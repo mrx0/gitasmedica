@@ -1,0 +1,1189 @@
+/*@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);*/
+
+@font-face {
+  font-family: 'fontawesome-selected';
+  src: url("../font/fontawesome-selected.eot");
+  src: url("../font/fontawesome-selected.eot?#iefix") format('embedded-opentype'), url("../font/fontawesome-selected.woff") format('woff'), url("../font/fontawesome-selected.ttf") format('truetype'), url("../font/fontawesome-selected.svg#fontawesome-selected") format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SFUIText';
+  src: url("../font/SFUIText-Light.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+	margin:0;
+	padding:0;
+	outline:none
+}
+/* обнуляем все элементы */
+/* общие стили */
+html {
+	/*font-size:80%;*/
+	height:100%;
+				
+	margin: 0;
+	/*overflow:hidden;*/
+}
+
+body {
+	/*font:normal 1em/1.3 arial, helvetica, sans-serif;*/
+	font-family: 'Lato', 'fontawesome-selected', Calibri, Arial, sans-serif;
+	color:#333;
+	height:100%;
+	background:#E8E8E8;
+	font-size: 16px;
+	/*font-size: 1em;*/
+	
+	margin: 0;
+	/*overflow:hidden;*/
+}
+
+a {
+	/*color:#2b82dc*/
+	color:#333;
+}
+
+a:hover {
+	text-decoration:none
+}
+
+h1, h2, h4, h5, h6 {
+	font-weight:normal;	
+	line-height:1;
+	padding: 0 0 10px;
+	color:#007BB6
+}
+
+h1 {
+	/*font-size:1.88em*/
+}
+
+h3 {
+
+	margin:15px 4px 12px;
+	color:#007BB6;
+    width: auto;
+    font-size: 14px;
+	font-style:normal;
+	font-weight:bold;
+}
+
+p {
+	text-align:justify;
+	word-spacing:.1ex;
+	line-height:1.6;
+	margin-bottom:1em;
+	margin-left:6px;
+}
+
+ul {
+	list-style:none
+}
+
+ol {
+	list-style-position:inside
+}
+
+header, nav, section, article, aside{
+	display:block;
+	position:relative;
+}
+
+footer {
+	display:block;
+	position:inherit;
+}
+
+header{
+	/*margin-bottom: 5px;*/
+}
+/* выравниваем страницу по центру, делаем отступы и цвет фона */
+section#main {
+	padding: 20px;
+	margin: 0 20px 40px;
+	background:#fff;
+}
+
+/* пишем класс для шапки - header */
+.h {
+	overflow:hidden;
+	background-image: url(../img/fon.png);
+	background-position: right center;
+    background-repeat: no-repeat;
+}
+
+/* меню навигации */
+nav {
+	background:#fff;
+	border:1px solid #BFBCB5;
+}
+
+nav {
+	list-style-type:none;
+	margin:0;
+	padding:0;
+	overflow:hidden;
+}
+
+nav a{
+	float:left;
+	font-weight: normal;
+}
+
+nav a{
+	display: block;
+	/*color: #BFBCB5;*/
+	color: #007BB6;
+	text-decoration: none;
+	text-align:center;
+	padding:10px 18px;
+}
+
+nav a:hover {
+	color: rgba(255,255,100, 1);
+	background: #97D7FF;
+}
+
+.href_exit {
+	color: #E72717;
+	font-weight: bold;
+}
+
+.href_profile {
+	color: #2ca9e4;
+	font-weight: bold;
+}
+
+.notes {
+	margin: 2px; 
+	padding:5px 15px 5px 15px; 
+	vertical-align: middle; 
+	color:#FFF; 
+	text-shadow: 2px 1px 1px #333;
+	border:1px solid #333;
+	font-weight: bold;
+	font-size: 65%;
+}
+
+.removes {
+	background: #2727D7;
+	margin: 2px; 
+	padding:5px 15px 5px 15px; 
+	vertical-align: middle; 
+	color:#FFF; 
+	text-shadow: 2px 1px 1px #333;
+	border:1px solid #333;
+	font-weight: bold;
+	font-size: 65%;
+}
+
+/* нижняя часть - footer */
+footer {
+	height:40px;
+	padding:25px 25px 0;
+	margin:20px 0 0;
+	border-top:1px solid #bbb;
+	
+}
+
+#data{
+	margin:20px 0 0;
+}
+
+area {
+	background-color: rgba(0,255,255,.1);
+}
+
+
+/*Для табличек*/
+.cellsBlockHover:hover {
+	background-color: rgba(151,255,255,.4);
+	font-weight:bold;
+	/*border: 1px solid #00ff00;*/
+	z-index: 900;
+}
+/*
+.cellsBlockFired {
+	background-color: rgba(103,103,103,1);
+}
+*/
+.cellsBlock {
+	display: table;
+	table-layout: auto;
+	width: 100%;
+	border-spacing: 1px;
+	font-size: 80%;
+}
+
+.cellText {
+	display: table-cell !important;
+	display: inline; /* для IE */
+	padding:4px;
+	border: 1px solid #BFBCB5;
+	vertical-align:middle;
+	/*width:250px;*/
+	min-width:250px;
+}
+
+.cellAddress {
+	display: table-cell !important;
+	display: inline; /* для IE */
+	padding:4px;
+	border: 1px solid #BFBCB5;
+	vertical-align:middle;
+	width:340px;
+	min-width:340px;
+}
+
+.cellOffice {
+	display: table-cell !important;
+	display: inline; /* для IE */
+	padding:4px;
+	border: 1px solid #BFBCB5;
+	vertical-align:middle;
+	width:150px;
+	min-width:150px;
+}
+
+.cellName {
+	display: table-cell !important;
+	display: inline; /* для IE */
+	padding:4px;
+	border: 1px solid #BFBCB5;
+	vertical-align:middle;
+	width:120px;
+	min-width:120px;
+	/*white-space:nowrap;*/
+}
+
+.cellCosmAct {
+	display: table-cell !important;
+	display: inline; /* для IE */
+	padding:4px;
+	border: 1px solid #BFBCB5;
+	vertical-align:middle;
+	width:20px;
+	min-width:20px;
+	max-width:20px;
+	font-size:80%;
+	height: 20px;
+}
+
+.cellFullName {
+	display: table-cell !important;
+	display: inline; /* для IE */
+	padding:4px;
+	border: 1px solid #BFBCB5;
+	vertical-align:middle;
+	width:250px;
+	min-width:250px;
+}
+
+.cellTime {
+	display: table-cell !important;
+	display: inline; /* для IE */
+	padding:4px;
+	border: 1px solid #BFBCB5;
+	vertical-align:middle;
+	width:100px;
+	min-width:100px;
+	
+}
+
+.cellPriority {
+	display: table-cell !important;
+	display: inline; /* для IE */
+	padding:4px 0;
+	border: 1px solid #BFBCB5;
+	vertical-align:middle;
+	width:4px;
+	min-width:4px;
+}
+
+.cellColorgrey {
+	background:#E8E8E8;
+	border-top: 1px solid #BFBCB5;
+}
+/**/
+/*Для табличек*/
+.cellsBlock2, .cellsBlock3, .cellsBlock4, .cellsBlock5{
+	display: table;
+	table-layout: auto;
+}
+
+.cellsBlock5{
+	border-spacing: 1px;
+}
+
+.cellsBlock2 {
+	width: 500px;
+}
+
+.cellsBlock4{
+	width: auto;
+}
+
+.cellsBlock3 {
+	width: 650px;
+}
+
+.cellsBlock5 {
+	width: 400px;
+	height:50px;
+	box-sizing: border-box;
+	border: 1px solid #BFBCB5;
+}
+
+.cellsBlock4 {
+	display:inline-block;
+}
+
+.tableTeeth{
+	text-align: center;
+	padding: 3px;
+}
+
+.cellLeft, .cellRight, .cellLeftTF {
+	display: table-cell !important;
+	display: inline; /* для IE */
+	/*margin:20px;*/
+	padding:5px;
+	background:#f0f0f0;
+	outline: 1px solid #BFBCB5;
+	vertical-align:middle;
+}
+
+.cellLeft {
+	width:150px;
+	min-width:150px;
+}
+
+/*****/
+
+input[type="text"], input[type="password"] {
+	border: 1px solid rgba(0,220,220,1);
+	color: #2980b9;
+	font-size: 13px;
+	box-shadow: 1px 1px 3px 1px rgba(200,200,200, 0.2) inset;
+	padding: 2px;
+	outline: none;
+	margin: 1px;
+	-webkit-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	-moz-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	-o-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+input[type="text"]:hover, input[type="password"]:hover{
+	border: 1px solid rgba(52, 152, 219, 1);
+	box-shadow: 1px 1px 3px 1px rgba(52, 152, 219, 0.2) inset;
+	-webkit-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	-moz-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	-o-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+input[type="text"]:focus, input[type="password"]:focus{
+	border: 1px solid rgba(52, 152, 219, 1);
+	box-shadow: 0px 0px 0px 0px rgba(52, 152, 219, 1);
+	background-color: rgba(255,255,100, 0.5);
+	-webkit-transition: all 100ms cubic-bezier(0.42, 0, 0.58, 1);
+	-moz-transition: all 100ms cubic-bezier(0.42, 0, 0.58, 1);
+	-o-transition: all 100ms cubic-bezier(0.42, 0, 0.58, 1);
+	transition: all 100ms cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+:focus::-webkit-input-placeholder {color: transparent}
+:focus::-moz-placeholder          {color: transparent}
+:focus:-moz-placeholder           {color: transparent}
+:focus:-ms-input-placeholder      {color: transparent}
+
+input[type="submit"], .button, .button_close{
+	font-size: 90%;
+    /*border: 1px solid #BFBCB5; /* Рамка */
+    display: inline-block;
+    padding: 5px 10px; /* Поля */
+    text-decoration: none; /* Убираем подчёркивание */
+    /*color: #fff; /* Цвет текста */
+	
+	/*display: table-cell !important;*/
+	/*display: inline; /* для IE */
+	/*padding:4px;*/
+	border: 1px solid #BFBCB5;
+	vertical-align:middle;
+	/*width:340px;*/
+	/*min-width:340px;*/
+	background-color: rgba(255, 255, 255, 1);
+	
+	/*border: 1px solid rgba(71,127,223,1);
+	color: #fff;
+	font-size: 14px;
+	background-color: rgba(31,191,63, 0.9);
+	/*box-shadow: 1px 1px 3px 1px rgba(200,200,200, 0.2) inset;*/
+	/*padding: 3px;
+	outline: none;
+	margin: 5px 2px;
+	-webkit-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	-moz-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	-o-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);*/
+}
+
+input[type="submit"]:hover, .button:hover, .button_close:hover{
+    box-shadow: 0 0 5px rgba(0,0,0,0.3); /* Тень */
+    background: linear-gradient(to bottom, #fcfff4, #e9e9ce); /* Градиент */
+    color: #a00;
+	
+	/*border: 1px solid rgba(255,46,93, 0.5);
+	box-shadow: 1px 1px 3px 1px rgba(52, 152, 219, 0.2) inset;
+	-webkit-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	-moz-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	-o-transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+	transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);*/
+
+}
+
+input[type="submit"]:focus, .button:focus, .button_close:focus, .b:focus, .b2:focus{
+	border: 1px solid rgba(199, 199, 199, 1);
+	box-shadow: 0px 0px 0px 0px rgba(52, 152, 219, 1);
+	background-color: rgba(52, 152, 219, 1);
+	-webkit-transition: all 100ms cubic-bezier(0.42, 0, 0.58, 1);
+	-moz-transition: all 100ms cubic-bezier(0.42, 0, 0.58, 1);
+	-o-transition: all 100ms cubic-bezier(0.42, 0, 0.58, 1);
+	transition: all 100ms cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+/*Кнопки*/
+
+
+.b {
+	margin: 5px 2px;
+}
+
+.b2{
+	margin: 0;	
+}
+
+.b, .b2 {
+	font-size: 90%;
+    /*border: 1px solid #BFBCB5; /* Рамка */
+    display: inline-block;
+    padding: 5px 10px; /* Поля */
+    text-decoration: none; /* Убираем подчёркивание */
+    /*color: #fff; /* Цвет текста */
+	
+	/*display: table-cell !important;*/
+	/*display: inline; /* для IE */
+	/*padding:4px;*/
+	border: 1px solid #BFBCB5;
+	vertical-align:middle;
+	/*width:340px;*/
+	/*min-width:340px;*/
+	background-color: rgba(255, 255, 255, 1);
+	
+	 cursor:pointer;
+}
+
+.b:hover, .b2:hover {
+    box-shadow: 0 0 5px rgba(0,0,0,0.3); /* Тень */
+    background: linear-gradient(to bottom, #fcfff4, #e9e9ce); /* Градиент */
+    color: #a00;
+}
+
+/*Ссылки выборки*/
+.ahref_sort {
+	color: #ff9900;
+	font-size:90%;
+	padding-right:20px;
+}
+
+/*Ссылки в таблице*/
+.ahref {
+	text-decoration: none; 
+	color:#333;
+}
+
+.ahref:hover {
+	/*background: rgba(00,255,255,0.7);*/
+}
+
+/*Поиск по алфавиту*/
+.AlphaSearch {
+	text-decoration: none; 
+	color:#00DCDC;
+}
+
+.AlphaSearchSel {
+	text-decoration: none; 
+	font-weight:bold;
+	color:#4F4FFF;
+}
+
+/*Выпадающий список*/
+
+.wrapper-demo {
+    *zoom: 1;
+	display:inline-block;
+}
+
+.wrapper-demo:after {
+    clear: both;
+    content: "";
+    display: table;
+}
+
+/* DEMO 2 */
+
+.wrapper-dropdown-2 {
+    /* Size and position */
+    position: relative; /* Enable absolute positionning for children and pseudo elements */
+    width: 150px;
+
+    /* Styles */
+    border-left: 5px solid grey;
+    cursor: pointer;
+}
+
+.wrapper-dropdown-2:after {
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    margin-top: -3px;
+    border-width: 6px 6px 0 6px;
+    border-style: solid;
+    border-color: grey transparent;
+}
+
+.wrapper-dropdown-2 .dropdown {
+  /* Size & position */
+    position: absolute;
+    top: 100%;
+    left: -5px;
+    right: 0px;
+
+    /* Styles */
+    /*background: white;*/
+	background: linear-gradient(to bottom, #fcfff4, #e9e9ce); /* Градиент */
+	
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+    list-style: none;
+
+    /* Hiding */
+    opacity: 0;
+    pointer-events: none;
+}
+
+.wrapper-dropdown-2 .dropdown li a {
+	font-size:80%;
+    display: block;
+    text-decoration: none;
+    color: #333;
+    border-left: 5px solid;
+    padding: 5px;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+}
+
+.wrapper-dropdown-2 .dropdown li:nth-child(1) a { 
+    border-left-color: #00ACED;
+}
+
+.wrapper-dropdown-2 .dropdown li:nth-child(2) a {
+    border-left-color: #4183C4;
+}
+
+.wrapper-dropdown-2 .dropdown li:nth-child(3) a {
+    border-left-color: #3B5998;
+}
+
+.wrapper-dropdown-2 .dropdown li i {
+    margin-right: 5px;
+    color: inherit;
+    vertical-align: middle;
+}
+
+/* Hover state */
+
+.wrapper-dropdown-2 .dropdown li:hover a {
+    color: grey;
+	background: rgba(144,247,95, 0.5);
+	background: -moz-linear-gradient(-45deg, rgba(144,247,95, 1) 0%, rgba(55,215,119, 0.7) 33%, rgba(144,247,95, 0.4) 71%, rgba(255,255,255, 0.5) 91%);
+	background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(144,247,95, 0.4)), color-stop(33%,rgba(55,215,119, 0.7)), color-stop(71%,rgba(144,247,95, 0.6)), color-stop(91%,rgba(255,255,255, 0.5)));
+	background: -webkit-linear-gradient(-45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+	background: -o-linear-gradient(-45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+	background: -ms-linear-gradient(-45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+	background: linear-gradient(135deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+}
+
+/* Active state */
+
+.wrapper-dropdown-2.active:after {
+    border-width: 0 6px 6px 6px;
+}
+
+.wrapper-dropdown-2.active .dropdown {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* No CSS3 support */
+
+.no-opacity       .wrapper-dropdown-2 .dropdown,
+.no-pointerevents .wrapper-dropdown-2 .dropdown {
+    display: none;
+    opacity: 1; /* If opacity support but no pointer-events support */
+    pointer-events: auto; /* If pointer-events support but no pointer-events support */
+}
+
+.no-opacity       .wrapper-dropdown-2.active .dropdown,
+.no-pointerevents .wrapper-dropdown-2.active .dropdown {
+    display: block;
+}
+
+/*Фильтр*/
+
+.filterBlock {
+	display: table;
+	table-layout: auto;
+	/*width: 100%;*/
+	border-spacing: 1px;
+	font-size: 80%;
+	color: #333;
+}
+
+.filtercellLeft, .filtercellRight {
+	display: table-cell !important;
+	display: inline; /* для IE */
+	/*margin: 110px;*/
+	padding:5px;
+	border: 1px solid #BFBCB5;
+	vertical-align:middle;
+}
+
+.filtercellLeft {
+	width:200px;
+	min-width:200px;
+	max-width:200px;
+}
+
+.filtercellRight {
+	width:280px;
+	min-width:280px;
+	max-width:280px;
+}
+
+
+/*Для быстрого поиска*/
+.search,.search2,.search3,.search4{
+    position:relative;
+}
+
+.search_result, .search_result2, .search_result3, .search_result4, .search_result_fc{
+	font-size:80%;
+    background: #FFF;
+    border: 1px #ccc solid;
+    width: 300px;
+   /* border-radius: 4px;*/
+   /* max-height:100px;*/
+   /* overflow-y:scroll;*/
+    display:none;
+	position: absolute;
+	margin: 0;
+	z-index: 999;
+}
+
+.search_result li,.search_result2 li,.search_result3 li,.search_result4 li,.search_result_fc li{
+	list-style: none;
+	padding: 5px 10px;
+   /* margin: 0 0 0 -40px;*/
+	margin: 0;
+	color: #0896D3;
+	border-bottom: 1px #ccc solid;
+	cursor: pointer;
+	transition:0.1s;
+}
+
+.search_result li:hover,.search_result2 li:hover,.search_result3 li:hover,.search_result4 li:hover,.search_result_fc li:hover{
+   /* background: #F9FF00;*/
+    color: grey;
+	background: rgba(144,247,95, 0.5);
+	background: -moz-linear-gradient(-45deg, rgba(144,247,95, 1) 0%, rgba(55,215,119, 0.7) 33%, rgba(144,247,95, 0.4) 71%, rgba(255,255,255, 0.5) 91%);
+	background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(144,247,95, 0.4)), color-stop(33%,rgba(55,215,119, 0.7)), color-stop(71%,rgba(144,247,95, 0.6)), color-stop(91%,rgba(255,255,255, 0.5)));
+	background: -webkit-linear-gradient(-45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+	background: -o-linear-gradient(-45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+	background: -ms-linear-gradient(-45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+	background: linear-gradient(135deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+}
+
+
+
+
+
+/*!Teeth map*/
+/*
+.wrapper {
+margin:0 auto;
+width:600px;
+position:relative;
+}
+*/
+#map {
+	float:left;
+	clear:both;
+	width:600px;
+	height:150px;
+	position:relative;
+}
+
+#map1 {
+	float:left;
+	clear:both;
+	width:600px;
+	height:150px;
+	position:relative;
+}
+
+#map2 {
+	float:left;
+	clear:both;
+	width:600px;
+	height:150px;
+	position:relative;
+}
+
+.text_in_map {
+	position: absolute; 
+	top: 64px;
+	z-index: 100;
+	font-size: 70%;
+}
+
+.point {
+	position:absolute;
+	display:none;
+	padding:10px 15px;
+	background:#fff;
+	font-size:14px;
+	font-weight:bold;
+	-moz-border-radius:8px;
+	border: 1px solid #BFBCB5;
+	z-index: 101;
+}
+
+.point .close {
+	display:block;
+	position:absolute;
+	top:-10px;
+	right:-10px;
+	width:24px;
+	height:24px;
+	text-indent:-9999px;
+	outline:none;
+	background:url(../img/close.png) no-repeat;
+	z-index: 102;
+}
+
+.point img {
+	vertical-align:middle;
+	margin-right:10px;
+}
+
+.point2 {
+	position:absolute;
+	display:none;
+	padding:10px 15px;
+	background:#FFFB9B;
+	font-size:14px;
+	font-weight:bold;
+	-moz-border-radius:8px;
+	border: 1px solid #800000;
+	z-index: 101;
+}
+
+.point2 .close {
+	display:block;
+	position:absolute;
+	top:-10px;
+	right:-10px;
+	width:24px;
+	height:24px;
+	text-indent:-9999px;
+	outline:none;
+	background:url(../img/close.png) no-repeat;
+	z-index: 102;
+}
+
+.point2 img {
+	vertical-align:middle;
+	margin-right:10px;
+}
+
+      .container {
+          position: relative;
+          height: 100%;
+          width: 100%;
+          left: 0;
+          -webkit-transition:  left 0.4s ease-in-out;
+          -moz-transition:  left 0.4s ease-in-out;
+          -ms-transition:  left 0.4s ease-in-out;
+          -o-transition:  left 0.4s ease-in-out;
+          transition:  left 0.4s ease-in-out;
+      }
+      .container.open-sidebar {
+          left: 240px;
+      }
+      
+      .swipe-area {
+          position: absolute;
+          width: 50px;
+          left: 0;
+      top: 0;
+          height: 100%;
+          background: #f3f3f3;
+          z-index: 0;
+      }
+      #sidebar {
+          background: #DF314D;
+          position: absolute;
+          width: 240px;
+          height: 100%;
+          left: -240px;
+          box-sizing: border-box;
+          -moz-box-sizing: border-box;
+      }
+      #sidebar ul {
+          margin: 0;
+          padding: 0;
+          list-style: none;
+      }
+      #sidebar ul li {
+          margin: 0;
+      }
+      #sidebar ul li a {
+          padding: 15px 20px;
+          font-size: 16px;
+          font-weight: 100;
+          color: white;
+          text-decoration: none;
+          display: block;
+          border-bottom: 1px solid #C9223D;
+          -webkit-transition:  background 0.3s ease-in-out;
+          -moz-transition:  background 0.3s ease-in-out;
+          -ms-transition:  background 0.3s ease-in-out;
+          -o-transition:  background 0.3s ease-in-out;
+          transition:  background 0.3s ease-in-out;
+      }
+      #sidebar ul li:hover a {
+          background: #C9223D;
+      }
+      .main-content {
+          width: 100%;
+          height: 100%;
+          padding: 10px;
+          box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          position: relative;
+      }
+      .main-content .content{
+          box-sizing: border-box;
+          -moz-box-sizing: border-box;
+      padding-left: 60px;
+      width: 100%;
+      }
+      .main-content .content h1{
+          font-weight: 100;
+      }
+      .main-content .content p{
+          width: 100%;
+          line-height: 160%;
+      }
+      .main-content #sidebar-toggle {
+          background: #DF314D;
+          border-radius: 3px;
+          display: block;
+          position: relative;
+          padding: 10px 7px;
+          float: left;
+      }
+      .main-content #sidebar-toggle .bar{
+           display: block;
+          width: 18px;
+          margin-bottom: 3px;
+          height: 2px;
+          background-color: #fff;
+          border-radius: 1px;   
+      }
+      .main-content #sidebar-toggle .bar:last-child{
+           margin-bottom: 0;   
+      }
+	
+	/* а вот это прикрепит меню к верху */
+	.f-sticky{
+		z-index: 9999; 
+		position: fixed; 
+		/*left: 0; */
+		top: 0; 
+		/*width: 100%;*/
+	} 
+	
+	
+	/* Tab style */
+#scrollUp {
+	bottom: -10px;
+	right: 30px;
+	width: 70px;
+	height: 70px;
+	padding: 10px 5px;
+	font-family: sans-serif;
+	font-size: 14px;
+	line-height: 20px;
+	text-align: center;
+	text-decoration: none;
+	text-shadow: 0 1px 0 #fff;
+	color: #828282;
+	-webkit-box-shadow: 0 0px 2px 1px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: 0 0px 2px 1px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 0px 2px 1px rgba(0, 0, 0, 0.2);
+	background-color: #E6E6E6;
+	background-image: -moz-linear-gradient(top, #EBEBEB, #DEDEDE);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#EBEBEB), to(#DEDEDE));
+	background-image: -webkit-linear-gradient(top, #EBEBEB, #DEDEDE);
+	background-image: -o-linear-gradient(top, #EBEBEB, #DEDEDE);
+	background-image: linear-gradient(to bottom, #EBEBEB, #DEDEDE);
+	background-repeat: repeat-x;
+	-webkit-transition: bottom 150ms linear;
+	-moz-transition: bottom 150ms linear;
+	transition: bottom 150ms linear;
+}
+
+#scrollUp:hover {
+		bottom: 0px;
+	}
+	
+	
+	
+	
+	
+#showDiv1, #showDiv2 {
+	display:inline-block;
+}
+
+#div1, #div2 {
+	display:none;
+}
+
+
+
+/* Модальные Окна для ЗФ */
+.modal_div {
+	width: 400px; 
+	height: 250px; /* Размеры должны быть фиксированы */
+	border-radius: 5px;
+	border: 3px #000 solid;
+	background: #fff;
+	position: fixed; /* чтобы окно было в видимой зоне в любом месте */
+	top: 45%; /* отступаем сверху 45%, остальные 5% подвинет скрипт */
+	left: 50%; /* половина экрана слева */
+	margin-top: -150px;
+	margin-left: -150px; /* тут вся магия центровки css, отступаем влево и вверх минус половину ширины и высоты соответственно =) */
+	display: none; /* в обычном состоянии окна не должно быть */
+	opacity: 0; /* полностью прозрачно для анимирования */
+	z-index: 105; /* окно должно быть наиболее большем слое */
+	padding: 20px 10px;
+}
+/* Кнопка закрыть для тех кто в танке) */
+.modal_close {
+	width: 21px;
+	height: 21px;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+	display: block;
+}
+/* Подложка */
+#overlay {
+	z-index: 102; /* подложка должна быть выше слоев элементов сайта, но ниже слоя модального окна */
+	position: fixed; /* всегда перекрывает весь сайт */
+	background-color: #000; /* черная */
+	opacity: 0.8; /* но немного прозрачна */
+	width: 100%; 
+	height: 100%; /* размером во весь экран */
+	top: 0; 
+	left: 0; /* сверху и слева 0, обязательные свойства! */
+	cursor: pointer;
+	display: none; /* в обычном состоянии её нет) */
+}
+
+/* Для расписания */
+.smena_div {
+	height: 120px;
+	width: 98%; 
+	/*border: 1px solid #BFBCB5;*/
+	display: table; 
+	text-align: center;
+}
+
+.smena {
+	height: 55px;
+	border: 1px solid #BFBCB5;
+	font-size: 80%;
+	vertical-align: middle;
+
+	box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.smena_work {
+		background-color: rgba(86, 249, 129, .7);
+}
+
+#blink1 {
+	-webkit-animation: blink1 8s linear infinite; 
+	animation: blink1 8s linear infinite; 
+} 
+@-webkit-keyframes blink1 {
+	0% {
+		background-color: rgba(249,225,49, 1);
+	} 
+	50% {
+		background-color: rgba(249,225,49, 0); 
+	}
+	100% {
+		background-color: rgba(249,225,49, 1);
+	} 
+} 
+@keyframes blink1 {
+	0% {
+		background-color: rgba(249,225,49, 1); 
+	}
+	50% {
+		background-color: rgba(249,225,49, 0); 
+	}
+	100% { 
+		background-color: rgba(249,225,49, 1);
+	}
+}
+#blink2 {
+	background-color: rgba(249,225,49, 1);
+} 
+
+.kab_filial {
+	display: table-cell;  
+	border: 1px solid #BFBCB5;
+	/*text-align: center; 
+	text-align: -moz-center; 
+	text-align: -webkit-center;*/
+	box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.n_kab_filial {
+	vertical-align:top;
+	/*border:1px solid red;*/
+	text-align: center;
+	font-size: 75%;
+	font-weight: bold;
+}
+
+/*Всплывающая подсказка*/
+.help {
+	color: #2C8505; outline: none; /*цвет подсказки*/
+	/*cursor: pointer; text-decoration: none; /*вид курсора при наведении, можно заменить на pointer*/
+	position: relative; /*позиция*/
+}
+
+/*положение всплывающей подсказки*/
+.help span {
+	display:none;
+	position: absolute;
+}
+
+/*подсказка при наведении курсора*/
+.help:hover span {
+	position: absolute; /*позиция*/
+	left: 10px;
+	right: 10px;
+	top: 25px;
+	z-index: 9999;
+	margin-left: 0;
+	width: 150px; /*ширина блока подсказки*/
+	display: block;
+}
+
+/*параметры изображения*/
+.help:hover img {
+	border: 0;
+}
+
+/*блок всплывающей подсказки*/
+.airhelp {
+	background: none repeat scroll 0 0 rgba(116, 111, 110, 1); /*цвет и прозрачность фона*/
+	border: 1px solid #2b82b8; /*параметры бордюра*/
+	/*border-radius: 5px; /*закругление углов*/
+	box-shadow: 0 0px 2px 1px rgba(0, 0, 0, 0.2);
+	color: #fff; /*цвет шрифта всплывающей подсказки*/
+	padding: 10px; /*внутренний отступ*/
+	text-align: left;
+	font-size: 140%;
+	font-weight: bold;
+}
+
+/*Для расписания записей*/
+.cellZapisTime, .cellZapisVal{
+	position: absolute; 
+	font-size:80%; 
+	box-sizing: border-box; 
+	/*border: 1px solid #BFBCB5;*/
+	outline: 1px solid #BFBCB5;
+}
+
+.cellZapisTime{
+	/*top: 20px;*/
+	left:0px;
+	font-weight: bold;
+	text-align: center;
+	width: 100px; 
+	height:60px;
+	background:#f0f0f0;
+}	
+
+.cellZapisVal{
+	left:100px;
+	width: 300px;
+	text-align: right;
+	/*background-color: rgba(119, 255, 135, 1);*/
+	background-color: rgba(255,255,0, .5);
+	overflow: auto;
+	
+}
+
+.cellZapisFreeSpace{
+	position: absolute; 
+	box-sizing: border-box; 
+	/*border: 1px solid #BFBCB5;*/
+	outline: 1px solid #BFBCB5;
+	/*background: #FF9900;*/
+	left: 100px;
+	width: 300px;
+}
+
+input[type="number"].mod{
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 40px;
+}

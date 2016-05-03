@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>404 Error Page</title>
+
+<!-- Bootstrap Core CSS 
+<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+-->
+
+<!--Bootstrap Core CSS -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<!-- Custom Fonts -->
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<script src="http://use.edgefonts.net/handlee.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+<!-- Plugin CSS -->
+<link rel="stylesheet" href="http://alt-web.com/css/animate.min.css" type="text/css">
+
+<!-- Custom CSS -->
+<link rel="stylesheet" href="http://alt-web.com/less/creative.css" type="text/css">
+<style>
+body { background: #000;}
+header {min-height: 250px !important; margin-top: 53px}
+section#tutorials {padding-top:15px}
+</style>
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+<body id="page-top">
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+<div class="container-fluid">
+<!-- Brand and toggle get grouped for better mobile display -->
+<div class="navbar-header">
+<button type="button" class="navbar-toggle collapsed " data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+<div id="brand">
+<a class="navbar-brand page-scroll img-responsive" href="#page-top"> <img alt="Alt-Web logo" src="http://alt-web.com/img/preload/alt-web-logo-sm.png"/><span class="sr-only">Alt-Web Design &amp; Publishing</span> </a>
+</div>
+</div>
+<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+<ul class="nav navbar-nav navbar-right">
+<li class="no-margin"><a href="http://alt-web.com/" title="Alt-Web Home Page"> <i class="no-shadow fa fa-home fa-2x"></i></a></li>
+<li class="no-margin"><a href="http://alt-web.com/index.php#contact" 
+				title="Alt-Web Contact"><i class="no-shadow fa fa-envelope fa-2x"></i></a></li>
+<li class="no-margin"><a href="http://alt-web.blogspot.com/" title="Alt-Web Blog"><i class="no-shadow fa fa-rss fa-2x"></i></a></li>
+<li class="current active"><a  href="#" title="404">UNKNOWN</a></li>
+<li><a href="http://alt-web.com/TUTORIALS/" title="Tutorials">TUTORIALS</a></li>
+
+<!--Freefind Site Search --> 
+<li class="hidden-sm" style="padding: 8px 6px">
+<form action="http://search.freefind.com/find.html"
+method="get" target="_blank" accept-charset="utf-8">
+<input type="hidden" name="id" value="84095852" />
+<input type="hidden" name="pid" value="r" />
+<input type="hidden" name="mode" value="ALL" />
+<input type="hidden" name="n" value="0" />
+<input type="hidden" name="_charset_" value="" />
+<input type="hidden" name="bcd" value="&divide;" />
+<div id="custom-search-input">
+<div class="input-group">
+<input name="query" type="text" class="search-query  form-control" placeholder="Site search" required />
+<span class="input-group-btn no-radius">
+<button class="btn btn-default no-radius" type="submit"> <span class="glyphicon glyphicon-search"></span> </button>
+</span>
+</div>
+</div>
+</form>
+<!--End Search --> 
+</li>
+</ul>
+</div>
+<!-- /.navbar-collapse -->
+</div>
+<!-- /.container-fluid --> 
+</nav>
+<header>
+<div class="header-content wow fadeIn">
+<div class="header-content-inner">
+<img class="img-responsive center-block hidden-xs" src="http://alt-web.com/img/preload/alt-web-logo.svg" height="50%" width="50%">
+<h1>Custom Web Design &amp; Development</h1>
+<hr>
+</div>
+</div>
+</header>
+<section class="no-margin" id="tutorials">
+<div class="container">
+<div class="row">
+<div class="col-sm-8">
+<img class="img-responsive pull-left"src="http://alt-web.com/Images/magnifying_glass.gif" alt="magnifing glass">
+<h2>Uh, oh... 404</h2>
+<h3>Little Grasshopper,</h3>
+<p>The page you seek could not be found,
+but countless more exist...
+The links provided here &amp; there,
+we hope will lend assist. </p>
+<hr>
+<p>Alt-Web's site has recently been rebuilt.  Some files were moved, deleted or renamed. If you feel you reached this page in error, please don't hesitate to <a class="btn btn-info" href="http://alt-web.com/#contact">Contact Us</a>
+</div>
+
+<aside class="col-sm-4 hidden-xs">
+
+<figure>
+<a href="http://alt-web.com/">
+<img class="img-responsive" src="http://alt-web.com/img/reach_the_world-with-alt-web.jpg" alt="Alt-Web Logo" title="Reach the World with Alt-Web.com"></a>
+<figcaption>No Project is Too Small</figcaption>
+</figure>
+</aside>
+
+</div>
+</div>
+</section>
+<section id="links" class="bg-dark" style="padding:35px 0 0 0">
+<div class="container">
+<div class="row wow fadeIn">
+<div class="col-sm-6">
+<h2 class="section-heading text-center no-margin">Help Feed the Kitty</h2>
+<img class="img-responsive center-block" src="http://alt-web.com/img/Cat-n-mouse-color.png"/>
+<p>We invite you to use the free web design resources from this site.Your PayPal contribution makes it possible for us to provide solutions for your <abbr title="Do It Yourself">DIY</abbr> projects. Thank you for your support.</p>
+<div class="col-xs-3 center-block">
+<form class="no-margin" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input name="cmd" value="_s-xclick" type="hidden">
+<input name="hosted_button_id" value="1006004" type="hidden">
+<input src="https://www.paypalobjects.com/en_US/i/btn/x-click-butcc-donate.gif" name="submit" alt="Donate Button" type="image">
+</form>
+</div>
+</div>
+<div class="col-sm-3 hidden-xs">
+<!--blog feed-->
+<h4 class="section-heading">
+Posts:
+</h4>
+
+<ul>
+
+<li><span class="small">08/05/2015</span><br>
+<a class="link" href="http://alt-web.blogspot.com/2015/08/responsive-videos-in-bootstrap-3.html">Responsive Videos in Bootstrap 3</a></li>
+
+<li><span class="small">08/02/2015</span><br>
+<a class="link" href="http://alt-web.blogspot.com/2015/08/customizing-bootstraps-carousel.html">Customizing Bootstrap's Carousel</a></li>
+
+<li><span class="small">07/31/2015</span><br>
+<a class="link" href="http://alt-web.blogspot.com/2015/07/server-side-includes-with-php.html">Server-Side Includes with PHP</a></li>
+
+<li><span class="small">07/28/2015</span><br>
+<a class="link" href="http://alt-web.blogspot.com/2015/07/responsive-contact-form-with-bootstrap_30.html">Responsive Contact Form with Bootstrap 3.2 and PHP (Part 3)</a></li>
+
+<li><span class="small">07/27/2015</span><br>
+<a class="link" href="http://alt-web.blogspot.com/2015/07/responsive-contact-form-with-bootstrap_27.html">Responsive Contact Form with Bootstrap 3.2 and PHP (Part 2)</a></li>
+
+<li><span class="small">07/27/2015</span><br>
+<a class="link" href="http://alt-web.blogspot.com/2015/07/responsive-contact-form-with-bootstrap.html">Responsive Contact Form with Bootstrap 3.2 and PHP (Part 1)</a></li>
+
+</ul>
+
+</div>
+<div class="col-sm-3 hidden-xs">
+<h4 class="section-heading">
+Tutorials:
+</h4>
+<ul>
+<li><a class="link" href="http://alt-web.com/TUTORIALS/?id=custom_web_fonts">Custom Web Fonts</a></li>
+<li><a class="link" href="http://alt-web.com/TUTORIALS/?id=html_emails">HTML E-mails &amp; Newsletters</a></li>
+<li><a class="link" href="http://alt-web.com/TUTORIALS/?id=equal_height_columns_bootstrap">Equal Height CSS Columns in Bootstrap</a></li>
+<li><a class="link" href="http://alt-web.com/TUTORIALS/?id=remove_unused_site_files">Remove Unused Site Files</a></li>
+</ul>
+<h4 class="section-heading">
+Articles &amp; Code Demos:
+</h4>
+<ul>
+<li><a href="http://alt-web.com/TUTORIALS/?id=persistent_page_indicator">Creating a Persistent Page Indicator on Sitewide CSS Menus (no scripts required) </a></li>
+<li><a href="http://alt-web.com/DEMOS/CSS-Button-Sprite.shtml">CSS Sprites</a></li>
+<li><a href="http://alt-web.com/DEMOS/CSS2-Captions-on-floated-images.shtml">CSS Floats: Captions on Floated Images</a></li>
+<li><a href="http://alt-web.com/TEST/Resizable-BG.shtml">Scalable Background Image</a></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<footer>
+<div class="container">
+<div class="row wow fadeIn" data-wow-delay="0.51s" data-wow-duration="1.5s">
+<div class="col-sm-8">
+<div class="pull-left">
+<img src="http://alt-web.com/img/preload/bottom-globe.png" alt="orange  kitten playing with Earth">
+</div>
+<h4 class="no-margin top-margin section-heading" style="margin-top:33px">
+Alt-Web Design &amp; Publishing
+</h4>
+<small class="text-faded">A California Web Developer<br>
+Web : Print : Graphics : Media Specialists<br>
+© 1995 - 2015 all rights reserved.</small>
+<p class="clearfix"></p>
+</div>
+<div class="col-sm-4">
+<h4 class="no-margin top-margin">
+Terms:
+</h4>
+<p class="small">PayPal, credit cards or corporate checks.<br>
+<i class="fa fa-3x fa-cc-paypal"></i>&nbsp; <i class="fa fa-3x fa-cc-visa"></i> &nbsp; <i class="fa fa-3x fa-cc-mastercard"></i> &nbsp; <i class="fa fa-3x fa-cc-discover"></i></p>
+</div>
+</div>
+</div>
+</footer>
+
+<!-- jQuery --> 
+<script src="http://code.jquery.com/jquery-latest.min.js"></script> 
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script> 
+
+<!-- Bootstrap Core JavaScript --> 
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> 
+
+<!-- Plugin JavaScript --> 
+<script src="http://alt-web.com/js/jquery.easing.min.js"></script> 
+<script src="http://alt-web.com/js/fittext.min.js"></script> 
+<script src="http://alt-web.com/js/wow.min.js"></script> 
+<script src="http://alt-web.com/js/creative.min.js"></script>
+</body>
+</html>
