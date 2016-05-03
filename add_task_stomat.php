@@ -333,6 +333,13 @@
 								<textarea name="comment" id="comment" cols="35" rows="10"></textarea>
 							</div>
 						</div>';
+				echo '
+						<div class="cellsBlock3">
+							<div class="cellLeft">Первичный?</div>
+							<div class="cellRight">
+								<input type="checkbox" name="pervich" id="pervich" value="1" checked> да
+							</div>
+						</div>';
 
 				echo '
 							<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">
@@ -595,6 +602,11 @@ function Ajax_add_task_stomat() {
 						}else{
 							remove_val = 0;
 						}
+						if ($("#pervich").prop("checked")){
+							pervich = 1;
+						}else{
+							pervich = 0;
+						}
 						
 						var arrayRemoveAct = new Array();
 						var arrayRemoveWorker = new Array();
@@ -630,6 +642,8 @@ function Ajax_add_task_stomat() {
 								add_notes_type:document.getElementById("add_notes_type").value,
 								add_notes_months:document.getElementById("add_notes_months").value,
 								add_notes_days:document.getElementById("add_notes_days").value,
+								
+								pervich:pervich,
 										
 								search_client3:document.getElementById("search_client3").value,';
 								//new_id:'.$new_id.',';

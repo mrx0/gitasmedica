@@ -34,7 +34,23 @@
 						<script src="js/init.js" type="text/javascript"></script>
 						<div id="status">
 							<header>
-								<h2>Посещение #'.$task[0]['id'].'</h2>
+								<h2>Посещение #'.$task[0]['id'].'</h2>';
+					//Первичка
+		
+					$query = "SELECT * FROM `journal_tooth_ex` WHERE `id` = '{$task[0]['id']}'";
+					$res = mysql_query($query) or die($query);
+					$number = mysql_num_rows($res);
+					if ($number != 0){
+						while ($arr = mysql_fetch_assoc($res)){
+							array_push($dop, $arr);
+						}
+						
+					}
+					//var_dump ($dop);
+					if (!empty($dop) && ($dop[0]['pervich'] == 1)){
+						echo 'Первичное';
+					}
+					echo '			
 							</header>';
 
 					echo '
@@ -73,7 +89,8 @@
 					//unset($t_f_data_temp['create_time']);	
 					
 					
-					//ЗО и тд						
+					//ЗО и тд	
+					$dop = array();							
 					$query = "SELECT * FROM `journal_tooth_status_temp` WHERE `id` = '{$task[0]['id']}'";
 					$res = mysql_query($query) or die($query);
 					$number = mysql_num_rows($res);

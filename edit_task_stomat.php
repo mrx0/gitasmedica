@@ -164,7 +164,7 @@
 						}						
 						
 
-						mysql_close();
+
 						
 						$client = $t_f_data_db['client'];
 						
@@ -331,8 +331,35 @@
 								</div>
 							</div>
 							';
+						
+						//Первичка
+						$dop = array();
+						$query = "SELECT * FROM `journal_tooth_ex` WHERE `id` = '{$task[0]['id']}'";
+						$res = mysql_query($query) or die($query);
+						$number = mysql_num_rows($res);
+						if ($number != 0){
+							while ($arr = mysql_fetch_assoc($res)){
+								array_push($dop, $arr);
+							}
+							
+						}	
+						
+						if (!empty($dop) && ($dop[0]['pervich'] == 1)){
+							$checked_pervich = ' checked';
+						}else{
+							$checked_pervich = '';
+						}
+						
+						echo '
+							<div class="cellsBlock3">
+								<div class="cellLeft">Первичный?</div>
+								<div class="cellRight">
+									<input type="checkbox" name="pervich" id="pervich" value="1" '.$checked_pervich.'> да
+								</div>
+							</div>';
 							
 							
+						mysql_close();	
 						echo '
 										<br />
 										<div class="cellsBlock2">
@@ -364,6 +391,12 @@
 												remove_val = 1;
 											}else{
 												remove_val = 0;
+											}
+												
+											if ($("#pervich").prop("checked")){
+												pervich_val = 1;
+											}else{
+												pervich_val = 0;
 											}
 											
 											var arrayRemoveAct = new Array();
@@ -402,6 +435,8 @@
 													
 													notes:notes_val,
 													remove:remove_val,
+													
+													pervich:pervich_val,
 													
 													removeAct:JSON.stringify(arrayRemoveAct),
 													removeWork:JSON.stringify(arrayRemoveWorker),

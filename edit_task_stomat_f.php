@@ -9,7 +9,7 @@
 		header("location: enter.php");
 	}else{
 		include_once 'DBWork.php';
-		var_dump ($_POST);
+		//var_dump ($_POST);
 		//var_dump ($_SESSION['journal_tooth_status_temp']);
 		if ($_POST){
 			if ($_POST['filial'] != 0){
@@ -112,6 +112,30 @@
 
 					//var_dump($stat_zuba);
 				}
+				
+				//Первичка
+				if ($_POST['pervich'] == 1){
+					$pervich_status = 1;
+				}else{
+					$pervich_status = 0;
+				}
+				
+				$query = "
+					INSERT INTO `journal_tooth_ex` (
+						`id`, `pervich` )
+					VALUES (
+						'{$_POST['id']}', '{$pervich_status}') ";
+				$query = "INSERT INTO `journal_tooth_ex` (
+					`id`, `pervich` )
+					VALUES (
+						'{$_POST['id']}', '{$pervich_status}')
+					ON DUPLICATE KEY UPDATE
+					`pervich` = '{$pervich_status}'
+					";
+						
+				mysql_query($query) or die(mysql_error().$query);
+		
+				
 				
 				if ($_POST['notes'] == 1){
 					if ($_POST['add_notes_type'] != 0){

@@ -221,6 +221,22 @@
 							}
 						}
 						
+						if ($_POST['pervich'] == 1){
+							$pervich_status = 1;
+						}else{
+							$pervich_status = 0;
+						}
+						
+						$query = "
+							INSERT INTO `journal_tooth_ex` (
+								`id`, `pervich` )
+							VALUES (
+								'{$task}', '{$pervich_status}') ";
+
+						mysql_query($query) or die(mysql_error());
+							
+						
+						
 						
 						echo '
 							Посещение добавлено в журнал.<br /><br />';
