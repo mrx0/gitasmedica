@@ -242,11 +242,22 @@
 					//Пробуем записать в сессию.
 					$_SESSION['journal_tooth_status_temp'] = $t_f_data;
 
-				}	
+				}else{
+					//Разбиваем запись с ',' на массив и записываем в новый массив
+					foreach ($t_f_data_db as $key => $value){
+						$surfaces_temp = explode(',', $value);
+						foreach ($surfaces_temp as $key1 => $value1){
+							$t_f_data[$key][$surfaces[$key1]] = $value1;
+						}
+					}
+					$t_f_data_draw = $t_f_data;
+				}
 				
 				
 				//echo $new_id;
 				//$t_f_data_db['id'] = $new_id;
+				
+				//var_dump($t_f_data_draw);
 				
 				//рисуем зубную формулу						
 				include_once 'teeth_map_svg.php';

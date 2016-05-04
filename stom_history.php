@@ -521,12 +521,12 @@
 											"fill-opacity": "1"\' 
 											class="mapArea'.$n.'" 
 											t_status = "'.$t_status.'"
-											data-path="'.$coordinates.'"
-											fill-color=\'"fill": "'.$color.'"\'
-											t_menu = "'.$n_zuba.', '.$surface.', t_menu, true, '.$surface.', 2, false, \'\', \'\', false, \'\', \'\'"';
+											data-path'.$n.'="'.$coordinates.'"
+											fill-color'.$n.'=\'"fill": "'.$color.'"\'
+											t_menu'.$n.' = "'.$n_zuba.', '.$surface.', t_menu, true, '.$surface.', 2, false, \'\', \'\', false, \'\', \'\'"';
 									echo					
 												'
-											t_menuA = "
+											t_menuA'.$n.' = "
 														'.t_surface_name($n_zuba.$surface, 1).'<br />'.t_surface_status($t_f_data[$i.$j]['status'], $s_stat);
 								
 									echo					
