@@ -348,7 +348,7 @@
 						<div class="cellsBlock3">
 							<div class="cellLeft">Первичный?</div>
 							<div class="cellRight">
-								<input type="checkbox" name="pervich" id="pervich" value="1" checked> да
+								<input type="checkbox" name="pervich" id="pervich" value="1"> да
 							</div>
 						</div>';
 
