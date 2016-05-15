@@ -344,11 +344,17 @@
 								<textarea name="comment" id="comment" cols="35" rows="10"></textarea>
 							</div>
 						</div>';
+				//!!!костыль 		
+				if ($_SESSION['id'] == 350){
+					$pervich_repin = '';
+				}else{
+					$pervich_repin = 'checked';
+				}
 				echo '
 						<div class="cellsBlock3">
 							<div class="cellLeft">Первичный?</div>
 							<div class="cellRight">
-								<input type="checkbox" name="pervich" id="pervich" value="1"> да
+								<input type="checkbox" name="pervich" id="pervich" value="1" '.$pervich_repin.'> да
 							</div>
 						</div>';
 
