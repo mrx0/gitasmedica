@@ -236,7 +236,7 @@
 								<div class="cellText" style="text-align: center">Комментарий</div>
 							</li>';
 				
-				Sanation ($journal);
+				//!!!!!!тест санации Sanation ($journal);
 				
 				for ($i = 0; $i < count($journal); $i++) {
 					
