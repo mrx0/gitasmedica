@@ -3,10 +3,13 @@
 //soft.php
 //ПО
 
+//2016 05 16 изменить БД для предложений
+//ALTER TABLE `journal_soft` ADD `inwork` INT( 1 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `worker` ;
+
 	require_once 'header.php';
 
 	if ($enter_ok){
-		if (($soft['see_all'] == 1) || $god_mode){
+		if (($soft['see_all'] == 1) || ($soft['see_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'filter.php';
 			include_once 'filter_f.php';
@@ -50,11 +53,15 @@
 				//echo $filter_rez[1];
 				$journal = SelDataFromDB('journal_soft', $sw, 'filter');
 			}else{
-				$journal = SelDataFromDB('journal_soft', $sw, $type);
+				if (($soft['see_all'] == 1) || $god_mode){
+					$journal = SelDataFromDB('journal_soft', $sw, $type);
+				}elseif ($soft['see_own'] == 1){
+					$journal = SelDataFromDB('journal_soft', $_SESSION['id'], 'see_own');
+				}
 			}
 			//var_dump ($journal);
 
-			if (($soft['add_new'] == 1) || $god_mode){
+			if (($soft['add_own'] == 1) || $god_mode){
 				echo '
 						<a href="add_task_soft.php" class="b">Добавить</a>';
 			}
@@ -84,7 +91,7 @@
 								<div class="cellText" style="text-align: center">Описание</div>
 								<div class="cellName" style="text-align: center">Автор</div>
 								<div class="cellName" style="text-align: center">Исполнитель</div>
-								<div class="cellTime" style="text-align: center">Закрыто</div>
+								<div class="cellTime" style="text-align: center">Статус</div>
 							</li>';
 
 				for ($i = 0; $i < count($journal); $i++) { 
@@ -103,12 +110,36 @@
 					$author = SelDataFromDB('spr_workers', $journal[$i]['create_person'], 'worker_id');
 					//
 					if ($journal[$i]['end_time'] == 0){
-						$ended = 'Нет';
-						$background_style = '';
-						$background_style2 = '
-							background: rgba(231,55,71, 0.9);
-							color:#fff;
-							';
+						if ($journal[$i]['inwork'] == 0){
+							$ended = 'Рассмотрение';
+							$background_style = '';
+							$background_style2 = '
+								background: rgba(231,55,71, 0.9);
+								color:#fff;
+								';
+						}
+						if ($journal[$i]['inwork'] == 1){
+							$ended = 'В работе';
+							$background_style = '
+								background: rgba(231,175,55, 0.8);
+								color:#fff;
+								';
+							$background_style2 = '
+								background: rgba(231,175,55, 0.8);
+								color:#fff;
+								';
+						}
+						if ($journal[$i]['inwork'] == 2){
+							$ended = 'Отказ';
+							$background_style = '
+								background: rgba(185,145,255, 0.9);
+								color:#fff;
+								';
+							$background_style2 = '
+								background: rgba(185,145,255, 0.9);
+								color:#fff;
+								';
+						}
 					}else{
 						$ended = date('d.m.y H:i', $journal[$i]['end_time']);
 						$background_style = '

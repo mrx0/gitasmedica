@@ -13,7 +13,7 @@
 	
 	$god_mode = FALSE;
 	
-	$version = 'v 07.04.2016';
+	$version = 'v 16.05.2016';
 	
 	echo'
 		<!DOCTYPE html>
@@ -382,7 +382,7 @@ jQuery("document").ready(function($){
 			echo '<li><a href="it.php">IT</a></li>';
 		}
 		if (($soft['see_all'] == 1) || ($soft['see_own'] == 1) || $god_mode){
-			echo '<li><a href="soft.php">ПО</a></li>';
+			echo '<li><a href="soft.php">Программа</a></li>';
 		}
 		if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
 			echo '<li><a href="stomat.php">Стоматология</a></li>';

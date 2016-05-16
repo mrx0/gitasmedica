@@ -298,7 +298,8 @@
 										}else{
 											if  ((mb_strstr($surface, 'root') == TRUE) && 
 												(($t_f_data[$i.$j]['status'] == '1') || ($t_f_data[$i.$j]['status'] == '2') || 
-												($t_f_data[$i.$j]['status'] == '18') || ($t_f_data[$i.$j]['status'] == '19'))){
+												($t_f_data[$i.$j]['status'] == '18') || ($t_f_data[$i.$j]['status'] == '19') || 
+												($t_f_data[$i.$j]['status'] == '9'))){
 												$DrawRoots = FALSE;
 											}else{
 												$DrawRoots = TRUE;
@@ -596,7 +597,8 @@
 									}else{
 										if  ((mb_strstr($surface, 'root') == TRUE) && 
 											(($t_f_data[$i.$j]['status'] == '1') || ($t_f_data[$i.$j]['status'] == '2') || 
-											($t_f_data[$i.$j]['status'] == '18') || ($t_f_data[$i.$j]['status'] == '19'))){
+												($t_f_data[$i.$j]['status'] == '18') || ($t_f_data[$i.$j]['status'] == '19') || 
+												($t_f_data[$i.$j]['status'] == '9'))){
 											$DrawRoots = FALSE;
 										}else{
 											$DrawRoots = TRUE;
@@ -878,7 +880,8 @@
 						}else{
 							if  ((mb_strstr($surface, 'root') == TRUE) && 
 								(($t_f_data[$i.$j]['status'] == '1') || ($t_f_data[$i.$j]['status'] == '2') || 
-								($t_f_data[$i.$j]['status'] == '18') || ($t_f_data[$i.$j]['status'] == '19'))){
+												($t_f_data[$i.$j]['status'] == '18') || ($t_f_data[$i.$j]['status'] == '19') || 
+												($t_f_data[$i.$j]['status'] == '9'))){
 								$DrawRoots = FALSE;
 							}else{
 								$DrawRoots = TRUE;

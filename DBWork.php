@@ -332,7 +332,12 @@
 			$old = 'Не нашли старую запись.';
 		}	
 		$time = time();
-		$query = "UPDATE `{$db}` SET `last_edit_time`='{$time}', `last_edit_person`='{$last_edit_person}', `office`='{$office}', `description`='{$description}', `priority`='{$priority}' WHERE `id`='{$id}'";
+		if ($db == 'journal_soft'){
+			$query = "UPDATE `{$db}` SET `last_edit_time`='{$time}', `last_edit_person`='{$last_edit_person}', `full_description`='{$description}' WHERE `id`='{$id}'";
+		}else{
+			$query = "UPDATE `{$db}` SET `last_edit_time`='{$time}', `last_edit_person`='{$last_edit_person}', `office`='{$office}', `description`='{$description}', `priority`='{$priority}' WHERE `id`='{$id}'";
+		}
+		
 		mysql_query($query) or die(mysql_error());
 		mysql_close();
 		
@@ -590,6 +595,8 @@
 			}elseif ($datatable == 'removes_open'){
 					$q = ' WHERE `'.$type.'` = '.$sw.' AND `closed` = 0 ORDER BY `create_time` DESC';
 					$datatable = 'removes';
+			}elseif (($datatable == 'journal_soft') && ($type == 'see_own')){
+				$q = ' WHERE `create_person` = '.$sw.' ORDER BY `create_time` DESC';
 			}else{
 				if ($type == 'filter'){
 					if ($datatable == 'spr_clients'){

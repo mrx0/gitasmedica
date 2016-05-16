@@ -1,12 +1,12 @@
 <?php
 
-//task_edit.php
-//Редактирование задачи IT
+//task_soft_edit.php
+//Редактирование задачи soft
 
 	require_once 'header.php';
 	
 	if ($enter_ok){
-		if (($it['edit'] == 1) || $god_mode){
+		if (($soft['see_all'] == 1) || ($soft['see_own'] == 1) || $god_mode){
 			if ($_GET){
 				include_once 'DBWork.php';
 				include_once 'functions.php';
@@ -39,11 +39,16 @@
 									<form action="task_soft_edit_f.php">
 
 										<div class="cellsBlock2">
+											<div class="cellLeft">Краткое описание</div>
+											<div class="cellRight">
+												'.$task[0]['description'].'
+											</div>
+										</div>
+		
+										<div class="cellsBlock2">
 											<div class="cellLeft">Описание</div>
 											<div class="cellRight">
-												<textarea name="description" id="description" cols="35" rows="10" style="vertical-align:top; text-align:left;">
-													'.trim($task[0]['description'], " \t\n\r\0\x0B").'
-												</textarea>
+												<textarea name="description" id="description" cols="35" rows="10">'.nl2br($task[0]['full_description']).'</textarea>
 											</div>
 										</div>
 										

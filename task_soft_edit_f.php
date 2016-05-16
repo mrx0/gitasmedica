@@ -12,16 +12,16 @@
 		if ($_POST){
 			if ($_POST['description'] == ''){
 				echo 'Не заполнено описание. Давайте еще разок =)<br /><br />
-				<a href="task_soft_edit.php?id='.$_POST['id'].'" class="b">Добавить</a>
+				<a href="task_soft_edit.php?id='.$_POST['id'].'" class="b">Редактировать</a>
 				<a href="soft.php" class="b">В журнал</a>';
 			}else{
 				include_once 'DBWork.php';
-				WriteToJournal_Update ($_POST['id'], $_POST['filial'], $_POST['description'], $_SESSION['id'], $_POST['priority'], 'journal_soft');
+				WriteToJournal_Update ($_POST['id'], '', $_POST['description'], $_SESSION['id'], '', 'journal_soft');
 			
 				echo '
 					Заявка отредактирована.
 					<br /><br />
-					<a href="it.php" class="b">В журнал</a>
+					<a href="soft.php" class="b">В журнал</a>
 					';
 			}
 		}

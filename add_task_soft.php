@@ -6,7 +6,7 @@
 	require_once 'header.php';
 	
 	if ($enter_ok){
-		if (($it['add_new'] == 1) || $god_mode){
+		if (($soft['add_new'] == 1) || ($soft['add_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			
 			echo '

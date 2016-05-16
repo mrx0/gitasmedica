@@ -202,7 +202,8 @@
 							//если корень и статусы кое какие плохие, где ничего нет или молочный
 							if  ((mb_strstr($surface, 'root') == TRUE) && 
 								(($t_f_data[$i.$j]['status'] == '1') || ($t_f_data[$i.$j]['status'] == '2') || 
-								($t_f_data[$i.$j]['status'] == '18') || ($t_f_data[$i.$j]['status'] == '19'))){
+								($t_f_data[$i.$j]['status'] == '18') || ($t_f_data[$i.$j]['status'] == '19') || 
+								($t_f_data[$i.$j]['status'] == '9'))){
 								$DrawRoots = FALSE;
 							}else{
 								//var_dump($i.$j.'=>'.$t_f_data[$i.$j][$surface]);
@@ -256,7 +257,7 @@
 									"stroke": "'.$color_stroke.'", 
 									"stroke-width": '.$stroke_width.', 
 									"fill-opacity": "1"\' 
-									class="mapArea'.$n.'" 
+									class="mapArea" 
 									t_status = "'.$t_status.'"
 									data-path="'.$coordinates.'"
 									fill-color=\'"fill": "'.$color.'"\'
@@ -270,19 +271,12 @@
 									//Если $DrawMenu true то DrawTeethMapMenu
 									//$n_zuba, $surface, $menu
 									
-									/*	<div class=\'cellsBlock4\'>
-											<div class=\'cellLeft\'>
-												'.t_surface_name($n_zuba.'NONE', 1).'<br />';
-										
-							DrawTeethMapMenu($n_zuba, $surface, 't_menu');	
-									echo '
-											</div>
-											<div class=\'cellRight\'>
+									/*		<div class=\'cellRight\'>
 												'.t_surface_name($n_zuba.$surface, 0).'<br />';
 							if ($DrawMenu){ DrawTeethMapMenu($n_zuba, $surface, $menu);}	
 							echo '
 											</div>
-										</div>';*/	
+										</div>';	*/
 							echo
 									'
 									t_menuA = "
