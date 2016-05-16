@@ -587,6 +587,9 @@
 				}
 			}elseif ($datatable == 'removes'){
 					$q = ' WHERE `'.$type.'` = '.$sw.' ORDER BY `create_time` DESC';
+			}elseif ($datatable == 'removes_open'){
+					$q = ' WHERE `'.$type.'` = '.$sw.' AND `closed` = 0 ORDER BY `create_time` DESC';
+					$datatable = 'removes';
 			}else{
 				if ($type == 'filter'){
 					if ($datatable == 'spr_clients'){
