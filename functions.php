@@ -389,6 +389,18 @@
 		return ($arr2['year'] - $arr1['year'] - 1) + $t;
 	}	
 	
+	function clear_dir($path) {
+		//var_dump($path);
+		if (file_exists(''.$path.'/')){
+			foreach (glob(''.$path.'/*') as $file){
+				//var_dump($file);
+				unlink($file);
+			}
+		}
+	}
+	
+	
+	
 	//Санация
 	function Sanation ($data){
 		//var_dump ($data);
