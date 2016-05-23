@@ -1,7 +1,7 @@
 <?php
 
 // A list of permitted file extensions
-$allowed = array('png', 'jpg', 'gif','zip');
+$allowed = array('png', 'jpg');
 
 if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0){
 
@@ -13,7 +13,7 @@ if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0){
 	}
 
 	if(move_uploaded_file($_FILES['upl']['tmp_name'], 'uploads/'.$_FILES['upl']['name'])){
-		echo '{"status":"success"}';
+		echo '{"status":"error"}';
 		exit;
 	}
 }

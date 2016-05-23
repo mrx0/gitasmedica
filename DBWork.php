@@ -597,6 +597,8 @@
 					$datatable = 'removes';
 			}elseif (($datatable == 'journal_soft') && ($type == 'see_own')){
 				$q = ' WHERE `create_person` = '.$sw.' ORDER BY `create_time` DESC';
+			}elseif (($datatable == 'spr_kd_img') && ($type == 'img')){
+				$q = ' WHERE `client` = '.$sw.' ORDER BY `uptime` ASC';
 			}else{
 				if ($type == 'filter'){
 					if ($datatable == 'spr_clients'){

@@ -17,8 +17,9 @@ $(function(){
         // This function is called when a file is added to the queue;
         // either via the browse button, or via drag/drop:
         add: function (e, data) {
-
-            var tpl = $('<input type="hidden" id="" name="" value="'+data.files[0].name+'" /><li class="working">'+
+			if (idd != 'graf') idd = 'face';
+			
+            var tpl = $('<input type="hidden" class="img_z" id="'+idd+'" value="'+data.files[0].name+'" /><li class="working">'+
 			'<input type="text" value="0" data-width="48" data-height="48"'+
 				' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" /><p></p>'+
 			'<p></p>'+
@@ -51,6 +52,14 @@ $(function(){
 
             // Automatically upload the file once it is added to the queue
             var jqXHR = data.submit();
+			
+			idd = 'graf';
+			
+			//var imgs = $(".img_z");
+
+			//$.each(imgs, function(){
+			//	alert ($(this).attr("value"));
+			//});
         },
 
         progress: function(e, data){

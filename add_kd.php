@@ -1,7 +1,7 @@
 <?php
 
-//add_task_cosmet.php 
-//Добавить задачу косметологов
+//
+//Это пиздец, нах я на это подписался-то
 
 	require_once 'header.php';
 	
@@ -11,7 +11,7 @@
 			include_once 'functions.php';
 			/*$offices = SelDataFromDB('spr_office', '', '');*/
 			
-			clear_dir('uploads');
+			//clear_dir('uploads');
 			
 			$post_data = '';
 			$js_data = '';
@@ -42,13 +42,13 @@
 								</div>';
 				echo '
 								<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">
-								<input type=\'button\' class="b" value=\'Отправить изображения\' onclick=Ajax_add_task_cosmet()>
+								<input type=\'button\' class="b" value=\'Отправить изображения\' onclick=fin_upload()>
 								';	
 				echo '
 				
 								<form id="upload" method="post" action="upload.php" enctype="multipart/form-data">
 									<div id="drop">
-										Переместите сюда
+										Переместите сюда или нажмите Поиск
 
 										<a>Поиск</a>
 										<input type="file" name="upl" multiple />
@@ -69,7 +69,7 @@
 								<script src="js/jquery.fileupload.js"></script>
 								
 								<!-- Our main JS file -->
-								<script src="js/script_up.js"></script>
+								<script src="js/script_up.js"></script>			
 						</div>
 					</div>';
 					
@@ -79,69 +79,41 @@
 				
 				echo '
 					<script>  
+						var idd = "";
+						function fin_upload() {
+							var face = "";
+							var graf= "";
+							var imgs = $(".img_z");
 
-						function Ajax_add_task_cosmet() {
-							// убираем класс ошибок с инпутов
-							$(\'input\').each(function(){
-								$(this).removeClass(\'error_input\');
+							
+							
+							$.each(imgs, function(){
+								//alert ($(this).attr("value"));
+								if ($(this).attr("id") == "face")
+									face = $(this).attr("value");
+								if ($(this).attr("id") == "graf")
+									if (face != $(this).attr("value"))
+										graf = $(this).attr("value");
 							});
-							// прячем текст ошибок
-							$(\'.error\').hide();
-							 
-							// получение данных из полей
-						   // var client = $(\'#search_client\').val();
-							//var filial = $(\'#filial\').val();
-							 
-							$.ajax({
-								// метод отправки 
-								type: "POST",
-								// путь до скрипта-обработчика
-								url: "ajax_test.php",
-								// какие данные будут переданы
-								data: {
-									client:document.getElementById("search_client").value,
-									filial:document.getElementById("filial").value,
+							
+							//alert(face);
+							//alert(graf);
+							
+							ajax({
+								url:"fin_upload.php",
+								statbox:"status",
+								method:"POST",
+								data:
+								{
+									face:face,
+									graf:graf,
+									client:'.$_GET['client'].',';
+				echo '
 								},
-								// тип передачи данных
-								dataType: "json",
-								// действие, при ответе с сервера
-								success: function(data){
-									// в случае, когда пришло success. Отработало без ошибок
-									if(data.result == \'success\'){   
-										//alert(\'форма корректно заполнена\');
-											'.$js_data.'
-													ajax({
-														url:"add_task_cosmet_f.php",
-														statbox:"status",
-														method:"POST",
-														data:
-														{
-															author:document.getElementById("author").value,
-															client:document.getElementById("search_client").value,
-															filial:document.getElementById("filial").value,
-															comment:document.getElementById("comment").value,';
-								echo $post_data;
-								echo '
-														},
-														success:function(data){
-															document.getElementById("status").innerHTML=data;
-														}
-													})
-									// в случае ошибок в форме
-									}else{
-										// перебираем массив с ошибками
-										for(var errorField in data.text_error){
-											// выводим текст ошибок 
-											$(\'#\'+errorField+\'_error\').html(data.text_error[errorField]);
-											// показываем текст ошибок
-											$(\'#\'+errorField+\'_error\').show();
-											// обводим инпуты красным цветом
-										   // $(\'#\'+errorField).addClass(\'error_input\');                      
-										}
-										document.getElementById("errror").innerHTML=\'<span style="color: red">Ошибка, что-то заполнено не так.</span>\'
-									}
+								success:function(data){
+									document.getElementById("status").innerHTML=data;
 								}
-							});						
+							})
 						};  
 						  
 					</script> 
