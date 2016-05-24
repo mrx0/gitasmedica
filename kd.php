@@ -39,16 +39,23 @@
 							<div id="data">
 						';
 							
-					foreach($rezult as $value){
+					foreach($rezult as $uptime => $value){
 						echo '
-								<div class="cellsBlock2">
-									<div class="cellRight">';
-						echo '			
-									<img src="kd/'.$value['face'].'.jpg" width="512" class="jLoupe" />';
+							<div class="cellsBlock2">
+								<div class="cellLeft">'.date('d.m.y H:i', $uptime).'</div>
+							</div>';
+							
 						echo '
-									<img src="kd/'.$value['graf'].'.jpg" width="256"/>';
+								<div class="cellsBlock2">';
+						echo '									
+									<div class="cellLeft">		
+										<img src="kd/'.$value['face'].'.jpg" width="512" class="jLoupe" />
+									</div>';
+						echo '
+									<div class="cellRight">
+										<img src="kd/'.$value['graf'].'.jpg" width="768"/>
+									</div>';
 						echo '	
-									</div>
 								</div>';
 					}
 
