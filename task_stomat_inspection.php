@@ -35,7 +35,8 @@
 						<div id="status">
 							<header>
 								<h2>Посещение #'.$task[0]['id'].'</h2>';
-					//Первичка
+								
+					//Дополнительно
 		
 					$query = "SELECT * FROM `journal_tooth_ex` WHERE `id` = '{$task[0]['id']}'";
 					$res = mysql_query($query) or die($query);
@@ -47,9 +48,15 @@
 						
 					}
 					//var_dump ($dop);
-					if (!empty($dop) && ($dop[0]['pervich'] == 1)){
-						echo 'Первичное';
+					if (!empty($dop)){
+						if ($dop[0]['pervich'] == 1){
+							echo 'Первичное<br />';
+						}
+						if ($dop[0]['noch'] == 1){
+							echo 'Ночное<br />';
+						}
 					}
+
 					echo '			
 							</header>';
 

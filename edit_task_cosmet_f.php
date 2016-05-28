@@ -44,13 +44,12 @@
 				echo '
 					Посещение отредактировано.
 					<br /><br />
-					<a href="cosmet.php" class="b">В журнал</a>
+					<a href="task_cosmet.php?id='.$_POST['id'].'" class="b">В посещение</a>
 					';
 			}else{
 				echo '
 					Вы не выбрали филиал<br /><br />
-					<a href="task_cosmet.php?id='.$_POST['id'].'" class="b">В посещение</a>
-					<a href="cosmet.php" class="b">В журнал</a>';
+					<a href="task_cosmet.php?id='.$_POST['id'].'" class="b">В посещение</a>';
 			}
 		}
 

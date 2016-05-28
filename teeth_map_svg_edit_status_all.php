@@ -33,6 +33,14 @@
 					//Если не ЗО
 					if ($_GET['status_all'] != '22'){
 						$t_f_data[$key]['status'] = $_GET['status_all'];
+						//Чистим радиксы (пока только их)  место для взаимоисключающих статусов
+						if ($t_f_data[$key]['root1'] == '34')
+							$t_f_data[$key]['root1'] = 0;
+						if ($t_f_data[$key]['root2'] == '34')
+							$t_f_data[$key]['root2'] = 0;
+						if ($t_f_data[$key]['root3'] == '34')
+							$t_f_data[$key]['root3'] = 0;
+							
 					}else{
 						if (isset($t_f_data[$key]['zo'])){
 							if ($t_f_data[$key]['zo'] == '1'){
@@ -55,12 +63,14 @@
 				}
 				
 				//сбросить статус зуба до полностью здорового
-				if ($value == '0'){
-					foreach($t_f_data[$key] as $key => $value){
-						$t_f_data[$key][$key] = '0';
-						//echo $key.':'.$value.'<br />';
+				if (isset($_GET['status_all']) && ($_GET['status_all'] == 'reset')){
+					foreach($t_f_data[$key] as $key_2 => $value){
+						$t_f_data[$key][$key_2] = '0';
+						//echo $key_2.':'.$value.'<br />';
 					}
+					$t_f_data[$key]['alien'] = '0';
 					$t_f_data[$key]['pin'] = '0';
+					unset($t_f_data[$key]['zo']);
 				}
 				
 				//имплантант (может быть с чем-то)
@@ -72,8 +82,9 @@
 					$t_f_data[$key]['pin'] = '1';
 					$t_f_data[$key]['status'] = '3';
 				}
-				//Чужой
-				if (isset($_GET['alien']) && ($_GET['alien'] == '1') && ($value != '0')){
+				//Чужой (исправлено 20160528)
+				//было if (isset($_GET['alien']) && ($_GET['alien'] == '1') && ($value != '0')){ 
+				if (isset($_GET['status_all']) && ($_GET['status_all'] == 'alien') && ($value != '0')){
 					$t_f_data[$key]['alien'] = '1';
 				}else{
 					$t_f_data[$key]['alien'] = '0';

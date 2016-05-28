@@ -12,8 +12,7 @@
 		if ($_POST){
 			if (($_POST['description'] == '') || ($_POST['full_description'] == '')){
 				echo 'Не заполнено описание.<br /><br />
-				<a href="add_task_soft.php" class="b">Добавить</a>
-				<a href="index.php" class="b">На главную</a>';
+				<a href="add_task_soft.php" class="b">Попробовать еще</a>';
 			}else{
 				include_once 'DBWork.php';
 				
@@ -22,9 +21,7 @@
 				echo '
 					Задача добавлена в журнал.
 					<br /><br />
-					<a href="add_task_soft.php" class="b">Добавить ещё</a>
-					<a href="soft.php" class="b">В журнал</a>
-					';
+					<a href="add_task_soft.php" class="b">Добавить ещё</a>';
 			}
 		}
 	}

@@ -12,7 +12,7 @@
 				include_once 'functions.php';
 				
 			$client = SelDataFromDB('spr_clients', $_GET['id'], 'user');
-			//var_dump($client);
+			//var_dump($_SESSION);
 			if ($client !=0){
 				echo '
 					<div id="status">
@@ -26,7 +26,13 @@
 				echo '
 							<form action="client_edit_f.php">
 								<div class="cellsBlock2">
-									<div class="cellLeft">ФИО</div>
+									<div class="cellLeft">
+										ФИО';
+				if ($god_mode || $_SESSION['permissions'] == 3){
+					echo '    <a href="client_edit_fio.php?id='.$_GET['id'].'"><img src="img/change.png" title="Редактировать ФИО"></a>';
+				}
+				echo '
+									</div>
 									<div class="cellRight">'.$client[0]['full_name'].'</div>
 								</div>
 								<div class="cellsBlock2">

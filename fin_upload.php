@@ -16,7 +16,7 @@
 			if (($_POST['face'] == '')||($_POST['client'] == '')||($_POST['client'] == 0)){
 				echo 'Ошибка попробуйте еще.<br /><br />
 					<a href="add_kd.php?client='.$_POST['client'].'" class="b">Вернуться</a>
-					<a href="clients.php" class="b">К списку пациентов</a>';
+					<a href="client.php?id='.$_POST['client'].'" class="b">Вернуться в карточку</a>';
 			}else{
 				
 				require 'config.php';
@@ -62,8 +62,9 @@
 				
 					echo '
 						Изображения добавлены<br /><br />
-						<a href="cosmet.php" class="b">Косметология</a>
-						<a href="clients.php" class="b">Пациенты</a>';
+						<a href="client.php?id='.$_POST['client'].'" class="b">Вернуться в карточку</a>
+						<a href="kd.php?client='.$_POST['client'].'" class="b">Посмотреть КД</a>
+						<a href="add_kd.php?client='.$_POST['client'].'" class="b">Добавить этому пациенту КД</a>';
 					
 			}
 		}

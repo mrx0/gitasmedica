@@ -1,7 +1,7 @@
 <?php 
 
-//task_edit_f.php
-//Функция для редактирования задачи IT
+//edit_task_cosmet_f.php
+//Функция для редактирования посещения косметолога
 
 	session_start();
 	
@@ -12,15 +12,16 @@
 		if ($_POST){
 			if ($_POST['description'] == ''){
 				echo 'Не заполнено описание. Давайте еще разок =)<br /><br />
-				<a href="task_soft_edit.php?id='.$_POST['id'].'" class="b">Вернуться</a>';
+				<a href="task_edit.php?id='.$_POST['id'].'" class="b">Добавить</a>
+				<a href="it.php" class="b">В журнал</a>';
 			}else{
 				include_once 'DBWork.php';
-				WriteToJournal_Update ($_POST['id'], '', $_POST['description'], $_SESSION['id'], '', 'journal_soft');
+				WriteToJournal_Update ($_POST['id'], $_POST['filial'], $_POST['description'], $_SESSION['id'], $_POST['priority']);
 			
 				echo '
 					Заявка отредактирована.
 					<br /><br />
-					<a href="task_soft.php?id='.$_POST['id'].'" class="b">Вернуться в заявку</a>
+					<a href="cosmet.php" class="b">В журнал</a>
 					';
 			}
 		}

@@ -14,8 +14,7 @@
 			if ($_POST['client'] == ''){
 				echo '
 					Не выбрали пациента. Давайте еще разок =)<br /><br />
-					<a href="add_task_cosmet.php" class="b">Добавить запись</a>
-					<a href="cosmet.php" class="b">В журнал</a>';
+					<a href="add_task_cosmet.php" class="b">Добавить запись</a>';
 			}else{
 				//Ищем клиента
 				$clients = SelDataFromDB ('spr_clients', $_POST['client'], 'client_full_name');
@@ -50,21 +49,20 @@
 						echo '
 							Добавлено в журнал.
 							<br /><br />
-							<a href="cosmet.php" class="b">В журнал</a>
-							<a href="add_task_cosmet.php" class="b">Добавить ещё</a>
+							<a href="client.php?id='.$client.'" class="b">В карточку пациента</a>
+							<a href="add_task_cosmet.php?client='.$client.'" class="b">Добавить посещение этому пациенту</a>
+							<a href="add_task_scosmet.php" class="b">Добавить новое посещение</a>
 							';
 					}else{
 						echo '
 							Вы не выбрали филиал<br /><br />
-							<a href="add_task_cosmet.php" class="b">Добавить запись</a>
-							<a href="cosmet.php" class="b">В журнал</a>';
+							<a href="add_task_cosmet.php" class="b">Добавить запись</a>';
 					}
 				}else{
 					echo '
-						В нашей баз нет такого пациента :(<br /><br />
+						В нашей базе нет такого пациента :(<br /><br />
 						<a href="add_task_cosmet.php" class="b">Добавить запись</a>
-						<a href="add_client.php" class="b">Добавить пациента</a>
-						<a href="cosmet.php" class="b">В журнал</a>';
+						<a href="add_client.php" class="b">Добавить пациента</a>';
 				}
 			}
 		}

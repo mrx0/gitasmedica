@@ -67,37 +67,37 @@
 							</div>
 						</div>
 						
-<script type="text/javascript" src="js/jquery.jloupe.js"></script>
-<script type="text/javascript">
-	$(function(){ 
-		// Image 1 and 2 use built-in jLoupe selector
+						<script type="text/javascript" src="js/jquery.jloupe.js"></script>
+						<script type="text/javascript">
+							$(function(){ 
+								// Image 1 and 2 use built-in jLoupe selector
 
-		// Image 3
-		$(\'#custom\').jloupe({
-		    radiusLT: 100,
-		    margin: 12,
-		    borderColor: false,
-		    image: \'img\loupe-trans.png\'
-		});
+								// Image 3
+								$(\'#custom\').jloupe({
+									radiusLT: 100,
+									margin: 12,
+									borderColor: false,
+									image: \'img\loupe-trans.png\'
+								});
 
-		// Image 4
-		$(\'#shape\').jloupe({
-		    radiusLT: 0,
-		    radiusRT: 10,
-		    radiusRB: 0,
-		    radiusLB: 10,
-		    width: 300,
-		    height: 150,
-		    borderColor: \'#f2730b\',
-		    backgroundColor: \'#000\',
-		    fade: false
-		});
-	});
-</script>
+								// Image 4
+								$(\'#shape\').jloupe({
+									radiusLT: 0,
+									radiusRT: 10,
+									radiusRB: 0,
+									radiusLB: 10,
+									width: 300,
+									height: 150,
+									borderColor: \'#f2730b\',
+									backgroundColor: \'#000\',
+									fade: false
+								});
+							});
+						</script>
 						
 						';
 				}else{
-					echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+					echo '<h1>Нечего показывать.</h1><a href="index.php">На главную</a>';
 				}
 			}else{
 				echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';

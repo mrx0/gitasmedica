@@ -456,6 +456,32 @@
 		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован пациент ['.$id.']. ['.date('d.m.y H:i', $time).']. Контакты: ['.$contacts.']. Дата рождения: ['.$birthday.']. Пол: ['.$sex.']. Лечащий врач [стоматология]: ['.$therapist.']. Лечащий врач [косметология]: ['.$therapist2.']');
 	}
 
+	//Обновление ФИО пациента из-под Web
+	function WriteFIOClientToDB_Update($session_id, $id, $name, $full_name, $f, $i, $o){
+		$old = '';
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+		//Для лога соберем сначала то, что было в записи.
+		$query = "SELECT * FROM `spr_clients` WHERE `id`=$id";
+		$res = mysql_query($query) or die(mysql_error());
+		$number = mysql_num_rows($res);
+		if ($number != 0){
+			$arr = mysql_fetch_assoc($res);
+			$old = 'Фамилия: ['.$arr['f'].']. Имя: ['.$arr['i'].']. Отчество: ['.$arr['o'].'].';
+		}else{
+			$old = 'Не нашли старую запись.';
+		}
+		$time = time();
+		$query = "UPDATE `spr_clients` SET `name`='{$name}', `full_name`='{$full_name}', `f`='{$f}', `i`='{$i}', `o`='{$o}' WHERE `id`='{$id}'";
+		mysql_query($query) or die(mysql_error());
+		mysql_close();
+		
+		//логирование
+		AddLog (GetRealIp(), $session_id, $old, 'Отредактированы ФИО пациента ['.$id.']. ['.date('d.m.y H:i', $time).']. Фамилия: ['.$f.']. Имя: ['.$i.']. Отчество: ['.$o.'].');
+	}
+
 	//Обновление лечащего врача пациента из-под Web
 	function UpdateTherapist ($session_id, $client_id, $therapist, $sw){
 		require 'config.php';
@@ -745,7 +771,8 @@
 		$search_data = trim(strip_tags(stripcslashes(htmlspecialchars($search_data))));
 		$datatable = trim(strip_tags(stripcslashes(htmlspecialchars($datatable))));
 
-		$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' ORDER BY `full_name` ASC LIMIT 10";
+		$query = "SELECT * FROM `$datatable` WHERE `full_name` RLIKE '^$search_data' ORDER BY `full_name` ASC LIMIT 10";
+	//	$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' ORDER BY `full_name` ASC LIMIT 10";
 	//	$query = "SELECT * FROM `$datatable` WHERE `name` LIKE '%$search_data%' LIMIT 10";
 		$res = mysql_query($query) or die(mysql_error());
 		$number = mysql_num_rows($res);

@@ -103,9 +103,9 @@
 			$t_menu .= "
 			</tr>
 				<td class='cellsBlockHover'>
-					<a href='#' id='refresh' onclick=refreshTeeth({$key},'{$func_n_zuba}','{$func_surface}') class='ahref'>
+					<!--<a href='#' id='refresh' onclick=refreshTeeth({$key},'{$func_n_zuba}','{$func_surface}') class='ahref'>-->
 						<img src='img/tooth_state/alien.png' border='0' />Чужой 
-					</a>
+					<!--</a>-->
 				</td>
 				<td class='cellsBlockHover'>
 					<input type='checkbox' name='alien' value='1'>

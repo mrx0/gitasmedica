@@ -1,7 +1,7 @@
 <?php
 
-//add_task.php
-//Добавить задачу
+//add_task_stomat.php
+//Добавить посещение стоматолога
 
 	require_once 'header.php';
 	
@@ -344,17 +344,18 @@
 								<textarea name="comment" id="comment" cols="35" rows="10"></textarea>
 							</div>
 						</div>';
-				//!!!костыль 		
-				if ($_SESSION['id'] == 350){
-					$pervich_repin = '';
-				}else{
-					$pervich_repin = 'checked';
-				}
 				echo '
 						<div class="cellsBlock3">
 							<div class="cellLeft">Первичный?</div>
 							<div class="cellRight">
-								<input type="checkbox" name="pervich" id="pervich" value="1" '.$pervich_repin.'> да
+								<input type="checkbox" name="pervich" id="pervich" value="1" > да
+							</div>
+						</div>';
+				echo '
+						<div class="cellsBlock3">
+							<div class="cellLeft">Ночной</div>
+							<div class="cellRight">
+								<input type="checkbox" name="noch" id="noch" value="1" > да
 							</div>
 						</div>';
 
@@ -624,6 +625,11 @@ function Ajax_add_task_stomat() {
 						}else{
 							pervich = 0;
 						}
+						if ($("#noch").prop("checked")){
+							noch = 1;
+						}else{
+							noch = 0;
+						}
 						
 						var arrayRemoveAct = new Array();
 						var arrayRemoveWorker = new Array();
@@ -661,6 +667,7 @@ function Ajax_add_task_stomat() {
 								add_notes_days:document.getElementById("add_notes_days").value,
 								
 								pervich:pervich,
+								noch:noch,
 										
 								search_client3:document.getElementById("search_client3").value,';
 								//new_id:'.$new_id.',';

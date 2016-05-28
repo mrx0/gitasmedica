@@ -15,8 +15,7 @@
 			if ($_POST['client'] == ''){
 				echo '
 					Не выбрали пациента. Давайте еще разок =)<br /><br />
-					<a href="add_task_stomat.php" class="b">Добавить запись</a>
-					<a href="stomat.php" class="b">В журнал</a>';
+					<a href="add_task_stomat.php" class="b">Добавить запись</a>';
 			}else{
 				//Ищем клиента
 				$clients = SelDataFromDB ('spr_clients', $_POST['client'], 'client_full_name');
@@ -226,12 +225,17 @@
 						}else{
 							$pervich_status = 0;
 						}
+						if ($_POST['noch'] == 1){
+							$noch_status = 1;
+						}else{
+							$noch_status = 0;
+						}
 						
 						$query = "
 							INSERT INTO `journal_tooth_ex` (
-								`id`, `pervich` )
+								`id`, `pervich`, `noch`)
 							VALUES (
-								'{$task}', '{$pervich_status}') ";
+								'{$task}', '{$pervich_status}', '{$noch_status}') ";
 
 						mysql_query($query) or die(mysql_error());
 							
@@ -246,22 +250,21 @@
 
 						echo '
 							<br /><br />
-							<a href="stomat.php" class="b">В журнал</a>
-							<a href="add_task_stomat.php" class="b">Добавить ещё</a>
+							<a href="client.php?id='.$client.'" class="b">В карточку пациента</a>
+							<a href="add_task_stomat.php?client='.$client.'" class="b">Добавить посещение этому пациенту</a>
+							<a href="add_task_stomat.php" class="b">Добавить новое посещение</a>
 							';
 						mysql_close();
 					}else{
 						echo '
 							Вы не выбрали филиал<br /><br />
-							<a href="add_task_stomat.php" class="b">Добавить запись</a>
-							<a href="stomat.php" class="b">В журнал</a>';
+							<a href="add_task_stomat.php" class="b">Добавить запись</a>';
 					}
 				}else{
 					echo '
-						В нашей баз нет такого пациента :(<br /><br />
+						В нашей базе нет такого пациента :(<br /><br />
 						<a href="add_task_stomat.php" class="b">Добавить запись</a>
-						<a href="add_client.php" class="b">Добавить пациента</a>
-						<a href="stomat.php" class="b">В журнал</a>';
+						<a href="add_client.php" class="b">Добавить пациента</a>';
 				}
 			}
 		}

@@ -38,6 +38,14 @@
 						$t_f_data[mb_substr($_GET['n_zuba'], 1)]['status'] = '0';
 					}else{
 						$t_f_data[mb_substr($_GET['n_zuba'], 1)]['status'] = $_GET['status'];
+						//Чистим радиксы (пока только их)  место для взаимоисключающих статусов
+						if ($t_f_data[mb_substr($_GET['n_zuba'], 1)]['root1'] == '34')
+							$t_f_data[mb_substr($_GET['n_zuba'], 1)]['root1'] = 0;
+						if ($t_f_data[mb_substr($_GET['n_zuba'], 1)]['root2'] == '34')
+							$t_f_data[mb_substr($_GET['n_zuba'], 1)]['root2'] = 0;
+						if ($t_f_data[mb_substr($_GET['n_zuba'], 1)]['root3'] == '34')
+							$t_f_data[mb_substr($_GET['n_zuba'], 1)]['root3'] = 0;
+							
 					}
 				}elseif (array_key_exists($_GET['status'], $root_status)){
 					if ($t_f_data[mb_substr($_GET['n_zuba'], 1)][$_GET['surface']] == $_GET['status']){
@@ -53,13 +61,14 @@
 					}
 				}
 			}
-			//сбросить статус зуба до полностью здорового
+			//сбросить статус зуба + ЗО до полностью здорового
 			if ($_GET['status'] == '0'){
 				foreach($t_f_data[mb_substr($_GET['n_zuba'], 1)] as $key => $value){
 					$t_f_data[mb_substr($_GET['n_zuba'], 1)][$key] = '0';
 					//echo $key.':'.$value.'<br />';
 				}
 				$t_f_data[mb_substr($_GET['n_zuba'], 1)]['pin'] = '0';
+				unset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['zo']);
 			}
 			
 			//имплантант (может быть с чем-то)
@@ -291,17 +300,25 @@
 						}else{
 							//Если у какой-то из областей зуба есть статус в бд.
 							if (isset($t_f_data[$i.$j][$surface])){
-							if ($t_f_data[$i.$j][$surface] != '0'){
-								if (array_key_exists($t_f_data[$i.$j][$surface], $root_status)){
-									$color = $root_status[$t_f_data[$i.$j][$surface]]['color'];
-								}elseif(array_key_exists($t_f_data[$i.$j][$surface], $surface_status)){
-									$color = $surface_status[$t_f_data[$i.$j][$surface]]['color'];
-								}else{
-									$color = "#fff";
+								if ($t_f_data[$i.$j][$surface] != '0'){
+									if (array_key_exists($t_f_data[$i.$j][$surface], $root_status)){
+										$color = $root_status[$t_f_data[$i.$j][$surface]]['color'];
+									}elseif(array_key_exists($t_f_data[$i.$j][$surface], $surface_status)){
+										$color = $surface_status[$t_f_data[$i.$j][$surface]]['color'];
+									}else{
+										$color = "#fff";
+									}
 								}
 							}
-							}
 						}
+						
+						//!Костыль для радикса(корень)/статус 34
+						if (($t_f_data[$i.$j]['root1'] == '34') || ($t_f_data[$i.$j]['root2'] == '34') || ($t_f_data[$i.$j]['root3'] == '34')){
+							$surface = 'NONE';
+							$color = '#FF0000';
+							$coordinates = $teeth_map_d[$n_zuba];								
+						}
+						
 						if (mb_strstr($surface, 'root') != FALSE){
 							$menu = 'r_menu';
 						}elseif((mb_strstr($surface, 'surface') != FALSE) || (mb_strstr($surface, 'top') != FALSE)){

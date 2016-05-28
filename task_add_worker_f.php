@@ -14,8 +14,8 @@
 			if ($_POST['worker'] == ''){
 				echo '
 					Не выбрали исполнителя. Давайте еще разок =)<br /><br />
-					<a href="task_add_worker.php?id='.$_POST['id'].'" class="b">Назначить/Изменить</a>
-					<a href="it.php" class="b">В журнал</a>';
+					<a href="task.php?id='.$_POST['id'].'" class="b">Вернуться в заявку</a>
+					<a href="task_add_worker.php?id='.$_POST['id'].'" class="b">Назначить/Изменить</a>';
 			}else{
 				//Ищем работника
 				$workers = SelDataFromDB ('spr_workers', $_POST['worker'], 'worker_full_name');
@@ -27,14 +27,13 @@
 					echo '
 						Задаче назначен исполнитель.
 						<br /><br />
-						<a href="task.php?id='.$_POST['id'].'" class="b">К задаче</a>
-						<a href="it.php" class="b">В журнал</a>
+						<a href="task.php?id='.$_POST['id'].'" class="b">Вернуться в заявку</a>
 					';
 				}else{
 					echo '
-						В нашей баз нет такого сотрудника :(<br /><br />
-						<a href="task_add_worker.php?id='.$_POST['id'].'" class="b">Назначить/Изменить</a>
-						<a href="it.php" class="b">В журнал</a>';
+						В нашей базе нет такого сотрудника :(<br /><br />
+						<a href="task.php?id='.$_POST['id'].'" class="b">Вернуться в заявку</a>
+						<a href="task_add_worker.php?id='.$_POST['id'].'" class="b">Вернуться к изменению исполнителя</a>';
 				}
 
 			}

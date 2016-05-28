@@ -222,14 +222,13 @@
 				echo '
 					Посещение отредактировано.
 					<br /><br />
-					<a href="stomat.php" class="b">В журнал</a>
+					<a href="task_stomat_inspection.php?id='.$_POST['id'].'" class="b">В посещение</a>
 					';
 							
 			}else{
 				echo '
 					Вы не выбрали филиал<br /><br />
-					<a href="task_cosmet.php?id='.$_POST['id'].'" class="b">В посещение</a>
-					<a href="stomat.php" class="b">В журнал</a>';
+					<a href="task_stomat_inspection.php?id='.$_POST['id'].'" class="b">В посещение</a>';
 			}
 		}
 	}

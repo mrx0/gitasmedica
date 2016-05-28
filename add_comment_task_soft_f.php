@@ -12,8 +12,7 @@
 		if ($_POST){
 			if ($_POST['t_s_comment'] == ''){
 				echo 'Ничего не написали.<br /><br />
-				<a href="task_soft.php?id='.$_POST['id'].'" class="b">К задаче</a>
-				<a href="soft.php" class="b">В журнал</a>';
+				<a href="task_soft.php?id='.$_POST['id'].'" class="b">К задаче</a>';
 			}else{
 				include_once 'DBWork.php';
 				
@@ -23,7 +22,6 @@
 					Комментарий добавлен
 					<br /><br />
 					<a href="task_soft.php?id='.$_POST['id'].'" class="b">К задаче</a>
-					<a href="soft.php" class="b">В журнал</a>
 					';
 			}
 		}

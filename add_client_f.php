@@ -27,7 +27,7 @@
 					$full_name = CreateFullName(trim($_POST['f']), trim($_POST['i']), trim($_POST['o']));
 					//Проверяем есть ли такой пациент
 					if (isSameFullName('spr_clients', $full_name)){
-						echo 'Такой пациент уже есть.<br /><br />
+						echo 'Такой пациент уже есть. Если тёзка, в конце поля "Отчество" поставьте символ "*"<br /><br />
 							<a href="add_client.php" class="b">Добавить ещё</a>
 							<a href="clients.php" class="b">К списку пациентов</a>';
 					}else{

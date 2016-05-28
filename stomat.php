@@ -8,7 +8,7 @@
 	//var_dump ($god_mode);
 	
 	if ($enter_ok){
-		//var_dump($permissions);
+		//var_dump($_SESSION);
 		if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
@@ -201,13 +201,16 @@
 			if ($journal != 0){
 				//var_dump ($journal);
 				$actions_stomat = SelDataFromDB('actions_stomat', '', '');
+				if (($stom['see_all'] == 1) || $god_mode){	
+					echo '
+						<p style="margin: 5px 0; padding: 1px; font-size:80%;">
+							Быстрый поиск по врачу: 
+							<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
+							
+						</p>';
 				
+				}
 				echo '
-					<p style="margin: 5px 0; padding: 1px; font-size:80%;">
-						Быстрый поиск по врачу: 
-						<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
-						
-					</p>
 					<div id="data">
 						<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
 							<li class="cellsBlock sticky" style="font-weight:bold; background-color:#FEFEFE;">
@@ -248,9 +251,32 @@
 						}else{
 							$client = 'unknown';
 						}
+						
+						//Дополнительно
+						$dop = array();
+						$dop_img = '';
+						$query = "SELECT * FROM `journal_tooth_ex` WHERE `id` = '{$journal[$i]['id']}'";
+						$res = mysql_query($query) or die($query);
+						$number = mysql_num_rows($res);
+						if ($number != 0){
+							while ($arr = mysql_fetch_assoc($res)){
+								array_push($dop, $arr);
+							}
+							
+						}
+						//var_dump ($dop);
+						if (!empty($dop)){
+							if ($dop[0]['pervich'] == 1){
+								$dop_img .= '<img src="img/pervich.png" title="Первичное">';
+							}
+							if ($dop[0]['noch'] == 1){
+								$dop_img .= '<img src="img/night.png" title="Ночное">';
+							}
+						}
+						
 						echo '
 							<li class="cellsBlock cellsBlockHover">
-									<a href="task_stomat_inspection.php?id='.$journal[$i]['id'].'" class="cellName ahref" title="'.$journal[$i]['id'].'">'.date('d.m.y H:i', $journal[$i]['create_time']).'</a>
+									<a href="task_stomat_inspection.php?id='.$journal[$i]['id'].'" class="cellName ahref" title="'.$journal[$i]['id'].'">'.date('d.m.y H:i', $journal[$i]['create_time']).' '.$dop_img.'</a>
 									<a href="client.php?id='.$journal[$i]['client'].'" class="cellName ahref">'.$client.'</a>';
 						if (($stom['see_all'] == 1) || $god_mode){
 							echo '<a href="user.php?id='.$journal[$i]['worker'].'" class="cellName ahref" id="4filter">'.WriteSearchUser('spr_workers', $journal[$i]['worker'], 'user').'</a>';

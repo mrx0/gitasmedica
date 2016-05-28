@@ -18,6 +18,10 @@
 				
 				if ($task !=0){
 					if ($god_mode || ($soft['see_all'] == 1) || ($_SESSION['id'] == $task[0]['create_person'])){
+						if ($task[0]['end_time'] != 0) {
+							$closed = TRUE; 
+						}
+						
 						echo '
 							<div id="status">
 								<header>
@@ -136,7 +140,7 @@
 										>';
 							}
 						}else{
-							if (($soft['close'] == 1) || $god_mode){
+							if ((($soft['close'] == 1) || $god_mode) && !$closed){
 								echo '
 										<input type=\'button\' class="b" value=\'Завершить\' onclick=\'
 											ajax({
@@ -146,7 +150,7 @@
 												data:
 												{
 													ended:document.getElementById("ended").value,
-													task_id:document.getElementById("task_id").value,
+													task_id:'.$_GET['id'].',
 													worker:document.getElementById("worker").value,
 												},
 												success:function(data){document.getElementById("status").innerHTML=data;}

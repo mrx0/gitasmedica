@@ -3,8 +3,7 @@
 	if ($_POST){
 		if ($_POST['task_id'] == ''){
 			echo 'Что-то не заполнено. Давайте еще разок =)<br /><br />
-				<!--<a href="add_worker.php" class="b">Добавить</a>-->
-				<a href="index.php" class="b">На главную</a>';
+				<a href="task.php?id='.$_POST['task_id'].'" class="b">Вернуться в заявку</a>';
 		}else{
 			include_once 'DBWork.php';
 			//include_once 'functions.php';
@@ -13,7 +12,7 @@
 			}
 			echo '
 				<h1>Задача снова в работе.</h1>
-				<a href="index.php" class="b">На главную</a>
+				<a href="task.php?id='.$_POST['task_id'].'" class="b">Вернуться в заявку</a>
 			';
 		}
 	}

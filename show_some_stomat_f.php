@@ -1,7 +1,7 @@
 <?php 
 
-//add_task_stomat_f.php
-//Функция для добавления задачи стоматологов в журнал
+//show_some_stomat_f.php
+//
 
 if ($_POST){	
 
@@ -304,6 +304,14 @@ if ($_POST){
 												}
 											}
 										}
+										
+										//!Костыль для радикса(корень)/статус 34
+										/*if (($t_f_data[$i.$j]['root1'] == '34') || ($t_f_data[$i.$j]['root2'] == '34') || ($t_f_data[$i.$j]['root3'] == '34')){
+											$surface = 'NONE';
+											$color = '#FF0000';
+											$coordinates = $teeth_map_d[$n_zuba];								
+										}*/
+										
 										if (mb_strstr($surface, 'root') != FALSE){
 											$menu = 'r_menu';
 										}elseif((mb_strstr($surface, 'surface') != FALSE) || (mb_strstr($surface, 'top') != FALSE)){

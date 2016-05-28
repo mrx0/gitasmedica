@@ -16,7 +16,8 @@
 			
 			echo '
 				<h1>Карточка отредактирована.</h1>
-				<br /><a href="contacts.php" class="b">В журнал</a>
+				<br />
+				<a href="user.php?id='.$_POST['id'].'" class="b">Вернуться в профиль</a>
 			';			
 		}
 

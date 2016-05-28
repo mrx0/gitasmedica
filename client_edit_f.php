@@ -51,7 +51,8 @@
 				.$echo_therapist.
 				'<br />'
 				.$echo_therapist2.
-				'<br /><a href="clients.php" class="b">В журнал</a>
+				'<br />
+				<a href="client.php?id='.$_POST['id'].'" class="b">Вернуться в карточку</a>
 			';			
 		}
 
