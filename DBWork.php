@@ -771,8 +771,8 @@
 		$search_data = trim(strip_tags(stripcslashes(htmlspecialchars($search_data))));
 		$datatable = trim(strip_tags(stripcslashes(htmlspecialchars($datatable))));
 
-	//	$query = "SELECT * FROM `$datatable` WHERE `full_name` RLIKE '^$search_data' ORDER BY `full_name` ASC LIMIT 10";
-		$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' ORDER BY `full_name` ASC LIMIT 10";
+		$query = "SELECT * FROM `$datatable` WHERE LOWER(`full_name`) RLIKE LOWER('^$search_data') ORDER BY `full_name` ASC LIMIT 10";
+	//	$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' ORDER BY `full_name` ASC LIMIT 10";
 	//	$query = "SELECT * FROM `$datatable` WHERE `name` LIKE '%$search_data%' LIMIT 10";
 		$res = mysql_query($query) or die(mysql_error());
 		$number = mysql_num_rows($res);
