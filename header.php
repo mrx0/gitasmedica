@@ -135,23 +135,37 @@ jQuery("document").ready(function($){
    <script>
 		function DrawTeethMapMenu (param) {
 			//alert (param);
-			var req = false;
-			$.ajax({
-				url:"t_context_menu_ajax.php",
-				type:"POST",
-				async: false,
-				data:
-				{
-					param:param,
-					//n_zuba:n_zuba,
-					//surface:surface,
-					//menu:menu,
-				},
-				success:function(data){
-					req = data;
-				},
-			});
-			return req;
+			//var req = false;
+			//$.ajax({
+			//	url:"t_context_menu_ajax.php",
+			//	type:"POST",
+			//	async: false,
+			//	data:
+			//	{
+			//		param:param,
+			//	},
+			//	success:function(data){
+			//		req = data;
+			//	},
+			//});
+			//return req;
+			
+			var res = "";
+			res += "<div class=\'cellsBlock4\'>" + 
+						"<div class=\'cellLeftTF\' style=\'vertical-align: top;\'>" +
+							"<table>";
+			
+			res += 	"<tr>" +
+						"<td colspan=\'3\' style=\'border: 2px solid #BEBEBE; padding:2px;\'>" +
+							"1" +
+						"</td>" +
+					"</tr>";
+					
+			res += 	"</table>" +
+					"</div>";
+			
+			return (res);
+			
 		}
     </script>
 			
