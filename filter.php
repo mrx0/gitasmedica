@@ -26,7 +26,7 @@
 						<form name="cl_form" action="'.$sw.'.php" method="GET" id="form">	
 							<input type="hidden" name="filter" value="yes">
 							<!--<input type="hidden" name="template" id="type" value="5">-->';
-		if (($sw == 'it') || ($sw == 'cosmet') || ($sw == 'stomat') ){
+		if (($sw == 'it') || ($sw == 'cosmet') || ($sw == 'stomat') || ($sw == 'stat_stomat2') ){
 			echo '					
 							<div class="filterBlock">
 								<div class="filtercellLeft">
@@ -42,7 +42,7 @@
 				echo '						
 									<span style="font-size:80%;">За всё время <input type="checkbox" name="all_time" value="1" checked></span>';
 			}
-			if  (($sw == 'cosmet') || ($sw == 'stomat')){
+			if  (($sw == 'cosmet') || ($sw == 'stomat') || ($sw == 'stat_stomat2')){
 				echo '						
 									<span style="font-size:80%;">За всё время <input type="checkbox" name="all_time" value="1"></span>';
 			}
@@ -59,7 +59,7 @@
 				echo '
 									Исполнитель';
 			}
-			if (($sw == 'cosmet') || ($sw == 'stomat')){
+			if (($sw == 'cosmet') || ($sw == 'stomat') || ($sw == 'stat_stomat2')){
 				echo '
 									Врач';
 			}
@@ -69,7 +69,7 @@
 			}
 			echo '				</div>
 								<div class="filtercellRight">';
-			if (($sw == 'it') || ($sw == 'cosmet') || ($sw == 'stomat')){
+			if (($sw == 'it') || ($sw == 'cosmet') || ($sw == 'stomat') || ($sw == 'stat_stomat2')){
 				echo '	
 									<input type="text" size="35" name="searchdata2" id="search_client2" placeholder="Введите первые три буквы для поиска" value="" class="who2" autocomplete="off">
 									<ul id="search_result2" class="search_result2"></ul><br />';
@@ -123,7 +123,7 @@
 							</div>';
 			}
 		}
-		if (($sw == 'it') || ($sw == 'cosmet') || ($sw == 'stomat')){
+		if (($sw == 'it') || ($sw == 'cosmet') || ($sw == 'stomat') || ($sw == 'stat_stomat2')){
 			echo '
 							<div class="filterBlock">
 								<div class="filtercellLeft">

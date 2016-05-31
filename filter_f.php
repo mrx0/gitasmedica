@@ -168,7 +168,11 @@
 				$filter_rez[0] = '<span style="font-size:85%;">Включен фильтр. '.$echo_filter.' С '.$dataarray['datastart'].' по '.$dataarray['dataend'].'. <a href="'.$where.'.php" class="ahref_sort">Сбросить</a></span>';
 			}elseif ($dataarray['datatable'] == 'journal_tooth_status'){
 				$sw .= "`create_time` BETWEEN '{$datastart}' AND '{$dataend}' ";
-				$where = 'stomat';
+				if (isset($dataarray['sw']) && $dataarray['sw'] == 'stat_stomat2'){
+					$where = 'stat_stomat2';
+				}else{
+					$where = 'stomat';
+				}
 				$filter_rez[0] = '<span style="font-size:85%;">Включен фильтр. '.$echo_filter.' С '.$dataarray['datastart'].' по '.$dataarray['dataend'].'. <a href="'.$where.'.php" class="ahref_sort">Сбросить</a></span>';
 			}else{
 				$sw .= "`create_time` BETWEEN '{$datastart}' AND '{$dataend}' ";
