@@ -26,11 +26,15 @@
 				//var_dump($status_arr);
 				if ($status_arr[0] == '1'){
 					//echo 'Отсутствует<br />';
-					$sanat = false;
+					if (($tooth != 18) && ($tooth != 28) && ($tooth != 38) && ($tooth != 48)){
+						$sanat = false;
+					}
 				}
 				if ($status_arr[0] == '2'){
 					//echo 'Удален<br />';
-					$sanat = false;
+					if (($tooth != 18) && ($tooth != 28) && ($tooth != 38) && ($tooth != 48)){
+						$sanat = false;
+					}
 				}
 				if (($status_arr[0] == '3') && ($status_arr[1] == '1')){
 					//echo $t_id.'Имплантант<br />';
@@ -55,7 +59,7 @@
 				}
 				
 				//echo $t_id.'<br />';
-				$sanat = false;
+				//$sanat = false;
 				
 				if (($status_arr[3] == 71) || ($status_arr[4] == 71) || ($status_arr[5] == 71) || ($status_arr[6] == 71) || 
 					($status_arr[7] == 71) || ($status_arr[8] == 71) || ($status_arr[9] == 71) || ($status_arr[10] == 71) || 
@@ -164,12 +168,12 @@
 					$month = date('n', $ttime);		
 					$year = date('Y', $ttime);
 					//$datestart = strtotime('1.'.$month.'.'.$year);
-					//32 Дня
-					$datestart = time()-60*60*24*64;
+					//182 Дня
+					$datestart = time()-60*60*24*182;
 					//нулевой день следующего месяца - это последний день предыдущего
 					$lastday = mktime(0, 0, 0, $month+1, 0, $year);
 					//$datefinish = strtotime(strftime("%d", $lastday).'.'.$month.'.'.$year.' 23:59:59');
-					$datefinish = time();
+					$datefinish = time()-60*60*24*59;
 					//echo $datestart.'<br />'.date('d.m.y H:i', $datestart).'<br />'.$datefinish.'<br />'.date('d.m.y H:i', $datefinish).'<br />'.($datefinish - $datestart).'<br />'.(($datefinish - $datestart)/(60*60*24)).'<br />'.'<br />'.'<br />'.'<br />';			
 					$_GET['datastart'] = date('d.m.Y', $datestart);
 					$_GET['dataend'] = date('d.m.Y', $datefinish);
@@ -341,6 +345,7 @@
 				$min_work_time = 60*60*10;
 				
 				foreach($all_clients_arr as $cl_id => $value) {
+					$kom_arr = array();
 					$komm = '';
 					//var_dump ($value);
 						
@@ -358,8 +363,9 @@
 							array_push($next_rez, $arr);
 						}
 					}
-						
+					
 					//var_dump ($next_rez);
+					//array_push($kom_arr, $next_rez[$i]['id']);						
 					
 					if (!empty($next_rez)){
 						for ($i=0; $i < count($next_rez); $i++){
@@ -394,35 +400,38 @@
 						}
 					}*/
 					
-					//Если последнее посещение было 1 месяцев назад
-					if ($value['create_time'] < time()-60*60*24*10){
-						//if (Sanation2($value)){
-						//	$rez_color = "style= 'background: rgba(87,223,63,0.7);'";
-						//}else{
+					//var_dump($kom_arr);
+					
+					//Если последнее посещение было 2 месяцев назад
+					if ($value['create_time'] < time()-60*60*24*60){
+						if (Sanation2($value['id'] ,$value)){
+							$rez_color = "style= 'background: rgba(87,223,63,0.7);'";
+						}else{
 							$rez_color = "style= 'background: rgba(255,39,119,0.7);'";
-						//}
+						}
 					}
-					
-					echo '
-						<li class="cellsBlock cellsBlockHover">
-								<a href="task_stomat_inspection.php?id='.$value['id'].'" class="cellName ahref" title="'.$value['id'].'">'.date('d.m.y H:i', $value['create_time']).' '.$dop_img.'</a>
-								<a href="client.php?id='.$cl_id.'" class="cellName ahref">'.WriteSearchUser('spr_clients', $cl_id, 'user').'</a>';
-					if (($stom['see_all'] == 1) || $god_mode){
-						echo '<a href="user.php?id='.$value['worker'].'" class="cellName ahref" id="4filter">'.WriteSearchUser('spr_workers', $value['worker'], 'user').'</a>';
-					}		
-					
-					$decription = array();
-					$decription_temp_arr = array();
-					$decription_temp = '';
-					
-					$decription = $decription_temp_arr;
+					if (empty($next_rez)){
+						echo '
+							<li class="cellsBlock cellsBlockHover">
+									<a href="task_stomat_inspection.php?id='.$value['id'].'" class="cellName ahref" title="'.$value['id'].'">'.date('d.m.y H:i', $value['create_time']).' '.$dop_img.'</a>
+									<a href="client.php?id='.$cl_id.'" class="cellName ahref">'.WriteSearchUser('spr_clients', $cl_id, 'user').'</a>';
+						if (($stom['see_all'] == 1) || $god_mode){
+							echo '<a href="user.php?id='.$value['worker'].'" class="cellName ahref" id="4filter">'.WriteSearchUser('spr_workers', $value['worker'], 'user').'</a>';
+						}		
 
-					echo '
-								<div class="cellText" '.$rez_color.'>'.$komm.' -> ';
-					var_dump(Sanation2($value['id'] ,$value));
-					echo 
-								'</div>
-						</li>';
+						$decription = array();
+						$decription_temp_arr = array();
+						$decription_temp = '';
+						
+						$decription = $decription_temp_arr;
+
+						echo '
+									<div class="cellText" '.$rez_color.'>'.$komm.' -> ';
+						//var_dump(Sanation2($value['id'] ,$value));
+						echo 
+									'</div>
+							</li>';
+					}
 				}
 				echo '
 						</ul>
