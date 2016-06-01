@@ -3,6 +3,91 @@
 //stomat.php
 //Стоматология
 
+	//Санация
+	function Sanation2 ($t_id, $data){
+		//var_dump ($data);
+		unset ($data['id']);
+		unset ($data['office']);
+		unset ($data['client']);
+		unset ($data['create_time']);
+		unset ($data['create_person']);
+		unset ($data['last_edit_time']);
+		unset ($data['last_edit_person']);
+		unset ($data['worker']);
+		unset ($data['comment']);
+		
+		$sanat = true;
+		
+		//foreach ($data as $key => $val){
+			//var_dump ($val);
+			foreach ($data as $tooth => $status){
+				//var_dump ($status);
+				$status_arr = explode(',', $status);
+				//var_dump($status_arr);
+				if ($status_arr[0] == '1'){
+					//echo 'Отсутствует<br />';
+					$sanat = false;
+				}
+				if ($status_arr[0] == '2'){
+					//echo 'Удален<br />';
+					$sanat = false;
+				}
+				if (($status_arr[0] == '3') && ($status_arr[1] == '1')){
+					//echo $t_id.'Имплантант<br />';
+					$sanat = false;
+				}
+				if ($status_arr[0] == '20'){
+					//echo 'Ретенция<br />';
+					$sanat = false;
+				}
+				if ($status_arr[0] == '22'){
+					//echo 'ЗО<br />';
+					$sanat = false;
+				}
+				
+				//echo $t_id.'<br />';
+				
+				if (($status_arr[3] == 64) || ($status_arr[4] == 64) || ($status_arr[5] == 64) || ($status_arr[6] == 64) || 
+					($status_arr[7] == 64) || ($status_arr[8] == 64) || ($status_arr[9] == 64) || ($status_arr[10] == 64) || 
+					($status_arr[11] == 64) || (isset($status_arr[12]) && ($status_arr[12] == 64))){
+					//echo 'Пломба кариес<br />';
+					$sanat = false;
+				}
+				
+				//echo $t_id.'<br />';
+				$sanat = false;
+				
+				if (($status_arr[3] == 71) || ($status_arr[4] == 71) || ($status_arr[5] == 71) || ($status_arr[6] == 71) || 
+					($status_arr[7] == 71) || ($status_arr[8] == 71) || ($status_arr[9] == 71) || ($status_arr[10] == 71) || 
+					($status_arr[11] == 71) || (isset($status_arr[12]) && ($status_arr[12] == 64))){
+					//echo 'Кариес<br />';
+					$sanat = false;
+				}
+				
+				//echo $t_id.'<br />';
+				
+				if (($status_arr[3] == 74) || ($status_arr[4] == 74) || ($status_arr[5] == 74) || ($status_arr[6] == 74) || 
+					($status_arr[7] == 74) || ($status_arr[8] == 74) || ($status_arr[9] == 74) || ($status_arr[10] == 74) || 
+					($status_arr[11] == 74) || (isset($status_arr[12]) && ($status_arr[12] == 64))){
+					//echo 'Пульпит<br />';
+					$sanat = false;
+				}
+				
+				//echo $t_id.'<br />';
+				
+				if (($status_arr[3] == 75) || ($status_arr[4] == 75) || ($status_arr[5] == 75) || ($status_arr[6] == 75) || 
+					($status_arr[7] == 75) || ($status_arr[8] == 75) || ($status_arr[9] == 75) || ($status_arr[10] == 75) || 
+					($status_arr[11] == 75) || (isset($status_arr[12]) && ($status_arr[12] == 64))){
+					//echo 'Периодонтит<br />';
+					$sanat = false;
+				}
+				
+			}
+		//}
+		return $sanat;
+	}
+
+
 	require_once 'header.php';
 	//var_dump ($enter_ok);
 	//var_dump ($god_mode);
@@ -78,10 +163,13 @@
 					$ttime = time();			
 					$month = date('n', $ttime);		
 					$year = date('Y', $ttime);
-					$datestart = strtotime('1.'.$month.'.'.$year);
+					//$datestart = strtotime('1.'.$month.'.'.$year);
+					//32 Дня
+					$datestart = time()-60*60*24*64;
 					//нулевой день следующего месяца - это последний день предыдущего
 					$lastday = mktime(0, 0, 0, $month+1, 0, $year);
-					$datefinish = strtotime(strftime("%d", $lastday).'.'.$month.'.'.$year.' 23:59:59');
+					//$datefinish = strtotime(strftime("%d", $lastday).'.'.$month.'.'.$year.' 23:59:59');
+					$datefinish = time();
 					//echo $datestart.'<br />'.date('d.m.y H:i', $datestart).'<br />'.$datefinish.'<br />'.date('d.m.y H:i', $datefinish).'<br />'.($datefinish - $datestart).'<br />'.(($datefinish - $datestart)/(60*60*24)).'<br />'.'<br />'.'<br />'.'<br />';			
 					$_GET['datastart'] = date('d.m.Y', $datestart);
 					$_GET['dataend'] = date('d.m.Y', $datefinish);
@@ -149,10 +237,12 @@
 				
 				$sw = $filter_rez[1];
 				if ($stom['see_own'] == 1){
-					$query = "SELECT `id`, `office`, `client`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`, `worker` FROM `journal_tooth_status` WHERE {$filter_rez[1]} AND `worker`='".$_SESSION['id']."' ORDER BY `create_time` DESC";
+					$query = "SELECT * FROM `journal_tooth_status` WHERE {$filter_rez[1]} AND `worker`='".$_SESSION['id']."' ORDER BY `create_time` DESC";
+					//$query = "SELECT `id`, `office`, `client`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`, `worker` FROM `journal_tooth_status` WHERE {$filter_rez[1]} AND `worker`='".$_SESSION['id']."' ORDER BY `create_time` DESC";
 				}
 				if (($stom['see_all'] == 1) || $god_mode){
-					$query = "SELECT `id`, `office`, `client`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`, `worker` FROM `journal_tooth_status` WHERE {$filter_rez[1]} ORDER BY `create_time` DESC";
+					$query = "SELECT * FROM `journal_tooth_status` WHERE {$filter_rez[1]} ORDER BY `create_time` DESC";
+					//$query = "SELECT `id`, `office`, `client`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`, `worker` FROM `journal_tooth_status` WHERE {$filter_rez[1]} ORDER BY `create_time` DESC";
 				}
 				
 				require 'config.php';
@@ -173,7 +263,7 @@
 				}else{
 					$journal = 0;
 				}
-				mysql_close();
+				//mysql_close();
 				
 				echo '
 					<form action="stat_stomat2.php" id="months_form" method="GET">
@@ -185,23 +275,26 @@
 					
 					
 					
-			if (($stom['see_all'] == 1) || $god_mode){		
-				if (!$filter){
-					echo '<button class="md-trigger b" data-modal="modal-11">Фильтр</button>';
-				}else{
-					echo $filter_rez[0];
+				if (($stom['see_all'] == 1) || $god_mode){		
+					if (!$filter){
+						echo '<button class="md-trigger b" data-modal="modal-11">Фильтр</button>';
+					}else{
+						echo $filter_rez[0];
+					}
 				}
-			}
 			
-			echo '
-				</header>';
-				
-			DrawFilterOptions ('stat_stomat2', $it, $stom, $stom, $workers, $clients, $offices, $god_mode);
+				echo '
+					</header>';
+					
+				DrawFilterOptions ('stat_stomat2', $it, $stom, $stom, $workers, $clients, $offices, $god_mode);
 			
 			
 			if ($journal != 0){
 				//var_dump ($journal);
 
+				//Цвет результата
+				$rez_color = '';
+				
 				if (($stom['see_all'] == 1) || $god_mode){	
 					echo '
 						<p style="margin: 5px 0; padding: 1px; font-size:80%;">
@@ -225,70 +318,111 @@
 								<div class="cellText" style="text-align: center">Комментарий</div>
 							</li>';
 				
-				//!!!!!!тест санации Sanation ($journal);
 				
 				$all_clients_arr = array();
 				
+				//Пробежка по пациентам, собираем массив с последним посещением каждого
 				foreach ($journal as $value){
 					//var_dump($value);
-					$all_clients_arr[$value['client']] = $value;
+					if (isset($all_clients_arr[$value['client']])){
+						if ($all_clients_arr[$value['client']]['create_time'] < $value['create_time']){
+							$all_clients_arr[$value['client']] = $value;
+						}
+					}else{
+						$all_clients_arr[$value['client']] = $value;
+					}
 					unset ($all_clients_arr[$value['client']]['client']);
 				}
 				
-				var_dump(count($all_clients_arr));
+				//var_dump(count($all_clients_arr));
+				//var_dump($all_clients_arr);
+				
+				//Минимальное кол-во времени между осмотром и работой 10 часов
+				$min_work_time = 60*60*10;
 				
 				foreach($all_clients_arr as $cl_id => $value) {
+					$komm = '';
+					//var_dump ($value);
+						
+					$min_work_time_rez = $value['create_time'] - $min_work_time;
 					
-						//Надо найти имя клиента
-						$clients = SelDataFromDB ('spr_clients', $cl_id, 'client_id');
-						if ($clients != 0){
-							$client = $clients[0]["name"];
-						}else{
-							$client = 'unknown';
+					$next_rez = array();
+					$dop_img = '';
+					
+					//Выбрали все посещения пациента
+					$query = "SELECT * FROM `journal_tooth_status` WHERE `client` = '{$cl_id}' AND `id` <> '{$value['id']}' AND `create_time` < {$min_work_time_rez}";
+					$res = mysql_query($query) or die($query);
+					$number = mysql_num_rows($res);
+					if ($number != 0){
+						while ($arr = mysql_fetch_assoc($res)){
+							array_push($next_rez, $arr);
+						}
+					}
+						
+					//var_dump ($next_rez);
+					
+					if (!empty($next_rez)){
+						for ($i=0; $i < count($next_rez); $i++){
+							//var_dump ($next_rez[$i]);
+							//Смотрим какие посещения были раньше текущего у этого пациента
+							if ($next_rez[$i]['create_time'] < $value['create_time']){
+								$komm .= 'Было '.$next_rez[$i]['id'].'; ';
+							}
+							/*if ($next_rez[$i]['create_time'] > $value['create_time']){
+								$komm .= 'Будет '.$next_rez[$i]['id'].'; ';
+							}*/
+						}
+					}
+					//Дополнительно
+					$dop = array();
+					/*$query = "SELECT * FROM `journal_tooth_ex` WHERE `id` = '{$journal[$i]['id']}'";
+					$res = mysql_query($query) or die($query);
+					$number = mysql_num_rows($res);
+					if ($number != 0){
+						while ($arr = mysql_fetch_assoc($res)){
+							array_push($dop, $arr);
 						}
 						
-						//Дополнительно
-						$dop = array();
-						$dop_img = '';
-						/*$query = "SELECT * FROM `journal_tooth_ex` WHERE `id` = '{$journal[$i]['id']}'";
-						$res = mysql_query($query) or die($query);
-						$number = mysql_num_rows($res);
-						if ($number != 0){
-							while ($arr = mysql_fetch_assoc($res)){
-								array_push($dop, $arr);
-							}
-							
+					}
+					//var_dump ($dop);
+					if (!empty($dop)){
+						if ($dop[0]['pervich'] == 1){
+							$dop_img .= '<img src="img/pervich.png" title="Первичное">';
 						}
-						//var_dump ($dop);
-						if (!empty($dop)){
-							if ($dop[0]['pervich'] == 1){
-								$dop_img .= '<img src="img/pervich.png" title="Первичное">';
-							}
-							if ($dop[0]['noch'] == 1){
-								$dop_img .= '<img src="img/night.png" title="Ночное">';
-							}
-						}*/
-						
-						echo '
-							<li class="cellsBlock cellsBlockHover">
-									<a href="task_stomat_inspection.php?id='.$value['id'].'" class="cellName ahref" title="'.$value['id'].'">'.date('d.m.y H:i', $value['create_time']).' '.$dop_img.'</a>
-									<a href="client.php?id='.$cl_id.'" class="cellName ahref">'.$client.'</a>';
-						if (($stom['see_all'] == 1) || $god_mode){
-							echo '<a href="user.php?id='.$value['worker'].'" class="cellName ahref" id="4filter">'.WriteSearchUser('spr_workers', $value['worker'], 'user').'</a>';
-						}		
-						
-						$decription = array();
-						$decription_temp_arr = array();
-						$decription_temp = '';
-						
+						if ($dop[0]['noch'] == 1){
+							$dop_img .= '<img src="img/night.png" title="Ночное">';
+						}
+					}*/
+					
+					//Если последнее посещение было 1 месяцев назад
+					if ($value['create_time'] < time()-60*60*24*10){
+						//if (Sanation2($value)){
+						//	$rez_color = "style= 'background: rgba(87,223,63,0.7);'";
+						//}else{
+							$rez_color = "style= 'background: rgba(255,39,119,0.7);'";
+						//}
+					}
+					
+					echo '
+						<li class="cellsBlock cellsBlockHover">
+								<a href="task_stomat_inspection.php?id='.$value['id'].'" class="cellName ahref" title="'.$value['id'].'">'.date('d.m.y H:i', $value['create_time']).' '.$dop_img.'</a>
+								<a href="client.php?id='.$cl_id.'" class="cellName ahref">'.WriteSearchUser('spr_clients', $cl_id, 'user').'</a>';
+					if (($stom['see_all'] == 1) || $god_mode){
+						echo '<a href="user.php?id='.$value['worker'].'" class="cellName ahref" id="4filter">'.WriteSearchUser('spr_workers', $value['worker'], 'user').'</a>';
+					}		
+					
+					$decription = array();
+					$decription_temp_arr = array();
+					$decription_temp = '';
+					
+					$decription = $decription_temp_arr;
 
-						$decription = $decription_temp_arr;
-
-
-						echo '
-									<div class="cellText">_._</div>
-							</li>';
-					//}
+					echo '
+								<div class="cellText" '.$rez_color.'>'.$komm.' -> ';
+					var_dump(Sanation2($value['id'] ,$value));
+					echo 
+								'</div>
+						</li>';
 				}
 				echo '
 						</ul>
@@ -296,6 +430,7 @@
 			}else{
 				echo '<h1>Нечего показывать.</h1><a href="index.php">На главную</a>';
 			}
+			mysql_close();
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}
