@@ -3,6 +3,7 @@
 //stomat.php
 //Стоматология
 
+
 	//Санация
 	function Sanation2 ($t_id, $data){
 		//var_dump ($data);
@@ -108,17 +109,11 @@
 			
 			echo '
 				<header style="margin-bottom: 5px;">
-					<h1>Стоматология</h1>';
+					<h1>______________</h1>';
 					
 			//$user = SelDataFromDB('spr_workers', $_SESSION['id'], 'user');
 			//var_dump ($user);
 			//echo 'Польз: '.$user[0]['name'].'<br />';
-			
-			if (($stom['add_own'] == 1) || $god_mode){
-				echo '
-						<!--<a href="add_task_stomat.php" class="b">Добавить</a>-->
-						<a href="clients.php" class="b">Добавить</a>';
-			}
 			
 
 				///////////////////
@@ -141,14 +136,36 @@
 							//echo date('d.m.Y H:i', $datestart).'<br />';
 							//нулевой день следующего месяца - это последний день предыдущего
 							$lastday = mktime(0, 0, 0, $month+1, 0, $year);
-							$datefinish = strtotime(strftime("%d", $lastday).'.'.$month.'.'.$year.' 23:59:59');
+							//2 месяца
+							//$datefinish = time()-60*60*24*60;
+							$datefinish = time();
 							//echo $datestart.'<br />'.date('d.m.y H:i', $datestart).'<br />'.$datefinish.'<br />'.date('d.m.y H:i', $datefinish).'<br />'.($datefinish - $datestart).'<br />'.(($datefinish - $datestart)/(60*60*24)).'<br />'.'<br />'.'<br />'.'<br />';			
 							$_GET['datastart'] = date('d.m.Y', $datestart);
 							$_GET['dataend'] = date('d.m.Y', $datefinish);
+							
+							
+							if((time()-$_GET['ttime'] >= 180) && (time()-$_GET['ttime'] < 365)){
+								$selected1 = '';
+								$selected2 = 'selected';
+								$selected3 = '';
+							}elseif(time()-$_GET['ttime'] >= 365){
+								$selected1 = '';
+								$selected2 = '';
+								$selected3 = 'selected';
+							}else{
+								$selected1 = 'selected';
+								$selected2 = '';
+								$selected3 = '';
+							}
+							
 						}else{
 							$ttime = explode('.', $_GET['datastart']);			
 							$month = $ttime[1];
 							$year = $ttime[2];
+									
+							$selected1 = 'selected';
+							$selected2 = '';
+							$selected3 = '';
 						}
 						$_GET['ended'] = 0;	
 						$_GET['datatable'] = 'journal_tooth_status';
@@ -156,9 +173,14 @@
 						$filter_rez = filterFunction ($_GET);
 						$filter = TRUE;
 						//var_dump ($filter_rez);
+
 					}else{
 							$sw .= '';
 							$type = '';
+							
+							$selected1 = 'selected';
+							$selected2 = '';
+							$selected3 = '';
 					}
 					
 				}else{
@@ -167,19 +189,21 @@
 					$ttime = time();			
 					$month = date('n', $ttime);		
 					$year = date('Y', $ttime);
-					//$datestart = strtotime('1.'.$month.'.'.$year);
-					//182 Дня
-					$datestart = time()-60*60*24*182;
-					//нулевой день следующего месяца - это последний день предыдущего
-					$lastday = mktime(0, 0, 0, $month+1, 0, $year);
-					//$datefinish = strtotime(strftime("%d", $lastday).'.'.$month.'.'.$year.' 23:59:59');
-					$datefinish = time()-60*60*24*59;
+					//3 месяца
+					$datestart = time()-60*60*24*91;
+					//2 месяца
+					//$datefinish = time()-60*60*24*60;
+					$datefinish = time();
 					//echo $datestart.'<br />'.date('d.m.y H:i', $datestart).'<br />'.$datefinish.'<br />'.date('d.m.y H:i', $datefinish).'<br />'.($datefinish - $datestart).'<br />'.(($datefinish - $datestart)/(60*60*24)).'<br />'.'<br />'.'<br />'.'<br />';			
 					$_GET['datastart'] = date('d.m.Y', $datestart);
 					$_GET['dataend'] = date('d.m.Y', $datefinish);
 					$_GET['ended'] = 0;				
 					
 					$filter_rez = filterFunction ($_GET);
+					
+					$selected1 = 'selected';
+					$selected2 = '';
+					$selected3 = '';
 
 				}
 				
@@ -196,7 +220,9 @@
 				$year_maxtime = date('Y', $maxtime);
 				//echo $month_mintime.'*'.$month_maxtime.'*'.$year_mintime.'*'.$year_maxtime;
 			
-				$Diff_Months = array();
+				//var_dump(date('n', time()-60*60*24*91));
+			
+				/*$Diff_Months = array();
 				while (!(($year_maxtime == $year_mintime) && ($month_maxtime == $month_mintime))){
 					//echo $month_mintime.'.'.$year_mintime.'x'.$month_maxtime.'.'.$year_maxtime.'<br />';
 					array_push($Diff_Months, $month_mintime.'.'.$year_mintime);
@@ -223,23 +249,34 @@
 					10 => 'Октябрь',
 					11 => 'Ноябрь',
 					12 => 'Декабрь',
-				);
-				for ($i=0; $i<count($Diff_Months); $i++){
+				);*/
+				
+				//var_dump($Diff_Months);
+				
+				/*for ($i=0; $i<count($Diff_Months); $i++){
 					$arr_temp = explode('.', $Diff_Months[$i]);
+					
 					if (($year == $arr_temp[1]) && ($month == $arr_temp[0])){
 						$selected = 'selected';
 						$selected_date = $m[$arr_temp[0]].' '.$arr_temp[1];
 					}else{
 						$selected = '';
 					}			
-					$li_months .= '<option value="'.$arr_temp[0].'_'.$arr_temp[1].'" '.$selected.' >'.$m[$arr_temp[0]].' '.$arr_temp[1].'</option>';
-				}
+					
+					//$li_months .= '<option value="'.$arr_temp[0].'_'.$arr_temp[1].'" '.$selected.' >'.$m[$arr_temp[0]].' '.$arr_temp[1].'</option>';
+				}*/
 				
+				$li_months = '
+					<option value="'.date('n', time()-60*60*24*90).'_'.date('Y', time()-60*60*24*90).'" '.$selected1.' >Последние 3 месяца</option>
+					<option value="'.date('n', time()-60*60*24*180).'_'.date('Y', time()-60*60*24*180).'" '.$selected2.' >Последние полгода</option>
+					<option value="'.date('n', time()-60*60*24*365).'_'.date('Y', time()-60*60*24*365).'" '.$selected3.' >Последний год</option>
+				';
 				//////////////////////////////////////////////////	
 				$journal = 0;
 			
 				
 				$sw = $filter_rez[1];
+				
 				if ($stom['see_own'] == 1){
 					$query = "SELECT * FROM `journal_tooth_status` WHERE {$filter_rez[1]} AND `worker`='".$_SESSION['id']."' ORDER BY `create_time` DESC";
 					//$query = "SELECT `id`, `office`, `client`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`, `worker` FROM `journal_tooth_status` WHERE {$filter_rez[1]} AND `worker`='".$_SESSION['id']."' ORDER BY `create_time` DESC";
@@ -319,6 +356,7 @@
 				}
 
 				echo '
+								<div class="cellCosmAct" style="text-align: center">-</div>
 								<div class="cellText" style="text-align: center">Комментарий</div>
 							</li>';
 				
@@ -329,6 +367,7 @@
 				foreach ($journal as $value){
 					//var_dump($value);
 					if (isset($all_clients_arr[$value['client']])){
+						//var_dump($all_clients_arr[$value['client']]['client'].' = '.$all_clients_arr[$value['client']]['create_time'].' - '.$value['create_time']);
 						if ($all_clients_arr[$value['client']]['create_time'] < $value['create_time']){
 							$all_clients_arr[$value['client']] = $value;
 						}
@@ -352,22 +391,29 @@
 					$min_work_time_rez = $value['create_time'] - $min_work_time;
 					
 					$next_rez = array();
+					$only_one = true;
 					$dop_img = '';
 					
+					//var_dump($next_rez);
+					
 					//Выбрали все посещения пациента
-					$query = "SELECT * FROM `journal_tooth_status` WHERE `client` = '{$cl_id}' AND `id` <> '{$value['id']}' AND `create_time` < {$min_work_time_rez}";
+					$query = "SELECT * FROM `journal_tooth_status` WHERE `client` = '{$cl_id}' AND `id` <> '{$value['id']}' AND `create_time` < '{$min_work_time_rez}'";
 					$res = mysql_query($query) or die($query);
 					$number = mysql_num_rows($res);
+					//var_dump($query);
 					if ($number != 0){
 						while ($arr = mysql_fetch_assoc($res)){
 							array_push($next_rez, $arr);
 						}
+						$only_one = false;
+					}else{
+						$only_one = true;
 					}
 					
 					//var_dump ($next_rez);
 					//array_push($kom_arr, $next_rez[$i]['id']);						
 					
-					if (!empty($next_rez)){
+					/*if (!empty($next_rez)){
 						for ($i=0; $i < count($next_rez); $i++){
 							//var_dump ($next_rez[$i]);
 							//Смотрим какие посещения были раньше текущего у этого пациента
@@ -377,8 +423,8 @@
 							/*if ($next_rez[$i]['create_time'] > $value['create_time']){
 								$komm .= 'Будет '.$next_rez[$i]['id'].'; ';
 							}*/
-						}
-					}
+					/*	}
+					}*/
 					//Дополнительно
 					$dop = array();
 					/*$query = "SELECT * FROM `journal_tooth_ex` WHERE `id` = '{$journal[$i]['id']}'";
@@ -403,14 +449,15 @@
 					//var_dump($kom_arr);
 					
 					//Если последнее посещение было 2 месяцев назад
-					if ($value['create_time'] < time()-60*60*24*60){
+					if ($value['create_time'] < time()-60*60*24*59){
 						if (Sanation2($value['id'] ,$value)){
 							$rez_color = "style= 'background: rgba(87,223,63,0.7);'";
 						}else{
 							$rez_color = "style= 'background: rgba(255,39,119,0.7);'";
 						}
 					}
-					if (empty($next_rez)){
+					//Если не было посещений позже указанного
+					if ($only_one && ($value['create_time'] <= time()-60*60*24*59)){
 						echo '
 							<li class="cellsBlock cellsBlockHover">
 									<a href="task_stomat_inspection.php?id='.$value['id'].'" class="cellName ahref" title="'.$value['id'].'">'.date('d.m.y H:i', $value['create_time']).' '.$dop_img.'</a>
@@ -426,7 +473,13 @@
 						$decription = $decription_temp_arr;
 
 						echo '
-									<div class="cellText" '.$rez_color.'>'.$komm.' -> ';
+									<div class="cellCosmAct">
+										<a href="#" onclick="window.open(\'task_stomat_inspection_window.php?id='.$value['id'].'\',\'test\', \'width=700,height=300,status=no,resizable=no,top=200,left=200\'); return false;">
+											<img src="img/tooth_state/1.png">
+										</a>	
+									</div>';
+						echo '
+									<div class="cellText" '.$rez_color.'>'.$komm.'';
 						//var_dump(Sanation2($value['id'] ,$value));
 						echo 
 									'</div>
