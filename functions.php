@@ -472,5 +472,93 @@
 		}
 	}
 	
+	
+	function Sanation2 ($t_id, $data){
+		//var_dump ($data);
+		unset ($data['id']);
+		unset ($data['office']);
+		unset ($data['client']);
+		unset ($data['create_time']);
+		unset ($data['create_person']);
+		unset ($data['last_edit_time']);
+		unset ($data['last_edit_person']);
+		unset ($data['worker']);
+		unset ($data['comment']);
+		
+		$sanat = true;
+		
+		//foreach ($data as $key => $val){
+			//var_dump ($val);
+			foreach ($data as $tooth => $status){
+				//var_dump ($status);
+				$status_arr = explode(',', $status);
+				//var_dump($status_arr);
+				if ($status_arr[0] == '1'){
+					//echo 'Отсутствует<br />';
+					if (($tooth != 18) && ($tooth != 28) && ($tooth != 38) && ($tooth != 48)){
+						$sanat = false;
+					}
+				}
+				if ($status_arr[0] == '2'){
+					//echo 'Удален<br />';
+					if (($tooth != 18) && ($tooth != 28) && ($tooth != 38) && ($tooth != 48)){
+						$sanat = false;
+					}
+				}
+				if (($status_arr[0] == '3') && ($status_arr[1] == '1')){
+					//echo $t_id.'Имплантант<br />';
+					$sanat = false;
+				}
+				if ($status_arr[0] == '20'){
+					//echo 'Ретенция<br />';
+					$sanat = false;
+				}
+				if ($status_arr[0] == '22'){
+					//echo 'ЗО<br />';
+					$sanat = false;
+				}
+				
+				//echo $t_id.'<br />';
+				
+				if (($status_arr[3] == 64) || ($status_arr[4] == 64) || ($status_arr[5] == 64) || ($status_arr[6] == 64) || 
+					($status_arr[7] == 64) || ($status_arr[8] == 64) || ($status_arr[9] == 64) || ($status_arr[10] == 64) || 
+					($status_arr[11] == 64) || (isset($status_arr[12]) && ($status_arr[12] == 64))){
+					//echo 'Пломба кариес<br />';
+					$sanat = false;
+				}
+				
+				//echo $t_id.'<br />';
+				//$sanat = false;
+				
+				if (($status_arr[3] == 71) || ($status_arr[4] == 71) || ($status_arr[5] == 71) || ($status_arr[6] == 71) || 
+					($status_arr[7] == 71) || ($status_arr[8] == 71) || ($status_arr[9] == 71) || ($status_arr[10] == 71) || 
+					($status_arr[11] == 71) || (isset($status_arr[12]) && ($status_arr[12] == 64))){
+					//echo 'Кариес<br />';
+					$sanat = false;
+				}
+				
+				//echo $t_id.'<br />';
+				
+				if (($status_arr[3] == 74) || ($status_arr[4] == 74) || ($status_arr[5] == 74) || ($status_arr[6] == 74) || 
+					($status_arr[7] == 74) || ($status_arr[8] == 74) || ($status_arr[9] == 74) || ($status_arr[10] == 74) || 
+					($status_arr[11] == 74) || (isset($status_arr[12]) && ($status_arr[12] == 64))){
+					//echo 'Пульпит<br />';
+					$sanat = false;
+				}
+				
+				//echo $t_id.'<br />';
+				
+				if (($status_arr[3] == 75) || ($status_arr[4] == 75) || ($status_arr[5] == 75) || ($status_arr[6] == 75) || 
+					($status_arr[7] == 75) || ($status_arr[8] == 75) || ($status_arr[9] == 75) || ($status_arr[10] == 75) || 
+					($status_arr[11] == 75) || (isset($status_arr[12]) && ($status_arr[12] == 64))){
+					//echo 'Периодонтит<br />';
+					$sanat = false;
+				}
+				
+			}
+		//}
+		return $sanat;
+	}
+	
 
 ?>

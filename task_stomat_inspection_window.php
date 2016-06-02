@@ -41,26 +41,14 @@
 						
 					}
 
-					echo '			
-							</header>';
-
 					echo '
 							<div id="data">';
 							
 
 					echo '
 								<form>
-
-									<div class="cellsBlock2">
-										<div class="cellLeft">
-											Пациент:<br /><i><b>'.WriteSearchUser('spr_clients', $task[0]['client'], 'user').'</b></i>
-										</div>
-										<div class="cellRight">
-											Посещение #'.$task[0]['id'].'
-										</div>
-										
-									</div>
-									
+									Посещение #'.$task[0]['id'].'; Пациент: <i><b>'.WriteSearchUser('spr_clients', $task[0]['client'], 'user').'</b></i><br />
+									'.WriteSearchUser('spr_workers', $task[0]['worker'], 'user').'<br />
 									<div class="cellsBlock2">
 										<div class="cellLeft">';
 										
@@ -145,6 +133,13 @@
 					
 					echo '
 							</div>
+						</div>
+						<div class="cellsBlock2">
+							<div class="cellLeft">
+								Комментарий: <i><b>'.$task[0]['comment'].'</b></i>
+							</div>
+						</div>
+							
 						</div>';
 				}else{
 					echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
