@@ -157,15 +157,15 @@
 			if ($dataarray['datatable'] == 'journal_it'){
 				$sw .= "`create_time` BETWEEN '{$datastart}' AND '{$dataend}' ";
 				$where = 'it';
-				$filter_rez[0] = '<span style="font-size:85%;">Включен фильтр. '.$echo_filter.' С '.$dataarray['datastart'].' по '.$dataarray['dataend'].'. <a href="'.$where.'.php" class="ahref_sort">Сбросить</a></span>';
+				$filter_rez[0] = '<span style="font-size:85%;">Включен фильтр. '.$echo_filter.' С '.$dataarray['datastart'].' по '.$dataarray['dataend'].'. <a href="'.$where.'.php" class="ahref_sort">Сбросить</a></span><br />';
 			}elseif ($dataarray['datatable'] == 'spr_clients'){
 				$sw .= "`birthday` BETWEEN '{$datastart}' AND '{$dataend}' ";
 				$where = 'clients';
-				$filter_rez[0] = '<span style="font-size:85%;">Включен фильтр. '.$echo_filter.' Даты рождения с '.$dataarray['datastart'].' по '.$dataarray['dataend'].'. <a href="'.$where.'.php" class="ahref_sort">Сбросить</a></span>';
+				$filter_rez[0] = '<span style="font-size:85%;">Включен фильтр. '.$echo_filter.' Даты рождения с '.$dataarray['datastart'].' по '.$dataarray['dataend'].'. <a href="'.$where.'.php" class="ahref_sort">Сбросить</a></span><br />';
 			}elseif ($dataarray['datatable'] == 'journal_cosmet1'){
 				$sw .= "`create_time` BETWEEN '{$datastart}' AND '{$dataend}' ";
 				$where = 'cosmet';
-				$filter_rez[0] = '<span style="font-size:85%;">Включен фильтр. '.$echo_filter.' С '.$dataarray['datastart'].' по '.$dataarray['dataend'].'. <a href="'.$where.'.php" class="ahref_sort">Сбросить</a></span>';
+				$filter_rez[0] = '<span style="font-size:85%;">Включен фильтр. '.$echo_filter.' С '.$dataarray['datastart'].' по '.$dataarray['dataend'].'. <a href="'.$where.'.php" class="ahref_sort">Сбросить</a></span><br />';
 			}elseif ($dataarray['datatable'] == 'journal_tooth_status'){
 				$sw .= "`create_time` BETWEEN '{$datastart}' AND '{$dataend}' ";
 				if (isset($dataarray['sw']) && $dataarray['sw'] == 'stat_stomat2'){
@@ -173,13 +173,13 @@
 				}else{
 					$where = 'stomat';
 				}
-				$filter_rez[0] = '<span style="font-size:85%;">Включен фильтр. '.$echo_filter.' С '.$dataarray['datastart'].' по '.$dataarray['dataend'].'. <a href="'.$where.'.php" class="ahref_sort">Сбросить</a></span>';
+				$filter_rez[0] = '<span style="font-size:85%;">Включен фильтр. '.$echo_filter.' С '.$dataarray['datastart'].' по '.$dataarray['dataend'].'. <a href="'.$where.'.php" class="ahref_sort">Сбросить</a></span><br />';
 			}else{
 				$sw .= "`create_time` BETWEEN '{$datastart}' AND '{$dataend}' ";
 			}
 		}else{
 			$sw .= "`create_time` BETWEEN '{$datastart}' AND '{$dataend}' ";
-			//$filter_rez[0] = '<span style="font-size:85%;">Включен фильтр. '.$echo_filter.' Даты рождения с '.$dataarray['datastart'].' по '.$dataarray['dataend'].'. <a href="'.$where.'.php" class="ahref_sort">Сбросить</a></span>';
+			//$filter_rez[0] = '<span style="font-size:85%;">Включен фильтр. '.$echo_filter.' Даты рождения с '.$dataarray['datastart'].' по '.$dataarray['dataend'].'. <a href="'.$where.'.php" class="ahref_sort">Сбросить</a></span><br />';
 
 		}
 		

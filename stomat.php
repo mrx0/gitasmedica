@@ -192,6 +192,10 @@
 				}
 			}
 			
+			if (($stom['see_all'] == 1) || $god_mode){	
+				echo '<a href="stat_stomat2.php" class="b">Пропавшая первичка</a>';
+			}
+			
 			echo '
 				</header>';
 				
@@ -202,14 +206,18 @@
 				//var_dump ($journal);
 				$actions_stomat = SelDataFromDB('actions_stomat', '', '');
 				if (($stom['see_all'] == 1) || $god_mode){	
+					$id4filter4worker = '';
+					$id4filter4upr = 'id="4filter"';
+				}else{
+					$id4filter4worker = 'id="4filter"';
+					$id4filter4upr = '';
+				}
 					echo '
 						<p style="margin: 5px 0; padding: 1px; font-size:80%;">
-							Быстрый поиск по врачу: 
+							Быстрый поиск: 
 							<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
 							
 						</p>';
-				
-				}
 				echo '
 					<div id="data">
 						<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
@@ -277,9 +285,9 @@
 						echo '
 							<li class="cellsBlock cellsBlockHover">
 									<a href="task_stomat_inspection.php?id='.$journal[$i]['id'].'" class="cellName ahref" title="'.$journal[$i]['id'].'">'.date('d.m.y H:i', $journal[$i]['create_time']).' '.$dop_img.'</a>
-									<a href="client.php?id='.$journal[$i]['client'].'" class="cellName ahref">'.$client.'</a>';
+									<a href="client.php?id='.$journal[$i]['client'].'" class="cellName ahref" '.$id4filter4worker.'>'.$client.'</a>';
 						if (($stom['see_all'] == 1) || $god_mode){
-							echo '<a href="user.php?id='.$journal[$i]['worker'].'" class="cellName ahref" id="4filter">'.WriteSearchUser('spr_workers', $journal[$i]['worker'], 'user').'</a>';
+							echo '<a href="user.php?id='.$journal[$i]['worker'].'" class="cellName ahref" '.$id4filter4upr.'>'.WriteSearchUser('spr_workers', $journal[$i]['worker'], 'user').'</a>';
 						}		
 						
 						/*echo '
