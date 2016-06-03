@@ -21,6 +21,7 @@
 		if ($n == '') $nm = '\'\'';
 		else $nm = $n;
 
+		$tooth_error = '';
 		
 		$t_f_data = array();
 		
@@ -208,13 +209,19 @@
 							}else{
 								//var_dump($i.$j.'=>'.$t_f_data[$i.$j][$surface]);
 								if (isset($t_f_data[$i.$j][$surface])){
-								if  ((mb_strstr($surface, 'root') == TRUE) && ($t_f_data[$i.$j][$surface] != '0')){
-									$color = $root_status[$t_f_data[$i.$j][$surface]]['color'];
-								}
-								$DrawRoots = TRUE;
+									if  ((mb_strstr($surface, 'root') == TRUE) && ($t_f_data[$i.$j][$surface] != '0')){
+										if (isset($root_status[$t_f_data[$i.$j][$surface]]['color'])){
+											$color = $root_status[$t_f_data[$i.$j][$surface]]['color'];
+										}else{
+											$tooth_error .= '<i>Ошибка на зубе <b>'.$i.$j.'</b></i><br />';
+										}
+									}
+									$DrawRoots = TRUE;
 								}
 							}
 						}
+						
+
 						//!!!!учим рисовать корни с коронками - начало  - кажется, это все говно. надо иначе
 						/*if ($t_f_data[$i.$j]['status'] == '19'){
 							$DrawRoots = TRUE;
@@ -305,7 +312,7 @@
 						}
 					}
 				}
-				
+
 				if ($t_f_data[$i.$j]['pin'] == '1'){
 					//штифт
 					$surface = 'NONE';
@@ -397,7 +404,17 @@
 			}
 		}
 		
-		
+				
+		if ($tooth_error != ''){
+			echo '
+					<span style="background: rgba(0,255,255,0.9); color: #ff0000; padding: 3px;">
+						Если вы видете это сообщение, то произошла ошибка.<br />
+						Отредактируйте формулу в этом посещении<br />
+						Сбросьте статусы следующих зубов и сохраните<br />
+							'.$tooth_error.'
+					</span>';
+		}
+				
 		
 		echo '</div>';
 		

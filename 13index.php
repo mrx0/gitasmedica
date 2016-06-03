@@ -24,22 +24,29 @@
 		}
 	}
 	
-	mysql_close();
+	
 	
 	//var_dump($rez);
 	
 	foreach($rez as $value){
 		//var_dump ($rez_arr);
 		$need_id = $value['id'];
+		unset($value['id']);
 		
-		
-		foreach($value as $val){
+		foreach($value as $n_tooth => $val){
 			$rez_arr = explode(',', $val);
 			if (!isset($rez_arr[12])){
-				echo $need_id.'было<br />';
+				echo $need_id.' => '.$n_tooth.' -> было<br />';
 				var_dump ($rez_arr);
 				
 				$rez_arr[12] = '0';
+				
+				$query = "UPDATE `journal_tooth_status` SET `$n_tooth`='".implode(',', $rez_arr)."' WHERE `id`=$need_id";
+				
+				var_dump($query);
+				
+				$res = mysql_query($query) or die($query);
+				
 				//echo 'стало<br />';
 				//var_dump ($rez_arr);
 			}
@@ -48,5 +55,6 @@
 
 		}
 	}
+	mysql_close();
 	
 ?>

@@ -58,7 +58,7 @@
 						
 				$rez .= '
 					<li class="cellsBlock cellsBlockHover">
-						<a href="client.php?id='.$removes[$i]['whom'].'" class="ahref cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removes[$i]['whom'], 'user').'</a>
+						<a href="user.php?id='.$removes[$i]['whom'].'" class="ahref cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removes[$i]['whom'], 'user').'</a>
 						<a href="client.php?id='.$removes[$i]['client'].'" class="ahref cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$removes[$i]['client'], 'user').'</a>
 						<a href="task_stomat_inspection.php?id='.$removes[$i]['task'].'" class="ahref cellName" style="text-align: center">#'.$removes[$i]['task'].'</a>
 						<div class="cellText" style="'.$background_style.'">'.$removes[$i]['description'].'</div>';

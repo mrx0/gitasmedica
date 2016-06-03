@@ -39,6 +39,7 @@
 					if (!empty($_GET['filter']) && ($_GET['filter'] == 'yes')){
 						$_GET['sw'] = 'stat_stomat2';
 						if (isset($_GET['ttime'])){
+							//var_dump($_GET['ttime']);
 							//echo 2;
 							//операции со временем						
 							$ttime = explode('_', $_GET['ttime']);			
@@ -58,12 +59,13 @@
 							$_GET['datastart'] = date('d.m.Y', $datestart);
 							$_GET['dataend'] = date('d.m.Y', $datefinish);
 							
+							//var_dump((time()-$datestart).' <-> '.(time()-$datefinish).' = '.(180*60*60*24).' <-> '.(365*60*60*24));
 							
-							if((time()-$_GET['ttime'] >= 180) && (time()-$_GET['ttime'] < 365)){
+							if((time()-$datestart >= 180*60*60*24) && (time()-$datestart < 365*60*60*24)){
 								$selected1 = '';
 								$selected2 = 'selected';
 								$selected3 = '';
-							}elseif(time()-$_GET['ttime'] >= 365){
+							}elseif(time()-$datestart >= 365*60*60*24){
 								$selected1 = '';
 								$selected2 = '';
 								$selected3 = 'selected';
@@ -180,7 +182,7 @@
 					
 					//$li_months .= '<option value="'.$arr_temp[0].'_'.$arr_temp[1].'" '.$selected.' >'.$m[$arr_temp[0]].' '.$arr_temp[1].'</option>';
 				}*/
-				
+				//var_dump(date('n', time()-60*60*24*365).'_'.date('Y', time()-60*60*24*365));
 				$li_months = '
 					<option value="'.date('n', time()-60*60*24*90).'_'.date('Y', time()-60*60*24*90).'" '.$selected1.' >Последние 3 месяца</option>
 					<option value="'.date('n', time()-60*60*24*180).'_'.date('Y', time()-60*60*24*180).'" '.$selected2.' >Последние полгода</option>
@@ -233,9 +235,9 @@
 					
 				if (($stom['see_all'] == 1) || $god_mode){		
 					if (!$filter){
-						echo '<button class="md-trigger b" data-modal="modal-11">Фильтр</button>';
+						//echo '<button class="md-trigger b" data-modal="modal-11">Фильтр</button>';
 					}else{
-						echo $filter_rez[0];
+						//echo $filter_rez[0];
 					}
 				}
 			
@@ -301,6 +303,7 @@
 				foreach($all_clients_arr as $cl_id => $value) {
 					$kom_arr = array();
 					$komm = '';
+					$removes_me = false;
 					//var_dump ($value);
 						
 					$min_work_time_rez = $value['create_time'] - $min_work_time;
@@ -308,10 +311,11 @@
 					$next_rez = array();
 					$only_one = true;
 					$dop_img = '';
+					$sanat_status = false;
 					
 					//var_dump($next_rez);
 					
-					//Выбрали все посещения пациента
+					//Выбрали все посещения пациента кроме последнего и того который следовал сразу после осмотра (если в один день был и осмотр и работа)
 					$query = "SELECT * FROM `journal_tooth_status` WHERE `client` = '{$cl_id}' AND `id` <> '{$value['id']}' AND `create_time` < '{$min_work_time_rez}'";
 					$res = mysql_query($query) or die($query);
 					$number = mysql_num_rows($res);
@@ -366,6 +370,7 @@
 					//Если последнее посещение было 2 месяцев назад
 					if ($value['create_time'] < time()-60*60*24*59){
 						if (Sanation2($value['id'] ,$value)){
+							$sanat_status = true;
 							$rez_color = "style= 'background: rgba(87,223,63,0.7);'";
 						}else{
 							$rez_color = "style= 'background: rgba(255,39,119,0.7);'";
@@ -373,6 +378,21 @@
 					}
 					//Если не было посещений позже указанного
 					if ($only_one && ($value['create_time'] <= time()-60*60*24*59)){
+						
+						//посмотрим, было ли направление
+						$removes = SelDataFromDB ('removes',$value['id'], 'task');
+						
+						//var_dump($removes);
+						if ($removes != 0){
+							//$removes_me = true;
+							foreach($removes as $removes_value){
+								$komm .= 'Направлен к '.WriteSearchUser('spr_workers', $removes_value['whom'], 'user').' ';
+								if ($sanat_status){
+									$rez_color = "style = 'background: rgba(55,127,223,0.7);'";
+								}
+							}
+						}
+						
 						echo '
 							<li class="cellsBlock cellsBlockHover">
 									<a href="task_stomat_inspection.php?id='.$value['id'].'" class="cellName ahref" title="'.$value['id'].'">'.date('d.m.y H:i', $value['create_time']).' '.$dop_img.'</a>

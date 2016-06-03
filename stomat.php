@@ -192,9 +192,9 @@
 				}
 			}
 			
-			if (($stom['see_all'] == 1) || $god_mode){	
+			//if (($stom['see_all'] == 1) || $god_mode){	
 				echo '<a href="stat_stomat2.php" class="b">Пропавшая первичка</a>';
-			}
+			//}
 			
 			echo '
 				</header>';
@@ -223,7 +223,8 @@
 						<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
 							<li class="cellsBlock sticky" style="font-weight:bold; background-color:#FEFEFE;">
 								<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Дата</div>
-								<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Пациент</div>';
+								<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Пациент</div>
+								<div class="cellCosmAct" style="text-align: center">-</div>';
 				if (($stom['see_all'] == 1) || $god_mode){
 					echo '<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Врач</div>';
 				}
@@ -250,6 +251,7 @@
 				//!!!!!!тест санации Sanation ($journal);
 				
 				for ($i = 0; $i < count($journal); $i++) {
+					$rez_color = '';
 					
 					//if (($journal[$i]['create_time'] >= $datestart)  && ($journal[$i]['create_time'] <= $datefinish)){
 						//Надо найти имя клиента
@@ -286,6 +288,19 @@
 							<li class="cellsBlock cellsBlockHover">
 									<a href="task_stomat_inspection.php?id='.$journal[$i]['id'].'" class="cellName ahref" title="'.$journal[$i]['id'].'">'.date('d.m.y H:i', $journal[$i]['create_time']).' '.$dop_img.'</a>
 									<a href="client.php?id='.$journal[$i]['client'].'" class="cellName ahref" '.$id4filter4worker.'>'.$client.'</a>';
+						
+						if (Sanation2($journal[$i]['id'], $journal[$i])){
+							$rez_color = "style= 'background: rgba(87,223,63,0.7);'";
+						}else{
+							$rez_color = "style= 'background: rgba(255,39,119,0.7);'";
+						}
+						echo '
+									<div class="cellCosmAct" '.$rez_color.'>
+										<a href="#" onclick="window.open(\'task_stomat_inspection_window.php?id='.$journal[$i]['id'].'\',\'test\', \'width=700,height=350,status=no,resizable=no,top=200,left=200\'); return false;">
+											<img src="img/tooth_state/1.png">
+										</a>	
+									</div>';
+									
 						if (($stom['see_all'] == 1) || $god_mode){
 							echo '<a href="user.php?id='.$journal[$i]['worker'].'" class="cellName ahref" '.$id4filter4upr.'>'.WriteSearchUser('spr_workers', $journal[$i]['worker'], 'user').'</a>';
 						}		

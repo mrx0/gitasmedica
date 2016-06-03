@@ -57,6 +57,13 @@
 						}
 					}
 
+					if (Sanation2($task[0]['id'], $task[0])){
+						echo '<span style= "background: rgba(87,223,63,0.7); padding: 2px;">Санирован (ТЕСТ)</span><br />';
+					}else{
+						echo '<span style= "background: rgba(255,39,119,0.7); padding: 2px;">Не санирован (ТЕСТ)</span><br />';
+					}
+
+					
 					echo '			
 							</header>';
 
