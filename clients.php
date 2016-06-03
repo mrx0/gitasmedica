@@ -6,7 +6,7 @@
 	require_once 'header.php';
 
 	if ($enter_ok){
-		if (($clients['see_all'] == 1) || $god_mode){
+		if (($clients['see_all'] == 1) || ($clients['see_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			include_once 'filter.php';
@@ -156,6 +156,10 @@
 							</li>';
 
 				for ($i = 0; $i < count($clients_j); $i++) { 
+				//var_dump($_SESSION['id']);
+				//	if (isset($_GET['own_clients']) && ($_GET['own_clients'] == 'yes') && ($_SESSION['id'] == $clients_j[$i]['therapist'])){
+				//		var_dump('мой');
+				//	}
 					echo '
 							<li class="cellsBlock cellsBlockHover">
 								<a href="client.php?id='.$clients_j[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$clients_j[$i]['full_name'].'</a>';
