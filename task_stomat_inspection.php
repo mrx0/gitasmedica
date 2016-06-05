@@ -49,6 +49,9 @@
 					}
 					//var_dump ($dop);
 					if (!empty($dop)){
+						if ($dop[0]['insured'] == 1){
+							echo 'Страховое<br />';
+						}
 						if ($dop[0]['pervich'] == 1){
 							echo 'Первичное<br />';
 						}

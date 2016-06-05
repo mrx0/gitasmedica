@@ -276,6 +276,9 @@
 						}
 						//var_dump ($dop);
 						if (!empty($dop)){
+							if ($dop[0]['insured'] == 1){
+								$dop_img .= '<img src="img/insured.png" title="Страховое">';
+							}
 							if ($dop[0]['pervich'] == 1){
 								$dop_img .= '<img src="img/pervich.png" title="Первичное">';
 							}

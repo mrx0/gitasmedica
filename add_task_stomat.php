@@ -346,9 +346,16 @@
 						</div>';
 				echo '
 						<div class="cellsBlock3">
-							<div class="cellLeft">Первичный?</div>
+							<div class="cellLeft">Первичный</div>
 							<div class="cellRight">
 								<input type="checkbox" name="pervich" id="pervich" value="1" > да
+							</div>
+						</div>';
+				echo '
+						<div class="cellsBlock3">
+							<div class="cellLeft">Страховой</div>
+							<div class="cellRight">
+								<input type="checkbox" name="insured" id="insured" value="1" > да
 							</div>
 						</div>';
 				echo '
@@ -625,6 +632,11 @@ function Ajax_add_task_stomat() {
 						}else{
 							pervich = 0;
 						}
+						if ($("#insured").prop("checked")){
+							insured = 1;
+						}else{
+							insured = 0;
+						}
 						if ($("#noch").prop("checked")){
 							noch = 1;
 						}else{
@@ -667,6 +679,7 @@ function Ajax_add_task_stomat() {
 								add_notes_days:document.getElementById("add_notes_days").value,
 								
 								pervich:pervich,
+								insured:insured,
 								noch:noch,
 										
 								search_client3:document.getElementById("search_client3").value,';

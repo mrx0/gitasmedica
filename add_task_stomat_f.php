@@ -225,6 +225,11 @@
 						}else{
 							$pervich_status = 0;
 						}
+						if ($_POST['insured'] == 1){
+							$insured_status = 1;
+						}else{
+							$insured_status = 0;
+						}
 						if ($_POST['noch'] == 1){
 							$noch_status = 1;
 						}else{
@@ -233,9 +238,9 @@
 						
 						$query = "
 							INSERT INTO `journal_tooth_ex` (
-								`id`, `pervich`, `noch`)
+								`id`, `pervich`, `noch`, `insured`)
 							VALUES (
-								'{$task}', '{$pervich_status}', '{$noch_status}') ";
+								'{$task}', '{$pervich_status}', '{$noch_status}', '{$insured_status}') ";
 
 						mysql_query($query) or die(mysql_error());
 							
