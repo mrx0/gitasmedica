@@ -254,10 +254,17 @@
 
 
 						echo '
+							<header>
+								<span style= "color: rgba(255,39,39,0.7); padding: 2px;">
+									Напоминание: Если вы что-то забыли или необходимо внести изменения,<br />
+									посещение можно отредактировать.
+								</span>
+							</header>
+
 							<br /><br />
 							<a href="client.php?id='.$client.'" class="b">В карточку пациента</a>
 							<a href="add_task_stomat.php?client='.$client.'" class="b">Добавить посещение этому пациенту</a>
-							<a href="add_task_stomat.php" class="b">Добавить новое посещение</a>
+							<!--<a href="add_task_stomat.php" class="b">Добавить новое посещение</a>-->
 							';
 						mysql_close();
 					}else{

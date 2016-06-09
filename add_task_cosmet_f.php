@@ -51,7 +51,7 @@
 							<br /><br />
 							<a href="client.php?id='.$client.'" class="b">В карточку пациента</a>
 							<a href="add_task_cosmet.php?client='.$client.'" class="b">Добавить посещение этому пациенту</a>
-							<a href="add_task_scosmet.php" class="b">Добавить новое посещение</a>
+							<a href="add_task_cosmet.php" class="b">Добавить новое посещение</a>
 							';
 					}else{
 						echo '

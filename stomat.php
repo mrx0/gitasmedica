@@ -258,8 +258,14 @@
 						$clients = SelDataFromDB ('spr_clients', $journal[$i]['client'], 'client_id');
 						if ($clients != 0){
 							$client = $clients[0]["name"];
+							if ($clients[0]["birthday"] != -1577934000){
+								$cl_age = getyeardiff($clients[0]["birthday"]);
+							}else{
+								$cl_age = 0;
+							}
 						}else{
 							$client = 'unknown';
+							$cl_age = 0;
 						}
 						
 						//Дополнительно
@@ -292,7 +298,7 @@
 									<a href="task_stomat_inspection.php?id='.$journal[$i]['id'].'" class="cellName ahref" title="'.$journal[$i]['id'].'">'.date('d.m.y H:i', $journal[$i]['create_time']).' '.$dop_img.'</a>
 									<a href="client.php?id='.$journal[$i]['client'].'" class="cellName ahref" '.$id4filter4worker.'>'.$client.'</a>';
 						
-						if (Sanation2($journal[$i]['id'], $journal[$i])){
+						if (Sanation2($journal[$i]['id'], $journal[$i], $cl_age)){
 							$rez_color = "style= 'background: rgba(87,223,63,0.7);'";
 						}else{
 							$rez_color = "style= 'background: rgba(255,39,119,0.7);'";

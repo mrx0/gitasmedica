@@ -376,7 +376,7 @@
 		return $sheduler_zapis;
 	}
 	
-	//Полных лет
+	//Полных лет / Возраст
 	function getyeardiff($bday){
 		$today = time();
 		$arr1 = getdate($bday);
@@ -473,8 +473,8 @@
 	}
 	
 	
-	function Sanation2 ($t_id, $data){
-		//var_dump ($data);
+	function Sanation2 ($t_id, $data, $cl_age){
+		//var_dump ($cl_data);
 		unset ($data['id']);
 		unset ($data['office']);
 		unset ($data['client']);
@@ -495,7 +495,7 @@
 				//var_dump($status_arr);
 				if ($status_arr[0] == '1'){
 					//echo 'Отсутствует<br />';
-					if (($tooth != 18) && ($tooth != 28) && ($tooth != 38) && ($tooth != 48)){
+					if ((($tooth != 18) && ($tooth != 28) && ($tooth != 38) && ($tooth != 48)) && ($cl_age > 14)){
 						$sanat = false;
 					}
 				}
