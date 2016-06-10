@@ -134,88 +134,8 @@ jQuery("document").ready(function($){
 		});
     </script>
 			
-   <script>
-		function DrawTeethMapMenu (param) {
-			//alert (param);
-			//var req = false;
-			//$.ajax({
-			//	url:"t_context_menu_ajax.php",
-			//	type:"POST",
-			//	async: false,
-			//	data:
-			//	{
-			//		param:param,
-			//	},
-			//	success:function(data){
-			//		req = data;
-			//	},
-			//});
-			//return req;
-			
-			var param_array = param.split(",");
 
-			//номер зуба
-			var n_zuba = param_array[0];
-			//поверхность
-			var surface = param_array[1];
-			//
-			var menu = param_array[2];
-			//
-			var draw_t_surface_name = param_array[3];
-			//
-			var draw_t_surface_name_surface = param_array[4];
-			//
-			var draw_t_surface_name_sw = param_array[5];
-			//
-			var draw_t_surface_name_right = param_array[6];
-			//
-			var draw_t_surface_name_surface_right = param_array[7];
-			//
-			var draw_t_surface_name_sw_right = param_array[8];
-			//
-			var DrawMenu_right = param_array[9];
-			//
-			var DrawMenu_surface_right = param_array[10];
-			//
-			var DrawMenu_menu_right = param_array[11];
-		
-			//alert(tooth_alien_status_arr[17]["img"]);
-			
-			var res = "";
-			res += "<div class=\'cellsBlock4\'>" + 
-						"<div class=\'cellLeftTF\' style=\'vertical-align: top;\'>" +
-							"<table>";
-			
-			
-			for (var tooth_status_key in tooth_status_arr) {
-				if ((tooth_status_key != 6) && (tooth_status_key != 7)){
-					res += 	"<tr>";
-					if ((tooth_status_key != 3) &&  (tooth_status_key != 22)){
-						res += 	"<td class=\'cellsBlockHover\'>" +
-									"<a href=\'#\' id=\'refresh\' onclick=refreshTeeth(0,0,0) class=\'ahref\'>" +
-										"<img src=\'img/tooth_state/" + tooth_status_arr[tooth_status_key][\'img\'] + "\' border=\'0\' />" + tooth_status_arr[tooth_status_key][\'descr\'] + 
-									"</a>" +
-								"</td>" +
-								"<td class=\'cellsBlockHover\'>" +
-								"</td>" +
-								"<td class=\'cellsBlockHover\'>" +
-									"<a href=\'#modal1\' class=\'open_modal\' id=\'" + tooth_status_key + "\'><img src=\'img/list.jpg\' border\'0\'/></a>" +
-								"</td>";
-					}else{
-						
-					}
-					res += 	"</tr>";		
-				}
-				
-			};
-					
-			res += 	"</table>" +
-					"</div>";
-			
-			return (res);
-			
-		}
-    </script>
+<script src="js/DrawTeethMapMenu.js"></script>
 			
 			
 			<script type="text/javascript">
@@ -282,9 +202,11 @@ jQuery("document").ready(function($){
 				function typeres() {
 					$(\'.tabs\').hide();
 					var etabs = document.getElementById("tabSelector");
-					if (etabs.options[etabs.selectedIndex].value.indexOf("tabs-") != -1) {
-						var tab = \'#tabs-\'+etabs.options[etabs.selectedIndex].value.substring(5);
-						$(tab).fadeIn();
+					if (etabs != null){
+						if (etabs.options[etabs.selectedIndex].value.indexOf("tabs-") != -1) {
+							var tab = \'#tabs-\'+etabs.options[etabs.selectedIndex].value.substring(5);
+							$(tab).fadeIn();
+						}
 					}
 				}
 			</script>

@@ -121,3 +121,136 @@ var tooth_alien_status_arr = {
 };
 	
 var surfaces_arr = ["status", "pin", "alien", "surface1", "surface2", "surface3", "surface4", "top1", "top2", "top12", "root1", "root2", "root3"];
+
+
+var root_status_arr = {
+		31: {
+			"descr": "Здоровый",
+			"color": "#FFF",
+			"img": "18.png",
+		},
+		32: {
+			"descr": "Удален",
+			"color": "#000",
+			"img": "19.png",
+		},
+		33: {
+			"descr": "Частичное пломбирование",
+			"color": "#00FFFF",
+			"img": "20.png",
+		},
+		34: {
+			"descr": "Корень (радикс)",
+			"color": "#FF0000",
+			"img": "21.png",
+		},
+		35: {
+			"descr": "Штифт",
+			"color": "#FFFF00",
+			"img": "22.png",
+		},
+		36: {
+			"descr": "Инородное тело",
+			"color": "#003F87",
+			"img": "23.png",
+		},
+		37: {
+			"descr": "Перфорация",
+			"color": "#CCC",
+			"img": "24.png",
+		},
+		38: {
+			"descr": "Пломбировка",
+			"color": "#0000FF",
+			"img": "25.png",
+		},
+		39: {
+			"descr": "Изменения",
+			"color": "#BF6F77",
+			"img": "26.png",
+		},
+		40: {
+			"descr": "Вкладка",
+			"color": "#00FF00",
+			"img": "27.png",
+		},
+};
+
+
+var surface_status_arr = {
+		61: {
+			"descr": "Здоровый",
+			"color": "#FFF",
+			"img": "38.png",
+		},
+		62: {
+			"descr": "Чужая пломба",
+			"color": "#00EF00",
+			"img": "28.png",
+		},
+		63: {
+			"descr": "Временная пломба",
+			"color": "#00A8FF",
+			"img": "29.png",
+		},
+		64: {
+			"descr": "Пломба кариес",
+			"color": "#FF6911",
+			"img": "30.png",
+		},
+		65: {
+			"descr": "Пломба",
+			"color": "#0000FF",
+			"img": "31.png",
+		},
+		66: {
+			"descr": "Штифт",
+			"color": "#FFFF00",
+			"img": "32.png",
+		},
+		67: {
+			"descr": "Удален",
+			"color": "#000",
+			"img": "33.png",
+		},
+		68: {
+			"descr": "Удален корень",
+			"color": "#973F00",
+			"img": "34.png",
+		},
+		69: {
+			"descr": "Коронка",
+			"color": "#9B0088",
+			"img": "35.png",
+		},
+		70: {
+			"descr": "Фасетка",
+			"color": "#FF00FF",
+			"img": "36.png",
+		},
+		71: {
+			"descr": "Кариес",
+			"color": "#FF0000",
+			"img": "37.png",
+		},
+		72: {
+			"descr": "Клиновидный деф.",
+			"color": "#9B0088",
+			"img": "35.png",
+		},
+		73: {
+			"descr": "Винир",
+			"color": "#97C78F",
+			"img": "42.png",
+		},
+		74: {
+			"descr": "Пульпит",
+			"color": "#CF77A7",
+			"img": "43.png",
+		},
+		75: {
+			"descr": "Периодонтит",
+			"color": "#600000",
+			"img": "44.png",
+		},
+};
