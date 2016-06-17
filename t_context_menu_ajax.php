@@ -150,7 +150,7 @@
 
 			foreach ($surface_status as $key => $value){
 				//отказались от использования статуса Коронка (69) к поверхности
-				if (($key != 69) && ($key != 72) && ($key != 73) && ($key != 74) && ($key != 75)){
+				if (($key != 69) && ($key != 72) && ($key != 73) && ($key != 74) && ($key != 75) && ($key != 76)){
 					$s_menu .= "
 					<tr>
 						<td class='cellsBlockHover'>
@@ -182,7 +182,7 @@
 					</tr>
 					";
 				}
-				if ((($key == 74) || ($key == 75)) && (($func_surface == 'top1') || ($func_surface == 'top2') || ($func_surface == 'top12'))){
+				if ((($key == 74) || ($key == 75)) || ($key == 76)) && (($func_surface == 'top1') || ($func_surface == 'top2') || ($func_surface == 'top12'))){
 					$s_menu .= "
 					<tr>
 						<td class='cellsBlockHover'>

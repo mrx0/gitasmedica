@@ -253,4 +253,9 @@ var surface_status_arr = {
 			"color": "#600000",
 			"img": "44.png",
 		},
+		76: {
+			"descr": "Герметизация",
+			"color": "#97EFA7",
+			"img": "47.png",
+		},
 };

@@ -1,4 +1,30 @@
+		
+		//Скрываем меню со статусами
+		$('.point').find('.close').live('click', function(){
+			var t = $(this),
+				parent = t.parent('.point');
+			
+			parent.stop( true , true ).fadeOut(function(){
+				parent.remove();
+			});
+			return false;
+		});
+		
+		//
+		/*var overlay = $('#overlay'); // подложка, должна быть одна на странице
+		$('.open_modal').live('click', function(event){
+			event.preventDefault(); // вырубаем стандартное поведение
+			var div = $(this).attr('href'); // возьмем строку с селектором у кликнутой ссылки
+			overlay.fadeIn(400, //показываем оверлэй
+			function(){ // после окончания показывания оверлэя
+				$(div) // берем строку с селектором и делаем из нее jquery объект
+				.css('display', 'block') 
+				.animate({opacity: 1, top: '50%'}, 200); // плавно показываем
+			});
+		});*/
+		
 		function CompileMenu (func_n_zuba, func_surface){
+			
 			var m_menu = "";
 			var t_menu = "";
 			var r_menu = "";
@@ -13,7 +39,7 @@
 					t_menu += "<tr>";
 					if ((tooth_status_key != 3) &&  (tooth_status_key != 22)){
 						t_menu += "<td class='cellsBlockHover'>"+
-							"<a href='#' id='refresh' onclick=refreshTeeth("+tooth_status_key+", "+func_n_zuba+", "+func_surface+") class='ahref'>"+
+							"<a href='#' id='refresh' onclick=\"refreshTeeth("+tooth_status_key+", '"+func_n_zuba+"', '"+func_surface+"')\" class='ahref'>"+
 								"<img src='img/tooth_state/"+tooth_status_arr[tooth_status_key]['img']+"' border='0' /> "+tooth_status_arr[tooth_status_key]['descr']+
 							"</a>"+
 						"</td>"+
@@ -25,7 +51,7 @@
 					}else{
 						if (tooth_status_key == '3'){
 							t_menu += "<td class='cellsBlockHover'>"+
-								"<a href='#' id='refresh' onclick=refreshTeeth("+tooth_status_key+", "+func_n_zuba+", "+func_surface+") class='ahref'>"+
+								"<a href='#' id='refresh' onclick=\"refreshTeeth("+tooth_status_key+", '"+func_n_zuba+"', '"+func_surface+"')\" class='ahref'>"+
 									"<img src='img/tooth_state/"+tooth_status_arr[tooth_status_key]['img']+"' border='0' /> "+tooth_status_arr[tooth_status_key]['descr']+
 								"</a>"+
 							"</td>"+
@@ -38,7 +64,7 @@
 						}
 						if (tooth_status_key == '22'){
 							t_menu += "<td class='cellsBlockHover'>"+
-								"<a href='#' id='refresh' onclick=refreshTeeth("+tooth_status_key+", "+func_n_zuba+", "+func_surface+") class='ahref'>"+
+								"<a href='#' id='refresh' onclick=\"refreshTeeth("+tooth_status_key+", '"+func_n_zuba+"', '"+func_surface+"')\" class='ahref'>"+
 									"<img src='img/tooth_state/"+tooth_status_arr[tooth_status_key]['img']+"' border='0' />"+tooth_status_arr[tooth_status_key]['descr']+
 								"</a>"+
 							"</td>"+
@@ -68,7 +94,7 @@
 					
 			t_menu += "<tr>"+
 				"<td class='cellsBlockHover'>"+
-					"<a href='#' id='refresh' onclick=refreshTeeth(0, "+func_n_zuba+", "+func_surface+") class='ahref'>"+
+					"<a href='#' id='refresh' onclick=\"refreshTeeth(0, '"+func_n_zuba+"', '"+func_surface+"')\" class='ahref'>"+
 						"<img src='img/tooth_state/reset.png' border='0' />Сбросить"+
 					"</a>"+
 				"</td>"+
@@ -84,7 +110,7 @@
 			for (var root_status_key in root_status_arr) {
 				r_menu += "<tr>"+
 					"<td class='cellsBlockHover'>"+
-						"<a href='#' id='refresh' onclick=refreshTeeth("+root_status_key+", "+func_n_zuba+", "+func_surface+") class='ahref'>"+
+						"<a href='#' id='refresh' onclick=\"refreshTeeth("+root_status_key+", '"+func_n_zuba+"', '"+func_surface+"')\" class='ahref'>"+
 							"<img src='img/root_state/"+root_status_arr[root_status_key]['img']+"' border='0' /> "+root_status_arr[root_status_key]['descr']+
 						"</a>"+
 					"</td>"+
@@ -99,10 +125,10 @@
 			//
 			for (var surface_status_key in surface_status_arr) {
 				//отказались от использования статуса Коронка (69) к поверхности
-				if ((surface_status_key != 69) && (surface_status_key != 72) && (surface_status_key != 73) && (surface_status_key != 74) && (surface_status_key != 75)){
+				if ((surface_status_key != 69) && (surface_status_key != 72) && (surface_status_key != 73) && (surface_status_key != 74) && (surface_status_key != 75) && (surface_status_key != 76)){
 					s_menu += "<tr>"+
 						"<td class='cellsBlockHover'>"+
-							"<a href='#' id='refresh' onclick=refreshTeeth("+surface_status_key+", "+func_n_zuba+", "+func_surface+") class='ahref'>"+
+							"<a href='#' id='refresh' onclick=\"refreshTeeth("+surface_status_key+", '"+func_n_zuba+"', '"+func_surface+"')\" class='ahref'>"+
 								"<img src='img/surface_state/"+surface_status_arr[surface_status_key]['img']+"' border='0' /> "+surface_status_arr[surface_status_key]['descr']+
 							"</a>"+
 						"</td>"+
@@ -116,7 +142,7 @@
 				if (((surface_status_key == 72)  || (surface_status_key == 73)) && (func_surface == 'surface1')){
 					s_menu += "<tr>"+
 						"<td class='cellsBlockHover'>"+
-							"<a href='#' id='refresh' onclick=refreshTeeth("+surface_status_key+", "+func_n_zuba+", "+func_surface+") class='ahref'>"+
+							"<a href='#' id='refresh' onclick=\"refreshTeeth("+surface_status_key+", '"+func_n_zuba+"', '"+func_surface+"')\" class='ahref'>"+
 								"<img src='img/surface_state/"+surface_status_arr[surface_status_key]['img']+"' border='0' /> "+surface_status_arr[surface_status_key]['descr']+
 							"</a>"+
 						"</td>"+
@@ -127,10 +153,10 @@
 						"</td>"+
 					"</tr>";
 				}
-				if (((surface_status_key == 74) || (surface_status_key == 75)) && ((func_surface == 'top1') || (func_surface == 'top2') || (func_surface == 'top12'))){
+				if (((surface_status_key == 74) || (surface_status_key == 75) || (surface_status_key == 76)) && ((func_surface == 'top1') || (func_surface == 'top2') || (func_surface == 'top12'))){
 					s_menu += "<tr>"+
 						"<td class='cellsBlockHover'>"+
-							"<a href='#' id='refresh' onclick=refreshTeeth("+surface_status_key+", "+func_n_zuba+", "+func_surface+") class='ahref'>"+
+							"<a href='#' id='refresh' onclick=\"refreshTeeth("+surface_status_key+", '"+func_n_zuba+"', '"+func_surface+"')\" class='ahref'>"+
 								"<img src='img/surface_state/"+surface_status_arr[surface_status_key]['img']+"' border='0' /> "+surface_status_arr[surface_status_key]['descr']+
 							"</a>"+
 						"</td>"+
@@ -173,8 +199,13 @@
 		
 		
 		function DrawTeethMapMenu (param) {
-
-			var param_array = param.split(",");
+			
+			var rezult_menu = "<div class='cellsBlock4'>"+
+				"<div class='cellLeftTF' style=vertical-align: top;>"+
+					"<table>";
+			//alert(param);
+			
+			var param_array = param.split(", ");
 
 			//номер зуба
 			var n_zuba = param_array[0];
@@ -201,10 +232,66 @@
 			//
 			var DrawMenu_menu_right = param_array[11];
 			
-			//alert(n_zuba);
+			//alert(menu);
+			
+			//тут !!! вставить название
 			
 			var res = CompileMenu(n_zuba, surface);
 			
-			return (res['t_menu']);
+			if (menu == 't_menu'){
+				rezult_menu += res['t_menu'];
+			}
+			if (menu == 'r_menu'){
+				rezult_menu += res['r_menu'];
+			}
+			if (menu == 's_menu'){
+				rezult_menu += res['s_menu'];
+			}
+			if (menu == 'first'){
+				//$first = '';	
+			}
+			if (menu == 'm_menu'){
+				rezult_menu += res['m_menu'];		
+			}
 			
+			rezult_menu += "</table>"+
+				"</div>";
+			
+			//правая колонка меню
+			if (draw_t_surface_name_right != 'false'){
+				rezult_menu += "<div class='cellRight' style='vertical-align: top;'>"+
+						"<table>";
+						
+				//тут !!! вставить название
+				
+				if (DrawMenu_right != 'false'){		
+				
+					var menu_arr_right = CompileMenu(n_zuba, DrawMenu_surface_right);	
+					
+					if (DrawMenu_menu_right == 't_menu'){
+						rezult_menu += menu_arr_right['t_menu'];
+					}
+					if(DrawMenu_menu_right == 'r_menu'){
+						rezult_menu += menu_arr_right['r_menu'];
+					}
+					if(DrawMenu_menu_right == 's_menu'){
+						rezult_menu += menu_arr_right['s_menu'];
+					}
+					if(DrawMenu_menu_right == 'first'){
+						//first = '';			
+					}
+					if(DrawMenu_menu_right == 'm_menu'){
+						rezult_menu += menu_arr_right['m_menu'];			
+					}				
+				}
+
+				rezult_menu += "</table>"+
+					"</div>";
+			}
+			
+			
+			return rezult_menu;
 		}
+		
+		
+		
