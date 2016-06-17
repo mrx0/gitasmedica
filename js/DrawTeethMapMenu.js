@@ -11,17 +11,17 @@
 		});
 		
 		//
-		/*var overlay = $('#overlay'); // подложка, должна быть одна на странице
+		var overlay = $('#overlay'); // подложка, должна быть одна на странице
 		$('.open_modal').live('click', function(event){
 			event.preventDefault(); // вырубаем стандартное поведение
 			var div = $(this).attr('href'); // возьмем строку с селектором у кликнутой ссылки
-			overlay.fadeIn(400, //показываем оверлэй
+			$('#overlay').fadeIn(400, //показываем оверлэй
 			function(){ // после окончания показывания оверлэя
 				$(div) // берем строку с селектором и делаем из нее jquery объект
 				.css('display', 'block') 
 				.animate({opacity: 1, top: '50%'}, 200); // плавно показываем
 			});
-		});*/
+		});
 		
 		function CompileMenu (func_n_zuba, func_surface){
 			
