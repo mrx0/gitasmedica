@@ -4,7 +4,7 @@
 //Зубная карта меню, вызов из Аякса
 
 	if($_POST){
-		//var_dump($_POST);
+		var_dump($_POST);
 		
 		$_POST['param'] = str_replace(' ', '', $_POST['param']);
 		$data_arr = explode(',', $_POST['param']);
@@ -115,20 +115,6 @@
 				</td>
 			</tr>
 			";
-			//Про ЗО		
-			/*$t_menu .= "
-			</tr>
-				<td class='cellsBlockHover'>
-					<img src='img/tooth_state/46.png' border='0' />З.О.
-				</td>
-				<td class='cellsBlockHover'>
-					<input type='checkbox' name='zo' value='1'>
-				</td>
-				<td class='cellsBlockHover'>
-					<a href='#modal1' class='open_modal' id='zo'><img src='img/list.jpg' border='0'/></a>
-				</td>
-			</tr>
-			";*/
 					
 			$t_menu .= "
 			<tr>
@@ -161,12 +147,10 @@
 				</tr>
 				";
 			}
-			//$r_menu .= "<a href='#' id='refresh' onclick=refreshTeeth(0,'{$func_n_zuba}','{$func_surface}') class='ahref'><img src='img/root_state/0' border='0' />Сбросить</a><br />";
-			
-			
+
 			foreach ($surface_status as $key => $value){
 				//отказались от использования статуса Коронка (69) к поверхности
-				if (($key != 69) && ($key != 72) && ($key != 73) && ($key != 74) && ($key != 75)){
+				if (($key != 69) && ($key != 72) && ($key != 73) && ($key != 74) && ($key != 75) && ($key != 76)){
 					$s_menu .= "
 					<tr>
 						<td class='cellsBlockHover'>
@@ -198,7 +182,7 @@
 					</tr>
 					";
 				}
-				if ((($key == 74) || ($key == 75)) && (($func_surface == 'top1') || ($func_surface == 'top2') || ($func_surface == 'top12'))){
+				if ((($key == 74) || ($key == 75)) || ($key == 76)) && (($func_surface == 'top1') || ($func_surface == 'top2') || ($func_surface == 'top12'))){
 					$s_menu .= "
 					<tr>
 						<td class='cellsBlockHover'>
@@ -215,8 +199,6 @@
 					";
 				}
 			}
-			//$s_menu .= "<a href='#' id='refresh' onclick=refreshTeeth(0,'{$func_n_zuba}','{$func_surface}') class='ahref'><img src='img/surface_state/0' border='0' />Сбросить</a><br />";
-			
 			
 			$actions_stomat = SelDataFromDB('actions_stomat', '', '');
 			//var_dump ($actions_stomat);

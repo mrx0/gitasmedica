@@ -130,15 +130,7 @@ jQuery(document).ready(function(){
 					}
 				};
 				
-				$('.point').find('.close').live('click', function(){
-					var t = $(this),
-						parent = t.parent('.point');
-					
-					parent.stop( true , true ).fadeOut(function(){
-						parent.remove();
-					});
-					return false;
-				});
+
 				
 			})(area[j], j);
 		}

@@ -50,7 +50,7 @@
 <script src="js/chart.js" type="text/javascript"></script>
 
 
-
+<script src="js/tooth_status.js" type="text/javascript"></script>
 <script src="js/path2.js" type="text/javascript"></script>
 
 			<!--<script type="text/javascript" src="js/jquery-1.4.3.min.js"></script>-->
@@ -69,7 +69,9 @@
 			<script type="text/javascript" src="js/search4.js"></script>
 			
 			<script type="text/javascript" src="js/search_fast_client.js"></script>
+			
 <!--<script src="js/jquery.js" type="text/javascript"></script>-->
+
 <script src="js/raphael.js" type="text/javascript"></script>
 <!--<script src="js/init.js" type="text/javascript"></script>-->
 
@@ -132,28 +134,8 @@ jQuery("document").ready(function($){
 		});
     </script>
 			
-   <script>
-		function DrawTeethMapMenu (param) {
-			//alert (param);
-			var req = false;
-			$.ajax({
-				url:"t_context_menu_ajax.php",
-				type:"POST",
-				async: false,
-				data:
-				{
-					param:param,
-					//n_zuba:n_zuba,
-					//surface:surface,
-					//menu:menu,
-				},
-				success:function(data){
-					req = data;
-				},
-			});
-			return req;
-		}
-    </script>
+
+<script src="js/DrawTeethMapMenu.js"></script>
 			
 			
 			<script type="text/javascript">
@@ -220,9 +202,11 @@ jQuery("document").ready(function($){
 				function typeres() {
 					$(\'.tabs\').hide();
 					var etabs = document.getElementById("tabSelector");
-					if (etabs.options[etabs.selectedIndex].value.indexOf("tabs-") != -1) {
-						var tab = \'#tabs-\'+etabs.options[etabs.selectedIndex].value.substring(5);
-						$(tab).fadeIn();
+					if (etabs != null){
+						if (etabs.options[etabs.selectedIndex].value.indexOf("tabs-") != -1) {
+							var tab = \'#tabs-\'+etabs.options[etabs.selectedIndex].value.substring(5);
+							$(tab).fadeIn();
+						}
 					}
 				}
 			</script>

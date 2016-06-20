@@ -7,7 +7,7 @@
 	
 	if($_GET){
 		
-		//var_dump($_GET);
+		var_dump($_GET);
 		//var_dump($_SESSION);
 		
 		include_once 'tooth_status.php';
