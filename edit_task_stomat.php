@@ -519,7 +519,253 @@
 			</div>
 			<!-- Подложка только одна -->
 			<div id="overlay"></div>
-			
+			<!-- Модальные окна -->
+			<div id="modal2" class="modal_div">
+				<span class="modal_close">X</span>
+					
+						<h3>Выбор нескольких сегментов зубной формулы</h3>
+						<b>Статус: </b>
+						<div id="t_summ_status"></div>
+
+
+							<table>
+								<tr>
+									<td>
+										<table width="100%" style="border: 1px solid #BEBEBE; margin:5px;">
+											<tr>
+												<td style="border: 1px solid #BEBEBE;">
+													18
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													17
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													16
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													15
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													14
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													13
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													12
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													11
+												</td>
+											</tr>
+											<tr>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t18" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t17" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t16" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t15" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t14" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t13" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t12" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t11" value="1">
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td>
+										<table width="100%" style="border: 1px solid #BEBEBE; margin:5px;">
+											<tr>
+												<td style="border: 1px solid #BEBEBE;">
+													21
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													22
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													23
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													24
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													25
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													26
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													27
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													28
+												</td>
+											</tr>
+											<tr>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t21" value="1">
+												</td>
+													<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t22" value="1">
+												</td>
+													<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t23" value="1">
+												</td>
+													<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t24" value="1">
+												</td>
+													<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t25" value="1">
+												</td>
+													<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t26" value="1">
+												</td>
+													<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t27" value="1">
+												</td>
+													<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t28" value="1">
+												</td>
+											</tr>
+										</table>
+										</td>
+								</tr>
+								<tr>
+									<td>
+										<table width="100%" style="border: 1px solid #BEBEBE; margin:5px;">
+											<tr>
+												<td style="border: 1px solid #BEBEBE;">
+													48
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													47
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													46
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													45
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													44
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													43
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													42
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													41
+												</td>
+											</tr>
+											<tr>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t48" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t47" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t46" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t45" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t44" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t43" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t42" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t41" value="1">
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td>
+										<table width="100%" style="border: 1px solid #BEBEBE; margin:5px;">
+											<tr>
+												<td style="border: 1px solid #BEBEBE;">
+													31
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													32
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													33
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													34
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													35
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													36
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													37
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													38
+												</td>
+											</tr>
+											<tr>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t31" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t32" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t33" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t34" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t35" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t36" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t37" value="1">
+												</td>
+												<td style="border: 1px solid #BEBEBE;">
+													<input type="checkbox" name="t38" value="1">
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox" name="implant" value="1"> + имплант
+									</td>
+								</tr>
+							</table>
+						<a href="#" class="b" onclick="refreshAllTeeth()">Применить</a>
+					
+			</div>
 			
 			
 			

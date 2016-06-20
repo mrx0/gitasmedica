@@ -11,15 +11,50 @@
 		});
 		
 		//
+		var Status4All;
+		
+		/* засунем сразу все элементы в переменные, чтобы скрипту не приходилось их каждый раз искать при кликах */
+		//var overlay = $('#overlay'); // подложка, должна быть одна на странице
+		//var open_modal = $('.open_modal'); // все ссылки, которые будут открывать окна
+		//var close = $('.modal_close, #overlay'); // все, что закрывает модальное окно, т.е. крестик и оверлэй-подложка
+		//var modal = $('.modal_div'); // все скрытые модальные окна
+		
 		var overlay = $('#overlay'); // подложка, должна быть одна на странице
 		$('.open_modal').live('click', function(event){
 			event.preventDefault(); // вырубаем стандартное поведение
 			var div = $(this).attr('href'); // возьмем строку с селектором у кликнутой ссылки
+			
+			 Status4All = $(this).attr('id');
+			ajax({
+				url:"t_surface_status_post_ajax.php",
+				statbox:"t_summ_status",
+				method:"POST",
+				data:
+				{
+					stat_id:$(this).attr('id'),
+				},
+				success:function(data){
+					document.getElementById("t_summ_status").innerHTML=data;
+				}
+			});
+			
 			$('#overlay').fadeIn(400, //показываем оверлэй
 			function(){ // после окончания показывания оверлэя
 				$(div) // берем строку с селектором и делаем из нее jquery объект
 				.css('display', 'block') 
 				.animate({opacity: 1, top: '50%'}, 200); // плавно показываем
+			});
+		});
+		
+		$(document).ready(function() {
+			$('.modal_close, #overlay').click( function(){ // ловим клик по крестику или оверлэю
+				$("#modal1, #modal2") // все модальные окна
+				.animate({opacity: 0, top: '45%'}, 200, // плавно прячем
+					function(){ // после этого
+						$(this).css('display', 'none');
+						$('#overlay').fadeOut(400); // прячем подложку
+					}
+				);
 			});
 		});
 		
@@ -46,7 +81,7 @@
 						"<td class='cellsBlockHover'>"+
 						"</td>"+
 						"<td class='cellsBlockHover'>"+
-							"<a href='#modal1' class='open_modal' id='"+tooth_status_key+"'><img src='img/list.jpg' border='0'/></a>"+
+							"<a href='#modal2' class='open_modal' id='"+tooth_status_key+"'><img src='img/list.jpg' border='0'/></a>"+
 						"</td>";
 					}else{
 						if (tooth_status_key == '3'){
@@ -59,7 +94,7 @@
 								"<input type='checkbox' name='implant' value='1'>"+
 							"</td>"+
 							"<td class='cellsBlockHover'>"+
-								"<a href='#modal1' class='open_modal' id='"+tooth_status_key+"'><img src='img/list.jpg' border='0'/></a>"+
+								"<a href='#modal2' class='open_modal' id='"+tooth_status_key+"'><img src='img/list.jpg' border='0'/></a>"+
 							"</td>";
 						}
 						if (tooth_status_key == '22'){
@@ -72,7 +107,7 @@
 								"<input type='checkbox' name='zo' value='1'>"+
 							"</td>"+
 							"<td class='cellsBlockHover'>"+
-								"<a href='#modal1' class='open_modal' id='"+tooth_status_key+"'><img src='img/list.jpg' border='0'/></a>"+
+								"<a href='#modal2' class='open_modal' id='"+tooth_status_key+"'><img src='img/list.jpg' border='0'/></a>"+
 							"</td>";
 						}
 					}
@@ -88,7 +123,7 @@
 					"<input type='checkbox' name='alien' value='1'>"+
 				"</td>"+
 				"<td class='cellsBlockHover'>"+
-					"<a href='#modal1' class='open_modal' id='alien'><img src='img/list.jpg' border='0'/></a>"+
+					"<a href='#modal2' class='open_modal' id='alien'><img src='img/list.jpg' border='0'/></a>"+
 				"</td>"+
 			"</tr>";
 					
@@ -101,7 +136,7 @@
 				"<td class='cellsBlockHover'>"+
 				"</td>"+
 				"<td class='cellsBlockHover'>"+
-					"<a href='#modal1' class='open_modal' id='reset'><img src='img/list.jpg' border='0'/></a>"+
+					"<a href='#modal2' class='open_modal' id='reset'><img src='img/list.jpg' border='0'/></a>"+
 				"</td>"+
 			"</tr>";
 			
@@ -117,7 +152,7 @@
 					"<td class='cellsBlockHover'>"+
 					"</td>"+
 					"<td class='cellsBlockHover'>"+
-						"<a href='#modal1' class='open_modal' id='"+root_status_key+"'><img src='img/list.jpg' border='0'/></a>"+
+						"<a href='#modal2' class='open_modal' id='"+root_status_key+"'><img src='img/list.jpg' border='0'/></a>"+
 					"</td>"+
 				"</tr>";
 			}
@@ -135,7 +170,7 @@
 						"<td class='cellsBlockHover'>"+
 						"</td>"+
 						"<td class='cellsBlockHover'>"+
-							"<a href='#modal1' class='open_modal' id='"+surface_status_key+"'><img src='img/list.jpg' border='0'/></a>"+
+							"<a href='#modal2' class='open_modal' id='"+surface_status_key+"'><img src='img/list.jpg' border='0'/></a>"+
 						"</td>"+
 					"</tr>";
 				}
@@ -149,7 +184,7 @@
 						"<td class='cellsBlockHover'>"+
 						"</td>"+
 						"<td class='cellsBlockHover'>"+
-							"<a href='#modal1' class='open_modal' id='"+surface_status_key+"'><img src='img/list.jpg' border='0'/></a>"+
+							"<a href='#modal2' class='open_modal' id='"+surface_status_key+"'><img src='img/list.jpg' border='0'/></a>"+
 						"</td>"+
 					"</tr>";
 				}
@@ -163,7 +198,7 @@
 						"<td class='cellsBlockHover'>"+
 						"</td>"+
 						"<td class='cellsBlockHover'>"+
-							"<a href='#modal1' class='open_modal' id='"+surface_status_key+"'><img src='img/list.jpg' border='0'/></a>"+
+							"<a href='#modal2' class='open_modal' id='"+surface_status_key+"'><img src='img/list.jpg' border='0'/></a>"+
 						"</td>"+
 					"</tr>";
 				}
@@ -182,7 +217,7 @@
 							<input type='checkbox' name='action{$actions_stomat[$i]['id']}' value='1'>
 						</td>
 						<td class='cellsBlockHover'>
-							<a href='#modal1' class='open_modal' id='menu'><img src='img/list.jpg' border='0'/></a>
+							<a href='#modal2' class='open_modal' id='menu'><img src='img/list.jpg' border='0'/></a>
 						</td>
 					</tr>
 					";
@@ -293,5 +328,157 @@
 			return rezult_menu;
 		}
 		
-		
+				function refreshAllTeeth(){
+					var t_stat_value11 = $("input[name=t11]:checked").val();
+					var t_stat_value12 = $("input[name=t12]:checked").val();
+					var t_stat_value13 = $("input[name=t13]:checked").val();
+					var t_stat_value14 = $("input[name=t14]:checked").val();
+					var t_stat_value15 = $("input[name=t15]:checked").val();
+					var t_stat_value16 = $("input[name=t16]:checked").val();
+					var t_stat_value17 = $("input[name=t17]:checked").val();
+					var t_stat_value18 = $("input[name=t18]:checked").val();
+					
+					var t_stat_value21 = $("input[name=t21]:checked").val();
+					var t_stat_value22 = $("input[name=t22]:checked").val();
+					var t_stat_value23 = $("input[name=t23]:checked").val();
+					var t_stat_value24 = $("input[name=t24]:checked").val();
+					var t_stat_value25 = $("input[name=t25]:checked").val();
+					var t_stat_value26 = $("input[name=t26]:checked").val();
+					var t_stat_value27 = $("input[name=t27]:checked").val();
+					var t_stat_value28 = $("input[name=t28]:checked").val();
+					
+					var t_stat_value31 = $("input[name=t31]:checked").val();
+					var t_stat_value32 = $("input[name=t32]:checked").val();
+					var t_stat_value33 = $("input[name=t33]:checked").val();
+					var t_stat_value34 = $("input[name=t34]:checked").val();
+					var t_stat_value35 = $("input[name=t35]:checked").val();
+					var t_stat_value36 = $("input[name=t36]:checked").val();
+					var t_stat_value37 = $("input[name=t37]:checked").val();
+					var t_stat_value38 = $("input[name=t38]:checked").val();
+					
+					var t_stat_value41 = $("input[name=t41]:checked").val();
+					var t_stat_value42 = $("input[name=t42]:checked").val();
+					var t_stat_value43 = $("input[name=t43]:checked").val();
+					var t_stat_value44 = $("input[name=t44]:checked").val();
+					var t_stat_value45 = $("input[name=t45]:checked").val();
+					var t_stat_value46 = $("input[name=t46]:checked").val();
+					var t_stat_value47 = $("input[name=t47]:checked").val();
+					var t_stat_value48 = $("input[name=t48]:checked").val();
+					
+					
+					var implant = $("input[name=implant]:checked").val();
+					
+					//alert(t_stat_value18);
+					
+					$.ajax({  
+					
+                        url: "teeth_map_svg_edit_status_all.php",  
+						method: "POST",
+                        cache: false,  
+						data:
+							{
+								t_stat_value11:t_stat_value11,
+								t_stat_value12:t_stat_value12,
+								t_stat_value13:t_stat_value13,
+								t_stat_value14:t_stat_value14,
+								t_stat_value15:t_stat_value15,
+								t_stat_value16:t_stat_value16,
+								t_stat_value17:t_stat_value17,
+								t_stat_value18:t_stat_value18,
+								
+								t_stat_value21:t_stat_value21,
+								t_stat_value22:t_stat_value22,
+								t_stat_value23:t_stat_value23,
+								t_stat_value24:t_stat_value24,
+								t_stat_value25:t_stat_value25,
+								t_stat_value26:t_stat_value26,
+								t_stat_value27:t_stat_value27,
+								t_stat_value28:t_stat_value28,
+								
+								t_stat_value31:t_stat_value31,
+								t_stat_value32:t_stat_value32,
+								t_stat_value33:t_stat_value33,
+								t_stat_value34:t_stat_value34,
+								t_stat_value35:t_stat_value35,
+								t_stat_value36:t_stat_value36,
+								t_stat_value37:t_stat_value37,
+								t_stat_value38:t_stat_value38,
+								
+								t_stat_value41:t_stat_value41,
+								t_stat_value42:t_stat_value42,
+								t_stat_value43:t_stat_value43,
+								t_stat_value44:t_stat_value44,
+								t_stat_value45:t_stat_value45,
+								t_stat_value46:t_stat_value46,
+								t_stat_value47:t_stat_value47,
+								t_stat_value48:t_stat_value48,
+								
+								implant:implant,
+								
+								status_all:Status4All,
+
+							},
+						success: function(html){
+							//alert(html);
+							$.ajax({  
+								url: "teeth_map_svg_edit.php",  
+								method: "POST",
+								cache: false,  
+								data:
+									{
+
+									},
+								success: function(html){  
+									//скрываем модальные окна
+									$("#modal1, #modal2") // все модальные окна
+										.animate({opacity: 0, top: '45%'}, 50, // плавно прячем
+											function(){ // после этого
+												$(this).css('display', 'none');
+												$('#overlay').fadeOut(50); // прячем подложку
+											}
+										);
+									//отрисовка
+									$("#teeth_map").html(html); 
+									//снимаем галочки с чекбоксов
+									$("input[name=t11]").removeAttr("checked");
+									$("input[name=t12]").removeAttr("checked");
+									$("input[name=t13]").removeAttr("checked");
+									$("input[name=t14]").removeAttr("checked");
+									$("input[name=t15]").removeAttr("checked");
+									$("input[name=t16]").removeAttr("checked");
+									$("input[name=t17]").removeAttr("checked");
+									$("input[name=t18]").removeAttr("checked");
+									
+									$("input[name=t21]").removeAttr("checked");
+									$("input[name=t22]").removeAttr("checked");
+									$("input[name=t23]").removeAttr("checked");
+									$("input[name=t24]").removeAttr("checked");
+									$("input[name=t25]").removeAttr("checked");
+									$("input[name=t26]").removeAttr("checked");
+									$("input[name=t27]").removeAttr("checked");
+									$("input[name=t28]").removeAttr("checked");
+									
+									$("input[name=t31]").removeAttr("checked");
+									$("input[name=t32]").removeAttr("checked");
+									$("input[name=t33]").removeAttr("checked");
+									$("input[name=t34]").removeAttr("checked");
+									$("input[name=t35]").removeAttr("checked");
+									$("input[name=t36]").removeAttr("checked");
+									$("input[name=t37]").removeAttr("checked");
+									$("input[name=t38]").removeAttr("checked");
+									
+									$("input[name=t41]").removeAttr("checked");
+									$("input[name=t42]").removeAttr("checked");
+									$("input[name=t43]").removeAttr("checked");
+									$("input[name=t44]").removeAttr("checked");
+									$("input[name=t45]").removeAttr("checked");
+									$("input[name=t46]").removeAttr("checked");
+									$("input[name=t47]").removeAttr("checked");
+									$("input[name=t48]").removeAttr("checked");
+
+								}  
+							}); 
+                        }  
+                    }); 
+				};
 		

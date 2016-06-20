@@ -373,7 +373,7 @@
 				</div>
 				
 			<!-- Модальные окна -->
-			<div id="modal2" class="modal_div">
+			<div id="modal1" class="modal_div">
 				<span class="modal_close">X</span>
 				<table>
 					<tr>
@@ -407,7 +407,7 @@
 			<div id="overlay"></div>
 			
 			<!-- Модальные окна -->
-			<div id="modal1" class="modal_div">
+			<div id="modal2" class="modal_div">
 				<span class="modal_close">X</span>
 					
 						<h3>Выбор нескольких сегментов зубной формулы</h3>
@@ -733,7 +733,14 @@
 					
 					
 					
-					
+									//скрываем модальные окна
+									$("#modal1, #modal2") // все модальные окна
+										.animate({opacity: 0, top: \'45%\'}, 50, // плавно прячем
+											function(){ // после этого
+												$(this).css(\'display', 'none\');
+												$(\'#overlay\').fadeOut(50); // прячем подложку
+											}
+										);
 	
 				};
 			</script>
@@ -915,6 +922,11 @@ function Ajax_add_task_stomat() {
 					};  
 					  
 				</script> 
+				
+
+				
+				
+				
 			';	
 			/*echo '
 				<script type="text/javascript">
