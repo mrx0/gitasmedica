@@ -380,13 +380,23 @@
 										<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
 										<!--<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">-->
 										<input type=\'button\' class="b" value=\'Редактировать\' onclick=\'
-											
-											if ($("#add_notes_show").prop("checked")){
-												notes_val = 1;
+											if (document.getElementById("#add_notes_show")){
+												var add_notes_type = 0;
+												var add_notes_months = 0;
+												var add_notes_days = 0;
+												
+												if ($("#add_notes_show").prop("checked")){
+													notes_val = 1;
+													add_notes_type = document.getElementById("add_notes_type").value;
+													add_notes_months = document.getElementById("add_notes_months").value;
+													add_notes_days = document.getElementById("add_notes_days").value;
+												}else{
+													notes_val = 0;
+													
+												}
 											}else{
 												notes_val = 0;
 											}
-											
 											if ($("#add_remove_show").prop("checked")){
 												remove_val = 1;
 											}else{
@@ -441,9 +451,9 @@
 													removeAct:JSON.stringify(arrayRemoveAct),
 													removeWork:JSON.stringify(arrayRemoveWorker),
 													
-													add_notes_type:document.getElementById("add_notes_type").value,
-													add_notes_months:document.getElementById("add_notes_months").value,
-													add_notes_days:document.getElementById("add_notes_days").value,
+													add_notes_type:add_notes_type,
+													add_notes_months:add_notes_months,
+													add_notes_days:add_notes_days,
 													
 													
 													client:'.$client.',
@@ -469,8 +479,9 @@
 			echo '
 				<script type="text/javascript">
 
-				
-					document.getElementById(\'add_notes_show\').checked=false;
+					if (document.getElementById("#add_notes_show")){
+						document.getElementById(\'add_notes_show\').checked=false;
+					}
 					document.getElementById(\'add_remove_show\').checked=false;
 					
 					function Add_notes_stomat_show(box) {
@@ -770,36 +781,7 @@
 			
 			
 				<script type="text/javascript">
-					$(document).ready(function() { // запускаем скрипт после загрузки всех элементов
-						/* засунем сразу все элементы в переменные, чтобы скрипту не приходилось их каждый раз искать при кликах */
-						var overlay = $(\'#overlay\'); // подложка, должна быть одна на странице
-						var open_modal = $(\'.open_modal\'); // все ссылки, которые будут открывать окна
-						var close = $(\'.modal_close, #overlay, #close_mdd\'); // все, что закрывает модальное окно, т.е. крестик и оверлэй-подложка
-						var modal = $(\'.modal_div\'); // все скрытые модальные окна
 
-						 open_modal.click( function(event){ // ловим клик по ссылке с классом open_modal
-							 event.preventDefault(); // вырубаем стандартное поведение
-							 var div = $(this).attr(\'href\'); // возьмем строку с селектором у кликнутой ссылки
-							 
-	 
-							 overlay.fadeIn(400, //показываем оверлэй
-								 function(){ // после окончания показывания оверлэя
-									 $(div) // берем строку с селектором и делаем из нее jquery объект
-										 .css(\'display\', \'block\') 
-										 .animate({opacity: 1, top: \'50%\'}, 200); // плавно показываем
-							 });
-						 });
-
-						 close.click( function(){ // ловим клик по крестику или оверлэю
-								modal // все модальные окна
-								 .animate({opacity: 0, top: \'45%\'}, 200, // плавно прячем
-									 function(){ // после этого
-										 $(this).css(\'display\', \'none\');
-										 overlay.fadeOut(400); // прячем подложку
-									 }
-								 );
-						 });
-					});
 				function AddRemoveData(){
 						
 					var arrayRemoveAct = new Array();
@@ -869,9 +851,14 @@
 						//$("#mini").append(this + "<br>");
 					});
 					
-					
-					
-					
+									//скрываем модальные окна
+									$("#modal1, #modal2") // все модальные окна
+										.animate({opacity: 0, top: \'45%\'}, 50, // плавно прячем
+											function(){ // после этого
+												$(this).css(\'display', 'none\');
+												$(\'#overlay\').fadeOut(50); // прячем подложку
+											}
+										);	
 	
 				};
 					
