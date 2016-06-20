@@ -380,10 +380,10 @@
 										<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
 										<!--<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">-->
 										<input type=\'button\' class="b" value=\'Редактировать\' onclick=\'
+											var add_notes_type = 0;
+											var add_notes_months = 0;
+											var add_notes_days = 0;
 											if (document.getElementById("#add_notes_show")){
-												var add_notes_type = 0;
-												var add_notes_months = 0;
-												var add_notes_days = 0;
 												
 												if ($("#add_notes_show").prop("checked")){
 													notes_val = 1;
