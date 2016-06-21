@@ -349,15 +349,38 @@
 						}else{
 							$checked_pervich = '';
 						}
+						if (!empty($dop) && ($dop[0]['insured'] == 1)){
+							$checked_insured = ' checked';
+						}else{
+							$checked_insured = '';
+						}
+						if (!empty($dop) && ($dop[0]['noch'] == 1)){
+							$checked_noch = ' checked';
+						}else{
+							$checked_noch = '';
+						}
 						
 						echo '
 							<div class="cellsBlock3">
-								<div class="cellLeft">Первичный?</div>
+								<div class="cellLeft">Первичный</div>
 								<div class="cellRight">
 									<input type="checkbox" name="pervich" id="pervich" value="1" '.$checked_pervich.'> да
 								</div>
 							</div>';
-							
+						echo '
+							<div class="cellsBlock3">
+								<div class="cellLeft">Страховой</div>
+								<div class="cellRight">
+									<input type="checkbox" name="insured" id="insured" value="1" '.$checked_insured.'> да
+								</div>
+							</div>';
+						echo '
+							<div class="cellsBlock3">
+								<div class="cellLeft">Ночной</div>
+								<div class="cellRight">
+									<input type="checkbox" name="noch" id="noch" value="1" '.$checked_noch.'> да
+								</div>
+							</div>';
 							
 						mysql_close();	
 						echo '
@@ -408,6 +431,16 @@
 											}else{
 												pervich_val = 0;
 											}
+											if ($("#insured").prop("checked")){
+												insured_val = 1;
+											}else{
+												insured_val = 0;
+											}
+											if ($("#noch").prop("checked")){
+												noch_val = 1;
+											}else{
+												noch_val = 0;
+											}
 											
 											var arrayRemoveAct = new Array();
 											var arrayRemoveWorker = new Array();
@@ -447,6 +480,8 @@
 													remove:remove_val,
 													
 													pervich:pervich_val,
+													noch:noch_val,
+													insured:insured_val,
 													
 													removeAct:JSON.stringify(arrayRemoveAct),
 													removeWork:JSON.stringify(arrayRemoveWorker),

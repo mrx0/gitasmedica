@@ -254,7 +254,7 @@
 					$rez_color = '';
 					
 					//if (($journal[$i]['create_time'] >= $datestart)  && ($journal[$i]['create_time'] <= $datefinish)){
-						//Надо найти имя клиента
+						//Надо найти клиента
 						$clients = SelDataFromDB ('spr_clients', $journal[$i]['client'], 'client_id');
 						if ($clients != 0){
 							$client = $clients[0]["name"];

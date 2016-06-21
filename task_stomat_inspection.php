@@ -60,7 +60,21 @@
 						}
 					}
 
-					if (Sanation2($task[0]['id'], $task[0])){
+					//Надо найти клиента
+					$clients = SelDataFromDB ('spr_clients', $task[0]['client'], 'client_id');
+					if ($clients != 0){
+						$client = $clients[0]["name"];
+						if ($clients[0]["birthday"] != -1577934000){
+							$cl_age = getyeardiff($clients[0]["birthday"]);
+						}else{
+							$cl_age = 0;
+						}
+					}else{
+						$client = 'unknown';
+						$cl_age = 0;
+					}
+					
+					if (Sanation2($task[0]['id'], $task[0], $cl_age)){
 						echo '<span style= "background: rgba(87,223,63,0.7); padding: 2px;">Санирован (ТЕСТ)</span><br />';
 					}else{
 						echo '<span style= "background: rgba(255,39,119,0.7); padding: 2px;">Не санирован (ТЕСТ)</span><br />';

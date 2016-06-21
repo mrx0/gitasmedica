@@ -119,6 +119,18 @@
 				}else{
 					$pervich_status = 0;
 				}
+				//Ночной
+				if ($_POST['noch'] == 1){
+					$noch_status = 1;
+				}else{
+					$noch_status = 0;
+				}
+				//Страховой
+				if ($_POST['insured'] == 1){
+					$insured_status = 1;
+				}else{
+					$insured_status = 0;
+				}
 				
 				$query = "
 					INSERT INTO `journal_tooth_ex` (
@@ -130,7 +142,9 @@
 					VALUES (
 						'{$_POST['id']}', '{$pervich_status}')
 					ON DUPLICATE KEY UPDATE
-					`pervich` = '{$pervich_status}'
+					`pervich` = '{$pervich_status}',
+					`noch` = '{$noch_status}',
+					`insured` = '{$insured_status}'
 					";
 						
 				mysql_query($query) or die(mysql_error().$query);

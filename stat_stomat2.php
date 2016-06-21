@@ -369,7 +369,22 @@
 					
 					//Если последнее посещение было 2 месяцев назад
 					if ($value['create_time'] < time()-60*60*24*59){
-						if (Sanation2($value['id'] ,$value)){
+						
+						//Надо найти клиента
+						$clients = SelDataFromDB ('spr_clients', $cl_id, 'client_id');
+						if ($clients != 0){
+							$client = $clients[0]["name"];
+							if ($clients[0]["birthday"] != -1577934000){
+								$cl_age = getyeardiff($clients[0]["birthday"]);
+							}else{
+								$cl_age = 0;
+							}
+						}else{
+							$client = 'unknown';
+							$cl_age = 0;
+						}
+						
+						if (Sanation2($value['id'] ,$value, $cl_age)){
 							$sanat_status = true;
 							$rez_color = "style= 'background: rgba(87,223,63,0.7);'";
 						}else{
