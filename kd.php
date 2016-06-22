@@ -52,8 +52,18 @@
 										<img src="kd/'.$value['face'].'.jpg" width="512" class="jLoupe" />
 									</div>';
 						echo '
-									<div class="cellRight">
-										<img src="kd/'.$value['graf'].'.jpg" width="768"/>
+									<div class="cellRight">';
+						echo '
+										<div>
+											<a href="#open1" onclick="show(\'hidden_'.$uptime.'\',600,100)">Диаграмма</a>
+										</div>';
+						echo '
+										<div id=hidden_'.$uptime.' style="display:none;">';
+						echo '
+											<img src="kd/'.$value['graf'].'.jpg" width="768"/>';
+						echo '
+										</div>';
+						echo '
 									</div>';
 						echo '	
 								</div>';
@@ -96,6 +106,38 @@
 						</script>
 						
 						';
+					echo '
+			<script language="JavaScript" type="text/javascript">
+				 /*<![CDATA[*/
+				 var s=[],s_timer=[];
+				 function show(id,h,spd)
+				 { 
+					s[id]= s[id]==spd? -spd : spd;
+					s_timer[id]=setTimeout(function() 
+					{
+						var obj=document.getElementById(id);
+						if(obj.offsetHeight+s[id]>=h)
+						{
+							obj.style.height=h+"px";obj.style.overflow="auto";
+						}
+						else 
+							if(obj.offsetHeight+s[id]<=0)
+							{
+								obj.style.height=0+"px";
+								obj.style.display="none";
+							}
+							else 
+							{
+								obj.style.height=(obj.offsetHeight+s[id])+"px";
+								obj.style.overflow="hidden";
+								obj.style.display="block";
+								setTimeout(arguments.callee, 10);
+							}
+					}, 5);
+				 }
+				 /*]]>*/
+			 </script>
+					';
 				}else{
 					echo '<h1>Нечего показывать.</h1><a href="index.php">На главную</a>';
 				}
