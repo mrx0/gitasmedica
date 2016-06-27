@@ -42,7 +42,7 @@
 								</div>';
 				echo '
 								<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">
-								<input type=\'button\' class="b" value=\'Отправить изображения\' onclick=fin_upload()>
+								<!--<input type=\'button\' class="b" value=\'Отправить изображения\' onclick=fin_upload()>-->
 								';	
 								
 				echo '
@@ -61,8 +61,10 @@
 											<!-- Кнопки загрузить и удалить, а также количество файлов -->
 											<div id="upload-button">
 													<span>0 Файлов</span>
-													<a href="#" class="upload">Загрузить</a>
-													<a href="#" class="delete">Удалить</a>
+													<a href="#" class="delete">Удалить все</a><br />
+													
+													<a href="#" class="upload">Отправить изображения</a>
+													
 													<!-- Прогресс бар загрузки -->
 													<div id="loading">
 														<div id="loading-bar">
@@ -73,13 +75,14 @@
 											</div>  
 										</div>
 									</div>
+									<!-- Список загруженных файлов -->
+									<div id="file-name-holder">
+										<ul id="uploaded-files">
+											<h1>Загруженные файлы</h1>
+										</ul>
+									</div>
 								</div>
-								<!-- Список загруженных файлов -->
-								<div id="file-name-holder">
-									<ul id="uploaded-files">
-										<h1>Загруженные файлы</h1>
-									</ul>
-								</div>
+
 				';				
 				/*echo '
 				
@@ -98,16 +101,16 @@
 								</form>
 */
 				echo '
-								<!-- JavaScript Includes -->
-								<script src="js/jquery.knob.js"></script>
+								<!-- JavaScript Includes 
+								<script src="js/jquery.knob.js"></script>-->
 
-								<!-- jQuery File Upload Dependencies -->
+								<!-- jQuery File Upload Dependencies 
 								<script src="js/jquery.ui.widget.js"></script>
 								<script src="js/jquery.iframe-transport.js"></script>
-								<script src="js/jquery.fileupload.js"></script>
+								<script src="js/jquery.fileupload.js"></script>-->
 								
-								<!-- Our main JS file -->
-								<script src="js/script_up.js"></script>	
+								<!-- Our main JS file 
+								<script src="js/script_up.js"></script>	-->
 
 
 								<!--для загрузки файлов новое-->

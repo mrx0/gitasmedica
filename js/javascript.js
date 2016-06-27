@@ -53,6 +53,9 @@ $(document).ready(function() {
 	
 	// Функция загрузки изображений на предросмотр
 	function loadInView(files) {
+		
+		$('#uploaded-files').hide();
+		
 		// Показываем обасть предпросмотра
 		$('#uploaded-holder').show();
 		
@@ -63,7 +66,7 @@ $(document).ready(function() {
 			if (!files[index].type.match('image.*')) {
 				
 				if(errMessage == 0) {
-					$('#drop-files p').html('Эй! только изображения!');
+					$('#drop-files p').html('Только изображения!');
 					++errMessage
 				}
 				else if(errMessage == 1) {
@@ -185,7 +188,7 @@ $(document).ready(function() {
 		// Для каждого файла
 		$.each(dataArray, function(index, file) {	
 			// загружаем страницу и передаем значения, используя HTTP POST запрос 
-			$.post('upload.php', dataArray[index], function(data) {
+			$.post('upload2.php', dataArray[index], function(data) {
 			
 				var fileName = dataArray[index].name;
 				++x;
@@ -205,14 +208,15 @@ $(document).ready(function() {
 					$('#loading-content').html('Загружается '+fileName);
 				}
 				
+				//alert(data);
 				// Формируем в виде списка все загруженные изображения
 				// data формируется в upload.php
 				var dataSplit = data.split(':');
 				if(dataSplit[1] == 'загружен успешно') {
-					$('#uploaded-files').append('<li><a href="images/'+dataSplit[0]+'">'+fileName+'</a> загружен успешно</li>');
+					$('#uploaded-files').append('<li><img src="kd/test/'+dataSplit[0]+'" width="40"> загружен успешно '+fileName+' <button onclick=\'alert("'+dataSplit[0]+'")\'>O</button></li>');
 								
 				} else {
-					$('#uploaded-files').append('<li><a href="images/'+data+'. Имя файла: '+dataArray[index].name+'</li>');
+					$('#uploaded-files').append('<li><img src="kd/test/'+data+'" width="40">. Имя файла: '+dataArray[index].name+' <button onclick=\'alert("'+dataSplit[0]+'")\'>O</button></li>');
 				}
 				
 			});
