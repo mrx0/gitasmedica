@@ -771,6 +771,14 @@ position:relative;
 	top: 64px;
 	z-index: 100;
 	font-size: 70%;
+	font-weight: bold;
+}
+
+.text_in_map_dop {
+	position: absolute; 
+	top: 64px;
+	z-index: 100;
+	font-size: 70%;
 }
 
 .point {

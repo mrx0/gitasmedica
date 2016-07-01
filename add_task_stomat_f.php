@@ -63,25 +63,36 @@
 						$n_zuba = '';
 						$stat_zuba = '';
 						
-						//для ЗО
-						$zo_arr = array();
+						//для ЗО и остального
+						$doppol_arr = array();
 						
 						foreach($t_f_data_temp as $key => $value){
 							$n_zuba .= "`{$key}`, ";
 							if (isset($value['zo'])){
-								$zo_arr[$key]['zo'] = $value['zo'];
+								$doppol_arr[$key]['zo'] = $value['zo'];
 								unset($value['zo']);
+							}
+							if (isset($value['shinir'])){
+								$doppol_arr[$key]['shinir'] = $value['shinir'];
+								unset($value['shinir']);
+							}
+							if (isset($value['podvizh'])){
+								$doppol_arr[$key]['podvizh'] = $value['podvizh'];
+								unset($value['podvizh']);
 							}
 							//var_dump($value['zo']);
 							$rrr = implode(',', $value);
 							$stat_zuba .= "'{$rrr}', ";
 						}
+
 						//echo $stat_zuba.'<br />';
 						
 						$n_zuba = substr($n_zuba, 0, -2);
 						$stat_zuba = substr($stat_zuba, 0, -2);
 						
-						//var_dump($zo_arr);
+						//var_dump($doppol_arr);
+						//var_dump($shinir_arr);
+						//var_dump($podvizh_arr);
 						//echo $n_zuba.'<br />';
 						//echo $stat_zuba.'<br />';
 						
@@ -104,10 +115,10 @@
 						$task = mysql_insert_id();
 						
 						
-						if (!empty($zo_arr)){
+						if (!empty($doppol_arr)){
 							$n_zuba = '';
 							$stat_zuba = '';
-							foreach($zo_arr as $key => $value){
+							foreach($doppol_arr as $key => $value){
 								$n_zuba .= "`{$key}`, ";
 								$rrr = json_encode($value, true);
 								$stat_zuba .= "'{$rrr}', ";

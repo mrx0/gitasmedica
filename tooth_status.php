@@ -89,6 +89,16 @@
 			'color' => '#FF0000',
 			'img' => '46.png',
 		),
+		23 => array(
+			'descr' => 'Шинирование.',
+			'color' => '#FFF',
+			'img' => '../surface_state/38.png',
+		),
+		24 => array(
+			'descr' => 'Подвижность',
+			'color' => '#FFF',
+			'img' => '../surface_state/38.png',
+		),
 		
 	);
 	

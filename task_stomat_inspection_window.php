@@ -66,7 +66,8 @@
 						
 					}
 											
-											
+					//var_dump($dop);		
+					
 					include_once 't_surface_name.php';
 					include_once 't_surface_status.php';
 					
@@ -86,8 +87,6 @@
 					unset($decription['worker']);
 					
 					unset($decription['comment']);
-
-					unset($dop[0]['id']);
 					
 					$t_f_data = array();
 					
@@ -102,14 +101,26 @@
 					//var_dump ($t_f_data);
 					if (!empty($dop[0])){
 						//var_dump($dop[0]);
+						unset($dop[0]['id']);
+						//var_dump($dop[0]);
 						foreach($dop[0] as $key => $value){
+							//var_dump($value);
 							if ($value != '0'){
+								//var_dump($value);
 								$dop_arr = json_decode($value, true);
 								//var_dump($dop_arr);
 								foreach ($dop_arr as $n_key => $n_value){
 									if ($n_key == 'zo'){
 										$t_f_data[$key]['zo'] = $n_value;
 										//$t_f_data_draw[$key]['zo'] = $n_value;
+									}
+									if ($n_key == 'shinir'){
+										$t_f_data[$key]['shinir'] = $n_value;
+										//$t_f_data_draw[$key]['shinir'] = $n_value;
+									}
+									if ($n_key == 'podvizh'){
+										$t_f_data[$key]['podvizh'] = $n_value;
+										//$t_f_data_draw[$key]['podvizh'] = $n_value;
 									}
 								}
 							}

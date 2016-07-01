@@ -4,7 +4,7 @@
 //Зубная карта меню, вызов из Аякса
 
 	if($_POST){
-		var_dump($_POST);
+		//var_dump($_POST);
 		
 		$_POST['param'] = str_replace(' ', '', $_POST['param']);
 		$data_arr = explode(',', $_POST['param']);

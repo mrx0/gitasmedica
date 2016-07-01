@@ -88,6 +88,16 @@ var tooth_status_arr = {
 			"color": "#FF0000",
 			"img": "46.png",
 		},
+	23: {
+			"descr": "Шинирование",
+			"color": "#FFF",
+			"img": "../surface_state/38.png",
+		},
+	24: {
+			"descr": "Подвижность",
+			"color": "#FFF",
+			"img": "../surface_state/38.png",
+		},
 		
 };
 	

@@ -11,6 +11,31 @@
 			include_once 'functions.php';
 			include_once 'tooth_status.php';
 			
+			$text_tooth_status = array(
+				'up' => -9,
+				'down' => 138,
+				'left' => array (
+					1 => 268,
+					2 => 231,
+					3 => 196,
+					4 => 159,
+					5 => 123,
+					6 => 87,
+					7 => 52,
+					8 => 15,						
+				),
+				'right' => array (
+					1 => 321,
+					2 => 360,
+					3 => 396,
+					4 => 432,
+					5 => 469,
+					6 => 505,
+					7 => 539,
+					8 => 576,			
+				),
+			);
+			
 			$client = SelDataFromDB('spr_clients', $_GET['id'], 'user');
 			
 			//var_dump($user);
@@ -258,18 +283,31 @@
 						unset($t_f_data['worker']);
 						unset($t_f_data['comment']);*/
 						
-						unset($dop[0]['id']);
+						//unset($dop[0]['id']);
 						
+						//var_dump ($t_f_data);
 						if (!empty($dop[0])){
 							//var_dump($dop[0]);
+							unset($dop[0]['id']);
+							//var_dump($dop[0]);
 							foreach($dop[0] as $key => $value){
+								//var_dump($value);
 								if ($value != '0'){
+									//var_dump($value);
 									$dop_arr = json_decode($value, true);
 									//var_dump($dop_arr);
 									foreach ($dop_arr as $n_key => $n_value){
 										if ($n_key == 'zo'){
 											$t_f_data[$key]['zo'] = $n_value;
 											//$t_f_data_draw[$key]['zo'] = $n_value;
+										}
+										if ($n_key == 'shinir'){
+											$t_f_data[$key]['shinir'] = $n_value;
+											//$t_f_data_draw[$key]['shinir'] = $n_value;
+										}
+										if ($n_key == 'podvizh'){
+											$t_f_data[$key]['podvizh'] = $n_value;
+											//$t_f_data_draw[$key]['podvizh'] = $n_value;
 										}
 									}
 								}
@@ -596,6 +634,56 @@
 											>
 											</div>
 											';
+								}
+								
+								$text_status_div = '';
+								$text_status_div_shinir = '';
+								$text_status_div_podvizh = '';
+								
+								//Для Шинирования и дополнительно
+								if (isset($t_f_data[$i.$j]['shinir'])){
+									$text_status_div_shinir = 'ш';
+									if ($i == 1){
+										$top_tts = $text_tooth_status['up'];
+										$left_tts = $text_tooth_status['left'][$j];
+									}
+									if ($i == 2){
+										$top_tts = $text_tooth_status['up'];
+										$left_tts = $text_tooth_status['right'][$j];
+									}
+									if ($i == 3){
+										$top_tts = $text_tooth_status['down'];
+										$left_tts = $text_tooth_status['right'][$j];
+									}
+									if ($i == 4){
+										$top_tts = $text_tooth_status['down'];
+										$left_tts = $text_tooth_status['left'][$j];
+									}
+								}
+								//Для Подвижности и дополнительно
+								if (isset($t_f_data[$i.$j]['podvizh'])){
+									$text_status_div_podvizh = 'A';
+									if ($i == 1){
+										$top_tts = $text_tooth_status['up'];
+										$left_tts = $text_tooth_status['left'][$j];
+									}
+									if ($i == 2){
+										$top_tts = $text_tooth_status['up'];
+										$left_tts = $text_tooth_status['right'][$j];
+									}
+									if ($i == 3){
+										$top_tts = $text_tooth_status['down'];
+										$left_tts = $text_tooth_status['right'][$j];
+									}
+									if ($i == 4){
+										$top_tts = $text_tooth_status['down'];
+										$left_tts = $text_tooth_status['left'][$j];
+									}
+									$text_status_div .= '
+										<div class="text_in_map_dop" style="left: '.$left_tts.'px; top: '.$top_tts.'px">';
+								}
+								if ((isset($t_f_data[$i.$j]['shinir'])) || (isset($t_f_data[$i.$j]['podvizh']))){
+									echo '<div class="text_in_map_dop" style="left: '.$left_tts.'px; top: '.$top_tts.'px">'.$text_status_div_shinir.' '.$text_status_div_podvizh.'</div>';
 								}
 								
 							}

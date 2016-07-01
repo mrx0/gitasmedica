@@ -28,15 +28,24 @@
 				$for_query = '';
 				$temp_n_zuba_stat_zuba = '';
 				
-				//для ЗО
-				$zo_arr = array();
+				//для ЗО и остального
+				$doppol_arr = array();
 				
 				foreach($t_f_data_temp as $key => $value){
 					$n_zuba = "`{$key}` ";
 					if (isset($value['zo'])){
-						$zo_arr[$key]['zo'] = $value['zo'];
+						$doppol_arr[$key]['zo'] = $value['zo'];
 						unset($value['zo']);
 					}
+					if (isset($value['shinir'])){
+						$doppol_arr[$key]['shinir'] = $value['shinir'];
+						unset($value['shinir']);
+					}
+					if (isset($value['podvizh'])){
+						$doppol_arr[$key]['podvizh'] = $value['podvizh'];
+						unset($value['podvizh']);
+					}
+					
 					$rrr = implode(',', $value);
 					$stat_zuba = " '{$rrr}', ";
 					
@@ -80,12 +89,12 @@
 				$for_query_update = '';
 				$for_query_insert = '';
 						
-				if (!empty($zo_arr)){
+				if (!empty($doppol_arr)){
 					$n_zuba_i = '';
 					$stat_zuba_i = '';
 					$n_zuba = '';
 					$stat_zuba = '';
-					foreach($zo_arr as $key => $value){
+					foreach($doppol_arr as $key => $value){
 						$n_zuba_i .= "`{$key}`, ";
 						$rrr = json_encode($value, true);
 						$stat_zuba_i .= "'{$rrr}', ";
@@ -94,19 +103,20 @@
 						$rrr = $n_zuba."='".json_encode($value, true)."'";
 						$for_query_update .= $rrr.',';
 					}
-					//echo $ffor_query_update.'<br />';
+					//echo $for_query_update.'<br />';
 					
 					$for_query_update = substr($for_query_update, 0, -1);
 					$n_zuba_i = substr($n_zuba_i, 0, -2);
 					$stat_zuba_i = substr($stat_zuba_i, 0, -2);
 					
+					$query = "DELETE FROM `journal_tooth_status_temp` WHERE `id` = '{$_POST['id']}'";
+
+					mysql_query($query) or die(mysql_error());
+					
 					$query = "INSERT INTO `journal_tooth_status_temp` (
 						`id`, {$n_zuba_i}) 
 						VALUES (
-							'{$_POST['id']}', {$stat_zuba_i}) 
-						ON DUPLICATE KEY UPDATE
-						{$for_query_update}
-						";
+							'{$_POST['id']}', {$stat_zuba_i})";
 					//echo $query;
 					mysql_query($query) or die(mysql_error());
 

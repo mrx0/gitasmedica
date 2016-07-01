@@ -56,8 +56,35 @@
 		//var_dump($t_f_data);
 		//echo $t_f_data_temp_refresh;
 		
+		$text_tooth_status = array(
+			'up' => -9,
+			'down' => 138,
+			'left' => array (
+				1 => 268,
+				2 => 231,
+				3 => 196,
+				4 => 159,
+				5 => 123,
+				6 => 87,
+				7 => 52,
+				8 => 15,						
+			),
+			'right' => array (
+				1 => 321,
+				2 => 360,
+				3 => 396,
+				4 => 432,
+				5 => 469,
+				6 => 505,
+				7 => 539,
+				8 => 576,			
+			),
+		);
+		
+		//<div class="text_in_map_dop" style="left: 15px; top: -9px">А</div>
 		
 		echo '<div class="map'.$n.'" id="map'.$n.'">
+			
 			<div class="text_in_map" style="left: 15px">8</div>
 			<div class="text_in_map" style="left: 52px">7</div>
 			<div class="text_in_map" style="left: 87px">6</div>
@@ -401,6 +428,56 @@
 							</div>
 							';
 				}
+				
+				$text_status_div = '';
+				$text_status_div_shinir = '';
+				$text_status_div_podvizh = '';
+				
+				//Для Шинирования и дополнительно
+				if (isset($t_f_data[$i.$j]['shinir'])){
+					$text_status_div_shinir = 'ш';
+					if ($i == 1){
+						$top_tts = $text_tooth_status['up'];
+						$left_tts = $text_tooth_status['left'][$j];
+					}
+					if ($i == 2){
+						$top_tts = $text_tooth_status['up'];
+						$left_tts = $text_tooth_status['right'][$j];
+					}
+					if ($i == 3){
+						$top_tts = $text_tooth_status['down'];
+						$left_tts = $text_tooth_status['right'][$j];
+					}
+					if ($i == 4){
+						$top_tts = $text_tooth_status['down'];
+						$left_tts = $text_tooth_status['left'][$j];
+					}
+				}
+				//Для Подвижности и дополнительно
+				if (isset($t_f_data[$i.$j]['podvizh'])){
+					$text_status_div_podvizh = 'A';
+					if ($i == 1){
+						$top_tts = $text_tooth_status['up'];
+						$left_tts = $text_tooth_status['left'][$j];
+					}
+					if ($i == 2){
+						$top_tts = $text_tooth_status['up'];
+						$left_tts = $text_tooth_status['right'][$j];
+					}
+					if ($i == 3){
+						$top_tts = $text_tooth_status['down'];
+						$left_tts = $text_tooth_status['right'][$j];
+					}
+					if ($i == 4){
+						$top_tts = $text_tooth_status['down'];
+						$left_tts = $text_tooth_status['left'][$j];
+					}
+					$text_status_div .= '
+						<div class="text_in_map_dop" style="left: '.$left_tts.'px; top: '.$top_tts.'px">';
+				}
+				if ((isset($t_f_data[$i.$j]['shinir'])) || (isset($t_f_data[$i.$j]['podvizh']))){
+					echo '<div class="text_in_map_dop" style="left: '.$left_tts.'px; top: '.$top_tts.'px">'.$text_status_div_shinir.' '.$text_status_div_podvizh.'</div>';
+				}
 			}
 		}
 		
@@ -426,6 +503,8 @@
 					var implant = $("input[name=implant]:checked").val();
 					var alien = $("input[name=alien]:checked").val();
 					var zo = $("input[name=zo]:checked").val();
+					var shinir = $("input[name=shinir]:checked").val();
+					var podvizh = $("input[name=podvizh]:checked").val();
                     $.ajax({  
                         url: "teeth_map_svg_edit.php",  
 						method: "POST",
@@ -440,6 +519,8 @@
 								
 								alien:alien,
 								zo:zo,
+								shinir:shinir,
+								podvizh:podvizh,
 								n:'.$nm.',
 							},
                         success: function(html){  

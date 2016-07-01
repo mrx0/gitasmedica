@@ -7,7 +7,7 @@
 	
 	if($_GET){
 		
-		var_dump($_GET);
+		//var_dump($_GET);
 		//var_dump($_SESSION);
 		
 		include_once 'tooth_status.php';
@@ -31,7 +31,7 @@
 			foreach ($arr as $key => $value){
 				if (array_key_exists($_GET['status_all'], $tooth_status) || ($value == '0')){
 					//Если не ЗО
-					if ($_GET['status_all'] != '22'){
+					if (($_GET['status_all'] != '22') && ($_GET['status_all'] != '23') && ($_GET['status_all'] != '24')){
 						$t_f_data[$key]['status'] = $_GET['status_all'];
 						//Чистим радиксы (пока только их)  место для взаимоисключающих статусов
 						if ($t_f_data[$key]['root1'] == '34')
@@ -42,15 +42,35 @@
 							$t_f_data[$key]['root3'] = 0;
 							
 					}else{
-						if (isset($t_f_data[$key]['zo'])){
-							if ($t_f_data[$key]['zo'] == '1'){
-								$t_f_data[$key]['zo'] = '0';
-							}elseif ($t_f_data[$key]['zo'] == '0'){
-								unset($t_f_data[$key]['zo']);
+						
+						if ($_GET['status_all'] == '22'){
+							if (isset($t_f_data[$key]['zo'])){
+								if ($t_f_data[$key]['zo'] == '1'){
+									$t_f_data[$key]['zo'] = '0';
+								}elseif ($t_f_data[$key]['zo'] == '0'){
+									unset($t_f_data[$key]['zo']);
+								}
+							}else{
+								$t_f_data[$key]['zo'] = '1';
 							}
-						}else{
-							$t_f_data[$key]['zo'] = '1';
 						}
+						
+						if ($_GET['status_all'] == '23'){
+							if (isset($t_f_data[$key]['shinir'])){
+								unset($t_f_data[$key]['shinir']);
+							}else{
+								$t_f_data[$key]['shinir'] = '1';
+							}
+						}
+						
+						if ($_GET['status_all'] == '24'){
+							if (isset($t_f_data[$key]['podvizh'])){
+								unset($t_f_data[$key]['podvizh']);
+							}else{
+								$t_f_data[$key]['podvizh'] = '1';
+							}
+						}
+						
 					}
 				}elseif (array_key_exists($_GET['status_all'], $surface_status)){
 					$t_f_data[$key]['surface1'] = $_GET['status_all'];
@@ -71,6 +91,8 @@
 					$t_f_data[$key]['alien'] = '0';
 					$t_f_data[$key]['pin'] = '0';
 					unset($t_f_data[$key]['zo']);
+					unset($t_f_data[$key]['shinir']);
+					unset($t_f_data[$key]['podvizh']);
 				}
 				
 				//имплантант (может быть с чем-то)

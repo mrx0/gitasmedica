@@ -210,7 +210,7 @@
 					unset($t_f_data_db['worker']);
 					unset($t_f_data_db['comment']);
 					
-					unset($dop[0]['id']);
+					//unset($dop[0]['id']);
 					
 					
 					foreach ($t_f_data_db as $key => $value){
@@ -221,26 +221,41 @@
 					}
 					
 					
+					//var_dump ($t_f_data);
 					if (!empty($dop[0])){
 						//var_dump($dop[0]);
+						unset($dop[0]['id']);
+						//var_dump($dop[0]);
 						foreach($dop[0] as $key => $value){
+							//var_dump($value);
 							if ($value != '0'){
+								//var_dump($value);
 								$dop_arr = json_decode($value, true);
 								//var_dump($dop_arr);
 								foreach ($dop_arr as $n_key => $n_value){
 									if ($n_key == 'zo'){
-										$t_f_data[$key]['zo'] = $n_value;
+										//$t_f_data[$key]['zo'] = $n_value;
 										$t_f_data_draw[$key]['zo'] = $n_value;
+									}
+									if ($n_key == 'shinir'){
+										//$t_f_data[$key]['shinir'] = $n_value;
+										$t_f_data_draw[$key]['shinir'] = $n_value;
+									}
+									if ($n_key == 'podvizh'){
+										//$t_f_data[$key]['podvizh'] = $n_value;
+										$t_f_data_draw[$key]['podvizh'] = $n_value;
 									}
 								}
 							}
 						}
 					}
 					
+					//var_dump ($t_f_data);	
+					
 					//var_dump($t_f_data);
 					
 					//Пробуем записать в сессию.
-					$_SESSION['journal_tooth_status_temp'] = $t_f_data;
+					$_SESSION['journal_tooth_status_temp'] = $t_f_data_draw;
 
 				}else{
 					//Разбиваем запись с ',' на массив и записываем в новый массив
@@ -417,7 +432,7 @@
 			<div id="modal2" class="modal_div">
 				<span class="modal_close">X</span>
 					
-						<h3>Выбор нескольких сегментов зубной формулы</h3>
+						<h3>Выбор нескольких сегментов зубной формулы2</h3>
 						<b>Статус: </b>
 						<div id="t_summ_status"></div>
 
