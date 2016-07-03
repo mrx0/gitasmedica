@@ -502,6 +502,8 @@
 									$("input[name=t46]").removeAttr("checked");
 									$("input[name=t47]").removeAttr("checked");
 									$("input[name=t48]").removeAttr("checked");
+									
+									$("input[name=implant]").removeAttr("checked");
 
 								}  
 							}); 
