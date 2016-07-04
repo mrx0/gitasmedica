@@ -74,7 +74,88 @@
 						$cl_age = 0;
 					}
 					
-					if (Sanation2($task[0]['id'], $task[0], $cl_age)){
+					//Перенесено сюда снизу
+					
+					//ЗО и тд	
+					$dop = array();							
+					$query = "SELECT * FROM `journal_tooth_status_temp` WHERE `id` = '{$task[0]['id']}'";
+					$res = mysql_query($query) or die($query);
+					$number = mysql_num_rows($res);
+					if ($number != 0){
+						while ($arr = mysql_fetch_assoc($res)){
+							array_push($dop, $arr);
+						}
+						
+					}
+											
+											
+					include_once 't_surface_name.php';
+					include_once 't_surface_status.php';
+					
+					
+					$arr = array();
+					$decription = $task[0];
+					
+					//var_dump($decription);
+					
+					unset($decription['id']);
+					unset($decription['office']);
+					unset($decription['client']);
+					unset($decription['create_time']);
+					unset($decription['create_person']);
+					unset($decription['last_edit_time']);
+					unset($decription['last_edit_person']);
+					unset($decription['worker']);
+					
+					unset($decription['comment']);
+					
+					$t_f_data = array();
+					
+					//собрали массив с зубами и статусами по поверхностям
+					foreach ($decription as $key => $value){
+						$surfaces_temp = explode(',', $value);
+						//var_dump($surfaces_temp);
+						foreach ($surfaces_temp as $key1 => $value1){
+							///!!!Еба костыль
+							if ($key1 < 13){
+								$t_f_data[$key][$surfaces[$key1]] = $value1;
+							}
+						}
+					}
+					//var_dump ($t_f_data);
+					if (!empty($dop[0])){
+						//var_dump($dop[0]);
+						unset($dop[0]['id']);
+						//var_dump($dop[0]);
+						foreach($dop[0] as $key => $value){
+							//var_dump($value);
+							if ($value != '0'){
+								//var_dump($value);
+								$dop_arr = json_decode($value, true);
+								//var_dump($dop_arr);
+								foreach ($dop_arr as $n_key => $n_value){
+									if ($n_key == 'zo'){
+										$t_f_data[$key]['zo'] = $n_value;
+										//$t_f_data_draw[$key]['zo'] = $n_value;
+									}
+									if ($n_key == 'shinir'){
+										$t_f_data[$key]['shinir'] = $n_value;
+										//$t_f_data_draw[$key]['shinir'] = $n_value;
+									}
+									if ($n_key == 'podvizh'){
+										$t_f_data[$key]['podvizh'] = $n_value;
+										//$t_f_data_draw[$key]['podvizh'] = $n_value;
+									}
+								}
+							}
+						}
+					}
+					
+					//var_dump ($t_f_data);		
+					
+					
+					
+					if (Sanation2($task[0]['id'], $t_f_data, $cl_age)){
 						echo '<span style= "background: rgba(87,223,63,0.7); padding: 2px;">Санирован (ТЕСТ)</span><br />';
 					}else{
 						echo '<span style= "background: rgba(255,39,119,0.7); padding: 2px;">Не санирован (ТЕСТ)</span><br />';
@@ -120,79 +201,7 @@
 					//unset($t_f_data_temp['create_time']);	
 					
 					
-					//ЗО и тд	
-					$dop = array();							
-					$query = "SELECT * FROM `journal_tooth_status_temp` WHERE `id` = '{$task[0]['id']}'";
-					$res = mysql_query($query) or die($query);
-					$number = mysql_num_rows($res);
-					if ($number != 0){
-						while ($arr = mysql_fetch_assoc($res)){
-							array_push($dop, $arr);
-						}
-						
-					}
-											
-											
-					include_once 't_surface_name.php';
-					include_once 't_surface_status.php';
-					
-					
-					$arr = array();
-					$decription = $task[0];
-					
-					//var_dump($decription);
-					
-					unset($decription['id']);
-					unset($decription['office']);
-					unset($decription['client']);
-					unset($decription['create_time']);
-					unset($decription['create_person']);
-					unset($decription['last_edit_time']);
-					unset($decription['last_edit_person']);
-					unset($decription['worker']);
-					
-					unset($decription['comment']);
-					
-					$t_f_data = array();
-					
-					//собрали массив с зубами и статусами по поверхностям
-					foreach ($decription as $key => $value){
-						$surfaces_temp = explode(',', $value);
-						//var_dump($surfaces_temp);
-						foreach ($surfaces_temp as $key1 => $value1){
-							$t_f_data[$key][$surfaces[$key1]] = $value1;
-						}
-					}
-					//var_dump ($t_f_data);
-					if (!empty($dop[0])){
-						//var_dump($dop[0]);
-						unset($dop[0]['id']);
-						//var_dump($dop[0]);
-						foreach($dop[0] as $key => $value){
-							//var_dump($value);
-							if ($value != '0'){
-								//var_dump($value);
-								$dop_arr = json_decode($value, true);
-								//var_dump($dop_arr);
-								foreach ($dop_arr as $n_key => $n_value){
-									if ($n_key == 'zo'){
-										$t_f_data[$key]['zo'] = $n_value;
-										//$t_f_data_draw[$key]['zo'] = $n_value;
-									}
-									if ($n_key == 'shinir'){
-										$t_f_data[$key]['shinir'] = $n_value;
-										//$t_f_data_draw[$key]['shinir'] = $n_value;
-									}
-									if ($n_key == 'podvizh'){
-										$t_f_data[$key]['podvizh'] = $n_value;
-										//$t_f_data_draw[$key]['podvizh'] = $n_value;
-									}
-								}
-							}
-						}
-					}
-					
-					//var_dump ($t_f_data);		
+
 
 
 					//рисуем зубную формулу						

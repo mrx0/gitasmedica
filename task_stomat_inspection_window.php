@@ -95,7 +95,10 @@
 						$surfaces_temp = explode(',', $value);
 						//var_dump($surfaces_temp);
 						foreach ($surfaces_temp as $key1 => $value1){
-							$t_f_data[$key][$surfaces[$key1]] = $value1;
+							///!!!Еба костыль
+							if ($key1 < 13){
+								$t_f_data[$key][$surfaces[$key1]] = $value1;
+							}
 						}
 					}
 					//var_dump ($t_f_data);

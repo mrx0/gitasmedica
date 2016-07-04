@@ -172,7 +172,10 @@
 					foreach ($t_f_data_db as $key => $value){
 						$surfaces_temp = explode(',', $value);
 						foreach ($surfaces_temp as $key1 => $value1){
-							$t_f_data[$key][$surfaces[$key1]] = $value1;
+							///!!!Еба костыль
+							if ($key1 < 13){
+								$t_f_data[$key][$surfaces[$key1]] = $value1;
+							}
 						}
 					}
 					//var_dump($t_f_data_db);
@@ -216,7 +219,10 @@
 					foreach ($t_f_data_db as $key => $value){
 						$surfaces_temp = explode(',', $value);
 						foreach ($surfaces_temp as $key1 => $value1){
-							$t_f_data_draw[$key][$surfaces[$key1]] = $value1;
+							///!!!Еба костыль
+							if ($key1 < 13){
+								$t_f_data_draw[$key][$surfaces[$key1]] = $value1;
+							}
 						}
 					}
 					
