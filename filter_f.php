@@ -11,6 +11,7 @@
 		$worker_filter = FALSE;
 		$filial_filter = FALSE;
 		$priority_filter = FALSE;
+		$pervich_filter = FALSE;
 		$fio_filter = FALSE;
 		$fio_f_filter = FALSE;
 		$fio_i_filter = FALSE;
@@ -124,6 +125,22 @@
 				$priority_filter = TRUE;
 			}
 		}
+		if  (!empty($dataarray['pervich'])){
+			//$sw = $dataarray['priority'];
+			//$type = 'priority_tasks';
+			
+			if ($dataarray['pervich'] == '0'){
+				$echo_filter .= 'Статуc: Все';
+				//$sw .= '';
+			}elseif($dataarray['pervich'] == '1'){
+				$echo_filter .= 'Статуc: Только первичные. ';
+				//$sw .= "`priority` = '{$dataarray['priority']}' ";
+				$pervich_filter = TRUE;
+			}elseif($dataarray['priority'] == '2'){
+				$echo_filter .= 'Статуc: Только не первичные. ';
+				$pervich_filter = TRUE;
+			}
+		}
 		if (isset ($dataarray['f']) && ($dataarray['f'] != '') && (!empty($dataarray))){
 			if (($ended_filter) || ($filial_filter) || ($priority_filter) || ($worker_filter)){
 				$sw .= 'AND '; 
@@ -183,7 +200,7 @@
 
 		}
 		
-		
+		if ($pervich_filter) $filter_rez['pervich'] = true;
 		$filter_rez[1] = $sw;
 		
 		return ($filter_rez);

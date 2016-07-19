@@ -169,6 +169,27 @@
 							</div>';
 			}
 		}
+		if ($sw == 'stomat'){
+			if (($stom['see_all'] == 1) || $god_mode){
+				echo '
+							<div class="filterBlock">
+								<div class="filtercellLeft">
+									Статус
+								</div>
+								<div class="filtercellRight">
+									<div class="wrapper-demo">
+										<select id="dd2" class="wrapper-dropdown-2 b2" tabindex="3" name="pervich">
+											<ul class="dropdown">
+												<li><option value="0" selected>Все</option></li>
+												<li><option value="1">Только первичные</option></li>
+											
+											</ul>
+										</select>
+									</div>
+								</div>
+							</div>';
+			}
+		}
 		if ($sw == 'clients'){
 			echo '					
 							<div class="filterBlock">
