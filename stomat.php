@@ -144,7 +144,8 @@
 				
 				//////////////////////////////////////////////////	
 			$journal = 0;
-			
+			$journal_ex = 0;
+				
 				
 				$sw = $filter_rez[1];
 				if ($stom['see_own'] == 1){
@@ -172,7 +173,12 @@
 				}else{
 					$journal = 0;
 				}
+				
+				$arr = array();
+				$rez = array();
+				
 				mysql_close();
+//				var_dump($journal_ex);
 				
 				echo '
 					<form action="stomat.php" id="months_form" method="GET">
@@ -253,6 +259,18 @@
 				for ($i = 0; $i < count($journal); $i++) {
 					$rez_color = '';
 					
+					$journal_ex_bool = FALSE;
+					
+					if ((isset($filter_rez['pervich'])) && ($filter_rez['pervich'] == true)){
+						$query = "SELECT * FROM `journal_tooth_ex` WHERE `pervich` = 1 AND `id` = '{$journal[$i]['id']}' ORDER BY `id` DESC";
+						$res = mysql_query($query) or die($query);
+						$number = mysql_num_rows($res);
+						if ($number != 0){
+							$journal_ex_bool = true;
+						}else{
+						}
+					}
+					if ((isset($filter_rez['pervich']) && $journal_ex_bool) || (!isset($filter_rez['pervich']))){
 					//if (($journal[$i]['create_time'] >= $datestart)  && ($journal[$i]['create_time'] <= $datefinish)){
 						//Надо найти клиента
 						$clients = SelDataFromDB ('spr_clients', $journal[$i]['client'], 'client_id');
@@ -439,7 +457,7 @@
 						echo '
 									<div class="cellText">'.$journal[$i]['comment'].'</div>
 							</li>';
-					//}
+					}
 				}
 				echo '
 						</ul>
