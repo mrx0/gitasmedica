@@ -315,7 +315,7 @@
 									<a href="task_stomat_inspection.php?id='.$journal[$i]['id'].'" class="cellName ahref" title="'.$journal[$i]['id'].'">'.date('d.m.y H:i', $journal[$i]['create_time']).' '.$dop_img.'</a>
 									<a href="client.php?id='.$journal[$i]['client'].'" class="cellName ahref" '.$id4filter4worker.'>'.$client.'</a>';
 						
-						if (Sanation2($journal[$i]['id'], $journal[$i], $cl_age)){
+						///if (Sanation2($journal[$i]['id'], $journal[$i], $cl_age)){
 						
 						
 						

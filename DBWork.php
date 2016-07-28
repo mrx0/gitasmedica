@@ -423,10 +423,15 @@
 			VALUES (
 			'{$name}', '{$full_name}', '{$f}', '{$i}', '{$o}', '{$contacts}', '{$sex}', '{$birthday}', '{$therapist}', '{$therapist2}') ";
 		mysql_query($query) or die(mysql_error());
+		
+		$mysql_insert_id = mysql_insert_id();
+		
 		mysql_close();
 		
 		//логирование
 		AddLog (GetRealIp(), $session_id, '', 'Добавлен пациент. ['.date('d.m.y H:i', $time).']. ['.$full_name.']. Контакты: ['.$contacts.']. Пол: ['.$sex.']. Дата рождения: ['.$birthday.']. Лечащий врач [стоматология]: ['.$therapist.']. Лечащий врач [косметология]: ['.$therapist2.']');
+		
+		return ($mysql_insert_id);
 	}
 	
 	

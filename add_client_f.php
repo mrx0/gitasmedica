@@ -64,15 +64,18 @@
 						//echo
 						$birthday = strtotime($_POST['sel_date'].'.'.$_POST['sel_month'].'.'.$_POST['sel_year']);
 						
-						WriteClientToDB_Edit ($_POST['session_id'], $name, $full_name, $_POST['f'], $_POST['i'], $_POST['o'], $_POST['contacts'], $therapist, $therapist2, $birthday, $_POST['sex']);
-					
+						$new_client = WriteClientToDB_Edit ($_POST['session_id'], $name, $full_name, $_POST['f'], $_POST['i'], $_POST['o'], $_POST['contacts'], $therapist, $therapist2, $birthday, $_POST['sex']);
+						//var_dump($new_client);
+						
 						echo '
 							<h1>Пациент добавлен в базу.</h1>
 							ФИО: '.$full_name.'<br />
-							'.$echo_therapist.'<br />'
-							.$echo_therapist2.'
+							'.$echo_therapist.'<br />
+							<a href="add_task_stomat.php?client='.$new_client.'" class="b">Добавить посещение стоматолога</a><br /><br />'
+							.$echo_therapist2.'<br />
+							<a href="add_task_cosmet.php?client='.$new_client.'" class="b">Добавить посещение косметолога</a>
 							<br /><br />
-							<a href="add_client.php" class="b">Добавить ещё</a>
+							<a href="add_client.php" class="b">Добавить ещё пациента</a>
 							<a href="clients.php" class="b">К списку пациентов</a>
 							';
 					}
