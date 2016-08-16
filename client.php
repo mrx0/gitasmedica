@@ -15,24 +15,24 @@
 				'up' => -9,
 				'down' => 138,
 				'left' => array (
-					1 => 268,
-					2 => 231,
-					3 => 196,
-					4 => 159,
-					5 => 123,
-					6 => 87,
-					7 => 52,
-					8 => 15,						
+					1 => 258,
+					2 => 221,
+					3 => 186,
+					4 => 149,
+					5 => 113,
+					6 => 77,
+					7 => 42,
+					8 => 5,						
 				),
 				'right' => array (
-					1 => 321,
-					2 => 360,
-					3 => 396,
-					4 => 432,
-					5 => 469,
-					6 => 505,
-					7 => 539,
-					8 => 576,			
+					1 => 311,
+					2 => 350,
+					3 => 386,
+					4 => 422,
+					5 => 459,
+					6 => 495,
+					7 => 529,
+					8 => 566,			
 				),
 			);
 			
@@ -311,6 +311,14 @@
 										if ($n_key == 'podvizh'){
 											$t_f_data[$key]['podvizh'] = $n_value;
 											//$t_f_data_draw[$key]['podvizh'] = $n_value;
+										}
+										if ($n_key == 'retein'){
+											$t_f_data[$key]['retein'] = $n_value;
+											//$t_f_data_draw[$key]['retein'] = $n_value;
+										}
+										if ($n_key == 'skomplect'){
+											$t_f_data[$key]['skomplect'] = $n_value;
+											//$t_f_data_draw[$key]['skomplect'] = $n_value;
 										}
 									}
 								}
@@ -642,7 +650,9 @@
 								$text_status_div = '';
 								$text_status_div_shinir = '';
 								$text_status_div_podvizh = '';
-								
+								$text_status_div_retein = '';
+								$text_status_div_skomplect = '';
+																
 								//Для Шинирования и дополнительно
 								if (isset($t_f_data[$i.$j]['shinir'])){
 									$text_status_div_shinir = 'ш';
@@ -685,8 +695,52 @@
 									$text_status_div .= '
 										<div class="text_in_map_dop" style="left: '.$left_tts.'px; top: '.$top_tts.'px">';
 								}
-								if ((isset($t_f_data[$i.$j]['shinir'])) || (isset($t_f_data[$i.$j]['podvizh']))){
-									echo '<div class="text_in_map_dop" style="left: '.$left_tts.'px; top: '.$top_tts.'px">'.$text_status_div_shinir.' '.$text_status_div_podvizh.'</div>';
+								//Для Ретейнер и дополнительно
+								if (isset($t_f_data[$i.$j]['retein'])){
+									$text_status_div_retein = 'р';
+									if ($i == 1){
+										$top_tts = $text_tooth_status['up'];
+										$left_tts = $text_tooth_status['left'][$j];
+									}
+									if ($i == 2){
+										$top_tts = $text_tooth_status['up'];
+										$left_tts = $text_tooth_status['right'][$j];
+									}
+									if ($i == 3){
+										$top_tts = $text_tooth_status['down'];
+										$left_tts = $text_tooth_status['right'][$j];
+									}
+									if ($i == 4){
+										$top_tts = $text_tooth_status['down'];
+										$left_tts = $text_tooth_status['left'][$j];
+									}
+									$text_status_div .= '
+										<div class="text_in_map_dop" style="left: '.$left_tts.'px; top: '.$top_tts.'px">';
+								}
+								//Для Сверхкомплекта и дополнительно
+								if (isset($t_f_data[$i.$j]['skomplect'])){
+									$text_status_div_skomplect = 'c';
+									if ($i == 1){
+										$top_tts = $text_tooth_status['up'];
+										$left_tts = $text_tooth_status['left'][$j];
+									}
+									if ($i == 2){
+										$top_tts = $text_tooth_status['up'];
+										$left_tts = $text_tooth_status['right'][$j];
+									}
+									if ($i == 3){
+										$top_tts = $text_tooth_status['down'];
+										$left_tts = $text_tooth_status['right'][$j];
+									}
+									if ($i == 4){
+										$top_tts = $text_tooth_status['down'];
+										$left_tts = $text_tooth_status['left'][$j];
+									}
+									$text_status_div .= '
+										<div class="text_in_map_dop" style="left: '.$left_tts.'px; top: '.$top_tts.'px">';
+								}
+								if ((isset($t_f_data[$i.$j]['shinir'])) || (isset($t_f_data[$i.$j]['podvizh'])) || (isset($t_f_data[$i.$j]['retein'])) || (isset($t_f_data[$i.$j]['skomplect']))){
+									echo '<div class="text_in_map_dop" style="left: '.$left_tts.'px; top: '.$top_tts.'px">'.$text_status_div_shinir.''.$text_status_div_podvizh.''.$text_status_div_retein.''.$text_status_div_skomplect.'</div>';
 								}
 								
 							}

@@ -229,6 +229,14 @@
 											$t_f_data[$key]['podvizh'] = $n_value;
 											//$t_f_data_draw[$key]['podvizh'] = $n_value;
 										}
+										if ($n_key == 'retein'){
+											$t_f_data[$key]['retein'] = $n_value;
+											//$t_f_data_draw[$key]['retein'] = $n_value;
+										}
+										if ($n_key == 'skomplect'){
+											$t_f_data[$key]['skomplect'] = $n_value;
+											//$t_f_data_draw[$key]['skomplect'] = $n_value;
+										}
 									}
 								}
 							}

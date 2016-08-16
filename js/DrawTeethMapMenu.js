@@ -72,7 +72,7 @@
 			for (var tooth_status_key in tooth_status_arr) {
 				if ((tooth_status_key != 6) && (tooth_status_key != 7)){
 					t_menu += "<tr>";
-					if ((tooth_status_key != 3) &&  (tooth_status_key != 22) &&  (tooth_status_key != 23) &&  (tooth_status_key != 24)){
+					if ((tooth_status_key != 3) &&  (tooth_status_key != 22) &&  (tooth_status_key != 23) &&  (tooth_status_key != 24) &&  (tooth_status_key != 25) &&  (tooth_status_key != 26)){
 						t_menu += "<td class='cellsBlockHover'>"+
 							"<a href='#' id='refresh' onclick=\"refreshTeeth("+tooth_status_key+", '"+func_n_zuba+"', '"+func_surface+"')\" class='ahref'>"+
 								"<img src='img/tooth_state/"+tooth_status_arr[tooth_status_key]['img']+"' border='0' /> "+tooth_status_arr[tooth_status_key]['descr']+
@@ -131,6 +131,32 @@
 							"</td>"+
 							"<td class='cellsBlockHover'>"+
 								"<input type='checkbox' name='podvizh' value='1'>"+
+							"</td>"+
+							"<td class='cellsBlockHover'>"+
+								"<a href='#modal2' class='open_modal' id='"+tooth_status_key+"'><img src='img/list.jpg' border='0'/></a>"+
+							"</td>";
+						}
+						if (tooth_status_key == '25'){
+							t_menu += "<td class='cellsBlockHover'>"+
+								"<a href='#' id='refresh' onclick=\"refreshTeeth("+tooth_status_key+", '"+func_n_zuba+"', '"+func_surface+"')\" class='ahref'>"+
+									"<img src='img/tooth_state/"+tooth_status_arr[tooth_status_key]['img']+"' border='0' />"+tooth_status_arr[tooth_status_key]['descr']+
+								"</a>"+
+							"</td>"+
+							"<td class='cellsBlockHover'>"+
+								"<input type='checkbox' name='retein' value='1'>"+
+							"</td>"+
+							"<td class='cellsBlockHover'>"+
+								"<a href='#modal2' class='open_modal' id='"+tooth_status_key+"'><img src='img/list.jpg' border='0'/></a>"+
+							"</td>";
+						}
+						if (tooth_status_key == '26'){
+							t_menu += "<td class='cellsBlockHover'>"+
+								"<a href='#' id='refresh' onclick=\"refreshTeeth("+tooth_status_key+", '"+func_n_zuba+"', '"+func_surface+"')\" class='ahref'>"+
+									"<img src='img/tooth_state/"+tooth_status_arr[tooth_status_key]['img']+"' border='0' />"+tooth_status_arr[tooth_status_key]['descr']+
+								"</a>"+
+							"</td>"+
+							"<td class='cellsBlockHover'>"+
+								"<input type='checkbox' name='skomplect' value='1'>"+
 							"</td>"+
 							"<td class='cellsBlockHover'>"+
 								"<a href='#modal2' class='open_modal' id='"+tooth_status_key+"'><img src='img/list.jpg' border='0'/></a>"+

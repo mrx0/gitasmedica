@@ -98,6 +98,16 @@ var tooth_status_arr = {
 			"color": "#FFF",
 			"img": "../surface_state/38.png",
 		},
+	25: {
+			"descr": "Ретейнер",
+			"color": "#FFF",
+			"img": "../surface_state/38.png",
+		},
+	26: {
+			"descr": "Сверхкомплект",
+			"color": "#FFF",
+			"img": "../surface_state/38.png",
+		},
 		
 };
 	

@@ -32,7 +32,7 @@
 		//Если был изменен статус зуба, есть номер зуба и номер зуба != ''
 		if (isset($_GET['status']) && ($_GET['status'] != '') && isset($_GET['n_zuba']) && ($_GET['n_zuba'] != '')){
 			
-			if (($_GET['status'] != '22') && ($_GET['status'] != '23') && ($_GET['status'] != '24')){
+			if (($_GET['status'] != '22') && ($_GET['status'] != '23') && ($_GET['status'] != '24') && ($_GET['status'] != '25') && ($_GET['status'] != '26')){
 				if (array_key_exists($_GET['status'], $tooth_status) || ($_GET['status'] == '0')){
 					if ($t_f_data[mb_substr($_GET['n_zuba'], 1)]['status'] == $_GET['status']){
 						$t_f_data[mb_substr($_GET['n_zuba'], 1)]['status'] = '0';
@@ -71,6 +71,24 @@
 				unset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['zo']);
 				unset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['shinir']);
 				unset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['podvizh']);
+				unset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['retein']);
+				unset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['skomplect']);
+			}
+			
+			//сбросить статус зуба + ЗО до полностью здорового и потом статус удалён или отсутствует
+			if (($_GET['status'] == '1') || ($_GET['status'] == '2')){
+				foreach($t_f_data[mb_substr($_GET['n_zuba'], 1)] as $key => $value){
+					$t_f_data[mb_substr($_GET['n_zuba'], 1)][$key] = '0';
+					//echo $key.':'.$value.'<br />';
+				}
+				$t_f_data[mb_substr($_GET['n_zuba'], 1)]['pin'] = '0';
+				unset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['zo']);
+				unset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['shinir']);
+				unset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['podvizh']);
+				unset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['retein']);
+				unset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['skomplect']);
+				
+				$t_f_data[mb_substr($_GET['n_zuba'], 1)]['status'] = $_GET['status'];
 			}
 			
 			//имплантант (может быть с чем-то)
@@ -147,6 +165,40 @@
 					$t_f_data[mb_substr($_GET['n_zuba'], 1)]['podvizh'] = '1';
 				}
 			}
+			//один только Ретейнер
+			if ($_GET['status'] == '25'){
+				if (isset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['retein'])){
+					unset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['retein']);
+				}else{
+					$t_f_data[mb_substr($_GET['n_zuba'], 1)]['retein'] = '1';
+				}
+				//$t_f_data[mb_substr($_GET['n_zuba'], 1)]['status'] = '22';
+			}
+			//Ретейнер с чем-то
+			if (isset($_GET['retein']) && ($_GET['retein'] == '1')){
+				if (isset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['retein'])){
+					unset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['retein']);
+				}else{
+					$t_f_data[mb_substr($_GET['n_zuba'], 1)]['retein'] = '1';
+				}
+			}
+			//один только Сверхкомплект
+			if ($_GET['status'] == '26'){
+				if (isset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['skomplect'])){
+					unset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['skomplect']);
+				}else{
+					$t_f_data[mb_substr($_GET['n_zuba'], 1)]['skomplect'] = '1';
+				}
+				//$t_f_data[mb_substr($_GET['n_zuba'], 1)]['status'] = '22';
+			}
+			//Сверхкомплект с чем-то
+			if (isset($_GET['skomplect']) && ($_GET['skomplect'] == '1')){
+				if (isset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['skomplect'])){
+					unset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['skomplect']);
+				}else{
+					$t_f_data[mb_substr($_GET['n_zuba'], 1)]['skomplect'] = '1';
+				}
+			}
 			/*if (!isset($_GET['zo']) && ((isset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['zo'])) && ($t_f_data[mb_substr($_GET['n_zuba'], 1)]['zo'] != 1) || (!isset($t_f_data[mb_substr($_GET['n_zuba'], 1)]['zo'])))){
 				$t_f_data[mb_substr($_GET['n_zuba'], 1)]['zo'] = '0';
 			}*/
@@ -171,24 +223,24 @@
 			'up' => -9,
 			'down' => 138,
 			'left' => array (
-				1 => 268,
-				2 => 231,
-				3 => 196,
-				4 => 159,
-				5 => 123,
-				6 => 87,
-				7 => 52,
-				8 => 15,						
+				1 => 258,
+				2 => 221,
+				3 => 186,
+				4 => 149,
+				5 => 113,
+				6 => 77,
+				7 => 42,
+				8 => 5,						
 			),
 			'right' => array (
-				1 => 321,
-				2 => 360,
-				3 => 396,
-				4 => 432,
-				5 => 469,
-				6 => 505,
-				7 => 539,
-				8 => 576,			
+				1 => 311,
+				2 => 350,
+				3 => 386,
+				4 => 422,
+				5 => 459,
+				6 => 495,
+				7 => 529,
+				8 => 566,			
 			),
 		);
 		
@@ -525,6 +577,8 @@
 				$text_status_div = '';
 				$text_status_div_shinir = '';
 				$text_status_div_podvizh = '';
+				$text_status_div_retein = '';
+				$text_status_div_skomplect = '';
 				
 				//Для Шинирования и дополнительно
 				if (isset($t_f_data[$i.$j]['shinir'])){
@@ -568,8 +622,52 @@
 					$text_status_div .= '
 						<div class="text_in_map_dop" style="left: '.$left_tts.'px; top: '.$top_tts.'px">';
 				}
-				if ((isset($t_f_data[$i.$j]['shinir'])) || (isset($t_f_data[$i.$j]['podvizh']))){
-					echo '<div class="text_in_map_dop" style="left: '.$left_tts.'px; top: '.$top_tts.'px">'.$text_status_div_shinir.' '.$text_status_div_podvizh.'</div>';
+				//Для Ретейнер и дополнительно
+				if (isset($t_f_data[$i.$j]['retein'])){
+					$text_status_div_retein = 'р';
+					if ($i == 1){
+						$top_tts = $text_tooth_status['up'];
+						$left_tts = $text_tooth_status['left'][$j];
+					}
+					if ($i == 2){
+						$top_tts = $text_tooth_status['up'];
+						$left_tts = $text_tooth_status['right'][$j];
+					}
+					if ($i == 3){
+						$top_tts = $text_tooth_status['down'];
+						$left_tts = $text_tooth_status['right'][$j];
+					}
+					if ($i == 4){
+						$top_tts = $text_tooth_status['down'];
+						$left_tts = $text_tooth_status['left'][$j];
+					}
+					$text_status_div .= '
+						<div class="text_in_map_dop" style="left: '.$left_tts.'px; top: '.$top_tts.'px">';
+				}
+				//Для Сверхкомплекта и дополнительно
+				if (isset($t_f_data[$i.$j]['skomplect'])){
+					$text_status_div_skomplect = 'c';
+					if ($i == 1){
+						$top_tts = $text_tooth_status['up'];
+						$left_tts = $text_tooth_status['left'][$j];
+					}
+					if ($i == 2){
+						$top_tts = $text_tooth_status['up'];
+						$left_tts = $text_tooth_status['right'][$j];
+					}
+					if ($i == 3){
+						$top_tts = $text_tooth_status['down'];
+						$left_tts = $text_tooth_status['right'][$j];
+					}
+					if ($i == 4){
+						$top_tts = $text_tooth_status['down'];
+						$left_tts = $text_tooth_status['left'][$j];
+					}
+					$text_status_div .= '
+						<div class="text_in_map_dop" style="left: '.$left_tts.'px; top: '.$top_tts.'px">';
+				}
+				if ((isset($t_f_data[$i.$j]['shinir'])) || (isset($t_f_data[$i.$j]['podvizh'])) || (isset($t_f_data[$i.$j]['retein'])) || (isset($t_f_data[$i.$j]['skomplect']))){
+					echo '<div class="text_in_map_dop" style="left: '.$left_tts.'px; top: '.$top_tts.'px">'.$text_status_div_shinir.''.$text_status_div_podvizh.''.$text_status_div_retein.''.$text_status_div_skomplect.'</div>';
 				}
 				
 			}
@@ -693,6 +791,8 @@
 					var zo = $("input[name=zo]:checked").val();
 					var shinir = $("input[name=shinir]:checked").val();
 					var podvizh = $("input[name=podvizh]:checked").val();
+					var retein = $("input[name=retein]:checked").val();
+					var skomplect = $("input[name=skomplect]:checked").val();
                     $.ajax({  
                         url: "teeth_map_svg_edit.php",  
 						method: "POST",
@@ -709,6 +809,8 @@
 								zo:zo,
 								shinir:shinir,
 								podvizh:podvizh,
+								retein:retein,
+								skomplect:skomplect,
 							},
                         success: function(html){  
                             $("#teeth_map").html(html);  

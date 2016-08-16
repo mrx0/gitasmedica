@@ -80,6 +80,14 @@
 								$doppol_arr[$key]['podvizh'] = $value['podvizh'];
 								unset($value['podvizh']);
 							}
+							if (isset($value['retein'])){
+								$doppol_arr[$key]['retein'] = $value['retein'];
+								unset($value['retein']);
+							}
+							if (isset($value['skomplect'])){
+								$doppol_arr[$key]['skomplect'] = $value['skomplect'];
+								unset($value['skomplect']);
+							}
 							//var_dump($value['zo']);
 							$rrr = implode(',', $value);
 							$stat_zuba .= "'{$rrr}', ";

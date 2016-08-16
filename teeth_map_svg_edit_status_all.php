@@ -31,7 +31,7 @@
 			foreach ($arr as $key => $value){
 				if (array_key_exists($_GET['status_all'], $tooth_status) || ($value == '0')){
 					//Если не ЗО
-					if (($_GET['status_all'] != '22') && ($_GET['status_all'] != '23') && ($_GET['status_all'] != '24')){
+					if (($_GET['status_all'] != '22') && ($_GET['status_all'] != '23') && ($_GET['status_all'] != '24') && ($_GET['status_all'] != '25') && ($_GET['status_all'] != '26')){
 						$t_f_data[$key]['status'] = $_GET['status_all'];
 						//Чистим радиксы (пока только их)  место для взаимоисключающих статусов
 						if ($t_f_data[$key]['root1'] == '34')
@@ -71,6 +71,22 @@
 							}
 						}
 						
+						if ($_GET['status_all'] == '25'){
+							if (isset($t_f_data[$key]['retein'])){
+								unset($t_f_data[$key]['retein']);
+							}else{
+								$t_f_data[$key]['retein'] = '1';
+							}
+						}
+						
+						if ($_GET['status_all'] == '26'){
+							if (isset($t_f_data[$key]['skomplect'])){
+								unset($t_f_data[$key]['skomplect']);
+							}else{
+								$t_f_data[$key]['skomplect'] = '1';
+							}
+						}
+						
 					}
 				}elseif (array_key_exists($_GET['status_all'], $surface_status)){
 					$t_f_data[$key]['surface1'] = $_GET['status_all'];
@@ -93,6 +109,8 @@
 					unset($t_f_data[$key]['zo']);
 					unset($t_f_data[$key]['shinir']);
 					unset($t_f_data[$key]['podvizh']);
+					unset($t_f_data[$key]['retein']);
+					unset($t_f_data[$key]['skomplect']);
 				}
 				
 				//имплантант (может быть с чем-то)
