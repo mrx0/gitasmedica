@@ -125,7 +125,15 @@
 				//Чужой (исправлено 20160528)
 				//было if (isset($_GET['alien']) && ($_GET['alien'] == '1') && ($value != '0')){ 
 				if (isset($_GET['status_all']) && ($_GET['status_all'] == 'alien') && ($value != '0')){
-					$t_f_data[$key]['alien'] = '1';
+					if (isset($t_f_data[$key]['alien'])){
+						if ($t_f_data[$key]['alien'] == '1'){
+							$t_f_data[$key]['alien'] = '0';
+						}elseif ($t_f_data[$key]['alien'] == '0'){
+							$t_f_data[$key]['alien'] = '1';
+						}
+					}else{
+						$t_f_data[$key]['alien'] = '0';
+					}
 				}else{
 					$t_f_data[$key]['alien'] = '0';
 				}
