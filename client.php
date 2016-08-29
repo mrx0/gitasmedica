@@ -845,6 +845,7 @@
 						<a href="add_task_cosmet.php?client='.$client[0]['id'].'" class="b">Добавить посещение</a>		
 						<a href="add_kd.php?client='.$client[0]['id'].'" class="b">Добавить КД</a>
 						<a href="kd.php?client='.$client[0]['id'].'" class="b">КД</a>
+						<a href="etaps.php?client='.$client[0]['id'].'" class="b">Исследования</a>
 						';		
 				}				
 			$cosmet_task = SelDataFromDB('journal_cosmet1', $_GET['id'], 'client_cosm_id');

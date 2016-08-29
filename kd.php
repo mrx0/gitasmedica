@@ -48,8 +48,16 @@
 						echo '
 								<div class="cellsBlock2">';
 						echo '									
-									<div class="cellLeft">		
-										<img src="kd/'.$value['face'].'.jpg" width="512" class="jLoupe" />
+									<div class="cellLeft">';
+						if (file_exists ('kd/'.$value['face'].'.jpg')){
+							echo '<img src="kd/'.$value['face'].'.jpg" width="768"/>';
+						}elseif (file_exists ('kd/'.$value['face'].'.png')){
+							echo '<img src="kd/'.$value['face'].'.png" width="400" class="jLoupe" />';								
+						}else{
+						//	var_dump('Error');
+						}
+						//				<img src="kd/'.$value['face'].'.jpg" width="512" class="jLoupe" />
+						echo '
 									</div>';
 						echo '
 									<div class="cellRight">';
@@ -59,8 +67,16 @@
 										</div>';
 						echo '
 										<div id=hidden_'.$uptime.' style="display:none;">';
-						echo '
-											<img src="kd/'.$value['graf'].'.jpg" width="768"/>';
+						if (file_exists ('kd/'.$value['graf'].'.jpg')){
+							echo '<img src="kd/'.$value['graf'].'.jpg" width="768"/>';
+						}elseif (file_exists ('kd/'.$value['graf'].'.png')){
+							echo '<img src="kd/'.$value['graf'].'.png" width="400" class="jLoupe" />';								
+						}else{
+						//	var_dump('Error');
+						}
+						
+						/*echo '
+											<img src="kd/'.$value['graf'].'.jpg" width="768"/>';*/
 						echo '
 										</div>';
 						echo '

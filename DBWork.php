@@ -598,6 +598,7 @@
 	function SelDataFromDB ($datatable, $sw, $type){
 		$arr = array();
 		$rez = array();
+		$q = '';
 		if ($sw == ''){
 			if (($datatable == 'spr_workers') || ($datatable == 'spr_clients')){
 				$q = " ORDER BY `full_name` ASC";
@@ -630,6 +631,14 @@
 				$q = ' WHERE `create_person` = '.$sw.' ORDER BY `create_time` DESC';
 			}elseif (($datatable == 'spr_kd_img') && ($type == 'img')){
 				$q = ' WHERE `client` = '.$sw.' ORDER BY `uptime` ASC';
+			}elseif (($datatable == 'journal_etaps')){
+				if ($type == 'client'){
+					$q =  " WHERE `client_id`='$sw'";
+				}else{
+					$q =  " WHERE `id`='$sw'";
+				}
+			}elseif (($datatable == 'journal_etaps_img')){
+				$q =  " WHERE `etap`='$sw' ORDER BY `uptime` ASC";
 			}else{
 				if ($type == 'filter'){
 					if ($datatable == 'spr_clients'){
