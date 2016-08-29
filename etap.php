@@ -58,7 +58,7 @@
 								}elseif (file_exists ('etaps/'.$etap_items[$i]['id'].'.png')){
 									echo '<img src="etaps/'.$etap_items[$i]['id'].'.png" width="400" class="jLoupe" />';								
 								}else{
-									var_dump('Error');
+									echo 'Ошибка изображения';
 								}
 								echo '
 										</div>

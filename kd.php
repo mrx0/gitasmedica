@@ -54,7 +54,7 @@
 						}elseif (file_exists ('kd/'.$value['face'].'.png')){
 							echo '<img src="kd/'.$value['face'].'.png" width="400" class="jLoupe" />';								
 						}else{
-						//	var_dump('Error');
+							echo 'Ошибка изображения';
 						}
 						//				<img src="kd/'.$value['face'].'.jpg" width="512" class="jLoupe" />
 						echo '
