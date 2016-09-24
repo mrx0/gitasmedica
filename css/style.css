@@ -112,7 +112,7 @@ section#main {
 /* пишем класс для шапки - header */
 .h {
 	overflow:hidden;
-	background-image: url(../img/fon.png);
+	/*background-image: url(../img/fon.png);*/
 	background-position: right center;
     background-repeat: no-repeat;
 }

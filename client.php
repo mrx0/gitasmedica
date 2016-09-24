@@ -840,7 +840,7 @@
 					</div>
 
 					<div id="div2">';
-				if (($cosm['add_own'] == 1) || ($god_mode)){
+				if (($cosm['add_own'] == 1) || ($cosm['see_all'] == 1) || ($god_mode)){
 					echo '
 						<a href="add_task_cosmet.php?client='.$client[0]['id'].'" class="b">Добавить посещение</a>		
 						<a href="add_kd.php?client='.$client[0]['id'].'" class="b">Добавить КД</a>

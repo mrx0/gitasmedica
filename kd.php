@@ -50,9 +50,9 @@
 						echo '									
 									<div class="cellLeft">';
 						if (file_exists ('kd/'.$value['face'].'.jpg')){
-							echo '<img src="kd/'.$value['face'].'.jpg" width="768"/>';
+							echo '<img src="kd/'.$value['face'].'.jpg" width="512" class="jLoupe />';
 						}elseif (file_exists ('kd/'.$value['face'].'.png')){
-							echo '<img src="kd/'.$value['face'].'.png" width="400" class="jLoupe" />';								
+							echo '<img src="kd/'.$value['face'].'.png" width="512" class="jLoupe" />';								
 						}else{
 							echo 'Ошибка изображения';
 						}
@@ -68,11 +68,12 @@
 						echo '
 										<div id=hidden_'.$uptime.' style="display:none;">';
 						if (file_exists ('kd/'.$value['graf'].'.jpg')){
-							echo '<img src="kd/'.$value['graf'].'.jpg" width="768"/>';
+							echo '<img src="kd/'.$value['graf'].'.jpg" width="768" />';
 						}elseif (file_exists ('kd/'.$value['graf'].'.png')){
-							echo '<img src="kd/'.$value['graf'].'.png" width="400" class="jLoupe" />';								
+							echo '<img src="kd/'.$value['graf'].'.png" width="768" />';								
 						}else{
 						//	var_dump('Error');
+							echo 'Ошибка изображения';
 						}
 						
 						/*echo '
