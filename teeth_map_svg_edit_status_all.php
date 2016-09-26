@@ -93,9 +93,10 @@
 					$t_f_data[$key]['surface2'] = $_GET['status_all'];
 					$t_f_data[$key]['surface3'] = $_GET['status_all'];
 					$t_f_data[$key]['surface4'] = $_GET['status_all'];
-					$t_f_data[$key]['top1'] = $_GET['status_all'];
+					/*$t_f_data[$key]['top1'] = $_GET['status_all'];
 					$t_f_data[$key]['top2'] = $_GET['status_all'];
-					$t_f_data[$key]['top12'] = $_GET['status_all'];
+					$t_f_data[$key]['top12'] = $_GET['status_all'];*/
+					$t_f_data[$key]['top1'] = $t_f_data[$key]['top2'] = $t_f_data[$key]['top12'] = $_GET['status_all'];
 				}
 				
 				//сбросить статус зуба до полностью здорового

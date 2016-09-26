@@ -55,16 +55,53 @@
 					$_SESSION['id']=$rezult[0]['id'];
 					$_SESSION['name']=$rezult[0]['name'];
 					$_SESSION['permissions']=$rezult[0]['permissions'];
+					//эти данные очень часто используются, вот их и будет "носить с собой" вошедший пользователь
 					
 					//логирование
 					AddLog (GetRealIp(), $_SESSION['id'], '', 'Пользователь вошёл в систему');
-					//эти данные очень часто используются, вот их и будет "носить с собой" вошедший пользователь
-					echo '<h1>Вы успешно вошли в систему!</h1><a href="index.php">Главная страница</a>
-					<script type="text/javascript">
-						setTimeout(function () {
-						   window.location.href = "index.php";
-						}, 1000);
-					</script>';
+					
+					if ($_SESSION['permissions'] != 4){
+						
+						echo '<h1>Вы успешно вошли в систему!</h1><a href="index.php">Главная страница</a>
+						<script type="text/javascript">
+							setTimeout(function () {
+							   window.location.href = "index.php";
+							}, 1000);
+						</script>';
+					
+					}else{
+						$offices = SelDataFromDB('spr_office', '', '');
+						
+						echo '<h1>Вы успешно вошли в систему!</h1>
+						Выберите филиал, на котором вы сегодня работаете.
+						<br>
+						<br>
+						
+						<form action="testreg2.php" method="post">
+							<div class="cellsBlock2">
+								<div class="cellLeft">Филиал</div>
+								<div class="cellRight">
+									<select name="filial" id="filial">
+										<option value="0" selected>Выберите филиал</option>';
+									if ($offices !=0){
+										for ($i=1;$i<count($offices);$i++){
+											echo "<option value='".$offices[$i]['id']."'>".$offices[$i]['name']."</option>";
+										}
+									}
+									echo '
+									</select>
+									<label id="filial_error" class="error"></label>
+								</div>
+							</div>
+							<input type="submit" name="submit" value="Войти">
+						</form>
+
+						<script type="text/javascript">
+							//setTimeout(function () {
+							//   window.location.href = "index.php";
+							//}, 1000);
+						</script>';
+					}
 				}else{
 					//если пароли не сошлись
 					exit ('<h1>Что-то пошло не так</h1><a href="enter.php">Вернуться и попытаться ещё</a>');

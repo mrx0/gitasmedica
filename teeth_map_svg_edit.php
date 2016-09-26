@@ -55,9 +55,23 @@
 					}
 				}elseif (array_key_exists($_GET['status'], $surface_status)){
 					if ($t_f_data[mb_substr($_GET['n_zuba'], 1)][$_GET['surface']] == $_GET['status']){
-						$t_f_data[mb_substr($_GET['n_zuba'], 1)][$_GET['surface']] = '0';
+						if (($_GET['surface'] == 'top1') || ($_GET['surface'] == 'top2') || ($_GET['surface'] == 'top12')){
+							$t_f_data[mb_substr($_GET['n_zuba'], 1)]['top1'] = 0;
+							$t_f_data[mb_substr($_GET['n_zuba'], 1)]['top2'] = 0;
+							$t_f_data[mb_substr($_GET['n_zuba'], 1)]['top12'] = 0;
+						}else{
+							$t_f_data[mb_substr($_GET['n_zuba'], 1)][$_GET['surface']] = 0;
+						}
+						//$t_f_data[mb_substr($_GET['n_zuba'], 1)][$_GET['surface']] = '0';
 					}else{
-						$t_f_data[mb_substr($_GET['n_zuba'], 1)][$_GET['surface']] = $_GET['status'];
+						if (($_GET['surface'] == 'top1') || ($_GET['surface'] == 'top2') || ($_GET['surface'] == 'top12')){
+							$t_f_data[mb_substr($_GET['n_zuba'], 1)]['top1'] = $_GET['status'];
+							$t_f_data[mb_substr($_GET['n_zuba'], 1)]['top2'] = $_GET['status'];
+							$t_f_data[mb_substr($_GET['n_zuba'], 1)]['top12'] = $_GET['status'];
+						}else{
+							$t_f_data[mb_substr($_GET['n_zuba'], 1)][$_GET['surface']] = $_GET['status'];
+						}
+						//$t_f_data[mb_substr($_GET['n_zuba'], 1)][$_GET['surface']] = $_GET['status'];
 					}
 				}
 			}
