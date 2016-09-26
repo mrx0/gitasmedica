@@ -13,6 +13,24 @@
 			//$offices = SelDataFromDB('spr_office', '', '');
 			
 			echo '
+			<style type="text/css">
+				.loading_overlay{	
+					position: fixed;
+					width: 100%;
+					height: 100%;
+					opacity: 1;
+					visibility: visible;
+					top: 0;
+					left: 0;
+					z-index: 1000;
+					background: rgba(196,196,96,.8);
+					-webkit-transition: all 0.3s;
+					-moz-transition: all 0.3s;
+					transition: all 0.3s;
+				}
+			</style>
+			<!--<div class="loading_overlay"></div>-->
+			
 				<header style="margin-bottom: 5px;">
 					<h1>Логи</h1>
 				</header>		
@@ -42,7 +60,18 @@
 				}
 			}
 			echo '	</ul>		
-				</div>';
+				</div>
+				
+				
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$(".loading_overlay").hide;
+		alert("Ok");
+	});
+</script>
+				
+				';
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}
