@@ -135,7 +135,7 @@
 				return $user[0]['name'];
 			}
 		}else{
-			return 'unknown';
+			return 'не указан';
 		}
 	}
 	

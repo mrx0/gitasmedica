@@ -103,6 +103,13 @@ echo '
 								<div class="cellLeft">Контакты</div>
 								<div class="cellRight"><textarea name="contacts" id="contacts" cols="35" rows="5"></textarea></div>
 							</div>
+
+							<div class="cellsBlock2">
+								<div class="cellLeft">Номер карты</div>
+								<div class="cellRight">
+									<input type="text" name="card" id="card" value="">
+								</div>
+							</div>
 							
 							</div>
 							
@@ -127,9 +134,7 @@ echo '
 									<ul id="search_result4" class="search_result4"></ul><br />
 								</div>
 							</div>
-							
-							</div>
-							
+						
 							<input type=\'button\' class="b" value=\'Добавить\' onclick=\'
 								ajax({
 									url:"add_client_f.php",
@@ -142,6 +147,9 @@ echo '
 										o:document.getElementById("o").value,
 										
 										contacts:document.getElementById("contacts").value,
+										
+										card:document.getElementById("card").value,
+										
 										therapist:document.getElementById("search_client2").value,
 										therapist2:document.getElementById("search_client4").value,
 										sel_date:document.getElementById("sel_date").value,
@@ -155,7 +163,8 @@ echo '
 									success:function(data){document.getElementById("status").innerHTML=data;}
 								})\'
 							>
-						</form>';	
+						</form>
+					</div>';	
 				
 			echo '
 					</div>

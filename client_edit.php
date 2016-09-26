@@ -30,7 +30,7 @@
 								<div class="cellsBlock2">
 									<div class="cellLeft">
 										ФИО';
-				if ($god_mode || $_SESSION['permissions'] == 3){
+			if ($god_mode || $_SESSION['permissions'] == 3 || ($clients['add_own'] == 1)){
 					echo '    <a href="client_edit_fio.php?id='.$_GET['id'].'"><img src="img/change.png" title="Редактировать ФИО"></a>';
 				}
 				echo '
@@ -101,7 +101,10 @@
 				}elseif($_SESSION['permissions'] == 5){
 					$disabled_cosm = 'disabled';
 					$disabled_stom = '';
-				}elseif($_SESSION['permissions'] = 777){
+				}elseif($_SESSION['permissions'] == 777){
+					$disabled_cosm = '';
+					$disabled_stom = '';
+				}elseif($clients['add_own'] == 1){
 					$disabled_cosm = '';
 					$disabled_stom = '';
 				}else{
@@ -141,7 +144,13 @@
 										<textarea name="contacts" id="contacts" cols="35" rows="5">'.$client[0]['contacts'].'</textarea>
 									</div>
 								</div>	
-						
+								
+							<div class="cellsBlock2">
+								<div class="cellLeft">Номер карты</div>
+								<div class="cellRight">
+									<input type="text" name="card" id="card" value="'.$client[0]['contacts'].'">
+								</div>
+							</div>
 											<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
 											<!--<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">-->
 											<input type=\'button\' class="b" value=\'Редактировать\' onclick=\'
@@ -153,6 +162,9 @@
 													{
 														id:document.getElementById("id").value,
 														contacts:document.getElementById("contacts").value,
+														
+														card:document.getElementById("card").value,
+														
 														therapist:document.getElementById("search_client2").value,
 														therapist2:document.getElementById("search_client4").value,
 														sel_date:document.getElementById("sel_date").value,

@@ -91,7 +91,7 @@
 					$sw .=  "`office` = '{$dataarray['filial']}' ";
 					$filial_filter = TRUE;
 				}else{
-					$echo_filter .= 'Филиал unknown. ';
+					$echo_filter .= 'Филиал не указан. ';
 					$sw .=  '';
 				}
 			}

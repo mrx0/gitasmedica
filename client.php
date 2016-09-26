@@ -40,7 +40,7 @@
 			
 			$client = SelDataFromDB('spr_clients', $_GET['id'], 'user');
 			
-			//var_dump($user);
+			//var_dump($client);
 			if ($client != 0){
 				echo '
 					<script src="js/init.js" type="text/javascript"></script>
@@ -48,6 +48,7 @@
 					<div id="status">
 						<header>
 							<h2>Карточка пациента #'.$client[0]['id'].'</h2>
+							Номер карты: '.$client[0]['card'].'
 						</header>';
 				echo '
 					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">

@@ -5,7 +5,7 @@
 	
     require_once 'header.php';
 
-	if (isset($_POST['filial']) && ($_SESSION['permissions'] == 4)){
+	if (isset($_POST['filial']) && ($_POST['filial'] != 0) && ($_SESSION['permissions'] == 4)){
 		$_SESSION['filial'] = $_POST['filial'];
 		echo '<h1>Вы успешно вошли в систему!</h1><a href="index.php">Главная страница</a>
 				<script type="text/javascript">

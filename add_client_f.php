@@ -8,7 +8,7 @@
 	if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 		header("location: enter.php");
 	}else{
-		//var_dump ($_POST);
+		//var_dump ($_SESSION);
 		if ($_POST){
 			if (($_POST['f'] == '')||($_POST['i'] == '')||($_POST['o'] == '')){
 				echo 'Что-то не заполнено. Если у пациента нет отчества, поставьте в поле "Отчество" символ "*"<br /><br />
@@ -17,6 +17,28 @@
 			}else{
 				include_once 'DBWork.php';
 				include_once 'functions.php';
+				
+				//Права
+				$god_mode = FALSE;
+		
+				if ($_SESSION['permissions'] == '777'){
+					$god_mode = TRUE;
+				}else{
+					//Получили список прав
+					$permissions = SelDataFromDB('spr_permissions', $_SESSION['permissions'], 'id');	
+					//var_dump($permissions);
+				}
+				if (!$god_mode){
+					if ($permissions != 0){
+						$stom = json_decode($permissions[0]['stom'], true);
+						$cosm = json_decode($permissions[0]['cosm'], true);
+					}
+				}else{
+					//Видимость
+					$stom['add_own'] = 0;
+					$cosm['add_own'] = 0;
+				}
+
 				$echo_therapist = '';
 				$echo_therapist2 = '';
 				if ((preg_match( '/[a-zA-Z]/', $_POST['f'] )) || (preg_match( '/[a-zA-Z]/', $_POST['i'] )) || (preg_match( '/[a-zA-Z]/', $_POST['o'] ))){
@@ -64,16 +86,24 @@
 						//echo
 						$birthday = strtotime($_POST['sel_date'].'.'.$_POST['sel_month'].'.'.$_POST['sel_year']);
 						
-						$new_client = WriteClientToDB_Edit ($_POST['session_id'], $name, $full_name, $_POST['f'], $_POST['i'], $_POST['o'], $_POST['contacts'], $therapist, $therapist2, $birthday, $_POST['sex']);
+						$new_client = WriteClientToDB_Edit ($_POST['session_id'], $name, $full_name, $_POST['f'], $_POST['i'], $_POST['o'], $_POST['contacts'], $_POST['card'], $therapist, $therapist2, $birthday, $_POST['sex']);
 						//var_dump($new_client);
 						
 						echo '
 							<h1>Пациент добавлен в базу.</h1>
-							ФИО: '.$full_name.'<br />
-							'.$echo_therapist.'<br />
-							<a href="add_task_stomat.php?client='.$new_client.'" class="b">Добавить посещение стоматолога</a><br /><br />'
-							.$echo_therapist2.'<br />
-							<a href="add_task_cosmet.php?client='.$new_client.'" class="b">Добавить посещение косметолога</a>
+							ФИО: <a href="client.php?id='.$new_client.'">'.$full_name.'</a><br><br>
+							'.$echo_therapist.'<br />';
+						if (($stom['add_own'] == 1) || $god_mode){
+							echo '
+								<a href="add_task_stomat.php?client='.$new_client.'" class="b">Добавить посещение стоматолога</a><br /><br />';
+						}
+						echo 
+							$echo_therapist2.'<br />';
+						if (($cosm['add_own'] == 1) || $god_mode){
+							echo '
+								<a href="add_task_cosmet.php?client='.$new_client.'" class="b">Добавить посещение косметолога</a>';
+						}
+						echo '
 							<br /><br />
 							<a href="add_client.php" class="b">Добавить ещё пациента</a>
 							<a href="clients.php" class="b">К списку пациентов</a>

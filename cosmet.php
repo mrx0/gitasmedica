@@ -244,7 +244,7 @@
 						if ($clients != 0){
 							$client = $clients[0]["name"];
 						}else{
-							$client = 'unknown';
+							$client = 'не указан';
 						}
 						//, isFired ? 'style="background-color: rgba(161,161,161,1);"' : '' ,
 						//echo $journal[$i]['worker'];

@@ -218,7 +218,7 @@
 								$cl_age = 0;
 							}
 						}else{
-							$client = 'unknown';
+							$client = 'не указан';
 							$cl_age = 0;
 						}
 						
