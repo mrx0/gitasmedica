@@ -4,8 +4,10 @@
 //Главная
 
 	require_once 'header.php';
-
+	
 	if ($enter_ok){
+		require_once 'header_tags.php';
+
 	
 		echo '
 			<header style="margin-bottom: 5px;">

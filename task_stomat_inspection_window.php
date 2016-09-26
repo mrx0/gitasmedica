@@ -6,6 +6,8 @@
 	require_once 'header.php';
 	
 	if ($enter_ok){
+		require_once 'header_tags.php';
+
 		//var_dump($permissions);
 		if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
 			if ($_GET){

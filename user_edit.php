@@ -1,11 +1,13 @@
 <?php
 
-//worker_edit.php
+//user_edit.php
 //Редактирование пользователя
 
 	require_once 'header.php';
 	
 	if ($enter_ok){
+		require_once 'header_tags.php';
+
 		if (($workers['edit'] == 1) || $god_mode){
 			if ($_GET){
 				include_once 'DBWork.php';

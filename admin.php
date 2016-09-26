@@ -4,8 +4,10 @@
 //Админка
 
 	require_once 'header.php';
-
+	
 	if ($enter_ok){
+		require_once 'header_tags.php';
+		
 		if ($god_mode){
 			include_once 'DBWork.php';
 			//$offices = SelDataFromDB('spr_office', '', '');

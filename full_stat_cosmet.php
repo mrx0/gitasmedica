@@ -1,13 +1,13 @@
 <?php
 
-//cosmet.php
-//Косметология
+//
+//
 
 	require_once 'header.php';
-	//var_dump ($enter_ok);
-	//var_dump ($god_mode);
 	
 	if ($enter_ok){
+		require_once 'header_tags.php';
+
 		//var_dump($permissions);
 		if (($cosm['see_all'] == 1) || $god_mode){
 			include_once 'DBWork.php';

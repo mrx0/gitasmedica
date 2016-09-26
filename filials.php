@@ -1,13 +1,13 @@
 <?php
 
-//index.php
-//Главная
+//filials.php
+//
 
 	require_once 'header.php';
-
-	if (empty($_SESSION['login']) || empty($_SESSION['id'])){
-		header("location: enter.php");
-	}else{
+	
+	if ($enter_ok){
+		require_once 'header_tags.php';
+		
 		echo '
 			<header>
 				<h1>Координаты филиалов</h1>
@@ -47,6 +47,8 @@
 		echo '
 				</ul>
 			</div>';
+	}else{
+		header("location: enter.php");
 	}
 		
 	require_once 'footer.php';

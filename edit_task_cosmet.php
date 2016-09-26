@@ -6,6 +6,8 @@
 	require_once 'header.php';
 	
 	if ($enter_ok){
+		require_once 'header_tags.php';
+		
 		if (($cosm['edit'] == 1) || $god_mode){
 			if ($_GET){
 				include_once 'DBWork.php';

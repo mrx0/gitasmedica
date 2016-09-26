@@ -1,7 +1,7 @@
 <?php 
 
-//edit_schedule_f.php
-//Функция для редактирования расписания
+//
+//
 
 	session_start();
 	

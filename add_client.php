@@ -6,6 +6,8 @@
 	require_once 'header.php';
 	
 	if ($enter_ok){
+		require_once 'header_tags.php';
+		
 		if (($clients['add_new'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			

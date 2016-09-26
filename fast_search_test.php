@@ -1,13 +1,13 @@
 <?php
 
-//add_task.php
-//Добавить задачу
+//fast_search_test.php
+//
 
 	require_once 'header.php';
 	
-	if (empty($_SESSION['login']) || empty($_SESSION['id'])){
-		header("location: enter.php");
-	}else{
+	if ($enter_ok){
+		require_once 'header_tags.php';
+		
 		include_once 'DBWork.php';
 		//$offices = SelDataFromDB('spr_office', '', '');
 		//$post_data = '';
@@ -21,7 +21,9 @@
 		';
 			
 			
-	}	
+	}else{
+		header("location: enter.php");
+	}
 		
 	require_once 'footer.php';
 
