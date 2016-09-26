@@ -42,7 +42,7 @@
 									<div class="cellRight">'.$user[0]['full_name'].'</div>
 								</div>
 								
-								<div class="cellsBlock2">
+						<!--		<div class="cellsBlock2">
 									<div class="cellLeft">Организация</div>
 									<div class="cellRight">	
 										<select name="org" id="org">
@@ -59,7 +59,7 @@
 										</select>
 									</div>
 								</div>
-								
+							-->	
 								<div class="cellsBlock2">
 									<div class="cellLeft">Должность/уровень доступа</div>
 									<div class="cellRight">';
@@ -130,7 +130,8 @@
 									data:
 									{
 										id:document.getElementById("id").value,
-										org:document.getElementById("org").value,
+										//org:document.getElementById("org").value,
+										org:0,
 										permissions:document.getElementById("permissions").value,
 										contacts:document.getElementById("contacts").value,
 										fired:fired,

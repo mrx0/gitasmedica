@@ -49,14 +49,14 @@
 								</div>
 							</div>
 							
-							<div class="cellsBlock2">
+			<!--				<div class="cellsBlock2">
 								<div class="cellLeft">Организация</div>
 								<div class="cellRight">';
 			echo $org;
 			echo '	
 								</div>
 							</div>
-							
+			-->				
 							<div class="cellsBlock2">
 								<div class="cellLeft">Логин</div>
 								<div class="cellRight">'.$user[0]['login'].'</div>

@@ -53,7 +53,7 @@
 								<div class="cellRight"><textarea name="contacts" id="contacts" cols="35" rows="5"></textarea></div>
 							</div>
 							
-							<div class="cellsBlock2">
+							<!--<div class="cellsBlock2">
 								<div class="cellLeft">Организация</div>
 								<div class="cellRight">
 									<select name="org" id="org">
@@ -66,7 +66,7 @@
 									echo '
 									</select>
 								</div>
-							</div>
+							</div>-->
 							
 							<div class="cellsBlock2">
 								<div class="cellLeft">Должность</div>
@@ -99,7 +99,8 @@
 										o:document.getElementById("o").value,
 										
 										contacts:document.getElementById("contacts").value,
-										org:document.getElementById("org").value,
+										//org:document.getElementById("org").value,
+										org:0,
 										permissions:document.getElementById("permissions").value,
 										
 										session_id:'.$_SESSION['id'].',
