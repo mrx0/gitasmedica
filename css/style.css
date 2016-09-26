@@ -511,6 +511,8 @@ input[type="submit"]:focus, .button:focus, .button_close:focus, .b:focus, .b2:fo
 
 .ahref:hover {
 	/*background: rgba(00,255,255,0.7);*/
+	font-weight: bold;
+	font-size: 95%;
 }
 
 /*Поиск по алфавиту*/
@@ -1567,3 +1569,33 @@ input[type="number"].mod{
 	color: #1bacbf;
 }
 
+/*Для ошибок*/
+.label_desc{
+	display: block;
+}
+.error{
+	font-size: 70%;
+	color: red;
+	display: none;
+}
+.error_input{
+	border: 2px solid #FF0000; 
+}
+
+.query_ok{
+	border: 1px dotted green;
+	margin-bottom: 10px;
+	padding-left: 16px;
+	background-color: rgba(125, 246, 125, 0.56);
+	width: 329px;
+}
+
+.query_neok{
+	border: 1px dotted red;
+	margin-bottom: 10px;
+	padding-top: 5px;
+	padding-left: 16px;
+	color: red;
+	background-color: rgba(249, 171, 171, 0.56);
+	width: 329px;
+}

@@ -17,6 +17,8 @@
 	
 
 	
+		<script src="js/functions.js"></script>
+		
 		<script src="js/classie.js"></script>
 		<script src="js/modalEffects.js"></script>
 		<script>

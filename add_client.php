@@ -10,6 +10,7 @@
 		
 		if (($clients['add_new'] == 1) || $god_mode){
 			include_once 'DBWork.php';
+			include_once 'functions.php';
 			
 			$orgs = SelDataFromDB('spr_org', '', '');
 			$permissions = SelDataFromDB('spr_permissions', '', '');
@@ -23,7 +24,8 @@
 
 			echo '
 					<div id="data">';
-
+			echo '
+						<div id="errrror"></div>';
 			echo '
 						<form action=""add_client_f.php">
 					
@@ -31,6 +33,7 @@
 								<div class="cellLeft">Фамилия</div>
 								<div class="cellRight">
 									<input type="text" name="f" id="f" value="">
+									<label id="fname_error" class="error"></label>
 								</div>
 							</div>
 							
@@ -38,6 +41,7 @@
 								<div class="cellLeft">Имя</div>
 								<div class="cellRight">
 									<input type="text" name="i" id="i" value="">
+									<label id="iname_error" class="error"></label>
 								</div>
 							</div>
 							
@@ -45,49 +49,20 @@
 								<div class="cellLeft">Отчество</div>
 								<div class="cellRight">
 									<input type="text" name="o" id="o" value="">
+									<label id="oname_error" class="error"></label>
 								</div>
 							</div>
 							
 							<div class="cellsBlock2">
 								<div class="cellLeft">Дата рождения</div>
 								<div class="cellRight">';
-echo '<select name="sel_date" id="sel_date">';
-$i = 1;
-while ($i <= 31) {
-    echo "<option value='" . $i . "'>$i</option>";
-    $i++;
-}
-echo "</select>";
-// Месяц
-echo "<select name='sel_month' id='sel_month'>";
-$month = array(
-    "Январь",
-    "Февраль",
-    "Март",
-    "Апрель",
-    "Май",
-    "Июнь",
-    "Июль",
-    "Август",
-    "Сентябрь",
-    "Октябрь",
-    "Ноябрь",
-    "Декабрь"
-);
-foreach ($month as $m => $n) {
-    echo "<option value='" . ($m + 1) . "'>$n</option>";
-}
-echo "</select>";
-// Год
-echo "<select name='sel_year' id='sel_year'>";
-$j = 1920;
-while ($j <= 2020) {
-    echo "<option value='" . $j . "'>$j</option>";
-    $j++;
-}
-echo "</select>";
+								
+			echo selectDate (0, 0, 0);
 
-echo '
+			echo '	
+									<label id="sel_date_error" class="error"></label>
+									<label id="sel_month_error" class="error"></label>
+									<label id="sel_year_error" class="error"></label>
 								</div>
 							</div>
 							
@@ -96,6 +71,7 @@ echo '
 								<div class="cellRight">
 									<input id="sex" name="sex" value="1" type="radio"> М
 									<input id="sex" name="sex" value="2" type="radio"> Ж
+									<label id="sex_error" class="error"></label>
 								</div>
 							</div>
 
@@ -135,34 +111,8 @@ echo '
 								</div>
 							</div>
 						
-							<input type=\'button\' class="b" value=\'Добавить\' onclick=\'
-								ajax({
-									url:"add_client_f.php",
-									statbox:"status",
-									method:"POST",
-									data:
-									{
-										f:document.getElementById("f").value,
-										i:document.getElementById("i").value,
-										o:document.getElementById("o").value,
-										
-										contacts:document.getElementById("contacts").value,
-										
-										card:document.getElementById("card").value,
-										
-										therapist:document.getElementById("search_client2").value,
-										therapist2:document.getElementById("search_client4").value,
-										sel_date:document.getElementById("sel_date").value,
-										sel_month:document.getElementById("sel_month").value,
-										sel_year:document.getElementById("sel_year").value,
-										
-										sex:sex_value,
-										
-										session_id:'.$_SESSION['id'].',
-									},
-									success:function(data){document.getElementById("status").innerHTML=data;}
-								})\'
-							>
+							<div id="errror"></div>
+							<input type="button" class="b" value="Добавить" onclick="Ajax_add_client('.$_SESSION['id'].')">
 						</form>
 					</div>';	
 				

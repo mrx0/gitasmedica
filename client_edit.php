@@ -24,6 +24,8 @@
 
 				echo '
 						<div id="data">';
+				echo '
+						<div id="errrror"></div>';
 
 				echo '
 							<form action="client_edit_f.php">
@@ -35,54 +37,29 @@
 				}
 				echo '
 									</div>
-									<div class="cellRight">'.$client[0]['full_name'].'</div>
+									<div class="cellRight">
+										<a href="client.php?='.$_GET['id'].'" class="ahref">'.$client[0]['full_name'].'</a>
+									</div>
 								</div>
 								<div class="cellsBlock2">
 									<div class="cellLeft">Дата рождения</div>
 									<div class="cellRight">';
+									
 				if ($client[0]['birthday'] != 0){
-					//print_r  (getdate($client[0]['birthday']));
 					$bdate = getdate($client[0]['birthday']);
+					$d = $bdate['mday'];
+					$m = $bdate['mon'];
+					$y = $bdate['year'];
 				}else{
-					$bdate = 0;
+					$d = $m = $y = 0;
 				}
-				echo '<select name="sel_date" id="sel_date">';
-				$i = 1;
-				while ($i <= 31) {
-					echo "<option value='" . $i . "'", $bdate['mday'] == $i ? ' selected':'' ,">$i</option>";
-					$i++;
-				}
-				echo "</select>";
-				// Месяц
-				echo "<select name='sel_month' id='sel_month'>";
-				$month = array(
-					"Январь",
-					"Февраль",
-					"Март",
-					"Апрель",
-					"Май",
-					"Июнь",
-					"Июль",
-					"Август",
-					"Сентябрь",
-					"Октябрь",
-					"Ноябрь",
-					"Декабрь"
-				);
-				foreach ($month as $m => $n) {
-					echo "<option value='" . ($m + 1) . "'", ($bdate['mon'] == ($m + 1)) ? ' selected':'' ,">$n</option>";
-				}
-				echo "</select>";
-				// Год
-				echo "<select name='sel_year' id='sel_year'>";
-				$j = 1920;
-				while ($j <= 2020) {
-					echo "<option value='" . $j . "'", $bdate['year'] == $j ? ' selected':'' ,">$j</option>";
-					$j++;
-				}
-				echo "</select>";
 
+				echo selectDate ($d, $m, $y);
+				
 				echo '
+										<label id="sel_date_error" class="error"></label>
+										<label id="sel_month_error" class="error"></label>
+										<label id="sel_year_error" class="error"></label>
 									</div>
 								</div>
 
@@ -91,20 +68,12 @@
 									<div class="cellRight">
 										<input id="sex" name="sex" value="1" ', $client[0]['sex'] == 1 ? 'checked': '',' type="radio"> М
 										<input id="sex" name="sex" value="2" ', $client[0]['sex'] == 2 ? 'checked': '',' type="radio"> Ж
+										<label id="sex_error" class="error"></label>
 									</div>
 								</div>';
 								
 				//Для редактирования лечащих врачей в карточке
-				if ($_SESSION['permissions'] == 6){
-					$disabled_stom = 'disabled';
-					$disabled_cosm = '';
-				}elseif($_SESSION['permissions'] == 5){
-					$disabled_cosm = 'disabled';
-					$disabled_stom = '';
-				}elseif($_SESSION['permissions'] == 777){
-					$disabled_cosm = '';
-					$disabled_stom = '';
-				}elseif($clients['add_own'] == 1){
+				if (($clients['add_own'] == 1) || $god_mode){
 					$disabled_cosm = '';
 					$disabled_stom = '';
 				}else{
@@ -145,47 +114,20 @@
 									</div>
 								</div>	
 								
-							<div class="cellsBlock2">
-								<div class="cellLeft">Номер карты</div>
-								<div class="cellRight">
-									<input type="text" name="card" id="card" value="'.$client[0]['card'].'">
+								<div class="cellsBlock2">
+									<div class="cellLeft">Номер карты</div>
+									<div class="cellRight">
+										<input type="text" name="card" id="card" value="'.$client[0]['card'].'">
+									</div>
 								</div>
-							</div>
-											<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
-											<!--<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">-->
-											<input type=\'button\' class="b" value=\'Редактировать\' onclick=\'
-												ajax({
-													url:"client_edit_f.php",
-													statbox:"status",
-													method:"POST",
-													data:
-													{
-														id:document.getElementById("id").value,
-														contacts:document.getElementById("contacts").value,
-														
-														card:document.getElementById("card").value,
-														
-														therapist:document.getElementById("search_client2").value,
-														therapist2:document.getElementById("search_client4").value,
-														sel_date:document.getElementById("sel_date").value,
-														sel_month:document.getElementById("sel_month").value,
-														sel_year:document.getElementById("sel_year").value,
-
-														sex:sex_value,
-														
-														session_id:'.$_SESSION['id'].',
-													},
-													success:function(data){document.getElementById("status").innerHTML=data;}
-												})\'
-											>
-										</form>';	
-						/*}else{
-							echo '<h1>Задача закрыта. Редактировать нельзя</h1><a href="it.php">Вернуться в журнал</a>';
-						}*/
-						echo '
-						
-								</div>
-							</div>
+								
+								<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
+								<div id="errror"></div>
+								<input type="button" class="b" value="Редактировать" onclick="Ajax_edit_client('.$_SESSION['id'].')">
+							</form>';	
+				echo '
+						</div>
+					</div>
 
 										
 				<script type="text/javascript">
