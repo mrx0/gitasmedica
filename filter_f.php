@@ -22,8 +22,10 @@
 			if ($dataarray['all_time'] == 1){
 				$arr_temp = SelMINDataFromDB($dataarray['datatable'], 'create_time');
 				$datastart = $arr_temp[0]['create_time'];
+				$dataarray['datastart'] = date('d.m.Y', $datastart);
 				$arr_temp = SelMAXDataFromDB($dataarray['datatable'], 'create_time');
 				$dataend = $arr_temp[0]['create_time'];
+				$dataarray['dataend'] = date('d.m.Y', $dataend);
 			}else{
 				$datastart = strtotime($dataarray['datastart']);
 				$dataend = strtotime($dataarray['dataend'].' 23:59:59');

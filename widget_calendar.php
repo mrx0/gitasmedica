@@ -3,11 +3,11 @@
 //widget_calendar.php
 //Календарик
 
-function widget_calendar ($month, $year, $path){
+function widget_calendar ($month, $year, $path, $dop){
 	
 	$result = '';
 	
-	if ($month < 10) $month = '0'.$month;
+	//if ($month < 10) $month = '0'.$month;
 	
 	//Массив с месяцами
 	$monthsName = array(
@@ -51,19 +51,22 @@ function widget_calendar ($month, $year, $path){
 		}
 	}
 	
+	$prevLink = $path.'?'.$dop.'&m='.$prev.'&y='.$pYear;
+	$nextLink = $path.'?'.$dop.'&m='.$next.'&y='.$nYear;
+	
 	$result .= '
-		<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right;">
+		<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
 			<span style="font-size: 90%; color: rgb(125, 125, 125);">Сегодня: <a href="'.$path.'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></span>
 		</li>
 		<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right;">
-			<a href="'.$path.'&m='.$prev.'&y='.$pYear.'" class="cellTime ahref" style="text-align: center;">
-				<span style="font-weight: normal; font-size: 70%;"><< '.$monthsName[$prev].'<br>'.$pYear.'</span>
+			<a href="'.$prevLink.'" class="cellTime ahref" style="text-align: center;">
+				<span style="font-weight: normal; font-size: 80%;"><< '.$monthsName[$prev].'<br>'.$pYear.'</span>
 			</a>
 			<div class="cellTime" style="text-align: center;">
 				<span style="color: #2EB703">'.$monthsName[$month].'</span><br>'.$year.'
 			</div>
-			<a href="'.$path.'&m='.$next.'&y='.$nYear.'" class="cellTime ahref" style="text-align: center;">
-				<span style="font-weight: normal; font-size: 70%;">'.$monthsName[$next].' >><br>'.$nYear.'</span>
+			<a href="'.$nextLink.'" class="cellTime ahref" style="text-align: center;">
+				<span style="font-weight: normal; font-size: 80%;">'.$monthsName[$next].' >><br>'.$nYear.'</span>
 			</a>
 			
 			<div class="cellTime" style="text-align: center; width: auto;">
@@ -82,7 +85,7 @@ function widget_calendar ($month, $year, $path){
 	$result .= '
 			</select>
 			<input id="iWantThisYear" type="number" value="'.$year.'" min="2000" max="2030" size="4" style="width: 60px;">
-			<i class="fa fa-check-square" style="font-size: 130%; color: green; cursor: pointer" onclick="iWantThisDate()"></i>
+			<img src="img/ok.png" style="cursor: pointer" onclick="iWantThisDate()">
 		</div>
 	</li>';
 	
