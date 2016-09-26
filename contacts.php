@@ -42,7 +42,7 @@
 							<li class="cellsBlock" style="font-weight:bold;">	
 								<div class="cellFullName" style="text-align: center">Полное имя</div>
 								<div class="cellOffice" style="text-align: center">Должность</div>
-								<div class="cellOffice" style="text-align: center">Организация</div>
+								
 								<div class="cellText" style="text-align: center">Контакты</div>
 								<div class="cellName" style="text-align: center">Логин</div>
 								<div class="cellName" style="text-align: center">Пароль</div>
@@ -58,7 +58,7 @@
 								<li class="cellsBlock cellsBlockHover ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'">
 									<a href="user.php?id='.$contacts[$i]['id'].'" class="cellFullName ahref" id="4filter" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$contacts[$i]['full_name'].'</a>
 									<div class="cellOffice" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>', $permissions != '0' ? $permissions : '-' ,'</div>
-									<div class="cellOffice" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>', $org != '0' ? $org : '-' ,'</div>
+									
 									<div class="cellText" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$contacts[$i]['contacts'].'</div>
 									<div class="cellName" style="text-align: center; ', $contacts[$i]['fired'] == '1' ? 'background-color: rgba(161,161,161,1);"' : '"' ,'>'.$contacts[$i]['login'].'</div>';
 						if ($god_mode){			

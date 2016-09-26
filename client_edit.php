@@ -148,7 +148,7 @@
 							<div class="cellsBlock2">
 								<div class="cellLeft">Номер карты</div>
 								<div class="cellRight">
-									<input type="text" name="card" id="card" value="'.$client[0]['contacts'].'">
+									<input type="text" name="card" id="card" value="'.$client[0]['card'].'">
 								</div>
 							</div>
 											<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
