@@ -1,11 +1,13 @@
 <?php
 
-//it.php
-//IT
+//
+//
 
 	require_once 'header.php';
-
+	
 	if ($enter_ok){
+		require_once 'header_tags.php';
+
 		if (($it['see_all'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';

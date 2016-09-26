@@ -4,16 +4,16 @@
 //Стоматология
 
 	require_once 'header.php';
-	//var_dump ($enter_ok);
-	//var_dump ($god_mode);
 	
 	if ($enter_ok){
+		require_once 'header_tags.php';
 		//var_dump($_SESSION);
 		if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			include_once 'filter.php';
 			include_once 'filter_f.php';
+			include_once 'widget_calendar.php';
 			
 			$filter = FALSE;
 			
@@ -89,6 +89,8 @@
 					$filter_rez = filterFunction ($_GET);
 
 				}
+				
+				echo widget_calendar ($month, $year, 'stomat.php?');
 				
 				//Тут мы создаем массив с месяцами и годами между самым первым посещением и последним
 				$arr_temp = SelMINDataFromDB ('journal_tooth_status', 'create_time');

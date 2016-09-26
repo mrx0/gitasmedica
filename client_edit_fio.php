@@ -6,6 +6,8 @@
 	require_once 'header.php';
 	
 	if ($enter_ok){
+		require_once 'header_tags.php';
+		
 		if ($god_mode || $_SESSION['permissions'] == 3){
 			if ($_GET){
 				include_once 'DBWork.php';

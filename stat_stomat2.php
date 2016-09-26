@@ -1,18 +1,16 @@
 <?php
 
-//stomat.php
-//Стоматология
+//
+//
 
 
 	//Санация
 
-
-
 	require_once 'header.php';
-	//var_dump ($enter_ok);
-	//var_dump ($god_mode);
 	
 	if ($enter_ok){
+		require_once 'header_tags.php';
+
 		//var_dump($_SESSION);
 		if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';

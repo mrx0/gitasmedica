@@ -6,6 +6,8 @@
 	require_once 'header.php';
 	
 	if ($enter_ok){
+		require_once 'header_tags.php';
+
 		if (($it['add_worker'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			//var_dump ($_GET);

@@ -5,9 +5,9 @@
 
 	require_once 'header.php';
 	
-	if (empty($_SESSION['login']) || empty($_SESSION['id'])){
-		header("location: enter.php");
-	}else{
+	if ($enter_ok){
+		require_once 'header_tags.php';
+		
 		include_once 'DBWork.php';
 		
 		echo '
@@ -64,6 +64,8 @@
 		echo '
 				</div>
 			</div>';
+	}else{
+		header("location: enter.php");
 	}	
 		
 	require_once 'footer.php';

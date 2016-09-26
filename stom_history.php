@@ -1,11 +1,13 @@
 <?php
 
-//user.php
+//
 //
 
 	require_once 'header.php';
 	
 	if ($enter_ok){
+		require_once 'header_tags.php';
+
 		if ($_GET){
 			//var_dump($_GET);
 			include_once 'DBWork.php';
