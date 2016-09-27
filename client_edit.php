@@ -38,7 +38,7 @@
 				echo '
 									</div>
 									<div class="cellRight">
-										<a href="client.php?='.$_GET['id'].'" class="ahref">'.$client[0]['full_name'].'</a>
+										<a href="client.php?id='.$_GET['id'].'" class="ahref">'.$client[0]['full_name'].'</a>
 									</div>
 								</div>
 								<div class="cellsBlock2">

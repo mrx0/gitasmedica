@@ -112,7 +112,7 @@
 				
 				$full_name = CreateFullName(trim($_POST['f']), trim($_POST['i']), trim($_POST['o']));
 				//Проверяем есть ли такой пользователь
-				if (isSameFullName('spr_workers', $full_name)){
+				if (isSameFullName('spr_workers', $full_name, 0)){
 					echo 'Такой пользователь уже есть.<br /><br />
 						<a href="add_worker.php" class="b">Добавить</a>
 						<a href="index.php" class="b">На главную</a>';

@@ -26,15 +26,15 @@
 							В ФИО встречаются латинские буквы. Это недопустимо<br /><br />
 						</div>';
 				}else{
-					$full_name = CreateFullName(trim($_POST['f']), trim($_POST['i']), trim($_POST['o']));
+					$full_name = CreateFullName(firspUpperCase(trim($_POST['f'])), firspUpperCase(trim($_POST['i'])), firspUpperCase(trim($_POST['o'])));
 					//Проверяем есть ли такой пациент
-					if (isSameFullName('spr_clients', $full_name)){
+					if (isSameFullName('spr_clients', $full_name, $_POST['id'])){
 						echo '
 							<div class="query_neok">
 								Такой пациент уже есть. Если тёзка, в конце отчества поставьте символ "*"<br /><br />
 							</div>';
 					}else{
-						$name = CreateName(trim($_POST['f']), trim($_POST['i']), trim($_POST['o']));
+						$name = CreateName(firspUpperCase(trim($_POST['f'])), firspUpperCase(trim($_POST['i'])), firspUpperCase(trim($_POST['o'])));
 						
 						WriteFIOClientToDB_Update ($_SESSION['id'], $_POST['id'], $name, $full_name, $_POST['f'], $_POST['i'], $_POST['o']);
 					

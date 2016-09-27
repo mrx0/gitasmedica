@@ -60,13 +60,17 @@
 	}
 
 	//Проверка на существование пользователя такими фио
-	function isSameFullName($datatable, $name){
+	function isSameFullName($datatable, $name, $id){
 		$rezult = array();
 		$rezult = SelDataFromDB($datatable, $name, 'full_name');
 		//var_dump ($rezult);
 		
 		if ($rezult != 0){
-			return TRUE;
+			if ($id != $rezult[0]['id']){
+				return TRUE;
+			}else{
+				return FALSE;
+			}
 		}else{
 			return FALSE;
 		}
@@ -621,5 +625,15 @@
 		
 	}
 	
+	//Первая буква заглавная
+	function firspUpperCase ($string){
+		mb_internal_encoding("UTF-8");
+		$first = mb_substr($string, 0, 1);//первая буква
+		$last = mb_substr($string, 1);//все кроме первой буквы
+		$first = mb_strtoupper($first);
+		$last = mb_strtolower($last);
+		return $first.$last;
+	}
+
 
 ?>
