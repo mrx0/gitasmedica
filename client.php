@@ -895,7 +895,7 @@
 					
 					/*$decription = array();
 					$decription = json_decode($cosmet_task[$i]['description'], true);
-					//var_dump ($decription);	*/	
+					var_dump ($actions_cosmet);	*/	
 					
 					echo '<div class="cellLeft">';
 					
@@ -903,7 +903,7 @@
 						$action = '';
 						if (isset($decription[$j])){
 							if ($decription[$j] != 0){
-								$action = $actions_cosmet[$j-1]['full_name'].'<br />';
+								$action = '<div style="margin: 2px; border: 1px solid #CCC; padding-left: 3px; background-color: '.$actions_cosmet[$j-1]['color'].'">'.$actions_cosmet[$j-1]['full_name'].'</div>';
 							}else{
 								$action = '';
 							}

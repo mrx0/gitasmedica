@@ -32,8 +32,8 @@
 								<div class="cellsBlock2">
 									<div class="cellLeft">
 										ФИО';
-			if ($god_mode || $_SESSION['permissions'] == 3 || ($clients['add_own'] == 1)){
-					echo '    <a href="client_edit_fio.php?id='.$_GET['id'].'"><img src="img/change.png" title="Редактировать ФИО"></a>';
+				if ($god_mode || $_SESSION['permissions'] == 3 || ($clients['add_own'] == 1)){
+					echo '    <a href="client_edit_fio.php?id='.$_GET['id'].'"><i class="fa fa-cog" title="Редактировать ФИО"></i></a>';
 				}
 				echo '
 									</div>

@@ -22,6 +22,7 @@
 			echo '<a href="logs.php" class="b">LOGS</a>';
 			echo '<a href="wrights.php" class="b">Права</a>';
 			echo '<a href="/sxd" class="b">SXD</a>';			
+			echo '<a href="/phpmyadmin" class="b">PHPMyAdmin</a>';			
 
 				
 			echo '			

@@ -38,7 +38,12 @@
 				echo '
 							<form action="user_edit_f.php">
 								<div class="cellsBlock2">
-									<div class="cellLeft">ФИО</div>
+									<div class="cellLeft">ФИО';
+				if ($god_mode || ($user['edit'] == 1)){
+					echo '    <a href="user_edit_fio.php?id='.$_GET['id'].'"><i class="fa fa-cog" title="Редактировать ФИО"></i></a>';
+				}
+				echo '
+									</div>
 									<div class="cellRight">'.$user[0]['full_name'].'</div>
 								</div>
 								

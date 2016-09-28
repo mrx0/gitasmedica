@@ -1,6 +1,6 @@
 <?php
 
-//task_edit_cosmet.php
+//edit_task_cosmet.php
 //Редактирование посещения косметолога
 
 	require_once 'header.php';

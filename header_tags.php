@@ -20,7 +20,7 @@
 			
 			<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
 			<!-- Font Awesome -->
-			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+			<link rel="stylesheet" href="css/font-awesome.css">
 			
 			<link rel="stylesheet" href="css/style.css" type="text/css" />
 			<!--<link rel="stylesheet" href="css/menu.css">-->
@@ -78,7 +78,8 @@
 		
 <script src="js/jszakaz.js"></script>
 <!--<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>-->
-<script src="js/jquery-ui.min-1.8.js"></script>
+<!--<script src="js/jquery-ui.min-1.8.js"></script>-->
+<script src="js/jquery-ui.min.js"></script>
 
 <!--чтобы менюшка прилеплялась к верхней части окна-->
 <script>
@@ -98,7 +99,12 @@ jQuery("document").ready(function($){
 </script>
 
 
-			
+<script type="text/javascript">
+	$(function(){
+		$(document).tooltip();
+	});
+</script>
+	
 			<script type="text/javascript">
 				$(document).ready(function(){
 					$("a.photo").fancybox({

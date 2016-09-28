@@ -85,7 +85,7 @@ function widget_calendar ($month, $year, $path, $dop){
 	$result .= '
 			</select>
 			<input id="iWantThisYear" type="number" value="'.$year.'" min="2000" max="2030" size="4" style="width: 60px;">
-			<img src="img/ok.png" style="cursor: pointer" onclick="iWantThisDate(\''.$path.'?'.$dop.'\')">
+			<i class="fa fa-check-square" style="font-size: 130%; color: green; cursor: pointer" onclick="iWantThisDate(\''.$path.'?'.$dop.'\')"></i>
 		</div>
 	</li>';
 	
