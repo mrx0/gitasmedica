@@ -36,6 +36,14 @@
 					
 					$mysql_insert_id = mysql_insert_id();
 					
+/*$filename = 'uploads_etap/'.$value;
+
+if (file_exists($filename)) {
+    echo "Файл $filename существует";
+} else {
+    echo "Файл $filename не существует";
+}
+	*/				
 					$extension = pathinfo('uploads_etap/'.$value, PATHINFO_EXTENSION);
 					
 					rename('uploads_etap/'.$value, 'etaps/'.$mysql_insert_id.'.'.$extension);										
