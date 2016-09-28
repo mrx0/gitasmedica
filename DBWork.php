@@ -537,6 +537,32 @@
 		//логирование
 		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован пользователь ['.$id.']. ['.date('d.m.y H:i', $time).']. Контакты: ['.$contacts.']. Организация: ['.$org.']. Права: ['.$permissions.']. Уволен: ['.$fired.']');
 	}
+	
+	//Обновление ФИО пользователя из-под Web
+	function WriteFIOUserToDB_Update($session_id, $id, $name, $full_name){
+		$old = '';
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+		//Для лога соберем сначала то, что было в записи.
+		$query = "SELECT * FROM `spr_clients` WHERE `id`=$id";
+		$res = mysql_query($query) or die(mysql_error());
+		$number = mysql_num_rows($res);
+		if ($number != 0){
+			$arr = mysql_fetch_assoc($res);
+			$old = 'Фамилия: ['.$arr['f'].']. Имя: ['.$arr['i'].']. Отчество: ['.$arr['o'].'].';
+		}else{
+			$old = 'Не нашли старую запись.';
+		}
+		$time = time();
+		$query = "UPDATE `spr_workers` SET `name`='{$name}', `full_name`='{$full_name}' WHERE `id`='{$id}'";
+		mysql_query($query) or die(mysql_error());
+		mysql_close();
+		
+		//логирование
+		AddLog (GetRealIp(), $session_id, $old, 'Отредактированы ФИО пользователя ['.$id.']. ['.date('d.m.y H:i', $time).']. ['.$full_name.'].');
+	}
 
 	//Вставка и обновление списка филиалов из-под Web
 	function WriteFilialToDB_Edit ($session_id, $name, $address, $contacts){

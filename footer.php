@@ -4,8 +4,9 @@
 //
 
 	echo '
-	
+
 	<div class="md-overlay"></div>
+	</section>
 	<div class="no_print"> 
 		<!--</section>-->
 		<footer>

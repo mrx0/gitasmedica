@@ -209,10 +209,10 @@
 					$post_data .= '
 									action'.$actions_cosmet[$i]['id'].':action_value'.$actions_cosmet[$i]['id'].',';
 					echo '
-						<div class="cellsBlock3">
-							<div class="cellLeft">'.$actions_cosmet[$i]['full_name'].'</div>
-							<div class="cellRight">
-								<input type="checkbox" name="action'.$actions_cosmet[$i]['id'].'" id="action'.$actions_cosmet[$i]['id'].'" '.$checked.'>
+						<div class="cellsBlock2">
+							<div class="cellLeft" style=" width: auto; font-size: 80%; background-color: '.$actions_cosmet[$i]['color'].'">
+								<span style="float: left;">'.$actions_cosmet[$i]['full_name'].'</span>
+								<span style="float: right;"><input type="checkbox" name="action'.$actions_cosmet[$i]['id'].'" id="action'.$actions_cosmet[$i]['id'].'" '.$checked.'></span>
 							</div>
 						</div>';
 				}

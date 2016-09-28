@@ -20,7 +20,12 @@
 			echo '
 				<header style="margin-bottom: 5px;">
 					<h1>Стоматология</h1>
-				</header>
+				</header>';
+				
+							
+			DrawFilterOptions ('stomat', $it, $stom, $stom, $workers, $clients, $offices, $god_mode);
+				
+			echo '
 					<div id="data">
 						<ul style="margin-left: 6px; margin-bottom: 20px;">';
 
@@ -140,9 +145,6 @@
 				//}
 				
 				echo '</li></ul>';
-				
-				DrawFilterOptions ('stomat', $it, $stom, $stom, $workers, $clients, $offices, $god_mode);
-				
 
 			
 			if ($journal != 0){
