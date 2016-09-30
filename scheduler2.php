@@ -98,7 +98,7 @@
 					if ($kabsInFilialExist){
 						//var_dump($kabsInFilial);
 						echo '
-							<div class="cellsBlock cellsBlockHover" style="height: auto;">
+							<div class="cellsBlock cellsBlockHover">
 								<div class="cellName" style="text-align: left; background-color: #FEFEFE; width: auto;">
 									'.$filial_val['name'].'
 								</div>
@@ -106,25 +106,27 @@
 						//Дни недели
 						for ($dayW = 1; $dayW <= 7; $dayW++) {
 							echo '
-								<div class="cellTime" style="text-align: center; background-color: #FEFEFE; width: 150px; min-width: 100px; max-width: 150px;">';
+								<div class="cellTime" style="padding: 0; text-align: center; background-color: #FEFEFE; width: 150px; min-width: 100px; max-width: 150px;">';
 							//номера смен 1 - день 2- вечер 3 - ночь 4 - утро
 							for ($smenaN = 1; $smenaN <= 4; $smenaN++) {
 								echo '
-									<div>
-										<div style="float: left;">
+									<div style="outline: 1px solid #666; display: table; margin-bottom: 3px;">
+										<div style="vertical-align: middle; width: 5px; box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2); display: table-cell !important;">
 											'.$smenaN.'
 										</div>
-										<div>';
+										<div style="text-align: middle; display: table-cell !important;">';
 								//Кабинеты
 								for ($kabN = 1; $kabN <= 5; $kabN++) {
 									echo '
-										<div>
-											каб. '.$kabN.'
-										</div>
-										<div>';
+											<div style=" box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);">
+												<div style="text-align: right; color: #555;">
+													<b>каб. '.$kabN.'</b>
+												</div>
+												<div>';
 									echo 'ФИО врача бла бла бла';
 									echo '
-										</div>';
+												</div>
+											</div>';
 								}
 								echo '		
 										</div>
