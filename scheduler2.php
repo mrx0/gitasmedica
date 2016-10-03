@@ -146,19 +146,28 @@
 											'.$smenaN.'
 										</div>
 										<div style="text-align: middle; display: table-cell !important; width: 100%;">';
+								
+								//наличие врачей в клинике
+								$ahtung = TRUE;
+								//переменная для вывода
+								$resEcho = '';
+								
 								//Кабинеты
 								for ($kabN = 1; $kabN <= count($kabsInFilial); $kabN++){
+									//если врач есть
+									if (isset($shedTemplate[$filial_val['id']][$dayW][$smenaN][$kabN])){
+										$resEcho .= WriteSearchUser('spr_workers', $shedTemplate[$filial_val['id']][$dayW][$smenaN][$kabN], 'user');
+										$ahtung = FALSE;
+									}else{
+										$resEcho .= '<span style="color: red;">нет врача</span>';
+									}
 									echo '
 											<div style=" box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);">
 												<div style="text-align: right; color: #555;">
 													<b>каб. '.$kabN.'</b>
 												</div>
 												<div style="text-align: left; padding: 4px;">';
-									if (isset($shedTemplate[$filial_val['id']][$dayW][$smenaN][$kabN])){
-										echo WriteSearchUser('spr_workers', $shedTemplate[$filial_val['id']][$dayW][$smenaN][$kabN], 'user');
-									}else{
-										echo '<span style="color: red;">нет врача</span>';
-									}
+									echo $resEcho;
 									echo '
 												</div>
 											</div>';
