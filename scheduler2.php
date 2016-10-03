@@ -12,6 +12,31 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			
+			//получаем шаблон графика из базы
+			$query = "SELECT `filial`, `day`, `smena`, `kab`, `worker` FROM `sheduler_template`";
+			
+			$shedTemplate = 0;
+			
+			require 'config.php';
+			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+			mysql_select_db($dbName) or die(mysql_error()); 
+			mysql_query("SET NAMES 'utf8'");
+			
+			$arr = array();
+			$rez = array();
+				
+			$res = mysql_query($query) or die($query);
+			$number = mysql_num_rows($res);
+			if ($number != 0){
+				while ($arr = mysql_fetch_assoc($res)){
+					$rez[$arr['filial']][$arr['day']][$arr['smena']][$arr['kab']] = $arr['worker'];
+				}
+				$shedTemplate = $rez;
+			}else{
+				$shedTemplate = 0;
+			}
+			//var_dump($shedTemplate);
+			
 			//есть ли кабинеты в филиале
 			$kabsInFilialExist = FALSE;
 			//какие есть кабинеты в филиале
@@ -53,14 +78,21 @@
 			echo '
 				<header style="margin-bottom: 5px;">
 					<h1>Текущий фактический график</h1>
+					'.$whose.'
 				</header>';
 			
 			echo '
-				<div id="data">';
+				<div id="data">
+					<ul style="margin-left: 6px; margin-bottom: 20px;">
+						<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
+							<a href="?who=stom" class="b">Стоматологи</a>
+							<a href="?who=cosm" class="b">Косметологи</a>
+						</li>
+					</ul>';
 			echo '
 				<div style="margin-bottom: 20px;">
 					<div class="cellsBlock">
-						<div class="cellName" style="text-align: center; background-color:#CCC; width: auto;"></div>
+						<div class="cellName" style="text-align: center; background-color:#CCC; width: 180px; min-width: 180px;"></div>
 						<div class="cellTime" style="text-align: center; background-color:#FEFEFE; width: 150px; min-width: 100px; max-width: 150px;"><b>ПН</b></div>
 						<div class="cellTime" style="text-align: center; background-color:#FEFEFE; width: 150px; min-width: 100px; max-width: 150px;"><b>ВТ</b></div>
 						<div class="cellTime" style="text-align: center; background-color:#FEFEFE; width: 150px; min-width: 100px; max-width: 150px;"><b>СР</b></div>
@@ -93,13 +125,12 @@
 						
 					}
 					
-
 					//Если кабинеты все таки есть
 					if ($kabsInFilialExist){
 						//var_dump($kabsInFilial);
 						echo '
 							<div class="cellsBlock cellsBlockHover">
-								<div class="cellName" style="text-align: left; background-color: #FEFEFE; width: auto;">
+								<div class="cellName" style="text-align: left; background-color: #FEFEFE; width: 180px; min-width: 180px;">
 									'.$filial_val['name'].'
 								</div>
 						';				
@@ -114,16 +145,20 @@
 										<div style="vertical-align: middle; width: 5px; box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2); display: table-cell !important;">
 											'.$smenaN.'
 										</div>
-										<div style="text-align: middle; display: table-cell !important;">';
+										<div style="text-align: middle; display: table-cell !important; width: 100%;">';
 								//Кабинеты
-								for ($kabN = 1; $kabN <= 5; $kabN++) {
+								for ($kabN = 1; $kabN <= count($kabsInFilial); $kabN++){
 									echo '
 											<div style=" box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);">
 												<div style="text-align: right; color: #555;">
 													<b>каб. '.$kabN.'</b>
 												</div>
-												<div>';
-									echo 'ФИО врача бла бла бла';
+												<div style="text-align: left; padding: 4px;">';
+									if (isset($shedTemplate[$filial_val['id']][$dayW][$smenaN][$kabN])){
+										echo WriteSearchUser('spr_workers', $shedTemplate[$filial_val['id']][$dayW][$smenaN][$kabN], 'user');
+									}else{
+										echo '<span style="color: red;">нет врача</span>';
+									}
 									echo '
 												</div>
 											</div>';
