@@ -12,6 +12,11 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 
+			$dopQuery = '';
+			
+			$offices = $offices_j = SelDataFromDB('spr_office', '', '');
+			//var_dump ($offices);
+			
 			//тип график (космет/стомат/...)
 			if (isset($_GET['who'])){
 				if ($_GET['who'] == 'stom'){
@@ -49,8 +54,23 @@
 				$type = 5;
 			}
 			
+			//Филиал
+			if (isset($_GET['filial'])){
+				if ($_GET['filial'] != 0){
+					$dopQuery .= " AND `filial`='{$_GET['filial']}'";
+					$offices = SelDataFromDB('spr_office', $_GET['filial'], 'id');
+				}	
+			}
+			
+			//День недели
+			if (isset($_GET['dayw'])){
+				if ($_GET['dayw'] != 0){
+					$dopQuery .= " AND `day`='{$_GET['dayw']}'";
+				}
+			}
+			
 			//получаем шаблон графика из базы
-			$query = "SELECT `filial`, `day`, `smena`, `kab`, `worker` FROM `sheduler_template` WHERE `type` = $type;";
+			$query = "SELECT `filial`, `day`, `smena`, `kab`, `worker` FROM `sheduler_template` WHERE `type` = '$type'".$dopQuery;
 			
 			$shedTemplate = 0;
 			
@@ -81,7 +101,7 @@
 			
 			echo '
 				<header style="margin-bottom: 5px;">
-					<h1>Текущий фактический график</h1>
+					<h1>Текущий график план</h1>
 					'.$whose.'
 				</header>';
 			
@@ -92,22 +112,61 @@
 							<a href="?who=stom" class="b">Стоматологи</a>
 							<a href="?who=cosm" class="b">Косметологи</a>
 						</li>
+						<li>
+							<div style="display: inline-block; margin-right: 20px;">
+								<div style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
+									Филиалы
+								</div>
+								<div>
+									<select name="SelectFilial" id="SelectFilial">
+										<option value="0">Все</option>';
+			if ($offices_j != 0){
+				for ($i=0;$i<count($offices_j);$i++){
+					$selected = '';
+					if (isset($_GET['filial'])){
+						if ($offices_j[$i]['id'] == $_GET['filial']){
+							$selected = 'selected';
+						}
+					}
+					echo "<option value='".$offices_j[$i]['id']."' $selected>".$offices_j[$i]['name']."</option>";
+				}
+			}
+			echo '
+									</select>
+								</div>
+							</div>
+							<div style="display: inline-block; margin-right: 20px;">
+								<div style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">День недели</div>
+								<div>
+									<select name="SelectFilial" id="SelectFilial">
+										<option value="0">Все</option>';
+				for ($i=0; $i<=7; $i++){
+					$selected = '';
+					if (isset($_GET['filial'])){
+						if ($offices_j[$i]['id'] == $_GET['filial']){
+							$selected = 'selected';
+						}
+					}
+					echo "<option value='".$offices_j[$i]['id']."' $selected>".$offices_j[$i]['name']."</option>";
+			}
+			echo '
+									</select>
+								</div>
+							</div>
+						</li>
 					</ul>';
 			echo '
 				<div style="margin-bottom: 20px;">
 					<div class="cellsBlock">
-						<div class="cellName" style="text-align: center; background-color:#CCC; width: 180px; min-width: 180px;"></div>
-						<div class="cellTime" style="text-align: center; background-color:#FEFEFE; width: 150px; min-width: 100px; max-width: 150px;"><b>ПН</b></div>
-						<div class="cellTime" style="text-align: center; background-color:#FEFEFE; width: 150px; min-width: 100px; max-width: 150px;"><b>ВТ</b></div>
-						<div class="cellTime" style="text-align: center; background-color:#FEFEFE; width: 150px; min-width: 100px; max-width: 150px;"><b>СР</b></div>
-						<div class="cellTime" style="text-align: center; background-color:#FEFEFE; width: 150px; min-width: 100px; max-width: 150px;"><b>ЧТ</b></div>
-						<div class="cellTime" style="text-align: center; background-color:#FEFEFE; width: 150px; min-width: 100px; max-width: 150px;"><b>ПТ</b></div>
-						<div class="cellTime" style="text-align: center; background-color:#FEFEFE; width: 150px; min-width: 100px; max-width: 150px;"><b>СБ</b></div>
-						<div class="cellTime" style="text-align: center; background-color:#FEFEFE; width: 150px; min-width: 100px; max-width: 150px;"><b>ВС</b></div>
+						<div class="cellName" style="font:size: 110%; text-align: center; background-color:#CCC; width: 120px; min-width: 120px; max-width: 120px;"></div>
+						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>ПН</b></div>
+						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>ВТ</b></div>
+						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>СР</b></div>
+						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>ЧТ</b></div>
+						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>ПТ</b></div>
+						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>СБ</b></div>
+						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>ВС</b></div>
 					</div>';
-					
-			$offices = SelDataFromDB('spr_office', '', '');
-			//var_dump ($offices);
 			
 			if ($offices != 0){
 				//Пробегаемся по филиалам
@@ -134,14 +193,14 @@
 						//var_dump($kabsInFilial);
 						echo '
 							<div class="cellsBlock cellsBlockHover">
-								<div class="cellName" style="text-align: left; background-color: #FEFEFE; width: 180px; min-width: 180px;">
+								<div class="cellName" style="font:size: 110%; text-align: left; background-color: #FEFEFE; width: 120px; min-width: 120px; max-width: 120px;">
 									'.$filial_val['name'].'
 								</div>
 						';				
 						//Дни недели
 						for ($dayW = 1; $dayW <= 7; $dayW++) {
 							echo '
-								<div class="cellTime" style="padding: 0; text-align: center; background-color: #FEFEFE; width: 150px; min-width: 100px; max-width: 150px;">';
+								<div class="cellTime" style="padding: 0; text-align: center; background-color: #FEFEFE; width: 150px; min-width: 125px; max-width: 150px;">';
 							//номера смен 1 - день 2- вечер 3 - ночь 4 - утро
 							for ($smenaN = 1; $smenaN <= 4; $smenaN++) {
 								echo '
@@ -163,16 +222,18 @@
 									if (isset($shedTemplate[$filial_val['id']][$dayW][$smenaN][$kabN])){
 										$resEcho = WriteSearchUser('spr_workers', $shedTemplate[$filial_val['id']][$dayW][$smenaN][$kabN], 'user');
 										$ahtung = FALSE;
+										$fontSize = 'font-size: 100%;';
 									}else{
 										$resEcho = '<span style="color: red;">никого</span>';
 										$now_ahtung = TRUE;
+										$fontSize = '';
 									}
 									$resEcho2 .= '
 											<div style="box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);" onclick="ShowSettingsScheduler('.$filial_val['id'].', \''.$filial_val['name'].'\', '.$dayW.', '.$smenaN.', '.$kabN.')">
 												<div style="text-align: right; color: #555;">
 													<b>каб. '.$kabN.'</b>
 												</div>
-												<div style="text-align: left; padding: 4px;">';
+												<div style="text-align: left; '.$fontSize.' padding: 4px;">';
 									$resEcho2 .= $resEcho;
 									$resEcho2 .= '
 												</div>
@@ -685,7 +746,7 @@
 								document.location.href = "?filial="+document.getElementById("SelectFilial").value+"&who="+$(this).val();	
 						});
 						$(\'#SelectFilial\').change(function(){
-							document.location.href = "?filial="+$(this).val()+"&who="+document.getElementById("SelectWho").value;
+							document.location.href = "?filial="+$(this).val()+"'.$who.'";
 						});
 					});';
 					

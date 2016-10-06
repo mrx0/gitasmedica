@@ -73,7 +73,7 @@
 				echo '
 					<div style="font-size:80%; background-color: #FF49E9; padding: 2px;">
 						<a href="#open1" onclick="show(\'hidden_1\',200,5)" class="ahref">
-							Уже в графике развернуть [+]
+							Уже в графике развернуть [+] 
 						</a>
 					</div>';	
 				echo '
