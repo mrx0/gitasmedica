@@ -47,7 +47,7 @@
 				foreach ($shedTemplate as $value){
 					//var_dump ($value);
 					
-					$rez .= WriteSearchUser('spr_workers', $value['worker'], 'user').' <a href="#" class="b" onclick=alert(\'Скоро\')>Удалить</a><br>';
+					$rez .= WriteSearchUser('spr_workers', $value['worker'], 'user').' <a href="#" class="b" onclick="DeleteWorkersSmena('.$value['worker'].', '.$_POST['filial'].', '.$_POST['dayW'].', '.$_POST['smenaN'].', '.$_POST['kabN'].', '.$_POST['type'].')">Удалить</a><br>';
 
 				}
 				echo $rez;

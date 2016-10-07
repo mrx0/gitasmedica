@@ -8,11 +8,23 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 
+		//var_dump ($_GET);
+		
 		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 
 			$dopQuery = '';
+			
+			$dayWarr = array(
+				1 => 'ПН',
+				2 => 'ВТ',
+				3 => 'СР',
+				4 => 'ЧТ',
+				5 => 'ПТ',
+				6 => 'СБ',
+				7 => 'ВС',
+			);
 			
 			$offices = $offices_j = SelDataFromDB('spr_office', '', '');
 			//var_dump ($offices);
@@ -59,8 +71,18 @@
 				if ($_GET['filial'] != 0){
 					$dopQuery .= " AND `filial`='{$_GET['filial']}'";
 					$offices = SelDataFromDB('spr_office', $_GET['filial'], 'id');
+					$wFilial = '';
 				}	
 			}
+			
+			$weekDays = '
+						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>ПН</b></div>
+						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>ВТ</b></div>
+						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>СР</b></div>
+						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>ЧТ</b></div>
+						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>ПТ</b></div>
+						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>СБ</b></div>
+						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>ВС</b></div>';
 			
 			//День недели
 			if (isset($_GET['dayw'])){
@@ -138,34 +160,38 @@
 							<div style="display: inline-block; margin-right: 20px;">
 								<div style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">День недели</div>
 								<div>
-									<select name="SelectFilial" id="SelectFilial">
+									<select name="SelectDayW" id="SelectDayW">
 										<option value="0">Все</option>';
-				for ($i=0; $i<=7; $i++){
+				for ($i=1; $i<=count($dayWarr); $i++){
 					$selected = '';
-					if (isset($_GET['filial'])){
-						if ($offices_j[$i]['id'] == $_GET['filial']){
+					if (isset($_GET['dayw'])){
+						if ($i == $_GET['dayw']){
 							$selected = 'selected';
+							
+							if ($_GET['dayw'] != 0){
+								//Какой день отображать
+								$weekDays = '
+									<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>'.$dayWarr[$i].'</b></div>';
+							}
 						}
 					}
-					echo "<option value='".$offices_j[$i]['id']."' $selected>".$offices_j[$i]['name']."</option>";
+					echo "<option value='$i' $selected>".$dayWarr[$i]."</option>";
 			}
 			echo '
 									</select>
 								</div>
+							</div>
+							<div style="margin-top: 10px;">
+								<a href="scheduler2.php" class="dotyel">Сброс</a>
 							</div>
 						</li>
 					</ul>';
 			echo '
 				<div style="margin-bottom: 20px;">
 					<div class="cellsBlock">
-						<div class="cellName" style="font:size: 110%; text-align: center; background-color:#CCC; width: 120px; min-width: 120px; max-width: 120px;"></div>
-						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>ПН</b></div>
-						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>ВТ</b></div>
-						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>СР</b></div>
-						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>ЧТ</b></div>
-						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>ПТ</b></div>
-						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>СБ</b></div>
-						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>ВС</b></div>
+						<div class="cellName" style="font:size: 110%; text-align: center; background-color:#CCC; width: 120px; min-width: 120px; max-width: 120px;"></div>';
+			echo $weekDays;
+			echo '
 					</div>';
 			
 			if ($offices != 0){
@@ -196,9 +222,19 @@
 								<div class="cellName" style="font:size: 110%; text-align: left; background-color: #FEFEFE; width: 120px; min-width: 120px; max-width: 120px;">
 									'.$filial_val['name'].'
 								</div>
-						';				
+						';			
+						
 						//Дни недели
-						for ($dayW = 1; $dayW <= 7; $dayW++) {
+						$dayWcount = 7;
+						if (isset($_GET['dayw'])){
+							if ($_GET['dayw'] != 0){
+								$dayWcount = 1;
+								$dayWvalue = $_GET['dayw'];
+							}
+						}
+						
+						for ($dayW = 1; $dayW <= $dayWcount; $dayW++) {
+							if ($dayWcount > 1) $dayWvalue = $dayW;
 							echo '
 								<div class="cellTime" style="padding: 0; text-align: center; background-color: #FEFEFE; width: 150px; min-width: 125px; max-width: 150px;">';
 							//номера смен 1 - день 2- вечер 3 - ночь 4 - утро
@@ -219,8 +255,8 @@
 								for ($kabN = 1; $kabN <= count($kabsInFilial); $kabN++){
 									$resEcho = '';
 									//если врач есть
-									if (isset($shedTemplate[$filial_val['id']][$dayW][$smenaN][$kabN])){
-										$resEcho = WriteSearchUser('spr_workers', $shedTemplate[$filial_val['id']][$dayW][$smenaN][$kabN], 'user');
+									if (isset($shedTemplate[$filial_val['id']][$dayWvalue][$smenaN][$kabN])){
+										$resEcho = WriteSearchUser('spr_workers', $shedTemplate[$filial_val['id']][$dayWvalue][$smenaN][$kabN], 'user');
 										$ahtung = FALSE;
 										$fontSize = 'font-size: 100%;';
 									}else{
@@ -229,7 +265,7 @@
 										$fontSize = '';
 									}
 									$resEcho2 .= '
-											<div style="box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);" onclick="ShowSettingsScheduler('.$filial_val['id'].', \''.$filial_val['name'].'\', '.$dayW.', '.$smenaN.', '.$kabN.')">
+											<div style="box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);" onclick="ShowSettingsScheduler('.$filial_val['id'].', \''.$filial_val['name'].'\', '.$dayWvalue.', '.$smenaN.', '.$kabN.')">
 												<div style="text-align: right; color: #555;">
 													<b>каб. '.$kabN.'</b>
 												</div>
@@ -661,11 +697,13 @@
 									<div class="cellLeft">День недели</div>
 									<div class="cellRight" id="dayW">
 									</div>
+									<div style="display: none;" id="dayW_value"></div>
 								</div>
 								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
 									<div class="cellLeft">Филиал</div>
-									<div class="cellRight" id="filial_name">
+									<div class="cellRight" id="filial_name">					
 									</div>
+									<div style="display: none;" id="filial_value"></div>
 								</div>
 								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
 									<div class="cellLeft">Кабинет №</div>
@@ -683,6 +721,7 @@
 
 									<div class="cellRight">
 										<div id="workersTodayDelete"></div>
+										<div id="errrror"></div>
 									</div>
 								</div>
 								';
@@ -711,6 +750,8 @@
 								</div>
 								';
 			}*/
+			
+			
 			//Врачи
 			echo '
 								<div id="ShowWorkersHere" style="vertical-align: top; height: 200px; border: 1px solid #C1C1C1; overflow-x: hidden; overflow-y: scroll;">
@@ -720,12 +761,6 @@
 						</div>';
 
 			echo '
-						<input type="hidden" id="day" name="day" value="0">
-						<input type="hidden" id="month" name="month" value="0">
-						<input type="hidden" id="year" name="year" value="0">
-						<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">
-						<input type="hidden" id="filial" name="filial" value="0">
-						<div id="errror"></div>
 						<input type="button" class="b" value="Применить" onclick=ChangeWorkerSheduler()>
 						<input type="button" class="b" value="Отмена" onclick="HideSettingsScheduler()">
 					</div>';	
@@ -741,12 +776,13 @@
 				<script>
 				
 					$(function() {
-						$(\'#SelectWho\').change(function(){
-							if (document.getElementById("SelectFilial").value != 0)
-								document.location.href = "?filial="+document.getElementById("SelectFilial").value+"&who="+$(this).val();	
+						$("#SelectFilial").change(function(){
+							var dayW = document.getElementById("SelectDayW").value;
+							document.location.href = "?filial="+$(this).val()+"&dayw="+dayW+"'.$who.'";
 						});
-						$(\'#SelectFilial\').change(function(){
-							document.location.href = "?filial="+$(this).val()+"'.$who.'";
+						$("#SelectDayW").change(function(){
+							var filial = document.getElementById("SelectFilial").value;
+							document.location.href = "?dayw="+$(this).val()+"&filial="+filial+"'.$who.'";
 						});
 					});';
 					
@@ -761,6 +797,8 @@
 						window.scrollTo(0,0)
 						
 						document.getElementById("dayW").innerHTML = dict.config.dw4[dayW];
+						document.getElementById("dayW_value").innerHTML = dayW;
+						document.getElementById("filial_value").innerHTML = filial;
 						document.getElementById("filial_name").innerHTML = filial_name;
 						document.getElementById("kabN").innerHTML = kabN;
 						document.getElementById("smenaN").innerHTML = smenaN;
@@ -805,6 +843,7 @@
 						
 					}
 					
+					//Закрываем диалоговое окно
 					function HideSettingsScheduler(){
 						$(\'#ShowSettingsScheduler\').hide();
 						$(\'#overlay\').hide();
@@ -813,15 +852,15 @@
 						for (var i=0; i<input.length; i++)  {
 							if(input[i].value=="0") input[i].checked="checked";
 						}
-						document.getElementById(\'smena1\').checked=false;
-						document.getElementById(\'smena2\').checked=false;
 						
 						document.getElementById("ShowWorkersHere").innerHTML = \'<div class="cellsBlock2" style="width:320px; font-size:80%;"><div class="cellRight">Не выбрана смена</div></div>\';
 						
-						$(\'.error\').hide();
-						document.getElementById("errror").innerHTML = \'\';
+						$(".error").hide();
+						document.getElementById("errror").innerHTML = "";
 					}
 					
+					
+					//!!!
 					function ShowWorkersSmena(){
 						var smena = 0;
 						if ( $("#smena1").prop("checked")){
@@ -852,6 +891,32 @@
 								document.getElementById("ShowWorkersHere").innerHTML=workers;
 							}
 						});	
+					}
+					
+					//Удаляем врача из смены
+					function DeleteWorkersSmena(worker, filial, day, smena, kab, type){
+						var rys = confirm("Удалить сотрудника из смены?");
+						if (rys){
+							$.ajax({
+								// метод отправки 
+								type: "POST",
+								// путь до скрипта-обработчика
+								url: "scheduler_worker_delete.php",
+								// какие данные будут переданы
+								data: {
+									worker:worker,
+									filial:filial,
+									day:day,
+									smena:smena,
+									kab:kab,
+									type:type
+								},
+								// действие, при ответе с сервера
+								success: function(request){
+									document.getElementById("workersTodayDelete").innerHTML=request;
+								}
+							});	
+						}
 					}';
 			}	
 			echo '	
@@ -896,98 +961,51 @@
 			if (($scheduler['edit'] == 1) || $god_mode){					
 				echo '
 					function ChangeWorkerSheduler() {
-						 
-						// прячем текст ошибок
-						$(\'.error\').hide();
-						document.getElementById("errror").innerHTML = \'\';
-						 
+
+						$(".error").hide();
+						document.getElementById("errrror").innerHTML = "";
+					
 						// получение данных из полей
-						var filial = $(\'#filial\').val();
-						var author = $(\'#author\').val();
-						var year = $(\'#year\').val();
-						var month = $(\'#month\').val();
-						var day = $(\'#day\').val();
-						
-						var DateForMove = $(\'input[name=DateForMove]:checked\').val();
-						
-						var kab = document.getElementById("kab").innerHTML;
+						var day = document.getElementById("dayW_value").innerHTML;
+						var filial = document.getElementById("filial_value").innerHTML;
+						var kab = document.getElementById("kabN").innerHTML;
+						var smena = document.getElementById("smenaN").innerHTML;
+						var type = '.$type.';
 
-						var worker = $(\'input[name=worker]:checked\').val();
+						var worker = $("input[name=worker]:checked").val();
 						if(typeof worker == "undefined") worker = 0;
-						
-						'.$js_data.'
-
-						var smena1_val = $("input[name=smena1]:checked").val();
-						var smena2_val = $("input[name=smena2]:checked").val();
 
 						$.ajax({
+							dataType: "json",
+							//statbox:SettingsScheduler,
 							// метод отправки 
 							type: "POST",
 							// путь до скрипта-обработчика
-							url: "ajax_test2.php",
+							url: "scheduler_worker_edit_f.php",
 							// какие данные будут переданы
 							data: {
+								day:day,
+								filial:filial,
+								kab:kab,
+								smena:smena,
+								type:type,
 								worker:worker,
-								smena1:smena1_val,
-								smena2:smena2_val,
 							},
-							// тип передачи данных
-							dataType: "json",
 							// действие, при ответе с сервера
 							success: function(data){
-								// в случае, когда пришло success. Отработало без ошибок
-								if(data.result == \'success\'){						
-						
-									$.ajax({
-										dataType: "json",
-										//statbox:SettingsScheduler,
-										// метод отправки 
-										type: "POST",
-										// путь до скрипта-обработчика
-										url: "edit_schedule_f.php",
-										// какие данные будут переданы
-										data: {
-											type:"scheduler_stom",
-											author:author,
-											filial:filial,
-											kab:kab,
-											day:day,
-											month:month,
-											year:year,
-											'.$post_data.'
-											smena1:smena1_val,
-											smena2:smena2_val,
-											worker:worker,
-											DateForMove:DateForMove,
-											datatable:"'.$datatable.'"
-										},
-										// действие, при ответе с сервера
-										success: function(data){
-											
-											if (data.req == 1){
-												window.location.href = data.text;
-											}
-											if (data.req == 9){
-												document.getElementById("ShowSettingsScheduler").innerHTML=data.text;
-												window.scrollTo(0,0);
-											}
-										}
-									});						
-								// в случае ошибок в форме
-								}else{
-									// перебираем массив с ошибками
-									for(var errorField in data.text_error){
-										// выводим текст ошибок 
-										$(\'#\'+errorField+\'_error\').html(data.text_error[errorField]);
-										// показываем текст ошибок
-										$(\'#\'+errorField+\'_error\').show();
-										// обводим инпуты красным цветом
-									   // $(\'#\'+errorField).addClass(\'error_input\');                      
-									}
-									document.getElementById("errror").innerHTML=\'<span style="color: red">Ошибка, что-то заполнено не так.</span>\'
+								//document.getElementById("errrror").innerHTML=data;
+								if (data.req == "ok"){
+									// прячем текст ошибок
+									$(".error").hide();
+									document.getElementById("errrror").innerHTML = "";
+									
+									window.location.href = data.text;
 								}
-							}			
-						});
+								if (data.req == "error"){
+									document.getElementById("errrror").innerHTML = data.text;
+								}
+							}
+						});						
 					};';
 			}
 			echo '					
