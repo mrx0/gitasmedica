@@ -74,12 +74,46 @@
 									<label id="sex_error" class="error"></label>
 								</div>
 							</div>
-
+							
 							<div class="cellsBlock2">
-								<div class="cellLeft">Контакты</div>
-								<div class="cellRight"><textarea name="contacts" id="contacts" cols="35" rows="5"></textarea></div>
+								<div class="cellLeft">Телефон</div>
+								<div class="cellRight">
+									<input type="text" name="telephone" id="telephone" value="">
+								</div>
+							</div>
+							
+							<div class="cellsBlock2">
+								<div class="cellLeft">Паспорт</div>
+								<div class="cellRight">
+									<div>
+										<span style="font-size: 70%; color: #AAA">Серия номер</span><br>
+										<input type="text" name="passport" id="passport" value="" size="10"><br>
+									</div>
+									<div>
+										<span style="font-size: 70%; color: #AAA">Выдан когда</span><br>
+										<input type="text" name="passportvidandata" id="passportvidandata" value="" size="10">
+									</div>
+									<div>
+										<span style="font-size: 70%; color: #AAA">Кем</span><br>
+										<textarea name="passportvidankem" id="passportvidankem" cols="25" rows="2"></textarea>
+									</div>
+								</div>
 							</div>
 
+							<div class="cellsBlock2">
+								<div class="cellLeft">Адрес</div>
+								<div class="cellRight"><textarea name="address" id="address" cols="35" rows="2"></textarea></div>
+							</div>
+
+							<div class="cellsBlock2">
+								<div class="cellLeft">Номер полиса<br>
+									<span style="font-size: 70%; color: #AAA">Если есть</span>
+								</div>
+								<div class="cellRight">
+									<input type="text" name="polis" id="polis" value="">
+								</div>
+							</div>
+							
 							<div class="cellsBlock2">
 								<div class="cellLeft">Номер карты</div>
 								<div class="cellRight">
@@ -87,8 +121,11 @@
 								</div>
 							</div>
 							
+							<div class="cellsBlock2">
+								<div class="cellLeft">Комментарий</div>
+								<div class="cellRight"><textarea name="comment" id="comment" cols="35" rows="2"></textarea></div>
 							</div>
-							
+														
 							<div class="cellsBlock2">
 								<div class="cellLeft">
 									Лечащий врач<br />
@@ -125,6 +162,34 @@
 					$("input[name=sex]").change(function() {
 						sex_value = $("input[name=sex]:checked").val();
 					});
+
+					$("#passport").on("keyup", function(e) { 
+					 
+						var $this = $(this); 
+						var val = $this.val();
+
+						if ((val.length >= 11) && !isNaN(val[val.length - 1])){
+							document.getElementById("passportvidandata").focus();
+						}
+					});
+
+					$("#passportvidandata").on("keyup", function(e) { 
+					 
+						var $this = $(this); 
+						var val = $this.val(); 
+
+						if ((val.length >= 10) && !isNaN(val[val.length - 1])){
+							document.getElementById("passportvidankem").focus();
+						}
+					});
+
+					jQuery(function($) {
+						$.mask.definitions["~"]="[+-]";
+						$("#passportvidandata").mask("99.99.9999");
+						$("#telephone").mask("+7(999)999-9999");
+						$("#passport").mask("9999 999999");
+					});
+
 				</script>';
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

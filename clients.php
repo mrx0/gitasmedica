@@ -154,7 +154,7 @@
 				echo '
 								<div class="cellCosmAct" style="text-align: center">Пол</div>
 								<div class="cellTime" style="text-align: center">Дата рождения</div>
-								<div class="cellText" style="text-align: center">Контакты</div>
+								<div class="cellText" style="text-align: center">Комментарий</div>
 							</li>';
 
 				for ($i = 0; $i < count($clients_j); $i++) { 
@@ -195,7 +195,7 @@
 
 					echo '
 								<div class="cellTime" style="text-align: center">', $clients_j[$i]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $clients_j[$i]['birthday']) ,'</div>
-								<div class="cellText">'.$clients_j[$i]['contacts'].'</div>
+								<div class="cellText">'.$clients_j[$i]['comment'].'</div>
 							</li>';
 				}
 			}else{

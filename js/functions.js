@@ -31,33 +31,40 @@
 				// в случае, когда пришло success. Отработало без ошибок
 				if(data.result == 'success'){   
 					//alert('форма корректно заполнена');
-				ajax({
-					url:"add_client_f.php",
-					statbox:"errrror",
-					method:"POST",
-					data:
-					{
-						f: document.getElementById("f").value,
-						i: document.getElementById("i").value,
-						o: document.getElementById("o").value,
+					ajax({
+						url:"add_client_f.php",
+						statbox:"errrror",
+						method:"POST",
+						data:
+						{
+							f: document.getElementById("f").value,
+							i: document.getElementById("i").value,
+							o: document.getElementById("o").value,
+									
+							comment: document.getElementById("comment").value,
 								
-						contacts: document.getElementById("contacts").value,
+							card: document.getElementById("card").value,
+								
+							therapist: document.getElementById("search_client2").value,
+							therapist2: document.getElementById("search_client4").value,
 							
-						card: document.getElementById("card").value,
+							sel_date: document.getElementById("sel_date").value,
+							sel_month: document.getElementById("sel_month").value,
+							sel_year: document.getElementById("sel_year").value,
 							
-						therapist: document.getElementById("search_client2").value,
-						therapist2: document.getElementById("search_client4").value,
-						
-						sel_date: document.getElementById("sel_date").value,
-						sel_month: document.getElementById("sel_month").value,
-						sel_year: document.getElementById("sel_year").value,
+							telephone:document.getElementById("telephone").value,
+							passport:document.getElementById("passport").value,
+							passportvidandata:document.getElementById("passportvidandata").value,
+							passportvidankem:document.getElementById("passportvidankem").value,
+							address:document.getElementById("address").value,
+							polis:document.getElementById("polis").value,
 							
-						sex: sex_value,
-							
-						session_id: session_id,
-					},
-					success:function(data){document.getElementById("errrror").innerHTML=data;}
-				})
+							sex:sex_value,
+								
+							session_id: session_id,
+						},
+						success:function(data){document.getElementById("errrror").innerHTML=data;}
+					})
 				// в случае ошибок в форме
 				}else{
 					// перебираем массив с ошибками
@@ -111,7 +118,7 @@
 						data:
 						{
 							id:document.getElementById("id").value,
-							contacts:document.getElementById("contacts").value,
+							comment:document.getElementById("comment").value,
 							
 							card:document.getElementById("card").value,
 							
@@ -120,6 +127,13 @@
 							sel_date:document.getElementById("sel_date").value,
 							sel_month:document.getElementById("sel_month").value,
 							sel_year:document.getElementById("sel_year").value,
+							
+							telephone:document.getElementById("telephone").value,
+							passport:document.getElementById("passport").value,
+							passportvidandata:document.getElementById("passportvidandata").value,
+							passportvidankem:document.getElementById("passportvidankem").value,
+							address:document.getElementById("address").value,
+							polis:document.getElementById("polis").value,
 
 							sex:sex_value,
 							

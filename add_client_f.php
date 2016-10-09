@@ -8,7 +8,7 @@
 	if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 		header("location: enter.php");
 	}else{
-		//var_dump ($_SESSION);
+		//var_dump ($_POST);
 		if ($_POST){
 			if (($_POST['f'] == '')||($_POST['i'] == '')||($_POST['o'] == '')){
 				echo '
@@ -90,7 +90,7 @@
 						//echo
 						$birthday = strtotime($_POST['sel_date'].'.'.$_POST['sel_month'].'.'.$_POST['sel_year']);
 						
-						$new_client = WriteClientToDB_Edit ($_POST['session_id'], $name, $full_name, $_POST['f'], $_POST['i'], $_POST['o'], $_POST['contacts'], $_POST['card'], $therapist, $therapist2, $birthday, $_POST['sex']);
+						$new_client = WriteClientToDB_Edit ($_POST['session_id'], $name, $full_name, $_POST['f'], $_POST['i'], $_POST['o'], $_POST['comment'], $_POST['card'], $therapist, $therapist2, $birthday, $_POST['sex'], $_POST['telephone'], $_POST['passport'], $_POST['passportvidandata'], $_POST['passportvidankem'], $_POST['address'], $_POST['polis']);
 						//var_dump($new_client);
 						
 						echo '

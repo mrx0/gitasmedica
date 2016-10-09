@@ -92,6 +92,56 @@
 				echo 
 									'</div>
 								</div>';
+				
+				echo '
+								<div class="cellsBlock2">
+									<div class="cellLeft">Телефон</div>
+									<div class="cellRight">
+										'.$client[0]['telephone'].'
+									</div>
+								</div>';
+								
+				echo '
+								<div class="cellsBlock2">
+									<div class="cellLeft">Паспорт</div>
+									<div class="cellRight">
+										<div>
+											<span style="font-size: 70%; color: #AAA">Серия номер</span><br>
+											'.$client[0]['passport'].'
+										</div>
+										<div>
+											<span style="font-size: 70%; color: #AAA">Выдан когда</span><br>
+											'.$client[0]['passportvidandata'].'
+										</div>
+										<div>
+											<span style="font-size: 70%; color: #AAA">Кем</span><br>
+											'.$client[0]['passportvidankem'].'
+										</div>
+									</div>
+								</div>';
+								
+				echo '
+								<div class="cellsBlock2">
+									<div class="cellLeft">Адрес</div>
+									<div class="cellRight">
+										'.$client[0]['address'].'
+									</div>
+								</div>';
+								
+				echo '
+								<div class="cellsBlock2">
+									<div class="cellLeft">Номер полиса</div>
+									<div class="cellRight">
+										'.$client[0]['polis'].'
+									</div>
+								</div>';
+								
+				echo '					
+								<div class="cellsBlock2">
+									<div class="cellLeft">Комментарий</div>
+									<div class="cellRight">'.$client[0]['comment'].'</div>
+								</div>';
+								
 				if (TRUE){
 				echo '				
 								<div class="cellsBlock2">
@@ -112,12 +162,27 @@
 									<div class="cellRight">'.WriteSearchUser('spr_workers',$client[0]['therapist2'], 'user').'</div>
 								</div>';
 				}
-				echo '					
+								
+				echo '
 								<div class="cellsBlock2">
-									<div class="cellLeft">Контакты</div>
-									<div class="cellRight">'.$client[0]['contacts'].'</div>
-								</div>	
-
+									<span style="font-size:80%;">';
+				if (($client[0]['last_edit_time'] != 0) && ($client[0]['last_edit_person'] != 0)){
+					echo '
+										Добавлен: '.date('d.m.y H:i', $client[0]['create_time']).'<br>
+										Кем: '.WriteSearchUser('spr_workers', $client[0]['create_person'], 'user').'<br>';
+				}else{
+					echo 'Добавлен: не указано';
+				}
+				if (($client[0]['last_edit_time'] != 0) && ($client[0]['last_edit_person'] != 0)){
+					echo '
+										Последний раз редактировался: '.date('d.m.y H:i', $client[0]['last_edit_time']).'<br>
+										Кем: '.WriteSearchUser('spr_workers', $client[0]['last_edit_person'], 'user').'';
+				}
+				echo '
+									</span>
+								</div>
+								
+								
 								<div class="cellsBlock2">';
 				if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
 					echo '
@@ -940,14 +1005,9 @@
 					</div>
 				</div>
 			</div>
-			
-			<div class="cellsBlock3">
-				<div class="cellLeft">
-				***
-				</div>
-			</div>
-			
-			
+
+			<hr>
+
 			<script language="JavaScript" type="text/javascript">
 				 /*<![CDATA[*/
 				 var s=[],s_timer=[];

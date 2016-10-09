@@ -71,6 +71,58 @@
 										<label id="sex_error" class="error"></label>
 									</div>
 								</div>';
+				echo '
+								<div class="cellsBlock2">
+									<div class="cellLeft">Телефон</div>
+									<div class="cellRight">
+										<input type="text" name="telephone" id="telephone" value="'.mb_substr($client[0]['telephone'], 1).'">
+									</div>
+								</div>';
+				echo '			
+								<div class="cellsBlock2">
+									<div class="cellLeft">Паспорт</div>
+									<div class="cellRight">
+										<div>
+											<span style="font-size: 70%; color: #AAA">Серия номер</span><br>
+											<input type="text" name="passport" id="passport" value="'.$client[0]['passport'].'" size="10"><br>
+										</div>
+										<div>
+											<span style="font-size: 70%; color: #AAA">Выдан когда</span><br>
+											<input type="text" name="passportvidandata" id="passportvidandata" value="'.$client[0]['passportvidandata'].'" size="10">
+										</div>
+										<div>
+											<span style="font-size: 70%; color: #AAA">Кем</span><br>
+											<textarea name="passportvidankem" id="passportvidankem" cols="25" rows="2">'.$client[0]['passportvidankem'].'</textarea>
+										</div>
+									</div>
+								</div>';
+				echo '
+								<div class="cellsBlock2">
+									<div class="cellLeft">Адрес</div>
+									<div class="cellRight"><textarea name="address" id="address" cols="35" rows="2">'.$client[0]['address'].'</textarea></div>
+								</div>';
+				echo '
+								<div class="cellsBlock2">
+									<div class="cellLeft">Номер полиса
+									</div>
+									<div class="cellRight">
+										<input type="text" name="polis" id="polis" value="'.$client[0]['polis'].'">
+									</div>
+								</div>';
+				echo '			
+								<div class="cellsBlock2">
+									<div class="cellLeft">Номер карты</div>
+									<div class="cellRight">
+										<input type="text" name="card" id="card" value="'.$client[0]['card'].'">
+									</div>
+								</div>';						
+				echo '					
+								<div class="cellsBlock2">
+									<div class="cellLeft">Комментарий</div>
+									<div class="cellRight">
+										<textarea name="comment" id="comment" cols="35" rows="2">'.$client[0]['comment'].'</textarea>
+									</div>
+								</div>';
 								
 				//Для редактирования лечащих врачей в карточке
 				if (($clients['add_own'] == 1) || $god_mode){
@@ -105,22 +157,8 @@
 										<ul id="search_result4" class="search_result4"></ul><br />
 									</div>
 								</div>';
-								
-				echo '					
-								<div class="cellsBlock2">
-									<div class="cellLeft">Контакты</div>
-									<div class="cellRight">
-										<textarea name="contacts" id="contacts" cols="35" rows="5">'.$client[0]['contacts'].'</textarea>
-									</div>
-								</div>	
-								
-								<div class="cellsBlock2">
-									<div class="cellLeft">Номер карты</div>
-									<div class="cellRight">
-										<input type="text" name="card" id="card" value="'.$client[0]['card'].'">
-									</div>
-								</div>
-								
+
+				echo '				
 								<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
 								<div id="errror"></div>
 								<input type="button" class="b" value="Редактировать" onclick="Ajax_edit_client('.$_SESSION['id'].')">
@@ -135,6 +173,24 @@
 					$("input[name=sex]").change(function() {
 						sex_value = $("input[name=sex]:checked").val();
 					});
+					
+					$("#passportvidandata").on("keyup", function(e) { 
+					 
+						var $this = $(this); 
+						var val = $this.val(); 
+
+						if ((val.length >= 10) && !isNaN(val[val.length - 1])){
+							document.getElementById("passportvidankem").focus();
+						}
+					});
+
+					jQuery(function($) {
+						$.mask.definitions["~"]="[+-]";
+						$("#passportvidandata").mask("99.99.9999");
+						$("#telephone").mask("+7(999)999-9999");
+						$("#passport").mask("9999 999999");
+					});
+					
 				</script>';
 				}else{
 					echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';

@@ -412,16 +412,16 @@
 	}
 	
 	//Вставка и обновление списка пациентов из-под Web
-	function WriteClientToDB_Edit ($session_id, $name, $full_name, $f, $i, $o, $contacts, $card, $therapist, $therapist2, $birthday, $sex){
+	function WriteClientToDB_Edit ($session_id, $name, $full_name, $f, $i, $o, $comment, $card, $therapist, $therapist2, $birthday, $sex, $telephone, $passport, $passportvidandata, $passportvidankem, $address, $polis){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 		mysql_select_db($dbName) or die(mysql_error()); 
 		mysql_query("SET NAMES 'utf8'");
 		$time = time();
 		$query = "INSERT INTO `spr_clients` (
-			`name`, `full_name`, `f`, `i`, `o`, `contacts`, `card`, `sex`, `birthday`, `therapist`, `therapist2`)
+			`name`, `full_name`, `f`, `i`, `o`, `comment`, `card`, `sex`, `birthday`, `telephone`, `passport`, `passportvidandata`, `passportvidankem`, `address`, `polis`, `therapist`, `therapist2`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`)
 			VALUES (
-			'{$name}', '{$full_name}', '{$f}', '{$i}', '{$o}', '{$contacts}', '{$card}', '{$sex}', '{$birthday}', '{$therapist}', '{$therapist2}') ";
+			'{$name}', '{$full_name}', '{$f}', '{$i}', '{$o}', '{$comment}', '{$card}', '{$sex}', '{$birthday}', '{$telephone}', '{$passport}', '{$passportvidandata}', '{$passportvidankem}', '{$address}', '{$polis}', '{$therapist}', '{$therapist2}', '{$session_id}', '{$time}', '0', '0') ";
 		mysql_query($query) or die(mysql_error().' -> '.$query);
 		
 		$mysql_insert_id = mysql_insert_id();
@@ -429,14 +429,14 @@
 		mysql_close();
 		
 		//логирование
-		AddLog (GetRealIp(), $session_id, '', 'Добавлен пациент. ['.date('d.m.y H:i', $time).']. ['.$full_name.']. Контакты: ['.$contacts.']. Карта: ['.$card.']. Пол: ['.$sex.']. Дата рождения: ['.$birthday.']. Лечащий врач [стоматология]: ['.$therapist.']. Лечащий врач [косметология]: ['.$therapist2.']');
+		AddLog (GetRealIp(), $session_id, '', 'Добавлен пациент. ['.date('d.m.y H:i', $time).']. ['.$full_name.']. Комментарий: ['.$comment.']. Карта: ['.$card.']. Пол: ['.$sex.']. Дата рождения: ['.$birthday.']. Телефон: ['.$telephone.']. Серия/номер паспорта ['.$passport.']. Дата выдачи ['.$passportvidandata.']. Выдан кем ['.$passportvidankem.']. Адрес ['.$address.']. Полис ['.$polis.']. Лечащий врач [стоматология]: ['.$therapist.']. Лечащий врач [косметология]: ['.$therapist2.']');
 		
 		return ($mysql_insert_id);
 	}
 	
 	
 	//Обновление карточки пациента из-под Web
-	function WriteClientToDB_Update($session_id, $id, $contacts, $card, $therapist, $therapist2, $birthday, $sex){
+	function WriteClientToDB_Update ($session_id, $id, $comment, $card, $therapist, $therapist2, $birthday, $sex, $telephone, $passport, $passportvidandata, $passportvidankem, $address, $polis){
 		$old = '';
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
@@ -448,17 +448,17 @@
 		$number = mysql_num_rows($res);
 		if ($number != 0){
 			$arr = mysql_fetch_assoc($res);
-			$old = 'Контакты: ['.$arr['contacts'].']. Карта: ['.$arr['card'].']. Дата рождения: ['.$arr['birthday'].']. Пол: ['.$arr['sex'].']. Лечащий врач [стоматология]: ['.$arr['therapist'].']. Лечащий врач [косметология]: ['.$arr['therapist2'].']';
+			$old = 'Комментарий: ['.$arr['comment'].']. Карта: ['.$arr['card'].']. Дата рождения: ['.$arr['birthday'].']. Пол: ['.$arr['sex'].']. Телефон: ['.$arr['telephone'].']. Серия/номер паспорта ['.$arr['passport'].']. Дата выдачи ['.$arr['passportvidandata'].']. Выдан кем ['.$arr['passportvidankem'].']. Адрес ['.$arr['address'].']. Полис ['.$arr['polis'].']. Лечащий врач [стоматология]: ['.$arr['therapist'].']. Лечащий врач [косметология]: ['.$arr['therapist2'].']';
 		}else{
 			$old = 'Не нашли старую запись.';
 		}
 		$time = time();
-		$query = "UPDATE `spr_clients` SET `sex`='{$sex}', `birthday`='{$birthday}', `therapist`='{$therapist}', `therapist2`='{$therapist2}', `contacts`='{$contacts}', `card`='{$card}' WHERE `id`='{$id}'";
+		$query = "UPDATE `spr_clients` SET `sex`='{$sex}', `birthday`='{$birthday}', `therapist`='{$therapist}', `therapist2`='{$therapist2}', `comment`='{$comment}', `card`='{$card}', `telephone`='{$telephone}', `passport`='{$passport}', `passportvidandata`='{$passportvidandata}', `passportvidankem`='{$passportvidankem}', `address`='{$address}', `polis`='{$polis}' WHERE `id`='{$id}'";
 		mysql_query($query) or die(mysql_error());
 		mysql_close();
 		
 		//логирование
-		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован пациент ['.$id.']. ['.date('d.m.y H:i', $time).']. Контакты: ['.$contacts.']. Карта: ['.$card.']. Дата рождения: ['.$birthday.']. Пол: ['.$sex.']. Лечащий врач [стоматология]: ['.$therapist.']. Лечащий врач [косметология]: ['.$therapist2.']');
+		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован пациент ['.$id.']. ['.date('d.m.y H:i', $time).']. Комментарий: ['.$comment.']. Карта: ['.$card.']. Дата рождения: ['.$birthday.']. Пол: ['.$sex.']. Телефон: ['.$telephone.']. Серия/номер паспорта ['.$passport.']. Дата выдачи ['.$passportvidandata.']. Выдан кем ['.$passportvidankem.']. Адрес ['.$address.']. Полис ['.$polis.']. Лечащий врач [стоматология]: ['.$therapist.']. Лечащий врач [косметология]: ['.$therapist2.']');
 	}
 
 	//Обновление ФИО пациента из-под Web

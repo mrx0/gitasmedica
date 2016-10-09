@@ -65,6 +65,8 @@
 			
 			<script type="text/javascript" src="js/search_fast_client.js"></script>
 			
+			<script type="text/javascript" src="js/jquery.maskedinput-1.2.2.js"></script>
+			
 <!--<script src="js/jquery.js" type="text/javascript"></script>-->
 
 <script src="js/raphael.js" type="text/javascript"></script>
