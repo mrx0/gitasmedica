@@ -15,9 +15,10 @@
 				for ($i = 0; $i < count($fast_search); $i++){
 					echo "<div style='border-bottom: 1px #ccc solid; width: 350px;'>
 					<a href='client.php?id=".$fast_search[$i]["id"]."' class='ahref' style='display: block; height: 100%;'>
-					<span style='font-size: 80%; font-weight: bold;'>".$fast_search[$i]["full_name"]."</span><br />
-					<span style='font-size: 70%'>Дата рождения: ", $fast_search[$i]['birthday'] == "-1577934000" ? "не указана" : date("d.m.Y", $fast_search[$i]["birthday"]) ,"</span><br />
-					<span style='font-size: 70%'>Контакты: ".$fast_search[$i]['contacts']."</span>
+					<span style='font-size: 80%; font-weight: bold;'>".$fast_search[$i]["full_name"]."</span><br>
+					<span style='font-size: 70%'>Дата рождения: ", $fast_search[$i]['birthday'] == "-1577934000" ? "не указана" : date("d.m.Y", $fast_search[$i]["birthday"]) ,"</span><br>
+					<span style='font-size: 70%'>Телефон: ".$fast_search[$i]['telephone']."</span><br>
+					<span style='font-size: 70%'>№ карты: ".$fast_search[$i]['card']."</span>
 					</a>
 					</div>";
 				}
