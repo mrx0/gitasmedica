@@ -182,7 +182,7 @@
 								</div>
 							</div>
 							<div style="margin-top: 10px;">
-								<a href="scheduler2.php" class="dotyel">Сброс</a>
+								<a href="scheduler2.php?'.$who.'" class="dotyel">Сброс</a>
 							</div>
 						</li>
 					</ul>';
