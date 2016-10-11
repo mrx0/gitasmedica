@@ -1603,7 +1603,7 @@ input[type="number"].mod{
 .dotyel{
 	border-bottom: 1px dashed #000080; 
 	text-decoration: none;
-	font-size: 70%; 
+ 
 	color: #999; 
 	background-color: rgba(252, 252, 0, 0.3);
 }

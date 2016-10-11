@@ -11,6 +11,8 @@
 		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
+			include_once 'widget_calendar.php';
+			
 			$offices = SelDataFromDB('spr_office', '', '');
 			//var_dump ($offices);
 			
@@ -18,6 +20,7 @@
 			$js_data = '';
 			$kabsInFilialExist = FALSE;
 			$kabsInFilial = array();
+			$dop = '';
 
 			/*$sheduler_times = array (
 				1 => '9:00 - 9:30',
@@ -45,40 +48,31 @@
 				23 => '20:00 - 20:30',
 				24 => '20:30 - 21:00',
 			);*/
-			
-			$who = '&who=stom';
-			$whose = 'Стоматологов ';
-			$selected_stom = ' selected';
-			$selected_cosm = ' ';
-			$datatable = 'scheduler_stom';
-			
-			if ($_GET){
-				//var_dump ($_GET);
+
 				
-				//тип график (космет/стомат/...)
-				if (isset($_GET['who'])){
-					if ($_GET['who'] == 'stom'){
-						$who = '&who=stom';
-						$whose = 'Стоматологов ';
-						$selected_stom = ' selected';
-						$selected_cosm = ' ';
-						$datatable = 'scheduler_stom';
-						$kabsForDoctor = 'stom';
-					}elseif($_GET['who'] == 'cosm'){
-						$who = '&who=cosm';
-						$whose = 'Косметологов ';
-						$selected_stom = ' ';
-						$selected_cosm = ' selected';
-						$datatable = 'scheduler_cosm';
-						$kabsForDoctor = 'cosm';
-					}else{
-						$who = '&who=stom';
-						$whose = 'Стоматологов ';
-						$selected_stom = ' selected';
-						$selected_cosm = ' ';
-						$datatable = 'scheduler_stom';
-						$kabsForDoctor = 'stom';
-					}
+			foreach ($_GET as $key => $value){
+				if (($key != 'm') && ($key != 'y'))
+					$dop .= '&'.$key.'='.$value;
+			}
+			
+			//тип график (космет/стомат/...)
+			if (isset($_GET['who'])){
+				if ($_GET['who'] == 'stom'){
+					$who = '&who=stom';
+					$whose = 'Стоматологов ';
+					$selected_stom = ' selected';
+					$selected_cosm = ' ';
+					$datatable = 'scheduler_stom';
+					$kabsForDoctor = 'stom';
+					$type = 5;
+				}elseif($_GET['who'] == 'cosm'){
+					$who = '&who=cosm';
+					$whose = 'Косметологов ';
+					$selected_stom = ' ';
+					$selected_cosm = ' selected';
+					$datatable = 'scheduler_cosm';
+					$kabsForDoctor = 'cosm';
+					$type = 6;
 				}else{
 					$who = '&who=stom';
 					$whose = 'Стоматологов ';
@@ -86,145 +80,122 @@
 					$selected_cosm = ' ';
 					$datatable = 'scheduler_stom';
 					$kabsForDoctor = 'stom';
+					$type = 5;
 				}
+			}else{
+				$who = '&who=stom';
+				$whose = 'Стоматологов ';
+				$selected_stom = ' selected';
+				$selected_cosm = ' ';
+				$datatable = 'scheduler_stom';
+				$kabsForDoctor = 'stom';
+				$type = 5;
+			}
+			
+			if (isset($_GET['m']) && isset($_GET['y'])){
+				//операции со временем						
+				$month = $_GET['m'];
+				$year = $_GET['y'];
+			}else{
+				//операции со временем						
+				$month = date('m');		
+				$year = date('Y');
+			}
+			
+			$month_stamp = mktime(0, 0, 0, $month, 1, $year);
+
+			$day_count = date("t", $month_stamp);
+			//var_dump($day_count);
+			
+			$weekday = date("w", $month_stamp);
+			if ($weekday == 0){
+				$weekday = 7;
+			}
+			$start = -($weekday-2);
+			//var_dump($start);
+			
+			$last = ($day_count + $weekday - 1) % 7;
+			//var_dump($last);
+			
+			if ($last == 0){
+				$end = $day_count; 
+			}else{
+				$end = $day_count + 7 - $last;
+			}
+			$today = date("Y-m-d");
+			
+			//!!!!
+			if(isset($_GET['filial'])){
+				if ($_GET['filial'] == 0) $_GET['filial'] = 15;
+				$selected_fil = $_GET['filial'];
+			}
+			
+			if (!isset($_GET['filial'])){
+				//Филиал					
+				$_GET['filial'] = 15;
+			}
 				
-				$month_names=array(
-					"Январь",
-					"Февраль",
-					"Март",
-					"Апрель",
-					"Май",
-					"Июнь",
-					"Июль",
-					"Август",
-					"Сентябрь",
-					"Октябрь",
-					"Ноябрь",
-					"Декабрь"
-				); 
-				if (isset($_GET['y']))
-					$y = $_GET['y'];
-				if (isset($_GET['m']))
-					$m = $_GET['m']; 
-				if (isset($_GET['date']) && strstr($_GET['date'],"-"))
-					list($y,$m) = explode("-",$_GET['date']);
-				if (!isset($y) || $y < 1970 || $y > 2037)
-					$y = date("Y");
-				if (!isset($m) || $m < 1 || $m > 12)
-					$m = date("m");
-				
-				$month_stamp = mktime(0, 0, 0, $m, 1, $y);
-				$day_count = date("t",$month_stamp);
-				$weekday = date("w", $month_stamp);
-				if ($weekday == 0)
-					$weekday = 7;
-				$start = -($weekday-2);
-				$last = ($day_count + $weekday - 1) % 7;
-				if ($last == 0) 
-					$end = $day_count; 
-				else 
-					$end = $day_count + 7 - $last;
-				$today = date("Y-m-d");
-				$go_today = date('?\m=m&\y=Y', mktime (0, 0, 0, date("m"), 1, date("Y"))); 
-				
-				$prev = date('?\m=m&\y=Y', mktime (0, 0, 0, $m-1, 1, $y));  
-				$next = date('?\m=m&\y=Y', mktime (0, 0, 0, $m+1, 1, $y));
-				if(isset($_GET['filial'])){
-					$prev .= '&filial='.$_GET['filial']; 
-					$next .= '&filial='.$_GET['filial'];
-					$go_today .= '&filial='.$_GET['filial'];
-					if ($_GET['filial'] == 0) $_GET['filial'] = 15;
-					$selected_fil = $_GET['filial'];
-				}
-				$i = 0;
+			//Массив с месяцами
+			$monthsName = array(
+				'01' => 'Январь',
+				'02' => 'Февраль',
+				'03' => 'Март',
+				'04' => 'Апрель',
+				'05' => 'Май',
+				'06' => 'Июнь',
+				'07'=> 'Июль',
+				'08' => 'Август',
+				'09' => 'Сентябрь',
+				'10' => 'Октябрь',
+				'11' => 'Ноябрь',
+				'12' => 'Декабрь'
+			);
 				
 				
+			$filial = SelDataFromDB('spr_office', $_GET['filial'], 'offices');
+			//var_dump($filial['name']);
+			
+			$kabsInFilial_arr = SelDataFromDB('spr_kabs', $_GET['filial'], 'office_kabs');
+			if ($kabsInFilial_arr != 0){
+				$kabsInFilial_json = $kabsInFilial_arr[0][$kabsForDoctor];
+				//var_dump($kabsInFilial_json);
 				
-				
-				$filial = SelDataFromDB('spr_office', $_GET['filial'], 'offices');
-				//var_dump($filial['name']);
-				
-				$kabsInFilial_arr = SelDataFromDB('spr_kabs', $_GET['filial'], 'office_kabs');
-				if ($kabsInFilial_arr != 0){
-					$kabsInFilial_json = $kabsInFilial_arr[0][$kabsForDoctor];
-					//var_dump($kabsInFilial_json);
+				if ($kabsInFilial_json != NULL){
+					$kabsInFilialExist = TRUE;
+					$kabsInFilial = json_decode($kabsInFilial_json, true);
+					//var_dump($kabsInFilial);
+					//echo count($kabsInFilial);
 					
-					if ($kabsInFilial_json != NULL){
-						$kabsInFilialExist = TRUE;
-						$kabsInFilial = json_decode($kabsInFilial_json, true);
-						//var_dump($kabsInFilial);
-						//echo count($kabsInFilial);
-						
-					}else{
-						$kabsInFilialExist = FALSE;
-					}
-					
+				}else{
+					$kabsInFilialExist = FALSE;
 				}
+			}
 				
 				
 				if ($filial != 0){
 					echo '
 						<div id="status">
 							<header>
-								<h2>График '.$whose.'на ',$month_names[$m-1],' ',$y,' филиал '.$filial[0]['name'].'</h2>
-								<a href="own_scheduler.php" class="b">График работы врачей</a><br /><br />';
-					echo '
-								<form>';
-					echo 'Выберите филиал';
-					echo '
-									<select name="SelectFilial" id="SelectFilial">
-										<option value="0">Выберите филиал</option>';
-					if ($offices != 0){
-						for ($off=0;$off<count($offices);$off++){
-							echo "
-										<option value='".$offices[$off]['id']."' ", $selected_fil == $offices[$off]['id'] ? "selected" : "" ,">".$offices[$off]['name']."</option>";
-						}
-					}
-
-					echo '
-									</select><br />';
-									
-					echo 'Выберите врачей';
-					echo '
-									<select name="SelectWho" id="SelectWho">
-										<option value="stom"'.$selected_stom.'>Стоматологи</option>
-										<option value="cosm"'.$selected_cosm.'>Косметологи</option>
-									</select>
-								</form>';	
-					echo '			
-							</header>';
+								<h2>График '.$whose.'на ',$monthsName[$month],' ',$year,' филиал '.$filial[0]['name'].'</h2>
+							</header>
+							<a href="own_scheduler.php" class="b">График работы врачей</a>';
 							
 					echo '
+							<div id="data">
+								<ul style="margin-left: 6px; margin-bottom: 20px;">
+									<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
+									<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
+										<a href="?who=stom" class="b">Стоматологи</a>
+										<a href="?who=cosm" class="b">Косметологи</a>
+									</li>';
+									
+					echo widget_calendar ($month, $year, 'scheduler.php', $dop);
 					
-							<style>
-								.label_desc{
-									display: block;
-								}
-								.error{
-									display: none;
-								}
-								.error_input{
-									border: 2px solid #FF0000; 
-								}
-							</style>	
-					
-					
-							<div id="data">';
+					echo '</ul>';
 
 					if ($kabsInFilialExist){
 						echo '
 							<table style="border:1px solid #BFBCB5; height:600px;">
-								<tr>
-									<td colspan="7">
-											<table width="100%" border=0 cellspacing=0 cellpadding=0> 
-												<tr> 
-													<td align="left"><a href="'.$prev.$who.'">&lt;&lt; предыдущий</a></td> 
-													<td align="center"><strong>',$month_names[$m-1],' ',$y,'</strong> (<a href="'.$go_today.$who.'">текущий</a>)</td> 
-													<td align="right"><a href="'.$next.$who.'">следующий &gt;&gt;</a></td> 
-												</tr> 
-											</table> 
-									</td>
-								</tr>
 								<tr style="text-align:center; vertical-align:top; font-weight:bold; height:20px;">
 									<td style="border:1px solid #BFBCB5; width:180px; min-width:180px; text-align:center; ">
 										Понедельник
@@ -265,7 +236,7 @@
 							//!!!по кабинетам бегаем
 							for ($k = 1; $k <= count($kabsInFilial); $k++){
 								//смотрим че там в этом кабинете сегодня 
-								$Kab_work_today = FilialKabSmenaWorker($datatable, $y, $m, $d, $_GET['filial'], $k);
+								$Kab_work_today = FilialKabSmenaWorker($datatable, $year, $month, $d, $_GET['filial'], $k);
 								$smena1_work = '
 											<div class="smena">
 												<br />
@@ -322,7 +293,7 @@
 								}
 								
 								$kabs .= '
-											<div class="kab_filial" onclick="ShowSettingsScheduler('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.')">
+											<div class="kab_filial" onclick="ShowSettingsScheduler('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$d.')">
 												<div class="n_kab_filial">
 													№'.$k.'	
 												</div>
@@ -335,7 +306,7 @@
 							$kabs .= '
 											</div>';
 							//выделение сегодня цветом
-							$now="$y-$m-".sprintf("%02d",$d);
+							$now="$year-$month-".sprintf("%02d",$d);
 							if ($now == $today){
 								$today_color = 'border:1px solid red;';
 							}else{
@@ -373,7 +344,7 @@
 														
 								echo '
 											<div style="vertical-align:top;'.$holliday_color.'" '.$ahtung_color.'>
-												<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 2px 4px;" class="b"  onclick="document.location.href = \'scheduler_day.php?y='.$y.'&m='.$m.'&d='.$d.'&filial='.$_GET['filial'].$who.'\'">К ЗАПИСИ</span>
+												<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 2px 4px;" class="b"  onclick="document.location.href = \'scheduler_day.php?y='.$year.'&m='.$month.'&d='.$d.'&filial='.$_GET['filial'].$who.'\'">К ЗАПИСИ</span>
 													<div style="text-align: right;">
 														<strong>'.$d.'</strong>
 													</div>
@@ -398,36 +369,6 @@
 						echo '<h1>В этом филиале нет кабинетов такого типа.</h1>';
 					}
 				}
-			}else{
-				echo '
-					<div id="status">
-						<header>
-							<h2>График</h2>
-							<a href="own_scheduler.php" class="b">График работы врачей</a><br /><br />';
-				echo '
-					<form>';
-				echo 'Выберите филиал';
-				echo '
-						<select name="SelectFilial" id="SelectFilial">
-							<option value="0" selected>Выберите филиал</option>';
-				if ($offices != 0){
-					for ($i=0;$i<count($offices);$i++){
-						echo "<option value='".$offices[$i]['id']."'>".$offices[$i]['name']."</option>";
-					}
-				}
-				echo '
-							</select><br />';
-									
-				echo 'Выберите врачей';
-				echo '
-						<select name="SelectWho" id="SelectWho">
-							<option value="stom"'.$selected_stom.'>Стоматологи</option>
-							<option value="cosm"'.$selected_cosm.'>Косметологи</option>
-						</select>
-					</form>';
-				echo '			
-				</header>';
-			}
 
 			echo '
 					</div>
