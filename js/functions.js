@@ -272,6 +272,35 @@
 		});		
 	};  
 	
+	function Ajax_change_shed() {
+		document.getElementById("changeShedOptionsReq").innerHTML = '';
+		
+		var day = document.getElementById("SelectDayShedOptions").value;
+		var month = document.getElementById("SelectMonthShedOptions").value;
+		var year = document.getElementById("SelectYearShedOptions").value;
+		
+		var ignoreshed = $("input[name=ignoreshed]:checked").val();
+		if (typeof (ignoreshed) == 'undefined') ignoreshed = 0;
+		
+		//alert (ignoreshed);
+		
+		ajax({
+			url:"sheduler_change.php",
+			statbox:"errrror",
+			method:"POST",
+			data:
+			{
+				day:day,
+				month:month,
+				year:year,
+				ignoreshed:ignoreshed,
+			},
+			success:function(data){
+				document.getElementById("changeShedOptionsReq").innerHTML=data;
+			}
+		})
+	};  
+	
 	function iWantThisDate(path){
 		var iWantThisMonth = document.getElementById("iWantThisMonth").value;
 		var iWantThisYear = document.getElementById("iWantThisYear").value;

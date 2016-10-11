@@ -25,6 +25,23 @@
 
 			$dopQuery = '';
 			
+			//Массив с месяцами
+			$monthsName = array(
+				'01' => 'Январь',
+				'02' => 'Февраль',
+				'03' => 'Март',
+				'04' => 'Апрель',
+				'05' => 'Май',
+				'06' => 'Июнь',
+				'07'=> 'Июль',
+				'08' => 'Август',
+				'09' => 'Сентябрь',
+				'10' => 'Октябрь',
+				'11' => 'Ноябрь',
+				'12' => 'Декабрь'
+			);
+			
+			//Массив с днями недели
 			$dayWarr = array(
 				1 => 'ПН',
 				2 => 'ВТ',
@@ -138,7 +155,44 @@
 			
 			echo '
 				<div id="data">
-					<ul style="margin-left: 6px; margin-bottom: 20px;">
+					<ul style="margin-left: 6px; margin-bottom: 20px;">';
+			if (($scheduler['edit'] == 1) || $god_mode){
+				echo '
+						<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
+							<div id="showDiv1"><span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Настройки</span> <i class="fa fa-cog" title="Настройки"></i></div>
+							<div id="div1" style="width: 400px; margin-bottom: 10px; border: 1px solid #BFBCB5; padding: 10px;">
+								<div id="changeShedOptionsReq"></div>
+								<div style="margin-bottom: 18px;">
+									Применить этот график на месяц ';
+				echo '
+									<select name="SelectMonthShedOptions" id="SelectMonthShedOptions">';
+				foreach ($monthsName as $mNumber => $mName){
+					$selected = '';
+					if ((int)$mNumber == (int)date('m')+1){
+						$selected = 'selected';
+					}
+					echo '
+										<option value="'.$mNumber.'" '.$selected.'>'.$mName.'</option>';
+				}
+				echo '
+									</select>
+									год 
+									<select name="SelectYearShedOptions" id="SelectYearShedOptions">
+										<option value="'.date('Y').'" selected>'.date('Y').'</option>
+										<option value="'.(date('Y')+1).'">'.(date('Y')+1).'</option>
+									</select>
+								</div>
+								<div style="margin-bottom: 18px;">
+									С  <input id="SelectDayShedOptions" type="number" value="1" min="1" max="31" size="2" style="width: 40px;"> числа
+								</div>
+								<div style="margin-bottom: 18px;">
+									Игнорировать существующий график <input type="checkbox" name="ignoreshed" id="ignoreshed" value="1">
+								</div>
+								<input type="button" class="b" value="Применить" onclick="Ajax_change_shed()">
+							</div>
+						</li>';
+			}
+			echo '
 						<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
 						<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
 							<a href="?who=stom" class="b">Стоматологи</a>
@@ -191,7 +245,7 @@
 									</select>
 								</div>
 							</div>
-							<div style="margin-top: 10px;">
+							<div style="display: inline-block; margin-right: 20px;">
 								<a href="?'.$who.'" class="dotyel" style="font-size: 70%;">Сбросить</a>
 							</div>
 						</li>
