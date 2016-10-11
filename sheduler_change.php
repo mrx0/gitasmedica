@@ -12,7 +12,7 @@
 		include_once 'functions.php';
 		var_dump ($_POST);
 		
-		/*if ($_POST){
+		if ($_POST){
 			if ($_POST['worker'] != 0){
 				$workerBusy = FALSE;
 				
@@ -106,6 +106,6 @@
 				
 				echo '{"req": "ok", "text":"'.$request.'"}';
 			}
-		}*/
+		}
 	}
 ?>
