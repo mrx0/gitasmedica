@@ -159,8 +159,10 @@
 			if (($scheduler['edit'] == 1) || $god_mode){
 				echo '
 						<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
-							<div id="showDiv1"><span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Настройки</span> <i class="fa fa-cog" title="Настройки"></i></div>
-							<div id="div1" style="width: 400px; margin-bottom: 10px; border: 1px solid #BFBCB5; padding: 10px;">
+							<div id="showDiv1" style="cursor: pointer;">
+								<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>
+							</div>
+							<div id="div1" style="width: 400px; margin-bottom: 10px; border: 1px dotted #BFBCB5; padding: 20px 10px 10px; background-color: #EEE;">
 								<div id="changeShedOptionsReq"></div>
 								<div style="margin-bottom: 18px;">
 									Применить этот график на месяц ';
