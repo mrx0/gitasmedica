@@ -1,6 +1,6 @@
 <?php 
 
-//scheduler_worker_edit_f.php
+//sheduler_change.php
 //Функция для редактирования расписания
 
 	session_start();
@@ -10,7 +10,7 @@
 	}else{
 		include_once 'DBWork.php';
 		include_once 'functions.php';
-		//var_dump ($_POST);
+		var_dump ($_POST);
 		
 		if ($_POST){
 			if ($_POST['worker'] != 0){

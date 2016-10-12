@@ -90,6 +90,11 @@
 										<input type="text" name="passport" id="passport" value="" size="10"><br>
 									</div>
 									<div>
+										<span style="font-size: 70%; color: #AAA">Серия номер (иностр.)</span><br>
+										<input type="text" name="alenpassportser" id="alenpassportser" value="" size="10"><br>
+										<input type="text" name="alenpassportnom" id="alenpassportnom" value="" size="10"><br>
+									</div>
+									<div>
 										<span style="font-size: 70%; color: #AAA">Выдан когда</span><br>
 										<input type="text" name="passportvidandata" id="passportvidandata" value="" size="10">
 									</div>
