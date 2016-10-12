@@ -320,8 +320,13 @@
 
 										$kabs .= '
 												<div style="outline: 1px solid  #BBB; display: table; margin-bottom: 3px; font-size: 70%;">
-													<div style="vertical-align: middle; width: 5px; box-shadow: 0px 5px 10px rgba(171, 254, 213, 0.59); display: table-cell !important;">
-														'.$smenaN.'
+													<div style="vertical-align: middle; width: 20px; box-shadow: 0px 5px 10px rgba(171, 254, 213, 0.59); display: table-cell !important;">
+														<div>'.$smenaN.'</div>';
+										if (count($schedulerFakt[$d][$smenaN]) != count($kabsInFilial)){
+											$kabs .= '
+														<div style="bottom: 0; font-size: 120%; color: green; cursor: pointer;"><i class="fa fa-plus-square" title="Добавить сотрудника"></i></div>';
+										}
+										$kabs .= '
 													</div>';
 											
 										//переменная для вывода
@@ -356,7 +361,7 @@
 										}
 										
 										$kabs .= '
-												<div style="text-align: middle; display: table-cell !important; width: 100%;'.$BgColor.'">';
+												<div style="text-align: center; display: table-cell !important; width: 130px;'.$BgColor.'">';
 										$kabs .= $resEcho2;
 										$kabs .= '		
 												</div>
@@ -365,11 +370,19 @@
 										if (($smenaN == 1) || ($smenaN == 2)){
 											$kabs .= '
 													<div style="width: 100%; height: 35px; min-height: 35px; outline: 1px solid  #BBB; display: table; margin-bottom: 3px; font-size: 70%;">
-														<div style="vertical-align: middle; width: 5px; box-shadow: 0px 5px 10px rgba(171, 254, 213, 0.59); display: table-cell !important;">
-															'.$smenaN.'
+														<div style="vertical-align: middle; width: 20px; box-shadow: 0px 5px 10px rgba(171, 254, 213, 0.59); display: table-cell !important;">
+															<div>'.$smenaN.'</div>
 														</div>
-														<div style="width: 100%; vertical-align: middle; display: table; margin-bottom: 3px; color: red;" onclick="ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$kab.', '.$year.', '.$month.','.$d.', '.$smenaN.')">
-															никого нет
+														<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red;" onclick="ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$kab.', '.$year.', '.$month.','.$d.', '.$smenaN.')">
+															<div>никого нет</div>
+															<div>';
+															
+											foreach	($kabsInFilial as $keyK => $valueK){
+												$kabs .= '
+													<div style="bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+											}
+											$kabs .= '
+														</div>
 														</div>
 													</div>';
 										}
@@ -381,7 +394,12 @@
 								$ahtung = TRUE;
 								$kabsNone .= '
 									<div style="width: 100%; text-align: center; display: table; margin-bottom: 3px; font-size: 70%; color: red;">
-										никого нет
+										никого нет ';
+								foreach	($kabsInFilial as $keyK => $valueK){
+									$kabsNone .= '
+										<div style="bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+								}
+								$kabsNone .= '		
 									</div>';
 							}
 							$kabs .= '
