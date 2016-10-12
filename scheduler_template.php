@@ -151,7 +151,9 @@
 				<header style="margin-bottom: 5px;">
 					<h1>Текущий график план</h1>
 					'.$whose.'
-				</header>';
+				</header>
+				<a href="scheduler.php" class="b">График </a>
+				<a href="own_scheduler.php" class="b">График сотрудника</a>';
 			
 			echo '
 				<div id="data">
@@ -185,7 +187,7 @@
 									</select>
 								</div>
 								<div style="margin-bottom: 18px;">
-									С  <input id="SelectDayShedOptions" type="number" value="1" min="1" max="31" size="2" style="width: 40px;"> числа
+									Начиная с <input id="SelectDayShedOptions" type="number" value="1" min="1" max="31" size="2" style="width: 40px;"> числа
 								</div>
 								<div style="margin-bottom: 18px;">
 									Игнорировать существующий график <input type="checkbox" name="ignoreshed" id="ignoreshed" value="1">

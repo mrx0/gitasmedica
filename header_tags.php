@@ -170,23 +170,25 @@ jQuery("document").ready(function($){
 								}
 								else
 								{
-											   send="";
-											   for (var i in param.data) send+= i+"="+param.data[i]+"&";
-											   send=send+"ajax=true";
+									send="";
+									for (var i in param.data) send+= i+"="+param.data[i]+"&";
+									send=send+"ajax=true";
 								}
 				 
 								req.open(method, param.url, true);
-								if(param.statbox)document.getElementById(param.statbox).innerHTML = \'<img src="img/wait.gif"> Обработка...\';
+								if(param.statbox)
+									document.getElementById(param.statbox).innerHTML = \'<img src="img/wait.gif"> обработка...\';
+								
 								req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 								req.send(send);
 								req.onreadystatechange = function()
 								{
-											   if (req.readyState == 4 && req.status == 200) //если ответ положительный
-											   {
-															   if(param.success)param.success(req.responseText);
-											   }
+									if (req.readyState == 4 && req.status == 200) //если ответ положительный
+									{
+										if(param.success)param.success(req.responseText);
+									}
 								}
-				}
+							}
 			</script>
 			
 <!--для скрытых блоков старое-->				

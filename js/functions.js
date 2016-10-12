@@ -53,9 +53,14 @@
 							sel_year: document.getElementById("sel_year").value,
 							
 							telephone:document.getElementById("telephone").value,
+							
 							passport:document.getElementById("passport").value,
 							passportvidandata:document.getElementById("passportvidandata").value,
 							passportvidankem:document.getElementById("passportvidankem").value,
+							
+							alienpassportser:document.getElementById("alienpassportser").value,
+							alienpassportnom:document.getElementById("alienpassportnom").value,							
+							
 							address:document.getElementById("address").value,
 							polis:document.getElementById("polis").value,
 							
@@ -129,9 +134,14 @@
 							sel_year:document.getElementById("sel_year").value,
 							
 							telephone:document.getElementById("telephone").value,
+							
 							passport:document.getElementById("passport").value,
 							passportvidandata:document.getElementById("passportvidandata").value,
 							passportvidankem:document.getElementById("passportvidankem").value,
+							
+							alienpassportser:document.getElementById("alienpassportser").value,
+							alienpassportnom:document.getElementById("alienpassportnom").value,	
+							
 							address:document.getElementById("address").value,
 							polis:document.getElementById("polis").value,
 
@@ -272,8 +282,12 @@
 		});		
 	};  
 	
+	// !!! правильный пример AJAX
 	function Ajax_change_shed() {
-		document.getElementById("changeShedOptionsReq").innerHTML = '';
+		
+		//document.getElementById("changeShedOptionsReq").innerHTML = '<img src="img/wait.gif"> обработка...';
+		
+		//document.getElementById("changeShedOptionsReq").innerHTML = '';
 		
 		var day = document.getElementById("SelectDayShedOptions").value;
 		var month = document.getElementById("SelectMonthShedOptions").value;
@@ -283,11 +297,11 @@
 		if (typeof (ignoreshed) == 'undefined') ignoreshed = 0;
 		
 		//alert (ignoreshed);
-		
-		ajax({
-			url:"sheduler_change.php",
-			statbox:"errrror",
-			method:"POST",
+
+		$.ajax({
+			url:"sheduler_change_f.php",
+			global: false, 
+			type: "POST", 
 			data:
 			{
 				day:day,
@@ -295,8 +309,12 @@
 				year:year,
 				ignoreshed:ignoreshed,
 			},
+			cache: false,
+			beforeSend: function() {
+				$('#changeShedOptionsReq').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'> обработка...</div>");
+			},
 			success:function(data){
-				document.getElementById("changeShedOptionsReq").innerHTML=data;
+				$('#changeShedOptionsReq').html(data);
 			}
 		})
 	};  

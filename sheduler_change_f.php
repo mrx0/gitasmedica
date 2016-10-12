@@ -10,101 +10,122 @@
 	}else{
 		include_once 'DBWork.php';
 		include_once 'functions.php';
-		var_dump ($_POST);
+		//var_dump ($_POST);
 		
 		if ($_POST){
-			if ($_POST['worker'] != 0){
-				$workerBusy = FALSE;
-				
-				$request = '';
-				
-				$workers = array();
-				$arr = array();
-				
-				//надо посмотреть, а не работает ли этот врач еще где-то в эту смену в этот день
-				$query = "SELECT `id`, `filial`, `day`, `smena`, `kab`, `worker` FROM `sheduler_template` WHERE `worker` = '{$_POST['worker']}' AND `type` = '{$_POST['type']}' AND `day` =  '{$_POST['smena']}' AND `smena` =  '{$_POST['smena']}'";
-
-				require 'config.php';
-				
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
-
-				$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-				$number = mysql_num_rows($res);
-				if ($number != 0){
-					while ($arr = mysql_fetch_assoc($res)){
-						array_push($workers, $arr);
-					}
-					$workerBusy = TRUE;
-				}else{
-					$workers = 0;
-				}
-				//var_dump ($query);
-				
-				//Если есть уже в графике, то удаляем оттуда
-				if ($workers != 0){
-					foreach ($workers as $value){
-						$query = "DELETE FROM `sheduler_template` WHERE `id`='{$value['id']}'";
-						
-						mysql_query($query) or die($query.' -> '.mysql_error());
-						
-						//логирование
-						AddLog ('0', $_SESSION['id'], '', '[ПЕРЕНОС ИЗ ДРУГОЙ СМЕНЫ] ['.$_POST['worker'].'] удален из Смены ['.$_POST['smena'].']. Филиал ['.$_POST['filial'].']. Кабинет ['.$_POST['kab'].']. День ['.$_POST['day'].']. Тип ['.$_POST['type'].']');	
-					}
-				}
+			//Максимально кол-во дней в месяц, где будем менять
+			$max_days =	cal_days_in_month(CAL_GREGORIAN, $_POST['month'], $_POST['year']);
 			
-				//Надо посмотреть, есть ли кто уже именно тут, в этом каб, смене, дне, филиале и удалить его потом
-				$query = "SELECT `id` FROM `sheduler_template` WHERE `type` = '{$_POST['type']}' AND `day` =  '{$_POST['smena']}' AND `smena` =  '{$_POST['smena']}' AND `filial` =  '{$_POST['filial']}' AND `kab` =  '{$_POST['kab']}'";				
-				$workers = array();
-				
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
-
-				$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-				$number = mysql_num_rows($res);
-				if ($number != 0){
-					while ($arr = mysql_fetch_assoc($res)){
-						array_push($workers, $arr);
-					}
-				}else{
-					$workers = 0;
-				}
+			if ($_POST['day'] < 0){
+				$day = 1;
+			}elseif($_POST['day'] > $max_days){
+				$day = $max_days;
+			}else{
+				$day = $_POST['day'];
+			}
 			
-				//Если есть уже в графике, то удаляем оттуда
-				if ($workers != 0){
-					foreach ($workers as $value){
-						$query = "DELETE FROM `sheduler_template` WHERE `id`='{$value['id']}'";
-						
-						mysql_query($query) or die($query.' -> '.mysql_error());
-						
-						//логирование
-						AddLog ('0', $_SESSION['id'], '', '[ЗАМЕНА НА ДРУГОГО] ['.$_POST['worker'].'] удален из Смены ['.$_POST['smena'].']. Филиал ['.$_POST['filial'].']. Кабинет ['.$_POST['kab'].']. День ['.$_POST['day'].']. Тип ['.$_POST['type'].']');	
-					}
+			$month = $_POST['month'];
+			$year = $_POST['year'];
+			
+			//var_dump ($day);
+			$canUpdate = TRUE;
+			
+			//получаем шаблон графика из базы
+			$query = "SELECT `filial`, `day`, `smena`, `kab`, `worker`, `type` FROM `sheduler_template`";
+			
+			$shedTemplate = 0;
+			
+			require 'config.php';
+			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+			mysql_select_db($dbName) or die(mysql_error()); 
+			mysql_query("SET NAMES 'utf8'");
+			
+			$arr = array();
+			$rez = array();
+				
+			$res = mysql_query($query) or die($query);
+			$number = mysql_num_rows($res);
+			if ($number != 0){
+				while ($arr = mysql_fetch_assoc($res)){
+					$rez[$arr['day']][$arr['smena']][$arr['filial']][$arr['type']][$arr['kab']][$arr['worker']] = true;
 				}
-
-				//Добавляем новую запись
-				$query = "INSERT INTO `sheduler_template` (`filial`, `day`, `smena`, `kab`, `worker`, `type`) VALUES ('{$_POST['filial']}', '{$_POST['day']}', '{$_POST['smena']}', '{$_POST['kab']}', '{$_POST['worker']}', '{$_POST['type']}')";
-				
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
-				
-				mysql_query($query) or die($query.' -> '.mysql_error());
-				
+				$shedTemplate = $rez;
+			}else{
+				$shedTemplate = 0;
+			}
+			//var_dump($shedTemplate[5][1]);
+			
+			if ($shedTemplate != 0){
+				for ($i=$day; $i<=$max_days; $i++){
+					$month_stamp = mktime(0, 0, 0, $month, $i, $year);
+					//Узнаем номер дня недели
+					$weekday = date("N", $month_stamp);
+					//var_dump($weekday);
+					//var_dump($shedTemplate[$weekday]);
+					
+					//foreach ($shedTemplate as $dayW => $valueW){
+						foreach ($shedTemplate[$weekday] as $smena => $valueS){
+							foreach ($valueS as $filial => $valueF){
+								foreach ($valueF as $type => $valueT){
+									foreach ($valueT as $kab => $valueK){
+										//Смотрим нет ли такой записи
+										$workerHere = FALSE;
+										$query = "SELECT `worker` FROM `scheduler` WHERE `day`='{$i}' AND `month`='{$month}' AND `year`='{$year}' AND `smena`='{$smena}' AND `filial`='{$filial}' AND `kab`='{$kab}' AND `type`='{$type}'";
+										$res = mysql_query($query) or die(mysql_error().' -> '.$query);
+										$number = mysql_num_rows($res);
+										if ($number != 0){
+											$workerHere = TRUE;
+										}
+										//var_dump($workerHere);
+										
+										if ($workerHere){
+											if ($_POST['ignoreshed'] == 1){
+												$query = "DELETE FROM `scheduler` WHERE `month`='{$month}' AND `day`>='{$day}'";
+													
+												mysql_query($query) or die($query.' -> '.mysql_error());
+												
+												foreach($valueK as $worker => $val){
+													//Вставляем запись
+													$query = "INSERT INTO `scheduler` (`year`, `month`, `day`, `filial`, `kab`, `smena`, `smena_t`, `worker`, `type`)
+													VALUES 
+													('{$year}', '{$month}', '{$i}', '{$filial}', '{$kab}', '{$smena}', NULL, '{$worker}', '{$type}')";
+													
+													mysql_query($query) or die($query.' -> '.mysql_error());
+												}
+											}else{
+												$canUpdate = FALSE;
+												break 5;
+											}
+										}else{
+											foreach($valueK as $worker => $val){
+												//Вставляем запись
+												$query = "INSERT INTO `scheduler` (`year`, `month`, `day`, `filial`, `kab`, `smena`, `smena_t`, `worker`, `type`)
+												VALUES 
+												('{$year}', '{$month}', '{$i}', '{$filial}', '{$kab}', '{$smena}', NULL, '{$worker}', '{$type}')";
+												
+												mysql_query($query) or die($query.' -> '.mysql_error());
+											}
+										}
+									}
+								}
+							}
+						}
+					//}
+				}
 				mysql_close();
 				
-				//логирование
-				AddLog ('0', $_SESSION['id'], '', 'Добавили сотрудника ['.$_POST['worker'].'] в смену ['.$_POST['smena'].']. Филиал ['.$_POST['filial'].']. Кабинет ['.$_POST['kab'].']. День ['.$_POST['day'].']. Тип ['.$_POST['type'].']');	
-
-				if ($workerBusy){
-					$request = 'Переместили сотрудника в смену';
+				if (!$canUpdate){
+					echo '
+						<div class="query_neok">
+							График был заполнен ранее.<br><br>
+						</div>';
 				}else{
-					$request = 'Поставили сотрудника в смену';
+					echo '
+						<div class="query_ok">
+							График заполнен.<br><br>
+						</div>';
+						AddLog ('0', $_SESSION['id'], '', 'График заполнен пользователем. Год ['.$year.']. Месяц['.$month.']. С числа['.$day.'].');	
 				}
-				
-				echo '{"req": "ok", "text":"'.$request.'"}';
 			}
 		}
 	}

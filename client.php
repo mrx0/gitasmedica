@@ -108,7 +108,16 @@
 										<div>
 											<span style="font-size: 70%; color: #AAA">Серия номер</span><br>
 											'.$client[0]['passport'].'
-										</div>
+										</div>';
+				if (($client[0]['alienpassportser'] != NULL) && ($client[0]['alienpassportnom'] != NULL)){
+					echo '
+										<div>
+											<span style="font-size: 70%; color: #AAA">Серия номер (иностр.)</span><br>
+											'.$client[0]['alienpassportser'].'
+											'.$client[0]['alienpassportnom'].'
+										</div>';
+				}
+				echo '
 										<div>
 											<span style="font-size: 70%; color: #AAA">Выдан когда</span><br>
 											'.$client[0]['passportvidandata'].'

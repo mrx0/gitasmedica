@@ -28,9 +28,9 @@
 					}
 					//var_dump($rez);
 					
-					//if ($rez != 0){
+					if ($rez != 0){
 						foreach ($rez as $value){
-							//var_dump($value);
+							var_dump($value);
 							
 							if ($value['smena'] != 9){
 								$query = "INSERT INTO `sheduler_template` (

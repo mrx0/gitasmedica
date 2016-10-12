@@ -87,6 +87,11 @@
 											<input type="text" name="passport" id="passport" value="'.$client[0]['passport'].'" size="10"><br>
 										</div>
 										<div>
+											<span style="font-size: 70%; color: #AAA">Серия номер (иностр.)</span><br>
+											<input type="text" name="alienpassportser" id="alienpassportser" value="'.$client[0]['alienpassportser'].'" size="5">
+											<input type="text" name="alienpassportnom" id="alienpassportnom" value="'.$client[0]['alienpassportnom'].'" size="10"><br>
+										</div>
+										<div>
 											<span style="font-size: 70%; color: #AAA">Выдан когда</span><br>
 											<input type="text" name="passportvidandata" id="passportvidandata" value="'.$client[0]['passportvidandata'].'" size="10">
 										</div>
