@@ -223,6 +223,12 @@
 			echo '
 					<div id="data">
 						<ul style="margin-left: 6px; margin-bottom: 20px;">
+							<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
+								<div style="cursor: pointer;" onclick="showHiddenDivs()">
+									<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Свободные места</span> <i class="fa fa-cog" title="Настройки"></i>
+								</div>
+							</li>
+						
 							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
 								<a href="?who=stom" class="b">Стоматологи</a>
@@ -322,10 +328,10 @@
 												<div style="outline: 1px solid  #BBB; display: table; margin-bottom: 3px; font-size: 70%;">
 													<div style="vertical-align: middle; width: 20px; box-shadow: 0px 5px 10px rgba(171, 254, 213, 0.59); display: table-cell !important;">
 														<div>'.$smenaN.'</div>';
-										if (count($schedulerFakt[$d][$smenaN]) != count($kabsInFilial)){
+										/*if (count($schedulerFakt[$d][$smenaN]) != count($kabsInFilial)){
 											$kabs .= '
 														<div style="bottom: 0; font-size: 120%; color: green; cursor: pointer;"><i class="fa fa-plus-square" title="Добавить сотрудника"></i></div>';
-										}
+										}*/
 										$kabs .= '
 													</div>';
 											
@@ -336,6 +342,9 @@
 										//for ($kabN = 1; $kabN <= count($kabsInFilial); $kabN++){
 										//Отсортируем кабинеты
 										ksort ($schedulerFakt[$d][$smenaN]);
+										
+										//Временный архив для кабинетов
+										$kabsInFilialTemp = $kabsInFilial;
 										
 										foreach($schedulerFakt[$d][$smenaN] as $kab => $kabValue){
 											
@@ -353,16 +362,34 @@
 											$resEcho2 .= '
 														</div>
 													</div>';
+													
+											//Вычеркиваем этот кабинет из списка незанятых
+											unset ($kabsInFilialTemp[$kab]);
 										}
 										
 										$BgColor = ' background-color: rgba(171, 254, 213, 0.59);';
 										if ($smenaN > 2){
 											$BgColor = ' background-color: rgba(220, 220, 220, 0.5);';
 										}
-										
+								
 										$kabs .= '
 												<div style="text-align: center; display: table-cell !important; width: 130px;'.$BgColor.'">';
 										$kabs .= $resEcho2;
+										
+										if (!empty($kabsInFilialTemp)){
+											$kabs .= '
+													<div class="hideThisDiv" style="background-color: #FEEEEE; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);">
+														<div style="text-align: center; padding: 4px; margin: 1px;">';
+														
+											foreach	($kabsInFilialTemp as $keyK => $valueK){
+												$kabs .= '
+													<div style="display: inline-block; bottom: 0; font-size: 110%; cursor: pointer; border: 1px dotted #9F9D9D; width: 15px; margin-right: 2px;" title="Добавить сотрудника"  onclick="ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$keyK.', '.$year.', '.$month.','.$d.', '.$smenaN.')"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+											}
+											$kabs .= '
+														</div>
+													</div>';
+										}
+										
 										$kabs .= '		
 												</div>
 											</div>';
@@ -374,15 +401,15 @@
 															<div>'.$smenaN.'</div>
 														</div>
 														<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red;" onclick="ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$kab.', '.$year.', '.$month.','.$d.', '.$smenaN.')">
-															<div>никого нет</div>
-															<div>';
+															<div style="margin-bottom: 7px;">никого нет</div>
+															<div class="hideThisDiv">';
 															
 											foreach	($kabsInFilial as $keyK => $valueK){
 												$kabs .= '
-													<div style="bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+													<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
 											}
 											$kabs .= '
-														</div>
+															</div>
 														</div>
 													</div>';
 										}
@@ -394,12 +421,14 @@
 								$ahtung = TRUE;
 								$kabsNone .= '
 									<div style="width: 100%; text-align: center; display: table; margin-bottom: 3px; font-size: 70%; color: red;">
-										никого нет ';
+										<div style="margin-bottom: 7px;">никого нет </div>
+										<div class="hideThisDiv">';
 								foreach	($kabsInFilial as $keyK => $valueK){
 									$kabsNone .= '
-										<div style="bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+										<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
 								}
 								$kabsNone .= '		
+										</div>
 									</div>';
 							}
 							$kabs .= '
@@ -427,7 +456,7 @@
 													
 								echo '
 											<div style="vertical-align:top;'.$holliday_color.'" id="blink2">
-												<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 2px 4px;" class="b"  onclick="document.location.href = \'scheduler_day.php?y='.$year.'&m='.$month.'&d='.$d.'&filial='.$_GET['filial'].$who.'\'">К ЗАПИСИ</span>
+												<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b"  onclick="document.location.href = \'scheduler_day.php?y='.$year.'&m='.$month.'&d='.$d.'&filial='.$_GET['filial'].$who.'\'">запись</span>
 													<div style="text-align: right;">
 														<strong>'.$d.'</strong>
 													</div>
@@ -480,8 +509,6 @@
 									<div style="display: none;" id="day"></div>
 									<div style="display: none;" id="month"></div>
 									<div style="display: none;" id="year"></div>
-									
-									<div style="display: none;" id="dayW_value"></div>
 								</div>
 								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
 									<div class="cellLeft">Филиал</div>
@@ -518,7 +545,7 @@
 						</div>';
 
 			echo '
-						<input type="button" class="b" value="OK" onclick="ChangeWorkerSheduler()" id="changeworkersheduletbutton">
+						<input type="button" class="b" value="OK" onclick="ChangeWorkerShedulerFakt()" id="changeworkersheduletbutton">
 						<input type="button" class="b" value="Отмена" onclick="HideSettingsSchedulerFakt()">
 					</div>';
 	
@@ -571,6 +598,7 @@
 							document.getElementById("kabN").innerHTML=kabN;
 							document.getElementById("smenaN").innerHTML=smenaN;
 							
+							//Те, кто уже есть
 							$.ajax({
 								// метод отправки 
 								type: "POST",
@@ -589,6 +617,26 @@
 								// действие, при ответе с сервера
 								success: function(workers_here){
 									document.getElementById("workersTodayDelete").innerHTML=workers_here;
+								}
+							});
+
+							//Те, кто свободен
+							$.ajax({
+								// метод отправки 
+								type: "POST",
+								// путь до скрипта-обработчика
+								url: "scheduler_workers_free_fakt.php",
+								// какие данные будут переданы
+								data: {
+									day:day,
+									month:month,
+									year:year,
+									smena:smenaN,
+									type:'.$type.',
+								},
+								// действие, при ответе с сервера
+								success: function(workers){
+									document.getElementById("ShowWorkersHere").innerHTML=workers;
 								}
 							});	
 						}
@@ -708,105 +756,60 @@
 								var ShowWorkersSmena1 = ShowWorkersSmena();
 							});
 						});';
-				if (($scheduler['edit'] == 1) || $god_mode){					
-					echo '
-						function Ajax_add_Sheduler() {
-							 
-							// прячем текст ошибок
-							$(\'.error\').hide();
-							document.getElementById("errror").innerHTML = \'\';
-							 
+			if (($scheduler['edit'] == 1) || $god_mode){					
+				echo '
+						function ChangeWorkerShedulerFakt() {
+
+							$(".error").hide();
+							document.getElementById("errrror").innerHTML = "";
+						
 							// получение данных из полей
-							var filial = $(\'#filial\').val();
-							var author = $(\'#author\').val();
-							var year = $(\'#year\').val();
-							var month = $(\'#month\').val();
-							var day = $(\'#day\').val();
-							
-							var DateForMove = $(\'input[name=DateForMove]:checked\').val();
-							
-							var kab = document.getElementById("kab").innerHTML;
+							var day = document.getElementById("day").innerHTML;
+							var month = document.getElementById("month").innerHTML;
+							var year = document.getElementById("year").innerHTML;
+							var filial = document.getElementById("filial_value").innerHTML;
+							var kab = document.getElementById("kabN").innerHTML;
+							var smena = document.getElementById("smenaN").innerHTML;
+							var type = '.$type.';
 
-							var worker = $(\'input[name=worker]:checked\').val();
+							var worker = $("input[name=worker]:checked").val();
 							if(typeof worker == "undefined") worker = 0;
-							
-							'.$js_data.'
-
-							var smena1_val = $("input[name=smena1]:checked").val();
-							var smena2_val = $("input[name=smena2]:checked").val();
 
 							$.ajax({
+								//dataType: "json",
+								//statbox:SettingsScheduler,
 								// метод отправки 
 								type: "POST",
 								// путь до скрипта-обработчика
-								url: "ajax_test2.php",
+								url: "scheduler_worker_edit_fakt_f.php",
 								// какие данные будут переданы
 								data: {
+									day:day,
+									month:month,
+									year:year,
+									filial:filial,
+									kab:kab,
+									smena:smena,
+									type:type,
 									worker:worker,
-									smena1:smena1_val,
-									smena2:smena2_val,
 								},
-								// тип передачи данных
-								dataType: "json",
 								// действие, при ответе с сервера
 								success: function(data){
-									// в случае, когда пришло success. Отработало без ошибок
-									if(data.result == \'success\'){						
-							
-										$.ajax({
-											dataType: "json",
-											//statbox:SettingsScheduler,
-											// метод отправки 
-											type: "POST",
-											// путь до скрипта-обработчика
-											url: "edit_schedule_f.php",
-											// какие данные будут переданы
-											data: {
-												type:"scheduler_stom",
-												author:author,
-												filial:filial,
-												kab:kab,
-												day:day,
-												month:month,
-												year:year,
-												'.$post_data.'
-												smena1:smena1_val,
-												smena2:smena2_val,
-												worker:worker,
-												DateForMove:DateForMove,
-												datatable:"'.$datatable.'"
-											},
-											// действие, при ответе с сервера
-											success: function(data){
-												
-												if (data.req == 1){
-													window.location.href = data.text;
-												}
-												if (data.req == 9){
-													document.getElementById("ShowSettingsSchedulerFakt").innerHTML=data.text;
-													window.scrollTo(0,0);
-												}
-											}
-										});						
-									// в случае ошибок в форме
-									}else{
-										// перебираем массив с ошибками
-										for(var errorField in data.text_error){
-											// выводим текст ошибок 
-											$(\'#\'+errorField+\'_error\').html(data.text_error[errorField]);
-											// показываем текст ошибок
-											$(\'#\'+errorField+\'_error\').show();
-											// обводим инпуты красным цветом
-										   // $(\'#\'+errorField).addClass(\'error_input\');                      
-										}
-										document.getElementById("errror").innerHTML=\'<span style="color: red">Ошибка, что-то заполнено не так.</span>\'
-									}
-								}			
-							});
+									document.getElementById("errrror").innerHTML = data;
+									/*if (data.req == "ok"){
+										// прячем текст ошибок
+										$(".error").hide();
+										document.getElementById("errrror").innerHTML = "";
+										setTimeout(function () {
+											location.reload()
+										}, 100);
+									}*/
+								}
+							});						
 						};';
-				}
-				echo '					
-				</script>
+			}
+			echo '					
+			</script>
 					
 				<script language="JavaScript" type="text/javascript">
 					 /*<![CDATA[*/

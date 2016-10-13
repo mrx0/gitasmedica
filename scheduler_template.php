@@ -564,7 +564,7 @@
 					
 					//Удаляем врача из смены
 					function DeleteWorkersSmena(worker, filial, day, smena, kab, type){
-						var rys = confirm("Удалить сотрудника из смены?");
+						var rys = confirm("Удалить сотрудника из смены Графика?");
 						if (rys){
 							$.ajax({
 								// метод отправки 

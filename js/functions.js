@@ -326,3 +326,12 @@
 		window.location.replace(path+'&m='+iWantThisMonth+'&y='+iWantThisYear);
 	}
 	
+	function showHiddenDivs(){
+		e = $('.hideThisDiv');
+		if(!e.is(':visible')) {
+			e.show();
+		}else{
+			e.hide();
+		}
+	}
+	

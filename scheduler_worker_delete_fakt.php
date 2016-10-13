@@ -1,6 +1,6 @@
 <?php 
 
-//scheduler_worker_delete.php
+//scheduler_worker_delete_fakt.php
 //
 
 	session_start();
@@ -21,8 +21,8 @@
 			mysql_query("SET NAMES 'utf8'");
 			$time = time();
 			
-			$query = "DELETE FROM `sheduler_template` WHERE `worker`='{$_POST['worker']}' AND
-			`filial`='{$_POST['filial']}' AND `day`='{$_POST['day']}' AND 
+			$query = "DELETE FROM `scheduler` WHERE `worker`='{$_POST['worker']}' AND
+			`filial`='{$_POST['filial']}' AND `day`='{$_POST['day']}' AND `month`='{$_POST['month']}' AND `year`='{$_POST['year']}' AND 
 			`smena`='{$_POST['smena']}' AND `kab`='{$_POST['kab']}' AND 
 			`type`='{$_POST['type']}'";
 			
@@ -30,7 +30,7 @@
 			mysql_close();
 			
 			//логирование
-			AddLog ('0', $_SESSION['id'], '', 'Сотрудник ['.$_POST['worker'].'] удален из смены Графика ['.$_POST['smena'].']. Филиал ['.$_POST['filial'].']. Кабинет ['.$_POST['kab'].']. День ['.$_POST['day'].']. Тип ['.$_POST['type'].']');	
+			AddLog ('0', $_SESSION['id'], '', 'Сотрудник ['.$_POST['worker'].'] удален из Фактической смены ['.$_POST['smena'].']. Филиал ['.$_POST['filial'].']. Кабинет ['.$_POST['kab'].']. День ['.$_POST['day'].']. Месяц ['.$_POST['month'].']. Год ['.$_POST['year'].']. Тип ['.$_POST['type'].']');	
 		
 			echo '<span style="color: green;">Удаление прошло успешно</span>';
 		}else{
