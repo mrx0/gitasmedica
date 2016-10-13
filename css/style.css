@@ -1632,6 +1632,6 @@ input[type="number"].mod{
     background: linear-gradient(to right, rgba(255,204,0, 0.2), #fc0 100%);
 }
 
-.hideThisDiv{
+.manageScheduler{
 	display: none;
 }

@@ -10,7 +10,7 @@
 	}else{
 		include_once 'DBWork.php';
 		include_once 'functions.php';
-		var_dump ($_POST);
+		//var_dump ($_POST);
 		
 		if ($_POST){
 			if ($_POST['worker'] != 0){
@@ -40,7 +40,7 @@
 				}else{
 					$workers = 0;
 				}
-				var_dump ($workers);
+				//var_dump ($workers);
 				//var_dump ($query);
 				
 				//Если есть уже в графике, то удаляем оттуда
@@ -72,7 +72,7 @@
 				}else{
 					$workers = 0;
 				}
-				var_dump ($workers);
+				//var_dump ($workers);
 				
 				//Если есть уже в графике, то удаляем оттуда
 				if ($workers != 0){

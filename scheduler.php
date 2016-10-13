@@ -159,8 +159,12 @@
 			}
 			
 			if (!isset($_GET['filial'])){
-				//Филиал					
-				$_GET['filial'] = 15;
+				//Филиал	
+				if (isset($_SESSION['filial'])){
+					$_GET['filial'] = $_SESSION['filial'];
+				}else{
+					$_GET['filial'] = 15;
+				}
 			}
 				
 			$filial = SelDataFromDB('spr_office', $_GET['filial'], 'offices');
@@ -210,7 +214,12 @@
 				}
 			}
 			
-			
+			//переменная, чтоб вкл/откл редактирование
+			echo '
+				<script>
+					var iCanManage = false;
+				</script>
+			';
 
 			echo '
 				<div id="status">
@@ -218,17 +227,20 @@
 						<h2>График '.$whose.'на ',$monthsName[$month],' ',$year,' филиал '.$filial[0]['name'].'</h2>
 					</header>
 					<a href="scheduler_template.php" class="b">График план</a>
-					<a href="own_scheduler.php" class="b">График сотрудника</a>';
+					<!--<a href="own_scheduler.php" class="b">График сотрудника</a>-->';
 					
 			echo '
 					<div id="data">
-						<ul style="margin-left: 6px; margin-bottom: 20px;">
+						<ul style="margin-left: 6px; margin-bottom: 20px;">';
+			if (($scheduler['edit'] == 1) || $god_mode){
+				echo '
 							<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
-								<div style="cursor: pointer;" onclick="showHiddenDivs()">
-									<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Свободные места</span> <i class="fa fa-cog" title="Настройки"></i>
+								<div style="cursor: pointer;" onclick="manageScheduler()">
+									<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>
 								</div>
-							</li>
-						
+							</li>';
+			}
+			echo '			
 							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
 								<a href="?who=stom" class="b">Стоматологи</a>
@@ -241,7 +253,7 @@
 									</div>
 									<div>
 										<select name="SelectFilial" id="SelectFilial">
-											<option value="0">Все</option>';
+											';
 			if ($offices_j != 0){
 				for ($i=0;$i<count($offices_j);$i++){
 					$selected = '';
@@ -353,7 +365,7 @@
 											$ahtung = FALSE;
 											$fontSize = 'font-size: 70%;';
 											$resEcho2 .= '
-													<div style="box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);" onclick="ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$kab.', '.$year.', '.$month.','.$d.', '.$smenaN.')">
+													<div style="box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);" onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$kab.', '.$year.', '.$month.','.$d.', '.$smenaN.')">
 														<div style="text-align: right; color: #555;">
 															<b>каб. '.$kab.'</b>
 														</div>
@@ -378,12 +390,12 @@
 										
 										if (!empty($kabsInFilialTemp)){
 											$kabs .= '
-													<div class="hideThisDiv" style="background-color: #FEEEEE; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);">
+													<div class="manageScheduler" style="background-color: #FEEEEE; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);">
 														<div style="text-align: center; padding: 4px; margin: 1px;">';
 														
 											foreach	($kabsInFilialTemp as $keyK => $valueK){
 												$kabs .= '
-													<div style="display: inline-block; bottom: 0; font-size: 110%; cursor: pointer; border: 1px dotted #9F9D9D; width: 15px; margin-right: 2px;" title="Добавить сотрудника"  onclick="ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$keyK.', '.$year.', '.$month.','.$d.', '.$smenaN.')"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+													<div style="display: inline-block; bottom: 0; font-size: 110%; cursor: pointer; border: 1px dotted #9F9D9D; width: 15px; margin-right: 2px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$keyK.', '.$year.', '.$month.','.$d.', '.$smenaN.')"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
 											}
 											$kabs .= '
 														</div>
@@ -400,13 +412,13 @@
 														<div style="vertical-align: middle; width: 20px; box-shadow: 0px 5px 10px rgba(171, 254, 213, 0.59); display: table-cell !important;">
 															<div>'.$smenaN.'</div>
 														</div>
-														<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red;" onclick="ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$kab.', '.$year.', '.$month.','.$d.', '.$smenaN.')">
+														<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red;">
 															<div style="margin-bottom: 7px;">никого нет</div>
-															<div class="hideThisDiv">';
+															<div class="manageScheduler">';
 															
 											foreach	($kabsInFilial as $keyK => $valueK){
 												$kabs .= '
-													<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+													<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$valueK.', '.$year.', '.$month.','.$d.', '.$smenaN.')"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
 											}
 											$kabs .= '
 															</div>
@@ -422,7 +434,7 @@
 								$kabsNone .= '
 									<div style="width: 100%; text-align: center; display: table; margin-bottom: 3px; font-size: 70%; color: red;">
 										<div style="margin-bottom: 7px;">никого нет </div>
-										<div class="hideThisDiv">';
+										<div class="manageScheduler">';
 								foreach	($kabsInFilial as $keyK => $valueK){
 									$kabsNone .= '
 										<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
@@ -456,7 +468,8 @@
 													
 								echo '
 											<div style="vertical-align:top;'.$holliday_color.'" id="blink2">
-												<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b"  onclick="document.location.href = \'scheduler_day.php?y='.$year.'&m='.$month.'&d='.$d.'&filial='.$_GET['filial'].$who.'\'">запись</span>
+												<!--<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b"  onclick="document.location.href = \'scheduler_day.php?y='.$year.'&m='.$month.'&d='.$d.'&filial='.$_GET['filial'].$who.'\'">запись</span>-->
+												<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b"  onclick="alert(\'Скоро\')">запись</span>
 													<div style="text-align: right;">
 														<strong>'.$d.'</strong>
 													</div>
@@ -493,8 +506,8 @@
 				echo '
 						</div>
 					</div>';
-
-			echo '
+			if (($scheduler['edit'] == 1) || $god_mode){
+				echo '
 					<div id="ShowSettingsSchedulerFakt" style="position: absolute; z-index: 105; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; padding:10px;">
 						<a class="close" href="#" onclick="HideSettingsSchedulerFakt()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(img/close.png) no-repeat;">
 							Close
@@ -527,7 +540,7 @@
 									<div class="cellRight" id="smenaN">
 									</div>
 								</div>';
-			echo '
+				echo '
 								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
 
 									<div class="cellRight">
@@ -536,16 +549,16 @@
 									</div>
 								</div>';
 
-			//Врачи
-			echo '
+				//Врачи
+				echo '
 								<div id="ShowWorkersHere" style="vertical-align: top; height: 200px; border: 1px solid #C1C1C1; overflow-x: hidden; overflow-y: scroll;">
 								</div>';
 
-			echo '	
+				echo '	
 						</div>';
-
+			}
 			echo '
-						<input type="button" class="b" value="OK" onclick="ChangeWorkerShedulerFakt()" id="changeworkersheduletbutton">
+						<input type="button" class="b" value="OK" onclick="if (iCanManage) ChangeWorkerShedulerFakt()" id="changeworkersheduletbutton">
 						<input type="button" class="b" value="Отмена" onclick="HideSettingsSchedulerFakt()">
 					</div>';
 	
@@ -844,12 +857,28 @@
 					';	
 			}else{
 				if (($scheduler['see_all'] == 1)|| $god_mode){
-					echo '<h2>График '.$whose.'на ',$monthsName[$month],' ',$year,' <span style="color:red">не заполнен</span></h2><br>
+					echo '<h2>График <span style="color:red">не заполнен</span></h2><br>
 					<a href="scheduler_template.php" class="b">Заполнить</a>';					
 				}else{
-					echo '<h2>График '.$whose.'на ',$monthsName[$month],' ',$year,' <span style="color:red">не заполнен</span>, обратитесь к руководителю</h2>';
+					echo '<h2>График <span style="color:red">не заполнен</span>, обратитесь к руководителю</h2>';
 				}
 			}
+			echo '
+					<script>
+					
+						$(function() {
+							$("#SelectFilial").change(function(){
+								//var dayW = document.getElementById("SelectDayW").value;
+								document.location.href = "?filial="+$(this).val()+"'.$who.'";
+							});
+							$("#SelectDayW").change(function(){
+								var filial = document.getElementById("SelectFilial").value;
+								document.location.href = "?dayw="+$(this).val()+"&filial="+filial+"'.$who.'";
+							});
+						});
+						
+					</script>
+			';
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}

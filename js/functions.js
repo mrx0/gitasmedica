@@ -326,12 +326,13 @@
 		window.location.replace(path+'&m='+iWantThisMonth+'&y='+iWantThisYear);
 	}
 	
-	function showHiddenDivs(){
-		e = $('.hideThisDiv');
+	function manageScheduler(){
+		e = $('.manageScheduler');
 		if(!e.is(':visible')) {
 			e.show();
 		}else{
 			e.hide();
 		}
+		if (iCanManage) iCanManage = false; else iCanManage = true;
 	}
 	

@@ -99,6 +99,13 @@
 					$offices = SelDataFromDB('spr_office', $_GET['filial'], 'id');
 					$wFilial = '';
 				}	
+			}else{
+				if(isset($_SESSION['filial'])){
+					$_GET['filial'] = $_SESSION['filial'];
+					$dopQuery .= " AND `filial`='{$_GET['filial']}'";
+					$offices = SelDataFromDB('spr_office', $_GET['filial'], 'id');
+					$wFilial = '';
+				}
 			}
 			
 			$weekDays = '
@@ -147,13 +154,21 @@
 			//какие есть кабинеты в филиале
 			$kabsInFilial = array();
 			
+			//переменная, чтоб вкл/откл редактирование
 			echo '
+				<script>
+					var iCanManage = false;
+				</script>
+			';
+			
+			echo '
+			<div id="status">
 				<header style="margin-bottom: 5px;">
 					<h1>Текущий график план</h1>
 					'.$whose.'
 				</header>
 				<a href="scheduler.php" class="b">График </a>
-				<a href="own_scheduler.php" class="b">График сотрудника</a>';
+				<!--<a href="own_scheduler.php" class="b">График сотрудника</a>-->';
 			
 			echo '
 				<div id="data">
@@ -161,7 +176,7 @@
 			if (($scheduler['edit'] == 1) || $god_mode){
 				echo '
 						<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
-							<div id="showDiv1" style="cursor: pointer;">
+							<div id="showDiv1" style="cursor: pointer;" onclick="manageScheduler()">
 								<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>
 							</div>
 							<div id="div1" style="width: 400px; margin-bottom: 10px; border: 1px dotted #BFBCB5; padding: 20px 10px 10px; background-color: #EEE;">
@@ -192,7 +207,7 @@
 								<div style="margin-bottom: 18px;">
 									Игнорировать существующий график <input type="checkbox" name="ignoreshed" id="ignoreshed" value="1">
 								</div>
-								<input type="button" class="b" value="Применить" onclick="Ajax_change_shed()">
+								<input type="button" class="b" value="Применить" onclick="if (iCanManage) Ajax_change_shed()">
 							</div>
 						</li>';
 			}
@@ -333,7 +348,7 @@
 										$fontSize = '';
 									}
 									$resEcho2 .= '
-											<div style="box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);" onclick="ShowSettingsScheduler('.$filial_val['id'].', \''.$filial_val['name'].'\', '.$dayWvalue.', '.$smenaN.', '.$kabN.')">
+											<div style="box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);" onclick="if (iCanManage) ShowSettingsScheduler('.$filial_val['id'].', \''.$filial_val['name'].'\', '.$dayWvalue.', '.$smenaN.', '.$kabN.')">
 												<div style="text-align: right; color: #555;">
 													<b>каб. '.$kabN.'</b>
 												</div>
@@ -379,8 +394,8 @@
 					}
 				}
 			}
-			 
-			echo '
+			if (($scheduler['edit'] == 1) || $god_mode){
+				echo '
 					<div id="ShowSettingsScheduler" style="position: absolute; z-index: 105; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; padding:10px;">
 						<a class="close" href="#" onclick="HideSettingsScheduler()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(img/close.png) no-repeat;">
 							Close
@@ -412,7 +427,7 @@
 									<div class="cellRight" id="smenaN">
 									</div>
 								</div>';
-			echo '
+				echo '
 								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
 
 									<div class="cellRight">
@@ -421,19 +436,19 @@
 									</div>
 								</div>';
 
-			//Врачи
-			echo '
+				//Врачи
+				echo '
 								<div id="ShowWorkersHere" style="vertical-align: top; height: 200px; border: 1px solid #C1C1C1; overflow-x: hidden; overflow-y: scroll;">
 								</div>';
 
-			echo '	
+				echo '	
 						</div>';
 
-			echo '
-						<input type="button" class="b" value="OK" onclick="ChangeWorkerSheduler()" id="changeworkersheduletbutton">
+				echo '
+						<input type="button" class="b" value="OK" onclick="if (iCanManage) ChangeWorkerSheduler()" id="changeworkersheduletbutton">
 						<input type="button" class="b" value="Отмена" onclick="HideSettingsScheduler()">
 					</div>';	
-					
+			}		
 					
 			echo '	
 			<!-- Подложка только одна -->
