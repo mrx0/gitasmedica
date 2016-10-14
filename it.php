@@ -21,7 +21,7 @@
 			
 			echo '
 				<header style="margin-bottom: 5px;">
-					<h1>Задачи Системных администраторов</h1>';
+					<h1>Задачи системного администратора</h1>';
 			if ($_GET){
 				//var_dump($_GET);
 				$filter_rez = array();
@@ -60,6 +60,10 @@
 			}
 			//var_dump ($journal);
 
+			if (($soft['see_all'] == 1) || ($soft['see_own'] == 1) || $god_mode){
+				echo '<a href="soft.php" class="b3">Программа</a><br>';
+			}
+			
 			if (($it['add_new'] == 1) || $god_mode){
 				echo '
 						<a href="add_task.php" class="b">Добавить</a>';

@@ -141,7 +141,7 @@
 				echo '<button class="md-trigger b" data-modal="modal-11">Фильтр</button>';
 				
 				//if (($stom['see_all'] == 1) || $god_mode){	
-					echo '<a href="stat_stomat2.php" class="b">Пропавшая первичка</a>';
+					//echo '<a href="stat_stomat2.php" class="b">Пропавшая первичка</a>';
 				//}
 				
 				echo '</li></ul>';

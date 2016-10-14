@@ -6,7 +6,7 @@
 	function DrawFilterOptions($sw, $it, $cosm, $stom, $workers, $clients, $offices, $god_mode){
 		include_once 'DBWork.php';
 		
-		$offices = SelDataFromDB('spr_office', '', '');
+		$offices_j = SelDataFromDB('spr_office', '', '');
 		//print_r (pathinfo(__FILE__));
 		echo '
 
@@ -134,9 +134,9 @@
 										<select id="dd2" class="wrapper-dropdown-2 b2" tabindex="2" name="filial">
 											<ul class="dropdown">
 												<li><option value="99" selected>Все</option></li>';
-													if ($offices !=0){
-														for ($i=0;$i<count($offices);$i++){
-															echo '<li><option value="'.$offices[$i]['id'].'" class="icon-twitter icon-large">'.$offices[$i]['name'].'</option></li>';
+													if ($offices_j !=0){
+														for ($i=0;$i<count($offices_j);$i++){
+															echo '<li><option value="'.$offices_j[$i]['id'].'" class="icon-twitter icon-large">'.$offices_j[$i]['name'].'</option></li>';
 														}
 													}
 										

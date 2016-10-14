@@ -63,6 +63,11 @@
 			}
 			//var_dump ($journal);
 
+			if (($it['see_all'] == 1) || $god_mode){
+				echo '
+						<a href="it.php" class="b3">Задачи для сисадмина</a><br>';
+			}
+			
 			if (($soft['add_own'] == 1) || $god_mode){
 				echo '
 						<a href="add_task_soft.php" class="b">Добавить</a>';

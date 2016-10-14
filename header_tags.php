@@ -281,6 +281,7 @@ jQuery("document").ready(function($){
 				$soft = json_decode($permissions[0]['soft'], true);
 				$scheduler = json_decode($permissions[0]['scheduler'], true);
 				$zapis = json_decode($permissions[0]['zapis'], true);
+				$report = json_decode($permissions[0]['report'], true);
 				//var_dump($offices);
 			}
 		}else{
@@ -303,6 +304,8 @@ jQuery("document").ready(function($){
 			$scheduler['see_own'] = 0;
 			$zapis['see_all'] = 0;
 			$zapis['see_own'] = 0;
+			$report['see_all'] = 0;
+			$report['see_own'] = 0;
 			//
 			$it['add_new'] = 0;
 			$it['add_own'] = 0;
@@ -322,6 +325,8 @@ jQuery("document").ready(function($){
 			$scheduler['add_own'] = 0;
 			$zapis['add_new'] = 0;
 			$zapis['add_own'] = 0;
+			$report['add_new'] = 0;
+			$report['add_own'] = 0;
 			//
 			$it['edit'] = 0;
 			$cosm['edit'] = 0;
@@ -332,6 +337,7 @@ jQuery("document").ready(function($){
 			$soft['edit'] = 0;
 			$scheduler['edit'] = 0;
 			$zapis['edit'] = 0;
+			$report['edit'] = 0;
 			//
 			$it['close'] = 0;
 			$cosm['close'] = 0;
@@ -342,6 +348,7 @@ jQuery("document").ready(function($){
 			$soft['close'] = 0;
 			$scheduler['close'] = 0;
 			$zapis['close'] = 0;
+			$report['close'] = 0;
 			//
 			$it['reopen'] = 0;
 			$cosm['reopen'] = 0;
@@ -352,6 +359,7 @@ jQuery("document").ready(function($){
 			$soft['reopen'] = 0;
 			$scheduler['reopen'] = 0;
 			$zapis['reopen'] = 0;
+			$report['reopen'] = 0;
 			//
 			$it['add_worker'] = 0;
 			$cosm['add_worker'] = 0;
@@ -362,37 +370,36 @@ jQuery("document").ready(function($){
 			$soft['add_worker'] = 0;
 			$scheduler['add_worker'] = 0;
 			$zapis['add_worker'] = 0;
+			$report['add_worker'] = 0;
 			//
 			
 		}
 		echo '<a href="index.php">Главная<div style="font-size:60%">'.$version.'</div></a>';
 		
 		if (($it['see_all'] == 1) || ($it['see_own'] == 1) || $god_mode){
-			echo '<li><a href="it.php">IT</a></li>';
+			echo '<li><a href="it.php" title="IT">IT</a></li>';
 		}
-		if (($soft['see_all'] == 1) || ($soft['see_own'] == 1) || $god_mode){
+		/*if (($soft['see_all'] == 1) || ($soft['see_own'] == 1) || $god_mode){
 			echo '<li><a href="soft.php">Программа</a></li>';
-		}
+		}*/
 		if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
-			echo '<li><a href="stomat.php">Стоматология</a></li>';
+			echo '<li><a href="stomat.php" title="Стоматология">Стоматология</a></li>';
 		}
 		if (($cosm['see_all'] == 1) || ($cosm['see_own'] == 1) || $god_mode){
-			echo '<li><a href="cosmet.php">Косметология</a></li>';
-		}
-		if (($workers['see_all'] == 1) || ($workers['see_own'] == 1) || $god_mode){
-			echo '<li><a href="contacts.php">Сотрудники</a></li>';
+			echo '<li><a href="cosmet.php" title="Косметология">Косметология</a></li>';
 		}
 		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
-			echo '<li><a href="scheduler.php">График</a></li>';
+			echo '<li><a href="scheduler.php" title="График">График</a></li>';
+		}
+		if (($report['see_all'] == 1) || ($report['see_own'] == 1) || $god_mode){
+			echo '<li><a href="reports.php" title="Статистика и отчёты"><i class="fa fa-bar-chart"></i></a></li>';
 		}
 		if (($clients['see_all'] == 1) || ($clients['see_own'] == 1) || $god_mode){
-			echo '<li><a href="clients.php">Пациенты</a></li>';
+			echo '<li><a href="clients.php" title="Пациенты">Пациенты</a></li>';
 		}
-		if (($offices['see_all'] == 1) || ($offices['see_own'] == 1) || $god_mode){
-			echo '<li><a href="filials.php">Филиалы</a></li>';
-		}
+		echo '<li><a href="directory.php" title="Справочники">Справочники</a></li>';
 		if ($god_mode){
-			echo '<li><a href="admin.php">Одминке</a></li>';
+			echo '<li><a href="admin.php"><i class="fa fa-cogs"></i></a></li>';
 		}
 	}
 	
@@ -405,7 +412,7 @@ jQuery("document").ready(function($){
 				<ul style="float:right;">';
 	if (!$enter_ok){
 		echo '
-					<li><a href="enter.php">Вход</a></li>';
+					<li><a href="enter.php" title="Вход"><i class="fa fa-power-off"></i></a></li>';
 	}else{
 		
 		$alarm = 0;
@@ -475,16 +482,16 @@ jQuery("document").ready(function($){
 		//Для автоматизации выбора филиала
 		if (isset($_SESSION['filial']) && !empty($_SESSION['filial'])){
 			$filial = array();
-			$filial = SelDataFromDB('spr_office', $_SESSION['filial'], 'offices');
-			//var_dump($filial['name']);
-			$selected_fil = $filial[0]['name'];
+			$offices_j = SelDataFromDB('spr_office', $_SESSION['filial'], 'offices');
+			//var_dump($offices_j['name']);
+			$selected_fil = $offices_j[0]['name'];
 		}else{
 			$selected_fil = '-';
 		}
 		
 		
 		echo '
-					<li>'.$if_removes.$if_notes.'<a href="user.php?id='.$_SESSION['id'].'" class="href_profile">['.$_SESSION['name'].']<br /><div style="font-size:60%">'.$selected_fil.'</div></a><a href="exit.php" class="href_exit">Выход</a></li>';
+					<li>'.$if_removes.$if_notes.'<a href="user.php?id='.$_SESSION['id'].'" class="href_profile"><div style="font-size: 80%">['.$_SESSION['name'].']</div><div style="font-size: 65%; font-weight: normal;">'.$selected_fil.'</div></a><a href="exit.php" class="href_exit" title="Выход"><i class="fa fa-power-off"></i></a></li>';
 		
 	}
 	echo '

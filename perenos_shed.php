@@ -15,7 +15,7 @@
 					$arr = array();
 					$rez = array();
 					//Собираем 
-					$query = "SELECT * FROM `scheduler_cosm` WHERE `office` = '{$filials[$i]['id']}' AND `year`='2016' AND `month`='8' AND `day`<'8'";
+					$query = "SELECT * FROM `scheduler_stom` WHERE `office` = '{$filials[$i]['id']}' AND `year`='2016' AND `month`='8' AND `day`<'8'";
 
 					$res = mysql_query($query) or die($q);
 					$number = mysql_num_rows($res);
@@ -37,7 +37,7 @@
 									`filial`, `day`, `smena`, `kab`, `worker`, `type`) 
 									VALUES (
 									'{$value['office']}', '{$value['day']}', '{$value['smena']}',
-									'{$value['kab']}', '{$value['worker']}', '6')";	
+									'{$value['kab']}', '{$value['worker']}', '5')";	
 								
 								//mysql_query($query) or die(mysql_error());
 							}else{
@@ -45,7 +45,7 @@
 									`filial`, `day`, `smena`, `kab`, `worker`, `type`) 
 									VALUES (
 									'{$value['office']}', '{$value['day']}', '1',
-									'{$value['kab']}', '{$value['worker']}', '6')";	
+									'{$value['kab']}', '{$value['worker']}', '5')";	
 								
 								//mysql_query($query) or die(mysql_error());
 								
@@ -53,7 +53,7 @@
 									`filial`, `day`, `smena`, `kab`, `worker`, `type`) 
 									VALUES (
 									'{$value['office']}', '{$value['day']}', '2',
-									'{$value['kab']}', '{$value['worker']}', '6')";	
+									'{$value['kab']}', '{$value['worker']}', '5')";	
 								
 								//mysql_query($query) or die(mysql_error());
 							}

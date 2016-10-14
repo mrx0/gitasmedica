@@ -136,15 +136,6 @@
 			}
 			
 			echo '<button class="md-trigger b" data-modal="modal-11">Фильтр</button>';				
-				
-			if (($cosm['see_all'] == 1) || $god_mode){
-				echo '
-						<a href="stat_cosm.php" class="b">Статистика</a>';
-			}
-			if (($cosm['see_all'] == 1) || $god_mode){
-				echo '
-						<a href="stat_cosm_ex.php" class="b">Статистика с фильтром</a>';
-			}
 			
 			echo '</li></ul>';
 			
