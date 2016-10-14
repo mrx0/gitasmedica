@@ -39,13 +39,30 @@
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
 										<div style="margin-bottom: 10px;">
-											C <input type="text" name="datastart" class="dateс" value="'.date("01.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
-											 &bull;По <input type="text" name="dataend" class="dateс" value="'.date("d.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
+											C <input type="text" id="datastart" name="datastart" class="dateс" value="'.date("01.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" disabled>
+											 &bull;По <input type="text" id="dataend" name="dataend" class="dateс" value="'.date("d.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" disabled>
 										</div>
 										<div style="vertical-align: middle; color: #333;">
 											<input type="checkbox" name="all_time" value="1" checked> <span style="font-size:80%;">За всё время</span>
+										</div>
+									</div>
+								</li>
+								
+								<li class="filterBlock">
+									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+										Возраст пациентов
+									</div>
+									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
+										<div style="margin-bottom: 10px;">
+											C <input type="text" name="datastart1" class="dateс1" value="'.date("01.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
+											 &bull;По <input type="text" name="dataend1" class="dateс1" value="'.date("d.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
+										</div>
+										<div style="vertical-align: middle; color: #333;">
+											<input type="checkbox" name="all_time1" value="1" checked> <span style="font-size:80%;">За всё время</span>
 										</div>
 									</div>
 								</li>
@@ -147,18 +164,20 @@
 					var all_time = 0;
 					
 					$("input[name=all_time]").click(function () {
-						if (typeof($("input[name=all_time]:checked").val()) != "undefined"){
+						if (typeof($("input[name=all_time]")) != "undefined"){
 							//alert($("input[name=all_time]:checked").val());
 							
-							all_time = $("input[name=all_time]:checked").val();
+							all_time = $("input[name=all_time]").val();
 						}
 						if (all_time == 1){
-							$("#datec").disabled = true;
+							//$("#datec").disabled = true;
+							$("#dataend").prop("disabled", true);
 						}
 						if (all_time == 0){
-							$("#datec").disabled = false;
+							$("#dataend").prop("disabled", false);
 						}
 						
+						alert(typeof($("input[name=all_time]:checked").val()));
 						
 					});
 				</script>';
