@@ -27,7 +27,7 @@
 			echo '
 						<div id="errrror"></div>';
 			echo '
-						<form action=""add_client_f.php">
+						<form action="add_client_f.php" style="font-size: 90%;" class="input_form">
 					
 							<div class="cellsBlock2">
 								<div class="cellLeft">Фамилия</div>
@@ -78,44 +78,113 @@
 							<div class="cellsBlock2">
 								<div class="cellLeft">Телефон</div>
 								<div class="cellRight">
-									<input type="text" name="telephone" id="telephone" value="">
+									<div>
+										<span style="font-size: 80%; color: #AAA">мобильный</span><br>
+										<input type="text" name="telephone" id="telephone" value="">
+									</div>
+									<div>
+										<span style="font-size: 80%; color: #AAA">домашний</span><br>
+										<input type="text" name="telephone" id="telephone" value="">
+									</div>
 								</div>
 							</div>
 							
-							<div class="cellsBlock2">
-								<div class="cellLeft">Паспорт</div>
-								<div class="cellRight">
-									<div>
-										<span style="font-size: 70%; color: #AAA">Серия номер</span><br>
-										<input type="text" name="passport" id="passport" value="" size="10"><br>
+							<div id="toggleDiv1" class="cellsBlock2" style="margin-top: 2px; margin-bottom: -1px; display: block;">
+								<div class="cellLeft" style="font-weight: bold; width: 500px; cursor: pointer;">
+									Паспортные данные
+								</div>
+							</div>
+							
+							<div id="div1">
+								<div class="cellsBlock2">
+									<div class="cellLeft">Паспорт</div>
+									<div class="cellRight">
+										<div>
+											<span style="font-size: 80%; color: #AAA">Серия номер</span><br>
+											<input type="text" name="passport" id="passport" value="" size="10"><br>
+										</div>
+										<div>
+											<span style="font-size: 80%; color: #AAA">Серия номер (иностр.)</span><br>
+											<input type="text" name="alienpassportser" id="alienpassportser" value="" size="5">
+											<input type="text" name="alienpassportnom" id="alienpassportnom" value="" size="10"><br>
+										</div>
+										<div>
+											<span style="font-size: 80%; color: #AAA">Выдан когда</span><br>
+											<input type="text" name="passportvidandata" id="passportvidandata" value="" size="10">
+										</div>
+										<div>
+											<span style="font-size: 80%; color: #AAA">Кем</span><br>
+											<textarea name="passportvidankem" id="passportvidankem" cols="25" rows="2"></textarea>
+										</div>
 									</div>
-									<div>
-										<span style="font-size: 70%; color: #AAA">Серия номер (иностр.)</span><br>
-										<input type="text" name="alienpassportser" id="alienpassportser" value="" size="5">
-										<input type="text" name="alienpassportnom" id="alienpassportnom" value="" size="10"><br>
+								</div>
+							
+								<div class="cellsBlock2">
+									<div class="cellLeft">Адрес</div>
+									<div class="cellRight"><textarea name="address" id="address" cols="35" rows="2"></textarea></div>
+								</div>
+							</div>
+							
+							<div id="toggleDiv2" class="cellsBlock2" style="margin-top: 2px; margin-bottom: 0; display: block;">
+								<div class="cellLeft" style="font-weight: bold; width: 500px; cursor: pointer;">
+									Данные страховой компании
+								</div>
+							</div>
+							
+							<div id="div2">
+								<div class="cellsBlock2">
+									<div class="cellLeft">Номер полиса<br>
+										<span style="font-size: 80%; color: #AAA">Если есть</span>
 									</div>
-									<div>
-										<span style="font-size: 70%; color: #AAA">Выдан когда</span><br>
-										<input type="text" name="passportvidandata" id="passportvidandata" value="" size="10">
-									</div>
-									<div>
-										<span style="font-size: 70%; color: #AAA">Кем</span><br>
-										<textarea name="passportvidankem" id="passportvidankem" cols="25" rows="2"></textarea>
+									<div class="cellRight">
+										<input type="text" name="polis" id="polis" value="">
 									</div>
 								</div>
 							</div>
-
-							<div class="cellsBlock2">
-								<div class="cellLeft">Адрес</div>
-								<div class="cellRight"><textarea name="address" id="address" cols="35" rows="2"></textarea></div>
-							</div>
-
-							<div class="cellsBlock2">
-								<div class="cellLeft">Номер полиса<br>
-									<span style="font-size: 70%; color: #AAA">Если есть</span>
+							
+							<div id="toggleDiv3" class="cellsBlock2" style="margin-top: 2px; margin-bottom: 0; display: block;">
+								<div class="cellLeft" style="font-weight: bold; width: 500px; cursor: pointer;">
+									Опекун
 								</div>
-								<div class="cellRight">
-									<input type="text" name="polis" id="polis" value="">
+							</div>
+							
+							<div id="div3">
+								<div class="cellsBlock2">
+									<div class="cellLeft">Фамилия</div>
+									<div class="cellRight">
+										<input type="text" name="fo" id="fo" value="">
+										<label id="fname_error" class="error"></label>
+									</div>
+								</div>
+								
+								<div class="cellsBlock2">
+									<div class="cellLeft">Имя</div>
+									<div class="cellRight">
+										<input type="text" name="io" id="io" value="">
+										<label id="iname_error" class="error"></label>
+									</div>
+								</div>
+								
+								<div class="cellsBlock2">
+									<div class="cellLeft">Отчество</div>
+									<div class="cellRight">
+										<input type="text" name="oo" id="oo" value="">
+										<label id="oname_error" class="error"></label>
+									</div>
+								</div>
+								
+								<div class="cellsBlock2">
+									<div class="cellLeft">Телефон</div>
+									<div class="cellRight">
+										<div>
+											<span style="font-size: 80%; color: #AAA">мобильный</span><br>
+											<input type="text" name="telephone" id="telephone" value="">
+										</div>
+										<div>
+											<span style="font-size: 80%; color: #AAA">домашний</span><br>
+											<input type="text" name="telephone" id="telephone" value="">
+										</div>
+									</div>
 								</div>
 							</div>
 							
@@ -134,7 +203,7 @@
 							<div class="cellsBlock2">
 								<div class="cellLeft">
 									Лечащий врач<br />
-									<span style="font-size: 70%">стоматология</span>
+									<span style="font-size: 80%">стоматология</span>
 								</div>
 								<div class="cellRight">
 									<input type="text" size="50" name="searchdata2" id="search_client2" placeholder="Введите первые три буквы для поиска" value="" class="who2"  autocomplete="off">
@@ -145,7 +214,7 @@
 							<div class="cellsBlock2">
 								<div class="cellLeft">
 									Лечащий врач<br />
-									<span style="font-size: 70%">косметология</span>
+									<span style="font-size: 80%">косметология</span>
 								</div>
 								<div class="cellRight">
 									<input type="text" size="50" name="searchdata4" id="search_client4" placeholder="Введите первые три буквы для поиска" value="" class="who4"  autocomplete="off">
