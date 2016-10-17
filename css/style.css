@@ -1015,7 +1015,7 @@ position:relative;
 	display:inline-block;
 }
 
-#div1, #div2 {
+#div1, #div2, #div3 {
 	display:none;
 }
 
@@ -1667,4 +1667,8 @@ input.dateс {
 	padding: 5px; 
 	overflow: hidden;
 	
+}
+
+.input_form input[type=text]{
+	height: 14px;
 }

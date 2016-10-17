@@ -215,20 +215,7 @@ jQuery("document").ready(function($){
 					}
 				}
 			</script>
-			
-<!--для скрытых блоков-->				
-    <script>
-      $(document).ready(function () {
-        $("#showDiv1").click(function () {
-          $("#div1").stop(true, true).slideToggle("slow");
-          $("#div2").slideUp("slow");
-        });
-        $("#showDiv2").click(function () {
-          $("#div2").stop(true, true).slideToggle("slow");
-          $("#div1").slideUp("slow");
-        });
-      });
-    </script>
+
 	
 <!--для печати-->	
 <style type="text/css" media="print">

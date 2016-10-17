@@ -41,7 +41,7 @@
 										<div style="margin-bottom: 10px;">
 											C <input type="text" id="datastart" name="datastart" class="dateс" value="'.date("01.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
 												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" disabled>
-											 &bull;По <input type="text" id="dataend" name="dataend" class="dateс" value="'.date("d.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
+											 &bull;по <input type="text" id="dataend" name="dataend" class="dateс" value="'.date("d.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
 												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" disabled>
 										</div>
 										<div style="vertical-align: middle; color: #333;">
@@ -50,19 +50,18 @@
 									</div>
 								</li>
 								
-								<li class="filterBlock">
+								<li class="filterBlock" style="display: none;">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Возраст пациентов
+										Возраст пациентов<br>
+										<span style="font-size: 80%; color: red;">не доступно</span>
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
 										<div style="margin-bottom: 10px;">
-											C <input type="text" name="datastart1" class="dateс1" value="'.date("01.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
-											 &bull;По <input type="text" name="dataend1" class="dateс1" value="'.date("d.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
+											От <input type="number" value="18" min="1" max="99" size="2" id="agestart" name="agestart" class="dateс" disabled>
+											 &bull;до <input type="number" value="45" min="1" max="99" size="2" id="ageend" name="ageend" class="dateс" disabled>
 										</div>
 										<div style="vertical-align: middle; color: #333;">
-											<input type="checkbox" name="all_time1" value="1" checked> <span style="font-size:80%;">За всё время</span>
+											<input type="checkbox" name="all_age" value="1" checked disabled> <span style="font-size:80%;">Любой возраст</span>
 										</div>
 									</div>
 								</li>
@@ -72,7 +71,7 @@
 										Сотрудник
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="text" size="35" name="searchdata2" id="search_client2" placeholder="Введите первые три буквы для поиска" value="" class="who2" autocomplete="off">
+										<input type="text" size="35" name="searchdata2" id="search_worker" placeholder="Введите первые три буквы для поиска" value="" class="who2" autocomplete="off">
 										<ul id="search_result2" class="search_result2"></ul><br />
 									</div>
 								</li>
@@ -83,7 +82,7 @@
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
 										<div class="wrapper-demo">
-											<select id="dd2" class="wrapper-dropdown-2 b2" tabindex="2" name="filial">
+											<select id="filial" class="wrapper-dropdown-2 b2" tabindex="2" name="filial">
 												<ul class="dropdown">
 													<li><option value="99" selected>Все</option></li>';
 														if ($offices_j !=0){
@@ -115,9 +114,9 @@
 										Страховые
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input name="strah" value="0" type="radio" checked> Все<br>
-										<input name="strah" value="1" type="radio"> Только страховые<br>
-										<input name="strah" value="2" type="radio"> Только НЕ страховые<br>
+										<input name="insured" value="0" type="radio" checked> Все<br>
+										<input name="insured" value="1" type="radio"> Только страховые<br>
+										<input name="insured" value="2" type="radio"> Только НЕ страховые<br>
 									</div>
 								</li>
 								
@@ -146,7 +145,7 @@
 								';
 				echo '
 								<li class="cellsBlock" style="margin: 10px;">
-									<a href="stat_stomat3.php" class="b">Применить</a>
+									<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_stom3()">
 								</li>';
 				echo '
 							</ul>
@@ -161,25 +160,60 @@
 				echo '
 
 				<script type="text/javascript">
-					var all_time = 0;
+					var all_time = 1;
+					var all_age = 1;
+					var wo_sex = 1;
 					
-					$("input[name=all_time]").click(function () {
-						if (typeof($("input[name=all_time]")) != "undefined"){
-							//alert($("input[name=all_time]:checked").val());
-							
-							all_time = $("input[name=all_time]").val();
+					$("input[name=all_time]").change(function() {
+						all_time = $("input[name=all_time]:checked").val();
+						//console.log(all_time);
+						
+						if (all_time === undefined){
+							all_time = 0;
 						}
+						//console.log(all_time);
+						//alert(all_time);
+						
 						if (all_time == 1){
-							//$("#datec").disabled = true;
-							$("#dataend").prop("disabled", true);
+							document.getElementById("datastart").disabled = true;
+							document.getElementById("dataend").disabled = true;
 						}
 						if (all_time == 0){
-							$("#dataend").prop("disabled", false);
+							document.getElementById("datastart").disabled = false;
+							document.getElementById("dataend").disabled = false;
 						}
-						
-						alert(typeof($("input[name=all_time]:checked").val()));
-						
 					});
+					
+					$("input[name=all_age]").change(function() {
+						all_age = $("input[name=all_age]:checked").val();
+						//console.log(all_age);
+						
+						if (all_age === undefined){
+							all_age = 0;
+						}
+						//console.log(all_age);
+						//alert(all_age);
+						
+						if (all_age == 1){
+							document.getElementById("agestart").disabled = true;
+							document.getElementById("ageend").disabled = true;
+						}
+						if (all_age == 0){
+							document.getElementById("agestart").disabled = false;
+							document.getElementById("ageend").disabled = false;
+						}
+					});
+					
+					$("input[name=wo_sex]").change(function() {
+						wo_sex = $("input[name=wo_sex]:checked").val();
+						//console.log(all_time);
+						
+						if (wo_sex === undefined){
+							wo_sex = 0;
+						}
+					});
+						
+					
 				</script>';
 			}
 			mysql_close();

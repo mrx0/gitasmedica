@@ -64,6 +64,7 @@
 					//var_dump($shedTemplate[$weekday]);
 					
 					//foreach ($shedTemplate as $dayW => $valueW){
+					if (isset($shedTemplate[$weekday])){
 						foreach ($shedTemplate[$weekday] as $smena => $valueS){
 							foreach ($valueS as $filial => $valueF){
 								foreach ($valueF as $type => $valueT){
@@ -110,6 +111,7 @@
 								}
 							}
 						}
+					}
 					//}
 				}
 				mysql_close();
