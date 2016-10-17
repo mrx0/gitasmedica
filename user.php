@@ -67,47 +67,49 @@
 								<div class="cellRight">'.$user[0]['contacts'].'</div>
 							</div>
 							<br /><br /><br />';
-			if (($stom['add_own'] == 1) || ($cosm['add_own'] == 1) || $god_mode){
-				echo '
-							<div class="cellsBlock2">
-								<div class="cellRight" style="font-size:70%;">Настройки.</div>
-							</div>			
-							<div class="cellsBlock2" style="font-size:80%;">
-								<div class="cellRight">
-									Выберите филиал, на котором вы находитесь сегодня, чтобы при заполнении посещений не приходилось выбирать его каждый раз.<br /><br />';
-				echo '
-									<form>
-										<select name="SelectFilial" id="SelectFilial">
-											<option value="0">Филиал не выбран</option>';
-				//Выбор филиала для сессии
-				$offices = SelDataFromDB('spr_office', '', '');
-				if ($offices != 0){
-					if (isset($_SESSION['filial']) && !empty($_SESSION['filial'])){
-						$selected_fil = $_SESSION['filial'];
-					}else{
-						$selected_fil = 0;
-					}
-					for ($off=0;$off<count($offices);$off++){
-						echo "
-											<option value='".$offices[$off]['id']."' ", $selected_fil == $offices[$off]['id'] ? "selected" : "" ,">".$offices[$off]['name']."</option>";
-					}
-				}
+			if ($_GET['id'] == $_SESSION['id']){
+				if (($stom['add_own'] == 1) || ($cosm['add_own'] == 1) || $god_mode){
 					echo '
-										</select>
-									</form>';	
-				echo '
+								<div class="cellsBlock2">
+									<div class="cellRight" style="font-size:70%;">Настройки.</div>
+								</div>			
+								<div class="cellsBlock2" style="font-size:80%;">
+									<div class="cellRight">
+										Выберите филиал, на котором вы находитесь сегодня, чтобы при заполнении посещений не приходилось выбирать его каждый раз.<br /><br />';
+					echo '
+										<form>
+											<select name="SelectFilial" id="SelectFilial">
+												<option value="0">Филиал не выбран</option>';
+					//Выбор филиала для сессии
+					$offices = SelDataFromDB('spr_office', '', '');
+					if ($offices != 0){
+						if (isset($_SESSION['filial']) && !empty($_SESSION['filial'])){
+							$selected_fil = $_SESSION['filial'];
+						}else{
+							$selected_fil = 0;
+						}
+						for ($off=0;$off<count($offices);$off++){
+							echo "
+												<option value='".$offices[$off]['id']."' ", $selected_fil == $offices[$off]['id'] ? "selected" : "" ,">".$offices[$off]['name']."</option>";
+						}
+					}
+						echo '
+											</select>
+										</form>';	
+					echo '
+										</div>
 									</div>
-								</div>
-								<br /><br /><br />';
+									<br /><br /><br />';
 
-							
-			if (($workers['edit'] == 1) || $god_mode){
+								
+				if (($workers['edit'] == 1) || $god_mode){
+					echo '
+									<a href="user_edit.php?id='.$_GET['id'].'" class="b">Редактировать</a>';
+				}
 				echo '
-								<a href="user_edit.php?id='.$_GET['id'].'" class="b">Редактировать</a>';
+					<a href="own_scheduler.php?id='.$_GET['id'].'" class="b">График работы</a>';
+				}	
 			}
-			echo '
-				<a href="own_scheduler.php?id='.$_GET['id'].'" class="b">График работы</a>';
-			}	
 			
 			if ($stom['see_own'] == 1){
 				$notes = SelDataFromDB ('notes', $_SESSION['id'], 'create_person');

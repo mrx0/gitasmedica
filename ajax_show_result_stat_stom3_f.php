@@ -476,9 +476,6 @@
 				//var_dump($queryDopEx);
 				//var_dump($queryDopClient);
 				
-				//mysql_query($query) or die(mysql_error());
-				
-				
 				mysql_close();
 			}else{
 				echo '<span style="color: red;">Не найден сотрудник. Проверьте, что полностью введены ФИО.</span>';
