@@ -330,8 +330,8 @@
 									</div>
 									<div class="filterBlock">
 										<div class="filtercellLeft">
-											Врач<br />
-											<span style="font-size:75%">Если не выбрано, то для всех</span>
+											Врач<br>
+											<span style="font-size:85%">Если не выбрано, то для всех</span>
 										</div>
 										<div class="filtercellRight">
 											<input type="text" size="35" name="searchdata2" id="search_client2" placeholder="Введите первые три буквы для поиска" value="" class="who2" autocomplete="off">

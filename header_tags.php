@@ -28,6 +28,7 @@
 			<link rel="stylesheet" type="text/css" href="css/component.css" />
 			<link rel="stylesheet" type="text/css" href="css/ModalZakaz.css" />
 			<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">	
+			<link rel="stylesheet" type="text/css" href="css/pretty.css" />
 			
 			
 			<link rel="stylesheet" type="text/css" href="js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
@@ -137,6 +138,8 @@ jQuery("document").ready(function($){
 		});
     </script>
 			
+<script src="js/multiselect.js"></script>
+
 
 <script src="js/DrawTeethMapMenu.js"></script>
 			

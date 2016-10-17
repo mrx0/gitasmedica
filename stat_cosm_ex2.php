@@ -1,7 +1,7 @@
 <?php
 
-//stat_stomat3.php
-//Выборка
+//stat_cosm_ex2.php
+//
 
 	require_once 'header.php';
 	
@@ -21,7 +21,7 @@
 			}else{
 				echo '
 					<header style="margin-bottom: 5px;">
-						<h1>_________________</h1>
+						<h1>Статистика с фильтром</h1>
 					</header>';
 
 				echo '
@@ -99,7 +99,7 @@
 									</div>
 								</li>
 								
-								<li class="filterBlock">
+								<!--<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
 										Первичные
 									</div>
@@ -108,29 +108,7 @@
 										<input name="pervich" value="1" type="radio"> Только первичные<br>
 										<input name="pervich" value="2" type="radio"> Только НЕ первичные<br>
 									</div>
-								</li>
-								
-								<li class="filterBlock">
-									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Страховые
-									</div>
-									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input name="insured" value="0" type="radio" checked> Все<br>
-										<input name="insured" value="1" type="radio"> Только страховые<br>
-										<input name="insured" value="2" type="radio"> Только НЕ страховые<br>
-									</div>
-								</li>
-								
-								<li class="filterBlock">
-									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Ночные
-									</div>
-									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input name="noch" value="0" type="radio" checked> Все<br>
-										<input name="noch" value="1" type="radio"> Только ночные<br>
-										<input name="noch" value="2" type="radio"> Только НЕ ночные<br>
-									</div>
-								</li>
+								</li>-->
 								
 								<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
@@ -142,11 +120,75 @@
 										<input name="sex" value="2" type="radio"> Ж<br><br>
 										<span style="font-size:80%; color: #333;"><input type="checkbox" name="wo_sex" checked value="1"> Показывать тех, кто без пола</span>
 									</div>
+								</li>';
+								
+				$actions_cosmet = SelDataFromDB('actions_cosmet', '', '');	
+				foreach($actions_cosmet as $key=>$arr_temp){
+					$data_nomer[$key] = $arr_temp['nomer'];
+				}
+				array_multisort($data_nomer, SORT_NUMERIC, $actions_cosmet);
+				
+				echo '				
+								
+								<li class="filterBlock">
+									<div class="filtercellLeft" style="width: 170px; min-width: 170px; vertical-align: top;">
+										<div>
+											<select name="from[]" id="multi_d" class="form-control" size="16" multiple="multiple" style="width: 167px;">';
+											
+				for ($k = 0; $k < count($actions_cosmet)-2; $k++) {
+					//Не надо отмечать первичную консультацию, для этого есть отметка о первичном посещении
+					//if ($k != 13){
+						echo '
+												<option value="'.$actions_cosmet[$k]['id'].'" style="margin-bottom: 2px; background-color:'.$actions_cosmet[$k]['color'].'">'.$actions_cosmet[$k]['full_name'].'</option>';
+					//}
+				}
+
+				echo '
+											</select>
+										</div>
+									</div>
+									<div class="filtercellLeft" style="width: 20px; min-width: 20px; vertical-align: middle">  
+										<div style="margin-bottom: 30px;  vertical-align: middle">
+											<button type="button" id="multi_d_rightAll" class="b" style="margin-bottom: 2px;"><i class="fa fa-angle-double-right"></i></button>
+											<button type="button" id="multi_d_rightSelected" class="b" style="margin-bottom: 2px;"><i class="fa fa-angle-right"></i></button>
+											<button type="button" id="multi_d_leftSelected" class="b" style="margin-bottom: 2px;"><i class="fa fa-angle-left"></i></button>
+											<button type="button" id="multi_d_leftAll" class="b" style="margin-bottom: 2px;"><i class="fa fa-angle-double-left"></i></button>
+										</div>
+										<div style=" vertical-align: middle">            
+											<button type="button" id="multi_d_rightAll_2" class="b" style="margin-bottom: 2px;"><i class="fa fa-angle-double-right"></i></i></button>
+											<button type="button" id="multi_d_rightSelected_2" class="b" style="margin-bottom: 2px;"><i class="fa fa-angle-right"></i></button>
+											<button type="button" id="multi_d_leftSelected_2" class="b" style="margin-bottom: 2px;"><i class="fa fa-angle-left"></i></button>
+											<button type="button" id="multi_d_leftAll_2" class="b" style="margin-bottom: 2px;"><i class="fa fa-angle-double-left"></i></button>
+										</div>
+									</div>
+									
+									<div class="filtercellRight" style="width: 170px; min-width: 170px; vertical-align: top;">    
+										<div style="margin-bottom: 30px;">
+											<div style="margin-bottom: 7px;">
+												Процедура условие
+											</div>
+											<div>
+												<select name="to[]" id="multi_d_to" class="form-control" size="7" multiple="multiple" style="width: 167px;"></select>
+											</div>
+										</div>
+										<div>		
+											<div style="margin-bottom: 7px;">
+												Процедура следствие
+											</div>
+											<div>
+												<select name="to_2[]" id="multi_d_to_2" class="form-control" size="7" multiple="multiple" style="width: 167px;"></select>
+											</div>
+										</div>
+									</div>
 								</li>
+								
+								
+								
+
 								';
 				echo '
 								<li class="cellsBlock" style="margin: 10px;">
-									<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_stom3()">
+									<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_cosm_ex2()">
 								</li>';
 				echo '
 							</ul>

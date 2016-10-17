@@ -57,6 +57,13 @@
 							</li>';
 			}
 
+			if (($cosm['see_all'] == 1) || $god_mode){
+				echo '
+							<li class="cellsBlock" style="margin: 10px;">
+								<a href="stat_cosm_ex2.php" class="b3">Статистика с фильтром2</a>
+							</li>';
+			}
+
 			echo '		
 						</ul>
 						<ul style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 20px; width: 300px; font-size: 95%; background-color: rgba(245, 245, 245, 0.9);">

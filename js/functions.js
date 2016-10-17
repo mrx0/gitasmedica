@@ -338,7 +338,7 @@
 	
 	
 	
-	//Статистика
+	//Выборка стоматология
 	function Ajax_show_result_stat_stom3(){
 		$.ajax({
 			url:"ajax_show_result_stat_stom3_f.php",
@@ -360,6 +360,74 @@
 				pervich:document.querySelector('input[name="pervich"]:checked').value,
 				insured:document.querySelector('input[name="insured"]:checked').value,
 				noch:document.querySelector('input[name="noch"]:checked').value,
+				
+				sex:document.querySelector('input[name="sex"]:checked').value,
+				wo_sex:wo_sex,
+
+			},
+			cache: false,
+			beforeSend: function() {
+				$('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			success:function(data){
+				$('#qresult').html(data);
+			}
+		})
+	}
+	
+	// Return an array of the selected opion values
+	// select is an HTML select element
+	function getSelectValues(select) {
+		var result = [];
+		var options = select && select.options;
+		var opt;
+
+		for (var i=0, iLen=options.length; i<iLen; i++) {
+			opt = options[i];
+
+			//if (opt.selected) {
+				result.push(opt.value || opt.text);
+			//}
+		}
+		return result;
+	}
+	
+	//Выборка косметология
+	function Ajax_show_result_stat_cosm_ex2(){
+		
+		var condition = [];
+		var effect = [];
+		
+		var el_condition = document.getElementById("multi_d_to");
+		var el_effect = document.getElementById("multi_d_to_2");
+
+		condition = getSelectValues(el_condition);
+		effect = getSelectValues(el_effect);
+		
+		console.log(condition);
+		console.log(effect);
+		
+		$.ajax({
+			url:"ajax_show_result_stat_cosm_ex2_f.php",
+			global: false, 
+			type: "POST", 
+			data:
+			{
+				all_time:all_time,
+				datastart:document.getElementById("datastart").value,
+				dataend:document.getElementById("dataend").value,
+				
+				all_age:all_age,
+				agestart:document.getElementById("agestart").value,
+				ageend:document.getElementById("ageend").value,
+				
+				worker:document.getElementById("search_worker").value,
+				filial:document.getElementById("filial").value,
+				
+				//pervich:document.querySelector('input[name="pervich"]:checked').value,
+				
+				condition:condition,
+				effect:effect,
 				
 				sex:document.querySelector('input[name="sex"]:checked').value,
 				wo_sex:wo_sex,
@@ -399,3 +467,87 @@
 			$('#div3').stop(true, true).slideToggle('slow');
 		});
 	//});
+
+	
+	//Для мультисельктора косметологии
+    jQuery(document).ready(function($) {
+        $('#multi_d').multiselect({
+            right: '#multi_d_to, #multi_d_to_2',
+            rightSelected: '#multi_d_rightSelected, #multi_d_rightSelected_2',
+            leftSelected: '#multi_d_leftSelected, #multi_d_leftSelected_2',
+            rightAll: '#multi_d_rightAll, #multi_d_rightAll_2',
+            leftAll: '#multi_d_leftAll, #multi_d_leftAll_2',
+     
+            search: {
+                left: '<input type="text" name="q" class="form-control" placeholder="Поиск..." />'
+            },
+     
+            moveToRight: function(Multiselect, $options, event, silent, skipStack) {
+                var button = $(event.currentTarget).attr('id');
+     
+                if (button == 'multi_d_rightSelected') {
+                    var $left_options = Multiselect.$left.find('> option:selected');
+                    Multiselect.$right.eq(0).append($left_options);
+     
+                    if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
+                        Multiselect.$right.eq(0).find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.$right.eq(0));
+                    }
+                } else if (button == 'multi_d_rightAll') {
+                    var $left_options = Multiselect.$left.children(':visible');
+                    Multiselect.$right.eq(0).append($left_options);
+     
+                    if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
+                        Multiselect.$right.eq(0).find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.$right.eq(0));
+                    }
+                } else if (button == 'multi_d_rightSelected_2') {
+                    var $left_options = Multiselect.$left.find('> option:selected');
+                    Multiselect.$right.eq(1).append($left_options);
+     
+                    if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
+                        Multiselect.$right.eq(1).find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.$right.eq(1));
+                    }
+                } else if (button == 'multi_d_rightAll_2') {
+                    var $left_options = Multiselect.$left.children(':visible');
+                    Multiselect.$right.eq(1).append($left_options);
+     
+                    if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
+                        Multiselect.$right.eq(1).eq(1).find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.$right.eq(1));
+                    }
+                }
+            },
+     
+            moveToLeft: function(Multiselect, $options, event, silent, skipStack) {
+                var button = $(event.currentTarget).attr('id');
+     
+                if (button == 'multi_d_leftSelected') {
+                    var $right_options = Multiselect.$right.eq(0).find('> option:selected');
+                    Multiselect.$left.append($right_options);
+     
+                    if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
+                        Multiselect.$left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.$left);
+                    }
+                } else if (button == 'multi_d_leftAll') {
+                    var $right_options = Multiselect.$right.eq(0).children(':visible');
+                    Multiselect.$left.append($right_options);
+     
+                    if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
+                        Multiselect.$left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.$left);
+                    }
+                } else if (button == 'multi_d_leftSelected_2') {
+                    var $right_options = Multiselect.$right.eq(1).find('> option:selected');
+                    Multiselect.$left.append($right_options);
+     
+                    if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
+                        Multiselect.$left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.$left);
+                    }
+                } else if (button == 'multi_d_leftAll_2') {
+                    var $right_options = Multiselect.$right.eq(1).children(':visible');
+                    Multiselect.$left.append($right_options);
+     
+                    if ( typeof Multiselect.callbacks.sort == 'function' && !silent ) {
+                        Multiselect.$left.find('> option').sort(Multiselect.callbacks.sort).appendTo(Multiselect.$left);
+                    }
+                }
+            }
+        });
+    });
