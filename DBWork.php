@@ -421,7 +421,7 @@
 		$query = "INSERT INTO `spr_clients` (
 			`name`, `full_name`, `f`, `i`, `o`, `comment`, `card`, `sex`, `birthday`, `telephone`, `passport`, `alienpassportser`, `alienpassportnom`, `passportvidandata`, `passportvidankem`, `address`, `polis`, `therapist`, `therapist2`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`)
 			VALUES (
-			'{$name}', '{$full_name}', '{$f}', '{$i}', '{$o}', '{$comment}', '{$card}', '{$sex}', '{$birthday}', '{$telephone}', '{$passport}', '{$alienpassportser}', '{$alienpassportnom}', '{$passportvidandata}', '{$passportvidankem}', '{$address}', '{$polis}', '{$therapist}', '{$therapist2}', '{$session_id}', '{$time}', '0', '0') ";
+			'{$name}', '{$full_name}', '{$f}', '{$i}', '{$o}', '{$comment}', '{$card}', '{$sex}', '{$birthday}', '{$telephone}', '{$passport}', '{$alienpassportser}', '{$alienpassportnom}', '{$passportvidandata}', '{$passportvidankem}', '{$address}', '{$polis}', '{$therapist}', '{$therapist2}', '{$time}', '{$session_id}', '0', '0') ";
 		mysql_query($query) or die(mysql_error().' -> '.$query);
 		
 		$mysql_insert_id = mysql_insert_id();
@@ -453,7 +453,7 @@
 			$old = 'Не нашли старую запись.';
 		}
 		$time = time();
-		$query = "UPDATE `spr_clients` SET `sex`='{$sex}', `birthday`='{$birthday}', `therapist`='{$therapist}', `therapist2`='{$therapist2}', `comment`='{$comment}', `card`='{$card}', `telephone`='{$telephone}', `passport`='{$passport}', `alienpassportser`='{$alienpassportser}', `alienpassportnom`='{$alienpassportnom}', `passportvidandata`='{$passportvidandata}', `passportvidankem`='{$passportvidankem}', `address`='{$address}', `polis`='{$polis}' WHERE `id`='{$id}'";
+		$query = "UPDATE `spr_clients` SET `sex`='{$sex}', `birthday`='{$birthday}', `therapist`='{$therapist}', `therapist2`='{$therapist2}', `comment`='{$comment}', `card`='{$card}', `telephone`='{$telephone}', `passport`='{$passport}', `alienpassportser`='{$alienpassportser}', `alienpassportnom`='{$alienpassportnom}', `passportvidandata`='{$passportvidandata}', `passportvidankem`='{$passportvidankem}', `address`='{$address}', `polis`='{$polis}', `last_edit_time`='{$time}', `last_edit_person`='{$session_id}' WHERE `id`='{$id}'";
 		mysql_query($query) or die(mysql_error());
 		mysql_close();
 		

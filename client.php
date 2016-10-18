@@ -175,14 +175,14 @@
 				echo '
 								<div class="cellsBlock2">
 									<span style="font-size:80%;">';
-				if (($client[0]['last_edit_time'] != 0) && ($client[0]['last_edit_person'] != 0)){
+				if (($client[0]['create_time'] != 0) || ($client[0]['create_person'] != 0)){
 					echo '
 										Добавлен: '.date('d.m.y H:i', $client[0]['create_time']).'<br>
 										Кем: '.WriteSearchUser('spr_workers', $client[0]['create_person'], 'user').'<br>';
 				}else{
 					echo 'Добавлен: не указано';
 				}
-				if (($client[0]['last_edit_time'] != 0) && ($client[0]['last_edit_person'] != 0)){
+				if (($client[0]['last_edit_time'] != 0) || ($client[0]['last_edit_person'] != 0)){
 					echo '
 										Последний раз редактировался: '.date('d.m.y H:i', $client[0]['last_edit_time']).'<br>
 										Кем: '.WriteSearchUser('spr_workers', $client[0]['last_edit_person'], 'user').'';

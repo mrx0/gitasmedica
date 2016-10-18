@@ -455,7 +455,7 @@
 						
 						echo '
 							<li class="cellsBlock" style="margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
-								Всего:<br>
+								Всего<br>
 								Осмотров отмечено: '.count($journal).'<br>
 								Посещений: '.$journal_count_orig.'<br>
 								Пациентов за период: '.count($orig_clients).'<br>

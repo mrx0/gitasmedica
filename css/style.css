@@ -527,13 +527,14 @@ input[type="submit"]:focus, .button:focus, .button_close:focus, .b:focus, .b2:fo
 /*Ссылки в таблице*/
 .ahref {
 	text-decoration: none; 
-	color:#333;
+	color:#041E35;
 }
 
 .ahref:hover {
 	/*background: rgba(00,255,255,0.7);*/
 	/*font-weight: bold;*/
 	/*font-size: 95%;*/
+	text-shadow: 1px 1px 1px #999;
 }
 
 /*Поиск по алфавиту*/

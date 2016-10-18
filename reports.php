@@ -42,33 +42,27 @@
 						</ul>
 						<ul style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 20px; width: 300px; font-size: 95%; background-color: rgba(245, 245, 245, 0.9);">
 							<h1>Косметология</h1>';
-							
-			if (($cosm['see_all'] == 1) || $god_mode){
 				echo '							
 							<li class="cellsBlock" style="margin: 10px;">
 								<a href="stat_cosm.php" class="b3">Статистика</a>
 							</li>';
-			}
-
-			if (($cosm['see_all'] == 1) || $god_mode){
 				echo '
 							<li class="cellsBlock" style="margin: 10px;">
 								<a href="stat_cosm_ex.php" class="b3">Статистика с фильтром</a>
 							</li>';
-			}
-
-			if (($cosm['see_all'] == 1) || $god_mode){
 				echo '
 							<li class="cellsBlock" style="margin: 10px;">
 								<a href="stat_cosm_ex2.php" class="b3">Статистика с фильтром2</a>
 							</li>';
-			}
 
 			echo '		
 						</ul>
 						<ul style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 20px; width: 300px; font-size: 95%; background-color: rgba(245, 245, 245, 0.9);">
 								<h1>Администраторы</h1>';
-			echo '<li></li>';
+			echo '				
+							<li class="cellsBlock" style="margin: 10px;">
+								<a href="stat_add_clients.php" class="b3">Добавление пациентов</a>
+							</li>';
 
 			echo '
 						</ul>
