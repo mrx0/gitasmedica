@@ -15,6 +15,8 @@
 			$queryDopExExist = false;
 			$queryDopClientExist = false;
 			$query = '';
+			$query4Effect = '';
+			$query4Effect2 = '';
 			$queryDop = '';
 			$queryDopEx = '';
 			$queryDopClient = '';
@@ -41,6 +43,8 @@
 			
 			if ($workerExist){
 				$query .= "SELECT * FROM `journal_cosmet1`";
+				$query4Effect .= "SELECT `client` FROM `journal_cosmet1`";
+				$query4Effect2 .= "SELECT `id` FROM `journal_cosmet1`";
 				
 				require 'config.php';
 				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
@@ -135,6 +139,7 @@
 				}*/
 				
 				//По процедурам
+				//Условие
 				if (isset($_POST['condition'])){
 					for($i=0; $i<count($_POST['condition']); $i++){
 						$queryCondition .= "`c".$_POST['condition'][$i]."`='1'";
@@ -145,6 +150,7 @@
 					$queryConditionExist = true;
 				}
 				
+				//Следствие
 				if (isset($_POST['effect'])){
 					for($i=0; $i<count($_POST['effect']); $i++){
 						$queryEffect .= "`c".$_POST['effect'][$i]."`='1'";
@@ -158,25 +164,27 @@
 				
 				if (($queryConditionExist) || ($queryEffectExist) || ($queryDopClientExist) || ($queryDopExist)){
 					$query .= ' WHERE '.$queryDop;
+					$query4Effect .= ' WHERE '.$queryDop;
+					$query4Effect2 .= ' WHERE '.$queryDop;
 
-					if ($queryEffectExist){
+					/*if ($queryEffectExist){
 						//var_dump($queryEffect);
 
 						if ($queryDopExist){
 							$query .= ' AND';
 						}
-						$query .= $queryEffect;
+						//$query .= $queryEffect;
 						$queryDopExist = true;
-					}
+					}*/
 					
 					if ($queryConditionExist){
 						//var_dump($queryCondition);
 
-						if ($queryDopExist){
+						/*if ($queryDopExist){
 							$query .= ' AND';
 						}
-						$queryCondition = "SELECT `id` FROM `journal_cosmet1` WHERE ".$queryCondition;
-						$queryDopExist = true;
+						$queryCondition = "SELECT * FROM `journal_cosmet1` WHERE ".$queryCondition;
+						$queryDopExist = true;*/
 						
 						//Дата/время
 						if ($_POST['all_time'] != 1){
@@ -186,18 +194,27 @@
 							$queryCondition .= "`create_time` BETWEEN '".strtotime ($_POST['datastart'])."' AND '".strtotime ($_POST['dataend']." 23:59:59")."'";
 							$queryDopExist = true;
 						}
-						$query .= "`id` IN (".$queryCondition.")";
+						//$query .= "`client` IN (".$queryCondition.")";
+						$query .= $queryCondition;
+						$query4Effect .= $queryCondition;
+						$query4Effect2 .= $queryCondition;
 					}
 					
 					if ($queryDopClientExist){
 						$queryDopClient = "SELECT `id` FROM `spr_clients` WHERE ".$queryDopClient;
-						if ($queryDopExist){
+						if ($queryDopExist || $queryConditionExist){
 							$query .= ' AND';
+							$query4Effect .= ' AND';
+							$query4Effect2 .= ' AND';
 						}
 						$query .= "`client` IN (".$queryDopClient.")";
+						$query4Effect .= "`client` IN (".$queryDopClient.")";
+						$query4Effect2 .= "`client` IN (".$queryDopClient.")";
 					}
 					
-					$query = $query." ORDER BY `create_time` DESC";
+					$query = $query." ORDER BY `create_time`, `client`";
+					//$query4Effect = $query4Effect." ORDER BY `create_time`, `client`";
+					//$query4Effect2 = $query4Effect2." ORDER BY `create_time`, `client`";
 					//var_dump($query);
 					//var_dump($queryEffect);
 					//var_dump($queryCondition);
@@ -220,7 +237,41 @@
 					}else{
 						$journal = 0;
 					}
+					
+					if ($queryEffectExist){
+						//var_dump($queryEffect);
+
+						/*if ($queryDopExist){
+							$query .= ' AND';
+						}*/
+						//$query .= $queryEffect;
+						//$queryDopExist = true;
+						
+						$query = "SELECT * FROM `journal_cosmet1` WHERE ".$queryEffect." AND `client` IN (".$query4Effect.") AND `id` NOT IN (".$query4Effect2.")";
+					}
+					
+					//var_dump($query);
+					
+					$arr = array();
+					$rez = array();
+					
+					$res = mysql_query($query) or die($query);
+					$number = mysql_num_rows($res);
+					if ($number != 0){
+						while ($arr = mysql_fetch_assoc($res)){
+							if (isset($rez[$arr['client']])){
+								array_push($rez[$arr['client']], $arr);
+							}else{
+								$rez[$arr['client']][0] = $arr;
+							}
+						}
+						$journalEffect = $rez;
+					}else{
+						$journalEffect = 0;
+					}
+					
 					//var_dump($journal);
+					//var_dump($journalEffect);
 					
 					//Выводим результат
 					if ($journal != 0){
@@ -299,9 +350,67 @@
 							echo '
 										<div class="cellText" ', isFired($journal[$i]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$journal[$i]['comment'].'</div>
 								</li>';
-										
-						}
+
+								
+							//var_dump ($journal[$i]['client']);
 							
+							if (isset($journalEffect[$journal[$i]['client']])){
+								$journalTemp = $journalEffect[$journal[$i]['client']];
+								for ($j = 0; $j < count($journalTemp); $j++) {
+									/*$clients = SelDataFromDB ('spr_clients', $journal[$i]['client'], 'client_id');
+									if ($clients != 0){
+										$client = $clients[0]["name"];
+									}else{
+										$client = 'не указан';
+									}*/
+									echo '
+										<li class="cellsBlock cellsBlockHover">
+												<div class="cellCosmAct" style="text-align: center; color: red; font=-size: 120%;"><i class="fa fa-chevron-circle-right"></i></i></div>
+												<a href="task_cosmet.php?id='.$journalTemp[$j]['id'].'" class="cellName ahref" title="'.$journalTemp[$j]['id'].'" style="width: 89px; min-width: 89px; font-size: 85%;', isFired($journalTemp[$j]['worker']) ? 'background-color: rgba(161,161,161,1);"' : '' ,'">'.date('d.m.y H:i', $journalTemp[$j]['create_time']).'</a>
+												<a href="client.php?id='.$journal[$i]['client'].'" class="cellName ahref" ', isFired($journalTemp[$j]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$client.'</a>
+												<a href="user.php?id='.$journalTemp[$j]['worker'].'" class="cellName ahref" id="4filter" ', isFired($journalTemp[$j]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.WriteSearchUser('spr_workers', $journalTemp[$j]['worker'], 'user').'</a>';
+						
+									$decription = array();
+									$decription_temp_arr = array();
+									$decription_temp = '';
+									
+									/*!!!Лайфхак для посещений из-за переделки структуры бд*/
+									foreach($journalTemp[$j] as $key => $value){
+										if (($key != 'id') && ($key != 'office') && ($key != 'client') && ($key != 'create_time') && ($key != 'create_person') && ($key != 'last_edit_time') && ($key != 'last_edit_person') && ($key != 'worker') && ($key != 'comment')){
+											$decription_temp_arr[mb_substr($key, 1)] = $value;
+										}
+									}
+									
+									//var_dump ($decription_temp_arr);
+									
+									$decription = $decription_temp_arr;
+								
+									foreach ($actions_cosmet as $key => $value) { 
+										$cell_color = '#FFFFFF';
+										$action = '';
+										if ($value['active'] != 0){
+											if (isset($decription[$value['id']])){
+												if ($decription[$value['id']] != 0){
+													$cell_color = $value['color'];
+													$action = 'V';
+												}
+												echo '<div class="cellCosmAct" style="text-align: center; background-color: '.$cell_color.';">'.$action.'</div>';
+											}else{
+												echo '<div class="cellCosmAct" style="text-align: center"></div>';
+											}
+										}
+									}
+									
+									echo '
+												<div class="cellText" ', isFired($journalTemp[$j]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$journalTemp[$j]['comment'].'</div>
+										</li>';
+												
+								}
+							}
+
+								
+						}
+
 							
 					}else{
 						echo '<span style="color: red;">Ничего не найдено</span>';

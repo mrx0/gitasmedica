@@ -140,7 +140,7 @@
 										<input name="sex" value="0" type="radio" checked> Все<br>
 										<input name="sex" value="1" type="radio"> М<br>
 										<input name="sex" value="2" type="radio"> Ж<br><br>
-										<span style="font-size:80%; color: #333;"><input type="checkbox" name="wo_sex" checked value="1"> Показывать тех, кто без пола</span>
+										<span style="font-size:80%; color: #333;"><input type="checkbox" name="wo_sex" checked value="1"> Показывать тех, у кого не указан пол</span>
 									</div>
 								</li>
 								';

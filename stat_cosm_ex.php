@@ -370,7 +370,7 @@
 											<input id="sex" name="sex" value="1" type="radio">М<br />
 											<input id="sex" name="sex" value="2" type="radio">Ж<br />
 											<input id="sex" name="sex" value="3" checked type="radio">М+Ж<br />
-											<span style="font-size:80%;">Показывать тех, кто без пола <input type="checkbox" name="wo_sex" checked value="1"></span>
+											<span style="font-size:80%;">Показывать тех, у кого не указан пол <input type="checkbox" name="wo_sex" checked value="1"></span>
 										</div>
 									</div>';
 				
