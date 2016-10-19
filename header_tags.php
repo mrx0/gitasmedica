@@ -272,7 +272,8 @@ jQuery("document").ready(function($){
 				$scheduler = json_decode($permissions[0]['scheduler'], true);
 				$zapis = json_decode($permissions[0]['zapis'], true);
 				$report = json_decode($permissions[0]['report'], true);
-				//var_dump($offices);
+				$spravka = json_decode($permissions[0]['spravka'], true);
+				//var_dump($spravka);
 			}
 		}else{
 			//Видимость
@@ -296,6 +297,8 @@ jQuery("document").ready(function($){
 			$zapis['see_own'] = 0;
 			$report['see_all'] = 0;
 			$report['see_own'] = 0;
+			$spravka['see_all'] = 0;
+			$spravka['see_own'] = 0;
 			//
 			$it['add_new'] = 0;
 			$it['add_own'] = 0;
@@ -317,6 +320,8 @@ jQuery("document").ready(function($){
 			$zapis['add_own'] = 0;
 			$report['add_new'] = 0;
 			$report['add_own'] = 0;
+			$spravka['add_new'] = 0;
+			$spravka['add_own'] = 0;
 			//
 			$it['edit'] = 0;
 			$cosm['edit'] = 0;
@@ -328,6 +333,7 @@ jQuery("document").ready(function($){
 			$scheduler['edit'] = 0;
 			$zapis['edit'] = 0;
 			$report['edit'] = 0;
+			$spravka['edit'] = 0;
 			//
 			$it['close'] = 0;
 			$cosm['close'] = 0;
@@ -339,6 +345,7 @@ jQuery("document").ready(function($){
 			$scheduler['close'] = 0;
 			$zapis['close'] = 0;
 			$report['close'] = 0;
+			$spravka['close'] = 0;
 			//
 			$it['reopen'] = 0;
 			$cosm['reopen'] = 0;
@@ -350,6 +357,7 @@ jQuery("document").ready(function($){
 			$scheduler['reopen'] = 0;
 			$zapis['reopen'] = 0;
 			$report['reopen'] = 0;
+			$spravka['reopen'] = 0;
 			//
 			$it['add_worker'] = 0;
 			$cosm['add_worker'] = 0;
@@ -361,6 +369,7 @@ jQuery("document").ready(function($){
 			$scheduler['add_worker'] = 0;
 			$zapis['add_worker'] = 0;
 			$report['add_worker'] = 0;
+			$spravka['add_worker'] = 0;
 			//
 			
 		}
@@ -387,7 +396,9 @@ jQuery("document").ready(function($){
 		if (($clients['see_all'] == 1) || ($clients['see_own'] == 1) || $god_mode){
 			echo '<li><a href="clients.php" title="Пациенты">Пациенты</a></li>';
 		}
-		echo '<li><a href="directory.php" title="Справочники">Справочники</a></li>';
+		if (($spravka['see_all'] == 1) || ($spravka['see_own'] == 1) || $god_mode){
+			echo '<li><a href="directory.php" title="Справочники">Справочники</a></li>';
+		}
 		if ($god_mode){
 			echo '<li><a href="admin.php"><i class="fa fa-cogs"></i></a></li>';
 		}

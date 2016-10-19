@@ -365,7 +365,7 @@
 									}*/
 									echo '
 										<li class="cellsBlock cellsBlockHover">
-												<div class="cellCosmAct" style="text-align: center; color: red; font=-size: 120%;"><i class="fa fa-chevron-circle-right"></i></i></div>
+												<div class="cellCosmAct" style="text-align: center; color: red; font-size: 120%;"><i class="fa fa-chevron-circle-right"></i></i></div>
 												<a href="task_cosmet.php?id='.$journalTemp[$j]['id'].'" class="cellName ahref" title="'.$journalTemp[$j]['id'].'" style="width: 89px; min-width: 89px; font-size: 85%;', isFired($journalTemp[$j]['worker']) ? 'background-color: rgba(161,161,161,1);"' : '' ,'">'.date('d.m.y H:i', $journalTemp[$j]['create_time']).'</a>
 												<a href="client.php?id='.$journal[$i]['client'].'" class="cellName ahref" ', isFired($journalTemp[$j]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$client.'</a>
 												<a href="user.php?id='.$journalTemp[$j]['worker'].'" class="cellName ahref" id="4filter" ', isFired($journalTemp[$j]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.WriteSearchUser('spr_workers', $journalTemp[$j]['worker'], 'user').'</a>';

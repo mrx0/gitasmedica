@@ -7,25 +7,21 @@
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
-		
-		echo '
-			<header>
-				<h1>Справочники</h1>
-			</header>';
+		if (($spravka['see_all'] == 1) || ($spravka['see_own'] == 1) || $god_mode){
+			echo '
+				<header>
+					<h1>Справочники</h1>
+				</header>';
 
-		if (($workers['see_all'] == 1) || ($workers['see_own'] == 1) || $god_mode){
-			echo '<a href="contacts.php" class="b3" title="Сотрудники">Сотрудники</a><br>';
-		}
-		
-		if (($offices['see_all'] == 1) || ($offices['see_own'] == 1) || $god_mode){
-			echo '<a href="filials.php" class="b3" title="Филиалы">Филиалы</a><br>';
-		}
+				echo '<a href="contacts.php" class="b3" title="Сотрудники">Сотрудники</a><br>';
 
-		if (($offices['see_all'] == 1) || ($offices['see_own'] == 1) || $god_mode){
-			echo '<a href="insurcompany.php" class="b3" title="Страховые компании">Страховые компании</a><br>';
-		}
+				echo '<a href="filials.php" class="b3" title="Филиалы">Филиалы</a><br>';
 
-		
+				echo '<a href="insurcompany.php" class="b3" title="Страховые компании">Страховые компании</a><br>';
+
+		}else{
+			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
+		}
 	}else{
 		header("location: enter.php");
 	}

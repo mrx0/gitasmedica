@@ -283,6 +283,34 @@
 	};  
 	
 	// !!! правильный пример AJAX
+	function Ajax_add_insure(session_id) {
+
+		var name = document.getElementById("name").value;
+		var contract = document.getElementById("contract").value;
+		var contacts = document.getElementById("contacts").value;
+
+		$.ajax({
+			url:"add_insure_f.php",
+			global: false, 
+			type: "POST", 
+			data:
+			{
+				name:name,
+				contract:contract ,
+				contacts:contacts,
+				session_id:session_id,
+			},
+			cache: false,
+			beforeSend: function() {
+				$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			success:function(data){
+				$('#errror').html(data);
+			}
+		})
+	};  
+	
+	// !!! правильный пример AJAX
 	function Ajax_change_shed() {
 		
 		//document.getElementById("changeShedOptionsReq").innerHTML = '<img src="img/wait.gif"> обработка...';

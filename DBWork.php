@@ -575,11 +575,29 @@
 			`name`, `address`, `contacts`)
 			VALUES (
 			'{$name}', '{$address}', '{$contacts}') ";
-		mysql_query($query) or die(mysql_error());
+		mysql_query($query) or die($query.' -> '.mysql_error());
 		mysql_close();
 		
 		//логирование
-		AddLog (GetRealIp(), $session_id, '', 'Добавлен филиал. Имя: ['.$name.']. Адрес: ['.$address.']. Контакты: ['.$contacts).']';
+		AddLog (GetRealIp(), $session_id, '', 'Добавлен филиал. Имя: ['.$name.']. Адрес: ['.$address.']. Контакты: ['.$contacts.']');
+	}
+	
+	//Вставка и обновление списка Страховых из-под Web
+	function WriteInsureToDB_Edit ($session_id, $name, $contract, $contacts){
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+		$time = time();
+		$query = "INSERT INTO `spr_insure` (
+			`name`, `contract`, `contacts`)
+			VALUES (
+			'{$name}', '{$contract}', '{$contacts}') ";
+		mysql_query($query) or die($query.' -> '.mysql_error());
+		mysql_close();
+		
+		//логирование
+		AddLog (GetRealIp(), $session_id, '', 'Добавлена Страховая. Название: ['.$name.']. Договор: ['.$contract.']. Контакты: ['.$contacts.']');
 	}
 	
 	//Очистка записи
