@@ -564,6 +564,94 @@
 		return $sanat;
 	}
 	
+	function missingTeeth  ($t_id, $data, $cl_age){
+		//var_dump ($data);
+		/*unset ($data['id']);
+		unset ($data['office']);
+		unset ($data['client']);
+		unset ($data['create_time']);
+		unset ($data['create_person']);
+		unset ($data['last_edit_time']);
+		unset ($data['last_edit_person']);
+		unset ($data['worker']);
+		unset ($data['comment']);*/
+		
+		$sanat = true;
+		
+		//foreach ($data as $key => $val){
+			//var_dump ($val);
+			foreach ($data as $tooth => $status){
+				//var_dump ($status);
+				//$status_arr = explode(',', $status);
+				//var_dump($status_arr);
+				if ($status['status'] == '1'){
+					//echo 'Отсутствует<br />';
+					if ((($tooth != 18) && ($tooth != 28) && ($tooth != 38) && ($tooth != 48)) && ($cl_age > 14)){
+						$sanat = false;
+					}
+				}
+				if ($status['status'] == '2'){
+					//echo 'Удален<br />';
+					if (($tooth != 18) && ($tooth != 28) && ($tooth != 38) && ($tooth != 48)){
+						$sanat = false;
+					}
+				}
+				if (($status['status'] == '3') && ($status['status'] == '1')){
+					//echo $t_id.'Имплантант<br />';
+					$sanat = false;
+				}
+				/*if ($status['status'] == '20'){
+					//echo 'Ретенция<br />';
+					$sanat = false;
+				}*/
+				/*if ($status['status'] == '22'){
+					//echo 'ЗО<br />';
+					$sanat = false;
+				}*/
+				
+				//echo $t_id.'<br />';
+				
+				/*if (($status['surface1'] == 64) || ($status['surface2'] == 64) || ($status['surface3'] == 64) || ($status['surface4'] == 64) || 
+					($status['top1'] == 64) || ($status['top2'] == 64) || ($status['top12'] == 64) || ($status['root1'] == 64) || 
+					($status['root2'] == 64) || ( $status['root3'] == 64)){
+					//echo 'Пломба кариес<br />';
+					$sanat = false;
+				}*/
+				
+				//echo $t_id.'<br />';
+				//$sanat = false;
+				
+				/*
+				if (($status['surface1'] == 71) || ($status['surface2'] == 71) || ($status['surface3'] == 71) || ($status['surface4'] == 71) || 
+					($status['top1'] == 71) || ($status['top2'] == 71) || ($status['top12'] == 71) || ($status['root1'] == 71) || 
+					($status['root2'] == 71) || ($status['root3'] == 64)){
+					//echo 'Кариес<br />';
+					$sanat = false;
+				}*/
+				
+				//echo $t_id.'<br />';
+				/*
+				if (($status['surface1'] == 74) || ($status['surface2'] == 74) || ($status['surface3'] == 74) || ($status['surface4'] == 74) || 
+					($status['top1'] == 74) || ($status['top2'] == 74) || ($status['top12'] == 74) || ($status['root1'] == 74) || 
+					($status['root2'] == 74) || ($status['root3'] == 64)){
+					//echo 'Пульпит<br />';
+					$sanat = false;
+				}*/
+				
+				//echo $t_id.'<br />';
+				/*
+				if (($status['surface1'] == 75) || ($status['surface2'] == 75) || ($status['surface3'] == 75) || ($status['surface4'] == 75) || 
+					($status['top1'] == 75) || ($status['top2'] == 75) || ($status['top12'] == 75) || ($status['root1'] == 75) || 
+					($status['root2'] == 75) || ($status['root3'] == 64)){
+					//echo 'Периодонтит<br />';
+					$sanat = false;
+				}*/
+				
+			}
+		//}
+		return $sanat;
+	}
+	
 	function selectDate ($selD, $selM, $selY){
 		//var_dump($selD);
 		//var_dump($selM);

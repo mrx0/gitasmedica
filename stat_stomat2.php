@@ -264,8 +264,8 @@
 					<div id="data">
 						<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
 							<li class="cellsBlock sticky" style="font-weight:bold; background-color:#FEFEFE;">
-								<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Дата</div>
-								<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Пациент</div>';
+								<div class="cellName grid" style="text-align: center; background-color:#FEFEFE;" data-type="string" data-sort="num" data-sort-cell="0">Дата</div>
+								<div class="cellName grid" style="text-align: center; background-color:#FEFEFE;" data-type="string" data-sort="num" data-sort-cell="1">Пациент</div>';
 				if (($stom['see_all'] == 1) || $god_mode){
 					echo '<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Врач</div>';
 				}
@@ -273,7 +273,9 @@
 				echo '
 								<div class="cellCosmAct" style="text-align: center">-</div>
 								<div class="cellText" style="text-align: center">Комментарий</div>
-							</li>';
+							</li>
+						</ul>
+						<ul class="live_filter" style="margin-left:6px;" id="num">';
 				
 				
 				$all_clients_arr = array();

@@ -9,7 +9,7 @@
 		require_once 'header_tags.php';
 
 		//var_dump($permissions);
-		if (($cosm['see_all'] == 1) || $god_mode){
+		if (($report['see_all'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			include_once 'filter.php';

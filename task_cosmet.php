@@ -119,9 +119,13 @@
 									<div class="cellsBlock2">
 										<span style="font-size:80%;">
 											Создана: '.date('d.m.y H:i', $task[0]['create_time']).'<br />
-											Кем: '.WriteSearchUser('spr_workers', $task[0]['create_person'], 'user').'<br />
+											Кем: '.WriteSearchUser('spr_workers', $task[0]['create_person'], 'user').'<br />';
+					if ((($task[0]['last_edit_time'] != 0) || ($task[0]['last_edit_person'] !=0)) && (($task[0]['create_time'] != $task[0]['last_edit_time']) && ($task[0]['last_edit_person'] != $task[0]['create_person']))){
+						echo '
 											Последний раз редактировалось: '.date('d.m.y H:i', $task[0]['last_edit_time']).'<br />
-											Кем: '.WriteSearchUser('spr_workers', $task[0]['last_edit_person'], 'user').'
+											Кем: '.WriteSearchUser('spr_workers', $task[0]['last_edit_person'], 'user');
+					}
+					echo '
 										</span>
 									</div>
 									

@@ -403,6 +403,43 @@
 		})
 	}
 	
+	//Для Отсутствующие зубы
+	function Ajax_show_result_stat_stom4(){
+		$.ajax({
+			url:"ajax_show_result_stat_stom4_f.php",
+			global: false, 
+			type: "POST", 
+			data:
+			{
+				all_time:all_time,
+				datastart:document.getElementById("datastart").value,
+				dataend:document.getElementById("dataend").value,
+				
+				all_age:all_age,
+				agestart:document.getElementById("agestart").value,
+				ageend:document.getElementById("ageend").value,
+				
+				worker:document.getElementById("search_worker").value,
+				filial:document.getElementById("filial").value,
+				
+				pervich:document.querySelector('input[name="pervich"]:checked').value,
+				insured:document.querySelector('input[name="insured"]:checked').value,
+				noch:document.querySelector('input[name="noch"]:checked').value,
+				
+				sex:document.querySelector('input[name="sex"]:checked').value,
+				wo_sex:wo_sex,
+
+			},
+			cache: false,
+			beforeSend: function() {
+				$('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			success:function(data){
+				$('#qresult').html(data);
+			}
+		})
+	}
+	
 	// Return an array of the selected opion values
 	// select is an HTML select element
 	function getSelectValues(select) {
@@ -616,3 +653,60 @@
             }
         });
     });
+
+	
+	// !!! Для сортировки таблиц ТЕСТ
+	// var grid = document.getElementById('grid');
+	var grid = document.getElementsByClassName('grid');
+	//console.log(grid);
+	
+	var myFunction = function() {
+		sortGrid(this.getAttribute('data-sort'), this.getAttribute('data-sort-cell'), this.getAttribute('data-type'));
+	};
+	
+	for (var i = 0; i < grid.length; i++){
+		grid[i].addEventListener('click', myFunction, false);
+	}
+	
+    /*grid.onclick = function(e) {
+		sortGrid(e.target.getAttribute('data-sort'), e.target.getAttribute('data-sort-cell'), e.target.getAttribute('data-type'));
+    };*/
+
+	function sortGrid(dataSort, cellNum, type) {
+		// Составить масси
+		var div = document.getElementById(dataSort);
+		var elems = div.getElementsByTagName('li');
+		var elemsArr = [].slice.call(elems);
+		//console.log(elemsArr);
+		
+		// определить функцию сравнения, в зависимости от типа
+		var compare;
+
+		switch (type) {
+			case 'number':
+				compare = function(rowA, rowB) {
+					return rowA.children[cellNum].innerHTML.toLowerCase() - rowB.children[cellNum].innerHTML.toLowerCase();
+				};
+			break;
+			case 'string':
+				compare = function(rowA, rowB) {
+					return rowA.children[cellNum].innerHTML.toLowerCase() > rowB.children[cellNum].innerHTML.toLowerCase() ? 1 : -1;
+				};
+			break;
+		}
+
+		// сортировать
+		elemsArr.sort(compare);
+		
+		// Убрать старое из большого DOM документа для лучшей производительности
+		while (div.firstChild) {
+			div.removeChild(div.firstChild);
+		}
+
+		// добавить результат в нужном порядке
+		// они автоматически будут убраны со старых мест и вставлены в правильном порядке
+		for (var i = 0; i < elemsArr.length; i++) {
+			div.appendChild(elemsArr[i]);
+		}
+		//div.appendChild(tbody);
+	}

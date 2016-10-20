@@ -1,7 +1,7 @@
 <?php
 
-//stat_stomat3.php
-//Выборка
+//stat_stomat4.php
+//Отсутствующие зубы
 
 	require_once 'header.php';
 	
@@ -9,7 +9,7 @@
 		require_once 'header_tags.php';
 
 		//var_dump($_SESSION);
-		if (($report['see_all'] == 1) || $god_mode){
+		if (($report['see_all'] == 1) || (($report['see_own'] == 1) && ($stom['see_own'] == 1)) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			include_once 'filter.php';
@@ -21,7 +21,7 @@
 			}else{
 				echo '
 					<header style="margin-bottom: 5px;">
-						<h1>_________________</h1>
+						<h1>Отсутствующие зубы</h1>
 					</header>';
 
 				echo '
@@ -70,11 +70,20 @@
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
 										Сотрудник<br>
 										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
-									</div>
+									</div>';
+				if (($report['see_all'] == 1) || $god_mode){
+					$value = '';
+					$disabled = '';
+				}else{
+					$value = WriteSearchUser('spr_workers', $_SESSION['id'], 'user_full');
+					$disabled = 'disabled';
+				}
+				echo '
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="text" size="35" name="searchdata2" id="search_worker" placeholder="Введите первые три буквы для поиска" value="" class="who2" autocomplete="off">
+										<input type="text" size="35" name="searchdata2" id="search_worker" placeholder="Введите первые три буквы для поиска" value="'.$value.'" class="who2" autocomplete="off" '.$disabled.'>
 										<ul id="search_result2" class="search_result2"></ul><br />
-									</div>
+									</div>';
+				echo '
 								</li>
 								
 								<li class="filterBlock">
@@ -146,7 +155,7 @@
 								';
 				echo '
 								<li class="cellsBlock" style="margin: 10px;">
-									<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_stom3()">
+									<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_stom4()">
 								</li>';
 				echo '
 							</ul>
