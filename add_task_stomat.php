@@ -8,7 +8,7 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 		
-		if (($stom['add_own'] == 1) || $god_mode){
+		if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode){
 			
 			
 			include_once 'DBWork.php';
@@ -121,8 +121,22 @@
 					<div id="data">';
 
 			echo '
-						<form action="add_task_stomat_f.php">
-					
+						<form action="add_task_stomat_f.php">';
+						
+			if ($stom['add_new'] == 1){
+				echo '
+							<div style="margin-bottom: 10px; color: #777; font-size: 90%;">Необходимо выбрать исполнителя</div>
+							<div class="cellsBlock3" style="margin-bottom: 20px;">
+								<div class="cellLeft">Исполнитель</div>
+								<div class="cellRight">
+									<input type="text" size="50" name="searchdata2" id="search_worker" placeholder="Введите первые три буквы для поиска" value="" class="who2"  autocomplete="off">
+									<ul id="search_result2" class="search_result2"></ul><br />
+									<label id="worker_error" class="error"></label>
+								</div>
+							</div>';	
+			}
+			
+			echo '		
 							<div class="cellsBlock3">
 								<div class="cellLeft">Филиал</div>
 								<div class="cellRight">
@@ -864,7 +878,12 @@ function Ajax_add_task_stomat() {
             // какие данные будут переданы
             data: {
 				client:document.getElementById("search_client").value,
-				filial:document.getElementById("filial").value,
+				filial:document.getElementById("filial").value,';
+	if (($stom['add_new'] == 1) || $god_mode){
+		echo '
+				worker:document.getElementById("search_worker").value,';
+	}
+	echo '
             },
             // тип передачи данных
             dataType: "json",
@@ -937,8 +956,13 @@ function Ajax_add_task_stomat() {
 								
 								pervich:pervich,
 								insured:insured,
-								noch:noch,
-										
+								noch:noch,';
+								
+			if (($stom['add_new'] == 1) || $god_mode){
+				echo '
+								worker:document.getElementById("search_worker").value,';
+			}
+			echo '									
 								search_client3:document.getElementById("search_client3").value,';
 								//new_id:'.$new_id.',';
 			echo $post_data;

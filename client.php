@@ -212,7 +212,7 @@
 
 				echo '
 								<div id="div1">';
-				if (($stom['add_own'] == 1) || ($god_mode)){
+				if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || ($god_mode)){
 					echo '	
 									<a href="add_task_stomat.php?client='.$client[0]['id'].'" class="b">Добавить осмотр</a>';
 				}
