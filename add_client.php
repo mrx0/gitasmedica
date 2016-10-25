@@ -84,7 +84,7 @@
 									</div>
 									<div>
 										<span style="font-size: 80%; color: #AAA">домашний</span><br>
-										<input type="text" name="telephone" id="telephone" value="">
+										<input type="text" name="htelephone" id="htelephone" value="">
 									</div>
 								</div>
 							</div>
@@ -133,11 +133,18 @@
 							
 							<div id="div2">
 								<div class="cellsBlock2">
-									<div class="cellLeft">Номер полиса<br>
-										<span style="font-size: 80%; color: #AAA">Если есть</span>
+									<div class="cellLeft">
+										Полис
 									</div>
 									<div class="cellRight">
-										<input type="text" name="polis" id="polis" value="">
+										<div>
+											<span style="font-size: 80%; color: #AAA">Номер</span><br>
+											<input type="text" name="polis" id="polis" value="">
+										</div>
+										<div>
+											<span style="font-size: 80%; color: #AAA">Дата</span><br>
+											<input type="text" name="polisdata" id="polisdata" value="" size="10">
+										</div>
 									</div>
 								</div>
 							</div>
@@ -178,18 +185,18 @@
 									<div class="cellRight">
 										<div>
 											<span style="font-size: 80%; color: #AAA">мобильный</span><br>
-											<input type="text" name="telephone" id="telephone" value="">
+											<input type="text" name="telephoneo" id="telephoneo" value="">
 										</div>
 										<div>
 											<span style="font-size: 80%; color: #AAA">домашний</span><br>
-											<input type="text" name="telephone" id="telephone" value="">
+											<input type="text" name="htelephoneo" id="htelephoneo" value="">
 										</div>
 									</div>
 								</div>
 							</div>
 							
 							<div class="cellsBlock2">
-								<div class="cellLeft">Номер карты</div>
+								<div class="cellLeft">Номер мед.карты</div>
 								<div class="cellRight">
 									<input type="text" name="card" id="card" value="">
 								</div>
@@ -259,8 +266,10 @@
 
 					jQuery(function($) {
 						$.mask.definitions["~"]="[+-]";
+						$("#polisdata").mask("99.99.9999");
 						$("#passportvidandata").mask("99.99.9999");
 						$("#telephone").mask("+7(999)999-9999");
+						$("#telephoneo").mask("+7(999)999-9999");
 						$("#passport").mask("9999 999999");
 					});
 

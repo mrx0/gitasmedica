@@ -41,6 +41,10 @@
 							i: document.getElementById("i").value,
 							o: document.getElementById("o").value,
 									
+							fo: document.getElementById("fo").value,
+							io: document.getElementById("io").value,
+							oo: document.getElementById("oo").value,
+									
 							comment: document.getElementById("comment").value,
 								
 							card: document.getElementById("card").value,
@@ -53,6 +57,10 @@
 							sel_year: document.getElementById("sel_year").value,
 							
 							telephone:document.getElementById("telephone").value,
+							htelephone:document.getElementById("htelephone").value,
+							
+							telephoneo:document.getElementById("telephoneo").value,
+							htelephoneo:document.getElementById("htelephoneo").value,
 							
 							passport:document.getElementById("passport").value,
 							passportvidandata:document.getElementById("passportvidandata").value,
@@ -62,7 +70,9 @@
 							alienpassportnom:document.getElementById("alienpassportnom").value,							
 							
 							address:document.getElementById("address").value,
+							
 							polis:document.getElementById("polis").value,
+							polisdata:document.getElementById("polisdata").value,
 							
 							sex:sex_value,
 								
