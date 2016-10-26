@@ -101,15 +101,14 @@
 									</div>
 									<br /><br /><br />';
 
-								
-				if (($workers['edit'] == 1) || $god_mode){
-					echo '
-									<a href="user_edit.php?id='.$_GET['id'].'" class="b">Редактировать</a>';
 				}
+			}				
+			if (($workers['edit'] == 1) || $god_mode){
 				echo '
-					<a href="own_scheduler.php?id='.$_GET['id'].'" class="b">График работы</a>';
-				}	
+									<a href="user_edit.php?id='.$_GET['id'].'" class="b">Редактировать</a>';
 			}
+			echo '
+									<a href="scheduler_own.php?id='.$_GET['id'].'" class="b">График работы</a>';
 			
 			if ($stom['see_own'] == 1){
 				$notes = SelDataFromDB ('notes', $_SESSION['id'], 'create_person');

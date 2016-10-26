@@ -16,8 +16,6 @@
 			$offices = $offices_j = SelDataFromDB('spr_office', '', '');
 			//var_dump ($offices);
 			
-			$post_data = '';
-			$js_data = '';
 			$kabsInFilialExist = FALSE;
 			$kabsInFilial = array();
 			$dop = '';
@@ -194,7 +192,7 @@
 			}else{
 				$rez = 0;
 			}
-			//var_dump($rez[2]);
+			//var_dump($rez[3]);
 			
 			$schedulerFakt = $rez;
 			
@@ -227,8 +225,20 @@
 						<h2>График '.$whose.'на ',$monthsName[$month],' ',$year,' филиал '.$filial[0]['name'].'</h2>
 					</header>
 					<a href="scheduler_template.php" class="b">График план</a>
+					<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>
 					<!--<a href="own_scheduler.php" class="b">График сотрудника</a>-->';
-					
+					echo '
+						<ul style="margin-left: 6px; margin-bottom: 10px;">
+							<li style="width: auto; color:#777; font-size: 70%;">
+								Примечание к графику:
+								<ul>
+									<li>1 смена 9:00 - 15:00</li>
+									<li>2 смена 15:00 - 21:00</li>
+									<li>3 смена 21:00 - 3:00</li>
+									<li>4 смена 3:00 - 9:00</li>
+								</ul>
+							</li>
+						</ul>';
 			echo '
 					<div id="data">
 						<ul style="margin-left: 6px; margin-bottom: 20px;">';
@@ -327,6 +337,7 @@
 								
 							//Проверяем, есть ли сегодня тут кто.
 							if (isset($schedulerFakt[$d])){
+								//if ($d==3) var_dump ($schedulerFakt[$d]);
 								//номера смен 1 - день 2- вечер 3 - ночь 4 - утро
 								for ($smenaN = 1; $smenaN <= 4; $smenaN++) {
 									//отсутствие врачей в клинике
@@ -361,7 +372,7 @@
 										foreach($schedulerFakt[$d][$smenaN] as $kab => $kabValue){
 											
 											$resEcho = '';
-											$resEcho = WriteSearchUser('spr_workers',$kabValue['worker'], 'user');
+											$resEcho = WriteSearchUser('spr_workers',$kabValue['worker'], 'user').' <a href="scheduler_own.php?id='.$kabValue['worker'].'" class="info"><i class="fa fa-info-circle" title="Профиль"></i></a>';
 											$ahtung = FALSE;
 											$fontSize = 'font-size: 70%;';
 											$resEcho2 .= '
@@ -418,9 +429,31 @@
 															
 											foreach	($kabsInFilial as $keyK => $valueK){
 												$kabs .= '
-													<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$valueK.', '.$year.', '.$month.','.$d.', '.$smenaN.')"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+																<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$valueK.', '.$year.', '.$month.','.$d.', '.$smenaN.')"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
 											}
 											$kabs .= '
+															</div>
+														</div>
+													</div>';
+										}
+										//Ночные смены
+										if (($smenaN == 3) || ($smenaN == 4)){
+											$kabs .= '
+													<div class="nightSmena">
+														<div style="width: 100%; height: 35px; min-height: 35px; outline: 1px solid  #BBB; display: table; margin-bottom: 3px; font-size: 70%;">
+															<div style="vertical-align: middle; width: 20px; box-shadow: 0px 5px 10px rgba(171, 254, 213, 0.59); display: table-cell !important;">
+																<div>'.$smenaN.'</div>
+															</div>
+															<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red;">
+																<div style="margin-bottom: 7px;">никого нет</div>
+																<div class="manageScheduler">';
+															
+											foreach	($kabsInFilial as $keyK => $valueK){
+												$kabs .= '
+																<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$valueK.', '.$year.', '.$month.','.$d.', '.$smenaN.')"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+											}
+											$kabs .= '
+																</div>
 															</div>
 														</div>
 													</div>';
@@ -480,7 +513,7 @@
 								echo $kabs;
 								
 								if (!$ahtung OR !$now_ahtung){
-									echo $kabs;
+									//echo $kabs;
 								}else{
 									echo $kabsNone;									
 								}
@@ -789,7 +822,7 @@
 							if(typeof worker == "undefined") worker = 0;
 
 							$.ajax({
-								//dataType: "json",
+								dataType: "json",
 								//statbox:SettingsScheduler,
 								// метод отправки 
 								type: "POST",
@@ -808,15 +841,15 @@
 								},
 								// действие, при ответе с сервера
 								success: function(data){
-									document.getElementById("errrror").innerHTML = data;
-									/*if (data.req == "ok"){
+									//document.getElementById("errrror").innerHTML = data;
+									if (data.req == "ok"){
 										// прячем текст ошибок
 										$(".error").hide();
 										document.getElementById("errrror").innerHTML = "";
 										setTimeout(function () {
 											location.reload()
 										}, 100);
-									}*/
+									}
 								}
 							});						
 						};';

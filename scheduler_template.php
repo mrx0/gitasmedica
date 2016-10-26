@@ -168,8 +168,20 @@
 					'.$whose.'
 				</header>
 				<a href="scheduler.php" class="b">График </a>
-				<!--<a href="own_scheduler.php" class="b">График сотрудника</a>-->';
-			
+				<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>
+				<!--<a href="scheduler_own.php" class="b">График сотрудника</a>-->';
+			echo '
+				<ul style="margin-left: 6px; margin-bottom: 10px;">
+					<li style="width: auto; color:#777; font-size: 70%;">
+					Примечание к графику:
+						<ul>
+							<li>1 смена 9:00 - 15:00</li>
+							<li>2 смена 15:00 - 21:00</li>
+							<li>3 смена 21:00 - 3:00</li>
+							<li>4 смена 3:00 - 9:00</li>
+						</ul>
+					</li>
+				</ul>';
 			echo '
 				<div id="data">
 					<ul style="margin-left: 6px; margin-bottom: 20px;">';
@@ -339,7 +351,7 @@
 									$resEcho = '';
 									//если врач есть
 									if (isset($shedTemplate[$filial_val['id']][$dayWvalue][$smenaN][$kabN])){
-										$resEcho = WriteSearchUser('spr_workers', $shedTemplate[$filial_val['id']][$dayWvalue][$smenaN][$kabN], 'user');
+										$resEcho = WriteSearchUser('spr_workers', $shedTemplate[$filial_val['id']][$dayWvalue][$smenaN][$kabN], 'user').' <a href="scheduler_own.php?id='.$shedTemplate[$filial_val['id']][$dayWvalue][$smenaN][$kabN].'" class="info"><i class="fa fa-info-circle" title="Профиль"></i></a>';
 										$ahtung = FALSE;
 										$fontSize = 'font-size: 100%;';
 									}else{

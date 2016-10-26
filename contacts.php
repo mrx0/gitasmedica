@@ -25,6 +25,8 @@
 			$arr_orgs = SelDataFromDB('spr_org', '', '');
 			//var_dump ($arr_orgs);
 			
+			$fired_all = '';
+			
 			if (($workers['add_new'] == 1) || $god_mode){
 				echo '
 					<a href="add_worker.php" class="b">Добавить</a>
@@ -54,21 +56,87 @@
 						//var_dump($permissions);
 						$org = SearchInArray($arr_orgs, $contacts[$i]['org'], 'name');
 						//var_dump($org);
-						echo '
+						
+						if ($contacts[$i]['fired'] != 1){
+						
+							echo '
 								<li class="cellsBlock cellsBlockHover ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'">
 									<a href="user.php?id='.$contacts[$i]['id'].'" class="cellFullName ahref" id="4filter" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$contacts[$i]['full_name'].'</a>
 									<div class="cellOffice" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>', $permissions != '0' ? $permissions : '-' ,'</div>
 									
 									<div class="cellText" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$contacts[$i]['contacts'].'</div>
 									<div class="cellName" style="text-align: center; ', $contacts[$i]['fired'] == '1' ? 'background-color: rgba(161,161,161,1);"' : '"' ,'>'.$contacts[$i]['login'].'</div>';
-						if ($god_mode){			
+							if ($god_mode){			
+								echo '
+										<div class="cellName" style="text-align: center; ', $contacts[$i]['fired'] == '1' ? 'background-color: rgba(161,161,161,1);"' : '"' ,'>'.$contacts[$i]['password'].'</div>';
+							}else{
+								echo '<div class="cellName" style="text-align: center; ', $contacts[$i]['fired'] == '1' ? 'background-color: rgba(161,161,161,1);"' : '"' ,'>****</div>';
+							}
 							echo '
-									<div class="cellName" style="text-align: center; ', $contacts[$i]['fired'] == '1' ? 'background-color: rgba(161,161,161,1);"' : '"' ,'>'.$contacts[$i]['password'].'</div>';
+									</li>';
 						}else{
-							echo '<div class="cellName" style="text-align: center; ', $contacts[$i]['fired'] == '1' ? 'background-color: rgba(161,161,161,1);"' : '"' ,'>****</div>';
+							$fired_all .= '
+								<li class="cellsBlock cellsBlockHover ';
+								if ($contacts[$i]['fired'] == '1') 
+									$fired_all .= 'style="background-color: rgba(161,161,161,1);"'; 
+								else 
+									$fired_all .= ''; 
+								$fired_all .= '">
+									<a href="user.php?id='.$contacts[$i]['id'].'" class="cellFullName ahref" id="4filter" ';
+								if ($contacts[$i]['fired'] == '1') 
+									$fired_all .= 'style="background-color: rgba(161,161,161,1);"';
+								else 
+									$fired_all .= '';
+								$fired_all .= '>'.$contacts[$i]['full_name'].'</a>
+									<div class="cellOffice" ';
+								if ($contacts[$i]['fired'] == '1') 
+									$fired_all .= 'style="background-color: rgba(161,161,161,1);"';
+								else 
+									$fired_all .= '' ;
+								$fired_all .= '>';
+								if ($permissions != '0') 
+									$fired_all .= $permissions;
+								else
+									$fired_all .= '-';
+								$fired_all .= '</div>
+									<div class="cellText" ';
+								if ($contacts[$i]['fired'] == '1') 
+									$fired_all .= 'style="background-color: rgba(161,161,161,1);"';
+								else
+									$fired_all .= '';
+								$fired_all .= '>'.$contacts[$i]['contacts'].'</div>
+									<div class="cellName" style="text-align: center; ';
+								if ($contacts[$i]['fired'] == '1') 
+									$fired_all .= 'background-color: rgba(161,161,161,1);"';
+								else 
+									$fired_all .= '"';
+								$fired_all .= '>'.$contacts[$i]['login'].'</div>';
+							if ($god_mode){			
+								$fired_all .= '
+										<div class="cellName" style="text-align: center; ';
+								if ($contacts[$i]['fired'] == '1') 
+									$fired_all .= 'background-color: rgba(161,161,161,1);"';
+								else
+									$fired_all .= '"';
+								$fired_all .= '>'.$contacts[$i]['password'].'</div>';
+							}else{
+								$fired_all .= '<div class="cellName" style="text-align: center; ';
+								if ($contacts[$i]['fired'] == '1') 
+									$fired_all .= 'background-color: rgba(161,161,161,1);"';
+								else
+									$fired_all .= '"';
+								$fired_all .= '>****</div>';
+							}
+							$fired_all .= '
+									</li>';
 						}
-						echo '
-								</li>';
+					}
+				}
+				if ($fired_all != ''){
+					if (($workers['see_own'] == 1) || $god_mode){
+						if (true || $god_mode){
+							echo $fired_all;
+						}
 					}
 				}
 			}else{

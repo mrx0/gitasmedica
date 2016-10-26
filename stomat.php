@@ -20,6 +20,7 @@
 			echo '
 				<header style="margin-bottom: 5px;">
 					<h1>Стоматология</h1>
+					<a href="stom_instruction.php" style="font-size: 90%">Краткая инструкция для стоматологов по основным действиям <span style="color:red;">(обновлено 07.04.2016)</span></a>
 				</header>';
 				
 							

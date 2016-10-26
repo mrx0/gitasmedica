@@ -371,6 +371,21 @@
 		}else{
 			e.hide();
 		}
+		
+		e2 = $('.nightSmena');
+		if(!e2.is(':visible')) {
+			e2.show();
+		}else{
+			e2.hide();
+		}
+		
+		e3 = $('.fa-info-circle');
+		if(e3.is(':visible')) {
+			e3.hide();
+		}else{
+			e3.show();
+		}
+		
 		if (iCanManage) iCanManage = false; else iCanManage = true;
 	}
 	

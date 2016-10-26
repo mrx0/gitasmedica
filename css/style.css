@@ -1655,7 +1655,7 @@ input[type="number"].mod{
     background: linear-gradient(to right, rgba(255,204,0, 0.2), #fc0 100%);
 }
 
-.manageScheduler{
+.manageScheduler, .nightSmena{
 	display: none;
 }
 
@@ -1672,4 +1672,13 @@ input.dateс {
 
 .input_form input[type=text]{
 	height: 14px;
+}
+
+.info {
+	text-decoration: none;
+	font-size: 110%;
+	color: #777;
+}
+.info :hover {
+	color: #FF9900;
 }

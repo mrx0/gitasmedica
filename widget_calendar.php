@@ -56,7 +56,7 @@ function widget_calendar ($month, $year, $path, $dop){
 	
 	$result .= '
 		<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-			<span style="font-size: 90%; color: rgb(125, 125, 125);">Сегодня: <a href="'.$path.'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></span>
+			<span style="font-size: 90%; color: rgb(125, 125, 125);">Сегодня: <a href="'.$path.'?'.$dop.'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></span>
 		</li>
 		<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right;">
 			<a href="'.$prevLink.'" class="cellTime ahref" style="text-align: center;">
