@@ -75,53 +75,129 @@
 								<div class="cellsBlock2">
 									<div class="cellLeft">Телефон</div>
 									<div class="cellRight">
-										<input type="text" name="telephone" id="telephone" value="'.mb_substr($client[0]['telephone'], 1).'">
+										<div>
+											<span style="font-size: 80%; color: #AAA">мобильный</span><br>
+											<input type="text" name="telephone" id="telephone" value="'.mb_substr($client[0]['telephone'], 1).'">
+										</div>
+										<div>
+											<span style="font-size: 80%; color: #AAA">домашний</span><br>
+											<input type="text" name="htelephone" id="htelephone" value="'.$client[0]['htelephone'].'">
+										</div>
 									</div>
 								</div>';
 				echo '			
-								<div class="cellsBlock2">
-									<div class="cellLeft">Паспорт</div>
-									<div class="cellRight">
-										<div>
-											<span style="font-size: 70%; color: #AAA">Серия номер</span><br>
-											<input type="text" name="passport" id="passport" value="'.$client[0]['passport'].'" size="10"><br>
+				
+								<div id="toggleDiv1" class="cellsBlock2" style="margin-top: 2px; margin-bottom: -1px; display: block; margin: 3px 0;">
+									<div class="cellLeft" style="font-weight: bold; width: 500px; cursor: pointer;">
+										Паспортные данные
+									</div>
+								</div>
+								
+								<div id="div1">
+									<div class="cellsBlock2">
+										<div class="cellLeft">Паспорт</div>
+										<div class="cellRight">
+											<div>
+												<span style="font-size: 70%; color: #AAA">Серия номер</span><br>
+												<input type="text" name="passport" id="passport" value="'.$client[0]['passport'].'" size="10"><br>
+											</div>
+											<div>
+												<span style="font-size: 70%; color: #AAA">Серия номер (иностр.)</span><br>
+												<input type="text" name="alienpassportser" id="alienpassportser" value="'.$client[0]['alienpassportser'].'" size="5">
+												<input type="text" name="alienpassportnom" id="alienpassportnom" value="'.$client[0]['alienpassportnom'].'" size="10"><br>
+											</div>
+											<div>
+												<span style="font-size: 70%; color: #AAA">Выдан когда</span><br>
+												<input type="text" name="passportvidandata" id="passportvidandata" value="'.$client[0]['passportvidandata'].'" size="10">
+											</div>
+											<div>
+												<span style="font-size: 70%; color: #AAA">Кем</span><br>
+												<textarea name="passportvidankem" id="passportvidankem" cols="25" rows="2">'.$client[0]['passportvidankem'].'</textarea>
+											</div>
 										</div>
-										<div>
-											<span style="font-size: 70%; color: #AAA">Серия номер (иностр.)</span><br>
-											<input type="text" name="alienpassportser" id="alienpassportser" value="'.$client[0]['alienpassportser'].'" size="5">
-											<input type="text" name="alienpassportnom" id="alienpassportnom" value="'.$client[0]['alienpassportnom'].'" size="10"><br>
-										</div>
-										<div>
-											<span style="font-size: 70%; color: #AAA">Выдан когда</span><br>
-											<input type="text" name="passportvidandata" id="passportvidandata" value="'.$client[0]['passportvidandata'].'" size="10">
-										</div>
-										<div>
-											<span style="font-size: 70%; color: #AAA">Кем</span><br>
-											<textarea name="passportvidankem" id="passportvidankem" cols="25" rows="2">'.$client[0]['passportvidankem'].'</textarea>
-										</div>
+									</div>
+									<div class="cellsBlock2">
+										<div class="cellLeft">Адрес</div>
+										<div class="cellRight"><textarea name="address" id="address" cols="35" rows="2">'.$client[0]['address'].'</textarea></div>
 									</div>
 								</div>';
 				echo '
-								<div class="cellsBlock2">
-									<div class="cellLeft">Адрес</div>
-									<div class="cellRight"><textarea name="address" id="address" cols="35" rows="2">'.$client[0]['address'].'</textarea></div>
-								</div>';
-				echo '
-								<div class="cellsBlock2">
-									<div class="cellLeft">Номер полиса
+								<div id="toggleDiv2" class="cellsBlock2" style="margin-top: 2px; margin-bottom: 0; display: block; margin: 3px 0;">
+									<div class="cellLeft" style="font-weight: bold; width: 500px; cursor: pointer;">
+										Данные страховой компании
 									</div>
-									<div class="cellRight">
-										<input type="text" name="polis" id="polis" value="'.$client[0]['polis'].'">
+								</div>
+								
+								<div id="div2">
+									<div class="cellsBlock2">
+										<div class="cellLeft">Полис
+										</div>
+										<div class="cellRight">
+											<div>
+												<span style="font-size: 80%; color: #AAA">Номер</span><br>
+													<input type="text" name="polis" id="polis" value="'.$client[0]['polis'].'">
+											</div>
+											<div>
+												<span style="font-size: 80%; color: #AAA">Дата</span><br>
+													<input type="text" name="polisdata" id="polisdata" value="'.$client[0]['polisdata'].'">
+											</div>
+										</div>
 									</div>
 								</div>';
 				echo '			
+								<div id="toggleDiv3" class="cellsBlock2" style="margin-top: 2px; margin-bottom: 0; display: block; margin: 3px 0;">
+									<div class="cellLeft" style="font-weight: bold; width: 500px; cursor: pointer;">
+										Опекун
+									</div>
+								</div>
+								
+								<div id="div3">
+									<div class="cellsBlock2">
+										<div class="cellLeft">Фамилия</div>
+										<div class="cellRight">
+											<input type="text" name="fo" id="fo" value="'.$client[0]['fo'].'">
+											<label id="fname_error" class="error"></label>
+										</div>
+									</div>
+									
+									<div class="cellsBlock2">
+										<div class="cellLeft">Имя</div>
+										<div class="cellRight">
+											<input type="text" name="io" id="io" value="'.$client[0]['io'].'">
+											<label id="iname_error" class="error"></label>
+										</div>
+									</div>
+									
+									<div class="cellsBlock2">
+										<div class="cellLeft">Отчество</div>
+										<div class="cellRight">
+											<input type="text" name="oo" id="oo" value="'.$client[0]['oo'].'">
+											<label id="oname_error" class="error"></label>
+										</div>
+									</div>
+									
+									<div class="cellsBlock2">
+										<div class="cellLeft">Телефон</div>
+										<div class="cellRight">
+											<div>
+												<span style="font-size: 80%; color: #AAA">мобильный</span><br>
+												<input type="text" name="telephoneo" id="telephoneo" value="'.$client[0]['telephoneo'].'">
+											</div>
+											<div>
+												<span style="font-size: 80%; color: #AAA">домашний</span><br>
+												<input type="text" name="htelephoneo" id="htelephoneo" value="'.$client[0]['htelephoneo'].'">
+											</div>
+										</div>
+									</div>
+								</div>';						
+				echo '					
 								<div class="cellsBlock2">
 									<div class="cellLeft">Номер карты</div>
 									<div class="cellRight">
 										<input type="text" name="card" id="card" value="'.$client[0]['card'].'">
 									</div>
-								</div>';						
-				echo '					
+								</div>
+								
 								<div class="cellsBlock2">
 									<div class="cellLeft">Комментарий</div>
 									<div class="cellRight">
@@ -166,7 +242,7 @@
 				echo '				
 								<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
 								<div id="errror"></div>
-								<input type="button" class="b" value="Редактировать" onclick="Ajax_edit_client('.$_SESSION['id'].')">
+								<input type="button" class="b" value="Применить" onclick="Ajax_edit_client('.$_SESSION['id'].')">
 							</form>';	
 				echo '
 						</div>
@@ -194,6 +270,8 @@
 						$("#passportvidandata").mask("99.99.9999");
 						$("#telephone").mask("+7(999)999-9999");
 						$("#passport").mask("9999 999999");
+						$("#polisdata").mask("99.99.9999");
+						$("#telephoneo").mask("+7(999)999-9999");
 					});
 					
 				</script>';

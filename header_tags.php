@@ -5,7 +5,7 @@
 	
 	$god_mode = FALSE;
 	
-	$version = 'v 26.10.2016';
+	$version = 'v 27.10.2016';
 	
 	echo'
 		<!DOCTYPE html>
@@ -30,24 +30,17 @@
 			<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">	
 			<link rel="stylesheet" type="text/css" href="css/pretty.css" />
 			
-			
 			<link rel="stylesheet" type="text/css" href="js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 
-<link rel="stylesheet" href="css/calendar.css" type="text/css">
+			<link rel="stylesheet" href="css/calendar.css" type="text/css">
+						
+			<script type="text/javascript" src="js/dict.js"></script>
+			<script type="text/javascript" src="js/common1.js"></script>
 
-			
-			
-<script type="text/javascript" src="js/dict.js"></script>
-<script type="text/javascript" src="js/common1.js"></script>
+			<script src="js/chart.js" type="text/javascript"></script>
 
-
-
-
-<script src="js/chart.js" type="text/javascript"></script>
-
-
-<script src="js/tooth_status.js" type="text/javascript"></script>
-<script src="js/path2.js" type="text/javascript"></script>
+			<script src="js/tooth_status.js" type="text/javascript"></script>
+			<script src="js/path2.js" type="text/javascript"></script>
 
 			<!--<script type="text/javascript" src="js/jquery-1.4.3.min.js"></script>-->
 			<!--<script type="text/javascript" src="js/jquery-1.11.3.js"></script>-->
@@ -60,53 +53,49 @@
 			<script type="text/javascript" src="jquery.liveFilter.js"></script>
 			<script type="text/javascript" src="js/search.js"></script>
 			<script type="text/javascript" src="js/search2.js"></script>
-			
-			
+
 			<script type="text/javascript" src="js/search4.js"></script>
 			
 			<script type="text/javascript" src="js/search_fast_client.js"></script>
 			
 			<script type="text/javascript" src="js/jquery.maskedinput-1.2.2.js"></script>
 			
-<!--<script src="js/jquery.js" type="text/javascript"></script>-->
+			<!--<script src="js/jquery.js" type="text/javascript"></script>-->
 
-<script src="js/raphael.js" type="text/javascript"></script>
-<!--<script src="js/init.js" type="text/javascript"></script>-->
+			<script src="js/raphael.js" type="text/javascript"></script>
+			<!--<script src="js/init.js" type="text/javascript"></script>-->
 
-<script src="js/modernizr.custom.js"></script>
-		
+			<script src="js/modernizr.custom.js"></script>
 
-<script src="js/jquery.scrollUp.js?1.1"></script>
+			<script src="js/jquery.scrollUp.js?1.1"></script>
 
-		
-<script src="js/jszakaz.js"></script>
-<!--<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>-->
-<!--<script src="js/jquery-ui.min-1.8.js"></script>-->
-<script src="js/jquery-ui.min.js"></script>
+			<script src="js/jszakaz.js"></script>
+			<!--<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>-->
+			<!--<script src="js/jquery-ui.min-1.8.js"></script>-->
+			<script src="js/jquery-ui.min.js"></script>
 
-<!--чтобы менюшка прилеплялась к верхней части окна-->
-<script>
-jQuery("document").ready(function($){
-     
-    var nav = $(\'.sticky\');
-     
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 136) {
-            nav.addClass("f-sticky");
-        } else {
-            nav.removeClass("f-sticky");
-        }
-    });
-  
-});
-</script>
+			<!--чтобы менюшка прилеплялась к верхней части окна-->
+			<script>
+			jQuery("document").ready(function($){
+				 
+				var nav = $(\'.sticky\');
+				 
+				$(window).scroll(function () {
+					if ($(this).scrollTop() > 136) {
+						nav.addClass("f-sticky");
+					} else {
+						nav.removeClass("f-sticky");
+					}
+				});
+			  
+			});
+			</script>
 
-
-<script type="text/javascript">
-	$(function(){
-		$(document).tooltip();
-	});
-</script>
+			<script type="text/javascript">
+				$(function(){
+					$(document).tooltip();
+				});
+			</script>
 	
 			<script type="text/javascript">
 				$(document).ready(function(){
@@ -120,30 +109,29 @@ jQuery("document").ready(function($){
 					});
 				});
 			</script>
-<script type="text/javascript">
-	$(function(){
-		$(\'#livefilter-list\').liveFilter(\'#livefilter-input\', \'li\', {
-			filterChildSelector: \'#4filter\'
-		});
-	});
-</script>
 			
-    <script>
-		$(function () {
-			$.scrollUp({
-				animation: \'slide\',
-				activeOverlay: false,
-				scrollText: \'Наверх\',
-			});
-		});
-    </script>
+			<script type="text/javascript">
+				$(function(){
+					$(\'#livefilter-list\').liveFilter(\'#livefilter-input\', \'li\', {
+						filterChildSelector: \'#4filter\'
+					});
+				});
+			</script>
 			
-<script src="js/multiselect.js"></script>
+			<script>
+				$(function () {
+					$.scrollUp({
+						animation: \'slide\',
+						activeOverlay: false,
+						scrollText: \'Наверх\',
+					});
+				});
+			</script>
+			
+			<script src="js/multiselect.js"></script>
 
+			<script src="js/DrawTeethMapMenu.js"></script>
 
-<script src="js/DrawTeethMapMenu.js"></script>
-			
-			
 			<script type="text/javascript">
 				function XmlHttp()
 				{
@@ -194,7 +182,7 @@ jQuery("document").ready(function($){
 							}
 			</script>
 			
-<!--для скрытых блоков старое-->				
+			<!--для скрытых блоков старое-->				
 			<script type="text/javascript">
 				function switchDisplay(id){
 					var el = document.getElementById(id);
@@ -203,8 +191,7 @@ jQuery("document").ready(function($){
 					return false;
 				}
 			</script>
-			
-			
+
 			<script type="text/javascript">
 				$( document ).ready(typeres())
 				function typeres() {
@@ -219,32 +206,28 @@ jQuery("document").ready(function($){
 				}
 			</script>
 
-	
-<!--для печати-->	
-<style type="text/css" media="print">
-  div.no_print {display: none; }
-</style> 
+			<!--для печати-->	
+			<style type="text/css" media="print">
+			  div.no_print {display: none; }
+			</style> 
 
-
-	
-			
 		</head>
 		<body>
 		
-<!--<ul class="navigation">
-    <li class="nav-item"><a href="index.php">Главная</a></li>
-    <li class="nav-item"><a href="it.php">IT</a></li>
-    <li class="nav-item"><a href="stomat.php">Стоматология</a></li>
-    <li class="nav-item"><a href="cosmet.php">Косметология</a></li>
-    <li class="nav-item"><a href="contacts.php">Сотрудники</a></li>
-    <li class="nav-item"><a href="clients.php">Пациенты</a></li>
-    <li class="nav-item"><a href="filials.php">Филиалы</a></li>
-</ul>
+		<!--<ul class="navigation">
+			<li class="nav-item"><a href="index.php">Главная</a></li>
+			<li class="nav-item"><a href="it.php">IT</a></li>
+			<li class="nav-item"><a href="stomat.php">Стоматология</a></li>
+			<li class="nav-item"><a href="cosmet.php">Косметология</a></li>
+			<li class="nav-item"><a href="contacts.php">Сотрудники</a></li>
+			<li class="nav-item"><a href="clients.php">Пациенты</a></li>
+			<li class="nav-item"><a href="filials.php">Филиалы</a></li>
+		</ul>
 
-<input type="checkbox" id="nav-trigger" class="nav-trigger" />
-<label for="nav-trigger"></label>
+		<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+		<label for="nav-trigger"></label>
 
-<div class="site-wrap">-->
+	<div class="site-wrap">-->
 		<div class="no_print"> 
 		<header class="h">
 			<nav>

@@ -89,7 +89,7 @@
 								</div>
 							</div>
 							
-							<div id="toggleDiv1" class="cellsBlock2" style="margin-top: 2px; margin-bottom: -1px; display: block;">
+							<div id="toggleDiv1" class="cellsBlock2" style="margin-top: 2px; margin-bottom: -1px; display: block; margin: 3px 0;">
 								<div class="cellLeft" style="font-weight: bold; width: 500px; cursor: pointer;">
 									Паспортные данные
 								</div>
@@ -125,7 +125,7 @@
 								</div>
 							</div>
 							
-							<div id="toggleDiv2" class="cellsBlock2" style="margin-top: 2px; margin-bottom: 0; display: block;">
+							<div id="toggleDiv2" class="cellsBlock2" style="margin-top: 2px; margin-bottom: 0; display: block; margin: 3px 0;">
 								<div class="cellLeft" style="font-weight: bold; width: 500px; cursor: pointer;">
 									Данные страховой компании
 								</div>
@@ -149,7 +149,7 @@
 								</div>
 							</div>
 							
-							<div id="toggleDiv3" class="cellsBlock2" style="margin-top: 2px; margin-bottom: 0; display: block;">
+							<div id="toggleDiv3" class="cellsBlock2" style="margin-top: 2px; margin-bottom: 0; display: block; margin: 3px 0;">
 								<div class="cellLeft" style="font-weight: bold; width: 500px; cursor: pointer;">
 									Опекун
 								</div>

@@ -22,7 +22,7 @@
 				$arr = array();
 				
 				//надо посмотреть, а не работает ли этот врач еще где-то в эту смену в этот день
-				$query = "SELECT `id`, `filial`, `day`, `smena`, `kab`, `worker` FROM `sheduler_template` WHERE `worker` = '{$_POST['worker']}' AND `type` = '{$_POST['type']}' AND `day` =  '{$_POST['smena']}' AND `smena` =  '{$_POST['smena']}'";
+				$query = "SELECT `id`, `filial`, `day`, `smena`, `kab`, `worker` FROM `sheduler_template` WHERE `worker` = '{$_POST['worker']}' AND `type` = '{$_POST['type']}' AND `day` =  '{$_POST['day']}' AND `smena` =  '{$_POST['smena']}'";
 
 				require 'config.php';
 				
@@ -55,7 +55,7 @@
 				}
 			
 				//Надо посмотреть, есть ли кто уже именно тут, в этом каб, смене, дне, филиале и удалить его потом
-				$query = "SELECT `id` FROM `sheduler_template` WHERE `type` = '{$_POST['type']}' AND `day` =  '{$_POST['smena']}' AND `smena` =  '{$_POST['smena']}' AND `filial` =  '{$_POST['filial']}' AND `kab` =  '{$_POST['kab']}'";				
+				$query = "SELECT `id` FROM `sheduler_template` WHERE `type` = '{$_POST['type']}' AND `day` =  '{$_POST['day']}' AND `smena` =  '{$_POST['smena']}' AND `filial` =  '{$_POST['filial']}' AND `kab` =  '{$_POST['kab']}'";				
 				$workers = array();
 				
 				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");

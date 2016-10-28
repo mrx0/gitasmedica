@@ -372,7 +372,7 @@
 										foreach($schedulerFakt[$d][$smenaN] as $kab => $kabValue){
 											
 											$resEcho = '';
-											$resEcho = WriteSearchUser('spr_workers',$kabValue['worker'], 'user').' <a href="scheduler_own.php?id='.$kabValue['worker'].'" class="info"><i class="fa fa-info-circle" title="Профиль"></i></a>';
+											$resEcho = WriteSearchUser('spr_workers',$kabValue['worker'], 'user').' <a href="scheduler_own.php?id='.$kabValue['worker'].'" class="info"><i class="fa fa-info-circle" title="График врача"></i></a>';
 											$ahtung = FALSE;
 											$fontSize = 'font-size: 70%;';
 											$resEcho2 .= '
@@ -464,19 +464,51 @@
 								//Если вообще никого целый день и ночь
 								//Но нам нужен только день
 								$ahtung = TRUE;
-								$kabsNone .= '
-									<div style="width: 100%; text-align: center; display: table; margin-bottom: 3px; font-size: 70%; color: red;">
-										<div style="margin-bottom: 7px;">никого нет </div>
-										<div class="manageScheduler">';
-								foreach	($kabsInFilial as $keyK => $valueK){
-									$kabsNone .= '
-										<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
-								}
-								$kabsNone .= '		
-										</div>
-									</div>';
+									for ($smenaN = 1; $smenaN <= 4; $smenaN++) {
+										if (($smenaN == 1) || ($smenaN == 2)){
+											$kabsNone .= '
+													<div style="width: 100%; height: 35px; min-height: 35px; outline: 1px solid  #BBB; display: table; margin-bottom: 3px; font-size: 70%;">
+														<div style="vertical-align: middle; width: 20px; box-shadow: 0px 5px 10px rgba(171, 254, 213, 0.59); display: table-cell !important;">
+															<div>'.$smenaN.'</div>
+														</div>
+														<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red;">
+															<div style="margin-bottom: 7px;">никого нет</div>
+															<div class="manageScheduler">';
+															
+											foreach	($kabsInFilial as $keyK => $valueK){
+												$kabsNone .= '
+																<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$valueK.', '.$year.', '.$month.','.$d.', '.$smenaN.')"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+											}
+											$kabsNone .= '
+															</div>
+														</div>
+													</div>';
+										}
+										//Ночные смены
+										if (($smenaN == 3) || ($smenaN == 4)){
+											$kabsNone .= '
+													<div class="nightSmena">
+														<div style="width: 100%; height: 35px; min-height: 35px; outline: 1px solid  #BBB; display: table; margin-bottom: 3px; font-size: 70%;">
+															<div style="vertical-align: middle; width: 20px; box-shadow: 0px 5px 10px rgba(171, 254, 213, 0.59); display: table-cell !important;">
+																<div>'.$smenaN.'</div>
+															</div>
+															<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red;">
+																<div style="margin-bottom: 7px;">никого нет</div>
+																<div class="manageScheduler">';
+															
+											foreach	($kabsInFilial as $keyK => $valueK){
+												$kabsNone .= '
+																<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$valueK.', '.$year.', '.$month.','.$d.', '.$smenaN.')"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+											}
+											$kabsNone .= '
+																</div>
+															</div>
+														</div>
+													</div>';
+										}
+									}
 							}
-							$kabs .= '
+							$kabsNone .= '
 											</div>';
 							//выделение сегодня цветом
 							$now="$year-$month-".sprintf("%02d",$d);

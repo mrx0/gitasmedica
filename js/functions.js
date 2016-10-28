@@ -45,16 +45,16 @@
 							io: document.getElementById("io").value,
 							oo: document.getElementById("oo").value,
 									
-							comment: document.getElementById("comment").value,
+							comment:document.getElementById("comment").value,
 								
-							card: document.getElementById("card").value,
+							card:document.getElementById("card").value,
 								
-							therapist: document.getElementById("search_client2").value,
-							therapist2: document.getElementById("search_client4").value,
+							therapist:document.getElementById("search_client2").value,
+							therapist2:document.getElementById("search_client4").value,
 							
-							sel_date: document.getElementById("sel_date").value,
-							sel_month: document.getElementById("sel_month").value,
-							sel_year: document.getElementById("sel_year").value,
+							sel_date:document.getElementById("sel_date").value,
+							sel_month:document.getElementById("sel_month").value,
+							sel_year:document.getElementById("sel_year").value,
 							
 							telephone:document.getElementById("telephone").value,
 							htelephone:document.getElementById("htelephone").value,
@@ -133,17 +133,27 @@
 						data:
 						{
 							id:document.getElementById("id").value,
+							
+							fo: document.getElementById("fo").value,
+							io: document.getElementById("io").value,
+							oo: document.getElementById("oo").value,
+							
 							comment:document.getElementById("comment").value,
 							
 							card:document.getElementById("card").value,
 							
 							therapist:document.getElementById("search_client2").value,
 							therapist2:document.getElementById("search_client4").value,
+							
 							sel_date:document.getElementById("sel_date").value,
 							sel_month:document.getElementById("sel_month").value,
 							sel_year:document.getElementById("sel_year").value,
 							
 							telephone:document.getElementById("telephone").value,
+							htelephone:document.getElementById("htelephone").value,
+							
+							telephoneo:document.getElementById("telephoneo").value,
+							htelephoneo:document.getElementById("htelephoneo").value,
 							
 							passport:document.getElementById("passport").value,
 							passportvidandata:document.getElementById("passportvidandata").value,
@@ -153,7 +163,9 @@
 							alienpassportnom:document.getElementById("alienpassportnom").value,	
 							
 							address:document.getElementById("address").value,
+							
 							polis:document.getElementById("polis").value,
+							polisdata:document.getElementById("polisdata").value,
 
 							sex:sex_value,
 							

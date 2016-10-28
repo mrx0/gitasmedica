@@ -97,7 +97,18 @@
 								<div class="cellsBlock2">
 									<div class="cellLeft">Телефон</div>
 									<div class="cellRight">
-										'.$client[0]['telephone'].'
+										<div>
+											<span style="font-size: 80%; color: #AAA">мобильный</span><br>
+											'.$client[0]['telephone'].'
+										</div>';
+				if ($client[0]['htelephone'] != ''){
+					echo '
+										<div>
+											<span style="font-size: 80%; color: #AAA">домашний</span><br>
+											'.$client[0]['htelephone'].'
+										</div>';
+				}
+				echo '
 									</div>
 								</div>';
 								
@@ -136,15 +147,70 @@
 										'.$client[0]['address'].'
 									</div>
 								</div>';
-								
-				echo '
+				if ($client[0]['polis'] != ''){
+					echo '
 								<div class="cellsBlock2">
-									<div class="cellLeft">Номер полиса</div>
+									<div class="cellLeft">Полис</div>
 									<div class="cellRight">
-										'.$client[0]['polis'].'
+										<div>
+											<span style="font-size: 80%; color: #AAA">Номер</span><br>
+											'.$client[0]['polis'].'
+										</div>
+										<div>
+											<span style="font-size: 80%; color: #AAA">Дата</span><br>
+											'.$client[0]['polisdata'].'
+										</div>
+										
 									</div>
 								</div>';
-								
+				}
+
+				if (($client[0]['fo'] != '') || ($client[0]['io'] != '')){
+					echo '
+							<div class="cellsBlock2" style="margin-top: 2px; margin-bottom: 0; display: block;">
+								<div class="cellLeft" style="font-weight: bold; width: 500px;">
+									Опекун
+								</div>
+							</div>
+							<div class="cellsBlock2">
+								<div class="cellLeft">Фамилия</div>
+								<div class="cellRight">
+									'.$client[0]['fo'].'
+								</div>
+							</div>
+							
+							<div class="cellsBlock2">
+								<div class="cellLeft">Имя</div>
+								<div class="cellRight">
+									'.$client[0]['io'].'
+								</div>
+							</div>
+							
+							<div class="cellsBlock2">
+								<div class="cellLeft">Отчество</div>
+								<div class="cellRight">
+									'.$client[0]['oo'].'
+								</div>
+							</div>
+							
+							<div class="cellsBlock2">
+								<div class="cellLeft">Телефон</div>
+								<div class="cellRight">
+									<div>
+										<span style="font-size: 80%; color: #AAA">мобильный</span><br>
+										'.$client[0]['telephoneo'].'
+									</div>';
+					if ($client[0]['htelephoneo'] != ''){
+						echo '
+									<div>
+										<span style="font-size: 80%; color: #AAA">домашний</span><br>
+										'.$client[0]['htelephoneo'].'
+									</div>';
+					}
+					echo '
+								</div>
+							</div>';
+				}
 				echo '					
 								<div class="cellsBlock2">
 									<div class="cellLeft">Комментарий</div>
@@ -180,7 +246,7 @@
 										Добавлен: '.date('d.m.y H:i', $client[0]['create_time']).'<br>
 										Кем: '.WriteSearchUser('spr_workers', $client[0]['create_person'], 'user').'<br>';
 				}else{
-					echo 'Добавлен: не указано';
+					echo 'Добавлен: не указано<br>';
 				}
 				if (($client[0]['last_edit_time'] != 0) || ($client[0]['last_edit_person'] != 0)){
 					echo '
