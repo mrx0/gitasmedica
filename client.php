@@ -47,7 +47,15 @@
 					<script src="js/init2.js" type="text/javascript"></script>
 					<div id="status">
 						<header>
-							<h2>Карточка пациента #'.$client[0]['id'].'</h2>
+							<h2>
+								Карточка пациента #'.$client[0]['id'].'';
+																
+				if (($clients['edit'] == 1) || $god_mode){
+					echo '
+									<a href="client_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 80%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+				}
+				echo '
+							</h2>
 							Номер карты: '.$client[0]['card'].'
 						</header>';
 				echo '
@@ -255,9 +263,16 @@
 				}
 				echo '
 									</span>
-								</div>
-								
-								
+								</div>';
+				
+				if (($finances['see_all'] != 0) || ($finances['see_own'] != 0) || $god_mode){
+					echo '				
+								<div class="cellsBlock2">
+									<a href="client_finance.php?client='.$client[0]['id'].'" class="b">Счёт <i class="fa fa-rub"></i></a>
+								</div>';
+				}
+				
+				echo '				
 								<div class="cellsBlock2">';
 				if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
 					echo '
@@ -267,11 +282,6 @@
 					echo '
 									<a href="#" id="showDiv2" class="b">Косметология</a>';
 				}					
-									
-				if (($clients['edit'] == 1) || $god_mode){
-					echo '
-									<a href="client_edit.php?id='.$_GET['id'].'" class="b">Редактировать</a>';
-				}
 				echo '
 								</div>';
 	
@@ -1081,7 +1091,6 @@
 				</div>
 			</div>
 
-			<hr>
 
 			<script language="JavaScript" type="text/javascript">
 				 /*<![CDATA[*/

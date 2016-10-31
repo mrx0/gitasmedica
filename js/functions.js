@@ -747,3 +747,86 @@
 		}
 		//div.appendChild(tbody);
 	}
+	
+	
+	function Ajax_finance_debt_add(client, session_id) {
+		// убираем класс ошибок с инпутов
+		$("input").each(function(){
+			$(this).removeClass("error_input");
+		});
+		// прячем текст ошибок
+		$(".error").hide();
+		 
+		$.ajax({
+			// метод отправки 
+			global: false, 
+			type: "POST", 
+			// путь до скрипта-обработчика
+			url: "ajax_test.php",
+			// какие данные будут переданы
+			data: {
+				summ:document.getElementById("summ").value,
+			},
+			cache: false,
+			// тип передачи данных
+			dataType: "json",
+			beforeSend: function() {
+				$('#changeShedOptionsReq').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				// в случае, когда пришло success. Отработало без ошибок
+				if(data.result == "success"){   
+					//alert("форма корректно заполнена");
+					
+					var type = document.getElementById("type").value;
+					
+					if (type == 3){
+						var uri = 'finance_prepayment_add_f.php';
+					}
+					if (type == 4){
+						var uri = 'finance_debt_add_f.php';
+					}
+					
+					$.ajax({
+						url: uri,
+						statbox:"status",
+						global: false, 
+						type: "POST", 
+						data:
+						{
+							client: client,
+							summ:document.getElementById("summ").value,
+							type:type,
+							
+							date_expires:document.getElementById("dataend").value,
+							
+							comment:document.getElementById("comment").value,
+							
+							session_id: session_id,
+						},
+						cache: false,
+						beforeSend: function() {
+							$('#changeShedOptionsReq').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+						},
+						success:function(data){
+							document.getElementById("status").innerHTML=data;
+						}
+					})
+				// в случае ошибок в форме
+				}else{
+					// перебираем массив с ошибками
+					for(var errorField in data.text_error){
+						// выводим текст ошибок 
+						$("#"+errorField+"_error").html(data.text_error[errorField]);
+						// показываем текст ошибок
+						$("#"+errorField+"_error").show();
+						// обводим инпуты красным цветом
+					   // $("#"+errorField).addClass("error_input");                      
+					}
+					document.getElementById("errror").innerHTML='<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>'
+				}
+			}
+		});						
+	};  
+	

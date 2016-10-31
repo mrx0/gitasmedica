@@ -723,5 +723,27 @@
 		return $first.$last;
 	}
 
+	//Долги/Авансы
+	function DebtsPrepayments ($id){
+		require 'config.php';
+		$result = array();
+		
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+		$query = "SELECT * FROM `journal_debts_prepayments` WHERE `client` = '{$id}'";
+		$res = mysql_query($query) or die($query);
+		$number = mysql_num_rows($res);
+		if ($number != 0){
+			while ($arr = mysql_fetch_assoc($res)){
+				array_push($result, $arr);
+			}
+		}else
+			$result = 0;
+		mysql_close();
+		
+		return $result;
+	}
+
 
 ?>
