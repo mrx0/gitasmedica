@@ -227,12 +227,12 @@
 					/*echo '
 						<div class="cellsBlock2">
 							<div class="cellName">
-								'.WriteSearchUser('spr_workers', $value, 'user').'
+								'.WriteSearchUser('spr_workers', $value, 'user', false).'
 							</div>
 						</div>';*/
 						
-					$tabs_workers .= '<li><a href="#tabs-'.$value.'">'.WriteSearchUser('spr_workers', $value, 'user').'</a></li>';
-					$itog[$value]['name'] = WriteSearchUser('spr_workers', $value, 'user');
+					$tabs_workers .= '<li><a href="#tabs-'.$value.'">'.WriteSearchUser('spr_workers', $value, 'user', false).'</a></li>';
+					$itog[$value]['name'] = WriteSearchUser('spr_workers', $value, 'user', false);
 					
 					$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$value} ORDER BY `create_time` DESC";
 					$res = mysql_query($query) or die($query);

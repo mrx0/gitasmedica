@@ -277,7 +277,7 @@
 							echo '
 									<div class="cellName">';
 							echo 
-										'Врач <br /><b>'.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user').'</b>';
+										'Врач <br /><b>'.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user', false).'</b>';
 							echo '
 									</div>';
 							echo '

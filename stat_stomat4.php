@@ -75,7 +75,7 @@
 					$value = '';
 					$disabled = '';
 				}else{
-					$value = WriteSearchUser('spr_workers', $_SESSION['id'], 'user_full');
+					$value = WriteSearchUser('spr_workers', $_SESSION['id'], 'user_full', false);
 					$disabled = 'disabled';
 				}
 				echo '

@@ -232,7 +232,7 @@
 										Лечащий врач<br />
 										<span style="font-size: 70%">стоматология</span>
 									</div>
-									<div class="cellRight">'.WriteSearchUser('spr_workers',$client[0]['therapist'], 'user').'</div>
+									<div class="cellRight">'.WriteSearchUser('spr_workers',$client[0]['therapist'], 'user', true).'</div>
 								</div>';
 				}
 				if (TRUE){
@@ -242,7 +242,7 @@
 										Лечащий врач<br />
 										<span style="font-size: 70%">косметология</span>
 									</div>
-									<div class="cellRight">'.WriteSearchUser('spr_workers',$client[0]['therapist2'], 'user').'</div>
+									<div class="cellRight">'.WriteSearchUser('spr_workers',$client[0]['therapist2'], 'user', true).'</div>
 								</div>';
 				}
 								
@@ -252,14 +252,14 @@
 				if (($client[0]['create_time'] != 0) || ($client[0]['create_person'] != 0)){
 					echo '
 										Добавлен: '.date('d.m.y H:i', $client[0]['create_time']).'<br>
-										Кем: '.WriteSearchUser('spr_workers', $client[0]['create_person'], 'user').'<br>';
+										Кем: '.WriteSearchUser('spr_workers', $client[0]['create_person'], 'user', true).'<br>';
 				}else{
 					echo 'Добавлен: не указано<br>';
 				}
 				if (($client[0]['last_edit_time'] != 0) || ($client[0]['last_edit_person'] != 0)){
 					echo '
 										Последний раз редактировался: '.date('d.m.y H:i', $client[0]['last_edit_time']).'<br>
-										Кем: '.WriteSearchUser('spr_workers', $client[0]['last_edit_person'], 'user').'';
+										Кем: '.WriteSearchUser('spr_workers', $client[0]['last_edit_person'], 'user', true).'';
 				}
 				echo '
 									</span>

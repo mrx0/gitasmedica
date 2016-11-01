@@ -58,14 +58,14 @@
 						
 				$rez .= '
 					<li class="cellsBlock cellsBlockHover">
-						<a href="user.php?id='.$removes[$i]['whom'].'" class="ahref cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removes[$i]['whom'], 'user').'</a>
-						<a href="client.php?id='.$removes[$i]['client'].'" class="ahref cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$removes[$i]['client'], 'user').'</a>
+						<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removes[$i]['whom'], 'user', true).'</div>
+						<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$removes[$i]['client'], 'user', true).'</div>
 						<a href="task_stomat_inspection.php?id='.$removes[$i]['task'].'" class="ahref cellName" style="text-align: center">#'.$removes[$i]['task'].'</a>
 						<div class="cellText" style="'.$background_style.'">'.$removes[$i]['description'].'</div>';
 				$rez .= '
 
 						<div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $removes[$i]['create_time']).'</div>
-						<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removes[$i]['create_person'], 'user').'</div>
+						<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removes[$i]['create_person'], 'user', true).'</div>
 						<div class="cellTime" style="text-align: center; '.$background_style2.'">'.$ended.'</div>
 					</li>';
 				}

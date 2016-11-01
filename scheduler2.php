@@ -256,7 +256,7 @@
 									$resEcho = '';
 									//если врач есть
 									if (isset($shedTemplate[$filial_val['id']][$dayWvalue][$smenaN][$kabN])){
-										$resEcho = WriteSearchUser('spr_workers', $shedTemplate[$filial_val['id']][$dayWvalue][$smenaN][$kabN], 'user');
+										$resEcho = WriteSearchUser('spr_workers', $shedTemplate[$filial_val['id']][$dayWvalue][$smenaN][$kabN], 'user', false);
 										$ahtung = FALSE;
 										$fontSize = 'font-size: 100%;';
 									}else{

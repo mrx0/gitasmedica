@@ -222,7 +222,7 @@
 										<span style="font-size: 70%">стоматология</span>
 									</div>
 									<div class="cellRight">
-										<input type="text" size="50" name="searchdata2" '.$disabled_stom.' id="search_client2" placeholder="', $client[0]['therapist'] != 0 ? WriteSearchUser('spr_workers',$client[0]['therapist'], 'user_full') : 'Введите первые три буквы для поиска' ,'" value="', $client[0]['therapist'] != 0 ? WriteSearchUser('spr_workers',$client[0]['therapist'], 'user_full') : '' ,'" class="who2"  autocomplete="off">
+										<input type="text" size="50" name="searchdata2" '.$disabled_stom.' id="search_client2" placeholder="', $client[0]['therapist'] != 0 ? WriteSearchUser('spr_workers',$client[0]['therapist'], 'user_full', false) : 'Введите первые три буквы для поиска' ,'" value="', $client[0]['therapist'] != 0 ? WriteSearchUser('spr_workers',$client[0]['therapist'], 'user_full', false) : '' ,'" class="who2"  autocomplete="off">
 										<ul id="search_result2" class="search_result2"></ul><br />
 									</div>
 								</div>';
@@ -234,7 +234,7 @@
 										<span style="font-size: 70%">косметология</span>
 									</div>
 									<div class="cellRight">
-										<input type="text" size="50" name="searchdata4"'.$disabled_cosm.' id="search_client4" placeholder="', $client[0]['therapist2'] != 0 ? WriteSearchUser('spr_workers',$client[0]['therapist2'], 'user_full') : 'Введите первые три буквы для поиска' ,'" value="', $client[0]['therapist2'] != 0 ? WriteSearchUser('spr_workers',$client[0]['therapist2'], 'user_full') : '' ,'" class="who4"  autocomplete="off">
+										<input type="text" size="50" name="searchdata4"'.$disabled_cosm.' id="search_client4" placeholder="', $client[0]['therapist2'] != 0 ? WriteSearchUser('spr_workers',$client[0]['therapist2'], 'user_full', false) : 'Введите первые три буквы для поиска' ,'" value="', $client[0]['therapist2'] != 0 ? WriteSearchUser('spr_workers',$client[0]['therapist2'], 'user_full', false) : '' ,'" class="who4"  autocomplete="off">
 										<ul id="search_result4" class="search_result4"></ul><br />
 									</div>
 								</div>';

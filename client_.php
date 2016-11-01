@@ -55,7 +55,7 @@
 								
 								<div class="cellsBlock2">
 									<div class="cellLeft">Лечащий врач</div>';
-				//Надо найти имя клиента
+				//Надо найти имя Пациента
 				/*$therapists = SelDataFromDB ('spr_workers', $client[0]['therapist'], 'worker_id');
 				if ($therapists != 0){
 					$therapist = $therapists[0]["name"];
@@ -63,7 +63,7 @@
 					$therapist = 'unknown';
 				}*/								
 				echo '
-									<div class="cellRight">'.WriteSearchUser('spr_workers',$client[0]['therapist'], 'user').'</div>
+									<div class="cellRight">'.WriteSearchUser('spr_workers',$client[0]['therapist'], 'user', true).'</div>
 								</div>
 								
 								<div class="cellsBlock2">

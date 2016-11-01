@@ -450,7 +450,7 @@
 														</div>';
 														
 											//if (($stom['see_all'] == 1) || $god_mode){
-												echo '<a href="user.php?id='.$journal[$i]['worker'].'" class="cellName ahref" '.$id4filter4upr.'>'.WriteSearchUser('spr_workers', $journal[$i]['worker'], 'user').'</a>';
+												echo '<div class="cellName" '.$id4filter4upr.'>'.WriteSearchUser('spr_workers', $journal[$i]['worker'], 'user', true).'</div>';
 											//}	
 											
 											/*echo '

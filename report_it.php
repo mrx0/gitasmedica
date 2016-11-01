@@ -113,7 +113,7 @@
 										echo '
 											<div class="cellsBlock3">
 												<div class="cellLeft" style="font-size:80%;">
-													'.WriteSearchUser('spr_workers',$value['create_person'], 'user').'<br />
+													'.WriteSearchUser('spr_workers',$value['create_person'], 'user', true).'<br />
 													<span style="font-size:75%;">'.date('d.m.y H:i', $value['create_time']).'</span>
 												</div>
 												<div class="cellRight" style="font-size:75%">'.nl2br($value['description']).'</div>

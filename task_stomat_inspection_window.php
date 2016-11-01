@@ -49,8 +49,8 @@
 
 					echo '
 								<form>
-									Посещение #'.$task[0]['id'].'; Пациент: <i><b>'.WriteSearchUser('spr_clients', $task[0]['client'], 'user').'</b></i><br />
-									'.WriteSearchUser('spr_workers', $task[0]['worker'], 'user').'<br />
+									Посещение #'.$task[0]['id'].'; Пациент: <i><b>'.WriteSearchUser('spr_clients', $task[0]['client'], 'user', false).'</b></i><br />
+									'.WriteSearchUser('spr_workers', $task[0]['worker'], 'user', false).'<br />
 									<div class="cellsBlock2">
 										<div class="cellLeft">';
 										

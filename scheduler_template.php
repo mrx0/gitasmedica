@@ -351,7 +351,7 @@
 									$resEcho = '';
 									//если врач есть
 									if (isset($shedTemplate[$filial_val['id']][$dayWvalue][$smenaN][$kabN])){
-										$resEcho = WriteSearchUser('spr_workers', $shedTemplate[$filial_val['id']][$dayWvalue][$smenaN][$kabN], 'user').' <a href="scheduler_own.php?id='.$shedTemplate[$filial_val['id']][$dayWvalue][$smenaN][$kabN].'" class="info"><i class="fa fa-info-circle" title="График врача"></i></a>';
+										$resEcho = WriteSearchUser('spr_workers', $shedTemplate[$filial_val['id']][$dayWvalue][$smenaN][$kabN], 'user', false).' <a href="scheduler_own.php?id='.$shedTemplate[$filial_val['id']][$dayWvalue][$smenaN][$kabN].'" class="info"><i class="fa fa-info-circle" title="График врача"></i></a>';
 										$ahtung = FALSE;
 										$fontSize = 'font-size: 100%;';
 									}else{

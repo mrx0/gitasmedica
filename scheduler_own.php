@@ -398,7 +398,7 @@
 												foreach($schedulerFakt[$d][$smenaN] as $kab => $kabValue){
 													
 													$resEcho = '';
-													//$resEcho .= WriteSearchUser('spr_workers',$kabValue['worker'], 'user').'<br>';
+													//$resEcho .= WriteSearchUser('spr_workers',$kabValue['worker'], 'user', false).'<br>';
 													$resEcho .= '<i style="font-weight: bold;">'.$offices_jarr[$kabValue['filial']]['name'].'</i>';
 													$ahtung = FALSE;
 													$fontSize = 'font-size: 70%;';

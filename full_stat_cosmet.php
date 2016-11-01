@@ -396,7 +396,7 @@
 						<b>По врачам:</b><br />';
 				foreach ($doctors as $key => $value){
 					//$filial = SelDataFromDB('spr_office', $key, 'offices');
-					echo WriteSearchUser('spr_workers', $key, 'user').': '.$value.'<br />';
+					echo WriteSearchUser('spr_workers', $key, 'user', false).': '.$value.'<br />';
 				}
 				//var_dump($worker);
 				echo '

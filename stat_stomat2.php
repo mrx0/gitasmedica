@@ -488,7 +488,7 @@
 						if ($removes != 0){
 							//$removes_me = true;
 							foreach($removes as $removes_value){
-								$komm .= 'Направлен к '.WriteSearchUser('spr_workers', $removes_value['whom'], 'user').' ';
+								$komm .= 'Направлен к '.WriteSearchUser('spr_workers', $removes_value['whom'], 'user', true).' ';
 								if ($sanat_status){
 									$rez_color = "style = 'background: rgba(55,127,223,0.7);'";
 								}
@@ -498,9 +498,9 @@
 						echo '
 							<li class="cellsBlock cellsBlockHover">
 									<a href="task_stomat_inspection.php?id='.$value['id'].'" class="cellName ahref" title="'.$value['id'].'">'.date('d.m.y H:i', $value['create_time']).' '.$dop_img.'</a>
-									<a href="client.php?id='.$cl_id.'" class="cellName ahref">'.WriteSearchUser('spr_clients', $cl_id, 'user').'</a>';
+									<div class="cellName">'.WriteSearchUser('spr_clients', $cl_id, 'user', true).'</div>';
 						if (($stom['see_all'] == 1) || $god_mode){
-							echo '<a href="user.php?id='.$value['worker'].'" class="cellName ahref" id="4filter">'.WriteSearchUser('spr_workers', $value['worker'], 'user').'</a>';
+							echo '<div class="cellName" id="4filter">'.WriteSearchUser('spr_workers', $value['worker'], 'user', true).'</div>';
 						}		
 
 						$decription = array();

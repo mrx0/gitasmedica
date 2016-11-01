@@ -372,7 +372,7 @@
 										foreach($schedulerFakt[$d][$smenaN] as $kab => $kabValue){
 											
 											$resEcho = '';
-											$resEcho = WriteSearchUser('spr_workers',$kabValue['worker'], 'user').' <a href="scheduler_own.php?id='.$kabValue['worker'].'" class="info"><i class="fa fa-info-circle" title="График врача"></i></a>';
+											$resEcho = WriteSearchUser('spr_workers',$kabValue['worker'], 'user', false).' <a href="scheduler_own.php?id='.$kabValue['worker'].'" class="info"><i class="fa fa-info-circle" title="График врача"></i></a>';
 											$ahtung = FALSE;
 											$fontSize = 'font-size: 70%;';
 											$resEcho2 .= '

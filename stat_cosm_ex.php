@@ -241,7 +241,7 @@
 										<li class="cellsBlock cellsBlockHover">
 												<a href="task_cosmet.php?id='.$journal[$i]['id'].'" class="cellName ahref" title="'.$journal[$i]['id'].'" ', isFired($journal[$i]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.date('d.m.y H:i', $journal[$i]['create_time']).'</a>
 												<div class="cellName">'.$office.'</div>
-												<a href="user.php?id='.$journal[$i]['worker'].'" class="cellName ahref" id="4filter" ', isFired($journal[$i]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.WriteSearchUser('spr_workers', $journal[$i]['worker'], 'user').'</a>
+												<div class="cellName" id="4filter" ', isFired($journal[$i]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.WriteSearchUser('spr_workers', $journal[$i]['worker'], 'user', true).'</div>
 												<a href="client.php?id='.$journal[$i]['client'].'" class="cellName ahref" ', isFired($journal[$i]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$clients[0]["name"].'</a>
 												<div class="cellCosmAct" style="text-align: center">'.$cl_sex.'</div>
 												<div class="cellCosmAct" style="text-align: center">'.getyeardiff($clients[0]['birthday']).'</div>

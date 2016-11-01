@@ -263,7 +263,7 @@
 									echo '
 										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
 											<div class="cellRight" id="month_date_worker" style="background-color:rgba(39, 183, 127, .5)">
-												1 смена каб '.$k.' '.WriteSearchUser('spr_workers', $Work_Today_arr[$k][1]['worker'], 'user').'
+												1 смена каб '.$k.' '.WriteSearchUser('spr_workers', $Work_Today_arr[$k][1]['worker'], 'user', false).'
 											</div>
 										</div>';
 								//Выбрать записи пациентов, если есть
@@ -364,7 +364,7 @@
 									echo '
 										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
 											<div class="cellRight" id="month_date_worker" style="padding:0;">
-												<div onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 1, '.$wt.', '.$Work_Today_arr[$k][1]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][1]['worker'], 'user').'\')" style="float:left; margin: 5px;">'.$sheduler_times[$wt].'</div>
+												<div onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 1, '.$wt.', '.$Work_Today_arr[$k][1]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][1]['worker'], 'user', false).'\')" style="float:left; margin: 5px;">'.$sheduler_times[$wt].'</div>
 												<div style="float:right; width: 60%; margin: 0; height:25px;">
 													<div style="'.$NextTimeBgCol.' height:100%; text-align: center;">';
 									//echo $NextTime_val;
@@ -413,14 +413,14 @@
 									echo '
 										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
 											<div class="cellRight" id="month_date_worker" style="background-color:rgba(39, 183, 127, .5);">
-												2 смена каб '.$k.' '.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user').'
+												2 смена каб '.$k.' '.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'
 											</div>
 										</div>';
 								for ($wt=900; $wt < 1260; $wt=$wt+30){
 									echo '
 										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
 											<div class="cellRight" id="month_date_worker">
-												<div onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 1, '.$wt.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user').'\')">'.$sheduler_times[$wt].'</div>
+												<div onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 1, '.$wt.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'\')">'.$sheduler_times[$wt].'</div>
 											</div>
 										</div>
 									';

@@ -19,7 +19,7 @@
 					Не выбрали пациента. Давайте еще разок =)<br /><br />
 					<a href="add_task_stomat.php" class="b">Добавить запись</a>';
 			}else{
-				//Ищем клиента
+				//Ищем Пациента
 				$clients = SelDataFromDB ('spr_clients', $_POST['client'], 'client_full_name');
 				//var_dump($clients);
 				if ($clients != 0){

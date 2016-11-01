@@ -105,12 +105,12 @@
 																				
 										<div class="cellsBlock2">
 											<div class="cellLeft">Врач</div>
-											<div class="cellRight">'.WriteSearchUser('spr_workers',$task[0]['worker'], 'user').'</div>
+											<div class="cellRight">'.WriteSearchUser('spr_workers',$task[0]['worker'], 'user', true).'</div>
 										</div>
 										
 										<div class="cellsBlock2">
 											<div class="cellLeft">Пациент</div>
-											<div class="cellRight">'.WriteSearchUser('spr_clients', $task[0]['client'], 'user').'</div>
+											<div class="cellRight">'.WriteSearchUser('spr_clients', $task[0]['client'], 'user', true).'</div>
 										</div>
 										
 										<div class="cellsBlock2">
@@ -421,16 +421,21 @@
 										</div>	
 
 										<div class="cellsBlock2">
-											<span style="font-size:80%;">
-												Создана: '.date('d.m.y H:i', $task[0]['create_time']).'<br />
-												Кем: '.WriteSearchUser('spr_workers', $task[0]['create_person'], 'user').'<br />
-												Последний раз редактировалось: '.date('d.m.y H:i', $task[0]['last_edit_time']).'<br />
-												Кем: '.WriteSearchUser('spr_workers', $task[0]['last_edit_person'], 'user').'
+											<span style="font-size: 80%; color: #999;">
+												Создан: '.date('d.m.y H:i', $task[0]['create_time']).' пользователем
+												'.WriteSearchUser('spr_workers', $task[0]['create_person'], 'user', true).'';
+						if ((($task[0]['last_edit_time'] != 0) || ($task[0]['last_edit_person'] !=0)) && (($task[0]['create_time'] != $task[0]['last_edit_time']))){
+							echo '
+											<br>
+											Редактировался: '.date('d.m.y H:i', $task[0]['last_edit_time']).' пользователем
+											'.WriteSearchUser('spr_workers', $task[0]['last_edit_person'], 'user', true).'';
+						}
+						echo '
 											</span>
 										</div>
 										<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
 										<!--<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">-->
-										<input type=\'button\' class="b" value=\'Редактировать\' onclick=\'
+										<input type=\'button\' class="b" value="Применить" onclick=\'
 											var add_notes_type = 0;
 											var add_notes_months = 0;
 											var add_notes_days = 0;

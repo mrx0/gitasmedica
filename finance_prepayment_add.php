@@ -66,7 +66,7 @@
 							</div>
 
 							<div class="cellsBlock2">
-								<div class="cellLeft">Дата окончания</div>
+								<div class="cellLeft">Срок истечения</div>
 								<div class="cellRight">
 									<input type="text" id="dataend" name="dataend" class="dateс" value="'.date("d.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
 										onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">

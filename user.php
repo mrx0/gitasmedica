@@ -25,7 +25,13 @@
 			echo '
 				<div id="status">
 					<header>
-						<h2>Карточка пользователя</h2>
+						<h2>Карточка пользователя';
+			if (($workers['edit'] == 1) || $god_mode){
+				echo '
+									<a href="user_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 80%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+			}
+			echo '
+						</h2>
 					</header>';
 			if ($user[0]['fired'] == '1'){
 				echo '<span style="color:#EF172F;font-weight:bold;">УВОЛЕН</span>';
@@ -103,10 +109,7 @@
 
 				}
 			}				
-			if (($workers['edit'] == 1) || $god_mode){
-				echo '
-									<a href="user_edit.php?id='.$_GET['id'].'" class="b">Редактировать</a>';
-			}
+
 			echo '
 									<a href="scheduler_own.php?id='.$_GET['id'].'" class="b">График работы</a>';
 			
@@ -204,7 +207,7 @@
 							<li class="cellsBlock cellsBlockHover">
 									<div class="cellPriority" style="background-color:'.$priority_color.'"></div>
 									<div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $notes[$i]['dead_line']).'</div>
-									<a href="client.php?id='.$notes[$i]['client'].'" class="ahref cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$notes[$i]['client'], 'user').'</a>
+									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$notes[$i]['client'], 'user', true).'</div>
 									<a href="task_stomat_inspection.php?id='.$notes[$i]['task'].'" class="ahref cellName" style="text-align: center">#'.$notes[$i]['task'].'</a>
 									<div class="cellText" style="'.$background_style.'">'.$for_notes[$notes[$i]['description']].'</div>
 									<div class="cellTime" style="text-align: center">';
@@ -216,7 +219,7 @@
 					echo '
 									</div>
 									<div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $notes[$i]['create_time']).'</div>
-									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$notes[$i]['create_person'], 'user').'</div>
+									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$notes[$i]['create_person'], 'user', true).'</div>
 									<div class="cellTime" style="text-align: center; '.$background_style2.'">'.$ended.'</div>
 							</li>';
 				}
@@ -298,8 +301,8 @@
 						
 						echo '
 							<li class="cellsBlock cellsBlockHover">
-									<a href="client.php?id='.$removesMy[$i]['whom'].'" class="ahref cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removesMy[$i]['whom'], 'user').'</a>
-									<a href="client.php?id='.$removesMy[$i]['client'].'" class="ahref cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$removesMy[$i]['client'], 'user').'</a>
+									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removesMy[$i]['whom'], 'user', true).'</div>
+									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$removesMy[$i]['client'], 'user', true).'</div>
 									<a href="task_stomat_inspection.php?id='.$removesMy[$i]['task'].'" class="ahref cellName" style="text-align: center">#'.$removesMy[$i]['task'].'</a>
 									<div class="cellText" style="'.$background_style.'">'.$removesMy[$i]['description'].'</div>
 									<div class="cellTime" style="text-align: center">';
@@ -310,7 +313,7 @@
 						echo '
 									</div>
 									<div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $removesMy[$i]['create_time']).'</div>
-									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removesMy[$i]['create_person'], 'user').'</div>
+									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removesMy[$i]['create_person'], 'user', true).'</div>
 									<div class="cellTime" style="text-align: center; '.$background_style2.'">'.$ended.'</div>
 							</li>';
 					}
@@ -356,8 +359,8 @@
 						
 						echo '
 							<li class="cellsBlock cellsBlockHover">
-									<a href="user.php?id='.$removesMe[$i]['whom'].'" class="ahref cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removesMe[$i]['whom'], 'user').'</a>
-									<a href="client.php?id='.$removesMe[$i]['client'].'" class="ahref cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$removesMe[$i]['client'], 'user').'</a>
+									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removesMe[$i]['whom'], 'user', true).'</div>
+									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$removesMe[$i]['client'], 'user', true).'</div>
 									<a href="task_stomat_inspection.php?id='.$removesMe[$i]['task'].'" class="ahref cellName" style="text-align: center">#'.$removesMe[$i]['task'].'</a>
 									<div class="cellText" style="'.$background_style.'">'.$removesMe[$i]['description'].'</div>
 									<div class="cellTime" style="text-align: center">';
@@ -368,7 +371,7 @@
 						echo '
 									</div>
 									<div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $removesMe[$i]['create_time']).'</div>
-									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removesMe[$i]['create_person'], 'user').'</div>
+									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removesMe[$i]['create_person'], 'user', true).'</div>
 									<div class="cellTime" style="text-align: center; '.$background_style2.'">'.$ended.'</div>
 							</li>';
 					}

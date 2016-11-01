@@ -84,7 +84,7 @@
 							echo '
 								<div class="cellsBlock2" style="width:320px; font-size:80%;">
 									<div class="cellRight" style="background-color: rgba(255,83,75,.5);">
-										<input type="radio" name="worker" value="'.$value['worker'].'"> '.WriteSearchUser('spr_workers', $value['worker'], 'user').'<br />
+										<input type="radio" name="worker" value="'.$value['worker'].'"> '.WriteSearchUser('spr_workers', $value['worker'], 'user', false).'<br />
 										<span style="font-size:80%;">Филиал '.$filial[0]['name'].'; кабинет '.$value['kab'].'; '.$smn.'</span>
 									</div>
 								</div>';

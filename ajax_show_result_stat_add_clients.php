@@ -199,7 +199,7 @@
 							echo '
 									<li class="cellsBlock cellsBlockHover">
 										<div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $journal[$i]['create_time']).'</div>
-										<a href="user.php?id='.$journal[$i]['create_person'].'" class="cellName ahref" style="text-align: center" id="4filter">'.WriteSearchUser('spr_workers', $journal[$i]['create_person'], 'user').'</a>
+										<div class="cellName" style="text-align: center" id="4filter">'.WriteSearchUser('spr_workers', $journal[$i]['create_person'], 'user', true).'</div>
 										<a href="client.php?id='.$journal[$i]['id'].'" class="cellFullName ahref">'.$journal[$i]['full_name'].'</a>';
 
 							echo '

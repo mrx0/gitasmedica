@@ -29,7 +29,16 @@
 					echo '
 						<div id="status">
 							<header>
-								<h2>Задача #'.$task[0]['id'].'</h2>
+								<h2>Задача #'.$task[0]['id'].'';
+					if (!$closed){
+						if (($it['edit'] == 1) || $god_mode){
+							
+							echo '
+									<a href="task_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 80%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+						}
+					}
+					echo '
+								</h2>
 							</header>';
 
 					echo '
@@ -56,7 +65,7 @@
 								
 									<div class="cellsBlock2">
 										<div class="cellLeft">Исполнитель</div>
-										<div class="cellRight">', $task[0]['worker'] == 0 ? 'не определён' : WriteSearchUser('spr_workers', $task[0]['worker'], 'user') ,'</div>
+										<div class="cellRight">', $task[0]['worker'] == 0 ? 'не определён' : WriteSearchUser('spr_workers', $task[0]['worker'], 'user', true) ,'</div>
 									</div>
 									
 									<div class="cellsBlock2">
@@ -65,11 +74,16 @@
 									</div>								
 									
 									<div class="cellsBlock2">
-										<span style="font-size:80%;">
-											Создана: '.date('d.m.y H:i', $task[0]['create_time']).'<br />
-											Кем: '.WriteSearchUser('spr_workers', $task[0]['create_person'], 'user').'<br />
-											Последний раз редактировалось: '.date('d.m.y H:i', $task[0]['last_edit_time']).'<br />
-											Кем: '.WriteSearchUser('spr_workers', $task[0]['last_edit_person'], 'user').'
+										<span style="font-size: 80%; color: #999;">
+											Создан: '.date('d.m.y H:i', $task[0]['create_time']).' пользователем
+											'.WriteSearchUser('spr_workers', $task[0]['create_person'], 'user', true).'';
+					if ((($task[0]['last_edit_time'] != 0) || ($task[0]['last_edit_person'] !=0)) && (($task[0]['create_time'] != $task[0]['last_edit_time']))){
+						echo '
+											<br>
+											Редактировался: '.date('d.m.y H:i', $task[0]['last_edit_time']).' пользователем
+											'.WriteSearchUser('spr_workers', $task[0]['last_edit_person'], 'user', true).'';
+					}
+					echo '
 										</span>
 									</div>
 									
@@ -82,12 +96,7 @@
 									<a href="task_add_worker.php?id='.$_GET['id'].'" class="b">Назначить исполнителя</a>';
 						}
 					}
-					if (!$closed){
-						if (($it['edit'] == 1) || $god_mode){
-							echo '
-									<a href="task_edit.php?id='.$_GET['id'].'" class="b">Редактировать</a>';
-						}
-					}
+
 					if ($closed){
 						if (($it['reopen'] == 1) || $god_mode){
 							echo '
@@ -168,7 +177,7 @@
 								echo '
 									<div class="cellsBlock3">
 										<div class="cellLeft">
-											'.WriteSearchUser('spr_workers',$value['create_person'], 'user').'<br />
+											'.WriteSearchUser('spr_workers',$value['create_person'], 'user', true).'<br />
 											<span style="font-size:80%;">'.date('d.m.y H:i', $value['create_time']).'</span>
 										</div>
 										<div class="cellRight">'.nl2br($value['description']).'</div>

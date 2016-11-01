@@ -47,7 +47,7 @@
 				foreach ($shedWorkers as $value){
 					//var_dump ($value);
 					
-					$rez .= WriteSearchUser('spr_workers', $value['worker'], 'user').' <a href="#" class="b" onclick="DeleteWorkersSmenaFakt('.$value['worker'].', '.$_POST['filial'].', '.$_POST['day'].', '.$_POST['month'].', '.$_POST['year'].', '.$_POST['smena'].', '.$_POST['kab'].', '.$_POST['type'].')">Удалить</a><br>';
+					$rez .= WriteSearchUser('spr_workers', $value['worker'], 'user', false).' <a href="#" class="b" onclick="DeleteWorkersSmenaFakt('.$value['worker'].', '.$_POST['filial'].', '.$_POST['day'].', '.$_POST['month'].', '.$_POST['year'].', '.$_POST['smena'].', '.$_POST['kab'].', '.$_POST['type'].')">Удалить</a><br>';
 
 				}
 				echo $rez;

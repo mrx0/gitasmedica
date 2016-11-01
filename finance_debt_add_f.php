@@ -34,7 +34,7 @@
 					mysql_close();
 					
 					//логирование
-					AddLog ('0', $_SESSION['id'], '', 'Добавлен долг #'.$mysql_insert_id.'. Клиент ['.$_POST['client'].']. Сумма ['.$_POST['summ'].']. Дата окончания ['.$_POST['date_expires'].']. Тип ['.$_POST['type'].']. Комментарий ['.$_POST['comment'].'].');	
+					AddLog ('0', $_SESSION['id'], '', 'Добавлен долг #'.$mysql_insert_id.'. Пациент ['.$_POST['client'].']. Сумма ['.$_POST['summ'].']. Срок истечения ['.$_POST['date_expires'].']. Тип ['.$_POST['type'].']. Комментарий ['.$_POST['comment'].'].');	
 				
 					if ($_POST['type'] == 3){
 						$descr = 'Аванс';
@@ -45,7 +45,7 @@
 					
 					echo '
 						<div class="query_ok">
-							'.$descr.' <a href="finance.php?id='.$mysql_insert_id.'">#'.$mysql_insert_id.'</a> добавлен.
+							'.$descr.' <a href="finance_dp.php?id='.$mysql_insert_id.'">#'.$mysql_insert_id.'</a> добавлен.
 							<br><br>
 							<a href="client.php?id='.$_POST['client'].'" class="b">Карточка пациента</a>
 							<a href="client_finance.php?client='.$_POST['client'].'" class="b">Счёт <i class="fa fa-rub"></i></a>

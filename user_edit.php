@@ -113,7 +113,7 @@
 								</div>
 											<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
 											<!--<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">-->
-											<input type=\'button\' class="b" value=\'Редактировать\' onclick=Ajax_user_edit()>
+											<input type=\'button\' class="b" value="Применить" onclick=Ajax_user_edit()>
 										</form>';	
 
 						echo '

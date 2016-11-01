@@ -820,7 +820,7 @@
 						echo '		
 								</div>
 								<div class="cellName">
-									'.WriteSearchUser('spr_workers', $value['worker'], 'user').'
+									'.WriteSearchUser('spr_workers', $value['worker'], 'user', true).'
 								</div>
 								<div class="cellText">';
 						//if (($stom['see_all'] == 1) || (($stom['see_own'] == 1) && (($_SESSION['id'] == $value['worker']) || ($_SESSION['id'] == $value['worker']))) || $god_mode){

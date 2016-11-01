@@ -44,22 +44,26 @@
 								</li>';
 						for ($i=0; $i<count($clientDP); $i++){
 							$descr = '';
+							$url = 'finance_dp.php';
+							
 							if ($clientDP[$i]['type'] == 3){
 								$descr = '<span style="color: green;">Аванс</span>';
+								//$url = 'finance_prepayment.php';
 							}
 							if ($clientDP[$i]['type'] == 4){
 								$descr = '<span style="color: red">Долг</span>';
+								//$url = 'finance_debt.php';
 							}
 							
 							$bgColor = '';
 							if ($clientDP[$i]['date_expires'] - time() <= 60*60*24*3){
-								$bgColor = 'background-color: red;';
+								$bgColor = 'background-color: rgba(254, 63, 63, 0.69);';
 							}
 							
 							echo '
 								<li class="cellsBlock" style="font-weight:bold; width: auto;">	
 									<div class="cellPriority" style="text-align: center"></div>
-									<div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $clientDP[$i]['create_time']).'</div>
+									<a href="'.$url.'?id='.$clientDP[$i]['id'].'" class="cellTime ahref" style="text-align: center">'.date('d.m.y H:i', $clientDP[$i]['create_time']).'</a>
 									<div class="cellTime" style="text-align: center">'.$descr.'</div>
 									<div class="cellName" style="text-align: right;">'.$clientDP[$i]['summ'].' руб.</div>
 									<div class="cellName" style="text-align: right; '.$bgColor.'">до '.date('d.m.y', $clientDP[$i]['date_expires']).'</div>

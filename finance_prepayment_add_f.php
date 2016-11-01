@@ -42,7 +42,7 @@
 					}
 					
 					//логирование
-					AddLog ('0', $_SESSION['id'], '', 'Добавлен '.$descr.' #'.$mysql_insert_id.'. Клиент ['.$_POST['client'].']. Сумма ['.$_POST['summ'].']. Дата окончания ['.$_POST['date_expires'].']. Тип ['.$_POST['type'].']. Комментарий ['.$_POST['comment'].'].');	
+					AddLog ('0', $_SESSION['id'], '', 'Добавлен '.$descr.' #'.$mysql_insert_id.'. Пациент ['.$_POST['client'].']. Сумма ['.$_POST['summ'].']. Дата окончания ['.$_POST['date_expires'].']. Тип ['.$_POST['type'].']. Комментарий ['.$_POST['comment'].'].');	
 				
 
 					

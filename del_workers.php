@@ -32,11 +32,11 @@
 					//var_dump ($value);
 					
 					if ($value['smena'] == 1){
-						$rez .= 'Смена 1 в графике: '.WriteSearchUser('spr_workers', $value['worker'], 'user').' <a href="#" class="b" onclick=alert(\'Скоро\')>Удалить</a><br />';
+						$rez .= 'Смена 1 в графике: '.WriteSearchUser('spr_workers', $value['worker'], 'user', false).' <a href="#" class="b" onclick=alert(\'Скоро\')>Удалить</a><br />';
 					}elseif ($value['smena'] == 2){
-						$rez .= 'Смена 2 в графике: '.WriteSearchUser('spr_workers', $value['worker'], 'user').' <a href="#" class="b" onclick=alert(\'Скоро\')>Удалить</a><br />';
+						$rez .= 'Смена 2 в графике: '.WriteSearchUser('spr_workers', $value['worker'], 'user', false).' <a href="#" class="b" onclick=alert(\'Скоро\')>Удалить</a><br />';
 					}elseif ($value['smena'] == 9){
-						$rez .= 'Смены 1+2 в графике: '.WriteSearchUser('spr_workers', $value['worker'], 'user').' <a href="#" class="b" onclick=alert(\'Скоро\')>Удалить</a><br />';
+						$rez .= 'Смены 1+2 в графике: '.WriteSearchUser('spr_workers', $value['worker'], 'user', false).' <a href="#" class="b" onclick=alert(\'Скоро\')>Удалить</a><br />';
 					}
 				}
 				echo $rez;

@@ -33,7 +33,15 @@
 					echo '
 						<div id="status">
 							<header>
-								<h2>Посещение #'.$task[0]['id'].'</h2>
+								<h2>Посещение #'.$task[0]['id'].'';
+					if (!$closed){
+						if (($cosm['edit'] == 1) || $god_mode){
+							echo '
+									<a href="edit_task_cosmet.php?id='.$_GET['id'].'" class="info" style="font-size: 80%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+						}
+					}
+					echo '			
+								</h2>
 							</header>';
 
 					echo '
@@ -56,7 +64,7 @@
 
 									<div class="cellsBlock2">
 										<div class="cellLeft">Пациент</div>
-										<div class="cellRight"><a href="client.php?id='.$task[0]['client'].'" class="ahref">'.WriteSearchUser('spr_clients', $task[0]['client'], 'user').'</a></div>
+										<div class="cellRight">'.WriteSearchUser('spr_clients', $task[0]['client'], 'user', true).'</div>
 									</div>
 									
 									<div class="cellsBlock2">
@@ -113,17 +121,18 @@
 									
 									<div class="cellsBlock2">
 										<div class="cellLeft">Врач</div>
-										<div class="cellRight">'.WriteSearchUser('spr_workers', $task[0]['worker'], 'user').'</div>
+										<div class="cellRight">'.WriteSearchUser('spr_workers', $task[0]['worker'], 'user', true).'</div>
 									</div>
 									
 									<div class="cellsBlock2">
-										<span style="font-size:80%;">
-											Создана: '.date('d.m.y H:i', $task[0]['create_time']).'<br />
-											Кем: '.WriteSearchUser('spr_workers', $task[0]['create_person'], 'user').'<br />';
-					if ((($task[0]['last_edit_time'] != 0) || ($task[0]['last_edit_person'] !=0)) && (($task[0]['create_time'] != $task[0]['last_edit_time']) && ($task[0]['last_edit_person'] != $task[0]['create_person']))){
+										<span style="font-size: 80%; color: #999;">
+											Создан: '.date('d.m.y H:i', $task[0]['create_time']).' пользователем
+											'.WriteSearchUser('spr_workers', $task[0]['create_person'], 'user', true).'';
+					if ((($task[0]['last_edit_time'] != 0) || ($task[0]['last_edit_person'] !=0)) && (($task[0]['create_time'] != $task[0]['last_edit_time']))){
 						echo '
-											Последний раз редактировалось: '.date('d.m.y H:i', $task[0]['last_edit_time']).'<br />
-											Кем: '.WriteSearchUser('spr_workers', $task[0]['last_edit_person'], 'user');
+											<br>
+											Редактировался: '.date('d.m.y H:i', $task[0]['last_edit_time']).' пользователем
+											'.WriteSearchUser('spr_workers', $task[0]['last_edit_person'], 'user', true).'';
 					}
 					echo '
 										</span>
@@ -148,12 +157,7 @@
 										})\'
 									>';
 					}*/
-					if (!$closed){
-						if (($cosm['edit'] == 1) || $god_mode){
-							echo '
-									<a href="edit_task_cosmet.php?id='.$_GET['id'].'" class="b">Редактировать</a>';
-						}
-					}
+
 					/*if ($closed){
 						echo '
 									<input type=\'button\' class="b" value=\'Вернуть в работу\' onclick=\'

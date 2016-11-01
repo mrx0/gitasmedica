@@ -125,18 +125,34 @@
 	}
 	
 	//
-	function WriteSearchUser($datatable, $sw, $type){
+	function WriteSearchUser($datatable, $sw, $type, $link){
 		if ($type == 'user_full'){
 			$search = 'user';
 		}else{
 			$search = $type;
 		}
+		
+		if ($datatable == 'spr_clients'){
+			$uri = 'client.php';
+		}
+		if ($datatable == 'spr_workers'){
+			$uri = 'user.php';
+		}
+		
 		$user = SelDataFromDB($datatable, $sw, $search);
 		if ($user != 0){
 			if ($type == 'user_full'){
-				return $user[0]['full_name'];
+				if ($link){
+					return '<a href="'.$uri.'?id='.$sw.'" class="ahref">'.$user[0]['full_name'].'</a>';
+				}else{
+					return $user[0]['full_name'];
+				}
 			}else{
-				return $user[0]['name'];
+				if ($link){
+					return '<a href="'.$uri.'?id='.$sw.'" class="ahref">'.$user[0]['name'].'</a>';
+				}else{
+					return $user[0]['name'];
+				}
 			}
 		}else{
 			return 'не указан';

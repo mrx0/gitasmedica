@@ -168,7 +168,7 @@
 									/*echo '
 										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
 											<div class="cellRight" id="month_date_worker" style="padding:0;">
-												<div onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 1, '.$wt.', '.$Work_Today_arr[$k][1]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][1]['worker'], 'user').'\')" style="float:left; margin: 5px;">'.$sheduler_times[$wt].'</div>
+												<div onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 1, '.$wt.', '.$Work_Today_arr[$k][1]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][1]['worker'], 'user', true).'\')" style="float:left; margin: 5px;">'.$sheduler_times[$wt].'</div>
 												<div style="float:right; width: 60%; margin: 0; height:25px;">
 													<div style="'.$NextTimeBgCol.' height:100%; text-align: center;">';
 									//echo $NextTime_val;

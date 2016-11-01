@@ -211,7 +211,7 @@
 					}
 					if ((isset($filter_rez['pervich']) && $journal_ex_bool) || (!isset($filter_rez['pervich']))){
 					//if (($journal[$i]['create_time'] >= $datestart)  && ($journal[$i]['create_time'] <= $datefinish)){
-						//Надо найти клиента
+						//Надо найти Пациента
 						$clients = SelDataFromDB ('spr_clients', $journal[$i]['client'], 'client_id');
 						if ($clients != 0){
 							$client = $clients[0]["name"];
@@ -359,7 +359,7 @@
 									</div>';
 									
 						if (($stom['see_all'] == 1) || $god_mode){
-							echo '<a href="user.php?id='.$journal[$i]['worker'].'" class="cellName ahref" '.$id4filter4upr.'>'.WriteSearchUser('spr_workers', $journal[$i]['worker'], 'user').'</a>';
+							echo '<div class="cellName" '.$id4filter4upr.'>'.WriteSearchUser('spr_workers', $journal[$i]['worker'], 'user', true).'</div>';
 						}		
 						
 						/*echo '

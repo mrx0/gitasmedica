@@ -34,7 +34,7 @@
 					echo '
 						<div id="status">
 							<header>
-								<h2>КД '.WriteSearchUser('spr_clients', $_GET['client'], 'user').'</h2>
+								<h2>КД '.WriteSearchUser('spr_clients', $_GET['client'], 'user', true).'</h2>
 							</header>';
 
 					echo '
