@@ -40,7 +40,7 @@
 						<a href="finance_dp_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 80%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
 				}
 				echo '
-							</h2>	
+							</h2>
 						</header>';
 				if (($finances['see_all'] == 1) || $god_mode){
 					
@@ -110,6 +110,9 @@
 					}
 					
 					echo '
+						<br>
+						<br>
+						<a href="finance_dp_repayment_add.php?id='.$_GET['id'].'" class="b">Погашение</a>
 					</div>';
 				}else{
 					echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
