@@ -962,4 +962,68 @@
 			}
 		});
 	}; 
+	
+	//Редактировать погашение
+	function Ajax_finance_dp_repayment_edit(id) {
+		// убираем класс ошибок с инпутов
+		$("input").each(function(){
+			$(this).removeClass("error_input");
+		});
+		// прячем текст ошибок
+		$(".error").hide();
+		 
+		$.ajax({
+			global: false, 
+			type: "POST", 
+			// путь до скрипта-обработчика
+			url: "ajax_test.php",
+			// какие данные будут переданы
+			data: {
+				summ:document.getElementById("summ").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// тип передачи данных
+			dataType: "json",
+			// действие, при ответе с сервера
+			success: function(data){
+				// в случае, когда пришло success. Отработало без ошибок
+				if(data.result == "success"){   
+					//alert("форма корректно заполнена");
+					$.ajax({
+						url:"finance_dp_repayment_edit_f.php",
+						statbox:"status",
+						global: false, 
+						type: "POST", 
+						data:
+						{
+							id: id,
+							comment: document.getElementById("comment").value,
+							summ: document.getElementById("summ").value,
+
+						},
+						cache: false,
+						beforeSend: function() {
+							$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+						},
+						success:function(data){document.getElementById("status").innerHTML=data;}
+					})
+					// в случае ошибок в форме
+				}else{
+					// перебираем массив с ошибками
+					for(var errorField in data.text_error){
+					// выводим текст ошибок 
+					$("#"+errorField+"_error").html(data.text_error[errorField]);
+					// показываем текст ошибок
+					$("#"+errorField+"_error").show();
+					// обводим инпуты красным цветом
+					 // $("#"+errorField).addClass("error_input");                      
+					}
+					document.getElementById("errror").innerHTML="<span style='color: red'>Ошибка, что-то заполнено не так.</span>"
+				}
+			}
+		});
+	}; 
 		

@@ -109,6 +109,38 @@
 						</span>';
 					}
 					
+					
+					$repayments = Repayments($clientDP[0]['id']);
+						if ($repayments != 0){
+							$ostatok = 0;
+							echo '
+								<br>
+								<br>
+								<li class="cellsBlock" style="font-weight:bold; width: auto;">
+									Погашения
+								</li>';
+							foreach($repayments as $value){
+								$ostatok += $value['summ'];
+								echo '
+								<li class="cellsBlock" style="font-weight:bold; width: auto; background-color: rgba(255, 255, 0, 0.3);">	
+									<a href="finance_dp_repayment.php?id='.$value['id'].'" class="cellTime ahref" style="text-align: center; border: 0;">'.date('d.m.y H:i', $value['create_time']).'</a>
+									<div class="cellName" style="text-align: right; border: 0;">'.$value['summ'].' руб.</div>
+									<div class="cellText" style="text-align: right; border: 0; max-width: 250px;">'.$value['comment'].'</div>
+								</li>';
+							}
+							echo '
+								<li class="cellsBlock" style="font-weight:bold; width: auto; margin-bottom: 10px;  margin-top: 2px; background-color: rgba(6, 255, 0, 0.3);">
+									<div class="cellText" style="text-align: left; max-width: 250px;">
+										Остаток: '.($clientDP[0]['summ'] - $ostatok).' руб. ';
+							if ($clientDP[0]['summ'] - $ostatok == 0){
+								echo '- <i>ЗАКРЫТО</i>';
+							}
+							echo '
+									</div>
+								</li>';
+						}
+						
+						
 					echo '
 						<br>
 						<br>

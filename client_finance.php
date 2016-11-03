@@ -88,7 +88,11 @@
 								echo '
 									<li class="cellsBlock" style="font-weight:bold; width: auto; margin-bottom: 10px;  margin-top: 2px; background-color: rgba(6, 255, 0, 0.3);">
 										<div class="cellText" style="text-align: left; max-width: 250px;">
-											Остаток: '.($clientDP[$i]['summ'] - $ostatok).'
+											Остаток: '.($clientDP[$i]['summ'] - $ostatok).' руб. ';
+								if ($clientDP[$i]['summ'] - $ostatok == 0){
+									echo '- <i>ЗАКРЫТО</i>';
+								}
+								echo '
 										</div>
 									</li>';
 							}

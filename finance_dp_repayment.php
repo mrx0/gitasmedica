@@ -18,15 +18,6 @@
 				//var_dump($user);
 				if ($clientDP !=0){
 					
-					if ($clientDP[0]['type'] == 3){
-						$descr = '<span style="color: green;">Аванс</span>';
-						//$url = 'finance_prepayment.php';
-					}
-					if ($clientDP[0]['type'] == 4){
-						$descr = '<span style="color: red">Долг</span>';
-						//$url = 'finance_debt.php';
-					}
-					
 					$year = date("Y");
 					$month = date("m");
 					
@@ -49,48 +40,61 @@
 					echo '
 						<div id="status">
 							<header>
-								<h2>Погашение '.$descr.' <a href="finance_dp.php?id='.$_GET['id'].'" class="ahref">#'.$_GET['id'].'</a></h2>
-								Заполните сумму
+								<h2>Погашение <a href="finance_dp.php?id='.$_GET['id'].'" class="ahref">#'.$_GET['id'].'</a>';
+					if (($finances['edit'] == 1) || $god_mode){
+						echo '
+							<a href="finance_dp_repayment_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 80%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+					}
+					echo '
+								</h2>
+								К документу <a href="finance_dp.php?id='.$clientDP[0]['parent'].'">#'.$clientDP[0]['parent'].'</a>
 							</header>					
 					
 							<div id="data">';
 
 					echo '
-						<form action="add_finance_f.php">
-							
-							<div class="cellsBlock2">
-								<div class="cellLeft">ФИО</div>
-								<div class="cellRight">
-									'.WriteSearchUser('spr_clients', $clientDP[0]['client'], 'user_full', true).'
+								<div class="cellsBlock2">
+									<div class="cellLeft">ФИО</div>
+									<div class="cellRight">
+										'.WriteSearchUser('spr_clients', $clientDP[0]['client'], 'user_full', true).'
+									</div>
 								</div>
-							</div>
-							
-							<div class="cellsBlock2">
-								<div class="cellLeft">Сумма погашения <i class="fa fa-rub"></i></div>
-								<div class="cellRight">
-									<input type="text" size="50" name="summ" id="summ" placeholder="0" value="" autocomplete="off">
-									<input type="hidden" name="type" id="type" value="4" autocomplete="off">
-									<label id="summ_error" class="error"></label>
+								
+								<div class="cellsBlock2">
+									<div class="cellLeft">Сумма погашения <i class="fa fa-rub"></i></div>
+									<div class="cellRight">
+										'.$clientDP[0]['summ'].'
+									</div>
 								</div>
-							</div>
 
-							<div class="cellsBlock2">
-								<div class="cellLeft">Срок истечения</div>
-								<div class="cellRight">
-									'.date('d.m.Y', $clientDP[0]['date_expires']).'
+								<div class="cellsBlock2">
+									<div class="cellLeft">Внесено</div>
+									<div class="cellRight">
+										'.date('d.m.Y H:i', $clientDP[0]['create_time']).'
+									</div>
 								</div>
-							</div>
 
-							<div class="cellsBlock2">
-								<div class="cellLeft">Комментарий</div>
-								<div class="cellRight">'.$clientDP[0]['comment'].'</div>
-							</div>
-							';
-					
-			echo '
-							<div id="errror" style="margin: 10px;"></div>
-							<input type="button" class="b" value="Применить" onclick="Ajax_finance_dp_repayment('.$_GET['id'].')">
-						</form>';	
+								<div class="cellsBlock2">
+									<div class="cellLeft">Комментарий</div>
+									<div class="cellRight">'.$clientDP[0]['comment'].'</div>
+								</div>
+								<br>';
+							
+					echo '
+						<span style="font-size: 80%; color: #999;">
+							Создан '.date('d.m.y H:i', $clientDP[0]['create_time']).' пользователем 
+							'.WriteSearchUser('spr_workers', $clientDP[0]['create_person'], 'user', true).'
+						</span>';
+						
+					if ($clientDP[0]['last_edit_time'] != 0){
+						echo '
+						<br>
+						<span style="font-size: 80%; color: #999;">
+							Редактировался '.date('d.m.y H:i', $clientDP[0]['last_edit_time']).' пользователем 
+							'.WriteSearchUser('spr_workers', $clientDP[0]['last_edit_person'], 'user', true).'
+						</span>';
+					}
+							
 				
 			echo '
 					</div>

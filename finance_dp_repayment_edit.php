@@ -16,15 +16,6 @@
 			//var_dump($_SESSION);
 			
 			if ($clientDP !=0){
-				
-				if ($clientDP[0]['type'] == 3){
-					$descr = '<span style="color: green;">Аванс</span>';
-					//$url = 'finance_prepayment.php';
-				}
-				if ($clientDP[0]['type'] == 4){
-					$descr = '<span style="color: red">Долг</span>';
-					//$url = 'finance_debt.php';
-				}
 
 							
 				$bgColor = '';
@@ -55,7 +46,7 @@
 				echo '
 					<div id="status">
 						<header>
-							<h2>Редактировать '.$descr.' <a href="finance_dp.php?id='.$_GET['id'].'" class="ahref">#'.$_GET['id'].'</a></h2>
+							<h2>Редактировать погашение <a href="finance_dp_repayment.php?id='.$_GET['id'].'" class="ahref">#'.$_GET['id'].'</a></h2>
 							<!--<a href="finance_edit_date.php?id='.$_GET['id'].'" class="" style="border-bottom: 1px dashed #000080; text-decoration: none; font-size: 70%; color: #999; background-color: rgba(252, 252, 0, 0.3);">Изменить дату внесения</a>-->
 						</header>';
 
@@ -80,10 +71,9 @@
 							</div>
 							
 							<div class="cellsBlock2">
-								<div class="cellLeft">Срок истечения</div>
+								<div class="cellLeft">Внесено</div>
 								<div class="cellRight">
-									<input type="text" id="dataend" name="dataend" class="dateс" value="'.date('d.m.Y', $clientDP[0]['date_expires']).'" onfocus="this.select();_Calendar.lcs(this)"
-										onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
+									'.date('d.m.Y H:i', $clientDP[0]['create_time']).'
 								</div>
 							</div>';
 							
@@ -130,7 +120,7 @@
 								
 				echo '	
 						<div id="errror"></div>				
-						<input type="button" class="b" value="Применить" onclick="Ajax_finance_debt_edit('.$_GET['id'].', '.$_SESSION['id'].')">
+						<input type="button" class="b" value="Применить" onclick="Ajax_finance_dp_repayment_edit('.$_GET['id'].')">
 							</form>';	
 						echo '
 						
