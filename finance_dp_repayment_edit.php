@@ -17,87 +17,88 @@
 			
 			if ($clientDP !=0){
 
+			
+				if (($clientDP[0]['date_expires'] > time() + 60*60*24) || ($finances['reopen'] == 1)){
 							
-				$bgColor = '';
-				/*if ($clientDP[0]['date_expires'] - time() <= 60*60*24*3){
-					$bgColor = 'background-color: rgba(254, 63, 63, 0.69);';
-				}*/
-				
-				
-				$year = date("Y");
-				$month = date("m");
-				
-				//Массив с месяцами
-				$monthsName = array(
-				'01' => 'Январь',
-				'02' => 'Февраль',
-				'03' => 'Март',
-				'04' => 'Апрель',
-				'05' => 'Май',
-				'06' => 'Июнь',
-				'07'=> 'Июль',
-				'08' => 'Август',
-				'09' => 'Сентябрь',
-				'10' => 'Октябрь',
-				'11' => 'Ноябрь',
-				'12' => 'Декабрь'
-				);
-				
-				echo '
-					<div id="status">
-						<header>
-							<h2>Редактировать погашение <a href="finance_dp_repayment.php?id='.$_GET['id'].'" class="ahref">#'.$_GET['id'].'</a></h2>
-							<!--<a href="finance_edit_date.php?id='.$_GET['id'].'" class="" style="border-bottom: 1px dashed #000080; text-decoration: none; font-size: 70%; color: #999; background-color: rgba(252, 252, 0, 0.3);">Изменить дату внесения</a>-->
-						</header>';
+					$bgColor = '';
+					/*if ($clientDP[0]['date_expires'] - time() <= 60*60*24*3){
+						$bgColor = 'background-color: rgba(254, 63, 63, 0.69);';
+					}*/
+					
+					
+					$year = date("Y");
+					$month = date("m");
+					
+					//Массив с месяцами
+					$monthsName = array(
+					'01' => 'Январь',
+					'02' => 'Февраль',
+					'03' => 'Март',
+					'04' => 'Апрель',
+					'05' => 'Май',
+					'06' => 'Июнь',
+					'07'=> 'Июль',
+					'08' => 'Август',
+					'09' => 'Сентябрь',
+					'10' => 'Октябрь',
+					'11' => 'Ноябрь',
+					'12' => 'Декабрь'
+					);
+					
+					echo '
+						<div id="status">
+							<header>
+								<h2>Редактировать погашение <a href="finance_dp_repayment.php?id='.$_GET['id'].'" class="ahref">#'.$_GET['id'].'</a></h2>
+								<!--<a href="finance_edit_date.php?id='.$_GET['id'].'" class="" style="border-bottom: 1px dashed #000080; text-decoration: none; font-size: 70%; color: #999; background-color: rgba(252, 252, 0, 0.3);">Изменить дату внесения</a>-->
+							</header>';
 
 					echo '
 						<div id="data">';
 					echo '
-						<form action="finance_edit_f.php">
-							
-							<div class="cellsBlock2">
-								<div class="cellLeft">ФИО</div>
-								<div class="cellRight">
-									'.WriteSearchUser('spr_clients', $clientDP[0]['client'], 'user_full', true).'
+							<form action="finance_edit_f.php">
+								
+								<div class="cellsBlock2">
+									<div class="cellLeft">ФИО</div>
+									<div class="cellRight">
+										'.WriteSearchUser('spr_clients', $clientDP[0]['client'], 'user_full', true).'
+									</div>
 								</div>
-							</div>
-							
-							<div class="cellsBlock2">
-								<div class="cellLeft">Сумма <i class="fa fa-rub"></i></div>
-								<div class="cellRight">
-									<input type="text" size="50" name="summ" id="summ" placeholder="0" value="'.$clientDP[0]['summ'].'" autocomplete="off">
-									<label id="summ_error" class="error"></label>
+								
+								<div class="cellsBlock2">
+									<div class="cellLeft">Сумма <i class="fa fa-rub"></i></div>
+									<div class="cellRight">
+										<input type="text" size="50" name="summ" id="summ" placeholder="0" value="'.$clientDP[0]['summ'].'" autocomplete="off">
+										<label id="summ_error" class="error"></label>
+									</div>
 								</div>
-							</div>
-							
-							<div class="cellsBlock2">
-								<div class="cellLeft">Внесено</div>
-								<div class="cellRight">
-									'.date('d.m.Y H:i', $clientDP[0]['create_time']).'
-								</div>
-							</div>';
+								
+								<div class="cellsBlock2">
+									<div class="cellLeft">Внесено</div>
+									<div class="cellRight">
+										'.date('d.m.Y H:i', $clientDP[0]['create_time']).'
+									</div>
+								</div>';
 							
 									
 					echo '					
-							<div class="cellsBlock2">
-								<div class="cellLeft">Комментарий</div>
-								<div class="cellRight"><textarea name="comment" id="comment" cols="35" rows="2">'.$clientDP[0]['comment'].'</textarea></div>
-							</div>
-							
-							<div class="cellsBlock2">
-								<div class="cellLeft">Удалить</div>
-								<div class="cellRight">
-									<div style="float: right;" class="delFinanceItem"><img src="img/delete.png" title="Удалить"></div>
+								<div class="cellsBlock2">
+									<div class="cellLeft">Комментарий</div>
+									<div class="cellRight"><textarea name="comment" id="comment" cols="35" rows="2">'.$clientDP[0]['comment'].'</textarea></div>
 								</div>
-							</div>
-							
-							';
-			echo '
-						</form>
-						<br>';	
+								
+								<div class="cellsBlock2">
+									<div class="cellLeft">Удалить</div>
+									<div class="cellRight">
+										<div style="float: right;" class="delFinanceItem"><img src="img/delete.png" title="Удалить"></div>
+									</div>
+								</div>';
+								
+					echo '
+							</form>
+							<br>';	
 				
-			echo '
-					</div>';
+					echo '
+						</div>';
 							
 					echo '
 						<span style="font-size: 80%; color: #999;">
@@ -116,12 +117,11 @@
 					
 
 					echo '
-					<br><br>';
+						<br><br>';
 								
-				echo '	
+					echo '	
 						<div id="errror"></div>				
-						<input type="button" class="b" value="Применить" onclick="Ajax_finance_dp_repayment_edit('.$_GET['id'].')">
-							</form>';	
+						<input type="button" class="b" value="Применить" onclick="Ajax_finance_dp_repayment_edit('.$_GET['id'].')">';	
 						echo '
 						
 						</div>
@@ -153,7 +153,9 @@
 									})
 								});
 							</script>';
-						
+					}else{
+						echo '<h1>Прошло более 24 часов с момента создания.</h1><a href="index.php">Вернуться на главную</a>';
+					}
 						
 				}else{
 					echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
