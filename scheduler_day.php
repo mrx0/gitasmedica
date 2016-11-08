@@ -190,7 +190,19 @@
 										<option value="stom"'.$selected_stom.'>Стоматологи</option>
 										<option value="cosm"'.$selected_cosm.'>Косметологи</option>
 									</select>
-								</form>';	
+								</form>
+								
+								
+								<div style="margin-bottom: 10px;">
+									<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
+										<span style="color: rgb(125, 125, 125);">
+											Дата:
+												<input type="text" id="datastart" name="datastart" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date("01.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
+												<i class="fa fa-check-square" style="font-size: 130%; color: green; cursor: pointer" onclick="iWantThisDate()"></i>
+										</span>
+									</li>
+								</div>';	
 					echo '			
 							</header>';
 							
