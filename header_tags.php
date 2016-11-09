@@ -78,7 +78,7 @@
 			<script>
 			jQuery("document").ready(function($){
 				 
-				var nav = $(\'.sticky\');
+				var nav = $(".sticky");
 				 
 				$(window).scroll(function () {
 					if ($(this).scrollTop() > 136) {

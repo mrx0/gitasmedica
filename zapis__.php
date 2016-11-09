@@ -19,9 +19,6 @@
 			$kabsInFilialExist = FALSE;
 			$kabsInFilial = array();
 			$dop = '';
-			$dopWho = '';
-			$dopDate = '';
-			$dopFilial = '';
 			$di = 0;
 			
 			//Массив с месяцами
@@ -51,7 +48,7 @@
 				7 => 'ВС',
 			);*/
 		
-			/*$sheduler_times = array (
+			$zapis_times = array (
 				1 => '9:00 - 9:30',
 				2 => '9:30 - 10:00',
 				3 => '10:00 - 10:30',
@@ -76,21 +73,12 @@
 				22 => '19:30 - 20:00',
 				23 => '20:00 - 20:30',
 				24 => '20:30 - 21:00',
-			);*/
-			
-			//!!!!
-			/*if(isset($_GET['filial'])){
-				if ($_GET['filial'] == 0) $_GET['filial'] = 15;
-				$selected_fil = $_GET['filial'];
-			}*/
-			
-			if (!isset($_GET['filial'])){
-				//Филиал	
-				if (isset($_SESSION['filial'])){
-					$_GET['filial'] = $_SESSION['filial'];
-				}else{
-					$_GET['filial'] = 15;
-				}
+			);
+
+				
+			foreach ($_GET as $key => $value){
+				if (($key != 'm') && ($key != 'y'))
+					$dop .= '&'.$key.'='.$value;
 			}
 			
 			//тип график (космет/стомат/...)
@@ -119,7 +107,6 @@
 					$datatable = 'scheduler_stom';
 					$kabsForDoctor = 'stom';
 					$type = 5;
-					$_GET['who'] = 'stom';
 				}
 			}else{
 				$who = '&who=stom';
@@ -129,7 +116,6 @@
 				$datatable = 'scheduler_stom';
 				$kabsForDoctor = 'stom';
 				$type = 5;
-				$_GET['who'] = 'stom';
 			}
 			
 			if (isset($_GET['m']) && isset($_GET['y'])){
@@ -162,21 +148,22 @@
 			}else{
 				$end = $day_count + 7 - $last;
 			}
+			$today = date("Y-m-d");
 			
-			foreach ($_GET as $key => $value){
-				if (($key == 'd') || ($key == 'm') || ($key == 'y'))
-					$dopDate  .= '&'.$key.'='.$value;
-				if ($key == 'filial'){
-					$dopFilial .= '&'.$key.'='.$value;
-					$dop .= '&'.$key.'='.$value;
-				}
-				if ($key == 'who'){
-					$dopWho .= '&'.$key.'='.$value;
-					$dop .= '&'.$key.'='.$value;
-				}
+			//!!!!
+			if(isset($_GET['filial'])){
+				if ($_GET['filial'] == 0) $_GET['filial'] = 15;
+				$selected_fil = $_GET['filial'];
 			}
 			
-			$today = date("Y-m-d");
+			if (!isset($_GET['filial'])){
+				//Филиал	
+				if (isset($_SESSION['filial'])){
+					$_GET['filial'] = $_SESSION['filial'];
+				}else{
+					$_GET['filial'] = 15;
+				}
+			}
 				
 			$filial = SelDataFromDB('spr_office', $_GET['filial'], 'offices');
 			//var_dump($filial['name']);
@@ -240,18 +227,18 @@
 					<a href="scheduler_template.php" class="b">График план</a>
 					<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>
 					<!--<a href="own_scheduler.php" class="b">График сотрудника</a>-->';
-			echo '
-					<ul style="margin-left: 6px; margin-bottom: 10px;">
-						<li style="width: auto; color:#777; font-size: 70%;">
-							Примечание к графику:
-							<ul>
-								<li>1 смена 9:00 - 15:00</li>
-								<li>2 смена 15:00 - 21:00</li>
-								<li>3 смена 21:00 - 3:00</li>
-								<li>4 смена 3:00 - 9:00</li>
-							</ul>
-						</li>
-					</ul>';
+					echo '
+						<ul style="margin-left: 6px; margin-bottom: 10px;">
+							<li style="width: auto; color:#777; font-size: 70%;">
+								Примечание к графику:
+								<ul>
+									<li>1 смена 9:00 - 15:00</li>
+									<li>2 смена 15:00 - 21:00</li>
+									<li>3 смена 21:00 - 3:00</li>
+									<li>4 смена 3:00 - 9:00</li>
+								</ul>
+							</li>
+						</ul>';
 			echo '
 					<div id="data">
 						<ul style="margin-left: 6px; margin-bottom: 20px;">';
@@ -266,8 +253,8 @@
 			echo '			
 							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-								<a href="?'.$dopFilial.$dopDate.'&who=stom" class="b">Стоматологи</a>
-								<a href="?'.$dopFilial.$dopDate.'&who=cosm" class="b">Косметологи</a>
+								<a href="?who=stom" class="b">Стоматологи</a>
+								<a href="?who=cosm" class="b">Косметологи</a>
 							</li>
 							<li style="width: auto; margin-bottom: 20px;">
 								<div style="display: inline-block; margin-right: 20px;">
@@ -308,7 +295,39 @@
 			if (($markSheduler == 1) && ($schedulerFakt != 0)){
 
 					if ($kabsInFilialExist){
+
 						echo '
+							<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
+						
+						echo '
+								<li class="cellsBlock" style="font-weight:bold; background-color:#FEFEFE; height: 75px;">
+									<div class="cellName" style="width: 50px; max-width: 50px; min-width: 50px; text-align: center; background-color:#FEFEFE;">Время</div>';
+						for ($j=1; $j<=8; $j++){
+							echo '<div class="cellCosmAct" style="width: auto; text-align: center; background-color:#FEFEFE;">Врач</div>';
+						}
+						
+						echo '
+								</li>';
+							
+						for ($t=1; $t<=24; $t++){
+							echo '
+								<li class="cellsBlock" style="font-weight:bold; background-color:#FEFEFE; height: 75px;">
+									<div class="cellName" style="width: 50px; max-width: 50px; min-width: 50px; text-align: center; background-color:#FEFEFE;">'.$zapis_times[$t].'</div>';
+							for ($j=1; $j<=8; $j++){
+								echo '
+									<div class="cellCosmAct" style="width: auto; text-align: center; background-color:#FEFEFE; position: relative;">
+										'.$j.'
+									</div>';
+							}
+							
+							echo '
+								</li>';
+						}
+						echo '
+							</ul>';
+						
+						
+						/*echo '
 							<table style="border:1px solid #BFBCB5;">
 								<tr style="text-align:center; vertical-align:top; font-weight:bold; height:20px;">
 									<td style="border:1px solid #BFBCB5;">
@@ -338,7 +357,7 @@
 						$now_ahtung = TRUE;
 						$ahtung = TRUE;
 						
-						for($d = $start; $d <= $end; $d++){
+						/*for($d = $start; $d <= $end; $d++){
 							if (!($di++ % 7)){
 								echo '
 									<tr>';
@@ -368,7 +387,7 @@
 											$kabs .= '
 														<div style="bottom: 0; font-size: 120%; color: green; cursor: pointer;"><i class="fa fa-plus-square" title="Добавить сотрудника"></i></div>';
 										}*/
-										$kabs .= '
+						/*				$kabs .= '
 													</div>';
 											
 										//переменная для вывода
@@ -436,7 +455,7 @@
 														<div style="vertical-align: middle; width: 20px; box-shadow: 0px 5px 10px rgba(171, 254, 213, 0.59); display: table-cell !important;">
 															<div>'.$smenaN.'</div>
 														</div>
-														<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red; background-color: rgba(255, 0, 0, 0.33);">
+														<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red;">
 															<div style="margin-bottom: 7px;">никого нет</div>
 															<div class="manageScheduler">';
 															
@@ -457,7 +476,7 @@
 															<div style="vertical-align: middle; width: 20px; box-shadow: 0px 5px 10px rgba(171, 254, 213, 0.59); display: table-cell !important;">
 																<div>'.$smenaN.'</div>
 															</div>
-															<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red; background-color: rgba(255, 0, 0, 0.33);">
+															<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red;">
 																<div style="margin-bottom: 7px;">никого нет</div>
 																<div class="manageScheduler">';
 															
@@ -484,7 +503,7 @@
 														<div style="vertical-align: middle; width: 20px; box-shadow: 0px 5px 10px rgba(171, 254, 213, 0.59); display: table-cell !important;">
 															<div>'.$smenaN.'</div>
 														</div>
-														<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red; background-color: rgba(255, 0, 0, 0.33);">
+														<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red;">
 															<div style="margin-bottom: 7px;">никого нет</div>
 															<div class="manageScheduler">';
 															
@@ -505,7 +524,7 @@
 															<div style="vertical-align: middle; width: 20px; box-shadow: 0px 5px 10px rgba(171, 254, 213, 0.59); display: table-cell !important;">
 																<div>'.$smenaN.'</div>
 															</div>
-															<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red; background-color: rgba(255, 0, 0, 0.33);">
+															<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red;">
 																<div style="margin-bottom: 7px;">никого нет</div>
 																<div class="manageScheduler">';
 															
@@ -547,7 +566,7 @@
 								echo '
 											<div style="vertical-align:top;'.$holliday_color.'" id="blink2">
 												<!--<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b"  onclick="document.location.href = \'scheduler_day.php?y='.$year.'&m='.$month.'&d='.$d.'&filial='.$_GET['filial'].$who.'\'">запись</span>-->
-												<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b"><a href="zapis.php?y='.$year.'&m='.$month.'&d='.$d.'&filial='.$_GET['filial'].$who.'" class="ahref">запись</a></span>
+												<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b"  onclick="alert(\'Скоро\')">запись</span>
 													<div style="text-align: right;">
 														<strong>'.$d.'</strong>
 													</div>
@@ -569,13 +588,13 @@
 														echo '
 																<td style="border:1px solid #BFBCB5; vertical-align:top;">&nbsp;</td>';*/
 									//			}
-							echo '
+						/*	echo '
 										</td>';
 							if (!($di % 7)){
 								echo '
 									</tr>';
 							}
-						} 
+						}*/ 
 						echo '
 							</table>';
 					}else{

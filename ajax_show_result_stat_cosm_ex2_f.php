@@ -26,6 +26,11 @@
 			$queryEffectExist = false;
 			$queryEffect = '';
 			
+			//количество посещений, выбранных по условию
+			$journal_count_condition = 0;
+			//количество клиентов, приходивших после условия на следственное
+			$journal_count_clients_effect = 0;
+			
 			if ($_POST['worker'] != ''){
 				include_once 'DBWork.php';
 				$workerSearch = SelDataFromDB ('spr_workers', $_POST['worker'], 'worker_full_name');
@@ -178,19 +183,23 @@
 					}*/
 					
 					if ($queryConditionExist){
+						
 						//var_dump($queryCondition);
 
-						/*if ($queryDopExist){
+						if ($queryDopExist){
 							$query .= ' AND';
+							$query4Effect .= ' AND';
+							$query4Effect2 .= ' AND';
 						}
+						/*
 						$queryCondition = "SELECT * FROM `journal_cosmet1` WHERE ".$queryCondition;
 						$queryDopExist = true;*/
 						
 						//Дата/время
 						if ($_POST['all_time'] != 1){
-							if ($queryDopExist){
+							/*if ($queryDopExist){
 								$queryCondition .= ' AND';
-							}
+							}*/
 							$queryCondition .= "`create_time` BETWEEN '".strtotime ($_POST['datastart'])."' AND '".strtotime ($_POST['dataend']." 23:59:59")."'";
 							$queryDopExist = true;
 						}
@@ -198,6 +207,7 @@
 						$query .= $queryCondition;
 						$query4Effect .= $queryCondition;
 						$query4Effect2 .= $queryCondition;
+						//var_dump($query);
 					}
 					
 					if ($queryDopClientExist){
@@ -221,13 +231,13 @@
 					
 					require 'config.php';
 					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-					mysql_select_db($dbName) or die(mysql_error()); 
+					mysql_select_db($dbName) or die('1: '.mysql_error()); 
 					mysql_query("SET NAMES 'utf8'");
 					
 					$arr = array();
 					$rez = array();
 					
-					$res = mysql_query($query) or die($query);
+					$res = mysql_query($query) or die('2: '.$query);
 					$number = mysql_num_rows($res);
 					if ($number != 0){
 						while ($arr = mysql_fetch_assoc($res)){
@@ -255,7 +265,7 @@
 					$arr = array();
 					$rez = array();
 					
-					$res = mysql_query($query) or die($query);
+					$res = mysql_query($query) or die('3: '.$query);
 					$number = mysql_num_rows($res);
 					if ($number != 0){
 						while ($arr = mysql_fetch_assoc($res)){
@@ -304,6 +314,9 @@
 							</li>';
 
 						for ($i = 0; $i < count($journal); $i++) {
+							
+							$journal_count_condition++;
+							
 							$clients = SelDataFromDB ('spr_clients', $journal[$i]['client'], 'client_id');
 							if ($clients != 0){
 								$client = $clients[0]["name"];
@@ -353,9 +366,12 @@
 
 								
 							//var_dump ($journal[$i]['client']);
+							$journal_count_clients_effect_status = false;							
 							
 							if (isset($journalEffect[$journal[$i]['client']])){
+
 								$journalTemp = $journalEffect[$journal[$i]['client']];
+								
 								for ($j = 0; $j < count($journalTemp); $j++) {
 									/*$clients = SelDataFromDB ('spr_clients', $journal[$i]['client'], 'client_id');
 									if ($clients != 0){
@@ -363,54 +379,68 @@
 									}else{
 										$client = 'не указан';
 									}*/
-									echo '
-										<li class="cellsBlock cellsBlockHover">
-												<div class="cellCosmAct" style="text-align: center; color: red; font-size: 120%;"><i class="fa fa-chevron-circle-right"></i></i></div>
-												<a href="task_cosmet.php?id='.$journalTemp[$j]['id'].'" class="cellName ahref" title="'.$journalTemp[$j]['id'].'" style="width: 89px; min-width: 89px; font-size: 85%;', isFired($journalTemp[$j]['worker']) ? 'background-color: rgba(161,161,161,1);"' : '' ,'">'.date('d.m.y H:i', $journalTemp[$j]['create_time']).'</a>
-												<a href="client.php?id='.$journal[$i]['client'].'" class="cellName ahref" ', isFired($journalTemp[$j]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$client.'</a>
-												<div class="cellName" id="4filter" ', isFired($journalTemp[$j]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.WriteSearchUser('spr_workers', $journalTemp[$j]['worker'], 'user', true).'</div>';
-						
-									$decription = array();
-									$decription_temp_arr = array();
-									$decription_temp = '';
 									
-									/*!!!Лайфхак для посещений из-за переделки структуры бд*/
-									foreach($journalTemp[$j] as $key => $value){
-										if (($key != 'id') && ($key != 'office') && ($key != 'client') && ($key != 'create_time') && ($key != 'create_person') && ($key != 'last_edit_time') && ($key != 'last_edit_person') && ($key != 'worker') && ($key != 'comment')){
-											$decription_temp_arr[mb_substr($key, 1)] = $value;
-										}
-									}
-									
-									//var_dump ($decription_temp_arr);
-									
-									$decription = $decription_temp_arr;
-								
-									foreach ($actions_cosmet as $key => $value) { 
-										$cell_color = '#FFFFFF';
-										$action = '';
-										if ($value['active'] != 0){
-											if (isset($decription[$value['id']])){
-												if ($decription[$value['id']] != 0){
-													$cell_color = $value['color'];
-													$action = 'V';
-												}
-												echo '<div class="cellCosmAct" style="text-align: center; background-color: '.$cell_color.';">'.$action.'</div>';
-											}else{
-												echo '<div class="cellCosmAct" style="text-align: center"></div>';
+									//процедура следствие должна быть строго после процедуры условия
+									if ($journalTemp[$j]['create_time'] > $journal[$i]['create_time']){
+										
+										$journal_count_clients_effect_status = true;
+										
+										echo '
+											<li class="cellsBlock cellsBlockHover">
+													<div class="cellCosmAct" style="text-align: center; color: red; font-size: 120%;"><i class="fa fa-chevron-circle-right"></i></i></div>
+													<a href="task_cosmet.php?id='.$journalTemp[$j]['id'].'" class="cellName ahref" title="'.$journalTemp[$j]['id'].'" style="width: 89px; min-width: 89px; font-size: 85%;', isFired($journalTemp[$j]['worker']) ? 'background-color: rgba(161,161,161,1);"' : '' ,'">'.date('d.m.y H:i', $journalTemp[$j]['create_time']).'</a>
+													<a href="client.php?id='.$journal[$i]['client'].'" class="cellName ahref" ', isFired($journalTemp[$j]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$client.'</a>
+													<div class="cellName" id="4filter" ', isFired($journalTemp[$j]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.WriteSearchUser('spr_workers', $journalTemp[$j]['worker'], 'user', true).'</div>';
+							
+										$decription = array();
+										$decription_temp_arr = array();
+										$decription_temp = '';
+										
+										/*!!!Лайфхак для посещений из-за переделки структуры бд*/
+										foreach($journalTemp[$j] as $key => $value){
+											if (($key != 'id') && ($key != 'office') && ($key != 'client') && ($key != 'create_time') && ($key != 'create_person') && ($key != 'last_edit_time') && ($key != 'last_edit_person') && ($key != 'worker') && ($key != 'comment')){
+												$decription_temp_arr[mb_substr($key, 1)] = $value;
 											}
 										}
-									}
+										
+										//var_dump ($decription_temp_arr);
+										
+										$decription = $decription_temp_arr;
 									
-									echo '
-												<div class="cellText" ', isFired($journalTemp[$j]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$journalTemp[$j]['comment'].'</div>
-										</li>';
-												
+										foreach ($actions_cosmet as $key => $value) { 
+											$cell_color = '#FFFFFF';
+											$action = '';
+											if ($value['active'] != 0){
+												if (isset($decription[$value['id']])){
+													if ($decription[$value['id']] != 0){
+														$cell_color = $value['color'];
+														$action = 'V';
+													}
+													echo '<div class="cellCosmAct" style="text-align: center; background-color: '.$cell_color.';">'.$action.'</div>';
+												}else{
+													echo '<div class="cellCosmAct" style="text-align: center"></div>';
+												}
+											}
+										}
+										
+										echo '
+													<div class="cellText" ', isFired($journalTemp[$j]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$journalTemp[$j]['comment'].'</div>
+											</li>';
+									}
 								}
+								if ($journal_count_clients_effect_status) $journal_count_clients_effect++;				
 							}
-
-								
 						}
-
+						echo '
+							<li class="cellsBlock" style="margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
+								Всего<br>
+								Посещений по указанному условию: '.$journal_count_condition.'<br>
+								Пациентов по указанному следствию: '.$journal_count_clients_effect.'<br>
+							</li>';
+						
+						echo '
+								</ul>
+							</div>';
 							
 					}else{
 						echo '<span style="color: red;">Ничего не найдено</span>';
