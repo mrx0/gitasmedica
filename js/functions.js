@@ -376,6 +376,13 @@
 		window.location.replace(path+'&m='+iWantThisMonth+'&y='+iWantThisYear);
 	}
 	
+	function iWantThisDate2(path){
+		var iWantThisDate2 = document.getElementById("iWantThisDate2").value;
+		var ThisDate = iWantThisDate2.split('.') 
+		
+		window.location.replace(path+'&d='+ThisDate[0]+'&m='+ThisDate[1]+'&y='+ThisDate[2]);
+	}
+	
 	function manageScheduler(){
 		e = $('.manageScheduler');
 		if(!e.is(':visible')) {

@@ -144,7 +144,7 @@
 					$year = date('Y');
 				}
 
-				if (!isset($day))
+				if (!isset($day) || $day < 1 || $day > 31)
 					$day = date("d");				
 				if (!isset($month) || $month < 1 || $month > 12)
 					$month = date("m");
@@ -278,20 +278,23 @@
 					//Календарик	
 					echo '
 	
-								<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-									<span style="color: rgb(125, 125, 125);">
-										Дата:
-											<input type="text" id="datastart" name="datastart" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date("01.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
-											onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
-											<i class="fa fa-check-square" style="font-size: 130%; color: green; cursor: pointer" onclick="iWantThisDate()"></i>
-									</span>
+								<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: left; margin-bottom: 10px;">
+									<div style="font-size: 90%; color: rgb(125, 125, 125);">Сегодня: <a href="?'.$dopFilial.$dopWho.'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></div>
+									<div>
+										<span style="color: rgb(125, 125, 125);">
+											Изменить дату:
+											<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)"
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
+											<i class="fa fa-check-square" style="font-size: 130%; color: green; cursor: pointer" onclick="iWantThisDate2(\'zapis.php?'.$dopFilial.$dopWho.'\')"></i>
+										</span>
+									</div>
 								</li>';
 							
 					
 					if ($kabsInFilialExist){
 						echo '
 							<table style="border:1px solid #BFBCB5; min-width: 700px; background: #fff;">
-								<tr>
+								<!--<tr>
 									<td colspan="7">
 											<table width="100%" border=0 cellspacing=0 cellpadding=0> 
 												<tr> 
@@ -301,15 +304,15 @@
 												</tr> 
 											</table> 
 									</td>
-								</tr>
+								</tr>-->
 								
 								<tr>';
 						
 						$Work_Today_arr = array();
 						
-						$Work_Today = FilialWorker	($datatable, $year, $month, $day, $_GET['filial']);
+						$Work_Today = FilialWorker	($type, $year, $month, $day, $_GET['filial']);
 						if ($Work_Today != 0){
-							//var_dump($Work_Today);
+							var_dump($Work_Today);
 							
 							foreach($Work_Today as $Work_Today_value){
 								//var_dump($Work_Today_value);
@@ -344,7 +347,7 @@
 										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
 											<div class="cellRight" id="month_date_worker" style="background-color:rgba(39, 183, 127, .5)">
 												1 смена каб '.$k.' '.WriteSearchUser('spr_workers', $Work_Today_arr[$k][1]['worker'], 'user', false).'<br />
-												<a href="scheduler_day_full.php?filial='.$_GET['filial'].'&who='.$who.'&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$k.'">Подробно</a>
+												<a href="scheduler_day_full.php?filial='.$_GET['filial'].'&who='.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'">Подробно</a>
 											</div>
 										</div>
 										<div style="position:relative; height: 720px;">';
@@ -365,7 +368,7 @@
 								for ($wt=540; $wt < 900; $wt=$wt+30){
 									$back_color = '';
 									echo '
-										<div class="cellZapisTime" style="top: '.$cellZapisTime_TopSdvig.'px;" onclick="window.location.href = \'scheduler_day_full.php?filial='.$_GET['filial'].'&who='.$who.'&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$k.'\'">
+										<div class="cellZapisTime" style="top: '.$cellZapisTime_TopSdvig.'px;" onclick="window.location.href = \'scheduler_day_full.php?filial='.$_GET['filial'].'&who='.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'\'">
 											'.$sheduler_times[$wt].'';
 									//var_dump($NextFill);
 									echo '
@@ -373,7 +376,7 @@
 									$cellZapisTime_TopSdvig = $cellZapisTime_TopSdvig + 60;
 									
 									//Выбрать записи пациентов, если есть
-									$ZapisHereQueryToday = FilialKabSmenaZapisToday2($datatable, $y, $m, $d, $_GET['filial'], $k, $wt);
+									$ZapisHereQueryToday = FilialKabSmenaZapisToday2($datatable, $year, $month, $day, $_GET['filial'], $k, $wt);
 									//var_dump ($ZapisHereQueryToday);
 									
 									if ($ZapisHereQueryToday != 0){
@@ -580,7 +583,7 @@
 											$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 											$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;
 											echo '
-												<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][1]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][1]['worker'], 'user', false).'\')">
+												<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][1]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][1]['worker'], 'user', false).'\')">
 													';
 												//var_dump($NextFill);
 											echo '
@@ -596,7 +599,7 @@
 											$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 											$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;
 											echo '
-												<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][1]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][1]['worker'], 'user', false).'\')">
+												<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][1]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][1]['worker'], 'user', false).'\')">
 													';
 												//var_dump($NextFill);
 											echo '
@@ -638,7 +641,7 @@
 										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
 											<div class="cellRight" id="month_date_worker" style="background-color:rgba(39, 183, 127, .5)">
 												2 смена каб '.$k.' '.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'<br />
-												<a href="scheduler_day_full.php?filial='.$_GET['filial'].'&who='.$who.'&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$k.'">Подробно</a>
+												<a href="scheduler_day_full.php?filial='.$_GET['filial'].'&who='.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'">Подробно</a>
 											</div>
 										</div>
 										<div style="position:relative; height: 720px;">';
@@ -659,7 +662,7 @@
 								for ($wt=900; $wt < 1260; $wt=$wt+30){
 									$back_color = '';
 									echo '
-										<div class="cellZapisTime" style="top: '.$cellZapisTime_TopSdvig.'px;" onclick="window.location.href = \'scheduler_day_full.php?filial='.$_GET['filial'].'&who='.$who.'&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$k.'\'">
+										<div class="cellZapisTime" style="top: '.$cellZapisTime_TopSdvig.'px;" onclick="window.location.href = \'scheduler_day_full.php?filial='.$_GET['filial'].'&who='.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'\'">
 											'.$sheduler_times[$wt].'';
 									//var_dump($NextFill);
 									echo '
@@ -667,7 +670,7 @@
 									$cellZapisTime_TopSdvig = $cellZapisTime_TopSdvig + 60;
 									
 									//Выбрать записи пациентов, если есть
-									$ZapisHereQueryToday = FilialKabSmenaZapisToday2($datatable, $y, $m, $d, $_GET['filial'], $k, $wt);
+									$ZapisHereQueryToday = FilialKabSmenaZapisToday2($datatable, $year, $month, $day, $_GET['filial'], $k, $wt);
 									//var_dump ($ZapisHereQueryToday);
 									
 									if (isset($NextSmenaArr[$k]['NextSmenaFill']) && !$NextSmenaArr_Bool){
@@ -741,7 +744,7 @@
 																$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 																$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-900)*2;
 																echo '
-																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'\')">
+																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'\')">
 																		';
 																	//var_dump($Zapis_key);
 																echo '
@@ -755,7 +758,7 @@
 																$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 																$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-900)*2;
 																echo '
-																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'\')">
+																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'\')">
 																		';
 																	//var_dump($Zapis_key);
 																echo '
@@ -767,7 +770,7 @@
 																	$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 																	$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-900)*2;
 																	echo '
-																		<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'\')">
+																		<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'\')">
 																			';
 																		//var_dump($Zapis_key);
 																	echo '
@@ -786,7 +789,7 @@
 																$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 																$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-900)*2;
 																echo '
-																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'\')">
+																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'\')">
 																		';
 																	//var_dump($Zapis_key);
 																echo '
@@ -853,7 +856,7 @@
 														$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 														$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-900)*2;
 														echo '
-															<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'\')">
+															<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'\')">
 																';
 															//var_dump($NextFill);
 														echo '
@@ -873,7 +876,7 @@
 															$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-900)*2;
 														}
 														echo '
-															<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'\')">
+															<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'\')">
 																';
 															//var_dump($NextSmenaArr);
 														echo '
@@ -938,7 +941,7 @@
 													}
 												}
 												echo '
-													<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'\')">
+													<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'\')">
 														'.$mark.'';
 													//var_dump($NextFill);
 												echo '
@@ -954,7 +957,7 @@
 												$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 												$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-900)*2;
 												echo '
-													<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'\')">
+													<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$Work_Today_arr[$k][2]['worker'].', \''.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'\')">
 														';
 													//var_dump($NextFill);
 												echo '
@@ -1139,18 +1142,24 @@
 
 			
 			echo '
-			
-				<script>
-				
-					$(function() {
-						$(\'#SelectWho\').change(function(){
-							if (document.getElementById("SelectFilial").value != 0)
-								document.location.href = "?filial="+document.getElementById("SelectFilial").value+"&who="+$(this).val();	
+					<script>
+					
+						$(function() {
+							$("#SelectFilial").change(function(){
+								//var dayW = document.getElementById("SelectDayW").value;
+								document.location.href = "?filial="+$(this).val()+"'.$who.'";
+							});
+							$("#SelectDayW").change(function(){
+								var filial = document.getElementById("SelectFilial").value;
+								document.location.href = "?dayw="+$(this).val()+"&filial="+filial+"'.$who.'";
+							});
 						});
-						$(\'#SelectFilial\').change(function(){
-							document.location.href = "?filial="+$(this).val()+"&who="+document.getElementById("SelectWho").value;
-						});
-					});';
+						
+					</script>';
+					
+			echo '
+					<script>';
+					
 			if (($zapis['add_new'] == 1) || $god_mode){
 				echo '		
 					function ShowSettingsAddTempZapis(filial, filial_name, kab, year, month, day, smena, time, period, worker_id, worker_name){
@@ -1560,4 +1569,4 @@
 		
 	require_once 'footer.php';
 
-?>
+?>>
