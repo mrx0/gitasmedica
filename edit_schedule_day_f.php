@@ -32,27 +32,27 @@
 							
 							echo '
 								Изменения в расписание внесены<br /><br />
-								<a href="scheduler_day.php?filial='.$_POST['filial'].$who.'&d='.$_POST['day'].'&m='.$_POST['month'].'&y='.$_POST['year'].'" class="b">К расписанию</a>';
+								<a href="zapis.php?filial='.$_POST['filial'].$who.'&d='.$_POST['day'].'&m='.$_POST['month'].'&y='.$_POST['year'].'" class="b">К расписанию</a>';
 							//header ('Location: scheduler.php?filial='.$_POST['filial'].$who.'&m='.$_POST['month'].'&y='.$_POST['year'].'');
 						}else{
 							echo '
 								Не указано описание<br /><br />
-								<a href="scheduler_day.php?filial='.$_POST['filial'].$who.'&d='.$_POST['day'].'&m='.$_POST['month'].'&y='.$_POST['year'].'" class="b">К расписанию</a>';
+								<a href="zapis.php?filial='.$_POST['filial'].$who.'&d='.$_POST['day'].'&m='.$_POST['month'].'&y='.$_POST['year'].'" class="b">К расписанию</a>';
 						}
 					}else{
 						echo '
 							Не указали контакты<br /><br />
-							<a href="scheduler_day.php?filial='.$_POST['filial'].$who.'&d='.$_POST['day'].'&m='.$_POST['month'].'&y='.$_POST['year'].'" class="b">К расписанию</a>';
+							<a href="zapis.php?filial='.$_POST['filial'].$who.'&d='.$_POST['day'].'&m='.$_POST['month'].'&y='.$_POST['year'].'" class="b">К расписанию</a>';
 					}
 				}else{
 					echo '
 						Не указали пациента<br /><br />
-						<a href="scheduler_day.php?filial='.$_POST['filial'].$who.'&d='.$_POST['day'].'&m='.$_POST['month'].'&y='.$_POST['year'].'" class="b">К расписанию</a>';
+						<a href="zapis.php?filial='.$_POST['filial'].$who.'&d='.$_POST['day'].'&m='.$_POST['month'].'&y='.$_POST['year'].'" class="b">К расписанию</a>';
 				}
 			}else{
 				echo '
 					Не выбрали врача<br /><br />
-					<a href="scheduler_day.php?filial='.$_POST['filial'].$who.'&d='.$_POST['day'].'&m='.$_POST['month'].'&y='.$_POST['year'].'" class="b">К расписанию</a>';
+					<a href="zapis.php?filial='.$_POST['filial'].$who.'&d='.$_POST['day'].'&m='.$_POST['month'].'&y='.$_POST['year'].'" class="b">К расписанию</a>';
 			}
 		}
 	}

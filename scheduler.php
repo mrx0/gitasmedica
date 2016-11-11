@@ -235,7 +235,7 @@
 			echo '
 				<div id="status">
 					<header>
-						<h2>График '.$whose.'на ',$monthsName[$month],' ',$year,' филиал '.$filial[0]['name'].'</h2>
+						<h2>График '.$whose.' на ',$monthsName[$month],' ',$year,' филиал '.$filial[0]['name'].'</h2>
 					</header>
 					<a href="scheduler_template.php" class="b">График план</a>
 					<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>
