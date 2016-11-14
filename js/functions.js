@@ -1034,3 +1034,56 @@
 		});
 	}; 
 		
+	function Ajax_add_TempZapis(type) {
+		 
+		// получение данных из полей
+		//var type = document.getElementById("type").value;
+		
+		var filial = $("#filial").val();
+		var author = $("#author").val();
+		var year = $("#year").val();
+		var month = $("#month").val();
+		var day = $("#day").val();
+		
+		var patient = $("#patient").val();
+		var contacts = $("#contacts").val();
+		var description = $("#description").val();
+		
+		var start_time = $("#start_time").val();
+		var wt = $("#wt").val();
+		
+		var kab = document.getElementById("kab").innerHTML;
+
+		var worker = $("#worker_id").val();
+		if(typeof worker == "undefined") worker = 0;
+
+		$.ajax({
+			//statbox:SettingsScheduler,
+			// метод отправки 
+			type: "POST",
+			// путь до скрипта-обработчика
+			url: "edit_schedule_day_f.php",
+			// какие данные будут переданы
+			data: {
+				type:"scheduler_stom",
+				author:author,
+				filial:filial,
+				kab:kab,
+				day:day,
+				month:month,
+				year:year,
+				start_time:start_time,
+				wt:wt,
+				worker:worker,
+				description:description,
+				contacts:contacts,
+				patient:patient,
+				type:type
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				document.getElementById("ShowSettingsAddTempZapis").innerHTML=data;
+				window.scrollTo(0,0)
+			}
+		});		
+	};

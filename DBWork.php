@@ -161,19 +161,19 @@
 	}
 
 	//Вставка записей во временную запись
-	function WriteToDB_EditZapis ($datatable, $year, $month, $day, $office, $kab, $worker, $create_person, $patient, $contacts, $description, $start_time, $wt){
+	function WriteToDB_EditZapis ($datatable, $year, $month, $day, $office, $kab, $worker, $create_person, $patient, $contacts, $description, $start_time, $wt, $type){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 		mysql_select_db($dbName) or die(mysql_error()); 
 		mysql_query("SET NAMES 'utf8'");
 		$time = time();
-		$query = "INSERT INTO `$datatable` (
-			`year`, `month`, `day`, `office`, `kab`, `worker`, `create_person`, `patient`, `contacts`, `description`, `start_time`, `wt`) 
+		$query = "INSERT INTO `zapis` (
+			`year`, `month`, `day`, `office`, `kab`, `worker`, `create_person`, `patient`, `contacts`, `description`, `start_time`, `wt`, `type`) 
 			VALUES (
-			'{$year}', '{$month}', '{$day}', '{$office}', '{$kab}', '{$worker}', '{$create_person}', '{$patient}', '{$contacts}', '{$description}', '{$start_time}', '{$wt}') ";
+			'{$year}', '{$month}', '{$day}', '{$office}', '{$kab}', '{$worker}', '{$create_person}', '{$patient}', '{$contacts}', '{$description}', '{$start_time}', '{$wt}', '{$type}') ";
 		//echo $query;
 		
-		mysql_query($query) or die(mysql_error());
+		mysql_query($query) or die(mysql_error().' -> '.$query);
 		mysql_close();
 		
 		//логирование

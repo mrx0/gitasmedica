@@ -13,10 +13,10 @@
 		//var_dump ($_POST);
 		
 		if ($_POST){
-			if ($_POST['datatable'] == 'scheduler_stom'){
+			if ($_POST['type'] == 5){
 				$who = '&who=stom';
 				$datatable = 'zapis_stom';
-			}elseif ($_POST['datatable'] == 'scheduler_cosm'){
+			}elseif ($_POST['type'] == 6){
 				$who = '&who=cosm';
 				$datatable = 'zapis_cosm';
 			}else{
@@ -28,7 +28,7 @@
 					if ($_POST['contacts'] != ''){
 						if ($_POST['contacts'] != ''){
 							//запись в базу
-							WriteToDB_EditZapis ($datatable, $_POST['year'], $_POST['month'], $_POST['day'], $_POST['filial'], $_POST['kab'], $_POST['worker'], $_POST['author'], $_POST['patient'], $_POST['contacts'], $_POST['description'], $_POST['start_time'], $_POST['wt']);
+							WriteToDB_EditZapis ('zapis', $_POST['year'], $_POST['month'], $_POST['day'], $_POST['filial'], $_POST['kab'], $_POST['worker'], $_POST['author'], $_POST['patient'], $_POST['contacts'], $_POST['description'], $_POST['start_time'], $_POST['wt'], $_POST['type']);
 							
 							echo '
 								Изменения в расписание внесены<br /><br />
