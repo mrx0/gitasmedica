@@ -1045,7 +1045,7 @@
 		var month = $("#month").val();
 		var day = $("#day").val();
 		
-		var patient = $("#patient").val();
+		var patient = $("#search_client").val();
 		var contacts = $("#contacts").val();
 		var description = $("#description").val();
 		
@@ -1058,9 +1058,8 @@
 		if(typeof worker == "undefined") worker = 0;
 
 		$.ajax({
-			//statbox:SettingsScheduler,
-			// метод отправки 
-			type: "POST",
+			global: false, 
+			type: "POST", 
 			// путь до скрипта-обработчика
 			url: "edit_schedule_day_f.php",
 			// какие данные будут переданы
@@ -1080,10 +1079,16 @@
 				patient:patient,
 				type:type
 			},
+			cache: false,
+			beforeSend: function() {
+				$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
 			// действие, при ответе с сервера
 			success: function(data){
-				document.getElementById("ShowSettingsAddTempZapis").innerHTML=data;
-				window.scrollTo(0,0)
+				document.getElementById("errror").innerHTML=data;
+				setTimeout(function () {
+					location.reload()
+				}, 100);
 			}
 		});		
 	};

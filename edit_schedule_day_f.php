@@ -26,33 +26,51 @@
 			if ($_POST['worker'] !=0){
 				if ($_POST['patient'] != ''){
 					if ($_POST['contacts'] != ''){
-						if ($_POST['contacts'] != ''){
-							//запись в базу
-							WriteToDB_EditZapis ('zapis', $_POST['year'], $_POST['month'], $_POST['day'], $_POST['filial'], $_POST['kab'], $_POST['worker'], $_POST['author'], $_POST['patient'], $_POST['contacts'], $_POST['description'], $_POST['start_time'], $_POST['wt'], $_POST['type']);
-							
-							echo '
-								Изменения в расписание внесены<br /><br />
-								<a href="zapis.php?filial='.$_POST['filial'].$who.'&d='.$_POST['day'].'&m='.$_POST['month'].'&y='.$_POST['year'].'" class="b">К расписанию</a>';
-							//header ('Location: scheduler.php?filial='.$_POST['filial'].$who.'&m='.$_POST['month'].'&y='.$_POST['year'].'');
+						if ($_POST['description'] != ''){
+							//Ищем Пациента
+							$clients = SelDataFromDB ('spr_clients', $_POST['patient'], 'client_full_name');
+							//var_dump($clients);
+							if ($clients != 0){
+								$client = $clients[0]["id"];
+								//запись в базу
+								WriteToDB_EditZapis ('zapis', $_POST['year'], $_POST['month'], $_POST['day'], $_POST['filial'], $_POST['kab'], $_POST['worker'], $_POST['author'], $client, $_POST['contacts'], $_POST['description'], $_POST['start_time'], $_POST['wt'], $_POST['type']);
+								
+								echo '
+									<div class="query_ok">
+										Запись добавлена<br><br>
+									</div>';
+								//header ('Location: scheduler.php?filial='.$_POST['filial'].$who.'&m='.$_POST['month'].'&y='.$_POST['year'].'');
+								//add_client.php
+							}else{
+								echo '
+									<div class="query_neok">
+										Добавьте пациента в базу<br>
+										<a href="add_client.php" class="b">Добавить пациента</a><br>
+									</div>';
+							}
 						}else{
 							echo '
-								Не указано описание<br /><br />
-								<a href="zapis.php?filial='.$_POST['filial'].$who.'&d='.$_POST['day'].'&m='.$_POST['month'].'&y='.$_POST['year'].'" class="b">К расписанию</a>';
+								<div class="query_neok">
+									Не указано описание<br><br>
+								</div>';
 						}
 					}else{
 						echo '
-							Не указали контакты<br /><br />
-							<a href="zapis.php?filial='.$_POST['filial'].$who.'&d='.$_POST['day'].'&m='.$_POST['month'].'&y='.$_POST['year'].'" class="b">К расписанию</a>';
+							<div class="query_neok">
+								Не указали контакты<br><br>
+							</div>';
 					}
 				}else{
 					echo '
-						Не указали пациента<br /><br />
-						<a href="zapis.php?filial='.$_POST['filial'].$who.'&d='.$_POST['day'].'&m='.$_POST['month'].'&y='.$_POST['year'].'" class="b">К расписанию</a>';
+						<div class="query_neok">
+							Не указали пациента<br><br>
+						</div>';
 				}
 			}else{
 				echo '
-					Не выбрали врача<br /><br />
-					<a href="zapis.php?filial='.$_POST['filial'].$who.'&d='.$_POST['day'].'&m='.$_POST['month'].'&y='.$_POST['year'].'" class="b">К расписанию</a>';
+					<div class="query_neok">
+						Не выбрали врача<br><br>
+					</div>';
 			}
 		}
 	}

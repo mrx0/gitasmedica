@@ -238,7 +238,7 @@
 				//переменная, чтоб вкл/откл редактирование
 				echo '
 					<script>
-						var iCanManage = false;
+						var iCanManage = true;
 					</script>
 				';
 				
@@ -412,7 +412,7 @@
 									$cellZapisTime_TopSdvig = $cellZapisTime_TopSdvig + 60;
 									
 									//Выбрать записи пациентов, если есть
-									$ZapisHereQueryToday = FilialKabSmenaZapisToday2($datatable, $year, $month, $day, $_GET['filial'], $k, $wt);
+									$ZapisHereQueryToday = FilialKabSmenaZapisToday2($datatable, $year, $month, $day, $_GET['filial'], $k, $wt, $type);
 									//var_dump ($ZapisHereQueryToday);
 									
 									if ($ZapisHereQueryToday != 0){
@@ -512,7 +512,7 @@
 														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'">
 															'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'
 															
-																<span style="font-weight:bold;">'.$ZapisHereQueryToday_val['patient'].'</span> : '.$ZapisHereQueryToday_val['description'].'
+																<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $ZapisHereQueryToday_val['patient'], 'user', false).'</span> : '.$ZapisHereQueryToday_val['description'].'
 															';
 													//var_dump ($NextFill);
 													echo '
@@ -601,7 +601,7 @@
 													<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
 														'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'<br>
 														
-															<span style="font-weight:bold;">'.$ZapisHereQueryToday[0]['patient'].'</span> : '.$ZapisHereQueryToday[0]['description'].'
+															<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $ZapisHereQueryToday[0]['patient'], 'user', false).'</span> : '.$ZapisHereQueryToday[0]['description'].'
 														';
 												//var_dump($NextSmenaArr[$k]['NextSmenaFill']);
 												echo '
@@ -727,7 +727,7 @@
 									$cellZapisTime_TopSdvig = $cellZapisTime_TopSdvig + 60;
 									
 									//Выбрать записи пациентов, если есть
-									$ZapisHereQueryToday = FilialKabSmenaZapisToday2($datatable, $year, $month, $day, $_GET['filial'], $k, $wt);
+									$ZapisHereQueryToday = FilialKabSmenaZapisToday2($datatable, $year, $month, $day, $_GET['filial'], $k, $wt, $type);
 									//var_dump ($ZapisHereQueryToday);
 									
 									if (isset($NextSmenaArr[$k]['NextSmenaFill']) && !$NextSmenaArr_Bool){
@@ -759,7 +759,7 @@
 												<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'">
 													'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'
 													
-														<span style="font-weight:bold;">'.$NextSmenaArr[$k]['ZapisHereQueryToday']['patient'].'</span> : '.$NextSmenaArr[$k]['ZapisHereQueryToday']['description'].'
+														<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $NextSmenaArr[$k]['ZapisHereQueryToday']['patient'], 'user', false).'</span> : '.$NextSmenaArr[$k]['ZapisHereQueryToday']['description'].'
 													';
 											//var_dump($NextSmenaArr[$k]['NextSmenaFill']);
 											echo '
@@ -877,7 +877,7 @@
 															<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'">
 																'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'
 																
-																	<span style="font-weight:bold;">'.$ZapisHereQueryToday_val['patient'].'</span> : '.$ZapisHereQueryToday_val['description'].'
+																	<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $ZapisHereQueryToday_val['patient'], 'user', false).'</span> : '.$ZapisHereQueryToday_val['description'].'
 																';
 														//var_dump ($NextFill);
 														echo '
@@ -963,7 +963,7 @@
 														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
 															'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'<br>
 															
-																<span style="font-weight:bold;">'.$ZapisHereQueryToday[0]['patient'].'</span> : '.$ZapisHereQueryToday[0]['description'].'
+																<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $ZapisHereQueryToday[0]['patient'], 'user', false).'</span> : '.$ZapisHereQueryToday[0]['description'].'
 															
 														</div>';
 												}else{
@@ -1114,20 +1114,21 @@
 
 								<div class="cellsBlock2" style="font-size:80%; width:400px;">
 									<div class="cellLeft" style="font-weight: bold;">Пациент</div>
-									<div class="cellRight" style="">
-										<input type="text" size="30" name="patient" id="patient" placeholder="Введите ФИО пациента" value="" autocomplete="off">
+									<div class="cellRight">
+										<input type="text" size="30" name="searchdata" id="search_client" placeholder="Введите ФИО пациента" value="" class="who"  autocomplete="off"> <a href="add_client.php" class="ahref"><i class="fa fa-plus-square" title="Добавить пациента" style="color: green; font-size: 120%;"></i></a>
+										<ul id="search_result" class="search_result"></ul><br />
 									</div>
 								</div>
 								<div class="cellsBlock2" style="font-size:80%; width:400px;">
-									<div class="cellLeft" style="font-weight: bold;">Контакты</div>
+									<div class="cellLeft" style="font-weight: bold;">Телефон</div>
 									<div class="cellRight" style="">
-										<input type="text" size="30" name="contacts" id="contacts" placeholder="Введите контакт" value="" autocomplete="off">
+										<input type="text" size="30" name="contacts" id="contacts" placeholder="Введите телефон" value="" autocomplete="off">
 									</div>
 								</div>
 								<div class="cellsBlock2" style="font-size:80%; width:400px;">
 									<div class="cellLeft" style="font-weight: bold;">Описание</div>
 									<div class="cellRight" style="">
-										<textarea name="description" id="description" style="width:100%; overflow:auto; height:150px;"></textarea>
+										<textarea name="description" id="description" style="width:90%; overflow:auto; height: 100px;"></textarea>
 									</div>
 								</div>		
 							</div>';
@@ -1169,7 +1170,13 @@
 										<div id="exist_zapis" style="display:inline-block;"></div>
 									</div>
 								</div>
-							</div>';
+								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
+									<div class="cellRight">
+										<div id="errror"></div>
+									</div>
+								</div>
+							</div>
+						</div>';
 
 
 
@@ -1182,8 +1189,9 @@
 						<input type="hidden" id="start_time" name="start_time" value="0">
 						<input type="hidden" id="wt" name="wt" value="0">
 						<input type="hidden" id="worker_id" name="worker_id" value="0">
-						<div id="errror"></div>
-						<input type="button" class="b" value="Добавить" id="Ajax_add_TempZapis" onclick="Ajax_add_TempZapis('.$type.')">
+						<!--<input type="button" class="b" value="Добавить" id="Ajax_add_TempZapis" onclick="Ajax_add_TempZapis('.$type.')">-->
+						<input type="button" class="b" value="OK" onclick="if (iCanManage) Ajax_add_TempZapis('.$type.')" id="Ajax_add_TempZapis">
+						<input type="button" class="b" value="Отмена" onclick="HideSettingsAddTempZapis()">
 					</div>';	
 					
 			echo '	
@@ -1247,6 +1255,7 @@
 						if (real_time_m < 10) real_time_m = \'0\'+real_time_m;
 						
 						var real_time_h_end = (time+period)/60|0;
+						if (real_time_h_end > 23) real_time_h_end = real_time_h_end - 24;
 						var real_time_m_end = (time+period)%60;
 						if (real_time_m_end < 10) real_time_m_end = \'0\'+real_time_m_end;
 						
@@ -1307,9 +1316,9 @@
 								
 						
 								var real_time_h_end = end_time/60|0;
+								if (real_time_h_end > 23) real_time_h_end = real_time_h_end - 24;
 								var real_time_m_end = end_time%60;
-								
-								if (real_time_m_end < 10) real_time_m_end = \'0\'+real_time_m_end;
+								if (real_time_m_end < 10) real_time_m_end = "0"+real_time_m_end;
 								
 								document.getElementById("work_time_h_end").innerHTML=real_time_h_end;
 								document.getElementById("work_time_m_end").innerHTML=real_time_m_end;
@@ -1318,10 +1327,10 @@
 								
 							}
 							if (time+period < next_time_start_rez){
-								document.getElementById("exist_zapis").innerHTML=\'\';
+								document.getElementById("exist_zapis").innerHTML="";
 							}
 						}else{
-							document.getElementById("exist_zapis").innerHTML=\'\';
+							document.getElementById("exist_zapis").innerHTML="";
 						}
 						
 
@@ -1482,6 +1491,7 @@
 						}
 						
 						var real_time_h_end = end_time/60|0;
+						if (real_time_h_end > 23) real_time_h_end = real_time_h_end - 24;
 						var real_time_m_end = end_time%60;
 						
 						//var real_time_h_end = (end_time + Number(wt))/60|0;

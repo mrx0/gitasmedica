@@ -23,7 +23,25 @@
 			$NextSmenaArr_Bool = FALSE;
 			$NextSmenaArr_Zanimayu = 0;
 
-			$sheduler_times = array (
+			/*$zapis_times = array (
+				0 => '0:00 - 0:30',
+				30 => '0:30 - 1:00',
+				60 => '1:00 - 1:30',
+				90 => '1:30 - 2:00',
+				120 => '2:00 - 2:30',
+				150 => '2:30 - 3:00',
+				180 => '3:00 - 3:30',
+				210 => '3:30 - 4:00',	
+				240 => '4:00 - 4:30',
+				270 => '4:30 - 5:00',
+				300 => '5:00 - 5:30',
+				330 => '5:30 - 6:00',
+				360 => '6:00 - 6:30',
+				390 => '6:30 - 7:00',
+				420 => '7:00 - 7:30',
+				450 => '7:30 - 8:00',
+				480 => '8:00 - 8:30',
+				510 => '8:30 - 9:00',	
 				540 => '9:00 - 9:30',
 				570 => '9:30 - 10:00',
 				600 => '10:00 - 10:30',
@@ -48,7 +66,13 @@
 				1170 => '19:30 - 20:00',
 				1200 => '20:00 - 20:30',
 				1230 => '20:30 - 21:00',
-			);
+				1260 => '21:00 - 21:30',
+				1290 => '21:30 - 22:00',
+				1320 => '22:00 - 22:30',
+				1350 => '22:30 - 23:00',
+				1380 => '23:00 - 23:30',
+				1410 => '23:30 - 00:00',
+			);*/
 			
 			$who = '&who=stom';
 			$whose = 'Стоматологов ';
@@ -68,6 +92,7 @@
 						$selected_cosm = ' ';
 						$datatable = 'scheduler_stom';
 						$kabsForDoctor = 'stom';
+						$type = 5;
 					}elseif($_GET['who'] == 'cosm'){
 						$who = '&who=cosm';
 						$whose = 'Косметологов ';
@@ -75,6 +100,7 @@
 						$selected_cosm = ' selected';
 						$datatable = 'scheduler_cosm';
 						$kabsForDoctor = 'cosm';
+						$type = 6;
 					}else{
 						$who = '&who=stom';
 						$whose = 'Стоматологов ';
@@ -82,6 +108,7 @@
 						$selected_cosm = ' ';
 						$datatable = 'scheduler_stom';
 						$kabsForDoctor = 'stom';
+						$type = 5;
 					}
 				}else{
 					$who = '&who=stom';
@@ -90,6 +117,7 @@
 					$selected_cosm = ' ';
 					$datatable = 'scheduler_stom';
 					$kabsForDoctor = 'stom';
+					$type = 5;
 				}
 				
 				$month_names=array(
@@ -217,7 +245,7 @@
 					
 							<div id="data">';
 							
-					$ZapisHereQueryToday = FilialKabSmenaZapisToday($datatable, $y, $m, $d, $_GET['filial'], $kab);
+					$ZapisHereQueryToday = FilialKabSmenaZapisToday($datatable, $y, $m, $d, $_GET['filial'], $kab, $type);
 					//var_dump($ZapisHereQueryToday);
 					
 					if ($ZapisHereQueryToday != 0){
@@ -260,7 +288,7 @@
 							echo '
 									<div class="cellName">';
 							echo 
-										'Пациент <br /><b>'.$ZapisHereQueryToday[$z]['patient'].'</b><br />'.$ZapisHereQueryToday[$z]['contacts'];
+										'Пациент <br /><b>'.WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user', true).'</b><br />'.$ZapisHereQueryToday[$z]['contacts'];
 							echo '
 									</div>';
 							echo '

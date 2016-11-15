@@ -35,7 +35,7 @@
 			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
 			mysql_select_db($dbName) or die(mysql_error()); 
 			mysql_query("SET NAMES 'utf8'");
-			$query = "SELECT * FROM `$datatable` WHERE `day` = '$day' AND `month` = '$month' AND `year` = '$year' AND `kab` = '$kab' AND `office` = '$filial' AND `start_time` < '$start_time' ORDER BY `start_time` ASC LIMIT 1";
+			$query = "SELECT * FROM `zapis` WHERE `day` = '$day' AND `month` = '$month' AND `year` = '$year' AND `kab` = '$kab' AND `office` = '$filial' AND `start_time` < '$start_time' ORDER BY `start_time` ASC LIMIT 1";
 			$res = mysql_query($query) or die($query);
 			$number = mysql_num_rows($res);
 			if ($number != 0){

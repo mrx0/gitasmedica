@@ -229,8 +229,7 @@
 			echo '
 				<script>
 					var iCanManage = false;
-				</script>
-			';
+				</script>';
 
 			echo '
 				<div id="status">

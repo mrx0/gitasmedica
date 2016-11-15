@@ -337,7 +337,7 @@
 		return $sheduler_zapis;
 	}
 	
-	function FilialKabSmenaZapisToday($table, $y, $m, $d, $office, $kab){
+	function FilialKabSmenaZapisToday($table, $y, $m, $d, $office, $kab, $type){
 		require 'config.php';
 		if ($table == 'scheduler_stom'){
 			$datatable = 'zapis_stom';
@@ -351,7 +351,7 @@
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
 		mysql_select_db($dbName) or die(mysql_error()); 
 		mysql_query("SET NAMES 'utf8'");
-		$query = "SELECT * FROM `$datatable` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$office}' AND `kab` = '{$kab}' ORDER BY `start_time` ASC";
+		$query = "SELECT * FROM `zapis` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$office}' AND `kab` = '{$kab}' AND `type` = '{$type}' ORDER BY `start_time` ASC";
 		$res = mysql_query($query) or die($query);
 		$number = mysql_num_rows($res);
 		if ($number != 0){
@@ -366,7 +366,7 @@
 	}
 	
 	
-	function FilialKabSmenaZapisToday2($table, $y, $m, $d, $office, $kab, $wt){
+	function FilialKabSmenaZapisToday2($table, $y, $m, $d, $office, $kab, $wt, $type){
 		require 'config.php';
 		if ($table == 'scheduler_stom'){
 			$datatable = 'zapis_stom';
@@ -381,7 +381,7 @@
 		mysql_select_db($dbName) or die(mysql_error()); 
 		mysql_query("SET NAMES 'utf8'");
 		$wt2 = $wt+30;
-		$query = "SELECT * FROM `$datatable` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$office}' AND `kab` = '{$kab}' AND `start_time` >= '{$wt}' AND `start_time` < '{$wt2}' AND `enter` <> 9 AND `enter` <> 8 ORDER BY `start_time` ASC";
+		$query = "SELECT * FROM `zapis` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$office}' AND `kab` = '{$kab}' AND `type` = '{$type}' AND `start_time` >= '{$wt}' AND `start_time` < '{$wt2}' AND `enter` <> 9 AND `enter` <> 8 ORDER BY `start_time` ASC";
 		//echo $query;
 		$res = mysql_query($query) or die($query);
 		$number = mysql_num_rows($res);
