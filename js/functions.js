@@ -1083,9 +1083,65 @@
 			beforeSend: function() {
 				$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 			},
+			dataType: "json",
 			// действие, при ответе с сервера
 			success: function(data){
-				document.getElementById("errror").innerHTML=data;
+				if(data.result == "success"){  
+					document.getElementById("errror").innerHTML=data.data;
+					setTimeout(function () {
+						location.reload()
+					}, 100);
+				}else{
+					document.getElementById("errror").innerHTML=data.data;
+				}
+			}
+		});		
+	};
+	
+	function Ajax_TempZapis_edit_Enter(id, enter) {
+		 
+		$.ajax({
+			//statbox:SettingsScheduler,
+			// метод отправки 
+			type: "POST",
+			// путь до скрипта-обработчика
+			url: "ajax_tempzapis_edit_enter_f.php",
+			// какие данные будут переданы
+			data: {
+				id:id,
+				enter:enter,
+				datatable: "zapis"
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				//document.getElementById("req").innerHTML=data;
+				//window.location.href = "";
+				setTimeout(function () {
+					location.reload()
+				}, 100);
+			}
+		});		
+	};
+
+
+	function Ajax_TempZapis_edit_OK(id, office) {
+		 
+		$.ajax({
+			//statbox:SettingsScheduler,
+			// метод отправки 
+			type: "POST",
+			// путь до скрипта-обработчика
+			url: "ajax_tempzapis_edit_OK_f.php",
+			// какие данные будут переданы
+			data: {
+				id:id,
+				office:office,
+				datatable: "zapis"
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				//document.getElementById("req").innerHTML=data;
+				//window.location.href = "";
 				setTimeout(function () {
 					location.reload()
 				}, 100);

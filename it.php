@@ -148,7 +148,11 @@
 								<div class="cellPriority" style="background-color:'.$priority_color.'"></div>
 								<div class="cellTime">'.date('d.m.y H:i', $journal[$i]['create_time']).'</div>
 								<div class="cellOffice" style="text-align: center;"><a href="" class="ahref">'.$office.'</a></div>
-								<a href="task.php?id='.$journal[$i]['id'].'" class="ahref cellText" style="'.$background_style.'"><b>#'.$journal[$i]['id'].'</b> '.$journal[$i]['description'].'</a>
+								<a href="task.php?id='.$journal[$i]['id'].'" class="ahref cellText" style="position: relative; '.$background_style.'">
+									<b>#'.$journal[$i]['id'].'</b> '.$journal[$i]['description'].'
+									<!--<div style="position: absolute; top: 1px; right: 2px; background: rgba(38, 32, 98, 0.9); padding: 3px; font-size: 90%; color: #FFF; border-radius: 3px;">5</div>-->
+								</a>
+									
 								<div class="cellName" style="text-align: center;">'.$author[0]['name'].'</div>
 								<div class="cellName" style="text-align: center;">'.$worker[0]['name'].'</div>
 								<div class="cellTime" style="text-align: center; '.$background_style2.'">'.$ended.'</div>

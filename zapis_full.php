@@ -230,19 +230,6 @@
 							
 					echo '
 					
-							<style>
-								.label_desc{
-									display: block;
-								}
-								.error{
-									display: none;
-								}
-								.error_input{
-									border: 2px solid #FF0000; 
-								}
-							</style>	
-					
-					
 							<div id="data">';
 							
 					$ZapisHereQueryToday = FilialKabSmenaZapisToday($datatable, $y, $m, $d, $_GET['filial'], $kab, $type);
@@ -261,7 +248,12 @@
 							}elseif($ZapisHereQueryToday[$z]['enter'] == 8){
 								$back_color = 'background-color: rgba(137,0,81, .7);';
 							}else{
-								$back_color = 'background-color: rgba(255,255,0, .5);';
+								//Если оформлено не на этом филиале
+								if($ZapisHereQueryToday[$z]['office'] != $ZapisHereQueryToday[$z]['add_from']){
+									$back_color = 'background-color: rgb(119, 255, 250);';
+								}else{
+									$back_color = 'background-color: rgba(255,255,0, .5);';
+								}
 							}
 							
 							
@@ -279,6 +271,7 @@
 							$start_time_m = $ZapisHereQueryToday[$z]['start_time']%60;
 							if ($start_time_m < 10) $start_time_m = '0'.$start_time_m;
 							$end_time_h = floor(($ZapisHereQueryToday[$z]['start_time']+$ZapisHereQueryToday[$z]['wt'])/60);
+							if ($end_time_h > 23) $end_time_h = $end_time_h - 24;
 							$end_time_m = ($ZapisHereQueryToday[$z]['start_time']+$ZapisHereQueryToday[$z]['wt'])%60;
 							if ($end_time_m < 10) $end_time_m = '0'.$end_time_m;
 							echo 
@@ -294,36 +287,52 @@
 							echo '
 									<div class="cellName">';
 							echo 
+										'Филиал:<br>'.
 										$filial[0]['name'];
 							echo '
 									</div>';
 							echo '
 									<div class="cellName">';
 							echo 
-										$ZapisHereQueryToday[$z]['kab'].' кабинет';
+										$ZapisHereQueryToday[$z]['kab'].' кабинет<br>'.'Врач: <br><b>'.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user', true).'</b>';
 							echo '
 									</div>';
 							echo '
 									<div class="cellName">';
 							echo 
-										'Врач <br /><b>'.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user', false).'</b>';
-							echo '
-									</div>';
-							echo '
-									<div class="cellName">';
-							echo 
+										'Описание:<br>'.
 										$ZapisHereQueryToday[$z]['description'];
 							echo '
 									</div>';
 							echo '
-									<div class="cellRight">';
-							echo 
-										'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 1)">Пришёл</a><br />
-										<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 9)">Не пришёл</a><br />
-										<a href="#" onclick="alert(\'Временно не работает\')">Редактировать</a><br />
-										<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 8)">Ошибка, отметить на удаление</a><br />
-										<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 0)">Отменить все изменения</a><br />
-										';
+									<div class="cellName">';
+							echo '
+										Добавлено<br>'.date('d.m.y H:i', $ZapisHereQueryToday[$z]['create_time']).'<br>
+										Кем: '.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['create_person'], 'user', true);
+							if (($ZapisHereQueryToday[$z]['last_edit_time'] != 0) || ($ZapisHereQueryToday[$z]['last_edit_person'] != 0)){
+								echo '<hr>
+										Изменено: '.date('d.m.y H:i', $ZapisHereQueryToday[$z]['last_edit_time']).'<br>
+										Кем: '.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['last_edit_person'], 'user', true).'';
+							}
+							echo '
+									</div>';
+							echo '
+									<div class="cellRight">';									
+							if (isset($_SESSION['filial'])){
+								if ($_SESSION['filial'] == $ZapisHereQueryToday[$z]['office']){
+									if($ZapisHereQueryToday[$z]['office'] != $ZapisHereQueryToday[$z]['add_from']){
+										echo '
+												<a href="#" onclick="Ajax_TempZapis_edit_OK('.$ZapisHereQueryToday[$z]['id'].', '.$ZapisHereQueryToday[$z]['office'].')">Подтвердить</a><br />';
+									}
+									echo 
+												'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 1)">Пришёл</a><br />
+												<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 9)">Не пришёл</a><br />
+												<a href="#" onclick="alert(\'Временно не работает\')">Редактировать</a><br />
+												<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 8)">Ошибка, отметить на удаление</a><br />
+												<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 0)">Отменить все изменения</a><br />
+												';
+								}
+							}
 							echo '
 									</div>';
 							echo '
@@ -355,35 +364,6 @@
 			echo '	
 			<!-- Подложка только одна -->
 			<div id="overlay"></div>';
-
-
-			echo '	
-				<script>  
-					function Ajax_TempZapis_edit_Enter(id, enter) {
-						 
-						$.ajax({
-							//statbox:SettingsScheduler,
-							// метод отправки 
-							type: "POST",
-							// путь до скрипта-обработчика
-							url: "ajax_tempzapis_edit_enter_f.php",
-							// какие данные будут переданы
-							data: {
-								id:id,
-								enter:enter,
-								datatable:"'.$datatable.'"
-							},
-							// действие, при ответе с сервера
-							success: function(data){
-								//document.getElementById("req").innerHTML=data;
-								window.location.href = "scheduler_day_full.php?filial='.$_GET['filial'].'&who='.$who.'&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$_GET['kab'].'";
-							}
-						});						
-										
-										
-
-					};
-				</script>';
 
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

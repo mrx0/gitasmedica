@@ -199,11 +199,11 @@
 					$dopWho .= '&'.$key.'='.$value;
 			}
 				
-				$today = date("Y-m-d");
+				/*$today = date("Y-m-d");
 				$go_today = date('?\d=d&\m=m&\y=Y'.$dopFilial.$dopWho, mktime (0, 0, 0, date("m"), date("d"), date("Y"))); 
 				
-				$prev = date('?\d=d&\m=m&\y=Y'.$dopFilial.$dopWho, mktime (0, 0, 0, $month, $day-1, $year));  
-				$next = date('?\d=d&\m=m&\y=Y'.$dopFilial.$dopWho, mktime (0, 0, 0, $month, $day+1, $year));
+				/*$prev = date('?\d=d&\m=m&\y=Y'.$dopFilial.$dopWho, mktime (0, 0, 0, $month, $day-1, $year));  
+				$next = date('?\d=d&\m=m&\y=Y'.$dopFilial.$dopWho, mktime (0, 0, 0, $month, $day+1, $year));*/
 				
 				/*if(isset($_GET['filial'])){
 					$prev .= '&filial='.$_GET['filial']; 
@@ -258,7 +258,7 @@
 						echo '
 									<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
 										<div style="cursor: pointer;" onclick="manageZapis()">
-											<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>
+											<!--<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>-->
 										</div>
 									</li>';
 					}
@@ -426,6 +426,7 @@
 													if ($TempStartWorkTime_m < 10) $TempStartWorkTime_m = '0'.$TempStartWorkTime_m;
 													//вычисляем время окончания приёма
 													$TempEndWorkTime_h = floor(($ZapisHereQueryToday_val['start_time']+$ZapisHereQueryToday_val['wt'])/60);
+													if ($TempEndWorkTime_h > 23) $TempEndWorkTime_h = $TempEndWorkTime_h - 24;
 													$TempEndWorkTime_m = ($ZapisHereQueryToday_val['start_time']+$ZapisHereQueryToday_val['wt'])%60;
 													if ($TempEndWorkTime_m < 10) $TempEndWorkTime_m = '0'.$TempEndWorkTime_m;	
 													//Сдвиг для блока
@@ -505,8 +506,14 @@
 															$cellZapisValue_Height = 60;
 														}
 													}
+													//Если пришёл
 													if ($ZapisHereQueryToday_val['enter'] == 1){
 														$back_color = 'background-color: rgba(119, 255, 135, 1);';
+													}else{
+														//Если оформлено не на этом филиале
+														if($ZapisHereQueryToday_val['office'] != $ZapisHereQueryToday_val['add_from']){
+															$back_color = 'background-color: rgb(119, 255, 250);';
+														}
 													}
 													echo '
 														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'">
@@ -530,6 +537,7 @@
 												if ($TempStartWorkTime_m < 10) $TempStartWorkTime_m = '0'.$TempStartWorkTime_m;
 												//вычисляем время окончания приёма
 												$TempEndWorkTime_h = floor(($ZapisHereQueryToday[0]['start_time']+$ZapisHereQueryToday[0]['wt'])/60);
+												if ($TempEndWorkTime_h > 23) $TempEndWorkTime_h = $TempEndWorkTime_h - 24;
 												$TempEndWorkTime_m = ($ZapisHereQueryToday[0]['start_time']+$ZapisHereQueryToday[0]['wt'])%60;
 												if ($TempEndWorkTime_m < 10) $TempEndWorkTime_m = '0'.$TempEndWorkTime_m;	
 												//Сдвиг для блока
@@ -596,6 +604,11 @@
 												}
 												if ($ZapisHereQueryToday[0]['enter'] == 1){
 													$back_color = 'background-color: rgba(119, 255, 135, 1);';
+												}else{
+													//Если оформлено не на этом филиале
+													if($ZapisHereQueryToday[0]['office'] != $ZapisHereQueryToday[0]['add_from']){
+														$back_color = 'background-color: rgb(119, 255, 250);';
+													}
 												}
 												echo '
 													<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
@@ -745,6 +758,7 @@
 											if ($TempStartWorkTime_m < 10) $TempStartWorkTime_m = '0'.$TempStartWorkTime_m;
 											//вычисляем время окончания приёма
 											$TempEndWorkTime_h = floor(($PrevZapis['start_time']+$PrevZapis['wt'])/60);
+											if ($TempEndWorkTime_h > 23) $TempEndWorkTime_h = $TempEndWorkTime_h - 24;
 											$TempEndWorkTime_m = ($PrevZapis['start_time']+$PrevZapis['wt'])%60;
 											if ($TempEndWorkTime_m < 10) $TempEndWorkTime_m = '0'.$TempEndWorkTime_m;	
 											//Сдвиг для блока
@@ -754,6 +768,11 @@
 											
 											if ($NextSmenaArr[$k]['ZapisHereQueryToday']['enter'] == 1){
 												$back_color = 'background-color: rgba(119, 255, 135, 1);';
+											}else{
+												//Если оформлено не на этом филиале
+												if($NextSmenaArr[$k]['ZapisHereQueryToday']['office'] != $NextSmenaArr[$k]['ZapisHereQueryToday']['add_from']){
+													$back_color = 'background-color: rgb(119, 255, 250);';
+												}
 											}
 											echo '
 												<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'">
@@ -782,6 +801,7 @@
 														if ($TempStartWorkTime_m < 10) $TempStartWorkTime_m = '0'.$TempStartWorkTime_m;
 														//вычисляем время окончания приёма
 														$TempEndWorkTime_h = floor(($ZapisHereQueryToday_val['start_time']+$ZapisHereQueryToday_val['wt'])/60);
+														if ($TempEndWorkTime_h > 23) $TempEndWorkTime_h = $TempEndWorkTime_h - 24;
 														$TempEndWorkTime_m = ($ZapisHereQueryToday_val['start_time']+$ZapisHereQueryToday_val['wt'])%60;
 														if ($TempEndWorkTime_m < 10) $TempEndWorkTime_m = '0'.$TempEndWorkTime_m;	
 														//Сдвиг для блока
@@ -872,6 +892,11 @@
 														}
 														if ($ZapisHereQueryToday_val['enter'] == 1){
 															$back_color = 'background-color: rgba(119, 255, 135, 1);';
+														}else{
+															//Если оформлено не на этом филиале
+															if($ZapisHereQueryToday_val['office'] != $ZapisHereQueryToday_val['add_from']){
+																$back_color = 'background-color: rgb(119, 255, 250);';
+															}
 														}
 														echo '
 															<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'">
@@ -895,6 +920,7 @@
 													if ($TempStartWorkTime_m < 10) $TempStartWorkTime_m = '0'.$TempStartWorkTime_m;
 													//вычисляем время окончания приёма
 													$TempEndWorkTime_h = floor(($ZapisHereQueryToday[0]['start_time']+$ZapisHereQueryToday[0]['wt'])/60);
+													if ($TempEndWorkTime_h > 23) $TempEndWorkTime_h = $TempEndWorkTime_h - 24;
 													$TempEndWorkTime_m = ($ZapisHereQueryToday[0]['start_time']+$ZapisHereQueryToday[0]['wt'])%60;
 													if ($TempEndWorkTime_m < 10) $TempEndWorkTime_m = '0'.$TempEndWorkTime_m;	
 													//Сдвиг для блока
@@ -958,6 +984,11 @@
 													}
 													if ($ZapisHereQueryToday[0]['enter'] == 1){
 														$back_color = 'background-color: rgba(119, 255, 135, 1);';
+													}else{
+														//Если оформлено не на этом филиале
+														if($ZapisHereQueryToday[0]['office'] != $ZapisHereQueryToday[0]['add_from']){
+															$back_color = 'background-color: rgb(119, 255, 250);';
+														}
 													}
 													echo '
 														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
