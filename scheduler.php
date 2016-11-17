@@ -142,6 +142,8 @@
 				$year = date('Y');
 			}
 			
+			$day = date("d");
+			
 			$month_stamp = mktime(0, 0, 0, $month, 1, $year);
 
 			$day_count = date("t", $month_stamp);
@@ -297,6 +299,9 @@
 										<a href="?'.$who.'" class="dotyel" style="font-size: 70%;">Сбросить</a>
 									</div>
 								</div>
+							</li>
+							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
+								<a href="zapis.php?y='.$year.'&m='.$month.'&d='.$day.'&filial='.$_GET['filial'].''.$who.'" class="b">Запись сегодня</a>
 							</li>';
 								
 			echo widget_calendar ($month, $year, 'scheduler.php', $dop);

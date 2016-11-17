@@ -316,10 +316,6 @@
 							
 					
 					if ($kabsInFilialExist){
-						echo '
-							<table style="border:1px solid #BFBCB5; /*width: 100%;*/ background: #fff;">
-								<tr>';
-						
 						
 						$Work_Today_arr = array();
 						
@@ -343,6 +339,16 @@
 						}
 						//var_dump($Work_Today_arr);
 						
+						echo '
+							<div id="tabs_w" style="font-family: Verdana, Calibri, Arial, sans-serif; font-size: 100% !important;">
+								<ul>
+									<li><a href="#tabs-1">1 смена</a></li>
+									<li><a href="#tabs-2">2 смена</a></li>
+									<li><a href="#tabs-3">3 смена</a></li>
+									<li><a href="#tabs-4">4 смена</a></li>
+								</ul>';
+						
+						
 						$NextSmenaArr = array();
 						//$NextSmenaFill = FALSE;
 						//$PrevSmenaZapis = array();
@@ -351,7 +357,10 @@
 						
 						//сдвиг для блоков времени
 						$cellZapisTime_TopSdvig = 0;
-						
+						echo '
+						<div id="tabs-1">
+							<table style="border:1px solid #BFBCB5; /*width: 100%;*/ background: #fff;">
+								<tr>';
 						echo '
 							<td style="border:1px solid grey; vertical-align: top; width: 50px; min-width: 50px; max-width: 50px;">
 								<div class="" style="border: none; width: 100%;  height: 50px;">
@@ -671,14 +680,18 @@
 									</td>';
 						}
 						echo '
-								<tr>
-								</tr>';
+									</tr>
+								</table>
+							</div>';
 								
 						//смена 2
 						
 						//сдвиг для блоков времени
 						$cellZapisTime_TopSdvig = 0;
-						
+						echo '
+						<div id="tabs-2">
+							<table style="border:1px solid #BFBCB5; /*width: 100%;*/ background: #fff;">
+								<tr>';
 						echo '
 							<td style="border:1px solid grey; vertical-align: top; width: 50px; min-width: 50px; max-width: 50px;">
 								<div class="" style="border: none; width: 100%;  height: 50px;">
@@ -702,7 +715,7 @@
 						
 						for ($k = 1; $k <= count($kabsInFilial); $k++){
 							echo '
-									<td style="border:1px solid grey; vertical-align: top;">';
+									<td style="border:1px solid grey; vertical-align: top; width: 180px; min-width: 180px; max-width: 180px;">';
 							
 							if (isset($Work_Today_arr[$k][2])){
 									//var_dump($NextSmenaArr);
@@ -710,7 +723,7 @@
 									echo '
 										<a href="zapis_full.php?filial='.$_GET['filial'].'&who='.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="cellsBlock5 ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">
 											<div class="cellRight" id="month_date_worker" style="border: none; background-color:rgba(39, 183, 127, .5); height: 40px; outline: none;">
-												1 смена каб '.$k.'<br><i>'.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'</i>
+												2 смена каб '.$k.'<br><i>'.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'</i>
 												
 											</div>
 										</a>
@@ -1073,7 +1086,8 @@
 						}
 						echo '
 								</tr>
-							</table>';
+							</table>
+						</div>';
 					}else{
 						echo '<h1>В этом филиале нет кабинетов такого типа.</h1>';
 					}
