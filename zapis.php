@@ -1168,24 +1168,19 @@
 								<div id="ShowTimeSettingsHere">
 								</div>
 								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
-									<div class="cellLeft">Время записи</div>
+									<div class="cellLeft">Время начала</div>
 									<div class="cellRight">
-										<div id="work_time_h" style="display:inline-block;"></div>:<div id="work_time_m" style="display:inline-block;"></div>
+										<!--<div id="work_time_h" style="display:inline-block;"></div>:<div id="work_time_m" style="display:inline-block;"></div>-->
 										
+										<input type="number" size="2" name="work_time_h" id="work_time_h" min="0" max="23" value="0" class="mod" onchange="PriemTimeCalc();" onkeypress = "PriemTimeCalc();"> часов
+										<input type="number" size="2" name="work_time_m" id="work_time_m" min="0" max="59" step="5" value="30" class="mod" onchange="PriemTimeCalc();" onkeypress = "PriemTimeCalc();"> минут
 									</div>
 								</div>
 								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
-									<div class="cellLeft">Время приёма</div>
+									<div class="cellLeft">Длительность</div>
 									<div class="cellRight">
 										<!--<div id="work_time_h" style="display:inline-block;"></div>:<div id="work_time_m" style="display:inline-block;"></div>-->
-										<!--<select name="PriemTime" id="PriemTime" onchange="PriemTimeCalc(this.value);">
-											<option value="5">5 мин</option>
-											<option value="10">10 мин</option>
-											<option value="15">15 мин</option>
-											<option value="30" selected>30 мин</option>
-											<option value="60">1 час</option>
-											<option value="90">1 час 30 мин</option>
-										</select>-->
+
 										<input type="number" size="2" name="change_hours" id="change_hours" min="0" max="11" value="0" class="mod" onchange="PriemTimeCalc();" onkeypress = "PriemTimeCalc();"> часов
 										<input type="number" size="2" name="change_minutes" id="change_minutes" min="0" max="59" step="5" value="30" class="mod" onchange="PriemTimeCalc();" onkeypress = "PriemTimeCalc();"> минут
 									</div>
@@ -1283,15 +1278,18 @@
 						
 						var real_time_h = time/60|0;
 						var real_time_m = time%60;
-						if (real_time_m < 10) real_time_m = \'0\'+real_time_m;
+						if (real_time_m < 10) real_time_m = "0"+real_time_m;
 						
 						var real_time_h_end = (time+period)/60|0;
 						if (real_time_h_end > 23) real_time_h_end = real_time_h_end - 24;
 						var real_time_m_end = (time+period)%60;
 						if (real_time_m_end < 10) real_time_m_end = \'0\'+real_time_m_end;
 						
-						document.getElementById("work_time_h").innerHTML=real_time_h;
-						document.getElementById("work_time_m").innerHTML=real_time_m;
+						//document.getElementById("work_time_h").innerHTML=real_time_h;
+						//document.getElementById("work_time_m").innerHTML=real_time_m;
+
+						document.getElementById("work_time_h").value=real_time_h;
+						document.getElementById("work_time_m").value=real_time_m;
 						
 						document.getElementById("work_time_h_end").innerHTML=real_time_h_end;
 						document.getElementById("work_time_m_end").innerHTML=real_time_m_end;
@@ -1316,13 +1314,14 @@
 									
 									start_time:time,
 									
-									datatable:"'.$datatable.'"
+									datatable:"zapis"
 								},
 								// действие, при ответе с сервера
 								success: function(next_zapis_data){
 									//alert (next_zapis_data.next_time_start);
 									//document.getElementById("kab").innerHTML=nex_zapis_data;
 									next_time_start_rez = next_zapis_data.next_time_start;
+									next_time_end_rez = next_zapis_data.next_time_end;
 									//next_zapis_data;
 									
 								}
@@ -1332,7 +1331,8 @@
 						
 						if (next_time_start_rez != 0){
 						
-							if (time+period >= next_time_start_rez){
+							//if ((time+period > next_time_start_rez) || (time == next_time_start_rez)){
+							if (((time+period > next_time_start_rez) && (time+period < next_time_end_rez)) || ((time >= next_time_start_rez) && (time < next_time_end_rez))){
 								//document.getElementById("exist_zapis").innerHTML=\'<span style="color: red">Дальше есть запись</span>\';
 								
 								var raznica_vremeni = Math.abs(next_time_start_rez - time);
@@ -1356,12 +1356,15 @@
 								
 								document.getElementById("wt").value=change_hours*60+change_minutes;
 								
-							}
-							if (time+period < next_time_start_rez){
+								document.getElementById("Ajax_add_TempZapis").disabled = true; 
+							}else{
+							//if (time+period < next_time_start_rez){
 								document.getElementById("exist_zapis").innerHTML="";
+								document.getElementById("Ajax_add_TempZapis").disabled = false; 
 							}
 						}else{
 							document.getElementById("exist_zapis").innerHTML="";
+							document.getElementById("Ajax_add_TempZapis").disabled = false; 
 						}
 						
 
@@ -1421,120 +1424,7 @@
 							document.getElementById(idd+"_2").style.background = \'#F0F0F0\';
 					}
 					
-					function PriemTimeCalc(){
-						var start_time = Number(document.getElementById("start_time").value);
-						var change_hours = Number(document.getElementById("change_hours").value);
-						var change_minutes = Number(document.getElementById("change_minutes").value);
-						
-						var day = Number(document.getElementById("day").value);
-						var month = Number(document.getElementById("month").value);
-						var year = Number(document.getElementById("year").value);
-						
-						var filial = Number(document.getElementById("filial").value);
-						var kab = document.getElementById("kab").innerHTML;
-						
-						//alert(kab);
-						//alert(wt);
-						//alert(start_time);
-						//alert(start_time+wt);
-						
-						var next_time_start_rez = 0;
-						
-						$.ajax({
-								dataType: "json",
-								async: false,
-								// метод отправки 
-								type: "POST",
-								// путь до скрипта-обработчика
-								url: "get_next_zapis.php",
-								// какие данные будут переданы
-								data: {
-									day:day,
-									month:month,
-									year:year,
-									
-									filial:filial,
-									kab:kab,
-									
-									start_time:start_time,
-									
-									datatable:"'.$datatable.'"
-								},
-								// действие, при ответе с сервера
-								success: function(next_zapis_data){
-									//alert (next_zapis_data.next_time_start);
-									//document.getElementById("kab").innerHTML=nex_zapis_data;
-									next_time_start_rez = next_zapis_data.next_time_start;
-									//next_zapis_data;
-									
-								}
-							});		
-						
-						//alert (next_time_start_rez);
-						
-						if (change_minutes > 59){
-							change_minutes = 59;
-							document.getElementById("change_minutes").value = 59;
-						}
-						if (change_hours > 12){
-							change_hours = 11;
-							document.getElementById("change_hours").value = 11;
-						}
-						if ((change_hours == 0) && (change_minutes == 0)){
-							change_minutes = 5;
-							document.getElementById("change_minutes").value = 5;
-						}
-							
-							
-						//alert(change_hours);
-						//alert(change_minutes);
-						
-						var end_time = start_time+change_hours*60+change_minutes;
-						
-						//if (end_time > 1260){
-							//alert(\'Перебор\');
-						//}
-						
-						//alert(end_time);
-						
-						if (next_time_start_rez != 0){
-						
-							if (end_time >= next_time_start_rez){
-								//alert(next_time_start_rez);
-								document.getElementById("exist_zapis").innerHTML=\'<span style="color: red">Дальше есть запись</span>\';
-								
-								var raznica_vremeni = Math.abs(next_time_start_rez - start_time);
-								
-								document.getElementById("change_hours").value = raznica_vremeni/60|0;
-								document.getElementById("change_minutes").value = raznica_vremeni%60;
-								
-								change_hours = raznica_vremeni/60|0;
-								change_minutes = raznica_vremeni%60;
-								
-								end_time = start_time+change_hours*60+change_minutes;
-								
-							}
-							if (end_time < next_time_start_rez){
-								document.getElementById("exist_zapis").innerHTML=\'\';
-							}
-						}else{
-							document.getElementById("exist_zapis").innerHTML=\'\';
-						}
-						
-						var real_time_h_end = end_time/60|0;
-						if (real_time_h_end > 23) real_time_h_end = real_time_h_end - 24;
-						var real_time_m_end = end_time%60;
-						
-						//var real_time_h_end = (end_time + Number(wt))/60|0;
-						//var real_time_m_end = (end_time + Number(wt))%60;
-						
-						if (real_time_m_end < 10) real_time_m_end = \'0\'+real_time_m_end;
-						
-						document.getElementById("work_time_h_end").innerHTML=real_time_h_end;
-						document.getElementById("work_time_m_end").innerHTML=real_time_m_end;
-						
-						document.getElementById("wt").value=change_hours*60+change_minutes;
-					}
+
 
 					$(document).ready(function() {
 						$("#smena1").click(function() {

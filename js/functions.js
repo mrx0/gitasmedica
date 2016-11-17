@@ -1148,3 +1148,134 @@
 			}
 		});		
 	};
+	
+	function PriemTimeCalc(){
+		var work_time_h = Number(document.getElementById("work_time_h").value);
+		var work_time_m = Number(document.getElementById("work_time_m").value);
+		
+		var start_time = work_time_h*60+work_time_m;
+		
+		document.getElementById("start_time").value = start_time;
+		
+		//var start_time = Number(document.getElementById("start_time").value);
+		var change_hours = Number(document.getElementById("change_hours").value);
+		var change_minutes = Number(document.getElementById("change_minutes").value);
+		
+		var day = Number(document.getElementById("day").value);
+		var month = Number(document.getElementById("month").value);
+		var year = Number(document.getElementById("year").value);
+		
+		var filial = Number(document.getElementById("filial").value);
+		var kab = document.getElementById("kab").innerHTML;
+		
+		//alert(kab);
+		//alert(wt);
+		//alert(start_time);
+		//alert(start_time+wt);
+
+		if (change_minutes > 59){
+			change_minutes = 59;
+			document.getElementById("change_minutes").value = 59;
+		}
+		if (change_hours > 12){
+			change_hours = 11;
+			document.getElementById("change_hours").value = 11;
+		}
+		if ((change_hours == 0) && (change_minutes == 0)){
+			change_minutes = 5;
+			document.getElementById("change_minutes").value = 5;
+		}
+			
+		
+		var next_time_start_rez = 0;
+		
+		$.ajax({
+			dataType: "json",
+			async: false,
+			// метод отправки 
+			type: "POST",
+			// путь до скрипта-обработчика
+			url: "get_next_zapis.php",
+			// какие данные будут переданы
+			data: {
+				day:day,
+				month:month,
+				year:year,
+				
+				filial:filial,
+				kab:kab,
+				
+				start_time:start_time,
+				wt:change_hours*60+change_minutes,
+				
+				datatable:"zapis"
+			},
+			// действие, при ответе с сервера
+			success: function(next_zapis_data){
+				//alert (next_zapis_data.next_time_start);
+				//document.getElementById("kab").innerHTML=nex_zapis_data;
+				next_time_start_rez = next_zapis_data.next_time_start;
+				next_time_end_rez = next_zapis_data.next_time_end;
+				//next_zapis_data;
+				
+			}
+		});		
+						
+		//alert (next_time_start_rez);
+		//alert (next_time_end_rez);
+						
+		//alert(change_hours);
+		//alert(change_minutes);
+		
+		var end_time = start_time+change_hours*60+change_minutes;
+		
+		//if (end_time > 1260){
+			//alert(\'Перебор\');
+		//}
+		
+		//alert(start_time+' == '+next_time_start_rez);
+		
+		if (next_time_start_rez != 0){
+			//alert(next_time_start_rez);
+			
+			//if ((end_time > next_time_start_rez) || (start_time == next_time_start_rez)){
+			if (((end_time > next_time_start_rez) && (end_time < next_time_end_rez)) || ((start_time >= next_time_start_rez) && (start_time < next_time_end_rez))){
+				//alert(next_time_start_rez);
+				document.getElementById("exist_zapis").innerHTML='<span style="color: red">Дальше есть запись</span>';
+				
+				var raznica_vremeni = Math.abs(next_time_start_rez - start_time);
+				
+				document.getElementById("change_hours").value = raznica_vremeni/60|0;
+				document.getElementById("change_minutes").value = raznica_vremeni%60;
+				
+				change_hours = raznica_vremeni/60|0;
+				change_minutes = raznica_vremeni%60;
+				
+				end_time = start_time+change_hours*60+change_minutes;
+				
+				document.getElementById("Ajax_add_TempZapis").disabled = true; 
+			}else{
+			//if (end_time < next_time_start_rez){
+				document.getElementById("exist_zapis").innerHTML='';
+				document.getElementById("Ajax_add_TempZapis").disabled = false; 
+			}
+		}else{
+			document.getElementById("exist_zapis").innerHTML='';
+			document.getElementById("Ajax_add_TempZapis").disabled = false; 
+		}
+					
+		var real_time_h_end = end_time/60|0;
+		if (real_time_h_end > 23) real_time_h_end = real_time_h_end - 24;
+		var real_time_m_end = end_time%60;
+						
+		//var real_time_h_end = (end_time + Number(wt))/60|0;
+		//var real_time_m_end = (end_time + Number(wt))%60;
+						
+		if (real_time_m_end < 10) real_time_m_end = '0'+real_time_m_end;
+						
+		document.getElementById("work_time_h_end").innerHTML=real_time_h_end;
+		document.getElementById("work_time_m_end").innerHTML=real_time_m_end;
+						
+		document.getElementById("wt").value=change_hours*60+change_minutes;
+	}
+	
