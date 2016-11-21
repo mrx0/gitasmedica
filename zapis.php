@@ -579,8 +579,8 @@
 														$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 														$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;
 													}else{
-														$wt_FreeSpace = $ZapisHereQueryToday[0]['start_time'] - ($PrevZapis['start_time'] + $PrevZapis['wt']);
-														$wt_start_FreeSpace = $PrevZapis['start_time'] + $PrevZapis['wt'];
+														$wt_FreeSpace = $ZapisHereQueryToday[0]['start_time'] - $wt;
+														$wt_start_FreeSpace = $wt;
 														$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 														$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;
 													}
@@ -1088,6 +1088,23 @@
 								</tr>
 							</table>
 						</div>';
+						
+						//смена 3
+						
+						//сдвиг для блоков времени
+						$cellZapisTime_TopSdvig = 0;
+						echo '
+						<div id="tabs-3">
+						</div>';
+						
+						//смена 4
+						
+						//сдвиг для блоков времени
+						$cellZapisTime_TopSdvig = 0;
+						echo '
+						<div id="tabs-4">
+						</div>';
+						
 					}else{
 						echo '<h1>В этом филиале нет кабинетов такого типа.</h1>';
 					}

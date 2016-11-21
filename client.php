@@ -268,7 +268,31 @@
 				if (($finances['see_all'] != 0) || ($finances['see_own'] != 0) || $god_mode){
 					echo '				
 								<div class="cellsBlock2">
-									<a href="client_finance.php?client='.$client[0]['id'].'" class="b">Счёт <i class="fa fa-rub"></i></a>
+									<a href="client_finance.php?client='.$client[0]['id'].'" class="b">Счёт <i class="fa fa-rub"></i></a> ';
+					//Долги/авансы					
+					$clientDP = DebtsPrepayments ($client[0]['id']);
+					//var_dump ($clientDP);
+					
+					if ($clientDP != 0){
+						for ($i=0; $i<count($clientDP); $i++){
+							$repayments = Repayments($clientDP[$i]['id']);
+							if ($repayments != 0){
+								$ostatok = 0;
+								foreach($repayments as $value){
+									$ostatok += $value['summ'];
+								}
+								if ($clientDP[$i]['summ'] - $ostatok == 0){
+									//echo '<i>ЗАКРЫТО</i>';
+								}else{
+									echo '<i style="color:red;">Есть не погашенное</i>';
+								}
+							}
+								
+						}
+					}
+									
+									
+					echo '
 								</div>';
 				}
 				

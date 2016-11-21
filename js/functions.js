@@ -589,6 +589,42 @@
 		})
 	}
 	
+	function Ajax_show_result_stat_client_finance(){
+		
+		$.ajax({
+			url:"ajax_show_result_stat_client_finance.php",
+			global: false, 
+			type: "POST", 
+			data:
+			{
+				all_time:all_time,
+				datastart:document.getElementById("datastart").value,
+				dataend:document.getElementById("dataend").value,
+				
+				//all_age:all_age,
+				//agestart:document.getElementById("agestart").value,
+				//ageend:document.getElementById("ageend").value,
+				
+				//worker:document.getElementById("search_worker").value,
+				//filial:document.getElementById("filial").value,
+				filial:99,
+				
+				//pervich:document.querySelector('input[name="pervich"]:checked').value,
+
+				//sex:document.querySelector('input[name="sex"]:checked').value,
+				//wo_sex:wo_sex,
+
+			},
+			cache: false,
+			beforeSend: function() {
+				$('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			success:function(data){
+				$('#qresult').html(data);
+			}
+		})
+	}
+	
 	// !!!!
 	//$(document).ready(function () {
 		$('#showDiv1').click(function () {

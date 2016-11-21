@@ -74,6 +74,15 @@
 
 			echo '
 						</ul>
+						<ul style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 20px; width: 300px; font-size: 95%; background-color: rgba(245, 245, 245, 0.9);">
+								<h1>Финансы</h1>';
+			echo '				
+							<li class="cellsBlock" style="margin: 10px;">
+								<a href="stat_client_finance.php" class="b3">Долги/авансы</a>
+							</li>';
+
+			echo '
+						</ul>
 					</div>';
 
 		}else{

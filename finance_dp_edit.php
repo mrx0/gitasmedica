@@ -16,7 +16,7 @@
 			
 			if ($clientDP !=0){
 				
-				if (($clientDP[0]['date_expires'] > time() + 60*60*24) || ($finances['reopen'] == 1)){
+				if ((time() < $clientDP[0]['create_time'] + 60*60*24) || ($finances['reopen'] == 1) || $god_mode){
 				
 					if ($clientDP[0]['type'] == 3){
 						$descr = '<span style="color: green;">Аванс</span>';

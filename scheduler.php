@@ -234,7 +234,9 @@
 				</script>';
 
 			echo '
+			
 				<div id="status">
+					<div class="no_print"> 
 					<header>
 						<h2>График '.$whose.' на ',$monthsName[$month],' ',$year,' филиал '.$filial[0]['name'].'</h2>
 					</header>
@@ -252,19 +254,23 @@
 								<li>4 смена 3:00 - 9:00</li>
 							</ul>
 						</li>
-					</ul>';
+					</ul>
+					</div>';
 			echo '
 					<div id="data">
 						<ul style="margin-left: 6px; margin-bottom: 20px;">';
 			if (($scheduler['edit'] == 1) || $god_mode){
 				echo '
+							<div class="no_print"> 
 							<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
 								<div style="cursor: pointer;" onclick="manageScheduler()">
 									<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>
 								</div>
-							</li>';
+							</li>
+							</div>';
 			}
 			echo '			
+							<div class="no_print"> 
 							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
 								<a href="?'.$dopFilial.$dopDate.'&who=stom" class="b">Стоматологи</a>
@@ -302,9 +308,12 @@
 							</li>
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
 								<a href="zapis.php?y='.$year.'&m='.$month.'&d='.$day.'&filial='.$_GET['filial'].''.$who.'" class="b">Запись сегодня</a>
-							</li>';
+							</li>
+							</div>';
 								
+			echo '<div class="no_print">';
 			echo widget_calendar ($month, $year, 'scheduler.php', $dop);
+			echo '</div>';
 			
 			echo '</ul>';
 			
@@ -551,7 +560,7 @@
 								echo '
 											<div style="vertical-align:top;'.$holliday_color.'" id="blink2">
 												<!--<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b"  onclick="document.location.href = \'scheduler_day.php?y='.$year.'&m='.$month.'&d='.$d.'&filial='.$_GET['filial'].$who.'\'">запись</span>-->
-												<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b"><a href="zapis.php?y='.$year.'&m='.$month.'&d='.$d.'&filial='.$_GET['filial'].$who.'" class="ahref">запись</a></span>
+												<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b"><div class="no_print"> <a href="zapis.php?y='.$year.'&m='.$month.'&d='.$d.'&filial='.$_GET['filial'].$who.'" class="ahref">запись</a></div></span>
 													<div style="text-align: right;">
 														<strong>'.$d.'</strong>
 													</div>

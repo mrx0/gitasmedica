@@ -43,8 +43,10 @@
 									Авансы / долги
 								</li>';
 						for ($i=0; $i<count($clientDP); $i++){
+							$allpayed = false;
 							$descr = '';
 							$url = 'finance_dp.php';
+							$descrPayed = '';
 							
 							if ($clientDP[$i]['type'] == 3){
 								$descr = '<span style="color: green;">Аванс</span>';
@@ -55,10 +57,42 @@
 								//$url = 'finance_debt.php';
 							}
 							
+							$repayments = Repayments($clientDP[$i]['id']);
+							if ($repayments != 0){
+								$ostatok = 0;
+								$descrPayed .= '
+									<li class="cellsBlock" style="font-weight:bold; width: auto;">
+										Погашения
+									</li>';
+								foreach($repayments as $value){
+									$ostatok += $value['summ'];
+									$descrPayed .= '
+									<li class="cellsBlock" style="font-weight:bold; width: auto; background-color: rgba(255, 255, 0, 0.3);">	
+										<a href="finance_dp_repayment.php?id='.$value['id'].'" class="cellTime ahref" style="text-align: center; border: 0;">'.date('d.m.y H:i', $value['create_time']).'</a>
+										<div class="cellName" style="text-align: right; border: 0;">'.$value['summ'].' руб.</div>
+										<div class="cellText" style="text-align: right; border: 0; max-width: 250px;">'.$value['comment'].'</div>
+									</li>';
+								}
+								$descrPayed .= '
+									<li class="cellsBlock" style="font-weight:bold; width: auto; margin-bottom: 10px;  margin-top: 2px; background-color: rgba(6, 255, 0, 0.3);">
+										<div class="cellText" style="text-align: left; max-width: 250px;">
+											Остаток: '.($clientDP[$i]['summ'] - $ostatok).' руб. ';
+								if ($clientDP[$i]['summ'] - $ostatok == 0){
+									$descrPayed .= '- <i>ЗАКРЫТО</i>';
+									$allpayed = true;
+								}
+								$descrPayed .= '
+										</div>
+									</li>';
+							}
+							
 							$bgColor = '';
 							if ($clientDP[$i]['date_expires'] - time() <= 60*60*24*3){
 								$bgColor = 'background-color: rgba(254, 63, 63, 0.69);';
 							}
+							if ($allpayed){
+								$bgColor = 'background-color: rgba(101, 254, 63, 0.7);';
+							}								
 							
 							echo '
 								<li class="cellsBlock" style="font-weight:bold; width: auto;">	
@@ -69,36 +103,10 @@
 									<div class="cellName" style="text-align: right; '.$bgColor.'">до '.date('d.m.y', $clientDP[$i]['date_expires']).'</div>
 									<div class="cellText" style="text-align: right; max-width: 250px;">'.$clientDP[$i]['comment'].'</div>
 								</li>';
-							$repayments = Repayments($clientDP[$i]['id']);
-							if ($repayments != 0){
-								$ostatok = 0;
-								echo '
-									<li class="cellsBlock" style="font-weight:bold; width: auto;">
-										Погашения
-									</li>';
-								foreach($repayments as $value){
-									$ostatok += $value['summ'];
-									echo '
-									<li class="cellsBlock" style="font-weight:bold; width: auto; background-color: rgba(255, 255, 0, 0.3);">	
-										<a href="finance_dp_repayment.php?id='.$value['id'].'" class="cellTime ahref" style="text-align: center; border: 0;">'.date('d.m.y H:i', $value['create_time']).'</a>
-										<div class="cellName" style="text-align: right; border: 0;">'.$value['summ'].' руб.</div>
-										<div class="cellText" style="text-align: right; border: 0; max-width: 250px;">'.$value['comment'].'</div>
-									</li>';
-								}
-								echo '
-									<li class="cellsBlock" style="font-weight:bold; width: auto; margin-bottom: 10px;  margin-top: 2px; background-color: rgba(6, 255, 0, 0.3);">
-										<div class="cellText" style="text-align: left; max-width: 250px;">
-											Остаток: '.($clientDP[$i]['summ'] - $ostatok).' руб. ';
-								if ($clientDP[$i]['summ'] - $ostatok == 0){
-									echo '- <i>ЗАКРЫТО</i>';
-								}
-								echo '
-										</div>
-									</li>';
-							}
-				
-							echo '
-								</li>';
+								
+							echo $descrPayed;
+							/*echo '
+								</li>';*/
 						}
 					}else{
 						echo '
