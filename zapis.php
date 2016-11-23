@@ -778,6 +778,8 @@
 											$cellZapisValue_TopSdvig = 0;
 											//Высота блока
 											$cellZapisValue_Height = $NextSmenaArr[$k]['OstatokVremeni'];
+											if ($cellZapisValue_Height > 720)
+												$cellZapisValue_Height = 720;
 											
 											if ($NextSmenaArr[$k]['ZapisHereQueryToday']['enter'] == 1){
 												$back_color = 'background-color: rgba(119, 255, 135, 1);';
@@ -801,6 +803,11 @@
 										//$NextSmenaArr = array();
 									}
 									//!!! Доделать, если "рваная" запись залазит (не кратное 30 минутам)
+									
+									/*var_dump(!$NextSmenaArr_Bool);
+									var_dump($NextSmenaArr_Bool);
+									var_dump(((900+$NextSmenaArr_Zanimayu)-$wt)%30);*/
+									$NextSmenaArr_Bool = false;
 									if (!$NextSmenaArr_Bool || ($NextSmenaArr_Bool && (((900+$NextSmenaArr_Zanimayu)-$wt)%30 != 0))){
 										if ($ZapisHereQueryToday != 0){
 											

@@ -272,6 +272,7 @@
 					//Долги/авансы					
 					$clientDP = DebtsPrepayments ($client[0]['id']);
 					//var_dump ($clientDP);
+					$allPayed = true;					
 					
 					if ($clientDP != 0){
 						for ($i=0; $i<count($clientDP); $i++){
@@ -284,13 +285,14 @@
 								if ($clientDP[$i]['summ'] - $ostatok == 0){
 									//echo '<i>ЗАКРЫТО</i>';
 								}else{
-									echo '<i style="color:red;">Есть не погашенное</i>';
+									$allPayed = false;
 								}
 							}
 								
 						}
 					}
-									
+					if (!$allPayed)
+						echo '<i style="color:red;">Есть не погашенное</i>';					
 									
 					echo '
 								</div>';
