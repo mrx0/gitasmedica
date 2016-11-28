@@ -87,7 +87,7 @@
 				if (isset($_GET['who'])){
 					if ($_GET['who'] == 'stom'){
 						$who = '&who=stom';
-						$whose = 'Стоматологов ';
+						$whose = 'Стоматологи ';
 						$selected_stom = ' selected';
 						$selected_cosm = ' ';
 						$datatable = 'scheduler_stom';
@@ -95,7 +95,7 @@
 						$type = 5;
 					}elseif($_GET['who'] == 'cosm'){
 						$who = '&who=cosm';
-						$whose = 'Косметологов ';
+						$whose = 'Косметологи ';
 						$selected_stom = ' ';
 						$selected_cosm = ' selected';
 						$datatable = 'scheduler_cosm';
@@ -103,7 +103,7 @@
 						$type = 6;
 					}else{
 						$who = '&who=stom';
-						$whose = 'Стоматологов ';
+						$whose = 'Стоматологи ';
 						$selected_stom = ' selected';
 						$selected_cosm = ' ';
 						$datatable = 'scheduler_stom';
@@ -112,7 +112,7 @@
 					}
 				}else{
 					$who = '&who=stom';
-					$whose = 'Стоматологов ';
+					$whose = 'Стоматологи ';
 					$selected_stom = ' selected';
 					$selected_cosm = ' ';
 					$datatable = 'scheduler_stom';
@@ -202,9 +202,12 @@
 					echo '
 						<div id="status">
 							<header>
-								<h2>Запись пациентов на '.$d.' ',$month_names[$m-1],' ',$y,' филиал '.$filial[0]['name'].' кабинет '.$kab.'</h2>
-								<a href="zapis.php?filial='.$_GET['filial'].'&who='.$who.'&d='.$d.'&m='.$m.'&y='.$y.'" class="b">Запись</a>
-								<a href="scheduler.php?filial='.$_GET['filial'].'&who='.$who.'" class="b">График</a>
+								<h2>Запись '.$d.' ',$month_names[$m-1],' ',$y,'</h2>
+								<b>Филиал</b> '.$filial[0]['name'].'<br>
+								<b>Кабинет '.$kab.'</b><br>
+								<span style="color: green; font-size: 120%; font-weight: bold;">'.$whose.'</span><br>
+								<a href="zapis.php?filial='.$_GET['filial'].''.$who.'&d='.$d.'&m='.$m.'&y='.$y.'" class="b">Запись</a>
+								<a href="scheduler.php?filial='.$_GET['filial'].''.$who.'" class="b">График</a>
 								<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>
 								<br><br>';
 					/*echo '
@@ -232,8 +235,41 @@
 					
 							<div id="data">';
 							
+					echo '		
+							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
+							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
+								<a href="?filial='.$_GET['filial'].'&who=stom&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$kab.'" class="b">Стоматологи</a>
+								<a href="?filial='.$_GET['filial'].'&who=cosm&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$kab.'" class="b">Косметологи</a>
+							</li>';
+							
 					$ZapisHereQueryToday = FilialKabSmenaZapisToday($datatable, $y, $m, $d, $_GET['filial'], $kab, $type);
 					//var_dump($ZapisHereQueryToday);
+					
+					$kabsInFilial_arr = SelDataFromDB('spr_kabs', $_GET['filial'], 'office_kabs');
+					if ($kabsInFilial_arr != 0){
+						$kabsInFilial_json = $kabsInFilial_arr[0][$kabsForDoctor];
+						//var_dump($kabsInFilial_json);
+						
+						if ($kabsInFilial_json != NULL){
+							$kabsInFilialExist = TRUE;
+							$kabsInFilial = json_decode($kabsInFilial_json, true);
+							//var_dump($kabsInFilial);
+							//echo count($kabsInFilial);
+							
+						}else{
+							$kabsInFilialExist = FALSE;
+						}
+					}
+					if ($kabsInFilialExist){
+						echo '		
+							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите кабинет</span><br>
+							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">';
+						for ($k = 1; $k <= count($kabsInFilial); $k++){
+						echo '		
+								<a href="?filial='.$_GET['filial'].''.$who.'&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$k.'" class="b">каб '.$k.'</a>';
+						}
+						echo '</li>';
+					}
 					
 					if ($ZapisHereQueryToday != 0){
 
@@ -281,7 +317,7 @@
 							echo '
 									<div class="cellName">';
 							echo 
-										'Пациент <br /><b>'.WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user', true).'</b><br />'.$ZapisHereQueryToday[$z]['contacts'];
+										'Пациент <br /><b>'.WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user', true).'</b>';
 							echo '
 									</div>';
 							echo '
@@ -324,15 +360,138 @@
 										echo '
 												<a href="#" onclick="Ajax_TempZapis_edit_OK('.$ZapisHereQueryToday[$z]['id'].', '.$ZapisHereQueryToday[$z]['office'].')">Подтвердить</a><br />';
 									}
-									echo 
-												'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 1)">Пришёл</a><br />
-												<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 9)">Не пришёл</a><br />
-												<a href="#" onclick="alert(\'Временно не работает\')">Редактировать</a><br />
-												<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 8)">Ошибка, отметить на удаление</a><br />
-												<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 0)">Отменить все изменения</a><br />
-												';
+									if($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']){
+										if($ZapisHereQueryToday[$z]['enter'] != 8){
+											echo 
+													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 1)">Пришёл</a><br />';
+											echo 
+													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 9)">Не пришёл</a><br />';
+											/*echo 
+													'<a href="#" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 1, '.$ZapisHereQueryToday[$z]['start_time'].', '.$ZapisHereQueryToday[$z]['wt'].', '.$ZapisHereQueryToday[$z]['worker'].', \''.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user_full', false).'\')">Редактировать</a><br />';
+											*/echo 
+													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 8)">Ошибка, удалить из записи</a><br />';
+										}
+										echo 
+													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 0)">Отменить все изменения</a><br />';
+									}
 								}
 							}
+							
+			echo '
+					<div id="ShowSettingsAddTempZapis" style="position: absolute; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; z-index:105; padding:10px;">
+						<a class="close" href="#" onclick="HideSettingsAddTempZapis()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(img/close.png) no-repeat;">
+							Close
+						</a>
+						
+						<div id="SettingsAddTempZapis">
+
+							<div style="display:inline-block;">
+								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
+									<div class="cellLeft">Число</div>
+									<div class="cellRight" id="month_date">
+									</div>
+								</div>
+								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
+									<div class="cellLeft">Смена</div>
+									<div class="cellRight" id="month_date_smena">
+									</div>
+								</div>
+								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
+									<div class="cellLeft">Филиал</div>
+									<div class="cellRight" id="filial_name">
+									</div>
+								</div>
+								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
+									<div class="cellLeft">Кабинет №</div>
+									<div class="cellRight" id="kab">
+									</div>
+								</div>
+								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
+									<div class="cellLeft">Врач</div>
+									<div class="cellRight" id="worker_name">
+										<input type="text" size="30" name="searchdata2" id="search_client2" placeholder="Введите ФИО врача" value="" class="who2"  autocomplete="off">
+										<ul id="search_result2" class="search_result2"></ul><br />
+									</div>
+								</div>
+
+								<div class="cellsBlock2" style="font-size:80%; width:400px;">
+									<div class="cellLeft" style="font-weight: bold;">Пациент</div>
+									<div class="cellRight">
+										<input type="text" size="30" name="searchdata" id="search_client" placeholder="Введите ФИО пациента" value="" class="who"  autocomplete="off"> <a href="add_client.php" class="ahref"><i class="fa fa-plus-square" title="Добавить пациента" style="color: green; font-size: 120%;"></i></a>
+										<ul id="search_result" class="search_result"></ul><br />
+									</div>
+								</div>
+								<!--<div class="cellsBlock2" style="font-size:80%; width:400px;">
+									<div class="cellLeft" style="font-weight: bold;">Телефон</div>
+									<div class="cellRight" style="">
+										<input type="text" size="30" name="contacts" id="contacts" placeholder="Введите телефон" value="" autocomplete="off">
+									</div>
+								</div>-->
+								<div class="cellsBlock2" style="font-size:80%; width:400px;">
+									<div class="cellLeft" style="font-weight: bold;">Описание</div>
+									<div class="cellRight" style="">
+										<textarea name="description" id="description" style="width:90%; overflow:auto; height: 100px;"></textarea>
+									</div>
+								</div>		
+							</div>';
+			echo '
+							<div style="display:inline-block; vertical-align: top; width: 360px; border: 1px solid #C1C1C1;">
+								<div id="ShowTimeSettingsHere">
+								</div>
+								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
+									<div class="cellLeft">Время начала</div>
+									<div class="cellRight">
+										<!--<div id="work_time_h" style="display:inline-block;"></div>:<div id="work_time_m" style="display:inline-block;"></div>-->
+										
+										<input type="number" size="2" name="work_time_h" id="work_time_h" min="0" max="23" value="0" class="mod" onchange="PriemTimeCalc();" onkeypress = "PriemTimeCalc();"> часов
+										<input type="number" size="2" name="work_time_m" id="work_time_m" min="0" max="59" step="5" value="30" class="mod" onchange="PriemTimeCalc();" onkeypress = "PriemTimeCalc();"> минут
+									</div>
+								</div>
+								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
+									<div class="cellLeft">Длительность</div>
+									<div class="cellRight">
+										<!--<div id="work_time_h" style="display:inline-block;"></div>:<div id="work_time_m" style="display:inline-block;"></div>-->
+
+										<input type="number" size="2" name="change_hours" id="change_hours" min="0" max="11" value="0" class="mod" onchange="PriemTimeCalc();" onkeypress = "PriemTimeCalc();"> часов
+										<input type="number" size="2" name="change_minutes" id="change_minutes" min="0" max="59" step="5" value="30" class="mod" onchange="PriemTimeCalc();" onkeypress = "PriemTimeCalc();"> минут
+									</div>
+								</div>
+								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
+									<div class="cellLeft">Время окончания</div>
+									<div class="cellRight">
+										<div id="work_time_h_end" style="display:inline-block;"></div>:<div id="work_time_m_end" style="display:inline-block;"></div>
+									</div>
+								</div>
+								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
+									<div class="cellRight">
+										<div id="exist_zapis" style="display:inline-block;"></div>
+									</div>
+								</div>
+								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
+									<div class="cellRight">
+										<div id="errror"></div>
+									</div>
+								</div>
+							</div>
+						</div>';
+
+
+
+			echo '
+						<input type="hidden" id="day" name="day" value="0">
+						<input type="hidden" id="month" name="month" value="0">
+						<input type="hidden" id="year" name="year" value="0">
+						<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">
+						<input type="hidden" id="filial" name="filial" value="0">
+						<input type="hidden" id="start_time" name="start_time" value="0">
+						<input type="hidden" id="wt" name="wt" value="0">
+						<input type="hidden" id="worker_id" name="worker_id" value="0">
+						<!--<input type="button" class="b" value="Добавить" id="Ajax_add_TempZapis" onclick="Ajax_add_TempZapis('.$type.')">-->
+						<input type="button" class="b" value="OK" onclick="if (iCanManage) Ajax_add_TempZapis('.$type.')" id="Ajax_add_TempZapis">
+						<input type="button" class="b" value="Отмена" onclick="HideSettingsAddTempZapis()">
+					</div>';	
+							
+							
 							echo '
 									</div>';
 							echo '
@@ -365,6 +524,182 @@
 			<!-- Подложка только одна -->
 			<div id="overlay"></div>';
 
+			echo '
+					<script>';
+					
+			if (($zapis['add_new'] == 1) || $god_mode){
+				echo '		
+					function ShowSettingsAddTempZapis(filial, filial_name, kab, year, month, day, smena, time, period, worker_id, worker_name){
+						document.getElementById("errror").innerHTML="";
+						//alert(period);
+						$(\'#ShowSettingsAddTempZapis\').show();
+						$(\'#overlay\').show();
+						//alert(month_date);
+						window.scrollTo(0,0)
+						
+						document.getElementById("Ajax_add_TempZapis").disabled = false;
+						
+						
+						document.getElementById("filial").value=filial;
+						document.getElementById("year").value=year;
+						document.getElementById("month").value=month;
+						document.getElementById("day").value=day;
+						document.getElementById("start_time").value=time;
+						document.getElementById("wt").value=period;
+						document.getElementById("worker_id").value=worker_id;
+						
+						document.getElementById("filial_name").innerHTML=filial_name;
+						if (worker_id == 0){
+							document.getElementById("search_client2").value = "";
+						}else{
+							document.getElementById("search_client2").value = worker_name;
+						}
+						document.getElementById("kab").innerHTML=kab;
+						document.getElementById("month_date").innerHTML=day+\'.\'+month+\'.\'+year;
+						document.getElementById("month_date_smena").innerHTML=smena
+						
+						
+						document.getElementById("change_minutes").value = period;
+						
+						var real_time_h = time/60|0;
+						var real_time_m = time%60;
+						if (real_time_m < 10) real_time_m = "0"+real_time_m;
+						
+						var real_time_h_end = (time+period)/60|0;
+						if (real_time_h_end > 23) real_time_h_end = real_time_h_end - 24;
+						var real_time_m_end = (time+period)%60;
+						if (real_time_m_end < 10) real_time_m_end = \'0\'+real_time_m_end;
+						
+						//document.getElementById("work_time_h").innerHTML=real_time_h;
+						//document.getElementById("work_time_m").innerHTML=real_time_m;
+
+						document.getElementById("work_time_h").value=real_time_h;
+						document.getElementById("work_time_m").value=real_time_m;
+						
+						document.getElementById("work_time_h_end").innerHTML=real_time_h_end;
+						document.getElementById("work_time_m_end").innerHTML=real_time_m_end;
+						
+						var next_time_start_rez = 0;
+						
+						$.ajax({
+								dataType: "json",
+								async: false,
+								// метод отправки 
+								type: "POST",
+								// путь до скрипта-обработчика
+								url: "get_next_zapis.php",
+								// какие данные будут переданы
+								data: {
+									day:day,
+									month:month,
+									year:year,
+									
+									filial:filial,
+									kab:kab,
+									
+									start_time:time,
+									
+									datatable:"zapis"
+								},
+								// действие, при ответе с сервера
+								success: function(next_zapis_data){
+									//alert (next_zapis_data.next_time_start);
+									//document.getElementById("kab").innerHTML=nex_zapis_data;
+									next_time_start_rez = next_zapis_data.next_time_start;
+									next_time_end_rez = next_zapis_data.next_time_end;
+									//next_zapis_data;
+									
+								}
+						});
+						
+						//alert(next_time_start_rez);
+						
+						if (next_time_start_rez != 0){
+						
+							//if ((time+period > next_time_start_rez) || (time == next_time_start_rez)){
+							if (((time+period > next_time_start_rez) && (time+period < next_time_end_rez)) || ((time >= next_time_start_rez) && (time < next_time_end_rez))){
+								//document.getElementById("exist_zapis").innerHTML=\'<span style="color: red">Дальше есть запись</span>\';
+								
+								var raznica_vremeni = Math.abs(next_time_start_rez - time);
+								
+								document.getElementById("change_hours").value = raznica_vremeni/60|0;
+								document.getElementById("change_minutes").value = raznica_vremeni%60;
+								
+								change_hours = raznica_vremeni/60|0;
+								change_minutes = raznica_vremeni%60;
+								
+								var end_time = time+change_hours*60+change_minutes;
+								
+						
+								var real_time_h_end = end_time/60|0;
+								if (real_time_h_end > 23) real_time_h_end = real_time_h_end - 24;
+								var real_time_m_end = end_time%60;
+								if (real_time_m_end < 10) real_time_m_end = "0"+real_time_m_end;
+								
+								document.getElementById("work_time_h_end").innerHTML=real_time_h_end;
+								document.getElementById("work_time_m_end").innerHTML=real_time_m_end;
+								
+								document.getElementById("wt").value=change_hours*60+change_minutes;
+								
+								document.getElementById("Ajax_add_TempZapis").disabled = true; 
+							}else{
+							//if (time+period < next_time_start_rez){
+								document.getElementById("exist_zapis").innerHTML="";
+								document.getElementById("Ajax_add_TempZapis").disabled = false; 
+							}
+						}else{
+							document.getElementById("exist_zapis").innerHTML="";
+							document.getElementById("Ajax_add_TempZapis").disabled = false; 
+						}
+						
+
+						
+					}
+					
+					function HideSettingsAddTempZapis(){
+						$(\'#ShowSettingsAddTempZapis\').hide();
+						$(\'#overlay\').hide();
+						document.getElementById("wt").value = 0;
+						document.getElementById("change_hours").value = 0;
+						document.getElementById("change_minutes").value = 30;
+					}
+					
+					function ShowWorkersSmena(){
+						var smena = 0;
+						if ( $("#smena1").prop("checked")){
+							if ( $("#smena2").prop("checked")){
+								smena = 9;
+							}else{
+								smena = 1;
+							}
+						}else if ( $("#smena2").prop("checked")){
+							smena = 2;
+						}
+						
+						$.ajax({
+							// метод отправки 
+							type: "POST",
+							// путь до скрипта-обработчика
+							url: "show_workers_free.php",
+							// какие данные будут переданы
+							data: {
+								day:$(\'#day\').val(),
+								month:$(\'#month\').val(),
+								year:$(\'#year\').val(),
+								smena:smena,
+								datatable:"'.$datatable.'"
+							},
+							// действие, при ответе с сервера
+							success: function(workers){
+								document.getElementById("ShowWorkersHere").innerHTML=workers;
+							}
+						});	
+					}';
+			}	
+			echo '	
+				</script>';
+			
+			
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}

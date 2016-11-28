@@ -1082,7 +1082,8 @@
 		var day = $("#day").val();
 		
 		var patient = $("#search_client").val();
-		var contacts = $("#contacts").val();
+		//var contacts = $("#contacts").val();
+		var contacts = 0;
 		var description = $("#description").val();
 		
 		var start_time = $("#start_time").val();
@@ -1090,9 +1091,11 @@
 		
 		var kab = document.getElementById("kab").innerHTML;
 
-		var worker = $("#worker_id").val();
-		if(typeof worker == "undefined") worker = 0;
-
+		var worker = $("#search_client2").val();
+		//alert(worker);
+		if((typeof worker == "undefined") || (worker == "")) worker = 0;
+		//alert(worker);
+		
 		$.ajax({
 			global: false, 
 			type: "POST", 
@@ -1135,28 +1138,34 @@
 	};
 	
 	function Ajax_TempZapis_edit_Enter(id, enter) {
-		 
-		$.ajax({
-			//statbox:SettingsScheduler,
-			// метод отправки 
-			type: "POST",
-			// путь до скрипта-обработчика
-			url: "ajax_tempzapis_edit_enter_f.php",
-			// какие данные будут переданы
-			data: {
-				id:id,
-				enter:enter,
-				datatable: "zapis"
-			},
-			// действие, при ответе с сервера
-			success: function(data){
-				//document.getElementById("req").innerHTML=data;
-				//window.location.href = "";
-				setTimeout(function () {
-					location.reload()
-				}, 100);
-			}
-		});		
+		if (enter == 8){
+			var rys = confirm("Вы хотите удалить запись. \nЕё невозможно будет восстановить. \n\nВы уверены?");
+		}else{
+			var rys = true;
+		}
+		if (rys){
+			$.ajax({
+				//statbox:SettingsScheduler,
+				// метод отправки 
+				type: "POST",
+				// путь до скрипта-обработчика
+				url: "ajax_tempzapis_edit_enter_f.php",
+				// какие данные будут переданы
+				data: {
+					id:id,
+					enter:enter,
+					datatable: "zapis"
+				},
+				// действие, при ответе с сервера
+				success: function(data){
+					//document.getElementById("req").innerHTML=data;
+					//window.location.href = "";
+					setTimeout(function () {
+						location.reload()
+					}, 100);
+				}
+			});	
+		}
 	};
 
 
