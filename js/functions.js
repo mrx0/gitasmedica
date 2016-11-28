@@ -1324,3 +1324,35 @@
 		document.getElementById("wt").value=change_hours*60+change_minutes;
 	}
 	
+	//События при наведении/убирании мыши СуперТест!
+	document.body.onmouseover = document.body.onmouseout = handler;
+
+	function handler(event) {
+
+		/*function str(el) {
+			if (!el) return "null"
+			return el.className || el.tagName;
+		}*/
+
+		e = $('#ShowDescrTempZapis');
+		
+		if (event.type == 'mouseover') {
+			if (event.target.className == 'cellZapisVal'){
+				var id = $(this).attr('clientid');
+				
+				//if(!e.is(':visible')) {
+					e.show();
+				//}else{
+				//	e.hide();
+				//}
+			}
+		}
+		
+		if (event.type == 'mouseout') {
+			e.hide();
+			/*if (event.target.className == 'cellZapisVal'){
+				var id = $(this).attr('clientid');
+				event.target.style.background = '';
+			}*/
+		}
+	}

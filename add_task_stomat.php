@@ -462,7 +462,7 @@
 			<div id="modal2" class="modal_div">
 				<span class="modal_close">X</span>
 					
-						<h3>Выбор нескольких сегментов зубной формулы2</h3>
+						<h3>Выбор нескольких сегментов зубной формулы.</h3>
 						<b>Статус: </b>
 						<div id="t_summ_status"></div>
 

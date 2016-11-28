@@ -52,9 +52,15 @@
 					$full_name = CreateFullName(firspUpperCase(trim($_POST['f'])), firspUpperCase(trim($_POST['i'])), firspUpperCase(trim($_POST['o'])));
 					//Проверяем есть ли такой пациент
 					if (isSameFullName('spr_clients', $full_name, 0)){
+						//!!! Тупость, костыль.. то же самое делаем строчкой выше
+						$rezult = SelDataFromDB('spr_clients', $full_name, 'full_name');
+						//var_dump ($rezult);
+					
 						echo '
 							<div class="query_neok">
-								Такой пациент уже есть. Если тёзка, в конце отчества поставьте символ "*"<br /><br />
+								Такой пациент уже есть. <br>
+								<a href="client.php?id='.$rezult[0]['id'].'" class="b">'.$rezult[0]['name'].'</a><br>
+								Если тёзка, в конце отчества поставьте символ "*"<br /><br />
 							</div>';
 					}else{
 						//лечащий врач стоматология

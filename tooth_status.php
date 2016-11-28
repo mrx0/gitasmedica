@@ -99,6 +99,11 @@
 			'color' => '#FFF',
 			'img' => '../surface_state/38.png',
 		),
+		25 => array(
+			'descr' => 'Ретейнер',
+			'color' => '#FFF',
+			'img' => '../surface_state/38.png',
+		),
 		
 	);
 	

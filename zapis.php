@@ -254,7 +254,7 @@
 							<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>';
 
 					echo '
-							<div id="data">
+							<div id="data" style="margin: 0">
 								<ul style="margin-left: 6px; margin-bottom: 20px;">';
 					if (($zapis['edit'] == 1) || $god_mode){
 						echo '
@@ -263,6 +263,45 @@
 											<!--<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>-->
 										</div>
 									</li>';
+					}
+					
+					if (isset($_SESSION['filial'])){
+					
+						require 'config.php';
+						mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+						mysql_select_db($dbName) or die(mysql_error()); 
+						mysql_query("SET NAMES 'utf8'");
+						
+						$arr = array();
+						$rez = array();
+						
+						$query = "SELECT * FROM `zapis` WHERE `office` = '{$_SESSION['filial']}' AND `add_from` <> '{$_SESSION['filial']}'";
+						
+						$res = mysql_query($query) or die($query);
+						$number = mysql_num_rows($res);
+						if ($number != 0){
+							while ($arr = mysql_fetch_assoc($res)){
+								array_push($rez, $arr);
+							}
+						}else{
+							$rez = 0;
+						}
+						mysql_close();
+						//var_dump($rez);
+						if ($rez != 0){
+							echo '
+								<span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас есть неподтвёрждённые записи</span><br>';
+								foreach ($rez as $val){
+									if ($val['type'] == 5)
+										$who = '&who=stom';
+									if ($val['type'] == 6)
+										$who = '&who=cosm';
+									echo '
+									<li class="cellsBlock" style="width: auto; margin-bottom: 5px;">
+										<a href="zapis_full.php?filial='.$val['office'].''.$who.'&d='.$val['day'].'&m='.$val['month'].'&y='.$val['year'].'&kab='.$val['kab'].'" style="text-decoration: none; border-bottom: 1px dashed #000080;">'.$val['day'].'.'.$val['month'].'.'.$val['year'].' показать</a>
+									</li>';							
+								}
+						}
 					}
 					
 			echo '			
@@ -1325,6 +1364,11 @@
 			<!-- Подложка только одна -->
 			<div id="overlay"></div>';
 
+			/*echo '
+			<div id="ShowDescrTempZapis" style="display: none; position: fixed; padding: 10px; margin: 10px; top: 40px; left: 20px; background-color: rgba(255,255,0, .7); border: 1px dotted red; font-size: 75%;">
+
+			</div>
+			';*/
 			
 			echo '
 					<script>
