@@ -350,7 +350,7 @@
 											Изменить дату:
 											<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
 												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
-											<i class="fa fa-check-square" style="font-size: 130%; color: green; cursor: pointer" onclick="iWantThisDate2(\'zapis.php?'.$dopFilial.$dopWho.'\')"></i>
+											<span style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'zapis.php?'.$dopFilial.$dopWho.'\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
 										</span>
 									</div>
 								</li>';
@@ -590,8 +590,8 @@
 														}
 													}
 													echo '
-														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'">
-															'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'
+														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
+															'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'<br>
 															
 																<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $ZapisHereQueryToday_val['patient'], 'user', false).'</span> : '.$ZapisHereQueryToday_val['description'].'
 															';
@@ -880,8 +880,8 @@
 												}
 											}
 											echo '
-												<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'">
-													'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'
+												<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
+													'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'<br>
 													
 														<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $NextSmenaArr[$k]['ZapisHereQueryToday']['patient'], 'user', false).'</span> : '.$NextSmenaArr[$k]['ZapisHereQueryToday']['description'].'
 													';
@@ -1014,8 +1014,8 @@
 															}
 														}
 														echo '
-															<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'">
-																'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'
+															<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
+																'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'<br>
 																
 																	<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $ZapisHereQueryToday_val['patient'], 'user', false).'</span> : '.$ZapisHereQueryToday_val['description'].'
 																';
