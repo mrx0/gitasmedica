@@ -41,8 +41,8 @@
 		),
 		8 => array(
 			'descr' => 'Бюгельный протез',
-			'color' => '#00FF00',
-			'img' => '8.png',
+			'color' => '#700000',
+			'img' => '48.png',
 		),
 		9 => array(
 			'descr' => 'Мост',
@@ -104,6 +104,17 @@
 			'color' => '#FFF',
 			'img' => '../surface_state/38.png',
 		),
+		26 => array(
+			'descr' => 'Сверхкомплект',
+			'color' => '#FFF',
+			'img' => '../surface_state/38.png',
+		),
+		27 => array(
+			'descr' => 'Чужой протез',
+			'color' => '#00FF00',
+			'img' => '8.png',
+		),
+		
 		
 	);
 	

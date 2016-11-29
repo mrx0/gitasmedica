@@ -40,8 +40,8 @@ var tooth_status_arr = {
 		},
 	8: {
 			"descr": "Бюгельный протез",
-			"color": "#00FF00",
-			"img": "8.png",
+			"color": "#700000",
+			"img": "48.png",
 		},
 	9: {
 			"descr": "Мост",
@@ -108,7 +108,11 @@ var tooth_status_arr = {
 			"color": "#FFF",
 			"img": "../surface_state/38.png",
 		},
-		
+	27: {
+			"descr": "Чужой протез",
+			"color": "#00FF00",
+			"img": "8.png",
+		},
 };
 	
 	
@@ -155,7 +159,7 @@ var root_status_arr = {
 			"img": "19.png",
 		},
 		33: {
-			"descr": "Частичное пломбирование",
+			"descr": "Частич. пломб.",
 			"color": "#00FFFF",
 			"img": "20.png",
 		},
@@ -193,6 +197,11 @@ var root_status_arr = {
 			"descr": "Вкладка",
 			"color": "#00FF00",
 			"img": "27.png",
+		},
+		41: {
+			"descr": "Пломбировка (чуж.)",
+			"color": "#00FF00",
+			"img": "42.png",
 		},
 };
 

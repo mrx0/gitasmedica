@@ -125,7 +125,7 @@
 				</td>
 				<td class='cellsBlockHover'>
 				</td>	
-				<td class='cellsBlockHover'>
+				<<td class='cellsBlockHover'>
 					<a href='#modal1' class='open_modal' id='reset'><img src='img/list.jpg' border='0'/></a>
 				</td>
 			</tr>

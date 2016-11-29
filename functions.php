@@ -761,7 +761,7 @@
 		return $result;
 	}
 	
-	//Погашания
+	//Погашения
 	function Repayments ($id){
 		require 'config.php';
 		$result = array();

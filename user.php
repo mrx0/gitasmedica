@@ -408,6 +408,7 @@
 								success:function(data){
 									//document.getElementById("status_notes").innerHTML=data;
 									//alert("Ok");
+									location.reload();
 								}
 							})
 						});

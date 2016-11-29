@@ -81,7 +81,9 @@
 								
 								<div class="cellsBlock2">
 									<div class="cellLeft">Дата рождения</div>
-									<div class="cellRight">', $client[0]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $client[0]['birthday']) ,'</div>
+									<div class="cellRight">
+										', $client[0]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $client[0]['birthday']) ,'<br>
+										полных лет <b>'.getyeardiff($client[0]['birthday']).'</b></div>
 								</div>
 								
 								<div class="cellsBlock2">
