@@ -73,6 +73,7 @@
 							
 							polis:document.getElementById("polis").value,
 							polisdata:document.getElementById("polisdata").value,
+							insurecompany:document.getElementById("insurecompany").value,
 							
 							sex:sex_value,
 								
@@ -166,6 +167,7 @@
 							
 							polis:document.getElementById("polis").value,
 							polisdata:document.getElementById("polisdata").value,
+							insurecompany:document.getElementById("insurecompany").value,
 
 							sex:sex_value,
 							

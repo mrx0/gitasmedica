@@ -145,6 +145,22 @@
 											<span style="font-size: 80%; color: #AAA">Дата</span><br>
 											<input type="text" name="polisdata" id="polisdata" value="" size="10">
 										</div>
+										<div>
+											<span style="font-size: 80%; color: #AAA">Страховая компания</span><br>';
+							echo '
+											<select name="insurecompany" id="insurecompany">
+												<option value="0">Выберите страховую</option>';
+				$insures_j = SelDataFromDB('spr_insure', '', '');
+				
+				if ($insures_j != 0){
+					for ($i=0;$i<count($insures_j);$i++){
+
+						echo "<option value='".$insures_j[$i]['id']."'>".$insures_j[$i]['name']."</option>";
+					}
+				}
+				echo '
+											</select>
+										</div>
 									</div>
 								</div>
 							</div>

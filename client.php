@@ -169,8 +169,23 @@
 										<div>
 											<span style="font-size: 80%; color: #AAA">Дата</span><br>
 											'.$client[0]['polisdata'].'
-										</div>
-										
+										</div>';
+					if ($client[0]['insure'] == 0){
+						$insure = 'не указана';
+					}else{
+						$insures_j = SelDataFromDB('spr_insure', $client[0]['insure'], 'offices');
+						if ($insures_j == 0){
+							$insure = 'ошибка';
+						}else{
+							$insure = $insures_j[0]['name'];
+						}
+					}
+					echo '
+										<div>
+											<span style="font-size: 80%; color: #AAA">Страховая компания</span><br>
+											'.$insure.'
+										</div>';
+					echo '					
 									</div>
 								</div>';
 				}

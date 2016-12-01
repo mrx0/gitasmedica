@@ -141,6 +141,37 @@
 												<span style="font-size: 80%; color: #AAA">Дата</span><br>
 													<input type="text" name="polisdata" id="polisdata" value="'.$client[0]['polisdata'].'">
 											</div>
+											<div>
+												<span style="font-size: 80%; color: #AAA">Страховая компания</span><br>';
+				echo '
+												<select name="insurecompany" id="insurecompany">
+													<option value="0">Выберите страховую</option>';
+													
+				if ($offices_j != 0){
+					for ($i=0;$i<count($offices_j);$i++){
+						$selected = '';
+						if (isset($_GET['filial'])){
+							if ($offices_j[$i]['id'] == $_GET['filial']){
+								$selected = 'selected';
+							}
+						}
+						echo "<option value='".$offices_j[$i]['id']."' $selected>".$offices_j[$i]['name']."</option>";
+					}
+				}
+				$insures_j = SelDataFromDB('spr_insure', '', '');
+					
+				if ($insures_j != 0){
+					for ($i=0;$i<count($insures_j);$i++){
+						$selected = '';
+						if ($insures_j[$i]['id'] == $client[0]['insure']){
+							$selected = 'selected';
+						}
+						echo "<option value='".$insures_j[$i]['id']."' ".$selected.">".$insures_j[$i]['name']."</option>";
+					}
+				}
+				echo '
+												</select>
+											</div>
 										</div>
 									</div>
 								</div>';
