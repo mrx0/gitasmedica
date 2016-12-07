@@ -20,7 +20,7 @@
 						<header>
 							<h2>Карточка услуги';
 							
-				if (($item['edit'] == 1) || $god_mode){
+				if (($items['edit'] == 1) || $god_mode){
 					echo '
 								<a href="serviceitem_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 80%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
 				}

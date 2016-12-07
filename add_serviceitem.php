@@ -8,7 +8,7 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 		
-		if (($pricelist['add_new'] == 1) || $god_mode){
+		if (($items['add_new'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			

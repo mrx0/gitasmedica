@@ -257,7 +257,7 @@
 				$report = json_decode($permissions[0]['report'], true);
 				$spravka = json_decode($permissions[0]['spravka'], true);
 				$finances = json_decode($permissions[0]['finances'], true);
-				$item = json_decode($permissions[0]['item'], true);
+				$items = json_decode($permissions[0]['items'], true);
 				//var_dump($spravka);
 			}
 		}else{
@@ -286,8 +286,8 @@
 			$spravka['see_own'] = 0;
 			$finances['see_all'] = 0;
 			$finances['see_own'] = 0;
-			$item['see_all'] = 0;
-			$item['see_own'] = 0;
+			$items['see_all'] = 0;
+			$items['see_own'] = 0;
 			//
 			$it['add_new'] = 0;
 			$it['add_own'] = 0;
@@ -313,8 +313,8 @@
 			$spravka['add_own'] = 0;
 			$finances['add_new'] = 0;
 			$finances['add_own'] = 0;
-			$item['add_new'] = 0;
-			$item['add_own'] = 0;
+			$items['add_new'] = 0;
+			$items['add_own'] = 0;
 			//
 			$it['edit'] = 0;
 			$cosm['edit'] = 0;
@@ -328,7 +328,7 @@
 			$report['edit'] = 0;
 			$spravka['edit'] = 0;
 			$finances['edit'] = 0;
-			$item['edit'] = 0;
+			$items['edit'] = 0;
 			//
 			$it['close'] = 0;
 			$cosm['close'] = 0;
@@ -342,7 +342,7 @@
 			$report['close'] = 0;
 			$spravka['close'] = 0;
 			$finances['close'] = 0;
-			$item['close'] = 0;
+			$items['close'] = 0;
 			//
 			$it['reopen'] = 0;
 			$cosm['reopen'] = 0;
@@ -356,7 +356,7 @@
 			$report['reopen'] = 0;
 			$spravka['reopen'] = 0;
 			$finances['reopen'] = 0;
-			$item['reopen'] = 0;
+			$items['reopen'] = 0;
 			//
 			$it['add_worker'] = 0;
 			$cosm['add_worker'] = 0;
@@ -370,7 +370,7 @@
 			$report['add_worker'] = 0;
 			$spravka['add_worker'] = 0;
 			$finances['add_worker'] = 0;
-			$item['add_worker'] = 0;
+			$items['add_worker'] = 0;
 			//
 			
 		}

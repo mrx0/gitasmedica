@@ -7,7 +7,7 @@
 
 	if ($enter_ok){
 		require_once 'header_tags.php';
-		if (($item['see_all'] == 1) || ($item['see_own'] == 1) || $god_mode){
+		if (($items['see_all'] == 1) || ($items['see_own'] == 1) || $god_mode){
 			
 			//тип график (космет/стомат/...)
 			if (isset($_GET['who'])){
@@ -62,7 +62,7 @@
 									<a href="?who=stom" class="b">Стоматологи</a>
 									<a href="?who=cosm" class="b">Косметологи</a>
 								</li>';*/
-			if (($item['add_new'] == 1) || $god_mode){
+			if (($items['add_new'] == 1) || $god_mode){
 				echo '
 					<a href="add_serviceitem.php?'.$who.'" class="b">Добавить</a>';
 			}

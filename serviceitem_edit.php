@@ -13,10 +13,10 @@
 				include_once 'DBWork.php';
 				include_once 'functions.php';
 				
-				$item = SelDataFromDB('spr_services', $_GET['id'], 'id');
-				//var_dump($item);
+				$items_j = SelDataFromDB('spr_services', $_GET['id'], 'id');
+				//var_dump($items_j);
 				
-				if ($item !=0){
+				if ($items_j !=0){
 					echo '
 						<div id="status">
 							<header>
@@ -33,7 +33,7 @@
 									<div class="cellsBlock2">
 										<div class="cellLeft">Название</div>
 										<div class="cellRight">
-											<textarea name="servicename" id="servicename" style="width:90%; overflow:auto; height: 50px;">'.$item[0]['name'].'</textarea>
+											<textarea name="servicename" id="servicename" style="width:90%; overflow:auto; height: 50px;">'.$items_j[0]['name'].'</textarea>
 											<label id="servicename_error" class="error"></label>
 										</div>
 									</div>
