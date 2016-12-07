@@ -179,7 +179,7 @@
 		//логирование
 		//!!!AddLog (GetRealIp(), $create_person, '', 'Изменение в расписании. ['.date('d.m.y H:i', $time).']. ОФис: ['.$office.']. Пациент: ['.$client.']. Описание: ['.$for_log.']. Комментарий: '.$comment);
 	}
-
+	
 	//Вставка записей в расписание
 	function WriteToDB_DeleteScheduler ($datatable, $id){
 		require 'config.php';
@@ -214,6 +214,51 @@
 		//!!!AddLog (GetRealIp(), $create_person, '', 'Изменение в расписании. ['.date('d.m.y H:i', $time).']. ОФис: ['.$office.']. Пациент: ['.$client.']. Описание: ['.$for_log.']. Комментарий: '.$comment);
 	}
 
+	//Добавление услуги.
+	function WriteToDB_EditService ($name, $session_id){
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+		$time = time();
+		$query = "INSERT INTO `spr_services` (
+			`name`, `create_time`, `create_person`) 
+			VALUES (
+			'{$name}', '{$time}', '{$session_id}')";
+		mysql_query($query) or die(mysql_error().' -> '.$query);
+		mysql_close();
+		
+		//логирование
+		//AddLog (GetRealIp(), $session_id, '', 'Добавлен комментарий. ['.date('d.m.y H:i', $create_time).']. ['.$dtable.']:['.$parent.']. Описание: ['.$description.']');
+	}
+	
+	//Обновление карточки пациента из-под Web
+	function WriteServiceToDB_Update ($name, $session_id, $id){
+		$old = '';
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+		//Для лога соберем сначала то, что было в записи.
+		$query = "SELECT * FROM `spr_clients` WHERE `id`=$id";
+		$res = mysql_query($query) or die(mysql_error());
+		$number = mysql_num_rows($res);
+		if ($number != 0){
+			$arr = mysql_fetch_assoc($res);
+			$old = 'Комментарий: ['.$arr['comment'].']. Карта: ['.$arr['card'].']. Дата рождения: ['.$arr['birthday'].']. Пол: ['.$arr['sex'].']. Телефон: ['.$arr['telephone'].']. Серия/номер паспорта ['.$arr['passport'].']. Серия/номер паспорта (иностр.) ['.$arr['alienpassportser'].'/'.$arr['passportvidandata'].']. Дата выдачи ['.$arr['passportvidandata'].']. Выдан кем ['.$arr['passportvidankem'].']. Адрес ['.$arr['address'].']. Полис ['.$arr['polis'].']. Дата ['.$arr['polisdata'].']. Страховая ['.$arr['insure'].']. Лечащий врач [стоматология]: ['.$arr['therapist'].']. Лечащий врач [косметология]: ['.$arr['therapist2'].']';
+		}else{
+			$old = 'Не нашли старую запись.';
+		}
+		$time = time();
+		$query = "UPDATE `spr_clients` SET `sex`='{$sex}', `birthday`='{$birthday}', `therapist`='{$therapist}', `therapist2`='{$therapist2}', `comment`='{$comment}', `card`='{$card}', `telephone`='{$telephone}', `passport`='{$passport}', `alienpassportser`='{$alienpassportser}', `alienpassportnom`='{$alienpassportnom}', `passportvidandata`='{$passportvidandata}', `passportvidankem`='{$passportvidankem}', `address`='{$address}', `polis`='{$polis}', `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `fo`='{$fo}', `io`='{$io}', `oo`='{$oo}', `htelephone`='{$htelephone}', `telephoneo`='{$telephoneo}', `htelephoneo`='{$htelephoneo}', `polisdata`='{$polisdata}', `insure`='{$insurecompany}' WHERE `id`='{$id}'";
+		mysql_query($query) or die(mysql_error());
+		mysql_close();
+		
+		//логирование
+		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован пациент ['.$id.']. ['.date('d.m.y H:i', $time).']. Комментарий: ['.$comment.']. Карта: ['.$card.']. Дата рождения: ['.$birthday.']. Пол: ['.$sex.']. Телефон: ['.$telephone.']. Серия/номер паспорта ['.$passport.']. Серия/номер паспорта (иностр.) ['.$alienpassportser.'/'.$passportvidandata.']. Дата выдачи ['.$passportvidandata.']. Выдан кем ['.$passportvidankem.']. Адрес ['.$address.']. Полис ['.$polis.']. Дата ['.$polisdata.']. Страховая ['.$insurecompany.']. Лечащий врач [стоматология]: ['.$therapist.']. Лечащий врач [косметология]: ['.$therapist2.']');
+	}
+
+	
 	//Вставка записей в журнал Cosmet из-под Web
 	function WriteToDB_EditCosmet ($office, $client, $description, $create_time, $create_person, $last_edit_time, $last_edit_person, $worker, $comment){
 		$param = '';
@@ -719,6 +764,12 @@
 				}
 				if ($type == 'full_name'){
 					$q = " WHERE `full_name` = '$sw'";
+				}
+				if ($type == 'name'){
+					$q = " WHERE `name` = '$sw'";
+				}
+				if ($type == 'services'){
+					$q = " WHERE `services` = '$sw'";
 				}
 				if ($type == 'offices'){
 					$q = " WHERE `id` = '$sw'";
