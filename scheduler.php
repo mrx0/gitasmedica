@@ -315,7 +315,7 @@
 			}
 			if (($zapis['see_all'] == 1) || $god_mode){
 				echo '
-								<a href="zapis_own.php?y='.$year.'&m='.$month.'&d='.$day.'&filial='.$_GET['filial'].''.$who.'" class="b">Запись сегодня</a>';
+								<a href="zapis.php?y='.$year.'&m='.$month.'&d='.$day.'&filial='.$_GET['filial'].''.$who.'" class="b">Запись сегодня</a>';
 			}
 			echo '
 							</li>
