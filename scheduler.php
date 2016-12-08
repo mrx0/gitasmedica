@@ -306,8 +306,18 @@
 									</div>
 								</div>
 							</li>
-							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-								<a href="zapis.php?y='.$year.'&m='.$month.'&d='.$day.'&filial='.$_GET['filial'].''.$who.'" class="b">Запись сегодня</a>
+							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">';
+			if ($zapis['see_own'] == 1){
+				if ($type == $_SESSION['permissions']){
+					echo '
+								<a href="zapis_own.php?y='.$year.'&m='.$month.'&d='.$day.'&worker='.$_SESSION['id'].'" class="b">Ваша запись сегодня</a>';
+				}
+			}
+			if (($zapis['see_all'] == 1) || $god_mode){
+				echo '
+								<a href="zapis_own.php?y='.$year.'&m='.$month.'&d='.$day.'&filial='.$_GET['filial'].''.$who.'" class="b">Запись сегодня</a>';
+			}
+			echo '
 							</li>
 							</div>';
 								
@@ -560,7 +570,22 @@
 								echo '
 											<div style="vertical-align:top;'.$holliday_color.'" id="blink2">
 												<!--<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b"  onclick="document.location.href = \'scheduler_day.php?y='.$year.'&m='.$month.'&d='.$d.'&filial='.$_GET['filial'].$who.'\'">запись</span>-->
-												<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b"><div class="no_print"> <a href="zapis.php?y='.$year.'&m='.$month.'&d='.$d.'&filial='.$_GET['filial'].$who.'" class="ahref">запись</a></div></span>
+												<div>';
+								if ($zapis['see_own'] == 1){
+									if ($type == $_SESSION['permissions']){
+										echo '
+													<span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b">
+														<div class="no_print"> <a href="zapis_own.php?y='.$year.'&m='.$month.'&d='.$d.'&worker='.$_SESSION['id'].'" class="ahref">ваша запись</a></div>
+													</span>';
+									}
+								}
+								if (($zapis['see_all'] == 1) || $god_mode){
+									echo '
+													<span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b">
+														<div class="no_print"> <a href="zapis.php?y='.$year.'&m='.$month.'&d='.$d.'&filial='.$_GET['filial'].$who.'" class="ahref">запись</a></div>
+													</span>';
+								}
+								echo '				
 													<div style="text-align: right;">
 														<strong>'.$d.'</strong>
 													</div>

@@ -100,11 +100,33 @@
 				//$first_db = FALSE;
 			}
 			
-			//Автоматизация выбора филиала
-			if (isset($_SESSION['filial']) && !empty($_SESSION['filial'])){
-				$selected_fil = $_SESSION['filial'];
+			if (isset($_GET['filial'])){
+				$selected_fil = $_GET['filial'];
 			}else{
-				$selected_fil = 0;
+				//Автоматизация выбора филиала
+				if (isset($_SESSION['filial']) && !empty($_SESSION['filial'])){
+					$selected_fil = $_SESSION['filial'];
+				}else{
+					$selected_fil = 0;
+				}			
+			}
+			
+			if (isset($_GET['pervich']) && ($_GET['pervich'] == 1)){
+				$pervich_check = ' checked';
+			}else{
+				$pervich_check = '';			
+			}
+			
+			if (isset($_GET['insured']) && ($_GET['insured'] == 1)){
+				$insured_check = ' checked';
+			}else{
+				$insured_check = '';			
+			}
+			
+			if (isset($_GET['noch']) && ($_GET['noch'] == 1)){
+				$noch_check = ' checked';
+			}else{
+				$noch_check = '';			
 			}
 			
 			//$t_f_data_db = $t_f_data_db_temp;
@@ -393,21 +415,21 @@
 						<div class="cellsBlock3">
 							<div class="cellLeft">Первичный</div>
 							<div class="cellRight">
-								<input type="checkbox" name="pervich" id="pervich" value="1" > да
+								<input type="checkbox" name="pervich" id="pervich" value="1" '.$pervich_check.'> да
 							</div>
 						</div>';
 				echo '
 						<div class="cellsBlock3">
 							<div class="cellLeft">Страховой</div>
 							<div class="cellRight">
-								<input type="checkbox" name="insured" id="insured" value="1" > да
+								<input type="checkbox" name="insured" id="insured" value="1" '.$insured_check.'> да
 							</div>
 						</div>';
 				echo '
 						<div class="cellsBlock3">
 							<div class="cellLeft">Ночной</div>
 							<div class="cellRight">
-								<input type="checkbox" name="noch" id="noch" value="1" > да
+								<input type="checkbox" name="noch" id="noch" value="1" '.$noch_check.'> да
 							</div>
 						</div>';
 

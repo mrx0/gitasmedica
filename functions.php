@@ -396,6 +396,30 @@
 		return $sheduler_zapis;
 	}
 	
+	function FilialWorkerSmenaZapisToday($table, $y, $m, $d, $worker){
+		require 'config.php';
+
+		$sheduler_zapis = array();
+		
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+		//$wt2 = $wt+30;
+		$query = "SELECT * FROM `zapis` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `worker` = '{$worker}' AND `enter` <> 9 AND `enter` <> 8 ORDER BY `start_time` ASC";
+		//echo $query;
+		$res = mysql_query($query) or die($query);
+		$number = mysql_num_rows($res);
+		if ($number != 0){
+			while ($arr = mysql_fetch_assoc($res)){
+				array_push($sheduler_zapis, $arr);
+			}
+		}else
+			$sheduler_zapis = 0;
+		mysql_close();
+		
+		return $sheduler_zapis;
+	}
+	
 	//Полных лет / Возраст
 	function getyeardiff($bday){
 		$today = time();

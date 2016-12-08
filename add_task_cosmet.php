@@ -24,11 +24,16 @@
 				}
 				
 			}
-			//Автоматизация выбора филиала
-			if (isset($_SESSION['filial']) && !empty($_SESSION['filial'])){
-				$selected_fil = $_SESSION['filial'];
+			
+			if (isset($_GET['filial'])){
+				$selected_fil = $_GET['filial'];
 			}else{
-				$selected_fil = 0;
+				//Автоматизация выбора филиала
+				if (isset($_SESSION['filial']) && !empty($_SESSION['filial'])){
+					$selected_fil = $_SESSION['filial'];
+				}else{
+					$selected_fil = 0;
+				}			
 			}
 
 			

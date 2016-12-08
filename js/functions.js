@@ -1145,6 +1145,22 @@
 		if((typeof worker == "undefined") || (worker == "")) worker = 0;
 		//alert(worker);
 		
+		if ($("#pervich").prop("checked")){
+			var pervich = 1;
+		}else{
+			var pervich = 0;
+		}
+		if ($("#insured").prop("checked")){
+			var insured = 1;
+		}else{
+			var insured = 0;
+		}
+		if ($("#noch").prop("checked")){
+			var noch = 1;
+		}else{
+			var noch = 0;
+		}
+		
 		$.ajax({
 			global: false, 
 			type: "POST", 
@@ -1165,6 +1181,11 @@
 				description:description,
 				contacts:contacts,
 				patient:patient,
+				
+				pervich:pervich,
+				insured:insured,
+				noch:noch,
+				
 				type:type
 			},
 			cache: false,

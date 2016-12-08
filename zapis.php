@@ -435,7 +435,7 @@
 									<div class="cellsBlock5 ahref" style="border: none; font-weight: bold; font-size:80%;"user_full>
 										<div class="cellRight" id="month_date_worker" style="border: none; background-color:rgba(39, 183, 127, .5); height: 40px; outline: none; position: relative;">
 											1 смена каб '.$k.'<br><i>'.WriteSearchUser('spr_workers', $worker, 'user', false).'</i>
-											<div class="b" style="position: absolute; top: 0; right: 0; color: #0C0C0C; margin: 0; padding: 1px 5px;"><a href="zapis_full.php?filial='.$_GET['filial'].'&who='.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">Подробно</a></div>
+											<div class="b" style="position: absolute; top: 0; right: 0; color: #0C0C0C; margin: 0; padding: 1px 5px;"><a href="zapis_full.php?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">Подробно</a></div>
 										</div>
 									</div>';
 							}else{
@@ -446,8 +446,8 @@
 										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
 											<div class="cellRight" id="month_date_worker" style="border: none; height: 40px; outline: none; position: relative;">
 												1 смена каб '.$k.'<br>
-												<span style="color:red;">нет врача по <a href="scheduler.php?filial='.$_GET['filial'].'&who='.$who.'">графику</a></span>
-												<div class="b" style="position: absolute; top: 0; right: 0; color: #0C0C0C; margin: 0; padding: 1px 5px;"><a href="zapis_full.php?filial='.$_GET['filial'].'&who='.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">Подробно</a></div>
+												<span style="color:red;">нет врача по <a href="scheduler.php?filial='.$_GET['filial'].''.$who.'">графику</a></span>
+												<div class="b" style="position: absolute; top: 0; right: 0; color: #0C0C0C; margin: 0; padding: 1px 5px;"><a href="zapis_full.php?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">Подробно</a></div>
 											</div>
 										</div>';
 							}
@@ -791,7 +791,7 @@
 									<div class="cellsBlock5 ahref" style="border: none; font-weight: bold; font-size:80%;"user_full>
 										<div class="cellRight" id="month_date_worker" style="border: none; background-color:rgba(39, 183, 127, .5); height: 40px; outline: none; position: relative;">
 											1 смена каб '.$k.'<br><i>'.WriteSearchUser('spr_workers', $worker, 'user', false).'</i>
-											<div class="b" style="position: absolute; top: 0; right: 0; color: #0C0C0C; margin: 0; padding: 1px 5px;"><a href="zapis_full.php?filial='.$_GET['filial'].'&who='.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">Подробно</a></div>
+											<div class="b" style="position: absolute; top: 0; right: 0; color: #0C0C0C; margin: 0; padding: 1px 5px;"><a href="zapis_full.php?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">Подробно</a></div>
 										</div>
 									</div>';
 							}else{
@@ -802,8 +802,8 @@
 										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
 											<div class="cellRight" id="month_date_worker" style="border: none; height: 40px; outline: none; position: relative;">
 												1 смена каб '.$k.'<br>
-												<span style="color:red;">нет врача по <a href="scheduler.php?filial='.$_GET['filial'].'&who='.$who.'">графику</a></span>
-												<div class="b" style="position: absolute; top: 0; right: 0; color: #0C0C0C; margin: 0; padding: 1px 5px;"><a href="zapis_full.php?filial='.$_GET['filial'].'&who='.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">Подробно</a></div>
+												<span style="color:red;">нет врача по <a href="scheduler.php?filial='.$_GET['filial'].''.$who.'">графику</a></span>
+												<div class="b" style="position: absolute; top: 0; right: 0; color: #0C0C0C; margin: 0; padding: 1px 5px;"><a href="zapis_full.php?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">Подробно</a></div>
 											</div>
 										</div>';
 							}
@@ -1275,7 +1275,7 @@
 								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
 									<div class="cellLeft">Врач</div>
 									<div class="cellRight" id="worker_name">
-										<input type="text" size="30" name="searchdata2" id="search_client2" placeholder="Введите ФИО врача" value="" class="who2"  autocomplete="off">
+										<input type="text" size="30" name="searchdata2" id="search_client2" placeholder="Введите ФИО врача" value="" class="who2"  autocomplete="off" style="width: 90%;">
 										<ul id="search_result2" class="search_result2"></ul><br />
 									</div>
 								</div>
@@ -1283,7 +1283,7 @@
 								<div class="cellsBlock2" style="font-size:80%; width:400px;">
 									<div class="cellLeft" style="font-weight: bold;">Пациент</div>
 									<div class="cellRight">
-										<input type="text" size="30" name="searchdata" id="search_client" placeholder="Введите ФИО пациента" value="" class="who"  autocomplete="off"> <a href="add_client.php" class="ahref"><i class="fa fa-plus-square" title="Добавить пациента" style="color: green; font-size: 120%;"></i></a>
+										<input type="text" size="30" name="searchdata" id="search_client" placeholder="Введите ФИО пациента" value="" class="who"  autocomplete="off" style="width: 90%;"> <a href="add_client.php" class="ahref"><i class="fa fa-plus-square" title="Добавить пациента" style="color: green; font-size: 120%;"></i></a>
 										<ul id="search_result" class="search_result"></ul><br />
 									</div>
 								</div>
@@ -1299,6 +1299,24 @@
 										<textarea name="description" id="description" style="width:90%; overflow:auto; height: 100px;"></textarea>
 									</div>
 								</div>		
+								<div class="cellsBlock2" style="font-size:80%; width:400px;">
+									<div class="cellLeft" style="font-weight: bold;">Первичный</div>
+									<div class="cellRight">
+										<input type="checkbox" name="pervich" id="pervich" value="1"> да
+									</div>
+								</div>
+								<div class="cellsBlock2" style="font-size:80%; width:400px;">
+									<div class="cellLeft" style="font-weight: bold;">Страховой</div>
+									<div class="cellRight">
+										<input type="checkbox" name="insured" id="insured" value="1"> да
+									</div>
+								</div>
+								<div class="cellsBlock2" style="font-size:80%; width:400px;">
+									<div class="cellLeft" style="font-weight: bold;">Ночной</div>
+									<div class="cellRight">
+										<input type="checkbox" name="noch" id="noch" value="1"> да
+									</div>
+								</div>
 							</div>';
 			echo '
 							<div style="display:inline-block; vertical-align: top; width: 360px; border: 1px solid #C1C1C1;">

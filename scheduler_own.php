@@ -475,7 +475,15 @@
 															
 										echo '
 													<div style="vertical-align:top;'.$holliday_color.'" id="blink2">
-														<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b"  onclick="alert(\'Скоро\')">запись</span>
+														<!--<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b"  onclick="alert(\'Скоро\')">запись</span>-->
+														<div>
+															<span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b">';
+								
+										echo '
+																<div class="no_print"> <a href="zapis_own.php?y='.$year.'&m='.$month.'&d='.$d.'&worker='.$_GET['id'].'" class="ahref">запись</a></div>';
+
+										echo '					
+															</span>
 															<div style="text-align: right;">
 																<strong>'.$d.'</strong>
 															</div>

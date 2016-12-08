@@ -1,14 +1,14 @@
 <?php
 
-//zapis_full.php
-//Вся щапись на день 
+//zapis_own.php
+//Вся запись на день 
 
 	require_once 'header.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
 
-		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
+		if (($zapis['see_all'] == 1) || ($zapis['see_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			$offices = SelDataFromDB('spr_office', '', '');
@@ -176,10 +176,10 @@
 				$i = 0;
 				
 				
-				$filial = SelDataFromDB('spr_office', $_GET['filial'], 'offices');
+
 				//var_dump($filial['name']);
 				
-				$kabsInFilial_arr = SelDataFromDB('spr_kabs', $_GET['filial'], 'office_kabs');
+				/*$kabsInFilial_arr = SelDataFromDB('spr_kabs', $_GET['filial'], 'office_kabs');
 				if ($kabsInFilial_arr != 0){
 					$kabsInFilial_json = $kabsInFilial_arr[0][$kabsForDoctor];
 					//var_dump($kabsInFilial_json);
@@ -194,22 +194,20 @@
 						$kabsInFilialExist = FALSE;
 					}
 					
-				}
+				}*/
 					
 				
-				if ($filial != 0){
+				//if ($filial != 0){
 					
 					echo '
 						<div id="status">
 							<header>
 								<h2>Запись '.$d.' ',$month_names[$m-1],' ',$y,'</h2>
-								<b>Филиал</b> '.$filial[0]['name'].'<br>
-								<b>Кабинет '.$kab.'</b><br>
-								<span style="color: green; font-size: 120%; font-weight: bold;">'.$whose.'</span><br>
-								<a href="zapis.php?filial='.$_GET['filial'].''.$who.'&d='.$d.'&m='.$m.'&y='.$y.'" class="b">Запись</a>
-								<a href="scheduler.php?filial='.$_GET['filial'].''.$who.'" class="b">График</a>
-								<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>
-								<br><br>';
+								<span style="font-size: 120%; font-weight: bold;">'.WriteSearchUser('spr_workers', $_GET['worker'], 'user', true).'</span><br>
+							</header>
+							<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>
+							<br><br>';
+								
 					/*echo '
 								<form>
 									<select name="SelectFilial" id="SelectFilial">
@@ -228,54 +226,18 @@
 										<option value="cosm"'.$selected_cosm.'>Косметологи</option>
 									</select>
 								</form>';	*/
-					echo '			
-							</header>';
 							
 					echo '
 					
 							<div id="data">';
 							
-					echo '		
-							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
-							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-								<a href="?filial='.$_GET['filial'].'&who=stom&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$kab.'" class="b">Стоматологи</a>
-								<a href="?filial='.$_GET['filial'].'&who=cosm&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$kab.'" class="b">Косметологи</a>
-							</li>';
-							
-					$ZapisHereQueryToday = FilialKabSmenaZapisToday($datatable, $y, $m, $d, $_GET['filial'], $kab, $type);
+					$ZapisHereQueryToday = FilialWorkerSmenaZapisToday($datatable, $y, $m, $d, $_GET['worker']);
 					//var_dump($ZapisHereQueryToday);
-					
-					$kabsInFilial_arr = SelDataFromDB('spr_kabs', $_GET['filial'], 'office_kabs');
-					if ($kabsInFilial_arr != 0){
-						$kabsInFilial_json = $kabsInFilial_arr[0][$kabsForDoctor];
-						//var_dump($kabsInFilial_json);
-						
-						if ($kabsInFilial_json != NULL){
-							$kabsInFilialExist = TRUE;
-							$kabsInFilial = json_decode($kabsInFilial_json, true);
-							//var_dump($kabsInFilial);
-							//echo count($kabsInFilial);
-							
-						}else{
-							$kabsInFilialExist = FALSE;
-						}
-					}
-					if ($kabsInFilialExist){
-						echo '		
-							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите кабинет</span><br>
-							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">';
-						for ($k = 1; $k <= count($kabsInFilial); $k++){
-						echo '		
-								<a href="?filial='.$_GET['filial'].''.$who.'&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$k.'" class="b">каб '.$k.'</a>';
-						}
-						echo '</li>';
-					}
 					
 					if ($ZapisHereQueryToday != 0){
 
 						for ($z = 0; $z < count($ZapisHereQueryToday); $z++){
 							$back_color = '';
-							
 							
 							if ($ZapisHereQueryToday[$z]['enter'] == 1){
 								$back_color = 'background-color: rgba(119, 255, 135, 1);';
@@ -336,6 +298,7 @@
 									</div>';
 							echo '
 									<div class="cellName">';
+							$filial = SelDataFromDB('spr_office', $ZapisHereQueryToday[$z]['office'], 'offices');
 							echo 
 										'Филиал:<br>'.
 										$filial[0]['name'];
@@ -368,34 +331,27 @@
 									</div>';
 							echo '
 									<div class="cellRight">';									
-							if (isset($_SESSION['filial'])){
-								if ($_SESSION['filial'] == $ZapisHereQueryToday[$z]['office']){
-									if($ZapisHereQueryToday[$z]['office'] != $ZapisHereQueryToday[$z]['add_from']){
-										echo '
-												<a href="#" onclick="Ajax_TempZapis_edit_OK('.$ZapisHereQueryToday[$z]['id'].', '.$ZapisHereQueryToday[$z]['office'].')">Подтвердить</a><br />';
-									}
+
+									
+								if ($_SESSION['id'] == $ZapisHereQueryToday[$z]['worker']){
 									if($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']){
-										if($ZapisHereQueryToday[$z]['enter'] != 8){
-											echo 
-													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 1)">Пришёл</a><br />';
-											echo 
-													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 9)">Не пришёл</a><br />';
-											/*echo 
-													'<a href="#" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 1, '.$ZapisHereQueryToday[$z]['start_time'].', '.$ZapisHereQueryToday[$z]['wt'].', '.$ZapisHereQueryToday[$z]['worker'].', \''.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user_full', false).'\')">Редактировать</a><br />';
-											*/
-											//var_dump($ZapisHereQueryToday[$z]['create_time']);
-											//var_dump(time());
+										if($ZapisHereQueryToday[$z]['enter'] == 1){
+											if(($_SESSION['permissions'] == 5) || $god_mode){
+												echo 
+													'<a href="add_task_stomat.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'">Внести Осмотр/Зубную формулу</a><br />';
+											}
+											if(($_SESSION['permissions'] == 6) || $god_mode){
+												echo 
+													'<a href="add_task_cosmet.php?client='.$ZapisHereQueryToday[$z]['patient'].'">Внести посещение косм.</a><br />';
+											}
 											$zapisDate = strtotime($ZapisHereQueryToday[$z]['day'].'.'.$ZapisHereQueryToday[$z]['month'].'.'.$ZapisHereQueryToday[$z]['year']);
 											if (time() < $zapisDate + 60*60*24){
 												echo 
-													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 8)">Ошибка, удалить из записи</a><br />';
+													'<a href="#">Внести Акт</a><br />';
 											}
 										}
-										echo 
-													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 0)">Отменить все изменения</a><br />';
 									}
 								}
-							}
 							
 			echo '
 					<div id="ShowSettingsAddTempZapis" style="position: absolute; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; z-index:105; padding:10px;">
@@ -521,7 +477,7 @@
 					}else{
 						echo 'Нет записи';
 					}
-				}
+				//}
 			}else{
 				echo '
 					<div id="status">

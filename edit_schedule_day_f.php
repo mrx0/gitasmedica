@@ -48,8 +48,28 @@
 								if ($_POST['contacts'] != ''){
 									if ($_POST['description'] != ''){
 										if (isset($_SESSION['filial'])){
+											
+											//Первичка
+											if ($_POST['pervich'] != 0){
+												$pervich = 1;
+											}else{
+												$pervich = 0;
+											}
+											//Страховые
+											if ($_POST['insured'] != 0){
+												$insured = 1;
+											}else{
+												$insured = 0;
+											}
+											//Ночные
+											if ($_POST['noch'] != 0){
+												$noch = 1;
+											}else{
+												$noch = 0;
+											}
+											
 											//запись в базу
-											WriteToDB_EditZapis ('zapis', $_POST['year'], $_POST['month'], $_POST['day'], $_POST['filial'], $_SESSION['filial'], $_POST['kab'], $worker, $_POST['author'], $client, $_POST['contacts'], $_POST['description'], $_POST['start_time'], $_POST['wt'], $_POST['type']);
+											WriteToDB_EditZapis ('zapis', $_POST['year'], $_POST['month'], $_POST['day'], $_POST['filial'], $_SESSION['filial'], $_POST['kab'], $worker, $_POST['author'], $client, $_POST['contacts'], $_POST['description'], $_POST['start_time'], $_POST['wt'], $_POST['type'], $pervich, $insured, $noch);
 											
 											$data = '
 												<div class="query_ok">
@@ -61,7 +81,7 @@
 										}else{
 											$data = '
 												<div class="query_neok">
-													Филиал не определён<br><br>
+													Ваш филиал не определён<br><br>
 												</div>';
 											echo json_encode(array('result' => 'error', 'data' => $data));
 										}
