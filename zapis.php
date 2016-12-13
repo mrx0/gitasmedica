@@ -273,7 +273,9 @@
 						mysql_query("SET NAMES 'utf8'");
 						
 						$arr = array();
+						$arr2 = array();
 						$rez = array();
+						$rez2 = array();
 						
 						$query = "SELECT * FROM `zapis` WHERE `office` = '{$_SESSION['filial']}' AND `add_from` <> '{$_SESSION['filial']}'";
 						
@@ -286,22 +288,56 @@
 						}else{
 							$rez = 0;
 						}
+						
+						$query = "SELECT * FROM `zapis` WHERE `add_from` = '{$_SESSION['filial']}' AND `office` <> '{$_SESSION['filial']}'";
+						
+						$res = mysql_query($query) or die($query);
+						$number = mysql_num_rows($res);
+						if ($number != 0){
+							while ($arr2 = mysql_fetch_assoc($res)){
+								array_push($rez2, $arr2);
+							}
+						}else{
+							$rez2 = 0;
+						}
+						
 						mysql_close();
 						//var_dump($rez);
-						if ($rez != 0){
+						if (($rez != 0) || ($rez2 != 0)){
 							echo '
 								<span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас есть неподтвёрждённые записи</span><br>';
-								foreach ($rez as $val){
-									if ($val['type'] == 5)
-										$who = '&who=stom';
-									if ($val['type'] == 6)
-										$who = '&who=cosm';
-									echo '
-									<li class="cellsBlock" style="width: auto; margin-bottom: 5px;">
-										<a href="zapis_full.php?filial='.$val['office'].''.$who.'&d='.$val['day'].'&m='.$val['month'].'&y='.$val['year'].'&kab='.$val['kab'].'" style="text-decoration: none; border-bottom: 1px dashed #000080;">'.$val['day'].'.'.$val['month'].'.'.$val['year'].' показать</a>
-									</li>';							
-								}
 						}
+						if ($rez != 0){
+							echo '
+								<span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><b>Вам</b></span><br>';
+							foreach ($rez as $val){
+								if ($val['type'] == 5)
+									$who = '&who=stom';
+								if ($val['type'] == 6)
+									$who = '&who=cosm';
+								echo '
+								<li class="cellsBlock" style="width: auto; margin-bottom: 5px;">
+									<a href="zapis_full.php?filial='.$val['office'].''.$who.'&d='.$val['day'].'&m='.$val['month'].'&y='.$val['year'].'&kab='.$val['kab'].'" style="text-decoration: none; border-bottom: 1px dashed #000080;">'.$val['day'].'.'.$val['month'].'.'.$val['year'].' показать</a>
+								</li>';							
+							}
+						}
+						if ($rez2 != 0){
+							echo '
+								<span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><b>Ваши</b></span><br>';
+							foreach ($rez2 as $val){
+								if ($val['type'] == 5)
+									$who = '&who=stom';
+								if ($val['type'] == 6)
+									$who = '&who=cosm';
+								echo '
+								<li class="cellsBlock" style="width: auto; margin-bottom: 5px;">
+									<a href="zapis_full.php?filial='.$val['office'].''.$who.'&d='.$val['day'].'&m='.$val['month'].'&y='.$val['year'].'&kab='.$val['kab'].'" style="text-decoration: none; border-bottom: 1px dashed #000080;">'.$val['day'].'.'.$val['month'].'.'.$val['year'].' показать</a>
+								</li>';							
+							}
+						}
+					}else{
+						echo '
+								<span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал</span><br>';
 					}
 					
 			echo '			

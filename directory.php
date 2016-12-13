@@ -19,7 +19,7 @@
 
 				echo '<a href="insurcompany.php" class="b3" title="Страховые компании">Страховые компании</a><br>';
 				
-				echo '<a href="services.php" class="b3" title="Справочник услуг">Справочник услуг</a><br>';
+				echo '<a href="pricelist.php" class="b3" title="Прайс">Прайс</a><br>';
 				
 				//echo '<a href="pricelist.php" class="b3" title="Прайс">Прайс</a><br>';
 

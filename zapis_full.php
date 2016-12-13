@@ -265,8 +265,12 @@
 							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите кабинет</span><br>
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">';
 						for ($k = 1; $k <= count($kabsInFilial); $k++){
-						echo '		
-								<a href="?filial='.$_GET['filial'].''.$who.'&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$k.'" class="b">каб '.$k.'</a>';
+							$kab_color = '';
+							if ($k == $kab){
+								$kab_color = ' background-color: #fff261;';
+							}
+							echo '		
+								<a href="?filial='.$_GET['filial'].''.$who.'&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$k.'" class="b" style="'.$kab_color.'">каб '.$k.'</a>';
 						}
 						echo '</li>';
 					}
@@ -371,8 +375,9 @@
 							if (isset($_SESSION['filial'])){
 								if ($_SESSION['filial'] == $ZapisHereQueryToday[$z]['office']){
 									if($ZapisHereQueryToday[$z]['office'] != $ZapisHereQueryToday[$z]['add_from']){
-										echo '
-												<a href="#" onclick="Ajax_TempZapis_edit_OK('.$ZapisHereQueryToday[$z]['id'].', '.$ZapisHereQueryToday[$z]['office'].')">Подтвердить</a><br />';
+										if($ZapisHereQueryToday[$z]['enter'] != 8){
+											echo '<a href="#" onclick="Ajax_TempZapis_edit_OK('.$ZapisHereQueryToday[$z]['id'].', '.$ZapisHereQueryToday[$z]['office'].')">Подтвердить</a><br />';
+										}
 									}
 									if($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']){
 										if($ZapisHereQueryToday[$z]['enter'] != 8){
@@ -388,12 +393,17 @@
 											$zapisDate = strtotime($ZapisHereQueryToday[$z]['day'].'.'.$ZapisHereQueryToday[$z]['month'].'.'.$ZapisHereQueryToday[$z]['year']);
 											if (time() < $zapisDate + 60*60*24){
 												echo 
-													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 8)">Ошибка, удалить из записи</a><br />';
+													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 8)">Ошибка, удалить из записи</a><br>';
 											}
 										}
 										echo 
-													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 0)">Отменить все изменения</a><br />';
+													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 0)">Отменить все изменения</a><br>';
 									}
+								}else{
+									echo 
+										'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 8)">Ошибка, удалить из записи</a><br>';
+									echo 
+										'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 0)">Отменить все изменения</a><br>';
 								}
 							}
 							
