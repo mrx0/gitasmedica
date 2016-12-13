@@ -215,25 +215,30 @@
 	}
 
 	//Добавление услуги.
-	function WriteToDB_EditService ($name, $session_id){
+	function WriteToDB_EditPriceName ($name, $session_id){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 		mysql_select_db($dbName) or die(mysql_error()); 
 		mysql_query("SET NAMES 'utf8'");
 		$time = time();
-		$query = "INSERT INTO `spr_services` (
+		$query = "INSERT INTO `spr_pricelist` (
 			`name`, `create_time`, `create_person`) 
 			VALUES (
 			'{$name}', '{$time}', '{$session_id}')";
 		mysql_query($query) or die(mysql_error().' -> '.$query);
+		
+		$mysql_insert_id = mysql_insert_id();
+		
 		mysql_close();
 		
 		//логирование
 		//AddLog (GetRealIp(), $session_id, '', 'Добавлен комментарий. ['.date('d.m.y H:i', $create_time).']. ['.$dtable.']:['.$parent.']. Описание: ['.$description.']');
+		
+		return ($mysql_insert_id);
 	}
 	
 	//Обновление карточки пациента из-под Web
-	function WriteServiceToDB_Update ($name, $session_id, $id){
+	function WritePriceNameToDB_Update ($name, $session_id, $id){
 		$old = '';
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
@@ -258,6 +263,31 @@
 		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован пациент ['.$id.']. ['.date('d.m.y H:i', $time).']. Комментарий: ['.$comment.']. Карта: ['.$card.']. Дата рождения: ['.$birthday.']. Пол: ['.$sex.']. Телефон: ['.$telephone.']. Серия/номер паспорта ['.$passport.']. Серия/номер паспорта (иностр.) ['.$alienpassportser.'/'.$passportvidandata.']. Дата выдачи ['.$passportvidandata.']. Выдан кем ['.$passportvidankem.']. Адрес ['.$address.']. Полис ['.$polis.']. Дата ['.$polisdata.']. Страховая ['.$insurecompany.']. Лечащий врач [стоматология]: ['.$therapist.']. Лечащий врач [косметология]: ['.$therapist2.']');
 	}
 
+	//Добавление цены услуги.
+	function WriteToDB_EditPricePrice ($item, $price, $session_id){
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+		$time = time();
+		$query = "INSERT INTO `spr_priceprices` (
+			`item`, `create_time`, `create_person`) 
+			VALUES (
+			'{$item}', '{$price}', '{$session_id}')";
+		mysql_query($query) or die(mysql_error().' -> '.$query);
+		
+		$mysql_insert_id = mysql_insert_id();
+		
+		mysql_close();
+		
+		//логирование
+		//AddLog (GetRealIp(), $session_id, '', 'Добавлен комментарий. ['.date('d.m.y H:i', $create_time).']. ['.$dtable.']:['.$parent.']. Описание: ['.$description.']');
+		
+		return ($mysql_insert_id);
+	}
+	
+
+	
 	
 	//Вставка записей в журнал Cosmet из-под Web
 	function WriteToDB_EditCosmet ($office, $client, $description, $create_time, $create_person, $last_edit_time, $last_edit_person, $worker, $comment){

@@ -335,17 +335,19 @@
 	};  
 	
 	// !!! правильный пример AJAX
-	function Ajax_add_service(session_id) {
+	function Ajax_add_priceitem(session_id) {
 
-		var servicename = document.getElementById("servicename").value;
+		var pricename = document.getElementById("pricename").value;
+		var price = document.getElementById("price").value;
 
 		$.ajax({
-			url:"add_servicename_f.php",
+			url:"add_priceitem_f.php",
 			global: false, 
 			type: "POST", 
 			data:
 			{
-				servicename:servicename,
+				pricename:pricename,
+				price:price,
 				session_id:session_id,
 			},
 			cache: false,
