@@ -1,6 +1,6 @@
 <?php
 	
-//FastSearchName.php
+//FastSearchNameFC.php
 //Поиск по имени
 
 	//var_dump ($_POST);

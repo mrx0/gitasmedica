@@ -536,6 +536,38 @@
 		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован пациент ['.$id.']. ['.date('d.m.y H:i', $time).']. Комментарий: ['.$comment.']. Карта: ['.$card.']. Дата рождения: ['.$birthday.']. Пол: ['.$sex.']. Телефон: ['.$telephone.']. Серия/номер паспорта ['.$passport.']. Серия/номер паспорта (иностр.) ['.$alienpassportser.'/'.$passportvidandata.']. Дата выдачи ['.$passportvidandata.']. Выдан кем ['.$passportvidankem.']. Адрес ['.$address.']. Полис ['.$polis.']. Дата ['.$polisdata.']. Страховая ['.$insurecompany.']. Лечащий врач [стоматология]: ['.$therapist.']. Лечащий врач [косметология]: ['.$therapist2.']');
 	}
 
+	//Удаление(блокировка) карточки пациента из-под Web
+	function WriteClientToDB_Delete ($session_id, $id){
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+
+		$time = time();
+		$query = "UPDATE `spr_clients` SET `status`='9' WHERE `id`='{$id}'";
+		mysql_query($query) or die(mysql_error());
+		mysql_close();
+		
+		//логирование
+		AddLog (GetRealIp(), $session_id, '', 'Заблокирован пациент ['.$id.']. ['.date('d.m.y H:i', $time).'].');
+	}
+
+	//Обновление карточки пациента из-под Web
+	function WriteClientToDB_Reopen ($session_id, $id){
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+
+		$time = time();
+		$query = "UPDATE `spr_clients` SET `status`='0' WHERE `id`='{$id}'";
+		mysql_query($query) or die(mysql_error());
+		mysql_close();
+		
+		//логирование
+		AddLog (GetRealIp(), $session_id, '', 'Разблокирован пациент ['.$id.']. ['.date('d.m.y H:i', $time).'].');
+	}
+
 	//Обновление ФИО пациента из-под Web
 	function WriteFIOClientToDB_Update($session_id, $id, $name, $full_name, $f, $i, $o){
 		$old = '';
@@ -910,7 +942,7 @@
 		$search_data = trim(strip_tags(stripcslashes(htmlspecialchars($search_data))));
 		$datatable = trim(strip_tags(stripcslashes(htmlspecialchars($datatable))));
 
-		$query = "SELECT * FROM `$datatable` WHERE LOWER(`full_name`) RLIKE LOWER('^$search_data') ORDER BY `full_name` ASC LIMIT 10";
+		$query = "SELECT * FROM `$datatable` WHERE LOWER(`full_name`) RLIKE LOWER('^$search_data') AND `status`<> 9 ORDER BY `full_name` ASC LIMIT 10";
 	//	$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' ORDER BY `full_name` ASC LIMIT 10";
 	//	$query = "SELECT * FROM `$datatable` WHERE `name` LIKE '%$search_data%' LIMIT 10";
 		$res = mysql_query($query) or die(mysql_error());

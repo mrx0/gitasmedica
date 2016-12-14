@@ -192,6 +192,49 @@
 		});	
 	}; 
 	
+	function Ajax_del_client(session_id) {
+		var id = document.getElementById("id").value;
+		
+		ajax({
+			url:"client_del_f.php",
+			statbox:"errrror",
+			method:"POST",
+			data:
+			{
+				id: id,
+				session_id: session_id,
+			},
+			success:function(data){
+				document.getElementById("errrror").innerHTML=data;
+				setTimeout(function () {
+					window.location.replace('client.php?id='+id);
+					//alert('client.php?id='+id);
+				}, 100);
+			}
+		})
+	}; 
+	
+	function Ajax_reopen_client(session_id, id) {
+		//var id = document.getElementById("id").value;
+		
+		ajax({
+			url:"client_reopen_f.php",
+			method:"POST",
+			data:
+			{
+				id: id,
+				session_id: session_id,
+			},
+			success:function(data){
+				//document.getElementById("errrror").innerHTML=data;
+				setTimeout(function () {
+					window.location.replace('client.php?id='+id);
+					//alert('client.php?id='+id);
+				}, 100);
+			}
+		})
+	}; 
+	
 	function Ajax_edit_fio_client() {
 		// убираем класс ошибок с инпутов
 		$('input').each(function(){
