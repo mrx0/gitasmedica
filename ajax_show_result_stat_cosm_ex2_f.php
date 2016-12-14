@@ -197,9 +197,9 @@
 						
 						//Дата/время
 						if ($_POST['all_time'] != 1){
-							/*if ($queryDopExist){
+							if ($queryDopExist){
 								$queryCondition .= ' AND';
-							}*/
+							}
 							$queryCondition .= "`create_time` BETWEEN '".strtotime ($_POST['datastart'])."' AND '".strtotime ($_POST['dataend']." 23:59:59")."'";
 							$queryDopExist = true;
 						}
