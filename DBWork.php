@@ -915,7 +915,7 @@
 		$datatable = trim(strip_tags(stripcslashes(htmlspecialchars($datatable))));
 
 	//	$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' LIMIT 5";
-		$query = "SELECT * FROM `$datatable` WHERE `name` LIKE '%$search_data%' ORDER BY `name` ASC LIMIT 10";
+		$query = "SELECT * FROM `$datatable` WHERE `name` LIKE '%$search_data%' AND `status`<> 9 ORDER BY `name` ASC LIMIT 10";
 		$res = mysql_query($query) or die(mysql_error());
 		$number = mysql_num_rows($res);
 		if ($number != 0){

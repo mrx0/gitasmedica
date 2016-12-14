@@ -235,6 +235,25 @@
 		})
 	}; 
 	
+	function Ajax_cosm_move(session_id, id) {
+		//var id = document.getElementById("id").value;
+		
+		ajax({
+			url:"cosm_move_f.php",
+			method:"POST",
+			data:
+			{
+				id: id,
+				session_id: session_id,
+			},
+			success:function(data){
+				setTimeout(function () {
+					window.location.replace('client.php?id='+id);
+				}, 100);
+			}
+		})
+	}; 
+	
 	function Ajax_edit_fio_client() {
 		// убираем класс ошибок с инпутов
 		$('input').each(function(){

@@ -5,7 +5,7 @@
 	
 	$god_mode = FALSE;
 	
-	$version = 'v 08.12.2016';
+	$version = 'v 14.12.2016';
 	
 	echo'
 		<!DOCTYPE html>

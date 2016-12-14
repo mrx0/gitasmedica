@@ -362,7 +362,7 @@
 					}
 					if (($clients['close'] == 1) || $god_mode){
 						echo '
-						<a href="stom_move.php?client='.$client[0]['id'].'" class="b">Переместить</a>';
+						<a href="stom_move.php?id='.$client[0]['id'].'" class="b">Переместить</a>';
 					}
 					
 						
@@ -1067,7 +1067,7 @@
 							<a href="etaps.php?client='.$client[0]['id'].'" class="b">Исследования</a>';		
 						if (($clients['close'] == 1) || $god_mode){
 							echo '
-							<a href="cosm_move.php?client='.$client[0]['id'].'" class="b">Переместить</a>';
+							<a href="cosm_move.php?id='.$client[0]['id'].'" class="b">Переместить</a>';
 						}
 					}				
 				$cosmet_task = SelDataFromDB('journal_cosmet1', $_GET['id'], 'client_cosm_id');
