@@ -65,6 +65,8 @@
 			if (($items['add_new'] == 1) || $god_mode){
 				echo '
 					<a href="add_pricelist_item.php?'.$who.'" class="b">Добавить позицию</a>';
+				echo '
+					<a href="add_pricelist_group.php?'.$who.'" class="b">Добавить группу/подгруппу</a>';
 			}
 			echo '					
 								<p style="margin: 5px 0; padding: 2px;">

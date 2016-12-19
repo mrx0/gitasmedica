@@ -237,6 +237,29 @@
 		return ($mysql_insert_id);
 	}
 	
+	//Добавление группы.
+	function WriteToDB_EditPriceGroup ($name, $level, $session_id){
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+		$time = time();
+		$query = "INSERT INTO `spr_storagegroup` (
+			`name`, `level`, `create_time`, `create_person`) 
+			VALUES (
+			'{$name}', '{$level}', '{$time}', '{$session_id}')";
+		mysql_query($query) or die(mysql_error().' -> '.$query);
+		
+		$mysql_insert_id = mysql_insert_id();
+		
+		mysql_close();
+		
+		//логирование
+		//AddLog (GetRealIp(), $session_id, '', 'Добавлен комментарий. ['.date('d.m.y H:i', $create_time).']. ['.$dtable.']:['.$parent.']. Описание: ['.$description.']');
+		
+		return ($mysql_insert_id);
+	}
+	
 	//Обновление карточки пациента из-под Web
 	function WritePriceNameToDB_Update ($name, $session_id, $id){
 		$old = '';

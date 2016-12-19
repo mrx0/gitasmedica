@@ -422,6 +422,32 @@
 		})
 	};  
 	
+	// Добавим группу прайса
+	function Ajax_add_pricegroup(session_id) {
+
+		var groupname = document.getElementById("groupname").value;
+		var group = document.getElementById("group").value;
+
+		$.ajax({
+			url:"add_pricegroup_f.php",
+			global: false, 
+			type: "POST", 
+			data:
+			{
+				groupname:groupname,
+				group:group,
+				session_id:session_id,
+			},
+			cache: false,
+			beforeSend: function() {
+				$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			success:function(data){
+				$('#errror').html(data);
+			}
+		})
+	};  
+	
 	function Ajax_edit_service(session_id) {
 
 		var servicename = document.getElementById("servicename").value;
