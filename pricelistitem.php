@@ -14,7 +14,33 @@
 			$rezult = SelDataFromDB('spr_pricelist', $_GET['id'], 'id');
 			//var_dump($rezult);
 			
+			$price = 0;
+			
 			if ($rezult != 0){
+				
+				require 'config.php';
+				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+				mysql_select_db($dbName) or die(mysql_error()); 
+				mysql_query("SET NAMES 'utf8'");
+			
+				$arr = array();
+				$rez = array();
+				$price = 0;
+					
+				$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `create_time` DESC LIMIT 1";
+										
+				$res = mysql_query($query) or die($query);
+
+				$number = mysql_num_rows($res);
+				if ($number != 0){
+					$arr = mysql_fetch_assoc($res);
+					$price = $arr['price'];
+				}else{
+					$price = 0;
+				}
+
+				mysql_close();
+				
 				echo '
 					<div id="status">
 						<header>
@@ -34,6 +60,11 @@
 							<div class="cellsBlock2">
 								<div class="cellLeft">Название</div>
 								<div class="cellRight">'.$rezult[0]['name'].'</div>
+							</div>';
+				echo '
+							<div class="cellsBlock2">
+								<div class="cellLeft">Цена</div>
+								<div class="cellRight">'.$price.' руб.</div>
 							</div>';
 							
 				echo '
