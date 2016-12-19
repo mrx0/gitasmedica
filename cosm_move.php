@@ -13,7 +13,7 @@
 				include_once 'DBWork.php';
 				include_once 'functions.php';
 				
-			$client = SelDataFromDB('spr_clients', $_GET['id'], 'user');
+			$client = SelDataFromDB('spr_clients', $_GET['client'], 'user');
 			//var_dump($_SESSION);
 			if ($client !=0){
 				echo '
@@ -39,7 +39,7 @@
 				echo '
 									</div>
 									<div class="cellRight">
-										<a href="client.php?id='.$_GET['id'].'" class="ahref">'.$client[0]['full_name'].'</a>
+										<a href="client.php?id='.$_GET['client'].'" class="ahref">'.$client[0]['full_name'].'</a>
 									</div>
 								</div>';
 
@@ -55,9 +55,9 @@
 								</div>';
 
 				echo '				
-								<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
+								<input type="hidden" id="id" name="id" value="'.$_GET['client'].'">
 								<div id="errror"></div>
-								<input type="button" class="b" value="Применить" onclick="Ajax_cosm_move('.$_SESSION['id'].', '.$_GET['id'].')">
+								<input type="button" class="b" value="Применить" onclick="Ajax_cosm_move('.$_SESSION['id'].', '.$_GET['client'].')">
 							</form>';	
 				echo '
 						</div>
