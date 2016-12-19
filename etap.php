@@ -8,7 +8,7 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 		
-		if (($cosm['add_own'] == 1) || $god_mode){
+		if (($cosm['add_own'] == 1) || ($cosm['see_all'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			
