@@ -64,7 +64,13 @@
 				echo '
 							<div class="cellsBlock2">
 								<div class="cellLeft">Цена</div>
-								<div class="cellRight">'.$price.' руб.</div>
+								<div class="cellRight">'.$price.' руб. ';
+				if (($items['edit'] == 1) || $god_mode){
+					echo '
+									<a href="priceprice_edit.php?id='.$_GET['id'].'" class="info b2" style="font-size: 100%;" title="Редактировать цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+				}
+				echo '
+								</div>
 							</div>';
 							
 				echo '

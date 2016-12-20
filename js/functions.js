@@ -448,18 +448,21 @@
 		})
 	};  
 	
-	function Ajax_edit_service(session_id) {
+	function Ajax_edit_service(id, session_id) {
 
 		var servicename = document.getElementById("servicename").value;
+		var group = document.getElementById("group").value;
 
 		$.ajax({
-			url:"serviceitem_edit_f.php",
+			url:"pricelistitem_edit_f.php",
 			global: false, 
 			type: "POST", 
 			data:
 			{
 				servicename:servicename,
 				session_id:session_id,
+				group:group,
+				id: id,
 			},
 			cache: false,
 			beforeSend: function() {

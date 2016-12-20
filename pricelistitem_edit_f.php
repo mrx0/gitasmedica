@@ -28,15 +28,20 @@
 				//var_dump($rezult);
 				
 				if ($rezult != 0){
-					WriteToDB_EditService ($name, $_SESSION['id']);
+					echo '
+						<div class="query_neok">
+							Такая позиция уже есть.<br><br>
+						</div>';
+				}else{
+					WriteToDB_UpdatePriceItem ($name, $_POST['id'], $_SESSION['id']);
+					if (isset($_POST['group'])){
+						if ($_POST['group'] != 0){
+							WriteToDB_UpdatePriceItemInGroup($_POST['id'], $_POST['group'], $_SESSION['id']);
+						}
+					}
 					echo '
 						<div class="query_ok">
 							Изменено.<br><br>
-						</div>';
-				}else{
-					echo '
-						<div class="query_neok">
-							Такая услуга уже есть.<br><br>
 						</div>';
 				}
 			}

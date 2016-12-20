@@ -26,7 +26,7 @@
 					echo '
 							<div id="data">';
 					echo '
-								<div id="errrror"></div>';
+								<div id="errror"></div>';
 					echo '
 								<form action="serviceitem_edit_f.php">
 					
@@ -37,8 +37,26 @@
 											<label id="servicename_error" class="error"></label>
 										</div>
 									</div>
-									
-									<input type="button" class="b" value="Применить" onclick="Ajax_edit_service('.$_SESSION['id'].')">
+									<div class="cellsBlock2">
+										<div class="cellLeft">Расположение</div>
+										<div class="cellRight">';
+					echo '
+											<select name="group" id="group" size="6" style="width: 250px;">
+												<option value="0">*</option>';
+												
+					$itemsingroups_j = SelDataFromDB('spr_itemsingroup', $_GET['id'], 'item');
+					if ($itemsingroups_j != 0){
+						$itemingroup = $itemsingroups_j[0]['group'];
+					}else{
+						$itemingroup = 0;
+					}
+												showTree(0, '', 'select', $itemingroup);
+					echo '
+											</select>';
+					echo '
+										</div>
+									</div>
+									<input type="button" class="b" value="Применить" onclick="Ajax_edit_service('.$_GET['id'].', '.$_SESSION['id'].')">
 								</form>
 							</div>
 						</div>';

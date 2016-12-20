@@ -75,68 +75,20 @@
 							</div>
 							<div class="cellsBlock2">
 								<div class="cellLeft">Расположение</div>
-								<div class="cellRight">
-									<select name="group" id="group">
-										<option value="0">Верхний уровень</option>';
+								<div class="cellRight">';
 			echo '
-										<option value="1">****</option>';
+									<select name="group" id="group" size="6" style="width: 250px;">
+										<option value="0">*</option>';
+										showTree(0, '', 'select', 0);
 			echo '
-									</select>
+									</select>';
+			echo '
 								</div>
 							</div>
 
 							<input type="button" class="b" value="Добавить" onclick="Ajax_add_pricegroup('.$_SESSION['id'].')">
 						</form>
 					</div>';	
-					
-			function showTree($level, $space){
-				require 'config.php';
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
-						
-				$arr = array();
-				$rez = array();
-				
-				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ORDER BY `name`";
-				
-				$res = mysql_query($query) or die($query);
-				$number = mysql_num_rows($res);
-				if ($number != 0){
-					while ($arr = mysql_fetch_assoc($res)){
-						array_push($rez, $arr);
-					}
-					$rezult = $rez;
-				}else{
-					$rezult = 0;
-				}
-				
-				if ($rezult != 0){
-					//var_dump($rezult);
-					
-					foreach ($rezult as $key => $value){
-						echo $space.$value['name'].'<br>';
-						$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ORDER BY `name`";
-						$res = mysql_query($query) or die($query);
-						$number = mysql_num_rows($res);
-						if ($number != 0){
-							//echo '_'.$value['name'].'<br>';
-							$space2 = $space. '___';
-							showTree($value['id'], $space2);
-						}else{
-							//$space = substr($space, 0, -1);
-							//echo '_'.$value['name'].'<br>';
-						}
-						//$space = substr($space, 0, -1);
-					}
-				}
-			}
-			
-			
-			//$rezult = SelDataFromDB('spr_storagegroup', '', '');	
-			//var_dump($rezult);
-			/* Запускаем функцию для текущего каталога */
-			showTree(0, '');
 				
 			echo '
 					</div>

@@ -237,6 +237,58 @@
 		return ($mysql_insert_id);
 	}
 	
+	//
+	function WriteToDB_UpdatePriceItem ($name, $id, $session_id){
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+		$time = time();
+		
+		$query = "UPDATE `spr_pricelist` SET `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `name`='{$name}' WHERE `id`='{$id}'";
+		
+		mysql_query($query) or die(mysql_error().' -> '.$query);
+
+		mysql_close();	
+		
+		//логирование
+		//AddLog (GetRealIp(), $session_id, '', 'Добавлен комментарий. ['.date('d.m.y H:i', $create_time).']. ['.$dtable.']:['.$parent.']. Описание: ['.$description.']');
+
+	}
+	
+	function WriteToDB_UpdatePriceItemInGroup ($item, $group, $session_id){
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+		$time = time();
+		
+		$query = "SELECT * FROM `spr_itemsingroup` WHERE `item` = '{$item}'";
+		
+		$res = mysql_query($query) or die(mysql_error());
+		$number = mysql_num_rows($res);
+		if ($number != 0){
+			
+			$query = "DELETE FROM `spr_itemsingroup` WHERE `item` = '{$item}'";
+			mysql_query($query) or die(mysql_error().' -> '.$query);
+		}
+		
+		$query = "INSERT INTO `spr_itemsingroup` (
+			`item`, `group`, `create_time`, `create_person`) 
+			VALUES (
+			'{$item}', '{$group}', '{$time}', '{$session_id}')";
+			
+		mysql_query($query) or die(mysql_error().' -> '.$query);
+		
+		//$mysql_insert_id = mysql_insert_id();
+
+		mysql_close();	
+		
+		//логирование
+		//AddLog (GetRealIp(), $session_id, '', 'Добавлен комментарий. ['.date('d.m.y H:i', $create_time).']. ['.$dtable.']:['.$parent.']. Описание: ['.$description.']');
+
+	}
+	
 	//Добавление группы.
 	function WriteToDB_EditPriceGroup ($name, $level, $session_id){
 		require 'config.php';
@@ -260,7 +312,7 @@
 		return ($mysql_insert_id);
 	}
 	
-	//Обновление карточки пациента из-под Web
+	//О!!!!  ЧТо это??
 	function WritePriceNameToDB_Update ($name, $session_id, $id){
 		$old = '';
 		require 'config.php';
