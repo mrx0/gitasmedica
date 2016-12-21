@@ -8,6 +8,7 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 		if (($items['see_all'] == 1) || ($items['see_own'] == 1) || $god_mode){
+			include_once 'functions.php';
 			
 			//тип график (космет/стомат/...)
 			if (isset($_GET['who'])){
@@ -76,7 +77,7 @@
 			echo '
 								<li class="cellsBlock" style="font-weight:bold; width: auto;">
 									<div class="cellPriority" style="text-align: center"></div>
-									<div class="cellName" style="text-align: center; width: 350px; min-width: 350px; max-width: 350px;">Наименование услуг</div>
+									<div class="cellName" style="text-align: center; width: 350px; min-width: 350px; max-width: 350px;">Наименование</div>
 									<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">Цена, руб.</div>
 								</li>';
 			
@@ -84,36 +85,67 @@
 			$services_j = SelDataFromDB('spr_pricelist', 'services', $type);
 			//var_dump ($services_j);
 
+			$arr = array();
+			$rez = array();
+			$arr4 = array();
+			$rez4 = array();
+			$arr3 = array();
+			$rez3 = array();
+			
 			require 'config.php';
 			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
 			mysql_select_db($dbName) or die(mysql_error()); 
 			mysql_query("SET NAMES 'utf8'");
 			
 			if ($services_j !=0){
-				for ($i = 0; $i < count($services_j); $i++) {
-					
-					$arr = array();
-					$rez = array();
-					$price = 0;
-					
-					$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$services_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
-										
-					$res = mysql_query($query) or die($query);
+				showTree(0, '', 'list', 0, FALSE);
+				
+				echo '
+					<li class="cellsBlock" style="width: auto;">
+						<div class="cellPriority" style=""></div>
+						<span class="cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">Без группы</span>
+						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">-</div>
+					</li>';
+						
+				$query = "SELECT * FROM `spr_pricelist` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) ORDER BY `name`";			
+				
+				$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
-					$number = mysql_num_rows($res);
-					if ($number != 0){
-						$arr = mysql_fetch_assoc($res);
-						$price = $arr['price'];
-					}else{
-						$price = 0;
+				$number = mysql_num_rows($res);	
+				if ($number != 0){
+					while ($arr3 = mysql_fetch_assoc($res)){
+						array_push($rez3, $arr3);
 					}
-										
-					echo '
-								<li class="cellsBlock" style="width: auto;">
-									<div class="cellPriority" style=""></div>
-									<a href="pricelistitem.php?id='.$services_j[$i]['id'].'" class="ahref cellOffice" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$services_j[$i]['name'].'</a>
-									<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.'</div>
-								</li>';
+					$items_j = $rez3;
+				}else{
+					$items_j = 0;
+				}
+				
+				//var_dump($items_j);
+				
+				if ($items_j != 0){
+					for ($i = 0; $i < count($items_j); $i++) {
+						$price = 0;
+						
+						$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
+											
+						$res = mysql_query($query) or die(mysql_error().' -> '.$query);
+
+						$number = mysql_num_rows($res);
+						if ($number != 0){
+							$arr4 = mysql_fetch_assoc($res);
+							$price = $arr4['price'];
+						}else{
+							$price = 0;
+						}
+				
+						echo '
+									<li class="cellsBlock" style="width: auto;">
+										<div class="cellPriority" style=""></div>
+										<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$items_j[$i]['name'].'</a>
+										<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.'</div>
+									</li>';
+					}
 				}
 			}
 			

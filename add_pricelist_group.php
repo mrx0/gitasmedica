@@ -1,7 +1,7 @@
 <?php
 
-//add_serviceitem.php
-//Добавить услугу
+//add_pricelist_group.php
+//Добавить новую группу/подгруппу
 
 	require_once 'header.php';
 	
@@ -55,7 +55,7 @@
 			echo '
 				<div id="status">
 					<header>
-						<h2>Добавить новую группу/подгруппу в прайс<!--'.$whose.'--></h2>
+						<h2>Добавить новую группу/подгруппу<!--'.$whose.'--></h2>
 						Заполните поля
 					</header>';
 
@@ -79,7 +79,7 @@
 			echo '
 									<select name="group" id="group" size="6" style="width: 250px;">
 										<option value="0">*</option>';
-										showTree(0, '', 'select', 0);
+										showTree(0, '', 'select', 0, TRUE);
 			echo '
 									</select>';
 			echo '
