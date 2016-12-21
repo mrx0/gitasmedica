@@ -860,13 +860,14 @@
 					echo '
 						<li class="cellsBlock" style="width: auto;">
 							<div class="cellPriority" style=""></div>
-							<a href="pricelistitem.php?id='.$value['id'].'" class="ahref cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$space.$value['name'].'</a>
+							<a href="1.php?id='.$value['id'].'" class="ahref cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$space.$value['name'].'</a>
 							<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">-</div>
 						</li>';
 						
 					$query = "SELECT * FROM `spr_pricelist` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ORDER BY `name`";			
-
-					mysql_query($query) or die(mysql_error().' -> '.$query);	
+					//var_dump($query);
+					
+					$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
 					$number = mysql_num_rows($res);	
 					if ($number != 0){
 						while ($arr2 = mysql_fetch_assoc($res)){
@@ -885,7 +886,8 @@
 							$price = 0;
 							
 							$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
-												
+							//var_dump($query);
+							
 							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
 							$number = mysql_num_rows($res);
@@ -908,6 +910,8 @@
 				
 				
 				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ORDER BY `name`";
+				//var_dump($query);
+				
 				$res = mysql_query($query) or die($query);
 				$number = mysql_num_rows($res);
 				if ($number != 0){

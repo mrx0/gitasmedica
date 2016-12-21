@@ -27,7 +27,7 @@
 				$rezult = SelDataFromDB('spr_pricelist', $name, 'name');
 				//var_dump($rezult);
 				
-				if ($rezult != 0){
+				if (($rezult != 0) && ($rezult[0]['id'] != $_POST['id'])){
 					echo '
 						<div class="query_neok">
 							Такая позиция уже есть.<br><br>

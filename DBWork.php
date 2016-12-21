@@ -346,9 +346,9 @@
 		mysql_query("SET NAMES 'utf8'");
 		$time = time();
 		$query = "INSERT INTO `spr_priceprices` (
-			`item`, `create_time`, `create_person`) 
+			`item`, `price`, `create_time`, `create_person`) 
 			VALUES (
-			'{$item}', '{$price}', '{$session_id}')";
+	'{$item}', '{$price}', '{$time}', '{$session_id}')";
 		mysql_query($query) or die(mysql_error().' -> '.$query);
 		
 		$mysql_insert_id = mysql_insert_id();
@@ -955,6 +955,9 @@
 				}
 				if ($type == 'priority_tasks'){
 					$q = " WHERE `priority` = '$sw'";
+				}
+				if ($type == 'item'){
+					$q = " WHERE `item` = '$sw'";
 				}
 			}
 		

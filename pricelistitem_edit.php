@@ -50,7 +50,8 @@
 					}else{
 						$itemingroup = 0;
 					}
-												showTree(0, '', 'select', $itemingroup, TRUE);
+					
+					showTree(0, '', 'select', $itemingroup, TRUE);
 					echo '
 											</select>';
 					echo '
