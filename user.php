@@ -212,7 +212,7 @@
 									<div class="cellText" style="'.$background_style.'">'.$for_notes[$notes[$i]['description']].'</div>
 									<div class="cellTime" style="text-align: center">';
 					if ($_SESSION['id'] == $notes[$i]['create_person']){
-					echo '
+						echo '
 										<a href="#" id="Change_notes_stomat" onclick="Change_notes_stomat('.$notes[$i]['id'].', '.$notes[$i]['description'].')">ред.</a>
 										<a href="#" id="Close_notes_stomat" onclick="Close_notes_stomat('.$notes[$i]['id'].')">закр.</a>';
 					}

@@ -816,10 +816,6 @@
 						
 		$arr = array();
 		$rez = array();
-		$arr2 = array();
-		$rez2 = array();
-		$arr3 = array();
-		$rez3 = array();
 		
 		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ORDER BY `name`";
 		
@@ -844,6 +840,11 @@
 			//var_dump($rezult);
 			
 			foreach ($rezult as $key => $value){
+				
+				$arr2 = array();
+				$rez2 = array();
+				$arr3 = array();
+				$rez3 = array();
 				
 				if ($type == 'select'){
 					//echo $space.$value['name'].'<br>';
@@ -926,58 +927,4 @@
 			}
 		}
 	}
-
-	
-	//Дерево
-	function showTree2($level, $space, $type, $sel_id){
-		require 'config.php';
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
-						
-		$arr = array();
-		$rez = array();
-				
-		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ORDER BY `name`";
-		
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
-		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
-				array_push($rez, $arr);
-			}
-			$rezult = $rez;
-		}else{
-			$rezult = 0;
-		}
-		
-		if ($rezult != 0){
-			//var_dump($rezult);
-			
-			foreach ($rezult as $key => $value){
-				
-				if ($type == 'select'){
-					//echo $space.$value['name'].'<br>';
-					$selected = '';
-					if ($value['id'] == $sel_id){
-						$selected = ' selected';
-					}
-					echo '<option value="'.$value['id'].'" '.$selected.'>'.$space.$value['name'].'</option>';
-				}
-				
-				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ORDER BY `name`";
-				$res = mysql_query($query) or die($query);
-				$number = mysql_num_rows($res);
-				if ($number != 0){
-					//echo '_'.$value['name'].'<br>';
-					$space2 = $space. '__';
-					showTree2($value['id'], $space2, $type, $sel_id);
-				}else{
-					//$space = substr($space, 0, -1);
-					//echo '_'.$value['name'].'<br>';
-				}
-				//$space = substr($space, 0, -1);
-			}
-		}
-	}	
 ?>

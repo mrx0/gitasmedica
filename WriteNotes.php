@@ -31,6 +31,7 @@
 				<div class="cellName" style="text-align: center">Пациент</div>
 				<div class="cellName" style="text-align: center">Посещение</div>
 				<div class="cellText" style="text-align: center">Описание</div>
+				<div class="cellTime" style="text-align: center">Управление</div>
 				<div class="cellTime" style="text-align: center">Создано</div>
 				<div class="cellName" style="text-align: center">Автор</div>
 				<div class="cellTime" style="text-align: center">Закрыто</div>
@@ -85,9 +86,17 @@
 					<li class="cellsBlock cellsBlockHover">
 						<div class="cellPriority" style="background-color:'.$priority_color.'"></div>
 						<div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $notes[$i]['dead_line']).'</div>
-						<a href="client.php?id='.$notes[$i]['client'].'" class="ahref cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$notes[$i]['client'], 'user', true).'</a>
+						<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients', $notes[$i]['client'], 'user', true).'</div>
 						<a href="task_stomat_inspection.php?id='.$notes[$i]['task'].'" class="ahref cellName" style="text-align: center">#'.$notes[$i]['task'].'</a>
 						<div class="cellText" style="'.$background_style.'">'.$for_notes[$notes[$i]['description']].'</div>
+						<div class="cellTime" style="text-align: center">';
+				if ($_SESSION['id'] == $notes[$i]['create_person']){
+					echo '
+										<a href="#" id="Change_notes_stomat" onclick="Change_notes_stomat('.$notes[$i]['id'].', '.$notes[$i]['description'].')">ред.</a>
+										<a href="#" id="Close_notes_stomat" onclick="Close_notes_stomat('.$notes[$i]['id'].')">закр.</a>';
+				}
+				echo '
+						</div>
 						<div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $notes[$i]['create_time']).'</div>
 						<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$notes[$i]['create_person'], 'user', true).'</div>
 						<div class="cellTime" style="text-align: center; '.$background_style2.'">'.$ended.'</div>
