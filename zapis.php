@@ -680,12 +680,12 @@
 														$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 														$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;
 													}else{
-														/*$wt_FreeSpace = $ZapisHereQueryToday[0]['start_time'] - $wt;
+														$wt_FreeSpace = $ZapisHereQueryToday[0]['start_time'] - $wt;
 														$wt_start_FreeSpace = $wt;
 														$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
-														$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;*/
+														$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;
 														
-														if ($PrevZapis['start_time'] + $PrevZapis['wt'] < $wt+30){
+														/*if ($PrevZapis['start_time'] + $PrevZapis['wt'] < $wt+30){
 															$NextFill = FALSE;
 															$wt_FreeSpace = $wt+30-($PrevZapis['start_time'] + $PrevZapis['wt']);
 															$wt_start_FreeSpace = ($PrevZapis['start_time'] + $PrevZapis['wt'])%30+$wt;
@@ -697,12 +697,12 @@
 																//var_dump($NextFill);
 															echo '
 																</div>';
-														}
+														}*/
 														
 													}
 													echo '
 														<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
-															2';
+															';
 														//var_dump($NextFill);
 													echo '
 														</div>';
@@ -768,7 +768,7 @@
 											$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;
 											echo '
 												<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
-													3';
+													';
 												//var_dump($NextFill);
 											echo '
 												</div>';
@@ -784,7 +784,7 @@
 											$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;
 											echo '
 												<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
-													4';
+													';
 												//var_dump($NextFill);
 											echo '
 												</div>';
@@ -1121,6 +1121,7 @@
 														echo '
 															</div>';
 													}
+													
 													//Если работа начнется не с начала периода
 													if ($ZapisHereQueryToday[0]['start_time'] > $wt){
 														if (!$NextFill){
@@ -1129,8 +1130,14 @@
 															$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 															$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-900)*2;
 														}else{
-															$wt_FreeSpace = $ZapisHereQueryToday[0]['start_time'] - ($PrevZapis['start_time'] + $PrevZapis['wt']);
-															$wt_start_FreeSpace = $PrevZapis['start_time'] + $PrevZapis['wt'];
+															//var_dump($PrevZapis);
+															if (isset($PrevZapis['start_time'])){
+																$wt_FreeSpace = $ZapisHereQueryToday[0]['start_time'] - ($PrevZapis['start_time'] + $PrevZapis['wt']);
+																$wt_start_FreeSpace = $PrevZapis['start_time'] + $PrevZapis['wt'];
+															}else{
+																$wt_FreeSpace = $ZapisHereQueryToday[0]['start_time'] - $wt;
+																$wt_start_FreeSpace = $wt;
+															}
 															$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 															$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-900)*2;
 														}
