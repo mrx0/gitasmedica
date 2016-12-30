@@ -27,7 +27,7 @@
 			$m = date("m");
 			$d = date("d");
 			
-			if ((($y < $_POST['year']) && ($m < $_POST['month']) && ($d < $_POST['day'])) || ($_SESSION['permissions'] == '777')){
+			if ((($y <= $_POST['year']) && ($m <= $_POST['month']) && ($d <= $_POST['day'])) || ($_SESSION['permissions'] == '777')){
 				
 				if (isset($_POST['worker'])){
 					$therapists = SelDataFromDB ('spr_workers', $_POST['worker'], 'worker_full_name');
