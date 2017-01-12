@@ -339,16 +339,16 @@
 	}
 
 	//Добавление цены услуги.
-	function WriteToDB_EditPricePrice ($item, $price, $session_id){
+	function WriteToDB_EditPricePrice ($item, $price, $fromdate, $session_id){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 		mysql_select_db($dbName) or die(mysql_error()); 
 		mysql_query("SET NAMES 'utf8'");
 		$time = time();
 		$query = "INSERT INTO `spr_priceprices` (
-			`item`, `price`, `create_time`, `create_person`) 
+			`item`, `price`, `date_from`, `create_time`, `create_person`) 
 			VALUES (
-	'{$item}', '{$price}', '{$time}', '{$session_id}')";
+		'{$item}', '{$price}', '{$fromdate}', '{$time}', '{$session_id}')";
 		mysql_query($query) or die(mysql_error().' -> '.$query);
 		
 		$mysql_insert_id = mysql_insert_id();

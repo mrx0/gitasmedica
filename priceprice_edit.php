@@ -13,6 +13,11 @@
 				include_once 'DBWork.php';
 				include_once 'functions.php';
 				
+				//операции со временем						
+				$day = date('d');		
+				$month = date('m');		
+				$year = date('Y');
+				
 				$items_j = SelDataFromDB('spr_pricelist', $_GET['id'], 'id');
 				//var_dump($items_j);
 				
@@ -33,7 +38,7 @@
 									<div class="cellsBlock2">
 										<div class="cellLeft">Название</div>
 										<div class="cellRight">
-											'.$items_j[0]['name'].'
+											<a href="pricelistitem.php?id='.$_GET['id'].'" class="ahref">'.$items_j[0]['name'].'</a>
 										</div>
 									</div>';
 									
@@ -46,7 +51,8 @@
 					$rez = array();
 					$price = 0;
 						
-					$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `create_time` DESC LIMIT 1";
+					//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `create_time` DESC LIMIT 1";
+					$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC LIMIT 1";
 											
 					$res = mysql_query($query) or die($query);
 
@@ -67,7 +73,20 @@
 											<input type="text" name="price" id="price" value="'.$price.'"  style="width: 50px;"> руб.
 											<label id="price_error" class="error"></label>
 										</div>
+									</div>';
+									
+					//Календарик	
+					echo '
+	
+								<div class="cellsBlock2">
+									<div class="cellLeft">С какого числа:</div>
+									<div class="cellRight">
+										<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
+										onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
 									</div>
+								</div>';
+								
+					echo '				
 									<input type="button" class="b" value="Применить" onclick="Ajax_edit_price('.$_GET['id'].', '.$_SESSION['id'].')">
 								</form>';
 
@@ -127,7 +146,8 @@
 							
 					if ($rez != 0){
 						for($i=0; $i < count($rez); $i++){
-							echo '<div>'.$rez[$i]['price'].' руб. |  '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'</div>';
+							echo '<div>'.$rez[$i]['price'].' руб. c '.date('d.m.y H:i', $rez[$i]['date_from']).' | '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'</div>';
+							//echo '<div>'.$rez[$i]['price'].' руб. |  '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'</div>';
 						}
 					}
 					

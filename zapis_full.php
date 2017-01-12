@@ -93,6 +93,9 @@
 						$datatable = 'scheduler_stom';
 						$kabsForDoctor = 'stom';
 						$type = 5;
+						
+						$stom_color = 'background-color: #fff261;';
+						$cosm_color = '';
 					}elseif($_GET['who'] == 'cosm'){
 						$who = '&who=cosm';
 						$whose = 'Косметологи ';
@@ -101,6 +104,9 @@
 						$datatable = 'scheduler_cosm';
 						$kabsForDoctor = 'cosm';
 						$type = 6;
+						
+						$stom_color = '';
+						$cosm_color = 'background-color: #fff261;';
 					}else{
 						$who = '&who=stom';
 						$whose = 'Стоматологи ';
@@ -109,6 +115,9 @@
 						$datatable = 'scheduler_stom';
 						$kabsForDoctor = 'stom';
 						$type = 5;
+						
+						$stom_color = 'background-color: #fff261;';
+						$cosm_color = '';
 					}
 				}else{
 					$who = '&who=stom';
@@ -118,6 +127,9 @@
 					$datatable = 'scheduler_stom';
 					$kabsForDoctor = 'stom';
 					$type = 5;
+						
+					$stom_color = 'background-color: #fff261;';
+					$cosm_color = '';
 				}
 				
 				$month_names=array(
@@ -202,7 +214,7 @@
 					echo '
 						<div id="status">
 							<header>
-								<h2>Запись '.$d.' ',$month_names[$m-1],' ',$y,'</h2>
+								<h2>Запись '.$d.' ',$month_names[$m-1],' ',$y,' <small>(подробное описание)</small></h2>
 								<b>Филиал</b> '.$filial[0]['name'].'<br>
 								<b>Кабинет '.$kab.'</b><br>
 								<span style="color: green; font-size: 120%; font-weight: bold;">'.$whose.'</span><br>
@@ -238,8 +250,8 @@
 					echo '		
 							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-								<a href="?filial='.$_GET['filial'].'&who=stom&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$kab.'" class="b">Стоматологи</a>
-								<a href="?filial='.$_GET['filial'].'&who=cosm&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$kab.'" class="b">Косметологи</a>
+								<a href="?filial='.$_GET['filial'].'&who=stom&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$kab.'" class="b" style="'.$stom_color.'">Стоматологи</a>
+								<a href="?filial='.$_GET['filial'].'&who=cosm&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$kab.'" class="b" style="'.$cosm_color.'">Косметологи</a>
 							</li>';
 							
 					$ZapisHereQueryToday = FilialKabSmenaZapisToday($datatable, $y, $m, $d, $_GET['filial'], $kab, $type);
@@ -385,9 +397,9 @@
 													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 1)">Пришёл</a><br />';
 											echo 
 													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 9)">Не пришёл</a><br />';
-											/*echo 
-													'<a href="#" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 1, '.$ZapisHereQueryToday[$z]['start_time'].', '.$ZapisHereQueryToday[$z]['wt'].', '.$ZapisHereQueryToday[$z]['worker'].', \''.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user_full', false).'\')">Редактировать</a><br />';
-											*/
+											echo 
+													'<a href="#" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 0, '.$ZapisHereQueryToday[$z]['start_time'].', '.$ZapisHereQueryToday[$z]['wt'].', '.$ZapisHereQueryToday[$z]['worker'].', \''.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user_full', false).'\', \''.WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', false).'\', \''.$ZapisHereQueryToday[$z]['description'].'\', '.$ZapisHereQueryToday[$z]['insured'].', '.$ZapisHereQueryToday[$z]['pervich'].', '.$ZapisHereQueryToday[$z]['noch'].')">Редактировать</a><br />';
+											
 											//var_dump($ZapisHereQueryToday[$z]['create_time']);
 											//var_dump(time());
 											$zapisDate = strtotime($ZapisHereQueryToday[$z]['day'].'.'.$ZapisHereQueryToday[$z]['month'].'.'.$ZapisHereQueryToday[$z]['year']);
@@ -439,7 +451,7 @@
 								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
 									<div class="cellLeft">Врач</div>
 									<div class="cellRight" id="worker_name">
-										<input type="text" size="30" name="searchdata2" id="search_client2" placeholder="Введите ФИО врача" value="" class="who2"  autocomplete="off">
+										<input type="text" size="30" name="searchdata2" id="search_client2" placeholder="Введите ФИО врача" value="" class="who2"  autocomplete="off" style="width: 90%;">
 										<ul id="search_result2" class="search_result2"></ul><br />
 									</div>
 								</div>
@@ -447,7 +459,7 @@
 								<div class="cellsBlock2" style="font-size:80%; width:400px;">
 									<div class="cellLeft" style="font-weight: bold;">Пациент</div>
 									<div class="cellRight">
-										<input type="text" size="30" name="searchdata" id="search_client" placeholder="Введите ФИО пациента" value="" class="who"  autocomplete="off"> <a href="add_client.php" class="ahref"><i class="fa fa-plus-square" title="Добавить пациента" style="color: green; font-size: 120%;"></i></a>
+										<input type="text" size="30" name="searchdata" id="search_client" placeholder="Введите ФИО пациента" value="" class="who"  autocomplete="off" style="width: 90%;"> <a href="add_client.php" class="ahref"><i class="fa fa-plus-square" title="Добавить пациента" style="color: green; font-size: 120%;"></i></a>
 										<ul id="search_result" class="search_result"></ul><br />
 									</div>
 								</div>
@@ -463,6 +475,24 @@
 										<textarea name="description" id="description" style="width:90%; overflow:auto; height: 100px;"></textarea>
 									</div>
 								</div>		
+								<div class="cellsBlock2" style="font-size:80%; width:400px;">
+									<div class="cellLeft" style="font-weight: bold;">Первичный</div>
+									<div class="cellRight">
+										<input type="checkbox" name="pervich" id="pervich" value="1"> да
+									</div>
+								</div>
+								<div class="cellsBlock2" style="font-size:80%; width:400px;">
+									<div class="cellLeft" style="font-weight: bold;">Страховой</div>
+									<div class="cellRight">
+										<input type="checkbox" name="insured" id="insured" value="1"> да
+									</div>
+								</div>
+								<div class="cellsBlock2" style="font-size:80%; width:400px;">
+									<div class="cellLeft" style="font-weight: bold;">Ночной</div>
+									<div class="cellRight">
+										<input type="checkbox" name="noch" id="noch" value="1"> да
+									</div>
+								</div>
 							</div>';
 			echo '
 							<div style="display:inline-block; vertical-align: top; width: 360px; border: 1px solid #C1C1C1;">
@@ -504,8 +534,6 @@
 								</div>
 							</div>
 						</div>';
-
-
 
 			echo '
 						<input type="hidden" id="day" name="day" value="0">
@@ -559,7 +587,7 @@
 					
 			if (($zapis['add_new'] == 1) || $god_mode){
 				echo '		
-					function ShowSettingsAddTempZapis(filial, filial_name, kab, year, month, day, smena, time, period, worker_id, worker_name){
+					function ShowSettingsAddTempZapis(filial, filial_name, kab, year, month, day, smena, time, period, worker_id, worker_name, patient_name, description, insured, pervich, noch){
 						document.getElementById("errror").innerHTML="";
 						//alert(period);
 						$(\'#ShowSettingsAddTempZapis\').show();
@@ -577,17 +605,25 @@
 						document.getElementById("start_time").value=time;
 						document.getElementById("wt").value=period;
 						document.getElementById("worker_id").value=worker_id;
-						
-						document.getElementById("filial_name").innerHTML=filial_name;
+
 						if (worker_id == 0){
 							document.getElementById("search_client2").value = "";
 						}else{
 							document.getElementById("search_client2").value = worker_name;
 						}
+						
+						document.getElementById("search_client").value=patient_name;
+						
+						document.getElementById("description").value=description;
+												
+						document.getElementById("filial_name").innerHTML=filial_name;
 						document.getElementById("kab").innerHTML=kab;
 						document.getElementById("month_date").innerHTML=day+\'.\'+month+\'.\'+year;
 						document.getElementById("month_date_smena").innerHTML=smena
 						
+						alert(insured);
+						alert(pervich);
+						alert(noch);
 						
 						document.getElementById("change_minutes").value = period;
 						
@@ -643,6 +679,10 @@
 						});
 						
 						//alert(next_time_start_rez);
+						
+						//Поправка времени и вставка в форму
+						document.getElementById("change_hours").value = period/60|0;
+						document.getElementById("change_minutes").value = period%60;
 						
 						if (next_time_start_rez != 0){
 						

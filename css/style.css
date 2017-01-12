@@ -1025,6 +1025,14 @@ position:relative;
 }
 
 
+#showHiddenDivs {
+	display:inline-block;
+}
+
+.hiddenDivs {
+	display:none;
+}
+
 
 /* Модальные Окна для ЗФ */
 .modal_div {
@@ -1688,4 +1696,8 @@ input.dateс {
 
 .info :hover {
 	color: #FF9900;
+}
+
+.hiddenDiv {
+	display:none;
 }

@@ -337,7 +337,7 @@
 						}
 					}else{
 						echo '
-								<span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал</span><br>';
+								<span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <a href="user.php?id='.$_SESSION['id'].'" class="ahref">определить</a></span><br>';
 					}
 					
 			echo '			
@@ -1197,6 +1197,7 @@
 													$cellZapisFreeSpace_Height = $wt_FreeSpace * 2;
 													$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-900)*2;
 													//$mark = 777;
+													//var_dump($wt);
 												}else{
 													if ((900+$NextSmenaArr_Zanimayu)< $wt){
 														$wt_FreeSpace = 30;
@@ -1267,7 +1268,468 @@
 						$cellZapisTime_TopSdvig = 0;
 						echo '
 						<div id="tabs-3">
+							<table style="border:1px solid #BFBCB5; /*width: 100%;*/ background: #fff;">
+								<tr>';
+						echo '
+							<td style="border:1px solid grey; vertical-align: top; width: 50px; min-width: 50px; max-width: 50px;">
+								<div class="" style="border: none; width: 100%;  height: 50px;">
+									
+								</div>
+								<div style="position:relative; height: 720px;">';
+
+						//for ($wt=1260; $wt < 1620; $wt=$wt+30){
+						//до полуночи
+						for ($wt=1260; $wt < 1440; $wt=$wt+30){	
+							echo '
+								<div class="cellZapisTime" style="text-align: -moz-center; text-align: center; text-align: -webkit-center; top: '.$cellZapisTime_TopSdvig.'px;">
+									'.$zapis_times[$wt].'';
+							//var_dump($NextFill);
+							echo '
+								</div>';
+							$cellZapisTime_TopSdvig = $cellZapisTime_TopSdvig + 60;
+						}
+						//после полуночи
+						for ($wt=0; $wt < 180; $wt=$wt+30){	
+							echo '
+								<div class="cellZapisTime" style="text-align: -moz-center; text-align: center; text-align: -webkit-center; top: '.$cellZapisTime_TopSdvig.'px;">
+									'.$zapis_times[$wt].'';
+							//var_dump($NextFill);
+							echo '
+								</div>';
+							$cellZapisTime_TopSdvig = $cellZapisTime_TopSdvig + 60;
+						}
+						echo '</div>
+							</td>';
+						
+						
+						for ($k = 1; $k <= count($kabsInFilial); $k++){
+							echo '
+									<td style="border:1px solid grey; vertical-align: top; width: 180px; min-width: 180px; max-width: 180px;">';
+							
+							if (isset($Work_Today_arr[$k][3])){
+								//var_dump($Kab_work_today_smena1);
+
+								$worker = $Work_Today_arr[$k][3]['worker'];
+								
+								echo '
+									<div class="cellsBlock5 ahref" style="border: none; font-weight: bold; font-size:80%;"user_full>
+										<div class="cellRight" id="month_date_worker" style="border: none; background-color:rgba(39, 183, 127, .5); height: 40px; outline: none; position: relative;">
+											1 смена каб '.$k.'<br><i>'.WriteSearchUser('spr_workers', $worker, 'user', false).'</i>
+											<div class="b" style="position: absolute; top: 0; right: 0; color: #0C0C0C; margin: 0; padding: 1px 5px;"><a href="zapis_full.php?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">Подробно</a></div>
+										</div>
+									</div>';
+							}else{
+
+								$worker = 0;
+								
+								echo '
+										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
+											<div class="cellRight" id="month_date_worker" style="border: none; height: 40px; outline: none; position: relative;">
+												1 смена каб '.$k.'<br>
+												<span style="color:red;">нет врача по <a href="scheduler.php?filial='.$_GET['filial'].''.$who.'">графику</a></span>
+												<div class="b" style="position: absolute; top: 0; right: 0; color: #0C0C0C; margin: 0; padding: 1px 5px;"><a href="zapis_full.php?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">Подробно</a></div>
+											</div>
+										</div>';
+							}
+							echo'
+										<div style="position:relative; height: 720px;">';
+								//Выбрать записи пациентов, если есть
+								//$ZapisHereQueryToday = FilialKabSmenaZapisToday($datatable, $y, $m, $d, $_GET['filial'], $k);
+								//var_dump ($ZapisHereQueryToday);
+								
+								$NextTime = FALSE;
+								$ThatTimeFree = TRUE;
+								$PeredannNextTime = FALSE;
+								$NextTime_val = 0;
+								//сдвиг для блоков времени
+								$cellZapisTime_TopSdvig = 0;
+								$cellZapisValue_TopSdvig = 0;
+								$PrevZapis = array();
+								$NextFill = FALSE;
+								
+								//for ($wt=900; $wt < 1260; $wt=$wt+30){
+								//for ($wt=1260; $wt < 1620; $wt=$wt+30){
+									
+								//до полуночи
+								for ($wt=1260; $wt < 1440; $wt=$wt+30){										
+									if (isset($Work_Today_arr[$k][3])){
+										$bg_color = '';	
+									}else{
+										$bg_color = ' background-color: #f0f0f0;';
+									}
+											
+									$back_color = '';
+									/*echo '
+										<div class="cellZapisTime" style="text-align: -moz-center; text-align: center; text-align: -webkit-center; top: '.$cellZapisTime_TopSdvig.'px;" onclick="window.location.href = \'zapis_full.php?filial='.$_GET['filial'].'&who='.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'\'">
+											'.$zapis_times[$wt].'';
+									//var_dump($NextFill);
+									echo '
+										</div>';*/
+									$cellZapisTime_TopSdvig = $cellZapisTime_TopSdvig + 60;
+									
+									//Выбрать записи пациентов, если есть
+									$ZapisHereQueryToday = FilialKabSmenaZapisToday2($datatable, $year, $month, $day, $_GET['filial'], $k, $wt, $type);
+									//var_dump ($ZapisHereQueryToday);
+									
+									if (isset($NextSmenaArr[$k]['NextSmenaFill']) && !$NextSmenaArr_Bool){
+										//var_dump(4);
+										if($NextSmenaArr[$k]['NextSmenaFill']){
+											//var_dump(5);
+											//надо перескочить промежуток
+											$NextSmenaArr_Bool = TRUE;
+											$NextSmenaArr_Zanimayu = $NextSmenaArr[$k]['OstatokVremeni']/2;
+											
+											//$NextFill = TRUE;
+											$PrevZapis = $NextSmenaArr[$k]['ZapisHereQueryToday'];
+											
+											//вычисляем время начала приёма
+											$TempStartWorkTime_h = floor($PrevZapis['start_time']/60);
+											$TempStartWorkTime_m = $PrevZapis['start_time']%60;
+											if ($TempStartWorkTime_m < 10) $TempStartWorkTime_m = '0'.$TempStartWorkTime_m;
+											//вычисляем время окончания приёма
+											$TempEndWorkTime_h = floor(($PrevZapis['start_time']+$PrevZapis['wt'])/60);
+											if ($TempEndWorkTime_h > 23) $TempEndWorkTime_h = $TempEndWorkTime_h - 24;
+											$TempEndWorkTime_m = ($PrevZapis['start_time']+$PrevZapis['wt'])%60;
+											if ($TempEndWorkTime_m < 10) $TempEndWorkTime_m = '0'.$TempEndWorkTime_m;	
+											//Сдвиг для блока
+											$cellZapisValue_TopSdvig = 0;
+											//Высота блока
+											$cellZapisValue_Height = $NextSmenaArr[$k]['OstatokVremeni'];
+											if ($cellZapisValue_Height > 720)
+												$cellZapisValue_Height = 720;
+											
+											if ($NextSmenaArr[$k]['ZapisHereQueryToday']['enter'] == 1){
+												$back_color = 'background-color: rgba(119, 255, 135, 1);';
+											}else{
+												//Если оформлено не на этом филиале
+												if($NextSmenaArr[$k]['ZapisHereQueryToday']['office'] != $NextSmenaArr[$k]['ZapisHereQueryToday']['add_from']){
+													$back_color = 'background-color: rgb(119, 255, 250);';
+												}
+											}
+											echo '
+												<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
+													'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'<br>
+													
+														<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $NextSmenaArr[$k]['ZapisHereQueryToday']['patient'], 'user', false).'</span> : '.$NextSmenaArr[$k]['ZapisHereQueryToday']['description'].'
+													';
+											//var_dump($NextSmenaArr[$k]['NextSmenaFill']);
+											echo '
+												</div>';
+											//$NextSmenaArr[$k]['NextSmenaFill'] = FALSE;
+										}
+										//$NextSmenaArr = array();
+									}
+									//var_dump(6);
+									//var_dump($PrevZapis);
+									
+									//!!! Доделать, если "рваная" запись залазит (не кратное 30 минутам)
+									
+									//var_dump(!$NextSmenaArr_Bool);
+									//var_dump(((900+$NextSmenaArr_Zanimayu)-$wt)%30);
+									//var_dump($NextSmenaArr_Zanimayu);
+									//var_dump($ZapisHereQueryToday);
+
+									//if (!$NextSmenaArr_Bool || ($NextSmenaArr_Bool && (((900+$NextSmenaArr_Zanimayu)-$wt)%30 != 0))){
+										if ($ZapisHereQueryToday != 0){
+											//var_dump(2);
+											
+											//Если тут записей больше 1
+											if (count($ZapisHereQueryToday) > 1){
+												foreach ($ZapisHereQueryToday as $Zapis_key => $ZapisHereQueryToday_val){
+													if ($ZapisHereQueryToday_val['start_time'] < 1260){
+														//вычисляем время начала приёма
+														$TempStartWorkTime_h = floor($ZapisHereQueryToday_val['start_time']/60);
+														$TempStartWorkTime_m = $ZapisHereQueryToday_val['start_time']%60;
+														if ($TempStartWorkTime_m < 10) $TempStartWorkTime_m = '0'.$TempStartWorkTime_m;
+														//вычисляем время окончания приёма
+														$TempEndWorkTime_h = floor(($ZapisHereQueryToday_val['start_time']+$ZapisHereQueryToday_val['wt'])/60);
+														if ($TempEndWorkTime_h > 23) $TempEndWorkTime_h = $TempEndWorkTime_h - 24;
+														$TempEndWorkTime_m = ($ZapisHereQueryToday_val['start_time']+$ZapisHereQueryToday_val['wt'])%60;
+														if ($TempEndWorkTime_m < 10) $TempEndWorkTime_m = '0'.$TempEndWorkTime_m;	
+														//Сдвиг для блока
+														$cellZapisValue_TopSdvig = (floor(($ZapisHereQueryToday_val['start_time']-1260)/30)*60 + ($ZapisHereQueryToday_val['start_time']-540)%30*2);
+														//Высота блока
+														$cellZapisValue_Height = $ZapisHereQueryToday_val['wt']*2;
+														//Если от начала работы окончание выходит за предел промежутка времени
+														if ($ZapisHereQueryToday_val['start_time'] + $ZapisHereQueryToday_val['wt'] > $wt+30){
+															$NextFill = TRUE;
+															//$PrevZapis = $ZapisHereQueryToday_val;
+														}
+														//Если перед первой работой от начала промежутка есть свободное время
+														if ($Zapis_key == 0){
+															if ($ZapisHereQueryToday_val['start_time'] > $wt){
+																$wt_FreeSpace = $ZapisHereQueryToday_val['start_time'] - $wt;
+																$wt_start_FreeSpace = $wt;
+																$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
+																$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
+																echo '
+																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																		';
+																	//var_dump($Zapis_key);
+																echo '
+																	</div>';
+															}
+														}else{
+															//если последняя запись
+															if ($Zapis_key == count($ZapisHereQueryToday)-1){
+																$wt_FreeSpace = $ZapisHereQueryToday_val['start_time'] - ($PrevZapis['start_time']+$PrevZapis['wt']);
+																$wt_start_FreeSpace = $PrevZapis['start_time'] + $PrevZapis['wt'];
+																$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
+																$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
+																echo '
+																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																		';
+																	//var_dump($Zapis_key);
+																echo '
+																	</div>';
+																//если есть свободное место после последней записи
+																if ($ZapisHereQueryToday_val['start_time'] + $ZapisHereQueryToday_val['wt'] < $wt+30){
+																	$wt_FreeSpace = $wt+30-($ZapisHereQueryToday_val['start_time'] + $ZapisHereQueryToday_val['wt']);
+																	$wt_start_FreeSpace = $ZapisHereQueryToday_val['start_time'] + $ZapisHereQueryToday_val['wt'];
+																	$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
+																	$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
+																	echo '
+																		<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																			';
+																		//var_dump($Zapis_key);
+																	echo '
+																		</div>';
+																//Если залазит на следующий отрезок времени
+																}else{
+																	if ($ZapisHereQueryToday_val['start_time'] + $ZapisHereQueryToday_val['wt'] > $wt+30){
+																		$NextFill = TRUE;
+																		//$PrevZapis = $ZapisHereQueryToday_val;
+																	}
+																}	
+																
+															}else{
+																$wt_FreeSpace = $ZapisHereQueryToday_val['start_time'] - ($PrevZapis['start_time']+$PrevZapis['wt']);
+																$wt_start_FreeSpace = $PrevZapis['start_time'] + $PrevZapis['wt'];
+																$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
+																$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
+																echo '
+																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																		';
+																	//var_dump($Zapis_key);
+																echo '
+																	</div>';
+															}
+														}
+														
+														//Если время выполнения работы больше чем осталось до конца смены
+														if ($wt == 1230){
+															if ($cellZapisValue_Height > 60){
+																$cellZapisValue_Height = 60;
+															}
+														}else{
+															if ($ZapisHereQueryToday[0]['start_time'] + $ZapisHereQueryToday[0]['wt'] >= 1260){
+																$cellZapisValue_Height = (1260-$ZapisHereQueryToday[0]['start_time'])*2;
+																/*$NextSmenaArr[$k]['NextSmenaFill'] = TRUE;
+																$NextSmenaArr[$k]['ZapisHereQueryToday'] = $ZapisHereQueryToday[0];
+																$NextSmenaArr[$k]['OstatokVremeni'] = ($ZapisHereQueryToday[0]['start_time'] + $ZapisHereQueryToday[0]['wt'] - 1260)*2;
+																if ($NextSmenaArr[$k]['OstatokVremeni'] > 1260){
+																	$NextSmenaArr[$k]['OstatokVremeni'] = 1260;
+																}*/
+															}
+														}
+														if ($ZapisHereQueryToday_val['enter'] == 1){
+															$back_color = 'background-color: rgba(119, 255, 135, 1);';
+														}else{
+															//Если оформлено не на этом филиале
+															if($ZapisHereQueryToday_val['office'] != $ZapisHereQueryToday_val['add_from']){
+																$back_color = 'background-color: rgb(119, 255, 250);';
+															}
+														}
+														echo '
+															<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
+																'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'<br>
+																
+																	<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $ZapisHereQueryToday_val['patient'], 'user', false).'</span> : '.$ZapisHereQueryToday_val['description'].'
+																';
+														//var_dump ($NextFill);
+														echo '
+															</div>';
+													}else{
+													}
+													//Передать предыдущую запись
+													$PrevZapis = $ZapisHereQueryToday_val;
+												}
+											}elseif (count($ZapisHereQueryToday) == 1){
+												if ($ZapisHereQueryToday[0]['start_time'] < 1260){
+													//вычисляем время начала приёма
+													$TempStartWorkTime_h = floor($ZapisHereQueryToday[0]['start_time']/60);
+													$TempStartWorkTime_m = $ZapisHereQueryToday[0]['start_time']%60;
+													if ($TempStartWorkTime_m < 10) $TempStartWorkTime_m = '0'.$TempStartWorkTime_m;
+													//вычисляем время окончания приёма
+													$TempEndWorkTime_h = floor(($ZapisHereQueryToday[0]['start_time']+$ZapisHereQueryToday[0]['wt'])/60);
+													if ($TempEndWorkTime_h > 23) $TempEndWorkTime_h = $TempEndWorkTime_h - 24;
+													$TempEndWorkTime_m = ($ZapisHereQueryToday[0]['start_time']+$ZapisHereQueryToday[0]['wt'])%60;
+													if ($TempEndWorkTime_m < 10) $TempEndWorkTime_m = '0'.$TempEndWorkTime_m;	
+													//Сдвиг для блока
+													$cellZapisValue_TopSdvig = (floor(($ZapisHereQueryToday[0]['start_time']-1260)/30)*60 + ($ZapisHereQueryToday[0]['start_time']-1260)%30*2);
+													//Высота блока
+													$cellZapisValue_Height = $ZapisHereQueryToday[0]['wt']*2;
+													//Если от начала работы окончание выходит за предел промежутка времени
+													if ($ZapisHereQueryToday[0]['start_time'] + $ZapisHereQueryToday[0]['wt'] > $wt+30){
+														$NextFill = TRUE;
+														//$PrevZapis = $ZapisHereQueryToday[0];
+													}
+													//Если работа закончится до окончания периода
+													if ($ZapisHereQueryToday[0]['start_time'] + $ZapisHereQueryToday[0]['wt'] < $wt+30){
+														$wt_FreeSpace = $wt+30-($ZapisHereQueryToday[0]['start_time'] + $ZapisHereQueryToday[0]['wt']);
+														$wt_start_FreeSpace = $ZapisHereQueryToday[0]['start_time'] + $ZapisHereQueryToday[0]['wt'];
+														$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
+														$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
+														echo '
+															<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																';
+															//var_dump($NextFill);
+														echo '
+															</div>';
+													}
+													
+													//Если работа начнется не с начала периода
+													if ($ZapisHereQueryToday[0]['start_time'] > $wt){
+														if (!$NextFill){
+															$wt_FreeSpace = $ZapisHereQueryToday[0]['start_time'] - $wt;
+															$wt_start_FreeSpace = $wt;
+															$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
+															$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
+														}else{
+															//var_dump($PrevZapis);
+															if (isset($PrevZapis['start_time'])){
+																$wt_FreeSpace = $ZapisHereQueryToday[0]['start_time'] - ($PrevZapis['start_time'] + $PrevZapis['wt']);
+																$wt_start_FreeSpace = $PrevZapis['start_time'] + $PrevZapis['wt'];
+															}else{
+																$wt_FreeSpace = $ZapisHereQueryToday[0]['start_time'] - $wt;
+																$wt_start_FreeSpace = $wt;
+															}
+															$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
+															$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
+														}
+														echo '
+															<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																';
+															//var_dump($NextSmenaArr);
+														echo '
+															</div>';
+													}
+													
+													//Если время выполнения работы больше чем осталось до конца смены
+													if ($wt == 1230){
+														if ($cellZapisValue_Height > 60){
+															$cellZapisValue_Height = 60;
+														}
+													}else{
+														if ($ZapisHereQueryToday[0]['start_time'] + $ZapisHereQueryToday[0]['wt'] >= 1260){
+															$cellZapisValue_Height = (1260-$ZapisHereQueryToday[0]['start_time'])*2;
+															/*$NextSmenaArr[$k]['NextSmenaFill'] = TRUE;
+															$NextSmenaArr[$k]['ZapisHereQueryToday'] = $ZapisHereQueryToday[0];
+															$NextSmenaArr[$k]['OstatokVremeni'] = ($ZapisHereQueryToday[0]['start_time'] + $ZapisHereQueryToday[0]['wt'] - 1260)*2;
+															if ($NextSmenaArr[$k]['OstatokVremeni'] > 1260){
+																$NextSmenaArr[$k]['OstatokVremeni'] = 1260;
+															}*/
+														}
+													}
+													if ($ZapisHereQueryToday[0]['enter'] == 1){
+														$back_color = 'background-color: rgba(119, 255, 135, 1);';
+													}else{
+														//Если оформлено не на этом филиале
+														if($ZapisHereQueryToday[0]['office'] != $ZapisHereQueryToday[0]['add_from']){
+															$back_color = 'background-color: rgb(119, 255, 250);';
+														}
+													}
+													echo '
+														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
+															'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'<br>
+															
+																<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $ZapisHereQueryToday[0]['patient'], 'user', false).'</span> : '.$ZapisHereQueryToday[0]['description'].'
+															
+														</div>';
+												}else{
+												}
+												//Передать предыдущую запись
+												$PrevZapis = $ZapisHereQueryToday[0];
+											}
+										//если тут вообще нет записи
+										}else{
+											//var_dump(1);
+											$mark = '';
+											if (!$NextFill){
+												//var_dump(7);
+												//($NextSmenaArr_Bool && (((900+$NextSmenaArr_Zanimayu)-$wt)%30 != 0))
+												if (!$NextSmenaArr_Bool){
+													//var_dump(8);
+													$wt_FreeSpace = 30;
+													$wt_start_FreeSpace = $wt;
+													$cellZapisFreeSpace_Height = $wt_FreeSpace * 2;
+													$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
+													//$mark = 777;
+													//var_dump($wt);
+												}else{
+													if ((900+$NextSmenaArr_Zanimayu)< $wt){
+														$wt_FreeSpace = 30;
+														$wt_start_FreeSpace = $wt;
+														$cellZapisFreeSpace_Height = $wt_FreeSpace * 2;
+														$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
+														//$mark = 888;
+													}else{
+														$wt_FreeSpace = $wt+30-(900+$NextSmenaArr_Zanimayu);
+														$wt_start_FreeSpace = 900+$NextSmenaArr_Zanimayu;
+														$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
+														$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
+														//$mark = $NextSmenaArr_Zanimayu;
+													}
+												}
+												echo '
+													<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+														'.$mark.'';
+													//var_dump($NextFill);
+												echo '
+													</div>';
+											}
+										}
+										//Если предыдущее время залазит на это
+										if ($NextFill){
+											//var_dump(3);
+											if ($PrevZapis['start_time'] + $PrevZapis['wt'] < $wt+30){
+												$NextFill = FALSE;
+												$wt_FreeSpace = $wt+30-($PrevZapis['start_time'] + $PrevZapis['wt']);
+												$wt_start_FreeSpace = ($PrevZapis['start_time'] + $PrevZapis['wt'])%30+$wt;
+												$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
+												$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
+												echo '
+													<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+														';
+													//var_dump($NextFill);
+												echo '
+													</div>';
+											}
+										}
+									//}
+									
+								}
+								echo '</div>';
+							/*}else{
+								echo '
+										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
+											<div class="cellRight" id="month_date_worker" style="border: none; height: 40px; outline: none;">
+												2 смена каб '.$k.'<br>
+												<span style="color:red;">нет врача по <a href="scheduler.php?filial='.$_GET['filial'].'&who='.$who.'">графику</a></span>
+											</div>
+										</div>';
+							}*/
+
+							echo '
+									</td>';
+							$NextSmenaArr[$k] = array();
+							$NextSmenaArr_Bool = FALSE;
+						}
+						echo '
+								</tr>
+							</table>
 						</div>';
+
 						
 						//смена 4
 						

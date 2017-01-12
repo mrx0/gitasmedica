@@ -140,9 +140,12 @@
 				);
 				
 				if ($stom['see_own'] == 1){
-					echo '<br /><br />Мои напоминания';
+					echo '<br><br>Мои напоминания 
+							<div id="showHiddenDivs" style="cursor: pointer;">
+								<span style="color: #7D7D7D; margin-bottom: 5px;" id="showHideText">Показать всё</span>
+							</div>';
 				}elseif (($stom['see_all'] == 1) || $god_mode){
-					echo '<br /><br />Все просроченные незакрытые напоминания';
+					echo '<br><br>Все просроченные незакрытые напоминания';
 				}
 				echo '
 							<ul class="live_filter" style="margin-left:6px;">
@@ -159,11 +162,11 @@
 								</li>';
 				for ($i = 0; $i < count($notes); $i++) {
 					$dead_line_time = $notes[$i]['dead_line'] - time() ;
-					if ($dead_line_time <= 0){
+					if (($dead_line_time <= 0) && $notes[$i]['closed'] == 0){
 						$priority_color = '#FF1F0F';
-					}elseif (($dead_line_time > 0) && ($dead_line_time <= 2*24*60*60)){
+					}elseif ((($dead_line_time > 0) && ($dead_line_time <= 2*24*60*60)) && $notes[$i]['closed'] == 0){
 						$priority_color = '#FF9900';
-					}elseif (($dead_line_time > 2*24*60*60) && ($dead_line_time <= 3*24*60*60)){
+					}elseif ((($dead_line_time > 2*24*60*60) && ($dead_line_time <= 3*24*60*60)) && $notes[$i]['closed'] == 0){
 						$priority_color = '#EFDF3F';
 					}else{
 						$priority_color = '#FFF';
@@ -188,6 +191,7 @@
 								background: linear-gradient(-135deg, rgba(239,23,63, 1) 0%,rgba(231,55,39, 0.7) 33%,rgba(239,23,63, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
 								';
 						}
+						$showHiddenDivs = '';
 					}else{
 						$ended = 'Да';
 						$background_style = '
@@ -202,9 +206,10 @@
 						$background_style2 = '
 							background: rgba(144,247,95, 0.5);
 							';
+						$showHiddenDivs = 'hiddenDivs';
 					}
 					echo '
-							<li class="cellsBlock cellsBlockHover">
+							<li class="cellsBlock cellsBlockHover '.$showHiddenDivs.'">
 									<div class="cellPriority" style="background-color:'.$priority_color.'"></div>
 									<div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $notes[$i]['dead_line']).'</div>
 									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$notes[$i]['client'], 'user', true).'</div>
@@ -393,6 +398,18 @@
 				
 			echo '
 				<script>
+					$("#showHiddenDivs").click(function () {
+						$(".hiddenDivs").each(function(){
+							//alert($(this).css("display"));
+							if($(this).css("display") == "none"){
+								$(this).css("display", "table");
+								document.getElementById("showHideText").innerHTML="Скрыть закрытые";
+							}else{
+								$(this).css("display", "none");
+								document.getElementById("showHideText").innerHTML="Показать всё";
+							}
+						})
+					});
 					$(function() {
 						$(\'#SelectFilial\').change(function(){
 							//alert($(this).val());

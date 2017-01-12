@@ -20,7 +20,7 @@
 					echo '
 						<div id="status">
 							<header>
-								<h2>Редактировать</h2>
+								<h2>Редактировать <a href="pricelistitem.php?id='.$_GET['id'].'" class="ahref">#'.$_GET['id'].'</a></h2>
 							</header>';
 
 					echo '

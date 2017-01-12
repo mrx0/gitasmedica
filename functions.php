@@ -861,7 +861,7 @@
 					echo '
 						<li class="cellsBlock" style="width: auto;">
 							<div class="cellPriority" style=""></div>
-							<a href="1.php?id='.$value['id'].'" class="ahref cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$space.$value['name'].'</a>
+							<a href="pricelistgroup.php?id='.$value['id'].'" class="ahref cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$space.$value['name'].'</a>
 							<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">-</div>
 						</li>';
 						
@@ -886,7 +886,8 @@
 
 							$price = 0;
 							
-							$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
+							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
+							$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from` DESC LIMIT 1";
 							//var_dump($query);
 							
 							$res = mysql_query($query) or die(mysql_error().' -> '.$query);

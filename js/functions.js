@@ -477,6 +477,7 @@
 	function Ajax_edit_price(id, session_id) {
 
 		var price = document.getElementById("price").value;
+		var iWantThisDate2 = document.getElementById("iWantThisDate2").value;
 
 		$.ajax({
 			url:"priceprice_edit_f.php",
@@ -486,6 +487,7 @@
 			{
 				session_id:session_id,
 				price:price,
+				iWantThisDate2:iWantThisDate2,
 				id: id,
 			},
 			cache: false,

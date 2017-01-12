@@ -54,13 +54,13 @@
 							<li class="cellsBlock" style="margin: 10px;">
 								<a href="stat_cosm.php" class="b3">Статистика</a>
 							</li>';
+				/*echo '
+							<li class="cellsBlock" style="margin: 10px;">
+								<a href="stat_cosm_ex.php" class="b3">Статистика с фильтром (старая нерабочая)</a>
+							</li>';*/
 				echo '
 							<li class="cellsBlock" style="margin: 10px;">
-								<a href="stat_cosm_ex.php" class="b3">Статистика с фильтром</a>
-							</li>';
-				echo '
-							<li class="cellsBlock" style="margin: 10px;">
-								<a href="stat_cosm_ex2.php" class="b3">Статистика с фильтром2</a>
+								<a href="stat_cosm_ex2.php" class="b3">Статистика с фильтром</a>
 							</li>';
 
 			echo '		
