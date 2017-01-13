@@ -401,7 +401,8 @@
 
 		var pricename = document.getElementById("pricename").value;
 		var price = document.getElementById("price").value;
-
+		var iWantThisDate2 = document.getElementById("iWantThisDate2").value;
+		
 		$.ajax({
 			url:"add_priceitem_f.php",
 			global: false, 
@@ -410,6 +411,7 @@
 			{
 				pricename:pricename,
 				price:price,
+				iWantThisDate2:iWantThisDate2,
 				session_id:session_id,
 			},
 			cache: false,

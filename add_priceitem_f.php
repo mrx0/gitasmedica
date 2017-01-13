@@ -31,12 +31,25 @@
 					if (isset($_POST['price'])){
 						if (is_numeric($_POST['price'])){
 							if ($_POST['price'] > 0){
-								$PriceName = WriteToDB_EditPriceName ($name, $_SESSION['id']);
-								WriteToDB_EditPricePrice ($PriceName, $_POST['price'], $_SESSION['id']);
-								echo '
-									<div class="query_ok">
-										Услуга добавлена в базу.<br><br>
-									</div>';
+								
+								//операции со временем						
+								$iWantThisDate2 = strtotime($_POST['iWantThisDate2']. "09:00:00");
+								$_time = time();
+								$start_day = mktime(9, 0, 0, date("m", $_time), date("d", $_time), date("y", $_time));
+								
+								if ($iWantThisDate2 >= $start_day){
+									$PriceName = WriteToDB_EditPriceName ($name, $_SESSION['id']);
+									WriteToDB_EditPricePrice ($PriceName, $_POST['price'], $iWantThisDate2, $_SESSION['id']);
+									echo '
+										<div class="query_ok">
+											Услуга добавлена в базу.<br><br>
+										</div>';
+								}else{
+									echo '
+										<div class="query_neok">
+											Задним числом добавлять нельзя.<br><br>
+										</div>';
+								}
 							}else{
 								echo '
 									<div class="query_neok">

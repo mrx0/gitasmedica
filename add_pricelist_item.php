@@ -78,8 +78,18 @@
 									<input type="text" name="price" id="price" value="0"  style="width: 50px;"> руб.
 									<label id="price_error" class="error"></label>
 								</div>
-							</div>
-
+							</div>';
+					//Календарик	
+					echo '
+	
+								<div class="cellsBlock2">
+									<div class="cellLeft">С какого числа:</div>
+									<div class="cellRight">
+										<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
+										onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
+									</div>
+								</div>';
+				echo '
 							<input type="button" class="b" value="Добавить" onclick="Ajax_add_priceitem('.$_SESSION['id'].')">
 						</form>
 					</div>';	
