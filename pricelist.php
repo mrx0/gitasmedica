@@ -128,7 +128,7 @@
 						$price = 0;
 						
 						//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
-						$query = "SELECT `price` FROM `date_from` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
+						$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
 											
 						$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
