@@ -9,7 +9,8 @@
 			//--
 		}else{
 			include_once 'DBWork.php';	
-			$fast_search = SelForFastSearch ('spr_clients', $_POST['searchdata']);
+			//$fast_search = SelForFastSearch ('spr_clients', $_POST['searchdata']);
+			$fast_search = SelForFastSearchFullName ('spr_clients', $_POST['searchdata']);
 			if ($fast_search != 0){
 				//var_dump ($fast_search);
 				for ($i = 0; $i < count($fast_search); $i++){

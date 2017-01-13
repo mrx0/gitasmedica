@@ -23,7 +23,6 @@
 					echo "\n<li>".$fast_search[$i]["full_name"]."</li>";
 				}
 			}
-			
 		}
 	}
 

@@ -12,6 +12,11 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			
+			//операции со временем						
+			$day = date('d');		
+			$month = date('m');		
+			$year = date('Y');
+			
 			//тип график (космет/стомат/...)
 			if (isset($_GET['who'])){
 				if ($_GET['who'] == 'stom'){
