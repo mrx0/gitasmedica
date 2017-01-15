@@ -1,7 +1,7 @@
 <?php 
 
-//edit_schedule_day_f.php
-//Функция для Добавления записи
+//edit_zapis_day_f.php
+//Функция для редактирования записи
 
 	session_start();
 	
@@ -63,7 +63,7 @@
 											}
 											
 											//запись в базу
-											WriteToDB_EditZapis ('zapis', $_POST['year'], $_POST['month'], $_POST['day'], $_POST['filial'], $_SESSION['filial'], $_POST['kab'], $worker, $_POST['author'], $client, $_POST['contacts'], $_POST['description'], $_POST['start_time'], $_POST['wt'], $_POST['type'], $pervich, $insured, $noch);
+											WriteToDB_UpdateZapis ('zapis', $worker, $_SESSION['id'], $client, $_POST['contacts'], $_POST['description'], $_POST['start_time'], $_POST['wt'], $_POST['type'], $pervich, $insured, $noch, $_POST['id']);
 											
 											$data = '
 												<div class="query_ok">

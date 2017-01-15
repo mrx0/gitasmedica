@@ -1238,8 +1238,9 @@
 				}
 			}
 		});
-	}; 
-		
+	};
+	
+	//Добавление записи
 	function Ajax_add_TempZapis(type) {
 		 
 		// получение данных из полей
@@ -1290,6 +1291,98 @@
 			// какие данные будут переданы
 			data: {
 				type:"scheduler_stom",
+				author:author,
+				filial:filial,
+				kab:kab,
+				day:day,
+				month:month,
+				year:year,
+				start_time:start_time,
+				wt:wt,
+				worker:worker,
+				description:description,
+				contacts:contacts,
+				patient:patient,
+				
+				pervich:pervich,
+				insured:insured,
+				noch:noch,
+				
+				type:type
+			},
+			cache: false,
+			beforeSend: function() {
+				$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			dataType: "json",
+			// действие, при ответе с сервера
+			success: function(data){
+				if(data.result == "success"){  
+					document.getElementById("errror").innerHTML=data.data;
+					setTimeout(function () {
+						location.reload()
+					}, 100);
+				}else{
+					document.getElementById("errror").innerHTML=data.data;
+				}
+			}
+		});		
+	};
+	
+	//Редактирование записи
+	function Ajax_edit_TempZapis(type) {
+		 
+		// получение данных из полей
+		//var type = document.getElementById("type").value;
+		
+		var filial = $("#filial").val();
+		var author = $("#author").val();
+		var year = $("#year").val();
+		var month = $("#month").val();
+		var day = $("#day").val();
+		
+		var patient = $("#search_client").val();
+		//var contacts = $("#contacts").val();
+		var contacts = 0;
+		var description = $("#description").val();
+		
+		var start_time = $("#start_time").val();
+		var wt = $("#wt").val();
+		
+		var id = document.getElementById("zapis_id").value;
+		
+		var kab = document.getElementById("kab").innerHTML;
+
+		var worker = $("#search_client2").val();
+		//alert(worker);
+		if((typeof worker == "undefined") || (worker == "")) worker = 0;
+		//alert(worker);
+		
+		if ($("#pervich").prop("checked")){
+			var pervich = 1;
+		}else{
+			var pervich = 0;
+		}
+		if ($("#insured").prop("checked")){
+			var insured = 1;
+		}else{
+			var insured = 0;
+		}
+		if ($("#noch").prop("checked")){
+			var noch = 1;
+		}else{
+			var noch = 0;
+		}
+		
+		$.ajax({
+			global: false, 
+			type: "POST", 
+			// путь до скрипта-обработчика
+			url: "edit_zapis_day_f.php",
+			// какие данные будут переданы
+			data: {
+				type:"scheduler_stom",
+				id:id,
 				author:author,
 				filial:filial,
 				kab:kab,

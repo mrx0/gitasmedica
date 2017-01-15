@@ -127,6 +127,9 @@
 						$datatable = 'scheduler_stom';
 						$kabsForDoctor = 'stom';
 						$type = 5;
+						
+						$stom_color = 'background-color: #fff261;';
+						$cosm_color = '';
 					}elseif($_GET['who'] == 'cosm'){
 						$who = '&who=cosm';
 						$whose = 'Косметологи ';
@@ -135,6 +138,9 @@
 						$datatable = 'scheduler_cosm';
 						$kabsForDoctor = 'cosm';
 						$type = 6;
+						
+						$stom_color = '';
+						$cosm_color = 'background-color: #fff261;';
 					}else{
 						$who = '&who=stom';
 						$whose = 'Стоматологи ';
@@ -144,6 +150,9 @@
 						$kabsForDoctor = 'stom';
 						$type = 5;
 						$_GET['who'] = 'stom';
+						
+						$stom_color = 'background-color: #fff261;';
+						$cosm_color = '';
 					}
 				}else{
 					$who = '&who=stom';
@@ -154,6 +163,9 @@
 					$kabsForDoctor = 'stom';
 					$type = 5;
 					$_GET['who'] = 'stom';
+						
+					$stom_color = 'background-color: #fff261;';
+					$cosm_color = '';
 				}
 				
 				if (isset($_GET['d']) && isset($_GET['m']) && isset($_GET['y'])){
@@ -343,8 +355,8 @@
 			echo '			
 							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-								<a href="?'.$dopFilial.$dopDate.'&who=stom" class="b">Стоматологи</a>
-								<a href="?'.$dopFilial.$dopDate.'&who=cosm" class="b">Косметологи</a>
+								<a href="?'.$dopFilial.$dopDate.'&who=stom" class="b" style="'.$stom_color.'">Стоматологи</a>
+								<a href="?'.$dopFilial.$dopDate.'&who=cosm" class="b" style="'.$cosm_color.'">Косметологи</a>
 							</li>
 							<li style="width: auto; margin-bottom: 20px;">
 								<div style="display: inline-block; margin-right: 20px;">

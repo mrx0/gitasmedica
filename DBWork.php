@@ -180,7 +180,29 @@
 		//!!!AddLog (GetRealIp(), $create_person, '', 'Изменение в расписании. ['.date('d.m.y H:i', $time).']. ОФис: ['.$office.']. Пациент: ['.$client.']. Описание: ['.$for_log.']. Комментарий: '.$comment);
 	}
 	
-	//Вставка записей в расписание
+	//Редактирование записей во временную запись
+	function WriteToDB_UpdateZapis ($datatable, $worker, $edit_person, $patient, $contacts, $description, $start_time, $wt, $type, $pervich, $insured, $noch, $id){
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+		$time = time();
+		$query = "UPDATE `zapis` SET 
+		`last_edit_time`='{$time}', `last_edit_person`='{$edit_person}',
+		`worker`='{$worker}', `patient`='{$patient}', `contacts`='{$contacts}', `description`='{$description}', 
+		`start_time`='{$start_time}', `wt`='{$wt}', `type`='{$type}', `pervich`='{$pervich}', `insured`='{$insured}', `noch`='{$noch}'
+		WHERE `id`='{$id}'";
+
+		//echo $query;
+		
+		mysql_query($query) or die(mysql_error().' -> '.$query);
+		mysql_close();
+		
+		//логирование
+		//!!!AddLog (GetRealIp(), $create_person, '', 'Изменение в расписании. ['.date('d.m.y H:i', $time).']. ОФис: ['.$office.']. Пациент: ['.$client.']. Описание: ['.$for_log.']. Комментарий: '.$comment);
+	}
+	
+	//Удаление записей в расписание
 	function WriteToDB_DeleteScheduler ($datatable, $id){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
@@ -197,7 +219,7 @@
 		//!!!AddLog (GetRealIp(), $create_person, '', 'Изменение в расписании. ['.date('d.m.y H:i', $time).']. ОФис: ['.$office.']. Пациент: ['.$client.']. Описание: ['.$for_log.']. Комментарий: '.$comment);
 	}
 
-	//Вставка записей в расписание
+	//Обновление записей в расписание
 	function WriteToDB_UpdateScheduler ($datatable, $id, $smena){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");

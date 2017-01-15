@@ -19,10 +19,29 @@
 			$js_data = '';
 			$kabsInFilialExist = FALSE;
 			$kabsInFilial = array();
+			$dopWho = '';
+			$dopDate = '';
+			$dopFilial = '';			
 			
 			$NextSmenaArr_Bool = FALSE;
 			$NextSmenaArr_Zanimayu = 0;
 
+			//Массив с месяцами
+			$monthsName = array(
+				'01' => 'Январь',
+				'02' => 'Февраль',
+				'03' => 'Март',
+				'04' => 'Апрель',
+				'05' => 'Май',
+				'06' => 'Июнь',
+				'07'=> 'Июль',
+				'08' => 'Август',
+				'09' => 'Сентябрь',
+				'10' => 'Октябрь',
+				'11' => 'Ноябрь',
+				'12' => 'Декабрь'
+			);
+			
 			/*$zapis_times = array (
 				0 => '0:00 - 0:30',
 				30 => '0:30 - 1:00',
@@ -132,7 +151,7 @@
 					$cosm_color = '';
 				}
 				
-				$month_names=array(
+				/*$month_names=array(
 					"Январь",
 					"Февраль",
 					"Март",
@@ -145,8 +164,9 @@
 					"Октябрь",
 					"Ноябрь",
 					"Декабрь"
-				); 
-				if (isset($_GET['y']))
+				); */
+				
+				/*if (isset($_GET['y']))
 					$y = $_GET['y'];
 				if (isset($_GET['m']))
 					$m = $_GET['m']; 
@@ -159,13 +179,35 @@
 				if (!isset($m) || $m < 1 || $m > 12)
 					$m = date("m");
 				if (!isset($d))
-					$d = date("d");
+					$d = date("d");*/
+				
+				if (isset($_GET['d']) && isset($_GET['m']) && isset($_GET['y'])){
+					//операции со временем						
+					$day = $_GET['d'];
+					$month = $_GET['m'];
+					$year = $_GET['y'];
+				}else{
+					//операции со временем						
+					$day = date('d');		
+					$month = date('m');		
+					$year = date('Y');
+				}
+
+				if (!isset($day) || $day < 1 || $day > 31)
+					$day = date("d");				
+				if (!isset($month) || $month < 1 || $month > 12)
+					$month = date("m");
+				if (!isset($year) || $year < 2010 || $year > 2037)
+					$year = date("Y");
+				
+				
 				if (isset($_GET['kab']))
 					$kab = $_GET['kab'];
-				$month_stamp = mktime(0, 0, 0, $m, 1, $y);
-				$day_count = date("t",$month_stamp);
-				$weekday = date("w", $month_stamp);
-				if ($weekday == 0)
+				
+				//$month_stamp = mktime(0, 0, 0, $m, 1, $y);
+				//$day_count = date("t",$month_stamp);
+				//$weekday = date("w", $month_stamp);
+				/*if ($weekday == 0)
 					$weekday = 7;
 				$start = -($weekday-2);
 				$last = ($day_count + $weekday - 1) % 7;
@@ -175,8 +217,8 @@
 					$end = $day_count + 7 - $last;
 				$today = date("Y-m-d");
 				$go_today = date('?\d=d&\m=m&\y=Y', mktime (0, 0, 0, date("m"), date("d"), date("Y"))); 
-				
-				$prev = date('?\d=d&\m=m&\y=Y', mktime (0, 0, 0, $m, $d-1, $y));  
+				*/
+				/*$prev = date('?\d=d&\m=m&\y=Y', mktime (0, 0, 0, $m, $d-1, $y));  
 				$next = date('?\d=d&\m=m&\y=Y', mktime (0, 0, 0, $m, $d+1, $y));
 				if(isset($_GET['filial'])){
 					$prev .= '&filial='.$_GET['filial']; 
@@ -185,7 +227,16 @@
 					
 					$selected_fil = $_GET['filial'];
 				}
-				$i = 0;
+				$i = 0;*/
+				
+				foreach ($_GET as $key => $value){
+					if (($key == 'd') || ($key == 'm') || ($key == 'y'))
+						$dopDate  .= '&'.$key.'='.$value;
+					if ($key == 'filial')
+						$dopFilial .= '&'.$key.'='.$value;
+					if ($key == 'who')
+						$dopWho .= '&'.$key.'='.$value;
+				}
 				
 				
 				$filial = SelDataFromDB('spr_office', $_GET['filial'], 'offices');
@@ -208,17 +259,22 @@
 					
 				}
 					
+				//переменная, чтоб вкл/откл редактирование
+				echo '
+					<script>
+						var iCanManage = true;
+					</script>';
 				
 				if ($filial != 0){
 					
 					echo '
 						<div id="status">
 							<header>
-								<h2>Запись '.$d.' ',$month_names[$m-1],' ',$y,' <small>(подробное описание)</small></h2>
+								<h2>Запись '.$day.' ',$monthsName[$month],' ',$year,' <small>(подробное описание)</small></h2>
 								<b>Филиал</b> '.$filial[0]['name'].'<br>
 								<b>Кабинет '.$kab.'</b><br>
 								<span style="color: green; font-size: 120%; font-weight: bold;">'.$whose.'</span><br>
-								<a href="zapis.php?filial='.$_GET['filial'].''.$who.'&d='.$d.'&m='.$m.'&y='.$y.'" class="b">Запись</a>
+								<a href="zapis.php?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'" class="b">Запись</a>
 								<a href="scheduler.php?filial='.$_GET['filial'].''.$who.'" class="b">График</a>
 								<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>
 								<br><br>';
@@ -250,12 +306,30 @@
 					echo '		
 							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-								<a href="?filial='.$_GET['filial'].'&who=stom&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$kab.'" class="b" style="'.$stom_color.'">Стоматологи</a>
-								<a href="?filial='.$_GET['filial'].'&who=cosm&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$kab.'" class="b" style="'.$cosm_color.'">Косметологи</a>
+								<a href="?'.$dopFilial.$dopDate.'&who=stom&kab='.$kab.'" class="b" style="'.$stom_color.'">Стоматологи</a>
+								<a href="?'.$dopFilial.$dopDate.'&who=cosm&kab='.$kab.'" class="b" style="'.$cosm_color.'">Косметологи</a>
 							</li>';
 							
-					$ZapisHereQueryToday = FilialKabSmenaZapisToday($datatable, $y, $m, $d, $_GET['filial'], $kab, $type);
+					$ZapisHereQueryToday = FilialKabSmenaZapisToday($datatable, $year, $month, $day, $_GET['filial'], $kab, $type);
 					//var_dump($ZapisHereQueryToday);
+					
+					
+					//Календарик	
+					echo '
+	
+								<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: left; margin-bottom: 10px;">
+									<div style="font-size: 90%; color: rgb(125, 125, 125);">Сегодня: <a href="?'.$dopFilial.$dopWho.'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></div>
+									<div>
+										<span style="color: rgb(125, 125, 125);">
+											Изменить дату:
+											<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
+											<span style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'zapis_full.php?&kab='.$kab.$dopFilial.$dopWho.'\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
+										</span>
+									</div>
+								</li>';
+					
+					
 					
 					$kabsInFilial_arr = SelDataFromDB('spr_kabs', $_GET['filial'], 'office_kabs');
 					if ($kabsInFilial_arr != 0){
@@ -282,7 +356,7 @@
 								$kab_color = ' background-color: #fff261;';
 							}
 							echo '		
-								<a href="?filial='.$_GET['filial'].''.$who.'&d='.$d.'&m='.$m.'&y='.$y.'&kab='.$k.'" class="b" style="'.$kab_color.'">каб '.$k.'</a>';
+								<a href="?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="b" style="'.$kab_color.'">каб '.$k.'</a>';
 						}
 						echo '</li>';
 					}
@@ -398,9 +472,10 @@
 											echo 
 													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 9)">Не пришёл</a><br />';
 											echo 
-													'<a href="#" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$y.', '.$m.','.$d.', 0, '.$ZapisHereQueryToday[$z]['start_time'].', '.$ZapisHereQueryToday[$z]['wt'].', '.$ZapisHereQueryToday[$z]['worker'].', \''.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user_full', false).'\', \''.WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', false).'\', \''.$ZapisHereQueryToday[$z]['description'].'\', '.$ZapisHereQueryToday[$z]['insured'].', '.$ZapisHereQueryToday[$z]['pervich'].', '.$ZapisHereQueryToday[$z]['noch'].')">Редактировать</a><br />';
+													'<a href="#" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 0, '.$ZapisHereQueryToday[$z]['start_time'].', '.$ZapisHereQueryToday[$z]['wt'].', '.$ZapisHereQueryToday[$z]['worker'].', \''.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user_full', false).'\', \''.WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', false).'\', \''.str_replace(array("\r","\n")," ", $ZapisHereQueryToday[$z]['description']).'\', '.$ZapisHereQueryToday[$z]['insured'].', '.$ZapisHereQueryToday[$z]['pervich'].', '.$ZapisHereQueryToday[$z]['noch'].', '.$ZapisHereQueryToday[$z]['id'].')">Редактировать</a><br />';
 											
 											//var_dump($ZapisHereQueryToday[$z]['create_time']);
+											//var_dump($ZapisHereQueryToday[$z]['description']);
 											//var_dump(time());
 											$zapisDate = strtotime($ZapisHereQueryToday[$z]['day'].'.'.$ZapisHereQueryToday[$z]['month'].'.'.$ZapisHereQueryToday[$z]['year']);
 											if (time() < $zapisDate + 60*60*24){
@@ -418,7 +493,9 @@
 										'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 0)">Отменить все изменения</a><br>';
 								}
 							}
-							
+			echo '
+					</div>
+				</div>';
 			echo '
 					<div id="ShowSettingsAddTempZapis" style="position: absolute; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; z-index:105; padding:10px;">
 						<a class="close" href="#" onclick="HideSettingsAddTempZapis()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(img/close.png) no-repeat;">
@@ -544,8 +621,9 @@
 						<input type="hidden" id="start_time" name="start_time" value="0">
 						<input type="hidden" id="wt" name="wt" value="0">
 						<input type="hidden" id="worker_id" name="worker_id" value="0">
+						<input type="hidden" id="zapis_id" name="zapis_id" value="0">
 						<!--<input type="button" class="b" value="Добавить" id="Ajax_add_TempZapis" onclick="Ajax_add_TempZapis('.$type.')">-->
-						<input type="button" class="b" value="OK" onclick="if (iCanManage) Ajax_add_TempZapis('.$type.')" id="Ajax_add_TempZapis">
+						<input type="button" class="b" value="OK" onclick="if (iCanManage) Ajax_edit_TempZapis('.$type.')" id="Ajax_add_TempZapis">
 						<input type="button" class="b" value="Отмена" onclick="HideSettingsAddTempZapis()">
 					</div>';	
 							
@@ -587,7 +665,7 @@
 					
 			if (($zapis['add_new'] == 1) || $god_mode){
 				echo '		
-					function ShowSettingsAddTempZapis(filial, filial_name, kab, year, month, day, smena, time, period, worker_id, worker_name, patient_name, description, insured, pervich, noch){
+					function ShowSettingsAddTempZapis(filial, filial_name, kab, year, month, day, smena, time, period, worker_id, worker_name, patient_name, description, insured, pervich, noch, id){
 						document.getElementById("errror").innerHTML="";
 						//alert(period);
 						$(\'#ShowSettingsAddTempZapis\').show();
@@ -605,6 +683,7 @@
 						document.getElementById("start_time").value=time;
 						document.getElementById("wt").value=period;
 						document.getElementById("worker_id").value=worker_id;
+						document.getElementById("zapis_id").value=id;
 
 						if (worker_id == 0){
 							document.getElementById("search_client2").value = "";
@@ -621,10 +700,19 @@
 						document.getElementById("month_date").innerHTML=day+\'.\'+month+\'.\'+year;
 						document.getElementById("month_date_smena").innerHTML=smena
 						
-						alert(insured);
-						alert(pervich);
-						alert(noch);
+						//alert(insured);
+						//alert(pervich);
+						//alert(noch);
 						
+						var pervich_checkbox = document.getElementById("pervich");
+						var insured_checkbox = document.getElementById("insured");
+						var noch_checkbox = document.getElementById("noch");
+						//if (pervich == 1) pervich_checkbox.attr("checked",true);
+						
+						if (pervich == 1) pervich_checkbox.checked = true;
+						if (insured == 1) insured_checkbox.checked = true;
+						if (noch == 1) noch_checkbox.checked = true;
+
 						document.getElementById("change_minutes").value = period;
 						
 						var real_time_h = time/60|0;
@@ -732,6 +820,15 @@
 						document.getElementById("wt").value = 0;
 						document.getElementById("change_hours").value = 0;
 						document.getElementById("change_minutes").value = 30;
+						
+						var pervich_checkbox = document.getElementById("pervich");
+						var insured_checkbox = document.getElementById("insured");
+						var noch_checkbox = document.getElementById("noch");
+						
+						pervich_checkbox.checked = false;
+						insured_checkbox.checked = false;
+						noch_checkbox.checked = false;
+						
 					}
 					
 					function ShowWorkersSmena(){
