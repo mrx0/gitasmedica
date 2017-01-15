@@ -5,7 +5,7 @@
 	
 	$god_mode = FALSE;
 	
-	$version = 'v 14.12.2016';
+	$version = 'v 15.01.2016';
 	
 	echo'
 		<!DOCTYPE html>
@@ -449,12 +449,12 @@
 			
 			$if_notes .= '
 				<a href="user.php?id='.$_SESSION['id'].'">';
-			if ($alarm !=0)
-				$if_notes .= '<span style="background:#FF1F0F;" class="notes">'.$alarm.'</span>';
-			if ($warning !=0)
-					$if_notes .= '<span style="background:#FF9900;" class="notes">'.$warning.'</span>';
 			if ($pre_warning!=0)
-					$if_notes .= '<span style="background:#EFDF3F;" class="notes">'.$pre_warning.'</span>';
+				$if_notes .= '<div style="color: #F9FF00;" class="notes" title="Напоминания менее 2 дней"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><div class="notes_count">'.$pre_warning.'</div></div>';
+			if ($warning !=0)
+				$if_notes .= '<div style="color: #FFC874;" class="notes" title="Напоминания осталось 3 дня"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><div class="notes_count">'.$warning.'</div></div>';
+			if ($alarm !=0)
+				$if_notes .= '<div style="color: #FF1F0F;" class="notes" title="Просрочные напоминания"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><div class="notes_count">'.$alarm.'</div></div>';
 			
 			$if_notes .= '</a>';
 		}else{
@@ -468,15 +468,14 @@
 		//... Ко мне
 		$removesMe = SelDataFromDB ('removes_open', $_SESSION['id'], 'whom');
 		if (($removesMy != 0) || ($removesMe != 0)){
-			$if_removes .= '<a href="user.php?id='.$_SESSION['id'].'"><span class="removes">';
-			if($removesMy != 0){
-
-				$if_removes .= count($removesMy);
-			}
+			$if_removes .= '<a href="user.php?id='.$_SESSION['id'].'">';
 			if($removesMe != 0){
-				$if_removes .= ' ( '.count($removesMe).' )';
+				$if_removes .= '<div class="removes" style="color: #2727D7;" class="removes" title="Направлено ко мне"><i class="fa fa-sign-in" aria-hidden="true"></i><div class="notes_count">'.count($removesMe).'</div></div>';
 			}
-			$if_removes .= '</span></a>';
+			if($removesMy != 0){
+				$if_removes .= '<div class="removes" style="color: #01E78E;" class="removes" title="Мои направления"><i class="fa fa-sign-out" aria-hidden="true"></i><div class="notes_count">'.count($removesMy).'</div></div>';
+			}
+			$if_removes .= '</a>';
 		}else{
 			$if_removes = '';
 		}

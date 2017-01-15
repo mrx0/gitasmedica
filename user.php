@@ -139,11 +139,21 @@
 					10 => 'Установлены брекеты',					
 				);
 				
+				echo ' 
+					<div class="showHiddenDivs" style="cursor: pointer;">
+						<div style="color: #7D7D7D; margin: 10px;" id="showHideText">Показать всё</div>
+					</div>';
+				echo '
+					<div id="tabs_w" style="font-family: Verdana, Calibri, Arial, sans-serif; font-size: 100% !important;">
+						<ul>
+							<li><a href="#tabs-1">Напоминания</a></li>
+							<li><a href="#tabs-2">Направления</a></li>
+						</ul>';
+				echo '
+						<div id="tabs-1">';
+
 				if ($stom['see_own'] == 1){
-					echo '<br><br>Мои напоминания 
-							<div id="showHiddenDivs" style="cursor: pointer;">
-								<span style="color: #7D7D7D; margin-bottom: 5px;" id="showHideText">Показать всё</span>
-							</div>';
+					echo 'Мои напоминания';
 				}elseif (($stom['see_all'] == 1) || $god_mode){
 					echo '<br><br>Все просроченные незакрытые напоминания';
 				}
@@ -235,7 +245,11 @@
 
 			echo '
 					</ul>';
-					
+						
+				echo '
+						</div>';
+				echo '
+						<div id="tabs-2">';
 			if ($_SESSION['id'] == $_GET['id']){					
 				//Перенаправления мои	
 				$removesMy = SelDataFromDB ('removes', $_SESSION['id'], 'create_person');
@@ -251,7 +265,7 @@
 			}
 			if (($removesMy != 0) || ($removesMe != 0)){
 				
-				echo '<br /><br />Направления';
+				echo 'Направления';
 				echo '
 							<ul class="live_filter" style="margin-left:6px;">
 								<li class="cellsBlock" style="font-weight:bold;">	
@@ -287,7 +301,7 @@
 								background: -ms-linear-gradient(45deg, rgba(255,255,71, 1) 0%,rgba(255,255,157, 0.7) 33%,rgba(255,255,71, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
 								background: linear-gradient(-135deg, rgba(255,255,71, 1) 0%,rgba(255,255,157, 0.7) 33%,rgba(255,255,71, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
 								';
-								
+							$showHiddenDivs = '';	
 						}else{
 							$ended = 'Да';
 							$background_style = '
@@ -302,10 +316,11 @@
 							$background_style2 = '
 								background: rgba(144,247,95, 0.5);
 								';
+							$showHiddenDivs = 'hiddenDivs';
 						}
 						
 						echo '
-							<li class="cellsBlock cellsBlockHover">
+							<li class="cellsBlock cellsBlockHover '.$showHiddenDivs.'">
 									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removesMy[$i]['whom'], 'user', true).'</div>
 									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$removesMy[$i]['client'], 'user', true).'</div>
 									<a href="task_stomat_inspection.php?id='.$removesMy[$i]['task'].'" class="ahref cellName" style="text-align: center">#'.$removesMy[$i]['task'].'</a>
@@ -346,6 +361,7 @@
 								background: -ms-linear-gradient(45deg, rgba(55,127,223, 1) 0%,rgba(151,223,255, 0.7) 33%,rgba(55,127,223, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
 								background: linear-gradient(-135deg, rgba(55,127,223, 1) 0%,rgba(151,223,255, 0.7) 33%,rgba(55,127,223, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
 								';
+							$showHiddenDivs = '';
 						}else{
 							$ended = 'Да';
 							$background_style = '
@@ -360,10 +376,11 @@
 							$background_style2 = '
 								background: rgba(144,247,95, 0.5);
 								';
+							$showHiddenDivs = 'hiddenDivs';
 						}
 						
 						echo '
-							<li class="cellsBlock cellsBlockHover">
+							<li class="cellsBlock cellsBlockHover '.$showHiddenDivs.'">
 									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removesMe[$i]['whom'], 'user', true).'</div>
 									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$removesMe[$i]['client'], 'user', true).'</div>
 									<a href="task_stomat_inspection.php?id='.$removesMe[$i]['task'].'" class="ahref cellName" style="text-align: center">#'.$removesMe[$i]['task'].'</a>
@@ -388,6 +405,13 @@
 
 			echo '
 					</ul>';
+				echo '
+						</div>
+					</div>';
+				
+
+					
+
 					
 					
 					
@@ -398,7 +422,7 @@
 				
 			echo '
 				<script>
-					$("#showHiddenDivs").click(function () {
+					$(".showHiddenDivs").click(function () {
 						$(".hiddenDivs").each(function(){
 							//alert($(this).css("display"));
 							if($(this).css("display") == "none"){
