@@ -401,6 +401,7 @@
 
 		var pricename = document.getElementById("pricename").value;
 		var price = document.getElementById("price").value;
+		var group = document.getElementById("group").value;
 		var iWantThisDate2 = document.getElementById("iWantThisDate2").value;
 		
 		$.ajax({
@@ -411,6 +412,7 @@
 			{
 				pricename:pricename,
 				price:price,
+				group:group,
 				iWantThisDate2:iWantThisDate2,
 				session_id:session_id,
 			},

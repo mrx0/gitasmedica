@@ -56,8 +56,9 @@
 				<div id="status">
 					<header>
 						<h2>Добавить новую группу/подгруппу<!--'.$whose.'--></h2>
-						Заполните поля
-					</header>';
+					</header>
+					<a href="pricelist.php" class="b">В прайс</a><br>
+					Заполните поля';
 
 			echo '
 					<div id="data">';

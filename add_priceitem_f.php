@@ -38,8 +38,9 @@
 								$start_day = mktime(9, 0, 0, date("m", $_time), date("d", $_time), date("y", $_time));
 								
 								if ($iWantThisDate2 >= $start_day){
-									$PriceName = WriteToDB_EditPriceName ($name, $_SESSION['id']);
-									WriteToDB_EditPricePrice ($PriceName, $_POST['price'], $iWantThisDate2, $_SESSION['id']);
+									$PriceNameId = WriteToDB_EditPriceName ($name, $_SESSION['id']);
+									WriteToDB_EditPricePrice ($PriceNameId, $_POST['price'], $iWantThisDate2, $_SESSION['id']);
+									WriteToDB_UpdatePriceItemInGroup($PriceNameId, $_POST['group'], $_SESSION['id']);
 									echo '
 										<div class="query_ok">
 											Услуга добавлена в базу.<br><br>

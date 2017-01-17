@@ -60,8 +60,9 @@
 				<div id="status">
 					<header>
 						<h2>Добавить новую позицию<!--'.$whose.'--></h2>
-						Заполните поля
-					</header>';
+					</header>
+					<a href="pricelist.php" class="b">В прайс</a><br>
+					Заполните поля';
 
 			echo '
 					<div id="data">';
@@ -92,6 +93,19 @@
 									<div class="cellRight">
 										<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
 										onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
+									</div>
+								</div>';
+					echo '			
+								<div class="cellsBlock2">
+									<div class="cellLeft">Расположение</div>
+									<div class="cellRight">';
+					echo '
+										<select name="group" id="group" size="6" style="width: 250px;">
+											<option value="0">*</option>';
+											showTree(0, '', 'select', 0, TRUE);
+					echo '	
+										</select>';
+					echo '	
 									</div>
 								</div>';
 				echo '
