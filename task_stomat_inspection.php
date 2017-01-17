@@ -119,6 +119,9 @@
 					
 					unset($decription['comment']);
 					
+					unset($decription['zapis_date']);
+					unset($decription['zapis_id']);
+					
 					$t_f_data = array();
 					
 					//собрали массив с зубами и статусами по поверхностям

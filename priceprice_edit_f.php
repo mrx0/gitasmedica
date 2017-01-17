@@ -22,7 +22,7 @@
 								//$PriceName = WriteToDB_EditPriceName ($name, $_SESSION['id']);
 							
 								//операции со временем						
-								$iWantThisDate2 = strtotime($_POST['iWantThisDate2']. "09:00:00");
+								$iWantThisDate2 = strtotime($_POST['iWantThisDate2']." 09:00:00");
 								$_time = time();
 								$start_day = mktime(9, 0, 0, date("m", $_time), date("d", $_time), date("y", $_time));
 								

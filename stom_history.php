@@ -90,7 +90,7 @@
 
 								<div class="cellsBlock2">
 									<div class="cellLeft">ФИО</div>
-									<div class="cellRight">'.$client[0]['full_name'].'</div>
+									<div class="cellRight"><a href="client.php?id='.$_GET['client'].'" class="ahref">'.$client[0]['full_name'].'</a></div>
 								</div>';
 								
 	
@@ -102,10 +102,10 @@
 									<a href="add_task_stomat.php?client='.$_GET['client'].'" class="b">Добавить осмотр</a>';
 				}
 				
-				if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
+				/*if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
 					echo '	
 									<a href="client.php?id='.$_GET['client'].'" class="b">Карточка пациента</a>';
-				}
+				}*/
 				
 //!!!!!!!!!!!!!!!!!!!!!!!!!*************************************
 				
@@ -242,6 +242,8 @@
 						unset($t_f_data['last_edit_person']);
 						unset($t_f_data['worker']);
 						unset($t_f_data['comment']);
+						unset($t_f_data['zapis_date']);
+						unset($t_f_data['zapis_id']);
 							
 						//var_dump ($dop[0]);
 						

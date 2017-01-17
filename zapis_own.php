@@ -234,6 +234,21 @@
 					$ZapisHereQueryToday = FilialWorkerSmenaZapisToday($datatable, $y, $m, $d, $_GET['worker']);
 					//var_dump($ZapisHereQueryToday);
 					
+					//!!! доделать Календарик	
+					/*echo '
+	
+								<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: left; margin-bottom: 10px;">
+									<div style="font-size: 90%; color: rgb(125, 125, 125);">Сегодня: <a href="?'.$dopFilial.$dopWho.'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></div>
+									<div>
+										<span style="color: rgb(125, 125, 125);">
+											Изменить дату:
+											<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
+											<span style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'zapis_own.php?&kab='.$kab.$dopFilial.$dopWho.'\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
+										</span>
+									</div>
+								</li>';*/
+					
 					if ($ZapisHereQueryToday != 0){
 
 						for ($z = 0; $z < count($ZapisHereQueryToday); $z++){
@@ -338,7 +353,7 @@
 										if($ZapisHereQueryToday[$z]['enter'] == 1){
 											if(($_SESSION['permissions'] == 5) || $god_mode){
 												echo 
-													'<a href="add_task_stomat.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'">Внести Осмотр/Зубную формулу</a><br />';
+													'<a href="add_task_stomat.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($d.'.'.$m.'.'.$y.' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'">Внести Осмотр/Зубную формулу</a><br />';
 											}
 											if(($_SESSION['permissions'] == 6) || $god_mode){
 												echo 

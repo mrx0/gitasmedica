@@ -131,12 +131,12 @@
 							
 							$query = "
 									INSERT INTO `journal_tooth_status` (
-										`office`, `client`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`, `worker`, `comment`, {$n_zuba}) 
+										`office`, `client`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`, `worker`, `comment`, `zapis_date`, `zapis_id`, {$n_zuba}) 
 									VALUES (
-										'{$_POST['filial']}', '{$client}', '{$time}', '{$_SESSION['id']}', '{$time}', '{$_SESSION['id']}', '{$worker}', '{$_POST['comment']}', {$stat_zuba}) ";
+										'{$_POST['filial']}', '{$client}', '{$time}', '{$_SESSION['id']}', '{$time}', '{$_SESSION['id']}', '{$worker}', '{$_POST['comment']}', '{$_POST['zapis_date']}', '{$_POST['zapis_id']}', {$stat_zuba}) ";
 							//echo $query.'<br />';
 							
-							mysql_query($query) or die(mysql_error());
+							mysql_query($query) or die($query.' -> '.mysql_error());
 							
 							$task = mysql_insert_id();
 							
@@ -159,7 +159,7 @@
 										`id`, {$n_zuba}) 
 									VALUES (
 										'{$task}', {$stat_zuba}) ";
-								mysql_query($query) or die(mysql_error());
+								mysql_query($query) or die($query.' -> '.mysql_error());
 								
 								//var_dump($stat_zuba);
 							}
@@ -300,7 +300,7 @@
 
 								<br /><br />
 								<a href="client.php?id='.$client.'" class="b">В карточку пациента</a>
-								<a href="add_task_stomat.php?client='.$client.'" class="b">Добавить посещение этому пациенту</a>
+								<a href="add_task_stomat.php?client='.$client.'&filial='.$_POST['filial'].'&insured='.$insured_status.'&pervich='.$pervich_status.'&noch='.$noch_status.'&date='.$_POST['zapis_date'].'&id='.$_POST['zapis_id'].'" class="b">Добавить посещение этому пациенту</a>
 								<!--<a href="add_task_stomat.php" class="b">Добавить новое посещение</a>-->
 								';
 							mysql_close();

@@ -429,6 +429,8 @@ if ($_POST){
 						unset($decription['last_edit_person']);
 						unset($decription['worker']);
 						unset($decription['comment']);
+						unset($decription['zapis_date']);
+						unset($decription['zapis_id']);
 						
 						$t_f_data = array();
 			

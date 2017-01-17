@@ -66,6 +66,7 @@
 			$t_f_data_db_temp = array();
 			$t_f_data_db_temp_dop = array();
 			
+			//var_dump($_GET);
 			
 			//Если у нас по GET передали клиента
 			$get_client = '';
@@ -129,6 +130,20 @@
 				$noch_check = '';			
 			}
 			
+			if (isset($_GET['date'])){
+				$zapis_date = date('d.m.y H:i', $_GET['date']);
+				$zapis_date_hidden = $_GET['date'];
+			}else{
+				$zapis_date = date('d.m.y H:i', time());		
+				$zapis_date_hidden = time();
+			}
+			
+			if (isset($_GET['id'])){
+				$zapis_id = $_GET['id'];
+			}else{
+				$zapis_id = 0;
+			}
+			
 			//$t_f_data_db = $t_f_data_db_temp;
 			
 			echo '
@@ -144,7 +159,14 @@
 
 			echo '
 						<form action="add_task_stomat_f.php">';
-						
+			echo '		
+							<div class="cellsBlock3">
+								<div class="cellLeft">Время посещения</div>
+								<div class="cellRight">
+									'.$zapis_date.'
+								</div>
+							</div>';
+							
 			if ($stom['add_new'] == 1){
 				echo '
 							<div style="margin-bottom: 10px; color: #777; font-size: 90%;">Необходимо выбрать исполнителя</div>
@@ -240,6 +262,8 @@
 					unset($t_f_data['last_edit_person']);
 					unset($t_f_data['worker']);
 					unset($t_f_data['comment']);
+					unset($t_f_data['zapis_date']);
+					unset($t_f_data['zapis_id']);
 					
 					unset($t_f_data_db['id']);
 					unset($t_f_data_db['office']);
@@ -250,6 +274,8 @@
 					unset($t_f_data_db['last_edit_person']);
 					unset($t_f_data_db['worker']);
 					unset($t_f_data_db['comment']);
+					unset($t_f_data_db['zapis_date']);
+					unset($t_f_data_db['zapis_id']);
 					
 					//unset($dop[0]['id']);
 					
@@ -435,8 +461,10 @@
 
 				echo '
 							<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">
+							<input type="hidden" id="zapis_date" name="zapis_date" value="'.$zapis_date_hidden.'">
+							<input type="hidden" id="zapis_id" name="zapis_id" value="'.$zapis_id.'">
 							<div id="errror"></div>
-							<input type=\'button\' class="b" value=\'Добавить\' onclick=Ajax_add_task_stomat()>
+							<input type="button" class="b" value="Добавить" onclick=Ajax_add_task_stomat()>
 						</form>
 						
 
@@ -975,6 +1003,9 @@ function Ajax_add_task_stomat() {
 								add_notes_type:document.getElementById("add_notes_type").value,
 								add_notes_months:document.getElementById("add_notes_months").value,
 								add_notes_days:document.getElementById("add_notes_days").value,
+								
+								zapis_date:document.getElementById("zapis_date").value,
+								zapis_id:document.getElementById("zapis_id").value,
 								
 								pervich:pervich,
 								insured:insured,

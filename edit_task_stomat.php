@@ -181,6 +181,8 @@
 						unset($t_f_data_db['last_edit_person']);
 						unset($t_f_data_db['worker']);
 						unset($t_f_data_db['comment']);
+						unset($t_f_data_db['zapis_date']);
+						unset($t_f_data_db['zapis_id']);
 						
 						
 						//Разбиваем запись с ',' на массив и записываем в новый массив

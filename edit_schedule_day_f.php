@@ -23,11 +23,16 @@
 				$who = '&who=stom';
 				$datatable = 'zapis_stom';
 			}*/
-			$y = date("Y");
+			/*$y = date("Y");
 			$m = date("m");
-			$d = date("d");
+			$d = date("d");*/
 			
-			if ((($y <= $_POST['year']) && ($m <= $_POST['month']) && ($d <= $_POST['day'])) || ($_SESSION['permissions'] == '777')){
+			$_time = time();
+			$start_day = mktime(0, 0, 0, date("m", $_time), date("d", $_time), date("y", $_time));
+			$time_post = strtotime($_POST['day'].'.'.$_POST['month'].'.'.$_POST['year']);
+			
+			//if ((($y <= $_POST['year']) && ($m <= $_POST['month']) && ($d <= $_POST['day'])) || ($_SESSION['permissions'] == '777')){
+			if (($start_day - $time_post <= 24*60*60) || ($_SESSION['permissions'] == '777')){
 				
 				if (isset($_POST['worker'])){
 					$therapists = SelDataFromDB ('spr_workers', $_POST['worker'], 'worker_full_name');
