@@ -278,6 +278,24 @@
 
 	}
 	
+	function WriteToDB_UpdatePriceGroup ($name, $id, $level, $session_id){
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+		$time = time();
+		
+		$query = "UPDATE `spr_storagegroup` SET `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `name`='{$name}', `level`='{$level}' WHERE `id`='{$id}'";
+		
+		mysql_query($query) or die(mysql_error().' -> '.$query);
+
+		mysql_close();	
+		
+		//логирование
+		//AddLog (GetRealIp(), $session_id, '', 'Добавлен комментарий. ['.date('d.m.y H:i', $create_time).']. ['.$dtable.']:['.$parent.']. Описание: ['.$description.']');
+
+	}
+	
 	function WriteToDB_UpdatePriceItemInGroup ($item, $group, $session_id){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
@@ -649,6 +667,22 @@
 		AddLog (GetRealIp(), $session_id, '', 'Заблокирован пациент ['.$id.']. ['.date('d.m.y H:i', $time).'].');
 	}
 
+	//Удаление(блокировка) 
+	function WritePricelistGroupToDB_Delete ($session_id, $id){
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+
+		$time = time();
+		$query = "UPDATE `spr_storagegroup` SET `status`='9' WHERE `id`='{$id}'";
+		mysql_query($query) or die(mysql_error());
+		mysql_close();
+		
+		//логирование
+		AddLog (GetRealIp(), $session_id, '', 'Из прайса удалена группа ['.$id.']. ['.date('d.m.y H:i', $time).'].');
+	}
+
 	//Обновление карточки пациента из-под Web
 	function WriteClientToDB_Reopen ($session_id, $id){
 		require 'config.php';
@@ -980,6 +1014,9 @@
 				}
 				if ($type == 'item'){
 					$q = " WHERE `item` = '$sw'";
+				}
+				if ($type == 'level'){
+					$q = " WHERE `level` = '$sw'";
 				}
 			}
 		

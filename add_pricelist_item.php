@@ -1,6 +1,6 @@
 <?php
 
-//add_serviceitem.php
+//add_pricelist_item.php
 //Добавить услугу
 
 	require_once 'header.php';
@@ -18,7 +18,7 @@
 			$year = date('Y');
 			
 			//тип график (космет/стомат/...)
-			if (isset($_GET['who'])){
+			/*if (isset($_GET['who'])){
 				if ($_GET['who'] == 'stom'){
 					$who = '&who=stom';
 					$whose = 'Стоматология ';
@@ -54,22 +54,36 @@
 				$kabsForDoctor = 'stom';
 				$type = 5;
 				$_GET['who'] = 'stom';
+			}*/
+			
+			if (isset($_GET['addinid'])){
+				$selected = $_GET['addinid'];
+			}else{
+				$selected = 0;
 			}
 			
 			echo '
 				<div id="status">
 					<header>
-						<h2>Добавить новую позицию<!--'.$whose.'--></h2>
-					</header>
+						<h2>Добавить новую позицию</h2>
+					</header>';
+			if ($selected != 0){
+				echo '<i style="color: blue;">Позиция будет добавлена в группу: '.$selected.'</i><br>';
+			}
+			
+			echo '
 					<a href="pricelist.php" class="b">В прайс</a><br>
 					Заполните поля';
+			
+
+			
 
 			echo '
 					<div id="data">';
 			echo '
 						<div id="errror"></div>';
 			echo '
-						<form action="add_servicename_f.php" style="font-size: 90%;" class="input_form">
+						<form action="add_pricelistitem_f.php" style="font-size: 90%;" class="input_form">
 					
 							<div class="cellsBlock2" style="margin-bottom: 5px;">
 								<div class="cellLeft">Название</div>
@@ -101,8 +115,8 @@
 									<div class="cellRight">';
 					echo '
 										<select name="group" id="group" size="6" style="width: 250px;">
-											<option value="0">*</option>';
-											showTree(0, '', 'select', 0, TRUE);
+											<option value="0" ',$selected == 0 ? 'selected' : '','>*</option>';
+											showTree(0, '', 'select', $selected, TRUE, 0, FALSE);
 					echo '	
 										</select>';
 					echo '	

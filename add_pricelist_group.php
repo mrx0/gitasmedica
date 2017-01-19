@@ -65,7 +65,7 @@
 			echo '
 						<div id="errror"></div>';
 			echo '
-						<form action="add_servicename_f.php" style="font-size: 90%;" class="input_form">
+						<form action="add_pricelistgroup_f.php" style="font-size: 90%;" class="input_form">
 					
 							<div class="cellsBlock2" style="margin-bottom: 5px;">
 								<div class="cellLeft">Название</div>
@@ -80,7 +80,7 @@
 			echo '
 									<select name="group" id="group" size="6" style="width: 250px;">
 										<option value="0">*</option>';
-										showTree(0, '', 'select', 0, TRUE);
+										showTree(0, '', 'select', 0, TRUE, 0, FALSE);
 			echo '
 									</select>';
 			echo '

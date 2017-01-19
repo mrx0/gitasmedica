@@ -40,10 +40,12 @@
 								if ($iWantThisDate2 >= $start_day){
 									$PriceNameId = WriteToDB_EditPriceName ($name, $_SESSION['id']);
 									WriteToDB_EditPricePrice ($PriceNameId, $_POST['price'], $iWantThisDate2, $_SESSION['id']);
-									WriteToDB_UpdatePriceItemInGroup($PriceNameId, $_POST['group'], $_SESSION['id']);
+									if ($_POST['group'] != 0){
+										WriteToDB_UpdatePriceItemInGroup($PriceNameId, $_POST['group'], $_SESSION['id']);
+									}
 									echo '
 										<div class="query_ok">
-											Услуга добавлена в базу.<br><br>
+											Позиция добавлена.<br><br>
 										</div>';
 								}else{
 									echo '

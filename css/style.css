@@ -1684,7 +1684,7 @@ input[type="number"].mod{
     background: linear-gradient(to right, rgba(255,204,0, 0.2), #fc0 100%);
 }
 
-.manageScheduler, .nightSmena{
+.manageScheduler, .nightSmena, .managePriceList{
 	display: none;
 }
 
@@ -1716,3 +1716,9 @@ input.dateс {
 .hiddenDiv {
 	display:none;
 }
+
+ .pricemenu{
+	 /*text-shadow: 1px 1px 1px #999;*/
+	 text-shadow: 1px 1px 1px #060606;	 
+	 cursor: pointer;
+ }

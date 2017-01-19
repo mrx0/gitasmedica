@@ -214,6 +214,35 @@
 		})
 	}; 
 	
+	function Ajax_del_pricelistgroup(id, session_id) {
+		
+		//var id = document.getElementById("id").value;
+		if ($("#deleteallin").prop("checked")){
+			var deleteallin = 1;
+		}else{
+			var deleteallin = 0;
+		}
+		
+		ajax({
+			url:"pricelistgroup_del_f.php",
+			statbox:"errrror",
+			method:"POST",
+			data:
+			{
+				id: id,
+				deleteallin:deleteallin,
+				session_id: session_id,
+			},
+			success:function(data){
+				document.getElementById("errrror").innerHTML=data;
+				setTimeout(function () {
+					window.location.replace('pricelistgroup.php?id='+id);
+					//alert('client.php?id='+id);
+				}, 100);
+			}
+		})
+	}; 
+	
 	function Ajax_reopen_client(session_id, id) {
 		//var id = document.getElementById("id").value;
 		
@@ -452,9 +481,9 @@
 		})
 	};  
 	
-	function Ajax_edit_service(id, session_id) {
+	function Ajax_edit_pricelistitem(id, session_id) {
 
-		var servicename = document.getElementById("servicename").value;
+		var pricelistitemname = document.getElementById("pricelistitemname").value;
 		var group = document.getElementById("group").value;
 
 		$.ajax({
@@ -463,7 +492,33 @@
 			type: "POST", 
 			data:
 			{
-				servicename:servicename,
+				pricelistitemname:pricelistitemname,
+				session_id:session_id,
+				group:group,
+				id: id,
+			},
+			cache: false,
+			beforeSend: function() {
+				$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			success:function(data){
+				$('#errror').html(data);
+			}
+		})
+	};  
+	
+	function Ajax_edit_pricelistgroup(id, session_id) {
+
+		var pricelistgroupname = document.getElementById("pricelistgroupname").value;
+		var group = document.getElementById("group").value;
+
+		$.ajax({
+			url:"pricelistgroup_edit_f.php",
+			global: false, 
+			type: "POST", 
+			data:
+			{
+				pricelistgroupname:pricelistgroupname,
 				session_id:session_id,
 				group:group,
 				id: id,
@@ -575,6 +630,13 @@
 			e3.hide();
 		}else{
 			e3.show();
+		}
+		
+		e4 = $('.managePriceList');
+		if(e4.is(':visible')) {
+			e4.hide();
+		}else{
+			e4.show();
 		}
 		
 		if (iCanManage) iCanManage = false; else iCanManage = true;

@@ -1,6 +1,6 @@
 <?php 
 
-//pricelistitem_edit_f.php
+//pricelistgroup_edit_f.php
 //Изменение
 
 	session_start();
@@ -10,7 +10,7 @@
 	}else{
 		//var_dump ($_POST);
 		if ($_POST){
-			if ($_POST['pricelistitemname'] == ''){
+			if ($_POST['pricelistgroupname'] == ''){
 				echo '
 					<div class="query_neok">
 						Что-то не заполнено.<br><br>
@@ -19,12 +19,12 @@
 				include_once 'DBWork.php';
 				include_once 'functions.php';
 				
-				//$name = trim($_POST['pricelistitemname']);
+				//$name = trim($_POST['pricelistgroupname']);
 				
-				$name = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['pricelistitemname']))));
+				$name = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['pricelistgroupname']))));
 				
 				//Проверяем есть ли такая услуга
-				$rezult = SelDataFromDB('spr_pricelist', $name, 'name');
+				$rezult = SelDataFromDB('spr_storagegroup', $name, 'name');
 				//var_dump($rezult);
 				
 				if (($rezult != 0) && ($rezult[0]['id'] != $_POST['id'])){
@@ -33,12 +33,10 @@
 							Такая позиция уже есть.<br><br>
 						</div>';
 				}else{
-					WriteToDB_UpdatePriceItem ($name, $_POST['id'], $_SESSION['id']);
-					if (isset($_POST['group'])){
-						if ($_POST['group'] != 0){
-							WriteToDB_UpdatePriceItemInGroup($_POST['id'], $_POST['group'], $_SESSION['id']);
-						}
-					}
+					if (!isset($_POST['group'])) $_POST['group'] = 0;
+					
+					WriteToDB_UpdatePriceGroup ($name, $_POST['id'], $_POST['group'], $_SESSION['id']);
+
 					echo '
 						<div class="query_ok">
 							Изменено.<br><br>

@@ -10,7 +10,7 @@
 		if (($items['see_all'] == 1) || ($items['see_own'] == 1) || $god_mode){
 			include_once 'functions.php';
 			
-			//тип график (космет/стомат/...)
+			//тип (космет/стомат/...)
 			if (isset($_GET['who'])){
 				if ($_GET['who'] == 'stom'){
 					$who = '&who=stom';
@@ -54,6 +54,13 @@
 					<h1>Прайс</h1>
 					<!--'.$whose.'-->
 				</header>';
+				
+			//переменная, чтоб вкл/откл редактирование
+			echo '
+				<script>
+					var iCanManage = false;
+				</script>';
+				
 			echo '
 						<div id="data">
 							<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
@@ -63,12 +70,26 @@
 									<a href="?who=stom" class="b">Стоматологи</a>
 									<a href="?who=cosm" class="b">Косметологи</a>
 								</li>';*/
+
 			if (($items['add_new'] == 1) || $god_mode){
 				echo '
-					<a href="add_pricelist_item.php?'.$who.'" class="b">Добавить позицию</a>';
+					<a href="add_pricelist_item.php" class="b">Добавить позицию</a>';
 				echo '
 					<a href="add_pricelist_group.php?'.$who.'" class="b">Добавить группу/подгруппу</a>';
 			}
+			
+			if (($items['edit'] == 1) || $god_mode){
+				echo '
+							<div class="no_print"> 
+							<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
+								<div style="cursor: pointer;" onclick="manageScheduler()">
+									<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>
+								</div>
+							</li>
+							</div>';
+							//managePriceList
+			}
+			
 			echo '					
 								<p style="margin: 5px 0; padding: 2px;">
 									Быстрый поиск: 
@@ -98,13 +119,13 @@
 			mysql_query("SET NAMES 'utf8'");
 			
 			if ($services_j !=0){
-				showTree(0, '', 'list', 0, FALSE);
+				showTree(0, '', 'list', 0, FALSE, 0, FALSE);
 				
 				echo '
 					<li class="cellsBlock" style="width: auto;">
 						<div class="cellPriority" style=""></div>
-						<span class="cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">Без группы</span>
-						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">-</div>
+						<span class="cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(255, 103, 97, 0.5);" id="4filter">Без группы</span>
+						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(255, 103, 97, 0.5);"></div>
 					</li>';
 						
 				$query = "SELECT * FROM `spr_pricelist` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) ORDER BY `name`";			
@@ -148,6 +169,10 @@
 									</li>';
 					}
 				}
+				
+				//Пробуем показать удалённые
+				showTree(0, '', 'list', 0, FALSE, 0, TRUE);
+				
 			}
 			
 			mysql_close();
