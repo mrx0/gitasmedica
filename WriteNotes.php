@@ -64,8 +64,7 @@
 							background: -webkit-linear-gradient(45deg, rgba(239,23,63, 1) 0%,rgba(231,55,39, 0.7) 33%,rgba(239,23,63, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
 							background: -o-linear-gradient(45deg, rgba(239,23,63, 1) 0%,rgba(231,55,39, 0.7) 33%,rgba(239,23,63, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
 							background: -ms-linear-gradient(45deg, rgba(239,23,63, 1) 0%,rgba(231,55,39, 0.7) 33%,rgba(239,23,63, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-							background: linear-gradient(-135deg, rgba(239,23,63, 1) 0%,rgba(231,55,39, 0.7) 33%,rgba(239,23,63, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-							';
+							background: linear-gradient(-135deg, rgba(239,23,63, 1) 0%,rgba(231,55,39, 0.7) 33%,rgba(239,23,63, 0.4) 71%,rgba(255,255,255, 0.5) 91%);';
 					}
 				}else{
 					$ended = 'Да';
@@ -76,11 +75,8 @@
 						background: -webkit-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
 						background: -o-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
 						background: -ms-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-						background: linear-gradient(-135deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-						';
-						$background_style2 = '
-							background: rgba(144,247,95, 0.5);
-							';
+						background: linear-gradient(-135deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);';
+						$background_style2 = 'background: rgba(144,247,95, 0.5);';
 				}
 				$rez .= '
 					<li class="cellsBlock cellsBlockHover">
@@ -89,13 +85,13 @@
 						<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients', $notes[$i]['client'], 'user', true).'</div>
 						<a href="task_stomat_inspection.php?id='.$notes[$i]['task'].'" class="ahref cellName" style="text-align: center">#'.$notes[$i]['task'].'</a>
 						<div class="cellText" style="'.$background_style.'">'.$for_notes[$notes[$i]['description']].'</div>
-						<div class="cellTime" style="text-align: center">';
+						<div class="cellTime" style="text-align: center;">';
 				if ($_SESSION['id'] == $notes[$i]['create_person']){
-					echo '
-										<a href="#" id="Change_notes_stomat" onclick="Change_notes_stomat('.$notes[$i]['id'].', '.$notes[$i]['description'].')">ред.</a>
-										<a href="#" id="Close_notes_stomat" onclick="Close_notes_stomat('.$notes[$i]['id'].')">закр.</a>';
+					$rez .= '
+							<a href="#" id="Change_notes_stomat" onclick="Change_notes_stomat('.$notes[$i]['id'].', '.$notes[$i]['description'].')">ред.</a>
+							<a href="#" id="Close_notes_stomat" onclick="Close_notes_stomat('.$notes[$i]['id'].')">закр.</a>';
 				}
-				echo '
+				$rez .= '
 						</div>
 						<div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $notes[$i]['create_time']).'</div>
 						<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$notes[$i]['create_person'], 'user', true).'</div>

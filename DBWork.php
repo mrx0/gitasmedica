@@ -668,7 +668,7 @@
 	}
 
 	//Удаление(блокировка) 
-	function WritePricelistGroupToDB_Delete ($session_id, $id){
+	/*function WritePricelistGroupToDB_Delete ($session_id, $id){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 		mysql_select_db($dbName) or die(mysql_error()); 
@@ -681,7 +681,7 @@
 		
 		//логирование
 		AddLog (GetRealIp(), $session_id, '', 'Из прайса удалена группа ['.$id.']. ['.date('d.m.y H:i', $time).'].');
-	}
+	}*/
 
 	//Обновление карточки пациента из-под Web
 	function WriteClientToDB_Reopen ($session_id, $id){
@@ -835,7 +835,7 @@
 		mysql_close();
 		
 		//логирование
-		AddLog (GetRealIp(), $session_id, '', 'Добавлена Страховая. Название: ['.$name.']. Договор: ['.$contract.']. Контакты: ['.$contacts.']');
+		AddLog (GetRealIp(), $session_id, '', 'Добавлена страховая. Название: ['.$name.']. Договор: ['.$contract.']. Контакты: ['.$contacts.']');
 	}
 	
 	//Очистка записи

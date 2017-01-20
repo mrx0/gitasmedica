@@ -235,10 +235,10 @@
 			},
 			success:function(data){
 				document.getElementById("errrror").innerHTML=data;
-				setTimeout(function () {
+				/*setTimeout(function () {
 					window.location.replace('pricelistgroup.php?id='+id);
 					//alert('client.php?id='+id);
-				}, 100);
+				}, 100);*/
 			}
 		})
 	}; 
