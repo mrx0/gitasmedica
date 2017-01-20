@@ -989,9 +989,11 @@
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
 		mysql_select_db($dbName) or die(mysql_error()); 
 		mysql_query("SET NAMES 'utf8'");
-						
+		$time = time();
+		
 		$arr = array();
 		$rez = array();
+		
 		$style_name = '';
 		$color_array = array(
 			'background-color: rgba(255, 236, 24, 0.5);',
@@ -1012,7 +1014,7 @@
 		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
 		
 		//Если не из корня смотрим, то выбираем всё, что в этой группе
-		if ($first && ($level != 0) && ($type == 'list')){
+		if ($first && ($level != 0) && (($type == 'list') || ($type == 'clear'))){
 			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
 			$first = FALSE;
 		}
@@ -1033,129 +1035,55 @@
 		if ($rezult != 0){
 			
 			foreach ($rezult as $key => $value){
-
+				//Обновили статус родителю
+				
+				$query = "UPDATE `spr_storagegroup` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `status`='9' WHERE `id`='{$value['id']}'";
+				mysql_query($query) or die(mysql_error().' -> '.$query);
+						
 				$arr2 = array();
 				$rez2 = array();
 				$arr3 = array();
 				$rez3 = array();
 				
-				if ($type == 'select'){
-					//echo $space.$value['name'].'<br>';
-					$selected = '';
-					if ($value['id'] == $sel_id){
-						$selected = ' selected';
-					}
-					echo '<option value="'.$value['id'].'" '.$selected.'>'.$space.$value['name'].'</option>';
-				}
-				
-				if ($type == 'list'){
-					//echo $space.$value['name'].'<br>';
-					
-					if ($value['level'] == 0) {
-						$style_name = 'font-size: 130%;';
-						$style_name .= $color_array[0];
-						//$this_level = 0;
-					}else{
-						$style_name = 'font-size: 110%; font-style: oblique;';
-						//$style_name .= 'background-color: rgba(97, 227, 255, 0.5)';
-						if (isset($color_array[$color_index])){
-							$style_name .= $color_array[$color_index];
-						}else{
-							$style_name .= 'background-color: rgba(225, 126, 255, 0.5);';
-						}
-						/*if ($this_level == 1){
-							$style_name .= 'background-color: rgba(103, 251, 66, 0.5)';
-						}elseif ($this_level == 2){
-							$style_name .= 'background-color: rgba(97, 227, 255, 0.5);';
-						}else{
-							$style_name .= 'background-color: rgba(225, 126, 255, 0.5);';
-						}*/
-					}
-					
-					echo '
-						<li class="cellsBlock" style="width: auto;">
-							<div class="cellPriority" style=""></div>
-							<div class="cellOffice" style=" text-align: left; width: 350px; min-width: 350px; max-width: 350px; '.$style_name.'">
-								<a href="pricelistgroup.php?id='.$value['id'].'" class="ahref" style="font-weight: bold;" id="4filter">'.$space.$value['name'].'</a>
-							</div>
-							<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; '.$style_name.'">
-								<div class="managePriceList" style="font-style: normal; font-size: 13px;">
-									<a href="pricelistgroup_edit.php?id='.$value['id'].'" class="ahref"><i id="PriceListGroupEdit" class="fa fa-pencil-square-o pricemenu" aria-hidden="true" style="color: #777;" title="Редактировать"></i></a>
-									<a href="add_pricelist_item.php?addinid='.$value['id'].'" class="ahref"><i id="PriceListGroupAdd" class="fa fa-plus pricemenu" aria-hidden="true" style="color: #36EA5E;" title="Добавить в эту группу"></i></a>
-									<!--<a href="pricelistgroup_del.php?id='.$value['id'].'" class="ahref"><i id="" class="fa fa-bars pricemenu" aria-hidden="true" style="" title="Изменить порядок"></i></a>-->
-									<a href="pricelistgroup_del.php?id='.$value['id'].'" class="ahref"><i id="PriceListGroupDelete" class="fa fa-trash pricemenu" aria-hidden="true" style="color: #FF3636" title="Удалить"></i></a>
-								</div>
-							</div>
-						</li>';
-						
-					$query = "SELECT * FROM `spr_pricelist` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$deleted_str." ORDER BY `name`";			
-					//var_dump($query);
-					
-					$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
-					$number = mysql_num_rows($res);	
+				//!!! clear
+				if ($type == 'clear'){
+					//собираем все позиции в этой группе и удаляем их из группы и их самих
+					$query = "SELECT * FROM `spr_itemsingroup` WHERE `group` = '{$value['id']}'";
+					$res = mysql_query($query) or die(mysql_error().' -> '.$query);
+					$number = mysql_num_rows($res);
 					if ($number != 0){
 						while ($arr2 = mysql_fetch_assoc($res)){
 							array_push($rez2, $arr2);
 						}
-						$items_j = $rez2;
 					}else{
-						$items_j = 0;
+						$rez2 = 0;
 					}
+					//var_dump($rez);
 					
-					//var_dump($items_j);
-					
-					if ($items_j != 0){
-						for ($i = 0; $i < count($items_j); $i++) {
-
-							$price = 0;
-							
-							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
-							$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from` DESC LIMIT 1";
+					if ($rez2 != 0){
+						//...удаляем их из группы
+						$query = "DELETE FROM `spr_itemsingroup` WHERE `group` = '{$value['id']}'";
+						mysql_query($query) or die(mysql_error().' -> '.$query);
+						
+						foreach ($rez2 as $ids){
+							//var_dump($ids);
+							//...и их самих
+							$query = "UPDATE `spr_pricelist` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `status`='9' WHERE `id`='{$ids['id']}'";
 							//var_dump($query);
-							
-							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-
-							$number = mysql_num_rows($res);
-							if ($number != 0){
-								$arr3 = mysql_fetch_assoc($res);
-								$price = $arr3['price'];
-							}else{
-								$price = 0;
-							}
-					
-							echo '
-										<li class="cellsBlock" style="width: auto;">
-											<div class="cellPriority" style=""></div>
-											<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$items_j[$i]['name'].'</a>
-											<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.'</div>
-										</li>';
+							mysql_query($query) or die(mysql_error().' -> '.$query);								
 						}
 					}
 				}
-				
-				
-				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
-				//var_dump($query);
-				
+
+				//получаем группы, которые в этом родителе
+				$query = "SELECT * FROM `spr_storagegroup` WHERE `level` = '{$value['id']}'";
 				$res = mysql_query($query) or die($query);
 				$number = mysql_num_rows($res);
 				if ($number != 0){
-					//echo '_'.$value['name'].'<br>';
-					$space2 = $space. '&nbsp;&nbsp;&nbsp;';
-					$last_level2 = $last_level+1;
-					showTree($value['id'], $space2, $type, $sel_id, $first, $last_level2, $deleted);
+					DeleteTree($value['id'], '', $type, $sel_id, $first, 0, $deleted);
 				}else{
-					//var_dump ($color_index);
-					//var_dump ($last_level);
-					/*if ($color_index > $last_level){
-						$color_index--;
-					}*/
-					//$space = substr($space, 0, -1);
-					//echo '_'.$value['name'].'<br>';
 				}
-				//$space = substr($space, 0, -1);
 			}
-			//$color_index = $last_level;
 		}
 	}
 	
