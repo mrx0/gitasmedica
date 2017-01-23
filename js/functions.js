@@ -264,6 +264,48 @@
 		})
 	}; 
 	
+	function Ajax_reopen_pricelistitem(session_id, id) {
+		//var id = document.getElementById("id").value;
+		
+		ajax({
+			url:"pricelistitem_reopen_f.php",
+			method:"POST",
+			data:
+			{
+				id: id,
+				session_id: session_id,
+			},
+			success:function(data){
+				//document.getElementById("errrror").innerHTML=data;
+				setTimeout(function () {
+					window.location.replace('pricelistitem.php?id='+id);
+					//alert('pricelistitem.php?id='+id);
+				}, 100);
+			}
+		})
+	}; 
+	
+	function Ajax_reopen_pricelistgroup(session_id, id) {
+		//var id = document.getElementById("id").value;
+		
+		ajax({
+			url:"pricelistgroup_reopen_f.php",
+			method:"POST",
+			data:
+			{
+				id: id,
+				session_id: session_id,
+			},
+			success:function(data){
+				//document.getElementById("errrror").innerHTML=data;
+				setTimeout(function () {
+					window.location.replace('pricelistgroup.php?id='+id);
+					//alert('pricelistgroup.php?id='+id);
+				}, 100);
+			}
+		})
+	}; 
+	
 	function Ajax_cosm_move(session_id, id) {
 		//var id = document.getElementById("id").value;
 		

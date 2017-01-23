@@ -45,7 +45,7 @@
 					}
 					if (($rezult[0]['status'] == 9) || ($items['close'] == 1)){
 						echo '
-							<a href="#" onclick="Ajax_reopen_pricelistGroup('.$_SESSION['id'].', '.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 80%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
+							<a href="#" onclick="Ajax_reopen_pricelistgroup('.$_SESSION['id'].', '.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 80%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
 					}
 				}
 				if (($items['close'] == 1) || $god_mode){

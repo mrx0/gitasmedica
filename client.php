@@ -344,143 +344,148 @@
 				
 				//var_dump ($sheduler_zapis);
 				
-				for ($z = 0; $z < count($sheduler_zapis); $z++){
-					$show_this = FALSE;
+				if ($sheduler_zapis != 0){
+				
+					$sheduler_zapis = array_reverse($sheduler_zapis);
 					
-					if ($sheduler_zapis[$z]['type'] == 5){
-						if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
-							$show_this = TRUE;
-						}
-					}elseif ($sheduler_zapis[$z]['type'] == 6){
-						if (($cosm['see_all'] == 1) || ($cosm['see_own'] == 1) || $god_mode){
-							$show_this = TRUE;
-						}
-					}
-					
-					if ($show_this){
-						$back_color = '';
-					
-						if ($sheduler_zapis[$z]['enter'] == 1){
-							$back_color = 'background-color: rgba(119, 255, 135, 1);';
-						}elseif($sheduler_zapis[$z]['enter'] == 9){
-							$back_color = 'background-color: rgba(239,47,55, .7);';
-						}elseif($sheduler_zapis[$z]['enter'] == 8){
-							$back_color = 'background-color: rgba(137,0,81, .7);';
-						}else{
-							//Если оформлено не на этом филиале
-							if($sheduler_zapis[$z]['office'] != $sheduler_zapis[$z]['add_from']){
-								$back_color = 'background-color: rgb(119, 255, 250);';
-							}else{
-								$back_color = 'background-color: rgba(255,255,0, .5);';
+					for ($z = 0; $z < count($sheduler_zapis); $z++){
+						$show_this = FALSE;
+						
+						if ($sheduler_zapis[$z]['type'] == 5){
+							if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
+								$show_this = TRUE;
+							}
+						}elseif ($sheduler_zapis[$z]['type'] == 6){
+							if (($cosm['see_all'] == 1) || ($cosm['see_own'] == 1) || $god_mode){
+								$show_this = TRUE;
 							}
 						}
-								
-						$dop_img = '';
-								
-						if ($sheduler_zapis[$z]['insured'] == 1){
-							$dop_img .= '<img src="img/insured.png" title="Страховое"> ';
-						}
-						if ($sheduler_zapis[$z]['pervich'] == 1){
-							$dop_img .= '<img src="img/pervich.png" title="Первичное"> ';
-						}
-						if ($sheduler_zapis[$z]['noch'] == 1){
-							$dop_img .= '<img src="img/night.png" title="Ночное"> ';
-						}
-								
-						echo '
-							<li class="cellsBlock" style="width: auto;">';
-						echo '
-								<div class="cellName" style="position: relative; '.$back_color.'">';
-						$start_time_h = floor($sheduler_zapis[$z]['start_time']/60);
-						$start_time_m = $sheduler_zapis[$z]['start_time']%60;
-						if ($start_time_m < 10) $start_time_m = '0'.$start_time_m;
-						$end_time_h = floor(($sheduler_zapis[$z]['start_time']+$sheduler_zapis[$z]['wt'])/60);
-						if ($end_time_h > 23) $end_time_h = $end_time_h - 24;
-						$end_time_m = ($sheduler_zapis[$z]['start_time']+$sheduler_zapis[$z]['wt'])%60;
-						if ($end_time_m < 10) $end_time_m = '0'.$end_time_m;
 						
-						if ($sheduler_zapis[$z]['month'] < 10) $month = '0'.$sheduler_zapis[$z]['month'];
-						else $month = $sheduler_zapis[$z]['month'];
+						if ($show_this){
+							$back_color = '';
 						
-						echo 
-							'<b>'.$sheduler_zapis[$z]['day'].' '.$monthsName[$month].' '.$sheduler_zapis[$z]['year'].'</b><br>'.
-							$start_time_h.':'.$start_time_m.' - '.$end_time_h.':'.$end_time_m;
-											
-						echo '
-									<div style="position: absolute; top: 1px; right: 1px;">'.$dop_img.'</div>';
-						echo '
-								</div>';
-						echo '
-								<div class="cellName">';
-						echo 
-									'Пациент <br /><b>'.WriteSearchUser('spr_clients', $sheduler_zapis[$z]['patient'], 'user', true).'</b>';
-						echo '
-								</div>';
-						echo '
-								<div class="cellName">';
-						
-						$offices = SelDataFromDB('spr_office', $sheduler_zapis[$z]['office'], 'offices');
-						echo 
-									'Филиал:<br>'.
-									$offices[0]['name'];
-						echo '
-								</div>';
-						echo '
-								<div class="cellName">';
-						echo 
-									$sheduler_zapis[$z]['kab'].' кабинет<br>'.'Врач: <br><b>'.WriteSearchUser('spr_workers', $sheduler_zapis[$z]['worker'], 'user', true).'</b>';
-						echo '
-								</div>';
-						echo '
-								<div class="cellName">';
-						echo 
-									'Описание:<br>'.
-									$sheduler_zapis[$z]['description'];
-						echo '
-								</div>';
-						echo '
-								<div class="cellName">';
-						echo '
-									Добавлено<br>'.date('d.m.y H:i', $sheduler_zapis[$z]['create_time']).'<br>
-									Кем: '.WriteSearchUser('spr_workers', $sheduler_zapis[$z]['create_person'], 'user', true);
-						if (($sheduler_zapis[$z]['last_edit_time'] != 0) || ($sheduler_zapis[$z]['last_edit_person'] != 0)){
-							echo '<hr>
-									Изменено: '.date('d.m.y H:i', $sheduler_zapis[$z]['last_edit_time']).'<br>
-									Кем: '.WriteSearchUser('spr_workers', $sheduler_zapis[$z]['last_edit_person'], 'user', true).'';
-						}
-						echo '
-								</div>';
-								
-						if ($_SESSION['id'] == $sheduler_zapis[$z]['worker']){
-							echo '
-								<div class="cellName" style="background-color:#d8d8d8">';
-							if($sheduler_zapis[$z]['office'] == $sheduler_zapis[$z]['add_from']){
-								if($sheduler_zapis[$z]['enter'] == 1){
-									if(($_SESSION['permissions'] == 5) || $god_mode){
-										echo 
-											'<a href="add_task_stomat.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&insured='.$sheduler_zapis[$z]['insured'].'&pervich='.$sheduler_zapis[$z]['pervich'].'&noch='.$sheduler_zapis[$z]['noch'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'">Внести Осмотр/Зубную формулу</a><br />';
-									}
-									if(($_SESSION['permissions'] == 6) || $god_mode){
-										echo 
-											'<a href="add_task_cosmet.php?client='.$sheduler_zapis[$z]['patient'].'">Внести посещение косм.</a><br />';
-									}
-									$zapisDate = strtotime($sheduler_zapis[$z]['day'].'.'.$sheduler_zapis[$z]['month'].'.'.$sheduler_zapis[$z]['year']);
-									if (time() < $zapisDate + 60*60*24){
-										echo 
-											'<a href="#">Внести Акт</a><br />';
-									}
+							if ($sheduler_zapis[$z]['enter'] == 1){
+								$back_color = 'background-color: rgba(119, 255, 135, 1);';
+							}elseif($sheduler_zapis[$z]['enter'] == 9){
+								$back_color = 'background-color: rgba(239,47,55, .7);';
+							}elseif($sheduler_zapis[$z]['enter'] == 8){
+								$back_color = 'background-color: rgba(137,0,81, .7);';
+							}else{
+								//Если оформлено не на этом филиале
+								if($sheduler_zapis[$z]['office'] != $sheduler_zapis[$z]['add_from']){
+									$back_color = 'background-color: rgb(119, 255, 250);';
+								}else{
+									$back_color = 'background-color: rgba(255,255,0, .5);';
 								}
-							}else{
-								echo "&nbsp";
+							}
+									
+							$dop_img = '';
+									
+							if ($sheduler_zapis[$z]['insured'] == 1){
+								$dop_img .= '<img src="img/insured.png" title="Страховое"> ';
+							}
+							if ($sheduler_zapis[$z]['pervich'] == 1){
+								$dop_img .= '<img src="img/pervich.png" title="Первичное"> ';
+							}
+							if ($sheduler_zapis[$z]['noch'] == 1){
+								$dop_img .= '<img src="img/night.png" title="Ночное"> ';
+							}
+									
+							echo '
+								<li class="cellsBlock" style="width: auto;">';
+							echo '
+									<div class="cellName" style="position: relative; '.$back_color.'">';
+							$start_time_h = floor($sheduler_zapis[$z]['start_time']/60);
+							$start_time_m = $sheduler_zapis[$z]['start_time']%60;
+							if ($start_time_m < 10) $start_time_m = '0'.$start_time_m;
+							$end_time_h = floor(($sheduler_zapis[$z]['start_time']+$sheduler_zapis[$z]['wt'])/60);
+							if ($end_time_h > 23) $end_time_h = $end_time_h - 24;
+							$end_time_m = ($sheduler_zapis[$z]['start_time']+$sheduler_zapis[$z]['wt'])%60;
+							if ($end_time_m < 10) $end_time_m = '0'.$end_time_m;
+							
+							if ($sheduler_zapis[$z]['month'] < 10) $month = '0'.$sheduler_zapis[$z]['month'];
+							else $month = $sheduler_zapis[$z]['month'];
+							
+							echo 
+								'<b>'.$sheduler_zapis[$z]['day'].' '.$monthsName[$month].' '.$sheduler_zapis[$z]['year'].'</b><br>'.
+								$start_time_h.':'.$start_time_m.' - '.$end_time_h.':'.$end_time_m;
+												
+							echo '
+										<div style="position: absolute; top: 1px; right: 1px;">'.$dop_img.'</div>';
+							echo '
+									</div>';
+							echo '
+									<div class="cellName">';
+							echo 
+										'Пациент <br /><b>'.WriteSearchUser('spr_clients', $sheduler_zapis[$z]['patient'], 'user', true).'</b>';
+							echo '
+									</div>';
+							echo '
+									<div class="cellName">';
+							
+							$offices = SelDataFromDB('spr_office', $sheduler_zapis[$z]['office'], 'offices');
+							echo 
+										'Филиал:<br>'.
+										$offices[0]['name'];
+							echo '
+									</div>';
+							echo '
+									<div class="cellName">';
+							echo 
+										$sheduler_zapis[$z]['kab'].' кабинет<br>'.'Врач: <br><b>'.WriteSearchUser('spr_workers', $sheduler_zapis[$z]['worker'], 'user', true).'</b>';
+							echo '
+									</div>';
+							echo '
+									<div class="cellName">';
+							echo 
+										'Описание:<br>'.
+										$sheduler_zapis[$z]['description'];
+							echo '
+									</div>';
+							echo '
+									<div class="cellName">';
+							echo '
+										Добавлено<br>'.date('d.m.y H:i', $sheduler_zapis[$z]['create_time']).'<br>
+										Кем: '.WriteSearchUser('spr_workers', $sheduler_zapis[$z]['create_person'], 'user', true);
+							if (($sheduler_zapis[$z]['last_edit_time'] != 0) || ($sheduler_zapis[$z]['last_edit_person'] != 0)){
+								echo '<hr>
+										Изменено: '.date('d.m.y H:i', $sheduler_zapis[$z]['last_edit_time']).'<br>
+										Кем: '.WriteSearchUser('spr_workers', $sheduler_zapis[$z]['last_edit_person'], 'user', true).'';
 							}
 							echo '
-								</div>';
+									</div>';
+									
+							if ($_SESSION['id'] == $sheduler_zapis[$z]['worker']){
+								echo '
+									<div class="cellName" style="background-color:#d8d8d8">';
+								if($sheduler_zapis[$z]['office'] == $sheduler_zapis[$z]['add_from']){
+									if($sheduler_zapis[$z]['enter'] == 1){
+										if(($_SESSION['permissions'] == 5) || $god_mode){
+											echo 
+												'<a href="add_task_stomat.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&insured='.$sheduler_zapis[$z]['insured'].'&pervich='.$sheduler_zapis[$z]['pervich'].'&noch='.$sheduler_zapis[$z]['noch'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'">Внести Осмотр/Зубную формулу</a><br />';
+										}
+										if(($_SESSION['permissions'] == 6) || $god_mode){
+											echo 
+												'<a href="add_task_cosmet.php?client='.$sheduler_zapis[$z]['patient'].'">Внести посещение косм.</a><br />';
+										}
+										$zapisDate = strtotime($sheduler_zapis[$z]['day'].'.'.$sheduler_zapis[$z]['month'].'.'.$sheduler_zapis[$z]['year']);
+										if (time() < $zapisDate + 60*60*24){
+											echo 
+												'<a href="#">Внести Акт</a><br />';
+										}
+									}
+								}else{
+									echo "&nbsp";
+								}
+								echo '
+									</div>';
+							}
+			
+							echo '
+								</li>';
 						}
-		
-						echo '
-							</li>';
-					}
 
+					}
 				}
 				echo '</ul>
 					</div>';

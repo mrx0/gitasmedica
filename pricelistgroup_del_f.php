@@ -14,8 +14,12 @@
 		include_once 'DBWork.php';
 		include_once 'functions.php';
 		if ($_POST){
-			
-			DeleteTree($_POST['id'], '', 'clear', 0, TRUE, 0, FALSE);
+			if (isset($_POST['deleteallin'])){
+				if ($_POST['deleteallin'] == 1) $deleteallin = 1; else $deleteallin = 0;
+			}else{
+				$deleteallin = 0;
+			}
+				DeleteTree($_POST['id'], '', 'clear', 0, TRUE, 0, FALSE, $deleteallin);
 
 			echo '
 				<div class="query_ok" style="padding-bottom: 10px;">

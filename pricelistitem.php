@@ -59,7 +59,7 @@
 					}
 					if (($rezult[0]['status'] == 9) || ($items['close'] == 1)){
 						echo '
-							<a href="#" onclick="Ajax_reopen_pricelistItem('.$_SESSION['id'].', '.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 80%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
+							<a href="#" onclick="Ajax_reopen_pricelistitem('.$_SESSION['id'].', '.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 80%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
 					}
 				}
 				if (($items['close'] == 1) || $god_mode){
@@ -93,8 +93,10 @@
 								<div class="cellLeft">Цена</div>
 								<div class="cellRight">'.$price.' руб. ';
 				if (($items['edit'] == 1) || $god_mode){
-					echo '
+					if ($rezult[0]['status'] != 9){
+						echo '
 									<a href="priceprice_edit.php?id='.$_GET['id'].'" class="info b2" style="font-size: 100%;" title="Редактировать цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+					}
 				}
 				echo '
 								</div>

@@ -561,6 +561,13 @@
 					//echo 'ЗО<br />';
 					$sanat = false;
 				}
+
+				if (($status['surface1'] == 63) || ($status['surface2'] == 63) || ($status['surface3'] == 63) || ($status['surface4'] == 63) || 
+					($status['top1'] == 63) || ($status['top2'] == 63) || ($status['top12'] == 63) || ($status['root1'] == 63) || 
+					($status['root2'] == 63) || ( $status['root3'] == 63)){
+					//echo 'Временная пломба<br />';
+					$sanat = false;
+				}
 				
 				//echo $t_id.'<br />';
 				
@@ -984,12 +991,14 @@
 	}
 	
 	//Удаление дерева
-	function DeleteTree($level, $space, $type, $sel_id, $first, $last_level, $deleted){
+	function DeleteTree($level, $space, $type, $sel_id, $first, $last_level, $deleted, $deleteallin){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
 		mysql_select_db($dbName) or die(mysql_error()); 
 		mysql_query("SET NAMES 'utf8'");
 		$time = time();
+		
+		//var_dump ($deleteallin);
 		
 		$arr = array();
 		$rez = array();
@@ -1065,12 +1074,14 @@
 						$query = "DELETE FROM `spr_itemsingroup` WHERE `group` = '{$value['id']}'";
 						mysql_query($query) or die(mysql_error().' -> '.$query);
 						
-						foreach ($rez2 as $ids){
-							//var_dump($ids);
-							//...и их самих
-							$query = "UPDATE `spr_pricelist` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `status`='9' WHERE `id`='{$ids['id']}'";
-							//var_dump($query);
-							mysql_query($query) or die(mysql_error().' -> '.$query);								
+						if ($deleteallin == 1){
+							foreach ($rez2 as $ids){
+								//var_dump($ids);
+								//...и их самих
+								$query = "UPDATE `spr_pricelist` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `status`='9' WHERE `id`='{$ids['item']}'";
+								//var_dump($query);
+								mysql_query($query) or die(mysql_error().' -> '.$query);								
+							}
 						}
 					}
 				}
@@ -1080,7 +1091,7 @@
 				$res = mysql_query($query) or die($query);
 				$number = mysql_num_rows($res);
 				if ($number != 0){
-					DeleteTree($value['id'], '', $type, $sel_id, $first, 0, $deleted);
+					DeleteTree($value['id'], '', $type, $sel_id, $first, 0, $deleted, $deleteallin);
 				}else{
 				}
 			}

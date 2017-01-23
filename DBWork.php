@@ -698,6 +698,36 @@
 		//логирование
 		AddLog (GetRealIp(), $session_id, '', 'Разблокирован пациент ['.$id.']. ['.date('d.m.y H:i', $time).'].');
 	}
+	
+	function WriteToDB_ReopenPriceGroup ($session_id, $id){
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+
+		$time = time();
+		$query = "UPDATE `spr_storagegroup` SET `status`='0' WHERE `id`='{$id}'";
+		mysql_query($query) or die(mysql_error());
+		mysql_close();
+		
+		//логирование
+		AddLog (GetRealIp(), $session_id, '', 'Разблокирована группа прайса ['.$id.']. ['.date('d.m.y H:i', $time).'].');
+	}
+	
+	function WriteToDB_ReopenPriceItem ($session_id, $id){
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+
+		$time = time();
+		$query = "UPDATE `spr_pricelist` SET `status`='0' WHERE `id`='{$id}'";
+		mysql_query($query) or die(mysql_error());
+		mysql_close();
+		
+		//логирование
+		AddLog (GetRealIp(), $session_id, '', 'Разблокирована позиция прайса ['.$id.']. ['.date('d.m.y H:i', $time).'].');
+	}
 
 	//Обновление ФИО пациента из-под Web
 	function WriteFIOClientToDB_Update($session_id, $id, $name, $full_name, $f, $i, $o){
