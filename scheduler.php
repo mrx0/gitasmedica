@@ -376,7 +376,7 @@
 						for($d = $start; $d <= $end; $d++){
 							if (!($di++ % 7)){
 								echo '
-									<tr>';
+									<tr style="height: 142px;">';
 							}
 							
 							$kabsNone = '';
@@ -561,7 +561,7 @@
 							//выделение сегодня цветом
 							$now="$year-$month-".sprintf("%02d",$d);
 							if ($now == $today){
-								$today_color = 'border:1px solid red;';
+								$today_color = 'border: 1px solid red; outline: 2px solid red;';
 							}else{
 								$today_color = 'border:1px solid #BFBCB5;';
 							}

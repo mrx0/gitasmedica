@@ -14,6 +14,8 @@
 			$offices = SelDataFromDB('spr_office', '', '');
 			//var_dump ($offices);
 
+			//!!! 
+			require 'config.php';
 			
 			$post_data = '';
 			$js_data = '';
@@ -120,60 +122,40 @@
 					$type = 5;
 				}
 				
-				$month_names=array(
-					"Январь",
-					"Февраль",
-					"Март",
-					"Апрель",
-					"Май",
-					"Июнь",
-					"Июль",
-					"Август",
-					"Сентябрь",
-					"Октябрь",
-					"Ноябрь",
-					"Декабрь"
-				); 
-				if (isset($_GET['y']))
-					$y = $_GET['y'];
-				if (isset($_GET['m']))
-					$m = $_GET['m']; 
-				if (isset($_GET['d']))
-					$d = $_GET['d']; 
-				if (isset($_GET['date']) && strstr($_GET['date'],"-"))
-					list($y,$m) = explode("-",$_GET['date']);
-				if (!isset($y) || $y < 1970 || $y > 2037)
-					$y = date("Y");
-				if (!isset($m) || $m < 1 || $m > 12)
-					$m = date("m");
-				if (!isset($d))
-					$d = date("d");
-				if (isset($_GET['kab']))
-					$kab = $_GET['kab'];
-				$month_stamp = mktime(0, 0, 0, $m, 1, $y);
-				$day_count = date("t",$month_stamp);
-				$weekday = date("w", $month_stamp);
-				if ($weekday == 0)
-					$weekday = 7;
-				$start = -($weekday-2);
-				$last = ($day_count + $weekday - 1) % 7;
-				if ($last == 0) 
-					$end = $day_count; 
-				else 
-					$end = $day_count + 7 - $last;
-				$today = date("Y-m-d");
-				$go_today = date('?\d=d&\m=m&\y=Y', mktime (0, 0, 0, date("m"), date("d"), date("Y"))); 
-				
-				$prev = date('?\d=d&\m=m&\y=Y', mktime (0, 0, 0, $m, $d-1, $y));  
-				$next = date('?\d=d&\m=m&\y=Y', mktime (0, 0, 0, $m, $d+1, $y));
-				if(isset($_GET['filial'])){
-					$prev .= '&filial='.$_GET['filial']; 
-					$next .= '&filial='.$_GET['filial'];
-					$go_today .= '&filial='.$_GET['filial'];
-					
-					$selected_fil = $_GET['filial'];
+				//Массив с месяцами
+				$monthsName = array(
+					'01' => 'Январь',
+					'02' => 'Февраль',
+					'03' => 'Март',
+					'04' => 'Апрель',
+					'05' => 'Май',
+					'06' => 'Июнь',
+					'07'=> 'Июль',
+					'08' => 'Август',
+					'09' => 'Сентябрь',
+					'10' => 'Октябрь',
+					'11' => 'Ноябрь',
+					'12' => 'Декабрь'
+				);
+
+				if (isset($_GET['d']) && isset($_GET['m']) && isset($_GET['y'])){
+					//операции со временем						
+					$day = $_GET['d'];
+					$month = $_GET['m'];
+					$year = $_GET['y'];
+				}else{
+					//операции со временем						
+					$day = date('d');		
+					$month = date('m');		
+					$year = date('Y');
 				}
-				$i = 0;
+
+				if (!isset($day) || $day < 1 || $day > 31)
+					$day = date("d");				
+				if (!isset($month) || $month < 1 || $month > 12)
+					$month = date("m");
+				if (!isset($year) || $year < 2010 || $year > 2037)
+					$year = date("Y");
 				
 				
 
@@ -202,7 +184,7 @@
 					echo '
 						<div id="status">
 							<header>
-								<h2>Запись '.$d.' ',$month_names[$m-1],' ',$y,'</h2>
+								<h2>Запись '.$day.' ',$monthsName[$month],' ',$year,'</h2>
 								<span style="font-size: 120%; font-weight: bold;">'.WriteSearchUser('spr_workers', $_GET['worker'], 'user', true).'</span><br>
 							</header>
 							<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>
@@ -231,27 +213,28 @@
 					
 							<div id="data">';
 							
-					$ZapisHereQueryToday = FilialWorkerSmenaZapisToday($datatable, $y, $m, $d, $_GET['worker']);
+					$ZapisHereQueryToday = FilialWorkerSmenaZapisToday($datatable, $year, $month, $day, $_GET['worker']);
 					//var_dump($ZapisHereQueryToday);
 					
 					//!!! доделать Календарик	
-					/*echo '
+					echo '
 	
 								<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: left; margin-bottom: 10px;">
-									<div style="font-size: 90%; color: rgb(125, 125, 125);">Сегодня: <a href="?'.$dopFilial.$dopWho.'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></div>
+									<div style="font-size: 90%; color: rgb(125, 125, 125);">Сегодня: <a href="?worker='.$_GET['worker'].'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></div>
 									<div>
 										<span style="color: rgb(125, 125, 125);">
 											Изменить дату:
 											<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
 												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
-											<span style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'zapis_own.php?&kab='.$kab.$dopFilial.$dopWho.'\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
+											<span style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'zapis_own.php?&worker='.$_GET['worker'].'\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
 										</span>
 									</div>
-								</li>';*/
+								</li>';
 					
 					if ($ZapisHereQueryToday != 0){
 
 						for ($z = 0; $z < count($ZapisHereQueryToday); $z++){
+							$t_f_data_db = array();
 							$back_color = '';
 							
 							if ($ZapisHereQueryToday[$z]['enter'] == 1){
@@ -282,14 +265,45 @@
 							}
 							
 							echo '
-								<div class="cellsBlock">';
-							/*echo '
-									<div class="cellName" style="'.$back_color.'">';
-							echo 
-										$ZapisHereQueryToday[$z]['day'].' '.$month_names[$ZapisHereQueryToday[$z]['month']-1].' '.$ZapisHereQueryToday[$z]['year'];
+								<li class="cellsBlock" style="width: auto;">
+									<!--<div class="cellCosmAct">-->';
+							
+							//!!!
+							mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+							mysql_select_db($dbName) or die(mysql_error()); 
+							mysql_query("SET NAMES 'utf8'");
+							
+							
+							$query = "SELECT `id`, `zapis_date`  FROM `journal_tooth_status` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
+							$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
+							$number = mysql_num_rows($res);
+							if ($number != 0){
+								while ($arr = mysql_fetch_assoc($res)){
+									array_push($t_f_data_db, $arr);
+								}
+							}else
+								$t_f_data_db = 0;
+							//var_dump($t_f_data_db);
+							
+							if ($t_f_data_db != 0){
+								foreach($t_f_data_db as $ids){
+									/*echo '
+										<div>
+											<a href="#" onclick="window.open(\'task_stomat_inspection_window.php?id='.$ids['id'].'\',\'test\', \'width=700,height=350,status=no,resizable=no,top=200,left=200\'); return false;">
+												<img src="img/tooth_state/1.png">
+											</a>	
+										</div>';*/
+										
+									/*echo '
+										<div>
+											<a href="task_stomat_inspection.php?id='.$ids['id'].'">
+												<img src="img/tooth_state/1.png">
+											</a>	
+										</div>';*/
+								}
+							}
 							echo '
-									</div>';*/
-							echo '
+									<!--</div>-->
 									<div class="cellName" style="position: relative; '.$back_color.'">';
 							$start_time_h = floor($ZapisHereQueryToday[$z]['start_time']/60);
 							$start_time_m = $ZapisHereQueryToday[$z]['start_time']%60;
@@ -326,7 +340,7 @@
 							echo '
 									</div>';
 							echo '
-									<div class="cellName">';
+									<div class="cellName" style="max-width: 120px; overflow: auto;">';
 							echo 
 										'Описание:<br>'.
 										$ZapisHereQueryToday[$z]['description'];
@@ -344,6 +358,25 @@
 							}
 							echo '
 									</div>';
+									
+									
+							//Формулы и посещения
+							echo '
+									<div class="cellName" style="vertical-align: top;">';
+									
+							if ($t_f_data_db != 0){
+								foreach($t_f_data_db as $ids){
+									echo '
+										<div style="border: 1px solid #BFBCB5; margin-top: 1px;">
+											<a href="task_stomat_inspection.php?id='.$ids['id'].'" class="ahref">
+												<div style="display: inline-block; vertical-align: middle;"><img src="img/tooth_state/1.png"></div><div style="display: inline-block; vertical-align: middle;">'.date('d.m.y H:i', $ids['zapis_date']).'</div>
+											</a>	
+										</div>';
+								}
+							}
+							echo '
+									</div>';	
+									
 							echo '
 									<div class="cellRight">';									
 
@@ -353,21 +386,27 @@
 										if($ZapisHereQueryToday[$z]['enter'] == 1){
 											if(($_SESSION['permissions'] == 5) || $god_mode){
 												echo 
-													'<a href="add_task_stomat.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($d.'.'.$m.'.'.$y.' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'">Внести Осмотр/Зубную формулу</a><br />';
+													'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
+														<a href="add_task_stomat.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($day.'.'.$month.'.'.$year.' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">Внести Осмотр/Зубную формулу</a>
+													</div>';
 											}
 											if(($_SESSION['permissions'] == 6) || $god_mode){
 												echo 
-													'<a href="add_task_cosmet.php?client='.$ZapisHereQueryToday[$z]['patient'].'">Внести посещение косм.</a><br />';
+													'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
+														<a href="add_task_cosmet.php?client='.$ZapisHereQueryToday[$z]['patient'].'" class="ahref">Внести посещение косм.</a>
+													</div>';
 											}
 											$zapisDate = strtotime($ZapisHereQueryToday[$z]['day'].'.'.$ZapisHereQueryToday[$z]['month'].'.'.$ZapisHereQueryToday[$z]['year']);
 											if (time() < $zapisDate + 60*60*24){
-												echo 
-													'<a href="#">Внести Акт</a><br />';
+												/*echo 
+													'<a href="#">Внести Акт</a><br />';*/
 											}
 										}
 									}
 								}
-							
+			echo '
+					</div>
+				</li>';	
 			echo '
 					<div id="ShowSettingsAddTempZapis" style="position: absolute; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; z-index:105; padding:10px;">
 						<a class="close" href="#" onclick="HideSettingsAddTempZapis()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(img/close.png) no-repeat;">

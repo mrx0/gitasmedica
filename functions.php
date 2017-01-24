@@ -139,20 +139,24 @@
 			$uri = 'user.php';
 		}
 		
-		$user = SelDataFromDB($datatable, $sw, $search);
-		if ($user != 0){
-			if ($type == 'user_full'){
-				if ($link){
-					return '<a href="'.$uri.'?id='.$sw.'" class="ahref">'.$user[0]['full_name'].'</a>';
+		if ($sw != ''){
+			$user = SelDataFromDB($datatable, $sw, $search);
+			if ($user != 0){
+				if ($type == 'user_full'){
+					if ($link){
+						return '<a href="'.$uri.'?id='.$sw.'" class="ahref">'.$user[0]['full_name'].'</a>';
+					}else{
+						return $user[0]['full_name'];
+					}
 				}else{
-					return $user[0]['full_name'];
+					if ($link){
+						return '<a href="'.$uri.'?id='.$sw.'" class="ahref">'.$user[0]['name'].'</a>';
+					}else{
+						return $user[0]['name'];
+					}
 				}
 			}else{
-				if ($link){
-					return '<a href="'.$uri.'?id='.$sw.'" class="ahref">'.$user[0]['name'].'</a>';
-				}else{
-					return $user[0]['name'];
-				}
+				return 'не указан';
 			}
 		}else{
 			return 'не указан';

@@ -22,6 +22,11 @@
 			$org = SearchInArray($arr_orgs, $user[0]['org'], 'name');
 			//var_dump($org);
 			
+			//операции со временем						
+			$month = date('m');		
+			$year = date('Y');
+			$day = date("d");
+			
 			echo '
 				<div id="status">
 					<header>
@@ -112,6 +117,11 @@
 
 			echo '
 									<a href="scheduler_own.php?id='.$_GET['id'].'" class="b">График работы</a>';
+			
+			if ($zapis['see_own'] == 1){
+					echo '
+								<a href="zapis_own.php?y='.$year.'&m='.$month.'&d='.$day.'&worker='.$_SESSION['id'].'" class="b">Ваша запись сегодня</a>';
+			}
 			
 			if ($stom['see_own'] == 1){
 				$notes = SelDataFromDB ('notes', $_SESSION['id'], 'create_person');

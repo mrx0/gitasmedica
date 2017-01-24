@@ -281,7 +281,7 @@
 							echo '
 									</div>';
 							echo '
-									<div class="cellName">';
+									<div class="cellName" style="max-width: 120px; overflow: auto;">';
 							echo 
 										$ZapisHereQueryToday[$z]['description'];
 							echo '

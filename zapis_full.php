@@ -318,7 +318,7 @@
 					echo '
 	
 								<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: left; margin-bottom: 10px;">
-									<div style="font-size: 90%; color: rgb(125, 125, 125);">Сегодня: <a href="?'.$dopFilial.$dopWho.'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></div>
+									<div style="font-size: 90%; color: rgb(125, 125, 125);">Сегодня: <a href="?'.$dopFilial.$dopWho.'&kab='.$kab.'" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></div>
 									<div>
 										<span style="color: rgb(125, 125, 125);">
 											Изменить дату:
@@ -364,6 +364,7 @@
 					if ($ZapisHereQueryToday != 0){
 
 						for ($z = 0; $z < count($ZapisHereQueryToday); $z++){
+							$t_f_data_db = array();
 							$back_color = '';
 							
 							
@@ -395,14 +396,39 @@
 							}
 							
 							echo '
-								<div class="cellsBlock">';
-							/*echo '
-									<div class="cellName" style="'.$back_color.'">';
-							echo 
-										$ZapisHereQueryToday[$z]['day'].' '.$month_names[$ZapisHereQueryToday[$z]['month']-1].' '.$ZapisHereQueryToday[$z]['year'];
+								<li class="cellsBlock" style="width: auto;">
+									<!--<div class="cellCosmAct">-->';
+							
+							$query = "SELECT `id`, `zapis_date`  FROM `journal_tooth_status` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
+							$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
+							$number = mysql_num_rows($res);
+							if ($number != 0){
+								while ($arr = mysql_fetch_assoc($res)){
+									array_push($t_f_data_db, $arr);
+								}
+							}else
+								$t_f_data_db = 0;
+							//var_dump($t_f_data_db);
+							
+							if ($t_f_data_db != 0){
+								foreach($t_f_data_db as $ids){
+									/*echo '
+										<div>
+											<a href="#" onclick="window.open(\'task_stomat_inspection_window.php?id='.$ids['id'].'\',\'test\', \'width=700,height=350,status=no,resizable=no,top=200,left=200\'); return false;">
+												<img src="img/tooth_state/1.png">
+											</a>	
+										</div>';*/
+										
+									/*echo '
+										<div>
+											<a href="task_stomat_inspection.php?id='.$ids['id'].'">
+												<img src="img/tooth_state/1.png">
+											</a>	
+										</div>';*/
+								}
+							}
 							echo '
-									</div>';*/
-							echo '
+									<!--</div>-->
 									<div class="cellName" style="position: relative; '.$back_color.'">';
 							$start_time_h = floor($ZapisHereQueryToday[$z]['start_time']/60);
 							$start_time_m = $ZapisHereQueryToday[$z]['start_time']%60;
@@ -438,7 +464,7 @@
 							echo '
 									</div>';
 							echo '
-									<div class="cellName">';
+									<div class="cellName" style="max-width: 120px; overflow: auto;">';
 							echo 
 										'Описание:<br>'.
 										$ZapisHereQueryToday[$z]['description'];
@@ -456,6 +482,26 @@
 							}
 							echo '
 									</div>';
+									
+							//Формулы и посещения
+							echo '
+									<div class="cellName" style="vertical-align: top;">';
+									
+							if ($t_f_data_db != 0){
+								foreach($t_f_data_db as $ids){
+									echo '
+										<div style="border: 1px solid #BFBCB5; margin-top: 1px;">
+											<a href="task_stomat_inspection.php?id='.$ids['id'].'" class="ahref">
+												<div style="display: inline-block; vertical-align: middle;"><img src="img/tooth_state/1.png"></div><div style="display: inline-block; vertical-align: middle;">'.date('d.m.y H:i', $ids['zapis_date']).'</div>
+											</a>	
+										</div>';
+								}
+							}
+
+							echo '
+									</div>';
+									
+									
 							echo '
 									<div class="cellRight">';									
 							if (isset($_SESSION['filial'])){
@@ -495,7 +541,7 @@
 							}
 			echo '
 					</div>
-				</div>';
+				</li>';
 			echo '
 					<div id="ShowSettingsAddTempZapis" style="position: absolute; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; z-index:105; padding:10px;">
 						<a class="close" href="#" onclick="HideSettingsAddTempZapis()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(img/close.png) no-repeat;">

@@ -323,7 +323,7 @@
 							if ($kabsInFilialExist){
 								echo '
 									<table style="border:1px solid #BFBCB5;">
-										<tr style="text-align:center; vertical-align:top; font-weight:bold; height:20px;">
+										<tr style="text-align:center; vertical-align:top; font-weight:bold; height:20px; ">
 											<td style="border:1px solid #BFBCB5;">
 												Понедельник
 											</td>
@@ -354,7 +354,7 @@
 								for($d = $start; $d <= $end; $d++){
 									if (!($di++ % 7)){
 										echo '
-											<tr>';
+											<tr style="height: 142px;">';
 									}
 									
 									$kabsNone = '';
@@ -455,7 +455,7 @@
 									//выделение сегодня цветом
 									$now="$year-$month-".sprintf("%02d",$d);
 									if ($now == $today){
-										$today_color = 'border:1px solid red;';
+										$today_color = 'border: 1px solid red; outline: 2px solid red;';
 									}else{
 										$today_color = 'border:1px solid #BFBCB5;';
 									}

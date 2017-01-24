@@ -319,6 +319,18 @@
 									</span>
 								</div>';
 				
+				echo '
+					<div id="tabs_w" style="font-family: Verdana, Calibri, Arial, sans-serif; font-size: 100% !important;">
+						<ul>
+							<li><a href="#tabs-1">Посещения (запись)</a></li>
+							<li><a href="#tabs-2">Счёт</a></li>
+							<li><a href="#tabs-3">Стоматология</a></li>
+							<li><a href="#tabs-4">Косметология</a></li>
+						</ul>';
+						
+				echo '
+						<div id="tabs-1">';
+				
 				//Запись пациента (aka посещения)
 			
 				echo '
@@ -349,6 +361,7 @@
 					$sheduler_zapis = array_reverse($sheduler_zapis);
 					
 					for ($z = 0; $z < count($sheduler_zapis); $z++){
+						$t_f_data_db = array();
 						$show_this = FALSE;
 						
 						if ($sheduler_zapis[$z]['type'] == 5){
@@ -392,8 +405,39 @@
 							}
 									
 							echo '
-								<li class="cellsBlock" style="width: auto;">';
+								<li class="cellsBlock" style="width: auto;">
+									<!--<div class="cellCosmAct">-->';
+							
+							$query = "SELECT `id`, `zapis_date`  FROM `journal_tooth_status` WHERE `zapis_id` = '{$sheduler_zapis[$z]['id']}' ORDER BY `create_time`";
+							$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
+							$number = mysql_num_rows($res);
+							if ($number != 0){
+								while ($arr = mysql_fetch_assoc($res)){
+									array_push($t_f_data_db, $arr);
+								}
+							}else
+								$t_f_data_db = 0;
+							//var_dump($t_f_data_db);
+							
+							if ($t_f_data_db != 0){
+								foreach($t_f_data_db as $ids){
+									/*echo '
+										<div>
+											<a href="#" onclick="window.open(\'task_stomat_inspection_window.php?id='.$ids['id'].'\',\'test\', \'width=700,height=350,status=no,resizable=no,top=200,left=200\'); return false;">
+												<img src="img/tooth_state/1.png">
+											</a>	
+										</div>';*/
+										
+									/*echo '
+										<div>
+											<a href="task_stomat_inspection.php?id='.$ids['id'].'">
+												<img src="img/tooth_state/1.png">
+											</a>	
+										</div>';*/
+								}
+							}
 							echo '
+									<!--</div>-->
 									<div class="cellName" style="position: relative; '.$back_color.'">';
 							$start_time_h = floor($sheduler_zapis[$z]['start_time']/60);
 							$start_time_m = $sheduler_zapis[$z]['start_time']%60;
@@ -455,23 +499,46 @@
 							echo '
 									</div>';
 									
-							if ($_SESSION['id'] == $sheduler_zapis[$z]['worker']){
+									
+							//Формулы и посещения
+							echo '
+									<div class="cellName" style="vertical-align: top;">';
+									
+							if ($t_f_data_db != 0){
+								foreach($t_f_data_db as $ids){
+									echo '
+										<div style="border: 1px solid #BFBCB5; margin-top: 1px;">
+											<a href="task_stomat_inspection.php?id='.$ids['id'].'" class="ahref">
+												<div style="display: inline-block; vertical-align: middle;"><img src="img/tooth_state/1.png"></div><div style="display: inline-block; vertical-align: middle;">'.date('d.m.y H:i', $ids['zapis_date']).'</div>
+											</a>	
+										</div>';
+								}
+							}
+
+							echo '
+									</div>';
+
+							if (($_SESSION['id'] == $sheduler_zapis[$z]['worker']) || ($god_mode)){
 								echo '
-									<div class="cellName" style="background-color:#d8d8d8">';
+									<div class="cellName" style="background-color: #d8d8d8; vertical-align: top;">';
 								if($sheduler_zapis[$z]['office'] == $sheduler_zapis[$z]['add_from']){
 									if($sheduler_zapis[$z]['enter'] == 1){
 										if(($_SESSION['permissions'] == 5) || $god_mode){
 											echo 
-												'<a href="add_task_stomat.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&insured='.$sheduler_zapis[$z]['insured'].'&pervich='.$sheduler_zapis[$z]['pervich'].'&noch='.$sheduler_zapis[$z]['noch'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'">Внести Осмотр/Зубную формулу</a><br />';
+												'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
+													<a href="add_task_stomat.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&insured='.$sheduler_zapis[$z]['insured'].'&pervich='.$sheduler_zapis[$z]['pervich'].'&noch='.$sheduler_zapis[$z]['noch'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'&worker='.$sheduler_zapis[$z]['worker'].'" class="ahref">Внести Осмотр/Зубную формулу</a>
+												</div>';
 										}
 										if(($_SESSION['permissions'] == 6) || $god_mode){
 											echo 
-												'<a href="add_task_cosmet.php?client='.$sheduler_zapis[$z]['patient'].'">Внести посещение косм.</a><br />';
+												'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
+													<a href="add_task_cosmet.php?client='.$sheduler_zapis[$z]['patient'].'" class="ahref">Внести посещение косм.</a>
+												</div>';
 										}
 										$zapisDate = strtotime($sheduler_zapis[$z]['day'].'.'.$sheduler_zapis[$z]['month'].'.'.$sheduler_zapis[$z]['year']);
 										if (time() < $zapisDate + 60*60*24){
-											echo 
-												'<a href="#">Внести Акт</a><br />';
+											/*echo 
+												'<a href="#">Внести Акт</a><br />';*/
 										}
 									}
 								}else{
@@ -489,8 +556,14 @@
 				}
 				echo '</ul>
 					</div>';
-				
+					
+				echo '</div>';
+
 				if ($client[0]['status'] != 9){
+					
+					echo '
+						<div id="tabs-2">';	
+					
 					if (($finances['see_all'] != 0) || ($finances['see_own'] != 0) || $god_mode){
 						echo '				
 									<div class="cellsBlock2">
@@ -520,26 +593,28 @@
 						if (!$allPayed)
 							echo '<i style="color:red;">Есть не погашенное</i>';					
 										
-						echo '
-									</div>';
+						echo '</div>';
 					}
 					
-					echo '				
+					echo '</div>';
+					
+					/*echo '				
 									<div class="cellsBlock2">';
-					if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
+					/*if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
 						echo '
 										<a href="#" id="showDiv1" class="b">Стоматология</a>';
 					}
 					if (($cosm['see_all'] == 1) || ($cosm['see_own'] == 1) || $god_mode){
 						echo '
 										<a href="#" id="showDiv2" class="b">Косметология</a>';
-					}					
+					}
 					echo '
-									</div>';
+									</div>';*/
 		
-
 					echo '
-									<div id="div1">';
+						<div id="tabs-3">';	
+					/*echo '
+									<div id="div1">';*/
 					if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || ($god_mode)){
 						echo '	
 										<a href="add_task_stomat.php?client='.$client[0]['id'].'" class="b">Добавить осмотр</a>';
@@ -1245,11 +1320,20 @@
 								</div>';
 					}
 						
-					mysql_close();			
+				
+					mysql_close();	
+					
 					echo '
-						</div>
-
-						<div id="div2">';
+						</div>';
+					echo '</div>';	
+					
+					echo '
+						<div id="tabs-4">';
+				
+					
+					/*echo '
+						<div id="div2">';*/
+						
 					if (($cosm['add_own'] == 1) || ($cosm['see_all'] == 1) || ($god_mode)){
 						echo '
 							<a href="add_task_cosmet.php?client='.$client[0]['id'].'" class="b">Добавить посещение</a>		
@@ -1342,12 +1426,15 @@
 									</div>
 								</div>';
 				}
+				echo '
+					</div>
+					</div>';
 			}
 								
 								
 								
 			echo '					
-					</div>
+					
 				</div>
 			</div>
 

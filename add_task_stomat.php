@@ -12,6 +12,8 @@
 			
 			
 			include_once 'DBWork.php';
+			include_once 'functions.php';
+			
 			include_once 'tooth_status.php';
 			
 			require 'config.php';
@@ -167,13 +169,18 @@
 								</div>
 							</div>';
 							
-			if ($stom['add_new'] == 1){
+			if (($stom['add_new'] == 1) || $god_mode){
+				if (isset($_GET['worker'])){
+					$workerEcho = WriteSearchUser('spr_workers', $_GET['worker'], 'user_full', false);
+				}else{
+					$workerEcho = '';
+				}
 				echo '
 							<div style="margin-bottom: 10px; color: #777; font-size: 90%;">Необходимо выбрать исполнителя</div>
 							<div class="cellsBlock3" style="margin-bottom: 20px;">
 								<div class="cellLeft">Исполнитель</div>
 								<div class="cellRight">
-									<input type="text" size="50" name="searchdata2" id="search_worker" placeholder="Введите первые три буквы для поиска" value="" class="who2"  autocomplete="off">
+									<input type="text" size="50" name="searchdata2" id="search_worker" placeholder="Введите первые три буквы для поиска" value="'.$workerEcho.'" class="who2"  autocomplete="off">
 									<ul id="search_result2" class="search_result2"></ul><br />
 									<label id="worker_error" class="error"></label>
 								</div>
