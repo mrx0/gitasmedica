@@ -13,7 +13,7 @@
 				<header>
 					<h1>Страховые компании</h1>
 				</header>';
-		if (($spravka['add_new'] == 1) || $god_mode || ($_SESSION['id'] == '299')){
+		if (($spravka['add_new'] == 1) || $god_mode){
 				echo '
 					<a href="add_insure.php" class="b">Добавить</a>';
 			}

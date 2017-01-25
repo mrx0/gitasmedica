@@ -312,6 +312,10 @@
 							if ($end_time_h > 23) $end_time_h = $end_time_h - 24;
 							$end_time_m = ($ZapisHereQueryToday[$z]['start_time']+$ZapisHereQueryToday[$z]['wt'])%60;
 							if ($end_time_m < 10) $end_time_m = '0'.$end_time_m;
+							
+							if ($ZapisHereQueryToday[$z]['month'] < 10) $month = '0'.$ZapisHereQueryToday[$z]['month'];
+							else $month = $ZapisHereQueryToday[$z]['month'];
+							
 							echo 
 										$start_time_h.':'.$start_time_m.' - '.$end_time_h.':'.$end_time_m;
 										
@@ -381,19 +385,19 @@
 									<div class="cellRight">';									
 
 									
-								if ($_SESSION['id'] == $ZapisHereQueryToday[$z]['worker']){
+								if (($_SESSION['id'] == $ZapisHereQueryToday[$z]['worker']) || ($stom['add_new'] == 1) || ($cosm['add_new'] == 1) || $god_mode){
 									if($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']){
 										if($ZapisHereQueryToday[$z]['enter'] == 1){
-											if(($_SESSION['permissions'] == 5) || $god_mode){
+											if (($ZapisHereQueryToday[$z]['type'] == 5) && (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode)){
 												echo 
 													'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
-														<a href="add_task_stomat.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($day.'.'.$month.'.'.$year.' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">Внести Осмотр/Зубную формулу</a>
+														<a href="add_task_stomat.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">Внести Осмотр/Зубную формулу</a>
 													</div>';
 											}
-											if(($_SESSION['permissions'] == 6) || $god_mode){
+											if (($ZapisHereQueryToday[$z]['type'] == 6) && (($cosm['add_own'] == 1) || ($cosm['add_new'] == 1) || $god_mode)){
 												echo 
 													'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
-														<a href="add_task_cosmet.php?client='.$ZapisHereQueryToday[$z]['patient'].'" class="ahref">Внести посещение косм.</a>
+														<a href="add_task_cosmet.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">Внести посещение косм.</a>
 													</div>';
 											}
 											$zapisDate = strtotime($ZapisHereQueryToday[$z]['day'].'.'.$ZapisHereQueryToday[$z]['month'].'.'.$ZapisHereQueryToday[$z]['year']);

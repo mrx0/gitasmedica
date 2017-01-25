@@ -9,7 +9,7 @@
 		if ($removes != 0){
 			//var_dump ($notes);	
 
-			$rez .= '<br /><br />Направления';
+			$rez .= '<br><br>Направления';
 			$rez .= '
 							<ul class="live_filter" style="margin-left:6px;">
 								<li class="cellsBlock" style="font-weight:bold;">	
@@ -69,6 +69,7 @@
 						<div class="cellTime" style="text-align: center; '.$background_style2.'">'.$ended.'</div>
 					</li>';
 				}
+				$rez .= '</ul>';
 			}else{
 				//echo '<h1>Нечего показывать.</h1>';
 			}

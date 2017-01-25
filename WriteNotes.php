@@ -22,7 +22,7 @@
 			10 => 'Установлены брекеты',	
 			);
 
-			$rez .= '<br /><br />Особые отметки';
+			$rez .= '<br><br>Особые отметки';
 			$rez .= '
 			<ul class="live_filter" style="margin-left:6px;">
 			<li class="cellsBlock" style="font-weight:bold;">	
@@ -98,7 +98,7 @@
 						<div class="cellTime" style="text-align: center; '.$background_style2.'">'.$ended.'</div>
 					</li>';
 			}
-
+			$rez .= '</ul>';
 		}else{
 			//echo '<h1>Нечего показывать.</h1>';
 		}

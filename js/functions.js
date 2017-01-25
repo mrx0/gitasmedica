@@ -18,9 +18,9 @@
 				iname:document.getElementById("i").value,
 				oname:document.getElementById("o").value,
 				
-				sel_date:document.getElementById("sel_date").value,
-				sel_month:document.getElementById("sel_month").value,
-				sel_year:document.getElementById("sel_year").value,
+				//sel_date:document.getElementById("sel_date").value,
+				//sel_month:document.getElementById("sel_month").value,
+				//sel_year:document.getElementById("sel_year").value,
 				
 				sex:sex_value,
 			},

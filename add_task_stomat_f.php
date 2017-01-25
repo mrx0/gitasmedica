@@ -16,8 +16,7 @@
 			
 			if ($_POST['client'] == ''){
 				echo '
-					Не выбрали пациента. Давайте еще разок =)<br /><br />
-					<a href="add_task_stomat.php" class="b">Добавить запись</a>';
+					Не выбран пациент<br><br>';
 			}else{
 				//Ищем Пациента
 				$clients = SelDataFromDB ('spr_clients', $_POST['client'], 'client_full_name');
@@ -30,7 +29,7 @@
 					
 					
 					if ($_POST['filial'] != 0){
-						
+						//Исполнитель
 						if (isset($_POST['worker'])){
 						
 							$workers = SelDataFromDB ('spr_workers', $_POST['worker'], 'worker_full_name');
@@ -202,10 +201,10 @@
 										
 										//mysql_close();
 									}else{
-										echo 'Вы не назначили срок напоминания<br /><br />';
+										echo 'Вы не назначили срок напоминания<br><br>';
 									}
 								}else{
-									echo 'Не выбран тип напоминания<br /><br />';
+									echo 'Не выбран тип напоминания<br><br>';
 								}
 							}
 							
@@ -245,13 +244,13 @@
 													//mysql_close();
 													
 												}else{
-													echo 'Не нашли в базе врача, к кому направляете.<br />';
+													echo 'Не нашли в базе врача, к кому направляете.<br>';
 												}
 											}else{
-												echo 'Пустое значение врача, к кому направляете.<br />';
+												echo 'Пустое значение врача, к кому направляете.<br>';
 											}
 										}else{
-											echo 'Пустое значение причины направления.<br />';
+											echo 'Пустое значение причины направления.<br>';
 										}
 									}
 								}
@@ -281,44 +280,32 @@
 
 							mysql_query($query) or die(mysql_error());
 								
-							
-							
-							
 							echo '
-								Посещение добавлено в журнал.<br /><br />';
-								
-							
-
-
-							echo '
+								<a href="task_stomat_inspection.php?id='.$task.'" class="ahref">Посещение #'.$task.'</a> добавлено в журнал.
+								<br><br>
 								<header>
 									<span style= "color: rgba(255,39,39,0.7); padding: 2px;">
 										Напоминание: Если вы что-то забыли или необходимо внести изменения,<br />
-										посещение можно отредактировать.
+										посещение можно <a href="edit_task_stomat.php?id='.$task.'" class="ahref">отредактировать</a>.
 									</span>
 								</header>
 
-								<br /><br />
+								<br><br>
 								<a href="client.php?id='.$client.'" class="b">В карточку пациента</a>
-								<a href="add_task_stomat.php?client='.$client.'&filial='.$_POST['filial'].'&insured='.$insured_status.'&pervich='.$pervich_status.'&noch='.$noch_status.'&date='.$_POST['zapis_date'].'&id='.$_POST['zapis_id'].'" class="b">Добавить посещение этому пациенту</a>
-								<!--<a href="add_task_stomat.php" class="b">Добавить новое посещение</a>-->
+								<!--<a href="add_task_stomat.php?client='.$client.'&filial='.$_POST['filial'].'&insured='.$insured_status.'&pervich='.$pervich_status.'&noch='.$noch_status.'&date='.$_POST['zapis_date'].'&id='.$_POST['zapis_id'].'" class="b">Добавить посещение этому пациенту</a>-->
 								';
 							mysql_close();
 						}else{
 							echo '
-								Указанный вами исполнитель отсутствует в нашей базе<br /><br />
-								<a href="add_task_stomat.php" class="b">Добавить запись</a>';
+								Указанный вами исполнитель отсутствует в нашей базе<br><br>';
 						}
 					}else{
 						echo '
-							Вы не выбрали филиал<br /><br />
-							<a href="add_task_stomat.php" class="b">Добавить запись</a>';
+							Вы не выбрали филиал<br><br>';
 					}
 				}else{
 					echo '
-						В нашей базе нет такого пациента :(<br /><br />
-						<a href="add_task_stomat.php" class="b">Добавить запись</a>
-						<a href="add_client.php" class="b">Добавить пациента</a>';
+						В нашей базе нет такого пациента.<br><br>';
 				}
 			}
 		}

@@ -539,6 +539,37 @@
 										'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 0)">Отменить все изменения</a><br>';
 								}
 							}
+							
+							//Дополнительное расширение прав на добавление посещений для специалистов, god_mode и управляющих
+							if (($_SESSION['id'] == $ZapisHereQueryToday[$z]['worker']) || ($stom['add_new'] == 1) || ($cosm['add_new'] == 1) || $god_mode){
+								if($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']){
+									if($ZapisHereQueryToday[$z]['enter'] == 1){
+										//var_dump($ZapisHereQueryToday[$z]['type']);
+										
+										if (($ZapisHereQueryToday[$z]['type'] == 5) && (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode)){
+											echo '
+											<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
+												<a href="add_task_stomat.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">Внести Осмотр/Зубную формулу</a>
+											</div>';
+										}
+										if (($ZapisHereQueryToday[$z]['type'] == 6) && (($cosm['add_own'] == 1) || ($cosm['add_new'] == 1) || $god_mode)){
+											echo  '
+											<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
+												<a href="add_task_cosmet.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">Внести посещение косм.</a>
+											</div>';
+										}
+										//!!!Акт
+										$zapisDate = strtotime($ZapisHereQueryToday[$z]['day'].'.'.$ZapisHereQueryToday[$z]['month'].'.'.$ZapisHereQueryToday[$z]['year']);
+										if (time() < $zapisDate + 60*60*24){
+											/*echo 
+												'<a href="#">Внести Акт</a><br />';*/
+										}
+									}
+								}else{
+									echo "&nbsp";
+								}
+
+							}
 			echo '
 					</div>
 				</li>';

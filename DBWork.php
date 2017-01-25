@@ -405,7 +405,7 @@
 	
 	
 	//Вставка записей в журнал Cosmet из-под Web
-	function WriteToDB_EditCosmet ($office, $client, $description, $create_time, $create_person, $last_edit_time, $last_edit_person, $worker, $comment){
+	function WriteToDB_EditCosmet ($office, $client, $description, $create_time, $create_person, $worker, $comment, $pervich, $zapis_date, $zapis_id){
 		$param = '';
 		$values = '';
 		$for_log = '';
@@ -421,14 +421,18 @@
 		mysql_query("SET NAMES 'utf8'");
 		$time = time();
 		$query = "INSERT INTO `journal_cosmet1` (
-			`office`, `client`, $param `create_time`, `create_person`, `last_edit_time`, `last_edit_person`, `worker`, `comment`) 
+			`office`, `client`, $param `create_time`, `create_person`, `worker`, `comment`, `pervich`, `zapis_date`, `zapis_id`) 
 			VALUES (
-			'{$office}', '{$client}', $values '{$create_time}', '{$create_person}', '{$last_edit_time}', '{$last_edit_person}', '{$worker}', '{$comment}') ";
+			'{$office}', '{$client}', $values '{$create_time}', '{$create_person}', '{$worker}', '{$comment}', '{$pervich}', '{$zapis_date}', '{$zapis_id}') ";
 		mysql_query($query) or die(mysql_error());
+		$mysql_insert_id = mysql_insert_id();
+		
 		mysql_close();
 		
 		//логирование
 		AddLog (GetRealIp(), $create_person, '', 'Добавлено посещение. ['.date('d.m.y H:i', $create_time).']. ОФис: ['.$office.']. Пациент: ['.$client.']. Описание: ['.$for_log.']. Комментарий: '.$comment);
+		
+		return ($mysql_insert_id);
 	}
 	
 	//Обновление записей в журнале Cosmet из-под Web

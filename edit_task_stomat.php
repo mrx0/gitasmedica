@@ -49,7 +49,22 @@
 					
 						echo '
 									<form action="edit_task_stomat_f.php">
-										
+										<div class="cellsBlock2">
+											<div class="cellLeft">
+												Время посещения<br>
+												<span style="font-size:70%;">
+													Согласно записи
+												</span>
+											</div>
+											<div class="cellRight">';
+						if ($task[0]['zapis_date'] != 0){
+							echo date('d.m.y H:i', $task[0]['zapis_date']);
+						}else{
+							echo 'не было привязано к записи';
+						}
+						echo '
+											</div>
+										</div>
 										<div class="cellsBlock2">
 											<div class="cellLeft">Дата посещения</div>
 											<div class="cellRight">';

@@ -8,8 +8,10 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 		
-		if (($cosm['add_own'] == 1) || $god_mode){
+		if (($cosm['add_own'] == 1) || ($cosm['add_new'] == 1) || $god_mode){
 			include_once 'DBWork.php';
+			include_once 'functions.php';
+			
 			$offices = SelDataFromDB('spr_office', '', '');
 			
 			$post_data = '';
@@ -36,6 +38,37 @@
 				}			
 			}
 
+			if (isset($_GET['pervich']) && ($_GET['pervich'] == 1)){
+				$pervich_check = ' checked';
+			}else{
+				$pervich_check = '';			
+			}
+			
+			/*if (isset($_GET['insured']) && ($_GET['insured'] == 1)){
+				$insured_check = ' checked';
+			}else{
+				$insured_check = '';			
+			}
+			
+			if (isset($_GET['noch']) && ($_GET['noch'] == 1)){
+				$noch_check = ' checked';
+			}else{
+				$noch_check = '';			
+			}*/
+			
+			if (isset($_GET['date'])){
+				$zapis_date = date('d.m.y H:i', $_GET['date']);
+				$zapis_date_hidden = $_GET['date'];
+			}else{
+				$zapis_date = date('d.m.y H:i', time());		
+				$zapis_date_hidden = time();
+			}
+			
+			if (isset($_GET['id'])){
+				$zapis_id = $_GET['id'];
+			}else{
+				$zapis_id = 0;
+			}
 			
 			echo '
 				<div id="status">
@@ -45,25 +78,42 @@
 					</header>';
 
 			echo '
-			
-		<style>
-.label_desc{
-    display: block;
-}
-.error{
-    display: none;
-}
-.error_input{
-    border: 2px solid #FF0000; 
-}
-</style>	
-			
-			
 					<div id="data">';
 
 			echo '
-						<form action="add_task_cosmet_f.php">
-					
+						<form action="add_task_cosmet_f.php">';
+			echo '		
+							<div class="cellsBlock3">
+								<div class="cellLeft">
+									Время посещения
+									<span style="font-size:70%;">
+										Согласно записи
+									</span>
+								</div>
+								<div class="cellRight">
+									'.$zapis_date.'
+								</div>
+							</div>';
+							
+			if (($cosm['add_new'] == 1) || $god_mode){
+				if (isset($_GET['worker'])){
+					$workerEcho = WriteSearchUser('spr_workers', $_GET['worker'], 'user_full', false);
+				}else{
+					$workerEcho = '';
+				}
+				echo '
+							<div style="margin-bottom: 10px; color: #777; font-size: 90%;">Необходимо выбрать исполнителя</div>
+							<div class="cellsBlock3" style="margin-bottom: 20px;">
+								<div class="cellLeft">Исполнитель</div>
+								<div class="cellRight">
+									<input type="text" size="50" name="searchdata2" id="search_worker" placeholder="Введите первые три буквы для поиска" value="'.$workerEcho.'" class="who2"  autocomplete="off">
+									<ul id="search_result2" class="search_result2"></ul><br />
+									<label id="worker_error" class="error"></label>
+								</div>
+							</div>';	
+			}
+							
+			echo '		
 							<div class="cellsBlock3">
 								<div class="cellLeft">Филиал</div>
 								<div class="cellRight">
@@ -124,14 +174,41 @@
 					';
 					$post_data .= '
 									action'.$actions_cosmet[$i]['id'].':action_value'.$actions_cosmet[$i]['id'].',';
+									
+					//отметка для первички (костыль от старого определения)
+					if ($actions_cosmet[$i]['id'] == 13){
+						if (isset($_GET['pervich']) && ($_GET['pervich'] == 1)){
+							$pervich_cons_check = ' checked';
+							
+						}else{
+							$pervich_cons_check = '';
+						}
+						$pervich_cons_check .= ' onclick="CheckPervich()"';
+					}else{
+						$pervich_cons_check = '';
+					}
+
 					echo '
 						<div class="cellsBlock3" style="font-size:80%;">
 							<div class="cellLeft">'.$actions_cosmet[$i]['full_name'].'</div>
 							<div class="cellRight">
-								<input type="checkbox" name="action'.$actions_cosmet[$i]['id'].'" id="action'.$actions_cosmet[$i]['id'].'" value="1">
+								<input type="checkbox" name="action'.$actions_cosmet[$i]['id'].'" id="action'.$actions_cosmet[$i]['id'].'" value="1" '.$pervich_cons_check.'>
 							</div>
 						</div>';
 				}
+				
+				//Новая отметка для первички
+				echo '
+						<div class="cellsBlock3">
+							<div class="cellLeft">
+								Первичный<br>
+								<span style="font-size: 70%;">Определяется из записи пациента</span>
+							</div>
+							<div class="cellRight">
+								<input type="checkbox" name="pervich" id="pervich" value="1" '.$pervich_check.'> да
+							</div>
+						</div>';
+				
 				echo '
 						<div class="cellsBlock3">
 							<div class="cellLeft">Комментарий</div>
@@ -142,8 +219,10 @@
 			}
 			echo '
 							<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">
+							<input type="hidden" id="zapis_date" name="zapis_date" value="'.$zapis_date_hidden.'">
+							<input type="hidden" id="zapis_id" name="zapis_id" value="'.$zapis_id.'">
 							<div id="errror"></div>
-							<input type=\'button\' class="b" value=\'Добавить\' onclick=Ajax_add_task_cosmet()>
+							<input type="button" class="b" value="Добавить" onclick=Ajax_add_task_cosmet()>
 						</form>';	
 				
 			echo '
@@ -175,7 +254,13 @@
 							// какие данные будут переданы
 							data: {
 								client:document.getElementById("search_client").value,
-								filial:document.getElementById("filial").value,
+								filial:document.getElementById("filial").value,';
+			if (($cosm['add_new'] == 1) || $god_mode){
+				echo '
+								worker:document.getElementById("search_worker").value,';
+			}
+			echo '
+								
 							},
 							// тип передачи данных
 							dataType: "json",
@@ -185,6 +270,13 @@
 								if(data.result == \'success\'){   
 									//alert(\'форма корректно заполнена\');
 										'.$js_data.'
+										
+										if ($("#pervich").prop("checked")){
+											pervich = 1;
+										}else{
+											pervich = 0;
+										}
+											
 												ajax({
 													url:"add_task_cosmet_f.php",
 													statbox:"status",
@@ -194,7 +286,18 @@
 														author:document.getElementById("author").value,
 														client:document.getElementById("search_client").value,
 														filial:document.getElementById("filial").value,
-														comment:document.getElementById("comment").value,';
+														comment:document.getElementById("comment").value,
+														
+														zapis_date:document.getElementById("zapis_date").value,
+														zapis_id:document.getElementById("zapis_id").value,
+								
+														pervich:pervich,';
+														
+							if (($cosm['add_new'] == 1) || $god_mode){
+								echo '
+														worker:document.getElementById("search_worker").value,';
+							}
+														
 							echo $post_data;
 							echo '
 													},
@@ -218,6 +321,19 @@
 							}
 						});						
 					};  
+					  
+					function CheckPervich(){
+						//alert(document.getElementById("pervich").checked);
+
+						if(document.getElementById("action13").checked == true){
+							document.getElementById("pervich").checked = true;
+						}else{
+							document.getElementById("pervich").checked = false;
+						}
+					}
+					  
+					  
+					  
 					  
 				</script> 
 			';	

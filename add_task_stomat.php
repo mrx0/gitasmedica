@@ -163,7 +163,12 @@
 						<form action="add_task_stomat_f.php">';
 			echo '		
 							<div class="cellsBlock3">
-								<div class="cellLeft">Время посещения</div>
+								<div class="cellLeft">
+									Время посещения<br>
+									<span style="font-size:70%;">
+										Согласно записи
+									</span>
+								</div>
 								<div class="cellRight">
 									'.$zapis_date.'
 								</div>
