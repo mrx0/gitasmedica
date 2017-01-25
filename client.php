@@ -613,7 +613,7 @@
 					}else{
 						echo '
 										<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-											<span style="color: rgb(125, 125, 125);">Посещения (запись)</span>
+											<span style="color: rgb(255, 30, 30);">Нет записи</span>
 										</li>';
 					}
 					echo '
