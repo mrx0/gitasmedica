@@ -391,10 +391,8 @@
 				
 					echo '
 								<div style="margin: 10px 0;">
-									<ul style="margin-left: 6px; margin-bottom: 20px;">
-										<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-											<span style="color: rgb(125, 125, 125);">Посещения (запись)</span>
-										</li>';
+									<ul style="margin-left: 6px; margin-bottom: 20px;">';
+									
 					$sheduler_zapis = array();
 					
 					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
@@ -612,6 +610,11 @@
 							}
 
 						}
+					}else{
+						echo '
+										<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
+											<span style="color: rgb(125, 125, 125);">Посещения (запись)</span>
+										</li>';
 					}
 					echo '
 									</ul>
