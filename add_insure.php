@@ -19,7 +19,8 @@
 
 		echo '
 				<div id="data">';
-
+		echo '				
+					<div id="errrror"></div>';
 		echo '
 					<form action="add_insure_f.php">
 				
@@ -44,7 +45,6 @@
 							</div>
 						</div>
 
-						<div id="errror"></div>
 						<input type="button" class="b" value="Добавить" onclick="Ajax_add_insure('.$_SESSION['id'].')">
 					</form>';	
 			

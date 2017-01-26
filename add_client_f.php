@@ -111,7 +111,7 @@
 								<div style="font-size: 80%; margin: 7px;">'.$echo_therapist.'</div>';
 						/*if (($stom['add_own'] == 1) || $god_mode){
 							echo '
-								<div><a href="add_task_stomat.php?client='.$new_client.'" class="b" style="font-size: 70%;">Добавить посещение стоматолога</a></div>';
+								<div><a href="add_error.php" class="b" style="font-size: 70%;">Добавить посещение стоматолога</a></div>';
 						}*/
 						echo 
 							'<div style="font-size: 80%; margin: 7px;">'.$echo_therapist2.'</div>';

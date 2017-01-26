@@ -132,7 +132,7 @@
 
 			if (($cosm['add_own'] == 1) || $god_mode){
 				echo '
-						<a href="add_task_cosmet.php" class="b">Добавить</a>';
+						<a href="add_error.php" class="b">Добавить</a>';
 			}
 			
 			echo '<button class="md-trigger b" data-modal="modal-11">Фильтр</button>';				

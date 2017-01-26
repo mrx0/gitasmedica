@@ -1050,7 +1050,7 @@
 			foreach ($rezult as $key => $value){
 				//Обновили статус родителю
 				
-				$query = "UPDATE `spr_storagegroup` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `status`='9' WHERE `id`='{$value['id']}'";
+				$query = "UPDATE `spr_storagegroup` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `status`='9', `level`='0' WHERE `id`='{$value['id']}'";
 				mysql_query($query) or die(mysql_error().' -> '.$query);
 						
 				$arr2 = array();

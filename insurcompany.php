@@ -37,11 +37,16 @@
 			//var_dump ($insure_j);
 			
 			if ($insure_j !=0){
-				for ($i = 0; $i < count($insure_j); $i++) { 
+				for ($i = 0; $i < count($insure_j); $i++) {
+					if ($insure_j[$i]['status'] == 9){
+						$bgcolor = 'background-color: rgba(161,161,161,1);';
+					}else{
+						$bgcolor = '';
+					}
 					echo '
-							<li class="cellsBlock">
-								<div class="cellPriority" style="background-color:"></div>
-								<div class="cellOffice" style="text-align: center; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$insure_j[$i]['name'].'</div>
+							<li class="cellsBlock" style="'.$bgcolor.'">
+								<div class="cellPriority"></div>
+								<a href="insure.php?id='.$insure_j[$i]['id'].'" class="cellOffice ahref" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px; font-weight: bold;" id="4filter">'.$insure_j[$i]['name'].'</a>
 								<div class="cellText" style="text-align: left">'.$insure_j[$i]['contract'].'</div>
 								<div class="cellText" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;">'.$insure_j[$i]['contacts'].'</div>
 							</li>';

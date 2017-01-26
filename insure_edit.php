@@ -1,56 +1,68 @@
 <?php
 
-//add_insure.php
-//Добавить страховую
+//insure_edit.php
+//Редактировать страховую
 
 	require_once 'header.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
 		
-		include_once 'DBWork.php';
+		if (($spravka['edit'] == 1) || $god_mode){
+			if ($_GET){
+				include_once 'DBWork.php';
 		
-		echo '
-			<div id="status">
-				<header>
-					<h2>Добавить Страховую компанию</h2>
-					Заполните поля
-				</header>';
+				$insure_j = SelDataFromDB('spr_insure', $_GET['id'], 'id');
+		
+				if ($insure_j != 0){
+					echo '
+						<div id="status">
+							<header>
+								<h2>Редактировать Страховую компанию</h2>
+							</header>
+							<a href="insurcompany.php" class="b">Все страховые</a><br>';
 
-		echo '
-				<div id="data">';
-
-		echo '
-					<form action="add_insure_f.php">
-				
-						<div class="cellsBlock2">
-							<div class="cellLeft">Название</div>
-							<div class="cellRight">
-								<input type="text" name="name" id="name" value="">
-							</div>
-						</div>
+					echo '
+							<div id="data">';
+					echo '
+								<div id="errrror"></div>';
+					echo '
+								<form action="insure_edit_f.php">
+									<div class="cellsBlock2">
+										<div class="cellLeft">Название</div>
+										<div class="cellRight">
+											<input type="text" name="name" id="name" value="'.htmlspecialchars($insure_j[0]['name']).'">
+										</div>
+									</div>
 						
-						<div class="cellsBlock2">
-							<div class="cellLeft">Договор</div>
-							<div class="cellRight">
-								<textarea name="contract" id="contract" cols="35" rows="5"></textarea>
-							</div>
-						</div>
-						
-						<div class="cellsBlock2">
-							<div class="cellLeft">Контакты</div>
-							<div class="cellRight">
-								<textarea name="contacts" id="contacts" cols="35" rows="5"></textarea>
-							</div>
-						</div>
+									<div class="cellsBlock2">
+										<div class="cellLeft">Договор</div>
+										<div class="cellRight">
+											<textarea name="contract" id="contract" cols="35" rows="5">'.$insure_j[0]['contract'].'</textarea>
+										</div>
+									</div>
+							
+									<div class="cellsBlock2">
+										<div class="cellLeft">Контакты</div>
+										<div class="cellRight">
+											<textarea name="contacts" id="contacts" cols="35" rows="5">'.$insure_j[0]['contacts'].'</textarea>
+										</div>
+									</div>
 
-						<div id="errror"></div>
-						<input type="button" class="b" value="Добавить" onclick="Ajax_add_insure('.$_SESSION['id'].')">
-					</form>';	
-			
-		echo '
-				</div>
-			</div>';
+									<input type="button" class="b" value="Применить" onclick="Ajax_edit_insure('.$_GET['id'].')">
+								</form>';	
+					echo '
+							</div>
+						</div>';
+				}else{
+					echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+				}
+			}else{
+				echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+			}
+		}else{
+			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
+		}
 	}else{
 		header("location: enter.php");
 	}	

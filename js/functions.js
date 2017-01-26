@@ -235,10 +235,50 @@
 			},
 			success:function(data){
 				document.getElementById("errrror").innerHTML=data;
-				/*setTimeout(function () {
+				setTimeout(function () {
 					window.location.replace('pricelistgroup.php?id='+id);
 					//alert('client.php?id='+id);
-				}, 100);*/
+				}, 100);
+			}
+		})
+	}; 
+	
+	function Ajax_del_pricelistitem(id) {
+		
+		ajax({
+			url:"pricelistitem_del_f.php",
+			statbox:"errrror",
+			method:"POST",
+			data:
+			{
+				id: id,
+			},
+			success:function(data){
+				document.getElementById("errrror").innerHTML=data;
+				setTimeout(function () {
+					window.location.replace('pricelistitem.php?id='+id);
+					//alert('client.php?id='+id);
+				}, 100);
+			}
+		})
+	}; 
+	
+	function Ajax_del_insure(id) {
+		
+		ajax({
+			url:"insure_del_f.php",
+			statbox:"errrror",
+			method:"POST",
+			data:
+			{
+				id: id,
+			},
+			success:function(data){
+				document.getElementById("errrror").innerHTML=data;
+				setTimeout(function () {
+					window.location.replace('insure.php?id='+id);
+					//alert('client.php?id='+id);
+				}, 100);
 			}
 		})
 	}; 
@@ -264,7 +304,7 @@
 		})
 	}; 
 	
-	function Ajax_reopen_pricelistitem(session_id, id) {
+	function Ajax_reopen_pricelistitem(id) {
 		//var id = document.getElementById("id").value;
 		
 		ajax({
@@ -273,12 +313,31 @@
 			data:
 			{
 				id: id,
-				session_id: session_id,
 			},
 			success:function(data){
 				//document.getElementById("errrror").innerHTML=data;
 				setTimeout(function () {
 					window.location.replace('pricelistitem.php?id='+id);
+					//alert('pricelistitem.php?id='+id);
+				}, 100);
+			}
+		})
+	}; 
+	
+	function Ajax_reopen_insure(id) {
+		//var id = document.getElementById("id").value;
+		
+		ajax({
+			url:"insure_reopen_f.php",
+			method:"POST",
+			data:
+			{
+				id: id,
+			},
+			success:function(data){
+				//document.getElementById("errrror").innerHTML=data;
+				setTimeout(function () {
+					window.location.replace('insure.php?id='+id);
 					//alert('pricelistitem.php?id='+id);
 				}, 100);
 			}
@@ -459,13 +518,73 @@
 			},
 			cache: false,
 			beforeSend: function() {
-				$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+				$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 			},
 			success:function(data){
-				$('#errror').html(data);
+				$('#errrror').html(data);
 			}
 		})
-	};  
+	}; 
+
+	function Ajax_edit_insure(id) {
+		// убираем класс ошибок с инпутов
+		$('input').each(function(){
+			$(this).removeClass('error_input');
+		});
+		// прячем текст ошибок
+		$('.error').hide();
+		 
+		var name = document.getElementById("name").value;
+		var contract = document.getElementById("contract").value;
+		var contacts = document.getElementById("contacts").value;
+		 
+		$.ajax({
+			// метод отправки 
+			type: "POST",
+			// путь до скрипта-обработчика
+			url: "ajax_test.php",
+			// какие данные будут переданы
+			data: {
+				name:name,
+			},
+			// тип передачи данных
+			dataType: "json",
+			// действие, при ответе с сервера
+			success: function(data){
+				// в случае, когда пришло success. Отработало без ошибок
+				if(data.result == 'success'){   
+					//alert('форма корректно заполнена');
+					ajax({
+						url:"insure_edit_f.php",
+						statbox:"errrror",
+						method:"POST",
+						data:
+						{
+							id:id,
+							
+							name:name,
+							contract:contract,
+							contacts:contacts,
+						},
+						success:function(data){document.getElementById("errrror").innerHTML=data;}
+					})
+				// в случае ошибок в форме
+				}else{
+					// перебираем массив с ошибками
+					for(var errorField in data.text_error){
+						// выводим текст ошибок 
+						$('#'+errorField+'_error').html(data.text_error[errorField]);
+						// показываем текст ошибок
+						$('#'+errorField+'_error').show();
+						// обводим инпуты красным цветом
+					   // $('#'+errorField).addClass('error_input');                      
+					}
+					document.getElementById("errrror").innerHTML='<div class="query_neok">Ошибка, что-то заполнено не так.</div>'
+				}
+			}
+		});	
+	}; 
+	
 	
 	// !!! правильный пример AJAX
 	function Ajax_add_priceitem(session_id) {

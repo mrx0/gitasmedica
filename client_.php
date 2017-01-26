@@ -83,7 +83,7 @@
 	
 
 				echo '<div id="div1">';
-				echo '	<a href="add_task_stomat.php?client='.$client[0]['id'].'" class="b">Добавить осмотр</a>';
+				echo '	<a href="add_error.php" class="b">Добавить осмотр</a>';
 
 				
 				//Выберем из базы последнюю запись
@@ -1055,7 +1055,7 @@
 					</div>
 
 					<div id="div2">';
-			echo '	<a href="add_task_cosmet.php?client='.$client[0]['id'].'" class="b">Добавить посещение</a>';		
+			echo '	<a href="add_error.php" class="b">Добавить посещение</a>';		
 								
 			$cosmet_task = SelDataFromDB('journal_cosmet1', $_GET['id'], 'client_cosm_id');
 			//var_dump ($cosmet_task);

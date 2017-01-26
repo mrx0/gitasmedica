@@ -42,7 +42,7 @@
 					echo '				
 								<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
 								<div id="errror"></div>
-								<input type="button" class="b" value="Удалить(заблокировать)" onclick="Ajax_del_pricelistitem('.$_SESSION['id'].')">';
+								<input type="button" class="b" value="Удалить(заблокировать)" onclick="Ajax_del_pricelistitem('.$_GET['id'].')">';
 				}
 
 

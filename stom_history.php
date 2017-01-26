@@ -99,7 +99,7 @@
 								<div>';
 				if (($stom['add_own'] == 1) || ($god_mode)){
 					echo '	
-									<a href="add_task_stomat.php?client='.$_GET['client'].'" class="b">Добавить осмотр</a>';
+									<a href="add_error.php" class="b">Добавить осмотр</a>';
 				}
 				
 				/*if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){

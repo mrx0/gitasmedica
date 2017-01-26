@@ -1,6 +1,6 @@
 <?php 
 
-//pricelistitem_reopen_f.php
+//insure_reopen_f.php
 //
 
 	session_start();
@@ -14,7 +14,7 @@
 		include_once 'DBWork.php';
 		if ($_POST){
 			
-			WriteToDB_ReopenPriceItem ($_SESSION['id'], $_POST['id']);
+			WriteToDB_ReopenInsure ($_SESSION['id'], $_POST['id']);
 
 			echo '
 				<div class="query_ok">

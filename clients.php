@@ -173,11 +173,11 @@
 					if ($clients_j[$i]['status'] != 9){
 						if (($stom['add_own'] == 1) || $god_mode){
 							echo '
-										<div class="cellCosmAct" style="text-align: center"><a href="add_task_stomat.php?client='.$clients_j[$i]['id'].'"><img src="img/stom_add.png" title="Добавить посещение Стоматолога"></a></div>';
+										<div class="cellCosmAct" style="text-align: center"><a href="add_error.php"><img src="img/stom_add.png" title="Добавить посещение Стоматолога"></a></div>';
 						}
 						if (($cosm['add_own'] == 1) || $god_mode){
 							echo '
-										<div class="cellCosmAct" style="text-align: center"><a href="add_task_cosmet.php?client='.$clients_j[$i]['id'].'"><img src="img/cosm_add.png" title="Добавить посещение Косметолога"></a></div>';
+										<div class="cellCosmAct" style="text-align: center"><a href="add_error.php"><img src="img/cosm_add.png" title="Добавить посещение Косметолога"></a></div>';
 						}
 						if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
 							echo '
