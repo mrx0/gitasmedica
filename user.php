@@ -79,7 +79,7 @@
 							</div>
 							<br /><br /><br />';
 			if ($_GET['id'] == $_SESSION['id']){
-				if (($stom['add_own'] == 1) || ($cosm['add_own'] == 1) || $god_mode){
+				if (($stom['add_own'] == 1) || ($cosm['add_own'] == 1) || $god_mode || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9)){
 					echo '
 								<div class="cellsBlock2">
 									<div class="cellRight" style="font-size:70%;">Настройки.</div>
@@ -120,7 +120,7 @@
 			
 			if ($zapis['see_own'] == 1){
 					echo '
-								<a href="zapis_own.php?y='.$year.'&m='.$month.'&d='.$day.'&worker='.$_SESSION['id'].'" class="b">Ваша запись сегодня</a>';
+								<a href="zapis_own.php?y='.$year.'&m='.$month.'&d='.$day.'&worker='.$_SESSION['id'].'" class="b">Запись сегодня</a>';
 			}
 			
 			if ($stom['see_own'] == 1){

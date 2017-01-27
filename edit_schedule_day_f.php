@@ -32,7 +32,7 @@
 			$time_post = strtotime($_POST['day'].'.'.$_POST['month'].'.'.$_POST['year']);
 			
 			//if ((($y <= $_POST['year']) && ($m <= $_POST['month']) && ($d <= $_POST['day'])) || ($_SESSION['permissions'] == '777')){
-			if (($start_day - $time_post <= 24*60*60) || ($_SESSION['permissions'] == '777')){
+			//if (($start_day - $time_post <= 24*60*60) || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9)){
 				
 				if (isset($_POST['worker'])){
 					$therapists = SelDataFromDB ('spr_workers', $_POST['worker'], 'worker_full_name');
@@ -80,7 +80,7 @@
 										}else{
 											$data = '
 												<div class="query_neok">
-													Ваш филиал не определён<br><br>
+													Ваш филиал не определён<br><br><a href="user.php?id='.$_SESSION['id'].'" class="ahref">определить</a>
 												</div>';
 											echo json_encode(array('result' => 'error', 'data' => $data));
 										}
@@ -127,13 +127,13 @@
 						</div>';
 					echo json_encode(array('result' => 'error', 'data' => $data));
 				}
-			}else{
+			/*}else{
 				$data = '
 					<div class="query_neok">
 						Нельзя добавлять задним числом<br><br>
 					</div>';
 				echo json_encode(array('result' => 'error', 'data' => $data));
-			}
+			}*/
 		}
 	}
 ?>

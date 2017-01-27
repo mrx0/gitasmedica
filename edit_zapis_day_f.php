@@ -27,7 +27,7 @@
 			$m = date("m");
 			$d = date("d");
 			
-			if ((($y <= $_POST['year']) && ($m <= $_POST['month']) && ($d <= $_POST['day'])) || ($_SESSION['permissions'] == '777')){
+			if ((($y <= $_POST['year']) && ($m <= $_POST['month']) && ($d <= $_POST['day'])) || ($_SESSION['permissions'] == '777') || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9)){
 				
 				if (isset($_POST['worker'])){
 					$therapists = SelDataFromDB ('spr_workers', $_POST['worker'], 'worker_full_name');
@@ -75,7 +75,7 @@
 										}else{
 											$data = '
 												<div class="query_neok">
-													Ваш филиал не определён<br><br>
+													Ваш филиал не определён<br><br><a href="user.php?id='.$_SESSION['id'].'" class="ahref">определить</a>
 												</div>';
 											echo json_encode(array('result' => 'error', 'data' => $data));
 										}

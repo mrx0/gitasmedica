@@ -416,6 +416,7 @@
 						
 						for ($z = 0; $z < count($sheduler_zapis); $z++){
 							$t_f_data_db = array();
+							$cosmet_data_db = array();
 							$show_this = FALSE;
 							
 							if ($sheduler_zapis[$z]['type'] == 5){
@@ -462,6 +463,7 @@
 										<li class="cellsBlock" style="width: auto;">
 											<!--<div class="cellCosmAct">-->';
 								
+								//Формулы
 								$query = "SELECT `id`, `zapis_date`  FROM `journal_tooth_status` WHERE `zapis_id` = '{$sheduler_zapis[$z]['id']}' ORDER BY `create_time`";
 								$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
 								$number = mysql_num_rows($res);
@@ -490,6 +492,26 @@
 											</div>';*/
 									}
 								}
+								
+								
+								//Посещения косметологов
+								$query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$sheduler_zapis[$z]['id']}' ORDER BY `create_time`";
+								$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
+								$number = mysql_num_rows($res);
+								if ($number != 0){
+									while ($arr = mysql_fetch_assoc($res)){
+										array_push($cosmet_data_db, $arr);
+									}
+								}else
+									$cosmet_data_db = 0;
+								//var_dump($cosmet_data_db);
+								
+								if ($cosmet_data_db != 0){
+									foreach($cosmet_data_db as $ids){
+										//
+									}
+								}
+								
 								echo '
 											<!--</div>-->
 											<div class="cellName" style="position: relative; '.$back_color.'">';
@@ -568,6 +590,20 @@
 												</div>';
 									}
 								}
+								
+								if ($cosmet_data_db != 0){
+									foreach($cosmet_data_db as $ids){
+										echo '
+												<div style="border: 1px solid #BFBCB5; margin-top: 1px;">
+													<a href="task_cosmet.php?id='.$ids['id'].'" class="ahref">
+														<!--<div style="display: inline-block; vertical-align: middle;"><img src="img/tooth_state/1.png"></div><div style="display: inline-block; vertical-align: middle;">'.date('d.m.y H:i', $ids['zapis_date']).'</div>-->
+														<div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding-left: 2px; font-weight: bold; font-style: italic;">K</div> <div style="display: inline-block; vertical-align: middle;">'.date('d.m.y H:i', $ids['zapis_date']).'</div>
+													</a>	
+												</div>';
+									}
+								}
+								
+								
 
 								echo '
 											</div>';
