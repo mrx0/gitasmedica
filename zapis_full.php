@@ -368,248 +368,253 @@
 							$cosmet_data_db = array();
 							$back_color = '';
 							
+							if(($ZapisHereQueryToday[$z]['enter'] != 8) || ($scheduler['see_all'] == 1) || $god_mode){
 							
-							if ($ZapisHereQueryToday[$z]['enter'] == 1){
-								$back_color = 'background-color: rgba(119, 255, 135, 1);';
-							}elseif($ZapisHereQueryToday[$z]['enter'] == 9){
-								$back_color = 'background-color: rgba(239,47,55, .7);';
-							}elseif($ZapisHereQueryToday[$z]['enter'] == 8){
-								$back_color = 'background-color: rgba(137,0,81, .7);';
-							}else{
-								//Если оформлено не на этом филиале
-								if($ZapisHereQueryToday[$z]['office'] != $ZapisHereQueryToday[$z]['add_from']){
-									$back_color = 'background-color: rgb(119, 255, 250);';
+							
+								if ($ZapisHereQueryToday[$z]['enter'] == 1){
+									$back_color = 'background-color: rgba(119, 255, 135, 1);';
+								}elseif($ZapisHereQueryToday[$z]['enter'] == 9){
+									$back_color = 'background-color: rgba(239,47,55, .7);';
+								}elseif($ZapisHereQueryToday[$z]['enter'] == 8){
+									$back_color = 'background-color: rgba(137,0,81, .7);';
 								}else{
-									$back_color = 'background-color: rgba(255,255,0, .5);';
+									//Если оформлено не на этом филиале
+									if($ZapisHereQueryToday[$z]['office'] != $ZapisHereQueryToday[$z]['add_from']){
+										$back_color = 'background-color: rgb(119, 255, 250);';
+									}else{
+										$back_color = 'background-color: rgba(255,255,0, .5);';
+									}
 								}
-							}
-							
-							$dop_img = '';
-							
-							if ($ZapisHereQueryToday[$z]['insured'] == 1){
-								$dop_img .= '<img src="img/insured.png" title="Страховое"> ';
-							}
-							if ($ZapisHereQueryToday[$z]['pervich'] == 1){
-								$dop_img .= '<img src="img/pervich.png" title="Первичное"> ';
-							}
-							if ($ZapisHereQueryToday[$z]['noch'] == 1){
-								$dop_img .= '<img src="img/night.png" title="Ночное"> ';
-							}
-							
-							echo '
-								<li class="cellsBlock" style="width: auto;">
-									<!--<div class="cellCosmAct">-->';
-							
-							//Формулы
-							$query = "SELECT `id`, `zapis_date`  FROM `journal_tooth_status` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
-							$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
-							$number = mysql_num_rows($res);
-							if ($number != 0){
-								while ($arr = mysql_fetch_assoc($res)){
-									array_push($t_f_data_db, $arr);
+								
+								$dop_img = '';
+								
+								if ($ZapisHereQueryToday[$z]['insured'] == 1){
+									$dop_img .= '<img src="img/insured.png" title="Страховое"> ';
 								}
-							}else
-								$t_f_data_db = 0;
-							//var_dump($t_f_data_db);
-							
-							if ($t_f_data_db != 0){
-								foreach($t_f_data_db as $ids){
-									/*echo '
-										<div>
-											<a href="#" onclick="window.open(\'task_stomat_inspection_window.php?id='.$ids['id'].'\',\'test\', \'width=700,height=350,status=no,resizable=no,top=200,left=200\'); return false;">
-												<img src="img/tooth_state/1.png">
-											</a>	
-										</div>';*/
-										
-									/*echo '
-										<div>
-											<a href="task_stomat_inspection.php?id='.$ids['id'].'">
-												<img src="img/tooth_state/1.png">
-											</a>	
-										</div>';*/
+								if ($ZapisHereQueryToday[$z]['pervich'] == 1){
+									$dop_img .= '<img src="img/pervich.png" title="Первичное"> ';
 								}
-							}
-							
-							
-							//Посещения косметологов
-							$query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
-							$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
-							$number = mysql_num_rows($res);
-							if ($number != 0){
-								while ($arr = mysql_fetch_assoc($res)){
-									array_push($cosmet_data_db, $arr);
+								if ($ZapisHereQueryToday[$z]['noch'] == 1){
+									$dop_img .= '<img src="img/night.png" title="Ночное"> ';
 								}
-							}else
-								$cosmet_data_db = 0;
-							//var_dump($cosmet_data_db);
-							
-							if ($cosmet_data_db != 0){
-								foreach($cosmet_data_db as $ids){
-									//
+								
+								echo '
+									<li class="cellsBlock" style="width: auto;">
+										<!--<div class="cellCosmAct">-->';
+								
+								//Формулы
+								$query = "SELECT `id`, `zapis_date`  FROM `journal_tooth_status` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
+								$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
+								$number = mysql_num_rows($res);
+								if ($number != 0){
+									while ($arr = mysql_fetch_assoc($res)){
+										array_push($t_f_data_db, $arr);
+									}
+								}else
+									$t_f_data_db = 0;
+								//var_dump($t_f_data_db);
+								
+								if ($t_f_data_db != 0){
+									foreach($t_f_data_db as $ids){
+										/*echo '
+											<div>
+												<a href="#" onclick="window.open(\'task_stomat_inspection_window.php?id='.$ids['id'].'\',\'test\', \'width=700,height=350,status=no,resizable=no,top=200,left=200\'); return false;">
+													<img src="img/tooth_state/1.png">
+												</a>	
+											</div>';*/
+											
+										/*echo '
+											<div>
+												<a href="task_stomat_inspection.php?id='.$ids['id'].'">
+													<img src="img/tooth_state/1.png">
+												</a>	
+											</div>';*/
+									}
 								}
-							}
-							
-							echo '
-									<!--</div>-->
-									<div class="cellName" style="position: relative; '.$back_color.'">';
-							$start_time_h = floor($ZapisHereQueryToday[$z]['start_time']/60);
-							$start_time_m = $ZapisHereQueryToday[$z]['start_time']%60;
-							if ($start_time_m < 10) $start_time_m = '0'.$start_time_m;
-							$end_time_h = floor(($ZapisHereQueryToday[$z]['start_time']+$ZapisHereQueryToday[$z]['wt'])/60);
-							if ($end_time_h > 23) $end_time_h = $end_time_h - 24;
-							$end_time_m = ($ZapisHereQueryToday[$z]['start_time']+$ZapisHereQueryToday[$z]['wt'])%60;
-							if ($end_time_m < 10) $end_time_m = '0'.$end_time_m;
-							echo 
-										$start_time_h.':'.$start_time_m.' - '.$end_time_h.':'.$end_time_m;
-										
-							echo '
-										<div style="position: absolute; top: 1px; right: 1px;">'.$dop_img.'</div>';
-							echo '
-									</div>';
-							echo '
-									<div class="cellName">';
-							echo 
-										'Пациент <br /><b>'.WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user', true).'</b>';
-							echo '
-									</div>';
-							echo '
-									<div class="cellName">';
-							echo 
-										'Филиал:<br>'.
-										$filial[0]['name'];
-							echo '
-									</div>';
-							echo '
-									<div class="cellName">';
-							echo 
-										$ZapisHereQueryToday[$z]['kab'].' кабинет<br>'.'Врач: <br><b>'.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user', true).'</b>';
-							echo '
-									</div>';
-							echo '
-									<div class="cellName" style="max-width: 120px; overflow: auto;">';
-							echo 
-										'Описание:<br>'.
-										$ZapisHereQueryToday[$z]['description'];
-							echo '
-									</div>';
-							echo '
-									<div class="cellName">';
-							echo '
-										Добавлено<br>'.date('d.m.y H:i', $ZapisHereQueryToday[$z]['create_time']).'<br>
-										Кем: '.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['create_person'], 'user', true);
-							if (($ZapisHereQueryToday[$z]['last_edit_time'] != 0) || ($ZapisHereQueryToday[$z]['last_edit_person'] != 0)){
-								echo '<hr>
-										Изменено: '.date('d.m.y H:i', $ZapisHereQueryToday[$z]['last_edit_time']).'<br>
-										Кем: '.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['last_edit_person'], 'user', true).'';
-							}
-							echo '
-									</div>';
-									
-							//Формулы и посещения
-							echo '
-									<div class="cellName" style="vertical-align: top;">';
-									
-							if ($t_f_data_db != 0){
-								foreach($t_f_data_db as $ids){
-									echo '
-										<div style="border: 1px solid #BFBCB5; margin-top: 1px;">
-											<a href="task_stomat_inspection.php?id='.$ids['id'].'" class="ahref">
-												<div style="display: inline-block; vertical-align: middle;"><img src="img/tooth_state/1.png"></div><div style="display: inline-block; vertical-align: middle;">'.date('d.m.y H:i', $ids['zapis_date']).'</div>
-											</a>	
+								
+								
+								//Посещения косметологов
+								$query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
+								$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
+								$number = mysql_num_rows($res);
+								if ($number != 0){
+									while ($arr = mysql_fetch_assoc($res)){
+										array_push($cosmet_data_db, $arr);
+									}
+								}else
+									$cosmet_data_db = 0;
+								//var_dump($cosmet_data_db);
+								
+								if ($cosmet_data_db != 0){
+									foreach($cosmet_data_db as $ids){
+										//
+									}
+								}
+								
+								echo '
+										<!--</div>-->
+										<div class="cellName" style="position: relative; '.$back_color.'">';
+								$start_time_h = floor($ZapisHereQueryToday[$z]['start_time']/60);
+								$start_time_m = $ZapisHereQueryToday[$z]['start_time']%60;
+								if ($start_time_m < 10) $start_time_m = '0'.$start_time_m;
+								$end_time_h = floor(($ZapisHereQueryToday[$z]['start_time']+$ZapisHereQueryToday[$z]['wt'])/60);
+								if ($end_time_h > 23) $end_time_h = $end_time_h - 24;
+								$end_time_m = ($ZapisHereQueryToday[$z]['start_time']+$ZapisHereQueryToday[$z]['wt'])%60;
+								if ($end_time_m < 10) $end_time_m = '0'.$end_time_m;
+								echo 
+											$start_time_h.':'.$start_time_m.' - '.$end_time_h.':'.$end_time_m;
+											
+								echo '
+											<div style="position: absolute; top: 1px; right: 1px;">'.$dop_img.'</div>';
+								echo '
 										</div>';
+								echo '
+										<div class="cellName">';
+								echo 
+											'Пациент <br /><b>'.WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user', true).'</b>';
+								echo '
+										</div>';
+								echo '
+										<div class="cellName">';
+								echo 
+											'Филиал:<br>'.
+											$filial[0]['name'];
+								echo '
+										</div>';
+								echo '
+										<div class="cellName">';
+								echo 
+											$ZapisHereQueryToday[$z]['kab'].' кабинет<br>'.'Врач: <br><b>'.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user', true).'</b>';
+								echo '
+										</div>';
+								echo '
+										<div class="cellName" style="max-width: 120px; overflow: auto;">';
+								echo 
+											'Описание:<br>'.
+											$ZapisHereQueryToday[$z]['description'];
+								echo '
+										</div>';
+								echo '
+										<div class="cellName">';
+								echo '
+											Добавлено<br>'.date('d.m.y H:i', $ZapisHereQueryToday[$z]['create_time']).'<br>
+											Кем: '.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['create_person'], 'user', true);
+								if (($ZapisHereQueryToday[$z]['last_edit_time'] != 0) || ($ZapisHereQueryToday[$z]['last_edit_person'] != 0)){
+									echo '<hr>
+											Изменено: '.date('d.m.y H:i', $ZapisHereQueryToday[$z]['last_edit_time']).'<br>
+											Кем: '.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['last_edit_person'], 'user', true).'';
 								}
-							}
-
-							if ($cosmet_data_db != 0){
-								foreach($cosmet_data_db as $ids){
-									echo '
+								echo '
+										</div>';
+										
+								//Формулы и посещения
+								echo '
+										<div class="cellName" style="vertical-align: top;">';
+										
+								if ($t_f_data_db != 0){
+									foreach($t_f_data_db as $ids){
+										echo '
 											<div style="border: 1px solid #BFBCB5; margin-top: 1px;">
-												<a href="task_cosmet.php?id='.$ids['id'].'" class="ahref">
-													<!--<div style="display: inline-block; vertical-align: middle;"><img src="img/tooth_state/1.png"></div><div style="display: inline-block; vertical-align: middle;">'.date('d.m.y H:i', $ids['zapis_date']).'</div>-->
-													<div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding-left: 2px; font-weight: bold; font-style: italic;">K</div> <div style="display: inline-block; vertical-align: middle;">'.date('d.m.y H:i', $ids['zapis_date']).'</div>
+												<a href="task_stomat_inspection.php?id='.$ids['id'].'" class="ahref">
+													<div style="display: inline-block; vertical-align: middle;"><img src="img/tooth_state/1.png"></div><div style="display: inline-block; vertical-align: middle;">'.date('d.m.y H:i', $ids['zapis_date']).'</div>
 												</a>	
 											</div>';
-								}
-							}
-							
-							
-							
-							
-							echo '
-									</div>';
-									
-									
-							echo '
-									<div class="cellRight">';									
-							if (isset($_SESSION['filial'])){
-								if ($_SESSION['filial'] == $ZapisHereQueryToday[$z]['office']){
-									if($ZapisHereQueryToday[$z]['office'] != $ZapisHereQueryToday[$z]['add_from']){
-										if($ZapisHereQueryToday[$z]['enter'] != 8){
-											echo '<a href="#" onclick="Ajax_TempZapis_edit_OK('.$ZapisHereQueryToday[$z]['id'].', '.$ZapisHereQueryToday[$z]['office'].')">Подтвердить</a><br />';
-										}
 									}
-									if($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']){
-										if($ZapisHereQueryToday[$z]['enter'] != 8){
-											echo 
-													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 1)">Пришёл</a><br />';
-											echo 
-													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 9)">Не пришёл</a><br />';
-											echo 
-													'<a href="#" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 0, '.$ZapisHereQueryToday[$z]['start_time'].', '.$ZapisHereQueryToday[$z]['wt'].', '.$ZapisHereQueryToday[$z]['worker'].', \''.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user_full', false).'\', \''.WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', false).'\', \''.str_replace(array("\r","\n")," ", $ZapisHereQueryToday[$z]['description']).'\', '.$ZapisHereQueryToday[$z]['insured'].', '.$ZapisHereQueryToday[$z]['pervich'].', '.$ZapisHereQueryToday[$z]['noch'].', '.$ZapisHereQueryToday[$z]['id'].')">Редактировать</a><br />';
-											
-											//var_dump($ZapisHereQueryToday[$z]['create_time']);
-											//var_dump($ZapisHereQueryToday[$z]['description']);
-											//var_dump(time());
-											$zapisDate = strtotime($ZapisHereQueryToday[$z]['day'].'.'.$ZapisHereQueryToday[$z]['month'].'.'.$ZapisHereQueryToday[$z]['year']);
-											if (time() < $zapisDate + 60*60*24){
-												echo 
-													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 8)">Ошибка, удалить из записи</a><br>';
-											}
-										}
-										echo 
-													'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 0)">Отменить все изменения</a><br>';
-									}
-								}else{
-									echo 
-										'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 8)">Ошибка, удалить из записи</a><br>';
-									echo 
-										'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 0)">Отменить все изменения</a><br>';
-								}
-							}
-							
-							//Дополнительное расширение прав на добавление посещений для специалистов, god_mode и управляющих
-							if (($_SESSION['id'] == $ZapisHereQueryToday[$z]['worker']) || ($stom['add_new'] == 1) || ($cosm['add_new'] == 1) || $god_mode){
-								if($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']){
-									if($ZapisHereQueryToday[$z]['enter'] == 1){
-										//var_dump($ZapisHereQueryToday[$z]['type']);
-										
-										if (($ZapisHereQueryToday[$z]['type'] == 5) && (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode)){
-											echo '
-											<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
-												<a href="add_task_stomat.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">Внести Осмотр/Зубную формулу</a>
-											</div>';
-										}
-										if (($ZapisHereQueryToday[$z]['type'] == 6) && (($cosm['add_own'] == 1) || ($cosm['add_new'] == 1) || $god_mode)){
-											echo  '
-											<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
-												<a href="add_task_cosmet.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">Внести посещение косм.</a>
-											</div>';
-										}
-										//!!!Акт
-										$zapisDate = strtotime($ZapisHereQueryToday[$z]['day'].'.'.$ZapisHereQueryToday[$z]['month'].'.'.$ZapisHereQueryToday[$z]['year']);
-										if (time() < $zapisDate + 60*60*24){
-											/*echo 
-												'<a href="#">Внести Акт</a><br />';*/
-										}
-									}
-								}else{
-									echo "&nbsp";
 								}
 
-							}
-			echo '
-					</div>
-				</li>';
+								if ($cosmet_data_db != 0){
+									foreach($cosmet_data_db as $ids){
+										echo '
+												<div style="border: 1px solid #BFBCB5; margin-top: 1px;">
+													<a href="task_cosmet.php?id='.$ids['id'].'" class="ahref">
+														<!--<div style="display: inline-block; vertical-align: middle;"><img src="img/tooth_state/1.png"></div><div style="display: inline-block; vertical-align: middle;">'.date('d.m.y H:i', $ids['zapis_date']).'</div>-->
+														<div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding-left: 2px; font-weight: bold; font-style: italic;">K</div> <div style="display: inline-block; vertical-align: middle;">'.date('d.m.y H:i', $ids['zapis_date']).'</div>
+													</a>	
+												</div>';
+									}
+								}
+								
+								
+								
+								
+								echo '
+										</div>';
+										
+										
+								echo '
+										<div class="cellRight">';									
+								if (isset($_SESSION['filial'])){
+									if ($_SESSION['filial'] == $ZapisHereQueryToday[$z]['office']){
+										if($ZapisHereQueryToday[$z]['office'] != $ZapisHereQueryToday[$z]['add_from']){
+											if($ZapisHereQueryToday[$z]['enter'] != 8){
+												echo '<a href="#" onclick="Ajax_TempZapis_edit_OK('.$ZapisHereQueryToday[$z]['id'].', '.$ZapisHereQueryToday[$z]['office'].')">Подтвердить</a><br />';
+											}
+										}
+										if($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']){
+											if($ZapisHereQueryToday[$z]['enter'] != 8){
+												echo 
+														'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 1)">Пришёл</a><br />';
+												echo 
+														'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 9)">Не пришёл</a><br />';
+												echo 
+														'<a href="#" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 0, '.$ZapisHereQueryToday[$z]['start_time'].', '.$ZapisHereQueryToday[$z]['wt'].', '.$ZapisHereQueryToday[$z]['worker'].', \''.WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user_full', false).'\', \''.WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', false).'\', \''.str_replace(array("\r","\n")," ", $ZapisHereQueryToday[$z]['description']).'\', '.$ZapisHereQueryToday[$z]['insured'].', '.$ZapisHereQueryToday[$z]['pervich'].', '.$ZapisHereQueryToday[$z]['noch'].', '.$ZapisHereQueryToday[$z]['id'].')">Редактировать</a><br />';
+												
+												//var_dump($ZapisHereQueryToday[$z]['create_time']);
+												//var_dump($ZapisHereQueryToday[$z]['description']);
+												//var_dump(time());
+												$zapisDate = strtotime($ZapisHereQueryToday[$z]['day'].'.'.$ZapisHereQueryToday[$z]['month'].'.'.$ZapisHereQueryToday[$z]['year']);
+												if (time() < $zapisDate + 60*60*24){
+													echo 
+														'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 8)">Ошибка, удалить из записи</a><br>';
+												}
+											}
+											echo 
+														'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 0)">Отменить все изменения</a><br>';
+										}
+									}else{
+										echo 
+											'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 8)">Ошибка, удалить из записи</a><br>';
+										echo 
+											'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 0)">Отменить все изменения</a><br>';
+									}
+								}
+								
+								//Дополнительное расширение прав на добавление посещений для специалистов, god_mode и управляющих
+								if (($_SESSION['id'] == $ZapisHereQueryToday[$z]['worker']) || ($stom['add_new'] == 1) || ($cosm['add_new'] == 1) || $god_mode){
+									if($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']){
+										if($ZapisHereQueryToday[$z]['enter'] == 1){
+											//var_dump($ZapisHereQueryToday[$z]['type']);
+											
+											if (($ZapisHereQueryToday[$z]['type'] == 5) && (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode)){
+												echo '
+												<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
+													<a href="add_task_stomat.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">Внести Осмотр/Зубную формулу</a>
+												</div>';
+											}
+											if (($ZapisHereQueryToday[$z]['type'] == 6) && (($cosm['add_own'] == 1) || ($cosm['add_new'] == 1) || $god_mode)){
+												echo  '
+												<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
+													<a href="add_task_cosmet.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">Внести посещение косм.</a>
+												</div>';
+											}
+											//!!!Акт
+											$zapisDate = strtotime($ZapisHereQueryToday[$z]['day'].'.'.$ZapisHereQueryToday[$z]['month'].'.'.$ZapisHereQueryToday[$z]['year']);
+											if (time() < $zapisDate + 60*60*24){
+												/*echo 
+													'<a href="#">Внести Акт</a><br />';*/
+											}
+										}
+									}else{
+										echo "&nbsp";
+									}
+
+								}
+
+							echo '
+									</div>
+								</li>';
+						}
+					}
 			echo '
 					<div id="ShowSettingsAddTempZapis" style="position: absolute; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; z-index:105; padding:10px;">
 						<a class="close" href="#" onclick="HideSettingsAddTempZapis()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(img/close.png) no-repeat;">
@@ -747,7 +752,7 @@
 							echo '
 								</div>
 								<div id="req"></div>';
-						}
+
 					}else{
 						echo 'Нет записи';
 					}

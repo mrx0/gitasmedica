@@ -103,7 +103,7 @@
 								</li>';
 			
 			include_once 'DBWork.php';
-			//$services_j = SelDataFromDB('spr_pricelist', 'services', $type);
+			//$services_j = SelDataFromDB('spr_pricelist_template', 'services', $type);
 			//var_dump ($services_j);
 
 			$arr = array();
@@ -119,18 +119,12 @@
 			mysql_query("SET NAMES 'utf8'");
 			
 			//if ($services_j !=0){
-				showTree(0, '', 'list', 0, FALSE, 0, FALSE);
+				showTree(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0);
 				
 				
 				//Без группы
-				echo '
-					<li class="cellsBlock" style="width: auto;">
-						<div class="cellPriority" style=""></div>
-						<span class="cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(255, 103, 97, 0.5);" id="4filter">Без группы</span>
-						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(255, 103, 97, 0.5);"></div>
-					</li>';
 						
-				$query = "SELECT * FROM `spr_pricelist` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' ORDER BY `name`";			
+				$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' ORDER BY `name`";			
 				
 				$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
@@ -147,6 +141,14 @@
 				//var_dump($items_j);
 				
 				if ($items_j != 0){
+					
+					echo '
+					<li class="cellsBlock" style="width: auto;">
+						<div class="cellPriority" style=""></div>
+						<span class="cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(255, 103, 97, 0.5);" id="4filter">Без группы</span>
+						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(255, 103, 97, 0.5);"></div>
+					</li>';
+					
 					for ($i = 0; $i < count($items_j); $i++) {
 						$price = 0;
 						
@@ -173,7 +175,7 @@
 				}
 				
 				//Пробуем показать удалённые
-				//showTree(0, '', 'list', 0, FALSE, 0, TRUE);
+				//showTree(0, '', 'list', 0, FALSE, 0, TRUE, 'spr_pricelist_template');
 				
 				$arr = array();
 				$rez = array();
@@ -183,12 +185,6 @@
 				$rez3 = array();
 				
 				//Удаленные группы
-				echo '
-					<li class="cellsBlock" style="width: auto; margin-top: 10px;">
-						<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
-						<span class="cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(114, 114, 114, 0.5);" id="4filter">Удалённые группы</span>
-						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(114, 114, 114, 0.5);"></div>
-					</li>';
 				
 				$query = "SELECT * FROM `spr_storagegroup` WHERE `status` = '9'";			
 				//var_dump($query);
@@ -209,6 +205,12 @@
 				//var_dump($items_j);
 				
 				if ($items_j != 0){
+					echo '
+					<li class="cellsBlock" style="width: auto; margin-top: 10px;">
+						<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
+						<span class="cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(114, 114, 114, 0.5);" id="4filter">Удалённые группы</span>
+						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(114, 114, 114, 0.5);"></div>
+					</li>';
 					for ($i = 0; $i < count($items_j); $i++) {
 						$price = 0;
 						
@@ -251,15 +253,8 @@
 				$rez3 = array();
 				
 				//Удалённые позиции
-				
-				echo '
-					<li class="cellsBlock" style="width: auto;">
-						<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
-						<span class="cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(114, 114, 114, 0.5);" id="4filter">Удалённые позиции</span>
-						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(114, 114, 114, 0.5);"></div>
-					</li>';
 					
-				$query = "SELECT * FROM `spr_pricelist` WHERE `status` = '9'";			
+				$query = "SELECT * FROM `spr_pricelist_template` WHERE `status` = '9'";			
 				
 				$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
@@ -276,6 +271,14 @@
 				//var_dump($items_j);
 				
 				if ($items_j != 0){
+					
+					echo '
+					<li class="cellsBlock" style="width: auto;">
+						<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
+						<span class="cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(114, 114, 114, 0.5);" id="4filter">Удалённые позиции</span>
+						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(114, 114, 114, 0.5);"></div>
+					</li>';
+					
 					for ($i = 0; $i < count($items_j); $i++) {
 						$price = 0;
 						

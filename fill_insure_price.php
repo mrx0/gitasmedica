@@ -1,7 +1,7 @@
 <?php
 
-//pricelistitem_del.php
-//Удаление(блокирование)
+//fill_insure_price.php
+//Заполнить
 
 	require_once 'header.php';
 	

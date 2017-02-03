@@ -24,7 +24,7 @@
 				$name = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['pricelistitemname']))));
 				
 				//Проверяем есть ли такая услуга
-				$rezult = SelDataFromDB('spr_pricelist', $name, 'name');
+				$rezult = SelDataFromDB('spr_pricelist_template', $name, 'name');
 				//var_dump($rezult);
 				
 				if (($rezult != 0) && ($rezult[0]['id'] != $_POST['id'])){

@@ -18,7 +18,7 @@
 				$month = date('m');		
 				$year = date('Y');
 				
-				$items_j = SelDataFromDB('spr_pricelist', $_GET['id'], 'id');
+				$items_j = SelDataFromDB('spr_pricelist_template', $_GET['id'], 'id');
 				//var_dump($items_j);
 				
 				if ($items_j !=0){

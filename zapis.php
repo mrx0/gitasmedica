@@ -289,7 +289,7 @@
 						$rez = array();
 						$rez2 = array();
 						
-						$query = "SELECT * FROM `zapis` WHERE `office` = '{$_SESSION['filial']}' AND `add_from` <> '{$_SESSION['filial']}'";
+						$query = "SELECT * FROM `zapis` WHERE `office` = '{$_SESSION['filial']}' AND `add_from` <> '{$_SESSION['filial']}' AND `enter` <> '8'";
 						
 						$res = mysql_query($query) or die($query);
 						$number = mysql_num_rows($res);
@@ -301,7 +301,7 @@
 							$rez = 0;
 						}
 						
-						$query = "SELECT * FROM `zapis` WHERE `add_from` = '{$_SESSION['filial']}' AND `office` <> '{$_SESSION['filial']}'";
+						$query = "SELECT * FROM `zapis` WHERE `add_from` = '{$_SESSION['filial']}' AND `office` <> '{$_SESSION['filial']}' AND `enter` <> '8'";
 						
 						$res = mysql_query($query) or die($query);
 						$number = mysql_num_rows($res);
@@ -327,6 +327,10 @@
 									$who = '&who=stom';
 								if ($val['type'] == 6)
 									$who = '&who=cosm';
+								
+								if ($val['day'] < 10) $val['day'] = '0'.$val['day'];
+								if ($val['month'] < 10) $val['month'] = '0'.$val['month'];
+								
 								echo '
 								<li class="cellsBlock" style="width: auto; margin-bottom: 5px;">
 									<a href="zapis_full.php?filial='.$val['office'].''.$who.'&d='.$val['day'].'&m='.$val['month'].'&y='.$val['year'].'&kab='.$val['kab'].'" style="text-decoration: none; border-bottom: 1px dashed #000080;">'.$val['day'].'.'.$val['month'].'.'.$val['year'].' показать</a>

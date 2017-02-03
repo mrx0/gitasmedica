@@ -11,7 +11,7 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 
-			$rezult = SelDataFromDB('spr_pricelist', $_GET['id'], 'id');
+			$rezult = SelDataFromDB('spr_pricelist_template', $_GET['id'], 'id');
 			//var_dump($rezult);
 			
 			$price = 0;

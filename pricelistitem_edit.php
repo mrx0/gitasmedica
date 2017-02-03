@@ -13,7 +13,7 @@
 				include_once 'DBWork.php';
 				include_once 'functions.php';
 				
-				$items_j = SelDataFromDB('spr_pricelist', $_GET['id'], 'id');
+				$items_j = SelDataFromDB('spr_pricelist_template', $_GET['id'], 'id');
 				//var_dump($items_j);
 				
 				if ($items_j !=0){
@@ -52,7 +52,7 @@
 						$itemingroup = 0;
 					}
 					
-					showTree(0, '', 'select', $itemingroup, TRUE, 0, FALSE);
+					showTree(0, '', 'select', $itemingroup, TRUE, 0, FALSE, 'spr_pricelist_template', 0);
 					echo '
 											</select>';
 					echo '

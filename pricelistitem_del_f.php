@@ -24,7 +24,7 @@
 			$query = "DELETE FROM `spr_itemsingroup` WHERE `item` = '{$_POST['id']}'";
 			mysql_query($query) or die(mysql_error().' -> '.$query);
 			
-			$query = "UPDATE `spr_pricelist` SET `status`='9' WHERE `id`='{$_POST['id']}'";
+			$query = "UPDATE `spr_pricelist_template` SET `status`='9' WHERE `id`='{$_POST['id']}'";
 			mysql_query($query) or die(mysql_error().' -> '.$query);
 
 			mysql_close();	

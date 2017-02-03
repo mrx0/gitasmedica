@@ -819,7 +819,7 @@
 	}
 
 	//Дерево
-	function showTree($level, $space, $type, $sel_id, $first, $last_level, $deleted){
+	function showTree($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
 		mysql_select_db($dbName) or die(mysql_error()); 
@@ -843,6 +843,18 @@
 			//выбираем не удалённые
 			$deleted_str = 'AND `status` <> 9';
 		}
+		
+		$q_dop = '';
+		$dbprices = 'spr_priceprices';
+		
+		//Для страховых
+		if ($insure_id != 0){
+			$q_dop = " AND `insure`='{$insure_id}'";
+			$dbprices = 'spr_priceprices_insure';
+		}else{
+			//
+		}
+		
 		//Выбираем всё из этого уровня
 		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
 		
@@ -907,7 +919,9 @@
 						}*/
 					}
 					
-					echo '
+					//Если не страховая
+					if ($insure_id == 0){
+						echo '
 						<li class="cellsBlock" style="width: auto;">
 							<div class="cellPriority" style=""></div>
 							<div class="cellOffice" style=" text-align: left; width: 350px; min-width: 350px; max-width: 350px; '.$style_name.'">
@@ -922,8 +936,9 @@
 								</div>
 							</div>
 						</li>';
-						
-					$query = "SELECT * FROM `spr_pricelist` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$deleted_str." ORDER BY `name`";			
+					}
+					
+					$query = "SELECT * FROM `{$dbtable}` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$deleted_str." ".$q_dop." ORDER BY `name`";			
 					//var_dump($query);
 					
 					$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
@@ -940,6 +955,28 @@
 					//var_dump($items_j);
 					
 					if ($items_j != 0){
+						
+						$anything_here = true;
+						
+						//Если страховая
+						if ($insure_id != 0){
+							echo '
+							<li class="cellsBlock" style="width: auto;">
+								<div class="cellPriority" style=""></div>
+								<div class="cellOffice" style=" text-align: left; width: 350px; min-width: 350px; max-width: 350px; '.$style_name.'">
+									<a href="pricelistgroup.php?id='.$value['id'].'" class="ahref" style="font-weight: bold;" id="4filter">'.$space.$value['name'].'</a>
+								</div>
+								<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; '.$style_name.'">
+									<div class="managePriceList" style="font-style: normal; font-size: 13px;">
+										<a href="pricelistgroup_edit.php?id='.$value['id'].'" class="ahref"><i id="PriceListGroupEdit" class="fa fa-pencil-square-o pricemenu" aria-hidden="true" style="color: #777;" title="Редактировать"></i></a>
+										<a href="add_pricelist_item.php?addinid='.$value['id'].'" class="ahref"><i id="PriceListGroupAdd" class="fa fa-plus pricemenu" aria-hidden="true" style="color: #36EA5E;" title="Добавить в эту группу"></i></a>
+										<!--<a href="pricelistgroup_del.php?id='.$value['id'].'" class="ahref"><i id="" class="fa fa-bars pricemenu" aria-hidden="true" style="" title="Изменить порядок"></i></a>-->
+										<a href="pricelistgroup_del.php?id='.$value['id'].'" class="ahref"><i id="PriceListGroupDelete" class="fa fa-trash pricemenu" aria-hidden="true" style="color: #FF3636" title="Удалить"></i></a>
+									</div>
+								</div>
+							</li>';
+						}
+						
 						for ($i = 0; $i < count($items_j); $i++) {
 
 							$price = 0;
@@ -965,6 +1002,8 @@
 											<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.'</div>
 										</li>';
 						}
+					}else{
+						//
 					}
 				}
 				
@@ -978,7 +1017,7 @@
 					//echo '_'.$value['name'].'<br>';
 					$space2 = $space. '&nbsp;&nbsp;&nbsp;';
 					$last_level2 = $last_level+1;
-					showTree($value['id'], $space2, $type, $sel_id, $first, $last_level2, $deleted);
+					showTree($value['id'], $space2, $type, $sel_id, $first, $last_level2, $deleted, $dbtable, $insure_id);
 				}else{
 					//var_dump ($color_index);
 					//var_dump ($last_level);
@@ -1082,7 +1121,7 @@
 							foreach ($rez2 as $ids){
 								//var_dump($ids);
 								//...и их самих
-								$query = "UPDATE `spr_pricelist` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `status`='9' WHERE `id`='{$ids['item']}'";
+								$query = "UPDATE `spr_pricelist_template` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `status`='9' WHERE `id`='{$ids['item']}'";
 								//var_dump($query);
 								mysql_query($query) or die(mysql_error().' -> '.$query);								
 							}
@@ -1197,7 +1236,7 @@
 							</div>
 						</li>';
 						
-					$query = "SELECT * FROM `spr_pricelist` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ORDER BY `name`";			
+					$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ORDER BY `name`";			
 					//var_dump($query);
 					
 					$res = mysql_query($query) or die(mysql_error().' -> '.$query);	

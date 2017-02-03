@@ -67,7 +67,13 @@
 								<div class="cellsBlock2">
 									<div class="cellLeft">Контакты</div>
 									<div class="cellRight">'.$insure_j[0]['contacts'].'</div>
-								</div>';
+								</div>
+							</div>';
+							
+					if ($insure_j[0]['status'] != 9){		
+						echo '	
+							<a href="insure_price.php?id='.$insure_j[0]['id'].'" class="b">Прайс комании</a>';
+					}
 						
 				}else{
 					echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';

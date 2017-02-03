@@ -54,7 +54,7 @@
 					echo '
 											<select name="group" id="group" size="6" style="width: 250px;">
 												<option value="0" ',$selected == 0 ? 'selected' : '','>*</option>';
-					showTree(0, '', 'select', $selected, TRUE, 0, FALSE);
+					showTree(0, '', 'select', $selected, TRUE, 0, FALSE, 'spr_pricelist_template', 0);
 					echo '
 											</select>';
 					echo '

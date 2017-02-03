@@ -243,7 +243,7 @@
 		mysql_select_db($dbName) or die(mysql_error()); 
 		mysql_query("SET NAMES 'utf8'");
 		$time = time();
-		$query = "INSERT INTO `spr_pricelist` (
+		$query = "INSERT INTO `spr_pricelist_template` (
 			`name`, `create_time`, `create_person`) 
 			VALUES (
 			'{$name}', '{$time}', '{$session_id}')";
@@ -267,7 +267,7 @@
 		mysql_query("SET NAMES 'utf8'");
 		$time = time();
 		
-		$query = "UPDATE `spr_pricelist` SET `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `name`='{$name}' WHERE `id`='{$id}'";
+		$query = "UPDATE `spr_pricelist_template` SET `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `name`='{$name}' WHERE `id`='{$id}'";
 		
 		mysql_query($query) or die(mysql_error().' -> '.$query);
 
@@ -725,7 +725,7 @@
 		mysql_query("SET NAMES 'utf8'");
 
 		$time = time();
-		$query = "UPDATE `spr_pricelist` SET `status`='0' WHERE `id`='{$id}'";
+		$query = "UPDATE `spr_pricelist_template` SET `status`='0' WHERE `id`='{$id}'";
 		mysql_query($query) or die(mysql_error());
 		mysql_close();
 		
