@@ -38,7 +38,7 @@
 						/*echo '
 								<a href="add_pricelist_group.php?" class="b">Добавить группу/подгруппу</a>';*/
 						echo '
-								<a href="fill_insure_price.php?id='.$_GET['id'].'" class="b">Заполнить</a>';
+								<a href="insure_price_fill.php?id='.$_GET['id'].'" class="b">Заполнить</a>';
 						echo '
 								<a href="clear_insure_price.php?id='.$_GET['id'].'" class="b">Очистить полностью</a>';
 					}

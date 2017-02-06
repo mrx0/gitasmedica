@@ -153,7 +153,9 @@
 				}				
 				echo '
 								<div class="cellCosmAct" style="text-align: center">Пол</div>
-								<div class="cellTime" style="text-align: center">Дата рождения</div>
+								<div class="cellCosmAct" style="text-align: center">Лет</div>
+								<div class="cellTime" style="text-align: center">Д. р.</div>
+								<div class="cellFullName" style="text-align: center">Контакты</div>
 								<div class="cellText" style="text-align: center">Комментарий</div>
 							</li>';
 
@@ -205,9 +207,17 @@
 					
 					echo '
 								</div>';
-
+					echo '
+								<div class="cellCosmAct" style="text-align: center"><b>'.getyeardiff($clients_j[$i]['birthday']).'</b></div>';
 					echo '
 								<div class="cellTime" style="text-align: center">', $clients_j[$i]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $clients_j[$i]['birthday']) ,'</div>
+								<div class="cellFullName">'.$clients_j[$i]['telephone'];
+					if ($clients_j[$i]['htelephone'] != ''){
+						echo '
+									дом. '.$clients_j[$i]['htelephone'].'';
+					}
+					echo '
+								</div>
 								<div class="cellText">'.$clients_j[$i]['comment'].'</div>
 							</li>';
 				}

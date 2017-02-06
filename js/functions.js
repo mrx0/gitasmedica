@@ -243,6 +243,7 @@
 		})
 	}; 
 	
+	//Удаление позиции прайса
 	function Ajax_del_pricelistitem(id) {
 		
 		ajax({
@@ -259,6 +260,28 @@
 					window.location.replace('pricelistitem.php?id='+id);
 					//alert('client.php?id='+id);
 				}, 100);
+			}
+		})
+	}; 
+	
+	//Заполнить прайс
+	function Ajax_insure_price_fill(id) {
+		
+		ajax({
+			url:"insure_price_fill_f.php",
+			statbox:"errrror",
+			method:"POST",
+			data:
+			{
+				id: id,
+				group: document.getElementById("group").value,
+			},
+			success:function(data){
+				document.getElementById("errrror").innerHTML=data;
+				/*setTimeout(function () {
+					window.location.replace('pricelistitem.php?id='+id);
+					//alert('client.php?id='+id);
+				}, 100);*/
 			}
 		})
 	}; 
