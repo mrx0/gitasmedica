@@ -1888,3 +1888,24 @@
 			}*/
 		}
 	}
+
+	//Смена пароля
+	function changePass(id) {
+		
+		var rys = confirm("Вы хотите сменить пароль. \n\nВы уверены?");
+
+		if (rys){
+			ajax({
+				url:"change_pass_f.php",
+				//statbox:"errrror",
+				method:"POST",
+				data:
+				{
+					id: id,
+				},
+				success:function(data){
+					alert(data);
+				}
+			})
+		}
+	}; 

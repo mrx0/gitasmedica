@@ -127,18 +127,18 @@
 						<h1>Пользователь добавлен в базу.</h1>
 						ФИО: '.$full_name.'<br />
 						Логин: '.$login.'<br />';
-					if ($god_mode){
+					//if ($god_mode){
 						echo '	
 							Пароль: '.$password.'';
-					}else{
-						echo '	
+					//}else{
+					/*	echo '	
 							Пароль: уточнить у системного администратора.<br />
 							Изменить права доступа может только адмиинистратор.';
-					}
+					}*/
 					echo '
 						<br /><br />
 						<a href="add_worker.php" class="b">Добавить ещё</a>
-						<a href="index.php" class="b">На главную</a>
+						<a href="contacts.php" class="b">Список сотрудников</a>
 						';
 				}
 			}

@@ -12,6 +12,12 @@
 		include_once 'functions.php';
 		var_dump ($_POST);
 		
+		//$_POST['group']
+		
+		var_dump (returnTree($_POST['group'], '', 'return', 0, TRUE, 0, FALSE, 'spr_pricelist_template', 0));
+		
+		
+		/*
 		if ($_POST){
 			if (isset($_POST['group'])){
 				
@@ -120,6 +126,6 @@
 						Не выбрали раздел<br><br>
 					</div>';
 			}
-		}
+		}*/
 	}
 ?>

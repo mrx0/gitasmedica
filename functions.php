@@ -1141,6 +1141,235 @@
 		}
 	}
 	
+	//Дерево с return
+	function returnTree($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id){
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+				
+		static $rezult_arr = array();
+				
+		$arr = array();
+		$rez = array();
+		/*$style_name = '';
+		$color_array = array(
+			'background-color: rgba(255, 236, 24, 0.5);',
+			'background-color: rgba(103, 251, 66, 0.5);',
+			'background-color: rgba(97, 227, 255, 0.5);',
+		);
+		$color_index = $last_level;
+		
+		$deleted_str = '';
+		*/
+		if ($deleted){
+			//$deleted_str = 'AND `status` = 9';
+		}else{
+			//выбираем не удалённые
+			$deleted_str = 'AND `status` <> 9';
+		}
+		
+		$q_dop = '';
+		$dbprices = 'spr_priceprices';
+		
+		//Для страховых
+		/*if ($insure_id != 0){
+			$q_dop = " AND `insure`='{$insure_id}'";
+			$dbprices = 'spr_priceprices_insure';
+		}else{
+			//
+		}*/
+		
+		//Выбираем всё из этого уровня
+		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+		//var_dump ($query);
+		
+		//Если не из корня смотрим, то выбираем всё, что в этой группе
+		if ($first && ($level != 0) && ($type == 'return')){
+			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+			$first = FALSE;
+		}
+		//var_dump ($query);
+		
+		$res = mysql_query($query) or die($query);
+		$number = mysql_num_rows($res);
+		if ($number != 0){
+			while ($arr = mysql_fetch_assoc($res)){
+				array_push($rez, $arr);
+			}
+			$rezult = $rez;
+		}else{
+			$rezult = 0;
+		}
+		//var_dump($rezult);
+		
+		if ($rezult != 0){
+			
+			foreach ($rezult as $key => $value){
+
+				$arr2 = array();
+				$rez2 = array();
+				$arr3 = array();
+				$rez3 = array();
+				
+				/*if ($type == 'select'){
+					//echo $space.$value['name'].'<br>';
+					$selected = '';
+					if ($value['id'] == $sel_id){
+						$selected = ' selected';
+					}
+					echo '<option value="'.$value['id'].'" '.$selected.'>'.$space.$value['name'].'</option>';
+				}*/
+				
+				if ($type == 'return'){
+					//echo $space.$value['name'].'<br>';
+					
+					/*if ($value['level'] == 0) {
+						$style_name = 'font-size: 130%;';
+						$style_name .= $color_array[0];
+						//$this_level = 0;
+					}else{
+						$style_name = 'font-size: 110%; font-style: oblique;';
+						//$style_name .= 'background-color: rgba(97, 227, 255, 0.5)';
+						if (isset($color_array[$color_index])){
+							$style_name .= $color_array[$color_index];
+						}else{
+							$style_name .= 'background-color: rgba(225, 126, 255, 0.5);';
+						}
+						/*if ($this_level == 1){
+							$style_name .= 'background-color: rgba(103, 251, 66, 0.5)';
+						}elseif ($this_level == 2){
+							$style_name .= 'background-color: rgba(97, 227, 255, 0.5);';
+						}else{
+							$style_name .= 'background-color: rgba(225, 126, 255, 0.5);';
+						}*/
+					//}
+					
+					//Если не страховая
+					/*if ($insure_id == 0){
+						echo '
+						<li class="cellsBlock" style="width: auto;">
+							<div class="cellPriority" style=""></div>
+							<div class="cellOffice" style=" text-align: left; width: 350px; min-width: 350px; max-width: 350px; '.$style_name.'">
+								<a href="pricelistgroup.php?id='.$value['id'].'" class="ahref" style="font-weight: bold;" id="4filter">'.$space.$value['name'].'</a>
+							</div>
+							<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; '.$style_name.'">
+								<div class="managePriceList" style="font-style: normal; font-size: 13px;">
+									<a href="pricelistgroup_edit.php?id='.$value['id'].'" class="ahref"><i id="PriceListGroupEdit" class="fa fa-pencil-square-o pricemenu" aria-hidden="true" style="color: #777;" title="Редактировать"></i></a>
+									<a href="add_pricelist_item.php?addinid='.$value['id'].'" class="ahref"><i id="PriceListGroupAdd" class="fa fa-plus pricemenu" aria-hidden="true" style="color: #36EA5E;" title="Добавить в эту группу"></i></a>
+									<!--<a href="pricelistgroup_del.php?id='.$value['id'].'" class="ahref"><i id="" class="fa fa-bars pricemenu" aria-hidden="true" style="" title="Изменить порядок"></i></a>-->
+									<a href="pricelistgroup_del.php?id='.$value['id'].'" class="ahref"><i id="PriceListGroupDelete" class="fa fa-trash pricemenu" aria-hidden="true" style="color: #FF3636" title="Удалить"></i></a>
+								</div>
+							</div>
+						</li>';
+					}*/
+					
+					$query = "SELECT * FROM `{$dbtable}` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$deleted_str." ".$q_dop." ORDER BY `name`";			
+					//var_dump($query);
+					
+					$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
+					$number = mysql_num_rows($res);	
+					if ($number != 0){
+						while ($arr2 = mysql_fetch_assoc($res)){
+							array_push($rez2, $arr2);
+						}
+						$items_j = $rez2;
+					}else{
+						$items_j = 0;
+					}
+					
+					//var_dump($items_j);
+					
+					if ($items_j != 0){
+						
+						$anything_here = true;
+						
+						//array_push($rezult_arr, $items_j[$i]['id']);
+						
+						//Если страховая
+						/*if ($insure_id != 0){
+							echo '
+							<li class="cellsBlock" style="width: auto;">
+								<div class="cellPriority" style=""></div>
+								<div class="cellOffice" style=" text-align: left; width: 350px; min-width: 350px; max-width: 350px; '.$style_name.'">
+									<a href="pricelistgroup.php?id='.$value['id'].'" class="ahref" style="font-weight: bold;" id="4filter">'.$space.$value['name'].'</a>
+								</div>
+								<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; '.$style_name.'">
+									<div class="managePriceList" style="font-style: normal; font-size: 13px;">
+										<a href="pricelistgroup_edit.php?id='.$value['id'].'" class="ahref"><i id="PriceListGroupEdit" class="fa fa-pencil-square-o pricemenu" aria-hidden="true" style="color: #777;" title="Редактировать"></i></a>
+										<a href="add_pricelist_item.php?addinid='.$value['id'].'" class="ahref"><i id="PriceListGroupAdd" class="fa fa-plus pricemenu" aria-hidden="true" style="color: #36EA5E;" title="Добавить в эту группу"></i></a>
+										<!--<a href="pricelistgroup_del.php?id='.$value['id'].'" class="ahref"><i id="" class="fa fa-bars pricemenu" aria-hidden="true" style="" title="Изменить порядок"></i></a>-->
+										<a href="pricelistgroup_del.php?id='.$value['id'].'" class="ahref"><i id="PriceListGroupDelete" class="fa fa-trash pricemenu" aria-hidden="true" style="color: #FF3636" title="Удалить"></i></a>
+									</div>
+								</div>
+							</li>';
+						}*/
+						
+						for ($i = 0; $i < count($items_j); $i++) {
+
+							$price = 0;
+							
+							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
+							$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from` DESC LIMIT 1";
+							//var_dump($query);
+							
+							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
+
+							$number = mysql_num_rows($res);
+							if ($number != 0){
+								$arr3 = mysql_fetch_assoc($res);
+								$price = $arr3['price'];
+							}else{
+								$price = 0;
+							}
+					
+							array_push($rezult_arr, $items_j[$i]['id']);
+
+							/*echo '
+										<li class="cellsBlock" style="width: auto;">
+											<div class="cellPriority" style=""></div>
+											<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$items_j[$i]['name'].'</a>
+											<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.'</div>
+										</li>';*/
+						}
+					}else{
+						//
+					}
+				}
+				
+				
+				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
+				//var_dump($query);
+				
+				$res = mysql_query($query) or die($query);
+				$number = mysql_num_rows($res);
+				//var_dump($number);
+
+				if ($number != 0){
+					//var_dump('next');
+					
+					//echo '_'.$value['name'].'<br>';
+					$space2 = $space. '&nbsp;&nbsp;&nbsp;';
+					$last_level2 = $last_level+1;
+					returnTree($value['id'], $space2, $type, $sel_id, $first, $last_level2, $deleted, $dbtable, $insure_id);
+				}else{
+					//var_dump ($color_index);
+					//var_dump ($last_level);
+					/*if ($color_index > $last_level){
+						$color_index--;
+					}*/
+					//$space = substr($space, 0, -1);
+					//echo '_'.$value['name'].'<br>';
+				}
+				//$space = substr($space, 0, -1);
+			}
+			//$color_index = $last_level;
+		}
+		return $rezult_arr;
+	}
+	
+	
+	
 	//!!! не делал Обратное дерево
 	function showReverseTree($level, $space, $type, $sel_id, $first, $last_level){
 		require 'config.php';

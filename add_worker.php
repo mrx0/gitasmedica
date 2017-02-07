@@ -74,13 +74,15 @@
 									<select name="permissions" id="permissions">
 										<option value="0" selected>Нажми и выбери</option>';
 									if ($permissions !=0){
-										if ($god_mode){
+										//if ($god_mode){
 											for ($i=0;$i<count($permissions);$i++){
-												echo "<option value='".$permissions[$i]['id']."'>".$permissions[$i]['name']."</option>";
+												if ((($permissions[$i]['id'] != 1) && ($permissions[$i]['id'] != 2) && ($permissions[$i]['id'] != 3) && ($permissions[$i]['id'] != 8)) || ($god_mode)){
+													echo "<option value='".$permissions[$i]['id']."'>".$permissions[$i]['name']."</option>";
+												}
 											}
-										}else{
-											echo "<option value='0'>По умолчанию</option>";
-										}
+										//}else{
+										//	echo "<option value='0'>По умолчанию</option>";
+										//}
 									}
 									echo '
 									</select>
