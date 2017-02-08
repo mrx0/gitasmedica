@@ -1323,7 +1323,8 @@
 								$price = 0;
 							}
 					
-							array_push($rezult_arr, $items_j[$i]['id']);
+							//array_push($rezult_arr, $items_j[$i]['id']);
+							$rezult_arr[$items_j[$i]['id']] = $price;
 
 							/*echo '
 										<li class="cellsBlock" style="width: auto;">

@@ -12,9 +12,54 @@
 		include_once 'functions.php';
 		var_dump ($_POST);
 		
-		//$_POST['group']
+		if ($_POST){
+			if (isset($_POST['group']) && isset($_POST['id'])){
+				$arr4fill = returnTree($_POST['group'], '', 'return', 0, TRUE, 0, FALSE, 'spr_pricelist_template', 0);
+				//var_dump ($arr4fill);
 		
-		var_dump (returnTree($_POST['group'], '', 'return', 0, TRUE, 0, FALSE, 'spr_pricelist_template', 0));
+				if (!empty($arr4fill)){
+					//var_dump ($arr4fill);
+					
+					require 'config.php';
+					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+					mysql_select_db($dbName) or die(mysql_error()); 
+					mysql_query("SET NAMES 'utf8'");
+					$time = time();
+					
+					//Сегодня 09:00:00
+					$fromdate = strtotime(date('d.m.Y', $time)." 09:00:00");
+					
+					foreach($arr4fill as $id => $price){
+						//Добавляем в базу позицию прайса для страховой
+						$query = "INSERT INTO `spr_pricelists_insure` (`item`, `insure`, `create_time`, `create_person`) 
+						VALUES (
+						'{$id}', '{$_POST['id']}', '{$time}', '{$_SESSION['id']}')";
+						mysql_query($query) or die(mysql_error().' -> '.$query);
+						
+						//ID новой позиции
+						$mysql_insert_id = mysql_insert_id();
+						
+						//Добавляем в базу цену позиции прайса для страховой
+						$query = "INSERT INTO `spr_priceprices_insure` (
+							`insure`, `item`, `price`, `date_from`, `create_time`, `create_person`) 
+							VALUES (
+						'{$_POST['id']}', '{$mysql_insert_id}', '{$price}', '{$fromdate}', '{$time}', '{$_SESSION['id']}')";
+						mysql_query($query) or die(mysql_error().' -> '.$query);
+						
+					}
+					echo '
+						<div class="query_ok">
+							Прайс заполнен<br><br>
+						</div>';
+				}
+				
+			}else{
+				echo '
+					<div class="query_neok">
+						Не выбран раздел<br><br>
+					</div>';
+			}
+		}
 		
 		
 		/*
