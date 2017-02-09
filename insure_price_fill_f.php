@@ -26,6 +26,11 @@
 					mysql_query("SET NAMES 'utf8'");
 					$time = time();
 					
+					$query = "DELETE FROM `spr_pricelists_insure` WHERE `insure`='{$_POST['id']}'";
+					mysql_query($query) or die(mysql_error().' -> '.$query);
+					$query = "DELETE FROM `spr_priceprices_insure` WHERE `insure`='{$_POST['id']}'";
+					mysql_query($query) or die(mysql_error().' -> '.$query);
+					
 					//Сегодня 09:00:00
 					$fromdate = strtotime(date('d.m.Y', $time)." 09:00:00");
 					
@@ -43,7 +48,7 @@
 						$query = "INSERT INTO `spr_priceprices_insure` (
 							`insure`, `item`, `price`, `date_from`, `create_time`, `create_person`) 
 							VALUES (
-						'{$_POST['id']}', '{$mysql_insert_id}', '{$price}', '{$fromdate}', '{$time}', '{$_SESSION['id']}')";
+						'{$_POST['id']}', '{$id}', '{$price}', '{$fromdate}', '{$time}', '{$_SESSION['id']}')";
 						mysql_query($query) or die(mysql_error().' -> '.$query);
 						
 					}

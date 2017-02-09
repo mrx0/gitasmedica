@@ -846,11 +846,13 @@
 		
 		$q_dop = '';
 		$dbprices = 'spr_priceprices';
+		$link = 'pricelistitem.php?';
 		
 		//Для страховых
 		if ($insure_id != 0){
 			$q_dop = " AND `insure`='{$insure_id}'";
 			$dbprices = 'spr_priceprices_insure';
+			$link = 'pricelistitem_insure.php?insure='.$insure_id;
 		}else{
 			//
 		}
@@ -920,7 +922,7 @@
 					}
 					
 					//Если не страховая
-					if ($insure_id == 0){
+					//if ($insure_id == 0){
 						echo '
 						<li class="cellsBlock" style="width: auto;">
 							<div class="cellPriority" style=""></div>
@@ -936,9 +938,15 @@
 								</div>
 							</div>
 						</li>';
-					}
+					//}
+					
 					
 					$query = "SELECT * FROM `{$dbtable}` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$deleted_str." ".$q_dop." ORDER BY `name`";			
+					
+					if ($insure_id != 0){
+						$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `{$dbtable}` WHERE `item` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$q_dop.") ".$deleted_str." ORDER BY `name`";			
+					}
+					
 					//var_dump($query);
 					
 					$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
@@ -959,7 +967,7 @@
 						$anything_here = true;
 						
 						//Если страховая
-						if ($insure_id != 0){
+						/*if ($insure_id != 0){
 							echo '
 							<li class="cellsBlock" style="width: auto;">
 								<div class="cellPriority" style=""></div>
@@ -975,7 +983,7 @@
 									</div>
 								</div>
 							</li>';
-						}
+						}*/
 						
 						for ($i = 0; $i < count($items_j); $i++) {
 
@@ -983,6 +991,10 @@
 							
 							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
 							$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from` DESC LIMIT 1";
+							
+							if ($insure_id != 0){
+								$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from` DESC LIMIT 1";
+							}
 							//var_dump($query);
 							
 							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
@@ -994,11 +1006,11 @@
 							}else{
 								$price = 0;
 							}
-					
+
 							echo '
 										<li class="cellsBlock" style="width: auto;">
 											<div class="cellPriority" style=""></div>
-											<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$items_j[$i]['name'].'</a>
+											<a href="'.$link.'&id='.$items_j[$i]['id'].'" class="ahref cellOffice" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$items_j[$i]['name'].'</a>
 											<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.'</div>
 										</li>';
 						}

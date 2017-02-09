@@ -157,6 +157,8 @@
 			foreach($actions_cosmet as $key=>$arr_temp){
 				$data_nomer[$key] = $arr_temp['nomer'];
 			}
+			//var_dump ($data_nomer);
+			
 			array_multisort($data_nomer, SORT_NUMERIC, $actions_cosmet);
 			//var_dump ($actions_cosmet);
 

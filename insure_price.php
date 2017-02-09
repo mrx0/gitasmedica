@@ -34,7 +34,7 @@
 
 					if (($items['add_new'] == 1) || $god_mode){
 						echo '
-								<a href="add_insure_price_item.php?id='.$_GET['id'].'" class="b">Добавить позицию/группу</a>';
+								<a href="add_insure_price_item.php?id='.$_GET['id'].'" class="b">Добавить позицию</a>';
 						/*echo '
 								<a href="add_pricelist_group.php?" class="b">Добавить группу/подгруппу</a>';*/
 						echo '
@@ -85,7 +85,8 @@
 						
 						//Без группы
 								
-						$query = "SELECT * FROM `spr_pricelists_insure` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' AND `insure`='{$_GET['id']}' ORDER BY `name`";			
+						//$query = "SELECT * FROM `spr_pricelists_insure` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' AND `insure`='{$_GET['id']}' ORDER BY `name`";			
+						$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `spr_pricelists_insure` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' AND `insure`='{$_GET['id']}') ORDER BY `name`";			
 						
 						$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
