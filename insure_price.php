@@ -40,7 +40,7 @@
 						echo '
 								<a href="insure_price_fill.php?id='.$_GET['id'].'" class="b">Заполнить</a>';
 						echo '
-								<a href="clear_insure_price.php?id='.$_GET['id'].'" class="b">Очистить полностью</a>';
+								<a href="insure_price_clear.php?id='.$_GET['id'].'" class="b">Очистить полностью</a>';
 					}
 			
 					/*if (($items['edit'] == 1) || $god_mode){
@@ -74,70 +74,80 @@
 					$arr3 = array();
 					$rez3 = array();
 					
+					
 					require 'config.php';
 					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
 					mysql_select_db($dbName) or die(mysql_error()); 
 					mysql_query("SET NAMES 'utf8'");
 			
-					//if ($services_j !=0){
-						showTree(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelists_insure', $_GET['id']);
-						
-						
-						//Без группы
-								
-						//$query = "SELECT * FROM `spr_pricelists_insure` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' AND `insure`='{$_GET['id']}' ORDER BY `name`";			
-						$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `spr_pricelists_insure` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' AND `insure`='{$_GET['id']}') ORDER BY `name`";			
-						
-						$res = mysql_query($query) or die(mysql_error().' -> '.$query);
+					$query = "SELECT * FROM `spr_pricelists_insure` WHERE `insure`='".$_GET['id']."' LIMIT 1";
+													
+					$res = mysql_query($query) or die($query);
 
-						$number = mysql_num_rows($res);	
-						if ($number != 0){
-							while ($arr3 = mysql_fetch_assoc($res)){
-								array_push($rez3, $arr3);
-							}
-							$items_j = $rez3;
-						}else{
-							$items_j = 0;
-						}
-				
-					//var_dump($items_j);
-					
-					if ($items_j != 0){
-						
-						echo '
-							<li class="cellsBlock" style="width: auto;">
-								<div class="cellPriority" style=""></div>
-								<span class="cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(255, 103, 97, 0.5);" id="4filter">Без группы</span>
-								<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(255, 103, 97, 0.5);"></div>
-							</li>';
-						
-						for ($i = 0; $i < count($items_j); $i++) {
-							$price = 0;
+					$number = mysql_num_rows($res);
+					if ($number != 0){
+						//if ($services_j !=0){
+							showTree(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelists_insure', $_GET['id']);
 							
-							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
-							$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
-												
+							
+							//Без группы
+									
+							//$query = "SELECT * FROM `spr_pricelists_insure` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' AND `insure`='{$_GET['id']}' ORDER BY `name`";			
+							$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `spr_pricelists_insure` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' AND `insure`='{$_GET['id']}') ORDER BY `name`";			
+							
 							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
-							$number = mysql_num_rows($res);
+							$number = mysql_num_rows($res);	
 							if ($number != 0){
-								$arr4 = mysql_fetch_assoc($res);
-								$price = $arr4['price'];
+								while ($arr3 = mysql_fetch_assoc($res)){
+									array_push($rez3, $arr3);
+								}
+								$items_j = $rez3;
 							}else{
-								$price = 0;
+								$items_j = 0;
 							}
 					
-							echo '
-										<li class="cellsBlock" style="width: auto;">
-											<div class="cellPriority" style=""></div>
-											<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$items_j[$i]['name'].'</a>
-											<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.'</div>
-										</li>';
-						}
-					}
+							//var_dump($items_j);
+						
+							if ($items_j != 0){
+								
+								echo '
+									<li class="cellsBlock" style="width: auto;">
+										<div class="cellPriority" style=""></div>
+										<span class="cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(255, 103, 97, 0.5);" id="4filter">Без группы</span>
+										<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(255, 103, 97, 0.5);"></div>
+									</li>';
+								
+								for ($i = 0; $i < count($items_j); $i++) {
+									$price = 0;
+									
+									//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
+									$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
+														
+									$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
-					//}
-				
+									$number = mysql_num_rows($res);
+									if ($number != 0){
+										$arr4 = mysql_fetch_assoc($res);
+										$price = $arr4['price'];
+									}else{
+										$price = 0;
+									}
+							
+									echo '
+												<li class="cellsBlock" style="width: auto;">
+													<div class="cellPriority" style=""></div>
+													<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$items_j[$i]['name'].'</a>
+													<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.'</div>
+												</li>';
+								}
+							}
+
+						//}
+					}else{
+						echo '<i style="color:red;">Прайс не заполнен</i>';
+					}
+					
 					mysql_close();
 
 					echo '

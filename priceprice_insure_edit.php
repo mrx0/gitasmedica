@@ -135,7 +135,7 @@
 										</div>';
 										
 							echo '				
-											<input type="button" class="b" value="Применить" onclick="Ajax_edit_price('.$_GET['id'].', '.$_SESSION['id'].')">
+											<input type="button" class="b" value="Применить" onclick="Ajax_edit_price_insure('.$_GET['id'].', '.$_GET['insure'].')">
 										</form>';
 
 								

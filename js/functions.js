@@ -264,6 +264,28 @@
 		})
 	}; 
 	
+	//Удаление позиции прайса страховой
+	function Ajax_del_pricelistitem_insure(id, insure) {
+		
+		ajax({
+			url:"pricelistitem_insure_del_f.php",
+			statbox:"errrror",
+			method:"POST",
+			data:
+			{
+				id: id,
+				insure: insure,
+			},
+			success:function(data){
+				document.getElementById("errrror").innerHTML=data;
+				setTimeout(function () {
+					window.location.replace('insure_price.php?id='+insure);
+					//alert('client.php?id='+id);
+				}, 100);
+			}
+		})
+	}; 
+	
 	//Заполнить прайс
 	function Ajax_insure_price_fill(id) {
 		
@@ -275,6 +297,27 @@
 			{
 				id: id,
 				group: document.getElementById("group").value,
+			},
+			success:function(data){
+				document.getElementById("errrror").innerHTML=data;
+				/*setTimeout(function () {
+					window.location.replace('pricelistitem.php?id='+id);
+					//alert('client.php?id='+id);
+				}, 100);*/
+			}
+		})
+	}; 
+	
+	//Очисить прайс
+	function Ajax_insure_price_clear(id) {
+		
+		ajax({
+			url:"insure_price_clear_f.php",
+			statbox:"errrror",
+			method:"POST",
+			data:
+			{
+				id: id,
 			},
 			success:function(data){
 				document.getElementById("errrror").innerHTML=data;
@@ -732,6 +775,32 @@
 				price:price,
 				iWantThisDate2:iWantThisDate2,
 				id: id,
+			},
+			cache: false,
+			beforeSend: function() {
+				$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			success:function(data){
+				$('#errror').html(data);
+			}
+		})
+	};  
+	
+	function Ajax_edit_price_insure(id, insure) {
+
+		var price = document.getElementById("price").value;
+		var iWantThisDate2 = document.getElementById("iWantThisDate2").value;
+
+		$.ajax({
+			url:"priceprice_insure_edit_f.php",
+			global: false, 
+			type: "POST", 
+			data:
+			{
+				price: price,
+				iWantThisDate2: iWantThisDate2,
+				id: id,
+				insure: insure,
 			},
 			cache: false,
 			beforeSend: function() {

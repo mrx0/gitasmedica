@@ -56,7 +56,7 @@
 						echo '				
 									<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
 									<div id="errror"></div>
-									<input type="button" class="b" value="Удалить" onclick="Ajax_del_pricelistitem_insure('.$_GET['id'].')">';
+									<input type="button" class="b" value="Удалить" onclick="Ajax_del_pricelistitem_insure('.$_GET['id'].', '.$_GET['insure'].')">';
 
 
 

@@ -401,6 +401,29 @@
 		return ($mysql_insert_id);
 	}
 	
+	//Добавление цены услуги страховое
+	function WriteToDB_EditPricePrice_insure ($item, $insure, $price, $fromdate, $session_id){
+		require 'config.php';
+		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
+		mysql_select_db($dbName) or die(mysql_error()); 
+		mysql_query("SET NAMES 'utf8'");
+		$time = time();
+		$query = "INSERT INTO `spr_priceprices_insure` (
+			`item`, `insure`, `price`, `date_from`, `create_time`, `create_person`) 
+			VALUES (
+		'{$item}', '{$insure}', '{$price}', '{$fromdate}', '{$time}', '{$session_id}')";
+		mysql_query($query) or die(mysql_error().' -> '.$query);
+		
+		$mysql_insert_id = mysql_insert_id();
+		
+		mysql_close();
+		
+		//логирование
+		//AddLog (GetRealIp(), $session_id, '', 'Добавлен комментарий. ['.date('d.m.y H:i', $create_time).']. ['.$dtable.']:['.$parent.']. Описание: ['.$description.']');
+		
+		return ($mysql_insert_id);
+	}
+	
 
 	
 	
