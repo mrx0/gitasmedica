@@ -101,7 +101,10 @@
 							$birthday = strtotime($_POST['sel_date'].'.'.$_POST['sel_month'].'.'.$_POST['sel_year']);
 						//}
 						
-						$new_client = WriteClientToDB_Edit ($_POST['session_id'], $name, $full_name, $_POST['f'], $_POST['i'], $_POST['o'], $_POST['fo'], $_POST['io'], $_POST['oo'], $_POST['comment'], $_POST['card'], $therapist, $therapist2, $birthday, $_POST['sex'], $_POST['telephone'], $_POST['htelephone'], $_POST['telephoneo'], $_POST['htelephoneo'], $_POST['passport'], $_POST['alienpassportser'], $_POST['alienpassportnom'], $_POST['passportvidandata'], $_POST['passportvidankem'], $_POST['address'], $_POST['polis'], $_POST['polisdata'], $_POST['insurecompany']);
+						$card = str_replace(" ","",$_POST['card']);
+						$card = mb_strtoupper($card, "UTF-8");
+						
+						$new_client = WriteClientToDB_Edit ($_POST['session_id'], $name, $full_name, $_POST['f'], $_POST['i'], $_POST['o'], $_POST['fo'], $_POST['io'], $_POST['oo'], $_POST['comment'], $card, $therapist, $therapist2, $birthday, $_POST['sex'], $_POST['telephone'], $_POST['htelephone'], $_POST['telephoneo'], $_POST['htelephoneo'], $_POST['passport'], $_POST['alienpassportser'], $_POST['alienpassportnom'], $_POST['passportvidandata'], $_POST['passportvidankem'], $_POST['address'], $_POST['polis'], $_POST['polisdata'], $_POST['insurecompany']);
 						//var_dump($new_client);
 						
 						echo '

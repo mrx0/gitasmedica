@@ -69,7 +69,7 @@
 						$price = 0;
 							
 						//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `create_time` DESC LIMIT 1";
-						$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC LIMIT 1";
+						$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$_GET['id']."' AND `insure`='".$_GET['insure']."' ORDER BY `date_from` DESC LIMIT 1";
 												
 						$res = mysql_query($query) or die($query);
 
@@ -137,7 +137,7 @@
 						if (($items['edit'] == 1) || $god_mode){
 							if ($rezult[0]['status'] != 9){
 								echo '
-											<a href="priceprice_insure_edit.php?id='.$_GET['id'].'" class="info b2" style="font-size: 100%;" title="Редактировать цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+											<a href="priceprice_insure_edit.php?insure='.$_GET['insure'].'&id='.$_GET['id'].'" class="info b2" style="font-size: 100%;" title="Редактировать цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
 							}
 						}
 						echo '
@@ -172,7 +172,7 @@
 						mysql_select_db($dbName) or die(mysql_error()); 
 						mysql_query("SET NAMES 'utf8'");
 						
-						$query = "SELECT * FROM `spr_priceprices_insure` WHERE `item`='".$_GET['id']."' ORDER BY `create_time` DESC";
+						$query = "SELECT * FROM `spr_priceprices_insure` WHERE `item`='".$_GET['id']."' AND `insure`='".$_GET['insure']."' ORDER BY `create_time` DESC";
 						//$query = "SELECT * FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC";
 											
 						$res = mysql_query($query) or die($query);

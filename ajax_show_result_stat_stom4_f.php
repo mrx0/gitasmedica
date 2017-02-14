@@ -165,9 +165,11 @@
 						WHERE '.$queryDop;
 						$queryDopExist = true;
 					}
+					//var_dump($queryGroup);
+					//var_dump($queryDopEx);
 					if ($queryDopExExist){
-						$queryDopEx = '
-						SELECT `id` FROM `journal_tooth_ex` WHERE '.$queryDopEx;
+						/*$queryDopEx = '
+						SELECT `id` FROM `journal_tooth_ex` WHERE '.$queryDopEx;*/
 						if ($queryDopExist){
 							$queryGroup .= '
 							AND';
@@ -176,6 +178,7 @@
 						`id` IN (".$queryDopEx.")";
 						$queryDopExist = true;
 					}
+					//var_dump($queryGroup);
 					if ($queryDopClientExist){
 						$queryDopClient = '
 						SELECT `id` FROM `spr_clients` WHERE '.$queryDopClient;

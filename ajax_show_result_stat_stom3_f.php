@@ -152,6 +152,8 @@
 					
 					$query = $query." ORDER BY `create_time` DESC";
 					
+					//var_dump($query);
+					
 					require 'config.php';
 					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
 					mysql_select_db($dbName) or die(mysql_error()); 

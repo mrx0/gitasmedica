@@ -45,7 +45,10 @@
 			}
 			$birthday = strtotime($_POST['sel_date'].'.'.$_POST['sel_month'].'.'.$_POST['sel_year']);
 				
-			WriteClientToDB_Update ($_POST['session_id'], $_POST['id'], $_POST['comment'], $_POST['card'], $therapist, $therapist2, $birthday, $_POST['sex'], $_POST['telephone'], $_POST['passport'], $_POST['alienpassportser'], $_POST['alienpassportnom'], $_POST['passportvidandata'], $_POST['passportvidankem'], $_POST['address'], $_POST['polis'], $_POST['fo'], $_POST['io'], $_POST['oo'], $_POST['htelephone'], $_POST['telephoneo'], $_POST['htelephoneo'], $_POST['polisdata'], $_POST['insurecompany']);
+			$card = str_replace(" ","",$_POST['card']);
+			$card = mb_strtoupper($card, "UTF-8");
+			
+			WriteClientToDB_Update ($_POST['session_id'], $_POST['id'], $_POST['comment'], $card, $therapist, $therapist2, $birthday, $_POST['sex'], $_POST['telephone'], $_POST['passport'], $_POST['alienpassportser'], $_POST['alienpassportnom'], $_POST['passportvidandata'], $_POST['passportvidankem'], $_POST['address'], $_POST['polis'], $_POST['fo'], $_POST['io'], $_POST['oo'], $_POST['htelephone'], $_POST['telephoneo'], $_POST['htelephoneo'], $_POST['polisdata'], $_POST['insurecompany']);
 
 			echo '
 				<div class="query_ok">
