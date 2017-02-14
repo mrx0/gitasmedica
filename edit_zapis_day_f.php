@@ -27,7 +27,7 @@
 			$m = date("m");
 			$d = date("d");
 			
-			if ((($y <= $_POST['year']) && ($m <= $_POST['month']) && ($d <= $_POST['day'])) || ($_SESSION['permissions'] == '777') || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9)){
+			//if ((($y <= $_POST['year']) && ($m <= $_POST['month']) && ($d <= $_POST['day'])) || ($_SESSION['permissions'] == '777') || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9)){
 				
 				if (isset($_POST['worker'])){
 					$therapists = SelDataFromDB ('spr_workers', $_POST['worker'], 'worker_full_name');
@@ -122,13 +122,13 @@
 						</div>';
 					echo json_encode(array('result' => 'error', 'data' => $data));
 				}
-			}else{
+			/*}else{
 				$data = '
 					<div class="query_neok">
 						Нельзя добавлять задним числом<br><br>
 					</div>';
 				echo json_encode(array('result' => 'error', 'data' => $data));
-			}
+			}*/
 		}
 	}
 ?>
