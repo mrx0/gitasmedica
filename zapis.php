@@ -1916,6 +1916,7 @@
 						<input type="hidden" id="start_time" name="start_time" value="0">
 						<input type="hidden" id="wt" name="wt" value="0">
 						<input type="hidden" id="worker_id" name="worker_id" value="0">
+						<input type="hidden" id="type" name="type" value="'.$type.'">
 						<!--<input type="button" class="b" value="Добавить" id="Ajax_add_TempZapis" onclick="Ajax_add_TempZapis('.$type.')">-->
 						<input type="button" class="b" value="OK" onclick="if (iCanManage) Ajax_add_TempZapis('.$type.')" id="Ajax_add_TempZapis">
 						<input type="button" class="b" value="Отмена" onclick="HideSettingsAddTempZapis()">

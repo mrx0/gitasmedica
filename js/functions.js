@@ -1796,6 +1796,8 @@
 	};
 	
 	function PriemTimeCalc(){
+		var type = document.getElementById("type").value;
+		
 		var work_time_h = Number(document.getElementById("work_time_h").value);
 		var work_time_m = Number(document.getElementById("work_time_m").value);
 		
@@ -1834,6 +1836,7 @@
 			
 		
 		var next_time_start_rez = 0;
+		var next_time_end_rez = 0;
 		
 		$.ajax({
 			dataType: "json",
@@ -1853,6 +1856,8 @@
 				
 				start_time:start_time,
 				wt:change_hours*60+change_minutes,
+				
+				type:type,
 				
 				datatable:"zapis"
 			},

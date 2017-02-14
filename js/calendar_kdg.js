@@ -15,6 +15,8 @@ mnn:new Array('31','28','31','30','31','30','31','31','30','31','30','31'),
 mnl:new Array('31','29','31','30','31','30','31','31','30','31','30','31'),
 calvalarr:new Array(42),
 
+temp_eColor:'',
+
 $:function(objID)
 {
     if(document.getElementById){return document.getElementById(objID);}
@@ -78,18 +80,24 @@ lcs:function(ielem){
 
 	// First check date is valid
 	curdt=ielem.value;
-	curdtarr=curdt.split('-');
+	curdtarr=curdt.split('.');
 	isdt=true;
 	for(var k=0;k<curdtarr.length;k++){
 		if (isNaN(curdtarr[k]))
 			isdt=false;
+		//alert(curdtarr[k]);
 	}
 	if (isdt&(curdtarr.length==3)){
+		
+		_Calendar.ccd=curdtarr[0];
 		_Calendar.ccm=curdtarr[1]-1;
 		_Calendar.ccy=curdtarr[2];
+		
 		_Calendar.prepcalendar(curdtarr[0],curdtarr[1]-1,curdtarr[2]);
 	}
 
+	//alert(curdtarr[0]);
+	
 },
 
 evtTgt:function(e)
@@ -103,11 +111,17 @@ evtTgt:function(e)
 EvtObj:function(e){if(!e)e=window.event;return e;},
 
 cs_over:function(e){
+	temp_eColor = _Calendar.evtTgt(_Calendar.EvtObj(e)).style.background;
+	//alert(temp_eColor);
+	
 	_Calendar.evtTgt(_Calendar.EvtObj(e)).style.background='#FFEBCC';
 },
 
 cs_out:function(e){
-	_Calendar.evtTgt(_Calendar.EvtObj(e)).style.background='#FFFFFF';
+	//_Calendar.evtTgt(_Calendar.EvtObj(e)).style.background='#FFFFFF';
+	//alert(temp_eColor);
+	
+	_Calendar.evtTgt(_Calendar.EvtObj(e)).style.background=temp_eColor;
 },
 
 cs_click:function(e){
@@ -135,12 +149,14 @@ prepcalendar:function( hd, cm, cy ){
 	td.setMonth(cm);
 	cd=td.getDay(); // день недели
 	if(cd==0)cd=6; else cd--;
-
+	
+	//alert(hd);
+	
 	vd='';
 	for(var m=0;m<12;m++) vd=vd+'<option value="'+m+'"'+(m==cm?' selected':'')+'>'+_Calendar.mn[m]+'</option>'; // цикл по месяцам
 
 	d='';
-	for(var y=cy-40;y<=md;y++)   d=d+'<option value="'+y+'"'+(y==cy?' selected':'')+'>'+y+'</option>'; // цикл по годам
+	for(var y=2014;y<=md+1;y++)  d=d+'<option value="'+y+'"'+(y==cy?' selected':'')+'>'+y+'</option>'; // цикл по годам
 	_Calendar.$('mns').innerHTML=' <select onChange="_Calendar.cmonth(this);">' + vd + '</select><select onChange="_Calendar.cyear(this);">' + d + '</select>'; // текущий месяц и год
 
 	marr=((cy%4)==0)?_Calendar.mnl:_Calendar.mnn;
@@ -152,15 +168,28 @@ prepcalendar:function( hd, cm, cy ){
 		if ((d >= (cd -(-1)))&&(d<=cd-(-marr[cm]))) {
 			dd = new Date(d-cd,cm,cy);
 			if(d==36)_Calendar.$("last_table_tr").style.display="";
+			
 			vd.onmouseover=_Calendar.cs_over;
 			vd.onmouseout=_Calendar.cs_out;
 			vd.onclick=_Calendar.cs_click;
 
 			if (_Calendar.sccm == cm && _Calendar.sccd == (d-cd) && _Calendar.sccy == cy){
-				vd.style.background='#DDD';
-				vd.style.color='#FF0000'; // сегодня
+				vd.style.background='rgb(70, 222, 40) none repeat scroll 0% 0%';
+				vd.style.color='#FFFF00';
+				vd.style.textShadow = '1px 1px 1px #6c6c6c';
+				vd.style.fontSize = '14px';
+				vd.style.fontWeight='bold'; // сегодня
+				
 			/*}else{ if(dd.getDay()==6||dd.getDay()==0)
 				vd.style.color='#FF0000'; // выходной*/
+			} 
+
+			if (_Calendar.sccm == cm && hd == d-(cd) && _Calendar.sccy == cy){
+				vd.style.background='rgb(222, 72, 40) none repeat scroll 0% 0%';
+				vd.style.color='#FFFF00';
+				vd.style.textShadow = '1px 1px 1px #6c6c6c';
+				vd.style.fontSize = '14px';
+				vd.style.fontWeight='bold'; // Выбраный день
 			}
 
 			vd.innerHTML=d-cd;
@@ -230,6 +259,7 @@ _Calendar.now=n=new Date;
 _Calendar.sccd=n.getDate();
 _Calendar.sccm=n.getMonth();
 _Calendar.sccy=n.getFullYear();
+_Calendar.ccd=n.getDate();
 _Calendar.ccm=n.getMonth();
 _Calendar.ccy=n.getFullYear();
 
@@ -253,7 +283,7 @@ document.write('</table>');
 
 document.all?document.attachEvent('onclick',_Calendar.checkClick):document.addEventListener('click',_Calendar.checkClick,false);
 
-_Calendar.prepcalendar('',_Calendar.ccm,_Calendar.ccy);
+_Calendar.prepcalendar(_Calendar.ccd,_Calendar.ccm,_Calendar.ccy);
 
 return _Calendar;
 }();
