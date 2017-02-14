@@ -33,8 +33,8 @@
 
 
 					if (($items['add_new'] == 1) || $god_mode){
-						echo '
-								<a href="add_insure_price_item.php?id='.$_GET['id'].'" class="b">Добавить позицию</a>';
+						/*echo '
+								<a href="add_insure_price_item.php?id='.$_GET['id'].'" class="b">Добавить позицию</a>';*/
 						/*echo '
 								<a href="add_pricelist_group.php?" class="b">Добавить группу/подгруппу</a>';*/
 						echo '

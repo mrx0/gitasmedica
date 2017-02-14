@@ -56,6 +56,8 @@
 
 			<script type="text/javascript" src="js/search4.js"></script>
 			
+			<script type="text/javascript" src="js/search5.js"></script>
+			
 			<script type="text/javascript" src="js/search_fast_client.js"></script>
 			
 			<script type="text/javascript" src="js/jquery.maskedinput-1.2.2.js"></script>

@@ -744,11 +744,11 @@ input[type="submit"]:focus, .button:focus, .button_close:focus, .b:focus, .b2:fo
 
 
 /*Для быстрого поиска*/
-.search,.search2,.search3,.search4{
+.search,.search2,.search3,.search4,.search5{
     position:relative;
 }
 
-.search_result, .search_result2, .search_result3, .search_result4, .search_result_fc{
+.search_result, .search_result2, .search_result3, .search_result4, .search_result5, .search_result_fc{
 	font-size:80%;
     background: #FFF;
     border: 1px #ccc solid;
@@ -762,7 +762,7 @@ input[type="submit"]:focus, .button:focus, .button_close:focus, .b:focus, .b2:fo
 	z-index: 999;
 }
 
-.search_result li,.search_result2 li,.search_result3 li,.search_result4 li,.search_result_fc li{
+.search_result li,.search_result2 li,.search_result3 li,.search_result4 li,.search_result5 li,.search_result_fc li{
 	list-style: none;
 	padding: 5px 10px;
    /* margin: 0 0 0 -40px;*/
@@ -773,7 +773,7 @@ input[type="submit"]:focus, .button:focus, .button_close:focus, .b:focus, .b2:fo
 	transition:0.1s;
 }
 
-.search_result li:hover,.search_result2 li:hover,.search_result3 li:hover,.search_result4 li:hover,.search_result_fc li:hover{
+.search_result li:hover,.search_result2 li:hover,.search_result3 li:hover,.search_result4 li:hover,.search_result5 li:hover,.search_result_fc li:hover{
    /* background: #F9FF00;*/
     color: grey;
 	background: rgba(144,247,95, 0.5);

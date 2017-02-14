@@ -25,7 +25,7 @@
 			mysql_query($query) or die(mysql_error().' -> '.$query);
 			
 			$query = "DELETE FROM `spr_priceprices_insure` WHERE `item` = '{$_POST['id']}' AND `insure`='{$_POST['insure']}'";
-			mysql_query($query) or die(mysql_error().' -> '.$query);
+			//mysql_query($query) or die(mysql_error().' -> '.$query);
 			
 			/*$query = "UPDATE `spr_pricelist_template` SET `status`='9' WHERE `id`='{$_POST['id']}'";
 			mysql_query($query) or die(mysql_error().' -> '.$query);*/

@@ -682,6 +682,36 @@
 		})
 	};  
 	
+	//Добавить в прайс страховой
+	function Ajax_add_insure_priceitem() {
+
+		var pricename = document.getElementById("pricename").value;
+		var price = document.getElementById("price").value;
+		var group = document.getElementById("group").value;
+		var iWantThisDate2 = document.getElementById("iWantThisDate2").value;
+		
+		$.ajax({
+			url:"add_priceitem_f.php",
+			global: false, 
+			type: "POST", 
+			data:
+			{
+				pricename:pricename,
+				price:price,
+				group:group,
+				iWantThisDate2:iWantThisDate2,
+				session_id:session_id,
+			},
+			cache: false,
+			beforeSend: function() {
+				$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			success:function(data){
+				$('#errror').html(data);
+			}
+		})
+	};  
+	
 	// Добавим группу прайса
 	function Ajax_add_pricegroup(session_id) {
 
