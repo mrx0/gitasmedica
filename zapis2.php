@@ -901,6 +901,7 @@
 								$NextFill = FALSE;
 								
 								for ($wt=900; $wt < 1260; $wt=$wt+30){
+									
 									if (isset($Work_Today_arr[$k][2])){
 										$bg_color = '';	
 									}else{
@@ -1451,7 +1452,7 @@
 											//Если тут записей больше 1
 											if (count($ZapisHereQueryToday) > 1){
 												foreach ($ZapisHereQueryToday as $Zapis_key => $ZapisHereQueryToday_val){
-													if ($ZapisHereQueryToday_val['start_time'] < 1440){
+													if ($ZapisHereQueryToday_val['start_time'] < 1260){
 														//вычисляем время начала приёма
 														$TempStartWorkTime_h = floor($ZapisHereQueryToday_val['start_time']/60);
 														$TempStartWorkTime_m = $ZapisHereQueryToday_val['start_time']%60;
@@ -1537,8 +1538,8 @@
 																$cellZapisValue_Height = 60;
 															}
 														}else{
-															if ($ZapisHereQueryToday[0]['start_time'] + $ZapisHereQueryToday[0]['wt'] >= 1440){
-																$cellZapisValue_Height = (1440-$ZapisHereQueryToday[0]['start_time'])*2;
+															if ($ZapisHereQueryToday[0]['start_time'] + $ZapisHereQueryToday[0]['wt'] >= 1260){
+																$cellZapisValue_Height = (1260-$ZapisHereQueryToday[0]['start_time'])*2;
 																/*$NextSmenaArr[$k]['NextSmenaFill'] = TRUE;
 																$NextSmenaArr[$k]['ZapisHereQueryToday'] = $ZapisHereQueryToday[0];
 																$NextSmenaArr[$k]['OstatokVremeni'] = ($ZapisHereQueryToday[0]['start_time'] + $ZapisHereQueryToday[0]['wt'] - 1260)*2;
@@ -1570,10 +1571,7 @@
 													$PrevZapis = $ZapisHereQueryToday_val;
 												}
 											}elseif (count($ZapisHereQueryToday) == 1){
-												//var_dump(2);
-												//var_dump($ZapisHereQueryToday[0]['start_time']);
-												//var_dump($ZapisHereQueryToday[0]['wt']);
-												if ($ZapisHereQueryToday[0]['start_time'] < 1440){
+												if ($ZapisHereQueryToday[0]['start_time'] < 1260){
 													//вычисляем время начала приёма
 													$TempStartWorkTime_h = floor($ZapisHereQueryToday[0]['start_time']/60);
 													$TempStartWorkTime_m = $ZapisHereQueryToday[0]['start_time']%60;
@@ -1639,8 +1637,8 @@
 															$cellZapisValue_Height = 60;
 														}
 													}else{
-														if ($ZapisHereQueryToday[0]['start_time'] + $ZapisHereQueryToday[0]['wt'] >= 1440){
-															$cellZapisValue_Height = (1440-$ZapisHereQueryToday[0]['start_time'])*2;
+														if ($ZapisHereQueryToday[0]['start_time'] + $ZapisHereQueryToday[0]['wt'] >= 1260){
+															$cellZapisValue_Height = (1260-$ZapisHereQueryToday[0]['start_time'])*2;
 															/*$NextSmenaArr[$k]['NextSmenaFill'] = TRUE;
 															$NextSmenaArr[$k]['ZapisHereQueryToday'] = $ZapisHereQueryToday[0];
 															$NextSmenaArr[$k]['OstatokVremeni'] = ($ZapisHereQueryToday[0]['start_time'] + $ZapisHereQueryToday[0]['wt'] - 1260)*2;
@@ -1685,15 +1683,15 @@
 													//$mark = 777;
 													//var_dump($wt);
 												}else{
-													if ((1260+$NextSmenaArr_Zanimayu)< $wt){
+													if ((900+$NextSmenaArr_Zanimayu)< $wt){
 														$wt_FreeSpace = 30;
 														$wt_start_FreeSpace = $wt;
 														$cellZapisFreeSpace_Height = $wt_FreeSpace * 2;
 														$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
 														//$mark = 888;
 													}else{
-														$wt_FreeSpace = $wt+30-(1260+$NextSmenaArr_Zanimayu);
-														$wt_start_FreeSpace = 1260+$NextSmenaArr_Zanimayu;
+														$wt_FreeSpace = $wt+30-(900+$NextSmenaArr_Zanimayu);
+														$wt_start_FreeSpace = 900+$NextSmenaArr_Zanimayu;
 														$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 														$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
 														//$mark = $NextSmenaArr_Zanimayu;

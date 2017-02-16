@@ -61,7 +61,7 @@
 					//логирование
 					AddLog (GetRealIp(), $_SESSION['id'], '', 'Пользователь вошёл в систему');
 					
-					if ($_SESSION['permissions'] != 4){
+					if (($_SESSION['permissions'] != 4) && ($_SESSION['permissions'] != 7)){
 						
 						echo '<h1>Вы успешно вошли в систему!</h1><a href="index.php">Главная страница</a>
 						<script type="text/javascript">
