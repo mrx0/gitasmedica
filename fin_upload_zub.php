@@ -53,7 +53,8 @@ if (file_exists($filename)) {
 				
 					echo '
 						Изображения добавлены<br /><br />
-						<a href="task_stomat_inspection.php?id='.$_POST['task'].'" class="b">Перейти к формуле</a>';
+						<a href="task_stomat_inspection.php?id='.$_POST['task'].'" class="b">Перейти к формуле</a>
+						<a href="client.php?id='.$_POST['client'].'" class="b">В карточку пациента</a>';
 			
 			}
 		}
