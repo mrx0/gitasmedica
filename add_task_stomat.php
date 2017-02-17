@@ -446,28 +446,28 @@
 						<div class="cellsBlock3">
 							<div class="cellLeft">Комментарий</div>
 							<div class="cellRight">
-								<textarea name="comment" id="comment" cols="35" rows="10"></textarea>
+								<textarea name="comment" id="comment" cols="35" rows="5"></textarea>
 							</div>
 						</div>';
 				echo '
 						<div class="cellsBlock3">
 							<div class="cellLeft">Первичный</div>
 							<div class="cellRight">
-								<input type="checkbox" name="pervich" id="pervich" value="1" '.$pervich_check.'> да
+								<input type="checkbox" name="pervich" id="pervich" value="1" '.$pervich_check.' disabled> да
 							</div>
 						</div>';
 				echo '
 						<div class="cellsBlock3">
 							<div class="cellLeft">Страховой</div>
 							<div class="cellRight">
-								<input type="checkbox" name="insured" id="insured" value="1" '.$insured_check.'> да
+								<input type="checkbox" name="insured" id="insured" value="1" '.$insured_check.' disabled> да
 							</div>
 						</div>';
 				echo '
 						<div class="cellsBlock3">
 							<div class="cellLeft">Ночной</div>
 							<div class="cellRight">
-								<input type="checkbox" name="noch" id="noch" value="1" '.$noch_check.'> да
+								<input type="checkbox" name="noch" id="noch" value="1" '.$noch_check.' disabled> да
 							</div>
 						</div>';
 

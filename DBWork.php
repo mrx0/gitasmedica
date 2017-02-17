@@ -1019,6 +1019,12 @@
 				}
 			}elseif (($datatable == 'journal_etaps_img')){
 				$q =  " WHERE `etap`='$sw' ORDER BY `uptime` ASC";
+			/*}elseif (($datatable == 'journal_zub_img')){
+				if ($type == 'task'){
+					$q =  " WHERE `task`='$sw' ORDER BY `uptime` ASC";
+				}elseif(){
+					$q =  " WHERE `task`='$sw' ORDER BY `uptime` ASC";
+				}*/
 			}else{
 				if ($type == 'filter'){
 					if ($datatable == 'spr_clients'){

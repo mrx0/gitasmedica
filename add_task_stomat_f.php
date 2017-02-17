@@ -283,6 +283,7 @@
 							echo '
 								<a href="task_stomat_inspection.php?id='.$task.'" class="ahref">Посещение #'.$task.'</a> добавлено в журнал.
 								<br><br>
+								<a href="zub_photo.php?id='.$task.'" class="b">Добавить фото</a>
 								<header>
 									<span style= "color: rgba(255,39,39,0.7); padding: 2px;">
 										Напоминание: Если вы что-то забыли или необходимо внести изменения,<br />
