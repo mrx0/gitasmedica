@@ -33,6 +33,7 @@
 						<div id="status">
 							<header>
 								<h2>Редактировать посещение</h2>
+								<a href="zub_photo.php?id='.$_GET['id'].'" class="b">Снимки</a>
 							</header>';
 
 					echo '

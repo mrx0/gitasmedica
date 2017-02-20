@@ -1,6 +1,6 @@
 <?php
 
-//etap.php
+//zub.php
 //
 
 	require_once 'header.php';
@@ -17,11 +17,10 @@
 			
 			//Если у нас по GET передали ID
 			if (isset($_GET['id']) && ($_GET['id'] != '')){
-				$task_stomat = SelDataFromDB('journal_tooth_status', $_GET['id'], 'id');
-				//var_dump($task_stomat);
-				
-				if ($task_stomat != 0){
-					$client = SelDataFromDB('spr_clients', $task_stomat[0]['client'], 'user');
+				$etap = SelDataFromDB('journal_etaps', $_GET['id'], 'id');
+				//var_dump($etap);
+				if ($etap != 0){
+					$client = SelDataFromDB('spr_clients', $etap[0]['client_id'], 'user');
 					//var_dump($client);
 					if ($client !=0){
 						$get_client = $client[0]['full_name'];
@@ -29,7 +28,7 @@
 						echo '
 							<div id="status">
 								<header>
-									<h2>Добавить фото</h2>
+									<h2>Исследование</h2>
 
 								</header>';
 								
@@ -39,100 +38,29 @@
 										<div class="cellsBlock3">
 											<div class="cellLeft">Пациент</div>
 											<div class="cellRight">
-												<a href="client.php?id='.$task_stomat[0]['client'].'" class="ahref">'.$get_client.'</a>
-											</div>
-										</div>
-										<div class="cellsBlock3">
-											<div class="cellLeft">Формула</div>
-											<div class="cellRight">
-												<a href="task_stomat_inspection.php?id='.$task_stomat[0]['id'].'" class="ahref">#'.$task_stomat[0]['id'].'</a>
+												<a href="client.php?id='.$etap[0]['client_id'].'" class="ahref">'.$get_client.'</a>
 											</div>
 										</div>';
 										
-									
-					//Фотки			
-
-					$arr = array();
-					$rez = array();
-					
-					require 'config.php';
-					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-					mysql_select_db($dbName) or die(mysql_error()); 
-					mysql_query("SET NAMES 'utf8'");
-
-					$query = "SELECT * FROM `journal_zub_img` WHERE `task`='{$_GET['id']}'";			
-					
-					$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-					$number = mysql_num_rows($res);
-					if ($number != 0){
-						while ($arr = mysql_fetch_assoc($res)){
-							array_push($rez, $arr);
-						}
-						$rezult = $rez;
-					}else{
-						$rezult = 0;
-					}
-					
-					$price = 0;
-					
-					if ($rezult != 0){
-						//var_dump($rezult);
-						echo '
-							<div style=" margin-bottom: 30px; margin-top: 30px;">
-								<div style="border: 1px solid #ccc; width: 400px; margin: 0 0 2px 0; padding: 2px;">
-									Снимки с внутриротовой камеры
-								</div>';
-						for($i = 0; $i < count($rezult); $i++){
-							echo '
-								<div style="display: inline-block; border: 1px solid #ccc; vertical-align: top;">
-									<div style=" border: 1px solid #eee;">'.date('d.m.y H:i', $rezult[$i]['uptime']).'</div>
-								';
-							echo '									
-									<div>';		
-							if (file_exists ('zub_photo/'.$rezult[$i]['id'].'.jpg')){
-								echo '
-									<a href="#" onclick="window.open(\'zub_photo/'.$rezult[$i]['id'].'.jpg\',\'Image'.$rezult[$i]['id'].'\',\'width=700,height=350,status=no,resizable=yes,top=200,left=200\');">
-										<img src="zub_photo/'.$rezult[$i]['id'].'.jpg" width="200">
-									</a>';
-							}elseif (file_exists ('zub_photo/'.$rezult[$i]['id'].'.png')){
-								echo '
-								<a href="#" onclick="window.open(\'zub_photo/'.$rezult[$i]['id'].'.png\',\'Image'.$rezult[$i]['id'].'\',\'width=700,height=350,status=no,resizable=yes,top=200,left=200\');">
-									<img src="zub_photo/'.$rezult[$i]['id'].'.png" width="200">
-								</a>';									
-									
-							}else{
-								echo 'Ошибка изображения '.$rezult[$i]['id'];
-							}
-							echo '
-									</div>
-								</div>';
-						}
-						echo '
-							</div>';
-					}else{
-						echo '<h3>Не добавлено ни одного изображения</h3>';
-					}
-/*										
-						$zub_photo_items = SelDataFromDB('journal_zub_img', $_GET['id'], 'task');
+						$etap_items = SelDataFromDB('journal_etaps_img', $_GET['id'], 'etap');
 						
-						if ($zub_photo_items !=0){
-							//var_dump($zub_photo_items);
-							
+						if ($etap_items !=0){
+							//var_dump($etap_items);
 							echo '
 								<div style=" margin-bottom: 30px;">';
-							for($i = 0; $i < count($zub_photo_items); $i++){
+							for($i = 0; $i < count($etap_items); $i++){
 								echo '
 									<div style="display: inline-block; border: 1px solid #ccc; vertical-align: top;">
-										<div style=" border: 1px solid #eee;">'.date('d.m.y H:i', $zub_photo_items[$i]['uptime']).'</div>
+										<div style=" border: 1px solid #eee;">'.date('d.m.y H:i', $etap_items[$i]['uptime']).'</div>
 									';
 								echo '									
 										<div>';		
-								if (file_exists ('zub_photo/'.$zub_photo_items[$i]['id'].'.jpg')){
-									echo '<img src="zub_photo/'.$zub_photo_items[$i]['id'].'.jpg" width="400" class="jLoupe" />';
-								}elseif (file_exists ('zub_photo/'.$zub_photo_items[$i]['id'].'.png')){
-									echo '<img src="zub_photo/'.$zub_photo_items[$i]['id'].'.png" width="400" class="jLoupe" />';								
+								if (file_exists ('etaps/'.$etap_items[$i]['id'].'.jpg')){
+									echo '<img src="etaps/'.$etap_items[$i]['id'].'.jpg" width="400" class="jLoupe" />';
+								}elseif (file_exists ('etaps/'.$etap_items[$i]['id'].'.png')){
+									echo '<img src="etaps/'.$etap_items[$i]['id'].'.png" width="400" class="jLoupe" />';								
 								}else{
-									echo 'Ошибка изображения '.$zub_photo_items[$i]['id'];
+									echo 'Ошибка изображения '.$etap_items[$i]['id'];
 								}
 								echo '
 										</div>
@@ -144,14 +72,15 @@
 							echo '
 								<h3>Не добавлено ни одного изображения</h3>
 							';
-						}*/
+						}
 							
 						echo '
 										<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">
+										<input type=\'button\' class="b" value=\'Добавить изображения\' onclick=fin_upload()>
 										';	
 						echo '
 						
-										<form id="upload" method="post" action="upload_zub.php" enctype="multipart/form-data" style="margin-bottom: 10px;">
+										<form id="upload" method="post" action="upload_etap.php" enctype="multipart/form-data">
 											<div id="drop">
 												Переместите сюда или нажмите Поиск
 
@@ -165,8 +94,6 @@
 
 										</form>
 
-										<input type="button" class="b" value="Применить" onclick=fin_upload()>
-										
 										<!-- JavaScript Includes -->
 										<script src="js/jquery.knob.js"></script>
 
@@ -202,13 +129,12 @@
 									//alert(JSON.stringify(img_arr));
 									
 									ajax({
-										url:"fin_upload_zub.php",
+										url:"fin_upload_etap.php",
 										statbox:"status",
 										method:"POST",
 										data:
 										{
-											task:'.$_GET['id'].',
-											client:'.$task_stomat[0]['client'].',
+											etap:'.$_GET['id'].',
 											imgs: img_arr';
 						echo '
 										},

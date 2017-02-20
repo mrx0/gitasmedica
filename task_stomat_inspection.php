@@ -357,6 +357,71 @@
 					include_once 'WriteRemoves.php';
 					echo WriteRemoves($removes);
 									
+					//Фотки			
+
+					$arr = array();
+					$rez = array();
+					
+					require 'config.php';
+					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+					mysql_select_db($dbName) or die(mysql_error()); 
+					mysql_query("SET NAMES 'utf8'");
+
+					$query = "SELECT * FROM `journal_zub_img` WHERE `task`='{$_GET['id']}'";			
+					
+					$res = mysql_query($query) or die(mysql_error().' -> '.$query);
+					$number = mysql_num_rows($res);
+					if ($number != 0){
+						while ($arr = mysql_fetch_assoc($res)){
+							array_push($rez, $arr);
+						}
+						$rezult = $rez;
+					}else{
+						$rezult = 0;
+					}
+					
+					$price = 0;
+					
+					if ($rezult != 0){
+						//var_dump($rezult);
+						echo '
+							<div style=" margin-bottom: 30px; margin-top: 30px;">
+								<div style="border: 1px solid #ccc; width: 400px; margin: 0 0 2px 0; padding: 2px;">
+									Снимки с внутриротовой камеры
+								</div>';
+						for($i = 0; $i < count($rezult); $i++){
+							echo '
+								<div style="display: inline-block; border: 1px solid #ccc; vertical-align: top;">
+									<div style=" border: 1px solid #eee;">'.date('d.m.y H:i', $rezult[$i]['uptime']).'</div>
+								';
+							echo '									
+									<div>';		
+							if (file_exists ('zub_photo/'.$rezult[$i]['id'].'.jpg')){
+								echo '
+									<a href="#" onclick="window.open(\'zub_photo/'.$rezult[$i]['id'].'.jpg\',\'Image'.$rezult[$i]['id'].'\',\'width=700,height=350,status=no,resizable=yes,top=200,left=200\');">
+										<img src="zub_photo/'.$rezult[$i]['id'].'.jpg" width="200">
+									</a>';
+							}elseif (file_exists ('zub_photo/'.$rezult[$i]['id'].'.png')){
+								echo '
+								<a href="#" onclick="window.open(\'zub_photo/'.$rezult[$i]['id'].'.png\',\'Image'.$rezult[$i]['id'].'\',\'width=700,height=350,status=no,resizable=yes,top=200,left=200\');">
+									<img src="zub_photo/'.$rezult[$i]['id'].'.png" width="200">
+								</a>';									
+									
+							}else{
+								echo 'Ошибка изображения '.$rezult[$i]['id'];
+							}
+							echo '
+									</div>
+								</div>';
+						}
+						echo '
+							</div>';
+					}else{
+						//echo 'нет фотки';
+					}
+					
+					
+									
 					/*if (!$closed){
 						echo '
 									<input type=\'button\' class="b" value=\'Назначить исполнителя\' onclick=\'

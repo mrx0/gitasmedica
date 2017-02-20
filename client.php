@@ -561,7 +561,7 @@
 									echo '
 												<div class="cellName">';
 									echo  '
-													Описание:<br>'.$sheduler_zapis[$z]['description'];
+													<b><i>Описание:</i></b><br><div style="text-overflow: ellipsis; overflow: hidden; white-space: inherit; display: block; width: 120px;" title="'.$sheduler_zapis[$z]['description'].'">'.$sheduler_zapis[$z]['description'].'</div>';
 									echo '
 												</div>';
 									echo '
