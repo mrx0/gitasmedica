@@ -30,6 +30,8 @@
 			<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">	
 			<link rel="stylesheet" type="text/css" href="css/pretty.css" />
 			
+			<link rel="stylesheet" type="text/css" href="css/drop_tree.css" />
+			
 			<link rel="stylesheet" type="text/css" href="js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 
 			<link rel="stylesheet" href="css/calendar.css" type="text/css">
