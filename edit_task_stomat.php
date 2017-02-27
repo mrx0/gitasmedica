@@ -265,7 +265,7 @@
 						//var_dump ($t_f_data);		
 						
 						//!!!Тест. Пробуем записать в сессию.
-						$_SESSION['journal_tooth_status_temp'] = $t_f_data;
+						$_SESSION['journal_tooth_status_temp'][$client] = $t_f_data;
 						
 						//var_dump($_SESSION);
 						
@@ -452,6 +452,7 @@
 											</span>
 										</div>
 										<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
+										<input type="hidden" id="client" name="client" value="'.$client.'">
 										<!--<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">-->
 										<input type=\'button\' class="b" value="Применить" onclick=\'
 											var add_notes_type = 0;

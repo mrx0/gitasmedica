@@ -84,8 +84,11 @@
 				if (($clients['close'] == 1) || $god_mode){
 					if ($client[0]['status'] != 9){
 						echo '
+									<a href="move_all.php?client='.$_GET['id'].'" class="info" style="font-size: 80%;" title="Переместить"><i class="fa fa-external-link-square" aria-hidden="true"></i></a>';
+						echo '
 									<a href="client_del.php?id='.$_GET['id'].'" class="info" style="font-size: 80%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
 					}
+					
 				}
 
 				echo '
@@ -123,7 +126,9 @@
 									<div class="cellLeft">Дата рождения</div>
 									<div class="cellRight">
 										', $client[0]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $client[0]['birthday']) ,'<br>
-										полных лет <b>'.getyeardiff($client[0]['birthday']).'</b></div>
+										', $client[0]['birthday'] == '-1577934000' ? '' : 'полных лет <b>'.getyeardiff($client[0]['birthday']).'</b>' ,'
+										
+									</div>
 								</div>
 								
 								<div class="cellsBlock2">
@@ -330,6 +335,7 @@
 					
 					if ($clientDP != 0){
 						//var_dump ($clientDP);
+						$allPayed = false;
 						for ($i=0; $i<count($clientDP); $i++){
 							$repayments = Repayments($clientDP[$i]['id']);
 							//var_dump ($repayments);
@@ -342,7 +348,7 @@
 									$ostatok += $value['summ'];
 								}
 								if ($clientDP[$i]['summ'] - $ostatok == 0){
-									//echo '<i>ЗАКРЫТО</i>';
+									$allPayed = true;
 								}else{
 									$allPayed = false;
 								}
@@ -722,10 +728,10 @@
 							echo '	
 								<a href="stom_history.php?client='.$client[0]['id'].'" class="b">История</a>';
 						}
-						if (($clients['close'] == 1) || $god_mode){
+						/*if (($clients['close'] == 1) || $god_mode){
 							echo '
 								<a href="stom_move.php?id='.$client[0]['id'].'" class="b">Переместить</a>';
-						}
+						}*/
 
 						//Выберем из базы последнюю запись
 						$t_f_data_db = array();
@@ -1440,10 +1446,10 @@
 								<a href="add_kd.php?client='.$client[0]['id'].'" class="b">Добавить КД</a>
 								<a href="kd.php?client='.$client[0]['id'].'" class="b">КД</a>
 								<a href="etaps.php?client='.$client[0]['id'].'" class="b">Исследования</a>';		
-							if (($clients['close'] == 1) || $god_mode){
+							/*if (($clients['close'] == 1) || $god_mode){
 								echo '
 								<a href="cosm_move.php?id='.$client[0]['id'].'" class="b">Переместить</a>';
-							}
+							}*/
 						}
 						
 						$cosmet_task = SelDataFromDB('journal_cosmet1', $_GET['id'], 'client_cosm_id');

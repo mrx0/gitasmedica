@@ -430,7 +430,7 @@
 			}
 		})
 	}; 
-	
+	//Перемещения косметологии другому пациенту
 	function Ajax_cosm_move(session_id, id) {
 		//var id = document.getElementById("id").value;
 		
@@ -449,7 +449,39 @@
 			}
 		})
 	}; 
-	
+	//Перемещение всего другому пациенту
+	function Ajax_move_all(id) {
+		//var id = document.getElementById("id").value;
+		var name = document.getElementById("search_client").value;
+		
+		var rys = false;
+		
+		var rys = confirm("Вы хотите перенести записи другому пациенту. \nЭто невозможно будет исправить \n\nВы уверены?");
+
+		if (rys){
+			$.ajax({
+				url:"move_all_f.php",
+				global: false, 
+				type: "POST", 
+				data:
+				{
+					id: id,
+					client: name,
+				},
+				cache: false,
+				beforeSend: function() {
+					$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+				},
+				success:function(data){
+					$('#errrror').html(data);
+					/*setTimeout(function () {
+						window.location.replace('client.php?id='+id);
+					}, 100);*/
+				}
+			})
+		}
+	}; 
+	//Редактировать ФИО пациента
 	function Ajax_edit_fio_client() {
 		// убираем класс ошибок с инпутов
 		$('input').each(function(){
@@ -2013,3 +2045,49 @@
 			})
 		}
 	}; 
+	
+	
+	//Tree
+	$(document).ready(function(){
+
+
+
+
+		$(".ul-dropfree").find("li:has(ul)").prepend('<div class="drop"></div>');
+		$(".ul-dropfree div.drop").click(function() {
+			if ($(this).nextAll("ul").css('display')=='none') {
+				$(this).nextAll("ul").slideDown(400);
+				$(this).css({'background-position':"-11px 0"});
+			} else {
+				$(this).nextAll("ul").slideUp(400);
+				$(this).css({'background-position':"0 0"});
+			}
+		});
+		$(".ul-dropfree").find("ul").slideUp(400).parents("li").children("div.drop").css({'background-position':"0 0"});
+
+
+		$(".ul-drop").find("li:has(ul)").prepend('<div class="drop"></div>');
+		$(".ul-drop div.drop").click(function() {
+			if ($(this).nextAll("ul").css('display')=='none') {
+				$(this).nextAll("ul").slideDown(400);
+				$(this).css({'background-position':"-11px 0"});
+			} else {
+				$(this).nextAll("ul").slideUp(400);
+				$(this).css({'background-position':"0 0"});
+			}
+		});
+		$(".ul-drop").find("ul").slideUp(400).parents("li").children("div.drop").css({'background-position':"0 0"});
+
+
+
+		$(".lasttreedrophide").click(function(){
+			$("#lasttree").find("ul").slideUp(400).parents("li").children("div.drop").css({'background-position':"0 0"});
+		});
+		$(".lasttreedropshow").click(function(){
+			$("#lasttree").find("ul").slideDown(400).parents("li").children("div.drop").css({'background-position':"-11px 0"});
+		});
+
+
+
+
+	});

@@ -212,7 +212,7 @@
 							<div class="cellsBlock3">
 								<div class="cellLeft">Пациент</div>
 								<div class="cellRight">
-									<input type="text" size="50" name="searchdata" id="search_client" placeholder="Введите первые три буквы для поиска" value="'.$get_client.'" class="who"  autocomplete="off">
+									<input type="text" size="50" name="searchdata" id="search_client" placeholder="Введите первые три буквы для поиска" value="'.$get_client.'" class="who"  autocomplete="off" disabled>
 									<ul id="search_result" class="search_result"></ul><br />
 									<label id="client_error" class="error"></label>
 								</div>
@@ -345,8 +345,9 @@
 					//var_dump($t_f_data);
 					
 					//Пробуем записать в сессию.
-					$_SESSION['journal_tooth_status_temp'] = $t_f_data_draw;
-
+					$_SESSION['journal_tooth_status_temp'][$_GET['client']] = $t_f_data_draw;
+					//var_dump($_SESSION['journal_tooth_status_temp']);
+					
 				}else{
 					//Разбиваем запись с ',' на массив и записываем в новый массив
 					foreach ($t_f_data_db as $key => $value){
@@ -473,6 +474,7 @@
 
 				echo '
 							<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">
+							<input type="hidden" id="client" name="client" value="'.$client[0]['id'].'">
 							<input type="hidden" id="zapis_date" name="zapis_date" value="'.$zapis_date_hidden.'">
 							<input type="hidden" id="zapis_id" name="zapis_id" value="'.$zapis_id.'">
 							<div id="errror"></div>

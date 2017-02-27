@@ -7,8 +7,8 @@
 	
 	if($_GET){
 		
-		//var_dump($_GET);
-		//var_dump($_SESSION);
+		var_dump($_GET);
+		var_dump($_SESSION);
 		
 		include_once 'tooth_status.php';
 		include_once 'root_status.php';
@@ -27,7 +27,7 @@
 		//var_dump($arr);
 		
 		if (!empty($arr)){
-			$t_f_data = $_SESSION['journal_tooth_status_temp'];
+			$t_f_data = $_SESSION['journal_tooth_status_temp'][$_GET['client']];
 			foreach ($arr as $key => $value){
 				if (array_key_exists($_GET['status_all'], $tooth_status) || ($value == '0')){
 					//Если не ЗО
@@ -141,7 +141,7 @@
 			}
 			
 			//var_dump($t_f_data);
-			$_SESSION['journal_tooth_status_temp'] = $t_f_data;
+			$_SESSION['journal_tooth_status_temp'][$_GET['client']] = $t_f_data;
 		}
 
 		//var_dump($_SESSION);

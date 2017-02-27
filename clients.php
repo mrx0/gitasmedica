@@ -223,7 +223,9 @@
 					echo '
 								</div>';
 					echo '
-								<div class="cellCosmAct" style="text-align: center"><b>'.getyeardiff($clients_j[$i]['birthday']).'</b></div>';
+								<div class="cellCosmAct" style="text-align: center">
+									', $clients_j[$i]['birthday'] == '-1577934000' ? '-' : '<b>'.getyeardiff($clients_j[$i]['birthday']).'</b>' ,'
+								</div>';
 					echo '
 								<div class="cellCosmAct" style="text-align: center; width: 60px; min-width: 60px; max-width: 60px;">'.$clients_j[$i]['card'].'</div>';
 					echo '

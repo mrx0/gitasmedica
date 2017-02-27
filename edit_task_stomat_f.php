@@ -17,7 +17,7 @@
 				$create_time = strtotime($_POST['sel_date'].'.'.$_POST['sel_month'].'.'.$_POST['sel_year'].' '.$_POST['sel_hours'].':'.$_POST['sel_minutes'].':'.$_POST['sel_seconds']);
 				
 
-				$t_f_data_temp = $_SESSION['journal_tooth_status_temp'];
+				$t_f_data_temp = $_SESSION['journal_tooth_status_temp'][$_POST['client']];
 						
 				
 				//$stat_time = time();

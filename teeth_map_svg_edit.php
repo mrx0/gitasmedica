@@ -27,7 +27,7 @@
 		include_once 'surface_status.php';
 		include_once 't_context_menu.php';
 		
-		$t_f_data = $_SESSION['journal_tooth_status_temp'];
+		$t_f_data = $_SESSION['journal_tooth_status_temp'][$_GET['client']];
 		
 		//Если был изменен статус зуба, есть номер зуба и номер зуба != ''
 		if (isset($_GET['status']) && ($_GET['status'] != '') && isset($_GET['n_zuba']) && ($_GET['n_zuba'] != '')){
@@ -219,7 +219,7 @@
 		}
 
 		//var_dump ($t_f_data);
-		$_SESSION['journal_tooth_status_temp'] = $t_f_data;
+		$_SESSION['journal_tooth_status_temp'][$_GET['client']] = $t_f_data;
 		
 		//Обновим данные в базе
 		//require 'config.php';
@@ -807,6 +807,9 @@
 					var podvizh = $("input[name=podvizh]:checked").val();
 					var retein = $("input[name=retein]:checked").val();
 					var skomplect = $("input[name=skomplect]:checked").val();
+					
+					var client = document.getElementById("client").value;
+					
                     $.ajax({  
                         url: "teeth_map_svg_edit.php",  
 						method: "POST",
@@ -825,6 +828,8 @@
 								podvizh:podvizh,
 								retein:retein,
 								skomplect:skomplect,
+								
+								client: client,
 							},
                         success: function(html){  
                             $("#teeth_map").html(html);  

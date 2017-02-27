@@ -68,17 +68,19 @@
 								<div class="cellsBlock2">
 									<div class="cellLeft">Должность/уровень доступа</div>
 									<div class="cellRight">';
-											if ($god_mode){
+											if ((($arr_permissions[$i]['id'] != 1) && ($arr_permissions[$i]['id'] != 2) && ($arr_permissions[$i]['id'] != 3) && ($arr_permissions[$i]['id'] != 8)) || ($god_mode)){
 												echo '
 													<select name="permissions" id="permissions">
 														<option value="0">Нажми и выбери</option>';
 												for ($i=0;$i<count($arr_permissions);$i++){
-													if ($arr_permissions[$i]['name'] == $permissions){
-														$slctd = 'selected';
-													}else{
-														$slctd = '1';
+													if ((($arr_permissions[$i]['id'] != 1) && ($arr_permissions[$i]['id'] != 2) && ($arr_permissions[$i]['id'] != 3) && ($arr_permissions[$i]['id'] != 8)) || ($god_mode)){
+														if ($arr_permissions[$i]['name'] == $permissions){
+															$slctd = 'selected';
+														}else{
+															$slctd = '1';
+														}
+														echo "<option value='".$arr_permissions[$i]['id']."' $slctd>".$arr_permissions[$i]['name']."</option>";
 													}
-													echo "<option value='".$arr_permissions[$i]['id']."' $slctd>".$arr_permissions[$i]['name']."</option>";
 												}
 												echo "</select>";
 											}else{

@@ -421,7 +421,9 @@
 					
 					var implant = $("input[name=implant]:checked").val();
 					
-					//alert(t_stat_value18);
+					var client = document.getElementById("client").value;
+					
+					//alert(client);
 					
 					$.ajax({  
 					
@@ -469,6 +471,8 @@
 								implant:implant,
 								
 								status_all:Status4All,
+								
+								client: client,
 
 							},
 						success: function(html){
@@ -479,7 +483,7 @@
 								cache: false,  
 								data:
 									{
-
+										client: client,
 									},
 								success: function(html){  
 									//скрываем модальные окна

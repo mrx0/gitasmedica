@@ -1551,7 +1551,7 @@
 
 							echo '
 										<li>
-											<p>'.$items_j[$i]['name'].'</p>
+											<p onclick="alert(this.innerHTML)">'.$items_j[$i]['name'].'</p>
 										</li>';
 						}
 					}else{

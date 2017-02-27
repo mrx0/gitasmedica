@@ -553,6 +553,9 @@
 					var podvizh = $("input[name=podvizh]:checked").val();
 					var retein = $("input[name=retein]:checked").val();
 					var skomplect = $("input[name=skomplect]:checked").val();
+					
+					var client = document.getElementById("client").value;
+					
                     $.ajax({  
                         url: "teeth_map_svg_edit.php",  
 						method: "POST",
@@ -572,6 +575,8 @@
 								retein:retein,
 								skomplect:skomplect,
 								n:'.$nm.',
+								
+								client: client,
 							},
                         success: function(html){  
                             $("#teeth_map").html(html);  

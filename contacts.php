@@ -11,7 +11,7 @@
 		if (($workers['see_all'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
-			
+			//var_dump($_SESSION);
 			//$offices = SelDataFromDB('spr_office', '', '');
 			
 			echo '
@@ -66,7 +66,8 @@
 									
 									<div class="cellText" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$contacts[$i]['contacts'].'</div>
 									<div class="cellName" style="text-align: center; ', $contacts[$i]['fired'] == '1' ? 'background-color: rgba(161,161,161,1);"' : '"' ,'>'.$contacts[$i]['login'].'</div>';
-							if ($god_mode || ($workers['see_own'] == 1)){			
+							if (($god_mode || ($workers['see_own'] == 1)) && 
+							(($contacts[$i]['permissions'] == 4) || ($contacts[$i]['permissions'] == 5) ||  ($contacts[$i]['permissions'] == 6) ||  ($contacts[$i]['permissions'] == 7) ||  ($contacts[$i]['permissions'] == 9))){ 			
 								echo '
 										<div class="cellName" style="text-align: center; ', $contacts[$i]['fired'] == '1' ? 'background-color: rgba(161,161,161,1);"' : '"' ,'>
 											<div style="display:inline-block;">'.$contacts[$i]['password'].'</div> <div style="color: red; display: inline-block; cursor: pointer;" title="Сменить пароль" onclick=changePass('.$contacts[$i]['id'].')><i class="fa fa-key" aria-hidden="true"></i></div>
