@@ -1480,7 +1480,7 @@
 					echo '
 						<li>
 							<div class="drop" style="background-position: 0px 0px;"></div>
-							<p>'.$value['name'].'</p>';
+							<p class="drop"><b>'.$value['name'].'</b></p>';
 					
 					/*echo '
 						<li class="cellsBlock" style="width: auto;">
@@ -1551,7 +1551,7 @@
 
 							echo '
 										<li>
-											<p onclick="alert(this.innerHTML)">'.$items_j[$i]['name'].'</p>
+											<p onclick="checkPriceItem('.$items_j[$i]['id'].')">'.$items_j[$i]['name'].'</p>
 										</li>';
 						}
 					}else{

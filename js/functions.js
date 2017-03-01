@@ -2044,17 +2044,224 @@
 				}
 			})
 		}
-	}; 
+	};
 	
+	//Функция заполняет результат счета из сессии
+	function fillInvoiseRez(){
+		//alert(1);
+		
+		$.ajax({
+			url:"fill_invoice_from_session_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				if(data.result == "success"){  
+					//alert(data.data);
+					$('#invoice_rezult').html(data.data);
+				}else{
+					//alert('error');
+					$('#errror').html(data.data);
+				}
+			}
+		});
+		$('#errror').html('Результат');
+	}
+	
+	//Удалить текущую позицию
+	function deleteInvoiceItem(zub, dataObj){
+		//alert(dataObj.getAttribute("invoiceitemid"));
+		//номер позиции
+		
+		var itemId = dataObj.getAttribute("invoiceitemid");
+		var target = 'item';
+		
+		if ((itemId == null) || (itemId == 'null') || (typeof itemId == "undefined")){
+			target = 'zub';
+		}
+		
+		$.ajax({
+			url:"delete_invoice_item_from_session_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				key: itemId,
+				zub: zub,
+				
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+				
+				target: target,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
+				
+				//$('#errror').html(data);
+				if(data.result == "success"){
+					//alert(111);
+					$(".sel_tooth").each(function() {
+						if (Number(this.innerHTML) == data.t_number_active){
+							this.style.background = '#83DB53';
+						}else{
+							this.style.background = '';
+						}
+					});
+				}
+				/*else{
+					//alert('error');
+					$('#errror').html(data.data);
+				}*/
+				
+				//fillInvoiseRez();
+			}
+		});
+	}	
+	
+	//Кликанье по зубам в счёте
+	$(document).ready(function(){
+
+		//получим активный зуб
+		var t_number_active = document.getElementById("t_number_active").value;
+		
+		if (t_number_active != 0){
+			$(".sel_tooth").each(function() {
+				if (Number(this.innerHTML) == t_number_active){
+					this.style.background = '#83DB53';
+				}else{
+					this.style.background = '';
+				}
+			});
+		}
+		
+		
+		$(".sel_tooth").click(function(){
+			//alert(Number(this.innerHTML));
+			$(".sel_tooth").each(function() {
+				this.style.background = '';
+			});
+			//Выделям активный зуб
+			this.style.background = '#83DB53';
+			//получам номер зуба
+			var t_number = Number(this.innerHTML);
+			//Отправляем в сессию
+			$.ajax({
+				url:"add_invoice_in_session_f.php",
+				global: false, 
+				type: "POST", 
+				dataType: "JSON",
+				data:
+				{
+					t_number: t_number,
+					client: document.getElementById("client").value,
+					zapis_id: document.getElementById("zapis_id").value,
+					filial: document.getElementById("filial").value,
+					worker: document.getElementById("worker").value,
+				},
+				cache: false,
+				beforeSend: function() {
+					//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+				},
+				// действие, при ответе с сервера
+				success: function(data){
+					
+					fillInvoiseRez ();
+					
+					if(data.result == "success"){  
+						$('#errror').html(data.data);
+						
+						//fillInvoiseRez();
+						
+					}else{
+						$('#errror').html(data.data);
+					}
+					//fillInvoiseRez();
+				}
+			})
+
+			//получам объект результата, сюда будем втыкать
+			//var invoice_rezult = document.getElementById("invoice_rezult");
+			//Создаем новый элемент. его будем втыкать
+			//var newDiv = document.createElement('div');
+			//Класс CSS
+			//div.className = "alert alert-success";
+			//Содержимое нового элемента
+			//newDiv.innerHTML = "<strong>Зуб"+t_number+"</strong> Добавлено.";
+			//Втыкаем
+			//invoice_rezult.appendChild(newDiv);
+			
+			//$("#lasttree").find("ul").slideUp(400).parents("li").children("div.drop").css({'background-position':"0 0"});
+
+		});
+
+		fillInvoiseRez();
+		
+	});
+
+	//Добавить позицию из прайса в счет
+	function checkPriceItem(price_id) {
+		//alert(100);
+		$.ajax({
+			url:"add_price_id_in_invoice_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				price_id: price_id,
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
+				
+				/*if(data.result == "success"){  
+					//alert(data.data);
+					$('#invoice_rezult').html(data.data);
+				}else{
+					//alert('error');
+					$('#errror').html(data.data);
+				}*/
+			}
+		});
+		
+		//fillInvoiseRez();
+	}; 
 	
 	//Tree
 	$(document).ready(function(){
-
-
-
-
+		/*
 		$(".ul-dropfree").find("li:has(ul)").prepend('<div class="drop"></div>');
-		$(".ul-dropfree div.drop").click(function() {
+		$(".ul-dropfree .drop").click(function() {
 			if ($(this).nextAll("ul").css('display')=='none') {
 				$(this).nextAll("ul").slideDown(400);
 				$(this).css({'background-position':"-11px 0"});
@@ -2064,21 +2271,20 @@
 			}
 		});
 		$(".ul-dropfree").find("ul").slideUp(400).parents("li").children("div.drop").css({'background-position':"0 0"});
-
-
+		*/
 		$(".ul-drop").find("li:has(ul)").prepend('<div class="drop"></div>');
-		$(".ul-drop div.drop").click(function() {
+		$(".ul-drop .drop").click(function() {
 			if ($(this).nextAll("ul").css('display')=='none') {
 				$(this).nextAll("ul").slideDown(400);
+				$(this).prev("div").css({'background-position':"-11px 0"});
 				$(this).css({'background-position':"-11px 0"});
 			} else {
 				$(this).nextAll("ul").slideUp(400);
+				$(this).prev("div").css({'background-position':"0 0"});
 				$(this).css({'background-position':"0 0"});
 			}
 		});
 		$(".ul-drop").find("ul").slideUp(400).parents("li").children("div.drop").css({'background-position':"0 0"});
-
-
 
 		$(".lasttreedrophide").click(function(){
 			$("#lasttree").find("ul").slideUp(400).parents("li").children("div.drop").css({'background-position':"0 0"});
@@ -2086,8 +2292,4 @@
 		$(".lasttreedropshow").click(function(){
 			$("#lasttree").find("ul").slideDown(400).parents("li").children("div.drop").css({'background-position':"-11px 0"});
 		});
-
-
-
-
 	});

@@ -638,10 +638,12 @@
 												}
 												//!!!Акт
 												$zapisDate = strtotime($sheduler_zapis[$z]['day'].'.'.$sheduler_zapis[$z]['month'].'.'.$sheduler_zapis[$z]['year']);
-												if (time() < $zapisDate + 60*60*24){
-													/*echo 
-														'<a href="#">Внести Акт</a><br />';*/
-												}
+												//if (time() < $zapisDate + 60*60*24){
+													echo 
+													'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
+														<a href="invoice_add.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'&worker='.$sheduler_zapis[$z]['worker'].'" class="ahref">Счёт</a>
+													</div>';
+												//}
 											}
 										}else{
 											echo "&nbsp";

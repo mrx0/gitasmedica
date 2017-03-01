@@ -263,6 +263,14 @@ area {
 	min-width:250px;
 }
 
+.cellText2 {
+	display: table-cell !important;
+	display: inline; /* для IE */
+	padding:4px;
+	border: 1px solid #BFBCB5;
+	vertical-align:middle;
+}
+
 .cellAddress {
 	display: table-cell !important;
 	display: inline; /* для IE */
@@ -1732,8 +1740,49 @@ input.dateс {
 	display:none;
 }
 
- .pricemenu{
-	 /*text-shadow: 1px 1px 1px #999;*/
-	 text-shadow: 1px 1px 1px #060606;	 
-	 cursor: pointer;
- }
+.pricemenu{
+	/*text-shadow: 1px 1px 1px #999;*/
+	text-shadow: 1px 1px 1px #060606;	 
+	cursor: pointer;
+}
+
+.tooth_updown{
+	display: block;
+	margin: 1px;
+}
+
+.sel_tooth, .sel_toothp {
+	display: inline-block;
+	padding: 5px;
+	border: 1px solid #CCC;
+	margin: 1px;
+	font-size: 10px;
+	cursor: pointer;
+}
+
+.tooth_left{
+	margin: 0 2px 0 0;
+	padding: 1px;
+}
+
+.tooth_left:hover{
+	background: rgba(43, 195, 184, 0.1);
+}
+
+.tooth_right{
+	margin: 0 0 0 2px;
+	padding: 1px;
+}
+
+.tooth_right:hover{
+	background: rgba(43, 195, 184, 0.1);
+}
+
+.sel_tooth:hover, .sel_toothp:hover {
+	font-weight: bold;
+	background: rgba(77, 246, 127, 0.9);
+}
+
+.invoice_rezult{
+	vertical-align: top;
+}

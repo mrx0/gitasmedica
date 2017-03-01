@@ -92,9 +92,9 @@
 						
 						//Авансы долги
 						$query = "UPDATE `journal_debts_prepayments` SET 
-						`patient`='{$clients[0]['id']}' 
+						`client`='{$clients[0]['id']}' 
 						WHERE 
-						`patient`='{$_POST['id']}'";
+						`client`='{$_POST['id']}'";
 
 						mysql_query($query) or die(mysql_error().' -> '.$query);
 						

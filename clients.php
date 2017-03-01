@@ -20,6 +20,8 @@
 			$sw = '';
 			$filter_rez = array();
 			
+			$deleted_clients = '';
+			
 			echo '
 				<header style="margin-bottom: 5px;">
 					<h1>Список пациентов</h1>';
@@ -174,18 +176,31 @@
 					}else{
 						$bgcolor = '';
 					}
-					echo '
+
+					if ($clients_j[$i]['status'] != 9){
+						echo '
 							<li class="cellsBlock cellsBlockHover" style="'.$bgcolor.'">
 								<a href="client.php?id='.$clients_j[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$clients_j[$i]['full_name'].'</a>';
 								
-					echo '
-								<div class="cellCosmAct" style="text-align: center">';
-					if (($clients_j[$i]['polis'] != '') && ($clients_j[$i]['insure'] != '')){
-						echo '<img src="img/insured.png" title="Страховое">';
-					}
-					echo '
-								</div>';
-								
+						echo '
+									<div class="cellCosmAct" style="text-align: center">';
+						if (($clients_j[$i]['polis'] != '') && ($clients_j[$i]['insure'] != '')){
+							echo '<img src="img/insured.png" title="Страховое">';
+						}
+						echo '
+									</div>';
+					}else{
+						$deleted_clients .= '
+							<li class="cellsBlock cellsBlockHover" style="'.$bgcolor.'">
+								<a href="client.php?id='.$clients_j[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$clients_j[$i]['full_name'].'</a>';
+						$deleted_clients .= '
+									<div class="cellCosmAct" style="text-align: center">';
+						if (($clients_j[$i]['polis'] != '') && ($clients_j[$i]['insure'] != '')){
+							echo '<img src="img/insured.png" title="Страховое">';
+						}
+						$deleted_clients .= '
+									</div>';
+					}						
 					if ($clients_j[$i]['status'] != 9){
 						/*if (($stom['add_own'] == 1) || $god_mode){
 							echo '
@@ -201,45 +216,94 @@
 										<div class="cellCosmAct" style="text-align: center"><a href="stom_history.php?client='.$clients_j[$i]['id'].'"><img src="img/stom_hist.png" title="История пациента (стоматология)"></a></div>';
 						}
 					}else{
-						echo '
+						$deleted_clients .= '
 							<!--<div class="cellCosmAct" style="text-align: center"></div>-->
-							<div class="cellCosmAct" style="text-align: center"></div>
 							<div class="cellCosmAct" style="text-align: center"></div>
 							';
 					}
-					echo '
-								<div class="cellCosmAct" style="text-align: center">';
-					if ($clients_j[$i]['sex'] != 0){
-						if ($clients_j[$i]['sex'] == 1){
-							echo 'М';
-						}
-						if ($clients_j[$i]['sex'] == 2){
-							echo 'Ж';
-						}
-					}else{
-						echo '-';
-					}
-					
-					echo '
-								</div>';
-					echo '
-								<div class="cellCosmAct" style="text-align: center">
-									', $clients_j[$i]['birthday'] == '-1577934000' ? '-' : '<b>'.getyeardiff($clients_j[$i]['birthday']).'</b>' ,'
-								</div>';
-					echo '
-								<div class="cellCosmAct" style="text-align: center; width: 60px; min-width: 60px; max-width: 60px;">'.$clients_j[$i]['card'].'</div>';
-					echo '
-								<div class="cellTime" style="text-align: center">', $clients_j[$i]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $clients_j[$i]['birthday']) ,'</div>
-								<div class="cellFullName">'.$clients_j[$i]['telephone'];
-					if ($clients_j[$i]['htelephone'] != ''){
+					if ($clients_j[$i]['status'] != 9){
 						echo '
-									дом. '.$clients_j[$i]['htelephone'].'';
+									<div class="cellCosmAct" style="text-align: center">';
+						if ($clients_j[$i]['sex'] != 0){
+							if ($clients_j[$i]['sex'] == 1){
+								echo 'М';
+							}
+							if ($clients_j[$i]['sex'] == 2){
+								echo 'Ж';
+							}
+						}else{
+							echo '-';
+						}
+						
+						echo '
+									</div>';
+						echo '
+									<div class="cellCosmAct" style="text-align: center">
+										', $clients_j[$i]['birthday'] == '-1577934000' ? '-' : '<b>'.getyeardiff($clients_j[$i]['birthday']).'</b>' ,'
+									</div>';
+						echo '
+									<div class="cellCosmAct" style="text-align: center; width: 60px; min-width: 60px; max-width: 60px;">'.$clients_j[$i]['card'].'</div>';
+						echo '
+									<div class="cellTime" style="text-align: center">', $clients_j[$i]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $clients_j[$i]['birthday']) ,'</div>
+									<div class="cellFullName">'.$clients_j[$i]['telephone'];
+						if ($clients_j[$i]['htelephone'] != ''){
+							echo '
+										дом. '.$clients_j[$i]['htelephone'].'';
+						}
+						echo '
+									</div>
+									<div class="cellText">'.$clients_j[$i]['comment'].'</div>
+								</li>';
+					}else{
+						$deleted_clients .= '
+									<div class="cellCosmAct" style="text-align: center">';
+						if ($clients_j[$i]['sex'] != 0){
+							if ($clients_j[$i]['sex'] == 1){
+								$deleted_clients .= 'М';
+							}
+							if ($clients_j[$i]['sex'] == 2){
+								$deleted_clients .= 'Ж';
+							}
+						}else{
+							$deleted_clients .= '-';
+						}
+						
+						$deleted_clients .= '
+									</div>';
+						$deleted_clients .= '
+									<div class="cellCosmAct" style="text-align: center">';
+						if ($clients_j[$i]['birthday'] == '-1577934000'){
+							$deleted_clients .= '-';
+						}else{
+							$deleted_clients .= '<b>'.getyeardiff($clients_j[$i]['birthday']).'</b>';
+						}
+						$deleted_clients .= '
+									</div>';
+						$deleted_clients .= '
+									<div class="cellCosmAct" style="text-align: center; width: 60px; min-width: 60px; max-width: 60px;">'.$clients_j[$i]['card'].'</div>';
+						$deleted_clients .= '
+									<div class="cellTime" style="text-align: center">';
+						if ($clients_j[$i]['birthday'] == 'не указана'){
+							$deleted_clients .= '';
+						}else{
+							$deleted_clients .= date('d.m.Y', $clients_j[$i]['birthday']);
+						}
+						$deleted_clients .= '
+									</div>
+									<div class="cellFullName">'.$clients_j[$i]['telephone'];
+						if ($clients_j[$i]['htelephone'] != ''){
+							$deleted_clients .= '
+										дом. '.$clients_j[$i]['htelephone'].'';
+						}
+						$deleted_clients .= '
+									</div>
+									<div class="cellText">'.$clients_j[$i]['comment'].'</div>
+								</li>';
 					}
-					echo '
-								</div>
-								<div class="cellText">'.$clients_j[$i]['comment'].'</div>
-							</li>';
 				}
+				
+				echo $deleted_clients;
+				
 			}else{
 				echo '<h1>Нечего показывать.</h1><a href="index.php">На главную</a>';
 			}
