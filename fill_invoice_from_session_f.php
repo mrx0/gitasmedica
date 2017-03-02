@@ -15,11 +15,17 @@
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center;">
 								<i><b>Зуб</b></i>
 							</div>
-							<div class="cellCosmAct" style="font-size: 70%; text-align: center;">
+							<!--<div class="cellCosmAct" style="font-size: 70%; text-align: center;">
 								<i><b>МКБ</b></i>
-							</div>
+							</div>-->
 							<div class="cellText2" style="font-size: 100%; text-align: center;">
 								**
+							</div>
+							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
+								<i><b>Цена, руб.</b></i>
+							</div>
+							<div class="cellCosmAct" style="font-size: 70%; text-align: center;">
+								<i><b>-</b></i>
 							</div>
 						</div>
 		';
@@ -51,16 +57,16 @@
 						}
 						$request .= '
 							<div class="cellsBlock">
-								<div class="cellCosmAct" style="font-size: 100%; text-align: center; '.$bg_col.'">
-									<b>'.$zub.'</b>
+								<div class="cellCosmAct toothInInvoice" style="'.$bg_col.'">
+									'.$zub.'
 								</div>';
 						if (!empty($invoice_data)){
 							foreach ($invoice_data as $key => $items){
 								$request .= '
 								<div class="cellsBlock" style="font-size: 100%;">
-								<div class="cellCosmAct" style=" '.$bg_col.'">
+								<!--<div class="cellCosmAct" style=" '.$bg_col.'">
 									-
-								</div>
+								</div>-->
 								<div class="cellText2" style=" '.$bg_col.'">';
 								
 								//Хочу имя позиции в прайсе
@@ -87,25 +93,48 @@
 								
 								if ($rezult2 != 0){
 									$request .= $rezult2[0]['name'];
+									
+									//Узнать цену
+									$arr = array();
+									$rez = array();
+									$price = 0;
+									
+									$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='{$items}' ORDER BY `create_time` DESC LIMIT 1";
+									
+									$res = mysql_query($query) or die(mysql_error().' -> '.$query);
+									$number = mysql_num_rows($res);
+									if ($number != 0){
+										$arr = mysql_fetch_assoc($res);
+										$price = $arr['price'];
+									}else{
+										$price = 0;
+									}
+									
 								}else{
 									$request .= '?';
 								}
 								
 								$request .= '
 								</div>
+								<div class="cellCosmAct invoiceItemPrice" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; '.$bg_col.'">
+									'.$price.'
+								</div>
 								<div invoiceitemid="'.$key.'" class="cellCosmAct info" style="font-size: 100%; text-align: center; '.$bg_col.'" onclick="deleteInvoiceItem('.$zub.', this);">
 									<i class="fa fa-trash-o" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
 								</div>
-								</div>';
+							</div>';
 							}
 						}else{
 							$request .= '
-								<div class="cellCosmAct" style="text-align: center; '.$bg_col.'">
+								<!--<div class="cellCosmAct" style="text-align: center; '.$bg_col.'">
 									-
-								</div>
+								</div>-->
 								<div class="cellText2" style="text-align: center; '.$bg_col.'">
 									не заполнено
 								</div>
+								<!--<div class="cellCosmAct" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; '.$bg_col.'">
+									0
+								</div>-->
 								<div class="cellCosmAct info" style="font-size: 100%; text-align: center; '.$bg_col.'" onclick="deleteInvoiceItem('.$zub.', this);">
 									<i class="fa fa-trash-o" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
 								</div>';

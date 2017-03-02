@@ -160,11 +160,10 @@
 							</div>
 						</div>';
 						
-						
+				//Прайс							
 				echo '			
 						<div  style="display: inline-block;">';
-						
-				//Прайс	
+
 				echo '	
 							<div style="margin: 10px 0 5px; font-size: 11px; cursor: pointer;">
 								<span class="dotyel a-action lasttreedrophide">скрыть всё</span>, <span class="dotyel a-action lasttreedropshow">раскрыть всё</span>
@@ -181,17 +180,19 @@
 							</div>';					
 				echo '
 						</div>';
-				
+
+				//Результат							
 				echo '			
 						<div class="invoice_rezult" style="display: inline-block;">';
-				//Результат	
+						
 				echo '	
 							<div id="errror" style="margin: 10px 0 5px; font-size: 11px; padding-left: 5px;">
 								
-							</div>';
+							</div>
+							<div id="calculateInvoice">0</div>';
 				
 				echo '
-							<div id="invoice_rezult" style="width: 350px; height: 500px; overflow: scroll; border: 1px solid #CCC;">
+							<div id="invoice_rezult" style="width: 500px; height: 500px; overflow: scroll; border: 1px solid #CCC;">
 							</div>';
 				echo '
 						</div>';

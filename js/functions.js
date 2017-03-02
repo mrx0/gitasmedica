@@ -2046,6 +2046,29 @@
 		}
 	};
 	
+	//Подсчёт суммы для счёта
+	function calculateInvoice (){
+		
+		var Summ = 0;
+		
+		$(".invoiceItemPrice").each(function() {
+			Summ += Number(this.innerHTML);
+		});
+		
+		document.getElementById("calculateInvoice").innerHTML = Summ;
+	};
+	
+	//Окрасить кнопки с зубами
+	function colorizeTButton (t_number_active){
+		$(".sel_tooth").each(function() {
+			if (Number(this.innerHTML) == t_number_active){
+				this.style.background = '#83DB53';
+			}else{
+				this.style.background = '';
+			}
+		});
+	}
+	
 	//Функция заполняет результат счета из сессии
 	function fillInvoiseRez(){
 		//alert(1);
@@ -2071,6 +2094,10 @@
 				if(data.result == "success"){  
 					//alert(data.data);
 					$('#invoice_rezult').html(data.data);
+					
+					// !!!
+					calculateInvoice();
+					
 				}else{
 					//alert('error');
 					$('#errror').html(data.data);
@@ -2078,6 +2105,7 @@
 			}
 		});
 		$('#errror').html('Результат');
+		//calculateInvoice();
 	}
 	
 	//Удалить текущую позицию
@@ -2117,17 +2145,21 @@
 			success: function(data){
 				
 				fillInvoiseRez();
+				//calculateInvoice();
 				
 				//$('#errror').html(data);
 				if(data.result == "success"){
 					//alert(111);
-					$(".sel_tooth").each(function() {
+					
+					colorizeTButton (data.t_number_active);
+					
+					/*$(".sel_tooth").each(function() {
 						if (Number(this.innerHTML) == data.t_number_active){
 							this.style.background = '#83DB53';
 						}else{
 							this.style.background = '';
 						}
-					});
+					});*/
 				}
 				/*else{
 					//alert('error');
@@ -2146,25 +2178,29 @@
 		var t_number_active = document.getElementById("t_number_active").value;
 		
 		if (t_number_active != 0){
-			$(".sel_tooth").each(function() {
+			colorizeTButton (t_number_active);
+			/*$(".sel_tooth").each(function() {
 				if (Number(this.innerHTML) == t_number_active){
 					this.style.background = '#83DB53';
 				}else{
 					this.style.background = '';
 				}
-			});
+			});*/
 		}
 		
 		
 		$(".sel_tooth").click(function(){
 			//alert(Number(this.innerHTML));
-			$(".sel_tooth").each(function() {
-				this.style.background = '';
-			});
+			//$(".sel_tooth").each(function() {
+			//	this.style.background = '';
+			//});
 			//Выделям активный зуб
-			this.style.background = '#83DB53';
+			//this.style.background = '#83DB53';
 			//получам номер зуба
 			var t_number = Number(this.innerHTML);
+			
+			colorizeTButton(t_number);
+			
 			//Отправляем в сессию
 			$.ajax({
 				url:"add_invoice_in_session_f.php",
@@ -2186,7 +2222,8 @@
 				// действие, при ответе с сервера
 				success: function(data){
 					
-					fillInvoiseRez ();
+					fillInvoiseRez();
+					//calculateInvoice();
 					
 					if(data.result == "success"){  
 						$('#errror').html(data.data);
@@ -2215,7 +2252,21 @@
 
 		});
 
+		//Выбор зуба из таблички 
+		$(".toothInInvoice").click(function(){
+			
+			var t_number = Number(this.innerHTML);
+			alert (t_number);
+			
+			colorizeTButton(t_number);
+		
+		});
+		
 		fillInvoiseRez();
+		/*setTimeout(function () {
+			calculateInvoice();
+		}, 1000);*/
+		
 		
 	});
 
@@ -2243,6 +2294,7 @@
 			success: function(data){
 				
 				fillInvoiseRez();
+				//calculateInvoice();
 				
 				/*if(data.result == "success"){  
 					//alert(data.data);
