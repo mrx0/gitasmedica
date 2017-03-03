@@ -2333,10 +2333,11 @@
 	
 	//Тест контекстного меню
 	$(document).ready(function() {
-		$(document).click(function(){
-			var e = $("#koeff");
+		
+		$(document).click(function(e){
 			var elem = $(".context-menu"); 
-			if(e.target!=elem[0]&&!elem.has(e.target).length){
+			var elem2 = $("#koeff"); 
+			if(e.target != elem[0]&&!elem.has(e.target).length && e.target != elem2[0]&&!elem2.has(e.target).length){
 				elem.hide(); 
 			} 
 		})
@@ -2367,13 +2368,10 @@
 				})
 				.appendTo('body') // Присоединяем наше меню к body документа:
 				.append( // Добавляем пункты меню:
-					$('<ul/>').append('<li><a href="#">Remove element</a></li>') 
-							.append('<li><a href="#">Add element</a></li>')
-							.append('<li><a href="#">Element style</a></li>') 
-							.append('<li><a href="#">Element props</a></li>')
-							.append('<li><a href="#">Open Inspector</a></li>')
+					$('<ul/>').append('<li><a href="#">Ведущий сп-т +10%</a></li>')
+							.append('<li><a href="#">Главный сп-т +20%</a></li>') 
 				)
-				.show('fast'); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+				.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
 			}
 		});
 	});
