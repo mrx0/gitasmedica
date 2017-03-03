@@ -2050,13 +2050,21 @@
 	function calculateInvoice (){
 		
 		var Summ = 0;
-		
 		$(".invoiceItemPrice").each(function() {
-			Summ += Number(this.innerHTML);
+			
+			//var fff = $(this).siblings('input[type=number]').val();
+			var quantity = Number($(this).parent().find('[type=number]').val());
+			//console.log(fff);
+			
+			$(this).next().next().next().html(quantity * Number(this.innerHTML));
+			
+			Summ += quantity * Number(this.innerHTML);
 		});
 		
 		document.getElementById("calculateInvoice").innerHTML = Summ;
 	};
+	
+
 	
 	//Окрасить кнопки с зубами
 	function colorizeTButton (t_number_active){
@@ -2104,7 +2112,7 @@
 				}
 			}
 		});
-		$('#errror').html('Результат');
+		//$('#errror').html('Результат');
 		//calculateInvoice();
 	}
 	
@@ -2170,108 +2178,51 @@
 			}
 		});
 	}	
-	
-	//Кликанье по зубам в счёте
-	$(document).ready(function(){
 
-		//получим активный зуб
-		var t_number_active = document.getElementById("t_number_active").value;
-		
-		if (t_number_active != 0){
-			colorizeTButton (t_number_active);
-			/*$(".sel_tooth").each(function() {
-				if (Number(this.innerHTML) == t_number_active){
-					this.style.background = '#83DB53';
-				}else{
-					this.style.background = '';
-				}
-			});*/
-		}
-		
-		
-		$(".sel_tooth").click(function(){
-			//alert(Number(this.innerHTML));
-			//$(".sel_tooth").each(function() {
-			//	this.style.background = '';
-			//});
-			//Выделям активный зуб
-			//this.style.background = '#83DB53';
-			//получам номер зуба
-			var t_number = Number(this.innerHTML);
-			
-			colorizeTButton(t_number);
-			
-			//Отправляем в сессию
-			$.ajax({
-				url:"add_invoice_in_session_f.php",
-				global: false, 
-				type: "POST", 
-				dataType: "JSON",
-				data:
-				{
-					t_number: t_number,
-					client: document.getElementById("client").value,
-					zapis_id: document.getElementById("zapis_id").value,
-					filial: document.getElementById("filial").value,
-					worker: document.getElementById("worker").value,
-				},
-				cache: false,
-				beforeSend: function() {
-					//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-				},
-				// действие, при ответе с сервера
-				success: function(data){
+
+	//Выбор зуба из таблички 
+	function toothInInvoice(t_number){
+		//alert (t_number);
+		$.ajax({
+			url:"add_invoice_in_session_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				t_number: t_number,
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
+				//calculateInvoice();
+				
+				if(data.result == "success"){  
+					//$('#errror').html(data.data);
 					
-					fillInvoiseRez();
-					//calculateInvoice();
-					
-					if(data.result == "success"){  
-						$('#errror').html(data.data);
-						
-						//fillInvoiseRez();
-						
-					}else{
-						$('#errror').html(data.data);
-					}
 					//fillInvoiseRez();
+					
+				}else{
+					$('#errror').html(data.data);
 				}
-			})
-
-			//получам объект результата, сюда будем втыкать
-			//var invoice_rezult = document.getElementById("invoice_rezult");
-			//Создаем новый элемент. его будем втыкать
-			//var newDiv = document.createElement('div');
-			//Класс CSS
-			//div.className = "alert alert-success";
-			//Содержимое нового элемента
-			//newDiv.innerHTML = "<strong>Зуб"+t_number+"</strong> Добавлено.";
-			//Втыкаем
-			//invoice_rezult.appendChild(newDiv);
+				//fillInvoiseRez();
+			}
+		})
+				
+		colorizeTButton(t_number);
+	}
 			
-			//$("#lasttree").find("ul").slideUp(400).parents("li").children("div.drop").css({'background-position':"0 0"});
-
-		});
-
-		//Выбор зуба из таблички 
-		$(".toothInInvoice").click(function(){
-			
-			var t_number = Number(this.innerHTML);
-			alert (t_number);
-			
-			colorizeTButton(t_number);
-		
-		});
-		
-		fillInvoiseRez();
-		/*setTimeout(function () {
-			calculateInvoice();
-		}, 1000);*/
-		
-		
-	});
-
 	//Добавить позицию из прайса в счет
-	function checkPriceItem(price_id) {
+	function checkPriceItem(price_id){
 		//alert(100);
 		$.ajax({
 			url:"add_price_id_in_invoice_f.php",
@@ -2309,6 +2260,40 @@
 		//fillInvoiseRez();
 	}; 
 	
+	//Полновстью чистим счёт
+	function clearInvoice(){
+		
+		var rys = false;
+		
+		var rys = confirm("Очистить?");
+
+		if (rys){
+			$.ajax({
+				url:"invoice_clear_f.php",
+				global: false, 
+				type: "POST", 
+				dataType: "JSON",
+				data:
+				{
+					client: document.getElementById("client").value,
+					zapis_id: document.getElementById("zapis_id").value,
+				},
+				cache: false,
+				beforeSend: function() {
+					//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+				},
+				// действие, при ответе с сервера
+				success: function(data){
+					
+					fillInvoiseRez();
+				}
+			});
+			
+		}
+	}; 
+	
+	// !!! Перенесли отсюда документ реади в инвойс_адд
+	
 	//Tree
 	$(document).ready(function(){
 		/*
@@ -2345,3 +2330,51 @@
 			$("#lasttree").find("ul").slideDown(400).parents("li").children("div.drop").css({'background-position':"-11px 0"});
 		});
 	});
+	
+	//Тест контекстного меню
+	$(document).ready(function() {
+		$(document).click(function(){
+			var e = $("#koeff");
+			var elem = $(".context-menu"); 
+			if(e.target!=elem[0]&&!elem.has(e.target).length){
+				elem.hide(); 
+			} 
+		})
+		// Вешаем слушатель события нажатие кнопок мыши для всего документа:
+		$("#koeff").click(function(event) {
+			
+			// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+			$('*').removeClass('selected-html-element');
+			// Удаляем предыдущие вызванное контекстное меню:
+			$('.context-menu').remove();
+			
+			// Проверяем нажата ли именно правая кнопка мыши:
+			if (event.which === 1)  {
+				
+				// Получаем элемент на котором был совершен клик:
+				var target = $(event.target);
+				
+				// Добавляем класс selected-html-element что бы наглядно показать на чем именно мы кликнули (исключительно для тестирования):
+				target.addClass('selected-html-element');
+
+				// Создаем меню:
+				$('<div/>', {
+					class: 'context-menu' // Присваиваем блоку наш css класс контекстного меню:
+				})
+				.css({
+					left: event.pageX+'px', // Задаем позицию меню на X
+					top: event.pageY+'px' // Задаем позицию меню по Y
+				})
+				.appendTo('body') // Присоединяем наше меню к body документа:
+				.append( // Добавляем пункты меню:
+					$('<ul/>').append('<li><a href="#">Remove element</a></li>') 
+							.append('<li><a href="#">Add element</a></li>')
+							.append('<li><a href="#">Element style</a></li>') 
+							.append('<li><a href="#">Element props</a></li>')
+							.append('<li><a href="#">Open Inspector</a></li>')
+				)
+				.show('fast'); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+			}
+		});
+	});
+

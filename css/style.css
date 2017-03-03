@@ -1793,3 +1793,58 @@ input.dateс {
 	text-align: center;
 	cursor: pointer; 
 }
+
+.toothInInvoice:hover {
+	background: rgba(77, 246, 127, 0.9);
+}
+
+#calculateInvoice {
+	font-size: 15px;
+	color: red;
+	font-weight: bold;
+	font-style: italic;
+	display: inline;
+}
+
+.invoceHeader {
+	margin: 2px;
+	font-size: 12px; 
+	padding: 10px; 
+	border: 1px solid #dddddd;
+	background: #e9e9e9;
+	color: #333333;
+	border-radius: 3px;
+}
+
+.settings_text{
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.settings_text:hover{
+	color: #FF9900;
+}
+
+
+/* Класс контекстного меню: */
+.context-menu {
+    position: absolute; /* Задаем абсолютное позиционирование для нашего меню */
+    display: none; /* Изначально не показываем его */
+    background-color: #fff; /* Цвет фона меню */
+    border: 1px solid #333; /* Граница */
+
+    /* Немного красивостей. Добавляем тень для нашего меню, что бы отобразить его слегка выше остальных элементов страницы: */
+    -moz-box-shadow: -5px 2px 10px rgba(0,0,0,0.5); /* Для Firefox */
+    -webkit-box-shadow: -5px 2px 10px rgba(0,0,0,0.5); /* Для Safari и Chrome */
+    box-shadow: -5px 2px 10px rgba(0,0,0,0.5); /* Параметры тени */
+}
+
+/* Добавляем стили для списка которые будет находиться внутри меню и, собственно, содержать его пункты: */
+.context-menu ul { list-style: none; margin: 0; padding: 0; }
+            
+.context-menu ul li { margin: 0; padding: 0; background-color: #fff; display: block; }
+
+/* Стили для ссылок пунктов меню: */
+.context-menu ul li a { color: #333; text-decoration: none; font-size: 12px; display: block; padding: 5px; }
+            
+.context-menu ul li a:hover { background-color: #eee; }

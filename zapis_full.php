@@ -567,6 +567,11 @@
 													echo 
 														'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 8)">Ошибка, удалить из записи</a><br>';
 												}
+												
+												echo 
+												'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
+													<a href="invoice_add.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">Счёт</a>
+												</div>';
 											}
 											echo 
 														'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 0)">Отменить все изменения</a><br>';
@@ -600,10 +605,10 @@
 											//!!!Акт
 											$zapisDate = strtotime($ZapisHereQueryToday[$z]['day'].'.'.$ZapisHereQueryToday[$z]['month'].'.'.$ZapisHereQueryToday[$z]['year']);
 											//if (time() < $zapisDate + 60*60*24){
-												echo 
+											/*	echo 
 												'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
 													<a href="invoice_add.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">Счёт</a>
-												</div>';
+												</div>';*/
 											//}
 										}
 									}else{
