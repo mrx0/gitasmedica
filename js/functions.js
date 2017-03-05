@@ -1,3 +1,61 @@
+	//попытка показать контекстное меню
+	function contextMenuShow(event, mark){
+			
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+		
+		// Получаем элемент на котором был совершен клик:
+		var target = $(event.target);
+			
+		// Добавляем класс selected-html-element что бы наглядно показать на чем именно мы кликнули (исключительно для тестирования):
+		target.addClass('selected-html-element');
+		
+		$.ajax({
+			url:"context_menu_show_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				mark: mark,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//alert(res.data);
+				
+				// Создаем меню:
+				var menu = $('<div/>', {
+					class: 'context-menu' // Присваиваем блоку наш css класс контекстного меню:
+				})
+				.css({
+					left: event.pageX+'px', // Задаем позицию меню на X
+					top: event.pageY+'px' // Задаем позицию меню по Y
+				})
+				.appendTo('body') // Присоединяем наше меню к body документа:
+				.append( // Добавляем пункты меню:
+					$('<ul/>').append(res.data)
+				);
+				
+				
+				if (mark == 'insure'){
+					menu.css({
+						'height': '300px',
+						'overflow-y': 'scroll',
+					});
+				}
+					
+				menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+		
+			}
+		});
+	}
+
 
 	function Ajax_add_client(session_id) {
 		// убираем класс ошибок с инпутов
@@ -2076,12 +2134,19 @@
 	//Окрасить кнопки с зубами
 	function colorizeTButton (t_number_active){
 		$(".sel_tooth").each(function() {
-			if (Number(this.innerHTML) == t_number_active){
-				this.style.background = '#83DB53';
-			}else{
-				this.style.background = '';
-			}
+			this.style.background = '';
 		});
+		$(".sel_toothp").css({'background': ""});
+		
+		if (t_number_active == 99){
+			$(".sel_toothp").css({'background': "#83DB53"});
+		}else{
+			$(".sel_tooth").each(function() {
+				if (Number(this.innerHTML) == t_number_active){
+					this.style.background = '#83DB53';
+				}
+			});
+		}
 	}
 	
 	//Функция заполняет результат счета из сессии
@@ -2123,6 +2188,47 @@
 		//calculateInvoice();
 	}
 	
+	// что-то как-то я хз, типа добавляем в сессию новый зуб
+	function addInvoiceInSession(t_number){
+		
+		colorizeTButton(t_number);
+			
+		//Отправляем в сессию
+		$.ajax({
+			url:"add_invoice_in_session_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				t_number: t_number,
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$(\'#errrror\').html("<div style=\'width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);\'><img src=\'img/wait.gif\' style=\'float:left;\'><span style=\'float: right;  font-size: 90%;\'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
+				//calculateInvoice();
+				
+				if(data.result == "success"){  
+					//$(\'#errror\').html(data.data);
+					
+					//fillInvoiseRez();
+					
+				}else{
+					$('#errror').html(data.data);
+				}
+				//fillInvoiseRez();
+			}
+		})
+	}
 	
 	function changeQuantityInvoice(zub, itemId, dataObj){
 		//alert(dataObj.value);
@@ -2298,8 +2404,61 @@
 		
 	}	
 
+	//Изменить страховую у всех
+	function insureInvoice(insure){
+		
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+		
+		$.ajax({
+			url:"add_insure_price_id_in_invoice_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				insure: insure,
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
+				//calculateInvoice();
+				
+				/*if(data.result == "success"){  
+					//alert(data.data);
+					$('#invoice_rezult').html(data.data);
+				}else{
+					//alert('error');
+					$('#errror').html(data.data);
+				}*/
+			}
+		});
+		//$(".invoiceItemPrice").each(function() {
+			
+			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
+			
+			//написали стоимость позиции
+			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
+			
+			
+		//});
+		
+	}	
+
 	//Выбор зуба из таблички 
 	function toothInInvoice(t_number){
+
 		//alert (t_number);
 		$.ajax({
 			url:"add_invoice_in_session_f.php",
@@ -2404,6 +2563,8 @@
 				success: function(data){
 					
 					fillInvoiseRez();
+					
+					colorizeTButton();
 				}
 			});
 			
@@ -2455,42 +2616,28 @@
 		$(document).click(function(e){
 			var elem = $(".context-menu"); 
 			var elem2 = $("#koeff"); 
-			if(e.target != elem[0]&&!elem.has(e.target).length && e.target != elem2[0]&&!elem2.has(e.target).length){
+			var elem3 = $("#insure"); 
+			if(e.target != elem[0]&&!elem.has(e.target).length &&
+			e.target != elem2[0]&&!elem2.has(e.target).length && 
+			e.target != elem3[0]&&!elem3.has(e.target).length){
 				elem.hide(); 
 			} 
-		})
+		});
+		
 		// Вешаем слушатель события нажатие кнопок мыши для всего документа:
 		$("#koeff").click(function(event) {
-			
-			// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
-			$('*').removeClass('selected-html-element');
-			// Удаляем предыдущие вызванное контекстное меню:
-			$('.context-menu').remove();
-			
+
 			// Проверяем нажата ли именно правая кнопка мыши:
 			if (event.which === 1)  {
-				
-				// Получаем элемент на котором был совершен клик:
-				var target = $(event.target);
-				
-				// Добавляем класс selected-html-element что бы наглядно показать на чем именно мы кликнули (исключительно для тестирования):
-				target.addClass('selected-html-element');
+				contextMenuShow(event, 'koeff');
+			}
+		});
+		// Вешаем слушатель события нажатие кнопок мыши для всего документа:
+		$("#insure").click(function(event) {
 
-				// Создаем меню:
-				$('<div/>', {
-					class: 'context-menu' // Присваиваем блоку наш css класс контекстного меню:
-				})
-				.css({
-					left: event.pageX+'px', // Задаем позицию меню на X
-					top: event.pageY+'px' // Задаем позицию меню по Y
-				})
-				.appendTo('body') // Присоединяем наше меню к body документа:
-				.append( // Добавляем пункты меню:
-					$('<ul/>').append('<li><div onclick="koeffInvoice(0)">нет</div></li>')
-							.append('<li><div onclick="koeffInvoice(10)">Ведущий сп-т +10%</div></li>')
-							.append('<li><div onclick="koeffInvoice(20)">Главный сп-т +20%</div></li>') 
-				)
-				.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+			// Проверяем нажата ли именно правая кнопка мыши:
+			if (event.which === 1)  {
+				contextMenuShow(event, 'insure');
 			}
 		});
 	});

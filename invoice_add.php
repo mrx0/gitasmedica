@@ -381,18 +381,7 @@
 													</div>
 												</div>
 												<div>
-													Страховая
-														<select name="insurecompany" id="insurecompany" style="width: 140px;">
-															<option value="0">не страховой</option>';
-							$insures_j = SelDataFromDB('spr_insure', '', '');
-					
-							if ($insures_j != 0){
-								for ($i=0;$i<count($insures_j);$i++){
-									echo "<option value='".$insures_j[$i]['id']."'>".$insures_j[$i]['name']."</option>";
-								}
-							}
-							echo '
-													</select>
+													<div id="insure" class="settings_text" >Страховая</div>
 												</div>
 											</div>
 										</div>
@@ -414,88 +403,63 @@
 						
 						
 						<script>
-	$(document).ready(function(){
-
-		//получим активный зуб
-		var t_number_active = document.getElementById("t_number_active").value;
-		
-		if (t_number_active != 0){
-			colorizeTButton (t_number_active);
-			/*$(".sel_tooth").each(function() {
-				if (Number(this.innerHTML) == t_number_active){
-					this.style.background = \'#83DB53\';
-				}else{
-					this.style.background = \'\';
-				}
-			});*/
-		}
-		
-		//Кликанье по зубам в счёте
-		$(".sel_tooth").click(function(){
-			//alert(Number(this.innerHTML));
-			//$(".sel_tooth").each(function() {
-			//	this.style.background = \'\';
-			//});
-			//Выделям активный зуб
-			//this.style.background = \'#83DB53\';
-			//получам номер зуба
-			var t_number = Number(this.innerHTML);
-			
-			colorizeTButton(t_number);
-			
-			//Отправляем в сессию
-			$.ajax({
-				url:"add_invoice_in_session_f.php",
-				global: false, 
-				type: "POST", 
-				dataType: "JSON",
-				data:
-				{
-					t_number: t_number,
-					client: document.getElementById("client").value,
-					zapis_id: document.getElementById("zapis_id").value,
-					filial: document.getElementById("filial").value,
-					worker: document.getElementById("worker").value,
-				},
-				cache: false,
-				beforeSend: function() {
-					//$(\'#errrror\').html("<div style=\'width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);\'><img src=\'img/wait.gif\' style=\'float:left;\'><span style=\'float: right;  font-size: 90%;\'> обработка...</span></div>");
-				},
-				// действие, при ответе с сервера
-				success: function(data){
-					
-					fillInvoiseRez();
-					//calculateInvoice();
-					
-					if(data.result == "success"){  
-						//$(\'#errror\').html(data.data);
 						
-						//fillInvoiseRez();
-						
-					}else{
-						$(\'#errror\').html(data.data);
-					}
-					//fillInvoiseRez();
-				}
-			})
+							$(document).ready(function(){
 
-			//получам объект результата, сюда будем втыкать
-			//var invoice_rezult = document.getElementById("invoice_rezult");
-			//Создаем новый элемент. его будем втыкать
-			//var newDiv = document.createElement(\'div\');
-			//Класс CSS
-			//div.className = "alert alert-success";
-			//Содержимое нового элемента
-			//newDiv.innerHTML = "<strong>Зуб"+t_number+"</strong> Добавлено.";
-			//Втыкаем
-			//invoice_rezult.appendChild(newDiv);
-			
-			//$("#lasttree").find("ul").slideUp(400).parents("li").children("div.drop").css({\'background-position\':"0 0"});
+								//получим активный зуб
+								var t_number_active = document.getElementById("t_number_active").value;
+								
+								if (t_number_active != 0){
+									colorizeTButton (t_number_active);
+									/*$(".sel_tooth").each(function() {
+										if (Number(this.innerHTML) == t_number_active){
+											this.style.background = \'#83DB53\';
+										}else{
+											this.style.background = \'\';
+										}
+									});*/
+								}
+								
+								//Кликанье по зубам в счёте
+								$(".sel_tooth").click(function(){
+									//alert(Number(this.innerHTML));
+									//$(".sel_tooth").each(function() {
+									//	this.style.background = \'\';
+									//});
+									//Выделям активный зуб
+									//this.style.background = \'#83DB53\';
+									
+									//получам номер зуба
+									var t_number = Number(this.innerHTML);
+									
+									addInvoiceInSession(t_number);
 
-		});
+									//получам объект результата, сюда будем втыкать
+									//var invoice_rezult = document.getElementById("invoice_rezult");
+									//Создаем новый элемент. его будем втыкать
+									//var newDiv = document.createElement(\'div\');
+									//Класс CSS
+									//div.className = "alert alert-success";
+									//Содержимое нового элемента
+									//newDiv.innerHTML = "<strong>Зуб"+t_number+"</strong> Добавлено.";
+									//Втыкаем
+									//invoice_rezult.appendChild(newDiv);
+									
+									//$("#lasttree").find("ul").slideUp(400).parents("li").children("div.drop").css({\'background-position\':"0 0"});
 
-		fillInvoiseRez();
-	});
+								});
+
+								//Кликанье по полости в счёте
+								$(".sel_toothp").click(function(){
+									
+									//получам номер полости
+									var t_number = 99;
+									
+									addInvoiceInSession(t_number);
+								});
+								
+								fillInvoiseRez();
+							});
 						</script>
 						
 						

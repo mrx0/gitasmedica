@@ -1837,6 +1837,7 @@ input.dateс {
     -moz-box-shadow: -5px 2px 10px rgba(0,0,0,0.5); /* Для Firefox */
     -webkit-box-shadow: -5px 2px 10px rgba(0,0,0,0.5); /* Для Safari и Chrome */
     box-shadow: -5px 2px 10px rgba(0,0,0,0.5); /* Параметры тени */
+
 }
 
 /* Добавляем стили для списка которые будет находиться внутри меню и, собственно, содержать его пункты: */
@@ -1857,9 +1858,9 @@ input.dateс {
 .context-menu ul li div {
 	color: #333;
 	text-decoration: none;
-	font-size: 12px;
+	font-size: 11px;
 	display: block;
-	padding: 5px;
+	padding: 3px;
 	cursor: pointer;
 }
             

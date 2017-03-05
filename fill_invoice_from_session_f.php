@@ -69,8 +69,13 @@
 						}
 						$request .= '
 							<div class="cellsBlock">
-								<div class="cellCosmAct toothInInvoice" style="'.$bg_col.'" onclick="toothInInvoice('.$zub.')">
-									'.$zub.'
+								<div class="cellCosmAct toothInInvoice" style="'.$bg_col.'" onclick="toothInInvoice('.$zub.')">';
+						if ($zub == 99){
+							$request .= 'П';
+						}else{
+							$request .= $zub;
+						}
+						$request .= '
 								</div>';
 						if (!empty($invoice_data)){
 							foreach ($invoice_data as $key => $items){
