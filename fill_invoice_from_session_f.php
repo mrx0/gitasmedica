@@ -90,7 +90,7 @@
 								mysql_select_db($dbName) or die(mysql_error()); 
 								mysql_query("SET NAMES 'utf8'");
 
-								$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = '{$items}'";			
+								$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = '{$items['id']}'";			
 					
 								$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 								$number = mysql_num_rows($res);
@@ -111,7 +111,11 @@
 									$rez = array();
 									$price = 0;
 									
-									$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='{$items}' ORDER BY `create_time` DESC LIMIT 1";
+									$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='{$items['id']}' ORDER BY `create_time` DESC LIMIT 1";
+									
+									if ($items['insure'] != 0){
+										$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='{$items['id']}' ORDER BY `date_from` DESC LIMIT 1";
+									}
 									
 									$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 									$number = mysql_num_rows($res);
@@ -129,16 +133,16 @@
 								$request .= '
 								</div>
 								<div class="cellCosmAct" style="font-size: 80%; text-align: center; '.$bg_col.' width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic;">
-									нет
+									'.$items['insure'].'
 								</div>
 								<div class="cellCosmAct invoiceItemPrice" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; '.$bg_col.'">
 									'.$price.'
 								</div>
 								<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px; '.$bg_col.'">
-									<input type="number" size="2" name="quantity" id="quantity" min="1" max="99" value="1" class="mod" onchange="calculateInvoice();" onkeypress = "calculateInvoice();">
+									<input type="number" size="2" name="quantity" id="quantity" min="1" max="99" value="'.$items['quantity'].'" class="mod" onchange="changeQuantityInvoice('.$zub.', '.$key.', this);" onkeypress = "changeQuantityInvoice('.$zub.', this);">
 								</div>
-								<div class="cellCosmAct" style="font-size: 90%; text-align: center; '.$bg_col.' width: 40px; min-width: 40px; max-width: 40px;">
-									-
+								<div class="cellCosmAct koeffInvoice" style="font-size: 90%; text-align: center; '.$bg_col.' width: 40px; min-width: 40px; max-width: 40px;">
+									'.$items['koeff'].'
 								</div>
 								<div class="cellCosmAct invoiceItemPriceItog" style="font-size: 90%; text-align: center; '.$bg_col.' width: 60px; min-width: 60px; max-width: 60px;">
 									0

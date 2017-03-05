@@ -2052,19 +2052,26 @@
 		var Summ = 0;
 		$(".invoiceItemPrice").each(function() {
 			
-			//var fff = $(this).siblings('input[type=number]').val();
+			//Цена
+			var cost = Number(this.innerHTML);
+			
+			//коэффициент специалиста
+			var koeff = Number($(this).parent().find('.koeffInvoice').html());
+
+			//взяли количество
 			var quantity = Number($(this).parent().find('[type=number]').val());
-			//console.log(fff);
 			
-			$(this).next().next().next().html(quantity * Number(this.innerHTML));
+			//вычисляем стоимость
+			var stoim = quantity * (Number(this.innerHTML) +  Number(this.innerHTML) / 100 * koeff)
+				
+			//прописываем стоимость
+			$(this).next().next().next().html(stoim);
 			
-			Summ += quantity * Number(this.innerHTML);
+			Summ += stoim;
 		});
 		
 		document.getElementById("calculateInvoice").innerHTML = Summ;
 	};
-	
-
 	
 	//Окрасить кнопки с зубами
 	function colorizeTButton (t_number_active){
@@ -2116,11 +2123,71 @@
 		//calculateInvoice();
 	}
 	
+	
+	function changeQuantityInvoice(zub, itemId, dataObj){
+		//alert(dataObj.value);
+		//console.log(this);
+		
+		//количество
+		var quantity = dataObj.value;
+		//alert(quantity);
+		
+		$.ajax({
+			url:"add_quantity_price_id_in_invoice_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				key: itemId,
+				zub: zub,
+				
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+				
+				quantity: quantity,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
+				//calculateInvoice();
+				
+				//$('#errror').html(data);
+				//if(data.result == "success"){
+				//	alert(data.data);
+					
+				//	colorizeTButton (data.t_number_active);
+					
+					/*$(".sel_tooth").each(function() {
+						if (Number(this.innerHTML) == data.t_number_active){
+							this.style.background = '#83DB53';
+						}else{
+							this.style.background = '';
+						}
+					});*/
+				//}
+				/*else{
+					//alert('error');
+					$('#errror').html(data.data);
+				}*/
+				
+				//fillInvoiseRez();
+			}
+		});
+	}
+	
 	//Удалить текущую позицию
 	function deleteInvoiceItem(zub, dataObj){
 		//alert(dataObj.getAttribute("invoiceitemid"));
+
 		//номер позиции
-		
 		var itemId = dataObj.getAttribute("invoiceitemid");
 		var target = 'item';
 		
@@ -2179,6 +2246,57 @@
 		});
 	}	
 
+	//Изменить коэффициент у всех
+	function koeffInvoice(koeff){
+		
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+		
+		$.ajax({
+			url:"add_koeff_price_id_in_invoice_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				koeff: koeff,
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
+				//calculateInvoice();
+				
+				/*if(data.result == "success"){  
+					//alert(data.data);
+					$('#invoice_rezult').html(data.data);
+				}else{
+					//alert('error');
+					$('#errror').html(data.data);
+				}*/
+			}
+		});
+		//$(".invoiceItemPrice").each(function() {
+			
+			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
+			
+			//написали стоимость позиции
+			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
+			
+			
+		//});
+		
+	}	
 
 	//Выбор зуба из таблички 
 	function toothInInvoice(t_number){
@@ -2368,8 +2486,9 @@
 				})
 				.appendTo('body') // Присоединяем наше меню к body документа:
 				.append( // Добавляем пункты меню:
-					$('<ul/>').append('<li><a href="#">Ведущий сп-т +10%</a></li>')
-							.append('<li><a href="#">Главный сп-т +20%</a></li>') 
+					$('<ul/>').append('<li><div onclick="koeffInvoice(0)">нет</div></li>')
+							.append('<li><div onclick="koeffInvoice(10)">Ведущий сп-т +10%</div></li>')
+							.append('<li><div onclick="koeffInvoice(20)">Главный сп-т +20%</div></li>') 
 				)
 				.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
 			}

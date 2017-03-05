@@ -1840,11 +1840,29 @@ input.dateс {
 }
 
 /* Добавляем стили для списка которые будет находиться внутри меню и, собственно, содержать его пункты: */
-.context-menu ul { list-style: none; margin: 0; padding: 0; }
+.context-menu ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
             
-.context-menu ul li { margin: 0; padding: 0; background-color: #fff; display: block; }
+.context-menu ul li {
+	margin: 0;
+	padding: 0;
+	background-color: #fff;
+	display: block;
+}
 
 /* Стили для ссылок пунктов меню: */
-.context-menu ul li a { color: #333; text-decoration: none; font-size: 12px; display: block; padding: 5px; }
+.context-menu ul li div {
+	color: #333;
+	text-decoration: none;
+	font-size: 12px;
+	display: block;
+	padding: 5px;
+	cursor: pointer;
+}
             
-.context-menu ul li a:hover { background-color: #eee; }
+.context-menu ul li div:hover {
+	background-color: #eee;
+}
