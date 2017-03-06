@@ -19,10 +19,13 @@
 								<i><b>МКБ</b></i>
 							</div>-->
 							<div class="cellText2" style="font-size: 100%; text-align: center;">
-								Наименование
+								<i><b>Наименование</b></i>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px;">
 								<i><b>Страх.</b></i>
+							</div>
+							<div class="cellCosmAct" style="font-size: 80%; text-align: center;">
+								<i><b>Сог.</b></i>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
 								<i><b>Цена, руб.</b></i>
@@ -32,6 +35,9 @@
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
 								<i><b>Коэфф.</b></i>
+							</div>
+							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
+								<i><b>Гар.</b></i>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
 								<i><b>Всего, руб.</b></i>
@@ -46,6 +52,8 @@
 			if (!isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['filial']) || !isset($_POST['worker'])){
 				echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
+				include_once 'DBWork.php';				
+				
 				$client = $_POST['client'];
 				$zapis_id = $_POST['zapis_id'];
 				$filial = $_POST['filial'];
@@ -119,7 +127,8 @@
 									$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='{$items['id']}' ORDER BY `create_time` DESC LIMIT 1";
 									
 									if ($items['insure'] != 0){
-										$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='{$items['id']}' ORDER BY `date_from` DESC LIMIT 1";
+										$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='{$items['id']}' AND `insure`='".$items['insure']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
+										
 									}
 									
 									$res = mysql_query($query) or die(mysql_error().' -> '.$query);
@@ -135,11 +144,46 @@
 									$request .= '?';
 								}
 								
+								if ($items['insure'] != 0){
+									//Написать страховую
+									$insure_j = SelDataFromDB('spr_insure', $items['insure'], 'id');
+									
+									if ($insure_j != 0){
+										$insure_name = $insure_j[0]['name'];
+									}else{
+										$insure_name = '?';
+									}
+								}else{
+									$insure_name = 'нет';
+								}
+								
 								$request .= '
 								</div>
-								<div class="cellCosmAct" style="font-size: 80%; text-align: center; '.$bg_col.' width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic;">
-									'.$items['insure'].'
-								</div>
+								<div class="cellCosmAct settings_text" style="font-size: 80%; text-align: center; '.$bg_col.' width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic;" onclick="contextMenuShow('.$zub.', '.$key.', event, \'insureItem\');">
+									'.$insure_name.'
+								</div>';
+								
+								if ($items['insure'] != 0){
+									if ($items['insure_approve'] == 1){
+										$request .= '
+											<div class="cellCosmAct" style="font-size: 70%; text-align: center; '.$bg_col.'">
+												<i class="fa fa-check" aria-hidden="true"></i>
+											</div>';
+									}else{
+										$request .= '
+										<div class="cellCosmAct" style="font-size: 100%; text-align: center; background: rgba(255, 0, 0, 0.5) none repeat scroll 0% 0%;">
+											<i class="fa fa-ban" aria-hidden="true"></i>
+										</div>';
+									}
+
+								}else{
+									$request .= '
+									<div class="cellCosmAct" style="font-size: 70%; text-align: center; '.$bg_col.'">
+										-
+									</div>';
+								}
+								
+								$request .= '
 								<div class="cellCosmAct invoiceItemPrice" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; '.$bg_col.'">
 									'.$price.'
 								</div>
@@ -148,6 +192,9 @@
 								</div>
 								<div class="cellCosmAct koeffInvoice" style="font-size: 90%; text-align: center; '.$bg_col.' width: 40px; min-width: 40px; max-width: 40px;">
 									'.$items['koeff'].'
+								</div>
+								<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px; '.$bg_col.'">
+									<i><b>-</b></i>
 								</div>
 								<div class="cellCosmAct invoiceItemPriceItog" style="font-size: 90%; text-align: center; '.$bg_col.' width: 60px; min-width: 60px; max-width: 60px;">
 									0
@@ -181,9 +228,7 @@
 					echo json_encode(array('result' => 'success', 'data' => $request));
 				}
 				
-				
-				/*include_once 'DBWork.php';
-				include_once 'functions.php';
+				/*include_once 'functions.php';
 				
 				require 'config.php';
 				//Вставка

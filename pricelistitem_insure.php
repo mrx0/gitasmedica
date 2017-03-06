@@ -69,7 +69,7 @@
 						$price = 0;
 							
 						//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `create_time` DESC LIMIT 1";
-						$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$_GET['id']."' AND `insure`='".$_GET['insure']."' ORDER BY `date_from` DESC LIMIT 1";
+						$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$_GET['id']."' AND `insure`='".$_GET['insure']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
 												
 						$res = mysql_query($query) or die($query);
 

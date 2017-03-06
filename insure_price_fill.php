@@ -52,6 +52,7 @@
 				
 							<form action="insure_price_fill_f.php">';
 							
+				$space = '';			
 									
 				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='0' ORDER BY `name`";
 				

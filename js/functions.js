@@ -1,6 +1,6 @@
 	//попытка показать контекстное меню
-	function contextMenuShow(event, mark){
-			
+	function contextMenuShow(zub, key, event, mark){
+		
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
 		// Удаляем предыдущие вызванное контекстное меню:
@@ -8,9 +8,15 @@
 		
 		// Получаем элемент на котором был совершен клик:
 		var target = $(event.target);
-			
+
 		// Добавляем класс selected-html-element что бы наглядно показать на чем именно мы кликнули (исключительно для тестирования):
 		target.addClass('selected-html-element');
+		
+		//alert(target.parent().parent().find('.toothInInvoice').html());
+		//Номер зуба
+		/*if ((mark == 'insure') || (mark == 'insureItem')){
+			t_number = target.parent().parent().find('.toothInInvoice').html();
+		}*/
 		
 		$.ajax({
 			url:"context_menu_show_f.php",
@@ -20,6 +26,8 @@
 			data:
 			{
 				mark: mark,
+				zub: zub,
+				key: key,
 			},
 			cache: false,
 			beforeSend: function() {
@@ -43,7 +51,7 @@
 				);
 				
 				
-				if (mark == 'insure'){
+				if ((mark == 'insure') || (mark == 'insureItem')){
 					menu.css({
 						'height': '300px',
 						'overflow-y': 'scroll',
@@ -2123,7 +2131,7 @@
 			var stoim = quantity * (Number(this.innerHTML) +  Number(this.innerHTML) / 100 * koeff)
 				
 			//прописываем стоимость
-			$(this).next().next().next().html(stoim);
+			$(this).next().next().next().next().html(stoim);
 			
 			Summ += stoim;
 		});
@@ -2456,6 +2464,60 @@
 		
 	}	
 
+	//Изменить страховую у этого зуба
+	function insureItemInvoice(zub, key, insure){
+		
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+		
+		$.ajax({
+			url:"add_insure_price_id_in_item_invoice_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				zub: zub,
+				key: key,
+				insure: insure,
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
+				//calculateInvoice();
+				
+				/*if(data.result == "success"){  
+					//alert(data.data);
+					$('#invoice_rezult').html(data.data);
+				}else{
+					//alert('error');
+					$('#errror').html(data.data);
+				}*/
+			}
+		});
+		//$(".invoiceItemPrice").each(function() {
+			
+			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
+			
+			//написали стоимость позиции
+			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
+			
+			
+		//});
+		
+	}	
+
 	//Выбор зуба из таблички 
 	function toothInInvoice(t_number){
 
@@ -2629,7 +2691,7 @@
 
 			// Проверяем нажата ли именно правая кнопка мыши:
 			if (event.which === 1)  {
-				contextMenuShow(event, 'koeff');
+				contextMenuShow(0, 0, event, 'koeff');
 			}
 		});
 		// Вешаем слушатель события нажатие кнопок мыши для всего документа:
@@ -2637,7 +2699,8 @@
 
 			// Проверяем нажата ли именно правая кнопка мыши:
 			if (event.which === 1)  {
-				contextMenuShow(event, 'insure');
+				//alert(1);
+				contextMenuShow(0, 0, event, 'insure');
 			}
 		});
 	});

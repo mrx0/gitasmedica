@@ -27,6 +27,7 @@
 						$temp_arr['id'] = $_POST['price_id'];
 						$temp_arr['quantity'] = 1;
 						$temp_arr['insure'] = 0;
+						$temp_arr['insure_approve'] = 0;
 						$temp_arr['price'] = 0;
 						$temp_arr['guarantee'] = 0;
 						$temp_arr['koeff'] = 0;

@@ -71,7 +71,7 @@
 						ksort($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
 						
 						//var_dump($_SESSION);
-						var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
+						//var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
 						
 						echo '
 						<div id="status">
@@ -371,17 +371,20 @@
 											<div style="display: inline-block; vertical-align: top;">
 												<div style="margin-bottom: 2px;">
 													<div style="display: inline-block; vertical-align: top;">
-														 <div class="settings_text" onclick="alert(\'all_guarantee\')">По гарантии</div>
-													</div> /	
-													<div style="display: inline-block; vertical-align: top;">
 														 <div id="koeff" class="settings_text" >Коэффициент</div>
+													</div> /
+													<div style="display: inline-block; vertical-align: top;">
+														 <div class="settings_text" onclick="alert(\'Comming soon...\')">По гарантии</div>
 													</div> /
 													<div style="display: inline-block; vertical-align: top;">
 														 <div class="settings_text" onclick="clearInvoice();">Очистить всё</div>
 													</div>
 												</div>
-												<div>
+												<div style="display: inline-block; vertical-align: top;">
 													<div id="insure" class="settings_text" >Страховая</div>
+												</div> / 
+												<div style="display: inline-block; vertical-align: top;">
+													<div id="insure_approve" class="settings_text" onclick="alert(\'Comming soon...\')">Согласовано</div>
 												</div>
 											</div>
 										</div>

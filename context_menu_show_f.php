@@ -41,6 +41,22 @@
 					}
 				}
 
+				if ($_POST['mark'] == 'insureItem'){
+					include_once 'DBWork.php';
+					
+					$data .= '
+						<li><div onclick="insureItemInvoice('.$_POST['zub'].', '.$_POST['key'].', 0)">не страховой</div></li>';
+					
+					$insures_j = SelDataFromDB('spr_insure', '', '');
+					
+					if ($insures_j != 0){
+						for ($i=0;$i<count($insures_j);$i++){
+							$data .= '
+								<li><div onclick="insureItemInvoice('.$_POST['zub'].', '.$_POST['key'].', '.$insures_j[$i]['id'].')">'.$insures_j[$i]['name'].'</div></li>';
+						}
+					}
+				}
+
 				echo json_encode(array('result' => 'success', 'data' => $data));
 
 			}

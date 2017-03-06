@@ -993,7 +993,7 @@
 							$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from` DESC LIMIT 1";
 							
 							if ($insure_id != 0){
-								$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from` DESC LIMIT 1";
+								$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' AND `insure`='".$insure_id."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
 							}
 							//var_dump($query);
 							
@@ -1535,7 +1535,7 @@
 							$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from` DESC LIMIT 1";
 							
 							if ($insure_id != 0){
-								$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from` DESC LIMIT 1";
+								$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' AND `insure`='".$insure_id."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
 							}
 							//var_dump($query);
 							
