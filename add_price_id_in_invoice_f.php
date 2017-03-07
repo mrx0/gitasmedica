@@ -24,13 +24,24 @@
 					
 					if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active])){
 						
-						$temp_arr['id'] = $_POST['price_id'];
+						$temp_arr['id'] = (int)$_POST['price_id'];
 						$temp_arr['quantity'] = 1;
 						$temp_arr['insure'] = 0;
 						$temp_arr['insure_approve'] = 0;
 						$temp_arr['price'] = 0;
 						$temp_arr['guarantee'] = 0;
-						$temp_arr['koeff'] = 0;
+						$temp_arr['spec_koeff'] = 0;
+						$temp_arr['discount'] = 0;
+						
+						if (isset($_POST['zapis_insure'])){
+							if (isset($_POST['client_insure'])){
+								if ($_POST['zapis_insure'] != 0){
+									if ($_POST['client_insure'] != 0){
+										$temp_arr['insure'] = $_POST['client_insure'];
+									}
+								}
+							}
+						}
 						
 						array_push($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active], $temp_arr);
 					}

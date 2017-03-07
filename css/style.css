@@ -1798,12 +1798,19 @@ input.dateс {
 	background: rgba(77, 246, 127, 0.9);
 }
 
-#calculateInvoice {
+#calculateInvoice, #calculateInsInvoice {
 	font-size: 15px;
-	color: red;
 	font-weight: bold;
 	font-style: italic;
 	display: inline;
+}
+
+#calculateInvoice {
+	color: red;
+}
+
+#calculateInsInvoice {
+	color: blue;
 }
 
 .invoceHeader {

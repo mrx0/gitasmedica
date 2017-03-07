@@ -1,6 +1,6 @@
 <?php 
 
-//add_insure_price_id_in_item_invoice_f.php
+//add_spec_koeff_price_id_in_item_invoice_f.php
 //
 
 	session_start();
@@ -14,19 +14,14 @@
 			
 			$temp_arr = array();
 			
-			if (!isset($_POST['zub']) || !isset($_POST['key']) || !isset($_POST['insure']) || !isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['filial']) || !isset($_POST['worker'])){
+			if (!isset($_POST['zub']) || !isset($_POST['key']) || !isset($_POST['spec_koeff']) || !isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['filial']) || !isset($_POST['worker'])){
 				//echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 				//var_dump($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']]);
 					
 				if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
 					if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']])){
-						if (($_POST['insure'] == 0) || ($_POST['insure'] != $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']]['insure'])){
-							$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']]['insure_approve'] = 0;
-						}					
-						$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']]['insure'] = (int)$_POST['insure'];
-						
-
+						$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']]['spec_koeff'] = (int)$_POST['spec_koeff'];
 						//$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active]
 					}
 				}

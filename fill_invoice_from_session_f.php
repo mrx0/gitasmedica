@@ -37,6 +37,9 @@
 								<i><b>Коэфф.</b></i>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
+								<i><b>Скидка</b></i>
+							</div>
+							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
 								<i><b>Гар.</b></i>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
@@ -128,7 +131,6 @@
 									
 									if ($items['insure'] != 0){
 										$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='{$items['id']}' AND `insure`='".$items['insure']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
-										
 									}
 									
 									$res = mysql_query($query) or die(mysql_error().' -> '.$query);
@@ -137,7 +139,7 @@
 										$arr = mysql_fetch_assoc($res);
 										$price = $arr['price'];
 									}else{
-										$price = 0;
+										$price = '?';
 									}
 									
 								}else{
@@ -159,26 +161,26 @@
 								
 								$request .= '
 								</div>
-								<div class="cellCosmAct settings_text" style="font-size: 80%; text-align: center; '.$bg_col.' width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic;" onclick="contextMenuShow('.$zub.', '.$key.', event, \'insureItem\');">
+								<div class="cellCosmAct settings_text" insure="'.$items['insure'].'" style="font-size: 80%; text-align: center; '.$bg_col.' width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic;" onclick="contextMenuShow('.$zub.', '.$key.', event, \'insureItem\');">
 									'.$insure_name.'
 								</div>';
 								
 								if ($items['insure'] != 0){
 									if ($items['insure_approve'] == 1){
 										$request .= '
-											<div class="cellCosmAct" style="font-size: 70%; text-align: center; '.$bg_col.'">
-												<i class="fa fa-check" aria-hidden="true"></i>
+											<div class="cellCosmAct settings_text" insureapprove="'.$items['insure_approve'].'" style="font-size: 70%; text-align: center; '.$bg_col.'" onclick="contextMenuShow('.$zub.', '.$key.', event, \'insure_approveItem\');">
+												<i class="fa fa-check" aria-hidden="true" style="font-size: 150%;"></i>
 											</div>';
 									}else{
 										$request .= '
-										<div class="cellCosmAct" style="font-size: 100%; text-align: center; background: rgba(255, 0, 0, 0.5) none repeat scroll 0% 0%;">
+										<div class="cellCosmAct settings_text" insureapprove="'.$items['insure_approve'].'" style="font-size: 100%; text-align: center; background: rgba(255, 0, 0, 0.5) none repeat scroll 0% 0%;" onclick="contextMenuShow('.$zub.', '.$key.', event, \'insure_approveItem\');">
 											<i class="fa fa-ban" aria-hidden="true"></i>
 										</div>';
 									}
 
 								}else{
 									$request .= '
-									<div class="cellCosmAct" style="font-size: 70%; text-align: center; '.$bg_col.'">
+									<div class="cellCosmAct" insureapprove="'.$items['insure_approve'].'" style="font-size: 70%; text-align: center; '.$bg_col.'">
 										-
 									</div>';
 								}
@@ -190,11 +192,20 @@
 								<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px; '.$bg_col.'">
 									<input type="number" size="2" name="quantity" id="quantity" min="1" max="99" value="'.$items['quantity'].'" class="mod" onchange="changeQuantityInvoice('.$zub.', '.$key.', this);" onkeypress = "changeQuantityInvoice('.$zub.', this);">
 								</div>
-								<div class="cellCosmAct koeffInvoice" style="font-size: 90%; text-align: center; '.$bg_col.' width: 40px; min-width: 40px; max-width: 40px;">
-									'.$items['koeff'].'
+								<div class="cellCosmAct spec_koeffInvoice settings_text"  speckoeff="'.$items['spec_koeff'].'" style="font-size: 90%; text-align: center; '.$bg_col.' width: 40px; min-width: 40px; max-width: 40px;" onclick="contextMenuShow('.$zub.', '.$key.', event, \'spec_koeffItem\');">
+									'.$items['spec_koeff'].'
 								</div>
-								<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px; '.$bg_col.'">
-									<i><b>-</b></i>
+								<div class="cellCosmAct settings_text"  discount="'.$items['discount'].'" style="font-size: 90%; text-align: center; '.$bg_col.' width: 40px; min-width: 40px; max-width: 40px;" onclick="contextMenuShow('.$zub.', '.$key.', event, \'discountItem\');">
+									'.$items['discount'].'
+								</div>
+								<div class="cellCosmAct settings_text" guarantee="'.$items['guarantee'].'" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px; '.$bg_col.'" onclick="contextMenuShow('.$zub.', '.$key.', event, \'guaranteeItem\');">';
+								if ($items['guarantee'] != 0){
+									$request .= '
+										<i class="fa fa-check" aria-hidden="true" style="color: red; font-size: 150%;"></i>';
+								}else{
+									$request .= '-';
+								}
+								$request .= '
 								</div>
 								<div class="cellCosmAct invoiceItemPriceItog" style="font-size: 90%; text-align: center; '.$bg_col.' width: 60px; min-width: 60px; max-width: 60px;">
 									0

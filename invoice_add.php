@@ -41,8 +41,8 @@
 						'12' => 'Декабрь'
 					);
 					
-					//$client = SelDataFromDB('spr_clients', $_GET['client'], 'user');
-					//var_dump($_SESSION);
+					$client_j = SelDataFromDB('spr_clients', $_GET['client'], 'user');
+					//var_dump($client_j);
 					
 					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
 					mysql_select_db($dbName) or die(mysql_error()); 
@@ -76,8 +76,8 @@
 						echo '
 						<div id="status">
 							<header>
-								<span style="color: red;">Тестовый режим. Ничего не сохраняется и, в общем-то, не особо работает</span>
-								<h2>Счёт '.WriteSearchUser('spr_clients', $_GET['client'], 'user', true).'</h2>';
+								<span style="color: red;">Тестовый режим. Ничего не сохраняется и почти что работает</span>
+								<h2>Акт '.WriteSearchUser('spr_clients', $_GET['client'], 'user', true).'</h2>';
 								
 								
 								
@@ -192,7 +192,9 @@
 						//Зубки
 						echo '	
 								<input type="hidden" id="client" name="client" value="'.$_GET['client'].'">
+								<input type="hidden" id="client_insure" name="client_insure" value="'.$client_j[0]['insure'].'">
 								<input type="hidden" id="zapis_id" name="zapis_id" value="'.$_GET['id'].'">
+								<input type="hidden" id="zapis_insure" name="zapis_insure" value="'.$sheduler_zapis[0]['insured'].'">
 								<input type="hidden" id="filial" name="filial" value="'.$_GET['filial'].'">
 								<input type="hidden" id="worker" name="worker" value="'.$_GET['worker'].'">
 								<input type="hidden" id="t_number_active" name="t_number_active" value="'.$_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['t_number_active'].'">
@@ -345,7 +347,7 @@
 											<div style=" width: 350px; height: 500px; overflow: scroll; border: 1px solid #CCC;">
 												<ul class="ul-tree ul-drop" id="lasttree">
 
-							будет потом
+							Comming soon...
 									
 
 												</ul>
@@ -363,7 +365,12 @@
 								
 						echo '	
 									<div id="errror" class="invoceHeader" style="">
-										<div style="">Итого: <div id="calculateInvoice" style="">0</div> руб.</div>
+										<div>
+											<div style="">К оплате: <div id="calculateInvoice" style="">0</div> руб.</div>
+										</div>
+										<div>
+											<div style="">Страховка: <div id="calculateInsInvoice" style="">0</div> руб.</div>
+										</div>
 										<div style="position: absolute; top: 3px; right: 5px; vertical-align: middle; font-size: 11px; width: 400px;">
 											<div style="display: inline-block; vertical-align: top;">
 												Настройки: 
@@ -371,20 +378,27 @@
 											<div style="display: inline-block; vertical-align: top;">
 												<div style="margin-bottom: 2px;">
 													<div style="display: inline-block; vertical-align: top;">
-														 <div id="koeff" class="settings_text" >Коэффициент</div>
+														 <div id="spec_koeff" class="settings_text" >Коэфф.</div>
 													</div> /
 													<div style="display: inline-block; vertical-align: top;">
-														 <div class="settings_text" onclick="alert(\'Comming soon...\')">По гарантии</div>
+														 <div id="guarantee" class="settings_text">По гарантии</div>
 													</div> /
 													<div style="display: inline-block; vertical-align: top;">
 														 <div class="settings_text" onclick="clearInvoice();">Очистить всё</div>
 													</div>
 												</div>
-												<div style="display: inline-block; vertical-align: top;">
-													<div id="insure" class="settings_text" >Страховая</div>
-												</div> / 
-												<div style="display: inline-block; vertical-align: top;">
-													<div id="insure_approve" class="settings_text" onclick="alert(\'Comming soon...\')">Согласовано</div>
+												<div style="margin-bottom: 2px;">
+													<div style="display: inline-block; vertical-align: top;">
+														<div id="insure" class="settings_text" >Страховая</div>
+													</div> / 
+													<div style="display: inline-block; vertical-align: top;">
+														<div id="insure_approve" class="settings_text">Согласовано</div>
+													</div>
+												</div>
+												<div style="margin-bottom: 2px;">
+													<div style="display: inline-block; vertical-align: top;">
+														<div id="discounts" class="settings_text">Скидки (Акции)</div>
+													</div>
 												</div>
 											</div>
 										</div>

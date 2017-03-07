@@ -2116,27 +2116,71 @@
 	function calculateInvoice (){
 		
 		var Summ = 0;
+		var SummIns = 0;
+		
+		document.getElementById("calculateInvoice").innerHTML = Summ;
+		document.getElementById("calculateInsInvoice").innerHTML = SummIns;
+
 		$(".invoiceItemPrice").each(function() {
+			
+			//console.log(document.getElementById($(this).parent().find('[insure]')).getAttribute('insure'));
+			//console.log($(this).prev().prev().attr('insure'));
+			//alert($(this).attr("insure"));
+			
+			//получаем значение страховой
+			var insure = $(this).prev().prev().attr('insure');
+			//console.log(insure);
+			
+			//получаем значение согласования
+			var insureapprove = $(this).prev().attr('insureapprove');
+			
+			//получаем значение гарантии
+			var guarantee = $(this).next().next().next().next().attr('guarantee');
+			//console.log(insure);
 			
 			//Цена
 			var cost = Number(this.innerHTML);
-			
-			//коэффициент специалиста
-			var koeff = Number($(this).parent().find('.koeffInvoice').html());
+						
+			//коэффициент
+			var spec_koeff = Number($(this).parent().find('.spec_koeffInvoice').html());
 
+			//скидка акция
+			var discount = $(this).next().next().next().attr('discount');
+			//alert(discount);
+			
 			//взяли количество
 			var quantity = Number($(this).parent().find('[type=number]').val());
 			
 			//вычисляем стоимость
-			var stoim = quantity * (Number(this.innerHTML) +  Number(this.innerHTML) / 100 * koeff)
-				
-			//прописываем стоимость
-			$(this).next().next().next().next().html(stoim);
+			var stoim = quantity * (Number(this.innerHTML) +  Number(this.innerHTML) / 100 * spec_koeff)
 			
-			Summ += stoim;
+			//с учетом скидки акции
+			stoim = stoim - (stoim / 100 * discount);
+			
+			//прописываем стоимость
+			if (guarantee == 0){
+				$(this).next().next().next().next().next().html(stoim);
+			}
+			
+			if (guarantee == 0){
+				if (insure != 0){
+					if (insureapprove != 0){
+						SummIns += stoim;
+					}
+				}else{
+					Summ += stoim;
+				}
+			}
+			
+			
+			
 		});
 		
 		document.getElementById("calculateInvoice").innerHTML = Summ;
+		if (SummIns > 0){
+			document.getElementById("calculateInsInvoice").innerHTML = SummIns;
+		}
+		
 	};
 	
 	//Окрасить кнопки с зубами
@@ -2360,8 +2404,8 @@
 		});
 	}	
 
-	//Изменить коэффициент у всех
-	function koeffInvoice(koeff){
+	//Изменить коэффициент специалиста у всех
+	function spec_koeffInvoice(spec_koeff){
 		
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
@@ -2369,13 +2413,168 @@
 		$('.context-menu').remove();
 		
 		$.ajax({
-			url:"add_koeff_price_id_in_invoice_f.php",
+			url:"add_spec_koeff_price_id_in_invoice_f.php",
 			global: false, 
 			type: "POST", 
 			dataType: "JSON",
 			data:
 			{
-				koeff: koeff,
+				spec_koeff: spec_koeff,
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
+				//calculateInvoice();
+				
+				/*if(data.result == "success"){  
+					//alert(data.data);
+					$('#invoice_rezult').html(data.data);
+				}else{
+					//alert('error');
+					$('#errror').html(data.data);
+				}*/
+			}
+		});
+		//$(".invoiceItemPrice").each(function() {
+			
+			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
+			
+			//написали стоимость позиции
+			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
+			
+			
+		//});
+		
+	}	
+
+	//Изменить гарантию у всех
+	function guaranteeInvoice(guarantee){
+		
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+		
+		$.ajax({
+			url:"add_guarantee_in_invoice_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				guarantee: guarantee,
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
+				//calculateInvoice();
+				
+				/*if(data.result == "success"){  
+					//alert(data.data);
+					$('#invoice_rezult').html(data.data);
+				}else{
+					//alert('error');
+					$('#errror').html(data.data);
+				}*/
+			}
+		});
+		//$(".invoiceItemPrice").each(function() {
+			
+			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
+			
+			//написали стоимость позиции
+			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
+			
+			
+		//});
+		
+	}	
+	//Изменить согласование у всех
+	function insureApproveInvoice(approve){
+		
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+		
+		$.ajax({
+			url:"add_insure_approve_in_invoice_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				approve: approve,
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
+				//calculateInvoice();
+				
+				/*if(data.result == "success"){  
+					//alert(data.data);
+					$('#invoice_rezult').html(data.data);
+				}else{
+					//alert('error');
+					$('#errror').html(data.data);
+				}*/
+			}
+		});
+		//$(".invoiceItemPrice").each(function() {
+			
+			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
+			
+			//написали стоимость позиции
+			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
+			
+			
+		//});
+		
+	}	
+
+	//Изменить скидку у всех
+	function discountInvoice(discount){
+		//alert(discount);
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+		
+		$.ajax({
+			url:"add_discount_price_id_in_invoice_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				discount: discount,
 				client: document.getElementById("client").value,
 				zapis_id: document.getElementById("zapis_id").value,
 				filial: document.getElementById("filial").value,
@@ -2518,6 +2717,222 @@
 		
 	}	
 
+	//Изменить согласование у этого зуба
+	function insureApproveItemInvoice(zub, key, approve){
+		
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+		
+		$.ajax({
+			url:"add_insure_approve_price_id_in_item_invoice_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				zub: zub,
+				key: key,
+				approve: approve,
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
+				//calculateInvoice();
+				
+				/*if(data.result == "success"){  
+					//alert(data.data);
+					$('#invoice_rezult').html(data.data);
+				}else{
+					//alert('error');
+					$('#errror').html(data.data);
+				}*/
+			}
+		});
+		//$(".invoiceItemPrice").each(function() {
+			
+			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
+			
+			//написали стоимость позиции
+			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
+			
+			
+		//});
+		
+	}	
+
+	//Изменить гарантию у этого зуба
+	function guaranteeItemInvoice(zub, key, guarantee){
+		
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+		
+		$.ajax({
+			url:"add_guarantee_price_id_in_item_invoice_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				zub: zub,
+				key: key,
+				guarantee: guarantee,
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
+				//calculateInvoice();
+				
+				/*if(data.result == "success"){  
+					//alert(data.data);
+					$('#invoice_rezult').html(data.data);
+				}else{
+					//alert('error');
+					$('#errror').html(data.data);
+				}*/
+			}
+		});
+		//$(".invoiceItemPrice").each(function() {
+			
+			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
+			
+			//написали стоимость позиции
+			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
+			
+			
+		//});
+		
+	}	
+
+	//Изменить Коэффициент у этого зуба
+	function spec_koeffItemInvoice(zub, key, spec_koeff){
+		
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+		
+		$.ajax({
+			url:"add_spec_koeff_price_id_in_item_invoice_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				zub: zub,
+				key: key,
+				spec_koeff: spec_koeff,
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
+				//calculateInvoice();
+				
+				/*if(data.result == "success"){  
+					//alert(data.data);
+					$('#invoice_rezult').html(data.data);
+				}else{
+					//alert('error');
+					$('#errror').html(data.data);
+				}*/
+			}
+		});
+		//$(".invoiceItemPrice").each(function() {
+			
+			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
+			
+			//написали стоимость позиции
+			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
+			
+			
+		//});
+		
+	}	
+
+	//Изменить скидка акция у этого зуба
+	function discountItemInvoice(zub, key, discount){
+		//alert(discount);
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+		
+		$.ajax({
+			url:"add_discount_price_id_in_item_invoice_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				zub: zub,
+				key: key,
+				discount: discount,
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
+				//calculateInvoice();
+				
+				/*if(data.result == "success"){  
+					//alert(data.data);
+					$('#invoice_rezult').html(data.data);
+				}else{
+					//alert('error');
+					$('#errror').html(data.data);
+				}*/
+			}
+		});
+		//$(".invoiceItemPrice").each(function() {
+			
+			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
+			
+			//написали стоимость позиции
+			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
+			
+			
+		//});
+		
+	}	
+
 	//Выбор зуба из таблички 
 	function toothInInvoice(t_number){
 
@@ -2572,7 +2987,9 @@
 			{
 				price_id: price_id,
 				client: document.getElementById("client").value,
+				client_insure: document.getElementById("client_insure").value,
 				zapis_id: document.getElementById("zapis_id").value,
+				zapis_insure: document.getElementById("zapis_insure").value,
 				filial: document.getElementById("filial").value,
 				worker: document.getElementById("worker").value,
 			},
@@ -2677,21 +3094,35 @@
 		
 		$(document).click(function(e){
 			var elem = $(".context-menu"); 
-			var elem2 = $("#koeff"); 
+			var elem2 = $("#spec_koeff"); 
 			var elem3 = $("#insure"); 
+			var elem4 = $("#guarantee"); 
+			var elem5 = $("#insure_approve"); 
+			var elem6 = $("#discount"); 
 			if(e.target != elem[0]&&!elem.has(e.target).length &&
 			e.target != elem2[0]&&!elem2.has(e.target).length && 
-			e.target != elem3[0]&&!elem3.has(e.target).length){
+			e.target != elem3[0]&&!elem3.has(e.target).length && 
+			e.target != elem4[0]&&!elem4.has(e.target).length && 
+			e.target != elem5[0]&&!elem5.has(e.target).length && 
+			e.target != elem6[0]&&!elem6.has(e.target).length){
 				elem.hide(); 
 			} 
 		});
 		
 		// Вешаем слушатель события нажатие кнопок мыши для всего документа:
-		$("#koeff").click(function(event) {
+		$("#spec_koeff").click(function(event) {
 
 			// Проверяем нажата ли именно правая кнопка мыши:
 			if (event.which === 1)  {
-				contextMenuShow(0, 0, event, 'koeff');
+				contextMenuShow(0, 0, event, 'spec_koeff');
+			}
+		});
+		// Вешаем слушатель события нажатие кнопок мыши для всего документа:
+		$("#guarantee").click(function(event) {
+
+			// Проверяем нажата ли именно правая кнопка мыши:
+			if (event.which === 1)  {
+				contextMenuShow(0, 0, event, 'guarantee');
 			}
 		});
 		// Вешаем слушатель события нажатие кнопок мыши для всего документа:
@@ -2701,6 +3132,24 @@
 			if (event.which === 1)  {
 				//alert(1);
 				contextMenuShow(0, 0, event, 'insure');
+			}
+		});
+		// Вешаем слушатель события нажатие кнопок мыши для всего документа:
+		$("#insure_approve").click(function(event) {
+
+			// Проверяем нажата ли именно правая кнопка мыши:
+			if (event.which === 1)  {
+				//alert(1);
+				contextMenuShow(0, 0, event, 'insure_approve');
+			}
+		});
+		// Вешаем слушатель события нажатие кнопок мыши для всего документа:
+		$("#discounts").click(function(event) {
+
+			// Проверяем нажата ли именно правая кнопка мыши:
+			if (event.which === 1)  {
+				//alert(71);
+				contextMenuShow(0, 0, event, 'discounts');
 			}
 		});
 	});
