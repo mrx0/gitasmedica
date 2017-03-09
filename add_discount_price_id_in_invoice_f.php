@@ -25,11 +25,17 @@
 					foreach ($data as $zub => $invoice_data){
 						
 						if (!empty($invoice_data)){
-							
-							foreach ($invoice_data as $key => $items){
-								
-								$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$zub][$key]['discount'] = (int)$_POST['discount'];
-								
+							if ($_POST['invoice_type'] == 5){
+								foreach ($invoice_data as $key => $items){
+									
+									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$zub][$key]['discount'] = (int)$_POST['discount'];
+									
+								}
+							}
+							if ($_POST['invoice_type'] == 6){
+
+									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$zub]['discount'] = (int)$_POST['discount'];
+
 							}
 						}
 					}

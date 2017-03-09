@@ -274,8 +274,8 @@
 								<div class="cellCosmAct" style="text-align: center">-</div>
 								<div class="cellText" style="text-align: center">Комментарий</div>
 							</li>
-						</ul>
-						<ul class="live_filter" style="margin-left:6px;" id="num">';
+						
+							<div style="" id="num">';
 				
 				
 				$all_clients_arr = array();
@@ -526,8 +526,8 @@
 					}
 				}
 				echo '
-						</ul>
-					</div>';
+						</div>
+					</ul>';
 			}else{
 				echo '<h1>Нечего показывать.</h1><a href="index.php">На главную</a>';
 			}
