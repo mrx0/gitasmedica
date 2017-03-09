@@ -642,7 +642,7 @@
 													if ($sheduler_zapis[$z]['type'] == 5){
 														echo 
 														'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
-															<a href="invoice_stom_add.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'&worker='.$sheduler_zapis[$z]['worker'].'&type='.$type.'" class="ahref">Счёт</a>
+															<a href="invoice_stom_add.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'&worker='.$sheduler_zapis[$z]['worker'].'&type='.$sheduler_zapis[$z]['type'].'" class="ahref">Счёт</a>
 														</div>';
 													}
 													if ($sheduler_zapis[$z]['type'] == 6){
