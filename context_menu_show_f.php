@@ -10,6 +10,12 @@
 	}else{
 		//var_dump ($_POST);
 		
+		include_once 'DBWork.php';
+		//разбираемся с правами
+		$god_mode = FALSE;
+		
+		require_once 'permissions.php';
+		
 		if ($_POST){
 			
 			$data = '';
@@ -23,7 +29,7 @@
 						<li><div onclick="spec_koeffInvoice(0)">нет</div></li>'.
 						'<li><div onclick="spec_koeffInvoice(10)">Ведущий сп-т +10%</div></li>'.
 						'<li><div onclick="spec_koeffInvoice(20)">Главный сп-т +20%</div></li>'.
-						'<li><div><input type="number" size="2" name="koeff" id="koeff" min="1" max="99" value="1" class="mod"><div style="display: inline;" onclick="spec_koeffInvoice(document.getElementById(\'koeff\').value)"> Применить</div></div></li>';
+						'<li><div><input type="number" size="2" name="koeff" id="koeff" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="spec_koeffInvoice(document.getElementById(\'koeff\').value)"> Применить</div></div></li>';
 				}
 				//По гарантии общий
 				if ($_POST['mark'] == 'guarantee'){
@@ -33,7 +39,6 @@
 				}
 				//Страховая общее
 				if ($_POST['mark'] == 'insure'){
-					include_once 'DBWork.php';
 					
 					$data .= '
 						<li><div onclick="insureInvoice(0)">не страховой</div></li>';
@@ -57,7 +62,7 @@
 				if ($_POST['mark'] == 'discounts'){
 					$data = '
 						<li><div onclick="discountInvoice(0)">нет</div></li>'.
-						'<li><div><input type="number" size="2" name="discount" id="discount" min="1" max="100" value="1" class="mod"><div style="display: inline;" onclick="discountInvoice(document.getElementById(\'discount\').value)"> Применить</div></div></li>';
+						'<li><div><input type="number" size="2" name="discount" id="discount" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="discountInvoice(document.getElementById(\'discount\').value)"> Применить</div></div></li>';
 				}
 				//Страховая согласовано позиция
 				if ($_POST['mark'] == 'insure_approveItem'){
@@ -77,17 +82,16 @@
 						<li><div onclick="spec_koeffItemInvoice('.$_POST['zub'].', '.$_POST['key'].', 0)">нет</div></li>'.
 						'<li><div onclick="spec_koeffItemInvoice('.$_POST['zub'].', '.$_POST['key'].', 10)">Ведущий сп-т +10%</div></li>'.
 						'<li><div onclick="spec_koeffItemInvoice('.$_POST['zub'].', '.$_POST['key'].', 20)">Главный сп-т +20%</div></li>'.
-						'<li><div><input type="number" size="2" name="koeff" id="koeff" min="1" max="100" value="1" class="mod"><div style="display: inline;" onclick="spec_koeffItemInvoice('.$_POST['zub'].', '.$_POST['key'].', document.getElementById(\'koeff\').value)"> Применить</div></div></li>';
+						'<li><div><input type="number" size="2" name="koeff" id="koeff" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="spec_koeffItemInvoice('.$_POST['zub'].', '.$_POST['key'].', document.getElementById(\'koeff\').value)"> Применить</div></div></li>';
 				}
 				//Скидки акции позиция
 				if ($_POST['mark'] == 'discountItem'){
 					$data = '
 						<li><div onclick="discountItemInvoice('.$_POST['zub'].', '.$_POST['key'].', 0)">нет</div></li>'.
-						'<li><div><input type="number" size="2" name="discount" id="discount" min="1" max="100" value="1" class="mod"><div style="display: inline;" onclick="discountItemInvoice('.$_POST['zub'].', '.$_POST['key'].', document.getElementById(\'discount\').value)"> Применить</div></div></li>';
+						'<li><div><input type="number" size="2" name="discount" id="discount" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="discountItemInvoice('.$_POST['zub'].', '.$_POST['key'].', document.getElementById(\'discount\').value)"> Применить</div></div></li>';
 				}
 				//Страховка позиция
 				if ($_POST['mark'] == 'insureItem'){
-					include_once 'DBWork.php';
 					
 					$data .= '
 						<li><div onclick="insureItemInvoice('.$_POST['zub'].', '.$_POST['key'].', 0)">не страховой</div></li>';
@@ -98,6 +102,29 @@
 						for ($i=0;$i<count($insures_j);$i++){
 							$data .= '
 								<li><div onclick="insureItemInvoice('.$_POST['zub'].', '.$_POST['key'].', '.$insures_j[$i]['id'].')">'.$insures_j[$i]['name'].'</div></li>';
+						}
+					}
+				}
+
+				//Изменить прикреплённый филиал
+				if ($_POST['mark'] == 'change_filial'){
+					
+					if (($stom['add_own'] == 1) || ($cosm['add_own'] == 1) || $god_mode || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9)){
+						$data .= '
+							<li><div onclick="changeUserFilial(0)">открепиться</div></li>';
+
+						//Выбор филиала для сессии
+						$offices_j = SelDataFromDB('spr_office', '', '');
+						if ($offices_j != 0){
+							for ($off = 0; $off < count($offices_j); $off++){
+								if (isset($_SESSION['filial']) && !empty($_SESSION['filial']) && ($_SESSION['filial'] == $offices_j[$off]['id'])){
+									$bg_col = 'background: rgba(83, 219, 185, 0.5) none repeat scroll 0% 0%;';
+								}else{
+									$bg_col = '';
+								}
+								$data .= '
+									<li><div onclick="changeUserFilial('.$offices_j[$off]['id'].')" style="'.$bg_col.'">'.$offices_j[$off]['name'].'</div></li>';
+							}
 						}
 					}
 				}

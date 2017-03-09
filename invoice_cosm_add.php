@@ -1,7 +1,7 @@
 <?php
 
-//invoice_add.php
-//Выписываем счёт
+//invoice_cosm_add.php
+//Выписываем счёт косметология
 
 	require_once 'header.php';
 	
@@ -72,14 +72,14 @@
 						ksort($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
 						
 						//var_dump($_SESSION);
-						//var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]);
+						var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]);
 						//var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['mkb']);
 						
 						echo '
 						<div id="status">
 							<header>
 								<span style="color: red;">Тестовый режим. Ничего не сохраняется и почти что работает</span>
-								<h2>Акт '.WriteSearchUser('spr_clients', $_GET['client'], 'user', true).'</h2>';
+								<h2>Наряд '.WriteSearchUser('spr_clients', $_GET['client'], 'user', true).'</h2>';
 								
 								
 								
@@ -200,7 +200,8 @@
 								<input type="hidden" id="filial" name="filial" value="'.$_GET['filial'].'">
 								<input type="hidden" id="worker" name="worker" value="'.$_GET['worker'].'">
 								<input type="hidden" id="t_number_active" name="t_number_active" value="'.$_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['t_number_active'].'">
-								
+								<input type="hidden" id="invoice_type" name="invoice_type" value="'.$_GET['type'].'">
+								<!--
 								<div style="vertical-align: middle; margin-bottom: 5px;">
 									<div id="teeth" style="display: inline-block;">
 										<div class="tooth_updown">
@@ -315,7 +316,8 @@
 									<div id="teeth_polost" class="sel_toothp" style="display: inline-block; vertical-align: middle; text-align: center; margin: 2px; padding: 5px;">
 										Полость
 									</div>
-								</div>';
+								</div>
+								-->';
 								
 											
 						echo '			
@@ -325,7 +327,7 @@
 									<div id="tabs_w" style="font-family: Verdana, Calibri, Arial, sans-serif; font-size: 100%">
 										<ul>
 											<li><a href="#price">Прайс</a></li>
-											<li><a href="#mkb">МКБ</a></li>
+											<!--<li><a href="#mkb">МКБ</a></li>-->
 										</ul>
 										<div id="price">';
 						//Прайс		
@@ -337,14 +339,14 @@
 											<div style=" width: 350px; height: 500px; overflow: scroll; border: 1px solid #CCC;">
 												<ul class="ul-tree ul-drop" id="lasttree">';
 
-						showTree2(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0);		
+						showTree2(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0, $_GET['type']);		
 							
 						echo '
 												</ul>
 											</div>';
 						echo '		
 										</div>
-										<div id="mkb">
+										<!--<div id="mkb">
 										
 											<div style=" width: 350px; height: 500px; overflow: scroll; border: 1px solid #CCC;">
 												<ul class="ul-tree ul-drop" id="lasttree">
@@ -362,7 +364,7 @@
 												</ul>
 											</div>
 
-										</div>
+										</div>-->
 									</div>';
 							
 						echo '
@@ -377,9 +379,9 @@
 										<div>
 											<div style="">К оплате: <div id="calculateInvoice" style="">0</div> руб.</div>
 										</div>
-										<div>
+										<!--<div>
 											<div style="">Страховка: <div id="calculateInsInvoice" style="">0</div> руб.</div>
-										</div>
+										</div>-->
 										<div style="position: absolute; top: 3px; right: 5px; vertical-align: middle; font-size: 11px; width: 400px;">
 											<div style="display: inline-block; vertical-align: top;">
 												Настройки: 
@@ -396,14 +398,14 @@
 														 <div class="settings_text" onclick="clearInvoice();">Очистить всё</div>
 													</div>
 												</div>
-												<div style="margin-bottom: 2px;">
+												<!--<div style="margin-bottom: 2px;">
 													<div style="display: inline-block; vertical-align: top;">
 														<div id="insure" class="settings_text" >Страховая</div>
 													</div> / 
 													<div style="display: inline-block; vertical-align: top;">
 														<div id="insure_approve" class="settings_text">Согласовано</div>
 													</div>
-												</div>
+												</div>-->
 												<div style="margin-bottom: 2px;">
 													<div style="display: inline-block; vertical-align: top;">
 														<div id="discounts" class="settings_text">Скидки (Акции)</div>
@@ -484,7 +486,7 @@
 									addInvoiceInSession(t_number);
 								});
 								
-								fillInvoiseRez('.$_GET['type'].');
+								fillInvoiseRez();
 							});
 						</script>
 						

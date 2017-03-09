@@ -1,6 +1,6 @@
 <?php 
 
-//fill_invoice_from_session_f.php
+//fill_invoice_stom_from_session_f.php
 //
 
 	session_start();
@@ -71,12 +71,21 @@
 					ksort($data);
 					
 					$t_number_active = $_SESSION['invoice_data'][$client][$zapis_id]['t_number_active'];
+					$mkb_data = $_SESSION['invoice_data'][$client][$zapis_id]['mkb'];
+					
+							
+					require 'config.php';
+					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+					mysql_select_db($dbName) or die(mysql_error()); 
+					mysql_query("SET NAMES 'utf8'");
 					
 					foreach ($data as $zub => $invoice_data){
 						if ($t_number_active == $zub){
 							$bg_col = 'background: rgba(131, 219, 83, 0.5) none repeat scroll 0% 0%;';
+							$bg_col2 = 'background: rgba(83, 219, 185, 0.5) none repeat scroll 0% 0%;';
 						}else{
 							$bg_col = '';
+							$bg_col2 = 'background: rgba(83, 219, 185, 0.14) none repeat scroll 0% 0%;';
 						}
 						$request .= '
 							<div class="cellsBlock">
@@ -88,7 +97,30 @@
 						}
 						$request .= '
 								</div>';
+								
+						if (!empty($mkb_data) && isset($mkb_data[$zub])){
+							$request .= '
+								<div class="cellsBlock" style="font-size: 100%;" >
+									<div class="cellText2" style="padding: 2px 4px; '.$bg_col2.'">
+										<b>';
+							if ($zub == 99){
+								$request .= '<i>Полость</i>';
+							}else{
+								$request .= '<i>Зуб</i>: '.$zub;
+							}
+							$request .= '
+										</b>. <i>Диагноз</i>: '.$mkb_data[$zub].'
+									</div>
+									<div class="cellCosmAct info" style="font-size: 100%; text-align: center; padding: 2px 4px; '.$bg_col2.'" onclick="deleteMKBItem('.$zub.');">
+										<i class="fa fa-trash-o" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
+									</div>
+								</div>';
+						}
+								
+								
+						//часть прайса		
 						if (!empty($invoice_data)){
+							
 							foreach ($invoice_data as $key => $items){
 								$request .= '
 								<div class="cellsBlock" style="font-size: 100%;" >
@@ -100,11 +132,6 @@
 								//Хочу имя позиции в прайсе
 								$arr = array();
 								$rez = array();
-					
-								require 'config.php';
-								mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-								mysql_select_db($dbName) or die(mysql_error()); 
-								mysql_query("SET NAMES 'utf8'");
 
 								$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = '{$items['id']}'";			
 					
@@ -190,7 +217,7 @@
 									'.$price.'
 								</div>
 								<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px; '.$bg_col.'">
-									<input type="number" size="2" name="quantity" id="quantity" min="1" max="99" value="'.$items['quantity'].'" class="mod" onchange="changeQuantityInvoice('.$zub.', '.$key.', this);" onkeypress = "changeQuantityInvoice('.$zub.', this);">
+									<input type="number" size="2" name="quantity" id="quantity" min="1" max="99" value="'.$items['quantity'].'" class="mod" onchange="changeQuantityInvoice('.$zub.', '.$key.', this);" onkeypress = "changeQuantityInvoice('.$zub.', '.$key.', this);">
 								</div>
 								<div class="cellCosmAct spec_koeffInvoice settings_text"  speckoeff="'.$items['spec_koeff'].'" style="font-size: 90%; text-align: center; '.$bg_col.' width: 40px; min-width: 40px; max-width: 40px;" onclick="contextMenuShow('.$zub.', '.$key.', event, \'spec_koeffItem\');">
 									'.$items['spec_koeff'].'
@@ -217,18 +244,14 @@
 							}
 						}else{
 							$request .= '
-								<!--<div class="cellCosmAct" style="text-align: center; '.$bg_col.'">
-									-
-								</div>-->
+							<div class="cellsBlock" style="font-size: 100%;" >
 								<div class="cellText2" style="text-align: center; '.$bg_col.' border: 1px dotted #DDD;">
 									<span style="color: rgba(255, 0, 0, 0.62);">не заполнено</span>
 								</div>
-								<!--<div class="cellCosmAct" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; '.$bg_col.'">
-									0
-								</div>-->
 								<div class="cellCosmAct info" style="font-size: 100%; text-align: center; '.$bg_col.'" onclick="deleteInvoiceItem('.$zub.', this);">
 									<i class="fa fa-trash-o" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
-								</div>';
+								</div>
+							</div>';
 						}
 							$request .= '
 							</div>

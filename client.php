@@ -636,13 +636,21 @@
 														<a href="add_task_cosmet.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&insured='.$sheduler_zapis[$z]['insured'].'&pervich='.$sheduler_zapis[$z]['pervich'].'&noch='.$sheduler_zapis[$z]['noch'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'&worker='.$sheduler_zapis[$z]['worker'].'" class="ahref">Внести посещение косм.</a>
 													</div>';
 												}
-												//!!!Акт
+												//!!!Наряд
 												$zapisDate = strtotime($sheduler_zapis[$z]['day'].'.'.$sheduler_zapis[$z]['month'].'.'.$sheduler_zapis[$z]['year']);
 												//if (time() < $zapisDate + 60*60*24){
-													echo 
-													'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
-														<a href="invoice_add.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'&worker='.$sheduler_zapis[$z]['worker'].'" class="ahref">Счёт</a>
-													</div>';
+													if ($sheduler_zapis[$z]['type'] == 5){
+														echo 
+														'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
+															<a href="invoice_stom_add.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'&worker='.$sheduler_zapis[$z]['worker'].'&type='.$type.'" class="ahref">Счёт</a>
+														</div>';
+													}
+													if ($sheduler_zapis[$z]['type'] == 6){
+														echo 
+														'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
+															<a href="invoice_cosm_add.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'&worker='.$sheduler_zapis[$z]['worker'].'&type='.$type.'" class="ahref">Счёт</a>
+														</div>';
+													}
 												//}
 											}
 										}else{

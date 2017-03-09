@@ -353,7 +353,7 @@
 						}
 					}else{
 						echo '
-								<span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <a href="user.php?id='.$_SESSION['id'].'" class="ahref">определить</a></span><br>';
+								<span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <i class="ahref change_filial">определить</i></span><br>';
 					}
 					
 			echo '			

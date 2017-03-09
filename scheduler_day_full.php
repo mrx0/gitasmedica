@@ -120,8 +120,11 @@
 					$m = date("m");
 				if (!isset($d))
 					$d = date("d");
-				if (isset($_GET['kab']))
+				if (isset($_GET['kab'])){
 					$kab = $_GET['kab'];
+				}else{
+					$kab = 1;
+				}
 				$month_stamp = mktime(0, 0, 0, $m, 1, $y);
 				$day_count = date("t",$month_stamp);
 				$weekday = date("w", $month_stamp);

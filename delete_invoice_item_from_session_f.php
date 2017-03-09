@@ -19,6 +19,7 @@
 					unset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']]);
 				}elseif ($_POST['target'] === 'zub'){
 					unset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']]);
+					unset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$_POST['zub']]);
 				}
 				
 				if ($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active'] == $_POST['zub']){

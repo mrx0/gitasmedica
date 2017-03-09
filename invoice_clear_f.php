@@ -20,6 +20,7 @@
 				if (isset($_SESSION['invoice_data'][$client][$zapis_id]['data'])){
 					
 					$_SESSION['invoice_data'][$client][$zapis_id]['data'] = array();
+					$_SESSION['invoice_data'][$client][$zapis_id]['mkb'] = array();
 					$_SESSION['invoice_data'][$client][$zapis_id]['t_number_active'] = 0;
 					
 					echo json_encode(array('result' => 'success', 'data' => 'OK'));

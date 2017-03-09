@@ -113,7 +113,7 @@
 		return $password;
 	}
 	
-	//Поиск в многомерном массиве
+	//Поиск в много(двух???)мерном ассоциативном(!?) массиве по значению
 	function SearchInArray($array, $data, $search){
 		$rez = 0;
 		foreach ($array as $key => $value){
@@ -1382,7 +1382,7 @@
 	}
 	
 	//Ещё одно дерево
-	function showTree2($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id){
+	function showTree2($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
 		mysql_select_db($dbName) or die(mysql_error()); 
@@ -1548,10 +1548,10 @@
 							}else{
 								$price = 0;
 							}
-
+						
 							echo '
 										<li>
-											<p onclick="checkPriceItem('.$items_j[$i]['id'].')">'.$items_j[$i]['name'].'</p>
+											<p onclick="checkPriceItem('.$items_j[$i]['id'].', '.$dtype.')">'.$items_j[$i]['name'].'</p>
 										</li>';
 						}
 					}else{
@@ -1575,7 +1575,7 @@
 					//echo '_'.$value['name'].'<br>';
 					$space2 = $space. '&nbsp;&nbsp;&nbsp;';
 					$last_level2 = $last_level+1;
-					showTree2($value['id'], $space2, $type, $sel_id, $first, $last_level2, $deleted, $dbtable, $insure_id);
+					showTree2($value['id'], $space2, $type, $sel_id, $first, $last_level2, $deleted, $dbtable, $insure_id, $dtype);
 				}else{
 					//---
 					

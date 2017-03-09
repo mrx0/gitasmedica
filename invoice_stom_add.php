@@ -1,7 +1,7 @@
 <?php
 
-//invoice_add.php
-//Выписываем счёт
+//invoice_stom_add.php
+//Выписываем счёт стоматология
 
 	require_once 'header.php';
 	
@@ -79,7 +79,7 @@
 						<div id="status">
 							<header>
 								<span style="color: red;">Тестовый режим. Ничего не сохраняется и почти что работает</span>
-								<h2>Акт '.WriteSearchUser('spr_clients', $_GET['client'], 'user', true).'</h2>';
+								<h2>Наряд '.WriteSearchUser('spr_clients', $_GET['client'], 'user', true).'</h2>';
 								
 								
 								
@@ -200,6 +200,7 @@
 								<input type="hidden" id="filial" name="filial" value="'.$_GET['filial'].'">
 								<input type="hidden" id="worker" name="worker" value="'.$_GET['worker'].'">
 								<input type="hidden" id="t_number_active" name="t_number_active" value="'.$_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['t_number_active'].'">
+								<input type="hidden" id="invoice_type" name="invoice_type" value="'.$_GET['type'].'">
 								
 								<div style="vertical-align: middle; margin-bottom: 5px;">
 									<div id="teeth" style="display: inline-block;">
@@ -337,7 +338,7 @@
 											<div style=" width: 350px; height: 500px; overflow: scroll; border: 1px solid #CCC;">
 												<ul class="ul-tree ul-drop" id="lasttree">';
 
-						showTree2(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0);		
+						showTree2(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0, $_GET['type']);		
 							
 						echo '
 												</ul>
@@ -484,7 +485,7 @@
 									addInvoiceInSession(t_number);
 								});
 								
-								fillInvoiseRez('.$_GET['type'].');
+								fillInvoiseRez();
 							});
 						</script>
 						

@@ -23,7 +23,7 @@
 				if (!isset($_SESSION['invoice_data'][$client][$zapis_id]['data'])){
 					echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 				}else{
-					$_SESSION['invoice_data'][$client][$zapis_id]['t_number_active'] = $t_number;
+					$_SESSION['invoice_data'][$client][$zapis_id]['t_number_active'] = (int)$t_number;
 					if (!isset($_SESSION['invoice_data'][$client][$zapis_id]['data'][$t_number])){
 						$_SESSION['invoice_data'][$client][$zapis_id]['data'][$t_number] = array();
 					}

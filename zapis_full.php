@@ -201,8 +201,11 @@
 					$year = date("Y");
 				
 				
-				if (isset($_GET['kab']))
+				if (isset($_GET['kab'])){
 					$kab = $_GET['kab'];
+				}else{
+					$kab = 1;
+				}
 				
 				//$month_stamp = mktime(0, 0, 0, $m, 1, $y);
 				//$day_count = date("t",$month_stamp);
@@ -298,16 +301,19 @@
 								</form>';	*/
 					echo '			
 							</header>';
-							
-					echo '
-					
-							<div id="data">';
+					if (!isset($_SESSION['filial'])){
+						echo '
+								<span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <i class="ahref change_filial">определить</i></span><br>';							
+					}
+	
+					/*echo '
+							<div id="data">';*/
 							
 					echo '		
 							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-								<a href="?'.$dopFilial.$dopDate.'&who=stom&kab='.$kab.'" class="b" style="'.$stom_color.'">Стоматологи</a>
-								<a href="?'.$dopFilial.$dopDate.'&who=cosm&kab='.$kab.'" class="b" style="'.$cosm_color.'">Косметологи</a>
+								<a href="?'.$dopFilial.$dopDate.'&who=stom&kab=1" class="b" style="'.$stom_color.'">Стоматологи</a>
+								<a href="?'.$dopFilial.$dopDate.'&who=cosm&kab=1" class="b" style="'.$cosm_color.'">Косметологи</a>
 							</li>';
 							
 					$ZapisHereQueryToday = FilialKabSmenaZapisToday($datatable, $year, $month, $day, $_GET['filial'], $kab, $type);
@@ -490,8 +496,7 @@
 								echo '
 										<div class="cellName" style="max-width: 120px; overflow: auto;">';
 								echo 
-											'Описание:<br>'.
-											$ZapisHereQueryToday[$z]['description'];
+											'<b><i>Описание:</i></b><br><div style="text-overflow: ellipsis; overflow: hidden; white-space: inherit; display: block; width: 120px;" title="'.$ZapisHereQueryToday[$z]['description'].'">'.$ZapisHereQueryToday[$z]['description'].'</div>';
 								echo '
 										</div>';
 								echo '
@@ -567,11 +572,18 @@
 													echo 
 														'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 8)">Ошибка, удалить из записи</a><br>';
 												}
-												
-												echo 
-												'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
-													<a href="invoice_add.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">Акт</a>
-												</div>';
+												if ($ZapisHereQueryToday[$z]['type'] == 5){
+													echo 
+													'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
+														<a href="invoice_stom_add.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'&type='.$type.'" class="ahref">Наряд</a>
+													</div>';
+												}
+												if ($ZapisHereQueryToday[$z]['type'] == 6){
+													echo 
+													'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
+														<a href="invoice_cosm_add.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'&type='.$type.'" class="ahref">Наряд</a>
+													</div>';
+												}
 											}
 											echo 
 														'<a href="#" onclick="Ajax_TempZapis_edit_Enter('.$ZapisHereQueryToday[$z]['id'].', 0)">Отменить все изменения</a><br>';
@@ -602,7 +614,7 @@
 													<a href="add_task_cosmet.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">Внести посещение косм.</a>
 												</div>';
 											}
-											//!!!Акт
+											//!!!Наряд
 											$zapisDate = strtotime($ZapisHereQueryToday[$z]['day'].'.'.$ZapisHereQueryToday[$z]['month'].'.'.$ZapisHereQueryToday[$z]['year']);
 											//if (time() < $zapisDate + 60*60*24){
 											/*	echo 

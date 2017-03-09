@@ -1,5 +1,6 @@
 	//попытка показать контекстное меню
 	function contextMenuShow(zub, key, event, mark){
+		//alert(mark);
 		
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
@@ -2113,13 +2114,18 @@
 	};
 	
 	//Подсчёт суммы для счёта
-	function calculateInvoice (){
+	function calculateInvoice (invoice_type){
 		
 		var Summ = 0;
 		var SummIns = 0;
 		
+		var insure = 0;
+		var insureapprove = 0;
+		
 		document.getElementById("calculateInvoice").innerHTML = Summ;
-		document.getElementById("calculateInsInvoice").innerHTML = SummIns;
+		if (invoice_type == 5){
+			document.getElementById("calculateInsInvoice").innerHTML = SummIns;
+		}
 
 		$(".invoiceItemPrice").each(function() {
 			
@@ -2127,12 +2133,14 @@
 			//console.log($(this).prev().prev().attr('insure'));
 			//alert($(this).attr("insure"));
 			
-			//получаем значение страховой
-			var insure = $(this).prev().prev().attr('insure');
-			//console.log(insure);
+			if (invoice_type == 5){
+				//получаем значение страховой
+				insure = $(this).prev().prev().attr('insure');
+				//console.log(insure);
 			
-			//получаем значение согласования
-			var insureapprove = $(this).prev().attr('insureapprove');
+				//получаем значение согласования
+				insureapprove = $(this).prev().attr('insureapprove');
+			}
 			
 			//получаем значение гарантии
 			var guarantee = $(this).next().next().next().next().attr('guarantee');
@@ -2159,7 +2167,7 @@
 			
 			//прописываем стоимость
 			if (guarantee == 0){
-				$(this).next().next().next().next().next().html(stoim);
+				$(this).next().next().next().next().next().html(Math.ceil(stoim/10) * 10);
 			}
 			
 			if (guarantee == 0){
@@ -2176,9 +2184,9 @@
 			
 		});
 		
-		document.getElementById("calculateInvoice").innerHTML = Summ;
+		document.getElementById("calculateInvoice").innerHTML = Math.ceil(Summ/10) * 10;
 		if (SummIns > 0){
-			document.getElementById("calculateInsInvoice").innerHTML = SummIns;
+			document.getElementById("calculateInsInvoice").innerHTML = Math.ceil(SummIns/10) * 10;
 		}
 		
 	};
@@ -2203,10 +2211,15 @@
 	
 	//Функция заполняет результат счета из сессии
 	function fillInvoiseRez(){
-		//alert(1);
 		
+		var invoice_type = document.getElementById("invoice_type").value;
+		
+		var link = "fill_invoice_stom_from_session_f.php";
+		if (invoice_type == 6){
+			link = "fill_invoice_cosm_from_session_f.php";
+		}
 		$.ajax({
-			url:"fill_invoice_from_session_f.php",
+			url: link,
 			global: false, 
 			type: "POST", 
 			dataType: "JSON",
@@ -2228,7 +2241,7 @@
 					$('#invoice_rezult').html(data.data);
 					
 					// !!!
-					calculateInvoice();
+					calculateInvoice(invoice_type);
 					
 				}else{
 					//alert('error');
@@ -2267,17 +2280,15 @@
 			success: function(data){
 				
 				fillInvoiseRez();
-				//calculateInvoice();
 				
 				if(data.result == "success"){  
 					//$(\'#errror\').html(data.data);
-					
-					//fillInvoiseRez();
+
 					
 				}else{
 					$('#errror').html(data.data);
 				}
-				//fillInvoiseRez();
+
 			}
 		})
 	}
@@ -2285,6 +2296,8 @@
 	function changeQuantityInvoice(zub, itemId, dataObj){
 		//alert(dataObj.value);
 		//console.log(this);
+		
+		var invoice_type = document.getElementById("invoice_type").value;
 		
 		//количество
 		var quantity = dataObj.value;
@@ -2306,6 +2319,7 @@
 				worker: document.getElementById("worker").value,
 				
 				quantity: quantity,
+				invoice_type: invoice_type,
 			},
 			cache: false,
 			beforeSend: function() {
@@ -2315,7 +2329,6 @@
 			success: function(data){
 				
 				fillInvoiseRez();
-				//calculateInvoice();
 				
 				//$('#errror').html(data);
 				//if(data.result == "success"){
@@ -2335,8 +2348,7 @@
 					//alert('error');
 					$('#errror').html(data.data);
 				}*/
-				
-				//fillInvoiseRez();
+
 			}
 		});
 	}
@@ -2378,8 +2390,7 @@
 			success: function(data){
 				
 				fillInvoiseRez();
-				//calculateInvoice();
-				
+
 				//$('#errror').html(data);
 				if(data.result == "success"){
 					//alert(111);
@@ -2399,7 +2410,55 @@
 					$('#errror').html(data.data);
 				}*/
 				
-				//fillInvoiseRez();
+
+			}
+		});
+	}	
+
+	//Удалить текущий диагноз МКБ
+	function deleteMKBItem(zub){
+
+		$.ajax({
+			url:"delete_mkb_item_from_session_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				zub: zub,
+				
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
+
+				//$('#errror').html(data);
+				//if(data.result == "success"){
+					//alert(111);
+					
+					//colorizeTButton (data.t_number_active);
+					
+					/*$(".sel_tooth").each(function() {
+						if (Number(this.innerHTML) == data.t_number_active){
+							this.style.background = '#83DB53';
+						}else{
+							this.style.background = '';
+						}
+					});*/
+				//}
+				/*else{
+					//alert('error');
+					$('#errror').html(data.data);
+				}*/
 			}
 		});
 	}	
@@ -2433,8 +2492,7 @@
 			success: function(data){
 				
 				fillInvoiseRez();
-				//calculateInvoice();
-				
+
 				/*if(data.result == "success"){  
 					//alert(data.data);
 					$('#invoice_rezult').html(data.data);
@@ -2485,8 +2543,7 @@
 			success: function(data){
 				
 				fillInvoiseRez();
-				//calculateInvoice();
-				
+
 				/*if(data.result == "success"){  
 					//alert(data.data);
 					$('#invoice_rezult').html(data.data);
@@ -2536,8 +2593,7 @@
 			success: function(data){
 				
 				fillInvoiseRez();
-				//calculateInvoice();
-				
+
 				/*if(data.result == "success"){  
 					//alert(data.data);
 					$('#invoice_rezult').html(data.data);
@@ -2588,8 +2644,7 @@
 			success: function(data){
 				
 				fillInvoiseRez();
-				//calculateInvoice();
-				
+
 				/*if(data.result == "success"){  
 					//alert(data.data);
 					$('#invoice_rezult').html(data.data);
@@ -2640,8 +2695,7 @@
 			success: function(data){
 				
 				fillInvoiseRez();
-				//calculateInvoice();
-				
+
 				/*if(data.result == "success"){  
 					//alert(data.data);
 					$('#invoice_rezult').html(data.data);
@@ -2694,8 +2748,7 @@
 			success: function(data){
 				
 				fillInvoiseRez();
-				//calculateInvoice();
-				
+
 				/*if(data.result == "success"){  
 					//alert(data.data);
 					$('#invoice_rezult').html(data.data);
@@ -2748,8 +2801,7 @@
 			success: function(data){
 				
 				fillInvoiseRez();
-				//calculateInvoice();
-				
+
 				/*if(data.result == "success"){  
 					//alert(data.data);
 					$('#invoice_rezult').html(data.data);
@@ -2802,8 +2854,7 @@
 			success: function(data){
 				
 				fillInvoiseRez();
-				//calculateInvoice();
-				
+
 				/*if(data.result == "success"){  
 					//alert(data.data);
 					$('#invoice_rezult').html(data.data);
@@ -2856,8 +2907,7 @@
 			success: function(data){
 				
 				fillInvoiseRez();
-				//calculateInvoice();
-				
+
 				/*if(data.result == "success"){  
 					//alert(data.data);
 					$('#invoice_rezult').html(data.data);
@@ -2910,8 +2960,7 @@
 			success: function(data){
 				
 				fillInvoiseRez();
-				//calculateInvoice();
-				
+
 				/*if(data.result == "success"){  
 					//alert(data.data);
 					$('#invoice_rezult').html(data.data);
@@ -2958,17 +3007,13 @@
 			success: function(data){
 				
 				fillInvoiseRez();
-				//calculateInvoice();
-				
+
 				if(data.result == "success"){  
 					//$('#errror').html(data.data);
-					
-					//fillInvoiseRez();
 					
 				}else{
 					$('#errror').html(data.data);
 				}
-				//fillInvoiseRez();
 			}
 		})
 				
@@ -2976,10 +3021,15 @@
 	}
 			
 	//Добавить позицию из прайса в счет
-	function checkPriceItem(price_id){
+	function checkPriceItem(price_id, type){
 		//alert(100);
+		
+		var link = "add_price_id_stom_in_invoice_f.php";
+		if (type == 6){
+			link = "add_price_id_cosm_in_invoice_f.php";
+		}
 		$.ajax({
-			url:"add_price_id_in_invoice_f.php",
+			url: link,
 			global: false, 
 			type: "POST", 
 			dataType: "JSON",
@@ -3001,7 +3051,45 @@
 			success: function(data){
 				
 				fillInvoiseRez();
-				//calculateInvoice();
+
+				/*if(data.result == "success"){  
+					//alert(data.data);
+					$('#invoice_rezult').html(data.data);
+				}else{
+					//alert('error');
+					$('#errror').html(data.data);
+				}*/
+			}
+		});
+
+	}; 
+	
+	//Добавить позицию из МКБ в акт
+	function checkMKBItem(mkb_id){
+		//alert(100);
+		$.ajax({
+			url:"add_mkb_id_in_invoice_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				mkb_id: mkb_id,
+				client: document.getElementById("client").value,
+				client_insure: document.getElementById("client_insure").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				zapis_insure: document.getElementById("zapis_insure").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
 				
 				/*if(data.result == "success"){  
 					//alert(data.data);
@@ -3012,11 +3100,10 @@
 				}*/
 			}
 		});
-		
-		//fillInvoiseRez();
+
 	}; 
 	
-	//Полновстью чистим счёт
+	//Полностью чистим счёт
 	function clearInvoice(){
 		
 		var rys = false;
@@ -3152,5 +3239,30 @@
 				contextMenuShow(0, 0, event, 'discounts');
 			}
 		});
+		// Вешаем слушатель события нажатие кнопок мыши для всего документа:
+		$(".change_filial").click(function(event) {
+
+			// Проверяем нажата ли именно правая кнопка мыши:
+			if (event.which === 1)  {
+				//alert(71);
+				contextMenuShow(0, 0, event, 'change_filial');
+			}
+		});
 	});
 
+	function changeUserFilial(filial){
+		ajax({
+			url:"Change_user_session_filial.php",
+			//statbox:"status_notes",
+			method:"POST",
+			data:
+			{
+				data: filial,
+			},
+			success:function(data){
+				//document.getElementById("status_notes").innerHTML=data;
+				//alert("Ok");
+				location.reload();
+			}
+		});
+	}

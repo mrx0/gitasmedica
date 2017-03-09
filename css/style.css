@@ -134,9 +134,6 @@ nav {
 nav a{
 	float:left;
 	font-weight: normal;
-}
-
-nav a{
 	display: block;
 	/*color: #BFBCB5;*/
 	color: #007BB6;
@@ -144,6 +141,14 @@ nav a{
 	text-align:center;
 	padding: 6px 10px 5px;
 	border-right: 1px dotted #CCC;
+	height: 25px;
+}
+
+nav div.user_link{
+	float:left;
+	display: block;
+	text-align:center;
+	padding: 0;
 	height: 25px;
 }
 
@@ -201,6 +206,18 @@ nav a:hover {
 	/*box-shadow: 0 0 5px #999;*/
 	z-index: 2;
 	 color: red;
+}
+
+#change_filial {
+	width: 120px; 
+	text-overflow: ellipsis; 
+	overflow: hidden;
+	white-space: inherit; 
+	position: absolute; 
+	font-size: 80%; 
+	font-weight: normal; 
+	bottom: -10px;
+	cursor: pointer;
 }
 
 /*.removes {
@@ -566,6 +583,7 @@ input[type="submit"]:focus, .button:focus, .button_close:focus, .b:focus, .b2:fo
 .ahref {
 	text-decoration: none; 
 	color:#041E35;
+	cursor: pointer;
 }
 
 .ahref:hover {
