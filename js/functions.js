@@ -2292,7 +2292,7 @@
 			}
 		})
 	}
-	
+	//меняет кол-во позиции
 	function changeQuantityInvoice(zub, itemId, dataObj){
 		//alert(dataObj.value);
 		//console.log(this);
@@ -2839,6 +2839,8 @@
 	//Изменить гарантию у этого зуба
 	function guaranteeItemInvoice(zub, key, guarantee){
 		
+		var invoice_type = document.getElementById("invoice_type").value;
+		
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
 		// Удаляем предыдущие вызванное контекстное меню:
@@ -2858,6 +2860,8 @@
 				zapis_id: document.getElementById("zapis_id").value,
 				filial: document.getElementById("filial").value,
 				worker: document.getElementById("worker").value,
+				
+				invoice_type: invoice_type,
 			},
 			cache: false,
 			beforeSend: function() {
@@ -2892,6 +2896,8 @@
 	//Изменить Коэффициент у этого зуба
 	function spec_koeffItemInvoice(zub, key, spec_koeff){
 		
+		var invoice_type = document.getElementById("invoice_type").value;
+		
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
 		// Удаляем предыдущие вызванное контекстное меню:
@@ -2911,6 +2917,8 @@
 				zapis_id: document.getElementById("zapis_id").value,
 				filial: document.getElementById("filial").value,
 				worker: document.getElementById("worker").value,
+				
+				invoice_type: invoice_type,
 			},
 			cache: false,
 			beforeSend: function() {
@@ -2944,6 +2952,9 @@
 
 	//Изменить скидка акция у этого зуба
 	function discountItemInvoice(zub, key, discount){
+		
+		var invoice_type = document.getElementById("invoice_type").value;
+		
 		//alert(discount);
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
@@ -2964,6 +2975,8 @@
 				zapis_id: document.getElementById("zapis_id").value,
 				filial: document.getElementById("filial").value,
 				worker: document.getElementById("worker").value,
+				
+				invoice_type: invoice_type,
 			},
 			cache: false,
 			beforeSend: function() {

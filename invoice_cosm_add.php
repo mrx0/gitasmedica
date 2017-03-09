@@ -72,7 +72,7 @@
 						ksort($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
 						
 						//var_dump($_SESSION);
-						var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]);
+						//var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]);
 						//var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['mkb']);
 						
 						echo '
