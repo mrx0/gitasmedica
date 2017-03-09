@@ -83,13 +83,15 @@
 						if ($t_number_active == $zub){
 							$bg_col = 'background: rgba(131, 219, 83, 0.5) none repeat scroll 0% 0%;';
 							$bg_col2 = 'background: rgba(83, 219, 185, 0.5) none repeat scroll 0% 0%;';
+							$bg_col3 = 'background: rgba(131, 219, 83, 0.5) none repeat scroll 0% 0%;';
 						}else{
 							$bg_col = '';
 							$bg_col2 = 'background: rgba(83, 219, 185, 0.14) none repeat scroll 0% 0%;';
+							$bg_col3 = 'background: rgba(83, 219, 185, 0.14) none repeat scroll 0% 0%;';
 						}
 						$request .= '
 							<div class="cellsBlock">
-								<div class="cellCosmAct toothInInvoice" style="'.$bg_col.'" onclick="toothInInvoice('.$zub.')">';
+								<div class="cellCosmAct toothInInvoice" style="'.$bg_col3.'" onclick="toothInInvoice('.$zub.')">';
 						if ($zub == 99){
 							$request .= 'П';
 						}else{

@@ -2466,6 +2466,8 @@
 	//Изменить коэффициент специалиста у всех
 	function spec_koeffInvoice(spec_koeff){
 		
+		var invoice_type = document.getElementById("invoice_type").value;
+		
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
 		// Удаляем предыдущие вызванное контекстное меню:
@@ -2483,6 +2485,8 @@
 				zapis_id: document.getElementById("zapis_id").value,
 				filial: document.getElementById("filial").value,
 				worker: document.getElementById("worker").value,
+				
+				invoice_type: invoice_type,
 			},
 			cache: false,
 			beforeSend: function() {
@@ -2517,6 +2521,8 @@
 	//Изменить гарантию у всех
 	function guaranteeInvoice(guarantee){
 		
+		var invoice_type = document.getElementById("invoice_type").value;
+		
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
 		// Удаляем предыдущие вызванное контекстное меню:
@@ -2534,6 +2540,8 @@
 				zapis_id: document.getElementById("zapis_id").value,
 				filial: document.getElementById("filial").value,
 				worker: document.getElementById("worker").value,
+				
+				invoice_type: invoice_type,
 			},
 			cache: false,
 			beforeSend: function() {
@@ -2618,6 +2626,9 @@
 	//Изменить скидку у всех
 	function discountInvoice(discount){
 		//alert(discount);
+		
+		var invoice_type = document.getElementById("invoice_type").value;
+		
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
 		// Удаляем предыдущие вызванное контекстное меню:
@@ -2635,6 +2646,8 @@
 				zapis_id: document.getElementById("zapis_id").value,
 				filial: document.getElementById("filial").value,
 				worker: document.getElementById("worker").value,
+				
+				invoice_type: invoice_type,
 			},
 			cache: false,
 			beforeSend: function() {

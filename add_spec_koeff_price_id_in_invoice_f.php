@@ -1,6 +1,6 @@
 <?php 
 
-//add_koeff_price_id_in_invoice_f.php
+//add_spec_koeff_price_id_in_invoice_f.php
 //
 
 	session_start();
@@ -14,7 +14,7 @@
 			
 			$temp_arr = array();
 			
-			if (!isset($_POST['spec_koeff']) || !isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['filial']) || !isset($_POST['worker'])){
+			if (!isset($_POST['spec_koeff']) || !isset($_POST['invoice_type']) || !isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['filial']) || !isset($_POST['worker'])){
 				//echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 				//var_dump($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']]);
@@ -25,11 +25,17 @@
 					foreach ($data as $zub => $invoice_data){
 						
 						if (!empty($invoice_data)){
-							
-							foreach ($invoice_data as $key => $items){
-								
-								$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$zub][$key]['spec_koeff'] = (int)$_POST['spec_koeff'];
-								
+							if ($_POST['invoice_type'] == 5){
+								foreach ($invoice_data as $key => $items){
+									
+									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$zub][$key]['spec_koeff'] = (int)$_POST['spec_koeff'];
+									
+								}
+							}
+							if ($_POST['invoice_type'] == 6){
+
+								$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$zub]['spec_koeff'] = (int)$_POST['spec_koeff'];
+
 							}
 						}
 					}
