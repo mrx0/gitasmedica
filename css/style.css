@@ -1121,13 +1121,13 @@ position:relative;
 #overlay {
 	z-index: 102; /* подложка должна быть выше слоев элементов сайта, но ниже слоя модального окна */
 	position: fixed; /* всегда перекрывает весь сайт */
-	background-color: #000; /* черная */
-	opacity: 0.8; /* но немного прозрачна */
+	background-color: rgba(0, 0, 0, 0.8); /* черная */
+	/*opacity: 0.8; /* но немного прозрачна */
 	width: 100%; 
 	height: 100%; /* размером во весь экран */
 	top: 0; 
 	left: 0; /* сверху и слева 0, обязательные свойства! */
-	cursor: pointer;
+	/*cursor: pointer;*/
 	display: none; /* в обычном состоянии её нет) */
 }
 
@@ -1816,18 +1816,18 @@ input.dateс {
 	background: rgba(77, 246, 127, 0.9);
 }
 
-#calculateInvoice, #calculateInsInvoice {
+#calculateInvoice, #calculateInsInvoice, .calculateInvoice, .calculateInsInvoice {
 	font-size: 15px;
 	font-weight: bold;
 	font-style: italic;
 	display: inline;
 }
 
-#calculateInvoice {
+#calculateInvoice, .calculateInvoice {
 	color: red;
 }
 
-#calculateInsInvoice {
+#calculateInsInvoice, .calculateInsInvoice {
 	color: blue;
 }
 
@@ -1891,4 +1891,20 @@ input.dateс {
             
 .context-menu ul li div:hover {
 	background-color: #eee;
+}
+
+.center_block {
+    /*width: 200px; /* Ширина элемента в пикселах */
+	width: 30%;
+    padding: 10px; /* Поля вокруг текста */
+    background: rgb(254, 253, 211);/* Цвет фона */
+	z-index: 106; /* окно должно быть наиболее большем слое */
+	text-align: center;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto;
+	position: absolute;
+	height: 150px;
 }

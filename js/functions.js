@@ -3292,3 +3292,104 @@
 			}
 		});
 	}
+	
+	//Показываем блок с суммами и кнопками Для наряда
+	function showInvoiceAdd(invoice_type){
+		$('#overlay').show();
+		
+		var Summ = document.getElementById("calculateInvoice").innerHTML;
+		var SummIns = 0;
+		var SummInsBlock = '';
+		
+		if (invoice_type == 5){
+			SummIns = document.getElementById("calculateInsInvoice").innerHTML;
+			SummInsBlock = '<div>Страховка: <span class="calculateInsInvoice">'+SummIns+'</span> руб.</div>';
+		}
+		
+		// Создаем меню:
+		var menu = $('<div/>', {
+			class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+		})
+		.appendTo('#overlay')
+		.append(
+			$('<div/>')
+			.css({
+				"height": "100%",
+				"border": "1px solid #AAA",
+				"position": "relative",
+			})
+			.append('<span style="margin: 5px;"><i>Проверьте сумму и нажмите сохранить</i></span>')
+			.append(
+				$('<div/>')
+				.css({
+					"position": "absolute",
+					"width": "100%",
+					"margin": "auto",
+					"top": "-10px",
+					"left": "0",
+					"bottom": "0",
+					"right": "0",
+					"height": "50%",
+				})
+				.append('<div style="margin: 10px;">К оплате: <span class="calculateInvoice">'+Summ+'</span> руб.</div>'+SummInsBlock)
+			)
+			.append(
+				$('<div/>')
+				.css({
+					"position": "absolute",
+					"bottom": "2px",
+					"width": "100%",
+				})
+				.append('<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add()">'+
+						'<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+				)
+			)
+		);
+
+		menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+	}
+
+	//Добавляем в базу наряд из сессии
+	function Ajax_invoice_add(){
+		
+		var invoice_type = document.getElementById("invoice_type").value;
+		
+		var Summ = document.getElementById("calculateInvoice").innerHTML;
+		var SummIns = 0;
+		
+		if (invoice_type == 5){
+			SummIns = document.getElementById("calculateInsInvoice").innerHTML;
+		}
+		
+		$.ajax({
+			url:"invoice_add_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+				
+				summ: Summ,
+				summins: SummIns,
+				
+				invoice_type: invoice_type,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//alert(res.data);
+				
+			
+		
+			}
+		});
+	}
+	

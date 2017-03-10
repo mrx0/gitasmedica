@@ -72,13 +72,13 @@
 						ksort($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
 						
 						//var_dump($_SESSION);
-						//var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]);
-						//var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['mkb']);
+						var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
+						var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['mkb']);
 						
 						echo '
 						<div id="status">
 							<header>
-								<span style="color: red;">Тестовый режим. Ничего не сохраняется и почти что работает</span>
+								<span style="color: red;">Тестовый режим. Уже сохраняется и даже как-то работает</span>
 								<h2>Наряд '.WriteSearchUser('spr_clients', $_GET['client'], 'user', true).'</h2>';
 								
 								
@@ -424,9 +424,11 @@
 						
 						echo '
 							</div>
+							<input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd('.$sheduler_zapis[0]['type'].')">
 						</div>
-						
-						
+	
+						<!-- Подложка только одна -->
+						<div id="overlay"></div>
 						
 						
 						
