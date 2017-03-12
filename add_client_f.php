@@ -107,7 +107,7 @@
 						$card = str_replace(",",", ",$card);
 						$card = str_replace("/","/ ",$card);
 						
-						$new_client = WriteClientToDB_Edit ($_POST['session_id'], $name, $full_name, $_POST['f'], $_POST['i'], $_POST['o'], $_POST['fo'], $_POST['io'], $_POST['oo'], $_POST['comment'], $card, $therapist, $therapist2, $birthday, $_POST['sex'], $_POST['telephone'], $_POST['htelephone'], $_POST['telephoneo'], $_POST['htelephoneo'], $_POST['passport'], $_POST['alienpassportser'], $_POST['alienpassportnom'], $_POST['passportvidandata'], $_POST['passportvidankem'], $_POST['address'], $_POST['polis'], $_POST['polisdata'], $_POST['insurecompany']);
+						$new_client = WriteClientToDB_Edit ($_POST['session_id'], $name, $full_name, firspUpperCase(trim($_POST['f'])), firspUpperCase(trim($_POST['i'])), firspUpperCase(trim($_POST['o'])), firspUpperCase(trim($_POST['fo'])), firspUpperCase(trim($_POST['io'])), firspUpperCase(trim($_POST['oo'])), $_POST['comment'], $card, $therapist, $therapist2, $birthday, $_POST['sex'], $_POST['telephone'], $_POST['htelephone'], $_POST['telephoneo'], $_POST['htelephoneo'], $_POST['passport'], $_POST['alienpassportser'], $_POST['alienpassportnom'], $_POST['passportvidandata'], $_POST['passportvidankem'], $_POST['address'], $_POST['polis'], $_POST['polisdata'], $_POST['insurecompany']);
 						//var_dump($new_client);
 						
 						echo '

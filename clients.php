@@ -158,9 +158,9 @@
 				}				
 				echo '
 								<div class="cellCosmAct" style="text-align: center">Пол</div>
-								<div class="cellCosmAct" style="text-align: center">Лет</div>
 								<div class="cellCosmAct" style="text-align: center; width: 60px; min-width: 60px; max-width: 60px;">Карта</div>
 								<div class="cellTime" style="text-align: center">Д. р.</div>
+								<div class="cellCosmAct" style="text-align: center">Лет</div>
 								<div class="cellFullName" style="text-align: center">Контакты</div>
 								<div class="cellText" style="text-align: center">Комментарий</div>
 							</li>';
@@ -238,13 +238,28 @@
 						echo '
 									</div>';
 						echo '
-									<div class="cellCosmAct" style="text-align: center">
-										', $clients_j[$i]['birthday'] == '-1577934000' ? '-' : '<b>'.getyeardiff($clients_j[$i]['birthday']).'</b>' ,'
+									<div class="cellCosmAct" style="text-align: center; width: 60px; min-width: 60px; max-width: 60px;">'.$clients_j[$i]['card'].'</div>';
+			
+						echo '
+									<div class="cellTime" style="text-align: center">';
+						if (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)){
+							echo 'не указана';
+						}else{
+							echo date('d.m.Y', $clients_j[$i]['birthday']);
+						}
+						echo '				
 									</div>';
 						echo '
-									<div class="cellCosmAct" style="text-align: center; width: 60px; min-width: 60px; max-width: 60px;">'.$clients_j[$i]['card'].'</div>';
-						echo '
-									<div class="cellTime" style="text-align: center">', $clients_j[$i]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $clients_j[$i]['birthday']) ,'</div>
+									<div class="cellCosmAct" style="text-align: center">';
+						if (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)){
+							echo '-';
+						}else{
+							echo '<b>'.getyeardiff($clients_j[$i]['birthday']).'</b>';
+						}
+						echo '	
+									</div>';
+									
+						echo '	
 									<div class="cellFullName">'.$clients_j[$i]['telephone'];
 						if ($clients_j[$i]['htelephone'] != ''){
 							echo '
@@ -254,6 +269,8 @@
 									</div>
 									<div class="cellText">'.$clients_j[$i]['comment'].'</div>
 								</li>';
+								
+								
 					}else{
 						$deleted_clients .= '
 									<div class="cellCosmAct" style="text-align: center">';
@@ -271,8 +288,19 @@
 						$deleted_clients .= '
 									</div>';
 						$deleted_clients .= '
+									<div class="cellCosmAct" style="text-align: center; width: 60px; min-width: 60px; max-width: 60px;">'.$clients_j[$i]['card'].'</div>';
+						$deleted_clients .= '
+									<div class="cellTime" style="text-align: center">';
+						if (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)){
+							$deleted_clients .= 'не указана';
+						}else{
+							$deleted_clients .= date('d.m.Y', $clients_j[$i]['birthday']);
+						}
+						$deleted_clients .= '
+									</div>';
+						$deleted_clients .= '
 									<div class="cellCosmAct" style="text-align: center">';
-						if ($clients_j[$i]['birthday'] == '-1577934000'){
+						if (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)){
 							$deleted_clients .= '-';
 						}else{
 							$deleted_clients .= '<b>'.getyeardiff($clients_j[$i]['birthday']).'</b>';
@@ -280,16 +308,6 @@
 						$deleted_clients .= '
 									</div>';
 						$deleted_clients .= '
-									<div class="cellCosmAct" style="text-align: center; width: 60px; min-width: 60px; max-width: 60px;">'.$clients_j[$i]['card'].'</div>';
-						$deleted_clients .= '
-									<div class="cellTime" style="text-align: center">';
-						if ($clients_j[$i]['birthday'] == 'не указана'){
-							$deleted_clients .= '';
-						}else{
-							$deleted_clients .= date('d.m.Y', $clients_j[$i]['birthday']);
-						}
-						$deleted_clients .= '
-									</div>
 									<div class="cellFullName">'.$clients_j[$i]['telephone'];
 						if ($clients_j[$i]['htelephone'] != ''){
 							$deleted_clients .= '

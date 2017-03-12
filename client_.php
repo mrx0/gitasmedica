@@ -1,7 +1,7 @@
 <?php
 
 //user.php
-//
+//!!! не использую???
 
 	require_once 'header.php';
 	

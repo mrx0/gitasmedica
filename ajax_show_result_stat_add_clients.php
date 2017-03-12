@@ -219,7 +219,15 @@
 										</div>';
 
 							echo '
-										<div class="cellTime" style="text-align: center">', $journal[$i]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $journal[$i]['birthday']) ,'</div>
+										<div class="cellTime" style="text-align: center">';
+				if (($journal[$i]['birthday'] == '-1577934000') || ($journal[$i]['birthday'] == 0)){
+					echo 'не указана';
+				}else{
+					echo 
+						date('d.m.Y', $journal[$i]['birthday']).'';
+				}
+				echo '
+										</div>
 										<div class="cellText">'.$journal[$i]['comment'].'</div>
 									</li>';
 						}

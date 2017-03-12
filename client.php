@@ -124,10 +124,15 @@
 								
 								<div class="cellsBlock2">
 									<div class="cellLeft">Дата рождения</div>
-									<div class="cellRight">
-										', $client[0]['birthday'] == '-1577934000' ? 'не указана' : date('d.m.Y', $client[0]['birthday']) ,'<br>
-										', $client[0]['birthday'] == '-1577934000' ? '' : 'полных лет <b>'.getyeardiff($client[0]['birthday']).'</b>' ,'
-										
+									<div class="cellRight">';
+				if (($client[0]['birthday'] == '-1577934000') || ($client[0]['birthday'] == 0)){
+					echo 'не указана';
+				}else{
+					echo 
+						date('d.m.Y', $client[0]['birthday']).'<br>
+						полных лет <b>'.getyeardiff($client[0]['birthday']).'</b>';
+				}
+				echo '						
 									</div>
 								</div>
 								
