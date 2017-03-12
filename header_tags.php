@@ -5,7 +5,7 @@
 	
 	$god_mode = FALSE;
 	
-	$version = 'v 27.02.2017';
+	$version = 'v 12.03.2017';
 	
 	echo'
 		<!DOCTYPE html>
@@ -339,10 +339,10 @@
 		if (($removesMy != 0) || ($removesMe != 0)){
 			$if_removes .= '<a href="user.php?id='.$_SESSION['id'].'">';
 			if($removesMe != 0){
-				$if_removes .= '<div class="removes" style="color: #2727D7;" class="removes" title="Направлено ко мне"><i class="fa fa-sign-in" aria-hidden="true"></i><div class="notes_count">'.count($removesMe).'</div></div>';
+				$if_removes .= '<div class="removes" style="color: #2727D7;" title="Направлено ко мне"><i class="fa fa-sign-in" aria-hidden="true"></i><div class="notes_count">'.count($removesMe).'</div></div>';
 			}
 			if($removesMy != 0){
-				$if_removes .= '<div class="removes" style="color: #01E78E;" class="removes" title="Мои направления"><i class="fa fa-sign-out" aria-hidden="true"></i><div class="notes_count">'.count($removesMy).'</div></div>';
+				$if_removes .= '<div class="removes" style="color: #01E78E;" title="Мои направления"><i class="fa fa-sign-out" aria-hidden="true"></i><div class="notes_count">'.count($removesMy).'</div></div>';
 			}
 			$if_removes .= '</a>';
 		}else{

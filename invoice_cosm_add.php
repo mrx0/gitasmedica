@@ -423,8 +423,8 @@
 								</div>';
 						
 						echo '
-							</div>
 							<input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd('.$sheduler_zapis[0]['type'].')">
+							</div>
 						</div>
 	
 						<!-- Подложка только одна -->
@@ -441,41 +441,15 @@
 								
 								if (t_number_active != 0){
 									colorizeTButton (t_number_active);
-									/*$(".sel_tooth").each(function() {
-										if (Number(this.innerHTML) == t_number_active){
-											this.style.background = \'#83DB53\';
-										}else{
-											this.style.background = \'\';
-										}
-									});*/
 								}
 								
 								//Кликанье по зубам в счёте
 								$(".sel_tooth").click(function(){
-									//alert(Number(this.innerHTML));
-									//$(".sel_tooth").each(function() {
-									//	this.style.background = \'\';
-									//});
-									//Выделям активный зуб
-									//this.style.background = \'#83DB53\';
-									
+	
 									//получам номер зуба
 									var t_number = Number(this.innerHTML);
 									
 									addInvoiceInSession(t_number);
-
-									//получам объект результата, сюда будем втыкать
-									//var invoice_rezult = document.getElementById("invoice_rezult");
-									//Создаем новый элемент. его будем втыкать
-									//var newDiv = document.createElement(\'div\');
-									//Класс CSS
-									//div.className = "alert alert-success";
-									//Содержимое нового элемента
-									//newDiv.innerHTML = "<strong>Зуб"+t_number+"</strong> Добавлено.";
-									//Втыкаем
-									//invoice_rezult.appendChild(newDiv);
-									
-									//$("#lasttree").find("ul").slideUp(400).parents("li").children("div.drop").css({\'background-position\':"0 0"});
 
 								});
 

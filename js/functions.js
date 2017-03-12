@@ -1,5 +1,5 @@
 	//попытка показать контекстное меню
-	function contextMenuShow(zub, key, event, mark){
+	function contextMenuShow(ind, key, event, mark){
 		//alert(mark);
 		
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
@@ -13,12 +13,6 @@
 		// Добавляем класс selected-html-element что бы наглядно показать на чем именно мы кликнули (исключительно для тестирования):
 		target.addClass('selected-html-element');
 		
-		//alert(target.parent().parent().find('.toothInInvoice').html());
-		//Номер зуба
-		/*if ((mark == 'insure') || (mark == 'insureItem')){
-			t_number = target.parent().parent().find('.toothInInvoice').html();
-		}*/
-		
 		$.ajax({
 			url:"context_menu_show_f.php",
 			global: false, 
@@ -27,7 +21,7 @@
 			data:
 			{
 				mark: mark,
-				zub: zub,
+				ind: ind,
 				key: key,
 			},
 			cache: false,
@@ -37,6 +31,10 @@
 			// действие, при ответе с сервера
 			success: function(res){
 				//alert(res.data);
+				
+				if (mark == 'zapis_options'){
+					res.data = $('#zapis_options'+ind+'').html();
+				}
 				
 				// Создаем меню:
 				var menu = $('<div/>', {
@@ -3385,10 +3383,21 @@
 			},
 			// действие, при ответе с сервера
 			success: function(res){
-				//alert(res.data);
+				//alert(res);
+				$('.center_block').remove();
+				$('#overlay').hide();
 				
-			
-		
+				if(res.result == "success"){  
+					$('#data').hide();
+					$('#invoices').html('<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен новый наряд</li>'+
+										'<li class="cellsBlock" style="width: auto;">'+
+										'<a href="invoice.php?id='+res.data+'" class="cellName ahref">'+
+											'<b>Наряд #'+res.data+'</b>'+
+										'</a>'+
+										'</li>');
+				}else{
+					$('#errror').html(res.data);
+				}
 			}
 		});
 	}

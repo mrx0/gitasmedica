@@ -191,7 +191,7 @@
 						echo '
 							<div id="data">';
 						
-						//Зубки
+
 						echo '	
 								<input type="hidden" id="client" name="client" value="'.$_GET['client'].'">
 								<input type="hidden" id="client_insure" name="client_insure" value="'.$client_j[0]['insure'].'">
@@ -200,8 +200,13 @@
 								<input type="hidden" id="filial" name="filial" value="'.$_GET['filial'].'">
 								<input type="hidden" id="worker" name="worker" value="'.$_GET['worker'].'">
 								<input type="hidden" id="t_number_active" name="t_number_active" value="'.$_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['t_number_active'].'">
-								<input type="hidden" id="invoice_type" name="invoice_type" value="'.$_GET['type'].'">
-								
+								<input type="hidden" id="invoice_type" name="invoice_type" value="'.$_GET['type'].'">';
+						if ($sheduler_zapis[0]['type'] == 5){
+							//Зубки
+							echo '		
+								<div style="font-size: 80%; color: #AAA; margin-bottom: 2px;">
+									Выберите зуб
+								</div>								
 								<div style="vertical-align: middle; margin-bottom: 5px;">
 									<div id="teeth" style="display: inline-block;">
 										<div class="tooth_updown">
@@ -317,7 +322,7 @@
 										Полость
 									</div>
 								</div>';
-								
+						}		
 											
 						echo '			
 								<div  style="display: inline-block; width: 400px; height: 600px;">';
@@ -325,8 +330,12 @@
 						echo '
 									<div id="tabs_w" style="font-family: Verdana, Calibri, Arial, sans-serif; font-size: 100%">
 										<ul>
-											<li><a href="#price">Прайс</a></li>
-											<li><a href="#mkb">МКБ</a></li>
+											<li><a href="#price">Прайс</a></li>';
+						if ($sheduler_zapis[0]['type'] == 5){
+							echo '
+											<li><a href="#mkb">МКБ</a></li>';
+						}
+						echo '
 										</ul>
 										<div id="price">';
 						//Прайс		
@@ -344,7 +353,9 @@
 												</ul>
 											</div>';
 						echo '		
-										</div>
+										</div>';
+						if ($sheduler_zapis[0]['type'] == 5){
+							echo '
 										<div id="mkb">
 										
 											<div style=" width: 350px; height: 500px; overflow: scroll; border: 1px solid #CCC;">
@@ -363,7 +374,9 @@
 												</ul>
 											</div>
 
-										</div>
+										</div>';
+						}
+						echo '
 									</div>';
 							
 						echo '
@@ -377,10 +390,14 @@
 									<div id="errror" class="invoceHeader" style="">
 										<div>
 											<div style="">К оплате: <div id="calculateInvoice" style="">0</div> руб.</div>
-										</div>
+										</div>';
+						if ($sheduler_zapis[0]['type'] == 5){
+							echo '
 										<div>
 											<div style="">Страховка: <div id="calculateInsInvoice" style="">0</div> руб.</div>
-										</div>
+										</div>';
+						}
+						echo '
 										<div style="position: absolute; top: 3px; right: 5px; vertical-align: middle; font-size: 11px; width: 400px;">
 											<div style="display: inline-block; vertical-align: top;">
 												Настройки: 
@@ -396,7 +413,9 @@
 													<div style="display: inline-block; vertical-align: top;">
 														 <div class="settings_text" onclick="clearInvoice();">Очистить всё</div>
 													</div>
-												</div>
+												</div>';
+						if ($sheduler_zapis[0]['type'] == 5){
+							echo '
 												<div style="margin-bottom: 2px;">
 													<div style="display: inline-block; vertical-align: top;">
 														<div id="insure" class="settings_text" >Страховая</div>
@@ -404,7 +423,9 @@
 													<div style="display: inline-block; vertical-align: top;">
 														<div id="insure_approve" class="settings_text">Согласовано</div>
 													</div>
-												</div>
+												</div>';
+						}
+						echo '
 												<div style="margin-bottom: 2px;">
 													<div style="display: inline-block; vertical-align: top;">
 														<div id="discounts" class="settings_text">Скидки (Акции)</div>
@@ -422,8 +443,8 @@
 								</div>';
 						
 						echo '
-							</div>
 							<input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd('.$sheduler_zapis[0]['type'].')">
+							</div>
 						</div>
 	
 						<!-- Подложка только одна -->
@@ -440,41 +461,15 @@
 								
 								if (t_number_active != 0){
 									colorizeTButton (t_number_active);
-									/*$(".sel_tooth").each(function() {
-										if (Number(this.innerHTML) == t_number_active){
-											this.style.background = \'#83DB53\';
-										}else{
-											this.style.background = \'\';
-										}
-									});*/
 								}
 								
 								//Кликанье по зубам в счёте
 								$(".sel_tooth").click(function(){
-									//alert(Number(this.innerHTML));
-									//$(".sel_tooth").each(function() {
-									//	this.style.background = \'\';
-									//});
-									//Выделям активный зуб
-									//this.style.background = \'#83DB53\';
 									
 									//получам номер зуба
 									var t_number = Number(this.innerHTML);
 									
 									addInvoiceInSession(t_number);
-
-									//получам объект результата, сюда будем втыкать
-									//var invoice_rezult = document.getElementById("invoice_rezult");
-									//Создаем новый элемент. его будем втыкать
-									//var newDiv = document.createElement(\'div\');
-									//Класс CSS
-									//div.className = "alert alert-success";
-									//Содержимое нового элемента
-									//newDiv.innerHTML = "<strong>Зуб"+t_number+"</strong> Добавлено.";
-									//Втыкаем
-									//invoice_rezult.appendChild(newDiv);
-									
-									//$("#lasttree").find("ul").slideUp(400).parents("li").children("div.drop").css({\'background-position\':"0 0"});
 
 								});
 

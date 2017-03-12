@@ -9,7 +9,7 @@
 		<head>
 			<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
 			
-			<title>:)</title>
+			<title>Вход</title>
 			
 			<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
 			<style type="text/css">

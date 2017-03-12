@@ -61,7 +61,11 @@ h1, h2, h4, h5, h6 {
 }
 
 h1 {
-	/*font-size:1.88em*/
+	font-size: 1.4em;
+}
+
+h2 {
+	font-size: 1.2em;
 }
 
 h3 {
@@ -103,9 +107,29 @@ footer {
 header{
 	/*margin-bottom: 5px;*/
 }
+
+header div.nav a{
+	margin: 0 1px 5px;
+	font-size: 80%;
+    border: 1px dotted rgb(126, 122, 113); /* Рамка */
+    display: inline-block;
+    padding: 1px 10px; /* Поля */
+    text-decoration: none; /* Убираем подчёркивание */
+	vertical-align:middle;
+	background-color: rgba(255, 255, 255, 1);
+	cursor:pointer;
+	color: rgb(126, 122, 113);
+}
+
+header div.nav a:hover {
+    box-shadow: 0 0 5px rgba(0,0,0,0.1); /* Тень */
+    background-color: #fcfff4; /* Градиент */
+    color: rgb(62, 62, 62);
+}
+
 /* выравниваем страницу по центру, делаем отступы и цвет фона */
 section#main {
-	padding: 20px;
+	padding: 10px 15px 20px;
 	margin: 0 20px 40px;
 	background:#fff;
 }

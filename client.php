@@ -74,19 +74,19 @@
 				if (($clients['edit'] == 1) || $god_mode){
 					if ($client[0]['status'] != 9){
 						echo '
-									<a href="client_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 80%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+									<a href="client_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
 					}
 					if (($client[0]['status'] == 9) && (($clients['close'] == 1) || $god_mode)){
 						echo '
-							<a href="#" onclick="Ajax_reopen_client('.$_SESSION['id'].', '.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 80%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
+							<a href="#" onclick="Ajax_reopen_client('.$_SESSION['id'].', '.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 100%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
 					}
 				}
 				if (($clients['close'] == 1) || $god_mode){
 					if ($client[0]['status'] != 9){
 						echo '
-									<a href="move_all.php?client='.$_GET['id'].'" class="info" style="font-size: 80%;" title="Переместить"><i class="fa fa-external-link-square" aria-hidden="true"></i></a>';
+									<a href="move_all.php?client='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Переместить"><i class="fa fa-external-link-square" aria-hidden="true"></i></a>';
 						echo '
-									<a href="client_del.php?id='.$_GET['id'].'" class="info" style="font-size: 80%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+									<a href="client_del.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
 					}
 					
 				}
@@ -423,6 +423,7 @@
 						for ($z = 0; $z < count($sheduler_zapis); $z++){
 							$t_f_data_db = array();
 							$cosmet_data_db = array();
+							$invoice_data_db = array();
 							$show_this = FALSE;
 							
 							if ($sheduler_zapis[$z]['type'] == 5){
@@ -486,19 +487,7 @@
 									
 									if ($t_f_data_db != 0){
 										foreach($t_f_data_db as $ids){
-											/*echo '
-												<div>
-													<a href="#" onclick="window.open(\'task_stomat_inspection_window.php?id='.$ids['id'].'\',\'test\', \'width=700,height=350,status=no,resizable=no,top=200,left=200\'); return false;">
-														<img src="img/tooth_state/1.png">
-													</a>	
-												</div>';*/
-												
-											/*echo '
-												<div>
-													<a href="task_stomat_inspection.php?id='.$ids['id'].'">
-														<img src="img/tooth_state/1.png">
-													</a>	
-												</div>';*/
+											//
 										}
 									}
 									
@@ -517,6 +506,24 @@
 									
 									if ($cosmet_data_db != 0){
 										foreach($cosmet_data_db as $ids){
+											//
+										}
+									}
+									
+									//Наряды
+									$query = "SELECT `id`, `summ`, `summins`, `create_time`  FROM `journal_invoice` WHERE `zapis_id` = '{$sheduler_zapis[$z]['id']}' ORDER BY `create_time`";
+									$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
+									$number = mysql_num_rows($res);
+									if ($number != 0){
+										while ($arr = mysql_fetch_assoc($res)){
+											array_push($invoice_data_db, $arr);
+										}
+									}else
+										$invoice_data_db = 0;
+									//var_dump($invoice_data_db);
+									
+									if ($invoice_data_db != 0){
+										foreach($invoice_data_db as $ids){
 											//
 										}
 									}
@@ -585,7 +592,7 @@
 												</div>';
 											
 											
-									//Формулы и посещения
+									//Формулы посещения наряды -->
 									echo '
 												<div class="cellName" style="vertical-align: top;">';
 											
@@ -594,7 +601,7 @@
 											echo '
 													<div style="border: 1px solid #BFBCB5; margin-top: 1px;">
 														<a href="task_stomat_inspection.php?id='.$ids['id'].'" class="ahref">
-															<div style="display: inline-block; vertical-align: middle;"><img src="img/tooth_state/1.png"></div><div style="display: inline-block; vertical-align: middle;">'.date('d.m.y H:i', $ids['zapis_date']).'</div>
+															<div style="display: inline-block; vertical-align: middle;"><img src="img/tooth2.svg" width="20px" height="20px"></div><div style="display: inline-block; vertical-align: middle;">'.date('d.m.y H:i', $ids['zapis_date']).'</div>
 														</a>	
 													</div>';
 										}
@@ -612,54 +619,143 @@
 										}
 									}
 									
-									
-
-									echo '
+									if ($invoice_data_db != 0){
+										//var_dump($invoice_data_db);
+										foreach($invoice_data_db as $ids){
+											echo '
+												<div class="cellsBlockHover" style="border: 1px solid #BFBCB5; margin-top: 1px;">
+													<a href="invoice.php?id='.$ids['id'].'" class="ahref">
+														<div>
+															<div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+																<i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+															</div>
+															<div style="display: inline-block; vertical-align: middle;">
+																'.date('d.m.y H:i', strtotime($ids['create_time'])).'
+															</div>
+														</div>
+														<div>
+															<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
+																Сумма:<br>
+																<span class="calculateInvoice" style="font-size: 11px">'.$ids['summ'].'</span> руб.
+															</div>';
+											if ($ids['summins'] != 0){
+												echo '
+															<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
+																Страховка:<br>
+																<span class="calculateInsInvoice" style="font-size: 11px">'.$ids['summins'].'</span> руб.
+															</div>';
+											}
+											echo '
+														</div>
+													</a>	
 												</div>';
-
-									if (($_SESSION['id'] == $sheduler_zapis[$z]['worker']) || ($stom['add_new'] == 1) || ($cosm['add_new'] == 1) || $god_mode){
-										echo '
-												<div class="cellName" style="background-color: #d8d8d8; vertical-align: top;">';
+										}
+									}
+									//<-- Формулы посещения наряды
+									
+									echo '
+											</div>';
+												
+									//Управление настройки -->
+									
+									echo '
+											<div class="cellName settings_text" style="background-color: rgb(240, 240, 240); text-align: center; vertical-align: middle; width: 8 0px; min-width: 80px; max-width: 80px;" onclick="contextMenuShow('.$sheduler_zapis[$z]['id'].', 0, event, \'zapis_options\');">';
+								
+									echo 'Меню [опции]';
+									
+									echo '
+												<ul id="zapis_options'.$sheduler_zapis[$z]['id'].'" class="zapis_options" style="display: none;">';
+									
+									if (isset($_SESSION['filial'])){
+											
+										if ($_SESSION['filial'] == $sheduler_zapis[$z]['office']){
+											/*if($sheduler_zapis[$z]['office'] != $sheduler_zapis[$z]['add_from']){
+												if($sheduler_zapis[$z]['enter'] != 8){
+													echo '<li><div onclick="Ajax_TempZapis_edit_OK('.$sheduler_zapis[$z]['id'].', '.$sheduler_zapis[$z]['office'].')">Подтвердить</div></li>';
+												}
+											}*/
+											if($sheduler_zapis[$z]['office'] == $sheduler_zapis[$z]['add_from']){
+												if($sheduler_zapis[$z]['enter'] != 8){
+													/*echo 
+															'<li><div onclick="Ajax_TempZapis_edit_Enter('.$sheduler_zapis[$z]['id'].', 1)">Пришёл</div></li>';
+													echo 
+															'<li><div onclick="Ajax_TempZapis_edit_Enter('.$sheduler_zapis[$z]['id'].', 9)">Не пришёл</div></li>';
+													echo 
+															'<li><div onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 0, '.$sheduler_zapis[$z]['start_time'].', '.$sheduler_zapis[$z]['wt'].', '.$sheduler_zapis[$z]['worker'].', \''.WriteSearchUser('spr_workers', $sheduler_zapis[$z]['worker'], 'user_full', false).'\', \''.WriteSearchUser('spr_clients', $sheduler_zapis[$z]['patient'], 'user_full', false).'\', \''.str_replace(array("\r","\n")," ", $sheduler_zapis[$z]['description']).'\', '.$sheduler_zapis[$z]['insured'].', '.$sheduler_zapis[$z]['pervich'].', '.$sheduler_zapis[$z]['noch'].', '.$sheduler_zapis[$z]['id'].')">Редактировать</div></li>';
+													*/
+													//var_dump($sheduler_zapis[$z]['create_time']);
+													//var_dump($sheduler_zapis[$z]['description']);
+													//var_dump(time());
+													/*$zapisDate = strtotime($sheduler_zapis[$z]['day'].'.'.$sheduler_zapis[$z]['month'].'.'.$sheduler_zapis[$z]['year']);
+													if (time() < $zapisDate + 60*60*24){
+														echo 
+															'<li><div onclick="Ajax_TempZapis_edit_Enter('.$sheduler_zapis[$z]['id'].', 8)">Ошибка, удалить из записи</div></li>';
+													}
+													*/
+													if (($finances['add_new'] == 1) || $god_mode){
+														echo 
+															'<li>
+																<div>
+																	<a href="invoice_add.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'&worker='.$sheduler_zapis[$z]['worker'].'&type='.$sheduler_zapis[$z]['type'].'" class="ahref">
+																		Внести наряд
+																	</a>
+																</div>
+															</li>';
+													}
+												}
+												/*echo '
+														<li>
+															<div onclick="Ajax_TempZapis_edit_Enter('.$sheduler_zapis[$z]['id'].', 0)">
+																Отменить все изменения
+															</div>
+														</li>';*/
+											}
+										}else{
+											/*echo 
+												'<li><div onclick="Ajax_TempZapis_edit_Enter('.$sheduler_zapis[$z]['id'].', 8)">Ошибка, удалить из записи</div></li>';
+											echo 
+												'<li><div onclick="Ajax_TempZapis_edit_Enter('.$sheduler_zapis[$z]['id'].', 0)">Отменить все изменения</div></li>';
+											*/
+										}
+									}
+									
+									
+									//Дополнительное расширение прав на добавление посещений для специалистов, god_mode и управляющих
+									if ((($_SESSION['id'] == $sheduler_zapis[$z]['worker']) && (($stom['add_own'] == 1) || ($cosm['add_own'] == 1))) || ($stom['add_new'] == 1) || ($cosm['add_new'] == 1) || $god_mode){
 										if($sheduler_zapis[$z]['office'] == $sheduler_zapis[$z]['add_from']){
 											if($sheduler_zapis[$z]['enter'] == 1){
-												//var_dump($sheduler_zapis[$z]['type']);
-												
 												if (($sheduler_zapis[$z]['type'] == 5) && (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode)){
 													echo '
-													<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
-														<a href="add_task_stomat.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&insured='.$sheduler_zapis[$z]['insured'].'&pervich='.$sheduler_zapis[$z]['pervich'].'&noch='.$sheduler_zapis[$z]['noch'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'&worker='.$sheduler_zapis[$z]['worker'].'" class="ahref">Внести Осмотр/Зубную формулу</a>
-													</div>';
+														<li>
+															<div>
+																<a href="add_task_stomat.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&insured='.$sheduler_zapis[$z]['insured'].'&pervich='.$sheduler_zapis[$z]['pervich'].'&noch='.$sheduler_zapis[$z]['noch'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'&worker='.$sheduler_zapis[$z]['worker'].'" class="ahref">
+																	Внести Осмотр/Зубную формулу
+																</a>
+															</div>
+														</li>';
 												}
 												if (($sheduler_zapis[$z]['type'] == 6) && (($cosm['add_own'] == 1) || ($cosm['add_new'] == 1) || $god_mode)){
-													echo  '
-													<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
-														<a href="add_task_cosmet.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&insured='.$sheduler_zapis[$z]['insured'].'&pervich='.$sheduler_zapis[$z]['pervich'].'&noch='.$sheduler_zapis[$z]['noch'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'&worker='.$sheduler_zapis[$z]['worker'].'" class="ahref">Внести посещение косм.</a>
-													</div>';
+													echo '
+														<li>
+															<div>
+																<a href="add_task_cosmet.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&insured='.$sheduler_zapis[$z]['insured'].'&pervich='.$sheduler_zapis[$z]['pervich'].'&noch='.$sheduler_zapis[$z]['noch'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'&worker='.$sheduler_zapis[$z]['worker'].'" class="ahref">
+																	Внести посещение косм.
+																</a>
+															</div>
+														</li>';
 												}
-												//!!!Наряд
-												$zapisDate = strtotime($sheduler_zapis[$z]['day'].'.'.$sheduler_zapis[$z]['month'].'.'.$sheduler_zapis[$z]['year']);
-												//if (time() < $zapisDate + 60*60*24){
-													if ($sheduler_zapis[$z]['type'] == 5){
-														echo 
-														'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
-															<a href="invoice_stom_add.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'&worker='.$sheduler_zapis[$z]['worker'].'&type='.$sheduler_zapis[$z]['type'].'" class="ahref">Счёт</a>
-														</div>';
-													}
-													if ($sheduler_zapis[$z]['type'] == 6){
-														echo 
-														'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
-															<a href="invoice_cosm_add.php?client='.$sheduler_zapis[$z]['patient'].'&filial='.$sheduler_zapis[$z]['office'].'&date='.strtotime ($sheduler_zapis[$z]['day'].'.'.$month.'.'.$sheduler_zapis[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$sheduler_zapis[$z]['id'].'&worker='.$sheduler_zapis[$z]['worker'].'&type='.$type.'" class="ahref">Счёт</a>
-														</div>';
-													}
-												//}
 											}
 										}else{
 											echo "&nbsp";
 										}
-										echo '
-												</div>';
 									}
-					
+								
+									echo '</ul>';
+
+									echo '
+										</div>';
+									//<-- Управление настройки
+									
 									echo '
 											</li>';
 								}
@@ -684,23 +780,77 @@
 					//Счёт -->
 					
 					if (($finances['see_all'] != 0) || ($finances['see_own'] != 0) || $god_mode){
-						if ($client[0]['status'] != 9){
+						if ($client[0]['status'] != 9){	
 						
 							echo '
 							<div id="tabs-2">';	
-						
+							
+							$invoice_j = array();
+							
+							echo '
+								<ul id="invoices" style="margin-left: 6px; margin: 10px 5px;">					
+									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выписанные наряды</li>';
+
+							$query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$_GET['id']."'";
+							
+							$res = mysql_query($query) or die($query);
+							$number = mysql_num_rows($res);
+							if ($number != 0){
+								while ($arr = mysql_fetch_assoc($res)){
+									array_push($invoice_j, $arr);
+								}
+							}else
+								$invoice_j = 0;
+							//var_dump ($invoice_j);
+
+							if ($invoice_j != 0){
+								//var_dump ($invoice_j);
+								
+								foreach($invoice_j as $invoice_item){
+									echo '
+										<li class="cellsBlock" style="width: auto;">';
+									echo '
+											<a href="invoice.php?id='.$invoice_item['id'].'" class="cellName ahref">
+												<b>Наряд #'.$invoice_item['id'].'</b>
+											</a>
+											<div class="cellName">
+												<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+													Сумма:<br>
+													<span class="calculateInvoice" style="font-size: 13px">'.$invoice_item['summ'].'</span> руб.
+												</div>';
+									if ($invoice_item['summins'] != 0){
+										echo '
+												<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+													Страховка:<br>
+													<span class="calculateInsInvoice" style="font-size: 13px">'.$invoice_item['summins'].'</span> руб.
+												</div>';
+									}
+									echo '
+											</div>';
+									echo '
+										</li>';
+								}
+								
+							}else{
+								echo '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 5px; color: red;">Нет нарядов</li>';
+							}
+							
+							echo '
+								</ul>';
+							
+							
 						
 							echo '				
 								<div class="cellsBlock2">
-									<a href="client_finance.php?client='.$client[0]['id'].'" class="b">Счёт <i class="fa fa-rub"></i></a><br>';
+									<a href="client_finance.php?client='.$client[0]['id'].'" class="b">Долги/Авансы <i class="fa fa-rub"></i> (старое)</a><br>';
 
 							if (!$allPayed)
 								echo '<i style="color:red;">Есть не погашенное</i>';					
-											
+										
 							echo '
-								</div>';
+									</div>';
 					
-						echo '
+							echo '
 							</div>';
 						}
 					}	
@@ -731,7 +881,7 @@
 										<div id="div1">';*/
 						if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || ($god_mode)){
 							echo '	
-								<a href="add_error.php" class="b">Добавить осмотр</a>';
+								<!--<a href="add_error.php" class="b">Добавить осмотр</a>-->';
 						}
 						
 						if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
@@ -1452,7 +1602,7 @@
 						
 						if (($cosm['add_own'] == 1) || ($cosm['edit'] == 1) || $god_mode){
 							echo '
-								<a href="add_error.php" class="b">Добавить посещение</a>		
+								<!--<a href="add_error.php" class="b">Добавить посещение</a>-->
 								<a href="add_kd.php?client='.$client[0]['id'].'" class="b">Добавить КД</a>
 								<a href="kd.php?client='.$client[0]['id'].'" class="b">КД</a>
 								<a href="etaps.php?client='.$client[0]['id'].'" class="b">Исследования</a>';		

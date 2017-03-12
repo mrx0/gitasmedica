@@ -236,6 +236,7 @@
 						for ($z = 0; $z < count($ZapisHereQueryToday); $z++){
 							$t_f_data_db = array();
 							$cosmet_data_db = array();
+							$invoice_data_db = array();
 							$back_color = '';
 							
 							if ($ZapisHereQueryToday[$z]['enter'] == 1){
@@ -288,23 +289,10 @@
 							
 							if ($t_f_data_db != 0){
 								foreach($t_f_data_db as $ids){
-									/*echo '
-										<div>
-											<a href="#" onclick="window.open(\'task_stomat_inspection_window.php?id='.$ids['id'].'\',\'test\', \'width=700,height=350,status=no,resizable=no,top=200,left=200\'); return false;">
-												<img src="img/tooth_state/1.png">
-											</a>	
-										</div>';*/
-										
-									/*echo '
-										<div>
-											<a href="task_stomat_inspection.php?id='.$ids['id'].'">
-												<img src="img/tooth_state/1.png">
-											</a>	
-										</div>';*/
+									//
 								}
 							}
-							
-							
+
 							//Посещения косметологов
 							$query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
 							$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
@@ -322,7 +310,25 @@
 									//
 								}
 							}
-								
+							
+							//Наряды
+							$query = "SELECT `id`, `summ`, `summins`, `create_time`  FROM `journal_invoice` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
+							$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
+							$number = mysql_num_rows($res);
+							if ($number != 0){
+								while ($arr = mysql_fetch_assoc($res)){
+									array_push($invoice_data_db, $arr);
+								}
+							}else
+								$invoice_data_db = 0;
+							//var_dump($invoice_data_db);
+							
+							if ($invoice_data_db != 0){
+								foreach($invoice_data_db as $ids){
+									//
+								}
+							}
+							
 							echo '
 									<!--</div>-->
 									<div class="cellName" style="position: relative; '.$back_color.'">';
@@ -385,7 +391,7 @@
 									</div>';
 									
 									
-							//Формулы и посещения
+							//Формулы посещения наряды -->
 							echo '
 									<div class="cellName" style="vertical-align: top;">';
 									
@@ -394,7 +400,7 @@
 									echo '
 										<div style="border: 1px solid #BFBCB5; margin-top: 1px;">
 											<a href="task_stomat_inspection.php?id='.$ids['id'].'" class="ahref">
-												<div style="display: inline-block; vertical-align: middle;"><img src="img/tooth_state/1.png"></div><div style="display: inline-block; vertical-align: middle;">'.date('d.m.y H:i', $ids['zapis_date']).'</div>
+												<div style="display: inline-block; vertical-align: middle;"><img src="img/tooth2.svg" width="20px" height="20px"></div><div style="display: inline-block; vertical-align: middle;">'.date('d.m.y H:i', $ids['zapis_date']).'</div>
 											</a>	
 										</div>';
 								}
@@ -412,101 +418,149 @@
 								}
 							}
 							
-							
-							
+							if ($invoice_data_db != 0){
+								//var_dump($invoice_data_db);
+								foreach($invoice_data_db as $ids){
+									echo '
+										<div class="cellsBlockHover" style="border: 1px solid #BFBCB5; margin-top: 1px;">
+											<a href="invoice.php?id='.$ids['id'].'" class="ahref">
+												<div>
+													<div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+														<i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+													</div>
+													<div style="display: inline-block; vertical-align: middle;">
+														'.date('d.m.y H:i', strtotime($ids['create_time'])).'
+													</div>
+												</div>
+												<div>
+													<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
+														Сумма:<br>
+														<span class="calculateInvoice" style="font-size: 11px">'.$ids['summ'].'</span> руб.
+													</div>';
+									if ($ids['summins'] != 0){
+										echo '
+													<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
+														Страховка:<br>
+														<span class="calculateInsInvoice" style="font-size: 11px">'.$ids['summins'].'</span> руб.
+													</div>';
+									}
+									echo '
+												</div>
+											</a>	
+										</div>';
+								}
+							}
+							//<-- Формулы посещения наряды
+								
 							echo '
-									</div>';	
+									</div>';
+									
+							//Управление настройки -->
 									
 							echo '
-									<div class="cellRight">';									
+									<div class="cellName settings_text" style="background-color: rgb(240, 240, 240); text-align: center; vertical-align: middle; width: 8 0px; min-width: 80px; max-width: 80px;" onclick="contextMenuShow('.$ZapisHereQueryToday[$z]['id'].', 0, event, \'zapis_options\');">';
+							
+							echo 'Меню [опции]';
+							
+							echo '
+										<ul id="zapis_options'.$ZapisHereQueryToday[$z]['id'].'" class="zapis_options" style="display: none;">';								
 
-									
-								if (($_SESSION['id'] == $ZapisHereQueryToday[$z]['worker']) || ($stom['add_new'] == 1) || ($cosm['add_new'] == 1) || $god_mode){
-									if($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']){
-										if($ZapisHereQueryToday[$z]['enter'] == 1){
-											if (($ZapisHereQueryToday[$z]['type'] == 5) && (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode)){
-												echo 
-													'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
-														<a href="add_task_stomat.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">Внести Осмотр/Зубную формулу</a>
-													</div>';
-											}
-											if (($ZapisHereQueryToday[$z]['type'] == 6) && (($cosm['add_own'] == 1) || ($cosm['add_new'] == 1) || $god_mode)){
-												echo 
-													'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
-														<a href="add_task_cosmet.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">Внести посещение косм.</a>
-													</div>';
-											}
-											$zapisDate = strtotime($ZapisHereQueryToday[$z]['day'].'.'.$ZapisHereQueryToday[$z]['month'].'.'.$ZapisHereQueryToday[$z]['year']);
-											//if (time() < $zapisDate + 60*60*24){
-												/*echo 
-												'<div style="border: 1px solid #BFBCB5; margin-top: 1px; padding: 2px;">
-													<a href="invoice_add.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">Счёт</a>
-												</div>';*/
-											//}
+							//Дополнительное расширение прав на добавление посещений для специалистов, god_mode и управляющих
+							if ((($_SESSION['id'] == $ZapisHereQueryToday[$z]['worker']) && (($stom['add_own'] == 1) || ($cosm['add_own'] == 1))) || ($stom['add_new'] == 1) || ($cosm['add_new'] == 1) || $god_mode){
+								if($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']){
+									if($ZapisHereQueryToday[$z]['enter'] == 1){
+										if (($ZapisHereQueryToday[$z]['type'] == 5) && (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode)){
+											echo '
+												<li>
+													<div>
+														<a href="add_task_stomat.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">
+															Внести Осмотр/Зубную формулу
+														</a>
+													</div>
+												</li>';
+										}
+										if (($ZapisHereQueryToday[$z]['type'] == 6) && (($cosm['add_own'] == 1) || ($cosm['add_new'] == 1) || $god_mode)){
+											echo '
+												<li>
+													<div>
+														<a href="add_task_cosmet.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">
+															Внести посещение косм.
+														</a>
+													</div>
+												</li>';
 										}
 									}
+								}else{
+									echo "&nbsp";
 								}
-			echo '
-					</div>
-				</li>';	
-			echo '
-					<div id="ShowSettingsAddTempZapis" style="position: absolute; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; z-index:105; padding:10px;">
-						<a class="close" href="#" onclick="HideSettingsAddTempZapis()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(img/close.png) no-repeat;">
-							Close
-						</a>
-						
-						<div id="SettingsAddTempZapis">
+							}
+							
+							echo '</ul>';
 
-							<div style="display:inline-block;">
-								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
-									<div class="cellLeft">Число</div>
-									<div class="cellRight" id="month_date">
-									</div>
-								</div>
-								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
-									<div class="cellLeft">Смена</div>
-									<div class="cellRight" id="month_date_smena">
-									</div>
-								</div>
-								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
-									<div class="cellLeft">Филиал</div>
-									<div class="cellRight" id="filial_name">
-									</div>
-								</div>
-								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
-									<div class="cellLeft">Кабинет №</div>
-									<div class="cellRight" id="kab">
-									</div>
-								</div>
-								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
-									<div class="cellLeft">Врач</div>
-									<div class="cellRight" id="worker_name">
-										<input type="text" size="30" name="searchdata2" id="search_client2" placeholder="Введите ФИО врача" value="" class="who2"  autocomplete="off">
-										<ul id="search_result2" class="search_result2"></ul><br />
-									</div>
-								</div>
+							echo '
+								</div>';
+							//<-- Управление настройки
+							
+							echo '
+								</li>';
+							echo '
+								<div id="ShowSettingsAddTempZapis" style="position: absolute; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; z-index:105; padding:10px;">
+									<a class="close" href="#" onclick="HideSettingsAddTempZapis()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(img/close.png) no-repeat;">
+										Close
+									</a>
+									
+									<div id="SettingsAddTempZapis">
 
-								<div class="cellsBlock2" style="font-size:80%; width:400px;">
-									<div class="cellLeft" style="font-weight: bold;">Пациент</div>
-									<div class="cellRight">
-										<input type="text" size="30" name="searchdata" id="search_client" placeholder="Введите ФИО пациента" value="" class="who"  autocomplete="off"> <a href="add_client.php" class="ahref"><i class="fa fa-plus-square" title="Добавить пациента" style="color: green; font-size: 120%;"></i></a>
-										<ul id="search_result" class="search_result"></ul><br />
-									</div>
-								</div>
-								<!--<div class="cellsBlock2" style="font-size:80%; width:400px;">
-									<div class="cellLeft" style="font-weight: bold;">Телефон</div>
-									<div class="cellRight" style="">
-										<input type="text" size="30" name="contacts" id="contacts" placeholder="Введите телефон" value="" autocomplete="off">
-									</div>
-								</div>-->
-								<div class="cellsBlock2" style="font-size:80%; width:400px;">
-									<div class="cellLeft" style="font-weight: bold;">Описание</div>
-									<div class="cellRight" style="">
-										<textarea name="description" id="description" style="width:90%; overflow:auto; height: 100px;"></textarea>
-									</div>
-								</div>		
-							</div>';
-			echo '
+										<div style="display:inline-block;">
+											<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
+												<div class="cellLeft">Число</div>
+												<div class="cellRight" id="month_date">
+												</div>
+											</div>
+											<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
+												<div class="cellLeft">Смена</div>
+												<div class="cellRight" id="month_date_smena">
+												</div>
+											</div>
+											<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
+												<div class="cellLeft">Филиал</div>
+												<div class="cellRight" id="filial_name">
+												</div>
+											</div>
+											<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
+												<div class="cellLeft">Кабинет №</div>
+												<div class="cellRight" id="kab">
+												</div>
+											</div>
+											<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
+												<div class="cellLeft">Врач</div>
+												<div class="cellRight" id="worker_name">
+													<input type="text" size="30" name="searchdata2" id="search_client2" placeholder="Введите ФИО врача" value="" class="who2"  autocomplete="off">
+													<ul id="search_result2" class="search_result2"></ul><br />
+												</div>
+											</div>
+
+											<div class="cellsBlock2" style="font-size:80%; width:400px;">
+												<div class="cellLeft" style="font-weight: bold;">Пациент</div>
+												<div class="cellRight">
+													<input type="text" size="30" name="searchdata" id="search_client" placeholder="Введите ФИО пациента" value="" class="who"  autocomplete="off"> <a href="add_client.php" class="ahref"><i class="fa fa-plus-square" title="Добавить пациента" style="color: green; font-size: 120%;"></i></a>
+													<ul id="search_result" class="search_result"></ul><br />
+												</div>
+											</div>
+											<!--<div class="cellsBlock2" style="font-size:80%; width:400px;">
+												<div class="cellLeft" style="font-weight: bold;">Телефон</div>
+												<div class="cellRight" style="">
+													<input type="text" size="30" name="contacts" id="contacts" placeholder="Введите телефон" value="" autocomplete="off">
+												</div>
+											</div>-->
+											<div class="cellsBlock2" style="font-size:80%; width:400px;">
+												<div class="cellLeft" style="font-weight: bold;">Описание</div>
+												<div class="cellRight" style="">
+													<textarea name="description" id="description" style="width:90%; overflow:auto; height: 100px;"></textarea>
+												</div>
+											</div>		
+										</div>';
+						echo '
 							<div style="display:inline-block; vertical-align: top; width: 360px; border: 1px solid #C1C1C1;">
 								<div id="ShowTimeSettingsHere">
 								</div>

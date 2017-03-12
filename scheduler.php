@@ -250,10 +250,13 @@
 				<div id="status">
 					<div class="no_print"> 
 					<header>
+						<div class="nav">
+							<a href="scheduler_template.php" class="b">График план</a>
+							<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>
+						</div>
+						
 						<h2>График '.$whose.' на ',$monthsName[$month],' ',$year,' филиал '.$filial[0]['name'].'</h2>
 					</header>
-					<a href="scheduler_template.php" class="b">График план</a>
-					<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>
 					<!--<a href="own_scheduler.php" class="b">График сотрудника</a>-->';
 			echo '
 					<ul style="margin-left: 6px; margin-bottom: 10px;">

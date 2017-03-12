@@ -258,12 +258,15 @@
 					echo '
 						<div id="status">
 							<header>
+								<div class="nav">
+									<a href="scheduler.php?'.$dopFilial.$dopWho.$dopDate.'" class="b">График</a>
+									<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>
+								</div>
+							
 								<h2>Запись '.$day.' ',$monthsName[$month],' ',$year,'</h2>
 								<b>Филиал</b> '.$filial[0]['name'].'<br>
 								<span style="color: green; font-size: 120%; font-weight: bold;">'.$whose.'</span><br>
-							</header>
-							<a href="scheduler.php?'.$dopFilial.$dopWho.$dopDate.'" class="b">График</a>
-							<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>';
+							</header>';
 
 					echo '
 							<div id="data" style="margin: 0">
