@@ -13,7 +13,7 @@
 		
 		if ($_POST){
 			if (($_POST['etap'] == '') || !isset($_POST['etap']) || !isset($_POST['imgs']) || ($_POST['imgs'] == '') || ($_POST['imgs'] == '[]')){
-				echo 'Ошибка. Обновите страницу [F5]<br /><br />';
+				echo 'Ошибка. Обновите страницу [Ctrl+F5]<br /><br />';
 			}else{
 				
 				$img_arr = explode(',', $_POST['imgs']);
