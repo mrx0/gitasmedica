@@ -37,9 +37,9 @@
 							}
 						}
 						
-						if ($iExist){
+						//if ($iExist){
 							$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active][$existID]['quantity']++;
-						}else{
+						//}else{
 							$temp_arr['id'] = (int)$_POST['price_id'];
 							$temp_arr['quantity'] = 1;
 							$temp_arr['insure'] = 0;
@@ -61,9 +61,8 @@
 							}
 							
 							array_push($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active], $temp_arr);
-						}
+						//}
 					}
-					
 				}
 
 				
