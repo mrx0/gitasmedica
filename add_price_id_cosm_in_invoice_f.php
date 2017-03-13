@@ -27,7 +27,7 @@
 					if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
 						
 						//проверим, нет ли уже такой позиции в акте
-						if (!empty($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
+						/*if (!empty($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
 							$data = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'];
 							foreach ($data as $key => $invoice_data){
 								if ($invoice_data['id'] == $_POST['price_id']){
@@ -35,7 +35,7 @@
 									$existID = $key;
 								}
 							}
-						}
+						}*/
 						
 						//if ($iExist){
 						//	$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$existID]['quantity']++;

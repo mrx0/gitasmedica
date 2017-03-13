@@ -15,9 +15,6 @@
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center;">
 								<i><b>Зуб</b></i>
 							</div>
-							<!--<div class="cellCosmAct" style="font-size: 70%; text-align: center;">
-								<i><b>МКБ</b></i>
-							</div>-->
 							<div class="cellText2" style="font-size: 100%; text-align: center;">
 								<i><b>Наименование</b></i>
 							</div>
