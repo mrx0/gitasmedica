@@ -96,6 +96,29 @@
 								echo '<i style="color:red;">Наряд удалён (заблокирован).</i><br>';												
 							}
 							
+							
+							echo '
+										<div class="cellsBlock2" style="margin-bottom: 10px;">
+											<span style="font-size:80%;  color: #555;">';
+												
+							if (($invoice_j[0]['create_time'] != 0) || ($invoice_j[0]['create_person'] != 0)){
+								echo '
+													Добавлен: '.date('d.m.y H:i' ,strtotime($invoice_j[0]['create_time'])).'<br>
+													Автор: '.WriteSearchUser('spr_workers', $invoice_j[0]['create_person'], 'user', true).'<br>';
+							}else{
+								echo 'Добавлен: не указано<br>';
+							}
+							if (($invoice_j[0]['last_edit_time'] != 0) || ($invoice_j[0]['last_edit_person'] != 0)){
+								echo '
+													Последний раз редактировался: '.date('d.m.y H:i', $invoice_j[0]['last_edit_time']).'<br>
+													Кем: '.WriteSearchUser('spr_workers', $invoice_j[0]['last_edit_person'], 'user', true).'';
+							}
+							echo '
+											</span>
+										</div>';
+							
+
+							
 							echo '
 									</header>';
 							echo '
@@ -107,6 +130,9 @@
 							$cosmet_data_db = array();
 
 							$back_color = '';
+							
+							$summ = 0;
+							$summins = 0;
 								
 							//if(($sheduler_zapis[0]['enter'] != 8) || ($scheduler['see_all'] == 1) || $god_mode){
 								if ($sheduler_zapis[0]['enter'] == 1){
@@ -358,19 +384,42 @@
 										$arr = array();
 										$rez = array();
 										$price = 0;
-										$stoim = 0;
+										$stoim_item = 0;
+										//Для отбора цены по времени создания наряда
+										$price_arr = array();
 										
-										$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='{$item['price_id']}' ORDER BY `create_time` DESC LIMIT 1";
+										
+										
+										$query = "SELECT `date_from`, `price` FROM `spr_priceprices` WHERE `item`='{$item['price_id']}' ORDER BY `date_from` DESC, `create_time`";
 										
 										if ($item['insure'] != 0){
-											$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='{$item['price_id']}' AND `insure`='".$item['insure']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
+											$query = "SELECT `date_from`, `price` FROM `spr_priceprices_insure` WHERE `item`='{$item['price_id']}' AND `insure`='".$item['insure']."' ORDER BY `date_from` DESC, `create_time`";
 										}
 										
 										$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 										$number = mysql_num_rows($res);
 										if ($number != 0){
-											$arr = mysql_fetch_assoc($res);
-											$price = $arr['price'];
+											//если кол-во цен == 1
+											if ($number == 1){
+												$arr = mysql_fetch_assoc($res);
+												$price = $arr['price'];
+											//если > 1
+											}else{
+												while ($arr = mysql_fetch_assoc($res)){
+													$price_arr[$arr['date_from']] = $arr;
+												}
+												//обратная сортировка
+												krsort($price_arr);										
+												//var_dump($price_arr);
+												//var_dump(strtotime($invoice_j[0]['create_time']));
+												
+												foreach($price_arr as $date_from => $value_arr){
+													if (strtotime($invoice_j[0]['create_time']) > $date_from){
+														$price = $value_arr['price'];
+														break;
+													}
+												}
+											}
 										}else{
 											$price = '?';
 										}
@@ -378,6 +427,8 @@
 									}else{
 										echo '?';
 									}
+									
+									$price = $item['price'];
 									
 									if ($item['insure'] != 0){
 										//Написать страховую
@@ -444,12 +495,25 @@
 										<b>';
 										
 									//вычисляем стоимость
-									$stoim = $item['quantity'] * ($price +  $price / 100 * $item['spec_koeff']);
+									$stoim_item = $item['quantity'] * ($price +  $price / 100 * $item['spec_koeff']);
 			
 									//с учетом скидки акции
-									$stoim = $stoim - ($stoim / 100 * $item['discount']);
-								
-									echo ceil($stoim/10) * 10;
+									$stoim_item = $stoim_item - ($stoim_item / 100 * $item['discount']);
+									$stoim_item = ceil($stoim_item/10) * 10;
+									
+									echo $stoim_item;
+			
+									//Общая стоимость
+									if ($item['guarantee'] == 0){
+										if ($item['insure'] != 0){
+											if ($item['insure_approve'] != 0){
+												$summins += $stoim_item;
+											}
+										}else{
+											$summ += $stoim_item;
+										}
+									}
+
 			
 									echo '</b>
 									</div>
@@ -458,7 +522,35 @@
 						echo '
 							</div>';
 					}
-										
+					
+					
+							echo '	
+										<div class="cellsBlock" style="font-size: 90%;" >
+											<div class="cellText2" style="padding: 2px 4px;">
+											</div>
+											<div class="cellName" style="font-size: 90%; font-weight: bold;">
+												Итого:';
+							if (($summ != $invoice_j[0]['summ']) || ($summins != $invoice_j[0]['summins'])){
+								/*echo '<br>
+									<span style="font-size: 90%; font-weight: normal; color: #FF0202; cursor: pointer; " title="Такое происходит, если  цена позиции в прайсе меняется задним числом"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 135%;"></i> Итоговая цена не совпадает</span>';*/
+							}
+
+							echo '				
+													
+											</div>
+											<div class="cellName" style="padding: 2px 4px;">
+												<div>
+													<div style="font-size: 90%;">Сумма: <div id="calculateInvoice" style="font-size: 110%;">'.$summ.'</div> руб.</div>
+												</div>';
+							if ($sheduler_zapis[0]['type'] == 5){
+								echo '
+												<div>
+													<div style="font-size: 90%;">Страховка: <div id="calculateInsInvoice" style="font-size: 110%;">'.$summins.'</div> руб.</div>
+												</div>';
+							}
+							echo '
+										</div>';		
+
 											
 							echo '			
 										</div>';

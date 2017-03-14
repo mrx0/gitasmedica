@@ -30,7 +30,7 @@
 				if ($rezult == 0){
 					if (isset($_POST['price'])){
 						if (is_numeric($_POST['price'])){
-							if ($_POST['price'] > 0){
+							if ($_POST['price'] >= 0){
 								
 								//операции со временем						
 								$iWantThisDate2 = strtotime($_POST['iWantThisDate2']." 09:00:00");

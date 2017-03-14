@@ -2146,28 +2146,72 @@
 			
 			//Цена
 			var cost = Number(this.innerHTML);
+					
+			var ind = $(this).attr('ind');
+			var key = $(this).attr('key');
+			//alert(ind);
+			//alert(key);
+			//alert(cost);
+				
+			//обновляем цену в сессии как можем 
+			$.ajax({
+				url: 'add_price_price_id_in_item_invoice_f.php',
+				global: false, 
+				type: "POST", 
+				dataType: "JSON",
+				data:
+				{
+					client: document.getElementById("client").value,
+					zapis_id: document.getElementById("zapis_id").value,
+					filial: document.getElementById("filial").value,
+					worker: document.getElementById("worker").value,
+					
+					invoice_type: invoice_type,
+					
+					ind: ind,
+					key: key,
+					
+					price: cost,
+				},
+				cache: false,
+				beforeSend: function() {
+					//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+				},
+				// действие, при ответе с сервера
+				success: function(data){
+					//if(data.result == "success"){  
+						//alert(data.data);
+						//$('#invoice_rezult').html(data.data);
 						
+					//}else{
+						//alert('error');
+					//	$('#errror').html(data.data);
+					//}
+				}
+			});
+			
 			//коэффициент
 			var spec_koeff = Number($(this).parent().find('.spec_koeffInvoice').html());
 
 			//скидка акция
 			var discount = $(this).next().next().next().attr('discount');
 			//alert(discount);
-			
+						
 			//взяли количество
 			var quantity = Number($(this).parent().find('[type=number]').val());
-			
+					
 			//вычисляем стоимость
-			var stoim = quantity * (Number(this.innerHTML) +  Number(this.innerHTML) / 100 * spec_koeff)
-			
+			var stoim = quantity * (cost +  cost / 100 * spec_koeff)
+						
 			//с учетом скидки акции
 			stoim = stoim - (stoim / 100 * discount);
-			
+			stoim = Math.ceil(stoim/10) * 10			
+				
 			//прописываем стоимость
 			if (guarantee == 0){
-				$(this).next().next().next().next().next().html(Math.ceil(stoim/10) * 10);
+				$(this).next().next().next().next().next().html(stoim);
 			}
-			
+						
 			if (guarantee == 0){
 				if (insure != 0){
 					if (insureapprove != 0){
@@ -2178,13 +2222,11 @@
 				}
 			}
 			
-			
-			
 		});
 		
-		document.getElementById("calculateInvoice").innerHTML = Math.ceil(Summ/10) * 10;
+		document.getElementById("calculateInvoice").innerHTML = Summ;
 		if (SummIns > 0){
-			document.getElementById("calculateInsInvoice").innerHTML = Math.ceil(SummIns/10) * 10;
+			document.getElementById("calculateInsInvoice").innerHTML = SummIns;
 		}
 		
 	};

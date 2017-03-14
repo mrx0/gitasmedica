@@ -49,16 +49,46 @@
 							$temp_arr['spec_koeff'] = 0;
 							$temp_arr['discount'] = 0;
 							
+							$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".(int)$_POST['price_id']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
+							
 							//Если посещение страховое и у пациента прописана страховая
 							if (isset($_POST['zapis_insure'])){
 								if (isset($_POST['client_insure'])){
 									if ($_POST['zapis_insure'] != 0){
 										if ($_POST['client_insure'] != 0){
 											$temp_arr['insure'] = (int)$_POST['client_insure'];
+											
+											$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".(int)$_POST['price_id']."' AND `insure`='".(int)$_POST['client_insure']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
 										}
 									}
 								}
 							}
+							
+							require 'config.php';
+							mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+							mysql_select_db($dbName) or die(mysql_error()); 
+							mysql_query("SET NAMES 'utf8'");
+						
+							$arr = array();
+							$rez = array();
+							$price = 0;
+								
+							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `create_time` DESC LIMIT 1";
+							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
+													
+							$res = mysql_query($query) or die($query);
+
+							$number = mysql_num_rows($res);
+							if ($number != 0){
+								$arr = mysql_fetch_assoc($res);
+								$price = $arr['price'];
+							}else{
+								$price = '?';
+							}
+
+							$temp_arr['price'] = (int)$price;
+							
+							mysql_close();
 							
 							array_push($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active], $temp_arr);
 						//}

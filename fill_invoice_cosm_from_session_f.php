@@ -119,7 +119,7 @@
 									$rez = array();
 									$price = 0;
 									
-									$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='{$items['id']}' ORDER BY `create_time` DESC LIMIT 1";
+									$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='{$items['id']}' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
 									
 									$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 									$number = mysql_num_rows($res);
@@ -137,11 +137,11 @@
 								
 								$request .= '
 								</div>
-								<div class="cellCosmAct invoiceItemPrice" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; '.$bg_col.'">
+								<div class="cellCosmAct invoiceItemPrice" ind="'.$zub.'" key="'.$key.'" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; '.$bg_col.'">
 									'.$price.'
 								</div>
 								<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px; '.$bg_col.'">
-									<input type="number" size="2" name="quantity" id="quantity" min="1" max="99" value="'.$items['quantity'].'" class="mod" onchange="changeQuantityInvoice('.$zub.', '.$zub.', this);" onkeypress = "changeQuantityInvoice('.$zub.', '.$zub.', this);">
+									<input type="number" size="2" name="quantity" id="quantity" min="1" max="99" value="'.$items['quantity'].'" class="mod" onkeypress = "changeQuantityInvoice('.$zub.', '.$zub.', this);">
 								</div>
 								<div class="cellCosmAct spec_koeffInvoice settings_text"  speckoeff="'.$items['spec_koeff'].'" style="font-size: 90%; text-align: center; '.$bg_col.' width: 40px; min-width: 40px; max-width: 40px;" onclick="contextMenuShow('.$zub.', '.$zub.', event, \'spec_koeffItem\');">
 									'.$items['spec_koeff'].'
@@ -162,7 +162,7 @@
 									0
 								</div>
 								<div invoiceitemid="'.$zub.'" class="cellCosmAct info" style="font-size: 100%; text-align: center; '.$bg_col.'" onclick="deleteInvoiceItem('.$zub.', this);">
-									<i class="fa fa-trash-o" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
+									<i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
 								</div>
 							</div>';
 							//}
@@ -173,7 +173,7 @@
 									<span style="color: rgba(255, 0, 0, 0.62);">не заполнено</span>
 								</div>
 								<div class="cellCosmAct info" style="font-size: 100%; text-align: center; '.$bg_col.'" onclick="deleteInvoiceItem('.$zub.', this);">
-									<i class="fa fa-trash-o" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
+									<i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
 								</div>
 							</div>';
 						}

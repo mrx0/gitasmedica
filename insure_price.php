@@ -87,7 +87,7 @@
 					$number = mysql_num_rows($res);
 					if ($number != 0){
 						//if ($services_j !=0){
-							showTree(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelists_insure', $_GET['id']);
+							showTree(15, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelists_insure', $_GET['id']);
 							
 							
 							//Без группы
@@ -122,8 +122,9 @@
 									$price = 0;
 									
 									//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
-									$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
-														
+									//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
+									$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' AND `insure`='".$_GET['insure']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
+									
 									$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
 									$number = mysql_num_rows($res);

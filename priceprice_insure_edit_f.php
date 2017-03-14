@@ -15,7 +15,7 @@
 			
 					if (isset($_POST['price']) && isset($_POST['id'])){
 						if (is_numeric($_POST['price'])){
-							if ($_POST['price'] > 0){
+							if ($_POST['price'] >= 0){
 								//var_dump(strtotime($_POST['iWantThisDate2']));
 								//var_dump(date('d.m.y H:i', time()));
 								//var_dump(date('d.m.y H:i', strtotime($_POST['iWantThisDate2'])));

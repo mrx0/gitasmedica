@@ -28,7 +28,7 @@
 				$price = 0;
 					
 				//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `create_time` DESC LIMIT 1";
-				$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC LIMIT 1";
+				$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
 										
 				$res = mysql_query($query) or die($query);
 
@@ -130,7 +130,7 @@
 				mysql_select_db($dbName) or die(mysql_error()); 
 				mysql_query("SET NAMES 'utf8'");
 				
-				$query = "SELECT * FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `create_time` DESC";
+				$query = "SELECT * FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC, `create_time` DESC";
 				//$query = "SELECT * FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC";
 									
 				$res = mysql_query($query) or die($query);

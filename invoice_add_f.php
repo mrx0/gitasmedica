@@ -93,9 +93,11 @@
 									mysql_query($query) or die(mysql_error().' -> '.$query);
 									
 								}
-								unset($_SESSION['invoice_data']);
+								//unset($_SESSION['invoice_data']);
 							}
 						}
+						unset($_SESSION['invoice_data']);
+						
 						echo json_encode(array('result' => 'success', 'data' => $mysql_insert_id));
 					}
 				}
