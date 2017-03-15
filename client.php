@@ -793,7 +793,7 @@
 							$invoice_j = array();
 							
 							echo '
-								<ul id="invoices" style="margin-left: 6px; margin: 10px 5px;">					
+								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выписанные наряды</li>';
 
 							$query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$_GET['id']."'";
@@ -816,7 +816,23 @@
 										<li class="cellsBlock" style="width: auto;">';
 									echo '
 											<a href="invoice.php?id='.$invoice_item['id'].'" class="cellName ahref">
-												<b>Наряд #'.$invoice_item['id'].'</b>
+												<b>Наряд #'.$invoice_item['id'].'</b><br>
+												<span style="font-size:80%;  color: #555;">';
+												
+								if (($invoice_item['create_time'] != 0) || ($invoice_item['create_person'] != 0)){
+									echo '
+														Добавлен: '.date('d.m.y H:i' ,strtotime($invoice_item['create_time'])).'<br>
+														<!--Автор: '.WriteSearchUser('spr_workers', $invoice_item['create_person'], 'user', true).'<br>-->';
+								}else{
+									echo 'Добавлен: не указано<br>';
+								}
+								if (($invoice_item['last_edit_time'] != 0) || ($invoice_item['last_edit_person'] != 0)){
+									echo '
+														Последний раз редактировался: '.date('d.m.y H:i', $invoice_item['last_edit_time']).'<br>
+														<!--Кем: '.WriteSearchUser('spr_workers', $invoice_item['last_edit_person'], 'user', true).'-->';
+								}
+								echo '
+												</span>
 											</a>
 											<div class="cellName">
 												<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
@@ -842,8 +858,26 @@
 							
 							echo '
 								</ul>';
+								
+							//Оплаты
+							echo '
+								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
+									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Внесенные оплаты/ордера</li>
+									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
+										<a href="add_order.php?client_id='.$client[0]['id'].'" class="b">Добавить оплату/ордер</a>
+									</li>';
+							echo '
+								</ul>';
 							
-							
+							//Оплаты
+							echo '
+								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
+									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Сертификаты пациента</li>
+									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
+										<a href="add_certificate.php?client_id='.$client[0]['id'].'" class="b">Добавить сертификат</a>
+									</li>';
+							echo '
+								</ul>';
 						
 							echo '				
 								<div class="cellsBlock2">

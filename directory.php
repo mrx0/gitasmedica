@@ -21,7 +21,8 @@
 				
 				echo '<a href="pricelist.php" class="b3" title="Прайс">Прайс</a><br>';
 				
-				//echo '<a href="pricelist.php" class="b3" title="Прайс">Прайс</a><br>';
+				echo '<a href="stock.php" class="b3" title="Прайс">Акции</a><br>';
+
 
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

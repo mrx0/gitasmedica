@@ -59,6 +59,8 @@
 				$filial = $_POST['filial'];
 				$worker = $_POST['worker'];
 				
+				$price = 0;
+				
 				if (!isset($_SESSION['invoice_data'][$client][$zapis_id]['data'])){
 					echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 				}else{
@@ -72,6 +74,7 @@
 					
 							
 					require 'config.php';
+					
 					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
 					mysql_select_db($dbName) or die(mysql_error()); 
 					mysql_query("SET NAMES 'utf8'");
@@ -108,7 +111,34 @@
 								$request .= '<i>Зуб</i>: '.$zub;
 							}
 							$request .= '
-										</b>. <i>Диагноз</i>: '.$mkb_data[$zub].'
+										</b>. <i>Диагноз</i>: ';
+										
+							foreach ($mkb_data[$zub] as $mkb_data_val){
+								$rez = array();
+								$rezult2 = array();
+								
+								$query = "SELECT `name`, `code` FROM `spr_mkb` WHERE `id` = '{$mkb_data_val}'";	
+								
+								$res = mysql_query($query) or die(mysql_error().' -> '.$query);
+								$number = mysql_num_rows($res);
+								if ($number != 0){
+									while ($arr = mysql_fetch_assoc($res)){
+										$rez[$mkb_data_val] = $arr;
+									}
+								}else{
+									$rez = 0;
+								}
+								if ($rez != 0){
+									foreach ($rez as $mkb_name_val){
+										$request .= '<div class="mkb_val"><b>'.$mkb_name_val['code'].'</b> '.$mkb_name_val['name'].'</div>';
+									}
+								}else{
+									$request .= '<div class="mkb_val">???</div>';
+								}
+								
+							}
+							
+							$request .= '
 									</div>
 									<div class="cellCosmAct info" style="font-size: 100%; text-align: center; padding: 2px 4px; '.$bg_col2.'" onclick="deleteMKBItem('.$zub.');">
 										<i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>

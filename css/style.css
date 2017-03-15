@@ -1932,3 +1932,16 @@ input.dateс {
 	position: absolute;
 	height: 150px;
 }
+
+.mkb_val{
+	position: relative;
+	border: 1px dotted #555; 
+	display: inline-block;
+	margin: 1px;
+	padding: 1px;
+	background-color: rgb(178, 252, 252);
+}
+
+.mkb_val:hover{
+	background-color: rgba(255, 236, 24, 0.5);
+}

@@ -385,7 +385,7 @@
 												<li><a href="#price">Прайс</a></li>';
 							if ($sheduler_zapis[0]['type'] == 5){
 								echo '
-												<li><a href="#mkb">МКБ</a></li>';
+												<li><a href="#mkb">Диагноз (МКБ)</a></li>';
 							}
 							echo '
 											</ul>
@@ -408,11 +408,16 @@
 											</div>';
 							if ($sheduler_zapis[0]['type'] == 5){
 								echo '
-											<div id="mkb">
+											<div id="mkb">';
 											
-												<div style=" width: 350px; height: 500px; overflow: scroll; border: 1px solid #CCC;">
-													<ul class="ul-tree ul-drop" id="lasttree">
+								/*echo '			
+												<div style="width: 350px; height: 500px; overflow: scroll; border: 1px solid #CCC;">
+													<ul class="ul-tree ul-drop" id="lasttree">';*/
+								
+								//Вывод справочника МКб
+								echo showTree3(NUll, '', 'list', 0, TRUE, 0, FALSE, 'spr_mkb', 0, 0);
 
+								/*echo '
 								Comming soon...<br>
 								Just test yet...<br><br>
 								
@@ -421,11 +426,11 @@
 											</li>		
 											<li>
 												<p onclick="checkMKBItem(\'777\')">002.Болезнь N2</p>
-											</li>		
-
+											</li>';	*/	
+								/*echo '
 													</ul>
-												</div>
-
+												</div>';*/
+								echo '
 											</div>';
 							}
 							echo '

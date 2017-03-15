@@ -428,45 +428,52 @@
 										echo '?';
 									}
 									
-									$price = $item['price'];
-									
-									if ($item['insure'] != 0){
-										//Написать страховую
-										$insure_j = SelDataFromDB('spr_insure', $item['insure'], 'id');
-										
-										if ($insure_j != 0){
-											$insure_name = $insure_j[0]['name'];
-										}else{
-											$insure_name = '?';
-										}
-									}else{
-										$insure_name = 'нет';
-									}
-									
 									echo '
-									</div>
-									<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic;">
-										'.$insure_name.'
 									</div>';
 									
-									if ($item['insure'] != 0){
-										if ($item['insure_approve'] == 1){
-											echo '
-												<div class="cellCosmAct" style="font-size: 70%; text-align: center;">
-													<i class="fa fa-check" aria-hidden="true" style="font-size: 150%;"></i>
+									$price = $item['price'];
+									
+									if ($sheduler_zapis[0]['type'] == 5){
+										if ($item['insure'] != 0){
+											//Написать страховую
+											$insure_j = SelDataFromDB('spr_insure', $item['insure'], 'id');
+											
+											if ($insure_j != 0){
+												$insure_name = $insure_j[0]['name'];
+											}else{
+												$insure_name = '?';
+											}
+										}else{
+											$insure_name = 'нет';
+										}
+									}
+									
+									if ($sheduler_zapis[0]['type'] == 5){
+										echo '
+										<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic;">
+											'.$insure_name.'
+										</div>';
+
+									
+										if ($item['insure'] != 0){
+											if ($item['insure_approve'] == 1){
+												echo '
+													<div class="cellCosmAct" style="font-size: 70%; text-align: center;">
+														<i class="fa fa-check" aria-hidden="true" style="font-size: 150%;"></i>
+													</div>';
+											}else{
+												echo '
+												<div class="cellCosmAct" style="font-size: 100%; text-align: center; background: rgba(255, 0, 0, 0.5) none repeat scroll 0% 0%;">
+													<i class="fa fa-ban" aria-hidden="true"></i>
 												</div>';
+											}
+
 										}else{
 											echo '
-											<div class="cellCosmAct" style="font-size: 100%; text-align: center; background: rgba(255, 0, 0, 0.5) none repeat scroll 0% 0%;">
-												<i class="fa fa-ban" aria-hidden="true"></i>
+											<div class="cellCosmAct" insureapprove="'.$item['insure_approve'].'" style="font-size: 70%; text-align: center;">
+												-
 											</div>';
 										}
-
-									}else{
-										echo '
-										<div class="cellCosmAct" insureapprove="'.$item['insure_approve'].'" style="font-size: 70%; text-align: center;">
-											-
-										</div>';
 									}
 									
 									echo '
@@ -495,11 +502,11 @@
 										<b>';
 										
 									//вычисляем стоимость
-									$stoim_item = $item['quantity'] * ($price +  $price / 100 * $item['spec_koeff']);
+									$stoim_item = $item['quantity'] * ($price +  $price * $item['spec_koeff'] / 100);
 			
 									//с учетом скидки акции
-									$stoim_item = $stoim_item - ($stoim_item / 100 * $item['discount']);
-									$stoim_item = ceil($stoim_item/10) * 10;
+									$stoim_item = $stoim_item - ($stoim_item * $item['discount'] / 100);
+									$stoim_item = round($stoim_item/10) * 10;
 									
 									echo $stoim_item;
 			
@@ -528,7 +535,7 @@
 										<div class="cellsBlock" style="font-size: 90%;" >
 											<div class="cellText2" style="padding: 2px 4px;">
 											</div>
-											<div class="cellName" style="font-size: 90%; font-weight: bold;">
+											<!--<div class="cellName" style="font-size: 90%; font-weight: bold;">
 												Итого:';
 							if (($summ != $invoice_j[0]['summ']) || ($summins != $invoice_j[0]['summins'])){
 								/*echo '<br>
@@ -546,7 +553,7 @@
 								echo '
 												<div>
 													<div style="font-size: 90%;">Страховка: <div id="calculateInsInvoice" style="font-size: 110%;">'.$summins.'</div> руб.</div>
-												</div>';
+												</div>-->';
 							}
 							echo '
 										</div>';		

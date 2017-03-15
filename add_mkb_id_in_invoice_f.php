@@ -24,7 +24,30 @@
 				if ($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active'] != 0){
 					$t_number_active = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active'];
 					
-					$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$t_number_active] = $_POST['mkb_id'];
+					//$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$t_number_active] = (int)$_POST['mkb_id'];
+					
+					if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$t_number_active])){
+						//проверим, нет ли уже такой позиции в диагнозе
+						if (!empty($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$t_number_active])){
+							$data = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$t_number_active];
+							foreach ($data as $mkb_data){
+								if ($mkb_data == $_POST['mkb_id']){
+									$iExist = true;
+									//$existID = $key;
+								}
+							}
+						}
+					}else{
+						$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$t_number_active] = array();
+					}
+
+					if ($iExist){
+						//
+					}else{
+						array_push($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$t_number_active], (int)$_POST['mkb_id']);
+					}
+					
+					
 					
 					/*if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$t_number_active])){
 						

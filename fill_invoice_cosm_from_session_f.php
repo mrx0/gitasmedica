@@ -56,6 +56,7 @@
 				if (!isset($_SESSION['invoice_data'][$client][$zapis_id]['data'])){
 					echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 				}else{
+					$_SESSION['invoice_data'][$client][$zapis_id]['data'] = array_values($_SESSION['invoice_data'][$client][$zapis_id]['data']);
 					//берем из сесии данные
 					$data = $_SESSION['invoice_data'][$client][$zapis_id]['data'];
 					
@@ -137,11 +138,11 @@
 								
 								$request .= '
 								</div>
-								<div class="cellCosmAct invoiceItemPrice" ind="'.$zub.'" key="'.$key.'" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; '.$bg_col.'">
+								<div class="cellCosmAct invoiceItemPrice" ind="'.$zub.'" key="0" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; '.$bg_col.'">
 									'.$price.'
 								</div>
 								<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px; '.$bg_col.'">
-									<input type="number" size="2" name="quantity" id="quantity" min="1" max="99" value="'.$items['quantity'].'" class="mod" onkeypress = "changeQuantityInvoice('.$zub.', '.$zub.', this);">
+									<input type="number" size="2" name="quantity" id="quantity" min="1" max="99" value="'.$items['quantity'].'" class="mod" onchange="changeQuantityInvoice('.$zub.', 0, this);">
 								</div>
 								<div class="cellCosmAct spec_koeffInvoice settings_text"  speckoeff="'.$items['spec_koeff'].'" style="font-size: 90%; text-align: center; '.$bg_col.' width: 40px; min-width: 40px; max-width: 40px;" onclick="contextMenuShow('.$zub.', '.$zub.', event, \'spec_koeffItem\');">
 									'.$items['spec_koeff'].'
@@ -161,7 +162,7 @@
 								<div class="cellCosmAct invoiceItemPriceItog" style="font-size: 90%; text-align: center; '.$bg_col.' width: 60px; min-width: 60px; max-width: 60px;">
 									0
 								</div>
-								<div invoiceitemid="'.$zub.'" class="cellCosmAct info" style="font-size: 100%; text-align: center; '.$bg_col.'" onclick="deleteInvoiceItem('.$zub.', this);">
+								<div class="cellCosmAct info" style="font-size: 100%; text-align: center; '.$bg_col.'" onclick="deleteInvoiceItem('.$zub.', this);">
 									<i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
 								</div>
 							</div>';

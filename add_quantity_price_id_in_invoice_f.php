@@ -29,9 +29,9 @@
 						}
 					}
 					if ($_POST['invoice_type'] == 6){
-						if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['key']])){
+						if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']])){
 						
-							$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['key']]['quantity'] = (int)$_POST['quantity'];
+							$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']]['quantity'] = (int)$_POST['quantity'];
 							//$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active]
 						}
 					}

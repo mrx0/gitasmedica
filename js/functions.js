@@ -2201,11 +2201,11 @@
 			var quantity = Number($(this).parent().find('[type=number]').val());
 					
 			//вычисляем стоимость
-			var stoim = quantity * (cost +  cost / 100 * spec_koeff)
+			var stoim = quantity * (cost +  cost * spec_koeff / 100)
 						
 			//с учетом скидки акции
-			stoim = stoim - (stoim / 100 * discount);
-			stoim = Math.ceil(stoim/10) * 10			
+			stoim = stoim - (stoim * discount / 100);
+			stoim = Math.round(stoim/10) * 10			
 				
 			//прописываем стоимость
 			if (guarantee == 0){
@@ -2287,6 +2287,7 @@
 					//alert('error');
 					$('#errror').html(data.data);
 				}
+				// !!! скролл надо замутить сюда $('#invoice_rezult').scrollTop();
 			}
 		});
 		//$('#errror').html('Результат');
@@ -2401,9 +2402,11 @@
 		var itemId = dataObj.getAttribute("invoiceitemid");
 		var target = 'item';
 		
-		if ((itemId == null) || (itemId == 'null') || (typeof itemId == "undefined")){
+		if ((itemId == 0) || (itemId == null) || (itemId == 'null') || (typeof itemId == "undefined")){
 			target = 'zub';
 		}
+		//alert(zub);
+		//alert(target);
 		
 		$.ajax({
 			url:"delete_invoice_item_from_session_f.php",
@@ -3398,9 +3401,17 @@
 		var Summ = document.getElementById("calculateInvoice").innerHTML;
 		var SummIns = 0;
 		
+		var SummInsStr = '';
+		
 		if (invoice_type == 5){
 			SummIns = document.getElementById("calculateInsInvoice").innerHTML;
+			SummInsStr = '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
+							'Страховка:<br>'+
+							'<span class="calculateInsInvoice" style="font-size: 13px">'+SummIns+'</span> руб.'+
+						'</div>';
 		}
+		
+		var client = document.getElementById("client").value;
 		
 		$.ajax({
 			url:"invoice_add_f.php",
@@ -3409,7 +3420,7 @@
 			dataType: "JSON",
 			data:
 			{
-				client: document.getElementById("client").value,
+				client: client,
 				zapis_id: document.getElementById("zapis_id").value,
 				filial: document.getElementById("filial").value,
 				worker: document.getElementById("worker").value,
@@ -3431,12 +3442,26 @@
 				
 				if(res.result == "success"){  
 					$('#data').hide();
-					$('#invoices').html('<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен новый наряд</li>'+
-										'<li class="cellsBlock" style="width: auto;">'+
-										'<a href="invoice.php?id='+res.data+'" class="cellName ahref">'+
-											'<b>Наряд #'+res.data+'</b>'+
-										'</a>'+
-										'</li>');
+					$('#invoices').html('<ul id="invoices" style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен новый наряд</li>'+
+											'<li class="cellsBlock" style="width: auto;">'+
+												'<a href="invoice.php?id='+res.data+'" class="cellName ahref">'+
+													'<b>Наряд #'+res.data+'</b><br>'+
+												'</a>'+
+												'<div class="cellName">'+
+													'<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
+														'Сумма:<br>'+
+														'<span class="calculateInvoice" style="font-size: 13px">'+Summ+'</span> руб.'+
+													'</div>'+
+													SummInsStr+
+												'</div>'+
+											'</li>'+
+										'</ul>'+
+										'<ul id="invoices" style="margin-left: 6px; margin-bottom: 4px; display: inline-block; vertical-align: middle;">'+
+											'<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+												'<a href="add_order.php?client_id='+client+'" class="b">Добавить оплату/ордер</a>'+
+											'</li>'+
+										'</ul>');
 				}else{
 					$('#errror').html(res.data);
 				}
