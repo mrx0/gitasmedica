@@ -1015,8 +1015,10 @@
 		e4 = $('.managePriceList');
 		if(e4.is(':visible')) {
 			e4.hide();
+			//$('.cellPriority').children().remove();
 		}else{
 			e4.show();
+			//$('.cellPriority').append('<input type="checkbox" name="prop[]" value="1">');
 		}
 		
 		if (iCanManage) iCanManage = false; else iCanManage = true;
@@ -2458,7 +2460,7 @@
 		});
 	}	
 
-	//Удалить текущий диагноз МКБ
+	//Удалить все диагнозы МКБ
 	function deleteMKBItem(zub){
 
 		$.ajax({
@@ -2502,6 +2504,37 @@
 					//alert('error');
 					$('#errror').html(data.data);
 				}*/
+			}
+		});
+	}	
+
+	//Удалить текущий диагноз МКБ
+	function deleteMKBItemID(ind, key){
+
+		$.ajax({
+			url:"delete_mkb_item_id_from_session_f.php",
+			global: false, 
+			type: "POST", 
+			dataType: "JSON",
+			data:
+			{
+				ind: ind,
+				key: key,
+				
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				
+				fillInvoiseRez();
+
 			}
 		});
 	}	

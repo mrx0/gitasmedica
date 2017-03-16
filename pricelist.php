@@ -79,28 +79,28 @@
 			}
 			
 			if (($items['edit'] == 1) || $god_mode){
-				echo '
+				/*echo '
 							<div class="no_print"> 
 							<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
 								<div style="cursor: pointer;" onclick="manageScheduler()">
 									<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>
 								</div>
 							</li>
-							</div>';
+							</div>';*/
 							//managePriceList
 			}
 			
-			echo '					
+			/*echo '					
 								<p style="margin: 5px 0; padding: 2px;">
 									Быстрый поиск: 
 									<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
-								</p>';
-			echo '
+								</p>';*/
+			/*echo '
 								<li class="cellsBlock" style="font-weight:bold; width: auto;">
 									<div class="cellPriority" style="text-align: center"></div>
 									<div class="cellName" style="text-align: center; width: 350px; min-width: 350px; max-width: 350px;">Наименование</div>
 									<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">Цена, руб.</div>
-								</li>';
+								</li>';*/
 			
 			include_once 'DBWork.php';
 			//$services_j = SelDataFromDB('spr_pricelist_template', 'services', $type);
@@ -119,10 +119,25 @@
 			mysql_query("SET NAMES 'utf8'");
 			
 			//if ($services_j !=0){
-				showTree(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0);
+				
+				//Прайс		
+				echo '	
+					<div style="margin: 10px 0 5px; font-size: 11px; cursor: pointer;">
+						<span class="dotyel a-action lasttreedrophide">скрыть всё</span>, <span class="dotyel a-action lasttreedropshow">раскрыть всё</span>
+					</div>';
+				
+				echo '
+					<div style="width: 900px; max-width: 900px; min-width: 900px;">
+						<ul class="ul-tree ul-drop" id="lasttree" style="width: 850px; font-size: 12px;">';
+
+				showTree4(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0, 0);		
+							
+				echo '
+						</ul>
+					</div>';
 				
 				
-				//Без группы
+				//!!! переделать Без группы
 						
 				$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' ORDER BY `name`";			
 				

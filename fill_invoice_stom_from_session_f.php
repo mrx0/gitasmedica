@@ -113,7 +113,7 @@
 							$request .= '
 										</b>. <i>Диагноз</i>: ';
 										
-							foreach ($mkb_data[$zub] as $mkb_data_val){
+							foreach ($mkb_data[$zub] as $mkb_key => $mkb_data_val){
 								$rez = array();
 								$rezult2 = array();
 								
@@ -130,7 +130,12 @@
 								}
 								if ($rez != 0){
 									foreach ($rez as $mkb_name_val){
-										$request .= '<div class="mkb_val"><b>'.$mkb_name_val['code'].'</b> '.$mkb_name_val['name'].'</div>';
+										$request .= '
+											<div class="mkb_val"><b>'.$mkb_name_val['code'].'</b> '.$mkb_name_val['name'].'
+												<div class="mkb_val_del" onclick="deleteMKBItemID('.$zub.', '.$mkb_data_val.')">
+													<i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
+												</div>
+											</div>';
 									}
 								}else{
 									$request .= '<div class="mkb_val">???</div>';

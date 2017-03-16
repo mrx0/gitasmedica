@@ -56,12 +56,38 @@ ul.ul-tree p {
 	border: 1px dotted #CCC;
 	text-align: left;
 }
+/*для большого дерева*/
+ul.ul-tree div.priceitem {
+	position:relative;
+	/*top: 12px;*/
+	margin: 1px 0 0 2.5em;
+	padding: 1px 4px;
+	border: 1px dotted #CCC;
+	text-align: left;
+}
 
 ul.ul-tree p:hover {
 	background: rgba(77, 246, 127, 0.5);
 }
+/*для большого дерева*/
+ul.ul-tree  div.priceitem:hover {
+	background: rgba(77, 246, 127, 0.5);
+}
 
 ul.ul-tree p:before {
+	content: ''; 
+	display: block; 
+	border-bottom: 1px solid rgba(0,0,0,.5); 
+	position:absolute; 
+	/*width: 2.5em;*/
+	width: 28px;
+	height: 24px; 
+	/*left: -2.5em;*/
+	left: -29px;
+	top: -12px; 
+}
+/*для большого дерева*/
+ul.ul-tree div.priceitem:before {
 	content: ''; 
 	display: block; 
 	border-bottom: 1px solid rgba(0,0,0,.5); 
