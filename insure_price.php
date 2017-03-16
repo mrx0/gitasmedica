@@ -60,12 +60,12 @@
 									Быстрый поиск: 
 									<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
 								</p>';
-					echo '
+					/*echo '
 								<li class="cellsBlock" style="font-weight:bold; width: auto;">
 									<div class="cellPriority" style="text-align: center"></div>
 									<div class="cellName" style="text-align: center; width: 350px; min-width: 350px; max-width: 350px;">Наименование</div>
 									<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">Цена, руб.</div>
-								</li>';
+								</li>';*/
 
 					$arr = array();
 					$rez = array();
@@ -87,9 +87,26 @@
 					$number = mysql_num_rows($res);
 					if ($number != 0){
 						//if ($services_j !=0){
-							showTree(15, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelists_insure', $_GET['id']);
 							
 							
+							//showTree(15, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelists_insure', $_GET['id']);
+							
+							//Прайс		
+							echo '	
+								<div style="margin: 10px 0 5px; font-size: 11px; cursor: pointer;">
+									<span class="dotyel a-action lasttreedrophide">скрыть всё</span>, <span class="dotyel a-action lasttreedropshow">раскрыть всё</span>
+								</div>';
+							
+							echo '
+								<div style="width: 900px; max-width: 900px; min-width: 900px;">
+									<ul class="ul-tree ul-drop" id="lasttree" style="width: 850px; font-size: 12px;">';
+
+							showTree4(15, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelists_insure', $_GET['id'], 0);	
+										
+							echo '
+									</ul>
+								</div>';
+								
 							//Без группы
 									
 							//$query = "SELECT * FROM `spr_pricelists_insure` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' AND `insure`='{$_GET['id']}' ORDER BY `name`";			
@@ -123,7 +140,7 @@
 									
 									//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
 									//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
-									$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' AND `insure`='".$_GET['insure']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
+									$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' AND `insure`='".$_GET['id']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
 									
 									$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 

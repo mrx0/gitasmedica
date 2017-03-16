@@ -15,13 +15,40 @@
 			$orgs = SelDataFromDB('spr_org', '', '');
 			$permissions = SelDataFromDB('spr_permissions', '', '');
 			
+			//Для того, если заводим пациента через GET
+			$value_f = '';
+			$value_i = '';
+			$value_o = '';
+			
+			$fio_arr = array();
+			
+			if (isset($_GET['fio'])){
+				$fio_arr = explode(' ', $_GET['fio']);
+				if (isset($fio_arr[0]))
+					$value_f = firspUpperCase($fio_arr[0]);
+				if (isset($fio_arr[1]))
+					$value_i = firspUpperCase($fio_arr[1]);
+				if (isset($fio_arr[2]))
+					$value_o = firspUpperCase($fio_arr[2]);
+			}
+			//var_dump($fio_arr );
+			
 			echo '
 				<div id="status">
 					<header>
 						<h2>Добавить пациента</h2>
 						Заполните поля
 					</header>';
-
+			echo '
+					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">
+						<div class="cellRight">
+							<span style="font-size: 70%;">Быстрый поиск пациента</span><br />
+							<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
+							<!--<ul id="search_result_fc" class="search_result_fc"></ul><br />-->
+							<div id="search_result_fc2"></div>
+						</div>
+					</div>';
+					
 			echo '
 					<div id="data">';
 			echo '
@@ -32,7 +59,7 @@
 							<div class="cellsBlock2">
 								<div class="cellLeft">Фамилия</div>
 								<div class="cellRight">
-									<input type="text" name="f" id="f" value="">
+									<input type="text" name="f" id="f" value="'.$value_f.'">
 									<label id="fname_error" class="error"></label>
 								</div>
 							</div>
@@ -40,7 +67,7 @@
 							<div class="cellsBlock2">
 								<div class="cellLeft">Имя</div>
 								<div class="cellRight">
-									<input type="text" name="i" id="i" value="">
+									<input type="text" name="i" id="i" value="'.$value_i.'">
 									<label id="iname_error" class="error"></label>
 								</div>
 							</div>
@@ -48,7 +75,7 @@
 							<div class="cellsBlock2">
 								<div class="cellLeft">Отчество</div>
 								<div class="cellRight">
-									<input type="text" name="o" id="o" value="">
+									<input type="text" name="o" id="o" value="'.$value_o.'">
 									<label id="oname_error" class="error"></label>
 								</div>
 							</div>

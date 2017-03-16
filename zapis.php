@@ -1834,8 +1834,13 @@
 								<div class="cellsBlock2" style="font-size:80%; width:400px;">
 									<div class="cellLeft" style="font-weight: bold;">Пациент</div>
 									<div class="cellRight">
-										<input type="text" size="30" name="searchdata" id="search_client" placeholder="Введите ФИО пациента" value="" class="who"  autocomplete="off" style="width: 90%;"> <a href="add_client.php" class="ahref"><i class="fa fa-plus-square" title="Добавить пациента" style="color: green; font-size: 120%;"></i></a>
-										<ul id="search_result" class="search_result"></ul><br />
+										<div>
+											<input type="text" size="30" name="searchdata" id="search_client" placeholder="Введите ФИО пациента" value="" class="who"  autocomplete="off" style="width: 90%;">
+											<ul id="search_result" class="search_result"></ul><br>
+										</div>
+										<div id="add_client_fio" style="cursor: pointer; border: 1px dotted #555;">
+											<i class="fa fa-plus-square" style="color: green; font-size: 120%;"></i> Добавить нового
+										</div>
 									</div>
 								</div>
 								<!--<div class="cellsBlock2" style="font-size:80%; width:400px;">

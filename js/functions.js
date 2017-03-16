@@ -3502,3 +3502,12 @@
 		});
 	}
 	
+	//Для перехода в добавление нового клиента из записи
+	$('#add_client_fio').click(function () {
+		var client_fio = document.getElementById("search_client").value;
+		if (client_fio != ''){
+			window.location.replace('add_client.php?fio='+document.getElementById("search_client").value);
+		}else{
+			window.location.replace('add_client.php');
+		}
+	});
