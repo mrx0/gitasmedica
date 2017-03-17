@@ -1793,7 +1793,7 @@ input.dateс {
 	margin: 1px;
 }
 
-.sel_tooth, .sel_toothp {
+.sel_tooth, .sel_toothp, .sel_toothm {
 	display: inline-block;
 	padding: 5px;
 	border: 1px solid #CCC;
@@ -1820,7 +1820,7 @@ input.dateс {
 	background: rgba(43, 195, 184, 0.1);
 }
 
-.sel_tooth:hover, .sel_toothp:hover {
+.sel_tooth:hover, .sel_toothp:hover, .sel_toothm:hover {
 	font-weight: bold;
 	background: rgba(77, 246, 127, 0.9);
 }

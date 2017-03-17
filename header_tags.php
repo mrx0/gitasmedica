@@ -112,6 +112,7 @@
 						titlePosition: \'over\'
 					});
 				});
+
 			</script>
 			
 			<script type="text/javascript">

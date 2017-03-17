@@ -828,7 +828,7 @@
 								}
 								if (($invoice_item['last_edit_time'] != 0) || ($invoice_item['last_edit_person'] != 0)){
 									echo '
-														Последний раз редактировался: '.date('d.m.y H:i', $invoice_item['last_edit_time']).'<br>
+														Последний раз редактировался: '.date('d.m.y H:i',strtotime($invoice_item['last_edit_time'])).'<br>
 														<!--Кем: '.WriteSearchUser('spr_workers', $invoice_item['last_edit_person'], 'user', true).'-->';
 								}
 								echo '

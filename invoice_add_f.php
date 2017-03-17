@@ -61,19 +61,22 @@
 										'{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$spec_koeff}', '{$discount}')";
 										
 										mysql_query($query) or die(mysql_error().' -> '.$query);
+									}
 
-										if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind])){
-											$mkb_id = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind];
-											
+									if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind])){
+										$mkb_data = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind];
+										foreach ($mkb_data as $mkb_id){
 											//Добавляем в базу МКБ
 											$query = "INSERT INTO `journal_invoice_ex_mkb` (`invoice_id`, `ind`, `mkb_id`) 
 											VALUES (
 											'{$mysql_insert_id}', '{$ind}', '{$mkb_id}')";
-											
+										
 											mysql_query($query) or die(mysql_error().' -> '.$query);
 										}
 									}
+									
 								}
+								
 								if ($_POST['invoice_type'] == 6){
 									
 									$price_id = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['id'];

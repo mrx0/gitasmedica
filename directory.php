@@ -21,7 +21,9 @@
 				
 				echo '<a href="pricelist.php" class="b3" title="Прайс">Прайс</a><br>';
 				
-				echo '<a href="stock.php" class="b3" title="Прайс">Акции</a><br>';
+				echo '<a href="stocks.php" class="b3" title="Акции">Акции</a><br>';
+				
+				echo '<a href="certificates.php" class="b3" title="Сертификаты">Сертификаты</a><br>';
 
 
 		}else{

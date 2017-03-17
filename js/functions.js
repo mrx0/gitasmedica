@@ -32,10 +32,15 @@
 			success: function(res){
 				//alert(res.data);
 				
+				//для записи
 				if (mark == 'zapis_options'){
 					res.data = $('#zapis_options'+ind+'').html();
 				}
-				
+				//для молочных
+				if (mark == 'teeth_moloch'){
+					res.data = $('#teeth_moloch_options').html();
+				}
+
 				// Создаем меню:
 				var menu = $('<div/>', {
 					class: 'context-menu' // Присваиваем блоку наш css класс контекстного меню:
@@ -3341,13 +3346,22 @@
 				contextMenuShow(0, 0, event, 'discounts');
 			}
 		});
-		// Вешаем слушатель события нажатие кнопок мыши для всего документа:
+		//Для прикрепления к филиалу
 		$(".change_filial").click(function(event) {
 
 			// Проверяем нажата ли именно правая кнопка мыши:
 			if (event.which === 1)  {
 				//alert(71);
 				contextMenuShow(0, 0, event, 'change_filial');
+			}
+		});
+		//Для отображения списка молочных зубов
+		$('#teeth_moloch').click(function(event) {
+
+			// Проверяем нажата ли именно правая кнопка мыши:
+			if (event.which === 1)  {
+				//alert(71);
+				contextMenuShow(0, 0, event, 'teeth_moloch');
 			}
 		});
 	});
@@ -3370,7 +3384,8 @@
 	}
 	
 	//Показываем блок с суммами и кнопками Для наряда
-	function showInvoiceAdd(invoice_type){
+	function showInvoiceAdd(invoice_type, mode){
+		//alert(mode);
 		$('#overlay').show();
 		
 		var Summ = document.getElementById("calculateInvoice").innerHTML;
@@ -3380,6 +3395,13 @@
 		if (invoice_type == 5){
 			SummIns = document.getElementById("calculateInsInvoice").innerHTML;
 			SummInsBlock = '<div>Страховка: <span class="calculateInsInvoice">'+SummIns+'</span> руб.</div>';
+		}
+		
+		var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'add\')">';
+						
+		
+		if (mode == 'edit'){
+			buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'edit\')">';
 		}
 		
 		// Создаем меню:
@@ -3416,7 +3438,7 @@
 					"bottom": "2px",
 					"width": "100%",
 				})
-				.append('<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add()">'+
+				.append(buttonsStr+
 						'<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
 				)
 			)
@@ -3426,8 +3448,18 @@
 
 	}
 
-	//Добавляем в базу наряд из сессии
-	function Ajax_invoice_add(){
+	//Добавляем/редактируем в базу наряд из сессии
+	function Ajax_invoice_add(mode){
+		//alert(mode);
+		
+		var invoice_id = 0;
+		
+		var link = "invoice_add_f.php";
+		
+		if (mode == 'edit'){
+			link = "invoice_edit_f.php";
+			invoice_id = document.getElementById("invoice_id").value;
+		}
 		
 		var invoice_type = document.getElementById("invoice_type").value;
 		
@@ -3447,7 +3479,7 @@
 		var client = document.getElementById("client").value;
 		
 		$.ajax({
-			url:"invoice_add_f.php",
+			url: link,
 			global: false, 
 			type: "POST", 
 			dataType: "JSON",
@@ -3462,6 +3494,7 @@
 				summins: SummIns,
 				
 				invoice_type: invoice_type,
+				invoice_id: invoice_id,
 			},
 			cache: false,
 			beforeSend: function() {
@@ -3475,8 +3508,8 @@
 				
 				if(res.result == "success"){  
 					$('#data').hide();
-					$('#invoices').html('<ul id="invoices" style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
-											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен новый наряд</li>'+
+					$('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован наряд</li>'+
 											'<li class="cellsBlock" style="width: auto;">'+
 												'<a href="invoice.php?id='+res.data+'" class="cellName ahref">'+
 													'<b>Наряд #'+res.data+'</b><br>'+
@@ -3501,7 +3534,7 @@
 			}
 		});
 	}
-	
+
 	//Для перехода в добавление нового клиента из записи
 	$('#add_client_fio').click(function () {
 		var client_fio = document.getElementById("search_client").value;

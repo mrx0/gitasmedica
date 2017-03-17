@@ -131,25 +131,9 @@
 
 				//Настройка для записи
 				if ($_POST['mark'] == 'zapis_options'){
-					
-					/*if (($stom['add_own'] == 1) || ($cosm['add_own'] == 1) || $god_mode || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9)){
-						$data .= '
-							<li><div onclick="changeUserFilial(0)">открепиться</div></li>';
-
-						//Выбор филиала для сессии
-						$offices_j = SelDataFromDB('spr_office', '', '');
-						if ($offices_j != 0){
-							for ($off = 0; $off < count($offices_j); $off++){
-								if (isset($_SESSION['filial']) && !empty($_SESSION['filial']) && ($_SESSION['filial'] == $offices_j[$off]['id'])){
-									$bg_col = 'background: rgba(83, 219, 185, 0.5) none repeat scroll 0% 0%;';
-								}else{
-									$bg_col = '';
-								}
-								$data .= '
-									<li><div onclick="changeUserFilial('.$offices_j[$off]['id'].')" style="'.$bg_col.'">'.$offices_j[$off]['name'].'</div></li>';
-							}
-						}
-					}*/
+				}
+				//Настройка для молочных в наряде
+				if ($_POST['mark'] == 'teeth_moloch'){
 				}
 
 				echo json_encode(array('result' => 'success', 'data' => $data));

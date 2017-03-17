@@ -198,8 +198,22 @@
 				  line-height: 34px;
 				}
 
-			</style> 
+				#errror{
+				  margin: 5px;
+				  padding: 0 10px;
+				  text-align: center;
+				}
+				
+				.query_ok{
+					color: green;
+				}
 
+				.query_neok{
+					color: red;
+				}
+				
+			</style> 
+			<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
 			
 		</head>
 		<body>';
@@ -208,15 +222,17 @@
 			<section class="containerLogin">
 				<div class="login">
 					<h1 style="padding: 0;">Введите логин и пароль</h1>
-					<form action="testreg.php" method="post">
-						<p><input type="text" name="login" size="15" maxlength="15" value="" placeholder="Логин"></p>
-						<p><input type="password" name="password" size="15" maxlength="15" value="" placeholder="Пароль"></p>
-						<p class="submit"><input type="submit" name="submit" value="Войти"></p>
-					</form>
+						<p><input type="text" id="login" name="login" size="15" maxlength="15" value="" autocomplete="off" placeholder="Логин"></p>
+						<p><input type="password" id="password" name="password" size="15" maxlength="15" value="" placeholder="Пароль"></p>
+						<div id="errror"></div>
+						<div id="ch_office"></div>
+						<p class="submit"><input id="sbmtfrm" type="submit" name="submit" value="Войти"></p>
 				</div>
+				
 			</section>';
 			
 		echo '
+		<script type="text/javascript" src="js/enter.js"></script>
 		</body>
 		</html>';
 	

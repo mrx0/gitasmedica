@@ -13,6 +13,8 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 		
+			require 'variables.php';
+		
 			require 'config.php';
 
 			//var_dump($_SESSION);
@@ -27,23 +29,7 @@
 						
 						$sheduler_zapis = array();
 						$invoice_j = array();
-						
-						//Массив с месяцами
-						$monthsName = array(
-							'01' => 'Январь',
-							'02' => 'Февраль',
-							'03' => 'Март',
-							'04' => 'Апрель',
-							'05' => 'Май',
-							'06' => 'Июнь',
-							'07'=> 'Июль',
-							'08' => 'Август',
-							'09' => 'Сентябрь',
-							'10' => 'Октябрь',
-							'11' => 'Ноябрь',
-							'12' => 'Декабрь'
-						);
-						
+
 						$client_j = SelDataFromDB('spr_clients', $_GET['client'], 'user');
 						//var_dump($client_j);
 						
@@ -314,6 +300,11 @@
 														28
 													</div>
 												</div>
+												<div class="tooth_right" style="display: inline-block;">
+													<div id="teeth_polost" class="sel_toothp">
+														Полость
+													</div>
+												</div>	
 											</div>
 											<div class="tooth_updown">
 												<div class="tooth_left" style="display: inline-block;">
@@ -368,12 +359,128 @@
 														38
 													</div>
 												</div>
+												<div class="tooth_right" style="display: inline-block;">
+													<div id="teeth_moloch" class="sel_toothm">
+														Молочные
+													</div>
+												</div>
 											</div>
 										</div>
-										<div id="teeth_polost" class="sel_toothp" style="display: inline-block; vertical-align: middle; text-align: center; margin: 2px; padding: 5px;">
-											Полость
-										</div>
 									</div>';
+								//Молочные зубы
+								echo '
+										<div id="teeth_moloch_options" style="display: none;">
+											<div class="tooth_updown">
+												<div class="tooth_left" style="display: inline-block;">
+													<div class="sel_tooth">
+														58
+													</div>
+													<div class="sel_tooth">
+														57
+													</div>
+													<div class="sel_tooth">
+														56
+													</div>
+													<div class="sel_tooth">
+														55
+													</div>
+													<div class="sel_tooth">
+														54
+													</div>
+													<div class="sel_tooth">
+														53
+													</div>
+													<div class="sel_tooth">
+														52
+													</div>
+													<div class="sel_tooth">
+														51
+													</div>
+												</div>			
+												<div class="tooth_right" style="display: inline-block;">
+													<div class="sel_tooth">
+														61
+													</div>
+													<div class="sel_tooth">
+														62
+													</div>
+													<div class="sel_tooth">
+														63
+													</div>
+													<div class="sel_tooth">
+														64
+													</div>
+													<div class="sel_tooth">
+														65
+													</div>
+													<div class="sel_tooth">
+														66
+													</div>
+													<div class="sel_tooth">
+														67
+													</div>
+													<div class="sel_tooth">
+														68
+													</div>
+												</div>
+											</div>
+											<div class="tooth_updown">
+												<div class="tooth_left" style="display: inline-block;">
+													<div class="sel_tooth">
+														88
+													</div>
+													<div class="sel_tooth">
+														87
+													</div>
+													<div class="sel_tooth">
+														86
+													</div>
+													<div class="sel_tooth">
+														85
+													</div>
+													<div class="sel_tooth">
+														84
+													</div>
+													<div class="sel_tooth">
+														83
+													</div>
+													<div class="sel_tooth">
+														82
+													</div>
+													<div class="sel_tooth">
+														81
+													</div>
+												</div>			
+												<div class="tooth_right" style="display: inline-block;">
+													<div class="sel_tooth">
+														71
+													</div>
+													<div class="sel_tooth">
+														72
+													</div>
+													<div class="sel_tooth">
+														73
+													</div>
+													<div class="sel_tooth">
+														74
+													</div>
+													<div class="sel_tooth">
+														75
+													</div>
+													<div class="sel_tooth">
+														76
+													</div>
+													<div class="sel_tooth">
+														77
+													</div>
+													<div class="sel_tooth">
+														78
+													</div>
+												</div>
+											</div>
+										</div>
+								';
+									
 							}		
 												
 							echo '			
@@ -501,7 +608,7 @@
 							
 							echo '
 								<div>	
-									<input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd('.$sheduler_zapis[0]['type'].')">
+									<input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd('.$sheduler_zapis[0]['type'].', \'add\')">
 								</div>
 							</div>
 		
@@ -522,13 +629,11 @@
 									}
 									
 									//Кликанье по зубам в счёте
-									$(".sel_tooth").click(function(){
-										
+									$(".sel_tooth").live("click", function() {
 										//получам номер зуба
 										var t_number = Number(this.innerHTML);
 										
 										addInvoiceInSession(t_number);
-
 									});
 
 									//Кликанье по полости в счёте
@@ -542,6 +647,7 @@
 									
 									fillInvoiseRez();
 								});
+								
 							</script>
 							
 							

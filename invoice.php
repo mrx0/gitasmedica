@@ -32,6 +32,7 @@
 						
 						$sheduler_zapis = array();
 						$invoice_ex_j = array();
+						$invoice_ex_j_mkb = array();
 
 						$client_j = SelDataFromDB('spr_clients', $invoice_j[0]['client_id'], 'user');
 						//var_dump($client_j);
@@ -42,7 +43,7 @@
 						
 						$query = "SELECT * FROM `zapis` WHERE `id`='".$invoice_j[0]['zapis_id']."'";
 						
-						$res = mysql_query($query) or die($query);
+						$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 						$number = mysql_num_rows($res);
 						if ($number != 0){
 							while ($arr = mysql_fetch_assoc($res)){
@@ -55,7 +56,6 @@
 						//if ($client !=0){
 						if ($sheduler_zapis != 0){
 						
-
 							//сортируем зубы по порядку
 							//ksort($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
 							
@@ -110,7 +110,7 @@
 							}
 							if (($invoice_j[0]['last_edit_time'] != 0) || ($invoice_j[0]['last_edit_person'] != 0)){
 								echo '
-													Последний раз редактировался: '.date('d.m.y H:i', $invoice_j[0]['last_edit_time']).'<br>
+													Последний раз редактировался: '.date('d.m.y H:i' ,strtotime($invoice_j[0]['last_edit_time'])).'<br>
 													Кем: '.WriteSearchUser('spr_workers', $invoice_j[0]['last_edit_person'], 'user', true).'';
 							}
 							echo '
@@ -220,10 +220,11 @@
 
 							//$query = "SELECT * FROM `journal_invoice` WHERE `zapis_id`='".$_GET['id']."'";
 							//!!! пробуем JOIN
-							$query = "SELECT * FROM `journal_invoice_ex` LEFT JOIN `journal_invoice_ex_mkb` USING(`invoice_id`, `ind`) WHERE `invoice_id`='".$_GET['id']."';";
+							//$query = "SELECT * FROM `journal_invoice_ex` LEFT JOIN `journal_invoice_ex_mkb` USING(`invoice_id`, `ind`) WHERE `invoice_id`='".$_GET['id']."';";
+							$query = "SELECT * FROM `journal_invoice_ex` WHERE `invoice_id`='".$_GET['id']."';";
 							//var_dump($query);
 							
-							$res = mysql_query($query) or die($query);
+							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 							$number = mysql_num_rows($res);
 							if ($number != 0){
 								while ($arr = mysql_fetch_assoc($res)){
@@ -240,6 +241,26 @@
 							
 							//сортируем зубы по порядку
 							ksort($invoice_ex_j);
+
+							//Для МКБ
+							$query = "SELECT * FROM `journal_invoice_ex_mkb` WHERE `invoice_id`='".$_GET['id']."';";
+							//var_dump ($query);
+							
+							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
+							$number = mysql_num_rows($res);
+							if ($number != 0){
+								while ($arr = mysql_fetch_assoc($res)){
+									if (!isset($invoice_ex_j_mkb[$arr['ind']])){
+										$invoice_ex_j_mkb[$arr['ind']] = array();
+										array_push($invoice_ex_j_mkb[$arr['ind']], $arr);
+									}else{
+										array_push($invoice_ex_j_mkb[$arr['ind']], $arr);
+									}
+								}
+							}else
+								$invoice_ex_j_mkb = 0;
+							//var_dump ($invoice_ex_j_mkb);
+
 
 							echo '
 								<div id="data">';
@@ -309,13 +330,16 @@
 													<i><b>Всего, руб.</b></i>
 												</div>
 											</div>';
-										
+
+											
+											
+											
 					foreach ($invoice_ex_j as $ind => $invoice_data){
 						
 						//var_dump($invoice_data);
 						echo '
 							<div class="cellsBlock">
-								<div class="cellCosmAct" style="text-align: center;">';
+								<div class="cellCosmAct toothInInvoice" style="text-align: center;">';
 						if ($ind == 99){
 							echo 'П';
 						}else{
@@ -327,7 +351,54 @@
 						//Диагноз
 						if ($sheduler_zapis[0]['type'] == 5){
 							
-							if (($invoice_data[0]['mkb_id'] != 'null') && ($invoice_data[0]['mkb_id'] != null)){
+							if (!empty($invoice_ex_j_mkb) && isset($invoice_ex_j_mkb[$ind])){
+								echo '
+									<div class="cellsBlock" style="font-size: 100%;" >
+										<div class="cellText2" style="padding: 2px 4px; background: rgba(83, 219, 185, 0.16) none repeat scroll 0% 0%;">
+											<b>';
+								if ($ind == 99){
+									echo '<i>Полость</i>';
+								}else{
+									echo '<i>Зуб</i>: '.$ind;
+								}
+								echo '
+											</b>. <i>Диагноз</i>: ';
+											
+								foreach ($invoice_ex_j_mkb[$ind] as $mkb_key => $mkb_data_val){
+									$rez = array();
+									$rezult2 = array();
+									
+									$query = "SELECT `name`, `code` FROM `spr_mkb` WHERE `id` = '{$mkb_data_val['mkb_id']}'";	
+									
+									$res = mysql_query($query) or die(mysql_error().' -> '.$query);
+									$number = mysql_num_rows($res);
+									if ($number != 0){
+										while ($arr = mysql_fetch_assoc($res)){
+											$rez[$mkb_data_val['mkb_id']] = $arr;
+										}
+									}else{
+										$rez = 0;
+									}
+									if ($rez != 0){
+										foreach ($rez as $mkb_name_val){
+											echo '
+												<div class="mkb_val" style="background: rgb(239, 255, 255); border: 1px dotted #bababa;"><b>'.$mkb_name_val['code'].'</b> '.$mkb_name_val['name'].'
+
+												</div>';
+										}
+									}else{
+										echo '<div class="mkb_val">???</div>';
+									}
+									
+								}
+								
+								echo '
+										</div>
+									</div>';
+							}					
+
+							
+							/*if (isset($invoice_ex_j_mkb[''])){
 								echo '
 									<div class="cellsBlock" style="font-size: 100%;" >
 										<div class="cellText2" style="padding: 2px 4px; background: rgba(83, 219, 185, 0.14) none repeat scroll 0% 0%;">
@@ -341,7 +412,7 @@
 											</b>. <i>Диагноз</i>: '.$invoice_data[0]['mkb_id'].'
 										</div>
 									</div>';
-							}
+							}*/
 							
 						}
 						
