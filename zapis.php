@@ -11,7 +11,8 @@
 		if (($zapis['see_all'] == 1) || ($zapis['see_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
-			
+            include_once 'variables.php';
+
 			$offices_j = SelDataFromDB('spr_office', '', '');
 			//var_dump ($offices_j);
 			
@@ -27,7 +28,7 @@
 			$NextSmenaArr_Zanimayu = 0;
 
 			//Массив с месяцами
-			$monthsName = array(
+			/*$monthsName = array(
 				'01' => 'Январь',
 				'02' => 'Февраль',
 				'03' => 'Март',
@@ -40,7 +41,7 @@
 				'10' => 'Октябрь',
 				'11' => 'Ноябрь',
 				'12' => 'Декабрь'
-			);
+			);*/
 			
 			$zapis_times = array (
 				0 => '0:00 - 0:30',

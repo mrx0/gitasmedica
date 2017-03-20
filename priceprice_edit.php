@@ -50,7 +50,9 @@
 					$arr = array();
 					$rez = array();
 					$price = 0;
-						
+					$price2 = 0;
+					$price3 = 0;
+
 					//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `create_time` DESC LIMIT 1";
 					$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
 											
@@ -71,11 +73,26 @@
 										<div class="cellLeft">Цена</div>
 										<div class="cellRight">
 											<input type="text" name="price" id="price" value="'.$price.'"  style="width: 50px;"> руб.
-											<label id="price_error" class="error"></label>
 										</div>
 									</div>';
 									
-					//Календарик	
+					echo '
+									<div class="cellsBlock2">
+										<div class="cellLeft">Цена2</div>
+										<div class="cellRight">
+											<input type="text" name="price2" id="price2" value="'.$price2.'"  style="width: 50px;"> руб.
+										</div>
+									</div>';
+
+					echo '
+									<div class="cellsBlock2">
+										<div class="cellLeft">Цена3</div>
+										<div class="cellRight">
+											<input type="text" name="price3" id="price3" value="'.$price3.'"  style="width: 50px;"> руб.
+										</div>
+									</div>';
+
+					//Календарик
 					echo '
 	
 								<div class="cellsBlock2">
@@ -88,6 +105,7 @@
 								
 					echo '				
 									<input type="button" class="b" value="Применить" onclick="Ajax_edit_price('.$_GET['id'].', '.$_SESSION['id'].')">
+									<label id="price_error" class="error"></label>
 								</form>';
 
 						

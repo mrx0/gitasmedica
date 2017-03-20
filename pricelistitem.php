@@ -20,13 +20,15 @@
 				
 				require 'config.php';
 				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-				mysql_select_db($dbName) or die(mysql_error()); 
+				mysql_select_db($dbName) or die(mysql_error());
 				mysql_query("SET NAMES 'utf8'");
 			
 				$arr = array();
 				$rez = array();
 				$price = 0;
-					
+				$price2 = 0;
+				$price3 = 0;
+
 				//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `create_time` DESC LIMIT 1";
 				$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
 										
@@ -55,17 +57,17 @@
 				if (($items['edit'] == 1) || $god_mode){
 					if ($rezult[0]['status'] != 9){
 						echo '
-									<a href="pricelistitem_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 80%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+									<a href="pricelistitem_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
 					}
 					if (($rezult[0]['status'] == 9) || ($items['close'] == 1)){
 						echo '
-							<a href="#" onclick="Ajax_reopen_pricelistitem('.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 80%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
+							<a href="#" onclick="Ajax_reopen_pricelistitem('.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 100%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
 					}
 				}
 				if (($items['close'] == 1) || $god_mode){
 					if ($rezult[0]['status'] != 9){
 						echo '
-									<a href="pricelistitem_del.php?id='.$_GET['id'].'" class="info" style="font-size: 80%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+									<a href="pricelistitem_del.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
 					}
 				}
 				
@@ -90,8 +92,8 @@
 							</div>';
 				echo '
 							<div class="cellsBlock2">
-								<div class="cellLeft">Цена</div>
-								<div class="cellRight">'.$price.' руб. ';
+								<div class="cellLeft" style="font-size: 90%;">Цена/ цена 2/ цена 3</div>
+								<div class="cellRight">'.$price.' | '.$price2.' | '.$price3.'   руб. ';
 				if (($items['edit'] == 1) || $god_mode){
 					if ($rezult[0]['status'] != 9){
 						echo '
@@ -101,7 +103,7 @@
 				echo '
 								</div>
 							</div>';
-							
+
 				echo '
 							<div class="cellsBlock2">
 								<span style="font-size:80%;">';
@@ -127,9 +129,9 @@
 					
 				require 'config.php';
 				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-				mysql_select_db($dbName) or die(mysql_error()); 
+				mysql_select_db($dbName) or die(mysql_error());
 				mysql_query("SET NAMES 'utf8'");
-				
+
 				$query = "SELECT * FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC, `create_time` DESC";
 				//$query = "SELECT * FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC";
 									

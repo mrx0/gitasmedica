@@ -12,11 +12,12 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			include_once 'tooth_status.php';
-			
+            include_once 'variables.php';
+
 			require 'config.php';
 			
 			//Массив с месяцами
-			$monthsName = array(
+			/*$monthsName = array(
 				'01' => 'Январь',
 				'02' => 'Февраль',
 				'03' => 'Март',
@@ -29,7 +30,7 @@
 				'10' => 'Октябрь',
 				'11' => 'Ноябрь',
 				'12' => 'Декабрь'
-			);
+			);*/
 			
 			//переменная для просроченных
 			$allPayed = true;

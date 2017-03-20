@@ -12,7 +12,8 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			include_once 'widget_calendar.php';
-			
+			include_once 'variables.php';
+
 			$offices = $offices_j = SelDataFromDB('spr_office', '', '');
 			//var_dump ($offices);
 			
@@ -25,7 +26,7 @@
 			$di = 0;
 			
 			//Массив с месяцами
-			$monthsName = array(
+			/*$monthsName = array(
 				'01' => 'Январь',
 				'02' => 'Февраль',
 				'03' => 'Март',
@@ -38,7 +39,7 @@
 				'10' => 'Октябрь',
 				'11' => 'Ноябрь',
 				'12' => 'Декабрь'
-			);
+			);*/
 			
 			//Массив с днями недели
 			/*$dayWarr = array(

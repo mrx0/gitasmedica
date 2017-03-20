@@ -233,8 +233,9 @@ nav a:hover {
 }
 
 #change_filial {
-	width: 120px; 
-	text-overflow: ellipsis; 
+	/*width: 120px;*/
+	width: 100%;
+	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: inherit; 
 	position: absolute; 
@@ -242,6 +243,7 @@ nav a:hover {
 	font-weight: normal; 
 	bottom: -10px;
 	cursor: pointer;
+	border-top: 1px dashed #e0e0e0;
 }
 
 /*.removes {
