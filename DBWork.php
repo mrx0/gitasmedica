@@ -379,16 +379,16 @@
 	}
 
 	//Добавление цены услуги.
-	function WriteToDB_EditPricePrice ($item, $price, $fromdate, $session_id){
+	function WriteToDB_EditPricePrice ($item, $price, $price2, $price3, $fromdate, $session_id){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 		mysql_select_db($dbName) or die(mysql_error()); 
 		mysql_query("SET NAMES 'utf8'");
 		$time = time();
 		$query = "INSERT INTO `spr_priceprices` (
-			`item`, `price`, `date_from`, `create_time`, `create_person`) 
+			`item`, `price`, `price2`, `price3`, `date_from`, `create_time`, `create_person`) 
 			VALUES (
-		'{$item}', '{$price}', '{$fromdate}', '{$time}', '{$session_id}')";
+		'{$item}', '{$price}', '{$price2}', '{$price3}', '{$fromdate}', '{$time}', '{$session_id}')";
 		mysql_query($query) or die(mysql_error().' -> '.$query);
 		
 		$mysql_insert_id = mysql_insert_id();
@@ -402,16 +402,16 @@
 	}
 	
 	//Добавление цены услуги страховое
-	function WriteToDB_EditPricePrice_insure ($item, $insure, $price, $fromdate, $session_id){
+	function WriteToDB_EditPricePrice_insure ($item, $insure, $price,  $price2,  $price3, $fromdate, $session_id){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 		mysql_select_db($dbName) or die(mysql_error()); 
 		mysql_query("SET NAMES 'utf8'");
 		$time = time();
 		$query = "INSERT INTO `spr_priceprices_insure` (
-			`item`, `insure`, `price`, `date_from`, `create_time`, `create_person`) 
+			`item`, `insure`, `price`, `price2`, `price3`, `date_from`, `create_time`, `create_person`) 
 			VALUES (
-		'{$item}', '{$insure}', '{$price}', '{$fromdate}', '{$time}', '{$session_id}')";
+		'{$item}', '{$insure}', '{$price}', '{$price2}', '{$price3}', '{$fromdate}', '{$time}', '{$session_id}')";
 		mysql_query($query) or die(mysql_error().' -> '.$query);
 		
 		$mysql_insert_id = mysql_insert_id();

@@ -13,9 +13,9 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			
-					if (isset($_POST['price']) && isset($_POST['id'])){
-						if (is_numeric($_POST['price'])){
-							if ($_POST['price'] >= 0){
+					if (isset($_POST['price']) && isset($_POST['price2']) && isset($_POST['price3']) && isset($_POST['id'])){
+						if ((is_numeric($_POST['price'])) && (is_numeric($_POST['price'])) && (is_numeric($_POST['price']))){
+							if (($_POST['price'] >= 0) && ($_POST['price2'] >= 0) && ($_POST['price3'] >= 0)){
 								//var_dump(strtotime($_POST['iWantThisDate2']));
 								//var_dump(date('d.m.y H:i', time()));
 								//var_dump(date('d.m.y H:i', strtotime($_POST['iWantThisDate2'])));
@@ -30,7 +30,7 @@
 								//var_dump($iWantThisDate2);
 								
 								if ($iWantThisDate2 >= $start_day){
-									WriteToDB_EditPricePrice ($_POST['id'], $_POST['price'], $iWantThisDate2, $_SESSION['id']);
+									WriteToDB_EditPricePrice ($_POST['id'], $_POST['price'], $_POST['price2'], $_POST['price3'], $iWantThisDate2, $_SESSION['id']);
 								
 									echo '
 										<div class="query_ok">

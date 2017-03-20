@@ -8,6 +8,8 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 
+        require 'variables.php';
+
 		//var_dump ($_GET);
 		
 		//$get_link = '';
@@ -26,7 +28,7 @@
 			$dopQuery = '';
 			
 			//Массив с месяцами
-			$monthsName = array(
+			/*$monthsName = array(
 				'01' => 'Январь',
 				'02' => 'Февраль',
 				'03' => 'Март',
@@ -39,7 +41,7 @@
 				'10' => 'Октябрь',
 				'11' => 'Ноябрь',
 				'12' => 'Декабрь'
-			);
+			);*/
 			
 			//Массив с днями недели
 			$dayWarr = array(

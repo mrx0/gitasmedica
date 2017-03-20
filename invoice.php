@@ -12,8 +12,8 @@
 	
 			include_once 'DBWork.php';
 			include_once 'functions.php';
-		
-			require 'variables.php';
+
+            require 'variables.php';
 			
 			require 'config.php';
 

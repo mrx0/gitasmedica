@@ -378,6 +378,28 @@
 		})
 	}; 
 	
+	//Скопировать прайс
+	function Ajax_insure_price_copy(id) {
+
+		ajax({
+			url:"insure_price_copy_f.php",
+			statbox:"errrror",
+			method:"POST",
+			data:
+			{
+				id: id,
+				id2: document.getElementById("insurecompany").value,
+			},
+			success:function(data){
+				document.getElementById("errrror").innerHTML=data;
+				/*setTimeout(function () {
+					window.location.replace('pricelistitem.php?id='+id);
+					//alert('client.php?id='+id);
+				}, 100);*/
+			}
+		})
+	};
+
 	//Очисить прайс
 	function Ajax_insure_price_clear(id) {
 		
@@ -895,6 +917,8 @@
 	function Ajax_edit_price(id, session_id) {
 
 		var price = document.getElementById("price").value;
+		var price2 = document.getElementById("price2").value;
+		var price3 = document.getElementById("price3").value;
 		var iWantThisDate2 = document.getElementById("iWantThisDate2").value;
 
 		$.ajax({
@@ -905,6 +929,8 @@
 			{
 				session_id:session_id,
 				price:price,
+				price2:price2,
+				price3:price3,
 				iWantThisDate2:iWantThisDate2,
 				id: id,
 			},
@@ -921,6 +947,8 @@
 	function Ajax_edit_price_insure(id, insure) {
 
 		var price = document.getElementById("price").value;
+		var price2 = document.getElementById("price2").value;
+		var price3 = document.getElementById("price3").value;
 		var iWantThisDate2 = document.getElementById("iWantThisDate2").value;
 
 		$.ajax({
@@ -930,6 +958,8 @@
 			data:
 			{
 				price: price,
+				price2: price2,
+				price3: price3,
 				iWantThisDate2: iWantThisDate2,
 				id: id,
 				insure: insure,
@@ -1016,14 +1046,25 @@
 		}else{
 			e3.show();
 		}
-		
+
+
+
 		e4 = $('.managePriceList');
-		if(e4.is(':visible')) {
+		e5 = $('.cellManage');
+		e6 = $('#DIVdelCheckedItems');
+
+		if((e4.is(':visible')) || (e5.is(':visible')) || (e6.is(':visible'))) {
 			e4.hide();
-			//$('.cellPriority').children().remove();
+			//e5.children().remove();
+            e5.hide();
+            e6.hide();
 		}else{
 			e4.show();
-			//$('.cellPriority').append('<input type="checkbox" name="prop[]" value="1">');
+            e5.show();
+            e6.show();
+            //e5.append('<span style="font-size: 80%; color: #777;"><input type="checkbox" name="propDel[]" value="1"> пометить на удаление</span>');
+            //меняет цвет
+			//e5.parent().css({"background-color": "#ffbcbc"});
 		}
 		
 		if (iCanManage) iCanManage = false; else iCanManage = true;
@@ -3544,3 +3585,66 @@
 			window.location.replace('add_client.php');
 		}
 	});
+
+	//для сбора чекбоксов в массив
+    function itemExistsChecker(cboxArray, cboxValue) {
+
+        var len = cboxArray.length;
+        if (len > 0) {
+            for (var i = 0; i < len; i++) {
+                if (cboxArray[i] == cboxValue) {
+                    return true;
+                }
+            }
+        }
+
+        cboxArray.push(cboxValue);
+
+        return (cboxArray);
+    }
+
+    function checkedItems (){
+
+        var cboxArray = [];
+
+        $('input[type="checkbox"]').each(function() {
+            var cboxValue = $(this).val();
+
+            if ( $(this).prop("checked")){
+                cboxArray = itemExistsChecker(cboxArray, cboxValue);
+            }
+
+        });
+
+       return cboxArray;
+	}
+
+    function delCheckedItems (insure_id){
+
+        var rys = false;
+
+        var rys = confirm("Вы хотите удалить неокторые позиции из прайса страховой. \n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "del_items_from_insure_price_f.php",
+                global: false,
+                type: "POST",
+                data: {
+                    items: checkedItems(),
+                    insure_id: insure_id,
+                },
+                cache: false,
+                beforeSend: function () {
+                    // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    $('#errrror').html(data);
+                    setTimeout(function () {
+                        window.location.replace('');
+                        //alert('client.php?id='+id);
+                    }, 100);
+                }
+            })
+        }
+    }

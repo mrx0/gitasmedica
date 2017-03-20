@@ -39,21 +39,29 @@
 								<a href="add_pricelist_group.php?" class="b">Добавить группу/подгруппу</a>';*/
 						echo '
 								<a href="insure_price_fill.php?id='.$_GET['id'].'" class="b">Заполнить</a>';
+                        echo '
+								<a href="insure_price_copy.php?id='.$_GET['id'].'" class="b">Копировать</a>';
 						echo '
 								<a href="insure_price_clear.php?id='.$_GET['id'].'" class="b">Очистить полностью</a>';
 					}
 			
-					/*if (($items['edit'] == 1) || $god_mode){
+					if (($items['edit'] == 1) || $god_mode){
 						echo '
 								<div class="no_print"> 
 								<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
 									<div style="cursor: pointer;" onclick="manageScheduler()">
 										<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>
 									</div>
+    						        <div id="DIVdelCheckedItems" style="display: none; width: 400px; margin-bottom: 10px; border: 1px dotted #BFBCB5; padding: 20px 10px 10px; background-color: #EEE;">
+    						            Удалить отмеченные позиции<br>
+    	    							<!--<input type="button" class="b" value="Удалить" onclick="if (iCanManage) Ajax_change_shed()">-->
+    	    							<input type="button" class="b" value="Удалить" onclick="delCheckedItems('.$_GET['id'].');">
+    	    							<div id="errrror"></div>
+    							    </div>
 								</li>
 								</div>';
 								//managePriceList
-					}*/
+					}
 			
 					echo '					
 								<p style="margin: 5px 0; padding: 2px;">
@@ -137,10 +145,12 @@
 								
 								for ($i = 0; $i < count($items_j); $i++) {
 									$price = 0;
-									
+									$price2 = 0;
+									$price3 = 0;
+
 									//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
 									//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
-									$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' AND `insure`='".$_GET['id']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
+									$query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' AND `insure`='".$_GET['id']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
 									
 									$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
@@ -148,15 +158,19 @@
 									if ($number != 0){
 										$arr4 = mysql_fetch_assoc($res);
 										$price = $arr4['price'];
+										$price2 = $arr4['price2'];
+										$price3 = $arr4['price3'];
 									}else{
 										$price = 0;
+										$price2 = 0;
+										$price3 = 0;
 									}
 							
 									echo '
 												<li class="cellsBlock" style="width: auto;">
 													<div class="cellPriority" style=""></div>
 													<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$items_j[$i]['name'].'</a>
-													<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.'</div>
+													<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.' / '.$price2.' / '.$price3.'</div>
 												</li>';
 								}
 							}

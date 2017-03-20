@@ -1,6 +1,6 @@
 <?php 
 
-//priceprice_insure_edit_f.php
+//del_items_from_insure_price.php
 //Изменение
 
 	session_start();
@@ -8,14 +8,14 @@
 	if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 		header("location: enter.php");
 	}else{
-		//var_dump ($_POST);
+		var_dump ($_POST);
 		if ($_POST){
-			include_once 'DBWork.php';
+			/*include_once 'DBWork.php';
 			include_once 'functions.php';
 			
 					if (isset($_POST['price']) && isset($_POST['price2']) && isset($_POST['price3']) && isset($_POST['id'])){
-                        if ((is_numeric($_POST['price'])) && (is_numeric($_POST['price2'])) && (is_numeric($_POST['price3']))){
-                            if (($_POST['price'] >= 0) && ($_POST['price2'] >= 0) && ($_POST['price3'] >= 0)){
+						if ((is_numeric($_POST['price'])) && (is_numeric($_POST['price'])) && (is_numeric($_POST['price']))){
+							if (($_POST['price'] >= 0) && ($_POST['price2'] >= 0) && ($_POST['price3'] >= 0)){
 								//var_dump(strtotime($_POST['iWantThisDate2']));
 								//var_dump(date('d.m.y H:i', time()));
 								//var_dump(date('d.m.y H:i', strtotime($_POST['iWantThisDate2'])));
@@ -30,7 +30,7 @@
 								//var_dump($iWantThisDate2);
 								
 								if ($iWantThisDate2 >= $start_day){
-									WriteToDB_EditPricePrice_insure ($_POST['id'], $_POST['insure'], $_POST['price'], $_POST['price2'], $_POST['price3'], $iWantThisDate2, $_SESSION['id']);
+									WriteToDB_EditPricePrice ($_POST['id'], $_POST['price'], $_POST['price2'], $_POST['price3'], $iWantThisDate2, $_SESSION['id']);
 								
 									echo '
 										<div class="query_ok">
@@ -59,7 +59,7 @@
 							<div class="query_neok">
 								Не указана цена.<br><br>
 							</div>';
-					}
+					}*/
 		}
 	}
 ?>

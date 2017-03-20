@@ -167,9 +167,11 @@
 					
 					for ($i = 0; $i < count($items_j); $i++) {
 						$price = 0;
-						
+						$price2 = 0;
+						$price3 = 0;
+
 						//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
-						$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
+						$query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
 											
 						$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
@@ -177,15 +179,19 @@
 						if ($number != 0){
 							$arr4 = mysql_fetch_assoc($res);
 							$price = $arr4['price'];
+							$price2 = $arr4['price2'];
+							$price3 = $arr4['price3'];
 						}else{
 							$price = 0;
+							$price2 = 0;
+							$price3 = 0;
 						}
 				
 						echo '
 									<li class="cellsBlock" style="width: auto;">
 										<div class="cellPriority" style=""></div>
 										<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$items_j[$i]['name'].'</a>
-										<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.'</div>
+										<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.' / '.$price2.' / '.$price3.'</div>
 									</li>';
 					}
 				}

@@ -30,7 +30,7 @@
 				$price3 = 0;
 
 				//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `create_time` DESC LIMIT 1";
-				$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
+				$query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
 										
 				$res = mysql_query($query) or die($query);
 
@@ -38,8 +38,12 @@
 				if ($number != 0){
 					$arr = mysql_fetch_assoc($res);
 					$price = $arr['price'];
+					$price2 = $arr['price2'];
+					$price3 = $arr['price3'];
 				}else{
 					$price = 0;
+					$price2 = 0;
+					$price3 = 0;
 				}
 
 				mysql_close();
@@ -92,7 +96,14 @@
 							</div>';
 				echo '
 							<div class="cellsBlock2">
-								<div class="cellLeft" style="font-size: 90%;">Цена/ цена 2/ цена 3</div>
+								<div class="cellLeft" style="font-size: 90%;">
+								    Цена/ цена 2/ цена 3
+                                    <ul style="margin-left: 6px; margin-bottom: 10px;">
+                                        <li style="width: auto; color:#777; font-size: 80%;">
+                                            Цены 2 и 3 указываются явно для тех позиций, для которых цены фиксированы
+                                        </li>
+                                    </ul>
+								</div>
 								<div class="cellRight">'.$price.' | '.$price2.' | '.$price3.'   руб. ';
 				if (($items['edit'] == 1) || $god_mode){
 					if ($rezult[0]['status'] != 9){

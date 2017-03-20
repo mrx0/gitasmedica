@@ -1692,15 +1692,30 @@
 							$style_name .= 'background-color: rgba(225, 126, 255, 0.5);';
 						}
 					}
+
+                    //$style_name .= 'position: relative;';
 					
 					echo '
-						<li style="border: none;">
+						<li style="border: none; position: relative;">
 							<div class="drop" style="background-position: 0px 0px;"></div>
 							<p class="drop" style="'.$style_name.'">
 								<b>
-									<a href="pricelistgroup.php?id='.$value['id'].'" class="ahref" style="font-weight: bold;">'.$space.$value['name'].'</a>
+								    '.$space.$value['name'].'
 								</b>
-							</p>';
+							</p>
+							<div style="position: absolute; top: 0; right: 3px;">
+							   <a href="pricelistgroup.php?id='.$value['id'].'" class="ahref" style="font-weight: bold;" title="Открыть карточку группы">
+                                    <i class="fa fa-folder-open" aria-hidden="true"></i>								    
+							   </a>
+								<div style="font-style: normal; font-size: 13px; display: inline-block;">
+								    <div class="managePriceList">
+                                        <a href="pricelistgroup_edit.php?id='.$value['id'].'" class="ahref"><i id="PriceListGroupEdit" class="fa fa-pencil-square-o pricemenu" aria-hidden="true" style="color: #777;" title="Редактировать карточку группы"></i></a>
+                                        <a href="add_pricelist_item.php?addinid='.$value['id'].'" class="ahref"><i id="PriceListGroupAdd" class="fa fa-plus pricemenu" aria-hidden="true" style="color: #36EA5E;" title="Добавить в эту группу"></i></a>
+                                        <!--<a href="pricelistgroup_del.php?id='.$value['id'].'" class="ahref"><i id="" class="fa fa-bars pricemenu" aria-hidden="true" style="" title="Изменить порядок"></i></a>-->
+                                        <a href="pricelistgroup_del.php?id='.$value['id'].'" class="ahref"><i id="PriceListGroupDelete" class="fa fa-trash pricemenu" aria-hidden="true" style="color: #FF3636" title="Удалить эту группу"></i></a>
+									</div>
+								</div>
+							</div>';
 					
 					/*echo '
 						<li class="cellsBlock" style="width: auto;">
@@ -1718,7 +1733,7 @@
 							</div>
 						</li>';
 					*/
-					
+
 					echo '
 							<ul style="display: none;">';
 					
@@ -1750,12 +1765,14 @@
 						for ($i = 0; $i < count($items_j); $i++) {
 
 							$price = 0;
-							
+							$price2 = 0;
+							$price3 = 0;
+
 							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
-							$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
+							$query = "SELECT `price`, `price2`, `price3` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
 							
 							if ($insure_id != 0){
-								$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' AND `insure`='".$insure_id."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
+								$query = "SELECT `price`, `price2`, `price3` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' AND `insure`='".$insure_id."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
 							}
 							//var_dump($query);
 							
@@ -1765,20 +1782,30 @@
 							if ($number != 0){
 								$arr3 = mysql_fetch_assoc($res);
 								$price = $arr3['price'];
+								$price2 = $arr3['price2'];
+								$price3 = $arr3['price3'];
 							}else{
 								$price = 0;
+								$price2 = 0;
+								$price3 = 0;
 							}
-						
+
+						    //позиции с ценами
 							echo '
 										<li>
 											<div class="priceitem">
+											    <div class="cellManage" style="display: none;">
+											      <span style="font-size: 80%; color: #777;">
+											        <input type="checkbox" name="propDel[]" value="'.$items_j[$i]['id'].'"> пометить на удаление
+											      </span>
+                                                </div>
 												<div class="priceitemDivname">
 													<a href="'.$link.'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter">'.$items_j[$i]['name'].'</a>
 												</div>
 												<div class="priceitemDiv">
 													<div class="priceitemDivcost"><b>'.$price.'</b> руб.</div>
-													<div class="priceitemDivcost"><b>0</b> руб.</div>
-													<div class="priceitemDivcost"><b>0</b> руб.</div>
+													<div class="priceitemDivcost"><b>'.$price2.'</b> руб.</div>
+													<div class="priceitemDivcost"><b>'.$price3.'</b> руб.</div>
 												</div>
 											</div>
 										</li>';

@@ -74,6 +74,11 @@
 									<header>
 										<h2>Изменить цену</h2>
 										<a href="insure.php?id='.$_GET['insure'].'" class="ahref" style="color: green; font-size: 90%; font-weight: bold;">'.$insure_j[0]['name'].'</a>
+                                        <ul style="margin-left: 0; margin-bottom: 10px; margin-top: 5px;">
+                                            <li style="width: auto; color:#777; font-size: 80%;">
+                                                Цены 2 и 3 указываются явно для тех позиций, для которых цены фиксированы
+                                            </li>
+                                        </ul>
 									</header>';
 
 							echo '
@@ -98,9 +103,11 @@
 							$arr = array();
 							$rez = array();
 							$price = 0;
-								
+							$price2 = 0;
+							$price3 = 0;
+
 							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `create_time` DESC LIMIT 1";
-							$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$_GET['id']."' AND `insure`='".$_GET['insure']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
+							$query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices_insure` WHERE `item`='".$_GET['id']."' AND `insure`='".$_GET['insure']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
 													
 							$res = mysql_query($query) or die($query);
 
@@ -108,8 +115,12 @@
 							if ($number != 0){
 								$arr = mysql_fetch_assoc($res);
 								$price = $arr['price'];
+								$price2 = $arr['price2'];
+								$price3 = $arr['price3'];
 							}else{
 								$price = 0;
+								$price2 = 0;
+								$price3 = 0;
 							}
 
 							mysql_close();
@@ -122,7 +133,22 @@
 													<label id="price_error" class="error"></label>
 												</div>
 											</div>';
-											
+                            echo '
+                                            <div class="cellsBlock2">
+                                                <div class="cellLeft">Цена2</div>
+                                                <div class="cellRight">
+                                                    <input type="text" name="price2" id="price2" value="'.$price2.'"  style="width: 50px;"> руб.
+                                                </div>
+                                            </div>';
+
+                            echo '
+                                            <div class="cellsBlock2">
+                                                <div class="cellLeft">Цена3</div>
+                                                <div class="cellRight">
+                                                    <input type="text" name="price3" id="price3" value="'.$price3.'"  style="width: 50px;"> руб.
+                                                </div>
+                                            </div>';
+
 							//Календарик	
 							echo '
 			
