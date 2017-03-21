@@ -77,18 +77,18 @@
 				echo '
 					<a href="add_pricelist_group.php?'.$who.'" class="b">Добавить группу/подгруппу</a>';
 			}
-			
-			if (($items['edit'] == 1) || $god_mode){
-				/*echo '
-							<div class="no_print"> 
-							<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
-								<div style="cursor: pointer;" onclick="manageScheduler()">
-									<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>
-								</div>
-							</li>
-							</div>';*/
-							//managePriceList
-			}
+
+            if (($items['edit'] == 1) || $god_mode){
+                echo '
+								<div class="no_print"> 
+								<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
+									<div style="cursor: pointer;" onclick="manageScheduler()">
+										<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>
+									</div>
+								</li>
+								</div>';
+                //managePriceList
+            }
 			
 			/*echo '					
 								<p style="margin: 5px 0; padding: 2px;">

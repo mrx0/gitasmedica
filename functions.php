@@ -1770,12 +1770,12 @@
 
 							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
 							$query = "SELECT `price`, `price2`, `price3` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
-							
+
 							if ($insure_id != 0){
 								$query = "SELECT `price`, `price2`, `price3` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' AND `insure`='".$insure_id."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
 							}
 							//var_dump($query);
-							
+
 							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
 							$number = mysql_num_rows($res);
@@ -1786,26 +1786,43 @@
 								$price3 = $arr3['price3'];
 							}else{
 								$price = 0;
-								$price2 = 0;
+                                $price2 = 0;
 								$price3 = 0;
 							}
+
+                            if ($price2 == 0){
+                                $price2 = $price * 1.1;
+                            }
+                            if ($price3 == 0){
+                                $price3 = $price * 1.2;
+                            }
+
 
 						    //позиции с ценами
 							echo '
 										<li>
-											<div class="priceitem">
-											    <div class="cellManage" style="display: none;">
+											<div class="priceitem">';
+                            if ($insure_id != 0) {
+                                echo '
+                            			        <div class="cellManage" style="display: none;">
 											      <span style="font-size: 80%; color: #777;">
-											        <input type="checkbox" name="propDel[]" value="'.$items_j[$i]['id'].'"> пометить на удаление
+											        <input type="checkbox" name="propDel[]" value="' . $items_j[$i]['id'] . '"> пометить на удаление
 											      </span>
-                                                </div>
+                                                </div>';
+                            }
+                            echo '
 												<div class="priceitemDivname">
 													<a href="'.$link.'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter">'.$items_j[$i]['name'].'</a>
 												</div>
 												<div class="priceitemDiv">
-													<div class="priceitemDivcost"><b>'.$price.'</b> руб.</div>
-													<div class="priceitemDivcost"><b>'.$price2.'</b> руб.</div>
-													<div class="priceitemDivcost"><b>'.$price3.'</b> руб.</div>
+													<div class="priceitemDivcost"><b>'.$price.'</b> руб.</div>';
+                            if ($insure_id == 0) {
+                                echo '
+                                                    <div class="priceitemDivcost" ><b > '.$price2.'</b > руб.</div >
+													<div class="priceitemDivcost" ><b > '.$price3.'</b > руб.</div >';
+                            }
+                            echo '
+
 												</div>
 											</div>
 										</li>';
