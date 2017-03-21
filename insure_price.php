@@ -18,6 +18,9 @@
 				if ($insure_j != 0){
 					echo '
 						<header>
+							<div class="nav">
+								<a href="pricelist.php" class="b">Основной прайс</a>
+							</div>
 							<h1 style="padding: 0;">Прайс <a href="insure.php?id='.$_GET['id'].'" class="ahref" style="color: green; font-size: 90%; font-weight: bold;">'.$insure_j[0]['name'].'</a></h1>
 						</header>';
 				

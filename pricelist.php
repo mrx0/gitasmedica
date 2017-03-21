@@ -9,7 +9,8 @@
 		require_once 'header_tags.php';
 		if (($items['see_all'] == 1) || ($items['see_own'] == 1) || $god_mode){
 			include_once 'functions.php';
-			
+            include_once 'DBWork.php';
+
 			//тип (космет/стомат/...)
 			if (isset($_GET['who'])){
 				if ($_GET['who'] == 'stom'){
@@ -51,8 +52,23 @@
 			
 			echo '
 				<header>
-					<h1>Прайс</h1>
-					<!--'.$whose.'-->
+					<h1>Основной прайс</h1>
+						<div>
+							<span style="font-size: 80%; color: #AAA">Перейти к прайсу страховой</span><br>';
+			echo '
+							<select name="insurecompany" id="insurecompany">
+								<option value="0">Выберите страховую</option>';
+			$insures_j = SelDataFromDB('spr_insure', '', '');
+
+			if ($insures_j != 0){
+				for ($i=0;$i<count($insures_j);$i++){
+                    echo "<option value='".$insures_j[$i]['id']."'>".$insures_j[$i]['name']."</option>";
+			    }
+			}
+			echo '
+							</select>
+							<span style="font-size: 90%; cursor: pointer" onclick="iWantThisInsurePrice()"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
+						</div>
 				</header>';
 				
 			//переменная, чтоб вкл/откл редактирование
@@ -101,9 +117,7 @@
 									<div class="cellName" style="text-align: center; width: 350px; min-width: 350px; max-width: 350px;">Наименование</div>
 									<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">Цена, руб.</div>
 								</li>';*/
-			
-			include_once 'DBWork.php';
-			
+
 			//$services_j = SelDataFromDB('spr_pricelist_template', 'services', $type);
 			//var_dump ($services_j);
 

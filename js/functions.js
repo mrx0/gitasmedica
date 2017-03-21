@@ -1024,6 +1024,14 @@
 		
 		window.location.replace(path+'&d='+ThisDate[0]+'&m='+ThisDate[1]+'&y='+ThisDate[2]);
 	}
+
+	//переход к прайсу страховой
+    function iWantThisInsurePrice(){
+        var insure_id = document.getElementById("insurecompany").value;
+		if (insure_id != 0){
+            window.location.replace('insure_price.php?id='+insure_id);
+		}
+    }
 	
 	function manageScheduler(){
 		e = $('.manageScheduler');
@@ -1069,8 +1077,8 @@
 		
 		if (iCanManage) iCanManage = false; else iCanManage = true;
 	}
-	
-	
+
+
 	
 	//Выборка стоматология
 	function Ajax_show_result_stat_stom3(){
