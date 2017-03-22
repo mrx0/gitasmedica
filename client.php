@@ -789,13 +789,89 @@
 						if ($client[0]['status'] != 9){	
 						
 							echo '
-							<div id="tabs-2">';	
-							
+							<div id="tabs-2">';
+
+                            //Внесенные оплаты/ордера
+                            $arr = array();
+                            $order_j = array();
+
+                            echo '
+								<ul id="orders" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
+									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px;">
+									    Внесенные оплаты/ордера	<a href="add_order.php?client_id='.$client[0]['id'].'" class="b">Добавить новый</a>
+									</li>';
+
+                            $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$_GET['id']."'";
+
+                            $res = mysql_query($query) or die($query);
+                            $number = mysql_num_rows($res);
+                            if ($number != 0){
+                                while ($arr = mysql_fetch_assoc($res)){
+                                    array_push($order_j, $arr);
+                                }
+                            }else
+                                $order_j = 0;
+                            //var_dump ($order_j);
+
+                            if ($order_j != 0){
+                                //var_dump ($order_j);
+
+                                foreach($order_j as $order_item){
+                                    echo '
+										<li class="cellsBlock" style="width: auto;">';
+                                    echo '
+											<a href="order.php?id='.$order_item['id'].'" class="cellOrder ahref">
+												<b>Ордер #'.$order_item['id'].'</b> от '.date('d.m.y' ,strtotime($order_item['date_in'])).'<br>
+												<span style="font-size:80%;  color: #555;">';
+
+                                    if (($order_item['create_time'] != 0) || ($order_item['create_person'] != 0)){
+                                        echo '
+														Добавлен: '.date('d.m.y H:i' ,strtotime($order_item['create_time'])).'<br>
+														<!--Автор: '.WriteSearchUser('spr_workers', $order_item['create_person'], 'user', true).'<br>-->';
+                                    }else{
+                                        echo 'Добавлен: не указано<br>';
+                                    }
+                                    if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
+                                        echo '
+														Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
+														<!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
+                                    }
+                                    echo '
+												</span>
+											</a>
+											<div class="cellName">
+												<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+													Сумма:<br>
+													<span class="calculateOrder" style="font-size: 13px">'.$order_item['summ'].'</span> руб.
+												</div>';
+                                    /*if ($order_item['summins'] != 0){
+                                        echo '
+												<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+													Страховка:<br>
+													<span class="calculateInsInvoice" style="font-size: 13px">'.$order_item['summins'].'</span> руб.
+												</div>';
+                                    }*/
+                                    echo '
+											</div>';
+                                    echo '
+										</li>';
+                                }
+
+                            }else{
+                                echo '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 5px; color: red;">Нет ордеров</li>';
+                            }
+
+                            echo '
+								</ul>';
+
+
+							//Выписанные наряды
+                            $arr = array();
 							$invoice_j = array();
-							
+
 							echo '
 								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
-									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выписанные наряды</li>';
+									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Выписанные наряды</li>';
 
 							$query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$_GET['id']."'";
 							
@@ -859,26 +935,17 @@
 							
 							echo '
 								</ul>';
-								
-							//Оплаты
-							echo '
-								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
-									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Внесенные оплаты/ордера</li>
-									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
-										<a href="add_order.php?client_id='.$client[0]['id'].'" class="b">Добавить оплату/ордер</a>
-									</li>';
-							echo '
-								</ul>';
-							
-							//Оплаты
-							echo '
+
+
+							//Сертификаты
+							/*echo '
 								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Сертификаты пациента</li>
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
 										<a href="add_certificate.php?client_id='.$client[0]['id'].'" class="b">Добавить сертификат</a>
 									</li>';
 							echo '
-								</ul>';
+								</ul>';*/
 						
 							echo '				
 								<div class="cellsBlock2">

@@ -1,5 +1,8 @@
 <?php
 
+//ajax_test.php
+//Проверка данных перед сохранением в бд
+
 // массив для хранения ошибок
 $errorContainer = array();
 // полученные данные
@@ -17,6 +20,8 @@ if (isset($_POST['age']))
     $arrayFields['age'] = $_POST['age'];
 if (isset($_POST['summ']))
     $arrayFields['summ'] = $_POST['summ'];
+if (isset($_POST['summ_type']))
+    $arrayFields['summ_type'] = $_POST['summ_type'];
 if (isset($_POST['admSettings'])){
 	//var_dump($_POST);
 	foreach($_POST['admSettings'] as $key => $value){

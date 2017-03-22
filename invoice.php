@@ -8,7 +8,7 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 
-		if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
+		if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
 	
 			include_once 'DBWork.php';
 			include_once 'functions.php';

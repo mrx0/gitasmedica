@@ -3497,6 +3497,101 @@
 
 	}
 
+    //Показываем блок с суммами и кнопками Для ордера
+    function showOrderAdd(client_id, mode){
+        //alert(mode);
+
+        var Summ = document.getElementById("summ").value;
+        var SummType = document.getElementById("summ_type").value;
+        var filial = document.getElementById("filial").value;
+
+        //проверка данных на валидность
+        $.ajax({
+            url:"ajax_test.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    summ:Summ,
+                    summ_type:SummType,
+                    filial:filial,
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                if(data.result == 'success'){
+                    $('#overlay').show();
+
+                    var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'add\')">';
+
+                    if (mode == 'edit'){
+                        buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'edit\')">';
+                    }
+
+                    // Создаем меню:
+                    var menu = $('<div/>', {
+                        class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+                    })
+                        .appendTo('#overlay')
+                        .append(
+                            $('<div/>')
+                                .css({
+                                    "height": "100%",
+                                    "border": "1px solid #AAA",
+                                    "position": "relative",
+                                })
+                                .append('<span style="margin: 5px;"><i>Проверьте сумму и нажмите сохранить</i></span>')
+                                .append(
+                                    $('<div/>')
+                                        .css({
+                                            "position": "absolute",
+                                            "width": "100%",
+                                            "margin": "auto",
+                                            "top": "-10px",
+                                            "left": "0",
+                                            "bottom": "0",
+                                            "right": "0",
+                                            "height": "50%",
+                                        })
+                                        .append('<div style="margin: 10px;">Сумма: <span class="calculateInvoice">'+Summ+'</span> руб.</div>')
+                                )
+                                .append(
+                                    $('<div/>')
+                                        .css({
+                                            "position": "absolute",
+                                            "bottom": "2px",
+                                            "width": "100%",
+                                        })
+                                        .append(buttonsStr+
+                                            '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                                        )
+                                )
+                        );
+
+                    menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+
+                // в случае ошибок в форме
+                }else{
+                    // перебираем массив с ошибками
+                    for(var errorField in data.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(data.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    document.getElementById("errror").innerHTML='<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>'
+                }
+            }
+        })
+    }
+
+
 	//Добавляем/редактируем в базу наряд из сессии
 	function Ajax_invoice_add(mode){
 		//alert(mode);
@@ -3575,6 +3670,77 @@
 										'<ul id="invoices" style="margin-left: 6px; margin-bottom: 4px; display: inline-block; vertical-align: middle;">'+
 											'<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
 												'<a href="add_order.php?client_id='+client+'" class="b">Добавить оплату/ордер</a>'+
+											'</li>'+
+										'</ul>');
+				}else{
+					$('#errror').html(res.data);
+				}
+			}
+		});
+	}
+
+	//Добавляем/редактируем в базу ордер
+	function Ajax_order_add(mode){
+		//alert(mode);
+
+        var order_id = 0;
+
+		var link = "order_add_f.php";
+
+		if (mode == 'edit'){
+			link = "order_edit_f.php";
+			invoice_id = document.getElementById("order_id").value;
+		}
+
+        var Summ = document.getElementById("summ").value;
+        var SummType = document.getElementById("summ_type").value;
+        var office_id = document.getElementById("filial").value;
+
+		var client_id = document.getElementById("client_id").value;
+		var date_in = document.getElementById("date_in").value;
+		//alert(date_in);
+
+        var comment = document.getElementById("comment").value;
+        //alert(comment);
+
+		$.ajax({
+			url: link,
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                client_id: client_id,
+                office_id: office_id,
+				summ: Summ,
+                summtype: SummType,
+                date_in: date_in,
+                comment: comment,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//alert(res);
+				$('.center_block').remove();
+				$('#overlay').hide();
+
+				if(res.result == "success"){
+					//$('#data').hide();
+					$('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован приходный ордер</li>'+
+											'<li class="cellsBlock" style="width: auto;">'+
+												'<a href="order.php?id='+res.data+'" class="cellName ahref">'+
+													'<b>Ордер #'+res.data+'</b><br>'+
+												'</a>'+
+												'<div class="cellName">'+
+													'<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
+														'Сумма:<br>'+
+														'<span class="calculateInvoice" style="font-size: 13px">'+Summ+'</span> руб.'+
+													'</div>'+
+												'</div>'+
 											'</li>'+
 										'</ul>');
 				}else{

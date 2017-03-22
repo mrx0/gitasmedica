@@ -334,15 +334,23 @@ area {
 	min-width:150px;
 }
 
-.cellName {
+.cellName, .cellOrder {
 	display: table-cell !important;
 	display: inline; /* для IE */
 	padding:4px;
 	border: 1px solid #BFBCB5;
 	vertical-align:middle;
+	/*white-space:nowrap;*/
+}
+
+.cellName{
 	width:120px;
 	min-width:120px;
-	/*white-space:nowrap;*/
+}
+
+.cellOrder{
+	width: 200px;
+	min-width: 200px;
 }
 
 .cellCosmAct {
@@ -398,6 +406,7 @@ area {
 .cellsBlock2, .cellsBlock3, .cellsBlock4, .cellsBlock5{
 	display: table;
 	table-layout: auto;
+	margin-bottom: 3px;
 }
 
 .cellsBlock5{
@@ -437,8 +446,8 @@ area {
 	display: inline; /* для IE */
 	/*margin:20px;*/
 	padding:5px;
-	background:#f0f0f0;
-	outline: 1px solid #BFBCB5;
+	background: rgb(245, 245, 245);
+	outline: 1px solid rgb(233, 233, 233);
 	vertical-align:middle;
 }
 
@@ -1692,7 +1701,7 @@ input[type="number"].mod{
 	display: block;
 }
 .error{
-	font-size: 70%;
+	font-size: 80%;
 	color: red;
 	display: none;
 }
@@ -1842,7 +1851,7 @@ input.dateс {
 	background: rgba(77, 246, 127, 0.9);
 }
 
-#calculateInvoice, #calculateInsInvoice, .calculateInvoice, .calculateInsInvoice {
+#calculateInvoice, #calculateInsInvoice, .calculateInvoice, .calculateInsInvoice, .calculateOrder {
 	font-size: 15px;
 	font-weight: bold;
 	font-style: italic;
@@ -1851,6 +1860,10 @@ input.dateс {
 
 #calculateInvoice, .calculateInvoice {
 	color: red;
+}
+
+.calculateOrder{
+	color: rgb(2, 108, 33);
 }
 
 #calculateInsInvoice, .calculateInsInvoice {

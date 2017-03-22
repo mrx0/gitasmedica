@@ -1,7 +1,7 @@
 <?php
 
-//
-//
+//ajax_test2.php
+//Проверка данных перед сохранением в бд
 
 //var_dump($_POST);
 
@@ -10,6 +10,7 @@ $error_text = '';
 
 // массив для хранения ошибок
 $errorContainer = array();
+
 // полученные данные
 if (isset($_POST['smena1']) && ($_POST['smena1'] == 1)){
 	if (isset($_POST['smena2']) && ($_POST['smena2'] == 1)){
