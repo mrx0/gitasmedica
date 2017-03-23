@@ -410,7 +410,9 @@
 					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
 					mysql_select_db($dbName) or die(mysql_error()); 
 					mysql_query("SET NAMES 'utf8'");
+
 					$query = "SELECT * FROM `zapis` WHERE `patient`='".$client[0]['id']."' ORDER BY `year`, `month`, `day`, `start_time` ASC";
+
 					$res = mysql_query($query) or die($query);
 					$number = mysql_num_rows($res);
 					if ($number != 0){
@@ -481,7 +483,8 @@
 									
 									//Формулы
 									$query = "SELECT `id`, `zapis_date`  FROM `journal_tooth_status` WHERE `zapis_id` = '{$sheduler_zapis[$z]['id']}' ORDER BY `create_time`";
-									$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
+
+									$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 									$number = mysql_num_rows($res);
 									if ($number != 0){
 										while ($arr = mysql_fetch_assoc($res)){
@@ -500,7 +503,8 @@
 									
 									//Посещения косметологов
 									$query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$sheduler_zapis[$z]['id']}' ORDER BY `create_time`";
-									$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
+
+									$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 									$number = mysql_num_rows($res);
 									if ($number != 0){
 										while ($arr = mysql_fetch_assoc($res)){
@@ -517,8 +521,9 @@
 									}
 									
 									//Наряды
-									$query = "SELECT `id`, `summ`, `summins`, `create_time`  FROM `journal_invoice` WHERE `zapis_id` = '{$sheduler_zapis[$z]['id']}' ORDER BY `create_time`";
-									$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
+									$query = "SELECT `id`, `summ`, `summins`, `create_time`, `status`  FROM `journal_invoice` WHERE `zapis_id` = '{$sheduler_zapis[$z]['id']}' ORDER BY `create_time`";
+
+									$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 									$number = mysql_num_rows($res);
 									if ($number != 0){
 										while ($arr = mysql_fetch_assoc($res)){
@@ -533,7 +538,7 @@
 											//
 										}
 									}
-									
+
 									echo '
 												<!--</div>-->
 												<div class="cellName" style="position: relative; '.$back_color.'">';
@@ -624,37 +629,37 @@
 													</div>';
 										}
 									}
-									
+
 									if ($invoice_data_db != 0){
 										//var_dump($invoice_data_db);
 										foreach($invoice_data_db as $ids){
-											echo '
-												<div class="cellsBlockHover" style="border: 1px solid #BFBCB5; margin-top: 1px;">
-													<a href="invoice.php?id='.$ids['id'].'" class="ahref">
-														<div>
-															<div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
-																<i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
-															</div>
-															<div style="display: inline-block; vertical-align: middle;">
-																'.date('d.m.y H:i', strtotime($ids['create_time'])).'
-															</div>
-														</div>
-														<div>
-															<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
-																Сумма:<br>
-																<span class="calculateInvoice" style="font-size: 11px">'.$ids['summ'].'</span> руб.
-															</div>';
-											if ($ids['summins'] != 0){
-												echo '
-															<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
-																Страховка:<br>
-																<span class="calculateInsInvoice" style="font-size: 11px">'.$ids['summins'].'</span> руб.
-															</div>';
-											}
-											echo '
-														</div>
-													</a>	
-												</div>';
+                                            echo '
+                                                <div class="cellsBlockHover" style="border: 1px solid #BFBCB5; margin-top: 1px;">
+                                                    <a href="invoice.php?id=' . $ids['id'] . '" class="ahref">
+                                                        <div>
+                                                           <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+                                                                <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+                                                            </div>
+                                                            <div style="display: inline-block; vertical-align: middle;">
+                                                                ' . date('d.m.y H:i', strtotime($ids['create_time'])) . '
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
+                                                                Сумма:<br>
+                                                                <span class="calculateInvoice" style="font-size: 11px">' . $ids['summ'] . '</span> руб.
+                                                            </div>';
+                                            if ($ids['summins'] != 0) {
+                                                echo '
+                                                             <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
+                                                                 Страховка:<br>
+                                                                 <span class="calculateInsInvoice" style="font-size: 11px">' . $ids['summins'] . '</span> руб.
+                                                             </div>';
+                                            }
+                                            echo '
+                                                        </div>
+                                                    </a>	
+                                                 </div>';
 										}
 									}
 									//<-- Формулы посещения наряды
@@ -791,14 +796,42 @@
 							echo '
 							<div id="tabs-2">';
 
-                            //Внесенные оплаты/ордера
+							echo '<div>';
+
+							//!!! @@@
+                            //Баланс контрагента
+                            include_once 'ffun.php';
+                            $client_balance = json_decode(calculateBalance ($_GET['id']), true);
+
+                            //var_dump(json_decode($client_balance, true));
+                            echo '
+                                    <ul id="balance" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
+                                        <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
+                                            Доступный остаток средств:
+                                        </li>
+                                        <li class="calculateOrder" style="font-size: 110%; font-weight: bold;">
+                                             '.($client_balance['summ'] - $client_balance['debited']).' руб.
+                                        </li>
+                                        <!--<li style="font-size: 85%; color: #7D7D7D; margin-top: 10px;">
+                                            Всего внесено:
+                                        </li>
+                                        <li style="margin-bottom: 5px; font-size: 90%; font-weight: bold;">
+                                            '.$client_balance['summ'].' руб.
+                                        </li>-->
+                                    </ul>';
+
+                            echo '</div>';
+
+                            echo '<div>';
+
+                            //Внесенные оплаты/ордеры
                             $arr = array();
                             $order_j = array();
 
                             echo '
 								<ul id="orders" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px;">
-									    Внесенные оплаты/ордера	<a href="add_order.php?client_id='.$client[0]['id'].'" class="b">Добавить новый</a>
+									    Внесенные оплаты/ордеры	<a href="add_order.php?client_id='.$client[0]['id'].'" class="b">Добавить новый</a>
 									</li>';
 
                             $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$_GET['id']."'";
@@ -813,30 +846,36 @@
                                 $order_j = 0;
                             //var_dump ($order_j);
 
+                            $orderAll_str = '';
+                            $orderClose_str = '';
+
                             if ($order_j != 0){
                                 //var_dump ($order_j);
 
                                 foreach($order_j as $order_item){
-                                    echo '
+
+                                    $orderTemp_str = '';
+
+                                    $orderTemp_str .= '
 										<li class="cellsBlock" style="width: auto;">';
-                                    echo '
+                                    $orderTemp_str .= '
 											<a href="order.php?id='.$order_item['id'].'" class="cellOrder ahref">
 												<b>Ордер #'.$order_item['id'].'</b> от '.date('d.m.y' ,strtotime($order_item['date_in'])).'<br>
 												<span style="font-size:80%;  color: #555;">';
 
                                     if (($order_item['create_time'] != 0) || ($order_item['create_person'] != 0)){
-                                        echo '
+                                        $orderTemp_str .= '
 														Добавлен: '.date('d.m.y H:i' ,strtotime($order_item['create_time'])).'<br>
 														<!--Автор: '.WriteSearchUser('spr_workers', $order_item['create_person'], 'user', true).'<br>-->';
                                     }else{
-                                        echo 'Добавлен: не указано<br>';
+                                        $orderTemp_str .= 'Добавлен: не указано<br>';
                                     }
                                     if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
-                                        echo '
+                                        $orderTemp_str .= '
 														Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
 														<!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
                                     }
-                                    echo '
+                                    $orderTemp_str .= '
 												</span>
 											</a>
 											<div class="cellName">
@@ -851,10 +890,32 @@
 													<span class="calculateInsInvoice" style="font-size: 13px">'.$order_item['summins'].'</span> руб.
 												</div>';
                                     }*/
-                                    echo '
+                                    $orderTemp_str .= '
 											</div>';
-                                    echo '
+                                    $orderTemp_str .= '
 										</li>';
+
+                                    if ($order_item['status'] != 9) {
+                                        $orderAll_str .= $orderTemp_str;
+                                    } else {
+                                        $orderClose_str .= $orderTemp_str;
+                                    }
+
+                                }
+
+
+                                if (strlen($orderAll_str) > 1){
+                                    echo $orderAll_str;
+                                }else{
+                                    echo '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 20px; color: red;">Нет ордеров</li>';
+                                }
+
+                                //Удалённые
+                                if ((strlen($orderClose_str) > 1) && (($finances['see_all'] != 0) || $god_mode)) {
+                                    echo '<div style="background-color: rgba(255, 214, 240, 0.5); padding: 5px; margin-top: 5px;">';
+                                    echo '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Удалённые из программы ордеры</li>';
+                                    echo $orderClose_str;
+                                    echo '</div>';
                                 }
 
                             }else{
@@ -885,50 +946,77 @@
 								$invoice_j = 0;
 							//var_dump ($invoice_j);
 
-							if ($invoice_j != 0){
-								//var_dump ($invoice_j);
-								
-								foreach($invoice_j as $invoice_item){
-									echo '
+                            $invoiceAll_str = '';
+                            $invoiceClose_str = '';
+
+							if ($invoice_j != 0) {
+                                //var_dump ($invoice_j);
+
+                                foreach ($invoice_j as $invoice_item) {
+
+                                    $invoiceTemp_str = '';
+
+                                    $invoiceTemp_str .= '
 										<li class="cellsBlock" style="width: auto;">';
-									echo '
-											<a href="invoice.php?id='.$invoice_item['id'].'" class="cellName ahref">
-												<b>Наряд #'.$invoice_item['id'].'</b><br>
+                                    $invoiceTemp_str .= '
+											<a href="invoice.php?id=' . $invoice_item['id'] . '" class="cellName ahref">
+												<b>Наряд #' . $invoice_item['id'] . '</b><br>
 												<span style="font-size:80%;  color: #555;">';
-												
-								if (($invoice_item['create_time'] != 0) || ($invoice_item['create_person'] != 0)){
-									echo '
-														Добавлен: '.date('d.m.y H:i' ,strtotime($invoice_item['create_time'])).'<br>
-														<!--Автор: '.WriteSearchUser('spr_workers', $invoice_item['create_person'], 'user', true).'<br>-->';
-								}else{
-									echo 'Добавлен: не указано<br>';
-								}
-								if (($invoice_item['last_edit_time'] != 0) || ($invoice_item['last_edit_person'] != 0)){
-									echo '
-														Последний раз редактировался: '.date('d.m.y H:i',strtotime($invoice_item['last_edit_time'])).'<br>
-														<!--Кем: '.WriteSearchUser('spr_workers', $invoice_item['last_edit_person'], 'user', true).'-->';
-								}
-								echo '
+
+                                    if (($invoice_item['create_time'] != 0) || ($invoice_item['create_person'] != 0)) {
+                                        $invoiceTemp_str .= '
+														Добавлен: ' . date('d.m.y H:i', strtotime($invoice_item['create_time'])) . '<br>
+														<!--Автор: ' . WriteSearchUser('spr_workers', $invoice_item['create_person'], 'user', true) . '<br>-->';
+                                    } else {
+                                        $invoiceTemp_str .= 'Добавлен: не указано<br>';
+                                    }
+                                    if (($invoice_item['last_edit_time'] != 0) || ($invoice_item['last_edit_person'] != 0)) {
+                                        $invoiceTemp_str .= '
+														Последний раз редактировался: ' . date('d.m.y H:i', strtotime($invoice_item['last_edit_time'])) . '<br>
+														<!--Кем: ' . WriteSearchUser('spr_workers', $invoice_item['last_edit_person'], 'user', true) . '-->';
+                                    }
+                                    $invoiceTemp_str .= '
 												</span>
 											</a>
 											<div class="cellName">
 												<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
 													Сумма:<br>
-													<span class="calculateInvoice" style="font-size: 13px">'.$invoice_item['summ'].'</span> руб.
+													<span class="calculateInvoice" style="font-size: 13px">' . $invoice_item['summ'] . '</span> руб.
 												</div>';
-									if ($invoice_item['summins'] != 0){
-										echo '
+                                    if ($invoice_item['summins'] != 0) {
+                                        $invoiceTemp_str .= '
 												<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
 													Страховка:<br>
-													<span class="calculateInsInvoice" style="font-size: 13px">'.$invoice_item['summins'].'</span> руб.
+													<span class="calculateInsInvoice" style="font-size: 13px">' . $invoice_item['summins'] . '</span> руб.
 												</div>';
-									}
-									echo '
+                                    }
+                                    $invoiceTemp_str .= '
 											</div>';
-									echo '
+                                    $invoiceTemp_str .= '
 										</li>';
-								}
-								
+
+                                    if ($invoice_item['status'] != 9) {
+                                        $invoiceAll_str .= $invoiceTemp_str;
+                                    } else {
+                                        $invoiceClose_str .= $invoiceTemp_str;
+                                    }
+
+                                }
+
+                                if (strlen($invoiceAll_str) > 1){
+                                    echo $invoiceAll_str;
+                                }else{
+                                    echo '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 20px; color: red;">Нет нарядов</li>';
+                                }
+
+                                //Удалённые
+                                if ((strlen($invoiceClose_str) > 1) && (($finances['see_all'] != 0) || $god_mode)) {
+                                    echo '<div style="background-color: rgba(255, 214, 240, 0.5); padding: 5px; margin-top: 5px;">';
+                                    echo '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Удалённые из программы наряды</li>';
+                                    echo $invoiceClose_str;
+                                    echo '</div>';
+                                }
+
 							}else{
 								echo '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 5px; color: red;">Нет нарядов</li>';
 							}
@@ -936,6 +1024,7 @@
 							echo '
 								</ul>';
 
+                            echo '</div>';
 
 							//Сертификаты
 							/*echo '

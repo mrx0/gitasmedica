@@ -79,7 +79,7 @@
 								}
 								if (($invoice_j[0]['status'] == 9) && (($finances['close'] == 1) || $god_mode)){
 									echo '
-										<a href="#" onclick="Ajax_reopen_invoice('.$_SESSION['id'].', '.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 100%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
+										<a href="#" onclick="Ajax_reopen_invoice('.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 100%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
 								}
 							}
 							if (($finances['close'] == 1) || $god_mode){

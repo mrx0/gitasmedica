@@ -463,7 +463,7 @@
 								}
 								
 								//Наряды
-								$query = "SELECT `id`, `summ`, `summins`, `create_time`  FROM `journal_invoice` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
+								$query = "SELECT `id`, `summ`, `summins`, `create_time`  FROM `journal_invoice` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' AND `status` <> '9' ORDER BY `create_time`";
 								$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
 								$number = mysql_num_rows($res);
 								if ($number != 0){

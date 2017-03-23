@@ -133,7 +133,7 @@
                             <div>
                                 <div id="errror"></div>
                                 <input type="hidden" id="client_id" name="client_id" value="'.$_GET['client_id'].'">
-                                <input type="button" class="b" value="Сохранить" onclick="showOrderAdd('.$_GET['client_id'].', \'add\')">
+                                <input type="button" class="b" value="Сохранить" onclick="showOrderAdd(\'add\')">
                             </div>
                         </div>
 

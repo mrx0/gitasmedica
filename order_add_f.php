@@ -31,12 +31,16 @@
                 //Добавляем в базу
                 $query = "INSERT INTO `journal_order` (`client_id`, `office_id`, `summ`, `summ_type`, `date_in`, `comment`, `create_person`, `create_time`) 
 						VALUES (
-						'{$_POST['client_id']}', '{$_POST['office_id']}', '{$_POST['summ']}', '{$_POST['summtype']}', '{$_POST['date_in']}', '{$comment}', '{$_SESSION['id']}', '{$time}')";
+						'{$_POST['client_id']}', '{$_POST['office_id']}', '{$_POST['summ']}', '{$_POST['summtype']}', '{$date_in}', '{$comment}', '{$_SESSION['id']}', '{$time}')";
 
                 mysql_query($query) or die(mysql_error().' -> '.$query);
 
                 //ID новой позиции
                 $mysql_insert_id = mysql_insert_id();
+
+                //!!! @@@
+                include_once 'ffun.php';
+                calculateBalance ($_POST['client_id']);
 
                 echo json_encode(array('result' => 'success', 'data' => $mysql_insert_id));
 

@@ -36,7 +36,7 @@
                             }
                             if (($order_j[0]['status'] == 9) && (($finances['close'] == 1) || $god_mode)){
                                 echo '
-                                        <a href="#" onclick="Ajax_reopen_order('.$_SESSION['id'].', '.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 100%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
+                                        <a href="#" onclick="Ajax_reopen_order('.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 100%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
                             }
                         }
 						if (($finances['close'] == 1) || $god_mode){
@@ -78,6 +78,27 @@
                                 </ul>';
 
 
+                        echo '
+									<div class="cellsBlock2" style="margin-bottom: 10px;">
+										<span style="font-size:80%;  color: #555;">';
+
+                        if (($order_j[0]['create_time'] != 0) || ($order_j[0]['create_person'] != 0)){
+                            echo '
+											Добавлен: '.date('d.m.y H:i' ,strtotime($order_j[0]['create_time'])).'<br>
+											Автор: '.WriteSearchUser('spr_workers', $order_j[0]['create_person'], 'user', true).'<br>';
+                        }else{
+                            echo 'Добавлен: не указано<br>';
+                        }
+                        if (($order_j[0]['last_edit_time'] != 0) || ($order_j[0]['last_edit_person'] != 0)){
+                            echo '
+											Последний раз редактировался: '.date('d.m.y H:i' ,strtotime($order_j[0]['last_edit_time'])).'<br>
+											Кем: '.WriteSearchUser('spr_workers', $order_j[0]['last_edit_person'], 'user', true).'';
+                        }
+                        echo '
+										</span>
+									</div>';
+
+
                             echo '
                                 <div id="data">';
 
@@ -101,7 +122,7 @@
 								<div class="cellRight">
 								    <ul style="margin-left: 6px; margin-bottom: 10px;">
 								        <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
-								            Способ внесения  <label id="summ_type_error" class="error"></label>
+								            Способ внесения
                                         </li>
                                         <li style="font-size: 90%; margin-bottom: 5px;">
                                             ', $order_j[0]['summ'] == 1 ? 'Наличный' : 'Безналичный' ,'
@@ -109,25 +130,20 @@
 								    </ul>
 								</div>
 							</div>';
-                        echo '
-									<div class="cellsBlock2" style="margin-bottom: 10px;">
-										<span style="font-size:80%;  color: #555;">';
 
-                        if (($order_j[0]['create_time'] != 0) || ($order_j[0]['create_person'] != 0)){
-                            echo '
-											Добавлен: '.date('d.m.y H:i' ,strtotime($order_j[0]['create_time'])).'<br>
-											Автор: '.WriteSearchUser('spr_workers', $order_j[0]['create_person'], 'user', true).'<br>';
-                        }else{
-                            echo 'Добавлен: не указано<br>';
-                        }
-                        if (($order_j[0]['last_edit_time'] != 0) || ($order_j[0]['last_edit_person'] != 0)){
-                            echo '
-											Последний раз редактировался: '.date('d.m.y H:i' ,strtotime($order_j[0]['last_edit_time'])).'<br>
-											Кем: '.WriteSearchUser('spr_workers', $order_j[0]['last_edit_person'], 'user', true).'';
-                        }
                         echo '
-										</span>
-									</div>';
+							<div class="cellsBlock2">
+								<div class="cellRight">
+								    <ul style="margin-left: 6px; margin-bottom: 10px;">
+								        <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
+								            Комментарий
+                                        </li>
+                                        <li style="font-size: 90%; margin-bottom: 5px;">
+                                            '.$order_j[0]['comment'].'
+									    </li>
+								    </ul>
+								</div>
+							</div>';
 
                     echo '
                         </div>

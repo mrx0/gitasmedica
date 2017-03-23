@@ -420,7 +420,7 @@
 			}
 		})
 	}; 
-	
+	//Удаление блокировка страховой
 	function Ajax_del_insure(id) {
 		
 		ajax({
@@ -440,7 +440,48 @@
 			}
 		})
 	}; 
-	
+	//Удаление блокировка наряда
+	function Ajax_del_invoice(id) {
+
+		ajax({
+			url:"invoice_del_f.php",
+			statbox:"errrror",
+			method:"POST",
+			data:
+			{
+				id: id,
+			},
+			success:function(data){
+				document.getElementById("errrror").innerHTML=data;
+				setTimeout(function () {
+					window.location.replace('invoice.php?id='+id);
+					//alert('client.php?id='+id);
+				}, 100);
+			}
+		})
+	};
+
+	//Удаление блокировка ордера
+	function Ajax_del_order(id) {
+
+		ajax({
+			url:"order_del_f.php",
+			statbox:"errrror",
+			method:"POST",
+			data:
+			{
+				id: id,
+			},
+			success:function(data){
+				document.getElementById("errrror").innerHTML=data;
+				setTimeout(function () {
+					window.location.replace('order.php?id='+id);
+					//alert('client.php?id='+id);
+				}, 100);
+			}
+		})
+	};
+
 	function Ajax_reopen_client(session_id, id) {
 		//var id = document.getElementById("id").value;
 		
@@ -481,7 +522,7 @@
 			}
 		})
 	}; 
-	
+	//разблокировка страховой
 	function Ajax_reopen_insure(id) {
 		//var id = document.getElementById("id").value;
 		
@@ -501,7 +542,47 @@
 			}
 		})
 	}; 
-	
+	//разблокировка наряда
+	function Ajax_reopen_invoice(id) {
+		//var id = document.getElementById("id").value;
+
+		ajax({
+			url:"invoice_reopen_f.php",
+			method:"POST",
+			data:
+			{
+				id: id,
+			},
+			success:function(data){
+				//document.getElementById("errrror").innerHTML=data;
+				setTimeout(function () {
+					window.location.replace('invoice.php?id='+id);
+					//alert('pricelistitem.php?id='+id);
+				}, 100);
+			}
+		})
+	};
+	//разблокировка ордера
+	function Ajax_reopen_order(id) {
+		//var id = document.getElementById("id").value;
+
+		ajax({
+			url:"order_reopen_f.php",
+			method:"POST",
+			data:
+			{
+				id: id,
+			},
+			success:function(data){
+				//document.getElementById("errrror").innerHTML=data;
+				setTimeout(function () {
+					window.location.replace('order.php?id='+id);
+					//alert('pricelistitem.php?id='+id);
+				}, 100);
+			}
+		})
+	};
+
 	function Ajax_reopen_pricelistgroup(session_id, id) {
 		//var id = document.getElementById("id").value;
 		
@@ -1742,8 +1823,7 @@
 	
 	//Добавление записи
 	function Ajax_add_TempZapis(type) {
-		 
-		// получение данных из полей
+        // получение данных из полей
 		//var type = document.getElementById("type").value;
 		
 		var filial = $("#filial").val();
@@ -1782,7 +1862,7 @@
 		}else{
 			var noch = 0;
 		}
-		
+
 		$.ajax({
 			global: false, 
 			type: "POST", 
@@ -1812,6 +1892,8 @@
 			},
 			cache: false,
 			beforeSend: function() {
+                //Блокируем кнопку OK
+                document.getElementById("Ajax_add_TempZapis").disabled = true;
 				$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 			},
 			dataType: "json",
@@ -2086,7 +2168,7 @@
 				change_minutes = raznica_vremeni%60;
 				
 				end_time = start_time+change_hours*60+change_minutes;
-				
+
 				document.getElementById("Ajax_add_TempZapis").disabled = true; 
 			}else{
 			//if (end_time < next_time_start_rez){
@@ -3498,7 +3580,7 @@
 	}
 
     //Показываем блок с суммами и кнопками Для ордера
-    function showOrderAdd(client_id, mode){
+    function showOrderAdd(mode){
         //alert(mode);
 
         var Summ = document.getElementById("summ").value;
@@ -3688,8 +3770,8 @@
 		var link = "order_add_f.php";
 
 		if (mode == 'edit'){
-			link = "order_edit_f.php";
-			invoice_id = document.getElementById("order_id").value;
+			link = "edit_order_f.php";
+            order_id = document.getElementById("order_id").value;
 		}
 
         var Summ = document.getElementById("summ").value;
@@ -3716,6 +3798,8 @@
                 summtype: SummType,
                 date_in: date_in,
                 comment: comment,
+
+                order_id: order_id,
 			},
 			cache: false,
 			beforeSend: function() {
