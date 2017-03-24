@@ -24,7 +24,11 @@
 			$query = "UPDATE `journal_order` SET `status`='9' WHERE `id`='{$_POST['id']}'";
 			mysql_query($query) or die(mysql_error().' -> '.$query);
 
-			mysql_close();	
+			//mysql_close();
+
+            //!!! @@@ Пересчет баланса
+            include_once 'ffun.php';
+            calculateBalance ($_POST['client_id']);
 			
 			echo '
 				<div class="query_ok" style="padding-bottom: 10px;">

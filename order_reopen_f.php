@@ -16,6 +16,10 @@
 			
 			WriteToDB_ReopenOrder ($_SESSION['id'], $_POST['id']);
 
+            //!!! @@@ Пересчет баланса
+            include_once 'ffun.php';
+            calculateBalance ($_POST['client_id']);
+
 			echo '
 				<div class="query_ok">
 					<h3>Ордер разблокирован.</h3>

@@ -270,18 +270,39 @@
 									
 							echo '	
 										<div id="errror" class="invoceHeader" style="">
-											<div>
-												<div style="">Сумма: <div id="calculateInvoice" style="">'.$invoice_j[0]['summ'].'</div> руб.</div>
+                                             <div style="display: inline-block; width: 300px; vertical-align: top;">
+                                                <div>
+                                                    <div style="">Сумма: <div id="calculateInvoice" style="">'.$invoice_j[0]['summ'].'</div> руб.</div>
+                                                </div>';
+							if ($sheduler_zapis[0]['type'] == 5) {
+                                echo '
+                                                <div>
+                                                    <div style="">Страховка: <div id="calculateInsInvoice" style="">' . $invoice_j[0]['summins'] . '</div> руб.</div>
+                                                </div>';
+                            }
+                            echo '
+											</div> 
+                                            <div style="display: inline-block; width: 300px; vertical-align: top;">
+                                                <div>
+                                                    <div style="">Оплачено: <div id="calculateInvoice" style="color: #333;">'.$invoice_j[0]['paid'].'</div> руб.</div>
+                                                </div>';
+                            if ($invoice_j[0]['summ'] != $invoice_j[0]['paid']) {
+                                echo '
+                                                <div>
+                                                    <div style="">Осталось внести: <div id="calculateInvoice" style="">'.($invoice_j[0]['summ'] - $invoice_j[0]['paid']).'</div> руб.</div>
+                                                </div>
+											</div>
+											<div style="display: inline-block; vertical-align: top;">
+                                                <div>
+                                                    <div style=""><a href="payment_add.php?invoice_id='.$invoice_j[0]['id'].'" class="b">Оплатить</a></div>
+                                                </div>
 											</div>';
-							if ($sheduler_zapis[0]['type'] == 5){
-								echo '
-											<div>
-												<div style="">Страховка: <div id="calculateInsInvoice" style="">'.$invoice_j[0]['summins'].'</div> руб.</div>
-											</div>';
-							}
+							}else{
+                                echo '</div>';
+                            }
 							echo '
 										</div>';
-							
+
 							echo '
 										<div id="invoice_rezult" style="float: none; width: 850px;">';
 							

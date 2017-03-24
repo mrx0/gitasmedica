@@ -55,7 +55,7 @@
 
 								<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
 								<div id="errror"></div>
-								<input type="button" class="b" value="Удалить(заблокировать)" onclick="Ajax_del_invoice('.$_GET['id'].')">
+								<input type="button" class="b" value="Удалить(заблокировать)" onclick="Ajax_del_invoice('.$_GET['id'].', '.$invoice_j[0]['client_id'].')">
 								
 							</div>
 						</div>';

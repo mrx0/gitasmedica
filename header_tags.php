@@ -35,6 +35,8 @@
 			<link rel="stylesheet" type="text/css" href="js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 
 			<link rel="stylesheet" href="css/calendar.css" type="text/css">
+			
+			<link rel="stylesheet" href="css/dds.css" type="text/css">
 						
 			<script type="text/javascript" src="js/dict.js"></script>
 			<script type="text/javascript" src="js/common1.js"></script>

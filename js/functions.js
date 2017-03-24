@@ -441,7 +441,7 @@
 		})
 	}; 
 	//Удаление блокировка наряда
-	function Ajax_del_invoice(id) {
+	function Ajax_del_invoice(id, client_id) {
 
 		ajax({
 			url:"invoice_del_f.php",
@@ -450,6 +450,7 @@
 			data:
 			{
 				id: id,
+                client_id: client_id,
 			},
 			success:function(data){
 				document.getElementById("errrror").innerHTML=data;
@@ -462,7 +463,7 @@
 	};
 
 	//Удаление блокировка ордера
-	function Ajax_del_order(id) {
+	function Ajax_del_order(id, client_id) {
 
 		ajax({
 			url:"order_del_f.php",
@@ -471,6 +472,7 @@
 			data:
 			{
 				id: id,
+                client_id: client_id,
 			},
 			success:function(data){
 				document.getElementById("errrror").innerHTML=data;
@@ -543,7 +545,7 @@
 		})
 	}; 
 	//разблокировка наряда
-	function Ajax_reopen_invoice(id) {
+	function Ajax_reopen_invoice(id, client_id) {
 		//var id = document.getElementById("id").value;
 
 		ajax({
@@ -552,6 +554,7 @@
 			data:
 			{
 				id: id,
+                client_id: client_id,
 			},
 			success:function(data){
 				//document.getElementById("errrror").innerHTML=data;
@@ -563,7 +566,7 @@
 		})
 	};
 	//разблокировка ордера
-	function Ajax_reopen_order(id) {
+	function Ajax_reopen_order(id, client_id) {
 		//var id = document.getElementById("id").value;
 
 		ajax({
@@ -572,6 +575,7 @@
 			data:
 			{
 				id: id,
+                client_id: client_id,
 			},
 			success:function(data){
 				//document.getElementById("errrror").innerHTML=data;
@@ -3748,10 +3752,14 @@
 													SummInsStr+
 												'</div>'+
 											'</li>'+
-										'</ul>'+
-										'<ul id="invoices" style="margin-left: 6px; margin-bottom: 4px; display: inline-block; vertical-align: middle;">'+
 											'<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-												'<a href="add_order.php?client_id='+client+'" class="b">Добавить оплату/ордер</a>'+
+												'<a href="payment_add.php?invoice_id='+res.data+'" class="b">Оплатить</a>'+
+											'</li>'+
+											'<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+												'<a href="add_order.php?client_id='+client+'" class="b">Добавить приходный ордер</a>'+
+											'</li>'+
+											'<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+												'<a href="finance_account.php?client_id='+client+'" class="b">Управление счётом</a>'+
 											'</li>'+
 										'</ul>');
 				}else{
@@ -3826,6 +3834,9 @@
 													'</div>'+
 												'</div>'+
 											'</li>'+
+					                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+						                        '<a href="finance_account.php?client_id='+client_id+'" class="b">Управление счётом</a>'+
+					                        '</li>'+
 										'</ul>');
 				}else{
 					$('#errror').html(res.data);
@@ -3906,3 +3917,4 @@
             })
         }
     }
+

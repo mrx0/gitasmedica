@@ -38,7 +38,7 @@
                 //ID новой позиции
                 $mysql_insert_id = mysql_insert_id();
 
-                //!!! @@@
+                //!!! @@@ Пересчет баланса
                 include_once 'ffun.php';
                 calculateBalance ($_POST['client_id']);
 

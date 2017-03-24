@@ -24,8 +24,12 @@
 			$query = "UPDATE `journal_invoice` SET `status`='9' WHERE `id`='{$_POST['id']}'";
 			mysql_query($query) or die(mysql_error().' -> '.$query);
 
-			mysql_close();	
-			
+			//mysql_close();
+
+            //!!! @@@ Пересчет долга
+            include_once 'ffun.php';
+            calculateDebt ($_POST['client_id']);
+
 			echo '
 				<div class="query_ok" style="padding-bottom: 10px;">
 					<h3>Наряд удален (заблокирован).</h3>

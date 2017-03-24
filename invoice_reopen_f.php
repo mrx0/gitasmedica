@@ -16,6 +16,10 @@
 			
 			WriteToDB_ReopenInvoice ($_SESSION['id'], $_POST['id']);
 
+            //!!! @@@ Пересчет долга
+            include_once 'ffun.php';
+            calculateDebt ($_POST['client_id']);
+
 			echo '
 				<div class="query_ok">
 					<h3>Наряд разблокирован.</h3>

@@ -112,7 +112,11 @@
 								}
 							}
 							unset($_SESSION['invoice_data']);
-							
+
+                            //!!! @@@ Пересчет долга
+                            include_once 'ffun.php';
+                            calculateDebt ($_POST['client']);
+
 							echo json_encode(array('result' => 'success', 'data' => $mysql_insert_id));
 						}
 					}

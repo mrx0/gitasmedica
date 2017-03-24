@@ -39,6 +39,9 @@
                     //ID старой позиции
                     $mysql_insert_id = $_POST['order_id'];
 
+                    //!!! @@@ Пересчет баланса
+                    include_once 'ffun.php';
+                    calculateBalance ($_POST['client_id']);
 
                     echo json_encode(array('result' => 'success', 'data' => $mysql_insert_id));
 
