@@ -2544,7 +2544,8 @@
 		var itemId = dataObj.getAttribute("invoiceitemid");
 		var target = 'item';
 		
-		if ((itemId == 0) || (itemId == null) || (itemId == 'null') || (typeof itemId == "undefined")){
+		//if ((itemId == 0) || (itemId == null) || (itemId == 'null') || (typeof itemId == "undefined")){
+		if ((itemId == null) || (itemId == 'null') || (typeof itemId == "undefined")){
 			target = 'zub';
 		}
 		//alert(zub);

@@ -182,7 +182,7 @@
         $arr = array();
 
         //Соберем все (неудаленные) наряды, где общая сумма не равна оплаченной
-        $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='$client_id' AND `status` <> '9'";
+        $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='$client_id' AND `status` <> '9' AND `summ` <> `paid`";
 
         $res = mysql_query($query) or die(mysql_error().' -> '.$query);
         $number = mysql_num_rows($res);
@@ -202,7 +202,7 @@
         if ( $clientInvoices != 0) {
             //Посчитаем сумму
             foreach ($clientInvoices as $invoices) {
-                $Summ += $invoices['summ'];
+                $Summ += $invoices['summ'] - $invoices['paid'];
             }
         }
 
@@ -224,5 +224,36 @@
 
         //return ($Summ);
     }
+
+    //берем цены из прайса
+    function takePrices ($item, $insure){
+
+        connectDB();
+
+        $prices_j = array();
+        $arr = array();
+
+        //Вытащим цены позиции
+        $query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices` WHERE `item`='".$item."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
+
+        //Если посещение страховое и у пациента прописана страховая
+        if ($insure != 0)){
+            $query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices_insure` WHERE `item`='".$item."' AND `insure`='".$insure."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
+        }
+
+        $res = mysql_query($query) or die(mysql_error().' -> '.$query);
+        $number = mysql_num_rows($res);
+        if ($number != 0){
+            while ($arr = mysql_fetch_assoc($res)){
+                array_push($prices_j, $arr);
+            }
+        }else{
+
+        }
+
+        return($prices_j);
+    }
+
+
 
 ?>

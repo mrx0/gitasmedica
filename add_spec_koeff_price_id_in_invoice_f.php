@@ -17,24 +17,35 @@
 			if (!isset($_POST['spec_koeff']) || !isset($_POST['invoice_type']) || !isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['filial']) || !isset($_POST['worker'])){
 				//echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
-				//var_dump($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']]);
+				//var_dump($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]);
 					
 				if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
 					$data = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'];
-					
-					foreach ($data as $zub => $invoice_data){
+					//переменная для массива цен
+                    $prices = array();
+                    //!!! @@@
+                    include_once 'ffun.php';
+
+                    $spec_koeff = (int)$_POST['spec_koeff'];
+
+					foreach ($data as $ind => $invoice_data){
 						
 						if (!empty($invoice_data)){
 							if ($_POST['invoice_type'] == 5){
 								foreach ($invoice_data as $key => $items){
-									
-									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$zub][$key]['spec_koeff'] = (int)$_POST['spec_koeff'];
+								    if
+								    //получим цены
+                                    $prices = takePrices ($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['id'], $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['insure'])
+
+									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['spec_koeff'] = $spec_koeff;
 									
 								}
 							}
 							if ($_POST['invoice_type'] == 6){
+                                //получим цены
+                                $prices = takePrices ($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['id'], $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['insure'])
 
-								$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$zub]['spec_koeff'] = (int)$_POST['spec_koeff'];
+								$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['spec_koeff'] = $spec_koeff;
 
 							}
 						}

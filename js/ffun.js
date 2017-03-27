@@ -2,8 +2,8 @@
 	//Для добавления суммы в оплате наряда
 	$('#addSummInPayment').click(function () {
 
-		var lefttopay = document.getElementById("leftToPay").innerHTML;
-		var available = document.getElementById("addSummInPayment").innerHTML;
+		var lefttopay = Number(document.getElementById("leftToPay").innerHTML);
+		var available = Number(document.getElementById("addSummInPayment").innerHTML);
 		//alert(lefttopay);
 		//alert(available);
 

@@ -629,7 +629,7 @@
 												//var_dump($ZapisHereQueryToday[$z]['description']);
 												//var_dump(time());
 												
-												if (($finances['add_new'] == 1) || $god_mode){
+												if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
 													echo 
 														'<li>
 															<div>

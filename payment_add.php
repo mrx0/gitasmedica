@@ -8,7 +8,7 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 
-		if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
+		if (($finances['add_own'] == 1) || ($finances['add_new'] == 1) || $god_mode){
 	
 			include_once 'DBWork.php';
 			include_once 'functions.php';
@@ -24,7 +24,7 @@
 				if (isset($_GET['invoice_id'])){
 					
 					$invoice_j = SelDataFromDB('journal_invoice', $_GET['invoice_id'], 'id');
-					
+
 					if ($invoice_j != 0){
 						//var_dump($invoice_j);
 						//array_push($_SESSION['invoice_data'], $_GET['client']);

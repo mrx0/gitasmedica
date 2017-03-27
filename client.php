@@ -703,7 +703,7 @@
 															'<li><div onclick="Ajax_TempZapis_edit_Enter('.$sheduler_zapis[$z]['id'].', 8)">Ошибка, удалить из записи</div></li>';
 													}
 													*/
-													if (($finances['add_new'] == 1) || $god_mode){
+													if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
 														echo 
 															'<li>
 																<div>
