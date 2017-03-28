@@ -260,16 +260,20 @@
         $price = $prices_arr[0]['price'];
 
         if ($insure == 0) {
-            if ($koef == 'k1') {
+            if ($koef === 'k1') {
                 if (isset($prices_arr[0]['price2'])) {
                     if ($prices_arr[0]['price2'] != 0) {
                         $price = $prices_arr[0]['price2'];
+                    }else{
+                        $price = $prices_arr[0]['price'] + $prices_arr[0]['price'] / 100 * 10;
                     }
                 }
-            } elseif ($koef == 'k2') {
+            } elseif ($koef === 'k2') {
                 if (isset($prices_arr[0]['price3'])) {
                     if ($prices_arr[0]['price3'] != 0) {
                         $price = $prices_arr[0]['price3'];
+                    }else{
+                        $price = $prices_arr[0]['price'] + $prices_arr[0]['price'] / 100 * 10;
                     }
                 }
             } else {
@@ -280,6 +284,8 @@
                 }
             }
         }
+
+        $price = round($price / 10) * 10;
 
         return($price);
     }

@@ -29,7 +29,7 @@
                     include_once 'ffun.php';
 
                     $spec_koeff = $_POST['spec_koeff'];
-
+                    //var_dump($prices);
 					foreach ($data as $ind => $invoice_data){
 						
 						if (!empty($invoice_data)){

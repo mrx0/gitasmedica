@@ -2360,9 +2360,11 @@
                 }
             }
 
-			//с учетом скидки акции
-			stoim = stoim - (stoim * discount / 100);
-			stoim = Math.round(stoim/10) * 10;
+			//с учетом скидки акции, но если не страховая
+            if (insure == 0) {
+                stoim = stoim - (stoim * discount / 100);
+            }
+            stoim = Math.round(stoim / 10) * 10;
 
 			//прописываем стоимость
 			if (guarantee == 0){
@@ -2373,7 +2375,9 @@
 		});
 
         Summ = Math.round(Summ - (Summ * discount / 100));
-        SummIns = Math.round(SummIns - (SummIns * discount / 100));
+        Summ = Math.round(Summ/10) * 10;
+        //SummIns = Math.round(SummIns - (SummIns * discount / 100));
+        SummIns = Math.round(SummIns/10) * 10;
 
 		document.getElementById("calculateInvoice").innerHTML = Summ;
 		if (SummIns > 0){
@@ -2721,7 +2725,8 @@
 			},
 			// действие, при ответе с сервера
 			success: function(data){
-				
+                //$('#errror').html(data);
+
 				fillInvoiseRez();
 
 				/*if(data.result == "success"){  
@@ -3287,7 +3292,7 @@
 			url: link,
 			global: false, 
 			type: "POST", 
-			dataType: "JSON",
+			//dataType: "JSON",
 			data:
 			{
 				price_id: price_id,
@@ -3304,7 +3309,8 @@
 			},
 			// действие, при ответе с сервера
 			success: function(data){
-				
+             	//$('#errror').html(data);
+
 				fillInvoiseRez();
 
 				/*if(data.result == "success"){  
@@ -3624,14 +3630,22 @@
                 if(data.result == 'success'){
                     $('#overlay').show();
 
-                    var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'add\')">';
+                    //var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'add\')">';
+
+                    /*if (mode == 'edit'){
+                        buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'edit\')">';
+                    }*/
+
+                    if (mode == 'add'){
+                        Ajax_order_add('add');
+                    }
 
                     if (mode == 'edit'){
-                        buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'edit\')">';
+                        Ajax_order_add('edit');
                     }
 
                     // Создаем меню:
-                    var menu = $('<div/>', {
+                    /*var menu = $('<div/>', {
                         class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
                     })
                         .appendTo('#overlay')
@@ -3671,7 +3685,7 @@
                         );
 
                     menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
-
+                    */
 
                 // в случае ошибок в форме
                 }else{

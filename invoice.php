@@ -281,6 +281,10 @@
                                                 </div>';
                             }
                             echo '
+                                                <div>
+                                                    <div style="">Скидка: <div id="discountValue" class="calculateInvoice" style="color: rgb(255, 0, 198);">'.$invoice_j[0]['discount'].'</div><span  class="calculateInvoice" style="color: rgb(255, 0, 198);">%</span></div>
+                                                </div>';
+                            echo '
 											</div> 
                                             <div style="display: inline-block; width: 300px; vertical-align: top;">
                                                 <div>
@@ -336,14 +340,14 @@
 													<i><b>Цена, руб.</b></i>
 												</div>
 												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-													<i><b>Кол-во</b></i>
-												</div>
-												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
 													<i><b>Коэфф.</b></i>
 												</div>
 												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-													<i><b>Скидка</b></i>
+													<i><b>Кол-во</b></i>
 												</div>
+												<!--<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
+													<i><b>Скидка</b></i>
+												</div>-->
 												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
 													<i><b>Гар.</b></i>
 												</div>
@@ -473,7 +477,7 @@
 										echo $rezult2[0]['name'];
 										
 										//Узнать цену
-										$arr = array();
+										/*$arr = array();
 										$rez = array();
 										$price = 0;
 										$stoim_item = 0;
@@ -514,7 +518,7 @@
 											}
 										}else{
 											$price = '?';
-										}
+										}*/
 										
 									}else{
 										echo '?';
@@ -572,15 +576,15 @@
 									<div class="cellCosmAct invoiceItemPrice" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
 										<b>'.$price.'</b>
 									</div>
-									<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-										<b>'.$item['quantity'].'</b>
-									</div>
 									<div class="cellCosmAct" style="font-size: 90%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
 										'.$item['spec_koeff'].'
 									</div>
-									<div class="cellCosmAct" style="font-size: 90%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-										'.$item['discount'].'
+									<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
+										<b>'.$item['quantity'].'</b>
 									</div>
+									<!--<div class="cellCosmAct" style="font-size: 90%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
+										'.$item['discount'].'
+									</div>-->
 									<div class="cellCosmAct settings_text" guarantee="'.$item['guarantee'].'" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">';
 									if ($item['guarantee'] != 0){
 										echo '
@@ -597,7 +601,9 @@
 									$stoim_item = $item['quantity'] * ($price +  $price * $item['spec_koeff'] / 100);
 			
 									//с учетом скидки акции
-									$stoim_item = $stoim_item - ($stoim_item * $item['discount'] / 100);
+                                    if ($item['insure'] == 0){
+									    $stoim_item = $stoim_item - ($stoim_item * $invoice_j[0]['discount'] / 100);
+                                    }
 									$stoim_item = round($stoim_item/10) * 10;
 									
 									echo $stoim_item;

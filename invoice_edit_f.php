@@ -33,13 +33,15 @@
 							mysql_query("SET NAMES 'utf8'");
 							
 							$time = date('Y-m-d H:i:s', time());
-							
+
+                            $discount = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['discount'];
+
 							//Обновляем в базу
 							/*$query = "INSERT INTO `journal_invoice` (`zapis_id`, `office_id`, `client_id`, `worker_id`, `type`, `summ`, `summins`, `create_person`, `create_time`) 
 							VALUES (
 							'{$_POST['zapis_id']}', '{$_POST['filial']}', '{$_POST['client']}', '{$_POST['worker']}', '{$_POST['invoice_type']}', '{$_POST['summ']}', '{$_POST['summins']}', '{$_SESSION['id']}', '{$time}')";
 							*/
-							$query = "UPDATE `journal_invoice` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `summ`='{$_POST['summ']}', `summins`='{$_POST['summins']}' WHERE `id`='{$_POST['invoice_id']}'";
+							$query = "UPDATE `journal_invoice` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `summ`='{$_POST['summ']}', `discount`='{$discount}', `summins`='{$_POST['summins']}' WHERE `id`='{$_POST['invoice_id']}'";
 							
 							mysql_query($query) or die(mysql_error().' -> '.$query);
 							

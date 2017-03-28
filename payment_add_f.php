@@ -163,7 +163,7 @@
                                                             mysql_query($query) or die(mysql_error() . ' -> ' . $query);*/
 
 
-                                                            echo json_encode(array('result' => 'success', 'data' => 'Типа проверяй'));
+                                                            echo json_encode(array('result' => 'success', 'data' => 'Вроде всё OK, проверяй'));
                                                         }
                                                     }
 
