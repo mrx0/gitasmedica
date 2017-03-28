@@ -21,31 +21,54 @@
 					
 				if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
 					$data = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'];
+					//переменная для цены
+                    $price = 0;
 					//переменная для массива цен
                     $prices = array();
                     //!!! @@@
                     include_once 'ffun.php';
 
-                    $spec_koeff = (int)$_POST['spec_koeff'];
+                    $spec_koeff = $_POST['spec_koeff'];
 
 					foreach ($data as $ind => $invoice_data){
 						
 						if (!empty($invoice_data)){
 							if ($_POST['invoice_type'] == 5){
 								foreach ($invoice_data as $key => $items){
-								    if
+                                    $item = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['id'];
+                                    $insure = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['insure'];
+
 								    //получим цены
-                                    $prices = takePrices ($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['id'], $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['insure'])
+                                    $prices = takePrices ($item, $insure);
+                                    //var_dump($prices);
+
+                                    if (!empty($prices)) {
+
+                                        $price = returnPriceWithKoeff($spec_koeff, $prices, $insure);
+
+                                    }
 
 									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['spec_koeff'] = $spec_koeff;
-									
+									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['price'] = $price;
+
 								}
 							}
 							if ($_POST['invoice_type'] == 6){
+                                $item =  $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['id'];
+                                $insure = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['insure'];
+
                                 //получим цены
-                                $prices = takePrices ($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['id'], $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['insure'])
+                                $prices = takePrices ($item, $insure);
+                                //var_dump($prices);
+
+                                if (!empty($prices)) {
+
+                                    $price = returnPriceWithKoeff($spec_koeff, $prices, $insure);
+
+                                }
 
 								$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['spec_koeff'] = $spec_koeff;
+								$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['price'] = $price;
 
 							}
 						}

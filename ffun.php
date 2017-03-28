@@ -237,7 +237,7 @@
         $query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices` WHERE `item`='".$item."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
 
         //Если посещение страховое и у пациента прописана страховая
-        if ($insure != 0)){
+        if ($insure != 0){
             $query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices_insure` WHERE `item`='".$item."' AND `insure`='".$insure."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
         }
 
@@ -252,6 +252,36 @@
         }
 
         return($prices_j);
+    }
+
+    //Вернём цену по коэффициенту
+    function returnPriceWithKoeff ($koef, $prices_arr, $insure){
+
+        $price = $prices_arr[0]['price'];
+
+        if ($insure == 0) {
+            if ($koef == 'k1') {
+                if (isset($prices_arr[0]['price2'])) {
+                    if ($prices_arr[0]['price2'] != 0) {
+                        $price = $prices_arr[0]['price2'];
+                    }
+                }
+            } elseif ($koef == 'k2') {
+                if (isset($prices_arr[0]['price3'])) {
+                    if ($prices_arr[0]['price3'] != 0) {
+                        $price = $prices_arr[0]['price3'];
+                    }
+                }
+            } else {
+                if (is_numeric($koef)) {
+                    $price = $prices_arr[0]['price'] + $prices_arr[0]['price'] / 100 * $koef;
+                } else {
+                    $price = $prices_arr[0]['price'];
+                }
+            }
+        }
+
+        return($price);
     }
 
 

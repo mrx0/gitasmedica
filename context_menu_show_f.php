@@ -27,8 +27,8 @@
 				if ($_POST['mark'] == 'spec_koeff'){
 					$data = '
 						<li><div onclick="spec_koeffInvoice(0)">нет</div></li>'.
-						'<li><div onclick="spec_koeffInvoice(10)">Ведущий сп-т</div></li>'.
-						'<li><div onclick="spec_koeffInvoice(20)">Главный сп-т</div></li>'.
+						'<li><div onclick="spec_koeffInvoice(\'k1\')">Ведущий сп-т</div></li>'.
+						'<li><div onclick="spec_koeffInvoice(\'k2\')">Главный сп-т</div></li>'.
 						'<li><div><input type="number" size="2" name="koeff" id="koeff" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="spec_koeffInvoice(document.getElementById(\'koeff\').value)"> Применить</div></div></li>';
 				}
 				//По гарантии общий
@@ -80,8 +80,8 @@
 				if ($_POST['mark'] == 'spec_koeffItem'){
 					$data = '
 						<li><div onclick="spec_koeffItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 0)">нет</div></li>'.
-						'<li><div onclick="spec_koeffItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 10)">Ведущий сп-т +10%</div></li>'.
-						'<li><div onclick="spec_koeffItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 20)">Главный сп-т +20%</div></li>'.
+						'<li><div onclick="spec_koeffItemInvoice('.$_POST['ind'].', '.$_POST['key'].', \'k1\')">Ведущий сп-т</div></li>'.
+						'<li><div onclick="spec_koeffItemInvoice('.$_POST['ind'].', '.$_POST['key'].', \'k2\')">Главный сп-т</div></li>'.
 						'<li><div><input type="number" size="2" name="koeff" id="koeff" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="spec_koeffItemInvoice('.$_POST['ind'].', '.$_POST['key'].', document.getElementById(\'koeff\').value)"> Применить</div></div></li>';
 				}
 				//Скидки акции позиция
