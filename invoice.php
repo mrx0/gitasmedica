@@ -359,275 +359,275 @@
 											
 											
 											
-					foreach ($invoice_ex_j as $ind => $invoice_data){
-						
-						//var_dump($invoice_data);
-						echo '
-							<div class="cellsBlock">
-								<div class="cellCosmAct toothInInvoice" style="text-align: center;">';
-						if ($ind == 99){
-							echo 'П';
-						}else{
-							echo $ind;
-						}
-						echo '
-								</div>';
-						
-						//Диагноз
-						if ($sheduler_zapis[0]['type'] == 5){
-							
-							if (!empty($invoice_ex_j_mkb) && isset($invoice_ex_j_mkb[$ind])){
-								echo '
-									<div class="cellsBlock" style="font-size: 100%;" >
-										<div class="cellText2" style="padding: 2px 4px; background: rgba(83, 219, 185, 0.16) none repeat scroll 0% 0%;">
-											<b>';
-								if ($ind == 99){
-									echo '<i>Полость</i>';
-								}else{
-									echo '<i>Зуб</i>: '.$ind;
-								}
-								echo '
-											</b>. <i>Диагноз</i>: ';
-											
-								foreach ($invoice_ex_j_mkb[$ind] as $mkb_key => $mkb_data_val){
-									$rez = array();
-									$rezult2 = array();
-									
-									$query = "SELECT `name`, `code` FROM `spr_mkb` WHERE `id` = '{$mkb_data_val['mkb_id']}'";	
-									
-									$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-									$number = mysql_num_rows($res);
-									if ($number != 0){
-										while ($arr = mysql_fetch_assoc($res)){
-											$rez[$mkb_data_val['mkb_id']] = $arr;
-										}
-									}else{
-										$rez = 0;
-									}
-									if ($rez != 0){
-										foreach ($rez as $mkb_name_val){
-											echo '
-												<div class="mkb_val" style="background: rgb(239, 255, 255); border: 1px dotted #bababa;"><b>'.$mkb_name_val['code'].'</b> '.$mkb_name_val['name'].'
+                            foreach ($invoice_ex_j as $ind => $invoice_data){
 
-												</div>';
-										}
-									}else{
-										echo '<div class="mkb_val">???</div>';
-									}
-									
-								}
-								
-								echo '
-										</div>
-									</div>';
-							}					
+                                //var_dump($invoice_data);
+                                echo '
+                                    <div class="cellsBlock">
+                                        <div class="cellCosmAct toothInInvoice" style="text-align: center;">';
+                                if ($ind == 99){
+                                    echo 'П';
+                                }else{
+                                    echo $ind;
+                                }
+                                echo '
+                                        </div>';
 
-							
-							/*if (isset($invoice_ex_j_mkb[''])){
-								echo '
-									<div class="cellsBlock" style="font-size: 100%;" >
-										<div class="cellText2" style="padding: 2px 4px; background: rgba(83, 219, 185, 0.14) none repeat scroll 0% 0%;">
-											<b>';
-								if ($ind == 99){
-									echo '<i>Полость</i>';
-								}else{
-									echo '<i>Зуб</i>: '.$ind;
-								}
-								echo '
-											</b>. <i>Диагноз</i>: '.$invoice_data[0]['mkb_id'].'
-										</div>
-									</div>';
-							}*/
-							
-						}
-						
-						foreach ($invoice_data as $item){
-							//var_dump($item);
-		
-							//часть прайса		
-							//if (!empty($invoice_data)){
-								
-								//foreach ($invoice_data as $key => $items){
-									echo '
-									<div class="cellsBlock" style="font-size: 100%;" >
-									<!--<div class="cellCosmAct" style="">
-										-
-									</div>-->
-										<div class="cellText2" style="">';
-									
-									//Хочу имя позиции в прайсе
-									$arr = array();
-									$rez = array();
+                                //Диагноз
+                                if ($sheduler_zapis[0]['type'] == 5){
 
-									$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = '{$item['price_id']}'";			
-						
-									$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-									$number = mysql_num_rows($res);
-									if ($number != 0){
-										while ($arr = mysql_fetch_assoc($res)){
-											array_push($rez, $arr);
-										}
-										$rezult2 = $rez;
-									}else{
-										$rezult2 = 0;
-									}
-									
-									if ($rezult2 != 0){
-										
-										echo $rezult2[0]['name'];
-										
-										//Узнать цену
-										/*$arr = array();
-										$rez = array();
-										$price = 0;
-										$stoim_item = 0;
-										//Для отбора цены по времени создания наряда
-										$price_arr = array();
-										
-										
-										
-										$query = "SELECT `date_from`, `price` FROM `spr_priceprices` WHERE `item`='{$item['price_id']}' ORDER BY `date_from` DESC, `create_time`";
-										
-										if ($item['insure'] != 0){
-											$query = "SELECT `date_from`, `price` FROM `spr_priceprices_insure` WHERE `item`='{$item['price_id']}' AND `insure`='".$item['insure']."' ORDER BY `date_from` DESC, `create_time`";
-										}
-										
-										$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-										$number = mysql_num_rows($res);
-										if ($number != 0){
-											//если кол-во цен == 1
-											if ($number == 1){
-												$arr = mysql_fetch_assoc($res);
-												$price = $arr['price'];
-											//если > 1
-											}else{
-												while ($arr = mysql_fetch_assoc($res)){
-													$price_arr[$arr['date_from']] = $arr;
-												}
-												//обратная сортировка
-												krsort($price_arr);										
-												//var_dump($price_arr);
-												//var_dump(strtotime($invoice_j[0]['create_time']));
-												
-												foreach($price_arr as $date_from => $value_arr){
-													if (strtotime($invoice_j[0]['create_time']) > $date_from){
-														$price = $value_arr['price'];
-														break;
-													}
-												}
-											}
-										}else{
-											$price = '?';
-										}*/
-										
-									}else{
-										echo '?';
-									}
-									
-									echo '
-									</div>';
-									
-									$price = $item['price'];
-									
-									if ($sheduler_zapis[0]['type'] == 5){
-										if ($item['insure'] != 0){
-											//Написать страховую
-											$insure_j = SelDataFromDB('spr_insure', $item['insure'], 'id');
-											
-											if ($insure_j != 0){
-												$insure_name = $insure_j[0]['name'];
-											}else{
-												$insure_name = '?';
-											}
-										}else{
-											$insure_name = 'нет';
-										}
-									}
-									
-									if ($sheduler_zapis[0]['type'] == 5){
-										echo '
-										<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic;">
-											'.$insure_name.'
-										</div>';
+                                    if (!empty($invoice_ex_j_mkb) && isset($invoice_ex_j_mkb[$ind])){
+                                        echo '
+                                            <div class="cellsBlock" style="font-size: 100%;" >
+                                                <div class="cellText2" style="padding: 2px 4px; background: rgba(83, 219, 185, 0.16) none repeat scroll 0% 0%;">
+                                                    <b>';
+                                        if ($ind == 99){
+                                            echo '<i>Полость</i>';
+                                        }else{
+                                            echo '<i>Зуб</i>: '.$ind;
+                                        }
+                                        echo '
+                                                    </b>. <i>Диагноз</i>: ';
 
-									
-										if ($item['insure'] != 0){
-											if ($item['insure_approve'] == 1){
-												echo '
-													<div class="cellCosmAct" style="font-size: 70%; text-align: center;">
-														<i class="fa fa-check" aria-hidden="true" style="font-size: 150%;"></i>
-													</div>';
-											}else{
-												echo '
-												<div class="cellCosmAct" style="font-size: 100%; text-align: center; background: rgba(255, 0, 0, 0.5) none repeat scroll 0% 0%;">
-													<i class="fa fa-ban" aria-hidden="true"></i>
-												</div>';
-											}
+                                        foreach ($invoice_ex_j_mkb[$ind] as $mkb_key => $mkb_data_val){
+                                            $rez = array();
+                                            $rezult2 = array();
 
-										}else{
-											echo '
-											<div class="cellCosmAct" insureapprove="'.$item['insure_approve'].'" style="font-size: 70%; text-align: center;">
-												-
-											</div>';
-										}
-									}
-									
-									echo '
-									<div class="cellCosmAct invoiceItemPrice" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
-										<b>'.$price.'</b>
-									</div>
-									<div class="cellCosmAct" style="font-size: 90%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-										'.$item['spec_koeff'].'
-									</div>
-									<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-										<b>'.$item['quantity'].'</b>
-									</div>
-									<!--<div class="cellCosmAct" style="font-size: 90%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-										'.$item['discount'].'
-									</div>-->
-									<div class="cellCosmAct settings_text" guarantee="'.$item['guarantee'].'" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">';
-									if ($item['guarantee'] != 0){
-										echo '
-											<i class="fa fa-check" aria-hidden="true" style="color: red; font-size: 150%;"></i>';
-									}else{
-										echo '-';
-									}
-									echo '
-									</div>
-									<div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
-										<b>';
-										
-									//вычисляем стоимость
-									$stoim_item = $item['quantity'] * ($price +  $price * $item['spec_koeff'] / 100);
-			
-									//с учетом скидки акции
-                                    if ($item['insure'] == 0){
-									    $stoim_item = $stoim_item - ($stoim_item * $invoice_j[0]['discount'] / 100);
+                                            $query = "SELECT `name`, `code` FROM `spr_mkb` WHERE `id` = '{$mkb_data_val['mkb_id']}'";
+
+                                            $res = mysql_query($query) or die(mysql_error().' -> '.$query);
+                                            $number = mysql_num_rows($res);
+                                            if ($number != 0){
+                                                while ($arr = mysql_fetch_assoc($res)){
+                                                    $rez[$mkb_data_val['mkb_id']] = $arr;
+                                                }
+                                            }else{
+                                                $rez = 0;
+                                            }
+                                            if ($rez != 0){
+                                                foreach ($rez as $mkb_name_val){
+                                                    echo '
+                                                        <div class="mkb_val" style="background: rgb(239, 255, 255); border: 1px dotted #bababa;"><b>'.$mkb_name_val['code'].'</b> '.$mkb_name_val['name'].'
+        
+                                                        </div>';
+                                                }
+                                            }else{
+                                                echo '<div class="mkb_val">???</div>';
+                                            }
+
+                                        }
+
+                                        echo '
+                                                </div>
+                                            </div>';
                                     }
-									$stoim_item = round($stoim_item/10) * 10;
-									
-									echo $stoim_item;
-			
-									//Общая стоимость
-									if ($item['guarantee'] == 0){
-										if ($item['insure'] != 0){
-											if ($item['insure_approve'] != 0){
-												$summins += $stoim_item;
-											}
-										}else{
-											$summ += $stoim_item;
-										}
-									}
 
-			
-									echo '</b>
-									</div>
-								</div>';
-						}
-						echo '
-							</div>';
-					}
-					
+
+                                    /*if (isset($invoice_ex_j_mkb[''])){
+                                        echo '
+                                            <div class="cellsBlock" style="font-size: 100%;" >
+                                                <div class="cellText2" style="padding: 2px 4px; background: rgba(83, 219, 185, 0.14) none repeat scroll 0% 0%;">
+                                                    <b>';
+                                        if ($ind == 99){
+                                            echo '<i>Полость</i>';
+                                        }else{
+                                            echo '<i>Зуб</i>: '.$ind;
+                                        }
+                                        echo '
+                                                    </b>. <i>Диагноз</i>: '.$invoice_data[0]['mkb_id'].'
+                                                </div>
+                                            </div>';
+                                    }*/
+
+                                }
+
+                                foreach ($invoice_data as $item){
+                                    //var_dump($item);
+
+                                    //часть прайса
+                                    //if (!empty($invoice_data)){
+
+                                        //foreach ($invoice_data as $key => $items){
+                                            echo '
+                                            <div class="cellsBlock" style="font-size: 100%;" >
+                                            <!--<div class="cellCosmAct" style="">
+                                                -
+                                            </div>-->
+                                                <div class="cellText2" style="">';
+
+                                            //Хочу имя позиции в прайсе
+                                            $arr = array();
+                                            $rez = array();
+
+                                            $query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = '{$item['price_id']}'";
+
+                                            $res = mysql_query($query) or die(mysql_error().' -> '.$query);
+                                            $number = mysql_num_rows($res);
+                                            if ($number != 0){
+                                                while ($arr = mysql_fetch_assoc($res)){
+                                                    array_push($rez, $arr);
+                                                }
+                                                $rezult2 = $rez;
+                                            }else{
+                                                $rezult2 = 0;
+                                            }
+
+                                            if ($rezult2 != 0){
+
+                                                echo $rezult2[0]['name'];
+
+                                                //Узнать цену
+                                                /*$arr = array();
+                                                $rez = array();
+                                                $price = 0;
+                                                $stoim_item = 0;
+                                                //Для отбора цены по времени создания наряда
+                                                $price_arr = array();
+
+
+
+                                                $query = "SELECT `date_from`, `price` FROM `spr_priceprices` WHERE `item`='{$item['price_id']}' ORDER BY `date_from` DESC, `create_time`";
+
+                                                if ($item['insure'] != 0){
+                                                    $query = "SELECT `date_from`, `price` FROM `spr_priceprices_insure` WHERE `item`='{$item['price_id']}' AND `insure`='".$item['insure']."' ORDER BY `date_from` DESC, `create_time`";
+                                                }
+
+                                                $res = mysql_query($query) or die(mysql_error().' -> '.$query);
+                                                $number = mysql_num_rows($res);
+                                                if ($number != 0){
+                                                    //если кол-во цен == 1
+                                                    if ($number == 1){
+                                                        $arr = mysql_fetch_assoc($res);
+                                                        $price = $arr['price'];
+                                                    //если > 1
+                                                    }else{
+                                                        while ($arr = mysql_fetch_assoc($res)){
+                                                            $price_arr[$arr['date_from']] = $arr;
+                                                        }
+                                                        //обратная сортировка
+                                                        krsort($price_arr);
+                                                        //var_dump($price_arr);
+                                                        //var_dump(strtotime($invoice_j[0]['create_time']));
+
+                                                        foreach($price_arr as $date_from => $value_arr){
+                                                            if (strtotime($invoice_j[0]['create_time']) > $date_from){
+                                                                $price = $value_arr['price'];
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }else{
+                                                    $price = '?';
+                                                }*/
+
+                                            }else{
+                                                echo '?';
+                                            }
+
+                                            echo '
+                                            </div>';
+
+                                            $price = $item['price'];
+
+                                            if ($sheduler_zapis[0]['type'] == 5){
+                                                if ($item['insure'] != 0){
+                                                    //Написать страховую
+                                                    $insure_j = SelDataFromDB('spr_insure', $item['insure'], 'id');
+
+                                                    if ($insure_j != 0){
+                                                        $insure_name = $insure_j[0]['name'];
+                                                    }else{
+                                                        $insure_name = '?';
+                                                    }
+                                                }else{
+                                                    $insure_name = 'нет';
+                                                }
+                                            }
+
+                                            if ($sheduler_zapis[0]['type'] == 5){
+                                                echo '
+                                                <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic;">
+                                                    '.$insure_name.'
+                                                </div>';
+
+
+                                                if ($item['insure'] != 0){
+                                                    if ($item['insure_approve'] == 1){
+                                                        echo '
+                                                            <div class="cellCosmAct" style="font-size: 70%; text-align: center;">
+                                                                <i class="fa fa-check" aria-hidden="true" style="font-size: 150%;"></i>
+                                                            </div>';
+                                                    }else{
+                                                        echo '
+                                                        <div class="cellCosmAct" style="font-size: 100%; text-align: center; background: rgba(255, 0, 0, 0.5) none repeat scroll 0% 0%;">
+                                                            <i class="fa fa-ban" aria-hidden="true"></i>
+                                                        </div>';
+                                                    }
+
+                                                }else{
+                                                    echo '
+                                                    <div class="cellCosmAct" insureapprove="'.$item['insure_approve'].'" style="font-size: 70%; text-align: center;">
+                                                        -
+                                                    </div>';
+                                                }
+                                            }
+
+                                            echo '
+                                            <div class="cellCosmAct invoiceItemPrice" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
+                                                <b>'.$price.'</b>
+                                            </div>
+                                            <div class="cellCosmAct" style="font-size: 90%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
+                                                '.$item['spec_koeff'].'
+                                            </div>
+                                            <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
+                                                <b>'.$item['quantity'].'</b>
+                                            </div>
+                                            <!--<div class="cellCosmAct" style="font-size: 90%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
+                                                '.$item['discount'].'
+                                            </div>-->
+                                            <div class="cellCosmAct settings_text" guarantee="'.$item['guarantee'].'" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">';
+                                            if ($item['guarantee'] != 0){
+                                                echo '
+                                                    <i class="fa fa-check" aria-hidden="true" style="color: red; font-size: 150%;"></i>';
+                                            }else{
+                                                echo '-';
+                                            }
+                                            echo '
+                                            </div>
+                                            <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
+                                                <b>';
+
+                                            //вычисляем стоимость
+                                            $stoim_item = $item['quantity'] * ($price +  $price * $item['spec_koeff'] / 100);
+
+                                            //с учетом скидки акции
+                                            if ($item['insure'] == 0){
+                                                $stoim_item = $stoim_item - ($stoim_item * $invoice_j[0]['discount'] / 100);
+                                            }
+                                            $stoim_item = round($stoim_item/10) * 10;
+
+                                            echo $stoim_item;
+
+                                            //Общая стоимость
+                                            if ($item['guarantee'] == 0){
+                                                if ($item['insure'] != 0){
+                                                    if ($item['insure_approve'] != 0){
+                                                        $summins += $stoim_item;
+                                                    }
+                                                }else{
+                                                    $summ += $stoim_item;
+                                                }
+                                            }
+
+
+                                            echo '</b>
+                                            </div>
+                                        </div>';
+                                }
+                                echo '
+                                    </div>';
+                            }
+
 					
 							echo '	
 										<div class="cellsBlock" style="font-size: 90%;" >
@@ -654,9 +654,78 @@
 												</div>-->';
 							}
 							echo '
-										</div>';		
+										    </div>';
 
-											
+
+
+                            //Документы закрытия/оплаты нарядов списком
+                            $payment_j = array();
+
+                            $query = "SELECT * FROM `journal_payment` WHERE `invoice_id`='".$_GET['id']."' ORDER BY `date_in` DESC";
+                            //var_dump($query);
+
+                            $res = mysql_query($query) or die(mysql_error().' -> '.$query);
+                            $number = mysql_num_rows($res);
+                            if ($number != 0){
+                                while ($arr = mysql_fetch_assoc($res)){
+                                    array_push($payment_j, $arr);
+                                }
+                            }else{
+
+                            }
+
+                            if (!empty($payment_j)) {
+                                echo '
+                                            <div class="invoceHeader" style="">
+                                                <ul style="margin-left: 6px; margin-bottom: 10px;">
+                                                    <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
+                                                        Проведённые оплаты по наряду:
+                                                    </li>';
+                                foreach ($payment_j as $payment_item) {
+
+                                    echo '
+                                                    <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
+                                    echo '
+                                                        <a href="order.php?id=' . $payment_item['id'] . '" class="cellOrder ahref" style="position: relative;">
+                                                            <b>Оплата #' . $payment_item['id'] . '</b> от ' . date('d.m.y', strtotime($payment_item['date_in'])) . '<br>
+                                                            <span style="font-size:80%;  color: #555;">';
+
+                                    if (($payment_item['create_time'] != 0) || ($payment_item['create_person'] != 0)) {
+                                        echo '
+                                                                Добавлен: ' . date('d.m.y H:i', strtotime($payment_item['create_time'])) . '<br>
+                                                                <!--Автор: ' . WriteSearchUser('spr_workers', $payment_item['create_person'], 'user', true) . '<br>-->';
+                                    } else {
+                                        echo 'Добавлен: не указано<br>';
+                                    }
+                                    /*if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
+                                        echo'
+                                                                Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
+                                                                <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
+                                    }*/
+                                    echo '
+                                                            </span>
+                                                        </a>
+                                                        <div class="cellName">
+                                                            <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+                                                                Сумма:<br>
+                                                                <span class="calculateOrder" style="font-size: 13px">' . $payment_item['summ'] . '</span> руб.
+                                                            </div>
+                                                        </div>
+                                                        <div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="deletePaymentItem('.$payment_item['id'].', this);">
+                                                            <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
+                                                        </div>
+                                                        ';
+                                    echo '
+                                                    </li>';
+                                }
+
+                                echo '
+                                                </ul>
+                                            </div>';
+                            }
+
+							echo '
+										</div>';
 							echo '			
 										</div>';
 							echo '

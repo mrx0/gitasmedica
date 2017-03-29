@@ -11,7 +11,7 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			
-			if (($finances['add_new'] == 1) || $god_mode){
+			if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
 			
 				$client = SelDataFromDB('spr_clients', $_GET['client'], 'user');
 			

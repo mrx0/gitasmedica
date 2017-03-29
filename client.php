@@ -34,7 +34,10 @@
 			
 			//переменная для просроченных
 			$allPayed = true;
-			
+
+            //доступный остаток
+            $dostOstatok = 0;
+
 			$text_tooth_status = array(
 				'up' => -9,
 				'down' => 138,
@@ -805,6 +808,9 @@
                             //Долг контрагента
                             $client_debt = json_decode(calculateDebt ($_GET['id']), true);
 
+                            //Если доступный остаток ОТРИЦАТЕЛЕН
+                            $dostOstatok = $client_balance['summ'] - $client_balance['debited'];
+
                             //var_dump(json_decode($client_balance, true));
                             echo '
                                     <ul id="balance" style="padding: 5px; margin: 0 5px 10px; display: inline-block; vertical-align: top; /*border: 1px outset #AAA;*/">
@@ -812,7 +818,7 @@
                                             Доступный остаток средств:
                                         </li>
                                         <li class="calculateOrder" style="font-size: 110%; font-weight: bold;">
-                                             '.($client_balance['summ'] - $client_balance['debited']).' руб.
+                                             '.$dostOstatok.' руб.
                                         </li>
                                         <!--<li style="font-size: 85%; color: #7D7D7D; margin-top: 10px;">
                                             Всего внесено:

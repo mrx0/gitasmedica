@@ -18,7 +18,6 @@
 		document.getElementById("summ").value = rezult;
 
 	});
-
     //Показываем блок с суммами и кнопками Для оплаты наряда
     function showPaymentAdd(mode){
         //alert(mode);
@@ -117,7 +116,6 @@
             }
         })
     }
-
     //Добавляем/редактируем в базу оплату
     function Ajax_payment_add(mode){
         //alert(mode);
@@ -175,6 +173,82 @@
                         '</ul>');
                 }else{
                     $('#errror').html(res.data);
+                }
+            }
+        });
+    }
+    //Выборка касса
+    function Ajax_show_result_cashbox(){
+
+        var summtype = $("input[name=summType]:checked").val();
+        var zapisTypeAll = $("input[id=zapisTypeAll]:checked").val();
+        if (zapisTypeAll === undefined){
+            zapisTypeAll = 0;
+        }
+        var zapisTypeStom = $("input[id=zapisTypeStom]:checked").val();
+        if (zapisTypeStom === undefined){
+            zapisTypeStom = 0;
+        }
+        var zapisTypeCosm = $("input[id=zapisTypeCosm]:checked").val();
+        if (zapisTypeCosm === undefined){
+            zapisTypeCosm = 0;
+        }
+
+        var certificatesShow = $("input[id=certificatesShow]:checked").val();
+        if (certificatesShow === undefined){
+            certificatesShow = 0;
+        }
+
+        $.ajax({
+            url:"ajax_show_result_cashbox_f.php",
+            global: false,
+            type: "POST",
+            data:
+                {
+                    datastart: document.getElementById("datastart").value,
+                    dataend: document.getElementById("dataend").value,
+
+                    filial: document.getElementById("filial").value,
+
+                    summtype: summtype,
+
+                    zapisTypeAll: zapisTypeAll,
+                    zapisTypeStom: zapisTypeStom,
+                    zapisTypeCosm: zapisTypeCosm,
+
+                    certificatesShow: certificatesShow,
+
+                },
+            cache: false,
+            beforeSend: function() {
+                $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                $('#qresult').html(data);
+            }
+        })
+    }
+    //Удалить текущую проплату
+    function deletePaymentItem(id){
+        //alert(id);
+
+        $.ajax({
+            url:"ajax_del_payment_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    id: id,
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(data){
+                if(data.result == "success"){
+
                 }
             }
         });

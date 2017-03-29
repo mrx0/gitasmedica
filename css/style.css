@@ -2135,3 +2135,14 @@ ul.ul-drop div.drop {
 }
 
 /* <-- Для разворачивающегося списка дерева*/
+
+
+.reportBlock {
+	border: 1px dotted #CCC;
+	margin: 10px;
+	padding: 10px 15px 20px;
+	width: 300px;
+	font-size: 95%;
+	background-color: rgba(245, 245, 245, 0.9);
+	display: inline-block;
+}
