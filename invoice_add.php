@@ -56,6 +56,7 @@
 								$_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['filial'] = (int)$_GET['filial'];
 								$_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['worker'] = (int)$_GET['worker'];
 								$_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['t_number_active'] = 0;
+                                $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['discount'] = 0;
 								$_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data'] = array();
 								$_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['mkb'] = array();
 							}
@@ -63,7 +64,7 @@
 							ksort($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
 							
 							//var_dump($_SESSION);
-							var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
+							//var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
 							//var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['mkb']);
 							
 							if ($sheduler_zapis[0]['month'] < 10) $month = '0'.$sheduler_zapis[0]['month'];
@@ -176,9 +177,9 @@
 							//Наряды
 							echo '
 								<ul id="invoices" style="margin-left: 6px; margin-bottom: 10px;">					
-									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выписанные наряды для этого посещения</li>';
+									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Последний выписанный наряд</li>';
 
-							$query = "SELECT * FROM `journal_invoice` WHERE `zapis_id`='".$_GET['id']."'";
+							$query = "SELECT * FROM `journal_invoice` WHERE `zapis_id`='".$_GET['id']."' ORDER BY `create_time` DESC LIMIT 1";
 							
 							$res = mysql_query($query) or die($query);
 							$number = mysql_num_rows($res);
@@ -225,7 +226,9 @@
 							
 							echo '
 								</ul>';
-							
+
+                            $discount = $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['discount'];
+
 							echo '
 								<div id="data">';
 
@@ -551,8 +554,8 @@
 									<div class="invoice_rezult" style="display: inline-block; border: 1px solid #c5c5c5; border-radius: 3px; position: relative;">';
 									
 							echo '	
-										<div id="errror" class="invoceHeader" style="">
-											<div>
+										<div id="errror" class="invoceHeader" style="position: relative;">
+						                    <div>
 												<div style="">К оплате: <div id="calculateInvoice" style="">0</div> руб.</div>
 											</div>';
 							if ($sheduler_zapis[0]['type'] == 5){
@@ -561,8 +564,18 @@
 												<div style="">Страховка: <div id="calculateInsInvoice" style="">0</div> руб.</div>
 											</div>';
 							}
+                            echo '
+                                            <div>
+												<div style="">Скидка: <div id="discountValue" class="calculateInvoice" style="color: rgb(255, 0, 198);">'.$discount.'</div><span  class="calculateInvoice" style="color: rgb(255, 0, 198);">%</span></div>
+											</div>';
 							echo '
-											<div style="position: absolute; top: 3px; right: 5px; vertical-align: middle; font-size: 11px; width: 400px;">
+											<div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
+												<div>	
+									                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd('.$sheduler_zapis[0]['type'].', \'add\')">
+								                </div>
+											</div>';
+							echo '
+											<div style="position: absolute; top: 0; left: 200px; vertical-align: middle; font-size: 11px; width: 300px;">
 												<div style="display: inline-block; vertical-align: top;">
 													Настройки: 
 												</div>
@@ -597,8 +610,7 @@
 													</div>
 												</div>
 											</div>
-										</div>
-										';
+										</div>';
 							
 							echo '
 										<div id="invoice_rezult" style="width: 700px; height: 500px; overflow: scroll; float: none">
@@ -608,7 +620,7 @@
 							
 							echo '
 								<div>	
-									<input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd('.$sheduler_zapis[0]['type'].', \'add\')">
+									<input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd('.$sheduler_zapis[0]['type'].', \'add\')">
 								</div>
 							</div>
 		

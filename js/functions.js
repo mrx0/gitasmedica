@@ -2255,13 +2255,15 @@
 	
 	//Подсчёт суммы для счёта
 	function calculateInvoice (invoice_type){
-		
+
 		var Summ = 0;
 		var SummIns = 0;
 		
 		var insure = 0;
 		var insureapprove = 0;
-		
+
+		var discount = Number(document.getElementById("discountValue").innerHTML);
+
 		document.getElementById("calculateInvoice").innerHTML = Summ;
 		if (invoice_type == 5){
 			document.getElementById("calculateInsInvoice").innerHTML = SummIns;
@@ -2283,7 +2285,8 @@
 			}
 			
 			//получаем значение гарантии
-			var guarantee = $(this).next().next().next().next().attr('guarantee');
+			//var guarantee = $(this).next().next().next().next().attr('guarantee');
+			var guarantee = $(this).next().next().next().attr('guarantee');
 			//console.log(insure);
 			
 			//Цена
@@ -2336,36 +2339,46 @@
 			var spec_koeff = Number($(this).parent().find('.spec_koeffInvoice').html());
 
 			//скидка акция
-			var discount = $(this).next().next().next().attr('discount');
+			//var discount = $(this).next().next().next().attr('discount');
 			//alert(discount);
 						
 			//взяли количество
 			var quantity = Number($(this).parent().find('[type=number]').val());
 					
 			//вычисляем стоимость
-			var stoim = quantity * (cost +  cost * spec_koeff / 100)
-						
-			//с учетом скидки акции
-			stoim = stoim - (stoim * discount / 100);
-			stoim = Math.round(stoim/10) * 10			
-				
+			//var stoim = quantity * (cost +  cost * spec_koeff / 100);
+			var stoim = quantity * cost	;
+
+			//суммируем сумму в итоги
+            if (guarantee == 0){
+                if (insure != 0){
+                    if (insureapprove != 0){
+                        SummIns += stoim;
+                    }
+                }else{
+                    Summ += stoim;
+                }
+            }
+
+			//с учетом скидки акции, но если не страховая
+            if (insure == 0) {
+                stoim = stoim - (stoim * discount / 100);
+            }
+            stoim = Math.round(stoim / 10) * 10;
+
 			//прописываем стоимость
 			if (guarantee == 0){
-				$(this).next().next().next().next().next().html(stoim);
+				//$(this).next().next().next().next().next().html(stoim);
+				$(this).next().next().next().next().html(stoim);
 			}
-						
-			if (guarantee == 0){
-				if (insure != 0){
-					if (insureapprove != 0){
-						SummIns += stoim;
-					}
-				}else{
-					Summ += stoim;
-				}
-			}
-			
+
 		});
-		
+
+        Summ = Math.round(Summ - (Summ * discount / 100));
+        Summ = Math.round(Summ/10) * 10;
+        //SummIns = Math.round(SummIns - (SummIns * discount / 100));
+        SummIns = Math.round(SummIns/10) * 10;
+
 		document.getElementById("calculateInvoice").innerHTML = Summ;
 		if (SummIns > 0){
 			document.getElementById("calculateInsInvoice").innerHTML = SummIns;
@@ -2395,7 +2408,7 @@
 	function fillInvoiseRez(){
 		
 		var invoice_type = document.getElementById("invoice_type").value;
-		
+
 		var link = "fill_invoice_stom_from_session_f.php";
 		if (invoice_type == 6){
 			link = "fill_invoice_cosm_from_session_f.php";
@@ -2682,7 +2695,8 @@
 
 	//Изменить коэффициент специалиста у всех
 	function spec_koeffInvoice(spec_koeff){
-		
+		//alert(spec_koeff);
+
 		var invoice_type = document.getElementById("invoice_type").value;
 		
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
@@ -2711,7 +2725,8 @@
 			},
 			// действие, при ответе с сервера
 			success: function(data){
-				
+                //$('#errror').html(data);
+
 				fillInvoiseRez();
 
 				/*if(data.result == "success"){  
@@ -2872,7 +2887,9 @@
 			},
 			// действие, при ответе с сервера
 			success: function(data){
-				
+
+                document.getElementById("discountValue").innerHTML = Number(discount);
+
 				fillInvoiseRez();
 
 				/*if(data.result == "success"){  
@@ -3111,7 +3128,7 @@
 	}	
 
 	//Изменить Коэффициент у этого зуба
-	function spec_koeffItemInvoice(zub, key, spec_koeff){
+	function spec_koeffItemInvoice(ind, key, spec_koeff){
 		
 		var invoice_type = document.getElementById("invoice_type").value;
 		
@@ -3127,7 +3144,7 @@
 			dataType: "JSON",
 			data:
 			{
-				zub: zub,
+				ind: ind,
 				key: key,
 				spec_koeff: spec_koeff,
 				client: document.getElementById("client").value,
@@ -3275,7 +3292,7 @@
 			url: link,
 			global: false, 
 			type: "POST", 
-			dataType: "JSON",
+			//dataType: "JSON",
 			data:
 			{
 				price_id: price_id,
@@ -3292,7 +3309,8 @@
 			},
 			// действие, при ответе с сервера
 			success: function(data){
-				
+             	//$('#errror').html(data);
+
 				fillInvoiseRez();
 
 				/*if(data.result == "success"){  
@@ -3612,14 +3630,22 @@
                 if(data.result == 'success'){
                     $('#overlay').show();
 
-                    var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'add\')">';
+                    //var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'add\')">';
+
+                    /*if (mode == 'edit'){
+                        buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'edit\')">';
+                    }*/
+
+                    if (mode == 'add'){
+                        Ajax_order_add('add');
+                    }
 
                     if (mode == 'edit'){
-                        buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'edit\')">';
+                        Ajax_order_add('edit');
                     }
 
                     // Создаем меню:
-                    var menu = $('<div/>', {
+                    /*var menu = $('<div/>', {
                         class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
                     })
                         .appendTo('#overlay')
@@ -3659,7 +3685,7 @@
                         );
 
                     menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
-
+                    */
 
                 // в случае ошибок в форме
                 }else{

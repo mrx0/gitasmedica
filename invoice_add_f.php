@@ -29,11 +29,17 @@
 						mysql_query("SET NAMES 'utf8'");
 						
 						$time = date('Y-m-d H:i:s', time());
-						
+
+                        //if ($_POST['invoice_type'] == 5) {
+                            //$discount = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['discount'];
+                       // }
+                        //if ($_POST['invoice_type'] == 6){
+                            $discount = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['discount'];
+                        //}
 						//Добавляем в базу
-						$query = "INSERT INTO `journal_invoice` (`zapis_id`, `office_id`, `client_id`, `worker_id`, `type`, `summ`, `summins`, `create_person`, `create_time`) 
+						$query = "INSERT INTO `journal_invoice` (`zapis_id`, `office_id`, `client_id`, `worker_id`, `type`, `summ`, `discount`, `summins`, `create_person`, `create_time`) 
 						VALUES (
-						'{$_POST['zapis_id']}', '{$_POST['filial']}', '{$_POST['client']}', '{$_POST['worker']}', '{$_POST['invoice_type']}', '{$_POST['summ']}', '{$_POST['summins']}', '{$_SESSION['id']}', '{$time}')";
+						'{$_POST['zapis_id']}', '{$_POST['filial']}', '{$_POST['client']}', '{$_POST['worker']}', '{$_POST['invoice_type']}', '{$_POST['summ']}', '{$discount}', '{$_POST['summins']}', '{$_SESSION['id']}', '{$time}')";
 						
 						mysql_query($query) or die(mysql_error().' -> '.$query);
 						

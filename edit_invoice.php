@@ -63,6 +63,7 @@
 									$_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['filial'] = $invoice_j[0]['office_id'];
 									$_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['worker'] = $invoice_j[0]['worker_id'];
 									$_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['t_number_active'] = 0;
+                                    $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['discount'] = 0;
 									$_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = array();
 									$_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['mkb'] = array();
 								}
@@ -121,7 +122,7 @@
 											$temp_arr2['insure_approve'] = (int)$invoice_ex_j_val['insure_approve'];
 											$temp_arr2['price'] = (int)$invoice_ex_j_val['price'];
 											$temp_arr2['guarantee'] = (int)$invoice_ex_j_val['guarantee'];
-											$temp_arr2['spec_koeff'] = (int)$invoice_ex_j_val['spec_koeff'];
+											$temp_arr2['spec_koeff'] = $invoice_ex_j_val['spec_koeff'];
 											$temp_arr2['discount'] = (int)$invoice_ex_j_val['discount'];
 											
 											if (!isset($temp_arr[$ind])){
@@ -133,7 +134,10 @@
 									}
 	
 									$_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
-									
+
+                                    //скидку тут добавлю в сесиию
+                                    $discount = $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['discount'] = $invoice_j[0]['discount'];
+
 									if ($invoice_ex_j_mkb != 0){
 										$_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['mkb'] = $invoice_ex_j_mkb;
 									
@@ -603,7 +607,7 @@
 										<div class="invoice_rezult" style="display: inline-block; border: 1px solid #c5c5c5; border-radius: 3px; position: relative;">';
 										
 								echo '	
-											<div id="errror" class="invoceHeader" style="">
+											<div id="errror" class="invoceHeader" style="position: relative;">
 												<div>
 													<div style="">К оплате: <div id="calculateInvoice" style="">0</div> руб.</div>
 												</div>';
@@ -613,9 +617,19 @@
 													<div style="">Страховка: <div id="calculateInsInvoice" style="">0</div> руб.</div>
 												</div>';
 								}
+                                echo '
+                                            <div>
+												<div style="">Скидка: <div id="discountValue" class="calculateInvoice" style="color: rgb(255, 0, 198);">'.$discount.'</div><span  class="calculateInvoice" style="color: rgb(255, 0, 198);">%</span></div>
+											</div>';
+                                echo '
+											<div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
+												<div>	
+									                <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd('.$sheduler_zapis[0]['type'].', \'edit\')">
+								                </div>
+											</div>';
 								echo '
-												<div style="position: absolute; top: 3px; right: 5px; vertical-align: middle; font-size: 11px; width: 400px;">
-													<div style="display: inline-block; vertical-align: top;">
+												<div style="position: absolute; top: 0; left: 200px; vertical-align: middle; font-size: 11px; width: 300px;">
+												    <div style="display: inline-block; vertical-align: top;">
 														Настройки: 
 													</div>
 													<div style="display: inline-block; vertical-align: top;">

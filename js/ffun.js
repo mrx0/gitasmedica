@@ -41,16 +41,24 @@
             },
             success:function(data){
                 if(data.result == 'success'){
-                    $('#overlay').show();
+                    //$('#overlay').show();
 
-                    var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_payment_add(\'add\')">';
+                    //var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_payment_add(\'add\')">';
+
+                    /*if (mode == 'edit'){
+                        buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_payment_add(\'edit\')">';
+                    }*/
+
+                    if (mode == 'add'){
+                       Ajax_payment_add('add');
+                    }
 
                     if (mode == 'edit'){
-                        buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_payment_add(\'edit\')">';
+                        Ajax_payment_add('edit');
                     }
 
                     // Создаем меню:
-                    var menu = $('<div/>', {
+                    /*var menu = $('<div/>', {
                         class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
                     })
                         .appendTo('#overlay')
@@ -90,6 +98,7 @@
                         );
 
                     menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+                    */
 
 
                     // в случае ошибок в форме

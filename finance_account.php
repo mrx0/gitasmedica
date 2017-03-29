@@ -200,13 +200,13 @@
                                 $invoiceTemp_str .= '
                                                 <div class="cellName">
                                                     <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                        Оплачено:<br>
+                                                        Оплачено: <br>
                                                         <span class="calculateInvoice" style="font-size: 13px; color: #333;">' . $invoice_item['paid'] . '</span> руб.
                                                     </div>';
                                 if ($invoice_item['summ'] != $invoice_item['paid']) {
                                     $invoiceTemp_str .= '
                                                     <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                        Осталось внести:<br>
+                                                        Осталось <a href="payment_add.php?invoice_id='.$invoice_item['id'].'" class="ahref">внести <i class="fa fa-thumb-tack" aria-hidden="true"></i></a><br>
                                                         <span class="calculateInvoice" style="font-size: 13px">'.($invoice_item['summ'] - $invoice_item['paid']).'</span> руб.
                                                     </div>';
                                 }

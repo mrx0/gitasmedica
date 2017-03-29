@@ -1465,7 +1465,7 @@
 														if (isset($t_f_data[$i.$j][$surface])){
 															//echo $i.$j.'<br />';
 															//var_dump ($t_f_data[$i.$j][$surface]);
-															if  ((mb_strstr($surface, 'root') == TRUE) && ($t_f_data[$i.$j][$surface] != '0')){
+															if  ((mb_strstr($surface, 'root') == TRUE) && ($t_f_data[$i.$j][$surface] != '0') && ($t_f_data[$i.$j][$surface] != '')){
 																$color = $root_status[$t_f_data[$i.$j][$surface]]['color'];
 															}
 															$DrawRoots = TRUE;
