@@ -866,6 +866,8 @@
 
 		var pricename = document.getElementById("pricename").value;
 		var price = document.getElementById("price").value;
+		var price2 = document.getElementById("price2").value;
+		var price3 = document.getElementById("price3").value;
 		var group = document.getElementById("group").value;
 		var iWantThisDate2 = document.getElementById("iWantThisDate2").value;
 		
@@ -877,6 +879,8 @@
 			{
 				pricename:pricename,
 				price:price,
+				price2:price2,
+				price3:price3,
 				group:group,
 				iWantThisDate2:iWantThisDate2,
 				session_id:session_id,
@@ -3914,12 +3918,12 @@
 
        return cboxArray;
 	}
-
+	//Удаление выбранных позиций из прайса страховой
     function delCheckedItems (insure_id){
 
         var rys = false;
 
-        var rys = confirm("Вы хотите удалить неокторые позиции из прайса страховой. \n\nВы уверены?");
+        var rys = confirm("Вы хотите удалить позиции из прайса страховой. \n\nВы уверены?");
 
         if (rys) {
             $.ajax({
@@ -3943,5 +3947,116 @@
                 }
             })
         }
+    }
+	//перемещение выбранных позиций прайса в группу
+    function moveCheckedItems (){
+		//alert(880);
+
+        var group = document.getElementById("group").value;
+        //alert(group);
+
+        var rys = false;
+
+        var rys = confirm("Вы хотите переместить выбранные позиции в группу. \n\nВы уверены?");
+		//alert(885);
+
+        if (rys) {
+            $.ajax({
+                url: "move_items_in_group_insure_price_f.php",
+                global: false,
+                type: "POST",
+                data: {
+                    group: group,
+                    items: checkedItems(),
+                },
+                cache: false,
+                beforeSend: function () {
+                    $('#overlay').hide();
+                    $('.center_block').remove();
+                    $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    $('#errrror').html(data);
+                    setTimeout(function () {
+                        window.location.replace('');
+                        //alert('client.php?id='+id);
+                    }, 100);
+                }
+            })
+        }
+    }
+
+	//Показать меню для перемещение выбранных позиций прайса в группу
+    function showMoveCheckedItems (){
+
+        //alert(mode);
+        $('#overlay').show();
+
+        var buttonsStr = '<input type="button" class="b" value="Применить" onclick="moveCheckedItems()">';
+
+        var tree = '';
+
+        $.ajax({
+            url: "show_tree.php",
+            global: false,
+            type: "POST",
+            data: {
+
+            },
+            cache: false,
+            beforeSend: function () {
+                // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (data) {
+                tree = data;
+
+                // Создаем меню:
+                var menu = $('<div/>', {
+                    class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+                })
+					.css({
+                	    "height": "200px",
+                	})
+                    .appendTo('#overlay')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "height": "100%",
+                                "border": "1px solid #AAA",
+                                "position": "relative",
+                            })
+                            .append('<span style="margin: 5px;"><i>Выберите группу</i></span>')
+                            .append(
+                                $('<div/>')
+                                    .css({
+                                        "position": "absolute",
+                                        "width": "100%",
+                                        "margin": "auto",
+                                        "top": "-10px",
+                                        "left": "0",
+                                        "bottom": "0",
+                                        "right": "0",
+                                        "height": "50%",
+                                    })
+                                    .append('<div style="margin: 10px;">'+tree+'</div>')
+                            )
+                            .append(
+                                $('<div/>')
+                                    .css({
+                                        "position": "absolute",
+                                        "bottom": "2px",
+                                        "width": "100%",
+                                    })
+                                    .append(buttonsStr+
+                                        '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                                    )
+                            )
+                    );
+
+                menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+
+            }
+        })
     }
 

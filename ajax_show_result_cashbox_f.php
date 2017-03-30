@@ -34,7 +34,7 @@
 
             //Филиал
             if ($_POST['filial'] != 99){
-                $queryFilial .= "`office` = '".$_POST['filial']."'";
+                $queryFilial .= "AND `office_id` = '".$_POST['filial']."'";
             }
 
             //Приход денег вытащим

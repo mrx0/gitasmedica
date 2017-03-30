@@ -56,7 +56,7 @@
 										<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>
 									</div>
     						        <div id="DIVdelCheckedItems" style="display: none; width: 400px; margin-bottom: 10px; border: 1px dotted #BFBCB5; padding: 20px 10px 10px; background-color: #EEE;">
-    						            Удалить отмеченные позиции<br>
+    						            Удалить отмеченные позиции из прайса страховой<br>
     	    							<!--<input type="button" class="b" value="Удалить" onclick="if (iCanManage) Ajax_change_shed()">-->
     	    							<input type="button" class="b" value="Удалить" onclick="delCheckedItems('.$_GET['id'].');">
     	    							<div id="errrror"></div>
@@ -140,6 +140,7 @@
 							if ($items_j != 0){
 								
 								echo '
+                                    <ul class="" style="width: 850px; font-size: 12px;">
 									<li class="cellsBlock" style="width: auto;">
 										<div class="cellPriority" style=""></div>
 										<span class="cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(255, 103, 97, 0.5);" id="4filter">Без группы</span>
@@ -169,13 +170,44 @@
 										$price3 = 0;
 									}
 							
-									echo '
+									/*echo '
 												<li class="cellsBlock" style="width: auto;">
 													<div class="cellPriority" style=""></div>
 													<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$items_j[$i]['name'].'</a>
 													<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.' / '.$price2.' / '.$price3.'</div>
-												</li>';
+												</li>';*/
+
+                                    //позиции с ценами
+                                    echo '
+										<li>
+											<div class="priceitemWOGroup">';
+                                    //if ($_GET['id'] != 0) {
+                                        echo '
+                            			        <div class="cellManage" style="display: none;">
+											      <span style="font-size: 80%; color: #777;">
+											        <input type="checkbox" name="propDel[]" value="' . $items_j[$i]['id'] . '"> отметить
+											      </span>
+                                                </div>';
+                                    //}
+                                    echo '
+												<div class="priceitemDivname">
+													<a href="pricelistitem_insure.php?insure='.$_GET['id'].'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter">'.$items_j[$i]['name'].'</a>
+												</div>
+												<div class="priceitemDiv">
+													<div class="priceitemDivcost"><b>'.$price.'</b> руб.</div>';
+                                    /*if ($_GET['id'] == 0) {
+                                        echo '
+                                                    <div class="priceitemDivcost" ><b > '.$price2.'</b > руб.</div >
+													<div class="priceitemDivcost" ><b > '.$price3.'</b > руб.</div >';
+                                    }*/
+                                    echo '
+
+												</div>
+											</div>
+										</li>';
+									
 								}
+								echo '</ul>';
 							}
 
 						//}
@@ -185,9 +217,7 @@
 					
 					mysql_close();
 
-					echo '
-								</ul>
-							</div>';
+
 				}else{
 					echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 				}

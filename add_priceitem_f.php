@@ -1,6 +1,6 @@
 <?php 
 
-// !!!!!! Доделать !!! add_priceitem_f.php
+//add_priceitem_f.php
 //Функция для добавления новой услуги
 
 	session_start();
@@ -39,7 +39,7 @@
 								
 								if ($iWantThisDate2 >= $start_day){
 									$PriceNameId = WriteToDB_EditPriceName (addslashes($name), $_SESSION['id']);
-									WriteToDB_EditPricePrice ($PriceNameId, $_POST['price'], $iWantThisDate2, $_SESSION['id']);
+									WriteToDB_EditPricePrice ($PriceNameId, $_POST['price'], $_POST['price2'], $_POST['price3'], $iWantThisDate2, $_SESSION['id']);
 									if ($_POST['group'] != 0){
 										WriteToDB_UpdatePriceItemInGroup($PriceNameId, $_POST['group'], $_SESSION['id']);
 									}

@@ -41,17 +41,17 @@
 				if (($items['edit'] == 1) || $god_mode){
 					if ($rezult[0]['status'] != 9){
 						echo '
-									<a href="pricelistgroup_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 80%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+									<a href="pricelistgroup_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
 					}
 					if (($rezult[0]['status'] == 9) || ($items['close'] == 1)){
 						echo '
-							<a href="#" onclick="Ajax_reopen_pricelistgroup('.$_SESSION['id'].', '.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 80%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
+							<a href="#" onclick="Ajax_reopen_pricelistgroup('.$_SESSION['id'].', '.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 100%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
 					}
 				}
 				if (($items['close'] == 1) || $god_mode){
 					if ($rezult[0]['status'] != 9){
 						echo '
-									<a href="pricelistgroup_del.php?id='.$_GET['id'].'" class="info" style="font-size: 80%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+									<a href="pricelistgroup_del.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
 					}
 				}
 				

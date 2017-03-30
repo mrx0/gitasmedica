@@ -2109,6 +2109,14 @@ ul.ul-drop div.drop {
 	position: relative;
 }
 
+.priceitemWOGroup{
+	position: relative;
+	margin: 1px 0 0 2.5em;
+	padding: 1px 4px;
+	border: 1px dotted #CCC;
+	text-align: left;
+}
+
 .priceitemDiv{
 	position: absolute;
 	top: 0;

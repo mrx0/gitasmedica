@@ -1,7 +1,7 @@
 <?php 
 
-//del_items_from_insure_price.php
-//Изменение
+//del_items_from_insure_price_f.php
+//Удалить из прайса страховой позиции
 
 	session_start();
 	

@@ -1702,21 +1702,24 @@
 								<b>
 								    '.$space.$value['name'].'
 								</b>
-							</p>
+							</p>';
+
+                    if ($insure_id == 0) {
+                        echo '
 							<div style="position: absolute; top: 0; right: 3px;">
-							   <a href="pricelistgroup.php?id='.$value['id'].'" class="ahref" style="font-weight: bold;" title="Открыть карточку группы">
+							   <a href="pricelistgroup.php?id=' . $value['id'] . '" class="ahref" style="font-weight: bold;" title="Открыть карточку группы">
                                     <i class="fa fa-folder-open" aria-hidden="true"></i>								    
 							   </a>
 								<div style="font-style: normal; font-size: 13px; display: inline-block;">
 								    <div class="managePriceList">
-                                        <a href="pricelistgroup_edit.php?id='.$value['id'].'" class="ahref"><i id="PriceListGroupEdit" class="fa fa-pencil-square-o pricemenu" aria-hidden="true" style="color: #777;" title="Редактировать карточку группы"></i></a>
-                                        <a href="add_pricelist_item.php?addinid='.$value['id'].'" class="ahref"><i id="PriceListGroupAdd" class="fa fa-plus pricemenu" aria-hidden="true" style="color: #36EA5E;" title="Добавить в эту группу"></i></a>
-                                        <!--<a href="pricelistgroup_del.php?id='.$value['id'].'" class="ahref"><i id="" class="fa fa-bars pricemenu" aria-hidden="true" style="" title="Изменить порядок"></i></a>-->
-                                        <a href="pricelistgroup_del.php?id='.$value['id'].'" class="ahref"><i id="PriceListGroupDelete" class="fa fa-trash pricemenu" aria-hidden="true" style="color: #FF3636" title="Удалить эту группу"></i></a>
+                                        <a href="pricelistgroup_edit.php?id=' . $value['id'] . '" class="ahref"><i id="PriceListGroupEdit" class="fa fa-pencil-square-o pricemenu" aria-hidden="true" style="color: #777;" title="Редактировать карточку группы"></i></a>
+                                        <a href="add_pricelist_item.php?addinid=' . $value['id'] . '" class="ahref"><i id="PriceListGroupAdd" class="fa fa-plus pricemenu" aria-hidden="true" style="color: #36EA5E;" title="Добавить в эту группу"></i></a>
+                                        <!--<a href="pricelistgroup_del.php?id=' . $value['id'] . '" class="ahref"><i id="" class="fa fa-bars pricemenu" aria-hidden="true" style="" title="Изменить порядок"></i></a>-->
+                                        <a href="pricelistgroup_del.php?id=' . $value['id'] . '" class="ahref"><i id="PriceListGroupDelete" class="fa fa-trash pricemenu" aria-hidden="true" style="color: #FF3636" title="Удалить эту группу"></i></a>
 									</div>
 								</div>
 							</div>';
-					
+                    }
 					/*echo '
 						<li class="cellsBlock" style="width: auto;">
 							<div class="cellPriority" style=""></div>
@@ -2048,7 +2051,16 @@
 		$arr = array();
 		$mkb_rez = array();
 		$rez = array();
-		
+
+		$mkb_avail_arr = array(
+            "K00-K93",
+            "K00-K14", "K00", "K01", "K02", "K03", "K04", "K05", "K06", "K07", "K08", "K09", "K10", "K11", "K12", "K13", "K14",
+            "S00-T98",
+            "S00-S09",
+            "S02",
+            "S03",
+        );
+
 		$parent_str = '';
 		//global $rez_str;
 		$rez_str = '';
@@ -2111,30 +2123,30 @@
 		
 		if ($mkb_rez != 0){
 			foreach ($mkb_rez as $mkb_rez_value){
-				
-				if ($mkb_rez_value['node_count'] > 0){
-					$rez_str .= '	
+				if ((in_array($mkb_rez_value['code'], $mkb_avail_arr)) || ((in_array($mkb_rez_value['parent_code'], $mkb_avail_arr)) && ($mkb_rez_value['node_count'] == 0))) {
+                    if ($mkb_rez_value['node_count'] > 0) {
+                        $rez_str .= '	
 						<li>
 							<div class="drop" style="background-position: 0px 0px;"></div>
-							<p onclick="checkMKBItem('.$mkb_rez_value['id'].');"><b>'.$mkb_rez_value['code'].'</b> '.$mkb_rez_value['name'].'</p>';
-							
-					$rez_str .= '	
+							<p onclick="checkMKBItem(' . $mkb_rez_value['id'] . ');"><b>' . $mkb_rez_value['code'] . '</b> ' . $mkb_rez_value['name'] . '</p>';
+
+                        $rez_str .= '	
 							<ul style="display: none;">';
-							
-					$rez_str .= showTree3($mkb_rez_value['id'], '', 'list', 0, FALSE, 0, FALSE, 'spr_mkb', 0, 0);
-					
-					$rez_str .= '	
+
+                        $rez_str .= showTree3($mkb_rez_value['id'], '', 'list', 0, FALSE, 0, FALSE, 'spr_mkb', 0, 0);
+
+                        $rez_str .= '	
 							</ul>';
-					$rez_str .= '	
+                        $rez_str .= '	
 						</li>';
-							
-				}else{
-					$rez_str .= '	
+
+                    } else {
+                        $rez_str .= '	
 							<li>
-								<p onclick="checkMKBItem('.$mkb_rez_value['id'].');">'.$mkb_rez_value['name'].'</p>
+								<p onclick="checkMKBItem(' . $mkb_rez_value['id'] . ');">' . $mkb_rez_value['name'] . '</p>
 							</li>';
-				}
-				
+                    }
+                }
 				//if ($type == 'list'){
 					//echo $space.$value['name'].'<br>';
 					

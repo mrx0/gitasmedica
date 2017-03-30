@@ -98,7 +98,22 @@
 									<input type="text" name="price" id="price" value="0"  style="width: 50px;"> руб.
 									<label id="price_error" class="error"></label>
 								</div>
-							</div>';
+							</div>
+							<div class="cellsBlock2">
+								<div class="cellLeft">Цена2</div>
+								<div class="cellRight">
+									<input type="text" name="price2" id="price2" value="0"  style="width: 50px;"> руб.
+									<label id="price2_error" class="error"></label>
+								</div>
+							</div>
+							<div class="cellsBlock2">
+								<div class="cellLeft">Цена3</div>
+								<div class="cellRight">
+									<input type="text" name="price3" id="price3" value="0"  style="width: 50px;"> руб.
+									<label id="price3_error" class="error"></label>
+								</div>
+							</div>
+							';
 					//Календарик	
 					echo '
 	
