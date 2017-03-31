@@ -72,6 +72,10 @@
 							echo '
 								<div id="status">
 									<header>
+                                        <div class="nav">
+                                            <a href=insure_price.php?id='.$_GET['insure'].'" class="b">Прайс компании</a>
+                                            <a href="pricelist.php" class="b">Основной прайс</a>
+                                        </div>
 										<h2>Изменить цену</h2>
 										<a href="insure.php?id='.$_GET['insure'].'" class="ahref" style="color: green; font-size: 90%; font-weight: bold;">'.$insure_j[0]['name'].'</a>
                                         <ul style="margin-left: 0; margin-bottom: 10px; margin-top: 5px;">
@@ -212,18 +216,27 @@
 							echo '
 										<ul style="margin-bottom: 10px; margin-top: 20px;">
 											<li style="width: auto; color:#777; font-size: 90%;">
-												История изменения цены
+												История изменений и применений цен
 											</li>
 										</ul>
 										<div style="margin-bottom: 20px;">
 											<div class="cellsBlock">';
-									
-							if ($rez != 0){
-								for($i=0; $i < count($rez); $i++){
-									echo '<div>'.$rez[$i]['price'].' руб. c '.date('d.m.y H:i', $rez[$i]['date_from']).' | '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'</div>';
-									//echo '<div>'.$rez[$i]['price'].' руб. |  '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'</div>';
-								}
-							}
+
+                            if ($rez != 0){
+                                for($i=0; $i < count($rez); $i++){
+                                    echo '
+                            <div>';
+                                    if ((($items['close'] == 1) && ($finances['close'] == 1)) || $god_mode){
+                                        echo '
+						        <i class="fa fa-times" aria-hidden="true" style="cursor: pointer; color: red;"  title="Удалить"></i>';
+                                    }
+                                    echo '
+                            '.$rez[$i]['price'].'/'.$rez[$i]['price2'].'/'.$rez[$i]['price3'].' руб. c '.date('d.m.y H:i', $rez[$i]['date_from']).' | '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'';
+                                    echo '
+						    </div>';
+                                    //echo '<div>'.$rez[$i]['price'].' руб. |  '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'</div>';
+                                }
+                            }
 							
 							echo '
 											</div>

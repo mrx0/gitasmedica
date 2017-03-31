@@ -31,8 +31,8 @@
 
 				//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `create_time` DESC LIMIT 1";
 				$query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
-										
-				$res = mysql_query($query) or die($query);
+
+                $res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
 				$number = mysql_num_rows($res);
 				if ($number != 0){
@@ -46,11 +46,14 @@
 					$price3 = 0;
 				}
 
-				mysql_close();
+				//mysql_close();
 				
 				echo '
 					<div id="status">
 						<header>
+							<div class="nav">
+								<a href="pricelist.php" class="b">Основной прайс</a>
+							</div>
 							<h2>Карточка позиции';
 							
 				/*if (($items['edit'] == 1) || $god_mode){
@@ -83,8 +86,7 @@
 				}
 				
 				echo '
-						</header>
-						<a href="pricelist.php" class="b">В прайс</a><br>';
+						</header>';
 						
 				echo '
 						<div id="data">';
@@ -115,6 +117,76 @@
 								</div>
 							</div>';
 
+				//В других прайсах
+
+                $arr = array();
+                $rez = array();
+
+                $insure_price_arr = array();
+
+                $query = "SELECT * FROM `spr_pricelists_insure` WHERE `item`= '".$_GET['id']."'";
+
+                $res = mysql_query($query) or die(mysql_error().' -> '.$query);
+
+                $number = mysql_num_rows($res);
+                if ($number != 0){
+                    while ($arr = mysql_fetch_assoc($res)){
+                        $insure_price_arr[$arr['insure']] = $arr;
+                    }
+                }else{
+                    $rez = 0;
+                }
+                //var_dump($insure_price_arr);
+
+                echo '
+							<ul style="margin-bottom: 10px; margin-top: 20px;">
+								<li style="width: auto; color:#777; font-size: 90%;">
+									Эта позиция в других прайсах
+								</li>
+							</ul>
+							<div style="margin-bottom: 20px;">
+								<div class="cellsBlock">';
+
+                $insure_j = SelDataFromDB('spr_insure', '', '');
+
+                if ($insure_j != 0){
+                    foreach ($insure_j as $insure_item){
+                        //var_dump($insure_item);
+                        echo '
+                            <li class="cellsBlock" style="width: auto;">
+                                <div class="cellOrder" style="position: relative;">
+                                    <a href="insure.php?id='.$insure_item['id'].'" class="ahref">'.$insure_item['name'].'</a>
+                                </div>';
+                        if (isset($insure_price_arr[$insure_item['id']])){
+                            if (($items['edit'] == 1) || $god_mode){
+                                 echo '
+                                <div class="cellName" style="background: rgb(157,255,134);">
+                                    <a href="pricelistitem_insure.php?insure='.$insure_item['id'].'&id='.$_GET['id'].'" class="ahref">открыть в страховой</a>
+                                </div>';
+                            }else{
+                                echo '
+                                <div class="cellName" style="background: rgb(157,255,134);">
+                                    
+                                </div>';
+                            }
+                        }else{
+                            echo '
+                                <div class="cellName" style="cursor: pointer; background: rgba(255,132,113,0.73);" onclick="Ajax_add_pricelistitem_insure('.$_GET['id'].', '.$insure_item['id'].');">
+                                    добавить в эту страховую
+                                </div>';
+                        }
+                        echo '           
+                            </li>   
+                        ';
+                    }
+                }
+                echo '
+								</div>
+							</div>
+							';
+
+
+
 				echo '
 							<div class="cellsBlock2">
 								<span style="font-size:80%;">';
@@ -138,15 +210,11 @@
 				$arr = array();
 				$rez = array();
 					
-				require 'config.php';
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-				mysql_select_db($dbName) or die(mysql_error());
-				mysql_query("SET NAMES 'utf8'");
 
 				$query = "SELECT * FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC, `create_time` DESC";
 				//$query = "SELECT * FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC";
-									
-				$res = mysql_query($query) or die($query);
+
+                $res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
 				$number = mysql_num_rows($res);
 				if ($number != 0){
@@ -163,7 +231,7 @@
 				echo '
 							<ul style="margin-bottom: 10px; margin-top: 20px;">
 								<li style="width: auto; color:#777; font-size: 90%;">
-									История изменения цены
+									История изменений и применений цен
 								</li>
 							</ul>
 							<div style="margin-bottom: 20px;">
@@ -171,7 +239,12 @@
 						
 				if ($rez != 0){
 					for($i=0; $i < count($rez); $i++){
-						echo '<div>'.$rez[$i]['price'].' руб. c '.date('d.m.y H:i', $rez[$i]['date_from']).' | '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'</div>';
+						echo '
+                            <div>';
+                        echo '
+                            '.$rez[$i]['price'].'/'.$rez[$i]['price2'].'/'.$rez[$i]['price3'].' руб. c '.date('d.m.y H:i', $rez[$i]['date_from']).' | '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'';
+                        echo '
+						    </div>';
 						//echo '<div>'.$rez[$i]['price'].' руб. |  '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'</div>';
 					}
 				}

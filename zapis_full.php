@@ -15,7 +15,13 @@
 			$offices = SelDataFromDB('spr_office', '', '');
 			//var_dump ($offices);
 
-			
+            $edit_options = false;
+            $upr_edit = false;
+            $admin_edit = false;
+            $stom_edit = false;
+            $cosm_edit = false;
+            $finance_edit = false;
+
 			$post_data = '';
 			$js_data = '';
 			$kabsInFilialExist = FALSE;
@@ -373,7 +379,7 @@
 					
 					if ($ZapisHereQueryToday != 0){
 
-						for ($z = 0; $z < count($ZapisHereQueryToday); $z++){
+						/*for ($z = 0; $z < count($ZapisHereQueryToday); $z++){
 							$t_f_data_db = array();
 							$cosmet_data_db = array();
 							$invoice_data_db = array();
@@ -440,12 +446,12 @@
 													<img src="img/tooth_state/1.png">
 												</a>	
 											</div>';*/
-									}
+						/*			}
 								}
 								
 								
 								//Посещения косметологов
-								$query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
+						/*		$query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
 								$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
 								$number = mysql_num_rows($res);
 								if ($number != 0){
@@ -702,8 +708,8 @@
 								echo '
 								</li>';
 							}
-						}
-						echo '
+						}*/
+						/*echo '
 							<div id="ShowSettingsAddTempZapis" style="position: absolute; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; z-index:105; padding:10px;">
 								<a class="close" href="#" onclick="HideSettingsAddTempZapis()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(img/close.png) no-repeat;">
 									Close
@@ -840,17 +846,46 @@
 						</div>';
 						echo '
 						</div>
-						<div id="req"></div>';
+						<div id="req"></div>';*/
 
 					}else{
 						echo 'В этом кабинете нет записи<br>Смотрите остальные';
 					}
+
+                    // !!! **** тест с записью
+					include_once 'showZapisRezult.php';
+
+                    if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
+                        $finance_edit = true;
+                        $edit_options = true;
+                    }
+
+                    if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode){
+                        $stom_edit = true;
+                        $edit_options = true;
+                    }
+                    if (($cosm['add_own'] == 1) || ($cosm['add_new'] == 1) || $god_mode){
+                        $cosm_edit = true;
+                        $edit_options = true;
+                    }
+
+                    if (($zapis['add_own'] == 1) || ($zapis['add_new'] == 1) || $god_mode) {
+                        $admin_edit = true;
+                        $edit_options = true;
+                    }
+
+                    if (($scheduler['see_all'] == 1) || $god_mode){
+                        $upr_edit = true;
+                        $edit_options = true;
+                    }
+
+					echo showZapisRezult($ZapisHereQueryToday, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $type);
+
 				}
 			}else{
 				echo '
 					<div id="status">
-						<header>
-';
+						<header>';
 				echo '			
 				</header>';
 			}

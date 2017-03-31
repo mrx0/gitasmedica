@@ -178,7 +178,7 @@
         });
     }
     //Выборка касса
-    function Ajax_show_result_cashbox(){
+    function Ajax_show_result_stat_cashbox(){
 
         var summtype = $("input[name=summType]:checked").val();
         var zapisTypeAll = $("input[id=zapisTypeAll]:checked").val();

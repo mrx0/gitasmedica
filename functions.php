@@ -1322,9 +1322,11 @@
 						for ($i = 0; $i < count($items_j); $i++) {
 
 							$price = 0;
-							
+							$price2 = 0;
+							$price3 = 0;
+
 							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
-							$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
+							$query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
 							//var_dump($query);
 							
 							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
@@ -1333,12 +1335,18 @@
 							if ($number != 0){
 								$arr3 = mysql_fetch_assoc($res);
 								$price = $arr3['price'];
+								$price2 = $arr3['price2'];
+								$price3 = $arr3['price3'];
 							}else{
 								$price = 0;
+								$price2 = 0;
+								$price3 = 0;
 							}
 					
 							//array_push($rezult_arr, $items_j[$i]['id']);
-							$rezult_arr[$items_j[$i]['id']] = $price;
+							$rezult_arr[$items_j[$i]['id']]['price'] = $price;
+							$rezult_arr[$items_j[$i]['id']]['price2'] = $price2;
+							$rezult_arr[$items_j[$i]['id']]['price3'] = $price3;
 
 							/*echo '
 										<li class="cellsBlock" style="width: auto;">

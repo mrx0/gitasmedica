@@ -35,7 +35,11 @@
 					//Сегодня 09:00:00
 					$fromdate = strtotime(date('d.m.Y', $time)." 09:00:00");
 					
-					foreach($arr4fill as $id => $price){
+					foreach($arr4fill as $id => $price_arr){
+                        $price = $price_arr['price'];
+                        $price2 = $price_arr['price2'];
+                        $price3 = $price_arr['price3'];
+
 						//Добавляем в базу позицию прайса для страховой
 						$query = "INSERT INTO `spr_pricelists_insure` (`item`, `insure`, `create_time`, `create_person`) 
 						VALUES (
@@ -47,9 +51,9 @@
 						
 						//Добавляем в базу цену позиции прайса для страховой
 						$query = "INSERT INTO `spr_priceprices_insure` (
-							`insure`, `item`, `price`, `date_from`, `create_time`, `create_person`) 
+							`insure`, `item`, `price`, `price2`, `price3`, `date_from`, `create_time`, `create_person`) 
 							VALUES (
-						'{$_POST['id']}', '{$id}', '{$price}', '{$fromdate}', '{$time}', '{$_SESSION['id']}')";
+						'{$_POST['id']}', '{$id}', '{$price}', '0', '0', '{$fromdate}', '{$time}', '{$_SESSION['id']}')";
 						mysql_query($query) or die(mysql_error().' -> '.$query);
 						
 					}

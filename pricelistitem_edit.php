@@ -20,9 +20,11 @@
 					echo '
 						<div id="status">
 							<header>
+								<div class="nav">
+								    <a href="pricelist.php" class="b">Основной прайс</a>
+							    </div>
 								<h2>Редактировать <a href="pricelistitem.php?id='.$_GET['id'].'" class="ahref">#'.$_GET['id'].'</a></h2>
-							</header>
-							<a href="pricelist.php" class="b">В прайс</a><br>';
+							</header>';
 
 					echo '
 							<div id="data">';

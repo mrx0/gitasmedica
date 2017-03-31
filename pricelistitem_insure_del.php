@@ -24,6 +24,11 @@
 						echo '
 							<div id="status">
 								<header>
+                                    <div class="nav">
+                                        <a href=insure_price.php?id='.$_GET['insure'].'" class="b">Прайс компании</a>
+                                        <a href="pricelist.php" class="b">Основной прайс</a>
+                                        <a href="pricelistitem.php?id='.$_GET['id'].'" class="b">Эта позиция в основном прайсе</a>
+                                    </div>
 									<h2>Удалить позицию из прайса страховой</h2>
 									<a href="insure.php?id='.$_GET['insure'].'" class="ahref" style="color: green; font-size: 90%; font-weight: bold;">'.$insure_j[0]['name'].'</a>
 								</header>

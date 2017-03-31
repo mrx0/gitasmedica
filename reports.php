@@ -75,6 +75,15 @@
 			echo '
 						</ul>
 						<ul class="reportBlock" style="">
+								<h1>Запись</h1>';
+			echo '				
+							<li class="cellsBlock" style="margin: 10px;">
+								<a href="stat_zapis.php" class="b3">Запись</a>
+							</li>';
+
+			echo '
+						</ul>
+						<ul class="reportBlock" style="">
 								<h1>Финансы</h1>';
 			echo '				
 							<li class="cellsBlock" style="margin: 10px;">
@@ -83,7 +92,7 @@
 
 			echo '				
 							<li class="cellsBlock" style="margin: 10px;">
-								<a href="cashbox.php" class="b3">Касса</a>
+								<a href="stat_cashbox.php" class="b3">Касса</a>
 							</li>';
 
 			echo '

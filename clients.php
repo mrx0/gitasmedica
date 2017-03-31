@@ -265,6 +265,14 @@
 							echo '
 										дом. '.$clients_j[$i]['htelephone'].'';
 						}
+						if ($clients_j[$i]['telephoneo'] != ''){
+							echo '
+										тел.оп. '.$clients_j[$i]['telephoneo'].'';
+						}
+						if ($clients_j[$i]['htelephoneo'] != ''){
+							echo '
+										дом.тел.оп. '.$clients_j[$i]['htelephoneo'].'';
+						}
 						echo '
 									</div>
 									<div class="cellText">'.$clients_j[$i]['comment'].'</div>

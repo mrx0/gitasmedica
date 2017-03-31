@@ -329,7 +329,7 @@
 								<a href="zapis_own.php?y='.$year.'&m='.$month.'&d='.$day.'&worker='.$_SESSION['id'].'" class="b">Ваша запись сегодня</a>';
 				}
 			}
-			if (($zapis['see_all'] == 1) || $god_mode){
+			if (($zapis['add_new'] == 1) || $god_mode){
 				echo '
 								<a href="zapis.php?y='.$year.'&m='.$month.'&d='.$day.'&filial='.$_GET['filial'].''.$who.'" class="b">Запись сегодня</a>';
 				/*echo '
@@ -597,7 +597,7 @@
 													</span>';
 									}
 								}
-								if (($zapis['see_all'] == 1) || $god_mode){
+								if (($zapis['add_new'] == 1) || $god_mode){
 									echo '
 													<span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b">
 														<div class="no_print">

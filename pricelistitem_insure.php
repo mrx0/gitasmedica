@@ -27,7 +27,7 @@
 				
 				//$rezult = SelDataFromDB('spr_pricelist_template', $_GET['id'], 'id');
 				//$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = (SELECT `item` FROM `spr_pricelists_insure` WHERE `item`='{$_GET['id']}') LIMIT 1";			
-				$query = "SELECT * FROM `spr_pricelists_insure` WHERE `item`='{$_GET['id']}' LIMIT 1";			
+				$query = "SELECT * FROM `spr_pricelists_insure` WHERE `item`='{$_GET['id']}' AND `insure`='{$_GET['insure']}' LIMIT 1";
 				
 				$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 				$number = mysql_num_rows($res);
@@ -92,6 +92,11 @@
 						echo '
 							<div id="status">
 								<header>
+                                    <div class="nav">
+                                        <a href=insure_price.php?id='.$_GET['insure'].'" class="b">Прайс компании</a>
+                                        <a href="pricelist.php" class="b">Основной прайс</a>
+                                        <a href="pricelistitem.php?id='.$_GET['id'].'" class="b">Эта позиция в основном прайсе</a>
+                                    </div>
 									<h2>Карточка позиции ';
 									
 						/*if (($items['edit'] == 1) || $god_mode){
@@ -112,7 +117,7 @@
 						if (($items['close'] == 1) || $god_mode){
 							//if ($rezult[0]['status'] != 9){
 								echo '
-											<a href="pricelistitem_insure_del.php?id='.$_GET['id'].'&insure='.$_GET['insure'].'" class="info" style="font-size: 80%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+											<a href="pricelistitem_insure_del.php?id='.$_GET['id'].'&insure='.$_GET['insure'].'" class="info" style="font-size: 100%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
 							//}
 						}
 						
@@ -125,8 +130,7 @@
 						}
 						
 						echo '
-								</header>
-								<a href="insure_price.php?id='.$_GET['insure'].'" class="b">В прайс</a><br>';
+								</header>';
 								
 						echo '
 								<div id="data">';
@@ -205,18 +209,23 @@
 						echo '
 									<ul style="margin-bottom: 10px; margin-top: 20px;">
 										<li style="width: auto; color:#777; font-size: 90%;">
-											История изменения цены
+											История изменений и применений цен
 										</li>
 									</ul>
 									<div style="margin-bottom: 20px;">
 										<div class="cellsBlock">';
-								
-						if ($rez != 0){
-							for($i=0; $i < count($rez); $i++){
-								echo '<div>'.$rez[$i]['price'].' руб. c '.date('d.m.y H:i', $rez[$i]['date_from']).' | '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'</div>';
-								//echo '<div>'.$rez[$i]['price'].' руб. |  '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'</div>';
-							}
-						}
+
+                        if ($rez != 0){
+                            for($i=0; $i < count($rez); $i++){
+                                echo '
+                            <div>';
+                                echo '
+                            '.$rez[$i]['price'].'/'.$rez[$i]['price2'].'/'.$rez[$i]['price3'].' руб. c '.date('d.m.y H:i', $rez[$i]['date_from']).' | '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'';
+                                echo '
+						    </div>';
+                                //echo '<div>'.$rez[$i]['price'].' руб. |  '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'</div>';
+                            }
+                        }
 						
 						echo '
 										</div>

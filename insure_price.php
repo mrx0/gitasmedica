@@ -21,7 +21,25 @@
 							<div class="nav">
 								<a href="pricelist.php" class="b">Основной прайс</a>
 							</div>
-							<h1 style="padding: 0;">Прайс <a href="insure.php?id='.$_GET['id'].'" class="ahref" style="color: green; font-size: 90%; font-weight: bold;">'.$insure_j[0]['name'].'</a></h1>
+							<h1 style="padding: 0;">
+							    Прайс <a href="insure.php?id='.$_GET['id'].'" class="ahref" style="color: green; font-size: 90%; font-weight: bold;">'.$insure_j[0]['name'].'</a>
+							</h1>
+						<div>
+							<span style="font-size: 80%; color: #AAA">Перейти к прайсу страховой</span><br>';
+			        echo '
+							<select name="insurecompany" id="insurecompany">
+								<option value="0">Выберите страховую</option>';
+			        $insures_j = SelDataFromDB('spr_insure', '', '');
+
+        			if ($insures_j != 0){
+		        		for ($i=0;$i<count($insures_j);$i++){
+                            echo "<option value='".$insures_j[$i]['id']."'>".$insures_j[$i]['name']."</option>";
+			            }
+			        }
+			        echo '
+							</select>
+							<span style="font-size: 90%; cursor: pointer" onclick="iWantThisInsurePrice()"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
+						</div>
 						</header>';
 				
 					//переменная, чтоб вкл/откл редактирование
