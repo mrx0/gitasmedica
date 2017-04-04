@@ -166,6 +166,7 @@ nav a{
 	padding: 6px 10px 5px;
 	border-right: 1px dotted #CCC;
 	height: 25px;
+	font-size: 12px;
 }
 
 nav div.user_link{

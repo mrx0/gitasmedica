@@ -1,5 +1,7 @@
 <?php
-	
+
+//variables.php
+
 	//Массив с месяцами
 	$monthsName = array(
 		'01' => 'Январь',

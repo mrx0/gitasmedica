@@ -61,6 +61,18 @@
         //var_dump($rezult);
 
         if (!empty($rezult)){
+
+            $office_j = SelDataFromDB('spr_office', '', '');
+            //var_dump($office_j);
+            //!!!
+            $office_j_arr = array();
+
+            foreach ($office_j as $office_item){
+                $office_j_arr[$office_item['id']] = $office_item;
+            }
+            //var_dump($office_j_arr);
+
+
             $orderAll_str = '';
             $orderClose_str = '';
 
@@ -83,7 +95,8 @@
                                         <li class="cellsBlock" style="width: auto;">';
                 $orderTemp_str .= '
                                             <a href="order.php?id='.$order_item['id'].'" class="cellOrder ahref" style="position: relative;">
-                                                <b>Ордер #'.$order_item['id'].'</b> от '.date('d.m.y' ,strtotime($order_item['date_in'])).'<br>
+                                                <b>Ордер #'.$order_item['id'].'</b>  от '.date('d.m.y' ,strtotime($order_item['date_in'])).'<br>
+                                                '.$office_j_arr[$order_item['office_id']]['name'].'<br>
                                                 <span style="font-size:80%;  color: #555;">';
 
                 if (($order_item['create_time'] != 0) || ($order_item['create_person'] != 0)){

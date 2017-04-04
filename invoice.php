@@ -29,7 +29,8 @@
 						//var_dump($invoice_j);
 						//array_push($_SESSION['invoice_data'], $_GET['client']);
 						//$_SESSION['invoice_data'] = $_GET['client'];
-						
+                        //var_dump($invoice_j[0]['closed_time'] == 0);
+
 						$sheduler_zapis = array();
 						$invoice_ex_j = array();
 						$invoice_ex_j_mkb = array();
@@ -291,21 +292,45 @@
                                                     <div style="">Оплачено: <div id="calculateInvoice" style="color: #333;">'.$invoice_j[0]['paid'].'</div> руб.</div>
                                                 </div>';
                             if ($invoice_j[0]['summ'] != $invoice_j[0]['paid']) {
+                                if ($invoice_j[0]['status'] != 9) {
+                                    echo '
+                                                <div>
+                                                    <div style="display: inline-block;">Осталось внести: <div id="calculateInvoice" style="">' . ($invoice_j[0]['summ'] - $invoice_j[0]['paid']) . '</div> руб.</div>
+                                                    <div style="display: inline-block;"><a href="payment_add.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Оплатить</a></div>
+                                                </div>';
+                                }
+							}
+                            if ($invoice_j[0]['summ'] != $invoice_j[0]['paid']) {
                                 echo '
-                                                <div>
-                                                    <div style="">Осталось внести: <div id="calculateInvoice" style="">'.($invoice_j[0]['summ'] - $invoice_j[0]['paid']).'</div> руб.</div>
-                                                </div>
-											</div>
-											<div style="display: inline-block; vertical-align: top;">
-                                                <div>
-                                                    <div style=""><a href="payment_add.php?invoice_id='.$invoice_j[0]['id'].'" class="b">Оплатить</a></div>
-                                                </div>
-											</div>';
-							}else{
-                                echo '</div>';
+                                                <div style="color: red; ">
+                                                    Наряд не закрыт (оплачен не полностью)
+                                                </div>';
                             }
+                            if ($invoice_j[0]['summ'] == $invoice_j[0]['paid']) {
+                                if ($invoice_j[0]['closed_time'] == 0){
+                                    echo '
+                                                <div>
+                                                    <div style="display: inline-block; color: red;">Наряд оплачен, но не закрыт.</div>
+                                                    <div style="display: inline-block;"><div class="b" onclick="alert('.$invoice_j[0]['id'].');">Закрыть</div></div>
+                                                </div>';
+                                }else{
+                                    echo '
+                                                <div style="margin-top: 5px;">
+                                                    <div style="display: inline-block; color: green;">Наряд закрыт.</div>
+                                                    <div style="display: inline-block;">'.date('d.m.y H:i', strtotime($invoice_j[0]['closed_time'])).'</div>
+                                                </div>';
+                                }
+
+                            }
+                            echo '
+                                            </div>';
+
+
 							echo '
 										</div>';
+
+
+
 
 							echo '
 										<div id="invoice_rezult" style="float: none; width: 850px;">';
@@ -686,7 +711,7 @@
                                     echo '
                                                     <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
                                     echo '
-                                                        <a href="order.php?id=' . $payment_item['id'] . '" class="cellOrder ahref" style="position: relative;">
+                                                        <a href="" class="cellOrder ahref" style="position: relative;">
                                                             <b>Оплата #' . $payment_item['id'] . '</b> от ' . date('d.m.y', strtotime($payment_item['date_in'])) . '<br>
                                                             <span style="font-size:80%;  color: #555;">';
 
@@ -711,7 +736,7 @@
                                                                 <span class="calculateOrder" style="font-size: 13px">' . $payment_item['summ'] . '</span> руб.
                                                             </div>
                                                         </div>
-                                                        <div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="deletePaymentItem('.$payment_item['id'].', this);">
+                                                        <div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="deletePaymentItem('.$payment_item['id'].', '.$invoice_j[0]['client_id'].', '.$invoice_j[0]['id'].');">
                                                             <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
                                                         </div>
                                                         ';

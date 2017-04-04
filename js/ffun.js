@@ -229,17 +229,19 @@
         })
     }
     //Удалить текущую проплату
-    function deletePaymentItem(id){
+    function deletePaymentItem(id, client_id, invoice_id){
         //alert(id);
 
         $.ajax({
-            url:"ajax_del_payment_f.php",
+            url:"payment_del_f.php",
             global: false,
             type: "POST",
-            dataType: "JSON",
+            //dataType: "JSON",
             data:
                 {
                     id: id,
+                    client_id: client_id,
+                    invoice_id: invoice_id,
                 },
             cache: false,
             beforeSend: function() {
@@ -247,9 +249,10 @@
             },
             // действие, при ответе с сервера
             success: function(data){
-                if(data.result == "success"){
+                /*if(data.result == "success"){
 
-                }
+                }*/
+                location.reload();
             }
         });
     }

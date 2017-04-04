@@ -14,6 +14,15 @@
 			$offices = SelDataFromDB('spr_office', '', '');
 			//var_dump ($offices);
 
+            require 'variables.php';
+
+            $edit_options = false;
+            $upr_edit = false;
+            $admin_edit = false;
+            $stom_edit = false;
+            $cosm_edit = false;
+            $finance_edit = false;
+
 			//!!! 
 			require 'config.php';
 			
@@ -123,7 +132,7 @@
 				}
 				
 				//Массив с месяцами
-				$monthsName = array(
+				/*$monthsName = array(
 					'01' => 'Январь',
 					'02' => 'Февраль',
 					'03' => 'Март',
@@ -136,7 +145,7 @@
 					'10' => 'Октябрь',
 					'11' => 'Ноябрь',
 					'12' => 'Декабрь'
-				);
+				);*/
 
 				if (isset($_GET['d']) && isset($_GET['m']) && isset($_GET['y'])){
 					//операции со временем						
@@ -233,7 +242,7 @@
 					
 					if ($ZapisHereQueryToday != 0){
 
-						for ($z = 0; $z < count($ZapisHereQueryToday); $z++){
+						/*for ($z = 0; $z < count($ZapisHereQueryToday); $z++){
 							$t_f_data_db = array();
 							$cosmet_data_db = array();
 							$invoice_data_db = array();
@@ -623,7 +632,37 @@
 							echo '
 								</div>
 								<div id="req"></div>';
-						}
+						}*/
+
+                        // !!! **** тест с записью
+                        include_once 'showZapisRezult.php';
+
+                        if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
+                            $finance_edit = true;
+                            $edit_options = true;
+                        }
+
+                        if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode){
+                            $stom_edit = true;
+                            $edit_options = true;
+                        }
+                        if (($cosm['add_own'] == 1) || ($cosm['add_new'] == 1) || $god_mode){
+                            $cosm_edit = true;
+                            $edit_options = true;
+                        }
+
+                        if (($zapis['add_own'] == 1) || ($zapis['add_new'] == 1) || $god_mode) {
+                            $admin_edit = true;
+                            $edit_options = true;
+                        }
+
+                        if (($scheduler['see_all'] == 1) || $god_mode){
+                            $upr_edit = true;
+                            $edit_options = true;
+                        }
+
+                        echo showZapisRezult($ZapisHereQueryToday, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $type);
+
 					}else{
 						echo 'Нет записи';
 					}

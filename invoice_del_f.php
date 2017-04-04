@@ -15,25 +15,50 @@
 		include_once 'functions.php';
 		if ($_POST){
 
+		    $data = '';
+
 			require 'config.php';
 			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 			mysql_select_db($dbName) or die(mysql_error()); 
 			mysql_query("SET NAMES 'utf8'");
 			$time = time();
-			
-			$query = "UPDATE `journal_invoice` SET `status`='9' WHERE `id`='{$_POST['id']}'";
-			mysql_query($query) or die(mysql_error().' -> '.$query);
 
-			//mysql_close();
+			//проверим, есть ли оплаты по этому наряду
+            //Документы закрытия/оплаты нарядов списком
+            $payment_j = array();
 
-            //!!! @@@ Пересчет долга
-            include_once 'ffun.php';
-            calculateDebt ($_POST['client_id']);
+            $query = "SELECT * FROM `journal_payment` WHERE `invoice_id`='".$_POST['id']."' ORDER BY `date_in` DESC";
+            //var_dump($query);
 
-			echo '
-				<div class="query_ok" style="padding-bottom: 10px;">
-					<h3>Наряд удален (заблокирован).</h3>
-				</div>';	
+            $res = mysql_query($query) or die(mysql_error().' -> '.$query);
+            $number = mysql_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysql_fetch_assoc($res)){
+                    array_push($payment_j, $arr);
+                }
+            }else{
+
+            }
+
+            if (!empty($payment_j)) {
+                $data = '<div class="query_neok" style="padding-bottom: 10px;"><h3>По наряду проходили оплаты. Удалить нельзя.</h3></div>';
+
+                echo json_encode(array('result' => 'error', 'data' => $data));
+            }else {
+
+                $query = "UPDATE `journal_invoice` SET `status`='9' WHERE `id`='{$_POST['id']}'";
+                mysql_query($query) or die(mysql_error() . ' -> ' . $query);
+
+                //mysql_close();
+
+                //!!! @@@ Пересчет долга
+                include_once 'ffun.php';
+                calculateDebt($_POST['client_id']);
+
+                $data = '<div class="query_ok" style="padding-bottom: 10px;"><h3>Наряд удален (заблокирован).</h3></div>';
+
+                echo json_encode(array('result' => 'success', 'data' => $data));
+            }
 		}
 
 	}

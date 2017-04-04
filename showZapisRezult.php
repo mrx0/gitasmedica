@@ -10,7 +10,8 @@
 
             include_once 'DBWork.php';
             include_once 'functions.php';
-            include_once 'variables.php';
+
+            require 'variables.php';
 
             $rezult = '';
 
@@ -104,7 +105,7 @@
                     }
 
                     //Наряды
-                    $query = "SELECT `id`, `summ`, `summins`, `create_time`  FROM `journal_invoice` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' AND `status` <> '9' ORDER BY `create_time`";
+                    $query = "SELECT * FROM `journal_invoice` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' AND `status` <> '9' ORDER BY `create_time`";
                     $res = mysql_query($query) or die(mysql_error() . ' -> ' . $query);
                     $number = mysql_num_rows($res);
                     if ($number != 0) {
@@ -214,20 +215,27 @@
                     if ($invoice_data_db != 0) {
                         //var_dump($invoice_data_db);
                         foreach ($invoice_data_db as $ids) {
+
+                            //Отметка об объеме оплат
+                            $paid_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;"></i>';
+
+                            if ($ids['summ'] == $ids['paid']) {
+                                $paid_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i>';
+                            }
+
                             $rezult .= '
-                                                <div class="cellsBlockHover" style="border: 1px solid #BFBCB5; margin-top: 1px;">
+                                                <div class="cellsBlockHover" style="border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
                                                     <a href="invoice.php?id=' . $ids['id'] . '" class="ahref">
                                                         <div>
                                                             <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
                                                                 <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                             </div>
                                                             <div style="display: inline-block; vertical-align: middle;">
-                                                                ' . date('d.m.y H:i', strtotime($ids['create_time'])) . '
+                                                                ' . date('d.m.y', strtotime($ids['create_time'])) . '
                                                             </div>
                                                         </div>
                                                         <div>
                                                             <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
-                                                                Сумма:<br>
                                                                 <span class="calculateInvoice" style="font-size: 11px">' . $ids['summ'] . '</span> руб.
                                                             </div>';
                             if ($ids['summins'] != 0) {
@@ -239,7 +247,9 @@
                             }
                             $rezult .= '
                                                         </div>
-                                                    </a>	
+                                                        
+                                                    </a>
+                                                    <span style="position: absolute; top: 2px; right: 3px;">'.$paid_mark.'</span>
                                                 </div>';
                         }
                     }
@@ -486,10 +496,10 @@
                                 </div>';
 
 
+            /*$rezult .= '
+                            </div>';*/
             $rezult .= '
-                            </div>';
-            $rezult .= '
-                            </div>
+                            <!--</div>-->
                             <div id="req"></div>';
 
 

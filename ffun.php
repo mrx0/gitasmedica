@@ -157,7 +157,7 @@
         //Если че та там есть с балансом
         if (!empty($clientBalance)){
             $rezult['summ'] = $Summ;
-            $rezult['debited'] = $clientBalance[0]['debited'];
+            $rezult['debited'] = calculatePayment($client_id);
 
             //Обновим баланс контрагента
             updateBalance ($clientBalance[0]['id'], $client_id, $Summ, $rezult['debited']);
@@ -223,6 +223,48 @@
         return (json_encode($rezult, true));
 
         //return ($Summ);
+    }
+
+     //считаем по нарядам, сколько потрачено и обновляем
+    function calculatePayment ($client_id){
+
+        $rezult = array();
+
+        connectDB();
+
+        $clientPayments = array();
+        $arr = array();
+
+        //Соберем все оплаты
+        $query = "SELECT * FROM `journal_payment` WHERE `client_id`='$client_id'";
+
+        $res = mysql_query($query) or die(mysql_error().' -> '.$query);
+        $number = mysql_num_rows($res);
+        if ($number != 0){
+            while ($arr = mysql_fetch_assoc($res)){
+                array_push($clientPayments, $arr);
+            }
+        }else{
+            $clientPayments = 0;
+        }
+        //return ($clientInvoices);
+
+        //Переменная для суммы
+        $Summ = 0;
+
+        //Если были там какие-то оплаты
+        if ( $clientPayments != 0) {
+            //Посчитаем сумму
+            foreach ($clientPayments as $payments) {
+                $Summ += $payments['summ'];
+            }
+        }
+
+        $rezult['summ'] = $Summ;
+
+        //return (json_encode($rezult, true));
+
+        return ($Summ);
     }
 
     //берем цены из прайса

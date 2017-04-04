@@ -246,7 +246,7 @@
 		require_once 'permissions.php';
 		
 		
-		echo '<a href="index.php">Главная<div style="font-size:60%">'.$version.'</div></a>';
+		echo '<a href="index.php">Главная<div style="font-size:80%">'.$version.'</div></a>';
 		
 		if (($it['see_all'] == 1) || ($it['see_own'] == 1) || $god_mode){
 			echo '<li><a href="it.php" title="IT">IT</a></li>';
@@ -264,7 +264,7 @@
 			echo '<li><a href="scheduler.php" title="График">График</a></li>';
 		}
 		if (($report['see_all'] == 1) || ($report['see_own'] == 1) || $god_mode){
-			echo '<li><a href="reports.php" title="Статистика и отчёты"><i class="fa fa-bar-chart"></i></a></li>';
+			echo '<li><a href="reports.php" title="Статистика и отчёты"><i class="fa fa-bar-chart"></i> Отчёты</a></li>';
 		}
 		if (($clients['see_all'] == 1) || ($clients['see_own'] == 1) || $god_mode){
 			echo '<li><a href="clients.php" title="Пациенты">Пациенты</a></li>';

@@ -1,7 +1,7 @@
 <?php 
 
-//order_add_f.php
-//Функция добавления ордера в базу
+//payment_add_f.php
+//оплата наряда
 
 //!!! доделать сравнение времени, учитывая месяц и тд и тп
 
@@ -40,145 +40,150 @@
                 $invoice_j = SelDataFromDB('journal_invoice', $_POST['invoice_id'], 'id');
 
                 if ($invoice_j != 0){
-                    //Ищем пациента
-                    $client_j = SelDataFromDB('spr_clients', $invoice_j[0]['client_id'], 'user');
 
-                    if ($client_j != 0){
-                        //Если это был наряд того пациента
-                        if ($client_j[0]['id'] == $invoice_j[0]['client_id']){
-                            //ID клиента
-                            $client_id = $client_j[0]['id'];
-                            //ID наряда
-                            $invoice_id = $_POST['invoice_id'];
+                    if($invoice_j[0]['status'] == 9) {
+                        echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Наряд был удален. Оплатить нельзя</div>'));
+                    }else{
+                        //Ищем пациента
+                        $client_j = SelDataFromDB('spr_clients', $invoice_j[0]['client_id'], 'user');
 
-                            //Если наряд оплачен !!! Добавить кнопку для изменения статуса
-                            if ($invoice_j[0]['summ'] == $invoice_j[0]['paid']) {
-                                echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Наряд уже оплачен</div>'));
-                            //Если сумма наряда меньше, чем уже оплачено
-                            }elseif($invoice_j[0]['summ'] < $invoice_j[0]['paid']){
-                                echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Сумма наряда не может быть меньше общей внесённой суммы.</div>'));
-                            //Если сумма наряда больше, чем уже оплачено, он по факту не оплачен и вроде можно двигаться дальше
-                            }elseif($invoice_j[0]['summ'] > $invoice_j[0]['paid']){
-                                //Если стоит метка, что наряд оплачен, надо разбираться
-                                if ($invoice_j[0]['status'] == 5) {
-                                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка! У наряда стоит статус <оплачен>.</div>'));
-                                }elseif($invoice_j[0]['status'] == 9){
-                                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Наряд удален/заблокирован. Операции с ним запрещены</div>'));
-                                }else{
-                                    //Если мы вносим оплату задним числом
-                                    //+2 суток
-                                    if (time() > strtotime($_POST['date_in']." 21:00:00") + 2*24*60*60){
-                                        echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Нельзя вносить задним числом</div>'));
-                                    }else {
-                                        //до того как был создан наряд
-                                        if (date("d", strtotime($invoice_j[0]['create_time'])) > date("d", strtotime($_POST['date_in'] . " 21:00:00"))) {
-                                            echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Оплата не может быть сделана до того, как был создан наряд</div>'));
+                        if ($client_j != 0) {
+                            //Если это был наряд того пациента
+                            if ($client_j[0]['id'] == $invoice_j[0]['client_id']) {
+                                //ID клиента
+                                $client_id = $client_j[0]['id'];
+                                //ID наряда
+                                $invoice_id = $_POST['invoice_id'];
+
+                                //Если наряд оплачен !!! Доделать: Добавить кнопку для изменения статуса
+                                if ($invoice_j[0]['summ'] == $invoice_j[0]['paid']) {
+                                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Наряд уже оплачен</div>'));
+                                    //Если сумма наряда меньше, чем уже оплачено
+                                } elseif ($invoice_j[0]['summ'] < $invoice_j[0]['paid']) {
+                                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Сумма наряда не может быть меньше общей внесённой суммы.</div>'));
+                                    //Если сумма наряда больше, чем уже оплачено, он по факту не оплачен и вроде можно двигаться дальше
+                                } elseif ($invoice_j[0]['summ'] > $invoice_j[0]['paid']) {
+                                    //Если стоит метка, что наряд оплачен, надо разбираться
+                                    if ($invoice_j[0]['status'] == 5) {
+                                        echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка! У наряда стоит статус <оплачен>.</div>'));
+                                    } elseif ($invoice_j[0]['status'] == 9) {
+                                        echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Наряд удален/заблокирован. Операции с ним запрещены</div>'));
+                                    } else {
+                                        //Если мы вносим оплату задним числом
+                                        //+2 суток
+                                        if (time() > strtotime($_POST['date_in'] . " 21:00:00") + 2 * 24 * 60 * 60) {
+                                            echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Нельзя вносить задним числом</div>'));
                                         } else {
-                                            //возьмем последнюю оплату этого наряда, если она есть
-                                            $payments_j = array();
-                                            $arr = array();
-
-                                            $query = "SELECT * FROM `journal_payment` WHERE `invoice_id`='$invoice_id'  ORDER BY `create_time` DESC, `id` DESC LIMIT 1";
-
-                                            $res = mysql_query($query) or die(mysql_error() . ' -> ' . $query);
-                                            $number = mysql_num_rows($res);
-                                            if ($number != 0) {
-                                                while ($arr = mysql_fetch_assoc($res)) {
-                                                    array_push($payments_j, $arr);
-                                                }
+                                            //до того как был создан наряд
+                                            if (date("d", strtotime($invoice_j[0]['create_time'])) > date("d", strtotime($_POST['date_in'] . " 21:00:00"))) {
+                                                echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Оплата не может быть сделана до того, как был создан наряд</div>'));
                                             } else {
-                                                $canAddPayment = true;
-                                            }
+                                                //возьмем последнюю оплату этого наряда, если она есть
+                                                $payments_j = array();
+                                                $arr = array();
 
-                                            //Если есть оплаты
-                                            if (!empty($payments_j)) {
-                                                //Если время последней до этой оплаты выше чем мы хотим сейчас, то борода. Иначе поедет время закрытия наряда
-                                                if (date("d", strtotime($payments_j[0]['date_in'])) > date("d", strtotime($_POST['date_in'] . " 21:00:00"))) {
-                                                    $canAddPayment = false;
+                                                $query = "SELECT * FROM `journal_payment` WHERE `invoice_id`='$invoice_id'  ORDER BY `create_time` DESC, `id` DESC LIMIT 1";
+
+                                                $res = mysql_query($query) or die(mysql_error() . ' -> ' . $query);
+                                                $number = mysql_num_rows($res);
+                                                if ($number != 0) {
+                                                    while ($arr = mysql_fetch_assoc($res)) {
+                                                        array_push($payments_j, $arr);
+                                                    }
                                                 } else {
                                                     $canAddPayment = true;
                                                 }
-                                            } else {
-                                                $canAddPayment = true;
-                                            }
 
-                                            if (!$canAddPayment) {
-                                                echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Оплата не может быть сделана до того, как была сделана предыдущая оплата</div>'));
-                                            } else {
+                                                //Если есть оплаты
+                                                if (!empty($payments_j)) {
+                                                    //Если время последней до этой оплаты выше чем мы хотим сейчас, то борода. Иначе поедет время закрытия наряда
+                                                    if (date("d", strtotime($payments_j[0]['date_in'])) > date("d", strtotime($_POST['date_in'] . " 21:00:00"))) {
+                                                        $canAddPayment = false;
+                                                    } else {
+                                                        $canAddPayment = true;
+                                                    }
+                                                } else {
+                                                    $canAddPayment = true;
+                                                }
 
-                                                //пересчитаем долги и баланс еще разок
-                                                //!!! @@@
-                                                //Баланс контрагента
-                                                include_once 'ffun.php';
-                                                $client_balance = json_decode(calculateBalance($client_j[0]['id']), true);
-                                                //Долг контрагента
-                                                $client_debt = json_decode(calculateDebt($client_j[0]['id']), true);
-
-                                                //Нет доступных средств на счету
-                                                if (($client_balance['summ'] <= 0) || ($client_balance['summ'] - $client_balance['debited'] <= 0)) {
-                                                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Нет доступных средств на счету</div>'));
+                                                if (!$canAddPayment) {
+                                                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Оплата не может быть сделана до того, как была сделана предыдущая оплата</div>'));
                                                 } else {
 
-                                                    $payed = $invoice_j[0]['paid'] + $_POST['summ'];
-                                                    $debited = $client_balance['debited'] + $_POST['summ'];
+                                                    //пересчитаем долги и баланс еще разок
+                                                    //!!! @@@
+                                                    //Баланс контрагента
+                                                    include_once 'ffun.php';
+                                                    $client_balance = json_decode(calculateBalance($client_j[0]['id']), true);
+                                                    //Долг контрагента
+                                                    $client_debt = json_decode(calculateDebt($client_j[0]['id']), true);
 
-                                                    //Если в итоге общая суммы оплаты больше чем требуемая
-                                                    if ($payed > $invoice_j[0]['summ']) {
-                                                        echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">После оплаты наряд будет переплачен. Измените сумму</div>'));
+                                                    //Нет доступных средств на счету
+                                                    if (($client_balance['summ'] <= 0) || ($client_balance['summ'] - $client_balance['debited'] <= 0)) {
+                                                        echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Нет доступных средств на счету</div>'));
                                                     } else {
-                                                        //Если в итоге общее потрачено будет больше денег на балансе
-                                                        if ($debited > $client_balance['summ']) {
-                                                            echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">На балансе не хватит средств для оплаты</div>'));
+
+                                                        $payed = $invoice_j[0]['paid'] + $_POST['summ'];
+                                                        $debited = $client_balance['debited'] + $_POST['summ'];
+
+                                                        //Если в итоге общая суммы оплаты больше чем требуемая
+                                                        if ($payed > $invoice_j[0]['summ']) {
+                                                            echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">После оплаты наряд будет переплачен. Измените сумму</div>'));
                                                         } else {
+                                                            //Если в итоге общее потрачено будет больше денег на балансе
+                                                            if ($debited > $client_balance['summ']) {
+                                                                echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">На балансе не хватит средств для оплаты</div>'));
+                                                            } else {
 
-                                                            //Ну вроде все норм, поехали всё обновлять/сохранять
-                                                            connectDB();
+                                                                //Ну вроде все норм, поехали всё обновлять/сохранять
+                                                                connectDB();
 
-                                                            //Вставим новую запись оплаты по наряду
-                                                            $query = "INSERT INTO `journal_payment` (
-                                                              `client_id`, `invoice_id`, `summ`, `date_in`, `comment`, `create_time`, `create_person`)
-                                                            VALUES (
-                                                              '{$client_id}', '{$invoice_id}', '{$_POST['summ']}', '{$_POST['date_in']}', '{$_POST['comment']}', '{$time}', '{$_SESSION['id']}')";
-                                                            mysql_query($query) or die(mysql_error() . ' -> ' . $query);
+                                                                //Вставим новую запись оплаты по наряду
+                                                                $query = "INSERT INTO `journal_payment` (
+                                                                  `client_id`, `invoice_id`, `summ`, `date_in`, `comment`, `create_time`, `create_person`)
+                                                                VALUES (
+                                                                  '{$client_id}', '{$invoice_id}', '{$_POST['summ']}', '{$date_in}', '{$_POST['comment']}', '{$time}', '{$_SESSION['id']}')";
+                                                                mysql_query($query) or die(mysql_error() . ' -> ' . $query);
 
-                                                            //ID новой позиции
-                                                            $mysql_insert_id = mysql_insert_id();
+                                                                //ID новой позиции
+                                                                $mysql_insert_id = mysql_insert_id();
 
-                                                            //Обновим наряд его сумму оплаты
-                                                            //Если набралась сумма оплат равная общей суммы долга по наряду, то ставим статус - оплачено и дату date_in
-                                                            if ($payed == $invoice_j[0]['summ']) {
-                                                                $query_invoice_dop = ", `closed_time`='{$_POST['date_in']}', `status`='5'";
+                                                                //Обновим наряд его сумму оплаты
+                                                                //Если набралась сумма оплат равная общей суммы долга по наряду, то ставим статус - оплачено и дату date_in
+                                                                if ($payed == $invoice_j[0]['summ']) {
+                                                                    $query_invoice_dop = ", `closed_time`='{$date_in}', `status`='5'";
+                                                                }
+                                                                $query = "UPDATE `journal_invoice` SET `paid`='$payed'$query_invoice_dop WHERE `id`='$invoice_id'";
+                                                                mysql_query($query) or die(mysql_error() . ' -> ' . $query);
+
+                                                                //Обновим потраченное в балансе
+                                                                $query = "UPDATE `journal_balance` SET `debited`='$debited'  WHERE `client_id`='$client_id'";
+                                                                mysql_query($query) or die(mysql_error() . ' -> ' . $query);
+
+                                                                //Обновим общий долг
+                                                                calculateDebt($client_id);
+                                                                calculateBalance ($client_id);
+
+                                                                /*$query = "UPDATE `journal_debt` SET `summ`='$debited'  WHERE `client_id`='$client_id'";
+                                                                mysql_query($query) or die(mysql_error() . ' -> ' . $query);*/
+
+
+                                                                echo json_encode(array('result' => 'success', 'data' => 'Оплата прошла успешно'));
                                                             }
-                                                            $query = "UPDATE `journal_invoice` SET `paid`='$payed'$query_invoice_dop WHERE `id`='$invoice_id'";
-                                                            mysql_query($query) or die(mysql_error() . ' -> ' . $query);
-
-                                                            //Обновим потраченное в балансе
-                                                            $query = "UPDATE `journal_balance` SET `debited`='$debited'  WHERE `client_id`='$client_id'";
-                                                            mysql_query($query) or die(mysql_error() . ' -> ' . $query);
-
-                                                            //Обновим общий долг
-                                                            calculateDebt ($client_id);
-
-                                                            /*$query = "UPDATE `journal_debt` SET `summ`='$debited'  WHERE `client_id`='$client_id'";
-                                                            mysql_query($query) or die(mysql_error() . ' -> ' . $query);*/
-
-
-                                                            echo json_encode(array('result' => 'success', 'data' => 'Вроде всё OK, проверяй'));
                                                         }
-                                                    }
 
+                                                    }
                                                 }
                                             }
                                         }
                                     }
+                                } else {
+                                    //лишний else
+                                    //echo json_encode(array('result' => 'success', 'data' => $invoice_j[0]['status'].'-'.$invoice_j[0]['summ']));
                                 }
-                            }else {
-                                //лишний else
-                                //echo json_encode(array('result' => 'success', 'data' => $invoice_j[0]['status'].'-'.$invoice_j[0]['summ']));
                             }
                         }
                     }
-
                 }
 /*
 

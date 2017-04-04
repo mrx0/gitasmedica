@@ -19,6 +19,12 @@
 				$client = SelDataFromDB('spr_clients', $_GET['client_id'], 'user');
 				if ($client !=0){
 
+                    $invoice_id = 0;
+
+                    if (isset($_GET['invoice_id'])){
+                        $invoice_id = $_GET['invoice_id'];
+                    }
+
                     echo '
                     <div id="status">
                         <header>
@@ -44,7 +50,6 @@
 
                     //Филиал
                     if (isset($_SESSION['filial'])){
-
 
                         echo '
 							<div class="cellsBlock2">
@@ -133,6 +138,7 @@
                             <div>
                                 <div id="errror"></div>
                                 <input type="hidden" id="client_id" name="client_id" value="'.$_GET['client_id'].'">
+                                <input type="hidden" id="invoice_id" name="invoice_id" value="'.$invoice_id.'">
                                 <input type="button" class="b" value="Сохранить" onclick="showOrderAdd(\'add\')">
                             </div>
                         </div>

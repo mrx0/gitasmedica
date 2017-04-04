@@ -469,21 +469,33 @@
 	//Удаление блокировка наряда
 	function Ajax_del_invoice(id, client_id) {
 
-		ajax({
+        $.ajax({
 			url:"invoice_del_f.php",
-			statbox:"errrror",
-			method:"POST",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
 			data:
 			{
 				id: id,
                 client_id: client_id,
 			},
-			success:function(data){
-				document.getElementById("errrror").innerHTML=data;
-				setTimeout(function () {
-					window.location.replace('invoice.php?id='+id);
-					//alert('client.php?id='+id);
-				}, 100);
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+			success:function(res){
+                if(res.result == 'success') {
+                	//alert(1);
+                    document.getElementById("errrror").innerHTML = res.data;
+                    setTimeout(function () {
+                        window.location.replace('invoice.php?id=' + id);
+                        //alert('client.php?id='+id);
+                    }, 100);
+                }else{
+                    //alert(2);
+                    document.getElementById("errrror").innerHTML = res.data;
+				}
 			}
 		})
 	};
@@ -2169,6 +2181,7 @@
 		var year = Number(document.getElementById("year").value);
 		
 		var filial = Number(document.getElementById("filial").value);
+		var zapis_id = Number(document.getElementById("zapis_id").value);
 		var kab = document.getElementById("kab").innerHTML;
 		
 		//alert(kab);
@@ -2192,7 +2205,9 @@
 		
 		var next_time_start_rez = 0;
 		var next_time_end_rez = 0;
-		
+		var query = '';
+		var idz = '';
+
 		$.ajax({
 			dataType: "json",
 			async: false,
@@ -2202,6 +2217,8 @@
 			url: "get_next_zapis.php",
 			// какие данные будут переданы
 			data: {
+				id: zapis_id,
+
 				day:day,
 				month:month,
 				year:year,
@@ -2218,12 +2235,15 @@
 			},
 			// действие, при ответе с сервера
 			success: function(next_zapis_data){
+				//alert(next_zapis_data);
 				//alert (next_zapis_data.next_time_start);
 				//document.getElementById("kab").innerHTML=nex_zapis_data;
 				next_time_start_rez = next_zapis_data.next_time_start;
 				next_time_end_rez = next_zapis_data.next_time_end;
 				//next_zapis_data;
-				
+                query = next_zapis_data.query;
+                idz = next_zapis_data.id;
+
 			}
 		});		
 						
@@ -2247,8 +2267,8 @@
 			//if ((end_time > next_time_start_rez) || (start_time == next_time_start_rez)){
 			if (((end_time > next_time_start_rez) && (end_time < next_time_end_rez)) || ((start_time >= next_time_start_rez) && (start_time < next_time_end_rez))){
 				//alert(next_time_start_rez);
-				document.getElementById("exist_zapis").innerHTML='<span style="color: red">Дальше есть запись</span>';
-				
+				document.getElementById("exist_zapis").innerHTML='<span style="color: red">Дальше есть запись</span><br>';
+
 				var raznica_vremeni = Math.abs(next_time_start_rez - start_time);
 				
 				document.getElementById("change_hours").value = raznica_vremeni/60|0;
@@ -3869,7 +3889,7 @@
 												'<a href="payment_add.php?invoice_id='+res.data+'" class="b">Оплатить</a>'+
 											'</li>'+
 											'<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-												'<a href="add_order.php?client_id='+client+'" class="b">Добавить приходный ордер</a>'+
+												'<a href="add_order.php?client_id='+client+'&invoice_id='+res.data+'" class="b">Добавить приходный ордер</a>'+
 											'</li>'+
 											'<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
 												'<a href="finance_account.php?client_id='+client+'" class="b">Управление счётом</a>'+
@@ -3890,6 +3910,8 @@
 
 		var link = "order_add_f.php";
 
+		var paymentStr = '';
+
 		if (mode == 'edit'){
 			link = "edit_order_f.php";
             order_id = document.getElementById("order_id").value;
@@ -3900,11 +3922,19 @@
         var office_id = document.getElementById("filial").value;
 
 		var client_id = document.getElementById("client_id").value;
+		var invoice_id = document.getElementById("invoice_id").value;
+		//alert(invoice_id);
 		var date_in = document.getElementById("date_in").value;
 		//alert(date_in);
 
         var comment = document.getElementById("comment").value;
         //alert(comment);
+
+        if (invoice_id != 0){
+            paymentStr = '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+                '<a href= "payment_add.php?invoice_id='+invoice_id+'" class="b">Оплатить наряд #'+invoice_id+'</a>'+
+                '</li>';
+		}
 
 		$.ajax({
 			url: link,
@@ -3947,6 +3977,7 @@
 													'</div>'+
 												'</div>'+
 											'</li>'+
+                        					paymentStr+
 					                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
 						                        '<a href="finance_account.php?client_id='+client_id+'" class="b">Управление счётом</a>'+
 					                        '</li>'+
