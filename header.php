@@ -2,7 +2,8 @@
 
 //header.php
 //Заголовок страниц сайта
-	
+//
+
 	session_start();
 	
 	$enter_ok = FALSE;
