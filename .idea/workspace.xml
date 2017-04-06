@@ -1,28 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f8f4c17b-6b78-4f1a-8b48-611bd890c0f8" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/payment_del_f.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/add_order.php" afterPath="$PROJECT_DIR$/add_order.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ajax_show_result_cashbox_f.php" afterPath="$PROJECT_DIR$/ajax_show_result_cashbox_f.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client.php" afterPath="$PROJECT_DIR$/client.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/style.css" afterPath="$PROJECT_DIR$/css/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ffun.php" afterPath="$PROJECT_DIR$/ffun.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/get_next_zapis.php" afterPath="$PROJECT_DIR$/get_next_zapis.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/header_tags.php" afterPath="$PROJECT_DIR$/header_tags.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/invoice.php" afterPath="$PROJECT_DIR$/invoice.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/invoice_add.php" afterPath="$PROJECT_DIR$/invoice_add.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/invoice_del_f.php" afterPath="$PROJECT_DIR$/invoice_del_f.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/ffun.js" afterPath="$PROJECT_DIR$/js/ffun.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/functions.js" afterPath="$PROJECT_DIR$/js/functions.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/order_add_f.php" afterPath="$PROJECT_DIR$/order_add_f.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/payment_add_f.php" afterPath="$PROJECT_DIR$/payment_add_f.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/showZapisRezult.php" afterPath="$PROJECT_DIR$/showZapisRezult.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/variables.php" afterPath="$PROJECT_DIR$/variables.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/zapis_full.php" afterPath="$PROJECT_DIR$/zapis_full.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/zapis_own.php" afterPath="$PROJECT_DIR$/zapis_own.php" />
-    </list>
+    <list default="true" id="f8f4c17b-6b78-4f1a-8b48-611bd890c0f8" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -39,8 +18,8 @@
       <file leaf-file-name="ffun.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/ffun.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="609">
-              <caret line="254" column="34" lean-forward="false" selection-start-line="254" selection-start-column="34" selection-end-line="254" selection-end-column="34" />
+            <state relative-caret-position="455">
+              <caret line="178" column="5" lean-forward="true" selection-start-line="178" selection-start-column="5" selection-end-line="178" selection-end-column="5" />
               <folding>
                 <marker date="1491324264995" expanded="true" signature="2650:2662" ph="..." />
                 <marker date="1491324264995" expanded="true" signature="3442:3455" ph="..." />
@@ -723,12 +702,12 @@
       <workItem from="1490796660493" duration="2036000" />
       <workItem from="1490865091864" duration="11143000" />
       <workItem from="1490943890271" duration="18427000" />
-      <workItem from="1491223598467" duration="27386000" />
+      <workItem from="1491223598467" duration="28003000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="203735000" />
+    <option name="totallyTimeSpent" value="204352000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1696" height="1026" extended-state="6" />
@@ -3476,8 +3455,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/ffun.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="609">
-          <caret line="254" column="34" lean-forward="false" selection-start-line="254" selection-start-column="34" selection-end-line="254" selection-end-column="34" />
+        <state relative-caret-position="455">
+          <caret line="178" column="5" lean-forward="true" selection-start-line="178" selection-start-column="5" selection-end-line="178" selection-end-column="5" />
           <folding>
             <marker date="1491324264995" expanded="true" signature="2650:2662" ph="..." />
             <marker date="1491324264995" expanded="true" signature="3442:3455" ph="..." />
