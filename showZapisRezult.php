@@ -351,6 +351,16 @@
                         } else {
                             $rezult .= "&nbsp";
                         }
+                        if ($upr_edit){
+                            $rezult .= '
+                                                    <li>
+                                                        <div>
+                                                            <a href="edit_zapis_change_client.php?client_id=' . $ZapisHereQueryToday[$z]['patient'] . '&zapis_id=' . $ZapisHereQueryToday[$z]['id'] . '" class="ahref">
+                                                                Изменить пациента
+                                                            </a>
+                                                        </div>
+                                                    </li>';
+                        }
                     }
 
                     $rezult .= '</ul>';

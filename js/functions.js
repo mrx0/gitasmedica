@@ -689,13 +689,46 @@
 				},
 				success:function(data){
 					$('#errrror').html(data);
-					/*setTimeout(function () {
+					setTimeout(function () {
 						window.location.replace('client.php?id='+id);
-					}, 100);*/
+					}, 100);
 				}
 			})
 		}
 	}; 
+	//Перемещение записи другому
+	function Ajax_edit_zapis_change_client(zapis_id, client_id) {
+
+        var name = document.getElementById("search_client").value;
+
+		var rys = false;
+
+		var rys = confirm("Вы хотите перенести запись другому пациенту. \nЭто невозможно будет исправить \n\nВы уверены?");
+
+		if (rys){
+			$.ajax({
+				url:"edit_zapis_change_client_f.php",
+				global: false,
+				type: "POST",
+				data:
+				{
+                    zapis_id: zapis_id,
+                    client_id: client_id,
+					new_client: name,
+				},
+				cache: false,
+				beforeSend: function() {
+					$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+				},
+				success:function(data){
+					$('#errrror').html(data);
+					setTimeout(function () {
+						window.location.replace('client.php?id='+client_id);
+					}, 100);
+				}
+			})
+		}
+	};
 	//Редактировать ФИО пациента
 	function Ajax_edit_fio_client() {
 		// убираем класс ошибок с инпутов
@@ -3918,11 +3951,12 @@
 		}
 
         var Summ = document.getElementById("summ").value;
-        var SummType = document.getElementById("summ_type").value;
+        //var SummType = document.getElementById("summ_type").value;
+        var SummType = document.querySelector('input[name="summ_type"]:checked').value;
         var office_id = document.getElementById("filial").value;
 
 		var client_id = document.getElementById("client_id").value;
-		var invoice_id = document.getElementById("invoice_id").value;
+		//var order_id = document.getElementById("order_id").value;
 		//alert(invoice_id);
 		var date_in = document.getElementById("date_in").value;
 		//alert(date_in);
@@ -3930,9 +3964,9 @@
         var comment = document.getElementById("comment").value;
         //alert(comment);
 
-        if (invoice_id != 0){
+        if (order_id != 0){
             paymentStr = '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-                '<a href= "payment_add.php?invoice_id='+invoice_id+'" class="b">Оплатить наряд #'+invoice_id+'</a>'+
+                '<a href= "payment_add.php?invoice_id='+order_id+'" class="b">Оплатить наряд #'+order_id+'</a>'+
                 '</li>';
 		}
 

@@ -20,6 +20,7 @@
                     $order_j = SelDataFromDB('journal_order', $_GET['id'], 'id');
 
                     if ($order_j != 0){
+                       // var_dump($order_j);
 
                         $offices_j = SelDataFromDB('spr_office', $order_j[0]['office_id'], 'offices');
 
@@ -125,7 +126,7 @@
 								            Способ внесения
                                         </li>
                                         <li style="font-size: 90%; margin-bottom: 5px;">
-                                            ', $order_j[0]['type'] == 1 ? 'Наличный' : 'Безналичный' ,'
+                                            ', $order_j[0]['summ_type'] == 1 ? 'Наличный' : 'Безналичный' ,'
 									    </li>
 								    </ul>
 								</div>

@@ -42,7 +42,7 @@
 				echo '
 							</h2>
 						</header>';
-				if (($finances['see_all'] == 1) || $god_mode){
+				if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
 					
 					//Массив с месяцами
 					$monthsName = array(
