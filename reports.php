@@ -97,6 +97,15 @@
 
 			echo '
 						</ul>
+						<ul class="reportBlock" style="">
+								<h1>Работы</h1>';
+			echo '				
+							<li class="cellsBlock" style="margin: 10px;">
+								<a href="stat_invoices.php" class="b3">Наряды</a>
+							</li>';
+
+			echo '
+						</ul>
 					</div>';
 
 		}else{

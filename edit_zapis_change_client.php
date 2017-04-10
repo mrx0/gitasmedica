@@ -64,7 +64,7 @@
                         // !!! **** тест с записью
                         include_once 'showZapisRezult.php';
 
-                        echo showZapisRezult($sheduler_zapis, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, 0);
+                        echo showZapisRezult($sheduler_zapis, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, 0, true, true);
 
                         echo '				
                                         <div class="cellsBlock2">

@@ -661,7 +661,7 @@
                             $edit_options = true;
                         }
 
-                        echo showZapisRezult($ZapisHereQueryToday, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $type);
+                        echo showZapisRezult($ZapisHereQueryToday, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $type, true, true);
 
 					}else{
 						echo 'Нет записи';

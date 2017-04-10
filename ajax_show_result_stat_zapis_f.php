@@ -19,6 +19,19 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         $queryDopEx = '';
         $queryDopClient = '';
 
+        $edit_options = false;
+        $upr_edit = false;
+        $admin_edit = false;
+        $stom_edit = false;
+        $cosm_edit = false;
+        $finance_edit = false;
+
+        //разбираемся с правами
+        $god_mode = FALSE;
+
+        require_once 'permissions.php';
+
+
         if ($_POST['worker'] != ''){
             include_once 'DBWork.php';
             $workerSearch = SelDataFromDB ('spr_workers', $_POST['worker'], 'worker_full_name');
@@ -162,6 +175,38 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 //Выводим результат
                 if ($journal != 0){
                     include_once 'functions.php';
+
+                    // !!! **** тест с записью
+                    include_once 'showZapisRezult.php';
+
+                    if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
+                        $finance_edit = true;
+                        $edit_options = true;
+                    }
+
+                    if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode){
+                        $stom_edit = true;
+                        $edit_options = true;
+                    }
+                    if (($cosm['add_own'] == 1) || ($cosm['add_new'] == 1) || $god_mode){
+                        $cosm_edit = true;
+                        $edit_options = true;
+                    }
+
+                    if (($zapis['add_own'] == 1) || ($zapis['add_new'] == 1) || $god_mode) {
+                        $admin_edit = true;
+                        $edit_options = true;
+                    }
+
+                    if (($scheduler['see_all'] == 1) || $god_mode){
+                        $upr_edit = true;
+                        $edit_options = true;
+                    }
+
+                    echo showZapisRezult($journal, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, 0, true, false);
+
+
+
 
                     //Общее кол-во посещений
                     $journal_count_orig = 0;
@@ -465,7 +510,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
             //var_dump($queryDopEx);
             //var_dump($queryDopClient);
 
-            mysql_close();
+            //mysql_close();
         }else{
             echo '<span style="color: red;">Не найден сотрудник. Проверьте, что полностью введены ФИО.</span>';
         }

@@ -60,6 +60,8 @@
                                 $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data'] = array();
                                 $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['mkb'] = array();
                             }
+                            //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]);
+
                             //сортируем зубы по порядку
                             ksort($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
 
@@ -582,10 +584,10 @@
                                                         <div style="">Страховка: <div id="calculateInsInvoice" style="">0</div> руб.</div>
                                                     </div>';
                                 }
-                                echo '
+                                /*echo '
                                                     <div>
                                                         <div style="">Скидка: <div id="discountValue" class="calculateInvoice" style="color: rgb(255, 0, 198);">' . $discount . '</div><span  class="calculateInvoice" style="color: rgb(255, 0, 198);">%</span></div>
-                                                    </div>';
+                                                    </div>';*/
                                 echo '
                                                     <div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
                                                         <div>	

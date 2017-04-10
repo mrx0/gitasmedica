@@ -2401,7 +2401,7 @@
 		var insure = 0;
 		var insureapprove = 0;
 
-		var discount = Number(document.getElementById("discountValue").innerHTML);
+		//var discount = Number(document.getElementById("discountValue").innerHTML);
 
 		document.getElementById("calculateInvoice").innerHTML = Summ;
 		if (invoice_type == 5){
@@ -2424,8 +2424,8 @@
 			}
 			
 			//получаем значение гарантии
-			//var guarantee = $(this).next().next().next().next().attr('guarantee');
-			var guarantee = $(this).next().next().next().attr('guarantee');
+			var guarantee = $(this).next().next().next().next().attr('guarantee');
+			//var guarantee = $(this).next().next().next().attr('guarantee');
 			//console.log(insure);
 			
 			//Цена
@@ -2478,7 +2478,7 @@
 			var spec_koeff = Number($(this).parent().find('.spec_koeffInvoice').html());
 
 			//скидка акция
-			//var discount = $(this).next().next().next().attr('discount');
+			var discount = $(this).next().next().next().attr('discount');
 			//alert(discount);
 						
 			//взяли количество
@@ -2488,7 +2488,15 @@
 			//var stoim = quantity * (cost +  cost * spec_koeff / 100);
 			var stoim = quantity * cost	;
 
-			//суммируем сумму в итоги
+			//с учетом скидки акции, но если не страховая
+            if (insure == 0) {
+                stoim = stoim - (stoim * discount / 100);
+            }
+            stoim = Math.round(stoim / 10) * 10;
+            //alert(stoim);
+			//console.log($(this).parent().find('.invoiceItemPriceItog').html(stoim));
+
+            //суммируем сумму в итоги
             if (guarantee == 0){
                 if (insure != 0){
                     if (insureapprove != 0){
@@ -2499,21 +2507,16 @@
                 }
             }
 
-			//с учетом скидки акции, но если не страховая
-            if (insure == 0) {
-                stoim = stoim - (stoim * discount / 100);
-            }
-            stoim = Math.round(stoim / 10) * 10;
-
 			//прописываем стоимость
 			if (guarantee == 0){
 				//$(this).next().next().next().next().next().html(stoim);
-				$(this).next().next().next().next().html(stoim);
+				//$(this).next().next().next().next().html(stoim);
+                $(this).parent().find('.invoiceItemPriceItog').html(stoim);
 			}
 
 		});
 
-        Summ = Math.round(Summ - (Summ * discount / 100));
+        //Summ = Math.round(Summ - (Summ * discount / 100));
         Summ = Math.round(Summ/10) * 10;
         //SummIns = Math.round(SummIns - (SummIns * discount / 100));
         SummIns = Math.round(SummIns/10) * 10;
@@ -3027,7 +3030,7 @@
 			// действие, при ответе с сервера
 			success: function(data){
 
-                document.getElementById("discountValue").innerHTML = Number(discount);
+                //document.getElementById("discountValue").innerHTML = Number(discount);
 
 				fillInvoiseRez();
 

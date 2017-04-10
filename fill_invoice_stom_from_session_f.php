@@ -33,9 +33,9 @@
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
 								<i><b>Кол-во</b></i>
 							</div>
-							<!--<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
+							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
 								<i><b>Скидка</b></i>
-							</div>-->
+							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
 								<i><b>Гар.</b></i>
 							</div>
@@ -273,9 +273,9 @@
 								<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px; '.$bg_col.'">
 									<input type="number" size="2" name="quantity" id="quantity" min="1" max="99" value="'.$items['quantity'].'" class="mod" onchange="changeQuantityInvoice('.$ind.', '.$key.', this);">
 								</div>
-								<!--<div class="cellCosmAct settings_text"  discount="'.$items['discount'].'" style="font-size: 90%; text-align: center; '.$bg_col.' width: 40px; min-width: 40px; max-width: 40px;" onclick="contextMenuShow('.$ind.', '.$key.', event, \'discountItem\');">
+								<div class="cellCosmAct settings_text"  discount="'.$items['discount'].'" style="font-size: 90%; text-align: center; '.$bg_col.' width: 40px; min-width: 40px; max-width: 40px;" onclick="contextMenuShow('.$ind.', '.$key.', event, \'discountItem\');">
 									'.$items['discount'].'
-								</div>-->
+								</div>
 								<div class="cellCosmAct settings_text" guarantee="'.$items['guarantee'].'" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px; '.$bg_col.'" onclick="contextMenuShow('.$ind.', '.$key.', event, \'guaranteeItem\');">';
 								if ($items['guarantee'] != 0){
 									$request .= '

@@ -1919,6 +1919,8 @@
 
 
 			echo '
+						<input type="hidden" id="zapis_id" name="zapis_id" value="0">
+						
 						<input type="hidden" id="day" name="day" value="0">
 						<input type="hidden" id="month" name="month" value="0">
 						<input type="hidden" id="year" name="year" value="0">

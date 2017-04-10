@@ -106,7 +106,7 @@
 										<input type="checkbox" id="zapisAll" name="zapisAll" class="zapisType" value="1" checked>Все<br>
 										<input type="checkbox" id="zapisArrive" name="zapisArrive" class="zapisType" value="1" checked>Пришёл<br>
 										<input type="checkbox" id="zapisNotArrive" name="zapisNotArrive" class="zapisType" value="1" checked>Не пришёл<br>
-										<input type="checkbox" id="zapisNull" name="zapisNull" class="zapisType" value="1" checked>Пустая запись<br>
+										<input type="checkbox" id="zapisNull" name="zapisNull" class="zapisType" value="1" checked>Не закрытая<br>
 										<input type="checkbox" id="zapisError" name="zapisError" class="zapisType" value="1" checked>Ошибочные<br>
 									</div>
 								</li>';

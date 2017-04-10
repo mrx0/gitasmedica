@@ -17,6 +17,13 @@
 			
 			require 'config.php';
 
+            $edit_options = false;
+            $upr_edit = false;
+            $admin_edit = false;
+            $stom_edit = false;
+            $cosm_edit = false;
+            $finance_edit = false;
+
 			//var_dump($_SESSION);
 			//unset($_SESSION['invoice_data']);
 			
@@ -163,7 +170,7 @@
 									$dop_img .= '<img src="img/night.png" title="Ночное"> ';
 								}
 										
-								echo '
+								/*echo '
 										<li class="cellsBlock" style="width: auto;">';
 									
 								echo '
@@ -211,7 +218,37 @@
 												<b><i>Описание:</i></b><br><div style="text-overflow: ellipsis; overflow: hidden; white-space: inherit; display: block; width: 120px;" title="'.$sheduler_zapis[0]['description'].'">'.$sheduler_zapis[0]['description'].'</div>';
 								echo '
 											</div>
-										</li>';
+										</li>';*/
+
+                                // !!! **** тест с записью
+                                include_once 'showZapisRezult.php';
+
+                                if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
+                                    $finance_edit = true;
+                                    $edit_options = true;
+                                }
+
+                                if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode){
+                                    $stom_edit = true;
+                                    $edit_options = true;
+                                }
+                                if (($cosm['add_own'] == 1) || ($cosm['add_new'] == 1) || $god_mode){
+                                    $cosm_edit = true;
+                                    $edit_options = true;
+                                }
+
+                                if (($zapis['add_own'] == 1) || ($zapis['add_new'] == 1) || $god_mode) {
+                                    $admin_edit = true;
+                                    $edit_options = true;
+                                }
+
+                                if (($scheduler['see_all'] == 1) || $god_mode){
+                                    $upr_edit = true;
+                                    $edit_options = true;
+                                }
+
+                                //echo showZapisRezult($sheduler_zapis, false, false, false, false, false, false, 0, false, false);
+                                echo showZapisRezult($sheduler_zapis, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, 0, false, false);
 
 								echo '
 									</ul>';
@@ -281,10 +318,10 @@
                                                     <div style="">Страховка: <div id="calculateInsInvoice" style="">' . $invoice_j[0]['summins'] . '</div> руб.</div>
                                                 </div>';
                             }
-                            echo '
+                            /*echo '
                                                 <div>
                                                     <div style="">Скидка: <div id="discountValue" class="calculateInvoice" style="color: rgb(255, 0, 198);">'.$invoice_j[0]['discount'].'</div><span  class="calculateInvoice" style="color: rgb(255, 0, 198);">%</span></div>
-                                                </div>';
+                                                </div>';*/
                             echo '
 											</div> 
                                             <div style="display: inline-block; width: 300px; vertical-align: top;">
@@ -370,9 +407,9 @@
 												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
 													<i><b>Кол-во</b></i>
 												</div>
-												<!--<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
+												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
 													<i><b>Скидка</b></i>
-												</div>-->
+												</div>
 												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
 													<i><b>Гар.</b></i>
 												</div>
@@ -607,9 +644,9 @@
                                             <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
                                                 <b>'.$item['quantity'].'</b>
                                             </div>
-                                            <!--<div class="cellCosmAct" style="font-size: 90%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
+                                            <div class="cellCosmAct" style="font-size: 90%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
                                                 '.$item['discount'].'
-                                            </div>-->
+                                            </div>
                                             <div class="cellCosmAct settings_text" guarantee="'.$item['guarantee'].'" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">';
                                             if ($item['guarantee'] != 0){
                                                 echo '
@@ -627,7 +664,8 @@
 
                                             //с учетом скидки акции
                                             if ($item['insure'] == 0){
-                                                $stoim_item = $stoim_item - ($stoim_item * $invoice_j[0]['discount'] / 100);
+                                                //$stoim_item = $stoim_item - ($stoim_item * $invoice_j[0]['discount'] / 100);
+                                                //$stoim_item = $stoim_item - ($stoim_item * $invoice_j[0]['discount'] / 100);
                                             }
                                             $stoim_item = round($stoim_item/10) * 10;
 

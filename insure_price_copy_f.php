@@ -42,7 +42,7 @@
                     //var_dump($arr4fill);
 
                     if ($arr4fill != 0) {
-                        $query = "SELECT `item`, `price`, `date_from` FROM `spr_priceprices_insure` WHERE `insure`='{$_POST['id']}' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
+                        $query = "SELECT `item`, `price`, `date_from` FROM `spr_priceprices_insure` WHERE `insure`='{$_POST['id']}' ORDER BY `date_from` DESC, `create_time` DESC";
                         $arr = array();
                         $price4fill = array();
 
@@ -54,7 +54,7 @@
                                 $price4fill[$arr['item']]['date_from'] = $arr['date_from'];
                             }
                         } else {
-                            $price4fill = 0;
+                            //$price4fill = 0;
                         }
                         //var_dump($price4fill);
                     }
@@ -95,6 +95,7 @@
                         mysql_query($query) or die(mysql_error() . ' -> ' . $query);
 
                     }
+                    //var_dump($price4fill);
                     echo '
 						<div class="query_ok">
 							Прайс заполнен<br><br>

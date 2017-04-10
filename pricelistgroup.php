@@ -43,7 +43,7 @@
 						echo '
 									<a href="pricelistgroup_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
 					}
-					if (($rezult[0]['status'] == 9) || ($items['close'] == 1)){
+					if (($rezult[0]['status'] == 9) && ($items['close'] == 1)){
 						echo '
 							<a href="#" onclick="Ajax_reopen_pricelistgroup('.$_SESSION['id'].', '.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 100%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
 					}
