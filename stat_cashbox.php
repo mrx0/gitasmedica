@@ -94,7 +94,7 @@
 									</div>
 								</li>
 								
-								<li class="filterBlock">
+								<!--<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
 										Вид услуг
 									</div>
@@ -103,7 +103,7 @@
 										<input type="checkbox" id="zapisTypeStom" name="zapisTypeStom" class="zapisType" value="1" checked>Стоматология<br>
 										<input type="checkbox" id="zapisTypeCosm" name="zapisTypeCosm" class="zapisType" value="1" checked>Косметология<br>
 									</div>
-								</li>
+								</li>-->
 								
 								<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
@@ -123,6 +123,8 @@
 				echo '
 							</ul>
 						</div>
+						
+
 						
 						<div id="status">
 							<ul style="border: 1px dotted #CCC; margin: 10px; width: auto;" id="qresult">

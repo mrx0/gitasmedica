@@ -181,7 +181,8 @@
     function Ajax_show_result_stat_cashbox(){
 
         var summtype = $("input[name=summType]:checked").val();
-        var zapisTypeAll = $("input[id=zapisTypeAll]:checked").val();
+
+        /*var zapisTypeAll = $("input[id=zapisTypeAll]:checked").val();
         if (zapisTypeAll === undefined){
             zapisTypeAll = 0;
         }
@@ -192,7 +193,7 @@
         var zapisTypeCosm = $("input[id=zapisTypeCosm]:checked").val();
         if (zapisTypeCosm === undefined){
             zapisTypeCosm = 0;
-        }
+        }*/
 
         var certificatesShow = $("input[id=certificatesShow]:checked").val();
         if (certificatesShow === undefined){
@@ -212,9 +213,9 @@
 
                     summtype: summtype,
 
-                    zapisTypeAll: zapisTypeAll,
+                    /*zapisTypeAll: zapisTypeAll,
                     zapisTypeStom: zapisTypeStom,
-                    zapisTypeCosm: zapisTypeCosm,
+                    zapisTypeCosm: zapisTypeCosm,*/
 
                     certificatesShow: certificatesShow,
 
@@ -225,6 +226,8 @@
             },
             success:function(data){
                 $('#qresult').html(data);
+
+                $( "#tabs_w" ).tabs();
             }
         })
     }

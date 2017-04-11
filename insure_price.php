@@ -138,9 +138,9 @@
 								
 							//Без группы
 									
-							//$query = "SELECT * FROM `spr_pricelists_insure` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' AND `insure`='{$_GET['id']}' ORDER BY `name`";			
-							$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `spr_pricelists_insure` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' AND `insure`='{$_GET['id']}') ORDER BY `name`";			
-							
+							//$query = "SELECT * FROM `spr_pricelists_insure` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' AND `insure`='{$_GET['id']}' ORDER BY `name`";
+							$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `spr_pricelists_insure` WHERE `item` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' AND `insure`='{$_GET['id']}') ORDER BY `name`";
+
 							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
 							$number = mysql_num_rows($res);	

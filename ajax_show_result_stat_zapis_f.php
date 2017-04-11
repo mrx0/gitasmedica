@@ -150,7 +150,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                 $query = $query." ORDER BY `create_time` DESC";
 
-                var_dump($query);
+                //var_dump($query);
 
                 require 'config.php';
                 mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
@@ -258,7 +258,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                     //!!!!!!тест санации Sanation ($journal);
 
-                    for ($i = 0; $i < count($journal); $i++) {
+                    /*for ($i = 0; $i < count($journal); $i++) {
 
                         $orig_clients[$journal[$i]['client']] = true;
 
@@ -287,7 +287,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             //if ((isset($filter_rez['pervich']) && $journal_ex_bool) || (!isset($filter_rez['pervich']))){
                             //if (($journal[$i]['create_time'] >= $datestart)  && ($journal[$i]['create_time'] <= $datefinish)){
                             //Надо найти клиента
-                            $clients = SelDataFromDB ('spr_clients', $journal[$i]['client'], 'client_id');
+                    /*        $clients = SelDataFromDB ('spr_clients', $journal[$i]['client'], 'client_id');
                             if ($clients != 0){
                                 $client = $clients[0]["name"];
                                 if (($clients[0]["birthday"] != -1577934000) || ($clients[0]["birthday"] == 0)){
@@ -442,7 +442,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             /*echo '
                                     <div class="cellName">!!!ТИП</div>';*/
 
-                            $decription = array();
+                    /*        $decription = array();
                             $decription_temp_arr = array();
                             $decription_temp = '';
 
@@ -455,7 +455,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                             //var_dump ($decription_temp_arr);
 
-                            $decription = $decription_temp_arr;
+                    /*        $decription = $decription_temp_arr;
 
                             //array_multisort($data_nomer, SORT_NUMERIC, $decription);
 
@@ -479,13 +479,13 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                 }
                             }*/
 
-                            echo '
+                    /*       echo '
 													<div class="cellText">'.$journal[$i]['comment'].'</div>
 											</li>';
                             //}
 
                         }
-                    }
+                    }*/
 
                     echo '
 							<li class="cellsBlock" style="margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
