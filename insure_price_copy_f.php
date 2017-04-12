@@ -42,7 +42,7 @@
                     //var_dump($arr4fill);
 
                     if ($arr4fill != 0) {
-                        $query = "SELECT `item`, `price`, `date_from` FROM `spr_priceprices_insure` WHERE `insure`='{$_POST['id']}' ORDER BY `date_from` DESC, `create_time` DESC";
+                        $query = "SELECT `item`, `price`, `price2`, `price3`, `date_from` FROM `spr_priceprices_insure` WHERE `insure`='{$_POST['id']}' ORDER BY `date_from` DESC, `create_time` DESC";
                         $arr = array();
                         $price4fill = array();
 
@@ -50,56 +50,75 @@
                         $number = mysql_num_rows($res);
                         if ($number != 0) {
                             while ($arr = mysql_fetch_assoc($res)) {
-                                $price4fill[$arr['item']]['price'] = $arr['price'];
-                                $price4fill[$arr['item']]['date_from'] = $arr['date_from'];
+                                if (isset($price4fill[$arr['item']])){
+                                    if ($price4fill[$arr['item']]['date_from'] < $arr['date_from']){
+                                        $price4fill[$arr['item']]['price'] = $arr['price'];
+                                        $price4fill[$arr['item']]['price2'] = $arr['price2'];
+                                        $price4fill[$arr['item']]['price3'] = $arr['price3'];
+                                        $price4fill[$arr['item']]['date_from'] = $arr['date_from'];
+                                    }
+                                }else {
+                                    $price4fill[$arr['item']]['price'] = $arr['price'];
+                                    $price4fill[$arr['item']]['price2'] = $arr['price2'];
+                                    $price4fill[$arr['item']]['price3'] = $arr['price3'];
+                                    $price4fill[$arr['item']]['date_from'] = $arr['date_from'];
+                                    //var_dump($arr['item']);
+                                    //var_dump($price4fill[936]);
+                                    //echo '<hr>';
+                                    //var_dump($arr['item']);
+                                    //var_dump($price4fill[$arr['item']]['price']);
+                                }
                             }
                         } else {
                             //$price4fill = 0;
                         }
                         //var_dump($price4fill);
-                    }
-
-                    //Удаляем старые данные для второй компании
-                    $query = "DELETE FROM `spr_pricelists_insure` WHERE `insure`='{$_POST['id2']}'";
-                    mysql_query($query) or die(mysql_error() . ' -> ' . $query);
-
-                    $query = "DELETE FROM `spr_priceprices_insure` WHERE `insure`='{$_POST['id2']}'";
-                    mysql_query($query) or die(mysql_error() . ' -> ' . $query);
 
 
-                    foreach ($arr4fill as $item) {
-                        //Добавляем в базу позицию прайса для страховой
-                        $query = "INSERT INTO `spr_pricelists_insure` (`item`, `insure`, `create_time`, `create_person`) 
-						VALUES (
-						'{$item['item']}', '{$_POST['id2']}', '{$time}', '{$_SESSION['id']}')";
+                        //Удаляем старые данные для второй компании
+                        $query = "DELETE FROM `spr_pricelists_insure` WHERE `insure`='{$_POST['id2']}'";
                         mysql_query($query) or die(mysql_error() . ' -> ' . $query);
 
-                        //ID новой позиции
-                        $mysql_insert_id = mysql_insert_id();
+                        $query = "DELETE FROM `spr_priceprices_insure` WHERE `insure`='{$_POST['id2']}'";
+                        mysql_query($query) or die(mysql_error() . ' -> ' . $query);
 
-                        $price = 0;
-                        //Сегодня 09:00:00
-                        $fromdate = strtotime(date('d.m.Y', $time) . " 09:00:00");
 
-                        if (isset($price4fill[$item['item']])) {
-                            $price = $price4fill[$item['item']]['price'];
-                            $fromdate = $price4fill[$item['item']]['date_from'];
+                        foreach ($arr4fill as $item) {
+                            //Добавляем в базу позицию прайса для страховой
+                            $query = "INSERT INTO `spr_pricelists_insure` (`item`, `insure`, `create_time`, `create_person`) 
+                            VALUES (
+                            '{$item['item']}', '{$_POST['id2']}', '{$time}', '{$_SESSION['id']}')";
+                            mysql_query($query) or die(mysql_error() . ' -> ' . $query);
+
+                            //ID новой позиции
+                            $mysql_insert_id = mysql_insert_id();
+
+                            $price = 0;
+                            //Сегодня 09:00:00
+                            $fromdate = strtotime(date('d.m.Y', $time) . " 09:00:00");
+
+                            if (isset($price4fill[$item['item']])) {
+                                $price = $price4fill[$item['item']]['price'];
+                                $price2 = $price4fill[$item['item']]['price2'];
+                                $price3 = $price4fill[$item['item']]['price3'];
+                                $fromdate = $price4fill[$item['item']]['date_from'];
+                            }
+
+
+                            //Добавляем в базу цену позиции прайса для страховой
+                            $query = "INSERT INTO `spr_priceprices_insure` (
+                                `insure`, `item`, `price`, `price2`, `price3`, `date_from`, `create_time`, `create_person`) 
+                                VALUES (
+                            '{$_POST['id2']}', '{$item['item']}', '{$price}', '{$price2}', '{$price3}', '{$fromdate}', '{$time}', '{$_SESSION['id']}')";
+                            mysql_query($query) or die(mysql_error() . ' -> ' . $query);
+
                         }
-
-
-                        //Добавляем в базу цену позиции прайса для страховой
-                        $query = "INSERT INTO `spr_priceprices_insure` (
-							`insure`, `item`, `price`, `date_from`, `create_time`, `create_person`) 
-							VALUES (
-						'{$_POST['id2']}', '{$item['item']}', '{$price}', '{$fromdate}', '{$time}', '{$_SESSION['id']}')";
-                        mysql_query($query) or die(mysql_error() . ' -> ' . $query);
-
+                        //var_dump($price4fill);
+                        echo '
+                            <div class="query_ok">
+                                Прайс заполнен<br><br>
+                            </div>';
                     }
-                    //var_dump($price4fill);
-                    echo '
-						<div class="query_ok">
-							Прайс заполнен<br><br>
-						</div>';
                 }else{
                     echo '
 					<div class="query_neok">

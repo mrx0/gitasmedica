@@ -26,6 +26,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         $cosm_edit = false;
         $finance_edit = false;
 
+        include_once 'DBWork.php';
+        include_once 'functions.php';
+
         //разбираемся с правами
         $god_mode = FALSE;
 
