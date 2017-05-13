@@ -75,7 +75,8 @@
                                             echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Нельзя вносить задним числом</div>'));
                                         } else {
                                             //до того как был создан наряд
-                                            if (date("d", strtotime($invoice_j[0]['create_time'])) > date("d", strtotime($_POST['date_in'] . " 21:00:00"))) {
+                                            //if (date("d", strtotime($invoice_j[0]['create_time'])) > date("d", strtotime($_POST['date_in'] . " 21:00:00"))) {
+                                            if (strtotime($invoice_j[0]['create_time']) > strtotime($_POST['date_in'] . " 21:00:00")) {
                                                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Оплата не может быть сделана до того, как был создан наряд</div>'));
                                             } else {
                                                 //возьмем последнюю оплату этого наряда, если она есть
@@ -97,7 +98,8 @@
                                                 //Если есть оплаты
                                                 if (!empty($payments_j)) {
                                                     //Если время последней до этой оплаты выше чем мы хотим сейчас, то борода. Иначе поедет время закрытия наряда
-                                                    if (date("d", strtotime($payments_j[0]['date_in'])) > date("d", strtotime($_POST['date_in'] . " 21:00:00"))) {
+                                                    //if (date("d", strtotime($payments_j[0]['date_in'])) > date("d", strtotime($_POST['date_in'] . " 21:00:00"))) {
+                                                    if (strtotime($payments_j[0]['date_in']) > strtotime($_POST['date_in'] . " 21:00:00")) {
                                                         $canAddPayment = false;
                                                     } else {
                                                         $canAddPayment = true;
