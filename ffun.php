@@ -325,9 +325,10 @@
                     $price = $prices_arr[0]['price'];
                 }
             }
+            $price = round($price / 10) * 10;
         }
 
-        $price = round($price / 10) * 10;
+        //$price = round($price / 10) * 10;
 
         return($price);
     }

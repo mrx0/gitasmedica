@@ -666,8 +666,9 @@
                                             if ($item['insure'] == 0){
                                                 //$stoim_item = $stoim_item - ($stoim_item * $invoice_j[0]['discount'] / 100);
                                                 //$stoim_item = $stoim_item - ($stoim_item * $invoice_j[0]['discount'] / 100);
+                                                $stoim_item = round($stoim_item/10) * 10;
                                             }
-                                            $stoim_item = round($stoim_item/10) * 10;
+                                            //$stoim_item = round($stoim_item/10) * 10;
 
                                             echo $stoim_item;
 

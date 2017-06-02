@@ -2474,8 +2474,7 @@
 				}
 			});
 			
-			//коэффициент
-			var spec_koeff = Number($(this).parent().find('.spec_koeffInvoice').html());
+			//коэффициентinvoiceItemPrice
 
 			//скидка акция
 			var discount = $(this).next().next().next().attr('discount');
@@ -2492,8 +2491,11 @@
             if (insure == 0) {
                 stoim = stoim - (stoim * discount / 100);
             }
-            stoim = Math.round(stoim / 10) * 10;
-            //alert(stoim);
+            if (insure == 0) {
+           		stoim = Math.round(stoim / 10) * 10;
+            }
+
+            console.log(stoim);
 			//console.log($(this).parent().find('.invoiceItemPriceItog').html(stoim));
 
             //суммируем сумму в итоги
@@ -2519,7 +2521,8 @@
         //Summ = Math.round(Summ - (Summ * discount / 100));
         Summ = Math.round(Summ/10) * 10;
         //SummIns = Math.round(SummIns - (SummIns * discount / 100));
-        SummIns = Math.round(SummIns/10) * 10;
+		//страховые не округляем
+        //SummIns = Math.round(SummIns/10) * 10;
 
 		document.getElementById("calculateInvoice").innerHTML = Summ;
 		if (SummIns > 0){
