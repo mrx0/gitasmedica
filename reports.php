@@ -94,6 +94,10 @@
 							<li class="cellsBlock" style="margin: 10px;">
 								<a href="stat_cashbox.php" class="b3">Касса</a>
 							</li>';
+			echo '				
+							<li class="cellsBlock" style="margin: 10px;">
+								<a href="stat_insure.php" class="b3">Страховые</a>
+							</li>';
 
 			echo '
 						</ul>

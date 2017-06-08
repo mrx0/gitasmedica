@@ -278,7 +278,9 @@
 							//var_dump ($invoice_ex_j);
 							
 							//сортируем зубы по порядку
-							ksort($invoice_ex_j);
+                            if ($invoice_ex_j != 0){
+							    ksort($invoice_ex_j);
+                            }
 
 							//Для МКБ
 							$query = "SELECT * FROM `journal_invoice_ex_mkb` WHERE `invoice_id`='".$_GET['id']."';";
@@ -453,7 +455,7 @@
 
                                         foreach ($invoice_ex_j_mkb[$ind] as $mkb_key => $mkb_data_val){
                                             $rez = array();
-                                            $rezult2 = array();
+                                            //$rezult2 = array();
 
                                             $query = "SELECT `name`, `code` FROM `spr_mkb` WHERE `id` = '{$mkb_data_val['mkb_id']}'";
 

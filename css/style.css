@@ -2155,3 +2155,13 @@ ul.ul-drop div.drop {
 	background-color: rgba(245, 245, 245, 0.9);
 	display: inline-block;
 }
+
+.tableInsStat tr td {
+	padding: 5px;
+	border: 1px dotted #b3c0c8;
+	font-size: 11px;
+}
+
+.tableInsStat tr:hover {
+	background-color: rgba(245, 245, 245, 0.9);
+}

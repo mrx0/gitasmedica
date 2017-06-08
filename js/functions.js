@@ -1333,6 +1333,63 @@
         })
     }
 
+    //Выборка статистики страховых
+    function Ajax_show_result_stat_insure(){
+
+        var zapisAll = $("input[id=zapisAll]:checked").val();
+        if (zapisAll === undefined){
+            zapisAll = 0;
+        }
+        var zapisArrive = $("input[id=zapisArrive]:checked").val();
+        if (zapisArrive === undefined){
+            zapisArrive = 0;
+        }
+        var zapisNotArrive = $("input[id=zapisNotArrive]:checked").val();
+        if (zapisNotArrive === undefined){
+            zapisNotArrive = 0;
+        }
+
+        var zapisError = $("input[id=zapisError]:checked").val();
+        if (zapisError === undefined){
+            zapisError = 0;
+        }
+
+        var zapisNull = $("input[id=zapisNull]:checked").val();
+        if (zapisNull === undefined){
+            zapisNull = 0;
+        }
+
+        $.ajax({
+            url:"ajax_show_result_stat_insure_f.php",
+            global: false,
+            type: "POST",
+            data:
+                {
+                    all_time:all_time,
+                    datastart: document.getElementById("datastart").value,
+                    dataend: document.getElementById("dataend").value,
+
+                    //worker:document.getElementById("search_worker").value,
+                    insure: document.getElementById("insure_sel").value,
+                    filial: document.getElementById("filial").value,
+
+                    zapisAll: zapisAll,
+                    zapisArrive: zapisArrive,
+                    zapisNotArrive: zapisNotArrive,
+                    zapisError: zapisError,
+                    zapisNull: zapisNull,
+
+                },
+            cache: false,
+            beforeSend: function() {
+                $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                $('#qresult').html(data);
+            }
+        })
+    }
+
 	//Для Отсутствующие зубы
 	function Ajax_show_result_stat_stom4(){
 		$.ajax({
