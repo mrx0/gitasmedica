@@ -254,7 +254,7 @@
 						if (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)){
 							echo '-';
 						}else{
-							echo '<b>'.getyeardiff($clients_j[$i]['birthday']).'</b>';
+							echo '<b>'.getyeardiff($clients_j[$i]['birthday'], 0).'</b>';
 						}
 						echo '	
 									</div>';
@@ -311,7 +311,7 @@
 						if (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)){
 							$deleted_clients .= '-';
 						}else{
-							$deleted_clients .= '<b>'.getyeardiff($clients_j[$i]['birthday']).'</b>';
+							$deleted_clients .= '<b>'.getyeardiff($clients_j[$i]['birthday'], 0).'</b>';
 						}
 						$deleted_clients .= '
 									</div>';

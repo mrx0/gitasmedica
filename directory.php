@@ -18,7 +18,9 @@
 				echo '<a href="filials.php" class="b3" title="Филиалы">Филиалы</a><br>';
 
 				echo '<a href="insurcompany.php" class="b3" title="Страховые компании">Страховые компании</a><br>';
-				
+
+				echo '<a href="laboratories.php" class="b3" title="Лаборатории">Лаборатории</a><br>';
+
 				echo '<a href="pricelist.php" class="b3" title="Прайс">Прайс</a><br>';
 				
 				echo '<a href="stocks.php" class="b3" title="Акции">Акции</a><br>';

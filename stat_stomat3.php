@@ -143,6 +143,18 @@
 										<span style="font-size:80%; color: #333;"><input type="checkbox" name="wo_sex" checked value="1"> Показывать тех, у кого не указан пол</span>
 									</div>
 								</li>
+								
+								<li class="filterBlock">
+									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+										Возраст
+									</div>
+									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
+										<input name="age" value="0" type="radio" checked> Любой<br>
+										<input name="age" value="1" type="radio"> Только дети (до 14 лет)<br>
+										<input name="age" value="2" type="radio"> Только взрослые (старше 14 лет)<br><br>
+										<span style="font-size:80%; color: #333;"><input type="checkbox" name="wo_age" checked value="1"> Показывать тех, у кого не указан возраст</span>
+									</div>
+								</li>
 								';
 				echo '
 								<li class="cellsBlock" style="margin: 10px;">
@@ -164,6 +176,7 @@
 					var all_time = 1;
 					var all_age = 1;
 					var wo_sex = 1;
+					var wo_age = 1;
 					
 					$("input[name=all_time]").change(function() {
 						all_time = $("input[name=all_time]:checked").val();
@@ -211,6 +224,15 @@
 						
 						if (wo_sex === undefined){
 							wo_sex = 0;
+						}
+					});
+						
+					$("input[name=wo_age]").change(function() {
+						wo_age = $("input[name=wo_age]:checked").val();
+						//console.log(all_time);
+						
+						if (wo_age === undefined){
+							wo_age = 0;
 						}
 					});
 						

@@ -425,8 +425,12 @@
 	}
 	
 	//Полных лет / Возраст
-	function getyeardiff($bday){
-		$today = time();
+	function getyeardiff($bday, $c_date){
+	    if ($c_date == 0){
+		    $today = time();
+	    }else{
+            $today = $c_date;
+        }
 		$arr1 = getdate($bday);
 		$arr2 = getdate($today);
 		if((int)date('md', $today) >= (int)date('md', $bday) ) { 

@@ -22,7 +22,7 @@
 			}else{
 				echo '
 					<header style="margin-bottom: 5px;">
-						<h1>Запись</h1>
+						<h1>Страховые</h1>
 					</header>';
 
 				echo '
@@ -58,7 +58,7 @@
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
 										<div class="wrapper-demo">';
-				if (($finances['see_all'] == 1) || $god_mode){
+				/*if (($finances['see_all'] == 1) || $god_mode){*/
                     echo '
 											<select id="insure_sel" class="wrapper-dropdown-2 b2" tabindex="2" name="insure_sel">
 												<ul class="dropdown">
@@ -72,13 +72,13 @@
 				    echo '
 												</ul>
 											</select>';
-				}else{
+				/*}else{
                     $offices_j = SelDataFromDB('spr_office', $_SESSION['filial'], 'offices');
                     if ($offices_j != 0) {
                         echo $offices_j[0]['name'].'
                                 <input type="hidden" id="filial" name="filial" value="'.$_SESSION['filial'].'">';
                     }
-                }
+                }*/
 
                 echo '
 										</div>

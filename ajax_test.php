@@ -22,6 +22,15 @@ if (isset($_POST['summ']))
     $arrayFields['summ'] = $_POST['summ'];
 if (isset($_POST['summ_type']))
     $arrayFields['summ_type'] = $_POST['summ_type'];
+
+if (isset($_POST['search_client2']))
+    $arrayFields['search_client2'] = $_POST['search_client2'];
+
+if (isset($_POST['lab']))
+    $arrayFields['lab'] = $_POST['lab'];
+if (isset($_POST['descr']))
+    $arrayFields['descr'] = $_POST['descr'];
+
 if (isset($_POST['admSettings'])){
 	//var_dump($_POST);
 	foreach($_POST['admSettings'] as $key => $value){

@@ -445,7 +445,8 @@
 				}, 100);*/
 			}
 		})
-	}; 
+	};
+
 	//Удаление блокировка страховой
 	function Ajax_del_insure(id) {
 		
@@ -465,7 +466,29 @@
 				}, 100);
 			}
 		})
-	}; 
+	};
+
+	//Удаление блокировка лаборатории
+	function Ajax_del_labor(id) {
+
+		ajax({
+			url:"labor_del_f.php",
+			statbox:"errrror",
+			method:"POST",
+			data:
+			{
+				id: id,
+			},
+			success:function(data){
+				document.getElementById("errrror").innerHTML=data;
+				setTimeout(function () {
+					window.location.replace('labor.php?id='+id);
+					//alert('client.php?id='+id);
+				}, 100);
+			}
+		})
+	};
+
 	//Удаление блокировка наряда
 	function Ajax_del_invoice(id, client_id) {
 
@@ -561,7 +584,8 @@
 				}, 100);
 			}
 		})
-	}; 
+	};
+
 	//разблокировка страховой
 	function Ajax_reopen_insure(id) {
 		//var id = document.getElementById("id").value;
@@ -581,7 +605,29 @@
 				}, 100);
 			}
 		})
-	}; 
+	};
+
+	//разблокировка лаборатории
+	function Ajax_reopen_labor(id) {
+		//var id = document.getElementById("id").value;
+
+		ajax({
+			url:"labor_reopen_f.php",
+			method:"POST",
+			data:
+			{
+				id: id,
+			},
+			success:function(data){
+				//document.getElementById("errrror").innerHTML=data;
+				setTimeout(function () {
+					window.location.replace('labor.php?id='+id);
+					//alert('pricelistitem.php?id='+id);
+				}, 100);
+			}
+		})
+	};
+
 	//разблокировка наряда
 	function Ajax_reopen_invoice(id, client_id) {
 		//var id = document.getElementById("id").value;
@@ -872,6 +918,33 @@
 		})
 	}; 
 
+	function Ajax_add_labor(session_id) {
+
+		var name = document.getElementById("name").value;
+		var contract = document.getElementById("contract").value;
+		var contacts = document.getElementById("contacts").value;
+
+		$.ajax({
+			url:"labor_add_f.php",
+			global: false,
+			type: "POST",
+			data:
+			{
+				name:name,
+				contract:contract ,
+				contacts:contacts,
+				session_id:session_id,
+			},
+			cache: false,
+			beforeSend: function() {
+				$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			success:function(data){
+				$('#errrror').html(data);
+			}
+		})
+	};
+
 	function Ajax_edit_insure(id) {
 		// убираем класс ошибок с инпутов
 		$('input').each(function(){
@@ -932,6 +1005,66 @@
 	}; 
 	
 	
+	function Ajax_edit_labor(id) {
+		// убираем класс ошибок с инпутов
+		$('input').each(function(){
+			$(this).removeClass('error_input');
+		});
+		// прячем текст ошибок
+		$('.error').hide();
+
+		var name = document.getElementById("name").value;
+		var contract = document.getElementById("contract").value;
+		var contacts = document.getElementById("contacts").value;
+
+		$.ajax({
+			// метод отправки
+			type: "POST",
+			// путь до скрипта-обработчика
+			url: "ajax_test.php",
+			// какие данные будут переданы
+			data: {
+				name:name,
+			},
+			// тип передачи данных
+			dataType: "json",
+			// действие, при ответе с сервера
+			success: function(data){
+				// в случае, когда пришло success. Отработало без ошибок
+				if(data.result == 'success'){
+					//alert('форма корректно заполнена');
+					ajax({
+						url:"labor_edit_f.php",
+						statbox:"errrror",
+						method:"POST",
+						data:
+						{
+							id:id,
+
+							name:name,
+							contract:contract,
+							contacts:contacts,
+						},
+						success:function(data){document.getElementById("errrror").innerHTML=data;}
+					})
+				// в случае ошибок в форме
+				}else{
+					// перебираем массив с ошибками
+					for(var errorField in data.text_error){
+						// выводим текст ошибок
+						$('#'+errorField+'_error').html(data.text_error[errorField]);
+						// показываем текст ошибок
+						$('#'+errorField+'_error').show();
+						// обводим инпуты красным цветом
+					   // $('#'+errorField).addClass('error_input');
+					}
+					document.getElementById("errrror").innerHTML='<div class="query_neok">Ошибка, что-то заполнено не так.</div>'
+				}
+			}
+		});
+	};
+
+
 	// !!! правильный пример AJAX
 	function Ajax_add_priceitem(session_id) {
 
@@ -1265,6 +1398,9 @@
 				
 				sex:document.querySelector('input[name="sex"]:checked').value,
 				wo_sex:wo_sex,
+
+                age:document.querySelector('input[name="age"]:checked').value,
+				wo_age:wo_age,
 
 			},
 			cache: false,
@@ -3648,14 +3784,17 @@
 			var elem3 = $("#insure"); 
 			var elem4 = $("#guarantee"); 
 			var elem5 = $("#insure_approve"); 
-			var elem6 = $("#discount"); 
+			var elem6 = $("#discount");
+			var elem7 = $("#lab_order_status");
+
 			if(e.target != elem[0]&&!elem.has(e.target).length &&
 			e.target != elem2[0]&&!elem2.has(e.target).length && 
 			e.target != elem3[0]&&!elem3.has(e.target).length && 
 			e.target != elem4[0]&&!elem4.has(e.target).length && 
 			e.target != elem5[0]&&!elem5.has(e.target).length && 
-			e.target != elem6[0]&&!elem6.has(e.target).length){
-				elem.hide(); 
+			e.target != elem6[0]&&!elem6.has(e.target).length &&
+			e.target != elem7[0]&&!elem7.has(e.target).length){
+				elem.hide();
 			} 
 		});
 		
@@ -3720,6 +3859,21 @@
 				contextMenuShow(0, 0, event, 'teeth_moloch');
 			}
 		});
+		//Для отображения меню изменения статуса
+		$('#lab_order_status').click(function(event) {
+
+			// Проверяем нажата ли именно правая кнопка мыши:
+			if (event.which === 1)  {
+				//alert(71);
+
+                var lab_order_id = document.getElementById("lab_order_id").value;
+                var status_now = document.getElementById("status_now").value;
+                //alert(status_now);
+
+				contextMenuShow(lab_order_id, status_now, event, 'lab_order_status');
+			}
+		});
+
 	});
 
 	function changeUserFilial(filial){
@@ -3890,6 +4044,74 @@
                     */
 
                 // в случае ошибок в форме
+                }else{
+                    // перебираем массив с ошибками
+                    for(var errorField in data.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(data.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    document.getElementById("errror").innerHTML='<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>'
+                }
+            }
+        })
+    }
+
+
+    //Промежуточная функция добавления заказа в лабораторию
+    function showLabOrderAdd(mode){
+        //alert(mode);
+
+        $('.error').each(function(){
+            //alert(this.innerHTML);
+            this.innerHTML = '';
+        });
+
+        document.getElementById("errror").innerHTML = '';
+
+        var search_client2 = document.getElementById("search_client2").value;
+        var lab = document.getElementById("lab").value;
+        var descr = document.getElementById("descr").value;
+        var comment = document.getElementById("comment").value;
+
+        //проверка данных на валидность
+        $.ajax({
+            url:"ajax_test.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    search_client2:search_client2,
+                    lab:lab,
+                    descr:descr
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                if(data.result == 'success'){
+                    //$('#overlay').show();
+
+                    //var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'add\')">';
+
+                    /*if (mode == 'edit'){
+                        buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'edit\')">';
+                    }*/
+
+                    if (mode == 'add'){
+                        Ajax_lab_order_add('add');
+                    }
+
+                    if (mode == 'edit'){
+                        Ajax_lab_order_add('edit');
+                    }
+
+                 // в случае ошибок в форме
                 }else{
                     // перебираем массив с ошибками
                     for(var errorField in data.text_error){
@@ -4081,6 +4303,107 @@
 										'</ul>');
 				}else{
 					$('#errror').html(res.data);
+				}
+			}
+		});
+	}
+
+	//Добавляем/редактируем в базу заказ в лабораторию
+	function Ajax_lab_order_add(mode){
+		//alert(mode);
+
+        var lab_order_id = 0;
+
+		var link = "lab_order_add_f.php";
+
+		if (mode == 'edit'){
+			link = "lab_order_edit_f.php";
+            lab_order_id = document.getElementById("lab_order_id").value;
+		}
+
+        var client_id = document.getElementById("client_id").value;
+
+        var search_client2 = document.getElementById("search_client2").value;
+        var lab = document.getElementById("lab").value;
+        var descr = document.getElementById("descr").value;
+        var comment = document.getElementById("comment").value;
+
+		$.ajax({
+			url: link,
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                client_id:client_id,
+
+                worker: search_client2,
+                lab: lab,
+                descr: descr,
+                comment: comment,
+
+                lab_order_id: lab_order_id,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//alert(res);
+				$('.center_block').remove();
+				$('#overlay').hide();
+
+				if(res.result == "success"){
+					//$('#data').hide();
+					$('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован заказ в лабораторию</li>'+
+											'<li class="cellsBlock" style="width: auto;">'+
+												'<a href="lab_order.php?id='+res.data+'" class="cellName ahref">'+
+													'<b>Заказ #'+res.data+'</b><br>'+
+												'</a>'+
+											'</li>'+
+										'</ul>');
+				}else{
+					$('#errror').html(res.data);
+				}
+			}
+		});
+	}
+
+	//Меняем статус заказа в лаборатории
+	function labOrderStatusChange(lab_order_id, status){
+		//alert(status);
+
+		var link = "labOrderStatusChange_f.php";
+
+		$.ajax({
+			url: link,
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                lab_order_id:lab_order_id,
+
+                status: status,
+
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//alert(res);
+				//$('.center_block').remove();
+				//$('#overlay').hide();
+
+				if(res.result == "success"){
+					//$('#data').hide();
+					window.location.replace('');
+				}else{
+					//$('#errror').html(res.data);
 				}
 			}
 		});

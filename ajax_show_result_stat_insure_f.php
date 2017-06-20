@@ -160,7 +160,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                     $query .= "`client` IN (".$queryDopClient.")";
                 }*/
 
-                $query = $query." AND `summins` <> '0' ORDER BY `create_time` DESC";
+                $query = $query." AND `summins` <> '0' AND `status`<>'9' ORDER BY `create_time` DESC";
 
                 //var_dump($query);
 

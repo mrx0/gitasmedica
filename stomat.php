@@ -216,7 +216,7 @@
 						if ($clients != 0){
 							$client = $clients[0]["name"];
 							if (($clients[0]["birthday"] != -1577934000) || ($clients[0]["birthday"] == 0)){
-								$cl_age = getyeardiff($clients[0]["birthday"]);
+								$cl_age = getyeardiff($clients[0]["birthday"], 0);
 							}else{
 								$cl_age = 0;
 							}

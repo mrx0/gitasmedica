@@ -129,6 +129,32 @@
 					}
 				}
 
+                //Скидки акции позиция
+                if ($_POST['mark'] == 'lab_order_status'){
+                    $data = '';
+				    if ($_POST['key'] == 0){
+                        $data .= '
+                            <li><div onclick="labOrderStatusChange('.$_POST['ind'].', 7)">Пришел из лаборатории</div></li>'.
+                            '<li><div onclick="labOrderStatusChange('.$_POST['ind'].', 8)">Удалить заказ</div></li>';
+                    }
+                    if ($_POST['key'] == 7){
+                        $data .= '
+                            <li><div onclick="labOrderStatusChange('.$_POST['ind'].', 1)">Закрыть заказ</div></li>'.
+                            '<li><div onclick="labOrderStatusChange('.$_POST['ind'].', 6)">Отправлен в лабораторию</div></li>';
+                    }
+                    if ($_POST['key'] == 6){
+                        $data .= '
+                            <li><div onclick="labOrderStatusChange('.$_POST['ind'].', 7)">Пришел из лаборатории</div></li>';
+                    }
+                    if ($_POST['key'] == 8){
+                        $data .= '
+                            <li><div onclick="labOrderStatusChange('.$_POST['ind'].', 0)">Восстановить</div></li>';
+                    }
+                    if ($_POST['key'] == 1){
+                        $data .= '';
+                    }
+                }
+
 				//Настройка для записи
 				if ($_POST['mark'] == 'zapis_options'){
 				}

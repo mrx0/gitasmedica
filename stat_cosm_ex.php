@@ -219,7 +219,7 @@
 							||
 							(($_GET['sex'] != '3') && ($clients[0]['sex'] == $_GET['sex']))){
 								
-								if ((getyeardiff($clients[0]['birthday']) > $_GET['start_age']) && (getyeardiff($clients[0]['birthday']) < $_GET['finish_age'])){
+								if ((getyeardiff($clients[0]['birthday'], 0) > $_GET['start_age']) && (getyeardiff($clients[0]['birthday'], 0) < $_GET['finish_age'])){
 									if ($clients[0]['sex'] != 0){
 										if ($clients[0]['sex'] == 1){
 											$cl_sex = 'М';
@@ -244,7 +244,7 @@
 												<div class="cellName" id="4filter" ', isFired($journal[$i]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.WriteSearchUser('spr_workers', $journal[$i]['worker'], 'user', true).'</div>
 												<a href="client.php?id='.$journal[$i]['client'].'" class="cellName ahref" ', isFired($journal[$i]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$clients[0]["name"].'</a>
 												<div class="cellCosmAct" style="text-align: center">'.$cl_sex.'</div>
-												<div class="cellCosmAct" style="text-align: center">'.getyeardiff($clients[0]['birthday']).'</div>
+												<div class="cellCosmAct" style="text-align: center">'.getyeardiff($clients[0]['birthday'], 0).'</div>
 												';
 
 									$decription = array();

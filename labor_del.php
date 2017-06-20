@@ -1,7 +1,7 @@
 <?php
 
-//insure_del.php
-//Удаление(блокирование) Страховой
+//labor_del.php
+//Удаление(блокирование) Лаборатории
 
 	require_once 'header.php';
 	
@@ -13,16 +13,16 @@
 				include_once 'DBWork.php';
 				include_once 'functions.php';
 				
-				$insure_j = SelDataFromDB('spr_insure', $_GET['id'], 'id');
-				//var_dump($insure_j);
+				$labor_j = SelDataFromDB('spr_labor', $_GET['id'], 'id');
+				//var_dump($labor_j);
 				
-				if ($insure_j !=0){
+				if ($labor_j !=0){
 					echo '
 						<div id="status">
 							<header>
-								<h2>Удалить(заблокировать) страховую <a href="insure.php?id='.$_GET['id'].'" class="ahref">#'.$_GET['id'].'</a></h2>
+								<h2>Удалить(заблокировать) лабораторию <a href="labor.php?id='.$_GET['id'].'" class="ahref">#'.$_GET['id'].'</a></h2>
 							</header>
-							<a href="insurcompany.php" class="b">Все страховые</a><br>';
+							<a href="laboratories.php" class="b">Все лаборатории</a><br>';
 
 					echo '
 							<div id="data">';
@@ -30,13 +30,13 @@
 							<div id="errrror"></div>';
 
 					echo '
-								<form action="insure_del_f.php">
+								<form action="labor_del_f.php">
 									<div class="cellsBlock2" style="">
 										<div class="cellLeft">
 											Название
 										</div>
 										<div class="cellRight">
-											<a href="insure.php?id='.$_GET['id'].'" class="ahref">'.$insure_j[0]['name'].'</a>
+											<a href="labor.php?id='.$_GET['id'].'" class="ahref">'.$labor_j[0]['name'].'</a>
 										</div>
 									</div>
 									';
@@ -44,7 +44,7 @@
 					echo '				
 									<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
 									<div id="errror"></div>
-									<input type="button" class="b" value="Удалить(заблокировать)" onclick="Ajax_del_insure('.$_GET['id'].')">';
+									<input type="button" class="b" value="Удалить(заблокировать)" onclick="Ajax_del_labor('.$_GET['id'].')">';
 
 					echo '				
 								</form>';	

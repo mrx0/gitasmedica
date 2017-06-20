@@ -127,7 +127,7 @@
 				}else{
 					echo 
 						date('d.m.Y', $client[0]['birthday']).'<br>
-						полных лет <b>'.getyeardiff($client[0]['birthday']).'</b>';
+						полных лет <b>'.getyeardiff($client[0]['birthday'], 0).'</b>';
 				}
 				echo '						
 									</div>
@@ -835,6 +835,9 @@
 								<a href="stom_move.php?id='.$client[0]['id'].'" class="b">Переместить</a>';
 						}*/
 
+
+
+
 						//Выберем из базы последнюю запись
 						$t_f_data_db = array();
 						
@@ -1438,7 +1441,7 @@
 									</div>
 								</div>';
 								
-								echo '
+								/*echo '
 								<div class="cellsBlock3" style="font-size:80%;">
 									<div class="cellLeft">';
 
@@ -1466,10 +1469,10 @@
 								
 								//var_dump ($t_f_data);			
 					*/
-								$descr_rez = '';
-								echo '
-										<div><a href="#open1" onclick="show(\'hidden_'.$z.'\',200,5)">Подробно</a></div>';	
-								echo '
+								/*$descr_rez = '';
+								/*echo '
+										<div><a href="#open1" onclick="show(\'hidden_'.$z.'\',200,5)">Подробно</a></div>';	*/
+								/*echo '
 										<div id=hidden_'.$z.' style="display:none;">';		
 								foreach($t_f_data as $key => $value){
 									//var_dump ($value);
@@ -1496,13 +1499,14 @@
 										}
 									}
 						
-								}
-								echo '
-									</div>';				
+								}*/
+								/*echo '
+									</div>';*/
 										
-								echo '					
-								</div>
-							</div>';
+								/*echo '
+								</div>';*/
+                                /*echo '
+							</div>';*/
 											
 							}
 							
@@ -1522,7 +1526,99 @@
 										</div>
 									</div>';
 						}
-							
+
+                        //Лаборатория
+                        $laborder_j = SelDataFromDB ('journal_laborder', $client[0]['id'], 'client');
+                        //var_dump($laborder_j);
+
+                        $labors_j = SelDataFromDB('spr_labor', '', '');
+                        //var_dump ($labors_j);
+
+                        $labors_jarr = array();
+
+                        foreach ($labors_j as $labor_val){
+                            $labors_jarr[$labor_val['id']] = $labor_val;
+                        }
+                        //var_dump ($labors_jrr);
+
+
+                        if (TRUE) {
+                            echo '
+                            <ul style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 20px; width: Auto; font-size: 95%; background-color: rgba(245, 245, 245, 0.9);">
+								
+								<li style="margin-bottom: 3px;">
+                                    Заказы в лабораторию ';
+                            if ($laborder_j == 0) {
+                                echo '<span style="font-size: 90%; color: #7D7D7D; margin-bottom: 5px; color: red;">нет заказов</span>';
+                            }
+
+                            echo '
+                                </li>
+								<li style="margin-bottom: 10px;">
+                                    <a href="lab_order_add.php?client_id=' . $client[0]['id'] . '" class="b" style="font-size: 75%;">Добавить новый</a>
+                                </li>';
+
+							if ($laborder_j != 0) {
+                                echo '
+									<li class="cellsBlock" style="font-weight:bold; background-color:#FEFEFE;">
+										<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Дата</div>
+										<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Врач</div>
+										<div class="cellOffice" style="text-align: center; background-color:#FEFEFE;">Лаборатория</div>
+										<div class="cellText" style="text-align: center; background-color:#FEFEFE;">Описание</div>
+										<div class="cellName" style="text-align: center; background-color:#FEFEFE;">Статус</div>
+									</li>';
+
+                                foreach ($laborder_j as $lab_order_data){
+
+                                    if ($lab_order_data['status'] == 1) {
+                                        $back_color = 'background-color: rgba(119, 255, 135, 1);';
+                                        $mark_enter = 'закрыт';
+                                    } elseif ($lab_order_data['status'] == 6) {
+                                        $back_color = 'background-color: rgba(255, 102, 17, 0.7);';
+                                        $mark_enter = 'отправлен в лаб.';
+                                    } elseif ($lab_order_data['status'] == 7) {
+                                        $back_color = 'background-color: rgba(47, 186, 239, 0.7);';
+                                        $mark_enter = 'пришел из лаб.';
+                                    } elseif ($lab_order_data['status'] == 8) {
+                                        $back_color = 'background-color: rgba(137,0,81, .7);';
+                                        $mark_enter = 'удалено';
+                                    } else {
+                                        //
+                                        /*if ($ZapisHereQueryToday[$z]['office'] != $ZapisHereQueryToday[$z]['add_from']) {
+                                            $back_color = 'background-color: rgb(119, 255, 250);';
+                                            $mark_enter = 'подтвердить';
+                                        } else {*/
+                                            $back_color = 'background-color: rgba(255,255,0, .5);';
+                                            $mark_enter = 'создан';
+                                        //s}
+                                    }
+
+
+                                    echo '
+                                    <li class="cellsBlock" style="font-weight:bold; background-color:#FEFEFE;">
+										<a href="lab_order.php?id='.$lab_order_data['id'].'" class="cellName ahref" style="text-align: center; background-color:#FEFEFE;">
+                                            '.date('d.m.y' ,strtotime($lab_order_data['create_time'])).'
+										</a>
+										<div class="cellName" style="text-align: center; background-color:#FEFEFE;">
+										    '.WriteSearchUser('spr_workers', $lab_order_data['worker_id'], 'user', true).'
+										</div>
+										<a href="labor.php?id='.$lab_order_data['labor_id'].'" class="cellOffice ahref" style="text-align: center; background-color:#FEFEFE;">
+                                            '.$labors_jarr[$lab_order_data['labor_id']]['name'].'
+										</a>
+										<div class="cellText" style="text-align: left; background-color:#FEFEFE;">
+										    '.$lab_order_data['descr'].'
+										</div>
+										<div class="cellName" style="text-align: center; '.$back_color.'">
+										    '.$mark_enter.'
+										</div>
+									</li>';
+
+                                }
+							}
+							echo '
+                            </ul>';
+                        }
+
 					
 						mysql_close();	
 						
