@@ -115,16 +115,18 @@
                         $arr = array();
                         $invoice_j = array();
 
+                        $msql_cnnct = ConnectToDB ();
+
                         echo '
 								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Выписанные наряды</li>';
 
                         $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$client_j[0]['id']."'";
 
-                        $res = mysql_query($query) or die($query);
-                        $number = mysql_num_rows($res);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                        $number = mysqli_num_rows($res);
                         if ($number != 0){
-                            while ($arr = mysql_fetch_assoc($res)){
+                            while ($arr = mysqli_fetch_assoc($res)){
                                 array_push($invoice_j, $arr);
                             }
                         }else
@@ -259,10 +261,10 @@
 
                             $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$client_j[0]['id']."'";
 
-                            $res = mysql_query($query) or die($query);
-                            $number = mysql_num_rows($res);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                            $number = mysqli_num_rows($res);
                             if ($number != 0){
-                                while ($arr = mysql_fetch_assoc($res)){
+                                while ($arr = mysqli_fetch_assoc($res)){
                                     array_push($order_j, $arr);
                                 }
                             }else

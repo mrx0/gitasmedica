@@ -749,6 +749,12 @@
                                                     </li>';
                                 foreach ($payment_j as $payment_item) {
 
+                                    $pay_type_mark = '';
+
+                                    if ($payment_item['type'] == 1){
+                                        $pay_type_mark = '<i class="fa fa-certificate" aria-hidden="true" title="Оплата сертификатом"></i>';
+                                    }
+
                                     echo '
                                                     <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
                                     echo '
@@ -770,6 +776,7 @@
                                     }*/
                                     echo '
                                                             </span>
+                                                            <span style="position: absolute; top: 2px; right: 3px;">'. $pay_type_mark .'</span>
                                                         </a>
                                                         <div class="cellName">
                                                             <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">

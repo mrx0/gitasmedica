@@ -1,7 +1,7 @@
 <?php 
 
-//payment_add_f.php
-//оплата наряда
+//payment_cert_add_f.php
+//оплата наряда сертификатом
 
 //!!! доделать сравнение времени, учитывая месяц и тд и тп
 
@@ -17,8 +17,10 @@
 			//$temp_arr = array();
 			//переменная для дополнительного текста в запросе при обновлении наряда
             $query_invoice_dop = '';
+            //...и сертификата
+            $query_cert_dop = '';
 
-			if (!isset($_POST['client_id']) || !isset($_POST['summ']) || !isset($_POST['invoice_id']) || !isset($_POST['date_in'])){
+			if (!isset($_POST['client_id']) || !isset($_POST['summ']) || !isset($_POST['cert_id']) || !isset($_POST['invoice_id']) || !isset($_POST['date_in'])){
 				//echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 
@@ -38,8 +40,10 @@
                 include_once 'DBWork.php';
                 //Ищем наряд
                 $invoice_j = SelDataFromDB('journal_invoice', $_POST['invoice_id'], 'id');
+               //Ищем сертификат
+                $cert_j = SelDataFromDB('journal_cert', $_POST['cert_id'], 'id');
 
-                if ($invoice_j != 0){
+                if (($invoice_j != 0) && ($cert_j != 0)){
 
                     if($invoice_j[0]['status'] == 9) {
                         echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Наряд был удален. Оплатить нельзя</div>'));
@@ -54,6 +58,8 @@
                                 $client_id = $client_j[0]['id'];
                                 //ID наряда
                                 $invoice_id = $_POST['invoice_id'];
+                                //ID сертификата
+                                $cert_id = $_POST['cert_id'];
 
                                 //Если наряд оплачен !!! Доделать: Добавить кнопку для изменения статуса
                                 if ($invoice_j[0]['summ'] == $invoice_j[0]['paid']) {
@@ -118,36 +124,35 @@
 
                                                     //пересчитаем долги и баланс еще разок
                                                     //!!! @@@
-                                                    //Баланс контрагента
-
-                                                    $client_balance = json_decode(calculateBalance($client_j[0]['id']), true);
+                                                    //Баланс контрагента (тут нам не интересен)
+                                                    //$client_balance = json_decode(calculateBalance($client_j[0]['id']), true);
                                                     //Долг контрагента
                                                     $client_debt = json_decode(calculateDebt($client_j[0]['id']), true);
 
                                                     //Нет доступных средств на счету
-                                                    if (($client_balance['summ'] <= 0) || ($client_balance['summ'] - $client_balance['debited'] <= 0)) {
+                                                    /*if (($client_balance['summ'] <= 0) || ($client_balance['summ'] - $client_balance['debited'] <= 0)) {
                                                         echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Нет доступных средств на счету</div>'));
-                                                    } else {
+                                                    } else {*/
 
                                                         $payed = $invoice_j[0]['paid'] + $_POST['summ'];
-                                                        $debited = $client_balance['debited'] + $_POST['summ'];
+                                                        //$debited = $client_balance['debited'] + $_POST['summ'];
 
                                                         //Если в итоге общая суммы оплаты больше чем требуемая
                                                         if ($payed > $invoice_j[0]['summ']) {
                                                             echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">После оплаты наряд будет переплачен. Измените сумму</div>'));
                                                         } else {
                                                             //Если в итоге общее потрачено будет больше денег на балансе
-                                                            if ($debited > $client_balance['summ']) {
+                                                            /*if ($debited > $client_balance['summ']) {
                                                                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">На балансе не хватит средств для оплаты</div>'));
-                                                            } else {
+                                                            } else {*/
 
                                                                 //Ну вроде все норм, поехали всё обновлять/сохранять
 
                                                                 //Вставим новую запись оплаты по наряду
                                                                 $query = "INSERT INTO `journal_payment` (
-                                                                  `client_id`, `invoice_id`, `summ`, `date_in`, `comment`, `create_time`, `create_person`)
+                                                                  `client_id`, `invoice_id`, `summ`, `type`, `cert_id`, `date_in`, `comment`, `create_time`, `create_person`)
                                                                 VALUES (
-                                                                  '{$client_id}', '{$invoice_id}', '{$_POST['summ']}', '{$date_in}', '{$_POST['comment']}', '{$time}', '{$_SESSION['id']}')";
+                                                                  '{$client_id}', '{$invoice_id}', '{$_POST['summ']}', '1', '{$cert_id}', '{$date_in}', '{$_POST['comment']}', '{$time}', '{$_SESSION['id']}')";
                                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                                                                 //ID новой позиции
@@ -162,7 +167,18 @@
                                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                                                                 //Обновим потраченное в балансе
-                                                                $query = "UPDATE `journal_balance` SET `debited`='$debited'  WHERE `client_id`='$client_id'";
+                                                                //$query = "UPDATE `journal_balance` SET `debited`='$debited'  WHERE `client_id`='$client_id'";
+                                                                //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+
+                                                                //Работа с сертификатом
+                                                                $debited = $_POST['summ'] + $cert_j[0]['debited'];
+
+                                                                //Обновим в сертификатие "потрачено" и Проверяем не закрыть ли нам сертификат
+                                                                if ($debited >= $cert_j[0]['nominal']) {
+                                                                    $query_cert_dop = ", `closed_time`='{$date_in}', `status`='5'";
+                                                                }
+                                                                $query = "UPDATE `journal_cert` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `debited`='$debited'$query_cert_dop WHERE `id`='$cert_id'";
                                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                                                                 //Обновим общий долг
@@ -174,10 +190,10 @@
 
 
                                                                 echo json_encode(array('result' => 'success', 'data' => 'Оплата прошла успешно'));
-                                                            }
+                                                            //}
                                                         }
 
-                                                    }
+                                                    //}
                                                 }
                                             }
                                         }
@@ -190,29 +206,6 @@
                         }
                     }
                 }
-/*
-
-                require 'config.php';
-                mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-                mysql_select_db($dbName) or die(mysql_error());
-                mysql_query("SET NAMES 'utf8'");
-
-                //Добавляем в базу
-                $query = "INSERT INTO `journal_order` (`client_id`, `office_id`, `summ`, `summ_type`, `date_in`, `comment`, `create_person`, `create_time`)
-						VALUES (
-						'{$_POST['client_id']}', '{$_POST['office_id']}', '{$_POST['summ']}', '{$_POST['summtype']}', '{$date_in}', '{$comment}', '{$_SESSION['id']}', '{$time}')";
-
-                mysql_query($query) or die(mysql_error().' -> '.$query);
-
-                //ID новой позиции
-                $mysql_insert_id = mysql_insert_id();
-
-                //!!! @@@ Пересчет баланса
-                include_once 'ffun.php';
-                calculateBalance ($_POST['client_id']);*/
-
-                //echo json_encode(array('result' => 'success', 'data' => $invoice_j[0]['status']));
-
 			}
 		}
 	}

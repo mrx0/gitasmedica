@@ -18,6 +18,7 @@
 		document.getElementById("summ").value = rezult;
 
 	});
+
     //Показываем блок с суммами и кнопками Для оплаты наряда
     function showPaymentAdd(mode){
         //alert(mode);
@@ -116,6 +117,131 @@
             }
         })
     }
+
+    function Ajax_payment_add_cert(mode){
+        //alert(mode);
+
+        var payment_id = 0;
+
+        var link = "payment_cert_add_f.php";
+
+        if (mode == 'edit'){
+            link = "payment_cert_edit_f.php";
+            payment_id = document.getElementById("payment_id").value;
+        }
+
+        var Summ = $("#summ").html();
+        //alert(Summ);
+        var invoice_id = $("#invoice_id").val();
+        //alert(invoice_id);
+
+        var client_id = $("#client_id").val();
+        //alert(client_id);
+        var date_in = $("#date_in").val();
+        //alert(date_in);
+
+        //!!!тут сделано только для одного сертификата, если надо переделать, то тут
+        var cert_id = $(".cert_pay").attr('cert_id');
+        //alert(cert_id);
+
+        var comment = $("#comment").val();
+        //alert(comment);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    client_id: client_id,
+                    invoice_id: invoice_id,
+                    cert_id: cert_id,
+                    summ: Summ,
+                    date_in: date_in,
+                    comment: comment,
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //alert(res);
+                $('.center_block').remove();
+                $('#overlay').hide();
+
+                if(res.result == "success"){
+                    //$('#data').hide();
+                    $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+                        /*'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Оплата наряда прошла успешно</li>'+*/
+                        '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">'+res.data+'</li>'+
+                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+                        '<a href="finance_account.php?client_id='+client_id+'" class="b">Управление счётом</a>'+
+                        '</li>'+
+                        '</ul>');
+                }else{
+                    $('#errror').html(res.data);
+                }
+            }
+        });
+    }
+
+    //Показываем блок с суммами и кнопками Для оплаты наряда сертификатом
+    function showPaymentAddCert (mode){
+        //alert(mode);
+
+        var Summ = $("#summ").html();
+
+        //проверка данных на валидность
+        $.ajax({
+            url:"ajax_test.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    summ:Summ,
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                if(data.result == 'success'){
+                    //$('#overlay').show();
+
+                    //var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_payment_add(\'add\')">';
+
+                    /*if (mode == 'edit'){
+                        buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_payment_add(\'edit\')">';
+                    }*/
+
+                    if (mode == 'add'){
+                        Ajax_payment_add_cert('add');
+                    }
+
+                    if (mode == 'edit'){
+                        Ajax_payment_add_cert('edit');
+                    }
+
+                    // в случае ошибок в форме
+                }else{
+                    // перебираем массив с ошибками
+                    for(var errorField in data.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(data.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    document.getElementById("errror").innerHTML='<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>'
+                }
+            }
+        })
+    }
+
     //Добавляем/редактируем в базу оплату
     function Ajax_payment_add(mode){
         //alert(mode);
@@ -239,7 +365,7 @@
             url:"payment_del_f.php",
             global: false,
             type: "POST",
-            //dataType: "JSON",
+            dataType: "JSON",
             data:
                 {
                     id: id,
@@ -255,6 +381,7 @@
                 /*if(data.result == "success"){
 
                 }*/
+                //alert(data.data);
                 location.reload();
             }
         });

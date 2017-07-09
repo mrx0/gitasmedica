@@ -13,19 +13,19 @@
 					<h1>Справочники</h1>
 				</header>';
 
-				echo '<a href="contacts.php" class="b3" title="Сотрудники">Сотрудники</a><br>';
+            //echo '<a href="stocks.php" class="b3" title="Акции">Акции</a>';
 
-				echo '<a href="filials.php" class="b3" title="Филиалы">Филиалы</a><br>';
+            echo '<a href="laboratories.php" class="b3" title="Лаборатории">Лаборатории</a>';
 
-				echo '<a href="insurcompany.php" class="b3" title="Страховые компании">Страховые компании</a><br>';
+            echo '<a href="pricelist.php" class="b3" title="Прайс">Прайс</a>';
 
-				echo '<a href="laboratories.php" class="b3" title="Лаборатории">Лаборатории</a><br>';
+            echo '<a href="certificates.php" class="b3" title="Сертификаты">Сертификаты</a>';
 
-				echo '<a href="pricelist.php" class="b3" title="Прайс">Прайс</a><br>';
-				
-				echo '<a href="stocks.php" class="b3" title="Акции">Акции</a><br>';
-				
-				echo '<a href="certificates.php" class="b3" title="Сертификаты">Сертификаты</a><br>';
+            echo '<a href="contacts.php" class="b3" title="Сотрудники">Сотрудники</a>';
+
+            echo '<a href="insurcompany.php" class="b3" title="Страховые компании">Страховые компании</a>';
+
+            echo '<a href="filials.php" class="b3" title="Филиалы">Филиалы</a>';
 
 
 		}else{

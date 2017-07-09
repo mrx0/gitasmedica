@@ -1,3 +1,52 @@
+	function hideAllErrors (){
+        // убираем класс ошибок с инпутов
+        $('input').each(function(){
+            $(this).removeClass('error_input');
+        });
+
+        // прячем текст ошибок
+        $('.error').hide();
+        $('#errror').html('');
+	}
+
+
+    //Для поиска сертификата из модального окна
+    $('#search_cert').bind("change keyup input click", function() {
+
+        //var $this = $(this);
+        var val = $(this).val();
+        //console.log(val);
+
+        if ((val.length > 3) && !isNaN(val[val.length - 1])){
+            $.ajax({
+                url:"FastSearchCert.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data:{
+					num:val,
+				},
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success:function(res){
+                    if(res.result == 'success') {
+                    	//alert(res.data);
+                        $(".search_result_cert").html(res.data).fadeIn(); //Выводим полученые данные в списке
+                    }else{
+                        //alert(res.data);
+					}
+                },
+				error:function(){
+                	//alert(12);
+				}
+            });
+        }else{
+            $("#search_result_cert").hide();
+        }
+    });
+
 	//попытка показать контекстное меню
 	function contextMenuShow(ind, key, event, mark){
 		//alert(mark);
@@ -71,11 +120,7 @@
 
 	function Ajax_add_client(session_id) {
 		// убираем класс ошибок с инпутов
-		$('input').each(function(){
-			$(this).removeClass('error_input');
-		});
-		// прячем текст ошибок
-		$('.error').hide();
+        hideAllErrors ();
 		 
 		$.ajax({
 			// метод отправки 
@@ -170,11 +215,7 @@
 
 	function Ajax_edit_client(session_id) {
 		// убираем класс ошибок с инпутов
-		$('input').each(function(){
-			$(this).removeClass('error_input');
-		});
-		// прячем текст ошибок
-		$('.error').hide();
+        hideAllErrors ();
 		 
 		$.ajax({
 			// метод отправки 
@@ -489,6 +530,39 @@
 		})
 	};
 
+	//Удаление блокировка сертификата
+	function Ajax_del_cert(id) {
+
+        $.ajax({
+			url:"cert_del_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+			data:
+			{
+				id: id,
+			},
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(res){
+                if(res.result == 'success') {
+                    //alert(1);
+                    $('#data').html(res.data);
+                    setTimeout(function () {
+                        window.location.replace('certificate.php?id=' + id);
+                        //alert('client.php?id='+id);
+                    }, 100);
+                }else{
+                    //alert(2);
+                    document.getElementById("errrror").innerHTML = res.data;
+                }
+            }
+		})
+	};
+
 	//Удаление блокировка наряда
 	function Ajax_del_invoice(id, client_id) {
 
@@ -622,6 +696,27 @@
 				//document.getElementById("errrror").innerHTML=data;
 				setTimeout(function () {
 					window.location.replace('labor.php?id='+id);
+					//alert('pricelistitem.php?id='+id);
+				}, 100);
+			}
+		})
+	};
+
+	//разблокировка сертификата
+	function Ajax_reopen_cert(id) {
+		//var id = document.getElementById("id").value;
+
+		ajax({
+			url:"cert_reopen_f.php",
+			method:"POST",
+			data:
+			{
+				id: id,
+			},
+			success:function(data){
+				//document.getElementById("errrror").innerHTML=data;
+				setTimeout(function () {
+					window.location.replace('certificate.php?id='+id);
 					//alert('pricelistitem.php?id='+id);
 				}, 100);
 			}
@@ -778,11 +873,7 @@
 	//Редактировать ФИО пациента
 	function Ajax_edit_fio_client() {
 		// убираем класс ошибок с инпутов
-		$('input').each(function(){
-			$(this).removeClass('error_input');
-		});
-		// прячем текст ошибок
-		$('.error').hide();
+        hideAllErrors ();
 		 
 		$.ajax({
 			// метод отправки 
@@ -835,11 +926,7 @@
 	
 	function Ajax_edit_fio_user() {
 		// убираем класс ошибок с инпутов
-		$('input').each(function(){
-			$(this).removeClass('error_input');
-		});
-		// прячем текст ошибок
-		$('.error').hide();
+        hideAllErrors ();
 		 
 		$.ajax({
 			// метод отправки 
@@ -945,13 +1032,170 @@
 		})
 	};
 
+	//Добавить сертификат
+	/*function Ajax_add_cert(session_id) {
+        // убираем ошибки
+        hideAllErrors ();
+
+		var num = document.getElementById("num").value;
+		var nominal = document.getElementById("nominal").value;
+
+        $.ajax({
+            // метод отправки
+            type: "POST",
+            // путь до скрипта-обработчика
+            url: "ajax_test.php",
+            // какие данные будут переданы
+            data: {
+                num:num,
+                nominal:nominal,
+            },
+            // тип передачи данных
+            dataType: "json",
+            // действие, при ответе с сервера
+            success: function(data){
+                // в случае, когда пришло success. Отработало без ошибок
+                if(data.result == 'success'){
+                    //alert('форма корректно заполнена');
+                    $.ajax({
+                        url:"cert_add_f.php",
+                        global: false,
+                        type: "POST",
+                        dataType: "JSON",
+                        data:
+                            {
+                                num:num,
+                                nominal:nominal,
+                                session_id:session_id,
+                            },
+                        cache: false,
+                        beforeSend: function() {
+                            $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                        },
+                        success:function(data){
+                            if(data.result == 'success') {
+                                //alert('success');
+                                $('#data').html(data.data);
+                            }else{
+                                //alert('error');
+                                $('#errror').html(data.data);
+                                $('#errrror').html('');
+							}
+                        }
+                    })
+                // в случае ошибок в форме
+                }else{
+                    // перебираем массив с ошибками
+                    for(var errorField in data.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(data.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    document.getElementById("errror").innerHTML='<div class="query_neok">Ошибка, что-то заполнено не так.</div>'
+                }
+            }
+        });
+	};*/
+
+
+    //Добавляем/редактируем в базу сертификат
+    function  Ajax_cert_add(id, mode, certData){
+
+        var link = "cert_add_f.php";
+
+        if (mode == 'edit'){
+            link = "cert_edit_f.php";
+        }
+
+        certData['cert_id'] = id;
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data:certData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(data){
+                if(data.result == 'success') {
+                    //alert('success');
+                    $('#data').html(data.data);
+                }else{
+                    //alert('error');
+                    $('#errror').html(data.data);
+                    $('#errrror').html('');
+                }
+            }
+        });
+    }
+
+	//!!! тут очередная "правильная" ф-ция
+    //Промежуточная функция добавления/редактирования сертификата
+    function showCertAdd(id, mode){
+        //alert(mode);
+
+        // убираем ошибки
+        hideAllErrors ();
+
+        var num = $('#num').val();
+        var nominal = $('#nominal').val();
+
+        var certData = {
+            num:num,
+            nominal:nominal,
+        }
+
+        //проверка данных на валидность
+        $.ajax({
+            url:"ajax_test.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data:certData,
+
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                if(data.result == 'success'){
+
+                    Ajax_cert_add(id, mode, certData);
+
+                // в случае ошибок в форме
+                }else{
+                    // перебираем массив с ошибками
+                    for(var errorField in data.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(data.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                }
+            }
+        })
+    }
+
+
+
+
+
 	function Ajax_edit_insure(id) {
 		// убираем класс ошибок с инпутов
-		$('input').each(function(){
-			$(this).removeClass('error_input');
-		});
-		// прячем текст ошибок
-		$('.error').hide();
+        hideAllErrors ();
 		 
 		var name = document.getElementById("name").value;
 		var contract = document.getElementById("contract").value;
@@ -1007,11 +1251,7 @@
 	
 	function Ajax_edit_labor(id) {
 		// убираем класс ошибок с инпутов
-		$('input').each(function(){
-			$(this).removeClass('error_input');
-		});
-		// прячем текст ошибок
-		$('.error').hide();
+		$hideAllErrors ();
 
 		var name = document.getElementById("name").value;
 		var contract = document.getElementById("contract").value;
@@ -1205,7 +1445,7 @@
 				$('#errror').html(data);
 			}
 		})
-	};  
+	};
 	
 	function Ajax_edit_price(id, session_id) {
 
@@ -1832,7 +2072,7 @@
     };*/
 
 	function sortGrid(dataSort, cellNum, type) {
-		// Составить масси
+		// Составить массив
 		var div = document.getElementById(dataSort);
 		var elems = div.getElementsByTagName('li');
 		var elemsArr = [].slice.call(elems);
@@ -2724,22 +2964,26 @@
 		
 	};
 	
-	//Окрасить кнопки с зубами
-	function colorizeTButton (t_number_active){
-		$(".sel_tooth").each(function() {
-			this.style.background = '';
+	//Подсчёт суммы для счёта с учетом сертификата
+	function calculatePaymentCert (){
+
+		var SummCert = 0;
+		var rezSumm = 0;
+
+		var leftToPay = Number($("#leftToPay").html());
+
+        $(".cert_pay").each(function() {
+            SummCert += Number($(this).html());
 		});
-		$(".sel_toothp").css({'background': ""});
-		
-		if (t_number_active == 99){
-			$(".sel_toothp").css({'background': "#83DB53"});
+
+        if (SummCert > leftToPay){
+            rezSumm = leftToPay;
 		}else{
-			$(".sel_tooth").each(function() {
-				if (Number(this.innerHTML) == t_number_active){
-					this.style.background = '#83DB53';
-				}
-			});
+            rezSumm = SummCert;
 		}
+
+        $("#summ").html(rezSumm);
+
 	}
 	
 	//Функция заполняет результат счета из сессии
@@ -4061,6 +4305,174 @@
     }
 
 
+   //Показываем блок с суммами и кнопками Для сертификата
+    function showCertCell(id){
+        //alert(id);
+        hideAllErrors ();
+
+        var cell_price = $('#cell_price').val();
+        //alert(cell_price);
+
+        //проверка данных на валидность
+        $.ajax({
+            url:"ajax_test.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    cell_price: cell_price
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                if(data.result == 'success'){
+                    $('#overlay').show();
+
+                    var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_cert_cell('+id+', '+cell_price+')">';
+
+                    /*if (mode == 'edit'){
+                        buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'edit\')">';
+                    }*/
+
+                    /*if (mode == 'add'){
+                        Ajax_order_add('add');
+                    }
+
+                    if (mode == 'edit'){
+                        Ajax_order_add('edit');
+                    }*/
+
+                    // Создаем меню:
+                    var menu = $('<div/>', {
+                        class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+                    })
+                        .appendTo('#overlay')
+                        .append(
+                            $('<div/>')
+                                .css({
+                                    "height": "100%",
+                                    "border": "1px solid #AAA",
+                                    "position": "relative",
+                                })
+                                .append('<span style="margin: 5px;"><i>Проверьте сумму и нажмите сохранить</i></span>')
+                                .append(
+                                    $('<div/>')
+                                        .css({
+                                            "position": "absolute",
+                                            "width": "100%",
+                                            "margin": "auto",
+                                            "top": "-10px",
+                                            "left": "0",
+                                            "bottom": "0",
+                                            "right": "0",
+                                            "height": "50%",
+                                        })
+                                        .append('<div style="margin: 10px;">Сумма: <span class="calculateInvoice">'+cell_price+'</span> руб.</div>')
+                                )
+                                .append(
+                                    $('<div/>')
+                                        .css({
+                                            "position": "absolute",
+                                            "bottom": "2px",
+                                            "width": "100%",
+                                        })
+                                        .append(buttonsStr+
+                                            '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                                        )
+                                )
+                        );
+
+                    menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+                // в случае ошибок в форме
+                }else{
+                	//alert(1);
+                    // перебираем массив с ошибками
+                    for(var errorField in data.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(data.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                }
+            }
+        })
+    }
+
+    //Показываем блок для поиска и добавления сертификата
+    function showCertPayAdd(){
+        //alert(id);
+        //hideAllErrors ();
+
+        //var search_cert_input = $('#search_cert_input').html();
+		//alert(search_cert_input);
+
+        $('#overlay').show();
+
+        //var buttonsStr = '<input type="button" class="b" value="Добавить" onclick="Ajax_cert_add_pay()">';
+        var buttonsStr = '';
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        }).css({
+            "height": "250px"
+        })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative",
+                    })
+                    .append('<span style="margin: 0;"><i></i></span>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-90px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%",
+                            })
+                            .append(
+                                //search_cert_input
+								'<div id="search_cert_input_target">'+
+								//	'<input type="text" size="30" name="searchdata" id="search_cert" placeholder="Наберите номер сертификата" value="" class="who"  autocomplete="off" style="width: 90%;">'+
+            					//'<ul id="search_result" class="search_result"></ul>'+
+								'</div>'
+							)
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "bottom": "2px",
+                                "width": "100%",
+                            })
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'#search_cert_input\').append($(\'#search_cert_input_target\').children()); $(\'.center_block\').remove(); $(\'#search_result_cert\').html(\'\'); $(\'#search_cert\').val(\'\');">'
+                            )
+                    )
+            );
+
+        $('#search_cert_input_target').append($('#search_cert_input').children());
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+    }
+
+
     //Промежуточная функция добавления заказа в лабораторию
     function showLabOrderAdd(mode){
         //alert(mode);
@@ -4218,6 +4630,144 @@
 				}
 			}
 		});
+	}
+
+	//Продаём сертификат по базе
+	function Ajax_cert_cell(id, cell_price){
+
+
+		$.ajax({
+			url: "cert_cell_f.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                cert_id: id,
+                cell_price: cell_price
+            },
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//alert(res);
+				$('.center_block').remove();
+				$('#overlay').hide();
+
+				if(res.result == "success"){
+					//$('#data').hide();
+					$('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Сертификат продан</li>'+
+									'</ul>');
+                    setTimeout(function () {
+                        window.location.replace('certificate.php?id='+id+'');
+                        //alert('client.php?id='+id);
+                    }, 100);
+				}else{
+					$('#errror').html(res.data);
+				}
+			}
+		});
+	}
+
+	//Добавим сертификат сертификат в оплату
+	function Ajax_cert_add_pay(id){
+
+        $('#overlay').hide();
+        $('#search_cert_input').append($('#search_cert_input_target').children());
+        $('.center_block').remove();
+        $('#search_result_cert').html('');
+        $('#search_cert').val('');
+
+        //$('.have_money_or_not').show();
+        $('#certs_result').show();
+        $('#showCertPayAdd_button').hide();
+
+		$.ajax({
+			url: "FastSearchCertOne.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                id: id,
+            },
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//alert(res);
+				$('.center_block').remove();
+				$('#overlay').hide();
+
+				if(res.result == "success"){
+					//$('#data').hide();
+                    $('#certs_result').append(res.data);
+
+                    calculatePaymentCert ();
+
+				}else{
+					//$('#errror').html(res.data);
+				}
+			}
+		});
+	}
+
+	//Очистить все сертификаты
+	function certsResultDel(){
+
+        /*$('#overlay').hide();
+        $('#search_cert_input').append($('#search_cert_input_target').children());
+        $('.center_block').remove();
+        $('#search_result_cert').html('');
+        $('#search_cert').val('');*/
+
+        //$('.have_money_or_not').show();
+        $('#certs_result').hide();
+        $('#showCertPayAdd_button').show();
+
+        $('#certs_result').html(
+			'<tr>'+
+				'<td><span class="lit_grey_text">Номер</span></td>'+
+					'<td><span class="lit_grey_text">Номинал</span></td>'+
+					'<td><span class="lit_grey_text">К оплате (остаток)</span></td>'+
+				'<td style="text-align: center;"><i class="fa fa-times" aria-hidden="true" title="Удалить"></i></td>'+
+            '</tr>'
+		);
+
+        $('#summ').html(0);
+
+		/*$.ajax({
+			url: "FastSearchCertOne.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                id: id,
+            },
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//alert(res);
+				$('.center_block').remove();
+				$('#overlay').hide();
+
+				if(res.result == "success"){
+					//$('#data').hide();
+                    $('#certs_result').append(res.data);
+				}else{
+					//$('#errror').html(res.data);
+				}
+			}
+		});*/
 	}
 
 	//Добавляем/редактируем в базу ордер
@@ -4419,7 +4969,7 @@
 		}
 	});
 
-	//для сбора чекбоксов в массив
+    //для сбора чекбоксов в массив
     function itemExistsChecker(cboxArray, cboxValue) {
 
         var len = cboxArray.length;

@@ -54,10 +54,17 @@ if (isset($_POST['sel_year']))
 if (isset($_POST['sex']))
     $arrayFields['sex'] = $_POST['sex'];
 
+if (isset($_POST['num']))
+    $arrayFields['num'] = $_POST['num'];
+if (isset($_POST['nominal']))
+    $arrayFields['nominal'] = $_POST['nominal'];
+if (isset($_POST['cell_price']))
+    $arrayFields['cell_price'] = $_POST['cell_price'];
+
 // проверка всех полей на пустоту
 foreach($arrayFields as $fieldName => $oneField){
 	
-    if($oneField == '' || !isset($oneField) || ($oneField == '0')){
+    if($oneField == '' || !isset($oneField) || (($oneField == '0') && (!isset($_POST['cell_price'])))){
         $errorContainer[$fieldName] = 'В этом поле ошибка';
     }
 	
@@ -75,6 +82,31 @@ foreach($arrayFields as $fieldName => $oneField){
 			$errorContainer[$fieldName] = 'В этом поле ошибка';
 		}
 		if ($oneField <= 0){
+			$errorContainer[$fieldName] = 'В этом поле ошибка';
+		}
+	}
+
+	if (isset($_POST['num'])){
+		if (!is_numeric($oneField)) {
+			$errorContainer[$fieldName] = 'В этом поле ошибка';
+		}
+		if ($oneField <= 0){
+			$errorContainer[$fieldName] = 'В этом поле ошибка';
+		}
+	}
+	if (isset($_POST['nominal'])) {
+        if (!is_numeric($oneField)) {
+            $errorContainer[$fieldName] = 'В этом поле ошибка';
+        }
+        if ($oneField <= 0) {
+            $errorContainer[$fieldName] = 'В этом поле ошибка';
+        }
+    }
+	if (isset($_POST['cell_price'])){
+		if (!is_numeric($oneField)) {
+			$errorContainer[$fieldName] = 'В этом поле ошибка';
+		}
+		if ($oneField < 0){
 			$errorContainer[$fieldName] = 'В этом поле ошибка';
 		}
 	}

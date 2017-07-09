@@ -14,20 +14,39 @@
 		}
 		return $uip;
 	}
-	
+
+
+    //Подключение к БД MySQl
+    function ConnectToDB () {
+        require 'config.php';
+
+        $msql_cnnct = mysqli_connect($hostname, $username, $db_pass, $dbName) or die("Не возможно создать соединение ");
+        mysqli_query($msql_cnnct, "SET NAMES 'utf8'");
+
+        return $msql_cnnct;
+    }
+
+    //Отключение от БД MySQl
+    function CloseDB ($msql_cnnct) {
+
+        mysqli_close($msql_cnnct);
+
+    }
+
 	//Логирование.
 	function AddLog ($ip, $creator, $description_old, $description_new){
-		require 'config.php';
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+
+        $msql_cnnct = ConnectToDB ();
+
 		$time = time();
 		$query = "INSERT INTO `logs` (
 			`date`, `ip`, `mac`, `creator`, `description_old`, `description_new`) 
 			VALUES (
 			'{$time}', '{$ip}', '', '{$creator}', '{$description_old}', '{$description_new}') ";
-		mysql_query($query) or die(mysql_error());
-		mysql_close();
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        mysqli_close($msql_cnnct);
 	}
 
 	//Получаем подсеть из IP
@@ -78,7 +97,6 @@
 	}*/
 
 
-	
 	//Вставка записей в журнал IT заявок из-под Web
 	function WriteToDB_Edit ($office, $description, $create_time, $create_person, $last_edit_time, $last_edit_person, $worker, $end_time, $priority){
 		require 'config.php';
@@ -788,6 +806,20 @@
 		AddLog (GetRealIp(), $session_id, '', 'Разблокирована лаборатория ['.$id.']. ['.date('d.m.y H:i', $time).'].');
 	}
 
+    //Разблокировать  сертификат
+	function WriteToDB_ReopenCert ($session_id, $id){
+
+        $msql_cnnct = ConnectToDB ();
+
+        $time = date('Y-m-d H:i:s', time());
+
+		$query = "UPDATE `journal_cert` SET `status`='0', `last_edit_time`='{$time}', `last_edit_person`='{$session_id}' WHERE `id`='{$id}'";
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		//логирование
+		AddLog (GetRealIp(), $session_id, '', 'Разблокирован сертификат ['.$id.']. ['.date('d.m.y H:i', $time).'].');
+	}
+
     //Разблокировать наряд
 	function WriteToDB_ReopenInvoice ($session_id, $id){
 		require 'config.php';
@@ -1029,6 +1061,56 @@
 		AddLog (GetRealIp(), $session_id, $old, 'Отредактирована лаборатория ['.$id.']. ['.date('d.m.y H:i', $time).']. Название: ['.$name.']. Договор: ['.$contract.']. Контакты: ['.$contacts.'].');
 	}
 
+	//Вставка и обновление Сертификата из-под Web
+	function WriteCertToDB_Edit ($session_id, $num, $nominal){
+
+        $msql_cnnct = ConnectToDB ();
+
+        $time = date('Y-m-d H:i:s', time());
+
+		$query = "INSERT INTO `journal_cert` (
+			`num`, `nominal`, `create_time`, `create_person`)
+			VALUES (
+			'{$num}', '{$nominal}', '{$time}', '{$session_id}') ";
+
+		//mysqli_query($query) or die($query.' -> '.mysql_error());
+		//mysqli_close();
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        //ID новой позиции
+        $mysql_insert_id = mysqli_insert_id($msql_cnnct);
+
+		//логирование
+		AddLog (GetRealIp(), $session_id, '', 'Добавлен сертификат. Номер: ['.$num.']. Номинал: ['.$nominal.'] руб.');
+
+		return ($mysql_insert_id);
+	}
+
+	//Редактирование Сертификата из-под Web
+	function WriteCertToDB_Update ($session_id, $id, $name, $contract, $contacts){
+		$old = '';
+
+        ConnectToDB ();
+
+        //Для лога соберем сначала то, что было в записи.
+		$query = "SELECT * FROM `spr_labor` WHERE `id`=$id";
+		$res = mysql_query($query) or die(mysql_error());
+		$number = mysql_num_rows($res);
+		if ($number != 0){
+			$arr = mysql_fetch_assoc($res);
+			$old = 'Название: ['.$arr['name'].']. Договор: ['.$arr['contract'].']. Контакты: ['.$arr['contacts'].']';
+		}else{
+			$old = 'Не нашли старую запись.';
+		}
+		$time = time();
+		$query = "UPDATE `spr_labor` SET `name`='{$name}', `contract`='{$contract}', `contacts`='{$contacts}' WHERE `id`='{$id}'";
+		mysql_query($query) or die(mysql_error());
+		mysql_close();
+
+		//логирование
+		AddLog (GetRealIp(), $session_id, $old, 'Отредактирована лаборатория ['.$id.']. ['.date('d.m.y H:i', $time).']. Название: ['.$name.']. Договор: ['.$contract.']. Контакты: ['.$contacts.'].');
+	}
+
 	//Очистка записи
 	function WriteToDB_Clr ($ip){
 		$q = '';
@@ -1221,52 +1303,89 @@
 			}
 		
 		}
+		
+		/*
+		$con = mysqli_connect("localhost","root","abcd123","payrolldb001") or die("Error " . mysqli_error($con));
+		$sql="SELECT substationid,substationcode FROM wms_substation WHERE assemblylineid = '".$q."'";
+
+		$result = mysqli_query($con,$sql);
+		*/
+		
 		require 'config.php';
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error().' -> '.$query);
-		mysql_query("SET NAMES 'utf8'");
+		
+		//mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+		$msql_cnnct = mysqli_connect($hostname, $username, $db_pass, $dbName) or die("Не возможно создать соединение ");
+		//mysql_select_db($dbName) or die(mysql_error().' -> '.$query);
+		//mysql_query("SET NAMES 'utf8'");
+		mysqli_query($msql_cnnct, "SET NAMES 'utf8'");
+		
 		$query = "SELECT * FROM `$datatable`".$q;
 		//echo $query;
-		$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-		$number = mysql_num_rows($res);
+		//$res = mysql_query($query) or die(mysql_error().' -> '.$query);
+		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+		
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($rez, $arr);
 			}
 			return $rez;
 		}else
 			return 0;
-		mysql_close();
+		mysqli_close();
 	}
-	
+
+	//Выборка для быстрого поиска по имени
 	function SelForFastSearch ($datatable, $search_data){
-		$arr = array();
-		$rez = array();
-		require 'config.php';
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Невозможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
-		
+
+        $msql_cnnct = ConnectToDB ();
+
+        $arr = array();
+        $rez = array();
+
 		//!Использовать надо везде. Очищение данных от мусора
 		$search_data = trim(strip_tags(stripcslashes(htmlspecialchars($search_data))));
 		$datatable = trim(strip_tags(stripcslashes(htmlspecialchars($datatable))));
 
 		//$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' LIMIT 5";
 		$query = "SELECT * FROM `$datatable` WHERE `name` LIKE '%$search_data%' AND `status`<> 9 ORDER BY `name` ASC LIMIT 10";
-		$res = mysql_query($query) or die(mysql_error());
-		$number = mysql_num_rows($res);
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				//echo "\n<li>".$row["name"]."</li>"; //$row["name"] - имя таблицы
 				array_push($rez, $arr);
 			}
 			return $rez;
 		}else
 			return 0;
-		mysql_close();
-		
 	}
 	
+	//Выборка для быстрого поиска сертификата
+	function SelForFastSearchCert ($datatable, $search_data){
+
+        $msql_cnnct = ConnectToDB ();
+
+        $rez = array();
+
+		//!Использовать надо везде. Очищение данных от мусора
+		$search_data = trim(strip_tags(stripcslashes(htmlspecialchars($search_data))));
+		$datatable = trim(strip_tags(stripcslashes(htmlspecialchars($datatable))));
+
+		//$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' LIMIT 5";
+		$query = "SELECT * FROM `$datatable` WHERE `num` LIKE '%$search_data%' AND `status`<> 9 ORDER BY `num` ASC LIMIT 3";
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+		$number = mysqli_num_rows($res);
+		if ($number != 0){
+			while ($arr = mysqli_fetch_assoc($res)){
+				//echo "\n<li>".$row["name"]."</li>"; //$row["name"] - имя таблицы
+				array_push($rez, $arr);
+			}
+			return $rez;
+		}else
+			return $rez;
+	}
+
 	function SelForFastSearchFullName ($datatable, $search_data){
 		$arr = array();
 		$rez = array();

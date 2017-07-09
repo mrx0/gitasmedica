@@ -2,6 +2,7 @@ $(function(){
 	    
 	//Живой поиск
 	$('.who').bind("change keyup input click", function() {
+
 		if(this.value.length > 2){
 			$.ajax({
 				url: "FastSearchName.php", //Путь к обработчику

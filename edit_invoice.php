@@ -26,10 +26,11 @@
 					//var_dump($invoice_j);
 					
 					if ($invoice_j != 0){
-				
-						//if (($finances['edit'] == 1) || $god_mode){
-							//array_push($_SESSION['invoice_data'], $invoice_j[0]['client_id']);
-							//$_SESSION['invoice_data'] = $invoice_j[0]['client_id'];
+
+                        //Если заднее число
+                        if ((strtotime($invoice_j[0]['create_time']) + 12*60*60 < time()) && (($finances['see_all'] != 1) && !$god_mode)){
+                            echo '<h1>Нельзя редактировать задним числом</h1>';
+                        }else {
 							
 							$sheduler_zapis = array();
 							$invoice_ex_j = array();
@@ -725,9 +726,7 @@
 							}else{
 								echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 							}
-						/*}else{
-							echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
-						}*/
+						}
 					}else{
 						echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 					}

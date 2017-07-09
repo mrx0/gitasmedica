@@ -11,6 +11,8 @@
             include_once 'DBWork.php';
             include_once 'functions.php';
 
+            $msql_cnnct = ConnectToDB ();
+
             require 'variables.php';
 
             $rezult = '';
@@ -75,10 +77,10 @@
 
                     //Формулы зубные
                     $query = "SELECT `id`, `zapis_date`  FROM `journal_tooth_status` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
-                    $res = mysql_query($query) or die(mysql_error() . ' -> ' . $query);
-                    $number = mysql_num_rows($res);
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                    $number = mysqli_num_rows($res);
                     if ($number != 0) {
-                        while ($arr = mysql_fetch_assoc($res)) {
+                        while ($arr = mysqli_fetch_assoc($res)) {
                             array_push($t_f_data_db, $arr);
                         }
                     } else
@@ -94,10 +96,10 @@
 
                     //Посещения косметологов
                     $query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
-                    $res = mysql_query($query) or die(mysql_error() . ' -> ' . $query);
-                    $number = mysql_num_rows($res);
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                    $number = mysqli_num_rows($res);
                     if ($number != 0) {
-                        while ($arr = mysql_fetch_assoc($res)) {
+                        while ($arr = mysqli_fetch_assoc($res)) {
                             array_push($cosmet_data_db, $arr);
                         }
                     } else
@@ -112,10 +114,10 @@
 
                     //Наряды
                     $query = "SELECT * FROM `journal_invoice` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' AND `status` <> '9' ORDER BY `create_time`";
-                    $res = mysql_query($query) or die(mysql_error() . ' -> ' . $query);
-                    $number = mysql_num_rows($res);
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                    $number = mysqli_num_rows($res);
                     if ($number != 0) {
-                        while ($arr = mysql_fetch_assoc($res)) {
+                        while ($arr = mysqli_fetch_assoc($res)) {
                             array_push($invoice_data_db, $arr);
                         }
                     } else

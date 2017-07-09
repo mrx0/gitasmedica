@@ -70,7 +70,7 @@
 							<div id="status">
 								<header>
 
-									<h2>Внесение оплаты по наряду <a href="invoice.php?id='.$_GET['invoice_id'].'" class="ahref">#'.$_GET['invoice_id'].'</a></h2>';
+									<h2>Оплата наряда <a href="invoice.php?id='.$_GET['invoice_id'].'" class="ahref">#'.$_GET['invoice_id'].'</a> сертификатом</h2>';
 
 							echo '
 										<div class="cellsBlock2" style="margin-bottom: 10px;">
@@ -191,6 +191,7 @@
 									</ul>';
 							//}
 
+
 							//Наряды
 
 							echo '
@@ -244,14 +245,14 @@
 										<div id="paymentAddRezult" class="cellsBlock" style="font-size: 90%;" >
 											<div class="cellText2" style="padding: 2px 4px;">
                                                 <ul id="balance" style="padding: 5px; margin: 0 5px 10px; display: inline-block; vertical-align: top; /*border: 1px outset #AAA;*/">';
-                            echo '
+                            /*echo '
                                                     <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
                                                         Доступный остаток средств:
-                                                    </li>';
-                            if (($client_balance['summ'] <= 0) || ($client_balance['summ'] - $client_balance['debited'] <= 0)){
+                                                    </li>';*/
+                            /*if (($client_balance['summ'] <= 0) || ($client_balance['summ'] - $client_balance['debited'] <= 0)){
                                 $have_no_money_style = 'display: none;';
 
-                                echo '
+                                /*echo '
                                                      <li style="font-size: 110%; color: red; margin-bottom: 5px;">
                                                         <div class="availableBalance" id="availableBalance" style="display: inline;">Нет доступных средств на счету</div>
                                                     </li>
@@ -261,15 +262,15 @@
                                                     </li>
                                                     <li style="font-size: 100%; color: #7D7D7D; margin-bottom: 5px;">
 												        <a href="finance_account.php?client_id='.$client_j[0]['id'].'" class="b">Управление счётом</a>
-											        </li>';
+											        </li>';*/
 
-                            }else{
+                            /*}else{
                                 $have_no_money_style = '';
 
-                                echo '
+                                /*echo '
                                                     <li class="calculateOrder" style="font-size: 110%; font-weight: bold;">
                                                         <div class="availableBalance" id="addSummInPayment" style="display: inline; cursor:pointer;">' . ($client_balance['summ'] - $client_balance['debited']) . '</div><div style="display: inline;"> руб.</div>
-                                                    </li>';
+                                                    </li>';*/
                                 //Календарик
                                 echo '
                                                     <li style="font-size: 85%; color: #7D7D7D; margin-top: 20px; margin-bottom: 5px;">
@@ -284,10 +285,10 @@
                                                             <div class="cellRight">
                                                                 <ul style="margin-left: 6px; margin-bottom: 10px;">
                                                                     <li style="font-size: 105%; color: #7D7D7D; margin-bottom: 5px;">
-                                                                        Внесите сумму к оплате (руб.) <label id="summ_error" class="error"></label>
+                                                                        Сумма к оплате (руб.) <label id="summ_error" class="error"></label>
                                                                     </li>
                                                                     <li style="margin-bottom: 5px;">
-                                                                        <input type="text" size="15" name="summ" id="summ" placeholder="Введите сумму" value="0" class="who2"  autocomplete="off">
+                                                                        <div id="summ" class="calculateInvoice" style="color: #333;">0<div>
                                                                     </li>
                                                                 </ul>
                                                             </div>
@@ -307,13 +308,13 @@
                                                         </div>
                                                        
                                                     </li>';
-                            }
+                            //}
 
-                            echo '
-                                                     <li style="font-size: 100%; color: #7D7D7D; margin-bottom: 5px;">
-                                                        <a href="certificate_payment_add.php?invoice_id='.$_GET['invoice_id'].'" class="b">Оплатить сертификатом</a>
-                                                     </li>';
                             /*echo '
+                                                     <li style="font-size: 100%; color: #7D7D7D; margin-bottom: 5px;">
+                                                        <a href="certificate_payment_add.php?client_id='.$client_j[0]['id'].'" class="b">Оплатить сертификатом</a>
+                                                     </li>';*/
+                            echo '
                                                      <li style="font-size: 85%; color: #7D7D7D; margin-top: 10px; margin-bottom: 5px;">
                                                         <div class="cellsBlock2">
                                                             <div class="cellRight">
@@ -321,14 +322,16 @@
                                                                     <li style="font-size: 105%; color: #7D7D7D; margin-bottom: 5px;">
                                                                         Оплатить сертификатом
                                                                     </li>
-                                                                    <li style="margin-bottom: 5px;">
-                                                                        <!--<input type="button" class="b" value="Добавить сертификат" onclick="showCertPayAdd()">-->
-                                                                        <a href="certificate_payment_add.php" class="b">Добавить сертификат</a>
+                                                                    <li style="margin-bottom: 5px;" id="showCertPayAdd_button">
+                                                                        <input type="button" class="b" value="Добавить сертификат" onclick="showCertPayAdd()">
                                                                     </li>
                                                                     <li style="margin-bottom: 5px;">
                                                                         <table id="certs_result" width="100%" border="0" class="tableInsStat" style="background-color: rgba(255,255,250, .7); color: #333; display: none;">
                                                                             <tr>
-                                                                                <td><span class="lit_grey_text">Номер</span></td><td><span class="lit_grey_text">Номинал</span></td><td><span class="lit_grey_text">К оплате (остаток)</span></td>
+                                                                                <td><span class="lit_grey_text">Номер</span></td>
+                                                                                <td><span class="lit_grey_text">Номинал</span></td>
+                                                                                <td><span class="lit_grey_text">К оплате (остаток)</span></td>
+                                                                                <td style="text-align: center;"><i class="fa fa-times" aria-hidden="true" title="Удалить"></i></td>
                                                                             </tr>
                                                                         </table>
                                                                         
@@ -336,14 +339,14 @@
                                                                 </ul>
                                                             </div>
                                                         </div>
-                                                     </li>';*/
+                                                     </li>';
 
                             echo '
                                                         <div id="have_money_or_not" style="'.$have_no_money_style.'">
                                                             <div id="errror"></div>
                                                             <input type="hidden" id="client_id" name="client_id" value="'.$invoice_j[0]['client_id'].'">
                                                             <input type="hidden" id="invoice_id" name="invoice_id" value="'.$_GET['invoice_id'].'">
-                                                            <input type="button" class="b" value="Сохранить" onclick="showPaymentAdd(\'add\')">
+                                                            <input type="button" class="b" value="Сохранить" onclick="showPaymentAddCert(\'add\')">
                                                         </div>';
 
 

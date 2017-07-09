@@ -6,17 +6,28 @@
 	include_once 'DBWork.php';
 
 	//собственно коннект
-    function connectDB (){
+    /*function connectDB (){
         require 'config.php';
         mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
         mysql_select_db($dbName) or die(mysql_error().' -> '.$query);
         mysql_query("SET NAMES 'utf8'");
+    }*/
+
+    //Подключение к БД MySQl
+    function ConnectToDB2 () {
+        require 'config.php';
+
+        $msql_cnnct = mysqli_connect($hostname, $username, $db_pass, $dbName) or die("Не возможно создать соединение ");
+        mysqli_query($msql_cnnct, "SET NAMES 'utf8'");
+
+        return $msql_cnnct;
     }
 
-    //добавляем клиенту новую запись с балансом
+
+//добавляем клиенту новую запись с балансом
     function addClientBalanceNew ($client_id, $balance){
 
-        connectDB();
+        $msql_cnnct = ConnectToDB2 ();
 
         $time = date('Y-m-d H:i:s', time());
 
@@ -26,14 +37,14 @@
 						VALUES (
 							'{$client_id}', '{$balance}', '{$time}', '{$_SESSION['id']}')";
 
-        mysql_query($query) or die(mysql_error().' -> '.$query);
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
     }
 
     //добавляем клиенту новую запись с долгом
     function addClientDebtNew ($client_id, $balance){
 
-        connectDB();
+        $msql_cnnct = ConnectToDB2 ();
 
         $time = date('Y-m-d H:i:s', time());
 
@@ -43,34 +54,34 @@
 						VALUES (
 							'{$client_id}', '{$balance}', '{$time}', '{$_SESSION['id']}')";
 
-        mysql_query($query) or die(mysql_error().' -> '.$query);
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
     }
 
     //Обновим баланс контрагента
     function updateBalance ($id, $client_id, $Summ, $debited){
 
-        connectDB();
+        $msql_cnnct = ConnectToDB2 ();
 
         $query = "UPDATE `journal_balance` SET `summ`='$Summ', `debited`='$debited'  WHERE `id`='$id'";
 
-        mysql_query($query) or die(mysql_error().' -> '.$query);
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
     }
 
     //Обновим долг контрагента
     function updateDebt ($id, $client_id, $Summ){
 
-        connectDB();
+        $msql_cnnct = ConnectToDB2 ();
 
         $query = "UPDATE `journal_debt` SET `summ`='$Summ'  WHERE `id`='$id'";
 
-        mysql_query($query) or die(mysql_error().' -> '.$query);
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
     }
 
     //Смотрим баланс
     function watchBalance ($client_id, $Summ){
 
-        connectDB();
+        $msql_cnnct = ConnectToDB2 ();
 
         $clientBalance = array();
         $arr = array();
@@ -78,10 +89,10 @@
         //Посмотрим баланс, если он есть. Если нет, то сделаем INSERT
         $query = "SELECT * FROM `journal_balance` WHERE `client_id`='$client_id'";
 
-        $res = mysql_query($query) or die($query);
-        $number = mysql_num_rows($res);
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        $number = mysqli_num_rows($res);
         if ($number != 0){
-            while ($arr = mysql_fetch_assoc($res)){
+            while ($arr = mysqli_fetch_assoc($res)){
                 array_push($clientBalance, $arr);
             }
         }else{
@@ -94,7 +105,7 @@
    //Смотрим долг
     function watchDebt ($client_id, $Summ){
 
-        connectDB();
+        $msql_cnnct = ConnectToDB2 ();
 
         $clientDebt = array();
         $arr = array();
@@ -102,10 +113,10 @@
         //Посмотрим баланс, если он есть. Если нет, то сделаем INSERT
         $query = "SELECT * FROM `journal_debt` WHERE `client_id`='$client_id'";
 
-        $res = mysql_query($query) or die(mysql_error().' -> '.$query);
-        $number = mysql_num_rows($res);
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        $number = mysqli_num_rows($res);
         if ($number != 0){
-            while ($arr = mysql_fetch_assoc($res)){
+            while ($arr = mysqli_fetch_assoc($res)){
                 array_push($clientDebt, $arr);
             }
         }else{
@@ -120,7 +131,7 @@
 
         $rezult = array();
 
-        connectDB();
+        $msql_cnnct = ConnectToDB2 ();
 
         $clientOrders = array();
         $arr = array();
@@ -128,10 +139,10 @@
         //Соберем все (неудаленные) ордеры
         $query = "SELECT * FROM `journal_order` WHERE `client_id`='$client_id' AND `status` <> '9'";
 
-        $res = mysql_query($query) or die(mysql_error().' -> '.$query);
-        $number = mysql_num_rows($res);
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        $number = mysqli_num_rows($res);
         if ($number != 0){
-            while ($arr = mysql_fetch_assoc($res)){
+            while ($arr = mysqli_fetch_assoc($res)){
                 array_push($clientOrders, $arr);
             }
         }else{
@@ -176,7 +187,7 @@
 
         $rezult = array();
 
-        connectDB();
+        $msql_cnnct = ConnectToDB2 ();
 
         $clientInvoices = array();
         $arr = array();
@@ -184,10 +195,10 @@
         //Соберем все (неудаленные) наряды, где общая сумма не равна оплаченной
         $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='$client_id' AND `status` <> '9' AND `summ` <> `paid`";
 
-        $res = mysql_query($query) or die(mysql_error().' -> '.$query);
-        $number = mysql_num_rows($res);
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        $number = mysqli_num_rows($res);
         if ($number != 0){
-            while ($arr = mysql_fetch_assoc($res)){
+            while ($arr = mysqli_fetch_assoc($res)){
                 array_push($clientInvoices, $arr);
             }
         }else{
@@ -230,7 +241,7 @@
 
         $rezult = array();
 
-        connectDB();
+        $msql_cnnct = ConnectToDB2 ();
 
         $clientPayments = array();
         $arr = array();
@@ -238,10 +249,10 @@
         //Соберем все оплаты
         $query = "SELECT * FROM `journal_payment` WHERE `client_id`='$client_id'";
 
-        $res = mysql_query($query) or die(mysql_error().' -> '.$query);
-        $number = mysql_num_rows($res);
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        $number = mysqli_num_rows($res);
         if ($number != 0){
-            while ($arr = mysql_fetch_assoc($res)){
+            while ($arr = mysqli_fetch_assoc($res)){
                 array_push($clientPayments, $arr);
             }
         }else{
@@ -256,7 +267,9 @@
         if ( $clientPayments != 0) {
             //Посчитаем сумму
             foreach ($clientPayments as $payments) {
-                $Summ += $payments['summ'];
+                if ($payments['type'] != 1) {
+                    $Summ += $payments['summ'];
+                }
             }
         }
 
@@ -270,7 +283,7 @@
     //берем цены из прайса
     function takePrices ($item, $insure){
 
-        connectDB();
+        $msql_cnnct = ConnectToDB2 ();
 
         $prices_j = array();
         $arr = array();
@@ -283,10 +296,10 @@
             $query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices_insure` WHERE `item`='".$item."' AND `insure`='".$insure."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
         }
 
-        $res = mysql_query($query) or die(mysql_error().' -> '.$query);
-        $number = mysql_num_rows($res);
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        $number = mysqli_num_rows($res);
         if ($number != 0){
-            while ($arr = mysql_fetch_assoc($res)){
+            while ($arr = mysqli_fetch_assoc($res)){
                 array_push($prices_j, $arr);
             }
         }else{
