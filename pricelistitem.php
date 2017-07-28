@@ -93,6 +93,12 @@
 
 				echo '
 							<div class="cellsBlock2">
+								<div class="cellLeft">Код</div>
+								<div class="cellRight">'.$rezult[0]['code'].'</div>
+							</div>';
+
+				echo '
+							<div class="cellsBlock2">
 								<div class="cellLeft">Название</div>
 								<div class="cellRight">'.$rezult[0]['name'].'</div>
 							</div>';
@@ -170,10 +176,17 @@
                                 </div>';
                             }
                         }else{
-                            echo '
-                                <div class="cellName" style="cursor: pointer; background: rgba(255,132,113,0.73);" onclick="Ajax_add_pricelistitem_insure('.$_GET['id'].', '.$insure_item['id'].');">
-                                    добавить в эту страховую
-                                </div>';
+                            if ($rezult[0]['status'] != 9){
+                                echo '
+                                    <div class="cellName" style="cursor: pointer; background: rgba(255,132,113,0.73);" onclick="Ajax_add_pricelistitem_insure('.$_GET['id'].', '.$insure_item['id'].');">
+                                        добавить в эту страховую
+                                    </div>';
+                            }else{
+                                echo '
+                                    <div class="cellName" style="cursor: pointer; background: rgba(255,132,113,0.73);">
+                                        нет в этой страховой
+                                    </div>';
+                            }
                         }
                         echo '           
                             </li>   

@@ -102,6 +102,35 @@
 									<div class="cellLeft">Потрачено</div>
 									<div class="cellRight">'.$cert_j[0]['debited'].' руб.</div>
 								</div>';
+					if ($cert_j[0]['status'] == 5) {
+                        echo '
+           					    <div class="cellsBlock2">
+									<div class="cellLeft">Закрыт (полностью потрачен)</div>
+									<div class="cellRight" style="background-color: rgba(119, 255, 135, 1);">' . date('d.m.y H:i', strtotime($cert_j[0]['closed_time'])) . '</div>
+								</div>';
+                    }
+
+                    $expired_color = '';
+
+                    if ($cert_j[0]['expires_time'] != '0000-00-00') {
+                        //время истечения срока годности
+                        $sd = $cert_j[0]['expires_time'];
+                        //текущее
+                        $cd = date('Y-m-d', time());
+                        //сравнение не прошла ли гарантия
+                        /*var_dump(strtotime($sd));
+                        var_dump(strtotime($cd)); */
+                        if (strtotime($sd) > strtotime($cd)) {
+                        } else {
+                            echo '
+                            <div class="cellsBlock2">
+                                <div class="cellLeft">Истёк срок</div>
+                                <div class="cellRight" style="background-color: rgba(239,47,55, .7);">' . date('d.m.y', strtotime($cert_j[0]['expires_time'])) . '</div>
+                            </div>';
+                        }
+                    }
+
+
 					//Если не удалён
                     if ($cert_j[0]['status'] != 9){
                         //Если ещё не продан

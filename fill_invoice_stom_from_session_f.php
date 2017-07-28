@@ -57,6 +57,8 @@
                 //!!! @@@
                 include_once 'ffun.php';
 
+                $msql_cnnct = ConnectToDB2();
+
 				$client = $_POST['client'];
 				$zapis_id = $_POST['zapis_id'];
 				$filial = $_POST['filial'];
@@ -75,14 +77,7 @@
 					
 					$t_number_active = $_SESSION['invoice_data'][$client][$zapis_id]['t_number_active'];
 					$mkb_data = $_SESSION['invoice_data'][$client][$zapis_id]['mkb'];
-					
-							
-					require 'config.php';
-					
-					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-					mysql_select_db($dbName) or die(mysql_error()); 
-					mysql_query("SET NAMES 'utf8'");
-					
+
 					foreach ($data as $ind => $invoice_data){
 						if ($t_number_active == $ind){
 							$bg_col = 'background: rgba(131, 219, 83, 0.5) none repeat scroll 0% 0%;';
@@ -121,12 +116,12 @@
 								$rez = array();
 								$rezult2 = array();
 								
-								$query = "SELECT `name`, `code` FROM `spr_mkb` WHERE `id` = '{$mkb_data_val}'";	
-								
-								$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-								$number = mysql_num_rows($res);
+								$query = "SELECT `name`, `code` FROM `spr_mkb` WHERE `id` = '{$mkb_data_val}'";
+
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+								$number = mysqli_num_rows($res);
 								if ($number != 0){
-									while ($arr = mysql_fetch_assoc($res)){
+									while ($arr = mysqli_fetch_assoc($res)){
 										$rez[$mkb_data_val] = $arr;
 									}
 								}else{
@@ -171,12 +166,12 @@
 								$arr = array();
 								$rez = array();
 
-								$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = '{$items['id']}'";			
-					
-								$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-								$number = mysql_num_rows($res);
+								$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = '{$items['id']}'";
+
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+								$number = mysqli_num_rows($res);
 								if ($number != 0){
-									while ($arr = mysql_fetch_assoc($res)){
+									while ($arr = mysqli_fetch_assoc($res)){
 										array_push($rez, $arr);
 									}
 									$rezult2 = $rez;

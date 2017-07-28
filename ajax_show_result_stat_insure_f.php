@@ -46,8 +46,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 $worker = $workerSearch[0]['id'];
             }
         }else{*/
-            $workerExist = true;
-            $worker = 0;
+        $workerExist = true;
+        $worker = 0;
         //}
 
         if ($workerExist){
@@ -83,7 +83,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 $queryDopExist = true;
             }*/
 
-             //Филиал
+            //Филиал
             if ($_POST['filial'] != 99){
                 if ($queryDopExist){
                     $queryDop .= ' AND';
@@ -204,10 +204,10 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                         //Если выбираем по одной страховой
                         //if ($_POST['insure'] != 99){
-                            //if ($_POST['insure'] ==
-                            //$rezult_arr[WriteSearchUser('spr_clients', $journal_item['client_id'], 'user_full', false)][$journal_item['create_time']] = $journal_item;
+                        //if ($_POST['insure'] ==
+                        //$rezult_arr[WriteSearchUser('spr_clients', $journal_item['client_id'], 'user_full', false)][$journal_item['create_time']] = $journal_item;
                         //}else {
-                            $rezult_arr[WriteSearchUser('spr_clients', $journal_item['client_id'], 'user_full', false)][$journal_item['create_time']] = $journal_item;
+                        $rezult_arr[WriteSearchUser('spr_clients', $journal_item['client_id'], 'user_full', false)][$journal_item['create_time']] = $journal_item;
                         //}
                     }
 
@@ -271,7 +271,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             //var_dump($invoice_ex_j);
 
 
-                           //Собираем точные данные по каждому наряду (МКБ)
+                            //Собираем точные данные по каждому наряду (МКБ)
                             $query = "SELECT * FROM `journal_invoice_ex_mkb` WHERE `invoice_id`='".$rezult_arr_time['id']."';";
                             //var_dump ($query);
 
@@ -376,7 +376,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                     $rez_str_invoice_ex = '';
 
                                     foreach($invoice_ex_data as $invoice_ex_zub_data) {
-                                         //var_dump($invoice_ex_zub_data);
+                                        //var_dump($invoice_ex_zub_data);
 
                                         $rez_str_invoice_ex .= '
                                          <tr>
@@ -393,33 +393,33 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                             <td style="font-size: 11px;">';
 
                                         if (isset($rezult_arr_time['invoice_ex_mkb'][$zub])) {
-                                             if (!empty($rezult_arr_time['invoice_ex_mkb'][$zub])) {
-                                                 foreach ($rezult_arr_time['invoice_ex_mkb'][$zub] as $mkb) {
-                                                     $rez = array();
-                                                     //$rezult2 = array();
+                                            if (!empty($rezult_arr_time['invoice_ex_mkb'][$zub])) {
+                                                foreach ($rezult_arr_time['invoice_ex_mkb'][$zub] as $mkb) {
+                                                    $rez = array();
+                                                    //$rezult2 = array();
 
-                                                     $query = "SELECT `name`, `code` FROM `spr_mkb` WHERE `id` = '{$mkb['mkb_id']}'";
+                                                    $query = "SELECT `name`, `code` FROM `spr_mkb` WHERE `id` = '{$mkb['mkb_id']}'";
 
-                                                     $res = mysql_query($query) or die(mysql_error() . ' -> ' . $query);
-                                                     $number = mysql_num_rows($res);
-                                                     if ($number != 0) {
-                                                         while ($arr = mysql_fetch_assoc($res)) {
-                                                             $rez[$mkb['mkb_id']] = $arr;
-                                                         }
-                                                     } else {
-                                                         $rez = 0;
-                                                     }
-                                                     if ($rez != 0) {
-                                                         foreach ($rez as $mkb_name_val) {
-                                                             $rez_str_invoice_ex .= $mkb_name_val['code'] . ' ' . $mkb_name_val['name'] . '<br>';
-                                                         }
-                                                     } else {
-                                                         $rez_str_invoice_ex .= '<span class="query_neok" style="padding-top: 0">ошибка диагноза</span>';
-                                                     }
-                                                 }
-                                             }
+                                                    $res = mysql_query($query) or die(mysql_error() . ' -> ' . $query);
+                                                    $number = mysql_num_rows($res);
+                                                    if ($number != 0) {
+                                                        while ($arr = mysql_fetch_assoc($res)) {
+                                                            $rez[$mkb['mkb_id']] = $arr;
+                                                        }
+                                                    } else {
+                                                        $rez = 0;
+                                                    }
+                                                    if ($rez != 0) {
+                                                        foreach ($rez as $mkb_name_val) {
+                                                            $rez_str_invoice_ex .= $mkb_name_val['code'] . ' ' . $mkb_name_val['name'] . '<br>';
+                                                        }
+                                                    } else {
+                                                        $rez_str_invoice_ex .= '<span class="query_neok" style="padding-top: 0">ошибка диагноза</span>';
+                                                    }
+                                                }
+                                            }
                                         } else {
-                                             $rez_str_invoice_ex .= '<span class="query_neok" style="padding-top: 0">нет диагноза</span>';
+                                            $rez_str_invoice_ex .= '<span class="query_neok" style="padding-top: 0">нет диагноза</span>';
                                         }
 
                                         $rez_str_invoice_ex .= '
@@ -435,22 +435,22 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                         $res = mysql_query($query) or die(mysql_error() . ' -> ' . $query);
                                         $number = mysql_num_rows($res);
                                         if ($number != 0) {
-                                             while ($arr = mysql_fetch_assoc($res)) {
-                                                 array_push($rez, $arr);
-                                             }
-                                             $rezult2 = $rez;
+                                            while ($arr = mysql_fetch_assoc($res)) {
+                                                array_push($rez, $arr);
+                                            }
+                                            $rezult2 = $rez;
                                         } else {
-                                             $rezult2 = 0;
+                                            $rezult2 = 0;
                                         }
 
                                         //var_dump($rezult2);
 
                                         if ($rezult2 != 0) {
 
-                                             $rez_str_invoice_ex .= $rezult2[0]['name'];
+                                            $rez_str_invoice_ex .= $rezult2[0]['name'];
 
                                         } else {
-                                             $rez_str_invoice_ex .= '<span class="query_neok" style="padding-top: 0">ошибка</span>';
+                                            $rez_str_invoice_ex .= '<span class="query_neok" style="padding-top: 0">ошибка названия позиции</span>';
                                         }
 
                                         $rez_str_invoice_ex .= '
@@ -569,13 +569,13 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
 
 
-                   /* echo '
-							<li class="cellsBlock" style="margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
-								Всего<br>
-								Осмотров отмечено: '.count($journal).'<br>
-								Посещений: '.$journal_count_orig.'<br>
-								Пациентов за период: '.count($orig_clients).'<br>
-							</li>';*/
+                    /* echo '
+                             <li class="cellsBlock" style="margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
+                                 Всего<br>
+                                 Осмотров отмечено: '.count($journal).'<br>
+                                 Посещений: '.$journal_count_orig.'<br>
+                                 Пациентов за период: '.count($orig_clients).'<br>
+                             </li>';*/
 
                     echo '
                                   </table>

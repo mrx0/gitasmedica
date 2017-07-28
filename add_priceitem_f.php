@@ -22,7 +22,8 @@
 				//$name = trim($_POST['pricename']);
 				
 				$name = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['pricename']))));
-				
+				$pricecode = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['pricecode']))));
+
 				//Проверяем есть ли такая услуга
 				$rezult = SelDataFromDB('spr_pricelist_template', addslashes($name), 'name');
 				//var_dump($rezult);
@@ -38,7 +39,7 @@
 								$start_day = mktime(9, 0, 0, date("m", $_time), date("d", $_time), date("y", $_time));
 								
 								if ($iWantThisDate2 >= $start_day){
-									$PriceNameId = WriteToDB_EditPriceName (addslashes($name), $_SESSION['id']);
+									$PriceNameId = WriteToDB_EditPriceName (addslashes($name),$pricecode, $_SESSION['id']);
 									WriteToDB_EditPricePrice ($PriceNameId, $_POST['price'], $_POST['price2'], $_POST['price3'], $iWantThisDate2, $_SESSION['id']);
 									if ($_POST['group'] != 0){
 										WriteToDB_UpdatePriceItemInGroup($PriceNameId, $_POST['group'], $_SESSION['id']);

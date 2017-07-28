@@ -335,7 +335,10 @@
                                     echo '
                                                 <div>
                                                     <div style="display: inline-block;">Осталось внести: <div id="calculateInvoice" style="">' . ($invoice_j[0]['summ'] - $invoice_j[0]['paid']) . '</div> руб.</div>
+                                                </div>
+                                                <div>
                                                     <div style="display: inline-block;"><a href="payment_add.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Оплатить</a></div>
+                                                    <div style="display: inline-block;"><a href="certificate_payment_add.php?invoice_id='.$invoice_j[0]['id'].'" class="b">Оплатить сертификатом</a></div>
                                                 </div>';
                                 }
 							}

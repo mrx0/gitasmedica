@@ -37,7 +37,7 @@ function dragDrop(ev) {
 
     //если перетаскивали availableBalance
     if (ev.dataTransfer.getData("Text") == 'availableBalance') {
-        console.log(target.getAttribute('invoice_id'));
+        //console.log(target.getAttribute('invoice_id'));
         //console.log(ev.dataTransfer.getData("Text"));
     }
 

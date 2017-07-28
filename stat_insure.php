@@ -22,6 +22,9 @@
 			}else{
 				echo '
 					<header style="margin-bottom: 5px;">
+                        <div class="nav">
+                            <a href="insure_download.php" class="b">Выгрузки</a>
+                        </div>
 						<h1>Страховые</h1>
 					</header>';
 
@@ -147,6 +150,8 @@
 				echo '
 								<li class="cellsBlock" style="margin: 10px;">
 									<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_insure()">
+									<input type="button" class="b" value="Создать *.xls для скачивания" onclick="Ajax_repare_insure_xls()">
+									<input type="checkbox" name="showError" value="1" checked><span style="font-size:80%;">Показывать ошибки</span>
 								</li>';
 				echo '
 							</ul>
@@ -162,7 +167,7 @@
 
 				<script type="text/javascript">
 				    //Проверка и установка checkbox
-                    $(".zapisType").click(function() {
+                    /*$(".zapisType").click(function() {
                         
 					    var checked_status = $(this).is(":checked");
 					    var thisId = $(this).attr("id");
@@ -195,10 +200,11 @@
                                 }
                             }
                         }
-					});
+					});*/
                     
                     
 					var all_time = 0;
+					var showError = 1;
 					
 					$("input[name=all_time]").change(function() {
 						all_time = $("input[name=all_time]:checked").val();
@@ -214,6 +220,14 @@
 						if (all_time == 0){
 							document.getElementById("datastart").disabled = false;
 							document.getElementById("dataend").disabled = false;
+						}
+					});
+					
+					$("input[name=showError]").change(function() {
+						showError = $("input[name=showError]:checked").val();
+						
+						if (showError === undefined){
+							showError = 0;
 						}
 					});
 				</script>';

@@ -86,6 +86,13 @@
 						<form action="add_pricelistitem_f.php" style="font-size: 90%;" class="input_form">
 					
 							<div class="cellsBlock2" style="margin-bottom: 5px;">
+								<div class="cellLeft">Код</div>
+								<div class="cellRight">
+									<input type="text" name="pricecode" id="pricecode" value="">
+									<label id="pricecode_error" class="error"></label>
+								</div>
+							</div>
+							<div class="cellsBlock2" style="margin-bottom: 5px;">
 								<div class="cellLeft">Название</div>
 								<div class="cellRight">
 									<textarea name="pricename" id="pricename" style="width:90%; overflow:auto; height: 50px;"></textarea>

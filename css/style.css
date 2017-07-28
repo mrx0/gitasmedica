@@ -1730,8 +1730,9 @@ input[type="number"].mod{
 .query_neok{
 	border: 1px dotted red;
 	margin-bottom: 10px;
-	padding-top: 5px;
-	padding-left: 16px;
+	/*padding-top: 5px;*/
+	padding: 3px 10px;
+	/*padding-left: 16px;*/
 	color: red;
 	background-color: rgba(249, 171, 171, 0.56);
 	width: 329px;

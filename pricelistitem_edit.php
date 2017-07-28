@@ -34,6 +34,13 @@
 								<form action="pricelistitem_edit_f.php">
 					
 									<div class="cellsBlock2">
+										<div class="cellLeft">Код</div>
+										<div class="cellRight">
+											<input type="text" name="pricelistitemcode" id="pricelistitemcode" style="" value="'.$items_j[0]['code'].'">
+											<label id="pricelistitemcode_error" class="error"></label>
+										</div>
+									</div>
+									<div class="cellsBlock2">
 										<div class="cellLeft">Название</div>
 										<div class="cellRight">
 											<textarea name="pricelistitemname" id="pricelistitemname" style="width:90%; overflow:auto; height: 50px;">'.$items_j[0]['name'].'</textarea>

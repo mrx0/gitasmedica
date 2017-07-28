@@ -12,7 +12,8 @@
 		if (available >= lefttopay) {
             rezult = lefttopay;
 		}else{
-            rezult = lefttopay - available;
+            //rezult = lefttopay - available;
+            rezult = available;
         }
 
 		document.getElementById("summ").value = rezult;

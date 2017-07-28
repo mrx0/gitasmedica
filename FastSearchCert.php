@@ -29,7 +29,7 @@
                     $debited_color = '';
 
 				    if ($fast_search[$i]['expires_time'] != '0000-00-00') {
-                        //время продажи
+                        //время истечения срока годности
                         $sd = $fast_search[$i]['expires_time'];
                         //текущее
                         $cd = date('Y-m-d', time());

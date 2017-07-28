@@ -429,7 +429,7 @@
 											<div id="teeth_moloch_options" style="display: none;">
 												<div class="tooth_updown">
 													<div class="tooth_left" style="display: inline-block;">
-														<div class="sel_tooth">
+														<!--<div class="sel_tooth">
 															58
 														</div>
 														<div class="sel_tooth">
@@ -437,7 +437,7 @@
 														</div>
 														<div class="sel_tooth">
 															56
-														</div>
+														</div>-->
 														<div class="sel_tooth">
 															55
 														</div>
@@ -470,7 +470,7 @@
 														<div class="sel_tooth">
 															65
 														</div>
-														<div class="sel_tooth">
+														<!--<div class="sel_tooth">
 															66
 														</div>
 														<div class="sel_tooth">
@@ -478,12 +478,12 @@
 														</div>
 														<div class="sel_tooth">
 															68
-														</div>
+														</div>-->
 													</div>
 												</div>
 												<div class="tooth_updown">
 													<div class="tooth_left" style="display: inline-block;">
-														<div class="sel_tooth">
+														<!--<div class="sel_tooth">
 															88
 														</div>
 														<div class="sel_tooth">
@@ -491,7 +491,7 @@
 														</div>
 														<div class="sel_tooth">
 															86
-														</div>
+														</div>-->
 														<div class="sel_tooth">
 															85
 														</div>
@@ -524,7 +524,7 @@
 														<div class="sel_tooth">
 															75
 														</div>
-														<div class="sel_tooth">
+														<!--<div class="sel_tooth">
 															76
 														</div>
 														<div class="sel_tooth">
@@ -532,7 +532,7 @@
 														</div>
 														<div class="sel_tooth">
 															78
-														</div>
+														</div>-->
 													</div>
 												</div>
 											</div>

@@ -1309,6 +1309,7 @@
 	function Ajax_add_priceitem(session_id) {
 
 		var pricename = document.getElementById("pricename").value;
+		var pricecode = document.getElementById("pricecode").value;
 		var price = document.getElementById("price").value;
 		var price2 = document.getElementById("price2").value;
 		var price3 = document.getElementById("price3").value;
@@ -1322,6 +1323,7 @@
 			data:
 			{
 				pricename:pricename,
+                pricecode:pricecode,
 				price:price,
 				price2:price2,
 				price3:price3,
@@ -1398,6 +1400,7 @@
 	function Ajax_edit_pricelistitem(id, session_id) {
 
 		var pricelistitemname = document.getElementById("pricelistitemname").value;
+		var pricelistitemcode = document.getElementById("pricelistitemcode").value;
 		var group = document.getElementById("group").value;
 
 		$.ajax({
@@ -1407,6 +1410,7 @@
 			data:
 			{
 				pricelistitemname:pricelistitemname,
+                pricelistitemcode:pricelistitemcode,
 				session_id:session_id,
 				group:group,
 				id: id,
@@ -1754,6 +1758,64 @@
                     zapisNotArrive: zapisNotArrive,
                     zapisError: zapisError,
                     zapisNull: zapisNull,
+
+                },
+            cache: false,
+            beforeSend: function() {
+                $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                $('#qresult').html(data);
+            }
+        })
+    }
+
+    //Подготовка файла xls для выгрузки
+    function Ajax_repare_insure_xls(){
+
+        /*var zapisAll = $("input[id=zapisAll]:checked").val();
+        if (zapisAll === undefined){
+            zapisAll = 0;
+        }
+        var zapisArrive = $("input[id=zapisArrive]:checked").val();
+        if (zapisArrive === undefined){
+            zapisArrive = 0;
+        }
+        var zapisNotArrive = $("input[id=zapisNotArrive]:checked").val();
+        if (zapisNotArrive === undefined){
+            zapisNotArrive = 0;
+        }
+
+        var zapisError = $("input[id=zapisError]:checked").val();
+        if (zapisError === undefined){
+            zapisError = 0;
+        }
+
+        var zapisNull = $("input[id=zapisNull]:checked").val();
+        if (zapisNull === undefined){
+            zapisNull = 0;
+        }*/
+
+        $.ajax({
+            url:"ajax_repare_insure_xls_f.php",
+            global: false,
+            type: "POST",
+            data:
+                {
+                    all_time:all_time,
+                    showError:showError,
+                    datastart: document.getElementById("datastart").value,
+                    dataend: document.getElementById("dataend").value,
+
+                    //worker:document.getElementById("search_worker").value,
+                    insure: document.getElementById("insure_sel").value,
+                    filial: document.getElementById("filial").value,
+
+                    /*zapisAll: zapisAll,
+                    zapisArrive: zapisArrive,
+                    zapisNotArrive: zapisNotArrive,
+                    zapisError: zapisError,
+                    zapisNull: zapisNull,*/
 
                 },
             cache: false,
@@ -2928,7 +2990,7 @@
            		stoim = Math.round(stoim / 10) * 10;
             }
 
-            console.log(stoim);
+            //console.log(stoim);
 			//console.log($(this).parent().find('.invoiceItemPriceItog').html(stoim));
 
             //суммируем сумму в итоги
@@ -2985,7 +3047,25 @@
         $("#summ").html(rezSumm);
 
 	}
-	
+
+    //Окрасить кнопки с зубами
+    function colorizeTButton (t_number_active){
+        $(".sel_tooth").each(function() {
+            this.style.background = '';
+        });
+        $(".sel_toothp").css({'background': ""});
+
+        if (t_number_active == 99){
+            $(".sel_toothp").css({'background': "#83DB53"});
+        }else{
+            $(".sel_tooth").each(function() {
+                if (Number(this.innerHTML) == t_number_active){
+                    this.style.background = '#83DB53';
+                }
+            });
+        }
+    }
+
 	//Функция заполняет результат счета из сессии
 	function fillInvoiseRez(){
 		

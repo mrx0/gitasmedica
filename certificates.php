@@ -48,9 +48,35 @@
                     }elseif ($cert_j[$i]['status'] == 7){
                         $back_color = 'background-color: rgba(47, 186, 239, 0.7);';
                         $status = 'Продан '.date('d.m.y H:i', strtotime($cert_j[$i]['cell_time']));
+                    }elseif ($cert_j[$i]['status'] == 5){
+                        $back_color = 'background-color: rgba(119, 255, 135, 1);';
+                        $status = 'Закрыт '.date('d.m.y H:i', strtotime($cert_j[$i]['closed_time']));
 					}else{
-                        $back_color = '';
+                            $back_color = '';
 					}
+
+                    $expired_color = '';
+                    $expired_txt = '';
+
+                    if (($cert_j[$i]['expires_time'] != '0000-00-00') && ($cert_j[$i]['status'] != 5)) {
+                        //время истечения срока годности
+                        $sd = $cert_j[$i]['expires_time'];
+                        //текущее
+                        $cd = date('Y-m-d', time());
+                        /*var_dump(strtotime($sd));
+                        var_dump(strtotime($cd));*/
+                        //сравнение не прошла ли гарантия
+                        if (strtotime($sd) > strtotime($cd)) {
+                            $expired_txt .= '';
+                        } else {
+                            $expired_color = 'background-color: rgba(239,47,55, .7)';
+                            $back_color = 'background-color: rgba(255, 50, 25, 0.5)';
+                            $status = 'Истёк срок '.date('d.m.y', strtotime($cert_j[$i]['expires_time']));
+                        }
+
+                    }
+
+
 					echo '
 							<li class="cellsBlock3" style="'.$back_color.'">
 								<div class="cellPriority" style=" margin-bottom: -1px;"></div>

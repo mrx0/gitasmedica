@@ -225,6 +225,10 @@
                                 }else{
                                     echo '</div>';
                                 }
+                            echo '
+                                        <div>
+                                            <a href="payment_add.php?invoice_id='.$_GET['invoice_id'].'" class="b">Оплатить со счёта</a>
+                                        </div>';
 							echo '
 										</div>';
 
@@ -280,6 +284,32 @@
                                                         </span>
                                                     </li>';
                                 echo '
+                                                     <li style="font-size: 85%; color: #7D7D7D; margin-top: 10px; margin-bottom: 5px;">
+                                                        <div class="cellsBlock2">
+                                                            <div class="cellRight">
+                                                                <ul style="margin-left: 6px; margin-bottom: 10px;">
+                                                                    <li style="font-size: 105%; color: #7D7D7D; margin-bottom: 5px;">
+                                                                        Сертификаты
+                                                                    </li>
+                                                                    <li style="margin-bottom: 5px;" id="showCertPayAdd_button">
+                                                                        <input type="button" class="b" value="Добавить сертификат" onclick="showCertPayAdd()">
+                                                                    </li>
+                                                                    <li style="margin-bottom: 5px;">
+                                                                        <table id="certs_result" width="100%" border="0" class="tableInsStat" style="background-color: rgba(255,255,250, .7); color: #333; display: none;">
+                                                                            <tr>
+                                                                                <td><span class="lit_grey_text">Номер</span></td>
+                                                                                <td><span class="lit_grey_text">Номинал</span></td>
+                                                                                <td><span class="lit_grey_text">К оплате (остаток)</span></td>
+                                                                                <td style="text-align: center;"><i class="fa fa-times" aria-hidden="true" title="Удалить"></i></td>
+                                                                            </tr>
+                                                                        </table>
+                                                                        
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                     </li>';
+                                echo '
                                                     <li style="">
                                                         <div class="cellsBlock2">
                                                             <div class="cellRight">
@@ -314,32 +344,6 @@
                                                      <li style="font-size: 100%; color: #7D7D7D; margin-bottom: 5px;">
                                                         <a href="certificate_payment_add.php?client_id='.$client_j[0]['id'].'" class="b">Оплатить сертификатом</a>
                                                      </li>';*/
-                            echo '
-                                                     <li style="font-size: 85%; color: #7D7D7D; margin-top: 10px; margin-bottom: 5px;">
-                                                        <div class="cellsBlock2">
-                                                            <div class="cellRight">
-                                                                <ul style="margin-left: 6px; margin-bottom: 10px;">
-                                                                    <li style="font-size: 105%; color: #7D7D7D; margin-bottom: 5px;">
-                                                                        Оплатить сертификатом
-                                                                    </li>
-                                                                    <li style="margin-bottom: 5px;" id="showCertPayAdd_button">
-                                                                        <input type="button" class="b" value="Добавить сертификат" onclick="showCertPayAdd()">
-                                                                    </li>
-                                                                    <li style="margin-bottom: 5px;">
-                                                                        <table id="certs_result" width="100%" border="0" class="tableInsStat" style="background-color: rgba(255,255,250, .7); color: #333; display: none;">
-                                                                            <tr>
-                                                                                <td><span class="lit_grey_text">Номер</span></td>
-                                                                                <td><span class="lit_grey_text">Номинал</span></td>
-                                                                                <td><span class="lit_grey_text">К оплате (остаток)</span></td>
-                                                                                <td style="text-align: center;"><i class="fa fa-times" aria-hidden="true" title="Удалить"></i></td>
-                                                                            </tr>
-                                                                        </table>
-                                                                        
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                     </li>';
 
                             echo '
                                                         <div id="have_money_or_not" style="'.$have_no_money_style.'">

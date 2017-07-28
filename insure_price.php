@@ -209,7 +209,7 @@
                                     //}
                                     echo '
 												<div class="priceitemDivname">
-													<a href="pricelistitem_insure.php?insure='.$_GET['id'].'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter">'.$items_j[$i]['name'].'</a>
+													<a href="pricelistitem_insure.php?insure='.$_GET['id'].'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter"><i>'.$items_j[$i]['code'].'</i> '.$items_j[$i]['name'].'</a>
 												</div>
 												<div class="priceitemDiv">
 													<div class="priceitemDivcost"><b>'.$price.'</b> руб.</div>';

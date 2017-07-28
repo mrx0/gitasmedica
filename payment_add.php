@@ -222,8 +222,13 @@
                                                     </div>
                                                 </div>';
                                 }else{
-                                    echo '</div>';
+                                    echo '
+                                        </div>';
                                 }
+                            echo '
+                                        <div>
+                                            <a href="certificate_payment_add.php?invoice_id='.$_GET['invoice_id'].'" class="b">Оплатить сертификатом</a>
+                                        </div>';
 							echo '
 										</div>';
 
@@ -308,11 +313,6 @@
                                                        
                                                     </li>';
                             }
-
-                            echo '
-                                                     <li style="font-size: 100%; color: #7D7D7D; margin-bottom: 5px;">
-                                                        <a href="certificate_payment_add.php?invoice_id='.$_GET['invoice_id'].'" class="b">Оплатить сертификатом</a>
-                                                     </li>';
                             /*echo '
                                                      <li style="font-size: 85%; color: #7D7D7D; margin-top: 10px; margin-bottom: 5px;">
                                                         <div class="cellsBlock2">

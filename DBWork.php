@@ -255,16 +255,16 @@
 	}
 
 	//Добавление услуги.
-	function WriteToDB_EditPriceName ($name, $session_id){
+	function WriteToDB_EditPriceName ($name, $pricecode, $session_id){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 		mysql_select_db($dbName) or die(mysql_error()); 
 		mysql_query("SET NAMES 'utf8'");
 		$time = time();
 		$query = "INSERT INTO `spr_pricelist_template` (
-			`name`, `create_time`, `create_person`) 
+			`name`, `code`, `create_time`, `create_person`) 
 			VALUES (
-			'{$name}', '{$time}', '{$session_id}')";
+			'{$name}', '{$pricecode}', '{$time}', '{$session_id}')";
 		mysql_query($query) or die(mysql_error().' -> '.$query);
 		
 		$mysql_insert_id = mysql_insert_id();
@@ -278,14 +278,14 @@
 	}
 	
 	//
-	function WriteToDB_UpdatePriceItem ($name, $id, $session_id){
+	function WriteToDB_UpdatePriceItem ($name, $code, $id, $session_id){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 		mysql_select_db($dbName) or die(mysql_error()); 
 		mysql_query("SET NAMES 'utf8'");
 		$time = time();
 		
-		$query = "UPDATE `spr_pricelist_template` SET `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `name`='{$name}' WHERE `id`='{$id}'";
+		$query = "UPDATE `spr_pricelist_template` SET `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `name`='{$name}', `code`='{$code}' WHERE `id`='{$id}'";
 		
 		mysql_query($query) or die(mysql_error().' -> '.$query);
 
@@ -1165,7 +1165,7 @@
 				$q = " ORDER BY `office` ASC";
 			}elseif ($type == 'sort_added'){
 				$q = " ORDER BY `create_time` DESC";
-			}elseif (($datatable == 'journal_cosmet') || ($datatable == 'journal_cosmet1')){
+			}elseif (($datatable == 'journal_cosmet') || ($datatable == 'journal_cosmet1') || ($datatable == 'journal_insure_download')){
 				$q =  "ORDER BY `create_time` DESC";
 			}else{
 				$q = '';

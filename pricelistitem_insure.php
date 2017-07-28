@@ -135,6 +135,12 @@
 						echo '
 								<div id="data">';
 
+                        echo '
+							<div class="cellsBlock2">
+								<div class="cellLeft">Код</div>
+								<div class="cellRight">'.$rezult2[0]['code'].'</div>
+							</div>';
+
 						echo '
 									<div class="cellsBlock2">
 										<div class="cellLeft">Название</div>
