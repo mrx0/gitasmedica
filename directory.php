@@ -23,6 +23,8 @@
 
             echo '<a href="contacts.php" class="b3" title="Сотрудники">Сотрудники</a>';
 
+            echo '<a href="specializations.php" class="b3" title="Сотрудники">Специализация</a>';
+
             echo '<a href="insurcompany.php" class="b3" title="Страховые компании">Страховые компании</a>';
 
             echo '<a href="filials.php" class="b3" title="Филиалы">Филиалы</a>';

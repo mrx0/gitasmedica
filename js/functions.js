@@ -1138,6 +1138,43 @@
         });
     }
 
+    //Добавляем/редактируем в базу специализацию
+    function  Ajax_specialization_add(mode){
+
+        var link = "specialization_add_f.php";
+
+        if (mode == 'edit'){
+            link = "specialization_edit_f.php";
+        }
+
+        var name = $('#name').val();
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data:name,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(data){
+                if(data.result == 'success') {
+                    //alert('success');
+                    $('#data').html(data.data);
+                }else{
+                    //alert('error');
+                    $('#errror').html(data.data);
+                    $('#errrror').html('');
+                }
+            }
+        });
+    }
+
 	//!!! тут очередная "правильная" ф-ция
     //Промежуточная функция добавления/редактирования сертификата
     function showCertAdd(id, mode){
@@ -4393,6 +4430,8 @@
         var cell_price = $('#cell_price').val();
         //alert(cell_price);
 
+        var office_id = $('#office_id').val();
+
         //проверка данных на валидность
         $.ajax({
             url:"ajax_test.php",
@@ -4411,7 +4450,7 @@
                 if(data.result == 'success'){
                     $('#overlay').show();
 
-                    var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_cert_cell('+id+', '+cell_price+')">';
+                    var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_cert_cell('+id+', '+cell_price+', '+office_id+')">';
 
                     /*if (mode == 'edit'){
                         buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'edit\')">';
@@ -4713,7 +4752,7 @@
 	}
 
 	//Продаём сертификат по базе
-	function Ajax_cert_cell(id, cell_price){
+	function Ajax_cert_cell(id, cell_price, office_id){
 
 
 		$.ajax({
@@ -4724,7 +4763,8 @@
 			data:
 			{
                 cert_id: id,
-                cell_price: cell_price
+                cell_price: cell_price,
+                office_id: office_id
             },
 			cache: false,
 			beforeSend: function() {

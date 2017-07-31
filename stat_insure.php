@@ -23,7 +23,7 @@
 				echo '
 					<header style="margin-bottom: 5px;">
                         <div class="nav">
-                            <a href="insure_download.php" class="b">Выгрузки</a>
+                            <a href="insure_xls.php" class="b">Выгрузки</a>
                         </div>
 						<h1>Страховые</h1>
 					</header>';

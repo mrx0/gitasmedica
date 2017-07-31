@@ -59,7 +59,7 @@
 				
 					
 					//ЗО и тд	
-					$dop = array();							
+					$dop = array();
 					$query = "SELECT * FROM `journal_tooth_status_temp` WHERE `id` = '{$task[0]['id']}'";
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 					$number = mysqli_num_rows($res);

@@ -1111,6 +1111,56 @@
 		AddLog (GetRealIp(), $session_id, $old, 'Отредактирована лаборатория ['.$id.']. ['.date('d.m.y H:i', $time).']. Название: ['.$name.']. Договор: ['.$contract.']. Контакты: ['.$contacts.'].');
 	}
 
+	//Вставка и обновление специализации из-под Web
+	function WriteToDB_EditSpecialization ($name, $session_id){
+
+        $msql_cnnct = ConnectToDB ();
+
+        $time = date('Y-m-d H:i:s', time());
+
+		$query = "INSERT INTO `spr_specialization` (
+			`name`, `create_time`, `create_person`)
+			VALUES (
+			'{$name}', '{$time}', '{$session_id}') ";
+
+		//mysqli_query($query) or die($query.' -> '.mysql_error());
+		//mysqli_close();
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        //ID новой позиции
+        $mysql_insert_id = mysqli_insert_id($msql_cnnct);
+
+		//логирование
+		AddLog (GetRealIp(), $session_id, '', 'Добавлена специализация ['.$name.']');
+
+		return ($mysql_insert_id);
+	}
+
+	//Редактирование специализации из-под Web
+	function WriteSpecializationToDB_Update ($id, $name, $session_id){
+		$old = '';
+
+        ConnectToDB ();
+
+        //Для лога соберем сначала то, что было в записи.
+		$query = "SELECT * FROM `spr_labor` WHERE `id`=$id";
+		$res = mysql_query($query) or die(mysql_error());
+		$number = mysql_num_rows($res);
+		if ($number != 0){
+			$arr = mysql_fetch_assoc($res);
+			$old = 'Название: ['.$arr['name'].']. Договор: ['.$arr['contract'].']. Контакты: ['.$arr['contacts'].']';
+		}else{
+			$old = 'Не нашли старую запись.';
+		}
+		$time = time();
+		$query = "UPDATE `spr_labor` SET `name`='{$name}', `contract`='{$contract}', `contacts`='{$contacts}' WHERE `id`='{$id}'";
+		mysql_query($query) or die(mysql_error());
+		mysql_close();
+
+		//логирование
+		AddLog (GetRealIp(), $session_id, $old, 'Отредактирована лаборатория ['.$id.']. ['.date('d.m.y H:i', $time).']. Название: ['.$name.']. Договор: ['.$contract.']. Контакты: ['.$contacts.'].');
+	}
+
 	//Очистка записи
 	function WriteToDB_Clr ($ip){
 		$q = '';
@@ -1460,7 +1510,7 @@
 	}
 
 	//Добавление новой ТАБЛИЦЫ подсети ($subnet[$i])
-	function AddNewSubTable ($subnet){
+	/*function AddNewSubTable ($subnet){
 		require 'config.php';
 		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
 		mysql_select_db($dbName) or die(mysql_error());
@@ -1481,7 +1531,7 @@
 			ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 		mysql_query($query) or die(mysql_error());
 		mysql_close();
-	}
+	}*/
 	
 	//Удаление ТАБЛИЦЫ ($subnet[$i])
 	function DeleteSubTable ($subnet){

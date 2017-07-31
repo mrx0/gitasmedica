@@ -220,7 +220,7 @@
 					
 				</script>';
 			}
-			mysql_close();
+			//mysql_close();
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}

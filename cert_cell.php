@@ -46,6 +46,19 @@ if ($enter_ok){
 								<div class="cellsBlock2">
 									<div class="cellLeft">Номинал</div>
 									<div class="cellRight">'.$cert_j[0]['nominal'].' руб.</div>
+								</div>';
+                    echo '								
+								<div class="cellsBlock2">
+									<div class="cellLeft">Филиал</div>
+									<div class="cellRight">';
+
+                    $offices_j = SelDataFromDB('spr_office', $_SESSION['filial'], 'offices');
+                    if ($offices_j != 0) {
+                        echo $offices_j[0]['name'].'
+                                <input type="hidden" id="office_id" name="office_id" value="'.$_SESSION['filial'].'">';
+                    }
+
+                    echo '</div>
 								</div>
 								
 								<div class="cellsBlock2">

@@ -74,7 +74,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
             }*/
 
             //Страховая
-            if ($_POST['insure'] != 99) {
+            //if ($_POST['insure'] != 99) {
 
                 //Филиал
                 if ($_POST['filial'] != 99) {
@@ -235,9 +235,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                         //Вставим запись в таблицу MySQl и получим ID
                         $query = "INSERT INTO `journal_insure_download` (
-                                                                  `insure_id`, `create_time`, `create_person`)
+                                                                  `insure_id`, `office_id`, `create_time`, `create_person`)
                                                                 VALUES (
-                                                                  '{$_POST['insure']}', '{$time}', '{$_SESSION['id']}')";
+                                                                  '{$_POST['insure']}', '{$_POST['filial']}', '{$time}', '{$_SESSION['id']}')";
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                         //ID новой позиции
@@ -403,8 +403,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             )
                         );
 
-                        $insure_j = SelDataFromDB('spr_insure', $_POST['insure'], 'id');
-
+                        //$insure_j = SelDataFromDB('spr_insure', $_POST['insure'], 'id');
 
                         //Переменная для расчета общей суммы всех нарядов из отчета
                         $all_pay_arr_temp = array();
@@ -432,13 +431,13 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         $str_time_temp = 'с '.date('d.m.Y', strtotime($_POST['datastart'].' 00:00:00')).' по '.date('d.m.Y', strtotime($_POST['dataend'].' 23:59:59'));
 
                         // Вставляем текст в ячейку A1
-                        $sheet->setCellValue("A1", 'Расшифровка к Акту выполненных работ '.$str_time_temp);
+                        /*$sheet->setCellValue("A1", 'Расшифровка к Акту выполненных работ '.$str_time_temp);
                         //применяем стиль текста
                         $sheet->getStyle('A1')->applyFromArray($style_wrap_false);
                         //устанавливает строке высоту
-                        $sheet->getRowDimension(1)->setRowHeight(14);
+                        $sheet->getRowDimension(1)->setRowHeight(14);*/
 
-                        $sheet->setCellValue("A2", 'Перечень медицинских услуг, оказанных застрахованным лицам');
+                        /*$sheet->setCellValue("A2", 'Перечень медицинских услуг, оказанных застрахованным лицам');
                         $sheet->getStyle('A2')->applyFromArray($style_wrap_false);
                         $sheet->getRowDimension(2)->setRowHeight(14);
                         $sheet->setCellValue("A3", $insure_j[0]['name']);
@@ -455,7 +454,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         $sheet->getRowDimension(6)->setRowHeight(14);
                         $sheet->setCellValue("A7", ' № '.$insure_j[0]['contract2']);
                         $sheet->getStyle('A7')->applyFromArray($style_wrap_false);
-                        $sheet->getRowDimension(7)->setRowHeight(14);
+                        $sheet->getRowDimension(7)->setRowHeight(14);*/
 
                         // Выравнивание текста
                         /*
@@ -542,8 +541,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             //Страховая пациента
                             $fio_insure = $rezult_arr_fio['data']['insure'];
 
-                            //Если страхова пациента попавшегося в массиве совпадает с той, которую мы ищем
-                            if ($fio_insure == $_POST['insure']) {
+                            //Если страховая пациента попавшегося в массиве совпадает с той, которую мы ищем
+                            //if ($fio_insure == $_POST['insure']) {
 
                                 //Высота строки
                                 $sheet->getRowDimension(1)->setRowHeight(20);
@@ -749,6 +748,13 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                                                 //var_dump($rezult2);
 
+                                                //Код
+                                                $sheet->setCellValue('E' . $countRow, $rezult2[0]['code']);
+                                                $sheet->getStyle('E' . $countRow)->applyFromArray($style_arial_8);
+                                                $sheet->getStyle('E' . $countRow)->applyFromArray($style_horizontal_left);
+                                                $sheet->getStyle('E' . $countRow)->applyFromArray($style_verical_top);
+                                                $sheet->getStyle('E' . $countRow)->applyFromArray($style_border_left_fight);
+
                                                 //Название
                                                 if ($rezult2 != 0) {
 
@@ -915,7 +921,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                                 //Увеличиваем номер строки
                                 $countRow++;
-                            }
+                            //}
 
                         }
                         //Вывод общей суммы
@@ -962,9 +968,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 } else {
                     echo '<span style="color: red;">Ожидается слишком большой результат выборки. Уточните запрос.</span>';
                 }
-            }else{
-                echo '<span style="color: red;">Укажите страховую.</span>';
-            }
+            //}else{
+            //    echo '<span style="color: red;">Укажите страховую.</span>';
+            //}
 
             //var_dump($query);
             //var_dump($queryDopEx);

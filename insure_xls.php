@@ -25,6 +25,7 @@
 						<li class="cellsBlock3" style="font-weight:bold; margin-bottom: -1px;">	
 							<div class="cellPriority" style="text-align: center"></div>
 							<div class="cellOffice" style="text-align: center;">Дата</div>
+							<div class="cellOffice" style="text-align: center;">Филиал</div>
 							<div class="cellOffice" style="text-align: center;">Страховая</div>
 							<div class="cellOffice" style="text-align: center;">Автор</div>
 							<div class="cellText" style="text-align: center;">Комментарий</div>
@@ -45,12 +46,14 @@
 
 				    $path = 'download\insure_xls'.'\\'.$insure_xls_j[$i]['id'].'.xls';
                     $insure_j = SelDataFromDB('spr_insure', $insure_xls_j[$i]['insure_id'], 'id');
+                    $office_j = SelDataFromDB('spr_office', $insure_xls_j[$i]['office_id'], 'id');
 
 					if ($insure_xls_j[$i]['status'] == 9) {
                         $deleted_str .= '
                             <li class="cellsBlock3" style="margin-bottom: -1px; background-color: rgba(161,161,161,1);">	
                                 <div class="cellPriority" style="text-align: center"></div>
                                 <div class="cellOffice" style="text-align: center;">'.date('d.m.Y H:i',  strtotime($insure_xls_j[$i]['create_time'])).'</div>
+                                <div class="cellOffice" style="text-align: center;">'.$office_j[0]['name'].'</div>
                                 <div class="cellOffice" style="text-align: center;">'.$insure_j[0]['name'].'</div>
                                 <div class="cellOffice" style="text-align: center;">'.WriteSearchUser('spr_workers', $insure_xls_j[$i]['create_person'], 'user', true).'</div>
                                 <div class="cellText" style="text-align: center;">'.$insure_xls_j[$i]['comment'].'</div>
@@ -62,6 +65,7 @@
                             <li class="cellsBlock3" style="margin-bottom: -1px;">	
                                 <div class="cellPriority" style="text-align: center"></div>
                                 <div class="cellOffice" style="text-align: center;">'.date('d.m.Y H:i',  strtotime($insure_xls_j[$i]['create_time'])).'</div>
+                                <div class="cellOffice" style="text-align: center;">'.$office_j[0]['name'].'</div>
                                 <div class="cellOffice" style="text-align: center;">'.$insure_j[0]['name'].'</div>
                                 <div class="cellOffice" style="text-align: center;">'.WriteSearchUser('spr_workers', $insure_xls_j[$i]['create_person'], 'user', true).'</div>
                                 <div class="cellText" style="text-align: center;">'.$insure_xls_j[$i]['comment'].'</div>
@@ -72,6 +76,7 @@
                             <li class="cellsBlock3" style="margin-bottom: -1px;">	
                                 <div class="cellPriority" style="text-align: center"></div>
                                 <div class="cellOffice" style="text-align: center;">'.date('d.m.Y H:i',  strtotime($insure_xls_j[$i]['create_time'])).'</div>
+                                <div class="cellOffice" style="text-align: center;">'.$office_j[0]['name'].'</div>
                                 <div class="cellOffice" style="text-align: center;">'.$insure_j[0]['name'].'</div>
                                 <div class="cellOffice" style="text-align: center;">'.WriteSearchUser('spr_workers', $insure_xls_j[$i]['create_person'], 'user', true).'</div>
                                 <div class="cellText" style="text-align: center;">'.$insure_xls_j[$i]['comment'].'</div>

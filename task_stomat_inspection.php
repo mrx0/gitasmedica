@@ -47,12 +47,14 @@
 								</h2>';
 								
 					//Дополнительно
+
+                    $msql_cnnct = ConnectToDB ();
 		
 					$query = "SELECT * FROM `journal_tooth_ex` WHERE `id` = '{$task[0]['id']}'";
-					$res = mysql_query($query) or die($query);
-					$number = mysql_num_rows($res);
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+					$number = mysqli_num_rows($res);
 					if ($number != 0){
-						while ($arr = mysql_fetch_assoc($res)){
+						while ($arr = mysqli_fetch_assoc($res)){
 							array_push($dop, $arr);
 						}
 						
@@ -89,10 +91,10 @@
 					//ЗО и тд	
 					$dop = array();							
 					$query = "SELECT * FROM `journal_tooth_status_temp` WHERE `id` = '{$task[0]['id']}'";
-					$res = mysql_query($query) or die($query);
-					$number = mysql_num_rows($res);
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+					$number = mysqli_num_rows($res);
 					if ($number != 0){
-						while ($arr = mysql_fetch_assoc($res)){
+						while ($arr = mysqli_fetch_assoc($res)){
 							array_push($dop, $arr);
 						}
 						

@@ -12,7 +12,7 @@
 		
 		if ($_POST){
 
-			if (!isset($_POST['cert_id']) || !isset($_POST['cell_price'])){
+			if (!isset($_POST['cert_id']) || !isset($_POST['office_id']) || !isset($_POST['cell_price'])){
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
                 include_once 'DBWork.php';
@@ -30,7 +30,7 @@
                     $expires_time = date_format($expires_time, 'Y-m-d');
 
                     //Обновляем
-                    $query = "UPDATE `journal_cert` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `cell_price`='{$_POST['cell_price']}', `cell_time`='{$time}', `expires_time`='{$expires_time}', `status`='7' WHERE `id`='{$_POST['cert_id']}'";
+                    $query = "UPDATE `journal_cert` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `cell_price`='{$_POST['cell_price']}', `cell_time`='{$time}', `office_id`='{$_POST['office_id']}', `expires_time`='{$expires_time}', `status`='7' WHERE `id`='{$_POST['cert_id']}'";
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                     //логирование

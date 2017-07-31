@@ -423,9 +423,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                         }
 
                                         $rez_str_invoice_ex .= '
-                                            </td>
-                                            <td></td>
-                                            <td>';
+                                            </td>';
 
                                         $arr = array();
                                         $rez = array();
@@ -444,6 +442,11 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                         }
 
                                         //var_dump($rezult2);
+
+                                        //Код
+                                        $rez_str_invoice_ex .= '<td>'.$rezult2[0]['code'].'</td>';
+                                        //Название
+                                        $rez_str_invoice_ex .= '<td>';
 
                                         if ($rezult2 != 0) {
 
