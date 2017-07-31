@@ -1139,7 +1139,7 @@
     }
 
     //Добавляем/редактируем в базу специализацию
-    function  Ajax_specialization_add(mode){
+    function Ajax_specialization_add(mode){
 
         var link = "specialization_add_f.php";
 

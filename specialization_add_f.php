@@ -11,10 +11,9 @@
         //var_dump ($_POST);
         if ($_POST){
             if ($_POST['name'] == ''){
-                echo '
-                        <div class="query_neok">
-                            Что-то не заполнено.<br><br>
-                        </div>';
+
+                echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok"> Что-то не заполнено.</div>'));
+
             }else{
                 include_once 'DBWork.php';
                 include_once 'functions.php';
@@ -38,6 +37,8 @@
 
                 }
             }
+        }else{
+            //echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok"> Что-то пошло не так.</div>'));
         }
     }
 ?>

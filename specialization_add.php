@@ -20,7 +20,7 @@
 		echo '
 				<div id="data">';
 		echo '				
-					<div id="errrror"></div>';
+					<div id="errror"></div>';
 		echo '
 					<form action="specialization_add_f.php">
 				
