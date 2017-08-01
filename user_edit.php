@@ -21,6 +21,10 @@
 			//var_dump($permissions);
 			$permissions = SearchInArray($arr_permissions, $user[0]['permissions'], 'name');
 			//var_dump($permissions);
+            $specializations = workerSpecialization($_GET['id']);
+
+            $specialization_j = SelDataFromDB('spr_specialization', '', '');
+            //var_dump($specialization_j);
 			$org = SearchInArray($arr_orgs, $user[0]['org'], 'name');
 			//var_dump($org);
 			
@@ -66,7 +70,7 @@
 								</div>
 							-->	
 								<div class="cellsBlock2">
-									<div class="cellLeft">Должность/уровень доступа</div>
+									<div class="cellLeft">Должность</div>
 									<div class="cellRight">';
 											if ((($arr_permissions[$i]['id'] != 1) && ($arr_permissions[$i]['id'] != 2) && ($arr_permissions[$i]['id'] != 3) && ($arr_permissions[$i]['id'] != 8)) || ($god_mode)){
 												echo '
@@ -86,6 +90,35 @@
 											}else{
 												echo $permissions.'<input type="hidden" id="permissions" name="permissions" value="'.$user[0]['permissions'].'">';
 											}
+										echo '
+										
+									</div>
+								</div>
+								<div class="cellsBlock2">
+									<div class="cellLeft">Специализация</div>
+									<div class="cellRight">';
+
+                                            $specializations_temp = array();
+
+											//Преобразуем массив чтоб id стали ключами
+                                            if ($specializations != 0){
+                                                foreach ($specializations as $data){
+                                                    $specializations_temp[$data['id']] = $data;
+                                                }
+
+                                            }
+
+                                            foreach ($specialization_j as $data){
+                                                $chckd = '';
+                                                if (!empty($specializations_temp)){
+                                                    if (isset($specializations_temp[$data['id']])) {
+                                                        $chckd = 'checked';
+                                                    }
+                                                }
+
+                                                echo '<input type="checkbox" name="specializations[]" value="'.$data['id'].'" '.$chckd.'> '.$data['name'].'<br>';
+                                            }
+
 										echo '
 										
 									</div>
@@ -115,7 +148,7 @@
 								</div>
 											<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
 											<!--<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">-->
-											<input type=\'button\' class="b" value="Применить" onclick=Ajax_user_edit()>
+											<input type=\'button\' class="b" value="Применить" onclick=Ajax_user_edit('.$_GET['id'].')>
 										</form>';	
 
 						echo '
@@ -128,29 +161,7 @@
 			echo '
 				<script>  
 
-					function Ajax_user_edit() {
-						var fired = $("input[name=fired]:checked").val();
-								ajax({
-									url:"user_edit_f.php",
-									statbox:"status",
-									method:"POST",
-									data:
-									{
-										id:document.getElementById("id").value,
-										//org:document.getElementById("org").value,
-										org:0,
-										permissions:document.getElementById("permissions").value,
-										contacts:document.getElementById("contacts").value,
-										fired:fired,
-											
-										session_id:'.$_SESSION['id'].',
-
-									},
-										success:function(data){
-										document.getElementById("status").innerHTML=data;
-									}
-								})
-					};  
+ 
 					  
 				</script> 
 			';	

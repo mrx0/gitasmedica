@@ -117,8 +117,75 @@
 		});
 	}
 
+    //для сбора чекбоксов в массив
+    function itemExistsChecker(cboxArray, cboxValue) {
 
-	function Ajax_add_client(session_id) {
+        var len = cboxArray.length;
+        if (len > 0) {
+            for (var i = 0; i < len; i++) {
+                if (cboxArray[i] == cboxValue) {
+                    return true;
+                }
+            }
+        }
+
+        cboxArray.push(cboxValue);
+
+        return (cboxArray);
+    }
+
+    function checkedItems (){
+
+        var cboxArray = [];
+
+        $('input[type="checkbox"]').each(function() {
+            var cboxValue = $(this).val();
+
+            if ( $(this).prop("checked")){
+                cboxArray = itemExistsChecker(cboxArray, cboxValue);
+            }
+
+        });
+
+        return cboxArray;
+    }
+
+    //Редактирование сотрудника
+    function Ajax_user_edit(worker_id) {
+
+        var fired = $("input[name=fired]:checked").val();
+        if((typeof fired == "undefined") || (fired == "")) fired = 0;
+
+        var org = 0;
+        var permissions = $('#permissions').val();
+        var contacts = $('#contacts').val();
+
+        $.ajax({
+            url:"user_edit_f.php",
+            global: false,
+            type: "POST",
+            data:
+                {
+                    worker_id: worker_id,
+                    org: org,
+                    permissions: permissions,
+                    contacts: contacts,
+                    fired: fired,
+                    specializations:checkedItems(),
+
+                },
+            cache: false,
+            beforeSend: function() {
+                // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                document.getElementById("status").innerHTML=data;
+            }
+        })
+    };
+
+	//Добавляем нового клиента
+    function Ajax_add_client(session_id) {
 		// убираем класс ошибок с инпутов
         hideAllErrors ();
 		 
@@ -1155,7 +1222,10 @@
             type: "POST",
             dataType: "JSON",
 
-            data:name,
+            data:
+			{
+				name: name,
+			},
 
             cache: false,
             beforeSend: function() {
@@ -1163,13 +1233,17 @@
             },
             // действие, при ответе с сервера
             success:function(data){
+                //alert('success1');
                 if(data.result == 'success') {
                     //alert('success');
                     $('#data').html(data.data);
+                    setTimeout(function () {
+                        window.location.replace('specializations.php');
+                    }, 100);
                 }else{
                     //alert('error');
                     $('#errror').html(data.data);
-                    $('#errrror').html('');
+                    //$('#errrror').html('');
                 }
             }
         });
@@ -5089,38 +5163,6 @@
 		}
 	});
 
-    //для сбора чекбоксов в массив
-    function itemExistsChecker(cboxArray, cboxValue) {
-
-        var len = cboxArray.length;
-        if (len > 0) {
-            for (var i = 0; i < len; i++) {
-                if (cboxArray[i] == cboxValue) {
-                    return true;
-                }
-            }
-        }
-
-        cboxArray.push(cboxValue);
-
-        return (cboxArray);
-    }
-
-    function checkedItems (){
-
-        var cboxArray = [];
-
-        $('input[type="checkbox"]').each(function() {
-            var cboxValue = $(this).val();
-
-            if ( $(this).prop("checked")){
-                cboxArray = itemExistsChecker(cboxArray, cboxValue);
-            }
-
-        });
-
-       return cboxArray;
-	}
 	//Удаление выбранных позиций из прайса страховой
     function delCheckedItems (insure_id){
 

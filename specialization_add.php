@@ -13,6 +13,9 @@
 		echo '
 			<div id="status">
 				<header>
+                    <div class="nav">
+						<a href="specializations.php" class="b">Специализации</a>
+					</div>
 					<h2>Добавить специализацию</h2>
 					Заполните поля
 				</header>';

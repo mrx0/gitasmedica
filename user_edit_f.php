@@ -12,12 +12,16 @@
 		include_once 'DBWork.php';
 		if ($_POST){
 
-			WriteWorkerToDB_Update ($_POST['session_id'], $_POST['id'], $_POST['org'], $_POST['permissions'], $_POST['contacts'], $_POST['fired']);
-			
+            if (!isset($_POST['specializations'])){
+                $_POST['specializations'] = array();
+            }
+
+			WriteWorkerToDB_Update ($_SESSION['id'], $_POST['worker_id'], $_POST['org'], $_POST['permissions'], $_POST['specializations'], $_POST['contacts'], $_POST['fired']);
+
 			echo '
 				<h1>Карточка отредактирована.</h1>
-				<br />
-				<a href="user.php?id='.$_POST['id'].'" class="b">Вернуться в профиль</a>
+				<br>
+				<a href="user.php?id='.$_POST['worker_id'].'" class="b">Вернуться в профиль</a>
 			';			
 		}
 

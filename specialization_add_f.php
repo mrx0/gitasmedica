@@ -20,7 +20,7 @@
 
                 //$name = trim($_POST['groupname']);
 
-                $name = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['groupname']))));
+                $name = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['name']))));
 
                 //Проверяем есть ли такая специализация
                 $rezult = SelDataFromDB('spr_specialization', $name, 'name');

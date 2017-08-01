@@ -904,29 +904,40 @@
 	}
 	
 	//Обновление карточки пользователя из-под Web
-	function WriteWorkerToDB_Update($session_id, $id, $org, $permissions, $contacts, $fired){
-		$old = '';
-		require 'config.php';
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+	function WriteWorkerToDB_Update($session_id, $worker_id, $org, $permissions, $specializations, $contacts, $fired){
+
+        $msql_cnnct = ConnectToDB ();
+
+	    $old = '';
+
 		//Для лога соберем сначала то, что было в записи.
-		$query = "SELECT * FROM `spr_workers` WHERE `id`=$id";
-		$res = mysql_query($query) or die(mysql_error());
-		$number = mysql_num_rows($res);
+		$query = "SELECT * FROM `spr_workers` WHERE `id`=$worker_id";
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			$arr = mysql_fetch_assoc($res);
+			$arr = mysqli_fetch_assoc($res);
 			$old = 'Контакты: ['.$arr['contacts'].']. Организация: ['.$arr['org'].']. Права: ['.$arr['permissions'].']. Уволен: ['.$arr['fired'].']';
 		}else{
 			$old = 'Не нашли старую запись.';
 		}
 		$time = time();
-		$query = "UPDATE `spr_workers` SET `org`='{$org}', `permissions`='{$permissions}', `contacts`='{$contacts}', `fired`='{$fired}' WHERE `id`='{$id}'";
-		mysql_query($query) or die(mysql_error());
-		mysql_close();
-		
+		$query = "UPDATE `spr_workers` SET `org`='{$org}', `permissions`='{$permissions}', `contacts`='{$contacts}', `fired`='{$fired}' WHERE `id`='{$worker_id}'";
+		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        //Специализации
+        $query = "DELETE FROM `journal_work_spec` WHERE `worker_id`='".$worker_id."'";
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        if (!empty($specializations)){
+            foreach ($specializations as $data){
+                $query = "INSERT INTO `journal_work_spec` (`worker_id`, `specialization_id`) VALUES ('$worker_id', '$data')";
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+            }
+        }
+
 		//логирование
-		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован пользователь ['.$id.']. ['.date('d.m.y H:i', $time).']. Контакты: ['.$contacts.']. Организация: ['.$org.']. Права: ['.$permissions.']. Уволен: ['.$fired.']');
+		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован пользователь ['.$worker_id.']. ['.date('d.m.y H:i', $time).']. Контакты: ['.$contacts.']. Организация: ['.$org.']. Права: ['.$permissions.']. Уволен: ['.$fired.']');
 	}
 	
 	//Обновление ФИО пользователя из-под Web
@@ -1277,6 +1288,9 @@
 				}
 				if ($type == 'worker_id'){
 					$q = " WHERE `id` = '$sw'";
+                    if ($datatable == 'journal_work_spec'){
+                        $q = " WHERE `worker_id` = '$sw'";
+                    }
 				}
 				if ($type == 'worker_stom_id'){
 					$q = " WHERE `worker` = '$sw' ORDER BY `create_time` DESC";

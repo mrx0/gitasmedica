@@ -19,6 +19,8 @@
 			//var_dump($permissions);
 			$permissions = SearchInArray($arr_permissions, $user[0]['permissions'], 'name');
 			//var_dump($permissions);
+			$specializations = workerSpecialization($_GET['id']);
+			//var_dump($specializations);
 			$org = SearchInArray($arr_orgs, $user[0]['org'], 'name');
 			//var_dump($org);
 			
@@ -26,7 +28,9 @@
 			$month = date('m');		
 			$year = date('Y');
 			$day = date("d");
-			
+
+            $specializations_str_rez = '';
+
 			echo '
 				<div id="status">
 					<header>
@@ -53,9 +57,27 @@
 							</div>
 
 							<div class="cellsBlock2">
-								<div class="cellLeft">Должность/уровень доступа</div>
+								<div class="cellLeft">Должность</div>
 								<div class="cellRight">';
 			echo $permissions;
+			echo '				
+								</div>
+							</div>
+							
+							<div class="cellsBlock2">
+								<div class="cellLeft">Специализация</div>
+								<div class="cellRight">';
+
+            if ($specializations != 0){
+                //var_dump($specializations_j);
+                foreach ($specializations as $data){
+                    $specializations_str_rez .= '<span class="tag">'.$data['name'].'</span>';
+                }
+            }else{
+                $specializations_str_rez = 'не указано';
+            }
+
+            echo $specializations_str_rez;
 			echo '				
 								</div>
 							</div>
@@ -81,14 +103,14 @@
 			if ($_GET['id'] == $_SESSION['id']){
 				if (($stom['add_own'] == 1) || ($cosm['add_own'] == 1) || $god_mode || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9)){
 					echo '
-								<div class="cellsBlock2">
+								<!--<div class="cellsBlock2">
 									<div class="cellRight" style="font-size:70%;">Настройки.</div>
-								</div>			
+								</div>-->			
 								<div class="cellsBlock2" style="font-size:80%;">
 									<div class="cellRight">
-										Выберите филиал, на котором вы находитесь сегодня, чтобы при заполнении посещений не приходилось выбирать его каждый раз.<br /><br />';
+										Филиал теперь можно выбрать/изменить в правом верхнем углу под ФИО пользователя';
 					echo '
-										<form>
+										<!--<form>
 											<select name="SelectFilial" id="SelectFilial">
 												<option value="0">Филиал не выбран</option>';
 					//Выбор филиала для сессии
@@ -106,7 +128,7 @@
 					}
 						echo '
 											</select>
-										</form>';	
+										</form>-->';
 					echo '
 										</div>
 									</div>
