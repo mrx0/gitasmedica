@@ -1,6 +1,6 @@
 <?php
 
-//scheduler.php v 2.0
+//scheduler_template.php v 2.0
 //Расписание кабинетов филиала
 
 	require_once 'header.php';
@@ -70,6 +70,7 @@
 					
 					$stom_color = 'background-color: #fff261;';
 					$cosm_color = '';
+                    $somat_color = '';
 				}elseif($_GET['who'] == 'cosm'){
 					$who = '&who=cosm';
 					$whose = 'Косметологов ';
@@ -81,6 +82,19 @@
 					
 					$stom_color = '';
 					$cosm_color = 'background-color: #fff261;';
+                    $somat_color = '';
+                }elseif($_GET['who'] == 'somat'){
+                    $who = '&who=somat';
+                    $whose = 'Специалистов ';
+                    $selected_stom = ' ';
+                    $selected_cosm = ' selected';
+                    $datatable = 'scheduler_somat';
+                    $kabsForDoctor = 'somat';
+                    $type = 10;
+
+                    $stom_color = '';
+                    $cosm_color = '';
+                    $somat_color = 'background-color: #fff261;';
 				}else{
 					$who = '&who=stom';
 					$whose = 'Стоматологов ';
@@ -92,6 +106,7 @@
 					
 					$stom_color = 'background-color: #fff261;';
 					$cosm_color = '';
+                    $somat_color = '';
 				}
 			}else{
 				$who = '&who=stom';
@@ -104,6 +119,7 @@
 				
 				$stom_color = 'background-color: #fff261;';
 				$cosm_color = '';
+                $somat_color = '';
 			}
 			
 			//Филиал
@@ -242,6 +258,7 @@
 						<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
 							<a href="?who=stom" class="b" style="'.$stom_color.'">Стоматологи</a>
 							<a href="?who=cosm" class="b" style="'.$cosm_color.'">Косметологи</a>
+							<a href="?who=somat" class="b" style="'.$somat_color.'">Специалисты</a>
 						</li>	
 						<li>
 							<div style="display: inline-block; margin-right: 20px;">

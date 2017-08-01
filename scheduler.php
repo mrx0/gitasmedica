@@ -107,6 +107,7 @@
 					
 					$stom_color = 'background-color: #fff261;';
 					$cosm_color = '';
+					$somat_color = '';
 				}elseif($_GET['who'] == 'cosm'){
 					$who = '&who=cosm';
 					$whose = 'Косметологов ';
@@ -118,6 +119,19 @@
 					
 					$stom_color = '';
 					$cosm_color = 'background-color: #fff261;';
+					$somat_color = '';
+				}elseif($_GET['who'] == 'somat'){
+					$who = '&who=somat';
+					$whose = 'Специалистов ';
+					$selected_stom = ' ';
+					$selected_cosm = ' selected';
+					$datatable = 'scheduler_somat';
+					$kabsForDoctor = 'somat';
+					$type = 10;
+
+					$stom_color = '';
+					$cosm_color = '';
+					$somat_color = 'background-color: #fff261;';
 				}else{
 					$who = '&who=stom';
 					$whose = 'Стоматологов ';
@@ -130,6 +144,7 @@
 					
 					$stom_color = 'background-color: #fff261;';
 					$cosm_color = '';
+					$somat_color = '';
 				}
 			}else{
 				$who = '&who=stom';
@@ -143,6 +158,7 @@
 				
 				$stom_color = 'background-color: #fff261;';
 				$cosm_color = '';
+				$somat_color = '';
 			}
 			
 			if (isset($_GET['m']) && isset($_GET['y'])){
@@ -171,7 +187,7 @@
 			
 			$last = ($day_count + $weekday - 1) % 7;
 			//var_dump($last);
-			
+            $somat_color = '';
 			if ($last == 0){
 				$end = $day_count; 
 			}else{
@@ -195,24 +211,20 @@
 				
 			$filial = SelDataFromDB('spr_office', $_GET['filial'], 'offices');
 			//var_dump($filial['name']);
-			
+
+            $msql_cnnct = ConnectToDB ();
+
 			//Получаем график факт
-			$query = "SELECT `id`, `day`, `smena`, `kab`, `worker` FROM `scheduler` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year' AND `filial`='{$filial[0]['id']}'";
-			
 			$markSheduler = 0;
-			
-			require 'config.php';
-			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-			mysql_select_db($dbName) or die(mysql_error()); 
-			mysql_query("SET NAMES 'utf8'");
-			
+
 			$arr = array();
 			$rez = array();
-				
-			$res = mysql_query($query) or die($query);
-			$number = mysql_num_rows($res);
+
+            $query = "SELECT `id`, `day`, `smena`, `kab`, `worker` FROM `scheduler` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year' AND `filial`='{$filial[0]['id']}'";
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+			$number = mysqli_num_rows($res);
 			if ($number != 0){
-				while ($arr = mysql_fetch_assoc($res)){
+				while ($arr = mysqli_fetch_assoc($res)){
 					//Раскидываем в массив
 					$rez[$arr['day']][$arr['smena']][$arr['kab']] = $arr;
 				}
@@ -291,6 +303,7 @@
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
 								<a href="?'.$dopFilial.$dopDate.'&who=stom" class="b" style="'.$stom_color.'">Стоматологи</a>
 								<a href="?'.$dopFilial.$dopDate.'&who=cosm" class="b" style="'.$cosm_color.'">Косметологи</a>
+								<a href="?'.$dopFilial.$dopDate.'&who=somat" class="b" style="'.$somat_color.'">Специалисты</a>
 							</li>
 							<li style="width: auto; margin-bottom: 20px;">
 								<div style="display: inline-block; margin-right: 20px;">
