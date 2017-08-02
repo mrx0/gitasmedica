@@ -124,6 +124,7 @@
 						
 						$stom_color = 'background-color: #fff261;';
 						$cosm_color = '';
+                        $somat_color = '';
 					}elseif($_GET['who'] == 'cosm'){
 						$who = '&who=cosm';
 						$whose = 'Косметологи ';
@@ -135,6 +136,19 @@
 						
 						$stom_color = '';
 						$cosm_color = 'background-color: #fff261;';
+                        $somat_color = '';
+                    }elseif($_GET['who'] == 'somat'){
+                        $who = '&who=somat';
+                        $whose = 'Специалисты ';
+                        $selected_stom = ' ';
+                        $selected_cosm = ' selected';
+                        $datatable = 'scheduler_somat';
+                        $kabsForDoctor = 'somat';
+                        $type = 10;
+
+                        $stom_color = '';
+                        $cosm_color = '';
+                        $somat_color = 'background-color: #fff261;';
 					}else{
 						$who = '&who=stom';
 						$whose = 'Стоматологи ';
@@ -146,6 +160,7 @@
 						
 						$stom_color = 'background-color: #fff261;';
 						$cosm_color = '';
+                        $somat_color = '';
 					}
 				}else{
 					$who = '&who=stom';
@@ -158,6 +173,7 @@
 						
 					$stom_color = 'background-color: #fff261;';
 					$cosm_color = '';
+                    $somat_color = '';
 				}
 				
 				/*$month_names=array(
@@ -326,6 +342,7 @@
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
 								<a href="?'.$dopFilial.$dopDate.'&who=stom&kab=1" class="b" style="'.$stom_color.'">Стоматологи</a>
 								<a href="?'.$dopFilial.$dopDate.'&who=cosm&kab=1" class="b" style="'.$cosm_color.'">Косметологи</a>
+								<a href="?'.$dopFilial.$dopDate.'&who=somat&kab=1" class="b" style="'.$somat_color.'">Специалисты</a>
 							</li>';
 							
 					$ZapisHereQueryToday = FilialKabSmenaZapisToday($datatable, $year, $month, $day, $_GET['filial'], $kab, $type);

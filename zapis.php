@@ -131,6 +131,7 @@
 						
 						$stom_color = 'background-color: #fff261;';
 						$cosm_color = '';
+                        $somat_color = '';
 					}elseif($_GET['who'] == 'cosm'){
 						$who = '&who=cosm';
 						$whose = 'Косметологи ';
@@ -142,6 +143,19 @@
 						
 						$stom_color = '';
 						$cosm_color = 'background-color: #fff261;';
+                        $somat_color = '';
+                    }elseif($_GET['who'] == 'somat'){
+                        $who = '&who=somat';
+                        $whose = 'Специалисты ';
+                        $selected_stom = ' ';
+                        $selected_cosm = ' selected';
+                        $datatable = 'scheduler_somat';
+                        $kabsForDoctor = 'somat';
+                        $type = 10;
+
+                        $stom_color = '';
+                        $cosm_color = '';
+                        $somat_color = 'background-color: #fff261;';
 					}else{
 						$who = '&who=stom';
 						$whose = 'Стоматологи ';
@@ -154,6 +168,7 @@
 						
 						$stom_color = 'background-color: #fff261;';
 						$cosm_color = '';
+                        $somat_color = '';
 					}
 				}else{
 					$who = '&who=stom';
@@ -167,6 +182,7 @@
 						
 					$stom_color = 'background-color: #fff261;';
 					$cosm_color = '';
+                    $somat_color = '';
 				}
 				
 				if (isset($_GET['d']) && isset($_GET['m']) && isset($_GET['y'])){
@@ -349,6 +365,8 @@
 									$who = '&who=stom';
 								if ($val['type'] == 6)
 									$who = '&who=cosm';
+								if ($val['type'] == 10)
+									$who = '&who=somat';
 								echo '
 								<li class="cellsBlock" style="width: auto; margin-bottom: 5px;">
 									<a href="zapis_full.php?filial='.$val['office'].''.$who.'&d='.$val['day'].'&m='.$val['month'].'&y='.$val['year'].'&kab='.$val['kab'].'" style="text-decoration: none; border-bottom: 1px dashed #000080;">'.$val['day'].'.'.$val['month'].'.'.$val['year'].' показать</a>
@@ -365,6 +383,7 @@
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
 								<a href="?'.$dopFilial.$dopDate.'&who=stom" class="b" style="'.$stom_color.'">Стоматологи</a>
 								<a href="?'.$dopFilial.$dopDate.'&who=cosm" class="b" style="'.$cosm_color.'">Косметологи</a>
+								<a href="?'.$dopFilial.$dopDate.'&who=somat" class="b" style="'.$somat_color.'">Специалисты</a>
 							</li>
 							<li style="width: auto; margin-bottom: 20px;">
 								<div style="display: inline-block; margin-right: 20px;">
