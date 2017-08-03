@@ -101,22 +101,22 @@
                                             $specializations_temp = array();
 
 											//Преобразуем массив чтоб id стали ключами
-                                            if ($specializations != 0){
-                                                foreach ($specializations as $data){
+                                            if ($specializations != 0) {
+                                                foreach ($specializations as $data) {
                                                     $specializations_temp[$data['id']] = $data;
                                                 }
 
-                                            }
 
-                                            foreach ($specialization_j as $data){
-                                                $chckd = '';
-                                                if (!empty($specializations_temp)){
-                                                    if (isset($specializations_temp[$data['id']])) {
-                                                        $chckd = 'checked';
+                                                foreach ($specialization_j as $data) {
+                                                    $chckd = '';
+                                                    if (!empty($specializations_temp)) {
+                                                        if (isset($specializations_temp[$data['id']])) {
+                                                            $chckd = 'checked';
+                                                        }
                                                     }
-                                                }
 
-                                                echo '<input type="checkbox" name="specializations[]" value="'.$data['id'].'" '.$chckd.'> '.$data['name'].'<br>';
+                                                    echo '<input type="checkbox" name="specializations[]" value="' . $data['id'] . '" ' . $chckd . '> ' . $data['name'] . '<br>';
+                                                }
                                             }
 
 										echo '

@@ -50,7 +50,7 @@
 							$temp_arr['discount'] = 0;
 
                             //переменная для цены
-                            $price = 0;
+                            $price['price'] = 0;
                             //переменная для массива цен
                             $prices = array();
                             //!!! @@@
@@ -103,7 +103,7 @@
                             $price = '?';
                         }*/
 
-							$temp_arr['price'] = (int)$price;
+							$temp_arr['price'] = (int)$price['price'];
 							
 							//mysql_close();
 							

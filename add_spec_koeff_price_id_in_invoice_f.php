@@ -22,7 +22,7 @@
 				if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
 					$data = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'];
 					//переменная для цены
-                    $price = 0;
+                    $price['price'] = 0;
 					//переменная для массива цен
                     $prices = array();
                     //!!! @@@
@@ -49,7 +49,8 @@
                                     }
 
 									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['spec_koeff'] = $spec_koeff;
-									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['price'] = $price;
+									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['price'] = $price['price'];
+									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['start_price'] = $price['start_price'];
 
 								}
 							}
@@ -68,7 +69,8 @@
                                 }
 
 								$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['spec_koeff'] = $spec_koeff;
-								$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['price'] = $price;
+								$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['price'] = $price['price'];
+								$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['price'] = $price['price'];
 
 							}
 						}

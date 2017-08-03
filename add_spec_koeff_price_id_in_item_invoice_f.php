@@ -13,16 +13,16 @@
 		if ($_POST){
 			
 			$temp_arr = array();
-			
+
 			if (!isset($_POST['ind']) || !isset($_POST['key']) || !isset($_POST['spec_koeff']) || !isset($_POST['invoice_type']) || !isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['filial']) || !isset($_POST['worker'])){
 				//echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 				//var_dump($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]);
-					
+
 				if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
 
 				    //переменная для цены
-                    $price = 0;
+                    $price['price'] = 0;
                     //переменная для массива цен
                     $prices = array();
                     //!!! @@@
@@ -46,7 +46,8 @@
                             }
 
 							$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['spec_koeff'] = $_POST['spec_koeff'];
-                            $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['price'] = $price;
+                            $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['price'] = $price['price'];
+                            $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['start_price'] = $price['start_price'];
 						}
 					}
 					if ($_POST['invoice_type'] == 6){
@@ -66,11 +67,12 @@
                             }
 
 							$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['spec_koeff'] = $_POST['spec_koeff'];
-                            $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['price'] = $price;
+                            $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['price'] = $price['price'];
+                            $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['start_price'] = $price['start_price'];
 						}
 					}
 				}
-				
+
 				//echo json_encode(array('result' => 'success', 'data' => $_POST['key']));
 			}
 		}

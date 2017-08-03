@@ -85,15 +85,17 @@
 						</ul>
 						<ul class="reportBlock" style="">
 								<h1>Финансы</h1>';
-			echo '				
-							<li class="cellsBlock" style="margin: 10px;">
-								<a href="stat_client_finance.php" class="b3">Долги/авансы (старое)</a>
-							</li>';
 
 			echo '				
 							<li class="cellsBlock" style="margin: 10px;">
 								<a href="stat_cashbox.php" class="b3">Касса</a>
 							</li>';
+
+			echo '				
+							<li class="cellsBlock" style="margin: 10px;">
+								<a href="stat_client_finance2.php" class="b3">Долги/авансы</a>
+							</li>';
+
 			echo '				
 							<li class="cellsBlock" style="margin: 10px;">
 								<a href="stat_insure.php" class="b3">Страховые</a>
@@ -102,7 +104,10 @@
 							<li class="cellsBlock" style="margin: 10px;">
 								<a href="insure_xls.php" class="b3">Страховые выгрузки</a>
 							</li>';
-
+            echo '				
+							<li class="cellsBlock" style="margin: 10px;">
+								<a href="stat_client_finance.php" class="b3">Долги/авансы (старое)</a>
+							</li>';
 			echo '
 						</ul>
 						<ul class="reportBlock" style="">

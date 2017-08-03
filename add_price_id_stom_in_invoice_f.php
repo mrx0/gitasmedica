@@ -104,7 +104,7 @@
                                 $price = '?';
                             }*/
 
-							$temp_arr['price'] = (int)$price;
+							$temp_arr['price'] = (int)$price['price'];
 							
 							//mysql_close();
 							

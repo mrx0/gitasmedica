@@ -18,6 +18,7 @@
 			require 'config.php';
 
 			//var_dump($_SESSION);
+			var_dump($_SESSION['invoice_data'][12210][28500]['data']);
 			//unset($_SESSION['invoice_data']);
 			
 			if ($_GET){

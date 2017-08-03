@@ -118,7 +118,7 @@
 	}
 
     //для сбора чекбоксов в массив
-    function itemExistsChecker(cboxArray, cboxValue) {
+    function itemExistsChecker2 (cboxArray, cboxValue) {
 
         var len = cboxArray.length;
         if (len > 0) {
@@ -134,21 +134,22 @@
         return (cboxArray);
     }
 
-    function checkedItems (){
+    function checkedItems2 (){
 
         var cboxArray = [];
 
-        $('input[type="checkbox"]').each(function() {
+        $('input[type="specializations]').each(function() {
             var cboxValue = $(this).val();
-
+alert($(this).val());
             if ( $(this).prop("checked")){
-                cboxArray = itemExistsChecker(cboxArray, cboxValue);
+                cboxArray = itemExistsChecker2(cboxArray, cboxValue);
             }
 
         });
 
         return cboxArray;
     }
+
 
     //Редактирование сотрудника
     function Ajax_user_edit(worker_id) {
@@ -159,6 +160,8 @@
         var org = 0;
         var permissions = $('#permissions').val();
         var contacts = $('#contacts').val();
+
+        //console.log(checkedItems2());
 
         $.ajax({
             url:"user_edit_f.php",
@@ -171,7 +174,7 @@
                     permissions: permissions,
                     contacts: contacts,
                     fired: fired,
-                    specializations:checkedItems(),
+                    specializations:checkedItems2(),
 
                 },
             cache: false,
@@ -3481,7 +3484,7 @@
 			url:"add_spec_koeff_price_id_in_invoice_f.php",
 			global: false, 
 			type: "POST", 
-			dataType: "JSON",
+			//dataType: "JSON",
 			data:
 			{
 				spec_koeff: spec_koeff,
@@ -3909,12 +3912,12 @@
 		$('*').removeClass('selected-html-element');
 		// Удаляем предыдущие вызванное контекстное меню:
 		$('.context-menu').remove();
-		
+
 		$.ajax({
 			url:"add_spec_koeff_price_id_in_item_invoice_f.php",
 			global: false, 
 			type: "POST", 
-			dataType: "JSON",
+			//dataType: "JSON",
 			data:
 			{
 				ind: ind,
@@ -3933,10 +3936,10 @@
 			},
 			// действие, при ответе с сервера
 			success: function(data){
-				
+
 				fillInvoiseRez();
 
-				/*if(data.result == "success"){  
+				/*if(data.result == "success"){
 					//alert(data.data);
 					$('#invoice_rezult').html(data.data);
 				}else{
@@ -4015,7 +4018,7 @@
 		
 	}	
 
-	//Выбор зуба из таблички 
+	//Выбор зуба из таблички
 	function toothInInvoice(t_number){
 
 		//alert (t_number);
@@ -5163,6 +5166,38 @@
 		}
 	});
 
+    //для сбора чекбоксов в массив
+    function itemExistsChecker(cboxArray, cboxValue) {
+
+        var len = cboxArray.length;
+        if (len > 0) {
+            for (var i = 0; i < len; i++) {
+                if (cboxArray[i] == cboxValue) {
+                    return true;
+                }
+            }
+        }
+
+        cboxArray.push(cboxValue);
+
+        return (cboxArray);
+    }
+
+    function checkedItems (){
+
+        var cboxArray = [];
+
+        $('input[type="checkbox"]').each(function() {
+            var cboxValue = $(this).val();
+
+            if ( $(this).prop("checked")){
+                cboxArray = itemExistsChecker(cboxArray, cboxValue);
+            }
+
+        });
+
+       return cboxArray;
+	}
 	//Удаление выбранных позиций из прайса страховой
     function delCheckedItems (insure_id){
 

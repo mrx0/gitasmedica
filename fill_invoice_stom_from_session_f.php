@@ -45,8 +45,7 @@
 							<div class="cellCosmAct" style="font-size: 70%; text-align: center;">
 								<i><b>-</b></i>
 							</div>
-						</div>
-		';
+						</div>';
 		
 		if ($_POST){
 			if (!isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['filial']) || !isset($_POST['worker'])){
@@ -64,7 +63,7 @@
 				$filial = $_POST['filial'];
 				$worker = $_POST['worker'];
 				
-				$price = 0;
+				$price['price'] = 0;
 				
 				if (!isset($_SESSION['invoice_data'][$client][$zapis_id]['data'])){
 					echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
@@ -184,7 +183,7 @@
 									
 									//Узнать цену
                                     //переменная для цены
-                                    $price = 0;
+                                    $price['price'] = 0;
                                     //переменная для массива цен
                                     $prices = array();
 
@@ -259,8 +258,8 @@
 								}
 								
 								$request .= '
-								<div class="cellCosmAct invoiceItemPrice" ind="'.$ind.'" key="'.$key.'" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; '.$bg_col.'">
-									'.$price.'
+								<div class="cellCosmAct invoiceItemPrice" ind="'.$ind.'" key="'.$key.'" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; '.$bg_col.'" onclick="contextMenuShow('.$ind.', '.$key.', event, \'priceItem\');">
+									'.$price['price'].'
 								</div>
 								<div class="cellCosmAct spec_koeffInvoice settings_text"  speckoeff="'.$items['spec_koeff'].'" style="font-size: 90%; text-align: center; '.$bg_col.' width: 40px; min-width: 40px; max-width: 40px;" onclick="contextMenuShow('.$ind.', '.$key.', event, \'spec_koeffItem\');">
 									'.$items['spec_koeff'].'

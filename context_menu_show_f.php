@@ -84,6 +84,10 @@
 						'<li><div onclick="spec_koeffItemInvoice('.$_POST['ind'].', '.$_POST['key'].', \'k2\')">Главный сп-т</div></li>'.
 						'<li><div><input type="number" size="2" name="koeff" id="koeff" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="spec_koeffItemInvoice('.$_POST['ind'].', '.$_POST['key'].', document.getElementById(\'koeff\').value)"> Применить</div></div></li>';
 				}
+				if ($_POST['mark'] == 'priceItem'){
+					$data = '
+						<li>***</li>';
+				}
 				//Скидки акции позиция
 				if ($_POST['mark'] == 'discountItem'){
 					$data = '

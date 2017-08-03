@@ -313,6 +313,7 @@
     function returnPriceWithKoeff ($koef, $prices_arr, $insure){
 
         $price = $prices_arr[0]['price'];
+        $start_price = (int)$price;
 
         if ($insure == 0) {
             if ($koef === 'k1') {
@@ -328,7 +329,7 @@
                     if ($prices_arr[0]['price3'] != 0) {
                         $price = $prices_arr[0]['price3'];
                     }else{
-                        $price = $prices_arr[0]['price'] + $prices_arr[0]['price'] / 100 * 10;
+                        $price = $prices_arr[0]['price'] + $prices_arr[0]['price'] / 100 * 20;
                     }
                 }
             } else {
@@ -338,12 +339,13 @@
                     $price = $prices_arr[0]['price'];
                 }
             }
+            //$start_price = (int)$price;
             $price = round($price / 10) * 10;
         }
 
         //$price = round($price / 10) * 10;
 
-        return($price);
+        return(array('price' => $price, 'start_price' => $start_price));
     }
 
 
