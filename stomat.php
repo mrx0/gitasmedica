@@ -98,19 +98,17 @@
 				if (($stom['see_all'] == 1) || $god_mode){
 					$query = "SELECT * FROM `journal_tooth_status` WHERE {$filter_rez[1]} ORDER BY `create_time` DESC";
 				}
-				
-				require 'config.php';
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
+
+
+                $msql_cnnct = ConnectToDB ();
 				
 				$arr = array();
 				$rez = array();
-				
-				$res = mysql_query($query) or die($query);
-				$number = mysql_num_rows($res);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+				$number = mysqli_num_rows($res);
 				if ($number != 0){
-					while ($arr = mysql_fetch_assoc($res)){
+					while ($arr = mysqli_fetch_assoc($res)){
 						array_push($rez, $arr);
 					}
 					$journal = $rez;
@@ -120,9 +118,7 @@
 
 				$arr = array();
 				$rez = array();
-				
-				mysql_close();
-					
+
 				if (($stom['see_all'] == 1) || $god_mode){	
 					if ($filter){
 						echo '<li class="cellsBlock" style="width: 400px; margin-top: 10px; border: 1px dotted green; background-color: rgba(158, 252, 158, 0.5); padding: 7px;">
@@ -199,11 +195,11 @@
 					$rez_color = '';
 					
 					$journal_ex_bool = FALSE;
-					
+                    //var_dump($journal[$i]['id']);
 					if ((isset($filter_rez['pervich'])) && ($filter_rez['pervich'] == true)){
 						$query = "SELECT * FROM `journal_tooth_ex` WHERE `pervich` = 1 AND `id` = '{$journal[$i]['id']}' ORDER BY `id` DESC";
-						$res = mysql_query($query) or die($query);
-						$number = mysql_num_rows($res);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query.'*205');
+						$number = mysqli_num_rows($res);
 						if ($number != 0){
 							$journal_ex_bool = true;
 						}else{
@@ -229,7 +225,7 @@
 						$dop = array();
 						$dop_img = '';
 
-                        $msql_cnnct = ConnectToDB ();
+                        //$msql_cnnct = ConnectToDB ();
 
 						$query = "SELECT * FROM `journal_tooth_ex` WHERE `id` = '{$journal[$i]['id']}'";
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);

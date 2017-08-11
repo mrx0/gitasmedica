@@ -535,7 +535,6 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         //Пробуем сформировать xls из данных
                         foreach ($rezult_arr as $fio => $rezult_arr_fio) {
 
-                            //Временный массив для всей суммы по пациенту
                             $fio_pay_arr_temp = array();
 
                             //Страховая пациента
@@ -643,23 +642,40 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                         //Номер строки куда будем вставлять стоимость наряда
                                         $invoiceSummCell = $countRow;
 
-                                        //Бегаем по нарядам пациента
+                                        //Костыль, чтоб не появлялась лишняя строка пустая при переходе с зуба на зуб
+                                        $prev_zub = 0;
+
+                                        //Бегаем по наряду пациента
                                         foreach ($rezult_arr_time['invoice_ex'] as $zub => $invoice_ex_data) {
 
-                                            //Временный массив для стоимости наряда
-                                            $invoice_pay_arr_temp = array();
+                                            //Костыль, чтоб не появлялась лишняя строка пустая при переходе с зуба на зуб
+                                            if ($prev_zub == 0) {
+                                                $prev_zub = $zub;
+
+                                                //Временный массив для всей суммы по пациенту
+                                                //$fio_pay_arr_temp = array();
+
+                                                //Временный массив для стоимости наряда
+                                                $invoice_pay_arr_temp = array();
+                                            }
 
                                             //Сумма каждого наряда
                                             $invoice_summ_zub = 0;
                                             //Временная переменная для ???!!!
                                             $rez_str_invoice_ex = '';
 
-                                            //Бегаем по каждой позиции наряда
+                                            //Бегаем по каждой позиции для зуба
                                             foreach ($invoice_ex_data as $invoice_ex_zub_data) {
                                                 //var_dump($invoice_ex_zub_data);
 
                                                 //Увеличиваем номер строки
                                                 $countRow++;
+
+                                                //Костыль, чтоб не появлялась лишняя строка пустая при переходе с зуба на зуб
+                                                if ($zub != $prev_zub) {
+                                                    $countRow--;
+                                                    $prev_zub = $zub;
+                                                }
 
                                                 $zub_count = '';
                                                 if ($zub == 99) {
@@ -668,6 +684,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                                 }
 
                                                 $sheet->getStyle('A' . $countRow)->applyFromArray($style_border_left);
+
+                                                //Проверка $countRow
+                                                //$sheet->setCellValue('B' . $countRow, $countRow);
 
                                                 //Номер зуба
                                                 $sheet->setCellValue('C' . $countRow, $zub_count);
@@ -837,7 +856,13 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                                             //Ячейки с суммами нарядов пациента
                                             $fio_pay_arr_call_temp = 'K' . $invoiceSummCell;
-                                            array_push($fio_pay_arr_temp, $fio_pay_arr_call_temp);
+
+                                            if (!in_array($fio_pay_arr_call_temp, $fio_pay_arr_temp)) {
+                                                array_push($fio_pay_arr_temp, $fio_pay_arr_call_temp);
+                                            }
+
+                                            //var_dump($fio_pay_arr_call_temp);
+                                            //var_dump($fio_pay_arr_temp);
 
                                             //Увеличиваем номер строки
                                             $countRow++;
@@ -884,6 +909,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                                 //Временная переменная для строки с формулой для расчета всей суммы нарядов по пациенту
                                 $fio_summ_str_temp = '';
+
+                                //var_dump($fio_pay_arr_temp);
 
                                 //Получим строку для расчета всей суммы нарядов по пациенту
                                 foreach ($fio_pay_arr_temp as $cell){

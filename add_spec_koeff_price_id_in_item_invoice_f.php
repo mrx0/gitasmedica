@@ -23,6 +23,7 @@
 
 				    //переменная для цены
                     $price['price'] = 0;
+                    $price['start_price'] = 0;
                     //переменная для массива цен
                     $prices = array();
                     //!!! @@@
@@ -41,13 +42,14 @@
 
                             if (!empty($prices)) {
 
-                                $price = returnPriceWithKoeff($spec_koeff, $prices, $insure);
+                                $price = returnPriceWithKoeff($spec_koeff, $prices, $insure, false, 0);
 
                             }
 
 							$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['spec_koeff'] = $_POST['spec_koeff'];
                             $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['price'] = $price['price'];
                             $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['start_price'] = $price['start_price'];
+                            $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['manual_price'] = false;
 						}
 					}
 					if ($_POST['invoice_type'] == 6){
@@ -62,13 +64,14 @@
 
                             if (!empty($prices)) {
 
-                                $price = returnPriceWithKoeff($spec_koeff, $prices, $insure);
+                                $price = returnPriceWithKoeff($spec_koeff, $prices, $insure, false, 0);
 
                             }
 
 							$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['spec_koeff'] = $_POST['spec_koeff'];
                             $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['price'] = $price['price'];
                             $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['start_price'] = $price['start_price'];
+                            $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['manual_price'] = false;
 						}
 					}
 				}

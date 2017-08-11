@@ -1,7 +1,7 @@
 <?php
 
-//edit_invoice.php
-//Выписываем счёт
+//invoice_edit.php
+//Редактируем счёт
 
 	require_once 'header.php';
 	
@@ -125,7 +125,13 @@
 											$temp_arr2['guarantee'] = (int)$invoice_ex_j_val['guarantee'];
 											$temp_arr2['spec_koeff'] = $invoice_ex_j_val['spec_koeff'];
 											$temp_arr2['discount'] = (int)$invoice_ex_j_val['discount'];
-											
+											if ($invoice_ex_j_val['manual_price'] == 1){
+                                                $temp_arr2['manual_price'] = true;
+                                            }else{
+                                                $temp_arr2['manual_price'] = false;
+                                            }
+
+
 											if (!isset($temp_arr[$ind])){
 												$temp_arr[$ind] = array();
 											}
@@ -133,6 +139,8 @@
 											array_push($temp_arr[$ind], $temp_arr2);
 										}
 									}
+
+									//var_dump($temp_arr2);
 	
 									$_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
 

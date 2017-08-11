@@ -57,6 +57,7 @@
 				$worker = $_POST['worker'];
 
                 $price['price'] = 0;
+                $price['start_price'] = 0;
 				
 				if (!isset($_SESSION['invoice_data'][$client][$zapis_id]['data'])){
 					echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
@@ -124,6 +125,8 @@
                                     //Узнать цену
                                     //переменная для цены
                                     $price['price'] = 0;
+                                    $price['start_price'] = 0;
+
                                     //переменная для массива цен
                                     $prices = array();
 
@@ -133,9 +136,27 @@
                                     $prices = takePrices ($items['id'], $items['insure']);
                                     //var_dump($prices);
 
-                                    if (!empty($prices)) {
+                                    /*if (!empty($prices)) {
 
-                                        $price = returnPriceWithKoeff($spec_koeff, $prices, $items['insure']);
+                                        $price = returnPriceWithKoeff($spec_koeff, $prices, $items['insure'], $items['manual_price'], 0);
+
+                                    }*/
+
+                                    if (!empty($prices)) {
+                                        if (isset($items['price'])){
+                                            if (!isset($items['manual_price'])){
+                                                $items['manual_price'] = false;
+                                            }
+                                            if (!isset($items['start_price'])){
+                                                $items['start_price'] = 0;
+                                            }
+                                            /*if ($items['manual_price']){
+                                                $price['price'] = $items['price'];
+                                                $price['start_price'] = $items['start_price'];*/
+                                            //}else {
+                                            $price = returnPriceWithKoeff($spec_koeff, $prices, $items['insure'], $items['manual_price'], $items['price']);
+                                            //}
+                                        }
 
                                     }
 

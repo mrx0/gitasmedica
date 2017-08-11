@@ -45,13 +45,16 @@
 							$temp_arr['insure'] = 0;
 							$temp_arr['insure_approve'] = 0;
 							$temp_arr['price'] = 0;
+							$temp_arr['start_price'] = 0;
 							$temp_arr['guarantee'] = 0;
 							$temp_arr['spec_koeff'] = 0;
 							$temp_arr['discount'] = 0;
+                            $temp_arr['manual_price'] = false;
 
 
                             //переменная для цены
-                            $price = 0;
+                            $price['price'] = 0;
+                            $price['start_price'] = 0;
                             //переменная для массива цен
                             $prices = array();
                             //!!! @@@
@@ -63,7 +66,7 @@
 
                             if (!empty($prices)) {
 
-                                $price = returnPriceWithKoeff(0, $prices, (int)$_POST['client_insure']);
+                                $price = returnPriceWithKoeff(0, $prices, (int)$_POST['client_insure'], false, 0);
                                 //var_dump($price);
                             }
 
@@ -105,6 +108,7 @@
                             }*/
 
 							$temp_arr['price'] = (int)$price['price'];
+                            $temp_arr['start_price'] = (int)$price['start_price'];
 							
 							//mysql_close();
 							

@@ -2187,7 +2187,7 @@
                     } else {
                         $rez_str .= '	
 							<li>
-								<p onclick="checkMKBItem(' . $mkb_rez_value['id'] . ');">' . $mkb_rez_value['name'] . '</p>
+								<p onclick="checkMKBItem(' . $mkb_rez_value['id'] . ');"><b>' . $mkb_rez_value['code'] . '</b> ' .  $mkb_rez_value['name'] . '</p>
 							</li>';
                     }
                 }

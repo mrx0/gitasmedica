@@ -8,7 +8,7 @@ require_once 'header.php';
 if ($enter_ok){
     require_once 'header_tags.php';
 
-    if (($spravka['see_all'] == 1) || $god_mode){
+    if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
         if ($_GET){
             include_once 'DBWork.php';
             include_once 'functions.php';
@@ -59,6 +59,16 @@ if ($enter_ok){
                     }
 
                     echo '</div>
+								</div>
+								
+								<div class="cellsBlock2">
+									<div class="cellLeft">
+									    Способ оплаты<br>
+									</div>
+									<div class="cellRight">
+									    <input id="summ_type" name="summ_type" value="1" type="radio" checked> Наличный<br>
+                                        <input id="summ_type" name="summ_type" value="2" type="radio"> Безналичный
+									</div>
 								</div>
 								
 								<div class="cellsBlock2">

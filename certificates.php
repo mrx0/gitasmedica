@@ -7,13 +7,13 @@
 
 	if ($enter_ok){
 		require_once 'header_tags.php';
-		if (($spravka['see_all'] == 1) || ($spravka['see_own'] == 1) || $god_mode){
+		if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
 			
 			echo '
 				<header>
 					<h1>Сертификаты</h1>
 				</header>';
-		if (($spravka['add_new'] == 1) || $god_mode){
+		if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
 				echo '
 					<a href="cert_add.php" class="b">Добавить</a>';
 			}
@@ -89,7 +89,17 @@
                     echo '
                                  </div>';
                     echo '
-								<div class="cellText" style="text-align: center;">'.$status.'</div>';
+								<div class="cellText" style="text-align: center;">'.$status.'<br>';
+                    if ($cert_j[$i]['office_id'] != 0) {
+                        $offices_j = SelDataFromDB('spr_office', $cert_j[$i]['office_id'], 'offices');
+                        if ($offices_j != 0) {
+                            echo '<span style="font-size: 70%;">'.$offices_j[0]['name'].'</span>';
+                        }else {
+                            echo '-';
+                        }
+                    }
+                    echo '
+                                </div>';
                     echo '
 							</li>';
 				}

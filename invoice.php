@@ -83,7 +83,7 @@
 							if (($finances['edit'] == 1) || $god_mode){
 								if ($invoice_j[0]['status'] != 9){
 									echo '
-												<a href="edit_invoice.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+												<a href="invoice_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
 								}
 								if (($invoice_j[0]['status'] == 9) && (($finances['close'] == 1) || $god_mode)){
 									echo '
@@ -665,13 +665,15 @@
                                                 <b>';
 
                                             //вычисляем стоимость
-                                            $stoim_item = $item['quantity'] * ($price +  $price * $item['spec_koeff'] / 100);
+                                            //$stoim_item = $item['quantity'] * ($price +  $price * $item['spec_koeff'] / 100);
+                                            $stoim_item = $item['quantity'] * $price;
 
                                             //с учетом скидки акции
                                             if ($item['insure'] == 0){
                                                 //$stoim_item = $stoim_item - ($stoim_item * $invoice_j[0]['discount'] / 100);
-                                                //$stoim_item = $stoim_item - ($stoim_item * $invoice_j[0]['discount'] / 100);
-                                                $stoim_item = round($stoim_item/10) * 10;
+                                                $stoim_item = $stoim_item - ($stoim_item * $item['discount'] / 100);
+                                                //$stoim_item = round($stoim_item/10) * 10;
+                                                $stoim_item = round($stoim_item);
                                             }
                                             //$stoim_item = round($stoim_item/10) * 10;
 

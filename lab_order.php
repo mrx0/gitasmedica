@@ -109,6 +109,7 @@
 
 
                         echo '
+                                    <div id="errror"></div>
                                     <div class="cellsBlock2">
                                         <div class="cellRight">
                                             <ul style="margin-left: 6px; margin-bottom: 10px;">
@@ -116,7 +117,7 @@
                                                    Статус (нажмите, чтобы изменить)
                                                 </li>
                                                 <li class="cellsBlock" style="margin-bottom: 5px;">
-                                                    <div id="lab_order_status" class="cellName" style="text-align: center; '.$back_color.'">
+                                                    <div id="lab_order_status" class="cellName ahref" style="text-align: center; '.$back_color.'">
 										                '.$mark_enter.'
 										            </div>
 										            <input type="hidden" id="status_now" value="'.$lab_order_j[0]['status'].'">
@@ -211,7 +212,13 @@
                                                         '.date('d.m.y H:i' ,strtotime($lab_order_j[0]['create_time'])).'
                                                     </div>
                                                     <div class="cellName" style="text-align: center; background-color:#FEFEFE;">
-                                                        '.WriteSearchUser('spr_workers', $lab_order_j[0]['create_person'], 'user', true).'
+                                                        '.WriteSearchUser('spr_workers', $lab_order_j[0]['create_person'], 'user', true).'<br>';
+                        if ($lab_order_j[0]['office_id'] != 0){
+                            echo $offices_j[0]['name'];
+                        }else{
+                            echo '-';
+                        }
+                        echo '
                                                     </div>
                                                     <div class="cellName" style="text-align: center; background-color: rgba(255,255,0, .5);">
                                                         создан
@@ -243,7 +250,16 @@
                                                         '.date('d.m.y H:i' ,strtotime($lab_order_ex_j[$i]['create_time'])).'
                                                     </div>
                                                     <div class="cellName" style="text-align: center; background-color:#FEFEFE;">
-                                                        '.WriteSearchUser('spr_workers', $lab_order_ex_j[$i]['create_person'], 'user', true).'
+                                                        '.WriteSearchUser('spr_workers', $lab_order_ex_j[$i]['create_person'], 'user', true).'<br>';
+                                if ($lab_order_ex_j[$i]['office_id'] != 0){
+                                    $offices_j = SelDataFromDB('spr_office', $lab_order_ex_j[$i]['office_id'], 'offices');
+                                    if ($offices_j != 0) {
+                                        echo $offices_j[0]['name'];
+                                    }
+                                }else{
+                                    echo '-';
+                                }
+                                echo '
                                                     </div>
                                                     <div class="cellName" style="text-align: center; '.$back_color  .'">
                                                         '.$mark_enter.'

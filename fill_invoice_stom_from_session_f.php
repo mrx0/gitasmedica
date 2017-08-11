@@ -64,6 +64,7 @@
 				$worker = $_POST['worker'];
 				
 				$price['price'] = 0;
+                $price['start_price'] = 0;
 				
 				if (!isset($_SESSION['invoice_data'][$client][$zapis_id]['data'])){
 					echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
@@ -184,6 +185,8 @@
 									//Узнать цену
                                     //переменная для цены
                                     $price['price'] = 0;
+                                    $price['start_price'] = 0;
+
                                     //переменная для массива цен
                                     $prices = array();
 
@@ -194,8 +197,20 @@
                                     //var_dump($prices);
 
                                     if (!empty($prices)) {
-
-                                        $price = returnPriceWithKoeff($spec_koeff, $prices, $items['insure']);
+                                        if (isset($items['price'])){
+                                            if (!isset($items['manual_price'])){
+                                                $items['manual_price'] = false;
+                                            }
+                                            if (!isset($items['start_price'])){
+                                                $items['start_price'] = 0;
+                                            }
+                                            /*if ($items['manual_price']){
+                                                $price['price'] = $items['price'];
+                                                $price['start_price'] = $items['start_price'];*/
+                                            //}else {
+                                                $price = returnPriceWithKoeff($spec_koeff, $prices, $items['insure'], $items['manual_price'], $items['price']);
+                                            //}
+                                        }
 
                                     }
 
@@ -258,8 +273,8 @@
 								}
 								
 								$request .= '
-								<div class="cellCosmAct invoiceItemPrice" ind="'.$ind.'" key="'.$key.'" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; '.$bg_col.'" onclick="contextMenuShow('.$ind.', '.$key.', event, \'priceItem\');">
-									'.$price['price'].'
+								<div class="cellCosmAct invoiceItemPrice settings_text" ind="'.$ind.'" key="'.$key.'" start_price="'.$price['start_price'].'" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; '.$bg_col.'" onclick="contextMenuShow('.$ind.', '.$key.', event, \'priceItem\');">
+                                    '.$price['price'].'
 								</div>
 								<div class="cellCosmAct spec_koeffInvoice settings_text"  speckoeff="'.$items['spec_koeff'].'" style="font-size: 90%; text-align: center; '.$bg_col.' width: 40px; min-width: 40px; max-width: 40px;" onclick="contextMenuShow('.$ind.', '.$key.', event, \'spec_koeffItem\');">
 									'.$items['spec_koeff'].'
@@ -279,7 +294,7 @@
 								}
 								$request .= '
 								</div>
-								<div class="cellCosmAct invoiceItemPriceItog" style="font-size: 90%; text-align: center; '.$bg_col.' width: 60px; min-width: 60px; max-width: 60px;">
+								<div class="cellCosmAct invoiceItemPriceItog" style="font-size: 100%; text-align: center; '.$bg_col.' width: 60px; min-width: 60px; max-width: 60px;">
 									0
 								</div>
 								<div invoiceitemid="'.$key.'" class="cellCosmAct info" style="font-size: 100%; text-align: center; '.$bg_col.'" onclick="deleteInvoiceItem('.$ind.', this);">

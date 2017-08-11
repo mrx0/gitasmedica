@@ -30,8 +30,9 @@
             $datastart = date('Y-m-d', strtotime($_POST['datastart'].' 00:00:00'));
             $dataend = date('Y-m-d', strtotime($_POST['dataend'].' 23:59:59'));
 
-            //Переменная для строчки запроса по филиалу
+            //Переменная для строчки запроса по филиалу и типу
             $queryFilial = '';
+            $queryType = '';
 
             //Филиал
             if ($_POST['filial'] != 99){
@@ -39,7 +40,7 @@
             }
 
             if ($_POST['summtype'] != 0){
-                $queryFilial .= "AND `summ_type` = '".$_POST['summtype']."'";
+                $queryType .= "AND `summ_type` = '".$_POST['summtype']."'";
             }
 
             //Приход денег вытащим
@@ -48,7 +49,7 @@
                 STR_TO_DATE('".$datastart." 00:00:00', '%Y-%m-%d %H:%i:%s')
                 AND 
                 STR_TO_DATE('".$dataend." 23:59:59', '%Y-%m-%d %H:%i:%s') 
-                ".$queryFilial."
+                ".$queryFilial.$queryType."
                 ORDER BY `date_in` DESC";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -161,11 +162,11 @@
                         $order_type_mark = '';
 
                         if ($order_item['summ_type'] == 1) {
-                            $order_type_mark = '<i class="fa fa-money" aria-hidden="true" title="Нал"></i>';
+                            $order_type_mark = '<i class="fa fa-money" aria-hidden="true" title="Нал" style="font-size: 15px; color: darkgreen;"></i>';
                         }
 
                         if ($order_item['summ_type'] == 2) {
-                            $order_type_mark = '<i class="fa fa-credit-card" aria-hidden="true" title="Безнал"></i>';
+                            $order_type_mark = '<i class="fa fa-credit-card" aria-hidden="true" title="Безнал" style="font-size: 15px; color: dodgerblue;"></i>';
                         }
                         $orderTemp_str = '';
 
@@ -227,7 +228,13 @@
                         $order_type_mark = '';
 
                         //if ($order_item['summ_type'] == 1){
-                            $order_type_mark = '<i class="fa fa-certificate" aria-hidden="true" title="Сертификат"></i>';
+                            $order_type_mark = '<i class="fa fa-certificate" aria-hidden="true" title="Сертификат" style="font-size: 15px; color: darkred;"></i>';
+                            if ($order_item['summ_type'] == 1){
+                                $order_type_mark = '<i class="fa fa-money" aria-hidden="true" title="Нал" style="font-size: 15px; color: darkgreen;"></i> '.$order_type_mark;
+                            }
+                            if ($order_item['summ_type'] == 2){
+                                $order_type_mark = '<i class="fa fa-credit-card" aria-hidden="true" title="Безнал" style="font-size: 15px; color: dodgerblue;"></i> '.$order_type_mark;
+                            }
                         //}
 
                         /*if ($order_item['summ_type'] == 2){

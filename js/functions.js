@@ -47,10 +47,17 @@
         }
     });
 
+	//Для изменения цены вручную
+    function changePriceItem(newPrice, start_price){
+        //alert(newPrice);
+        //alert(start_price);
+
+    };
+
 	//попытка показать контекстное меню
 	function contextMenuShow(ind, key, event, mark){
 		//alert(mark);
-		
+
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
 		// Удаляем предыдущие вызванное контекстное меню:
@@ -58,6 +65,8 @@
 		
 		// Получаем элемент на котором был совершен клик:
 		var target = $(event.target);
+
+        //alert(target.attr('start_price'));
 
 		// Добавляем класс selected-html-element что бы наглядно показать на чем именно мы кликнули (исключительно для тестирования):
 		target.addClass('selected-html-element');
@@ -80,10 +89,25 @@
 			// действие, при ответе с сервера
 			success: function(res){
 				//alert(res.data);
-				
+
 				//для записи
 				if (mark == 'zapis_options'){
 					res.data = $('#zapis_options'+ind+'').html();
+				}
+				//Регуляция цены
+				if (mark == 'priceItem'){
+
+				    var start_price = Number(target.attr('start_price'));
+
+					res.data =
+                        '<li style="font-size: 10px;">'+
+                        'Введите новую цену (не менее '+start_price+')'+
+                        '</li>'+
+						'<li>'+
+                        '<input type="text" name="changePriceItem" id="changePriceItem" class="form-control" value="'+Number(target.html())+'" onkeyup="changePriceItem(this.value, '+start_price+');">'+
+						'<div style="display: inline;" onclick="priceItemInvoice('+ind+', '+key+', document.getElementById(\'changePriceItem\').value, '+start_price+')">Ok</div>'+
+						'</li>';
+
 				}
 				//для молочных
 				if (mark == 'teeth_moloch'){
@@ -140,7 +164,7 @@
 
         $('input[type="specializations]').each(function() {
             var cboxValue = $(this).val();
-alert($(this).val());
+            //alert($(this).val());
             if ( $(this).prop("checked")){
                 cboxArray = itemExistsChecker2(cboxArray, cboxValue);
             }
@@ -3101,7 +3125,10 @@ alert($(this).val());
                 stoim = stoim - (stoim * discount / 100);
             }
             if (insure == 0) {
-           		stoim = Math.round(stoim / 10) * 10;
+            	//Убрали округление 2017.08.09
+           		//stoim = Math.round(stoim / 10) * 10;
+                //Изменили округление 2017.08.10
+           		stoim = Math.round(stoim);
             }
 
             //console.log(stoim);
@@ -3128,7 +3155,12 @@ alert($(this).val());
 		});
 
         //Summ = Math.round(Summ - (Summ * discount / 100));
-        Summ = Math.round(Summ/10) * 10;
+
+        //Убрали округление 2017.08.09
+        //Summ = Math.round(Summ/10) * 10;
+        //Изменили округление 2017.08.10
+        Summ = Math.round(Summ);
+
         //SummIns = Math.round(SummIns - (SummIns * discount / 100));
 		//страховые не округляем
         //SummIns = Math.round(SummIns/10) * 10;
@@ -3994,7 +4026,8 @@ alert($(this).val());
 			},
 			// действие, при ответе с сервера
 			success: function(data){
-				
+				//alert(2);
+
 				fillInvoiseRez();
 
 				/*if(data.result == "success"){  
@@ -4017,6 +4050,74 @@ alert($(this).val());
 		//});
 		
 	}	
+
+	//Изменить цену у этого зуба
+	function priceItemInvoice(ind, key, price, start_price){
+
+		var invoice_type = document.getElementById("invoice_type").value;
+
+		/*alert(ind);
+		alert(key);
+		alert(price);
+		alert(start_price);*/
+
+        if (isNaN(price)) price = start_price;
+		if (price <= start_price) price = start_price;
+
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+
+		$.ajax({
+			url:"add_manual_price_id_in_item_invoice_f.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                ind: ind,
+				key: key,
+                price: price,
+                start_price: start_price,
+
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+
+				invoice_type: invoice_type,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(){
+				//alert(1);
+
+				fillInvoiseRez();
+
+				/*if(data.result == "success"){
+					//alert(data.data);
+					$('#invoice_rezult').html(data.data);
+				}else{
+					//alert('error');
+					$('#errror').html(data.data);
+				}*/
+			}
+		});
+		//$(".invoiceItemPrice").each(function() {
+
+			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
+
+			//написали стоимость позиции
+			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
+
+
+		//});*/
+
+	}
 
 	//Выбор зуба из таблички
 	function toothInInvoice(t_number){
@@ -4831,6 +4932,8 @@ alert($(this).val());
 	//Продаём сертификат по базе
 	function Ajax_cert_cell(id, cell_price, office_id){
 
+        var summ_type = document.querySelector('input[name="summ_type"]:checked').value;
+        //alert(summ_type);
 
 		$.ajax({
 			url: "cert_cell_f.php",
@@ -4841,7 +4944,8 @@ alert($(this).val());
 			{
                 cert_id: id,
                 cell_price: cell_price,
-                office_id: office_id
+                office_id: office_id,
+                summ_type: summ_type
             },
 			cache: false,
 			beforeSend: function() {
@@ -5150,7 +5254,8 @@ alert($(this).val());
 					//$('#data').hide();
 					window.location.replace('');
 				}else{
-					//$('#errror').html(res.data);
+				    console.log('error');
+					$('#errror').html(res.data);
 				}
 			}
 		});

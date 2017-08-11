@@ -310,37 +310,49 @@
     }
 
     //Вернём цену по коэффициенту
-    function returnPriceWithKoeff ($koef, $prices_arr, $insure){
+    function returnPriceWithKoeff ($koef, $prices_arr, $insure, $manual, $db_price){
 
         $price = $prices_arr[0]['price'];
-        $start_price = (int)$price;
+        //$start_price = (int)$price;
 
         if ($insure == 0) {
-            if ($koef === 'k1') {
-                if (isset($prices_arr[0]['price2'])) {
-                    if ($prices_arr[0]['price2'] != 0) {
-                        $price = $prices_arr[0]['price2'];
-                    }else{
-                        $price = $prices_arr[0]['price'] + $prices_arr[0]['price'] / 100 * 10;
+
+                if ($koef === 'k1') {
+                    if (isset($prices_arr[0]['price2'])) {
+                        if ($prices_arr[0]['price2'] != 0) {
+                            $price = $prices_arr[0]['price2'];
+                        } else {
+                            $price = $prices_arr[0]['price'] + $prices_arr[0]['price'] / 100 * 10;
+                        }
                     }
-                }
-            } elseif ($koef === 'k2') {
-                if (isset($prices_arr[0]['price3'])) {
-                    if ($prices_arr[0]['price3'] != 0) {
-                        $price = $prices_arr[0]['price3'];
-                    }else{
-                        $price = $prices_arr[0]['price'] + $prices_arr[0]['price'] / 100 * 20;
+                } elseif ($koef === 'k2') {
+                    if (isset($prices_arr[0]['price3'])) {
+                        if ($prices_arr[0]['price3'] != 0) {
+                            $price = $prices_arr[0]['price3'];
+                        } else {
+                            $price = $prices_arr[0]['price'] + $prices_arr[0]['price'] / 100 * 20;
+                        }
                     }
-                }
-            } else {
-                if (is_numeric($koef)) {
-                    $price = $prices_arr[0]['price'] + $prices_arr[0]['price'] / 100 * $koef;
                 } else {
-                    $price = $prices_arr[0]['price'];
+                    if (is_numeric($koef)) {
+                        $price = $prices_arr[0]['price'] + $prices_arr[0]['price'] / 100 * $koef;
+                    } else {
+                        $price = $prices_arr[0]['price'];
+                    }
                 }
-            }
-            //$start_price = (int)$price;
-            $price = round($price / 10) * 10;
+                $start_price = (int)$price;
+
+
+                if ($manual) {
+                    $price = $db_price;
+                }else{
+                    //$price = round($price / 10) * 10;
+                    //$price = round($price);
+                    $price = floor($price);
+                }
+                //$start_price = $prices_arr[0]['start_price'];
+                //$start_price = (int)$prices_arr[0]['price'];
+
         }
 
         //$price = round($price / 10) * 10;

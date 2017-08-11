@@ -84,10 +84,11 @@
 						'<li><div onclick="spec_koeffItemInvoice('.$_POST['ind'].', '.$_POST['key'].', \'k2\')">Главный сп-т</div></li>'.
 						'<li><div><input type="number" size="2" name="koeff" id="koeff" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="spec_koeffItemInvoice('.$_POST['ind'].', '.$_POST['key'].', document.getElementById(\'koeff\').value)"> Применить</div></div></li>';
 				}
-				if ($_POST['mark'] == 'priceItem'){
+                //Регуляция цены
+				/*if ($_POST['mark'] == 'priceItem'){
 					$data = '
 						<li>***</li>';
-				}
+				}*/
 				//Скидки акции позиция
 				if ($_POST['mark'] == 'discountItem'){
 					$data = '
@@ -138,7 +139,7 @@
                     $data = '';
 				    if ($_POST['key'] == 0){
                         $data .= '
-                            <li><div onclick="labOrderStatusChange('.$_POST['ind'].', 7)">Пришел из лаборатории</div></li>'.
+                            <li><div onclick="labOrderStatusChange('.$_POST['ind'].', 6)">Отправлен в лабораторию</div></li>'.
                             '<li><div onclick="labOrderStatusChange('.$_POST['ind'].', 8)">Удалить заказ</div></li>';
                     }
                     if ($_POST['key'] == 7){
