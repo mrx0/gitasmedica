@@ -72,7 +72,7 @@
 			
 			if (($clients['add_new'] == 1) || $god_mode){
 				echo '
-					<a href="add_client.php" class="b">Добавить</a>';
+					<a href="client_add.php" class="b">Добавить</a>';
 			}
 			if (!$filter){
 				echo '<button class="md-trigger b" data-modal="modal-11">Поиск</button>';

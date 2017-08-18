@@ -353,6 +353,8 @@
                 //$start_price = $prices_arr[0]['start_price'];
                 //$start_price = (int)$prices_arr[0]['price'];
 
+        }else{
+            $start_price = (int)$price;
         }
 
         //$price = round($price / 10) * 10;

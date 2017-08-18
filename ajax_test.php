@@ -31,6 +31,16 @@ if (isset($_POST['lab']))
 if (isset($_POST['descr']))
     $arrayFields['descr'] = $_POST['descr'];
 
+//
+if (isset($_POST['cat_name']))
+    $arrayFields['cat_name'] = $_POST['cat_name'];
+if (isset($_POST['work_percent']))
+    $arrayFields['work_percent'] = $_POST['work_percent'];
+if (isset($_POST['material_percent']))
+    $arrayFields['material_percent'] = $_POST['material_percent'];
+if (isset($_POST['personal_id']))
+    $arrayFields['personal_id'] = $_POST['personal_id'];
+
 if (isset($_POST['admSettings'])){
 	//var_dump($_POST);
 	foreach($_POST['admSettings'] as $key => $value){
@@ -110,6 +120,27 @@ foreach($arrayFields as $fieldName => $oneField){
 			$errorContainer[$fieldName] = 'В этом поле ошибка';
 		}
 	}
+
+    if (isset($_POST['work_percent'])){
+        if ($fieldName == 'work_percent') {
+            if (!is_numeric($oneField)) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка';
+            }
+            if ($oneField < 0) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка';
+            }
+        }
+    }
+    if (isset($_POST['material_percent'])){
+        if ($fieldName == 'material_percent') {
+            if (!is_numeric($oneField)) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка';
+            }
+            if ($oneField < 0) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка';
+            }
+        }
+    }
 }
  /*
 // сравнение введенных паролей

@@ -27,7 +27,7 @@
 				echo '
 						<div id="data">';
 				echo '
-							<ul style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 20px; width: 420px; font-size: 95%; background-color: rgba(245, 245, 245, 0.9);">
+							<ul style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 20px; width: 420px; font-size: 95%; background-color: rgba(245, 245, 245, 0.9); display: inline-table;">
 								
 								<li style="margin-bottom: 10px;">
 									Выберите условие
@@ -85,11 +85,31 @@
 								</li>
 								<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Сотрудник<br>
+										Сотрудник, к кому была запись (пока не работает)<br>
 										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="text" size="35" name="searchdata2" id="search_worker" placeholder="Введите первые три буквы для поиска" value="" class="who2" autocomplete="off">
+										<input type="text" size="30" name="searchdata2" id="search_worker" placeholder="Минимум три буквы для поиска" value="" class="who2" autocomplete="off">
+										<ul id="search_result2" class="search_result2"></ul><br />
+									</div>
+								</li>
+								<li class="filterBlock">
+									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+										Пациент (пока не работает)<br>
+										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
+									</div>
+									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
+										<input type="text" size="30" name="searchdata2" id="search_worker" placeholder="Минимум три буквы для поиска" value="" class="who2" autocomplete="off">
+										<ul id="search_result2" class="search_result2"></ul><br />
+									</div>
+								</li>
+								<li class="filterBlock">
+									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+										Сотрудник, который добавил запись<br>
+										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
+									</div>
+									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
+										<input type="text" size="30" name="searchdata2" id="search_worker" placeholder="Минимум три буквы для поиска" value="" class="who2" autocomplete="off">
 										<ul id="search_result2" class="search_result2"></ul><br />
 									</div>
 								</li>
@@ -100,25 +120,57 @@
 								
 								<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Статус
+										Состояние
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
 										<input type="checkbox" id="zapisAll" name="zapisAll" class="zapisType" value="1" checked> Все<br>
-										<input type="checkbox" id="zapisArrive" name="zapisArrive" class="zapisType" value="1" checked> Пришёл<br>
-										<input type="checkbox" id="zapisNotArrive" name="zapisNotArrive" class="zapisType" value="1" checked> Не пришёл<br>
-										<input type="checkbox" id="zapisNull" name="zapisNull" class="zapisType" value="1" checked> Не закрытая<br>
+										<input type="checkbox" id="zapisArrive" name="zapisArrive" class="zapisType" value="1" checked> Пришли<br>
+										<input type="checkbox" id="zapisNotArrive" name="zapisNotArrive" class="zapisType" value="1" checked> Не пришли<br>
+										<input type="checkbox" id="zapisNull" name="zapisNull" class="zapisType" value="1" checked> Не закрытые<br>
 										<input type="checkbox" id="zapisError" name="zapisError" class="zapisType" value="1" checked> Ошибочные<br>
 									</div>
 								</li>';
 
 				echo '
-								<li class="cellsBlock" style="margin: 10px;">
-									<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_zapis()">
-								</li>';
-				echo '
 							</ul>
-						</div>
-						
+							<ul style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 20px; width: 420px; font-size: 95%; background-color: rgba(245, 245, 245, 0.9);display: inline-table;">
+							    
+								<li style="margin-bottom: 10px;">
+									Дополнительные условия
+								</li>
+							    
+								<li class="filterBlock">
+									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+										Заполненность (пока не работает)
+									</div>
+									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
+										<input type="checkbox" id="fullAll" name="fullAll" class="fullType" value="1" checked> Все<br>
+										<input type="checkbox" id="fullWOInvoice" name="fullWOInvoice" class="fullType" value="1" checked> Без нарядов<br>
+										<input type="checkbox" id="fullWOTask" name="fullWOTask" class="fullType" value="1" checked> Без посещений<br>
+										<input type="checkbox" id="fullOk" name="fullOk" class="fullType" value="1" checked> Заполненные полностью<br>
+									</div>
+								</li>
+								
+								<li class="filterBlock">
+									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+										Статус
+									</div>
+									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
+										<input type="checkbox" id="statusAll" name="statusAll" class="statusType" value="1" checked> Все<br>
+										<input type="checkbox" id="statusPervich" name="statusPervich" class="statusType" value="1" checked> Первичные<br>
+										<input type="checkbox" id="statusInsure" name="statusInsure" class="statusType" value="1" checked> Страховые<br>
+										<input type="checkbox" id="statusNight" name="statusNight" class="statusType" value="1" checked> Ночные<br>
+										<input type="checkbox" id="statusAnother" name="statusAnother" class="statusType" value="1" checked> Все остальные<br>
+									</div>
+								</li>
+								
+							</ul>
+						</div>';
+				
+				echo '
+						<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_zapis()">';
+
+                echo '
 						<div id="status">
 							<ul style="border: 1px dotted #CCC; margin: 10px; width: auto;" id="qresult">
 								Результат отобразится здесь
@@ -159,6 +211,76 @@
                                 });
                                 if (allCheckStatus){
                                     $("#zapisAll").prop("checked", true);
+                                }
+                            }
+                        }
+					});
+                    
+                    $(".fullType").click(function() {
+                        
+					    var checked_status = $(this).is(":checked");
+					    var thisId = $(this).attr("id");
+					    var pin_status = false;
+					    var allCheckStatus = false;
+					    
+                        if (thisId == "fullAll"){
+                            if (checked_status){
+                                pin_status = true;
+                            }else{
+                                pin_status = false;
+                            }
+                            $(".fullType").each(function() {
+                                $(this).prop("checked", pin_status);
+                            });
+                        }else{
+                            if (!checked_status){
+                                $("#fullAll").prop("checked", false);
+                            }else{
+                                allCheckStatus = true; 
+                                $(".fullType").each(function() {
+                                    if ($(this).attr("id") != "fullAll"){
+                                        if (!$(this).is(":checked")){
+                                            allCheckStatus = false; 
+                                        }
+                                    }
+                                });
+                                if (allCheckStatus){
+                                    $("#fullAll").prop("checked", true);
+                                }
+                            }
+                        }
+					});
+                    
+                    $(".statusType").click(function() {
+                        
+					    var checked_status = $(this).is(":checked");
+					    var thisId = $(this).attr("id");
+					    var pin_status = false;
+					    var allCheckStatus = false;
+					    
+                        if (thisId == "statusAll"){
+                            if (checked_status){
+                                pin_status = true;
+                            }else{
+                                pin_status = false;
+                            }
+                            $(".statusType").each(function() {
+                                $(this).prop("checked", pin_status);
+                            });
+                        }else{
+                            if (!checked_status){
+                                $("#statusAll").prop("checked", false);
+                            }else{
+                                allCheckStatus = true; 
+                                $(".statusType").each(function() {
+                                    if ($(this).attr("id") != "statusAll"){
+                                        if (!$(this).is(":checked")){
+                                            allCheckStatus = false; 
+                                        }
+                                    }
+                                });
+                                if (allCheckStatus){
+                                    $("#statusAll").prop("checked", true);
                                 }
                             }
                         }

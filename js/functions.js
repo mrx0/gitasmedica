@@ -1276,12 +1276,105 @@
         });
     }
 
+    //Добавляем/редактируем в базу категории процентов
+    function Ajax_cat_add(mode){
+
+        var link = "fl_percent_cat_add_f.php";
+
+        if (mode == 'edit'){
+            link = "fl_percent_cat_edit_f.php";
+        }
+
+        var cat_name = $('#cat_name').val();
+        var work_percent = $('#work_percent').val();
+        var material_percent = $('#material_percent').val();
+        var personal_id = $('#personal_id').val();
+        //console.log(personal_id);
+
+        // убираем класс ошибок с инпутов
+        $("input").each(function(){
+            $(this).removeClass("error_input");
+        });
+        // прячем текст ошибок
+        $(".error").hide();
+
+        //проверка данных на валидность
+        $.ajax({
+            url:"ajax_test.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data:{
+                cat_name: cat_name,
+                work_percent: work_percent,
+                material_percent: material_percent,
+                personal_id: personal_id
+            },
+
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                if(data.result == 'success'){
+                    console.log(data.result);
+                    $.ajax({
+                        url: link,
+                        global: false,
+                        type: "POST",
+                        dataType: "JSON",
+
+                        data:
+                            {
+                                cat_name: cat_name,
+                                work_percent: work_percent,
+                                material_percent: material_percent,
+                            },
+
+                        cache: false,
+                        beforeSend: function() {
+                            $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                        },
+                        // действие, при ответе с сервера
+                        success:function(data){
+                            //alert('success1');
+                            if(data.result == 'success') {
+                                //alert('success');
+                                $('#data').html(data.data);
+                                setTimeout(function () {
+                                    window.location.replace('specializations.php');
+                                }, 100);
+                            }else{
+                                //alert('error');
+                                $('#errror').html(data.data);
+                                //$('#errrror').html('');
+                            }
+                        }
+                    });
+                // в случае ошибок в форме
+                }else{
+                    // перебираем массив с ошибками
+                    for(var errorField in data.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(data.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                }
+            }
+        })
+    }
+
 	//!!! тут очередная "правильная" ф-ция
     //Промежуточная функция добавления/редактирования сертификата
     function showCertAdd(id, mode){
         //alert(mode);
 
-        // убираем ошибки
+        //убираем ошибки
         hideAllErrors ();
 
         var num = $('#num').val();
@@ -1327,12 +1420,8 @@
         })
     }
 
-
-
-
-
 	function Ajax_edit_insure(id) {
-		// убираем класс ошибок с инпутов
+		//убираем класс ошибок с инпутов
         hideAllErrors ();
 		 
 		var name = document.getElementById("name").value;
@@ -1821,6 +1910,51 @@
             zapisNull = 0;
         }
 
+        var fullAll = $("input[id=fullAll]:checked").val();
+        if (fullAll === undefined){
+            fullAll = 0;
+        }
+
+        var fullWOInvoice = $("input[id=fullWOInvoice]:checked").val();
+        if (fullWOInvoice === undefined){
+            fullWOInvoice = 0;
+        }
+
+        var fullWOTask = $("input[id=fullWOTask]:checked").val();
+        if (fullWOTask === undefined){
+            fullWOTask = 0;
+        }
+
+        var fullOk = $("input[id=fullOk]:checked").val();
+        if (fullOk === undefined){
+            fullOk = 0;
+        }
+
+        var statusAll = $("input[id=statusAll]:checked").val();
+        if (statusAll === undefined){
+            statusAll = 0;
+        }
+
+        var statusPervich = $("input[id=statusPervich]:checked").val();
+        if (statusPervich === undefined){
+            statusPervich = 0;
+        }
+
+        var statusInsure = $("input[id=statusInsure]:checked").val();
+        if (statusInsure === undefined){
+            statusInsure = 0;
+        }
+
+        var statusNight = $("input[id=statusNight]:checked").val();
+        if (statusNight === undefined){
+            statusNight = 0;
+        }
+
+        var statusAnother = $("input[id=statusAnother]:checked").val();
+        if (statusAnother === undefined){
+            statusAnother = 0;
+        }
+
         $.ajax({
             url:"ajax_show_result_stat_zapis_f.php",
             global: false,
@@ -1839,6 +1973,17 @@
                     zapisNotArrive: zapisNotArrive,
                     zapisError: zapisError,
                     zapisNull: zapisNull,
+
+                    fullAll: fullAll,
+                    fullWOInvoice: fullWOInvoice,
+                    fullWOTask: fullWOTask,
+                    fullOk: fullOk,
+
+                    statusAll: statusAll,
+                    statusPervich: statusPervich,
+                    statusInsure: statusInsure,
+                    statusNight: statusNight,
+                    statusAnother: statusAnother,
 
                 },
             cache: false,
@@ -5265,9 +5410,9 @@
 	$('#add_client_fio').click(function () {
 		var client_fio = document.getElementById("search_client").value;
 		if (client_fio != ''){
-			window.location.replace('add_client.php?fio='+document.getElementById("search_client").value);
+			window.location.replace('client_add.php?fio='+document.getElementById("search_client").value);
 		}else{
-			window.location.replace('add_client.php');
+			window.location.replace('client_add.php');
 		}
 	});
 

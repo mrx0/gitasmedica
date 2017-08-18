@@ -99,6 +99,8 @@
 							//$birthday = 0;
 						//}else{
 							$birthday = strtotime($_POST['sel_date'].'.'.$_POST['sel_month'].'.'.$_POST['sel_year']);
+
+							$birthday2 = $_POST['sel_year'].'-'.$_POST['sel_month'].'-'.$_POST['sel_date'];
 						//}
 						
 						$card = str_replace(" ","",$_POST['card']);
@@ -107,7 +109,7 @@
 						$card = str_replace(",",", ",$card);
 						$card = str_replace("/","/ ",$card);
 						
-						$new_client = WriteClientToDB_Edit ($_POST['session_id'], $name, $full_name, firspUpperCase(trim($_POST['f'])), firspUpperCase(trim($_POST['i'])), firspUpperCase(trim($_POST['o'])), firspUpperCase(trim($_POST['fo'])), firspUpperCase(trim($_POST['io'])), firspUpperCase(trim($_POST['oo'])), $_POST['comment'], $card, $therapist, $therapist2, $birthday, $_POST['sex'], $_POST['telephone'], $_POST['htelephone'], $_POST['telephoneo'], $_POST['htelephoneo'], $_POST['passport'], $_POST['alienpassportser'], $_POST['alienpassportnom'], $_POST['passportvidandata'], $_POST['passportvidankem'], $_POST['address'], $_POST['polis'], $_POST['polisdata'], $_POST['insurecompany']);
+						$new_client = WriteClientToDB_Edit ($_POST['session_id'], $name, $full_name, firspUpperCase(trim($_POST['f'])), firspUpperCase(trim($_POST['i'])), firspUpperCase(trim($_POST['o'])), firspUpperCase(trim($_POST['fo'])), firspUpperCase(trim($_POST['io'])), firspUpperCase(trim($_POST['oo'])), $_POST['comment'], $card, $therapist, $therapist2, $birthday, $birthday2, $_POST['sex'], $_POST['telephone'], $_POST['htelephone'], $_POST['telephoneo'], $_POST['htelephoneo'], $_POST['passport'], $_POST['alienpassportser'], $_POST['alienpassportnom'], $_POST['passportvidandata'], $_POST['passportvidankem'], $_POST['address'], $_POST['polis'], $_POST['polisdata'], $_POST['insurecompany']);
 						//var_dump($new_client);
 						
 						echo '
@@ -126,7 +128,7 @@
 								<div><a href="add_task_cosmet.php?client='.$new_client.'" class="b" style="font-size: 70%;">Добавить посещение косметолога</a></div>';
 						}*/
 						echo '
-								<div stle="font-size: 70%; margin-top: 10px;"><a href="add_client.php" class="b">Добавить пациента</a>
+								<div stle="font-size: 70%; margin-top: 10px;"><a href="client_add.php" class="b">Добавить пациента</a>
 								<a href="clients.php" class="b">К списку пациентов</a></div>
 							</div>';
 					}

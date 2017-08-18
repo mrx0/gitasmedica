@@ -29,7 +29,10 @@ $(function(){
 	    
     //При выборе результата поиска, прячем список и заносим выбранный результат в input
     $(".search_result").on("click", "li", function(){
-        s_user = $(this).text();
+        //s_user = $(this).text();
+        s_user = $(this).attr("full_name");
+        //console.log($(this).attr("full_name"));
+
 		$(".who").val(s_user);
 		//document.getElementById("qwe").innerHTML = "111110";
         //$(".who").val(s_user).attr('disabled', 'disabled'); //деактивируем input, если нужно

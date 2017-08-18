@@ -14,7 +14,7 @@
 			if ($fast_search != 0){
 				//var_dump ($fast_search);
 				for ($i = 0; $i < count($fast_search); $i++){
-					echo "\n<li>".$fast_search[$i]["full_name"]."</li>";
+					echo "\n<li full_name='".$fast_search[$i]["full_name"]."'>".$fast_search[$i]["full_name"]."<br>Дата рождения: ".date('d.m.Y', $fast_search[$i]['birthday'])."</li>";
 				}
 			}
 			

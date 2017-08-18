@@ -29,10 +29,10 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                     }
                 }
                 if ($_POST['invoice_type'] == 6){
-                    if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['key']])){
-                        $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['key']]['manual_price'] = true;
-                        $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['key']]['price'] = (int)$_POST['price'];
-                        $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['key']]['start_price'] = (int)$_POST['start_price'];
+                    if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']])){
+                        $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['manual_price'] = true;
+                        $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['price'] = (int)$_POST['price'];
+                        $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['start_price'] = (int)$_POST['start_price'];
                     }
                 }
             }

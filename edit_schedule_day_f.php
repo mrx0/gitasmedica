@@ -76,7 +76,7 @@
 												</div>';
 											echo json_encode(array('result' => 'success', 'data' => $data));
 											//header ('Location: scheduler.php?filial='.$_POST['filial'].$who.'&m='.$_POST['month'].'&y='.$_POST['year'].'');
-											//add_client.php
+											//client_add.php
 										}else{
 											$data = '
 												<div class="query_neok">
@@ -102,7 +102,7 @@
 								$data = '
 									<div class="query_neok">
 										Не нашли в базе пациента<br>
-										<a href="add_client.php" class="b">Добавить пациента</a><br>
+										<a href="client_add.php" class="b">Добавить пациента</a><br>
 									</div>';
 								echo json_encode(array('result' => 'error', 'data' => $data));
 							}

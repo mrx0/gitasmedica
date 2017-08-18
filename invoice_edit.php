@@ -141,9 +141,13 @@
 									}
 
 									//var_dump($temp_arr2);
-	
-									$_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
-
+	                                if ($invoice_j[0]['type'] == 5) {
+                                        $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
+                                    }
+                                    //Костыль для сессионых данных косметологии
+	                                if ($invoice_j[0]['type'] == 6) {
+                                        $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr[0];
+                                    }
                                     //скидку тут добавлю в сесиию
                                     $discount = $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['discount'] = $invoice_j[0]['discount'];
 

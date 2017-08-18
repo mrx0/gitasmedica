@@ -1,7 +1,7 @@
 <?php
 
-//add_client.php
-//Добавить клиента
+//add_error.php
+//Добавить ошибка
 
 	require_once 'header.php';
 	

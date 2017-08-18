@@ -43,7 +43,10 @@
 					$echo_therapist2.= 'Лечащий врач <b>[косметология]</b> не назначен. <span style="color:red;">Такого врача нет в нашей базе</span>. Это можно указать в карточке пациента. Либо это произойдет автоматически при первом приёме.<br />';
 				}
 			}
+
 			$birthday = strtotime($_POST['sel_date'].'.'.$_POST['sel_month'].'.'.$_POST['sel_year']);
+
+            $birthday2 = $_POST['sel_year'].'-'.$_POST['sel_month'].'-'.$_POST['sel_date'];
 				
 			$card = str_replace(" ","",$_POST['card']);
 			$card = mb_strtoupper($card, "UTF-8");
@@ -51,7 +54,7 @@
 			$card = str_replace(",",", ",$card);
 			$card = str_replace("/","/ ",$card);
 						
-			WriteClientToDB_Update ($_POST['session_id'], $_POST['id'], $_POST['comment'], $card, $therapist, $therapist2, $birthday, $_POST['sex'], $_POST['telephone'], $_POST['passport'], $_POST['alienpassportser'], $_POST['alienpassportnom'], $_POST['passportvidandata'], $_POST['passportvidankem'], $_POST['address'], $_POST['polis'], $_POST['fo'], $_POST['io'], $_POST['oo'], $_POST['htelephone'], $_POST['telephoneo'], $_POST['htelephoneo'], $_POST['polisdata'], $_POST['insurecompany']);
+			WriteClientToDB_Update ($_POST['session_id'], $_POST['id'], $_POST['comment'], $card, $therapist, $therapist2, $birthday, $birthday2, $_POST['sex'], $_POST['telephone'], $_POST['passport'], $_POST['alienpassportser'], $_POST['alienpassportnom'], $_POST['passportvidandata'], $_POST['passportvidankem'], $_POST['address'], $_POST['polis'], $_POST['fo'], $_POST['io'], $_POST['oo'], $_POST['htelephone'], $_POST['telephoneo'], $_POST['htelephoneo'], $_POST['polisdata'], $_POST['insurecompany']);
 
 			echo '
 				<div class="query_ok">

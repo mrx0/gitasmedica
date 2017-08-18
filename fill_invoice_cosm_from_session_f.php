@@ -64,7 +64,7 @@
 				}else{
 					$_SESSION['invoice_data'][$client][$zapis_id]['data'] = array_values($_SESSION['invoice_data'][$client][$zapis_id]['data']);
 					//берем из сесии данные
-					$data = $_SESSION['invoice_data'][$client][$zapis_id]['data'];
+					$data = $_SESSION['invoice_data'][$client][$zapis_id]['data'][0];
                     $discount = $_SESSION['invoice_data'][$client][$zapis_id]['discount'];
 					
 					ksort($data);
@@ -100,13 +100,13 @@
 								$request .= '
 								<div class="cellsBlock" style="font-size: 100%;" >
 
-									<div class="cellText2" style=" '.$bg_col.'">';
+									<div class="cellText2" style=" '.$bg_col.'"><div style="text-overflow: ellipsis; overflow: hidden; white-space: inherit;  width: 120px;">';
 								
 								//Хочу имя позиции в прайсе
 								$arr = array();
 								$rez = array();
 
-								$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = '{$items['id']}'";			
+								$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = '{$items['id']}'";
 					
 								$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 								$number = mysql_num_rows($res);
@@ -183,7 +183,8 @@
 								
 								$request .= '
 								</div>
-								<div class="cellCosmAct invoiceItemPrice" ind="'.$ind.'" key="0" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; '.$bg_col.'" onclick="contextMenuShow('.$ind.', '.$key.', event, \'priceItem\');">
+								</div>
+								<div class="cellCosmAct invoiceItemPrice settings_text" ind="'.$ind.'" key="0" start_price="'.$price['start_price'].'"style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; '.$bg_col.'" onclick="contextMenuShow('.$ind.', 0, event, \'priceItem\');">
 									'.$price['price'].'
 								</div>
 								<div class="cellCosmAct spec_koeffInvoice settings_text"  speckoeff="'.$items['spec_koeff'].'" style="font-size: 90%; text-align: center; '.$bg_col.' width: 40px; min-width: 40px; max-width: 40px;" onclick="contextMenuShow('.$ind.', '.$ind.', event, \'spec_koeffItem\');">

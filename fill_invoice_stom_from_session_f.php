@@ -160,7 +160,7 @@
 								<!--<div class="cellCosmAct" style=" '.$bg_col.'">
 									-
 								</div>-->
-								<div class="cellText2" style=" '.$bg_col.'">';
+								<div class="cellText2" style=" '.$bg_col.'"><div style="text-overflow: ellipsis; overflow: hidden; white-space: inherit;  width: 120px;">';
 								
 								//Хочу имя позиции в прайсе
 								$arr = array();
@@ -247,6 +247,7 @@
 								}
 								
 								$request .= '
+								</div>
 								</div>
 								<div class="cellCosmAct settings_text" insure="'.$items['insure'].'" style="font-size: 80%; text-align: center; '.$bg_col.' width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic;" onclick="contextMenuShow('.$ind.', '.$key.', event, \'insureItem\');">
 									'.$insure_name.'
