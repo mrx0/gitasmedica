@@ -705,7 +705,7 @@
 											<div class="cellText2" style="padding: 2px 4px;">
 											</div>
 											<!--<div class="cellName" style="font-size: 90%; font-weight: bold;">
-												Итого:';
+												Итого:-->';
 							if (($summ != $invoice_j[0]['summ']) || ($summins != $invoice_j[0]['summins'])){
 								/*echo '<br>
 									<span style="font-size: 90%; font-weight: normal; color: #FF0202; cursor: pointer; " title="Такое происходит, если  цена позиции в прайсе меняется задним числом"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 135%;"></i> Итоговая цена не совпадает</span>';*/
@@ -713,14 +713,14 @@
 
 							echo '				
 													
-											</div>
+											<!--</div>
 											<div class="cellName" style="padding: 2px 4px;">
 												<div>
 													<div style="font-size: 90%;">Сумма: <div id="calculateInvoice" style="font-size: 110%;">'.$summ.'</div> руб.</div>
-												</div>';
+												</div>-->';
 							if ($sheduler_zapis[0]['type'] == 5){
 								echo '
-												<div>
+												<!--<div>
 													<div style="font-size: 90%;">Страховка: <div id="calculateInsInvoice" style="font-size: 110%;">'.$summins.'</div> руб.</div>
 												</div>-->';
 							}
