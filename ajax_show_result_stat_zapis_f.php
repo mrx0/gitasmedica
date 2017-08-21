@@ -10,7 +10,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 }else{
     //var_dump ($_POST);
     if ($_POST){
+        $creatorExist = false;
         $workerExist = false;
+        $clientExist = false;
         $queryDopExist = false;
         $queryDopExExist = false;
         $queryDopEx2Exist = false;
@@ -36,7 +38,23 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         require_once 'permissions.php';
 
+        //Кто создал запись
+        if ($_POST['creator'] != ''){
+            include_once 'DBWork.php';
+            $creatorSearch = SelDataFromDB ('spr_workers', $_POST['creator'], 'worker_full_name');
 
+            if ($creatorSearch == 0){
+                $creatorExist = false;
+            }else{
+                $creatorExist = true;
+                $creator = $creatorSearch[0]['id'];
+            }
+        }else{
+            $creatorExist = true;
+            $creator = 0;
+        }
+
+        //К кому запись
         if ($_POST['worker'] != ''){
             include_once 'DBWork.php';
             $workerSearch = SelDataFromDB ('spr_workers', $_POST['worker'], 'worker_full_name');
@@ -52,7 +70,23 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
             $worker = 0;
         }
 
-        if ($workerExist){
+        //Клиент
+        if ($_POST['client'] != ''){
+            include_once 'DBWork.php';
+            $clientSearch = SelDataFromDB ('spr_clients', $_POST['client'], 'client_full_name');
+
+            if ($clientSearch == 0){
+                $clientExist = false;
+            }else{
+                $clientExist = true;
+                $client = $clientSearch[0]['id'];
+            }
+        }else{
+            $clientExist = true;
+            $client = 0;
+        }
+
+        if ($creatorExist){
             $query .= "SELECT * FROM `zapis`";
 
             /*require 'config.php';
@@ -67,12 +101,30 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 $queryDopExist = true;
             }
 
-            //Сотрудник
+            //Кто создал запись
+            if ($creator != 0){
+                if ($queryDopExist){
+                    $queryDop .= ' AND';
+                }
+                $queryDop .= "`create_person` = '".$creator."'";
+                $queryDopExist = true;
+            }
+
+            //К кому запись
             if ($worker != 0){
                 if ($queryDopExist){
                     $queryDop .= ' AND';
                 }
-                $queryDop .= "`create_person` = '".$worker."'";
+                $queryDop .= "`worker` = '".$worker."'";
+                $queryDopExist = true;
+            }
+
+            //Клиент
+            if ($client != 0){
+                if ($queryDopExist){
+                    $queryDop .= ' AND';
+                }
+                $queryDop .= "`patient` = '".$client."'";
                 $queryDopExist = true;
             }
 
@@ -125,7 +177,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                     //$queryDopExExist = true;
                 }
 
-               //Ошибочные
+                //Ошибочные
                 if ($_POST['zapisError'] != 0){
                     if ($queryDopExExist){
                         $queryDopEx .= ' OR';
@@ -178,7 +230,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                     //$queryDopExExist = true;
                 }
 
-               //Все остальные
+                //Все остальные
                 if ($_POST['statusAnother'] != 0){
                     if ($queryDopEx2Exist){
                         $queryDopEx2 .= ' OR';

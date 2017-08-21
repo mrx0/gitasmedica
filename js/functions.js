@@ -1859,7 +1859,7 @@
 				all_age:all_age,
 				agestart:document.getElementById("agestart").value,
 				ageend:document.getElementById("ageend").value,
-				
+
 				worker:document.getElementById("search_worker").value,
 				filial:document.getElementById("filial").value,
 				
@@ -1965,8 +1965,13 @@
                     datastart: document.getElementById("datastart").value,
                     dataend: document.getElementById("dataend").value,
 
-                    worker:document.getElementById("search_worker").value,
-                    filial: document.getElementById("filial").value,
+                    //Кто создал запись
+                    creator:$("#search_worker").val(),
+                    //Пациент
+                    client:$("#search_client").val(),
+                    //К кому запись
+                    worker:$("#search_client4").val(),
+                    filial:$("#filial").val(),
 
                     zapisAll: zapisAll,
                     zapisArrive: zapisArrive,

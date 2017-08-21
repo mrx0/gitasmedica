@@ -89,8 +89,8 @@
 										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="text" size="30" name="searchdata2" id="search_worker" placeholder="Минимум три буквы для поиска" value="" class="who2" autocomplete="off">
-										<ul id="search_result2" class="search_result2"></ul><br />
+										<input type="text" size="30" name="searchdata4" id="search_client4" placeholder="Минимум три буквы для поиска" value="" class="who4" autocomplete="off">
+										<ul id="search_result4" class="search_result4"></ul><br />
 									</div>
 								</li>
 								<li class="filterBlock">
@@ -99,8 +99,8 @@
 										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="text" size="30" name="searchdata2" id="search_worker" placeholder="Минимум три буквы для поиска" value="" class="who2" autocomplete="off">
-										<ul id="search_result2" class="search_result2"></ul><br />
+										<input type="text" size="30" name="searchdata" id="search_client" placeholder="Минимум три буквы для поиска" value="" class="who" autocomplete="off">
+										<ul id="search_result" class="search_result"></ul><br />
 									</div>
 								</li>
 								<li class="filterBlock">
