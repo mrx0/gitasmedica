@@ -64,19 +64,15 @@
 				}else{
 					$_SESSION['invoice_data'][$client][$zapis_id]['data'] = array_values($_SESSION['invoice_data'][$client][$zapis_id]['data']);
 					//берем из сесии данные
-					$data = $_SESSION['invoice_data'][$client][$zapis_id]['data'][0];
+					$data = $_SESSION['invoice_data'][$client][$zapis_id]['data'];
                     $discount = $_SESSION['invoice_data'][$client][$zapis_id]['discount'];
 					
 					ksort($data);
 					
 					$t_number_active = $_SESSION['invoice_data'][$client][$zapis_id]['t_number_active'];
 					//$mkb_data = $_SESSION['invoice_data'][$client][$zapis_id]['mkb'];
-					
-							
-					require 'config.php';
-					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-					mysql_select_db($dbName) or die(mysql_error()); 
-					mysql_query("SET NAMES 'utf8'");
+
+                    $msql_cnnct = ConnectToDB ();
 					
 					foreach ($data as $ind => $items){
 						if ($t_number_active == $ind){
@@ -107,11 +103,11 @@
 								$rez = array();
 
 								$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = '{$items['id']}'";
-					
-								$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-								$number = mysql_num_rows($res);
+
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+								$number = mysqli_num_rows($res);
 								if ($number != 0){
-									while ($arr = mysql_fetch_assoc($res)){
+									while ($arr = mysqli_fetch_assoc($res)){
 										array_push($rez, $arr);
 									}
 									$rezult2 = $rez;

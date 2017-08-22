@@ -44,25 +44,23 @@
 
 						$client_j = SelDataFromDB('spr_clients', $invoice_j[0]['client_id'], 'user');
 						//var_dump($client_j);
-						
-						mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-						mysql_select_db($dbName) or die(mysql_error()); 
-						mysql_query("SET NAMES 'utf8'");
+
+                        $msql_cnnct = ConnectToDB ();
 						
 						$query = "SELECT * FROM `zapis` WHERE `id`='".$invoice_j[0]['zapis_id']."'";
-						
-						$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-						$number = mysql_num_rows($res);
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+						$number = mysqli_num_rows($res);
 						if ($number != 0){
-							while ($arr = mysql_fetch_assoc($res)){
+							while ($arr = mysqli_fetch_assoc($res)){
 								array_push($sheduler_zapis, $arr);
 							}
-						}else
-							$sheduler_zapis = 0;
-						//var_dump ($sheduler_zapis);
-						
+						}else{
+                            //$sheduler_zapis = 0;
+                            //var_dump ($sheduler_zapis);
+                        }
 						//if ($client !=0){
-						if ($sheduler_zapis != 0){
+						if (!empty($sheduler_zapis)){
 						
 							//сортируем зубы по порядку
 							//ksort($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
@@ -261,11 +259,11 @@
 							//$query = "SELECT * FROM `journal_invoice_ex` LEFT JOIN `journal_invoice_ex_mkb` USING(`invoice_id`, `ind`) WHERE `invoice_id`='".$_GET['id']."';";
 							$query = "SELECT * FROM `journal_invoice_ex` WHERE `invoice_id`='".$_GET['id']."';";
 							//var_dump($query);
-							
-							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-							$number = mysql_num_rows($res);
+
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+							$number = mysqli_num_rows($res);
 							if ($number != 0){
-								while ($arr = mysql_fetch_assoc($res)){
+								while ($arr = mysqli_fetch_assoc($res)){
 									if (!isset($invoice_ex_j[$arr['ind']])){
 										$invoice_ex_j[$arr['ind']] = array();
 										array_push($invoice_ex_j[$arr['ind']], $arr);
@@ -285,11 +283,11 @@
 							//Для МКБ
 							$query = "SELECT * FROM `journal_invoice_ex_mkb` WHERE `invoice_id`='".$_GET['id']."';";
 							//var_dump ($query);
-							
-							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-							$number = mysql_num_rows($res);
+
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+							$number = mysqli_num_rows($res);
 							if ($number != 0){
-								while ($arr = mysql_fetch_assoc($res)){
+								while ($arr = mysqli_fetch_assoc($res)){
 									if (!isset($invoice_ex_j_mkb[$arr['ind']])){
 										$invoice_ex_j_mkb[$arr['ind']] = array();
 										array_push($invoice_ex_j_mkb[$arr['ind']], $arr);
@@ -358,8 +356,8 @@
                                 }else{
                                     echo '
                                                 <div style="margin-top: 5px;">
-                                                    <div style="display: inline-block; color: green;">Наряд закрыт.</div>
-                                                    <div style="display: inline-block;">'.date('d.m.y H:i', strtotime($invoice_j[0]['closed_time'])).'</div>
+                                                    <div style="display: inline-block; color: green;">Наряд закрыт</div>
+                                                    <div style="display: inline-block;">'.date('d.m.y', strtotime($invoice_j[0]['closed_time'])).'</div>
                                                 </div>';
                                 }
 
@@ -435,7 +433,7 @@
                                 if ($ind == 99){
                                     echo 'П';
                                 }else{
-                                    echo $ind;
+                                    echo $ind+1;
                                 }
                                 echo '
                                         </div>';
@@ -462,10 +460,10 @@
 
                                             $query = "SELECT `name`, `code` FROM `spr_mkb` WHERE `id` = '{$mkb_data_val['mkb_id']}'";
 
-                                            $res = mysql_query($query) or die(mysql_error().' -> '.$query);
-                                            $number = mysql_num_rows($res);
+                                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                            $number = mysqli_num_rows($res);
                                             if ($number != 0){
-                                                while ($arr = mysql_fetch_assoc($res)){
+                                                while ($arr = mysqli_fetch_assoc($res)){
                                                     $rez[$mkb_data_val['mkb_id']] = $arr;
                                                 }
                                             }else{
@@ -528,10 +526,10 @@
 
                                             $query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = '{$item['price_id']}'";
 
-                                            $res = mysql_query($query) or die(mysql_error().' -> '.$query);
-                                            $number = mysql_num_rows($res);
+                                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                            $number = mysqli_num_rows($res);
                                             if ($number != 0){
-                                                while ($arr = mysql_fetch_assoc($res)){
+                                                while ($arr = mysqli_fetch_assoc($res)){
                                                     array_push($rez, $arr);
                                                 }
                                                 $rezult2 = $rez;
@@ -735,10 +733,10 @@
                             $query = "SELECT * FROM `journal_payment` WHERE `invoice_id`='".$_GET['id']."' ORDER BY `date_in` DESC";
                             //var_dump($query);
 
-                            $res = mysql_query($query) or die(mysql_error().' -> '.$query);
-                            $number = mysql_num_rows($res);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                            $number = mysqli_num_rows($res);
                             if ($number != 0){
-                                while ($arr = mysql_fetch_assoc($res)){
+                                while ($arr = mysqli_fetch_assoc($res)){
                                     array_push($payment_j, $arr);
                                 }
                             }else{
@@ -755,16 +753,27 @@
                                 foreach ($payment_j as $payment_item) {
 
                                     $pay_type_mark = '';
+                                    $cert_num = '';
 
                                     if ($payment_item['type'] == 1){
                                         $pay_type_mark = '<i class="fa fa-certificate" aria-hidden="true" title="Оплата сертификатом"></i>';
+                                        //Найдем сертификат по его id
+                                        $query = "SELECT `num` FROM `journal_cert` WHERE `id`='".$payment_item['cert_id']."' LIMIT 1";
+                                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                        $number = mysqli_num_rows($res);
+                                        if ($number != 0) {
+                                            $arr = mysqli_fetch_assoc($res);
+                                            $cert_num = 'Сертификатом №'.$arr['num'];
+                                        } else {
+                                            $cert_num = 'Ошибка сертификата';
+                                        }
                                     }
 
                                     echo '
                                                     <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
                                     echo '
                                                         <a href="" class="cellOrder ahref" style="position: relative;">
-                                                            <b>Оплата #' . $payment_item['id'] . '</b> от ' . date('d.m.y', strtotime($payment_item['date_in'])) . '<br>
+                                                            <b>Оплата #' . $payment_item['id'] . '</b> от ' . date('d.m.y', strtotime($payment_item['date_in'])) . ' '.$cert_num.'<br>
                                                             <span style="font-size:80%;  color: #555;">';
 
                                     if (($payment_item['create_time'] != 0) || ($payment_item['create_person'] != 0)) {

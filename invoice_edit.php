@@ -14,8 +14,6 @@
 				include_once 'functions.php';
 			
 				require 'variables.php';
-			
-				require 'config.php';
 
 				//var_dump($_SESSION['invoice_data']);
 				//unset($_SESSION['invoice_data']);
@@ -40,25 +38,24 @@
 
 							$client_j = SelDataFromDB('spr_clients', $invoice_j[0]['client_id'], 'user');
 							//var_dump($client_j);
-							
-							mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-							mysql_select_db($dbName) or die(mysql_error()); 
-							mysql_query("SET NAMES 'utf8'");
+
+                            $msql_cnnct = ConnectToDB ();
 							
 							$query = "SELECT * FROM `zapis` WHERE `id`='".$invoice_j[0]['zapis_id']."'";
-							
-							$res = mysql_query($query) or die($query);
-							$number = mysql_num_rows($res);
+
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+							$number = mysqli_num_rows($res);
 							if ($number != 0){
-								while ($arr = mysql_fetch_assoc($res)){
+								while ($arr = mysqli_fetch_assoc($res)){
 									array_push($sheduler_zapis, $arr);
 								}
-							}else
-								$sheduler_zapis = 0;
+							}else {
+                                $sheduler_zapis = 0;
+                            }
 							//var_dump ($sheduler_zapis);
 							
 							//if ($client !=0){
-							if ($sheduler_zapis != 0){
+							if (!empty($sheduler_zapis)){
 							
 								if (!isset($_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']])){
 									$_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['filial'] = $invoice_j[0]['office_id'];
@@ -72,11 +69,11 @@
 								//Хочу получить все данные по этому наряду и захреначить их в сессиию
 								$query = "SELECT * FROM `journal_invoice_ex` WHERE `invoice_id`='".$_GET['id']."';";
 								//var_dump($query);
-								
-								$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-								$number = mysql_num_rows($res);
+
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+								$number = mysqli_num_rows($res);
 								if ($number != 0){
-									while ($arr = mysql_fetch_assoc($res)){
+									while ($arr = mysqli_fetch_assoc($res)){
 										if (!isset($invoice_ex_j[$arr['ind']])){
 											$invoice_ex_j[$arr['ind']] = array();
 											array_push($invoice_ex_j[$arr['ind']], $arr);
@@ -95,11 +92,11 @@
 								//Для МКБ
 								$query = "SELECT * FROM `journal_invoice_ex_mkb` WHERE `invoice_id`='".$_GET['id']."';";
 								//var_dump ($query);
-								
-								$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-								$number = mysql_num_rows($res);
+
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+								$number = mysqli_num_rows($res);
 								if ($number != 0){
-									while ($arr = mysql_fetch_assoc($res)){
+									while ($arr = mysqli_fetch_assoc($res)){
 										if (!isset($invoice_ex_j_mkb[$arr['ind']])){
 											$invoice_ex_j_mkb[$arr['ind']] = array();
 											array_push($invoice_ex_j_mkb[$arr['ind']], $arr['mkb_id']);
@@ -132,21 +129,24 @@
                                             }
 
 
-											if (!isset($temp_arr[$ind])){
+											/*if (!isset($temp_arr[$ind])){
 												$temp_arr[$ind] = array();
 											}
 											
-											array_push($temp_arr[$ind], $temp_arr2);
+											array_push($temp_arr[$ind], $temp_arr2);*/
+
+                                            array_push($temp_arr, $temp_arr2);
 										}
 									}
 
-									//var_dump($temp_arr2);
+									//var_dump($temp_arr);
+
 	                                if ($invoice_j[0]['type'] == 5) {
                                         $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
                                     }
-                                    //Костыль для сессионых данных косметологии
+                                    //Костыль для сессионых данных косметологов
 	                                if ($invoice_j[0]['type'] == 6) {
-                                        $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr[0];
+                                        $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
                                     }
                                     //скидку тут добавлю в сесиию
                                     $discount = $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['discount'] = $invoice_j[0]['discount'];

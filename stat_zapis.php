@@ -85,7 +85,7 @@
 								</li>
 								<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Сотрудник, к кому была запись (пока не работает)<br>
+										Сотрудник, к кому была запись<br>
 										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
@@ -95,7 +95,7 @@
 								</li>
 								<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Пациент (пока не работает)<br>
+										Пациент<br>
 										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
@@ -141,7 +141,19 @@
 							    
 								<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Заполненность (пока не работает)
+										Тип
+									</div>
+									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
+										<input id="typeW" name="typeW" value="0" type="radio" checked>Все<br />
+										<input id="typeW" name="typeW" value="5" type="radio">Стоматологи<br />
+										<input id="typeW" name="typeW" value="6" type="radio">Косметологи<br />
+										<input id="typeW" name="typeW" value="10" type="radio">Специалисты<br />
+									</div>
+								</li>
+								
+								<li class="filterBlock">
+									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+										Заполненность
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
 										<input type="checkbox" id="fullAll" name="fullAll" class="fullType" value="1" checked> Все<br>

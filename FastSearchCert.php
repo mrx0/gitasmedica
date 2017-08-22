@@ -12,7 +12,7 @@
 		if (isset($_POST['num'])){
 			$searchdata = $_POST['num'];
 		}
-		if(($searchdata == '') || (strlen($searchdata) < 3)){
+		if(($searchdata == '') || (strlen($searchdata) < 2)){
             echo json_encode(array('result' => 'error', 'data' => 'Ошибка #1'));
 		}else{
 			include_once 'DBWork.php';	

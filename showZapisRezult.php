@@ -75,45 +75,51 @@
                                         <li class="cellsBlock" style="width: auto;">
                                             <!--<div class="cellCosmAct">-->';
 
-                    //Формулы зубные
-                    $query = "SELECT `id`, `zapis_date`  FROM `journal_tooth_status` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
-                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                    $number = mysqli_num_rows($res);
-                    if ($number != 0) {
-                        while ($arr = mysqli_fetch_assoc($res)) {
-                            array_push($t_f_data_db, $arr);
-                        }
-                    } else
-                        $t_f_data_db = 0;
-                    //var_dump($t_f_data_db);
+                    if ($ZapisHereQueryToday[$z]['type'] == 5) {
+                        //Формулы зубные
+                        $query = "SELECT `id`, `zapis_date`  FROM `journal_tooth_status` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
+                        //var_dump($query);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0) {
+                            while ($arr = mysqli_fetch_assoc($res)) {
+                                array_push($t_f_data_db, $arr);
+                            }
+                        } else
+                            //$t_f_data_db = 0;
+                        //var_dump($t_f_data_db);
 
-                    if ($t_f_data_db != 0) {
-                        foreach ($t_f_data_db as $ids) {
-
+                        if ($t_f_data_db != 0) {
+                            foreach ($t_f_data_db as $ids) {
+                                //
+                            }
                         }
                     }
 
+                    if ($ZapisHereQueryToday[$z]['type'] == 6) {
+                        //Посещения косметологов
+                        $query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
+                        //var_dump($query);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0) {
+                            while ($arr = mysqli_fetch_assoc($res)) {
+                                array_push($cosmet_data_db, $arr);
+                            }
+                        } else
+                            //$cosmet_data_db = 0;
+                        //var_dump($cosmet_data_db);
 
-                    //Посещения косметологов
-                    $query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
-                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                    $number = mysqli_num_rows($res);
-                    if ($number != 0) {
-                        while ($arr = mysqli_fetch_assoc($res)) {
-                            array_push($cosmet_data_db, $arr);
-                        }
-                    } else
-                        $cosmet_data_db = 0;
-                    //var_dump($cosmet_data_db);
-
-                    if ($cosmet_data_db != 0) {
-                        foreach ($cosmet_data_db as $ids) {
-                            //
+                        if ($cosmet_data_db != 0) {
+                            foreach ($cosmet_data_db as $ids) {
+                                //
+                            }
                         }
                     }
 
                     //Наряды
                     $query = "SELECT * FROM `journal_invoice` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' AND `status` <> '9' ORDER BY `create_time`";
+                    //var_dump($query);
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                     $number = mysqli_num_rows($res);
                     if ($number != 0) {
@@ -201,7 +207,7 @@
                     $rezult .= '
                                             <div class="cellName" style="vertical-align: top;">';
 
-                    if ($t_f_data_db != 0) {
+                    if (!empty($t_f_data_db)) {
                         foreach ($t_f_data_db as $ids) {
                             $rezult .= '
                                                 <div class="cellsBlockHover" style="border: 1px solid #BFBCB5; margin-top: 1px;">
@@ -212,7 +218,7 @@
                         }
                     }
 
-                    if ($cosmet_data_db != 0) {
+                    if (!empty($cosmet_data_db)) {
                         foreach ($cosmet_data_db as $ids) {
                             $rezult .= '
                                                     <div class="cellsBlockHover" style="border: 1px solid #BFBCB5; margin-top: 1px;">
@@ -426,7 +432,7 @@
                                             <div class="cellsBlock2" style="font-size:80%; width:400px;">
                                                 <div class="cellLeft" style="font-weight: bold;">Пациент</div>
                                                 <div class="cellRight">
-                                                    <input type="text" size="30" name="searchdata" id="search_client" placeholder="Введите ФИО пациента" value="" class="who"  autocomplete="off" style="width: 90%;"> <a href="client_add.php" class="ahref"><i class="fa fa-plus-square" title="Добавить пациента" style="color: green; font-size: 120%;"></i></a>
+                                                    <input type="text" size="30" name="searchdata" id="search_client" placeholder="Введите ФИО пациента" value="" class="who"  autocomplete="off" style="width: 90%;"> <a href="add_client.php" class="ahref"><i class="fa fa-plus-square" title="Добавить пациента" style="color: green; font-size: 120%;"></i></a>
                                                     <ul id="search_result" class="search_result"></ul><br />
                                                 </div>
                                             </div>

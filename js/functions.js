@@ -17,7 +17,7 @@
         var val = $(this).val();
         //console.log(val);
 
-        if ((val.length > 3) && !isNaN(val[val.length - 1])){
+        if ((val.length > 1) && !isNaN(val[val.length - 1])){
             $.ajax({
                 url:"FastSearchCert.php",
                 global: false,
@@ -1887,6 +1887,8 @@
     //Выборка статистики  записи
     function Ajax_show_result_stat_zapis(){
 
+        var typeW = document.querySelector('input[name="typeW"]:checked').value;
+
         var zapisAll = $("input[id=zapisAll]:checked").val();
         if (zapisAll === undefined){
             zapisAll = 0;
@@ -1972,6 +1974,8 @@
                     //К кому запись
                     worker:$("#search_client4").val(),
                     filial:$("#filial").val(),
+
+                    typeW:typeW,
 
                     zapisAll: zapisAll,
                     zapisArrive: zapisArrive,
