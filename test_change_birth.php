@@ -23,7 +23,7 @@
 		foreach ($rez as $client){
 			
 			if (($client['birthday'] != -1577934000) && ($client['birthday'] != 0)){
-			    
+
 				$newDate = date('Y-m-d', $client['birthday']);
 
                 $query = "UPDATE `spr_clients` SET `birthday2`='".$newDate."' WHERE `id`='".$client['id']."' AND `birthday2`='0000-00-00' LIMIT 1";

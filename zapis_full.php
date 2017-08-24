@@ -113,7 +113,7 @@
 				
 				//тип график (космет/стомат/...)
 				if (isset($_GET['who'])){
-					if ($_GET['who'] == 'stom'){
+					if (($_GET['who'] == 'stom') || ($_GET['who'] == 5)){
 						$who = '&who=stom';
 						$whose = 'Стоматологи ';
 						$selected_stom = ' selected';
@@ -125,7 +125,7 @@
 						$stom_color = 'background-color: #fff261;';
 						$cosm_color = '';
                         $somat_color = '';
-					}elseif($_GET['who'] == 'cosm'){
+					}elseif(($_GET['who'] == 'cosm') || ($_GET['who'] == 6)){
 						$who = '&who=cosm';
 						$whose = 'Косметологи ';
 						$selected_stom = ' ';
@@ -137,7 +137,7 @@
 						$stom_color = '';
 						$cosm_color = 'background-color: #fff261;';
                         $somat_color = '';
-                    }elseif($_GET['who'] == 'somat'){
+                    }elseif(($_GET['who'] == 'somat') || ($_GET['who'] == 10)){
                         $who = '&who=somat';
                         $whose = 'Специалисты ';
                         $selected_stom = ' ';

@@ -23,11 +23,14 @@
 						</header>';
 					echo '
 						<div id="data" style="margin: 0;">
+                            <div>
+                                <div style="display: inline-block; color: red;">Запрещено создавать новые долги и авансы через данное меню. Необходимо закрыть все уже созданные.</div>
+                            </div>
 							<ul style="margin-left: 6px; margin-bottom: 20px;">';
 					echo '
 								<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-									<a href="finance_debt_add.php?client='.$client[0]['id'].'" class="b"><span style="color: red;"><i class="fa fa-rub"></i></span> Зафиксировать долг</a>
-									<a href="finance_prepayment_add.php?client='.$client[0]['id'].'" class="b"><span style="color: green;"><i class="fa fa-rub"></i></span> Зафиксировать аванс</a>
+									<!--<a href="finance_debt_add.php?client='.$client[0]['id'].'" class="b"><span style="color: red;"><i class="fa fa-rub"></i></span> Зафиксировать долг</a>
+									<a href="finance_prepayment_add.php?client='.$client[0]['id'].'" class="b"><span style="color: green;"><i class="fa fa-rub"></i></span> Зафиксировать аванс</a>-->
 								</li>
 							</ul>';
 							

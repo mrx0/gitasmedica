@@ -141,7 +141,7 @@
 										<li class="cellsBlock" style="width: auto;">';
 									
 								echo '
-											<div class="cellName" style="position: relative; '.$back_color.'">';
+											<div class="cellName" style="position: relative; cursor: pointer; '.$back_color.'" onclick="window.location.replace(\'zapis_full.php?filial=15&who='.$sheduler_zapis[0]['type'].'&d='.$sheduler_zapis[0]['day'].'&m='.$month.'&y='.$sheduler_zapis[0]['year'].'&kab='.$sheduler_zapis[0]['kab'].'\')">';
 								$start_time_h = floor($sheduler_zapis[0]['start_time']/60);
 								$start_time_m = $sheduler_zapis[0]['start_time']%60;
 								if ($start_time_m < 10) $start_time_m = '0'.$start_time_m;

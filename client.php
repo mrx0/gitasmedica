@@ -332,9 +332,22 @@
 								
 				//Смотрим счёт (авансы/долги)
 				if (($finances['see_all'] != 0) || ($finances['see_own'] != 0) || $god_mode){
-					//Долги/авансы					
-					$clientDP = DebtsPrepayments ($client[0]['id']);
-					
+
+				    //Долги/авансы
+                    //
+                    //!!! @@@
+                    //Баланс контрагента
+                    include_once 'ffun.php';
+                    $client_balance = json_decode(calculateBalance ($_GET['id']), true);
+                    //Долг контрагента
+                    $client_debt = json_decode(calculateDebt ($_GET['id']), true);
+
+                    if ($client_debt['summ'] > 0){
+                        $allPayed = false;
+                    }
+
+                    /*$clientDP = DebtsPrepayments ($client[0]['id']);
+
 					if ($clientDP != 0){
 						//var_dump ($clientDP);
 						$allPayed = false;
@@ -357,7 +370,7 @@
 							}
 								
 						}
-					}
+					}*/
 				}
 				if ($client[0]['status'] != 9){			
 					//Вкладки 
@@ -373,7 +386,7 @@
 						if (!$allPayed){
 							echo '
 									<div class="notes_count2">
-										<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+										<i class="fa fa-exclamation-circle" aria-hidden="true" title="Есть долги"></i>
 									</div>';
 							}
 						echo '
@@ -488,10 +501,10 @@
 
 							//!!! @@@
                             //Баланс контрагента
-                            include_once 'ffun.php';
-                            $client_balance = json_decode(calculateBalance ($_GET['id']), true);
+                            //include_once 'ffun.php';
+                            //$client_balance = json_decode(calculateBalance ($_GET['id']), true);
                             //Долг контрагента
-                            $client_debt = json_decode(calculateDebt ($_GET['id']), true);
+                            //$client_debt = json_decode(calculateDebt ($_GET['id']), true);
 
                             //Если доступный остаток ОТРИЦАТЕЛЕН
                             $dostOstatok = $client_balance['summ'] - $client_balance['debited'];
