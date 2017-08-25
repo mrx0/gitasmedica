@@ -2005,6 +2005,127 @@
         })
     }
 
+    //Выборка статистики  нарядов
+    function Ajax_show_result_stat_invoice(){
+
+        //var typeW = document.querySelector('input[name="typeW"]:checked').value;
+
+        var paidAll = $("input[id=paidAll]:checked").val();
+        if (paidAll === undefined){
+            paidAll = 0;
+        }
+        var paidTrue = $("input[id=paidTrue]:checked").val();
+        if (paidTrue === undefined){
+            paidTrue = 0;
+        }
+        var paidNot = $("input[id=paidNot]:checked").val();
+        if (paidNot === undefined){
+            paidNot = 0;
+        }
+
+        /*var zapisError = $("input[id=zapisError]:checked").val();
+        if (zapisError === undefined){
+            zapisError = 0;
+        }*/
+
+        var insureTrue = $("input[id=insureTrue]:checked").val();
+        if (insureTrue === undefined){
+            insureTrue = 0;
+        }
+
+        /*var fullAll = $("input[id=fullAll]:checked").val();
+        if (fullAll === undefined){
+            fullAll = 0;
+        }
+
+        var fullWOInvoice = $("input[id=fullWOInvoice]:checked").val();
+        if (fullWOInvoice === undefined){
+            fullWOInvoice = 0;
+        }
+
+        var fullWOTask = $("input[id=fullWOTask]:checked").val();
+        if (fullWOTask === undefined){
+            fullWOTask = 0;
+        }
+
+        var fullOk = $("input[id=fullOk]:checked").val();
+        if (fullOk === undefined){
+            fullOk = 0;
+        }
+
+        var statusAll = $("input[id=statusAll]:checked").val();
+        if (statusAll === undefined){
+            statusAll = 0;
+        }
+
+        var statusPervich = $("input[id=statusPervich]:checked").val();
+        if (statusPervich === undefined){
+            statusPervich = 0;
+        }
+
+        var statusInsure = $("input[id=statusInsure]:checked").val();
+        if (statusInsure === undefined){
+            statusInsure = 0;
+        }
+
+        var statusNight = $("input[id=statusNight]:checked").val();
+        if (statusNight === undefined){
+            statusNight = 0;
+        }
+
+        var statusAnother = $("input[id=statusAnother]:checked").val();
+        if (statusAnother === undefined){
+            statusAnother = 0;
+        }*/
+
+        $.ajax({
+            url:"ajax_show_result_stat_invoice_f.php",
+            global: false,
+            type: "POST",
+            data:
+                {
+                    all_time:all_time,
+                    datastart: document.getElementById("datastart").value,
+                    dataend: document.getElementById("dataend").value,
+
+                    //Кто создал запись
+                    creator:$("#search_worker").val(),
+                    //Пациент
+                    client:$("#search_client").val(),
+                    //К кому запись
+                    //worker:$("#search_client4").val(),
+                    filial:$("#filial").val(),
+
+                    //typeW:typeW,
+
+                    paidAll: paidAll,
+                    paidTrue: paidTrue,
+                    paidNot: paidNot,
+                    //zapisError: zapisError,
+                    insureTrue: insureTrue,
+
+                    /*fullAll: fullAll,
+                    fullWOInvoice: fullWOInvoice,
+                    fullWOTask: fullWOTask,
+                    fullOk: fullOk,
+
+                    statusAll: statusAll,
+                    statusPervich: statusPervich,
+                    statusInsure: statusInsure,
+                    statusNight: statusNight,
+                    statusAnother: statusAnother,*/
+
+                },
+            cache: false,
+            beforeSend: function() {
+                $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                $('#qresult').html(data);
+            }
+        })
+    }
+
     //Выборка статистики страховых
     function Ajax_show_result_stat_insure(){
 

@@ -1,6 +1,6 @@
 <?php
 
-//laboratiries.php
+//laboratories.php
 //
 
 	require_once 'header.php';

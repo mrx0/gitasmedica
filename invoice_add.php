@@ -247,12 +247,18 @@
 
                             //Если заднее число записи
 
-                            //var_dump(date("Y-m-d H:i",time()));
+                            //var_dump(time());
+                            /*var_dump(date("Y-m-d H:m", time()));
+                            var_dump(date("Y-m-d H:m"));*/
                             //var_dump($sheduler_zapis[0]['year'].'-'.$month.'-'.$sheduler_zapis[0]['day'].' '.$start_time_h.':'.$start_time_m);
-                            $datetime1 = new DateTime(date("Y-m-d H:m"));
+                            $datetime1 = new DateTime(date("Y-m-d H:i"));
                             $datetime2 = new DateTime($sheduler_zapis[0]['year'].'-'.$month.'-'.$sheduler_zapis[0]['day'].' '.$start_time_h.':'.$start_time_m);
                             $interval = $datetime2->diff($datetime1);
-                            //var_dump ((int)$interval->format('%H'));
+                            $diff_hours = $interval->h;
+                            $diff_hours = $diff_hours + ($interval->days*24);
+                            /*var_dump ($datetime1);
+                            var_dump ($datetime2);*/
+                            //var_dump ($diff_hours);
 
                             //var_dump($sheduler_zapis[0]['day'].'.'.$month.'.'.$sheduler_zapis[0]['year'].' '.$start_time_h.':'.$start_time_m);
 
@@ -261,7 +267,7 @@
                                 (($sheduler_zapis[0]['year'] == date("Y")) && ($sheduler_zapis[0]['day'] < date("m"))) ||
                                 (($month == date("m")) && ($sheduler_zapis[0]['day'] < date("d")))) &&
                                 !(($finances['see_all'] == 1) || $god_mode) &&
-                                !(($sheduler_zapis[0]['noch'] == '1') && ((int)$interval->format('%H') <= 15))
+                                !(($sheduler_zapis[0]['noch'] == '1') && ($diff_hours <= 13))
                             ) {
                                 /*var_dump($sheduler_zapis[0]['day']);
                                 var_dump($month);

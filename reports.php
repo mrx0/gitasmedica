@@ -31,19 +31,19 @@
 						<ul class="reportBlock" style="">
 							<h1>Стоматология</h1>';
 			echo '				
-							<li class="cellsBlock" style="margin: 10px;">
+							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_stomat2.php" class="b3">Пропавшая первичка</a>
 							</li>';
 			echo '				
-							<li class="cellsBlock" style="margin: 10px;">
+							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_stomat3.php" class="b3">Выборка</a>
 							</li>';
 			echo '				
-							<li class="cellsBlock" style="margin: 10px;">
+							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_stomat4.php" class="b3">Отсутствующие зубы</a>
 							</li>';
 			/*echo '				
-							<li class="cellsBlock" style="margin: 10px;">
+							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_stomat5.php" class="b3">Все просроченные незакрытые напоминания стоматологов</a>
 							</li>';*/
 			echo '
@@ -51,25 +51,16 @@
 						<ul class="reportBlock" style="">
 							<h1>Косметология</h1>';
 				echo '							
-							<li class="cellsBlock" style="margin: 10px;">
+							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_cosm.php" class="b3">Статистика</a>
 							</li>';
 				/*echo '
-							<li class="cellsBlock" style="margin: 10px;">
+							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_cosm_ex.php" class="b3">Статистика с фильтром (старая нерабочая)</a>
 							</li>';*/
 				echo '
-							<li class="cellsBlock" style="margin: 10px;">
+							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_cosm_ex2.php" class="b3">Статистика с фильтром</a>
-							</li>';
-
-			echo '		
-						</ul>
-						<ul class="reportBlock" style="">
-								<h1>Администраторы</h1>';
-			echo '				
-							<li class="cellsBlock" style="margin: 10px;">
-								<a href="stat_add_clients.php" class="b3">Добавление пациентов</a>
 							</li>';
 
 			echo '
@@ -77,8 +68,13 @@
 						<ul class="reportBlock" style="">
 								<h1>Запись</h1>';
 			echo '				
-							<li class="cellsBlock" style="margin: 10px;">
+							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_zapis.php" class="b3">Запись</a>
+							</li>';
+
+            echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="stat_add_clients.php" class="b3">Добавление пациентов</a>
 							</li>';
 
 			echo '
@@ -87,33 +83,43 @@
 								<h1>Финансы</h1>';
 
 			echo '				
-							<li class="cellsBlock" style="margin: 10px;">
+							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_cashbox.php" class="b3">Касса</a>
 							</li>';
 
 			echo '				
-							<li class="cellsBlock" style="margin: 10px;">
+							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_client_finance2.php" class="b3">Долги/авансы</a>
 							</li>';
 
 			echo '				
-							<li class="cellsBlock" style="margin: 10px;">
-								<a href="stat_insure.php" class="b3">Страховые</a>
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="stat_invoice.php" class="b3">Наряды</a>
 							</li>';
-			echo '				
-							<li class="cellsBlock" style="margin: 10px;">
-								<a href="insure_xls.php" class="b3">Страховые выгрузки</a>
-							</li>';
+
             echo '				
-							<li class="cellsBlock" style="margin: 10px;">
+							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_client_finance.php" class="b3">Долги/авансы (старое)</a>
 							</li>';
 			echo '
 						</ul>
 						<ul class="reportBlock" style="">
+								<h1>Страховые</h1>';
+            echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="stat_insure.php" class="b3">Страховые</a>
+							</li>';
+            echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="insure_xls.php" class="b3">Страховые выгрузки</a>
+							</li>';
+
+			echo '
+						</ul>
+						<ul class="reportBlock" style="">
 								<h1>Работы</h1>';
 			echo '				
-							<li class="cellsBlock" style="margin: 10px;">
+							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_invoices.php" class="b3">Наряды</a>
 							</li>';
 

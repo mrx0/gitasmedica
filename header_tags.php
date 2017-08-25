@@ -5,7 +5,7 @@
 	
 	$god_mode = FALSE;
 	
-	$version = 'v 24.08.2017';
+	$version = 'v 25.08.2017';
 	
 	echo'
 		<!DOCTYPE html>
@@ -254,17 +254,17 @@
 		/*if (($soft['see_all'] == 1) || ($soft['see_own'] == 1) || $god_mode){
 			echo '<li><a href="soft.php">Программа</a></li>';
 		}*/
-		if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
+		/*if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
 			echo '<li><a href="stomat.php" title="Стоматология">Стоматология</a></li>';
-		}
-		if (($cosm['see_all'] == 1) || ($cosm['see_own'] == 1) || $god_mode){
+		}*/
+		/*if (($cosm['see_all'] == 1) || ($cosm['see_own'] == 1) || $god_mode){
 			echo '<li><a href="cosmet.php" title="Косметология">Косметология</a></li>';
-		}
+		}*/
 		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
 			echo '<li><a href="scheduler.php" title="График">График</a></li>';
 		}
 		if (($report['see_all'] == 1) || ($report['see_own'] == 1) || $god_mode){
-			echo '<li><a href="reports.php" title="Статистика и отчёты"><i class="fa fa-bar-chart"></i> Отчёты</a></li>';
+			echo '<li><a href="reports.php" title="Статистика и отчёты">Отчёты</a></li>';
 		}
 		if (($clients['see_all'] == 1) || ($clients['see_own'] == 1) || $god_mode){
 			echo '<li><a href="clients.php" title="Пациенты">Пациенты</a></li>';

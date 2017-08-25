@@ -71,6 +71,21 @@
                         $dop_img .= '<img src="img/night.png" title="Ночное"> ';
                     }
 
+                    $start_time_h = floor($ZapisHereQueryToday[$z]['start_time'] / 60);
+                    $start_time_m = $ZapisHereQueryToday[$z]['start_time'] % 60;
+                    if ($start_time_m < 10) $start_time_m = '0' . $start_time_m;
+                    $end_time_h = floor(($ZapisHereQueryToday[$z]['start_time'] + $ZapisHereQueryToday[$z]['wt']) / 60);
+                    if ($end_time_h > 23) $end_time_h = $end_time_h - 24;
+                    $end_time_m = ($ZapisHereQueryToday[$z]['start_time'] + $ZapisHereQueryToday[$z]['wt']) % 60;
+                    if ($end_time_m < 10) $end_time_m = '0' . $end_time_m;
+
+                    $day = $ZapisHereQueryToday[$z]['day'];
+
+                    if ($ZapisHereQueryToday[$z]['month'] < 10) $month = '0' . $ZapisHereQueryToday[$z]['month'];
+                    else $month = $ZapisHereQueryToday[$z]['month'];
+
+                    $year = $ZapisHereQueryToday[$z]['year'];
+
                     $rezult .= '
                                         <li class="cellsBlock" style="width: auto;">
                                             <!--<div class="cellCosmAct">-->';
@@ -136,23 +151,10 @@
                         }
                     }
 
+
                     $rezult .= '
                                             <!--</div>-->
-                                            <div class="cellName" style="position: relative; ' . $back_color . '">';
-                    $start_time_h = floor($ZapisHereQueryToday[$z]['start_time'] / 60);
-                    $start_time_m = $ZapisHereQueryToday[$z]['start_time'] % 60;
-                    if ($start_time_m < 10) $start_time_m = '0' . $start_time_m;
-                    $end_time_h = floor(($ZapisHereQueryToday[$z]['start_time'] + $ZapisHereQueryToday[$z]['wt']) / 60);
-                    if ($end_time_h > 23) $end_time_h = $end_time_h - 24;
-                    $end_time_m = ($ZapisHereQueryToday[$z]['start_time'] + $ZapisHereQueryToday[$z]['wt']) % 60;
-                    if ($end_time_m < 10) $end_time_m = '0' . $end_time_m;
-
-                    $day = $ZapisHereQueryToday[$z]['day'];
-
-                    if ($ZapisHereQueryToday[$z]['month'] < 10) $month = '0' . $ZapisHereQueryToday[$z]['month'];
-                    else $month = $ZapisHereQueryToday[$z]['month'];
-
-                    $year = $ZapisHereQueryToday[$z]['year'];
+                                            <div class="cellName" style="position: relative; cursor: pointer; ' . $back_color . '" onclick="window.location.replace(\'zapis_full.php?filial=15&who='.$ZapisHereQueryToday[$z]['type'].'&d='.$ZapisHereQueryToday[$z]['day'].'&m='.$month.'&y='.$ZapisHereQueryToday[$z]['year'].'&kab='.$ZapisHereQueryToday[$z]['kab'].'\')">';
 
                     $rezult .=
                         '<b>' . $day . ' ' . $monthsName[$month] . ' ' . $year . '</b><br>' .

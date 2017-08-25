@@ -23,6 +23,7 @@
             $finance_edit = false;
 
 
+
             require 'config.php';
 
 			//переменная для просроченных
@@ -57,7 +58,19 @@
 			);
 			
 			$client = SelDataFromDB('spr_clients', $_GET['id'], 'user');
-			
+
+			//!!!ДР по-новому надо сделать
+            /*
+SELECT
+    `name`,
+    `birth`,
+    (YEAR(CURRENT_DATE)-YEAR(`birth`))-(RIGHT(CURRENT_DATE,5)<RIGHT(`birth`,5)
+    ) AS `age`
+FROM `users`
+ORDER BY `name`;
+            */
+
+
 			//var_dump($client);
 			if ($client != 0){
 				echo '
