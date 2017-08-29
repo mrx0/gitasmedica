@@ -21,7 +21,35 @@
 
     }
 
-	//Вставка и обновление категории процентов из-под Web
+    //Получить IP компа
+    function GetRealIp(){
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])){
+            $uip=$_SERVER['HTTP_CLIENT_IP'];
+        }elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+            $uip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+        }else{
+            $uip=$_SERVER['REMOTE_ADDR'];
+        }
+        return $uip;
+    }
+
+    //Логирование.
+    function AddLog ($ip, $creator, $description_old, $description_new){
+
+        $msql_cnnct = ConnectToDB ();
+
+        $time = time();
+        $query = "INSERT INTO `logs` (
+                `date`, `ip`, `mac`, `creator`, `description_old`, `description_new`) 
+                VALUES (
+                '{$time}', '{$ip}', '', '{$creator}', '{$description_old}', '{$description_new}') ";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        mysqli_close($msql_cnnct);
+    }
+
+    //Вставка и обновление категории процентов из-под Web
 	function WritePercentCatToDB_Edit ($session_id, $cat_name, $work_percent, $material_percent, $personal_id){
 
         $msql_cnnct = ConnectToDB ();
@@ -29,9 +57,9 @@
         $time = date('Y-m-d H:i:s', time());
 
         $query = "INSERT INTO `fl_percents` (
-			`cat_name`, `work_percent`, `material_percent`, `personal_id`, `create_time`, `create_person`)
+			`name`, `work_percent`, `material_percent`, `type`, `personal_id`, `create_time`, `create_person`)
 			VALUES (
-			'{$cat_name}', '{$work_percent}', '{$material_percent}', '{$personal_id}', '{$time}', '{$session_id}') ";
+			'{$cat_name}', '{$work_percent}', '{$material_percent}', '{$personal_id}', '{$personal_id}', '{$time}', '{$session_id}') ";
 
         //mysqli_query($query) or die($query.' -> '.mysql_error());
         //mysqli_close();
@@ -41,7 +69,7 @@
         $mysql_insert_id = mysqli_insert_id($msql_cnnct);
 
         //логирование
-        AddLog (GetRealIp(), $session_id, '', 'Добавлен сертификат. Номер: ['.$num.']. Номинал: ['.$nominal.'] руб.');
+        AddLog (GetRealIp(), $session_id, '', 'Добавлена категория процентов. Название: ['.$cat_name.']. Работа: ['.$work_percent.']. Материал: ['.$material_percent.']. Тип: ['.$personal_id.'].');
 
         return ($mysql_insert_id);
     }

@@ -41,10 +41,15 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         require_once 'permissions.php';
 
         //Дополнительные настройки, чтобы передать их дальше
-        $dop['fullAll'] = $_POST['fullAll'];
-        $dop['fullWOInvoice'] = $_POST['fullWOInvoice'];
-        $dop['fullWOTask'] = $_POST['fullWOTask'];
-        $dop['fullOk'] = $_POST['fullOk'];
+        $dop['zapis']['fullAll'] = $_POST['fullAll'];
+        $dop['zapis']['fullWOInvoice'] = $_POST['fullWOInvoice'];
+        $dop['zapis']['fullWOTask'] = $_POST['fullWOTask'];
+        $dop['zapis']['fullOk'] = $_POST['fullOk'];
+
+        $dop['invoice']['invoiceAll'] = $_POST['invoiceAll'];
+        $dop['invoice']['invoicePaid'] = $_POST['invoicePaid'];
+        $dop['invoice']['invoiceNotPaid'] = $_POST['invoiceNotPaid'];
+        $dop['invoice']['invoiceInsure'] = $_POST['invoiceInsure'];
 
 
         //Кто создал запись

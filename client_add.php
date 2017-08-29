@@ -257,7 +257,7 @@
 								</div>
 								<div class="cellRight">
 									<input type="text" size="50" name="searchdata2" id="search_client2" placeholder="Введите первые три буквы для поиска" value="" class="who2"  autocomplete="off">
-									<ul id="search_result2" class="search_result2"></ul><br />
+									<ul id="search_result2" class="search_result2"></ul><br>
 								</div>
 							</div>
 							
@@ -268,7 +268,7 @@
 								</div>
 								<div class="cellRight">
 									<input type="text" size="50" name="searchdata4" id="search_client4" placeholder="Введите первые три буквы для поиска" value="" class="who4"  autocomplete="off">
-									<ul id="search_result4" class="search_result4"></ul><br />
+									<ul id="search_result4" class="search_result4"></ul><br>
 								</div>
 							</div>
 						

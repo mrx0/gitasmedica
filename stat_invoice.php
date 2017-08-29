@@ -126,7 +126,7 @@
 										<input type="checkbox" id="paidAll" name="paidAll" class="paidType" value="1" checked> Все<br>
 										<input type="checkbox" id="paidTrue" name="paidTrue" class="paidType" value="1" checked> Не оплаченные<br>
 										<input type="checkbox" id="paidNot" name="paidNot" class="paidType" value="1" checked> Оплаченные<br>
-										<input type="checkbox" id="insureTrue" name="insureTrue" class="paidType" value="1" checked> Не закрытые<br>
+										<input type="checkbox" id="insureTrue" name="insureTrue" class="paidType" value="1" checked> Страховые<br>
 										<!--<input type="checkbox" id="zapisError" name="zapisError" class="zapisType" value="1" checked> Ошибочные<br>-->
 									</div>
 								</li>';

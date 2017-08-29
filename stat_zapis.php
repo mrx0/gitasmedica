@@ -20,13 +20,16 @@
 			if ($_POST){
 			}else{
 				echo '
+                    <div class="no_print"> 
 					<header style="margin-bottom: 5px;">
 						<h1>Запись</h1>
-					</header>';
+					</header>
+					</div>';
 
 				echo '
 						<div id="data">';
 				echo '
+                            <div class="no_print"> 
 							<ul style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 20px; width: 420px; font-size: 95%; background-color: rgba(245, 245, 245, 0.9); display: inline-table;">
 								
 								<li style="margin-bottom: 10px;">
@@ -123,11 +126,11 @@
 										Состояние
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="checkbox" id="zapisAll" name="zapisAll" class="zapisType" value="1" checked> Все<br>
+										<input type="checkbox" id="zapisAll" name="zapisAll" class="zapisType" value="1"> Все<br>
 										<input type="checkbox" id="zapisArrive" name="zapisArrive" class="zapisType" value="1" checked> Пришли<br>
-										<input type="checkbox" id="zapisNotArrive" name="zapisNotArrive" class="zapisType" value="1" checked> Не пришли<br>
-										<input type="checkbox" id="zapisNull" name="zapisNull" class="zapisType" value="1" checked> Не закрытые<br>
-										<input type="checkbox" id="zapisError" name="zapisError" class="zapisType" value="1" checked> Ошибочные<br>
+										<input type="checkbox" id="zapisNotArrive" name="zapisNotArrive" class="zapisType" value="1"> Не пришли<br>
+										<input type="checkbox" id="zapisNull" name="zapisNull" class="zapisType" value="1"> Не закрытые<br>
+										<input type="checkbox" id="zapisError" name="zapisError" class="zapisType" value="1"> Ошибочные<br>
 									</div>
 								</li>';
 
@@ -176,11 +179,27 @@
 									</div>
 								</li>
 								
+								<li class="filterBlock">
+									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+										Наряды
+									</div>
+									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
+										<input type="checkbox" id="invoiceAll" name="invoiceAll" class="invoiceType" value="1" checked> Все<br>
+										<input type="checkbox" id="invoicePaid" name="invoicePaid" class="invoiceType" value="1" checked> Оплаченные<br>
+										<input type="checkbox" id="invoiceNotPaid" name="invoiceNotPaid" class="invoiceType" value="1" checked> Не оплаченные<br>
+										<input type="checkbox" id="invoiceInsure" name="invoiceInsure" class="invoiceType" value="1" checked> Страховые<br>
+										<!--<input type="checkbox" id="statusAnother" name="statusAnother" class="invoiceType" value="1" checked> Все остальные<br>-->
+									</div>
+								</li>
+								
 							</ul>
+							</div>
 						</div>';
 				
 				echo '
-						<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_zapis()">';
+                        <div class="no_print"> 
+						<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_zapis()">
+						</div>';
 
                 echo '
 						<div id="status">
@@ -293,6 +312,41 @@
                                 });
                                 if (allCheckStatus){
                                     $("#statusAll").prop("checked", true);
+                                }
+                            }
+                        }
+					});
+                    //Наряды
+                    $(".invoiceType").click(function() {
+                        
+					    var checked_status = $(this).is(":checked");
+					    var thisId = $(this).attr("id");
+					    var pin_status = false;
+					    var allCheckStatus = false;
+					    
+                        if (thisId == "invoiceAll"){
+                            if (checked_status){
+                                pin_status = true;
+                            }else{
+                                pin_status = false;
+                            }
+                            $(".invoiceType").each(function() {
+                                $(this).prop("checked", pin_status);
+                            });
+                        }else{
+                            if (!checked_status){
+                                $("#invoiceAll").prop("checked", false);
+                            }else{
+                                allCheckStatus = true; 
+                                $(".invoiceType").each(function() {
+                                    if ($(this).attr("id") != "invoiceAll"){
+                                        if (!$(this).is(":checked")){
+                                            allCheckStatus = false; 
+                                        }
+                                    }
+                                });
+                                if (allCheckStatus){
+                                    $("#invoiceAll").prop("checked", true);
                                 }
                             }
                         }

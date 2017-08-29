@@ -1284,12 +1284,16 @@
         if (mode == 'edit'){
             link = "fl_percent_cat_edit_f.php";
         }
+		//console.log(link);
 
         var cat_name = $('#cat_name').val();
         var work_percent = $('#work_percent').val();
         var material_percent = $('#material_percent').val();
         var personal_id = $('#personal_id').val();
-        //console.log(personal_id);
+        /*console.log(cat_name);
+        console.log(work_percent);
+        console.log(material_percent);
+        console.log(personal_id);*/
 
         // убираем класс ошибок с инпутов
         $("input").each(function(){
@@ -1318,7 +1322,7 @@
             },
             success:function(data){
                 if(data.result == 'success'){
-                    console.log(data.result);
+                    //console.log(data.result);
                     $.ajax({
                         url: link,
                         global: false,
@@ -1330,20 +1334,21 @@
                                 cat_name: cat_name,
                                 work_percent: work_percent,
                                 material_percent: material_percent,
+                                personal_id: personal_id,
                             },
 
                         cache: false,
                         beforeSend: function() {
-                            $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                            //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
                         },
                         // действие, при ответе с сервера
                         success:function(data){
-                            //alert('success1');
+                            console.log(data.data);
                             if(data.result == 'success') {
                                 //alert('success');
                                 $('#data').html(data.data);
                                 setTimeout(function () {
-                                    window.location.replace('specializations.php');
+                                    //window.location.replace('specializations.php');
                                 }, 100);
                             }else{
                                 //alert('error');
@@ -1957,6 +1962,26 @@
             statusAnother = 0;
         }
 
+        var invoiceAll = $("input[id=invoiceAll]:checked").val();
+        if (invoiceAll === undefined){
+            invoiceAll = 0;
+        }
+
+        var invoicePaid = $("input[id=invoicePaid]:checked").val();
+        if (invoicePaid === undefined){
+            invoicePaid = 0;
+        }
+
+        var invoiceNotPaid = $("input[id=invoiceNotPaid]:checked").val();
+        if (invoiceNotPaid === undefined){
+            invoiceNotPaid = 0;
+        }
+
+        var invoiceInsure = $("input[id=invoiceInsure]:checked").val();
+        if (invoiceInsure === undefined){
+            invoiceInsure = 0;
+        }
+
         $.ajax({
             url:"ajax_show_result_stat_zapis_f.php",
             global: false,
@@ -1993,6 +2018,11 @@
                     statusInsure: statusInsure,
                     statusNight: statusNight,
                     statusAnother: statusAnother,
+
+                    invoiceAll: invoiceAll,
+                    invoicePaid: invoicePaid,
+                    invoiceNotPaid: invoiceNotPaid,
+                    invoiceInsure: invoiceInsure,
 
                 },
             cache: false,

@@ -40,6 +40,10 @@
                 $stomatExist = false;
                 $cosmetExist = false;
 
+                $invoicePaid = false;
+                $invoiceNotPaid = false;
+                $invoiceInsure = false;
+
                 $showZapisRezult = false;
 
                 if (($ZapisHereQueryToday[$z]['enter'] != 8) || (($ZapisHereQueryToday[$z]['enter'] == 8) && $upr_edit)) {
@@ -94,9 +98,9 @@
                         //var_dump($t_f_data_db);
 
                         if ($t_f_data_db != 0) {
-                            foreach ($t_f_data_db as $ids) {
+                            /*foreach ($t_f_data_db as $ids) {
                                 //
-                            }
+                            }*/
                         }
                     }
 
@@ -117,9 +121,9 @@
                         //var_dump($cosmet_data_db);
 
                         if ($cosmet_data_db != 0) {
-                            foreach ($cosmet_data_db as $ids) {
+                            /*foreach ($cosmet_data_db as $ids) {
                                 //
-                            }
+                            }*/
                         }
                     }
 
@@ -138,9 +142,9 @@
                     //var_dump($invoice_data_db);
 
                     if ($invoice_data_db != 0) {
-                        foreach ($invoice_data_db as $ids) {
+                        /*foreach ($invoice_data_db as $ids) {
                             //
-                        }
+                        }*/
                     }
 
 
@@ -148,42 +152,128 @@
                     var_dump ('1_');
                     var_dump($showZapisRezult);*/
 
+                    //Ячейка с нарядами
+                    $rezultInvoice = '';
+
+                    if (!empty($invoice_data_db)) {
+                        //var_dump($invoice_data_db);
+                        foreach ($invoice_data_db as $ids) {
+                            //var_dump($ids['id']);
+
+                            //Отметка об объеме оплат
+                            $paid_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;"></i>';
+
+                            $invoicePaid = false;
+                            $invoiceNotPaid = false;
+                            $invoiceInsure = false;
+
+                            if ($ids['summ'] == $ids['paid']) {
+                                $paid_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i>';
+                                $invoicePaid = true;
+                            }else{
+                                $invoiceNotPaid = true;
+                            }
+
+                            $rezultInvoice .= '
+                                                        <div class="cellsBlockHover" style="border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
+                                                            <a href="invoice.php?id=' . $ids['id'] . '" class="ahref">
+                                                                <div>
+                                                                    <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+                                                                        <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+                                                                    </div>
+                                                                    <div style="display: inline-block; vertical-align: middle;">
+                                                                        ' . date('d.m.y', strtotime($ids['create_time'])) . '
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
+                                                                        <span class="calculateInvoice" style="font-size: 11px">' . $ids['summ'] . '</span> руб.
+                                                                    </div>';
+                            if ($ids['summins'] != 0) {
+                                $rezultInvoice .= '
+                                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
+                                                                        Страховка:<br>
+                                                                        <span class="calculateInsInvoice" style="font-size: 11px">' . $ids['summins'] . '</span> руб.
+                                                                    </div>';
+                                $invoiceInsure = true;
+                            }
+                            $rezultInvoice .= '
+                                                                </div>
+                                                                
+                                                            </a>
+                                                            <span style="position: absolute; top: 2px; right: 3px;">' . $paid_mark . '</span>
+                                                        </div>';
+                        }
+                    }
+
+
+
+
                     if (!empty($dop)){
-                        if ($dop['fullAll'] == 1){
-                            $showZapisRezult = true;
-                            /*var_dump ('2_');
-                            var_dump($showZapisRezult);*/
-                        }else {
-                            if (($dop['fullWOInvoice'] == 1) && !$invoiceExist){
+                        if (isset($dop['zapis'])) {
+                            if ($dop['zapis']['fullAll'] == 1) {
                                 $showZapisRezult = true;
-                                /*var_dump ('3_');
+                                /*var_dump ('2_');
+                                var_dump($showZapisRezult);*/
+                            } else {
+                                if (($dop['zapis']['fullWOInvoice'] == 1) && !$invoiceExist) {
+                                    $showZapisRezult = true;
+                                    /*var_dump ('3_');
+                                    var_dump($showZapisRezult);*/
+                                }
+                                if (($dop['zapis']['fullWOTask'] == 1) && (!$cosmetExist && !$stomatExist)) {
+                                    $showZapisRezult = true;
+                                    /*var_dump ('4_');
+                                    var_dump($showZapisRezult);*/
+                                }
+                                if (($dop['zapis']['fullOk'] == 1) && ($cosmetExist || $stomatExist)) {
+                                    $showZapisRezult = true;
+                                    /*var_dump ('5_');
+                                    var_dump($showZapisRezult);*/
+                                }
+                                /*var_dump ('6_');
                                 var_dump($showZapisRezult);*/
                             }
-                            if (($dop['fullWOTask'] == 1) && (!$cosmetExist && !$stomatExist)){
+                        }
+                        if (isset($dop['invoice'])) {
+                            $showZapisRezult = false;
+                            if ($dop['invoice']['invoiceAll'] == 1) {
                                 $showZapisRezult = true;
-                                /*var_dump ('4_');
+                                /*var_dump ('7_');
+                                var_dump($showZapisRezult);*/
+                            } else {
+                                if (($dop['invoice']['invoicePaid'] == 1) && $invoicePaid) {
+                                    $showZapisRezult = true;
+                                    /*var_dump ('8_');
+                                    var_dump($showZapisRezult);*/
+                                }
+                                if (($dop['invoice']['invoiceNotPaid'] == 1) && $invoiceNotPaid) {
+                                    $showZapisRezult = true;
+                                    /*var_dump ('9_');
+                                    var_dump($showZapisRezult);*/
+                                }
+                                if (($dop['invoice']['invoiceInsure'] == 1) && $invoiceInsure) {
+                                    $showZapisRezult = true;
+                                    /*var_dump ('10_');
+                                    var_dump($showZapisRezult);*/
+                                }
+                                /*var_dump ('11_');
                                 var_dump($showZapisRezult);*/
                             }
-                            if (($dop['fullOk'] == 1) && ($cosmetExist || $stomatExist)){
-                                $showZapisRezult = true;
-                                /*var_dump ('5_');
-                                var_dump($showZapisRezult);*/
-                            }
-                            /*var_dump ('6_');
-                            var_dump($showZapisRezult);*/
                         }
                     }else{
                         $showZapisRezult = true;
-                        /*var_dump ('7_');
+                        /*var_dump ('12_');
                         var_dump($showZapisRezult);*/
                     }
 
                     /*var_dump ($dop);
                     var_dump ($invoiceExist);
                     var_dump ($cosmetExist);
-                    var_dump ($stomatExist);
-                    var_dump ('8_');
-                    var_dump($showZapisRezult);*/
+                    var_dump ($stomatExist);*/
+                    /*var_dump ('13_');
+                    var_dump($showZapisRezult);
+                    var_dump('__________');*/
 
 
                     if ($showZapisRezult) {
@@ -287,7 +377,10 @@
                             }
                         }
                         if ($format) {
-                            if (!empty($invoice_data_db)) {
+
+                            $rezult .= $rezultInvoice;
+
+                            /*if (!empty($invoice_data_db)) {
                                 //var_dump($invoice_data_db);
                                 foreach ($invoice_data_db as $ids) {
 
@@ -327,7 +420,7 @@
                                                             <span style="position: absolute; top: 2px; right: 3px;">' . $paid_mark . '</span>
                                                         </div>';
                                 }
-                            }
+                            }*/
                             //<-- Формулы посещения наряды
 
                             $rezult .= '

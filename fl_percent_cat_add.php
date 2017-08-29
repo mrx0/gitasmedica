@@ -81,7 +81,7 @@ if ($enter_ok){
 
         echo '					
                             <div id="errror"></div>                        
-                            <input type="button" class="b" value="Добавить" onclick="Ajax_cat_add()">
+                            <input type="button" class="b" value="Добавить" onclick="Ajax_cat_add(\'add\')">
                         </form>';
 
         echo '

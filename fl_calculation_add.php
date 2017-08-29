@@ -1,28 +1,28 @@
 <?php
 
-//invoice_edit.php
-//Редактируем счёт
+//fl_calculation_add.php
+//Добавляем расчётный лист к наряду
 
 	require_once 'header.php';
-	
+
 	if ($enter_ok){
 		require_once 'header_tags.php';
-	
+
 		if (($finances['edit'] == 1) || $god_mode){
 			if ($_GET){
 				include_once 'DBWork.php';
 				include_once 'functions.php';
-			
+
 				require 'variables.php';
 
 				//var_dump($_SESSION['invoice_data']);
 				//unset($_SESSION['invoice_data']);
-				
-				if (isset($_GET['id'])){
-					
-					$invoice_j = SelDataFromDB('journal_invoice', $_GET['id'], 'id');
+
+				if (isset($_GET['invoice_id'])){
+
+					$invoice_j = SelDataFromDB('journal_invoice', $_GET['invoice_id'], 'id');
 					//var_dump($invoice_j);
-					
+
 					if ($invoice_j != 0){
 
                         //Если заднее число
@@ -67,7 +67,7 @@
 								}
 
 								//Хочу получить все данные по этому наряду и захреначить их в сессиию
-								$query = "SELECT * FROM `journal_invoice_ex` WHERE `invoice_id`='".$_GET['id']."';";
+								$query = "SELECT * FROM `journal_invoice_ex` WHERE `invoice_id`='".$_GET['invoice_id']."';";
 								//var_dump($query);
 
                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -90,7 +90,7 @@
 								//var_dump ($invoice_ex_j);
 
 								//Для МКБ
-								$query = "SELECT * FROM `journal_invoice_ex_mkb` WHERE `invoice_id`='".$_GET['id']."';";
+								$query = "SELECT * FROM `journal_invoice_ex_mkb` WHERE `invoice_id`='".$_GET['invoice_id']."';";
 								//var_dump ($query);
 
                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -175,7 +175,7 @@
 										</div>-->
 										
 										<!--<span style="color: red;">Тестовый режим. Уже сохраняется и даже как-то работает</span>-->
-										<h2>Редактировать наряд <a href="invoice.php?id='.$_GET['id'].'" class="ahref">#'.$_GET['id'].'</a></h2>';
+										<h2>Добавить расчётный лист к наряду <a href="invoice.php?id='.$_GET['invoice_id'].'" class="ahref">#'.$_GET['invoice_id'].'</a></h2>';
 
 								echo '
 										<div class="cellsBlock2" style="margin-bottom: 10px;">
@@ -201,7 +201,7 @@
 									</header>';
 
 
-                                if ((($invoice_j[0]['summ'] != $invoice_j[0]['paid']) && ($invoice_j[0]['closed_time'] == 0)) || ($invoice_j[0]['summins'] != 0)) {
+                                if ((($invoice_j[0]['summ'] == $invoice_j[0]['paid']) && ($invoice_j[0]['closed_time'] != 0)) || ($invoice_j[0]['summins'] != 0)) {
                                     echo '
                                         <ul style="margin-left: 6px; margin-bottom: 10px;">	
                                             <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Посещение</li>';
@@ -738,7 +738,7 @@
                                 }else{
                                     echo '
                                                 <div>
-                                                    <div style="display: inline-block; color: red;">Наряд оплачен и закрыт. Редактировать нельзя</div>
+                                                    <div style="display: inline-block; color: red;">Наряд не оплачен и не закрыт.</div>
                                                 </div>';
                                 }
 
@@ -762,7 +762,7 @@
 	}else{
 		header("location: enter.php");
 	}
-		
+
 	require_once 'footer.php';
 
 ?>

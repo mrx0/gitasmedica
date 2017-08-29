@@ -74,7 +74,7 @@ if (isset($_POST['cell_price']))
 // проверка всех полей на пустоту
 foreach($arrayFields as $fieldName => $oneField){
 	
-    if($oneField == '' || !isset($oneField) || (($oneField == '0') && (!isset($_POST['cell_price'])))){
+    if($oneField == '' || !isset($oneField) || (($oneField == '0') && (!isset($_POST['cell_price'])) && (!isset($_POST['material_percent'])))){
         $errorContainer[$fieldName] = 'В этом поле ошибка';
     }
 	
