@@ -21,7 +21,7 @@
                 $msql_cnnct = ConnectToDB();
 
                 //А нет ли уже такого в базе?
-                $query = "SELECT * FROM `fl_percents` WHERE `personal_id`='{$_POST['personal_id']}' AND `name`='{$_POST['cat_name']}'";
+                $query = "SELECT * FROM `fl_spr_percents` WHERE `personal_id`='{$_POST['personal_id']}' AND `name`='{$_POST['cat_name']}'";
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                 $number = mysqli_num_rows($res);

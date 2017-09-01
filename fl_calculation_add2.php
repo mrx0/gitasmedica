@@ -1,7 +1,7 @@
 <?php
 
-//invoice.php
-//Наряд заказ
+//fl_calculation_add2.php
+//Расчет
 
 require_once 'header.php';
 
@@ -59,8 +59,13 @@ if ($enter_ok){
                         //$sheduler_zapis = 0;
                         //var_dump ($sheduler_zapis);
                     }
+                    //var_dump ($sheduler_zapis);
                     //if ($client !=0){
                     if (!empty($sheduler_zapis)){
+
+                        //Категории процентов
+                        $percents_j = SelDataFromDB('fl_spr_percents', $sheduler_zapis[0]['type'], 'type');
+                        //var_dump($percents_j);
 
                         //сортируем зубы по порядку
                         //ksort($_SESSION['invoice_data'][$_GET['client']][$_GET['invoice_id']]['data']);
@@ -383,10 +388,10 @@ if ($enter_ok){
 													<i><b>Тип</b></i>
 												</div>';
 
-                        echo '						
+                        /*!!!echo '
 												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
 													<i><b>ЗП</b></i>
-												</div>';
+												</div>';*/
                         echo '
                                                 <div class="cellCosmAct" style="font-size: 70%; text-align: center;">
                                                     <i><b>-</b></i>
@@ -663,12 +668,22 @@ if ($enter_ok){
 
                                 echo '</b>
                                             </div>
-                                            <div class="cellName" style="font-size: 80%;">
-									            <i><b>-</b></i>
+                                            <div class="cellName" style="font-size: 80%; width: 120px; max-width: 120px;">';
+                                echo '
+                                            <select name="percent_cat" id="percent_cat" style="width: 110px; max-width: 110px;">';
+
+                                                if ($percents_j != 0){
+                                                    for ($i=0;$i<count($percents_j);$i++){
+                                                        echo "<option value='".$percents_j[$i]['id']."'>".$percents_j[$i]['name']."</option>";
+                                                    }
+                                                }
+                                                echo '
+                                            </select>';
+                                echo '
 					                        </div>
                                             
                                             <!--</div>-->
-                                            <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
+                                            <!--<div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
                                                 <b>';
 
                                 //!!! вычисляем зп
@@ -700,8 +715,8 @@ if ($enter_ok){
 
 
                                 echo '</b>
-                                            </div>
-                                            <div invoiceitemid="" class="cellCosmAct info" style="font-size: 100%; text-align: center; " onclick="deleteInvoiceItem(0, this);">
+                                            </div>-->
+                                            <div invoiceitemid="" class="cellCosmAct info" style="font-size: 100%; text-align: center; " onclick="deleteCalcilationItem(0, this);">
                                                 <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
                                             </div>
                                         </div>';
@@ -716,7 +731,7 @@ if ($enter_ok){
 											<div class="cellText2" style="padding: 2px 4px;">
                                                 <div style="vertical-align: middle; font-size: 11px;">
                                                     <div style="text-align: right;">	
-                                                        <input type="button" class="b" value="Сохранить" onclick="showCalculateAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\')">
+                                                        <input type="button" class="b" value="Сохранить" onclick="showCalculateAdd(' . $sheduler_zapis[0]['type'] . ', \'add\')">
                                                     </div>
                                                 </div>
 											</div>
@@ -837,7 +852,8 @@ if ($enter_ok){
 									</div>';
                         echo '
 								</div>
-							';
+								<!-- Подложка только одна -->
+                                <div id="overlay"></div>';
                     }else{
                         echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
                     }

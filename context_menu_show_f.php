@@ -134,6 +134,22 @@
 					}
 				}
 
+				//Изменить категорию процентов
+				if ($_POST['mark'] == 'percent_cats'){
+
+				    //Категории процентов
+                    $percents_j = SelDataFromDB('fl_spr_percents', $_POST['key'], 'type');
+
+
+                    if ($percents_j != 0){
+                        for ($i=0;$i<count($percents_j);$i++){
+                            $data .= '
+									<li><div onclick="fl_changePercentCat('.$percents_j[$i]['id'].')" style="">'.$percents_j[$i]['name'].'</div></li>';
+                        }
+                    }
+
+				}
+
                 //Скидки акции позиция
                 if ($_POST['mark'] == 'lab_order_status'){
                     $data = '';

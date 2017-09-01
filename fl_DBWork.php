@@ -56,7 +56,7 @@
 
         $time = date('Y-m-d H:i:s', time());
 
-        $query = "INSERT INTO `fl_percents` (
+        $query = "INSERT INTO `fl_spr_percents` (
 			`name`, `work_percent`, `material_percent`, `type`, `personal_id`, `create_time`, `create_person`)
 			VALUES (
 			'{$cat_name}', '{$work_percent}', '{$material_percent}', '{$personal_id}', '{$personal_id}', '{$time}', '{$session_id}') ";

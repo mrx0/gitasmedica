@@ -60,7 +60,7 @@
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
 										<div class="wrapper-demo">';
-				if (($finances['see_all'] == 1) || $god_mode){
+				//if (($finances['see_all'] == 1) || $god_mode){
                     echo '
 											<select id="filial" class="wrapper-dropdown-2 b2" tabindex="2" name="filial">
 												<ul class="dropdown">
@@ -74,13 +74,13 @@
 				    echo '
 												</ul>
 											</select>';
-				}else{
+				/*}else{
                     $offices_j = SelDataFromDB('spr_office', $_SESSION['filial'], 'offices');
                     if ($offices_j != 0) {
                         echo $offices_j[0]['name'].'
                                 <input type="hidden" id="filial" name="filial" value="'.$_SESSION['filial'].'">';
                     }
-                }
+                }*/
 
                 echo '
 										</div>
@@ -91,9 +91,16 @@
 										Сотрудник, к кому была запись<br>
 										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
 									</div>
-									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
+									<div class="filtercellRight" style="width: 245px; min-width: 245px;">';
+                if (($finances['see_all'] == 1) || $god_mode){
+                    echo '
 										<input type="text" size="30" name="searchdata4" id="search_client4" placeholder="Минимум три буквы для поиска" value="" class="who4" autocomplete="off">
-										<ul id="search_result4" class="search_result4"></ul><br />
+										<ul id="search_result4" class="search_result4"></ul><br />';
+                }else{
+                    echo WriteSearchUser('spr_workers', $_SESSION['id'], 'user_full', false).'
+                                        <input type="hidden" id="search_client4" name="searchdata4" value="'.WriteSearchUser('spr_workers', $_SESSION['id'], 'user_full', false).'">';
+                }
+                echo '
 									</div>
 								</li>
 								<li class="filterBlock">

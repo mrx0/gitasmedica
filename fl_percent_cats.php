@@ -34,7 +34,7 @@
 						</li>';
 			
 			include_once 'DBWork.php';
-			$percents_j = SelDataFromDB('fl_percents', '', '');
+			$percents_j = SelDataFromDB('fl_spr_percents', '', '');
 			var_dump ($percents_j);
 			
 			if ($percents_j !=0){

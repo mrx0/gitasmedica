@@ -15,7 +15,7 @@
 		
 			require 'variables.php';
 		
-			require 'config.php';
+			//require 'config.php';
 
 			//var_dump($_SESSION);
 			//var_dump($_SESSION['invoice_data'][20293][28205]['data']);
@@ -33,17 +33,16 @@
 
 						$client_j = SelDataFromDB('spr_clients', $_GET['client'], 'user');
 						//var_dump($client_j);
-						
-						mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-						mysql_select_db($dbName) or die(mysql_error()); 
-						mysql_query("SET NAMES 'utf8'");
+
+                        $msql_cnnct = ConnectToDB ();
 						
 						$query = "SELECT * FROM `zapis` WHERE `id`='".$_GET['id']."'";
-						
-						$res = mysql_query($query) or die($query);
-						$number = mysql_num_rows($res);
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+						$number = mysqli_num_rows($res);
 						if ($number != 0){
-							while ($arr = mysql_fetch_assoc($res)){
+							while ($arr = mysqli_fetch_assoc($res)){
 								array_push($sheduler_zapis, $arr);
 							}
 						}else
@@ -184,10 +183,10 @@
 
                             $query = "SELECT * FROM `journal_invoice` WHERE `zapis_id`='" . $_GET['id'] . "' ORDER BY `create_time` DESC LIMIT 1";
 
-                            $res = mysql_query($query) or die($query);
-                            $number = mysql_num_rows($res);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                            $number = mysqli_num_rows($res);
                             if ($number != 0) {
-                                while ($arr = mysql_fetch_assoc($res)) {
+                                while ($arr = mysqli_fetch_assoc($res)) {
                                     array_push($invoice_j, $arr);
                                 }
                             } else
@@ -264,7 +263,7 @@
 
                             if (
                                 (($sheduler_zapis[0]['year'] < date("Y")) ||
-                                (($sheduler_zapis[0]['year'] == date("Y")) && ($sheduler_zapis[0]['day'] < date("m"))) ||
+                                (($sheduler_zapis[0]['year'] == date("Y")) && ($month < date("m"))) ||
                                 (($month == date("m")) && ($sheduler_zapis[0]['day'] < date("d")))) &&
                                 !(($finances['see_all'] == 1) || $god_mode) &&
                                 !(($sheduler_zapis[0]['noch'] == '1') && ($diff_hours <= 13))

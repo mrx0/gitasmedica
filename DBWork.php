@@ -1367,6 +1367,9 @@
 				if ($type == 'laborder_id'){
 					$q = " WHERE `laborder_id` = '$sw'";
 				}
+				if ($type == 'type'){
+					$q = " WHERE `type` = '$sw'";
+				}
 			}
 		
 		}

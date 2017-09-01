@@ -13,7 +13,7 @@
 			$searchdata = $_POST['num'];
 		}
 		if(($searchdata == '') || (strlen($searchdata) < 2)){
-            echo json_encode(array('result' => 'error', 'data' => 'Ошибка #1'));
+            echo json_encode(array('result' => 'error', 'data' => 'Ошибка #3'));
 		}else{
 			include_once 'DBWork.php';	
 			$fast_search = SelForFastSearchCert ($table, $searchdata);
