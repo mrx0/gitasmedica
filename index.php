@@ -10,6 +10,9 @@
 
 		include_once 'DBWork.php';
 		include_once 'functions.php';
+
+        $announcing_arr = array();
+
 		$offices = SelDataFromDB('spr_office', '', '');
 
 		echo '
@@ -17,10 +20,106 @@
 				<h1>Главная</h1>';
 			echo '
 			</header>
-		
-				<div id="data">';
-			echo '<a href="history.php" class="b3">История изменений и обновлений <b style="color: red;">'.$version.'</b></a><br>';
-			echo '		
+            
+            <div id="infoDiv" style="display: none; position: absolute; z-index: 2; background-color: rgba(249, 255, 171, 0.89);" class="query_neok">
+            </div>
+			
+			<div id="data">';
+
+        if (($it['add_own'] == 1) || ($it['add_new'] == 1) || $god_mode){
+            echo '<a href="announcing_add.php" class="b">Добавить объявление</a><br>';
+        }
+
+        $msql_cnnct = ConnectToDB ();
+
+        $arr = array();
+        $rez = array();
+
+        //Просто пример
+        /*$query = "SELECT ss.name, ss.id
+        FROM `journal_work_spec` jws
+        INNER JOIN `spr_specialization` ss ON ss.id = jws.specialization_id
+        WHERE `worker_id` = '$worker_id'";*/
+
+        $query = "SELECT jann.*, jannrm.status AS read_status
+        FROM `journal_announcing_readmark` jannrm
+        RIGHT JOIN (
+          SELECT * FROM `journal_announcing` WHERE `status` <> '9'
+        ) jann ON jann.id = jannrm.announcing_id
+        AND jannrm.create_person = '{$_SESSION['id']}'
+        ORDER BY `create_time` DESC";
+
+        //$query = "SELECT * FROM `journal_announcing` ORDER BY `create_time` DESC";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                array_push($announcing_arr, $arr);
+            }
+        }
+        //var_dump($announcing_arr);
+        //var_dump($query);
+
+        if (!empty($announcing_arr)){
+            foreach ($announcing_arr as $announcing) {
+
+                $annColor = '245, 245, 245';
+                $annIco = '<i class="fa fa-refresh" aria-hidden="true"></i>';
+                $annColorAlpha = '0.9';
+
+                if ($announcing['type'] == 1){
+                    $annColor = '252, 255, 51';
+                    $annIco = '<i class="fa fa-bullhorn" aria-hidden="true"></i>';
+                    $annColorAlpha = '0.53';
+                }
+                if ($announcing['type'] == 2){
+                    $                    $annIco = '<i class="fa fa-bullhorn" aria-hidden="true"></i>';
+                    $annColor = '73, 208, 183';
+                    $annIco = '<i class="fa fa-refresh" aria-hidden="true"></i>';
+                    $annColorAlpha = '0.35';
+                }
+
+                echo '
+                
+                <div style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 30px; font-size: 80%; background-color: rgba('.$annColor.', '.$annColorAlpha.'); position: relative;">
+                    <h2 style="height: 15px; border: 1px dotted #CCC; background-color: rgba(250, 250, 250, 0.9); width: 100%; padding: 6px 13px; margin: -9px 0 15px -14px; position: relative;">
+                        
+                        <div style="position: absolute; top: 3px; left: 10px; font-size: 17px; color: rgba('.$annColor.', 1);  text-shadow: 1px 1px 3px rgb(0, 0, 0), 0 0 2px rgba(52, 152, 219, 1);">
+                            '.$annIco.'
+                        </div>
+                                                
+                        <div style="position: absolute; top: 5px; left: 35px; font-size: 13px;">
+                            <b>'.nl2br($announcing['theme']).'</b>
+                        </div>
+                              
+                        <div style="position: absolute; top: 2px; right: 10px; font-size: 11px; text-align: right;">
+                            '.date('d.m.y H:i' ,strtotime($announcing['create_time'])).'<br>
+                            <span style="font-size: 10px; color: #716f6f;">'.WriteSearchUser('spr_workers', $announcing['create_person'], 'user', false).'</span>
+                        </div>
+                        
+                    </h2>
+                    <p style="margin-bottom: 0;">
+                        '.nl2br($announcing['text']).'
+                    </p>';
+
+                if ($announcing['read_status'] != 1) {
+                    echo '
+                    <div style="position: absolute; bottom: 0; right: 10px;">
+                        <button class="b iUnderstand" announcingID="' . $announcing['id'] . '">Ясно</button>
+                    </div>';
+                }
+
+                echo '
+                </div>';
+                //var_dump($announcing['status']);
+                //var_dump($announcing['read_status']);
+            }
+        }
+
+        echo '<a href="history.php" class="b3">История изменений и обновлений до <b style="color: red;">15.09.2017</b></a><br>';
+        echo '		
 				</div>';
 		
 	}else{

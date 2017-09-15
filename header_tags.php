@@ -29,6 +29,7 @@
 			<link rel="stylesheet" type="text/css" href="css/ModalZakaz.css" />
 			<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">	
 			<link rel="stylesheet" type="text/css" href="css/pretty.css" />
+			<link rel="stylesheet" type="text/css" href="css/multi-select.css" />
 			
 			<!--<link rel="stylesheet" type="text/css" href="css/drop_tree.css" />-->
 			
@@ -63,6 +64,8 @@
 			<script type="text/javascript" src="js/search5.js"></script>
 			
 			<script type="text/javascript" src="js/search_fast_client.js"></script>
+			
+			<script type="text/javascript" src="js/jquery.multi-select.js"></script>
 			
 			<script type="text/javascript" src="js/jquery.maskedinput-1.2.2.js"></script>
 			

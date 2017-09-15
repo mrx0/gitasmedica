@@ -4,6 +4,7 @@
 //
 
 	require_once 'header.php';
+    require_once 'blocks_dom.php';
 
 	if ($enter_ok){
 		require_once 'header_tags.php';
@@ -66,15 +67,15 @@
 				echo '
 					<a href="add_serviceitem.php?'.$who.'" class="b">Добавить</a>';
 			}
-			echo '					
-								<p style="margin: 5px 0; padding: 2px;">
-									Быстрый поиск: 
-									<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
-								</p>';
+
 			echo '
 								<li class="cellsBlock" style="font-weight:bold; width: auto;">
 									<div class="cellPriority" style="text-align: center"></div>
-									<div class="cellName" style="text-align: center; width: 350px; min-width: 350px; max-width: 350px;">Наименование услуг</div>
+									<div class="cellName" style="text-align: center; width: 350px; min-width: 350px; max-width: 350px;">
+									Наименование услуг';
+            echo $block_fast_filter;
+            echo'
+									</div>
 									<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">Цена, руб.</div>
 								</li>';
 			

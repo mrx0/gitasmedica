@@ -814,6 +814,77 @@
                                             </div>';
                             }
 
+                            //Расчетных листов списком
+                            $fl_calculate_j = array();
+
+                            $query = "SELECT * FROM `fl_journal_calculate` WHERE `invoice_id`='".$_GET['id']."' ORDER BY `create_time` DESC";
+                            //var_dump($query);
+
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                            $number = mysqli_num_rows($res);
+                            if ($number != 0){
+                                while ($arr = mysqli_fetch_assoc($res)){
+                                    array_push($fl_calculate_j, $arr);
+                                }
+                            }else{
+
+                            }
+
+
+                            if (!empty($fl_calculate_j)) {
+                                echo '
+                                            <div class="invoceHeader" style="">
+                                                <ul style="margin-left: 6px; margin-bottom: 10px;">
+                                                    <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
+                                                        Расчётные листы по наряду:
+                                                    </li>';
+                                foreach ($fl_calculate_j as $calculate_item) {
+
+                                    echo '
+                                                    <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
+                                    echo '
+                                                        <a href="fl_calculate.php?id='.$calculate_item['id'].'" class="cellOrder ahref" style="position: relative;">
+                                                            <b>Расчёт #' . $calculate_item['id'] . '</b> от ' . date('d.m.y', strtotime($calculate_item['date_in'])) . '<br>
+                                                            <span style="font-size:80%;  color: #555;">';
+
+                                    if (($calculate_item['create_time'] != 0) || ($calculate_item['create_person'] != 0)) {
+                                        echo '
+                                                                Добавлен: ' . date('d.m.y H:i', strtotime($calculate_item['create_time'])) . '<br>
+                                                                <!--Автор: ' . WriteSearchUser('spr_workers', $calculate_item['create_person'], 'user', true) . '<br>-->';
+                                    } else {
+                                        echo 'Добавлен: не указано<br>';
+                                    }
+                                    /*if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
+                                        echo'
+                                                                Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
+                                                                <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
+                                    }*/
+                                    echo '
+                                                            </span>
+                                                            
+                                                        </a>
+                                                        <div class="cellName">
+                                                            '.WriteSearchUser('spr_workers', $calculate_item['worker_id'], 'user', true).'<br>
+                                                        </div>
+                                                        <div class="cellName">
+                                                            <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+                                                                Сумма:<br>
+                                                                <span class="calculateOrder" style="font-size: 13px">' . $calculate_item['summ'] . '</span> руб.
+                                                            </div>
+                                                        </div>
+                                                        <div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="fl_deleteCalculateItem('.$calculate_item['id'].', '.$invoice_j[0]['client_id'].', '.$invoice_j[0]['id'].');">
+                                                            <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
+                                                        </div>
+                                                        ';
+                                    echo '
+                                                    </li>';
+                                }
+
+                                echo '
+                                                </ul>
+                                            </div>';
+                            }
+
 							echo '
 										</div>';
 							echo '			

@@ -14,8 +14,9 @@
 				</header>';
 
             //echo '<a href="stocks.php" class="b3" title="Акции">Акции</a>';
-
-            echo '<a href="percent_cats.php" class="b3" title="Категории процентов">Категории процентов</a>';
+            if (($finances['see_all'] == 1) || $god_mode) {
+                echo '<a href="fl_percent_cats.php" class="b3" title="Категории процентов">Категории процентов</a>';
+            }
 
             echo '<a href="laboratories.php" class="b3" title="Лаборатории">Лаборатории</a>';
 

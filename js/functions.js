@@ -1098,7 +1098,7 @@
 			}
 		})
 	}; 
-
+	//Добавить лабораторию
 	function Ajax_add_labor(session_id) {
 
 		var name = document.getElementById("name").value;
@@ -1122,6 +1122,54 @@
 			},
 			success:function(data){
 				$('#errrror').html(data);
+			}
+		})
+	};
+	//Добавить объявление
+	function Ajax_add_announcing(mode) {
+
+        var announcing_id = 0;
+
+        var link = "announcing_add_f.php";
+
+        if (mode == 'edit'){
+            link = "announcing_add_f.php";
+            announcing_id = $("#announcing__id").val();
+        }
+
+		var announcing_type = $("#announcing_type").val();
+		var theme = $("#theme").val();
+		var comment = $("#comment").val();
+		var filial = $("#filial").val();
+		var workers_type = $("#workers_type").val();
+		//console.log(announcing_type);
+
+		$.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+			{
+                announcing_type:announcing_type,
+                comment:comment,
+                filial:filial,
+                workers_type:workers_type,
+                theme: theme
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			success:function(res){
+                if(res.result == "success") {
+                    $('#data').html(res.data);
+                    setTimeout(function () {
+                        window.location.replace('index.php');
+                    }, 1000)
+                }else{
+					$('#errror').html(data);
+                }
 			}
 		})
 	};
@@ -2473,6 +2521,43 @@
 			$('#div3').stop(true, true).slideToggle('slow');
 		});
 	//});
+
+	//Кнопка "ясно" в объявлениях на главной странице
+    $('.iUnderstand').click(function () {
+
+    	var thisObj = $(this);
+    	var announcingID = thisObj.attr("announcingID");
+
+        $.ajax({
+            url: "announcing_change_readmark_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: {
+                announcingID: announcingID,
+            },
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function (res) {
+                if(res.result == "success"){
+                    //console.log(thisObj);
+                    $('#infoDiv').html(res.data);
+                    $('#infoDiv').show();
+                    thisObj.remove();
+                    setTimeout(function() {
+                        $('#infoDiv').hide('slow');
+                        $('#infoDiv').html();
+                    }, 2000);
+
+                    //location.reload();
+                }
+
+            }
+        });
+    });
 
 
 	//Для мультисельктора косметологии
@@ -5041,7 +5126,7 @@
 	}
 
 	//Показываем блок с суммами и кнопками Для расчета
-	function showCalculateAdd(invoice_type, mode){
+	/*function showCalculateAdd(invoice_type, mode){
 		//console.log(mode);
 		$('#overlay').show();
 
@@ -5105,7 +5190,7 @@
 
 		menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
 
-	}
+	}*/
 
 	//Показываем блок с суммами и кнопками Для расчета
 	function showCalculateAdd(invoice_type, mode){
@@ -5644,6 +5729,7 @@
 		}
 
 		var client = $("#client").val();
+		var invoice_id = $("#invoice_id").val();
 
 		$.ajax({
 			url: link,
@@ -5654,7 +5740,7 @@
 			{
 				client: client,
 				zapis_id: $("#zapis_id2").val(),
-				invoice_id: $("#invoice_id").val(),
+				invoice_id: invoice_id,
 				filial: $("#filial2").val(),
 				worker: $("#worker").val(),
 
@@ -5680,7 +5766,7 @@
                         location.reload();
                     }else {
                         $('#data').hide();
-                        $('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
+                        /*$('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
                             '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован наряд</li>' +
                             '<li class="cellsBlock" style="width: auto;">' +
                             '<a href="invoice.php?id=' + res.data + '" class="cellName ahref">' +
@@ -5703,7 +5789,8 @@
                             '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">' +
                             '<a href="finance_account.php?client_id=' + client + '" class="b">Управление счётом</a>' +
                             '</li>' +
-                            '</ul>');
+                            '</ul>');*/
+                        window.location.replace('invoice.php?id='+invoice_id+'');
                     }
 				}else{
 					$('#errror').html(res.data);

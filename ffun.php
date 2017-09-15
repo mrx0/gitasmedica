@@ -362,6 +362,14 @@
         return(array('price' => $price, 'start_price' => $start_price));
     }
 
+    //Результат расчета от процентов
+    function calculateResult($summ, $koeffW, $koeffM){
 
+        $result = 0;
+
+        $result = ($summ - ($summ / 100 * $koeffM)) / 100 * $koeffW;
+
+        return $result;
+    }
 
 ?>

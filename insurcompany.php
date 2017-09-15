@@ -4,6 +4,7 @@
 //
 
 	require_once 'header.php';
+    require_once 'blocks_dom.php';
 
 	if ($enter_ok){
 		require_once 'header_tags.php';
@@ -18,16 +19,17 @@
 					<a href="add_insure.php" class="b">Добавить</a>';
 			}
 			echo '
-						<p style="margin: 5px 0; padding: 2px;">
-							Быстрый поиск: 
-							<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
-						</p>
+
 						<div id="data">
 							<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
 			echo '
 						<li class="cellsBlock" style="font-weight:bold;">	
 							<div class="cellPriority" style="text-align: center"></div>
-							<div class="cellOffice" style="text-align: center; width: 350px; min-width: 350px; max-width: 350px;">Название</div>
+							<div class="cellOffice" style="text-align: center; width: 350px; min-width: 350px; max-width: 350px;">
+							    Название';
+            echo $block_fast_filter;
+            echo '
+							</div>
 							<div class="cellText" style="text-align: center">Договор</div>
 							<div class="cellText" style="text-align: center; width: 350px; min-width: 350px; max-width: 350px;">Контакты</div>
 						</li>';

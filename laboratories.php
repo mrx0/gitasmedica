@@ -18,10 +18,10 @@
 					<a href="labor_add.php" class="b">Добавить</a>';
 			}
 			echo '
-						<p style="margin: 5px 0; padding: 2px;">
-							Быстрый поиск: 
-							<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
-						</p>
+                        <p style="margin: 1px 0; padding: 1px;">
+                            <i class="fa fa-filter" aria-hidden="true"></i>
+                            <input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="">
+                        </p>
 						<div id="data">
 							<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
 			echo '

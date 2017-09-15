@@ -4,6 +4,7 @@
 //
 
 	require_once 'header.php';
+	require_once 'blocks_dom.php';
 
 	if ($enter_ok){
 		require_once 'header_tags.php';
@@ -18,16 +19,15 @@
 					<a href="cert_add.php" class="b">Добавить</a>';
 			}
 			echo '
-						<p style="margin: 5px 0; padding: 2px;">
-							Быстрый поиск: 
-							<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
-						</p>
 						<div id="data">
 							<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
 			echo '
 						<li class="cellsBlock3" style="font-weight:bold; margin-bottom: -1px;">	
 							<div class="cellPriority" style="text-align: center"></div>
-							<div class="cellOffice" style="text-align: center;">Номер</div>
+							<div class="cellOffice" style="text-align: center; width: 180px; min-width: 180px;">Номер';
+            echo $block_fast_filter;
+            echo '
+                            </div>
 							<div class="cellOffice" style="text-align: center;">Номинал</div>
 							<div class="cellOffice" style="text-align: center;">Остаток</div>
 							<div class="cellText" style="text-align: center;">Статус</div>
@@ -80,7 +80,7 @@
 					echo '
 							<li class="cellsBlock3" style="'.$back_color.'">
 								<div class="cellPriority" style=" margin-bottom: -1px;"></div>
-								<a href="certificate.php?id='.$cert_j[$i]['id'].'" class="cellOffice ahref" style="text-align: left; font-weight: bold;" id="4filter">'.$cert_j[$i]['num'].'</a>
+								<a href="certificate.php?id='.$cert_j[$i]['id'].'" class="cellOffice ahref" style="text-align: left; font-weight: bold; width: 180px; min-width: 180px;" id="4filter">'.$cert_j[$i]['num'].'</a>
 								<div class="cellOffice" style="text-align: right">'.$cert_j[$i]['nominal'].' руб.</div>
 								<div class="cellOffice" style="text-align: right">';
                     if (($cert_j[$i]['status'] == 7) && ($cert_j[$i]['status'] != '0000-00-00 00:00:00')) {

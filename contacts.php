@@ -4,7 +4,8 @@
 //Список сотрудников
 
 	require_once 'header.php';
-	
+    require_once 'blocks_dom.php';
+
 	if ($enter_ok){
 		require_once 'header_tags.php';
 		
@@ -35,14 +36,14 @@
 			if ($contacts != 0){
 
 				echo '
-					<p style="margin: 5px 0; padding: 2px;">
-						Быстрый поиск: 
-						<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
-					</p>
 					<div id="data">
 						<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
 							<li class="cellsBlock" style="font-weight:bold;">	
-								<div class="cellFullName" style="text-align: center">Полное имя</div>
+								<div class="cellFullName" style="text-align: center">
+								    Полное имя';
+                echo $block_fast_filter;
+                echo '
+								</div>
 								<div class="cellOffice" style="text-align: center">Должность</div>
 								
 								<div class="cellText" style="text-align: center">Контакты</div>

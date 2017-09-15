@@ -24,6 +24,8 @@ if ($enter_ok){
         $cosm_edit = false;
         $finance_edit = false;
 
+        $temp_arr = array();
+
         //var_dump($_SESSION);
         //unset($_SESSION['invoice_data']);
 
@@ -251,8 +253,11 @@ if ($enter_ok){
                             $rez = array();
                             $arr = array();
 
+                            $calculate_summ = 0;
+                            $calculate_summins = 0;
+
                             //Получим уже существующие рассчёты
-                            $query = "SELECT `id` FROM `fl_journal_calculate` WHERE `invoice_id`='".$_GET['invoice_id']."' AND `zapis_id`='".$sheduler_zapis[0]['id']."';";
+                            $query = "SELECT `id`, `summ`, `summins` FROM `fl_journal_calculate` WHERE `invoice_id`='".$_GET['invoice_id']."' AND `zapis_id`='".$sheduler_zapis[0]['id']."';";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                             $number = mysqli_num_rows($res);
@@ -276,11 +281,17 @@ if ($enter_ok){
                                             array_push($calculate_exist_j, (int)$arr['inv_pos_id']);
                                         }
                                     }
+
+                                    $calculate_summ += (int)$calculate_item['summ'];
+                                    $calculate_summins += (int)$calculate_item['summins'];
+
                                 }
                             }
                             //var_dump($calculate_exist_j);
+                            //var_dump($calculate_summ);
+                            //var_dump($calculate_summins);
 
-                            if (empty($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'])) {
+                            //if (empty($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'])) {
                                 //надо костыльно преобразовать массив
                                 foreach ($invoice_ex_j as $ind => $invoice_ex_j_arr) {
 
@@ -340,7 +351,7 @@ if ($enter_ok){
                                     }
                                 }
 
-                                //  var_dump($temp_arr);
+                                //var_dump($temp_arr);
 
                                 if (!empty($temp_arr)) {
 
@@ -359,7 +370,7 @@ if ($enter_ok){
 
                                     }
                                 }
-                            }
+                            //}
                         }
 
                         //var_dump($_SESSION);
@@ -384,7 +395,7 @@ if ($enter_ok){
                         }else
                             $invoice_ex_j_mkb = 0;*/
                         //var_dump ($invoice_ex_j_mkb);
-
+                        //var_dump ($temp_arr);
 
                         echo '
 								<div id="data">';
@@ -415,6 +426,11 @@ if ($enter_ok){
                                                         <div style="">Страховка: <div id="calculateInsInvoice" style="">' . $invoice_j[0]['summins'] . '</div> руб.</div>
                                                     </div>';
                             }
+                            echo '
+                                                    <div>
+                                                        <div style="">Остаток для расчётов: <div id="calculateSumm" style="">' . (($invoice_j[0]['summ'] + $invoice_j[0]['summins']) - ($calculate_summ + $calculate_summins)) . '</div> руб.</div>
+                                                    </div>';
+
                             /*echo '
                                                 <div>
                                                     <div style="">Скидка: <div id="discountValue" class="calculateInvoice" style="color: rgb(255, 0, 198);">'.$invoice_j[0]['discount'].'</div><span  class="calculateInvoice" style="color: rgb(255, 0, 198);">%</span></div>
@@ -1019,7 +1035,7 @@ if ($enter_ok){
                             echo '
                                         </div>';
                         }else{
-                            echo 'тю-тю';
+                            echo '<span style="color: red; font-weight: bold;">Вся сумма уже распределена.</span>';
                         }
                         echo '
 								</div>

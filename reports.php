@@ -115,7 +115,8 @@
 							</li>';
 
 			echo '
-						</ul>
+						</ul>';
+            /*echo '
 						<ul class="reportBlock" style="">
 								<h1>Работы</h1>';
 			echo '				
@@ -124,7 +125,19 @@
 							</li>';
 
 			echo '
-						</ul>
+						</ul>';*/
+            if (($finances['see_all'] == 1) || $god_mode) {
+                echo '
+						<ul class="reportBlock" style="">
+								<h1>---</h1>';
+                echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="calculates.php" class="b3">-%-</a>
+							</li>';
+                echo '
+						</ul>';
+            }
+            echo '
 					</div>';
 
 		}else{

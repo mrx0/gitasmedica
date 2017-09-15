@@ -4,8 +4,8 @@
 
 		var lefttopay = Number(document.getElementById("leftToPay").innerHTML);
 		var available = Number(document.getElementById("addSummInPayment").innerHTML);
-		//alert(lefttopay);
-		//alert(available);
+		//console.log(lefttopay);
+		//console.log(available);
 
 		var rezult = 0;
 
@@ -22,7 +22,7 @@
 
     //Показываем блок с суммами и кнопками Для оплаты наряда
     function showPaymentAdd(mode){
-        //alert(mode);
+        //console.log(mode);
 
         var Summ = document.getElementById("summ").value;
 
@@ -120,7 +120,7 @@
     }
 
     function Ajax_payment_add_cert(mode){
-        //alert(mode);
+        //console.log(mode);
 
         var payment_id = 0;
 
@@ -132,21 +132,21 @@
         }
 
         var Summ = $("#summ").html();
-        //alert(Summ);
+        //console.log(Summ);
         var invoice_id = $("#invoice_id").val();
-        //alert(invoice_id);
+        //console.log(invoice_id);
 
         var client_id = $("#client_id").val();
-        //alert(client_id);
+        //console.log(client_id);
         var date_in = $("#date_in").val();
-        //alert(date_in);
+        //console.log(date_in);
 
         //!!!тут сделано только для одного сертификата, если надо переделать, то тут
         var cert_id = $(".cert_pay").attr('cert_id');
-        //alert(cert_id);
+        //console.log(cert_id);
 
         var comment = $("#comment").val();
-        //alert(comment);
+        //console.log(comment);
 
         $.ajax({
             url: link,
@@ -168,7 +168,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                //alert(res);
+                //console.log(res);
                 $('.center_block').remove();
                 $('#overlay').hide();
 
@@ -190,7 +190,7 @@
 
     //Показываем блок с суммами и кнопками Для оплаты наряда сертификатом
     function showPaymentAddCert (mode){
-        //alert(mode);
+        //console.log(mode);
 
         var Summ = $("#summ").html();
 
@@ -245,7 +245,7 @@
 
     //Добавляем/редактируем в базу оплату
     function Ajax_payment_add(mode){
-        //alert(mode);
+        //console.log(mode);
 
         var payment_id = 0;
 
@@ -261,10 +261,10 @@
 
         var client_id = document.getElementById("client_id").value;
         var date_in = document.getElementById("date_in").value;
-        //alert(date_in);
+        //console.log(date_in);
 
         var comment = document.getElementById("comment").value;
-        //alert(comment);
+        //console.log(comment);
 
         $.ajax({
             url: link,
@@ -285,7 +285,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                //alert(res);
+                //console.log(res);
                 $('.center_block').remove();
                 $('#overlay').hide();
 
@@ -360,7 +360,7 @@
     }
     //Удалить текущую проплату
     function deletePaymentItem(id, client_id, invoice_id){
-        //alert(id);
+        //console.log(id);
 
         $.ajax({
             url:"payment_del_f.php",
@@ -378,12 +378,158 @@
                 //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             // действие, при ответе с сервера
+            success: function(res){
+                if(res.result == "success"){
+                    location.reload();
+                    //console.log(res.data);
+                }
+                if(res.result == "error"){
+                    alert(res.data);
+                }
+                //console.log(data.data);
+
+            }
+        });
+    }
+
+    //Удалить расчет
+    function fl_deleteCalculateItem(id, client_id, calculate_id){
+        //console.log(id);
+
+        $.ajax({
+            url:"fl_calculate_del_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    id: id,
+                    client_id: client_id,
+                    calculate_id: calculate_id,
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
             success: function(data){
                 /*if(data.result == "success"){
 
                 }*/
-                //alert(data.data);
+                //console.log(data.data);
                 location.reload();
             }
         });
     }
+
+    //Для изменений в процентах персональных
+    var elems = document.getElementsByClassName("changePersonalPercentCat"), newInput;
+    //console.log(elems);
+
+    if (elems.length > 0) {
+        for (var i = 0; i < elems.length; i++) {
+            var el = elems[i];
+            el.addEventListener("click", function () {
+                //var thisID = this.id;
+                //var workerID = this.getAttribute("worker_id");
+                //var catID = this.getAttribute("cat_id");
+                //var typeID = this.getAttribute("type_id");
+                var thisVal = this.innerHTML;
+                var newVal = thisVal;
+                //console.log(this);
+                //console.log(workerID);
+                //console.log(catID);
+                //console.log(typeID);
+                //console.log(thisVal);
+                //console.log(isNaN(thisVal));
+
+                var inputs = this.getElementsByTagName("input");
+                if (inputs.length > 0) return;
+                if (!newInput) {
+
+                    buttonDiv = document.createElement("div");
+                    //buttonDiv.innerHTML = '<i class="fa fa-check" aria-hidden="true" title="Применить" style="margin-right: 4px;"></i> <i class="fa fa-refresh" aria-hidden="true" title="По умолчанию" style="color: red;"></i>';
+                    buttonDiv.innerHTML = '<i class="fa fa-refresh" aria-hidden="true" title="По умолчанию" style="color: red;"></i>';
+                    buttonDiv.style.position = "absolute";
+                    buttonDiv.style.right = "-9px";
+                    buttonDiv.style.top = "1px";
+                    buttonDiv.style.fontSize = "12px";
+                    buttonDiv.style.color = "green";
+                    buttonDiv.style.border = "1px solid #BFBCB5";
+                    buttonDiv.style.backgroundColor = "#FFF";
+                    buttonDiv.style.padding = "0 6px";
+
+                    newInput = document.createElement("input");
+                    newInput.type = "text";
+                    newInput.maxLength = 3;
+                    newInput.setAttribute("size", 20);
+                    newInput.style.width = "40px";
+                    newInput.addEventListener("blur", function () {
+                        //console.log(newInput.parentNode.getAttribute("worker_id"));
+
+                        var workerID = newInput.parentNode.getAttribute("worker_id");
+                        var catID = newInput.parentNode.getAttribute("cat_id");
+                        var typeID = newInput.parentNode.getAttribute("type_id");
+
+                        //Новые данные
+                        if ((newInput.value == "") || (isNaN(newInput.value)) || (newInput.value < 0) || (newInput.value > 100) || (isNaN(parseInt(newInput.value, 10)))){
+                            //newInput.parentNode.innerHTML = 0;
+                            newInput.parentNode.innerHTML = thisVal;
+                            newVal = thisVal;
+                        } else {
+                            newInput.parentNode.innerHTML = parseInt(newInput.value, 10);
+                            newVal = parseInt(newInput.value, 10);
+                        }
+                        //console.log(this);
+                        //console.log(workerID);
+
+                        if (thisVal != newVal) {
+
+                            $.ajax({
+                                url: "fl_change_personal_percent_cat_f.php",
+                                global: false,
+                                type: "POST",
+                                dataType: "JSON",
+                                data: {
+                                    worker_id: workerID,
+                                    cat_id: catID,
+                                    type: typeID,
+                                    val: newVal,
+                                },
+                                cache: false,
+                                beforeSend: function () {
+                                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                                },
+                                // действие, при ответе с сервера
+                                success: function (res) {
+                                    if(res.result == "success"){
+                                        //console.log(data);
+                                        $('#infoDiv').html(res.data);
+                                        $('#infoDiv').show();
+                                        setTimeout(function() {
+                                            $('#infoDiv').hide('slow');
+                                            $('#infoDiv').html();
+                                        }, 1000);
+
+                                        //location.reload();
+                                     }
+
+                                }
+                            });
+                        }
+
+                    }, false)
+                }
+
+                //newInput.value = this.firstChild.innerHTML;
+                newInput.value = thisVal;
+                this.innerHTML = "";
+                this.appendChild(buttonDiv);
+                this.appendChild(newInput);
+                //newInput.innerHTML = ('<i class="fa fa-check" aria-hidden="true"></i>');
+                newInput.focus();
+                newInput.select();
+            }.bind(el), false);
+        }
+        ;
+    };

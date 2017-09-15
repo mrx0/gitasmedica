@@ -457,12 +457,19 @@ area {
 	min-width:150px;
 }
 
+.cellDivide {
+	/*width:50%;*/
+	display: inline-block;
+	margin: 2px 0 0;
+	/*border: 1px solid #BFBCB5;*/
+}
+
 /*****/
 
 input[type="text"], input[type="password"], input[type="date"], textarea {
 	border: 1px solid rgba(0,220,220,1);
 	color: #2980b9;
-	font-size: 13px;
+	font-size: 11px;
 	box-shadow: 1px 1px 3px 1px rgba(200,200,200, 0.2) inset;
 	padding: 2px;
 	outline: none;
@@ -1731,7 +1738,7 @@ input[type="number"].mod{
 	border: 1px dotted red;
 	margin-bottom: 10px;
 	/*padding-top: 5px;*/
-	padding: 3px 10px;
+	padding: 2px 10px;
 	/*padding-left: 16px;*/
 	color: red;
 	background-color: rgba(249, 171, 171, 0.56);
@@ -1861,7 +1868,7 @@ input.dateс {
 	background: rgba(77, 246, 127, 0.9);
 }
 
-#calculateInvoice, #calculateInsInvoice, .calculateInvoice, .calculateInsInvoice, .calculateOrder {
+#calculateInvoice, #calculateInsInvoice, #calculateSumm, .calculateInvoice, .calculateInsInvoice, .calculateOrder {
 	font-size: 15px;
 	font-weight: bold;
 	font-style: italic;
@@ -1872,7 +1879,7 @@ input.dateс {
 	color: red;
 }
 
-.calculateOrder{
+.calculateOrder, #calculateSumm{
 	color: rgb(2, 108, 33);
 }
 
