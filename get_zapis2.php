@@ -1,24 +1,101 @@
 <?php
-	
-	$URL = 'https://www.asstom.ru/zapis_giveitotome.php?last=0&token=ec3d3704abf1bb0430cd82e66fefdce7';
-	$query = $URL;
-	
-	$ch = curl_init();
 
-	curl_setopt($ch, CURLOPT_URL, $query);
+//get_zapis2.php
+//Получение записи с сайта
 
-	curl_setopt($ch, CURLOPT_HEADER, FALSE);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-	curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-	curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
-	
-	$str = curl_exec($ch);
-	
-	var_dump(json_decode($str));
-	
-	curl_close($ch);
+	if ($_POST){
+        if (isset($_POST['type'])){
+            //$_POST['type'] = 5;
 
+            $rezult = '';
+            $rezult_arr = array();
+
+            include_once 'DBWork.php';
+
+            $msql_cnnct = ConnectToDB();
+
+            //if ($_POST['type'] == 5) {
+                $URL = 'https://www.asstom.ru/zapis_giveitotome.php?';
+                $last_id_zapis_option = 'last_id_zapis_asstom';
+            //}
+
+            //if ($_POST['type'] == 6) {
+                //$URL = 'https://www.asstom.ru/zapis_giveitotome.php?';
+                //$last_id_zapis_option = 'last_id_zapis_ascosm';
+            //}
+
+            //if ($_POST['type'] == 10) {
+                //$URL = 'https://www.asstom.ru/zapis_giveitotome.php?';
+                //$last_id_zapis_option = 'last_id_zapis_assmed';
+            //}
+
+            $arr = array();
+
+            $query = "SELECT `value` FROM `settings` WHERE `option`='".$last_id_zapis_option."'";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                $arr = mysqli_fetch_assoc($res);
+
+                $last = $arr['value'];
+
+                $token = 'ec3d3704abf1bb0430cd82e66fefdce7';
+
+                $query = $URL . 'last=' . $last . '&' . 'token=' . $token;
+
+                $ch = curl_init();
+
+                curl_setopt($ch, CURLOPT_URL, $query);
+
+                curl_setopt($ch, CURLOPT_HEADER, FALSE);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+                curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
+
+                $rezult = curl_exec($ch);
+                $rezult_arr = json_decode($rezult, true);
+                //var_dump($rezult_arr);
+
+                curl_close($ch);
+
+                if (!empty($rezult_arr)) {
+                    foreach ($rezult_arr as $zapis_val){
+                        //var_dump($zapis_val['id']);
+
+                        if ($zapis_val['id'] > $last){
+                            $last = $zapis_val['id'];
+                        }
+
+                        $query = "INSERT INTO `zapis_online` (`id_own`, `datetime`, `name`, `email`, `phone`, `time`, `place`, `type`, `comments`)
+                        VALUES (
+                        '{$zapis_val['id']}', '{$zapis_val['datetime']}', '{$zapis_val['name']}', '{$zapis_val['email']}', '{$zapis_val['phone']}', '{$zapis_val['time']}', '{$zapis_val['place']}', '{$zapis_val['type']}', '{$zapis_val['comments']}')";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                    }
+
+                    $query = "UPDATE `settings` SET `value`='{$last}' WHERE `option`='".$last_id_zapis_option."'";
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                    //echo json_encode(array('result' => 'success', 'data' => $query));
+                }else{
+                    //echo json_encode(array('result' => 'success', 'data' => 0));
+                }
+
+            }
+
+            //Выборка
+            $query = "SELECT COUNT(*) AS total FROM `zapis_online` WHERE `status` <> '7'";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $arr = mysqli_fetch_assoc($res);
+
+            echo json_encode(array('result' => 'success', 'data' => $arr['total']));
+        }
+    }
 ?>
 	

@@ -345,6 +345,12 @@
 			if (($zapis['add_new'] == 1) || $god_mode){
 				echo '
 								<a href="zapis.php?y='.$year.'&m='.$month.'&d='.$day.'&filial='.$_GET['filial'].''.$who.'" class="b">Запись сегодня</a>';
+                if (isset($_SESSION['filial'])) {
+                    if ($_SESSION['filial'] == 15) {
+                        echo '
+								<a href="zapis_online.php" class="b" style="position: relative">Запись онлайн<div class="notes_count2 have_new-zapis" style="display: none;"><i class="fa fa-exclamation-circle" aria-hidden="true" title="Есть необработанные"></i></div></a>';
+                    }
+                }
 				/*echo '
 								<a href="zapis_full.php?y='.$year.'&m='.$month.'&d='.$day.'&filial='.$_GET['filial'].''.$who.'" class="b">Подробно</a>';*/
 			}

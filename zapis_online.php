@@ -1,0 +1,186 @@
+<?php
+
+//zapis_online.php
+//Запись онлайн
+
+	require_once 'header.php';
+    require_once 'blocks_dom.php';
+	
+	if ($enter_ok){
+		require_once 'header_tags.php';
+
+        if (($zapis['add_new'] == 1) || $god_mode){
+			include_once 'DBWork.php';
+			include_once 'functions.php';
+
+            $offices_j = array();
+            $permissions_j = array();
+            $zapis_online_j = array();
+            $deleted_zapis = '';
+
+
+            $msql_cnnct = ConnectToDB();
+
+            $query = "SELECT * FROM `spr_office`";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    $offices_j[$arr['id']] = $arr;
+                }
+            }
+
+            $query = "SELECT `id`, `name` FROM `spr_permissions`";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    $permissions_j[$arr['id']] = $arr;
+                }
+            }
+
+            //$offices = SelDataFromDB('spr_office', '', '');
+
+			echo '
+				<header style="margin-bottom: 5px;">
+					<h1>Запись онлайн</h1>';
+
+    		echo '
+				</header>';
+
+    		$dop = '';
+    		/*if (isset($_SESSION['filial'])){
+                $dop = 'WHERE `place`='.$_SESSION['filial'];
+            }*/
+
+            $query = "SELECT * FROM `zapis_online` ".$dop;
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($zapis_online_j, $arr);
+                }
+            }
+
+			if (!empty($zapis_online_j)){
+				echo '
+				
+					<div id="data">
+						<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
+							<li class="cellsBlock" style="font-weight:bold; font-size: 10px;">	
+							    <div class="cellTime" style="text-align: center;">Время обр.</div>
+								<div class="cellFullName" style="text-align: center">
+                                    ФИО';
+                echo $block_fast_filter;
+                echo '
+								</div>';
+
+				echo '
+                                <div class="cellTime" style="text-align: center; width: 130px; max-width: 130px;">Контакты</div>
+                                <div class="cellText" style="text-align: center">Комментарий</div>
+                                <div class="cellTime" style="text-align: center">Время желаемое</div>
+                                <div class="cellOffice" style="text-align: center;">Филиал / Специалист</div>
+								<div class="cellTime" style="text-align: center">Статус</div>
+							</li>';
+
+				for ($i = 0; $i < count($zapis_online_j); $i++) {
+
+                    if ($zapis_online_j[$i]['status'] == 7) {
+                        $bgcolor = 'background-color: rgba(158, 249, 142,1);';
+                        $status = 'Обработано';
+                    } else {
+                        $bgcolor = 'background-color: rgba(247, 162, 162, 0.5);';
+                        $status = 'Не обработано';
+                    }
+
+                    if ($zapis_online_j[$i]['status'] != 7) {
+                        echo '
+							<li class="cellsBlock cellsBlockHover" style="' . $bgcolor . '">
+								<div class="cellTime" style="text-align: center">
+								    ' . $zapis_online_j[$i]['datetime'] . '
+								</div>
+								<div id="4filter" class="cellFullName" style="text-align: left">
+								    ' . $zapis_online_j[$i]['name'] . '
+								</div>
+								<div class="cellTime" style="text-align: center; width: 130px; max-width: 130px;">
+								    <b>тел. :</b><br>' . $zapis_online_j[$i]['phone'] . '<br>
+								    <b>e-mail:</b><br>' . $zapis_online_j[$i]['email'] . '
+								</div>
+								<div class="cellText" style="text-align: center">
+								    ' . $zapis_online_j[$i]['comments'] . '
+								</div>
+								<div class="cellTime" style="text-align: center">
+								    ' . $zapis_online_j[$i]['time'] . '
+								</div>
+								<div class="cellOffice" style="text-align: center;">
+								    ' . $offices_j[$zapis_online_j[$i]['place']]['name'] . '<br>
+								    <b>' . $permissions_j[$zapis_online_j[$i]['type']]['name'] . '</b>
+								</div>
+								<div class="cellTime ahref" style="text-align: center" onclick="contextMenuShow('.$zapis_online_j[$i]['id'].', '.$zapis_online_j[$i]['status'].', event, \'zapisOnlineStatusChange\');">
+								    '.$status.'<br>';
+                        if ($zapis_online_j[$i]['closed_time'] != '0000-00-00 00:00:00'){
+                            echo '<b>'.WriteSearchUser('spr_workers', $zapis_online_j[$i]['last_edit_person'], 'user', false).'</b><br>'.date('d.m.y H:i',strtotime($zapis_online_j[$i]['closed_time']));
+                        }
+                        echo '
+								</div>
+							</li>';
+
+
+                    } else {
+                        $deleted_zapis .= '
+							<li class="cellsBlock cellsBlockHover" style="' . $bgcolor . '">
+								<div class="cellTime" style="text-align: center">
+								    ' . $zapis_online_j[$i]['datetime'] . '
+								</div>
+								<div id="4filter" class="cellFullName" style="text-align: left">
+								    ' . $zapis_online_j[$i]['name'] . '
+								</div>
+								<div class="cellTime" style="text-align: center; width: 130px; max-width: 130px;">
+								    <b>тел. :</b> ' . $zapis_online_j[$i]['phone'] . '<br>
+								    <b>e-mail: </b>' . $zapis_online_j[$i]['email'] . '
+								</div>
+								<div class="cellText" style="text-align: center">
+								    ' . $zapis_online_j[$i]['comments'] . '
+								</div>
+								<div class="cellTime" style="text-align: center">
+								    ' . $zapis_online_j[$i]['time'] . '
+								</div>
+								<div class="cellOffice" style="text-align: center;">
+								    ' . $offices_j[$zapis_online_j[$i]['place']]['name'] . '<br>
+								    <b>' . $permissions_j[$zapis_online_j[$i]['type']]['name'] . '</b>
+								</div>
+								<div class="cellTime ahref" style="text-align: center" onclick="contextMenuShow('.$zapis_online_j[$i]['id'].', '.$zapis_online_j[$i]['status'].', event, \'zapisOnlineStatusChange\');">
+								    '.$status.'<br>';
+                        if ($zapis_online_j[$i]['closed_time'] != '0000-00-00 00:00:00'){
+                            $deleted_zapis .= '<b>'.WriteSearchUser('spr_workers', $zapis_online_j[$i]['last_edit_person'], 'user', false).'</b><br>'.date('d.m.y H:i',strtotime($zapis_online_j[$i]['closed_time']));
+                        }
+                        $deleted_zapis .= '
+								</div>
+							</li>';
+                    }
+                }
+
+				echo $deleted_zapis;
+				
+			}else{
+				echo '<h1>Нечего показывать.</h1><a href="index.php">На главную</a>';
+			}
+			echo '
+					</ul>
+				</div>';
+		}else{
+			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
+		}
+	}else{
+		header("location: enter.php");
+	}
+		
+	require_once 'footer.php';
+
+?>

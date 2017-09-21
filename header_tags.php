@@ -264,7 +264,7 @@
 			echo '<li><a href="cosmet.php" title="Косметология">Косметология</a></li>';
 		}*/
 		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
-			echo '<li><a href="scheduler.php" title="График">График</a></li>';
+			echo '<li><a href="scheduler.php" title="График" style="position: relative">График Запись<div class="notes_count2 have_new-zapis" style="display: none;"><i class="fa fa-exclamation-circle" aria-hidden="true" title="Есть необработанные онлайн заявки"></i></div></a></li>';
 		}
 		if (($report['see_all'] == 1) || ($report['see_own'] == 1) || $god_mode){
 			echo '<li><a href="reports.php" title="Статистика и отчёты">Отчёты</a></li>';
@@ -329,7 +329,7 @@
 			if ($warning !=0)
 				$if_notes .= '<div style="color: #FFC874;" class="notes" title="Напоминания осталось 3 дня"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><div class="notes_count">'.$warning.'</div></div>';
 			if ($alarm !=0)
-				$if_notes .= '<div style="color: #FF1F0F;" class="notes" title="Просрочные напоминания"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><div class="notes_count">'.$alarm.'</div></div>';
+				$if_notes .= '<div style="color: #FF1F0F;" class="notes" title="Просроченные напоминания"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><div class="notes_count">'.$alarm.'</div></div>';
 			
 			$if_notes .= '</a>';
 		}else{
@@ -367,6 +367,7 @@
 		
 		
 		echo '
+
 					<li>
 						'.$if_removes.$if_notes.'
 						<div class="user_link" style="font-size: 80%; position: relative;">

@@ -134,8 +134,8 @@
 						'overflow-y': 'scroll',
 					});
 				}
-					
-				menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+                // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+				menu.show();
 		
 			}
 		});
@@ -691,6 +691,41 @@
 		})
 	};
 
+	//Редактирование времени наряда
+	function Ajax_invoice_time_edit(id) {
+
+        $.ajax({
+			url:"invoice_time_edit_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+			data:
+			{
+				id: id,
+				new_create_time: $("#datanew").val(),
+			},
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+			success:function(res){
+                //console.log(res);
+                if(res.result == 'success') {
+                	//console.log(1);
+                   $("#errrror").html(res.data);
+                    setTimeout(function () {
+                        window.location.replace('invoice.php?id=' + id);
+                        //console.log('client.php?id='+id);
+                    }, 500);
+                }else{
+                    //console.log(2);
+                    $("#errrror").html(res.data);
+				}
+			}
+		})
+	};
+
 	//Удаление блокировка ордера
 	function Ajax_del_order(id, client_id) {
 
@@ -708,7 +743,7 @@
 				setTimeout(function () {
 					window.location.replace('order.php?id='+id);
 					//console.log('client.php?id='+id);
-				}, 100);
+				}, 2000);
 			}
 		})
 	};
@@ -2526,6 +2561,10 @@
     $('.iUnderstand').click(function () {
 
     	var thisObj = $(this);
+    	//кнопка "Развернуть"
+    	var anotherObj =  thisObj.parent().prev();
+    	//Заголовок / тема
+    	var anotherObj2 =  thisObj.parent().prev().prev().prev();
     	var announcingID = thisObj.attr("announcingID");
 
         $.ajax({
@@ -2543,20 +2582,36 @@
             // действие, при ответе с сервера
             success: function (res) {
                 if(res.result == "success"){
-                    //console.log(thisObj);
+
                     $('#infoDiv').html(res.data);
                     $('#infoDiv').show();
+
                     thisObj.remove();
+
                     setTimeout(function() {
+                        $('#topic_'+announcingID).hide('slow');
                         $('#infoDiv').hide('slow');
                         $('#infoDiv').html();
-                    }, 2000);
+
+                        anotherObj.show();
+                        anotherObj2.removeClass("blink1");
+                    }, 500);
 
                     //location.reload();
                 }
 
             }
         });
+    });
+
+	//Кнопка "Развернуть" в объявлениях на главной странице
+    $('.showMeTopic').click(function () {
+
+    	var thisObj = $(this);
+    	var announcingID = thisObj.attr("announcingID");
+        $('#topic_'+announcingID).show();
+        thisObj.hide();
+        return false;
     });
 
 
@@ -6131,6 +6186,45 @@
 		});
 	}
 
+	//Меняем статус онлайн записи
+	function changeOnlineZapisStatus(online_zapis_id, status){
+		//console.log(status);
+
+		var link = "changeOnlineZapisStatus_f.php";
+
+		$.ajax({
+			url: link,
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                online_zapis_id:online_zapis_id,
+
+                status: status,
+
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//console.log(res);
+				//$('.center_block').remove();
+				//$('#overlay').hide();
+
+				if(res.result == "success"){
+					//$('#data').hide();
+					window.location.replace('');
+				}else{
+				    console.log('error');
+					$('#errror').html(res.data);
+				}
+			}
+		});
+	}
+
 	//Для перехода в добавление нового клиента из записи
 	$('#add_client_fio').click(function () {
 		var client_fio = document.getElementById("search_client").value;
@@ -6314,4 +6408,43 @@
             }
         })
     }
+
+    //Подгрузка записи с сайта при каждой загрузке страницы
+	$(document).ready(function() {
+
+		//типы пользователей
+		//var types = [5, 6, 10];
+
+		//for (var key in types) {
+
+            var reqData = {
+                type: 5,
+            }
+
+            //Запрос к базе онлайн записи и выгрузка
+            $.ajax({
+                url:"get_zapis2.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+
+                data:reqData,
+
+                cache: false,
+                beforeSend: function() {
+                },
+                success:function(res){
+                    //console.log(res);
+
+                    if(res.result == 'success'){
+                    	if (res.data > 0)
+                        $(".have_new-zapis").show();
+                    }else{
+
+                    }
+                }
+            });
+
+        //}
+	});
 

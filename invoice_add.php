@@ -266,7 +266,7 @@
                                 (($sheduler_zapis[0]['year'] == date("Y")) && ($month < date("m"))) ||
                                 (($month == date("m")) && ($sheduler_zapis[0]['day'] < date("d")))) &&
                                 !(($finances['see_all'] == 1) || $god_mode) &&
-                                !(($sheduler_zapis[0]['noch'] == '1') && ($diff_hours <= 13))
+                                !(($sheduler_zapis[0]['noch'] == '1') && ($diff_hours <= 14))
                             ) {
                                 /*var_dump($sheduler_zapis[0]['day']);
                                 var_dump($month);

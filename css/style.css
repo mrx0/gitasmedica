@@ -1204,30 +1204,30 @@ position:relative;
 		background-color: rgba(86, 249, 129, .7);
 }
 
-#blink1 {
-	-webkit-animation: blink1 8s linear infinite; 
-	animation: blink1 8s linear infinite; 
+.blink1 {
+	-webkit-animation: blink1 2s linear infinite;
+	animation: blink1 2s linear infinite;
 } 
 @-webkit-keyframes blink1 {
 	0% {
-		background-color: rgba(249,225,49, 1);
-	} 
+		background-color: rgba(249, 78, 0, 0.4);
+	}
 	50% {
-		background-color: rgba(249,225,49, 0); 
+		background-color: rgba(250, 250, 250, 1);
 	}
 	100% {
-		background-color: rgba(249,225,49, 1);
+		background-color: rgba(249, 78, 0, 0.4);
 	} 
 } 
 @keyframes blink1 {
 	0% {
-		background-color: rgba(249,225,49, 1); 
+		background-color: rgba(249, 78, 0, 0.4);
 	}
 	50% {
-		background-color: rgba(249,225,49, 0); 
+		background-color: rgba(250, 250, 250, 1);
 	}
 	100% { 
-		background-color: rgba(249,225,49, 1);
+		background-color: rgba(249, 78, 0, 0.4);
 	}
 }
 #blink2 {

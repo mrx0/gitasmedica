@@ -291,7 +291,7 @@ if ($enter_ok){
                             //var_dump($calculate_summ);
                             //var_dump($calculate_summins);
 
-                            //if (empty($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'])) {
+                            if (empty($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'])) {
                                 //надо костыльно преобразовать массив
                                 foreach ($invoice_ex_j as $ind => $invoice_ex_j_arr) {
 
@@ -370,11 +370,12 @@ if ($enter_ok){
 
                                     }
                                 }
-                            //}
+                            }
                         }
 
                         //var_dump($_SESSION);
-                        //var_dump($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data']);
+                        //var_dump($_SESSION['test']);
+                        //var_dump($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'][25][0]);
                         //var_dump($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['mkb']);
 
                         //Для МКБ
@@ -399,7 +400,7 @@ if ($enter_ok){
 
                         echo '
 								<div id="data">';
-                        if (!empty($temp_arr)) {
+                        if (!empty($temp_arr) || !empty($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'])) {
                             echo '	
                                         <input type="hidden" id="invoice_id" name="client" value="' . $invoice_j[0]['id'] . '">
                                         <input type="hidden" id="client" name="client" value="' . $invoice_j[0]['client_id'] . '">
@@ -482,8 +483,9 @@ if ($enter_ok){
                                                 </div>';
                             echo '
                                                 <div style="margin-top: 5px; font-size: 110%;">
-                                                   <b>Исполнитель: </b><input type="text" size="50" name="searchdata2" id="search_client2" placeholder="Введите первые три буквы для поиска" value="' . WriteSearchUser('spr_workers', $invoice_j[0]['worker_id'], 'user_full', false) . '" class="who2"  autocomplete="off">
+                                                   <b>Исполнитель: </b><input type="text" size="50" name="searchdata2" id="search_client2" placeholder="Введите первые три буквы для поиска" value="' . WriteSearchUser('spr_workers', $invoice_j[0]['worker_id'], 'user_full', false) . '" class="who2"  autocomplete="off">!!!Изменить
                                                     <ul id="search_result2" class="search_result2"></ul><br>
+                                 
                                                 </div>';
 
                             echo '

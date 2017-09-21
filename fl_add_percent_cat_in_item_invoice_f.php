@@ -24,10 +24,12 @@
                     include_once 'DBWork.php';
 
                     //Категории процентов
-                    $percents_j = SelDataFromDB('fl_spr_percents', $_POST['percent_cat'], 'id');
+                    //$percents_j = SelDataFromDB('fl_spr_percents', $_POST['percent_cat'], 'id');
 
-                    $work_percent = (int)$percents_j[0]['work_percent'];
-                    $material_percent = (int)$percents_j[0]['material_percent'];
+                    $percents_j = getPercents($_POST['worker'], $_POST['percent_cat']);
+
+                    $work_percent = (int)$percents_j['work_percent'];
+                    $material_percent = (int)$percents_j['material_percent'];
 
                     //var_dump($work_percent);
 
@@ -45,6 +47,8 @@
 							$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['material_percent'] = $material_percent;
 						}
 					}
+
+                    echo json_encode(array('result' => 'success', 'data' => 'Ok #1'));
 				}else{
                     echo json_encode(array('result' => 'error', 'data' => 'Ошибка #5'));
                 }
@@ -54,6 +58,6 @@
 		}else{
             echo json_encode(array('result' => 'error', 'data' => 'Ошибка #6'));
         }
-        var_dump($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data']);
+        //var_dump($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data']);
 	}
 ?>

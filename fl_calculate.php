@@ -474,7 +474,7 @@
                                                 <div style="display: inline-block; width: 300px; vertical-align: top;">
                                                     <div>
                                                         <div style="">Расчет: <div id="calcValue" class="calculateInvoice" style="color: rgb(255, 0, 198);">'.calculateResult($calculate_j[0]['summ'], 20, 6).'</div> руб.</div>
-                                                        <div style="font-size: 10px;">20% от (Сумма наряда - 6%)</div>
+                                                        <div style="font-size: 10px;"></div>
                                                     </div>
                                                 </div>';
 

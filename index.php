@@ -68,30 +68,51 @@
                 $annColor = '245, 245, 245';
                 $annIco = '<i class="fa fa-refresh" aria-hidden="true"></i>';
                 $annColorAlpha = '0.9';
+                $readStateClass = '';
+                $newTopic = true;
+                $topicTheme = nl2br($announcing['theme']);
 
                 if ($announcing['type'] == 1){
                     $annColor = '252, 255, 51';
                     $annIco = '<i class="fa fa-bullhorn" aria-hidden="true"></i>';
                     $annColorAlpha = '0.53';
+                    if ($topicTheme == ''){
+                        $topicTheme = 'Объявление';
+                    }
                 }
                 if ($announcing['type'] == 2){
-                    $                    $annIco = '<i class="fa fa-bullhorn" aria-hidden="true"></i>';
                     $annColor = '73, 208, 183';
                     $annIco = '<i class="fa fa-refresh" aria-hidden="true"></i>';
                     $annColorAlpha = '0.35';
+                    if ($topicTheme == ''){
+                        $topicTheme = 'Обновление';
+                    }
+                }
+                if ($announcing['type'] == 3){
+                    $annColor = '21, 209, 33';
+                    $annIco = '<i class="fa fa-book" aria-hidden="true"></i>';
+                    $annColorAlpha = '0.35';
+                    if ($topicTheme == ''){
+                        $topicTheme = 'Инструкция';
+                    }
+                }
+
+                if ($announcing['read_status'] == 1){
+                    $readStateClass = 'display: none;';
+                    $newTopic = false;
                 }
 
                 echo '
                 
-                <div style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 30px; font-size: 80%; background-color: rgba('.$annColor.', '.$annColorAlpha.'); position: relative;">
-                    <h2 style="height: 15px; border: 1px dotted #CCC; background-color: rgba(250, 250, 250, 0.9); width: 100%; padding: 6px 13px; margin: -9px 0 15px -14px; position: relative;">
+                <div style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 0px; font-size: 80%; background-color: rgba('.$annColor.', '.$annColorAlpha.'); position: relative;">
+                    <h2 class="', $newTopic ? "blink1":"" ,'" style="height: 15px; border: 1px dotted #CCC; background-color: rgba(250, 250, 250, 0.9); width: 100%; padding: 6px 13px; margin: -9px 0 15px -14px; position: relative;">
                         
                         <div style="position: absolute; top: 3px; left: 10px; font-size: 17px; color: rgba('.$annColor.', 1);  text-shadow: 1px 1px 3px rgb(0, 0, 0), 0 0 2px rgba(52, 152, 219, 1);">
                             '.$annIco.'
                         </div>
                                                 
                         <div style="position: absolute; top: 5px; left: 35px; font-size: 13px;">
-                            <b>'.nl2br($announcing['theme']).'</b>
+                            <b>'.$topicTheme.'</b>
                         </div>
                               
                         <div style="position: absolute; top: 2px; right: 10px; font-size: 11px; text-align: right;">
@@ -100,16 +121,22 @@
                         </div>
                         
                     </h2>
-                    <p style="margin-bottom: 0;">
+                    <p id="topic_'.$announcing['id'].'" style="margin-bottom: 30px; '.$readStateClass.'">
                         '.nl2br($announcing['text']).'
                     </p>';
 
-                if ($announcing['read_status'] != 1) {
+                echo '
+                    <div style="position: absolute; bottom: 0; right: 5px; ', $newTopic ? "display:none;":"",'">
+                        <a href="" class="ahref showMeTopic" announcingID="' . $announcing['id'] . '">Развернуть</a>
+                    </div>';
+
+                if ($newTopic) {
                     echo '
                     <div style="position: absolute; bottom: 0; right: 10px;">
                         <button class="b iUnderstand" announcingID="' . $announcing['id'] . '">Ясно</button>
                     </div>';
                 }
+
 
                 echo '
                 </div>';

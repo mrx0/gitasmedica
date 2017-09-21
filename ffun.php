@@ -372,4 +372,69 @@
         return $result;
     }
 
+    //Получить категории процентов по сотруднику и категории
+    function getPercents($worker_id, $percent_cat){
+
+        $type = 0;
+        $result = array();
+        $percents = array();
+        $percents_personal = array();
+
+        $msql_cnnct = ConnectToDB2 ();
+
+        //Узнаем категорию сотрудника
+        $query = "SELECT `id`, `permissions` AS `type` FROM `spr_workers` WHERE `id`='".$worker_id."' LIMIT 1";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+        if ($number != 0){
+            $arr = mysqli_fetch_assoc($res);
+
+            $type = $arr['type'];
+
+            //Вытащим общие персональные процентовки
+            $query = "SELECT `id`, `work_percent`, `material_percent` FROM `fl_spr_percents` WHERE `id`='".$percent_cat." AND `type`='".$type."' LIMIT 1";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    $percents[$arr['id']]['work_percent'] = $arr['work_percent'];
+                    $percents[$arr['id']]['material_percent'] =  $arr['material_percent'];
+                }
+
+
+                //Вытащим персональные процентовки
+                $query = "SELECT * FROM `fl_spr_percents_personal` WHERE `worker_id`='".$worker_id."' AND `percent_cat`='".$percent_cat."'";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        array_push($percents_personal, $arr);
+                    }
+                }else{
+
+                }
+
+            }else{
+                $percents[$arr['id']]['work_percent'] = 0;
+                $percents[$arr['id']]['material_percent'] =  0;
+            }
+        }
+
+
+
+
+
+
+
+        $result = $percents_personal;
+
+        return $result;
+    }
+
 ?>

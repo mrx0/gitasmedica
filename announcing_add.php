@@ -37,6 +37,7 @@
 								<select name="announcing_type" id="announcing_type">
 								    <option value="1" selected>Объявление</option>
 								    <option value="2">Обновление</option>
+								    <option value="3">Инструкция</option>
 								</select>
 							</div>
 						</div>';

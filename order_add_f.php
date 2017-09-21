@@ -25,6 +25,7 @@
 				//echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 
+                $msql_cnnct = ConnectToDB();
 
                 $time = date('Y-m-d H:i:s', time());
                 $date_in = date('Y-m-d H:i:s', strtotime($_POST['date_in']." 09:00:00"));
@@ -40,10 +41,6 @@
                     echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Нельзя добавлять ордеры задним числом</div>'));
                 }else{
 
-                    require 'config.php';
-                    mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-                    mysql_select_db($dbName) or die(mysql_error());
-                    mysql_query("SET NAMES 'utf8'");
 
                     $comment = addslashes($_POST['comment']);
 
@@ -52,10 +49,10 @@
                             VALUES (
                             '{$_POST['client_id']}', '{$_POST['office_id']}', '{$_POST['summ']}', '{$_POST['summtype']}', '{$date_in}', '{$comment}', '{$_SESSION['id']}', '{$time}')";
 
-                    mysql_query($query) or die(mysql_error().' -> '.$query);
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                     //ID новой позиции
-                    $mysql_insert_id = mysql_insert_id();
+                    $mysql_insert_id = mysqli_insert_id($msql_cnnct);
 
                     //!!! @@@ Пересчет баланса
                     include_once 'ffun.php';

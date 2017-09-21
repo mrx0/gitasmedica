@@ -134,6 +134,21 @@
 					}
 				}
 
+				//Изменить статус онлайн записи
+				if ($_POST['mark'] == 'zapisOnlineStatusChange'){
+
+					if (($zapis['add_new'] == 1) || $god_mode){
+                        if ($_POST['key'] == 0){
+                            $data .= '
+                            <li><div onclick="changeOnlineZapisStatus('.$_POST['ind'].', 7)">Обработано</div></li>';
+                        }
+                        if ($_POST['key'] == 7){
+                            $data .= '
+                            <li><div onclick="changeOnlineZapisStatus('.$_POST['ind'].', 0)">Сбросить статус</div></li>';
+                        }
+					}
+				}
+
 				//Изменить категорию процентов
 				if ($_POST['mark'] == 'percent_cats'){
 

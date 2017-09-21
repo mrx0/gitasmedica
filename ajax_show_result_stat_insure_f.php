@@ -10,7 +10,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 }else{
     //var_dump ($_POST);
     if ($_POST){
-        $workerExist = false;
+        //$workerExist = false;
         $queryDopExist = false;
         $queryDopExExist = false;
         $queryDopClientExist = false;
@@ -34,6 +34,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         require_once 'permissions.php';
 
+        $msql_cnnct = ConnectToDB();
 
         /*if ($_POST['worker'] != ''){
             include_once 'DBWork.php';
@@ -53,10 +54,6 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         if ($workerExist){
             $query .= "SELECT * FROM `journal_invoice`";
 
-            /*require 'config.php';
-            mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-            mysql_select_db($dbName) or die(mysql_error());
-            mysql_query("SET NAMES 'utf8'");*/
             //$time = time();
 
             //Дата/время
@@ -164,18 +161,14 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                 //var_dump($query);
 
-                require 'config.php';
-                mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-                mysql_select_db($dbName) or die(mysql_error());
-                mysql_query("SET NAMES 'utf8'");
-
                 $arr = array();
                 $rez = array();
 
-                $res = mysql_query($query) or die($query);
-                $number = mysql_num_rows($res);
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
                 if ($number != 0){
-                    while ($arr = mysql_fetch_assoc($res)){
+                    while ($arr = mysqli_fetch_assoc($res)){
                         array_push($rez, $arr);
                     }
                     $journal = $rez;
@@ -231,11 +224,11 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             //Добавим в массив данные о полисе
                             $query = "SELECT `polis`,`insure` FROM `spr_clients` WHERE `id`='".$rezult_arr_time['client_id']."';";
 
-                            $res = mysql_query($query) or die($query);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
-                            $number = mysql_num_rows($res);
+                            $number = mysqli_num_rows($res);
                             if ($number != 0) {
-                                $arr = mysql_fetch_assoc($res);
+                                $arr = mysqli_fetch_assoc($res);
                                 $rezult_arr[$fio]['data']['polis'] = $arr['polis'];
                                 $rezult_arr[$fio]['data']['insure'] = $arr['insure'];
                             }else{
@@ -248,10 +241,11 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             $query = "SELECT * FROM `journal_invoice_ex` WHERE `invoice_id`='".$rezult_arr_time['id']."';";
                             //var_dump($query);
 
-                            $res = mysql_query($query) or die(mysql_error().' -> '.$query);
-                            $number = mysql_num_rows($res);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                            $number = mysqli_num_rows($res);
                             if ($number != 0){
-                                while ($arr = mysql_fetch_assoc($res)){
+                                while ($arr = mysqli_fetch_assoc($res)){
                                     if (!isset($invoice_ex_j[$arr['ind']])){
                                         $invoice_ex_j[$arr['ind']] = array();
                                         array_push($invoice_ex_j[$arr['ind']], $arr);
@@ -275,11 +269,12 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             $query = "SELECT * FROM `journal_invoice_ex_mkb` WHERE `invoice_id`='".$rezult_arr_time['id']."';";
                             //var_dump ($query);
 
-                            $res = mysql_query($query) or die(mysql_error().' -> '.$query);
-                            $number = mysql_num_rows($res);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                            $number = mysqli_num_rows($res);
 
                             if ($number != 0){
-                                while ($arr = mysql_fetch_assoc($res)){
+                                while ($arr = mysqli_fetch_assoc($res)){
                                     if (!isset($invoice_ex_j_mkb[$arr['ind']])){
                                         $invoice_ex_j_mkb[$arr['ind']] = array();
                                         array_push($invoice_ex_j_mkb[$arr['ind']], $arr);
@@ -400,10 +395,11 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                                                     $query = "SELECT `name`, `code` FROM `spr_mkb` WHERE `id` = '{$mkb['mkb_id']}'";
 
-                                                    $res = mysql_query($query) or die(mysql_error() . ' -> ' . $query);
-                                                    $number = mysql_num_rows($res);
+                                                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                                                    $number = mysqli_num_rows($res);
                                                     if ($number != 0) {
-                                                        while ($arr = mysql_fetch_assoc($res)) {
+                                                        while ($arr = mysqli_fetch_assoc($res)) {
                                                             $rez[$mkb['mkb_id']] = $arr;
                                                         }
                                                     } else {
@@ -430,10 +426,11 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                                         $query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = '{$invoice_ex_zub_data['price_id']}'";
 
-                                        $res = mysql_query($query) or die(mysql_error() . ' -> ' . $query);
-                                        $number = mysql_num_rows($res);
+                                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                                        $number = mysqli_num_rows($res);
                                         if ($number != 0) {
-                                            while ($arr = mysql_fetch_assoc($res)) {
+                                            while ($arr = mysqli_fetch_assoc($res)) {
                                                 array_push($rez, $arr);
                                             }
                                             $rezult2 = $rez;
