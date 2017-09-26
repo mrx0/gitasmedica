@@ -8,6 +8,7 @@
 	unset($_SESSION['journal_tooth_status_temp']);
 	unset($_SESSION['permissions']);
 	unset($_SESSION['filial']);
+    unset($_SESSION['calculate_data']);
 	
 	//вся процедура работает на сессиях. Именно в ней хранятся данные  пользователя, пока он находится на сайте. Очень важно запустить их в  самом начале странички!!!
 	if (isset($_POST['login'])){

@@ -17,10 +17,8 @@
 
 		    $data = '';
 
-			require 'config.php';
-			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-			mysql_select_db($dbName) or die(mysql_error()); 
-			mysql_query("SET NAMES 'utf8'");
+            $msql_cnnct = ConnectToDB ();
+
 			$time = time();
 
 			//проверим, есть ли оплаты по этому наряду
@@ -30,11 +28,28 @@
             $query = "SELECT * FROM `journal_payment` WHERE `invoice_id`='".$_POST['id']."' ORDER BY `date_in` DESC";
             //var_dump($query);
 
-            $res = mysql_query($query) or die(mysql_error().' -> '.$query);
-            $number = mysql_num_rows($res);
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+            $number = mysqli_num_rows($res);
             if ($number != 0){
-                while ($arr = mysql_fetch_assoc($res)){
+                while ($arr = mysqli_fetch_assoc($res)){
                     array_push($payment_j, $arr);
+                }
+            }else{
+
+            }
+
+			//проверим, есть ли расчёты по этому наряду
+            //Расчёты списком
+            $calculate_j = array();
+
+            $query = "SELECT * FROM `fl_journal_calculate` WHERE `invoice_id`='".$_POST['id']."' ORDER BY `date_in` DESC";
+            //var_dump($query);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($calculate_j, $arr);
                 }
             }else{
 
@@ -45,19 +60,25 @@
 
                 echo json_encode(array('result' => 'error', 'data' => $data));
             }else {
+                if (!empty($calculate_j)) {
+                    $data = '<div class="query_neok" style="padding-bottom: 10px;"><h3>По наряду созданы расчёты. Удалить нельзя.</h3></div>';
 
-                $query = "UPDATE `journal_invoice` SET `status`='9' WHERE `id`='{$_POST['id']}'";
-                mysql_query($query) or die(mysql_error() . ' -> ' . $query);
+                    echo json_encode(array('result' => 'error', 'data' => $data));
+                }else {
 
-                //mysql_close();
+                    $query = "UPDATE `journal_invoice` SET `status`='9' WHERE `id`='{$_POST['id']}'";
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-                //!!! @@@ Пересчет долга
-                include_once 'ffun.php';
-                calculateDebt($_POST['client_id']);
+                    //mysql_close();
 
-                $data = '<div class="query_ok" style="padding-bottom: 10px;"><h3>Наряд удален (заблокирован).</h3></div>';
+                    //!!! @@@ Пересчет долга
+                    include_once 'ffun.php';
+                    calculateDebt($_POST['client_id']);
 
-                echo json_encode(array('result' => 'success', 'data' => $data));
+                    $data = '<div class="query_ok" style="padding-bottom: 10px;"><h3>Наряд удален (заблокирован).</h3></div>';
+
+                    echo json_encode(array('result' => 'success', 'data' => $data));
+                }
             }
 		}
 

@@ -411,7 +411,7 @@
                                             <div id="errror" class="invoceHeader" style="">
                                                  <div style="display: inline-block; width: 300px; vertical-align: top;">
                                                     <div>
-                                                        <div style="">Сумма: <div id="calculateInvoice" style="">'.$calculate_j[0]['summ'].'</div> руб.</div>
+                                                        На кого: <b>'.WriteSearchUser('spr_workers', $calculate_j[0]['worker_id'], 'user', true).'</b>
                                                     </div>';
                                 /*if ($sheduler_zapis[0]['type'] == 5) {
                                     echo '
@@ -473,8 +473,8 @@
                                 echo '
                                                 <div style="display: inline-block; width: 300px; vertical-align: top;">
                                                     <div>
-                                                        <div style="">Расчет: <div id="calcValue" class="calculateInvoice" style="color: rgb(255, 0, 198);">'.calculateResult($calculate_j[0]['summ'], 20, 6).'</div> руб.</div>
-                                                        <div style="font-size: 10px;"></div>
+                                                        <!--<div style="">Расчет: <div id="calcValue" class="calculateInvoice" style="color: rgb(255, 0, 198);"></div> руб.</div>
+                                                        <div style="font-size: 10px;"></div>-->
                                                     </div>
                                                 </div>';
 
@@ -530,7 +530,15 @@
                                                         <i><b>Гар.</b></i>
                                                     </div>-->
                                                     <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
-                                                        <i><b>Всего, руб.</b></i>
+                                                        <i><b>Из наряда, руб.</b></i>
+                                                    </div>
+                                                    <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
+                                                        <i><b>Расчёт, руб.</b></i>
+                                                    </div>
+                                                    <div class="cellName" style="font-size: 80%; text-align: center;">
+                                                        <div>
+                                                            <i><b>Тип</b></i>
+                                                        </div>
                                                     </div>
                                                 </div>';
 
@@ -775,8 +783,7 @@
                                                 }
                                                 echo '
                                                 </div>-->
-                                                <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
-                                                    <b>';
+                                                <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">';
 
                                                 //вычисляем стоимость
                                                 //$stoim_item = $item['quantity'] * ($price +  $price * $item['spec_koeff'] / 100);
@@ -794,7 +801,7 @@
                                                 echo $stoim_item;
 
                                                 //Общая стоимость
-                                                if ($item['guarantee'] == 0){
+                                                /*if ($item['guarantee'] == 0){
                                                     if ($item['insure'] != 0){
                                                         if ($item['insure_approve'] != 0){
                                                             $summins += $stoim_item;
@@ -802,10 +809,30 @@
                                                     }else{
                                                         $summ += $stoim_item;
                                                     }
-                                                }
+                                                }*/
 
 
-                                                echo '</b>
+                                                echo '
+                                                </div>
+                                                
+                                                <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
+                                                <b>';
+
+                                                echo calculateResult($stoim_item, $item['work_percent'], $item['material_percent']);
+
+                                                $summ += calculateResult($stoim_item, $item['work_percent'], $item['material_percent']);
+
+                                                echo '
+                                                </b>
+                                                </div>';
+
+                                        $percents_j = SelDataFromDB('fl_spr_percents', $item['percent_cats'], 'id');
+
+                                        echo '
+                                                <div class="cellName" style="text-align: center;">
+                                                    <div>
+                                                        <i>'.$percents_j[0]['name'].'</i>
+                                                    </div>
                                                 </div>
                                             </div>';
                                     }
@@ -816,8 +843,6 @@
 
                                 echo '	
                                             <div class="cellsBlock" style="font-size: 90%;" >
-                                                <div class="cellText2" style="padding: 2px 4px;">
-                                                </div>
                                                 <!--<div class="cellName" style="font-size: 90%; font-weight: bold;">
                                                     Итого:-->';
                                 if (($summ != $calculate_j[0]['summ']) || ($summins != $calculate_j[0]['summins'])){
@@ -839,6 +864,20 @@
                                                     </div>-->';
                                 }
                                 echo '
+                                                </div>
+                                                
+                                                <div class="invoceHeader" style="">
+                                                    <ul style="margin-left: 6px; margin-bottom: 10px;">
+                                                        <!--<li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
+                                                            Сумма наряда: <div id="calculateInvoice" style="">'.$calculate_j[0]['summ'].'
+                                                        </li>-->
+
+                                                       <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
+                                                            К расчёту <div id="calculateInvoice" style="">'.$summ.'</div> руб.
+                                                        </li>
+
+                                                    </div>
+                                                    </ul>
                                                 </div>';
 
 

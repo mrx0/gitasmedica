@@ -120,12 +120,19 @@
 						if (!empty($invoice_data)){
 
                             //Категории процентов
-                            $percents_j = SelDataFromDB('fl_spr_percents', 5, 'type');
-                            //var_dump($percents_j);
+                            $percent_cats_j = SelDataFromDB('fl_spr_percents', 5, 'type');
+                            //var_dump( $percent_cats_j);
 
 							foreach ($invoice_data as $key => $items){
-
                                 $percent_cat = $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind][$key]['percent_cats'];
+
+                                $percents_j = getPercents($_POST['worker'], $percent_cat);
+
+                                $work_percent = (int)$percents_j[$percent_cat]['work_percent'];
+                                $material_percent = (int)$percents_j[$percent_cat]['material_percent'];
+
+                                $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind][$key]['work_percent'] = $work_percent;
+                                $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind][$key]['material_percent'] = $material_percent;
 
 								$request .= '
 								<div class="cellsBlock" style="font-size: 100%;" >
@@ -289,15 +296,15 @@
                                 $request .= '
                                             <select name="percent_cat'.$ind.'_'.$key.'" id="percent_cat'.$ind.'_'.$key.'" style="width: 110px; max-width: 110px;" onchange="fl_changeItemPercentCat('.$ind.', '.$key.', $(\'#percent_cat'.$ind.'_'.$key.'\').val());">';
 
-                                                if ($percents_j != 0){
-                                                    for ($i=0;$i<count($percents_j);$i++){
-                                                        if ($percent_cat == $percents_j[$i]['id']){
+                                                if ( $percent_cats_j != 0){
+                                                    for ($i=0;$i<count( $percent_cats_j);$i++){
+                                                        if ($percent_cat ==  $percent_cats_j[$i]['id']){
                                                             $selected = ' selected';
                                                         }else{
                                                             $selected = '';
                                                         }
 
-                                                        $request .= "<option value='".$percents_j[$i]['id']."' ".$selected.">".$percents_j[$i]['name']."</option>";
+                                                        $request .= "<option value='". $percent_cats_j[$i]['id']."' ".$selected.">". $percent_cats_j[$i]['name']."</option>";
                                                     }
                                                 }
                                 $request .= '

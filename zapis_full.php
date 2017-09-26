@@ -417,13 +417,19 @@
 
                             if (isset($Work_Today_arr[$k][1])){
                                 //var_dump($Kab_work_today_smena1);
-                                $worker = '<i>'.WriteSearchUser('spr_workers', $Work_Today_arr[$k][1]['worker'], 'user', false).'</i>';
+                                $worker = '<i>1 см: '.WriteSearchUser('spr_workers', $Work_Today_arr[$k][1]['worker'], 'user', false).'</i><br>';
                             }else{
-                                $worker = '&nbsp;';
+                                $worker = '1 см: <span style="font-weight: normal;">никого</span><br>';
+                            }
+                            if (isset($Work_Today_arr[$k][2])){
+                                //var_dump($Kab_work_today_smena1);
+                                $worker .= '<i>2 см: '.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'</i>';
+                            }else{
+                                $worker .= '2 см: <span style="font-weight: normal;">никого</span>';
                             }
 
 							echo '		
-								<a href="?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="b" style="'.$kab_color.' text-align: center;">каб '.$k.'<br>'.$worker.'</a>';
+								<a href="?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="b" style="'.$kab_color.' text-align: center;"><span style="font-size: 120%">каб '.$k.'</span><br>'.$worker.'</a>';
 						}
 						echo '</li>';
 					}

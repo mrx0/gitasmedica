@@ -3731,19 +3731,19 @@
 				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 			},
 			// действие, при ответе с сервера
-			success: function(data){
-                //console.log(data);
-				if(data.result == "success"){
-					//console.log(data.data);
-					$('#calculate_rezult').html(data.data);
-					//$('#calculate_rezult').append(data.data);
+			success: function(res){
+                console.log(res.data2);
+				if(res.result == "success"){
+					//console.log(res.data);
+					$('#calculate_rezult').html(res.data);
+					//$('#calculate_rezult').append(res.data);
 
 					// !!!
 					//calculateInvoice(invoice_type);
 
 				}else{
-					console.log(data.data);
-					$('#errror').html(data.data);
+					console.log(res.data);
+					$('#errror').html(res.data);
 				}
 				// !!! скролл надо замутить сюда $('#invoice_rezult').scrollTop();
 			}
@@ -4528,7 +4528,7 @@
             },
             // действие, при ответе с сервера
             success: function(data){
-                //console.log(data);
+                console.log(data);
 
                 fillCalculateRez();
 
@@ -5769,14 +5769,19 @@
 		}
 
 		var invoice_type = $("#invoice_type").val();
+		//console.log (invoice_type);
 
 		var Summ = document.getElementById("calculateInvoice").innerHTML;
+        //console.log (Summ);
+
 		var SummIns = 0;
 
 		var SummInsStr = '';
 
 		if (invoice_type == 5){
 			SummIns = document.getElementById("calculateInsInvoice").innerHTML;
+            //console.log (SummIns);
+
 			SummInsStr = '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
 							'Страховка:<br>'+
 							'<span class="calculateInsInvoice" style="font-size: 13px">'+SummIns+'</span> руб.'+

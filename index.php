@@ -4,7 +4,10 @@
 //Главная
 
 	require_once 'header.php';
-	
+
+	//var_dump($_SESSION);
+	//var_dump($_SESSION['calculate_data']);
+
 	if ($enter_ok){
 		require_once 'header_tags.php';
 

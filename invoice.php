@@ -366,11 +366,12 @@
                                                     <div style="display: inline-block;">'.date('d.m.y', strtotime($invoice_j[0]['closed_time'])).'</div>
                                                 </div>';
                                 }
-                                echo '
+                                if (($invoice_j[0]['summ'] != 0) || ($invoice_j[0]['summins'] != 0)) {
+                                    echo '
                                                 <div style="margin-top: 5px;">
                                                     <div style="display: inline-block;"><a href="fl_calculation_add3.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Внести расчётный лист</a></div>
                                                 </div>';
-
+                                }
                             }
                             echo '
                                             </div>';

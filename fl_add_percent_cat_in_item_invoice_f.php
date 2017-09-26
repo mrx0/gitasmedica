@@ -22,6 +22,7 @@
 				if (isset($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
 
                     include_once 'DBWork.php';
+                    include_once 'ffun.php';
 
                     //Категории процентов
                     //$percents_j = SelDataFromDB('fl_spr_percents', $_POST['percent_cat'], 'id');

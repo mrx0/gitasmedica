@@ -17,6 +17,7 @@
 	unset($_SESSION['permissions']);
 	unset($_SESSION['filial']);
 	unset($_SESSION['invoice_data']);
+    unset($_SESSION['calculate_data']);
 	 
 	//Переадресовываем на главную
 	header("location: index.php");
