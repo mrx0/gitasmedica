@@ -1,34 +1,202 @@
 <?php
 
-//stat_zapis.php
-//Статистика по записи
+//calculates.php
+//Расчёты
+
+
+function cmp($a, $b)
+{
+    return sort($massive, SORT_STRING);
+}
+
 
 	require_once 'header.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
-
 		//var_dump($_SESSION);
-		if (($zapis['see_all'] == 1) || ($zapis['see_own'] == 1) || $god_mode){
+
+		if (($finances['see_all'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			include_once 'filter.php';
 			include_once 'filter_f.php';
-			
+			include_once 'ffun.php';
+
+			$workers_j = array();
+
 			$offices_j = SelDataFromDB('spr_office', '', '');
+            $permissions_j = SelDataFromDB('spr_permissions', '', '');
+
+            $msql_cnnct = ConnectToDB ();
+
 
 			if ($_POST){
 			}else{
+
+			    //Переменная для набора JS для tabs
+                $tabs_rez_js = '';
+
+
+
 				echo '
                     <div class="no_print"> 
 					<header style="margin-bottom: 5px;">
-						<h1>Запись</h1>
+						<h1>---</h1>
 					</header>
 					</div>';
 
 				echo '
 						<div id="data">';
-				echo '
+
+
+                echo '
+                    <div id="tabs_w">
+                        <ul class="tabs">';
+
+                //Для теста
+                $permission['id'] = 5;
+                $permission['name'] = $permissions_j[4]['name'];
+
+                //вкладки по правам
+                //foreach ($permissions_j as $permission){
+                    if (($permission['id'] != 1) && ($permission['id'] != 2) && ($permission['id'] != 3) && ($permission['id'] != 8) && ($permission['id'] != 9)){
+                        echo '
+                            <li>
+                                <a href="#tabs-' . $permission['id'] . '">
+                                    ' . $permission['name'] . '
+                                </a>
+                            </li>';
+                    }
+                //}
+                echo '
+                        </ul>';
+
+                //проходим по каждой из должностей
+                //foreach ($permissions_j as $permission){
+                    //Обнуляем массив
+                    $workers_j = array();
+
+
+                    if (($permission['id'] != 1) && ($permission['id'] != 2) && ($permission['id'] != 3) && ($permission['id'] != 8) && ($permission['id'] != 9)){
+
+                        //Выберем всех сотрудников с такой должностью
+                        $query = "SELECT * FROM `spr_workers` WHERE `permissions`='{$permission['id']}' AND `fired` = '0'";
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0){
+                            while ($arr = mysqli_fetch_assoc($res)){
+                                $workers_j[$arr['name']] = $arr;
+                            }
+                        }
+
+                        //Сортируем по имени
+                        ksort($workers_j);
+
+                        //содержимое по правам
+                        echo '
+                        <div id="tabs-'.$permission['id'].'" style="padding: 0;">';
+
+
+                        //$tabs_rez_js .= '$( "#tabs_w'.$permission['id'].'" ).tabs();';
+                        $tabs_rez_js .= '$( "#tabs_w'.$permission['id'].'" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );';
+                        $tabs_rez_js .= '$( "#tabs_w'.$permission['id'].' li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );';
+
+
+                        echo '
+                            <div id="tabs_w'.$permission['id'].'" style="font-size: 100%;">
+                                <ul class="tabs" style="font-size: 125%; height: 500px; overflow-y: scroll;">';
+
+                        //вкладки по сотрудникам
+                        foreach ($workers_j as $worker){
+
+                            echo '
+                                    <li>
+                                        <a href="#tabs-' . $permission['id'] . '_' . $worker['id'] . '">
+                                            ' . $worker['name'] . '<div id="tabs_notes_' . $permission['id'] . '_' . $worker['id'].'" class="notes_count2" style="display: none; right: 0px;"><i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i></div>
+                                        </a>
+                                    </li>';
+                        }
+
+                        echo '
+                                </ul>';
+
+                        //содержимое по сотрудникам
+                        foreach ($workers_j as $worker){
+
+                            echo '
+
+                                <div id="tabs-' . $permission['id'] . '_' . $worker['id'] . '" style="width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); margin-left: 150px; font-size: 12px;">';
+
+                            echo '<h2>' .$permission['name'].'</h2><h1>'.$worker['name'].'</h2>';
+
+                            $tabs_rez_js .= '$( "#tabs_w'.$permission['id'].'_'.$worker['id'].'").tabs();';
+
+                            echo '
+                                    <div id="tabs_w'.$permission['id'].'_'.$worker['id'].'" style="font-size: 100%;">
+                                        <ul class="tabs" style="font-size: 125%; float: left;">';
+
+                            //закладки по офисам
+                            foreach ($offices_j as $office){
+
+                                if ($office['id'] != 11) {
+
+                                    echo '
+                                            <li class="tabs-' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '">
+                                                <a href="#tabs-' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '">
+                                                    ' . $office['name'] . '<div id="tabs_notes_' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count2" style="display: none; right: 0px;"><i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i></div>
+                                                </a>
+                                            </li>';
+                                }
+                            }
+
+                            echo '
+                                        </ul>';
+
+                            //содержимое по офисам
+                            foreach ($offices_j as $office){
+
+                                if ($office['id'] != 11) {
+                                    echo '
+                                        <div id="tabs-' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '" style="width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); font-size: 12px; margin-top: 65px;">';
+
+                                    echo '
+                                            <div class="tableData" id="'.$permission['id'] . '_' . $worker['id'] . '_' . $office['id'].'">
+                                                <div style="width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);"><img src="img/wait.gif" style="float:left;"><span style="float: right;  font-size: 90%;"> обработка...</span></div>
+                                            </div>';
+
+                                    echo '
+                                        </div>';
+                                }
+                            }
+
+                            echo '
+                                    </div>';
+                            echo '                
+                                </div>';
+                        }
+
+                        echo '
+                            </div>
+                        </div>';
+
+                    }
+                //}
+
+                echo '
+                    </div>';
+
+
+
+
+
+
+
+
+
+
+				/*echo '
                             <div class="no_print"> 
 							<ul style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 20px; width: 420px; font-size: 95%; background-color: rgba(245, 245, 245, 0.9); display: inline-table;">
 								
@@ -43,17 +211,17 @@
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
 										<div style="margin-bottom: 10px;">
 											C <input type="text" id="datastart" name="datastart" class="dateс" value="'.date("01.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" disabled>
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
 											 &bull;по <input type="text" id="dataend" name="dataend" class="dateс" value="'.date("d.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" disabled>
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
 										</div>
 										<div style="vertical-align: middle; color: #333;">
-											<input type="checkbox" name="all_time" value="1" checked> <span style="font-size:80%;">За всё время</span>
+											<input type="checkbox" name="all_time" value="1"> <span style="font-size:80%;">За всё время</span>
 										</div>
 									</div>
-								</li>';
+								</li>';*/
 
-				echo '				
+				/*echo '
 								<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
 										Филиал
@@ -82,7 +250,7 @@
                     }
                 }*/
 
-                echo '
+                /*echo '
 										</div>
 									</div>
 								</li>
@@ -92,7 +260,7 @@
 										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">';
-                if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
+                if (($finances['see_all'] == 1) || $god_mode){
                     echo '
 										<input type="text" size="30" name="searchdata4" id="search_client4" placeholder="Минимум три буквы для поиска" value="" class="who4" autocomplete="off">
 										<ul id="search_result4" class="search_result4"></ul><br />';
@@ -101,16 +269,6 @@
                                         <input type="hidden" id="search_client4" name="searchdata4" value="'.WriteSearchUser('spr_workers', $_SESSION['id'], 'user_full', false).'">';
                 }
                 echo '
-									</div>
-								</li>
-								<li class="filterBlock">
-									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Пациент<br>
-										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
-									</div>
-									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="text" size="30" name="searchdata" id="search_client" placeholder="Минимум три буквы для поиска" value="" class="who" autocomplete="off">
-										<ul id="search_result" class="search_result"></ul><br />
 									</div>
 								</li>
 								<li class="filterBlock">
@@ -133,7 +291,7 @@
 										Состояние
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="checkbox" id="zapisAll" name="zapisAll" class="zapisType" value="1"> Все<br>
+										<input type="checkbox" id="calculateAll" name="zapisAll" class="zapisType" value="1"> Все<br>
 										<input type="checkbox" id="zapisArrive" name="zapisArrive" class="zapisType" value="1" checked> Пришли<br>
 										<input type="checkbox" id="zapisNotArrive" name="zapisNotArrive" class="zapisType" value="1"> Не пришли<br>
 										<input type="checkbox" id="zapisNull" name="zapisNull" class="zapisType" value="1"> Не закрытые<br>
@@ -205,7 +363,7 @@
 				
 				echo '
                         <div class="no_print"> 
-						<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_zapis()">
+						<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_calculate()">
 						</div>';
 
                 echo '
@@ -213,11 +371,107 @@
 							<ul style="border: 1px dotted #CCC; margin: 10px; width: auto;" id="qresult">
 								Результат отобразится здесь
 							<ul>
-						</div>';
-						
+						</div>';*/
+
 				echo '
 
 				<script type="text/javascript">
+				
+				
+				$( "#tabs_w" ).tabs();
+				//$( "#tabs_ww" ).tabs();
+				//$( "#tabs_w2" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
+				'.$tabs_rez_js.'
+				
+				
+				$(document).ready(function() {
+				    //console.log(123);
+				    
+				    var ids = "0_0_0";
+				    var ids_arr = {};
+				    var permission = 0;
+				    var worker = 0;
+				    var office = 0;
+
+				    
+				    $(".tableData").each(function() {
+                        //console.log($(this).attr("id"));
+                        
+                        var thisObj = $(this);
+
+                        ids = $(this).attr("id");
+                        ids_arr = ids.split("_");
+                        //console.log(ids_arr);
+                         
+                        permission = ids_arr[0];
+                        worker = ids_arr[1];
+                        office = ids_arr[2];
+                        
+                        var certData = {
+                            permission: permission,
+                            worker: worker,
+                            office: office,
+                            month: "09",
+                        }
+                        
+                        $.ajax({
+                            url:"fl_get_calculates_f.php",
+                            global: false,
+                            type: "POST",
+                            dataType: "JSON",
+                
+                            data:certData,
+                
+                            cache: false,
+                            beforeSend: function() {
+                                //$(\'#errrror\').html("<div style=\'width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);\'><img src=\'img/wait.gif\' style=\'float:left;\'><span style=\'float: right;  font-size: 90%;\'> обработка...</span></div>");
+                            },
+                            success:function(res){
+                                //console.log(res);
+                                //thisObj.html(res);
+                                
+                                if(res.result == \'success\'){
+                                
+                                    ids = thisObj.attr("id");
+                                    ids_arr = ids.split("_");
+                                    //console.log(ids_arr);
+                                     
+                                    permission = ids_arr[0];
+                                    worker = ids_arr[1];
+                                    office = ids_arr[2];
+                                
+                                    if (res.status == 1){
+                                        thisObj.html(res.data);
+                                        
+                                        //Показываем оповещения на фио и филиале
+                                        $("#tabs_notes_"+permission+"_"+worker).show();
+                                        $("#tabs_notes_"+permission+"_"+worker+"_"+office).show();
+                                        console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
+
+                                    }
+                                    
+                                    if (res.status == 0){
+                                        thisObj.html("Нет данных");
+                                    	
+                                    	//Спрячем пустые вкладки, где нет данных
+                                        $(".tabs-"+permission+"_"+worker+"_"+office).hide();
+                                    }
+                                }
+                                
+                                if(res.result == \'error\'){
+                                    thisObj.html(res.data);
+                                    
+                                    
+                                }
+                            }
+                        });
+                         
+                         
+                    });
+				});
+				
+				
+				
 				    //Проверка и установка checkbox
                     $(".zapisType").click(function() {
                         
@@ -360,7 +614,7 @@
 					});
                     
                     
-					var all_time = 1;
+					var all_time = 0;
 					
 					$("input[name=all_time]").change(function() {
 						all_time = $("input[name=all_time]:checked").val();

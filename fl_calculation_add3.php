@@ -14,7 +14,7 @@ if ($enter_ok){
         include_once 'functions.php';
         include_once 'ffun.php';
 
-        /*var_dump (getPercents(288, 1));
+        /*var_dump (getPercents(266, 4));
         var_dump (getPercents(288, 3));
         var_dump (getPercents(288, 4));
         var_dump (getPercents(288, 5));
@@ -166,8 +166,8 @@ if ($enter_ok){
 
                         $back_color = '';
 
-                        $summ = 0;
-                        $summins = 0;
+                        $summ_inv = 0;
+                        $summins_inv = 0;
 
                         //if(($sheduler_zapis[0]['enter'] != 8) || ($scheduler['see_all'] == 1) || $god_mode){
                         if ($sheduler_zapis[0]['enter'] == 1){
@@ -263,11 +263,11 @@ if ($enter_ok){
                             $rez = array();
                             $arr = array();
 
-                            $calculate_summ = 0;
-                            $calculate_summins = 0;
+                            $calculate_summ_inv = 0;
+                            $calculate_summins_inv = 0;
 
                             //Получим уже существующие рассчёты
-                            $query = "SELECT `id`, `summ`, `summins` FROM `fl_journal_calculate` WHERE `invoice_id`='".$_GET['invoice_id']."' AND `zapis_id`='".$sheduler_zapis[0]['id']."';";
+                            $query = "SELECT `id`, `summ_inv`, `summ` FROM `fl_journal_calculate` WHERE `invoice_id`='".$_GET['invoice_id']."' AND `zapis_id`='".$sheduler_zapis[0]['id']."';";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                             $number = mysqli_num_rows($res);
@@ -292,14 +292,14 @@ if ($enter_ok){
                                         }
                                     }
 
-                                    $calculate_summ += (int)$calculate_item['summ'];
-                                    $calculate_summins += (int)$calculate_item['summins'];
+                                    $calculate_summ_inv += (int)$calculate_item['summ_inv'];
+                                    //$calculate_summins_inv += (int)$calculate_item['summins_inv'];
 
                                 }
                             }
                             //var_dump($calculate_exist_j);
-                            //var_dump($calculate_summ);
-                            //var_dump($calculate_summins);
+                            //var_dump($calculate_summ_inv);
+                            //var_dump($calculate_summins_inv);
 
                             if (empty($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'])) {
                                 //надо костыльно преобразовать массив
@@ -320,17 +320,25 @@ if ($enter_ok){
                                             $temp_arr2['spec_koeff'] = $invoice_ex_j_val['spec_koeff'];
                                             $temp_arr2['discount'] = (int)$invoice_ex_j_val['discount'];
 
-                                            $query = "SELECT `id`, `work_percent`, `material_percent` FROM `fl_spr_percents` LIMIT 1;";
+                                            $query = "SELECT `id` FROM `fl_spr_percents` WHERE `type`='".$invoice_j[0]['type']."' LIMIT 1;";
                                             //var_dump($query);
 
                                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                                             $number = mysqli_num_rows($res);
+
                                             if ($number != 0) {
                                                 $arr = mysqli_fetch_assoc($res);
-                                                $temp_arr2['percent_cats'] = (int)$arr['id'];
+                                                /*$temp_arr2['percent_cats'] = (int)$arr['id'];
                                                 $temp_arr2['work_percent'] = (int)$arr['work_percent'];
-                                                $temp_arr2['material_percent'] = (int)$arr['material_percent'];
+                                                $temp_arr2['material_percent'] = (int)$arr['material_percent'];*/
+
+                                                $percents_j = getPercents( $invoice_j[0]['worker_id'], (int)$arr['id']);
+                                                //var_dump($percents_j);
+
+                                                $temp_arr2['percent_cats'] = (int)$arr['id'];
+                                                $temp_arr2['work_percent'] = (int)$percents_j[(int)$arr['id']]['work_percent'];
+                                                $temp_arr2['material_percent'] = (int)$percents_j[(int)$arr['id']]['material_percent'];
 
                                             } else {
                                                 $temp_arr2['percent_cats'] = 0;
@@ -338,6 +346,7 @@ if ($enter_ok){
                                                 $temp_arr2['material_percent'] = 0;
                                                 //$invoice_ex_j = 0;
                                             }
+
 
 
                                             if ($invoice_ex_j_val['manual_price'] == 1) {
@@ -429,17 +438,18 @@ if ($enter_ok){
                                             <div id="errror" class="invoceHeader" style="">
                                                  <div style="display: inline-block; width: 300px; vertical-align: top;">
                                                     <div>
-                                                        <div style="">Сумма: <div id="calculateInvoice" style="">' . $invoice_j[0]['summ'] . '</div> руб.</div>
+                                                        <div style="">Сумма наряда: <div id="calculateInvoice" style="">' . $invoice_j[0]['summ'] . '</div> руб.</div>
                                                     </div>';
                             if ($sheduler_zapis[0]['type'] == 5) {
                                 echo '
                                                     <div>
-                                                        <div style="">Страховка: <div id="calculateInsInvoice" style="">' . $invoice_j[0]['summins'] . '</div> руб.</div>
+                                                        <div style="">Страховка наряда: <div id="calculateInsInvoice" style="">' . $invoice_j[0]['summins'] . '</div> руб.</div>
                                                     </div>';
                             }
+
                             echo '
                                                     <div>
-                                                        <div style="">Остаток для расчётов: <div id="calculateSumm" style="">' . (($invoice_j[0]['summ'] + $invoice_j[0]['summins']) - ($calculate_summ)) . '</div> руб.</div>
+                                                        <div style="">Оплачено: <div id="calculateInvoice" style="color: #333;">' . $invoice_j[0]['paid'] . '</div> руб.</div>
                                                     </div>';
 
                             /*echo '
@@ -448,10 +458,18 @@ if ($enter_ok){
                                                 </div>';*/
                             echo '
                                                 </div> 
-                                                <div style="display: inline-block; width: 300px; vertical-align: top;">
+                                                <div style="display: inline-block; width: 300px; vertical-align: top;">';
+
+                            echo '
                                                     <div>
-                                                        <div style="">Оплачено: <div id="calculateInvoice" style="color: #333;">' . $invoice_j[0]['paid'] . '</div> руб.</div>
+                                                        <div style="">Остаток для расчётов: <div class="calculateInvoice" style="color: #333;">' . (($invoice_j[0]['summ'] + $invoice_j[0]['summins']) - ($calculate_summ_inv)) . '</div> руб.</div>
                                                     </div>';
+                            echo '
+                                                    <div>
+                                                        <div style="">Сумма расчёта: <div id="calculateSumm" style="">' . (($invoice_j[0]['summ'] + $invoice_j[0]['summins']) - ($calculate_summ_inv)) . '</div> руб.</div>
+                                                    </div>';
+
+
                             if ($invoice_j[0]['summ'] != $invoice_j[0]['paid']) {
                                 if ($invoice_j[0]['status'] != 9) {
                                     echo '
@@ -544,22 +562,22 @@ if ($enter_ok){
                                                 </div>
                                                 <!--<div class="cellName" style="font-size: 90%; font-weight: bold;">
                                                     Итого:-->';
-                            if (($summ != $invoice_j[0]['summ']) || ($summins != $invoice_j[0]['summins'])) {
+                            //if (($summ_inv != $invoice_j[0]['summ']) || ($summins_inv != $invoice_j[0]['summins'])) {
                                 /*echo '<br>
                                     <span style="font-size: 90%; font-weight: normal; color: #FF0202; cursor: pointer; " title="Такое происходит, если  цена позиции в прайсе меняется задним числом"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 135%;"></i> Итоговая цена не совпадает</span>';*/
-                            }
+                            //}
 
                             echo '				
                                                         
                                                 <!--</div>
                                                 <div class="cellName" style="padding: 2px 4px;">
                                                     <div>
-                                                        <div style="font-size: 90%;">Сумма: <div id="calculateInvoice" style="font-size: 110%;">' . $summ . '</div> руб.</div>
+                                                        <div style="font-size: 90%;">Сумма: <div id="calculateInvoice" style="font-size: 110%;">' . $summ_inv . '</div> руб.</div>
                                                     </div>-->';
                             if ($sheduler_zapis[0]['type'] == 5) {
                                 echo '
                                                     <!--<div>
-                                                        <div style="font-size: 90%;">Страховка: <div id="calculateInsInvoice" style="font-size: 110%;">' . $summins . '</div> руб.</div>
+                                                        <div style="font-size: 90%;">Страховка: <div id="calculateInsInvoice" style="font-size: 110%;">' . $summins_inv . '</div> руб.</div>
                                                     </div>-->';
                             }
                             echo '

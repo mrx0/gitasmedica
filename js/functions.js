@@ -1426,7 +1426,8 @@
                         },
                         // действие, при ответе с сервера
                         success:function(data){
-                            console.log(data.data);
+                            //console.log(data.data);
+
                             if(data.result == 'success') {
                                 //console.log('success');
                                 $('#data').html(data.data);
@@ -1974,6 +1975,152 @@
 
     //Выборка статистики  записи
     function Ajax_show_result_stat_zapis(){
+
+        var typeW = document.querySelector('input[name="typeW"]:checked').value;
+
+        var zapisAll = $("input[id=zapisAll]:checked").val();
+        if (zapisAll === undefined){
+            zapisAll = 0;
+        }
+        var zapisArrive = $("input[id=zapisArrive]:checked").val();
+        if (zapisArrive === undefined){
+            zapisArrive = 0;
+        }
+        var zapisNotArrive = $("input[id=zapisNotArrive]:checked").val();
+        if (zapisNotArrive === undefined){
+            zapisNotArrive = 0;
+        }
+
+        var zapisError = $("input[id=zapisError]:checked").val();
+        if (zapisError === undefined){
+            zapisError = 0;
+        }
+
+        var zapisNull = $("input[id=zapisNull]:checked").val();
+        if (zapisNull === undefined){
+            zapisNull = 0;
+        }
+
+        var fullAll = $("input[id=fullAll]:checked").val();
+        if (fullAll === undefined){
+            fullAll = 0;
+        }
+
+        var fullWOInvoice = $("input[id=fullWOInvoice]:checked").val();
+        if (fullWOInvoice === undefined){
+            fullWOInvoice = 0;
+        }
+
+        var fullWOTask = $("input[id=fullWOTask]:checked").val();
+        if (fullWOTask === undefined){
+            fullWOTask = 0;
+        }
+
+        var fullOk = $("input[id=fullOk]:checked").val();
+        if (fullOk === undefined){
+            fullOk = 0;
+        }
+
+        var statusAll = $("input[id=statusAll]:checked").val();
+        if (statusAll === undefined){
+            statusAll = 0;
+        }
+
+        var statusPervich = $("input[id=statusPervich]:checked").val();
+        if (statusPervich === undefined){
+            statusPervich = 0;
+        }
+
+        var statusInsure = $("input[id=statusInsure]:checked").val();
+        if (statusInsure === undefined){
+            statusInsure = 0;
+        }
+
+        var statusNight = $("input[id=statusNight]:checked").val();
+        if (statusNight === undefined){
+            statusNight = 0;
+        }
+
+        var statusAnother = $("input[id=statusAnother]:checked").val();
+        if (statusAnother === undefined){
+            statusAnother = 0;
+        }
+
+        var invoiceAll = $("input[id=invoiceAll]:checked").val();
+        if (invoiceAll === undefined){
+            invoiceAll = 0;
+        }
+
+        var invoicePaid = $("input[id=invoicePaid]:checked").val();
+        if (invoicePaid === undefined){
+            invoicePaid = 0;
+        }
+
+        var invoiceNotPaid = $("input[id=invoiceNotPaid]:checked").val();
+        if (invoiceNotPaid === undefined){
+            invoiceNotPaid = 0;
+        }
+
+        var invoiceInsure = $("input[id=invoiceInsure]:checked").val();
+        if (invoiceInsure === undefined){
+            invoiceInsure = 0;
+        }
+
+        $.ajax({
+            url:"ajax_show_result_stat_zapis_f.php",
+            global: false,
+            type: "POST",
+            data:
+                {
+                    all_time:all_time,
+                    datastart: document.getElementById("datastart").value,
+                    dataend: document.getElementById("dataend").value,
+
+                    //Кто создал запись
+                    creator:$("#search_worker").val(),
+                    //Пациент
+                    client:$("#search_client").val(),
+                    //К кому запись
+                    worker:$("#search_client4").val(),
+                    filial:$("#filial").val(),
+
+                    typeW:typeW,
+
+                    zapisAll: zapisAll,
+                    zapisArrive: zapisArrive,
+                    zapisNotArrive: zapisNotArrive,
+                    zapisError: zapisError,
+                    zapisNull: zapisNull,
+
+                    fullAll: fullAll,
+                    fullWOInvoice: fullWOInvoice,
+                    fullWOTask: fullWOTask,
+                    fullOk: fullOk,
+
+                    statusAll: statusAll,
+                    statusPervich: statusPervich,
+                    statusInsure: statusInsure,
+                    statusNight: statusNight,
+                    statusAnother: statusAnother,
+
+                    invoiceAll: invoiceAll,
+                    invoicePaid: invoicePaid,
+                    invoiceNotPaid: invoiceNotPaid,
+                    invoiceInsure: invoiceInsure,
+
+                },
+            cache: false,
+            beforeSend: function() {
+                $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                $('#qresult').html(data);
+            }
+        })
+    }
+
+    //Выборка статистики расчётов
+    function Ajax_show_result_stat_calculate(){
 
         var typeW = document.querySelector('input[name="typeW"]:checked').value;
 
@@ -3464,7 +3611,7 @@
 					id: id,
 				},
 				success:function(data){
-					console.log(data);
+					//console.log(data);
 				}
 			})
 		}
@@ -3617,6 +3764,21 @@
 
 	};
 
+	//Подсчёт суммы для расчёта
+	function calculateCalculate (){
+
+		var Summ = 0;
+
+		$(".invoiceItemPriceItog").each(function() {
+
+            Summ += Number($(this).html());
+            //console.log(Summ);
+        });
+
+		$("#calculateSumm").html(Summ);
+
+	};
+
 	//Подсчёт суммы для счёта с учетом сертификата
 	function calculatePaymentCert (){
 
@@ -3739,7 +3901,7 @@
 					//$('#calculate_rezult').append(res.data);
 
 					// !!!
-					//calculateInvoice(invoice_type);
+                    calculateCalculate();
 
 				}else{
 					console.log(res.data);
@@ -3963,7 +4125,7 @@
 				if(data.result == "success"){
 					//console.log(111);
 
-					colorizeTButton (data.t_number_active);
+					//colorizeTButton (data.t_number_active);
 
 					/*$(".sel_tooth").each(function() {
 						if (Number(this.innerHTML) == data.t_number_active){
@@ -5816,7 +5978,7 @@
 			},
 			// действие, при ответе с сервера
 			success: function(res){
-				console.log(res);
+				//console.log(res);
 
 				$('.center_block').remove();
 				$('#overlay').hide();

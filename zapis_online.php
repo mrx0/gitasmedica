@@ -53,9 +53,9 @@
 				</header>';
 
     		$dop = '';
-    		/*if (isset($_SESSION['filial'])){
+    		if (isset($_SESSION['filial'])){
                 $dop = 'WHERE `place`='.$_SESSION['filial'];
-            }*/
+            }
 
             $query = "SELECT * FROM `zapis_online` ".$dop;
 

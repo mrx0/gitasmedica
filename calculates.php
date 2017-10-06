@@ -195,7 +195,7 @@
 				
 				echo '
                         <div class="no_print"> 
-						<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_zapis()">
+						<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_calculate()">
 						</div>';
 
                 echo '

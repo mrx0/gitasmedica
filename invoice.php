@@ -877,7 +877,7 @@
                                                         <div class="cellName">
                                                             <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
                                                                 Сумма:<br>
-                                                                <span class="calculateOrder" style="font-size: 13px">' . $calculate_item['summ'] . '</span> руб.
+                                                                <span class="calculateOrder" style="font-size: 13px">' . $calculate_item['summ_inv'] . '</span> руб.
                                                             </div>
                                                         </div>
                                                         <div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="fl_deleteCalculateItem('.$calculate_item['id'].', '.$invoice_j[0]['client_id'].', '.$invoice_j[0]['id'].');">

@@ -9,12 +9,12 @@
 		header("location: enter.php");
 	}else{
 		//var_dump ($_POST);
-		
+
 		if ($_POST){
 
 			$temp_arr = array();
-            $calculateSumm = 0;
-            //$calculateInsSumm = 0;
+            $calculateInvSumm = 0;
+            $calculateCalcSumm = 0;
 
 			if (!isset($_POST['invoice_type']) || !isset($_POST['summ']) || !isset($_POST['summins']) || !isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['invoice_id']) || !isset($_POST['filial']) || !isset($_POST['worker'])){
 				//echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
@@ -39,9 +39,9 @@
                         $discount = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['discount'];
                         //}
                         //Добавляем в базу
-                        $query = "INSERT INTO `fl_journal_calculate` (`zapis_id`, `invoice_id`, `office_id`, `client_id`, `worker_id`, `type`, `summ`, `discount`, `summins`, `date_in`, `create_person`, `create_time`) 
+                        $query = "INSERT INTO `fl_journal_calculate` (`zapis_id`, `invoice_id`, `office_id`, `client_id`, `worker_id`, `type`, `summ_inv`, `discount`, `summ`, `date_in`, `create_person`, `create_time`) 
 						VALUES (
-						'{$_POST['zapis_id']}', '{$_POST['invoice_id']}', '{$_POST['filial']}', '{$_POST['client']}', '{$_POST['worker']}', '{$_POST['invoice_type']}', '{$_POST['summ']}', '{$discount}', '{$_POST['summins']}', '{$time}', '{$_SESSION['id']}', '{$time}')";
+						'{$_POST['zapis_id']}', '{$_POST['invoice_id']}', '{$_POST['filial']}', '{$_POST['client']}', '{$_POST['worker']}', '{$_POST['invoice_type']}', '{$_POST['summ']}', '{$discount}', '{$_POST['summ']}', '{$time}', '{$_SESSION['id']}', '{$time}')";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -79,7 +79,9 @@
 
                                         $price =  ($price - ($price * $discount / 100));
 
-                                        $calculateSumm +=  round($price);
+                                        $calculateInvSumm +=  round($price);
+
+                                        $calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
                                     }
 
                                     /*if (isset($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind])){
@@ -122,7 +124,9 @@
 
                                     $price =  ($price - ($price * $discount / 100));
 
-                                    $calculateSumm +=  round($price);
+                                    $calculateInvSumm +=  round($price);
+
+                                    $calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
 
                                 }
                                 //unset($_SESSION['calculate_data']);
@@ -130,8 +134,8 @@
                         }
 
                         //Обновим сумму в расчете
-                        if ($calculateSumm != 0) {
-                            $query = "UPDATE `fl_journal_calculate` SET `summ`='{$calculateSumm}' WHERE `id`='{$mysql_insert_id}'";
+                        if ($calculateInvSumm > 0) {
+                            $query = "UPDATE `fl_journal_calculate` SET `summ_inv`='{$calculateInvSumm}', `summ`='{$calculateCalcSumm}' WHERE `id`='{$mysql_insert_id}'";
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
                         }
 

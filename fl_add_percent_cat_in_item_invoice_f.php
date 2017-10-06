@@ -29,8 +29,8 @@
 
                     $percents_j = getPercents($_POST['worker'], $_POST['percent_cat']);
 
-                    $work_percent = (int)$percents_j['work_percent'];
-                    $material_percent = (int)$percents_j['material_percent'];
+                    $work_percent = (int)$percents_j[$_POST['percent_cat']]['work_percent'];
+                    $material_percent = (int)$percents_j[$_POST['percent_cat']]['material_percent'];
 
                     //var_dump($work_percent);
 

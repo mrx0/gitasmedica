@@ -260,9 +260,9 @@
 		/*if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
 			echo '<li><a href="stomat.php" title="Стоматология">Стоматология</a></li>';
 		}*/
-		/*if (($cosm['see_all'] == 1) || ($cosm['see_own'] == 1) || $god_mode){
+		if (($cosm['see_all'] == 1) || ($cosm['see_own'] == 1) || $god_mode){
 			echo '<li><a href="cosmet.php" title="Косметология">Косметология</a></li>';
-		}*/
+		}
 		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
 			echo '<li><a href="scheduler.php" title="График" style="position: relative">График Запись<div class="notes_count2 have_new-zapis" style="display: none;"><i class="fa fa-exclamation-circle" aria-hidden="true" title="Есть необработанные онлайн заявки"></i></div></a></li>';
 		}

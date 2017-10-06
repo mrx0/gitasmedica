@@ -362,6 +362,8 @@
         return(array('price' => $price, 'start_price' => $start_price));
     }
 
+
+
     //Результат расчета от процентов
     function calculateResult($summ, $koeffW, $koeffM){
 
@@ -371,6 +373,8 @@
 
         return number_format($result, 2, '.', ' ');
     }
+
+
 
     //Получить категории процентов по сотруднику и категории
     function getPercents($worker_id, $percent_cat){

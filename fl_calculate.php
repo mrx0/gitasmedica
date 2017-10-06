@@ -531,10 +531,20 @@
                                                     </div>-->
                                                     <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
                                                         <i><b>Из наряда, руб.</b></i>
-                                                    </div>
+                                                    </div>';
+
+                                if (($finances['see_all'] == 1) || $god_mode) {
+                                    echo '
+                                                    <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
+                                                        <i><b>% работа/материал</b></i>
+                                                    </div>';
+                                    echo '
                                                     <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
                                                         <i><b>Расчёт, руб.</b></i>
-                                                    </div>
+                                                    </div>';
+                                }
+
+                                echo '
                                                     <div class="cellName" style="font-size: 80%; text-align: center;">
                                                         <div>
                                                             <i><b>Тип</b></i>
@@ -813,8 +823,14 @@
 
 
                                                 echo '
+                                                </div>';
+
+                                                $percents_j = SelDataFromDB('fl_spr_percents', $item['percent_cats'], 'id');
+
+                                                echo '
+                                                <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
+                                                    <i><b>'.$item['work_percent'].' / '.$item['material_percent'].'</b></i>
                                                 </div>
-                                                
                                                 <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
                                                 <b>';
 
@@ -825,8 +841,6 @@
                                                 echo '
                                                 </b>
                                                 </div>';
-
-                                        $percents_j = SelDataFromDB('fl_spr_percents', $item['percent_cats'], 'id');
 
                                         echo '
                                                 <div class="cellName" style="text-align: center;">
@@ -845,10 +859,10 @@
                                             <div class="cellsBlock" style="font-size: 90%;" >
                                                 <!--<div class="cellName" style="font-size: 90%; font-weight: bold;">
                                                     Итого:-->';
-                                if (($summ != $calculate_j[0]['summ']) || ($summins != $calculate_j[0]['summins'])){
+                                //if (($summ != $calculate_j[0]['summ']) || ($summins != $calculate_j[0]['summins'])){
                                     /*echo '<br>
                                         <span style="font-size: 90%; font-weight: normal; color: #FF0202; cursor: pointer; " title="Такое происходит, если  цена позиции в прайсе меняется задним числом"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 135%;"></i> Итоговая цена не совпадает</span>';*/
-                                }
+                                //}
 
                                 echo '				
                                                         
@@ -863,23 +877,28 @@
                                                         <div style="font-size: 90%;">Страховка: <div id="calculateInsInvoice" style="font-size: 110%;">'.$summins.'</div> руб.</div>
                                                     </div>-->';
                                 }
-                                echo '
-                                                </div>
-                                                
+
+                                    echo '
+                                                </div>';
+                                if (($finances['see_all'] == 1) || $god_mode) {
+                                    echo '                
                                                 <div class="invoceHeader" style="">
                                                     <ul style="margin-left: 6px; margin-bottom: 10px;">
                                                         <!--<li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
-                                                            Сумма наряда: <div id="calculateInvoice" style="">'.$calculate_j[0]['summ'].'
+                                                            Сумма наряда: <div id="calculateInvoice" style="">' . $calculate_j[0]['summ'] . '
                                                         </li>-->
 
                                                        <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
-                                                            К расчёту <div id="calculateInvoice" style="">'.$summ.'</div> руб.
-                                                        </li>
+                                                            К расчёту <div id="calculateInvoice" style="">' . $summ . '</div> руб.
+                                                       </li>
+                                                       <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
+                                                            <input type="button" class="b" value="Перерасчёт" onclick="">
+                                                       </li>
 
                                                     </div>
                                                     </ul>
                                                 </div>';
-
+                                }
 
                                  echo '
                                             </div>';

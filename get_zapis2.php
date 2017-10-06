@@ -3,6 +3,8 @@
 //get_zapis2.php
 //Получение записи с сайта
 
+    session_start();
+
 	if ($_POST){
         if (isset($_POST['type'])){
             //$_POST['type'] = 5;
@@ -88,7 +90,12 @@
             }
 
             //Выборка
-            $query = "SELECT COUNT(*) AS total FROM `zapis_online` WHERE `status` <> '7'";
+            if (empty($_SESSION['filial'])){
+                $query = "SELECT COUNT(*) AS total FROM `zapis_online` WHERE `status` <> '7'";
+            }else{
+                $query = "SELECT COUNT(*) AS total FROM `zapis_online` WHERE `status` <> '7' AND `place` = '".$_SESSION['filial']."'";
+            }
+
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
