@@ -15,10 +15,14 @@
             $rez = array();
             $arr = array();
 
+            $summCalc = 0;
+
             $rezult = '';
 
+            $invoice_rez_str = '';
+
             if (!isset($_POST['permission']) || !isset($_POST['worker']) || !isset($_POST['office']) || !isset($_POST['month'])){
-                echo json_encode(array('result' => 'error', 'status' => '0', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
+                echo json_encode(array('result' => 'error', 'status' => '0', 'data' => '<div class="query_neok">Что-то пошло не так</div>', 'summCalc' => 0));
             }else {
 
                 $msql_cnnct = ConnectToDB();
@@ -92,7 +96,7 @@
 
 
                                 //Отметка об объеме оплат
-                                $paid_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;"></i>';
+                                /*$paid_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;"></i>';
 
                                 if ($invoice_data_db[0]['summ'] == $invoice_data_db[0]['paid']) {
                                     $paid_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i>';
@@ -125,7 +129,7 @@
                                                         
                                                     </a>
                                                     <span style="position: absolute; top: 2px; right: 3px;">' . $paid_mark . '</span>
-                                                </div>';
+                                                </div>';*/
 
 
                             $rezult .=
@@ -150,20 +154,26 @@
                                     '.$invoice_rez_str.'
                                     <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
                                 </div>';
+
+                            $summCalc += $rezData['summ'];
+
                         }
 
-                        echo json_encode(array('result' => 'success', 'status' => '1','data' => $rezult));
+
+                        $rezult .= '<div class="summCalcs">0123</div>';
+
+                        echo json_encode(array('result' => 'success', 'status' => '1', 'data' => $rezult, 'summCalc' => $summCalc));
                     }else{
-                        echo json_encode(array('result' => 'success', 'status' => '0', 'data' => ''));
+                        echo json_encode(array('result' => 'success', 'status' => '0', 'data' => '', 'summCalc' => $summCalc));
                     }
                 } else {
-                    echo json_encode(array('result' => 'success', 'status' => '0', 'data' => ''));
+                    echo json_encode(array('result' => 'success', 'status' => '0', 'data' => '', 'summCalc' => 0));
                 }
                 //echo json_encode(array('result' => 'success', 'data' => $query));
 
             }
         }else{
-            echo json_encode(array('result' => 'error', 'status' => '0', 'data' => '<div class="query_neok">Какая-то ошибка.</div>'));
+            echo json_encode(array('result' => 'error', 'status' => '0', 'data' => '<div class="query_neok">Какая-то ошибка.</div>', 'summCalc' => 0));
         }
     }
 ?>

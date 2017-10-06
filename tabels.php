@@ -446,7 +446,9 @@ function cmp($a, $b)
                                         //Показываем оповещения на фио и филиале
                                         $("#tabs_notes_"+permission+"_"+worker).show();
                                         $("#tabs_notes_"+permission+"_"+worker+"_"+office).show();
-                                        console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
+                                        //console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
+                                        
+                                        thisObj.parent().find(".summCalcs").html(res.summCalc);
 
                                     }
                                     
