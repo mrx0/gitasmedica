@@ -134,6 +134,11 @@
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="calculates.php" class="b3">-%-</a>
 							</li>';
+
+                echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="tabels.php" class="b3">Важный отчёт</a>
+							</li>';
                 echo '
 						</ul>';
             }

@@ -119,19 +119,20 @@
                         </div>
                               
                         <div style="position: absolute; top: 2px; right: 10px; font-size: 11px; text-align: right;">
-                            '.date('d.m.y H:i' ,strtotime($announcing['create_time'])).'<br>
-                            <span style="font-size: 10px; color: #716f6f;">'.WriteSearchUser('spr_workers', $announcing['create_person'], 'user', false).'</span>
-                        </div>
-                        
+                            Дата: '.date('d.m.y H:i' ,strtotime($announcing['create_time'])).'<br>
+                            <span style="font-size: 10px; color: #716f6f;">Автор: '.WriteSearchUser('spr_workers', $announcing['create_person'], 'user', false).'</span>
+                        </div>';
+
+                echo '
+                    <div style="position: absolute; bottom: 0; left: 34px; font-size: 80%;', $newTopic ? "display:none;":"",'">
+                        <a href="" class="ahref showMeTopic" announcingID="' . $announcing['id'] . '">Развернуть</a>
+                    </div>';
+
+                echo '        
                     </h2>
                     <p id="topic_'.$announcing['id'].'" style="margin-bottom: 30px; '.$readStateClass.'">
                         '.nl2br($announcing['text']).'
                     </p>';
-
-                echo '
-                    <div style="position: absolute; bottom: 0; right: 5px; ', $newTopic ? "display:none;":"",'">
-                        <a href="" class="ahref showMeTopic" announcingID="' . $announcing['id'] . '">Развернуть</a>
-                    </div>';
 
                 if ($newTopic) {
                     echo '

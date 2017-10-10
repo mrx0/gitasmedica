@@ -8,7 +8,7 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 
-		if (($finances['see_all'] == 1) || $god_mode){
+        if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
 	
 			include_once 'DBWork.php';
 			include_once 'functions.php';
@@ -530,7 +530,7 @@
                                                         <i><b>Гар.</b></i>
                                                     </div>-->
                                                     <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
-                                                        <i><b>Из наряда, руб.</b></i>
+                                                        <i><b>Цена из наряда, руб.</b></i>
                                                     </div>';
 
                                 if (($finances['see_all'] == 1) || $god_mode) {
@@ -827,22 +827,28 @@
 
                                                 $percents_j = SelDataFromDB('fl_spr_percents', $item['percent_cats'], 'id');
 
+                                                if (($finances['see_all'] == 1) || $god_mode) {
+
+                                                    echo '
+                                                    <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
+                                                        <i><b>'.$item['work_percent'].' / '.$item['material_percent'].'</b></i>
+                                                    </div>';
+
+
+                                                    echo'
+                                                    <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
+                                                    <b>';
+
+                                                    echo calculateResult($stoim_item, $item['work_percent'], $item['material_percent']);
+
+                                                    $summ += calculateResult($stoim_item, $item['work_percent'], $item['material_percent']);
+
+                                                    echo '
+                                                    </b>
+                                                    </div>';
+                                                }
+
                                                 echo '
-                                                <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
-                                                    <i><b>'.$item['work_percent'].' / '.$item['material_percent'].'</b></i>
-                                                </div>
-                                                <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
-                                                <b>';
-
-                                                echo calculateResult($stoim_item, $item['work_percent'], $item['material_percent']);
-
-                                                $summ += calculateResult($stoim_item, $item['work_percent'], $item['material_percent']);
-
-                                                echo '
-                                                </b>
-                                                </div>';
-
-                                        echo '
                                                 <div class="cellName" style="text-align: center;">
                                                     <div>
                                                         <i>'.$percents_j[0]['name'].'</i>
