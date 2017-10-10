@@ -348,7 +348,7 @@
                 //if (isset($_SESSION['filial'])) {
                     //if ($_SESSION['filial'] == 15) {
                         echo '
-								<a href="zapis_online.php" class="b" style="position: relative">Запись онлайн<div class="notes_count2 have_new-zapis" style="display: none;"><i class="fa fa-exclamation-circle" aria-hidden="true" title="Есть необработанные"></i></div></a>';
+								<a href="zapis_online.php" class="b" style="position: relative">Запись онлайн<div class="have_new-zapis notes_count" style="display: none;" title="Есть необработанные"></div></a>';
                     //}
                 //}
 				/*echo '
@@ -984,7 +984,7 @@
 			echo '					
 			</script>
 					
-				<script language="JavaScript" type="text/javascript">
+				<script>
 					 /*<![CDATA[*/
 					 var s=[],s_timer=[];
 					 function show(id,h,spd)
@@ -1041,6 +1041,8 @@
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}
+		echo '
+		    <div id="doc_title">График '.$whose.'/',$monthsName[$month],' ',$year,'/'.$filial[0]['name'].' - Асмедика</div>';
 	}else{
 		header("location: enter.php");
 	}

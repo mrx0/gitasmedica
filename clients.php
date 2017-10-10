@@ -336,6 +336,7 @@
 			}
 			echo '
 					</ul>
+					<div id="doc_title">Пациенты ['.$sw.'] - Асмедика</div>
 				</div>';
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

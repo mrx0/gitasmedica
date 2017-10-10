@@ -75,7 +75,7 @@ ORDER BY `name`;
 			if ($client != 0){
 				echo '
 					<script src="js/init.js" type="text/javascript"></script>
-					<script src="js/init2.js" type="text/javascript"></script>
+					<!--<script src="js/init2.js" type="text/javascript"></script>-->
 					<div id="status">
 						<header>
 							<h2>
@@ -1047,7 +1047,7 @@ ORDER BY `name`;
 								
 								
 								echo '
-										<div class="map'.$n.'" id="map'.$n.'">
+										<div class="map'.$n.' map_exist" id="map'.$n.'">
 											<div class="text_in_map" style="left: 15px">8</div>
 											<div class="text_in_map" style="left: 52px">7</div>
 											<div class="text_in_map" style="left: 87px">6</div>
@@ -1763,7 +1763,7 @@ ORDER BY `name`;
 			}
 				
 			echo '					
-					
+				<div id="doc_title">Пациент: '.$client[0]['full_name'].' - Асмедика</div>
 				</div>
 			</div>
 

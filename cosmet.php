@@ -131,8 +131,8 @@
 			echo '<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">';
 
 			if (($cosm['add_own'] == 1) || $god_mode){
-				echo '
-						<a href="add_error.php" class="b">Добавить</a>';
+				/*echo '
+						<a href="add_error.php" class="b">Добавить</a>';*/
 			}
 			
 			echo '<button class="md-trigger b" data-modal="modal-11">Фильтр</button>';				
@@ -237,12 +237,13 @@
 							</li>';
 					//}
 				}
-				echo '
-						</ul>
-					</div>';
 			}else{
 				echo '<h1>Нечего показывать.</h1><a href="index.php">На главную</a>';
 			}
+            echo '
+						</ul>
+						<div id="doc_title">Косметология - Асмедика</div>
+					</div>';
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}

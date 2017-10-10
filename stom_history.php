@@ -1,7 +1,7 @@
 <?php
 
-//
-//
+//stom_history.php
+//История формул стоматологических
 
 	require_once 'header.php';
 	
@@ -74,7 +74,7 @@
 						</header>';
 						
 				echo '
-					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">
+					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 101;">
 						<div class="cellRight">
 							<span style="font-size: 70%;">Быстрый поиск пациента</span><br />
 							<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
@@ -98,8 +98,8 @@
 				echo '
 								<div>';
 				if (($stom['add_own'] == 1) || ($god_mode)){
-					echo '	
-									<a href="add_error.php" class="b">Добавить осмотр</a>';
+					/*echo '
+									<a href="add_error.php" class="b">Добавить осмотр</a>';*/
 				}
 				
 				/*if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
@@ -290,7 +290,7 @@
 						
 						
 						echo '
-									<div class="map'.$n.'" id="map'.$n.'">
+									<div class="map'.$n.' map_exist" id="map'.$n.'">
 										<div class="text_in_map" style="left: 15px">8</div>
 										<div class="text_in_map" style="left: 52px">7</div>
 										<div class="text_in_map" style="left: 87px">6</div>
@@ -727,7 +727,7 @@
 						//var_dump ($t_f_data);			
 			
 						$descr_rez = '';
-						echo '<div><a href="#open1" onclick="show(\'hidden_'.$z.'\',200,5)">Подробно</a></div>';	
+						//echo '<div><a href="#open1" onclick="show(\'hidden_'.$z.'\',200,5)">Подробно</a></div>';
 						echo '<div id=hidden_'.$z.' style="display:none;">';		
 						foreach($t_f_data as $key => $value){
 							//var_dump ($value);

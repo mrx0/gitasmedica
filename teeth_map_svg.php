@@ -83,7 +83,7 @@
 		
 		//<div class="text_in_map_dop" style="left: 15px; top: -9px">А</div>
 		
-		echo '<div class="map'.$n.'" id="map'.$n.'">
+		echo '<div class="map'.$n.' map_exist" id="map'.$n.'">
 			
 			<div class="text_in_map" style="left: 15px">8</div>
 			<div class="text_in_map" style="left: 52px">7</div>

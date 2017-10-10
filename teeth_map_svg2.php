@@ -43,7 +43,7 @@
 		
 		
 		echo '
-			<div class="map" id="map">
+			<div class="map map_exist" id="map">
 				<div class="text_in_map" style="left: 15px">8</div>
 				<div class="text_in_map" style="left: 52px">7</div>
 				<div class="text_in_map" style="left: 87px">6</div>

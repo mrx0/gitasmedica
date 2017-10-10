@@ -132,8 +132,8 @@
 				echo '<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">';
 				
 				if (($stom['add_own'] == 1) || $god_mode){
-					echo '
-							<a href="add_error.php" class="b">Добавить</a>';
+					/*echo '
+							<a href="add_error.php" class="b">Добавить</a>';*/
 				}
 				echo '<button class="md-trigger b" data-modal="modal-11">Фильтр</button>';
 				

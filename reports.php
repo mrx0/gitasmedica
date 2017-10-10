@@ -138,6 +138,7 @@
 						</ul>';
             }
             echo '
+                    <div id="doc_title">Отчёты - Асмедика</div>
 					</div>';
 
 		}else{

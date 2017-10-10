@@ -60,7 +60,7 @@
 			}
 			//var_dump ($journal);
 
-			if (($soft['see_all'] == 1) || ($soft['see_own'] == 1) || $god_mode){
+			if ($god_mode){
 				echo '<a href="soft.php" class="b3">Программа</a><br>';
 			}
 			
@@ -164,6 +164,7 @@
 
 			echo '
 					</ul>
+					<div id="doc_title">IT - Асмедика</div>
 				</div>
 				<script type="text/javascript">
 

@@ -261,6 +261,15 @@
 
                             //var_dump($sheduler_zapis[0]['day'].'.'.$month.'.'.$sheduler_zapis[0]['year'].' '.$start_time_h.':'.$start_time_m);
 
+                            /*var_dump($sheduler_zapis[0]['day']);
+                            var_dump($month);
+                            var_dump($sheduler_zapis[0]['year']);
+                            var_dump(date("m") == $month);
+                            var_dump(date("d") == $sheduler_zapis[0]['day']);
+                            var_dump(date("d"));
+                            var_dump(date("m"));
+                            var_dump(date("Y"));*/
+
                             if (
                                 (($sheduler_zapis[0]['year'] < date("Y")) ||
                                 (($sheduler_zapis[0]['year'] == date("Y")) && ($month < date("m"))) ||

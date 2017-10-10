@@ -3223,6 +3223,9 @@
 			var noch = 0;
 		}
 
+        //var window_location_href_arr = (window.location.href).split("#");
+        //var window_location_href = window_location_href_arr[0];
+
 		$.ajax({
 			global: false,
 			type: "POST",
@@ -3262,8 +3265,12 @@
 				if(data.result == "success"){
 					document.getElementById("errror").innerHTML=data.data;
 					setTimeout(function () {
-						location.reload()
-					}, 100);
+                        //console.log(window.location.href);
+
+                        //window.location.replace(window_location_href+"#tabs-4");
+
+                        location.reload();
+					}, 50);
 				}else{
 					document.getElementById("errror").innerHTML=data.data;
 				}
@@ -6604,8 +6611,41 @@
                     //console.log(res);
 
                     if(res.result == 'success'){
-                    	if (res.data > 0)
-                        $(".have_new-zapis").show();
+                    	if (res.data > 0) {
+                            $(".have_new-zapis").show();
+                            $(".have_new-zapis").html(res.data);
+                        }
+                    }else{
+
+                    }
+                }
+            });
+
+
+            //Запрос есть ли новые объявления
+            $.ajax({
+                url:"get_topic2.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+
+                data:reqData,
+
+                cache: false,
+                beforeSend: function() {
+                },
+                success:function(res){
+                    //console.log(res);
+
+                    if(res.result == 'success'){
+                    	//console.log(res);
+
+                    	if (res.data > 0) {
+                            //console.log(res.data);
+
+                            $(".have_new-topic").show();
+                            $(".have_new-topic").html(res.data);
+                        }
                     }else{
 
                     }

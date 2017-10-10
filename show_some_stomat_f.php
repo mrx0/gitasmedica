@@ -14,7 +14,8 @@ if ($_POST){
 		include_once 'surface_status.php';
 		include_once 't_context_menu.php';
 
-		echo '					<script src="js/init.js" type="text/javascript"></script>
+		echo '		
+					<script src="js/init.js" type="text/javascript"></script>
 					<script src="js/init2.js" type="text/javascript"></script>';
 		$temp_arr = array();
 		
@@ -141,7 +142,7 @@ if ($_POST){
 						
 						
 						echo '
-									<div class="map'.$n.'" id="map'.$n.'">
+									<div class="map'.$n.' map_exist" id="map'.$n.'">
 										<div class="text_in_map" style="left: 15px">8</div>
 										<div class="text_in_map" style="left: 52px">7</div>
 										<div class="text_in_map" style="left: 87px">6</div>

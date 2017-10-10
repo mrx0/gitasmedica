@@ -83,7 +83,7 @@
 	
 
 				echo '<div id="div1">';
-				echo '	<a href="add_error.php" class="b">Добавить осмотр</a>';
+				//echo '	<a href="add_error.php" class="b">Добавить осмотр</a>';
 
 				
 				//Выберем из базы последнюю запись
@@ -184,7 +184,7 @@
 						//echo $t_f_data_temp_refresh;
 						
 						
-						echo '<div class="map'.$n.'" id="map'.$n.'">';
+						echo '<div class="map'.$n.' map_exist" id="map'.$n.'">';
 
 						
 
@@ -483,7 +483,7 @@
 					//echo $t_f_data_temp_refresh;
 					
 					
-					echo '<div class="map'.$n.'" id="map'.$n.'">';
+					echo '<div class="map'.$n.' map_exist" id="map'.$n.'">';
 
 					
 
@@ -766,7 +766,7 @@
 		//echo $t_f_data_temp_refresh;
 		
 		
-		echo '<div class="map'.$n.'" id="map'.$n.'">';
+		echo '<div class="map'.$n.' map_exist" id="map'.$n.'">';
 
 		
 
@@ -1055,7 +1055,7 @@
 					</div>
 
 					<div id="div2">';
-			echo '	<a href="add_error.php" class="b">Добавить посещение</a>';		
+			//echo '	<a href="add_error.php" class="b">Добавить посещение</a>';
 								
 			$cosmet_task = SelDataFromDB('journal_cosmet1', $_GET['id'], 'client_cosm_id');
 			//var_dump ($cosmet_task);

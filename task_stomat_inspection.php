@@ -259,7 +259,7 @@
 						$z = 0;
 						$descr_rez = '';
 		
-						echo '<div><a href="#open1" onclick="show(\'hidden_'.$z.'\',200,5)">Подробно</a></div>';	
+						//echo '<div><a href="#open1" onclick="show(\'hidden_'.$z.'\',200,5)">Подробно</a></div>';
 						echo '<div id=hidden_'.$z.' style="display:none;">';		
 						foreach($t_f_data as $key => $value){
 							//var_dump ($value);

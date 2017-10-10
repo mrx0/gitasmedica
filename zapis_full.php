@@ -485,7 +485,8 @@
 					
 			echo '	
 						
-					</div>';					
+					</div>
+					<div id="doc_title">Подробная запись '.$whose.'/'.$day.' ',$monthsName[$month],' ',$year,'/'.$filial[0]['name'].' - Асмедика</div>';
 			echo '	
 			<!-- Подложка только одна -->
 			<div id="overlay"></div>';

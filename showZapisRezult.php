@@ -169,7 +169,7 @@
                     $rezult .= '
                                             <div class="cellName">';
                     $rezult .=
-                        'Пациент <br /><b>' . WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user', true) . '</b>';
+                        'Пациент <br /><b title="'.WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', false).'">' . WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user', true) . '</b>';
                     $rezult .= '
                                             </div>';
                     $rezult .= '

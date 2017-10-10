@@ -458,10 +458,10 @@
 						echo '
 							<div id="tabs_w" style="font-family: Verdana, Calibri, Arial, sans-serif; font-size: 100% !important;">
 								<ul>
-									<li><a href="#tabs-1">1 смена</a></li>
-									<li><a href="#tabs-2">2 смена</a></li>
-									<li><a href="#tabs-3">3 смена</a></li>
-									<li><a href="#tabs-4">4 смена</a></li>
+									<li><a href="#tabs-1" onclick="window.location.replace(\'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'#tabs-1\');">1 смена</a></li>
+									<li><a href="#tabs-2" onclick="window.location.replace(\'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'#tabs-2\');">2 смена</a></li>
+									<li><a href="#tabs-3" onclick="window.location.replace(\'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'#tabs-3\');">3 смена</a></li>
+									<li><a href="#tabs-4" onclick="window.location.replace(\'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'#tabs-4\');">4 смена</a></li>
 								</ul>';
 						
 						
@@ -890,7 +890,7 @@
 								echo '
 									<div class="cellsBlock5 ahref" style="border: none; font-weight: bold; font-size:80%;" >
 										<div class="cellRight" id="month_date_worker" style="border: none; background-color:rgba(39, 183, 127, .5); height: 40px; outline: none; position: relative;">
-											1 смена каб '.$k.'<br><i>'.WriteSearchUser('spr_workers', $worker, 'user', false).'</i>
+											2 смена каб '.$k.'<br><i>'.WriteSearchUser('spr_workers', $worker, 'user', false).'</i>
 											<div class="b" style="position: absolute; top: 0; right: 0; color: #0C0C0C; margin: 0; padding: 1px 5px;"><a href="zapis_full.php?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">Подробно</a></div>
 										</div>
 									</div>';
@@ -901,7 +901,7 @@
 								echo '
 										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
 											<div class="cellRight" id="month_date_worker" style="border: none; height: 40px; outline: none; position: relative;">
-												1 смена каб '.$k.'<br>
+												2 смена каб '.$k.'<br>
 												<span style="color:red;">нет врача по <a href="scheduler.php?filial='.$_GET['filial'].''.$who.'">графику</a></span>
 												<div class="b" style="position: absolute; top: 0; right: 0; color: #0C0C0C; margin: 0; padding: 1px 5px;"><a href="zapis_full.php?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">Подробно</a></div>
 											</div>
@@ -1352,7 +1352,7 @@
 								echo '
 									<div class="cellsBlock5 ahref" style="border: none; font-weight: bold; font-size:80%;" >
 										<div class="cellRight" id="month_date_worker" style="border: none; background-color:rgba(39, 183, 127, .5); height: 40px; outline: none; position: relative;">
-											1 смена каб '.$k.'<br><i>'.WriteSearchUser('spr_workers', $worker, 'user', false).'</i>
+											3 смена каб '.$k.'<br><i>'.WriteSearchUser('spr_workers', $worker, 'user', false).'</i>
 											<div class="b" style="position: absolute; top: 0; right: 0; color: #0C0C0C; margin: 0; padding: 1px 5px;"><a href="zapis_full.php?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">Подробно</a></div>
 										</div>
 									</div>';
@@ -1363,7 +1363,7 @@
 								echo '
 										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
 											<div class="cellRight" id="month_date_worker" style="border: none; height: 40px; outline: none; position: relative;">
-												1 смена каб '.$k.'<br>
+												3 смена каб '.$k.'<br>
 												<span style="color:red;">нет врача по <a href="scheduler.php?filial='.$_GET['filial'].''.$who.'">графику</a></span>
 												<div class="b" style="position: absolute; top: 0; right: 0; color: #0C0C0C; margin: 0; padding: 1px 5px;"><a href="zapis_full.php?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">Подробно</a></div>
 											</div>
@@ -1956,7 +1956,8 @@
 					
 			echo '	
 						
-					</div>';					
+					</div>
+					<div id="doc_title">Запись '.$whose.'/'.$day.' ',$monthsName[$month],' ',$year,'/'.$filial[0]['name'].' - Асмедика</div>';
 			echo '	
 			<!-- Подложка только одна -->
 			<div id="overlay"></div>';
@@ -2200,6 +2201,7 @@
 			if (($zapis['add_new'] == 1) || $god_mode){					
 				echo '';
 			}
+
 			echo '					
 			</script>
 				
