@@ -12,6 +12,7 @@
 	}else{
 		//var_dump ($_POST);
 		include_once 'DBWork.php';
+
 		if ($_POST){
 			if (isset($_POST['zapis_id']) && isset($_POST['client_id']) && isset($_POST['new_client']) && ($_POST['new_client'] != '')){
 				//Ищем Пациента
@@ -20,97 +21,107 @@
 				if ($clients_j != 0){
 					if ($clients_j[0]['id'] != $_POST['client_id']){
 
-                        require 'config.php';
-                        mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-                        mysql_select_db($dbName) or die(mysql_error());
-                        mysql_query("SET NAMES 'utf8'");
+                        $msql_cnnct = ConnectToDB ();
+
                         $time = time();
 
-                        //Запись
-                        $query = "UPDATE `zapis` SET 
-						`patient`='{$clients_j[0]['id']}' 
-						WHERE 
-						`id`='{$_POST['zapis_id']}'";
+                        //Расчетные листы
+                        $query = "SELECT COUNT(*) AS total FROM `fl_journal_calculate` WHERE `zapis_id`={$_POST['zapis_id']}";
 
-                        mysql_query($query) or die(mysql_error().' -> '.$query);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
-						//Косметология
-						$query = "UPDATE `journal_cosmet1` SET 
-						`client`='{$clients_j[0]['id']}'
-						WHERE 
-						`zapis_id`='{$_POST['zapis_id']}'";
+                        $arr = mysqli_fetch_assoc($res);
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);
-						
-						//Этапы
-						/*$query = "UPDATE `journal_etaps` SET
-						`client_id`='{$clients_j[0]['id']}'
-						WHERE 
-						`client_id`='{$_POST['id']}'";
+                        if ($arr['total'] == 0) {
+                            //Запись
+                            $query = "UPDATE `zapis` SET 
+                            `patient`='{$clients_j[0]['id']}' 
+                            WHERE 
+                            `id`='{$_POST['zapis_id']}'";
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);*/
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-						//Наряды
-						$query = "UPDATE `journal_invoice` SET
-						`client_id`='{$clients_j[0]['id']}' 
-						WHERE 
-						`zapis_id`='{$_POST['zapis_id']}'";
+                            //Косметология
+                            $query = "UPDATE `journal_cosmet1` SET 
+                            `client`='{$clients_j[0]['id']}'
+                            WHERE 
+                            `zapis_id`='{$_POST['zapis_id']}'";
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-						//Стоматология
-						$query = "UPDATE `journal_tooth_status` SET 
-						`client`='{$clients_j[0]['id']}' 
-						WHERE 
-						`zapis_id`='{$_POST['zapis_id']}'";
+                            //Этапы
+                            /*$query = "UPDATE `journal_etaps` SET
+                            `client_id`='{$clients_j[0]['id']}'
+                            WHERE
+                            `client_id`='{$_POST['id']}'";
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);
-						
-						//Ротовые снимки
-						/*$query = "UPDATE `journal_zub_img` SET
-						`client`='{$clients_j[0]['id']}'
-						WHERE 
-						`client`='{$_POST['id']}'";
+                            mysql_query($query) or die(mysql_error().' -> '.$query);*/
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);*/
-						
-						//Заметки
-						/*$query = "UPDATE `notes` SET
-						`client`='{$clients_j[0]['id']}'
-						WHERE 
-						`client`='{$_POST['id']}'";
+                            //Наряды
+                            $query = "UPDATE `journal_invoice` SET
+                            `client_id`='{$clients_j[0]['id']}' 
+                            WHERE 
+                            `zapis_id`='{$_POST['zapis_id']}'";
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);*/
-						
-						//Направления !!! не исправляется пока. Так что пациента в посещении будет наверняка другой
-						/*$query = "UPDATE `removes` SET
-						`client`='{$clients_j[0]['id']}'
-						WHERE 
-						`client`='{$_POST['id']}'";
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);*/
-						
-						//Снимки КД
-						/*$query = "UPDATE `spr_kd_img` SET
-						`client`='{$clients_j[0]['id']}'
-						WHERE 
-						`client`='{$_POST['id']}'";
+                            //Стоматология
+                            $query = "UPDATE `journal_tooth_status` SET 
+                            `client`='{$clients_j[0]['id']}' 
+                            WHERE 
+                            `zapis_id`='{$_POST['zapis_id']}'";
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);*/
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                            //Ротовые снимки
+                            /*$query = "UPDATE `journal_zub_img` SET
+                            `client`='{$clients_j[0]['id']}'
+                            WHERE
+                            `client`='{$_POST['id']}'";
+
+                            mysql_query($query) or die(mysql_error().' -> '.$query);*/
+
+                            //Заметки
+                            /*$query = "UPDATE `notes` SET
+                            `client`='{$clients_j[0]['id']}'
+                            WHERE
+                            `client`='{$_POST['id']}'";
+
+                            mysql_query($query) or die(mysql_error().' -> '.$query);*/
+
+                            //Направления !!! не исправляется пока. Так что пациента в посещении будет наверняка другой
+                            /*$query = "UPDATE `removes` SET
+                            `client`='{$clients_j[0]['id']}'
+                            WHERE
+                            `client`='{$_POST['id']}'";
+
+                            mysql_query($query) or die(mysql_error().' -> '.$query);*/
+
+                            //Снимки КД
+                            /*$query = "UPDATE `spr_kd_img` SET
+                            `client`='{$clients_j[0]['id']}'
+                            WHERE
+                            `client`='{$_POST['id']}'";
+
+                            mysql_query($query) or die(mysql_error().' -> '.$query);*/
 
 
-						
-						//Авансы долги
-						/*$query = "UPDATE `journal_debts_prepayments` SET
-						`client`='{$clients_j[0]['id']}'
-						WHERE 
-						`client`='{$_POST['id']}'";
+                            //Авансы долги
+                            /*$query = "UPDATE `journal_debts_prepayments` SET
+                            `client`='{$clients_j[0]['id']}'
+                            WHERE
+                            `client`='{$_POST['id']}'";
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);*/
-						
-						
+                            mysql_query($query) or die(mysql_error().' -> '.$query);*/
 
-						mysql_close();	
+
+                            //mysql_close();
+                        }else{
+                            echo '
+							<div class="query_neok">
+								В нарядах уже есть расчетные листы.<br><br>
+							</div>';
+                        }
 					}else{
 						echo '
 							<div class="query_neok">

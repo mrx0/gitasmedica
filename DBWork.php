@@ -1444,7 +1444,9 @@
 
 		//$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' LIMIT 5";
 		$query = "SELECT * FROM `$datatable` WHERE `num` LIKE '%$search_data%' AND `status`<> 9 ORDER BY `num` ASC LIMIT 3";
+
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
 		$number = mysqli_num_rows($res);
 		if ($number != 0){
 			while ($arr = mysqli_fetch_assoc($res)){
@@ -1457,31 +1459,50 @@
 	}
 
 	function SelForFastSearchFullName ($datatable, $search_data){
-		$arr = array();
+
+        $msql_cnnct = ConnectToDB ();
+
+		//$arr = array();
 		$rez = array();
-		require 'config.php';
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Невозможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
-		
+
 		//!Использовать надо везде. Очищение данных от мусора
 		$search_data = trim(strip_tags(stripcslashes(htmlspecialchars($search_data))));
 		$datatable = trim(strip_tags(stripcslashes(htmlspecialchars($datatable))));
 
-		$query = "SELECT * FROM `$datatable` WHERE LOWER(`full_name`) RLIKE LOWER('^$search_data') AND `status`<> 9 ORDER BY `full_name` ASC LIMIT 10";
+		$query = "SELECT * FROM `$datatable` WHERE (
+                  LOWER(`full_name`) RLIKE LOWER('^$search_data') 
+                  OR
+                  UPPER(`card`) LIKE UPPER('%$search_data%') 
+                  OR
+                  `telephone` LIKE '%$search_data%'
+                  OR
+                  `htelephone` LIKE '%$search_data%'
+                  OR
+                  `telephoneo` LIKE '%$search_data%'
+                  OR
+                  `htelephoneo` LIKE '%$search_data%'
+                  OR
+                  `passport` RLIKE '^$search_data'
+                  OR
+                  `id` RLIKE '^$search_data'
+                  ) AND `status`<> 9 ORDER BY `full_name` ASC LIMIT 10";
+
 	//	$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' ORDER BY `full_name` ASC LIMIT 10";
 	//	$query = "SELECT * FROM `$datatable` WHERE `name` LIKE '%$search_data%' LIMIT 10";
-		$res = mysql_query($query) or die(mysql_error());
-		$number = mysql_num_rows($res);
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				//echo "\n<li>".$row["name"]."</li>"; //$row["name"] - имя таблицы
 				array_push($rez, $arr);
 			}
 			return $rez;
 		}else
 			return 0;
-		mysql_close();
+
+		//mysql_close();
 		
 	}
 	

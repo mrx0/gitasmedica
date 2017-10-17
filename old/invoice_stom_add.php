@@ -4,6 +4,7 @@
 //Выписываем счёт стоматология
 
 	require_once 'header.php';
+require_once 'blocks_dom.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
@@ -338,7 +339,15 @@
 						echo '
 										</ul>
 										<div id="price">';
-						//Прайс		
+
+						//Прайс
+                        //
+                        //Быстрый поиск
+						echo '	
+											<div style="margin: 10px 0 5px; font-size: 11px; cursor: pointer;">';
+												echo $block_fast_filter;
+                        echo '
+											</div>';
 						echo '	
 											<div style="margin: 10px 0 5px; font-size: 11px; cursor: pointer;">
 												<span class="dotyel a-action lasttreedrophide">скрыть всё</span>, <span class="dotyel a-action lasttreedropshow">раскрыть всё</span>

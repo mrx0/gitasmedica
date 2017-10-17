@@ -23,18 +23,15 @@
 
                     $sheduler_zapis = array();
 
-                    require 'config.php';
-
-                    mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-                    mysql_select_db($dbName) or die(mysql_error());
-                    mysql_query("SET NAMES 'utf8'");
+                    $msql_cnnct = ConnectToDB ();
 
                     $query = "SELECT * FROM `zapis` WHERE `id`='".$_GET['zapis_id']."'";
 
-                    $res = mysql_query($query) or die($query);
-                    $number = mysql_num_rows($res);
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                    $number = mysqli_num_rows($res);
                     if ($number != 0){
-                        while ($arr = mysql_fetch_assoc($res)){
+                        while ($arr = mysqli_fetch_assoc($res)){
                             array_push($sheduler_zapis, $arr);
                         }
                     }else

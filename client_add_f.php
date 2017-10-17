@@ -1,6 +1,6 @@
 <?php 
 
-//add_client_f.php
+//client_add_f.php
 //Функция для добавления Пациента
 
 	session_start();

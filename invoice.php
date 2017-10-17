@@ -899,6 +899,8 @@
 										</div>';
 							echo '
 									</div>';
+                            echo '
+		                            <div id="doc_title">Наряд #'.$_GET['id'].' Сумма: '.$invoice_j[0]['summ'].' / '.WriteSearchUser('spr_clients',  $sheduler_zapis[0]['patient'], 'user', false).' - Асмедика</div>';
 							echo '
 								</div>
 							';

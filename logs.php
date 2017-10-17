@@ -49,10 +49,10 @@
 						<li class="cellsBlock cellsBlockHover">
 							<div class="cellCosmAct" style="background-color:'.$logs[$i]['id'].'"></div>
 							<div class="cellTime">'.date('d.m.y H:i', $logs[$i]['date']).'</div>
-							<div class="cellName"  id="4filter">'.$logs[$i]['creator'].'</div>
+							<div class="cellName 4filter"  id="4filter">'.$logs[$i]['creator'].'</div>
 							<div class="cellOffice" style="text-align: center;">'.$logs[$i]['ip'].'</div>
 							<div class="cellOffice" style="text-align: center;">'.$logs[$i]['mac'].'</div>
-							<div class="cellText">'.$logs[$i]['description_new'].'<hr>
+							<div class="cellText 4filter">'.$logs[$i]['description_new'].'<hr>
 								<span style="background:#f0f0f0;">'.$logs[$i]['description_old'].'</span>
 							</div>
 						</li>';

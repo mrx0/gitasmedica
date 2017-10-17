@@ -574,77 +574,85 @@
 		//foreach ($data as $key => $val){
 			//var_dump ($val);
 			foreach ($data as $tooth => $status){
-				//var_dump ($status);
-				//$status_arr = explode(',', $status);
-				//var_dump($status_arr);
-				if ($status['status'] == '1'){
-					//echo 'Отсутствует<br />';
-					if ((($tooth != 18) && ($tooth != 28) && ($tooth != 38) && ($tooth != 48)) && ($cl_age > 14)){
-						$sanat = false;
-					}
-				}
-				if ($status['status'] == '2'){
-					//echo 'Удален<br />';
-					if (($tooth != 18) && ($tooth != 28) && ($tooth != 38) && ($tooth != 48)){
-						$sanat = false;
-					}
-				}
-				if (($status['status'] == '3') && ($status['status'] == '1')){
-					//echo $t_id.'Имплантант<br />';
-					$sanat = false;
-				}
-				if ($status['status'] == '20'){
-					//echo 'Ретенция<br />';
-					$sanat = false;
-				}
-				if ($status['status'] == '22'){
-					//echo 'ЗО<br />';
-					$sanat = false;
-				}
+			    if ($tooth != 'status') {
+                    //var_dump ($status);
+                    //var_dump ($status);
+                    //$status_arr = explode(',', $status);
+                    //var_dump($status_arr);
+                    if ($status['status'] == '1') {
+                        //echo 'Отсутствует<br />';
+                        if ((($tooth != 18) && ($tooth != 28) && ($tooth != 38) && ($tooth != 48)) && ($cl_age > 14)) {
+                            $sanat = false;
+                        }
+                    }
+                    if ($status['status'] == '2') {
+                        //echo 'Удален<br />';
+                        if (($tooth != 18) && ($tooth != 28) && ($tooth != 38) && ($tooth != 48)) {
+                            $sanat = false;
+                        }
+                    }
+                    if (($status['status'] == '3') && ($status['status'] == '1')) {
+                        //echo $t_id.'Имплантант<br />';
+                        $sanat = false;
+                    }
+                    if ($status['status'] == '20') {
+                        //echo 'Ретенция<br />';
+                        $sanat = false;
+                    }
+                    if ($status['status'] == '22') {
+                        //echo 'ЗО<br />';
+                        $sanat = false;
+                    }
 
-				if (($status['surface1'] == 63) || ($status['surface2'] == 63) || ($status['surface3'] == 63) || ($status['surface4'] == 63) || 
-					($status['top1'] == 63) || ($status['top2'] == 63) || ($status['top12'] == 63) || ($status['root1'] == 63) || 
-					($status['root2'] == 63) || ( $status['root3'] == 63)){
-					//echo 'Временная пломба<br />';
-					$sanat = false;
-				}
-				
-				//echo $t_id.'<br />';
-				
-				if (($status['surface1'] == 64) || ($status['surface2'] == 64) || ($status['surface3'] == 64) || ($status['surface4'] == 64) || 
-					($status['top1'] == 64) || ($status['top2'] == 64) || ($status['top12'] == 64) || ($status['root1'] == 64) || 
-					($status['root2'] == 64) || ( $status['root3'] == 64)){
-					//echo 'Пломба кариес<br />';
-					$sanat = false;
-				}
-				
-				//echo $t_id.'<br />';
-				//$sanat = false;
-				
-				if (($status['surface1'] == 71) || ($status['surface2'] == 71) || ($status['surface3'] == 71) || ($status['surface4'] == 71) || 
-					($status['top1'] == 71) || ($status['top2'] == 71) || ($status['top12'] == 71) || ($status['root1'] == 71) || 
-					($status['root2'] == 71) || ($status['root3'] == 64)){
-					//echo 'Кариес<br />';
-					$sanat = false;
-				}
-				
-				//echo $t_id.'<br />';
+                    if (($status['surface1'] == 63) || ($status['surface2'] == 63) || ($status['surface3'] == 63) || ($status['surface4'] == 63) ||
+                        ($status['top1'] == 63) || ($status['top2'] == 63) || ($status['top12'] == 63) || ($status['root1'] == 63) ||
+                        ($status['root2'] == 63) || ($status['root3'] == 63)
+                    ) {
+                        //echo 'Временная пломба<br />';
+                        $sanat = false;
+                    }
 
-				if (($status['surface1'] == 74) || ($status['surface2'] == 74) || ($status['surface3'] == 74) || ($status['surface4'] == 74) || 
-					($status['top1'] == 74) || ($status['top2'] == 74) || ($status['top12'] == 74) || ($status['root1'] == 74) || 
-					($status['root2'] == 74) || ($status['root3'] == 64)){
-					//echo 'Пульпит<br />';
-					$sanat = false;
-				}
-				
-				//echo $t_id.'<br />';
-				
-				if (($status['surface1'] == 75) || ($status['surface2'] == 75) || ($status['surface3'] == 75) || ($status['surface4'] == 75) || 
-					($status['top1'] == 75) || ($status['top2'] == 75) || ($status['top12'] == 75) || ($status['root1'] == 75) || 
-					($status['root2'] == 75) || ($status['root3'] == 64)){
-					//echo 'Периодонтит<br />';
-					$sanat = false;
-				}
+                    //echo $t_id.'<br />';
+
+                    if (($status['surface1'] == 64) || ($status['surface2'] == 64) || ($status['surface3'] == 64) || ($status['surface4'] == 64) ||
+                        ($status['top1'] == 64) || ($status['top2'] == 64) || ($status['top12'] == 64) || ($status['root1'] == 64) ||
+                        ($status['root2'] == 64) || ($status['root3'] == 64)
+                    ) {
+                        //echo 'Пломба кариес<br />';
+                        $sanat = false;
+                    }
+
+                    //echo $t_id.'<br />';
+                    //$sanat = false;
+
+                    if (($status['surface1'] == 71) || ($status['surface2'] == 71) || ($status['surface3'] == 71) || ($status['surface4'] == 71) ||
+                        ($status['top1'] == 71) || ($status['top2'] == 71) || ($status['top12'] == 71) || ($status['root1'] == 71) ||
+                        ($status['root2'] == 71) || ($status['root3'] == 64)
+                    ) {
+                        //echo 'Кариес<br />';
+                        $sanat = false;
+                    }
+
+                    //echo $t_id.'<br />';
+
+                    if (($status['surface1'] == 74) || ($status['surface2'] == 74) || ($status['surface3'] == 74) || ($status['surface4'] == 74) ||
+                        ($status['top1'] == 74) || ($status['top2'] == 74) || ($status['top12'] == 74) || ($status['root1'] == 74) ||
+                        ($status['root2'] == 74) || ($status['root3'] == 64)
+                    ) {
+                        //echo 'Пульпит<br />';
+                        $sanat = false;
+                    }
+
+                    //echo $t_id.'<br />';
+
+                    if (($status['surface1'] == 75) || ($status['surface2'] == 75) || ($status['surface3'] == 75) || ($status['surface4'] == 75) ||
+                        ($status['top1'] == 75) || ($status['top2'] == 75) || ($status['top12'] == 75) || ($status['root1'] == 75) ||
+                        ($status['root2'] == 75) || ($status['root3'] == 64)
+                    ) {
+                        //echo 'Периодонтит<br />';
+                        $sanat = false;
+                    }
+                }
 				
 			}
 		//}
@@ -1429,10 +1437,8 @@
 	
 	//Ещё одно дерево
 	function showTree2($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype){
-		require 'config.php';
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+
+        $msql_cnnct = ConnectToDB ();
 						
 		$arr = array();
 		$rez = array();
@@ -1475,11 +1481,12 @@
 			$first = FALSE;
 		}
 		//var_dump ($query);
-		
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($rez, $arr);
 			}
 			$rezult = $rez;
@@ -1524,7 +1531,7 @@
 					}
 
 					echo '
-						<li>
+						<li style="cursor: e-resize;">
 							<div class="drop" style="background-position: 0px 0px;"></div>
 							<p class="drop"><b>'.$value['name'].'</b></p>';
 					
@@ -1555,11 +1562,11 @@
 					}
 					
 					//var_dump($query);
-					
-					$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
-					$number = mysql_num_rows($res);	
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+					$number = mysqli_num_rows($res);
 					if ($number != 0){
-						while ($arr2 = mysql_fetch_assoc($res)){
+						while ($arr2 = mysqli_fetch_assoc($res)){
 							array_push($rez2, $arr2);
 						}
 						$items_j = $rez2;
@@ -1584,20 +1591,20 @@
 								$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' AND `insure`='".$insure_id."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
 							}
 							//var_dump($query);
-							
-							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
-							$number = mysql_num_rows($res);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+							$number = mysqli_num_rows($res);
 							if ($number != 0){
-								$arr3 = mysql_fetch_assoc($res);
+								$arr3 = mysqli_fetch_assoc($res);
 								$price = $arr3['price'];
 							}else{
 								$price = 0;
 							}
 						
 							echo '
-										<li>
-											<p onclick="checkPriceItem('.$items_j[$i]['id'].', '.$dtype.')">'.$items_j[$i]['name'].'</p>
+										<li style="cursor: pointer;">
+											<p onclick="checkPriceItem('.$items_j[$i]['id'].', '.$dtype.')"><span class="4filter">'.$items_j[$i]['name'].'</span></p>
 										</li>';
 						}
 					}else{
@@ -1614,9 +1621,9 @@
 				
 				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
 				//var_dump($query);
-				
-				$res = mysql_query($query) or die($query);
-				$number = mysql_num_rows($res);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+				$number = mysqli_num_rows($res);
 				if ($number != 0){
 					//echo '_'.$value['name'].'<br>';
 					$space2 = $space. '&nbsp;&nbsp;&nbsp;';

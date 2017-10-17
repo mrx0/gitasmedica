@@ -4,6 +4,7 @@
 //История формул стоматологических
 
 	require_once 'header.php';
+    require_once 'blocks_dom.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
@@ -74,13 +75,11 @@
 						</header>';
 						
 				echo '
-					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 101;">
-						<div class="cellRight">
-							<span style="font-size: 70%;">Быстрый поиск пациента</span><br />
-							<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
-							<!--<ul id="search_result_fc" class="search_result_fc"></ul><br />-->
-							<div id="search_result_fc2"></div>
-						</div>
+					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 101;">';
+
+                echo $block_fast_search_client;
+
+                echo '
 					</div>';
 
 				echo '
@@ -113,21 +112,21 @@
 				
 			//Выберем из базы последнюю запись
 				$t_f_data_db = array();
-				
-				require 'config.php';
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
+
+                $msql_cnnct = ConnectToDB ();
+
 				$time = time();
 				if ($id_zf){
 					$query = "SELECT * FROM `journal_tooth_status` WHERE `id` = '".max(array_keys($temp_arr))."'";
 				}else{
 					$query = "SELECT * FROM `journal_tooth_status` WHERE `client` = '{$_GET['client']}' ORDER BY `create_time` DESC LIMIT 1";
 				}
-				$res = mysql_query($query) or die($q);
-				$number = mysql_num_rows($res);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+				$number = mysqli_num_rows($res);
 				if ($number != 0){
-					while ($arr = mysql_fetch_assoc($res)){
+					while ($arr = mysqli_fetch_assoc($res)){
 						array_push($t_f_data_db, $arr);
 					}
 				}else
@@ -148,10 +147,13 @@
 					}else{
 						$query = "SELECT * FROM `journal_tooth_status` WHERE `client` = '{$_GET['client']}' ORDER BY `create_time` ASC LIMIT 1";
 					}
-					$res = mysql_query($query) or die($q);
-					$number = mysql_num_rows($res);
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+					$number = mysqli_num_rows($res);
+
 					if ($number != 0){
-						while ($arr = mysql_fetch_assoc($res)){
+						while ($arr = mysqli_fetch_assoc($res)){
 							array_push($t_f_data_db_first, $arr);
 						}
 					}else
@@ -173,10 +175,12 @@
 						
 						//ЗО и тд
 						$query = "SELECT * FROM `journal_tooth_status_temp` WHERE `id` = '{$t_f_data_db[$z]['id']}'";
-						$res = mysql_query($query) or die($query);
-						$number = mysql_num_rows($res);
+
+						$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+						$number = mysqli_num_rows($res);
 						if ($number != 0){
-							while ($arr = mysql_fetch_assoc($res)){
+							while ($arr = mysqli_fetch_assoc($res)){
 								array_push($dop, $arr);
 							}
 							
@@ -764,7 +768,7 @@
 					}
 					
 				}
-			mysql_close();	
+			//mysql_close();
 				
 				
 				

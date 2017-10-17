@@ -108,12 +108,12 @@
                                             <a href="#" onclick="Ajax_reopen_invoice('.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 100%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
                                     }
                                 }*/
-                                /*if (($finances['close'] == 1) || $god_mode){
-                                    if ($calculate_j[0]['status'] != 9){
+                                //if (($finances['close'] == 1) || $god_mode){
+                                    //if ($calculate_j[0]['status'] != 9){
                                         echo '
-                                                    <a href="invoice_del.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
-                                    }
-                                }*/
+                                                    <span class="info" style="font-size: 100%; cursor: pointer;" title="Удалить" onclick="fl_deleteCalculateItem('.$_GET['id'].', '.$calculate_j[0]['client_id'].', '.$calculate_j[0]['invoice_id'].');" ><i class="fa fa-trash-o" aria-hidden="true"></i></span>';
+                                    //}
+                                //}
 
                                 echo '			
                                             </h2>';
@@ -411,7 +411,7 @@
                                             <div id="errror" class="invoceHeader" style="">
                                                  <div style="display: inline-block; width: 300px; vertical-align: top;">
                                                     <div>
-                                                        На кого: <b>'.WriteSearchUser('spr_workers', $calculate_j[0]['worker_id'], 'user', true).'</b>
+                                                        Кому: <b>'.WriteSearchUser('spr_workers', $calculate_j[0]['worker_id'], 'user', true).'</b>
                                                     </div>';
                                 /*if ($sheduler_zapis[0]['type'] == 5) {
                                     echo '
@@ -539,7 +539,7 @@
                                                         <i><b>% работа/материал</b></i>
                                                     </div>';
                                     echo '
-                                                    <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
+                                                    <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 120px; min-width: 120px; max-width: 120px;">
                                                         <i><b>Расчёт, руб.</b></i>
                                                     </div>';
                                 }
@@ -836,7 +836,7 @@
 
 
                                                     echo'
-                                                    <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
+                                                    <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 120px; min-width: 120px; max-width: 120px;">
                                                     <b>';
 
                                                     echo calculateResult($stoim_item, $item['work_percent'], $item['material_percent']);
@@ -895,10 +895,10 @@
                                                         </li>-->
 
                                                        <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
-                                                            К расчёту <div id="calculateInvoice" style="">' . $summ . '</div> руб.
+                                                            Сумма расчёта <div id="calculateInvoice" style="">' . $summ . '</div> руб.
                                                        </li>
                                                        <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
-                                                            <input type="button" class="b" value="Перерасчёт" onclick="">
+                                                            <!--<input type="button" class="b" value="Перерасчёт" onclick="fl_reloadPercentsCalculate()">-->
                                                        </li>
 
                                                     </div>

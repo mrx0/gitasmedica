@@ -4,6 +4,7 @@
 //Добавить клиента
 
 	require_once 'header.php';
+    require_once 'blocks_dom.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
@@ -39,22 +40,21 @@
 						<h2>Добавить пациента</h2>
 						Заполните поля
 					</header>';
-			echo '
-					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">
-						<div class="cellRight">
-							<span style="font-size: 70%;">Быстрый поиск пациента</span><br />
-							<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
-							<!--<ul id="search_result_fc" class="search_result_fc"></ul><br />-->
-							<div id="search_result_fc2"></div>
-						</div>
+
+            echo '
+					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">';
+
+            echo $block_fast_search_client;
+
+            echo '
 					</div>';
-					
+
 			echo '
 					<div id="data">';
 			echo '
 						<div id="errrror"></div>';
 			echo '
-						<form action="add_client_f.php" style="font-size: 90%;" class="input_form">
+						<form action="client_add_f.php" style="font-size: 90%;" class="input_form">
 					
 							<div class="cellsBlock2">
 								<div class="cellLeft">Фамилия</div>
@@ -271,6 +271,19 @@
 									<ul id="search_result4" class="search_result4"></ul><br>
 								</div>
 							</div>
+						
+							<!--
+							<div class="cellsBlock2">
+								<div class="cellLeft">
+									Лечащий врач<br />
+									<span style="font-size: 80%">специалисты</span>
+								</div>
+								<div class="cellRight">
+									<input type="text" size="50" name="searchdata4" id="search_client4" placeholder="Введите первые три буквы для поиска" value="" class="who4"  autocomplete="off">
+									<ul id="search_result4" class="search_result4"></ul><br>
+								</div>
+							</div>
+							-->
 						
 							<div id="errror"></div>
 							<input type="button" class="b" value="Добавить" onclick="Ajax_add_client('.$_SESSION['id'].')">

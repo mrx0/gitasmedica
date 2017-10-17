@@ -62,7 +62,7 @@
 						echo '
 											</div>
 										</div>
-										<div class="cellsBlock2">
+										<div class="cellsBlock2" style="display: none">
 											<div class="cellLeft">Дата посещения</div>
 											<div class="cellRight">';
 				if ($task[0]['create_time'] != 0){
@@ -123,8 +123,9 @@
 										<div class="cellsBlock2">
 											<div class="cellLeft">Пациент</div>
 											<div class="cellRight">'.WriteSearchUser('spr_clients', $task[0]['client'], 'user', true).'</div>
-										</div>
-										
+										</div>';
+
+				/*echo '
 										<div class="cellsBlock2">
 											<div class="cellLeft">Филиал</div>
 											<div class="cellRight">
@@ -138,8 +139,23 @@
 						echo '
 												</select>
 											</div>
-										</div>
+										</div>';*/
 
+                        echo '						
+										<div class="cellsBlock2">
+											<div class="cellLeft">Филиал</div>
+											<div class="cellRight">';
+
+                        $offices_j = SelDataFromDB('spr_office', $task[0]['office'] , 'offices');
+
+                        echo $offices_j[0]['name'].'<input type="hidden" id="filial" name="filial" value="'.$task[0]['office'] .'">';
+
+                        echo '
+											</div>
+										</div>';
+
+                        echo '
+				
 										<div class="cellsBlock2">
 											<div class="cellLeft">Описание</div>
 											<div class="cellRight">

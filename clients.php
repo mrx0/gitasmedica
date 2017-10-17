@@ -82,16 +82,15 @@
 				</header>';
 			
 			DrawFilterOptions ('clients', $it, $cosm, $stom, $workers, $clients, $offices, $god_mode);
-				echo '
-					<div class="cellsBlock2" style="width: 400px; ">
-						<div class="cellRight">
-							<span style="font-size: 70%;">Быстрый поиск пациента</span><br />
-							<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
-							<!--<ul id="search_result_fc" class="search_result_fc"></ul><br />-->
-							<div id="search_result_fc2"></div>
-						</div>
+
+			echo '
+					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 101;">';
+
+            echo $block_fast_search_client;
+
+            echo '
 					</div>';
-				echo '
+			echo '
 					<br />
 					<div>
 						Сортировка по алфавиту<br />
@@ -181,7 +180,7 @@
 					if ($clients_j[$i]['status'] != 9){
 						echo '
 							<li class="cellsBlock cellsBlockHover" style="'.$bgcolor.'">
-								<a href="client.php?id='.$clients_j[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$clients_j[$i]['full_name'].'</a>';
+								<a href="client.php?id='.$clients_j[$i]['id'].'" class="cellFullName ahref 4filter" id="4filter">'.$clients_j[$i]['full_name'].'</a>';
 								
 						echo '
 									<div class="cellCosmAct" style="text-align: center">';
@@ -193,7 +192,7 @@
 					}else{
 						$deleted_clients .= '
 							<li class="cellsBlock cellsBlockHover" style="'.$bgcolor.'">
-								<a href="client.php?id='.$clients_j[$i]['id'].'" class="cellFullName ahref" id="4filter">'.$clients_j[$i]['full_name'].'</a>';
+								<a href="client.php?id='.$clients_j[$i]['id'].'" class="cellFullName ahref 4filter" id="4filter">'.$clients_j[$i]['full_name'].'</a>';
 						$deleted_clients .= '
 									<div class="cellCosmAct" style="text-align: center">';
 						if (($clients_j[$i]['polis'] != '') && ($clients_j[$i]['insure'] != '')){

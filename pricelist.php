@@ -182,7 +182,7 @@
                     <ul class="" style="width: 850px; font-size: 12px;">
 					<li class="cellsBlock" style="width: auto;">
 						<div class="cellPriority" style=""></div>
-						<span class="cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(255, 103, 97, 0.5);" id="4filter">Без группы</span>
+						<span class="cellOffice 4filter" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(255, 103, 97, 0.5);" id="4filter">Без группы</span>
 						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(255, 103, 97, 0.5);"></div>
 					</li>';
 					
@@ -228,7 +228,7 @@
                         //}
                         echo '
 												<div class="priceitemDivname">
-													<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref" id="4filter"><i>'.$items_j[$i]['code'].'</i> '.$items_j[$i]['name'].'</a>
+													<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref 4filter" id="4filter"><i>'.$items_j[$i]['code'].'</i> '.$items_j[$i]['name'].'</a>
 												</div>
 												<div class="priceitemDiv">
 													<div class="priceitemDivcost"><b>'.$price.'</b> руб.</div>';
@@ -281,7 +281,7 @@
 					echo '
 					<li class="cellsBlock" style="width: auto; margin-top: 10px;">
 						<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
-						<span class="cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(114, 114, 114, 0.5);" id="4filter">Удалённые группы</span>
+						<span class="cellOffice 4filter" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(114, 114, 114, 0.5);" id="4filter">Удалённые группы</span>
 						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(114, 114, 114, 0.5);"></div>
 					</li>';
 					for ($i = 0; $i < count($items_j); $i++) {
@@ -303,7 +303,7 @@
 						echo '
 									<li class="cellsBlock" style="width: auto;">
 										<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
-										<a href="pricelistgroup.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(223, 128, 252, 0.23);" id="4filter">'.$items_j[$i]['name'].'</a>
+										<a href="pricelistgroup.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice 4filter" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(223, 128, 252, 0.23);" id="4filter">'.$items_j[$i]['name'].'</a>
 										<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(223, 128, 252, 0.23);">
 											<div class="managePriceList" style="font-style: normal; font-size: 13px;">';
 						/*echo '
@@ -348,7 +348,7 @@
 					echo '
 					<li class="cellsBlock" style="width: auto;">
 						<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
-						<span class="cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(114, 114, 114, 0.5);" id="4filter">Удалённые позиции</span>
+						<span class="cellOffice 4filter" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(114, 114, 114, 0.5);" id="4filter">Удалённые позиции</span>
 						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(114, 114, 114, 0.5);"></div>
 					</li>';
 					
@@ -371,7 +371,7 @@
 						echo '
 									<li class="cellsBlock" style="width: auto;">
 										<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
-										<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$items_j[$i]['name'].'</a>
+										<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice 4filter" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$items_j[$i]['name'].'</a>
 										<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.'</div>
 									</li>';
 					}

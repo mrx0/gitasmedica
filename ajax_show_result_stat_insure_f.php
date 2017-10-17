@@ -458,7 +458,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                             <td style="text-align: right;">';
 
                                         if ($invoice_ex_zub_data['price'] > 0){
-                                            $rez_str_invoice_ex .= number_format($invoice_ex_zub_data['price'], 2, '.', ' ');
+                                            $rez_str_invoice_ex .= number_format($invoice_ex_zub_data['price'], 2, '.', '');
                                         }else{
                                             $rez_str_invoice_ex .= '<span class="query_neok" style="padding-top: 0;  text-align: right;">'.number_format($invoice_ex_zub_data['price'], 2, '.', ' ').'</span>';
                                         }
@@ -466,7 +466,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                         $rez_str_invoice_ex .= '
                                            </td>
                                            <td style="text-align: right;">'.$invoice_ex_zub_data['quantity'].'</td>
-                                           <td style="text-align: right;">'.number_format($invoice_ex_zub_data['price'] * $invoice_ex_zub_data['quantity'], 2, '.', ' ').'</td>
+                                           <td style="text-align: right;">'.number_format($invoice_ex_zub_data['price'] * $invoice_ex_zub_data['quantity'], 2, '.', '').'</td>
                                         </tr>';
 
                                         $invoice_summ_zub += $invoice_ex_zub_data['price'] * $invoice_ex_zub_data['quantity'];
@@ -480,7 +480,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                                     /*$rez_str_fio .= '
                                         </td>
-                                        <td style="font-weight: bold; font-size: 13px; text-align: right;">'.number_format($invoice_summ, 2, '.', ' ').'</td>
+                                        <td style="font-weight: bold; font-size: 13px; text-align: right;">'.number_format($invoice_summ, 2, '.', '').'</td>
                                     </tr>';
 
 
@@ -492,7 +492,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                                 $rez_str_fio .= '
                                         </td>
-                                        <td style="font-weight: bold; font-size: 13px; text-align: right;">'.number_format($invoice_summ, 2, '.', ' ').'</td>
+                                        <td style="font-weight: bold; font-size: 13px; text-align: right;">'.number_format($invoice_summ, 2, '.', '').'</td>
                                     </tr>';
 
 
@@ -503,7 +503,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         $rez_str_fio .= '
                                     <tr>
                                         <td colspan="6"><b>Итого по пациенту:</b></td>
-                                        <td style="font-weight: bold; font-size: 13px; text-align: right;">' .number_format($patient_summ, 2, '.', ' ').'</td>
+                                        <td style="font-weight: bold; font-size: 13px; text-align: right;">' .number_format($patient_summ, 2, '.', '').'</td>
                                     </tr>';
 
                         //Для отборки по страховой

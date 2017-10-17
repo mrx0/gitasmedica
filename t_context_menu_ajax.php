@@ -182,7 +182,7 @@
 					</tr>
 					";
 				}
-				if ((($key == 74) || ($key == 75)) || ($key == 76)) && (($func_surface == 'top1') || ($func_surface == 'top2') || ($func_surface == 'top12'))){
+				if (((($key == 74) || ($key == 75)) || ($key == 76)) && (($func_surface == 'top1') || ($func_surface == 'top2') || ($func_surface == 'top12'))){
 					$s_menu .= "
 					<tr>
 						<td class='cellsBlockHover'>

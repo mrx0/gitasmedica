@@ -51,6 +51,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         $dop['invoice']['invoiceNotPaid'] = $_POST['invoiceNotPaid'];
         $dop['invoice']['invoiceInsure'] = $_POST['invoiceInsure'];
 
+        $dop['patientUnic'] = $_POST['patientUnic'];
 
         //Кто создал запись
         if ($_POST['creator'] != ''){
@@ -342,14 +343,32 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             $edit_options = true;
                         }
 
+                        //Если хотим видеть только уникальные пациенты
+                        if ($_POST['patientUnic'] == 1){
+                            //var_dump($journal);
+
+                            $journal_temp = array();
+
+                            foreach($journal as $journal_item){
+                                //Нам нужны фио пациентов чтоб потом сортировать их по фио
+
+                                $journal_temp[WriteSearchUser('spr_clients', $journal_item['patient'], 'user_full', false)] =  $journal_item;
+                            }
+
+                            ksort($journal_temp);
+                            $journal = $journal_temp;
+                            $journal = array_values($journal_temp);
+
+                            //var_dump($journal);
+                        }
+
 
                         echo showZapisRezult2($journal, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, 0, true, false, $dop);
 
 
                         echo '
                                     <li class="cellsBlock" style="margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
-                                        Всего<br>
-                                        Посещений: ' . count($journal) . '<br>
+                                        Всего : ' . count($journal) . '<br>
                                     </li>';
 
                         echo '

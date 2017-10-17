@@ -1,7 +1,7 @@
 <?php
 
-//calculates.php
-//Расчёты
+//fl_tabels.php
+//Важный отчёт
 
 
 function cmp($a, $b)
@@ -113,8 +113,8 @@ function cmp($a, $b)
 
                             echo '
                                     <li>
-                                        <a href="#tabs-' . $permission['id'] . '_' . $worker['id'] . '">
-                                            ' . $worker['name'] . '<div id="tabs_notes_' . $permission['id'] . '_' . $worker['id'].'" class="notes_count2" style="display: none; right: 0px;"><i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i></div>
+                                        <a href="#tabs-' . $permission['id'] . '_' . $worker['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'\'}); ">
+                                            ' . $worker['name'] . '<div id="tabs_notes_' . $permission['id'] . '_' . $worker['id'].'" class="notes_count2" style="display: none; right: 0;"><i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i></div>
                                         </a>
                                     </li>';
                         }
@@ -162,8 +162,12 @@ function cmp($a, $b)
                                         <div id="tabs-' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '" style="width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); font-size: 12px; margin-top: 65px;">';
 
                                     echo '
-                                            <div class="tableData" id="'.$permission['id'] . '_' . $worker['id'] . '_' . $office['id'].'">
+                                            <div class="tableDataNPaidCalcs" id="'.$permission['id'] . '_' . $worker['id'] . '_' . $office['id'].'">
                                                 <div style="width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);"><img src="img/wait.gif" style="float:left;"><span style="float: right;  font-size: 90%;"> обработка...</span></div>
+                                            </div>';
+                                    echo '
+                                            <div class="tableTabels" id="'.$permission['id'] . '_' . $worker['id'] . '_' . $office['id'].'_tabels">
+                                                <!--<div style="width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);"><img src="img/wait.gif" style="float:left;"><span style="float: right;  font-size: 90%;"> обработка...</span></div>-->
                                             </div>';
 
                                     echo '
@@ -387,6 +391,21 @@ function cmp($a, $b)
 				$(document).ready(function() {
 				    //console.log(123);
 				    
+				    //Рабочий пример клика на элементе после подгрузки его в DOM 
+                    $("body").on("click", ".chkBoxCalcs", function(){
+                        var checked_status = $(this).prop("checked");
+                        //console.log(checked_status);
+                        //console.log($(this).parent());
+                            
+                        if (checked_status){
+                            $(this).parent().parent().parent().css({"background-color": "#83DB53"});
+                        }else{
+                            $(this).parent().parent().parent().css({"background-color": ""});
+                        }
+                    });   
+				    
+				    
+				    
 				    var ids = "0_0_0";
 				    var ids_arr = {};
 				    var permission = 0;
@@ -394,7 +413,7 @@ function cmp($a, $b)
 				    var office = 0;
 
 				    
-				    $(".tableData").each(function() {
+				    $(".tableDataNPaidCalcs").each(function() {
                         //console.log($(this).attr("id"));
                         
                         var thisObj = $(this);
@@ -411,9 +430,11 @@ function cmp($a, $b)
                             permission: permission,
                             worker: worker,
                             office: office,
-                            month: "09",
-                        }
+                            month: "09"
+                        };
                         
+                        
+                        //Необработанные расчеты
                         $.ajax({
                             url:"fl_get_calculates_f.php",
                             global: false,
@@ -448,12 +469,12 @@ function cmp($a, $b)
                                         $("#tabs_notes_"+permission+"_"+worker+"_"+office).show();
                                         //console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
                                         
-                                        thisObj.parent().find(".summCalcs").html(res.summCalc);
+                                        thisObj.parent().find(".summCalcsNPaid").html(res.summCalc);
 
                                     }
                                     
                                     if (res.status == 0){
-                                        thisObj.html("Нет данных");
+                                        thisObj.html("Нет данных по необработанным расчетным листам");
                                     	
                                     	//Спрячем пустые вкладки, где нет данных
                                         $(".tabs-"+permission+"_"+worker+"_"+office).hide();
@@ -467,173 +488,251 @@ function cmp($a, $b)
                                 }
                             }
                         });
+                    });
+                    
+                    
+				    $(".tableTabels").each(function() {
+                        //console.log($(this).attr("id"));
+                        
+                        var thisObj = $(this);
+
+                        ids = $(this).attr("id");
+                        ids_arr = ids.split("_");
+                        //console.log(ids_arr);
                          
+                        permission = ids_arr[0];
+                        worker = ids_arr[1];
+                        office = ids_arr[2];
+                        
+                        var certData = {
+                            permission: permission,
+                            worker: worker,
+                            office: office,
+                            month: "09"
+                        };
+                        
                          
+                        //Табели
+                        $.ajax({
+                            url:"fl_get_tabels_f.php",
+                            global: false,
+                            type: "POST",
+                            dataType: "JSON",
+                
+                            data:certData,
+                
+                            cache: false,
+                            beforeSend: function() {
+                                //$(\'#errrror\').html("<div style=\'width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);\'><img src=\'img/wait.gif\' style=\'float:left;\'><span style=\'float: right;  font-size: 90%;\'> обработка...</span></div>");
+                            },
+                            success:function(res){
+                                //console.log(res);
+                                //thisObj.html(res);
+                                
+                                if(res.result == \'success\'){
+                                
+                                    ids = thisObj.attr("id");
+                                    ids_arr = ids.split("_");
+                                    //console.log(ids_arr);
+                                     
+                                    permission = ids_arr[0];
+                                    worker = ids_arr[1];
+                                    office = ids_arr[2];
+                                
+                                    if (res.status == 1){
+                                        thisObj.html(res.data);
+                                        
+                                        //Показываем оповещения на фио и филиале
+                                        $("#tabs_notes_"+permission+"_"+worker).show();
+                                        $("#tabs_notes_"+permission+"_"+worker+"_"+office).show();
+                                        //console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
+                                        
+                                        //
+                                        //thisObj.parent().find(".summCalcsNPaid").html(res.summCalc);
+
+                                    }
+                                    
+                                    if (res.status == 0){
+                                        thisObj.html("Нет данных по табелям");
+                                    	
+                                    	//Спрячем пустые вкладки, где нет данных
+                                        $(".tabs-"+permission+"_"+worker+"_"+office).hide();
+                                    }
+                                }
+                                
+                                if(res.result == "error"){
+                                    thisObj.html(res.data);
+                                    
+                                    
+                                }
+                            }
+                        });
                     });
 				});
 				
 				
 				
-				    //Проверка и установка checkbox
-                    $(".zapisType").click(function() {
-                        
-					    var checked_status = $(this).is(":checked");
-					    var thisId = $(this).attr("id");
-					    var pin_status = false;
-					    var allCheckStatus = false;
-					    
-                        if (thisId == "zapisAll"){
-                            if (checked_status){
-                                pin_status = true;
-                            }else{
-                                pin_status = false;
-                            }
+                //Проверка и установка checkbox
+                /*$(".zapisType").click(function() {
+                    
+                    var checked_status = $(this).is(":checked");
+                    var thisId = $(this).attr("id");
+                    var pin_status = false;
+                    var allCheckStatus = false;
+                    
+                    if (thisId == "zapisAll"){
+                        if (checked_status){
+                            pin_status = true;
+                        }else{
+                            pin_status = false;
+                        }
+                        $(".zapisType").each(function() {
+                            $(this).prop("checked", pin_status);
+                        });
+                    }else{
+                        if (!checked_status){
+                            $("#zapisAll").prop("checked", false);
+                        }else{
+                            allCheckStatus = true; 
                             $(".zapisType").each(function() {
-                                $(this).prop("checked", pin_status);
-                            });
-                        }else{
-                            if (!checked_status){
-                                $("#zapisAll").prop("checked", false);
-                            }else{
-                                allCheckStatus = true; 
-                                $(".zapisType").each(function() {
-                                    if ($(this).attr("id") != "zapisAll"){
-                                        if (!$(this).is(":checked")){
-                                            allCheckStatus = false; 
-                                        }
+                                if ($(this).attr("id") != "zapisAll"){
+                                    if (!$(this).is(":checked")){
+                                        allCheckStatus = false; 
                                     }
-                                });
-                                if (allCheckStatus){
-                                    $("#zapisAll").prop("checked", true);
                                 }
+                            });
+                            if (allCheckStatus){
+                                $("#zapisAll").prop("checked", true);
                             }
                         }
-					});
+                    }
+                });
+                
+                $(".fullType").click(function() {
                     
-                    $(".fullType").click(function() {
-                        
-					    var checked_status = $(this).is(":checked");
-					    var thisId = $(this).attr("id");
-					    var pin_status = false;
-					    var allCheckStatus = false;
-					    
-                        if (thisId == "fullAll"){
-                            if (checked_status){
-                                pin_status = true;
-                            }else{
-                                pin_status = false;
-                            }
+                    var checked_status = $(this).is(":checked");
+                    var thisId = $(this).attr("id");
+                    var pin_status = false;
+                    var allCheckStatus = false;
+                    
+                    if (thisId == "fullAll"){
+                        if (checked_status){
+                            pin_status = true;
+                        }else{
+                            pin_status = false;
+                        }
+                        $(".fullType").each(function() {
+                            $(this).prop("checked", pin_status);
+                        });
+                    }else{
+                        if (!checked_status){
+                            $("#fullAll").prop("checked", false);
+                        }else{
+                            allCheckStatus = true; 
                             $(".fullType").each(function() {
-                                $(this).prop("checked", pin_status);
-                            });
-                        }else{
-                            if (!checked_status){
-                                $("#fullAll").prop("checked", false);
-                            }else{
-                                allCheckStatus = true; 
-                                $(".fullType").each(function() {
-                                    if ($(this).attr("id") != "fullAll"){
-                                        if (!$(this).is(":checked")){
-                                            allCheckStatus = false; 
-                                        }
+                                if ($(this).attr("id") != "fullAll"){
+                                    if (!$(this).is(":checked")){
+                                        allCheckStatus = false; 
                                     }
-                                });
-                                if (allCheckStatus){
-                                    $("#fullAll").prop("checked", true);
                                 }
+                            });
+                            if (allCheckStatus){
+                                $("#fullAll").prop("checked", true);
                             }
                         }
-					});
+                    }
+                });
+                
+                $(".statusType").click(function() {
                     
-                    $(".statusType").click(function() {
-                        
-					    var checked_status = $(this).is(":checked");
-					    var thisId = $(this).attr("id");
-					    var pin_status = false;
-					    var allCheckStatus = false;
-					    
-                        if (thisId == "statusAll"){
-                            if (checked_status){
-                                pin_status = true;
-                            }else{
-                                pin_status = false;
-                            }
+                    var checked_status = $(this).is(":checked");
+                    var thisId = $(this).attr("id");
+                    var pin_status = false;
+                    var allCheckStatus = false;
+                    
+                    if (thisId == "statusAll"){
+                        if (checked_status){
+                            pin_status = true;
+                        }else{
+                            pin_status = false;
+                        }
+                        $(".statusType").each(function() {
+                            $(this).prop("checked", pin_status);
+                        });
+                    }else{
+                        if (!checked_status){
+                            $("#statusAll").prop("checked", false);
+                        }else{
+                            allCheckStatus = true; 
                             $(".statusType").each(function() {
-                                $(this).prop("checked", pin_status);
-                            });
-                        }else{
-                            if (!checked_status){
-                                $("#statusAll").prop("checked", false);
-                            }else{
-                                allCheckStatus = true; 
-                                $(".statusType").each(function() {
-                                    if ($(this).attr("id") != "statusAll"){
-                                        if (!$(this).is(":checked")){
-                                            allCheckStatus = false; 
-                                        }
+                                if ($(this).attr("id") != "statusAll"){
+                                    if (!$(this).is(":checked")){
+                                        allCheckStatus = false; 
                                     }
-                                });
-                                if (allCheckStatus){
-                                    $("#statusAll").prop("checked", true);
                                 }
+                            });
+                            if (allCheckStatus){
+                                $("#statusAll").prop("checked", true);
                             }
                         }
-					});
-                    //Наряды
-                    $(".invoiceType").click(function() {
-                        
-					    var checked_status = $(this).is(":checked");
-					    var thisId = $(this).attr("id");
-					    var pin_status = false;
-					    var allCheckStatus = false;
-					    
-                        if (thisId == "invoiceAll"){
-                            if (checked_status){
-                                pin_status = true;
-                            }else{
-                                pin_status = false;
-                            }
+                    }
+                });*/
+                
+                //Наряды
+                /*$(".invoiceType").click(function() {
+                    
+                    var checked_status = $(this).is(":checked");
+                    var thisId = $(this).attr("id");
+                    var pin_status = false;
+                    var allCheckStatus = false;
+                    
+                    if (thisId == "invoiceAll"){
+                        if (checked_status){
+                            pin_status = true;
+                        }else{
+                            pin_status = false;
+                        }
+                        $(".invoiceType").each(function() {
+                            $(this).prop("checked", pin_status);
+                        });
+                    }else{
+                        if (!checked_status){
+                            $("#invoiceAll").prop("checked", false);
+                        }else{
+                            allCheckStatus = true; 
                             $(".invoiceType").each(function() {
-                                $(this).prop("checked", pin_status);
-                            });
-                        }else{
-                            if (!checked_status){
-                                $("#invoiceAll").prop("checked", false);
-                            }else{
-                                allCheckStatus = true; 
-                                $(".invoiceType").each(function() {
-                                    if ($(this).attr("id") != "invoiceAll"){
-                                        if (!$(this).is(":checked")){
-                                            allCheckStatus = false; 
-                                        }
+                                if ($(this).attr("id") != "invoiceAll"){
+                                    if (!$(this).is(":checked")){
+                                        allCheckStatus = false; 
                                     }
-                                });
-                                if (allCheckStatus){
-                                    $("#invoiceAll").prop("checked", true);
                                 }
+                            });
+                            if (allCheckStatus){
+                                $("#invoiceAll").prop("checked", true);
                             }
                         }
-					});
+                    }
+                });
                     
                     
-					var all_time = 0;
-					
-					$("input[name=all_time]").change(function() {
-						all_time = $("input[name=all_time]:checked").val();
-						
-						if (all_time === undefined){
-							all_time = 0;
-						}
-						
-						if (all_time == 1){
-							document.getElementById("datastart").disabled = true;
-							document.getElementById("dataend").disabled = true;
-						}
-						if (all_time == 0){
-							document.getElementById("datastart").disabled = false;
-							document.getElementById("dataend").disabled = false;
-						}
-					});
+                var all_time = 0;
+                
+                $("input[name=all_time]").change(function() {
+                    all_time = $("input[name=all_time]:checked").val();
+                    
+                    if (all_time === undefined){
+                        all_time = 0;
+                    }
+                    
+                    if (all_time == 1){
+                        document.getElementById("datastart").disabled = true;
+                        document.getElementById("dataend").disabled = true;
+                    }
+                    if (all_time == 0){
+                        document.getElementById("datastart").disabled = false;
+                        document.getElementById("dataend").disabled = false;
+                    }
+                });*/
 				</script>';
 			}
 			//mysql_close();

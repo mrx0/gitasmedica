@@ -30,23 +30,23 @@
                     $work_percent = (int)$percents_j[0]['work_percent'];
                     $material_percent = (int)$percents_j[0]['material_percent'];
 
-					foreach ($data as $in => $invoice_data){
+					foreach ($data as $ind => $invoice_data){
 
 						if (!empty($invoice_data)){
 							if ($_POST['invoice_type'] == 5){
 								foreach ($invoice_data as $key => $items){
 
-									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$zub][$key]['percent_cats'] = (int)$_POST['percent_cat'];
-									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$zub][$key]['work_percent'] = $work_percent;
-									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$zub][$key]['material_percent'] = $material_percent;
+									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['percent_cats'] = (int)$_POST['percent_cat'];
+									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['work_percent'] = $work_percent;
+									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['material_percent'] = $material_percent;
 
 								}
 							}
 							if ($_POST['invoice_type'] == 6){
 
-									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$zub]['percent_cats'] = (int)$_POST['percent_cat'];
-									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$zub]['work_percent'] = $work_percent;
-									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$zub]['material_percent'] = $material_percent;
+									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['percent_cats'] = (int)$_POST['percent_cat'];
+									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['work_percent'] = $work_percent;
+									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['material_percent'] = $material_percent;
 
 							}
 						}

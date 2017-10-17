@@ -161,7 +161,7 @@
                                     <ul class="" style="width: 850px; font-size: 12px;">
 									<li class="cellsBlock" style="width: auto;">
 										<div class="cellPriority" style=""></div>
-										<span class="cellOffice" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(255, 103, 97, 0.5);" id="4filter">Без группы</span>
+										<span class="cellOffice 4filter" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(255, 103, 97, 0.5);" id="4filter">Без группы</span>
 										<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(255, 103, 97, 0.5);"></div>
 									</li>';
 								
@@ -209,7 +209,7 @@
                                     //}
                                     echo '
 												<div class="priceitemDivname">
-													<a href="pricelistitem_insure.php?insure='.$_GET['id'].'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter"><i>'.$items_j[$i]['code'].'</i> '.$items_j[$i]['name'].'</a>
+													<a href="pricelistitem_insure.php?insure='.$_GET['id'].'&id='.$items_j[$i]['id'].'" class="ahref 4filter" id="4filter"><i>'.$items_j[$i]['code'].'</i> '.$items_j[$i]['name'].'</a>
 												</div>
 												<div class="priceitemDiv">
 													<div class="priceitemDivcost"><b>'.$price.'</b> руб.</div>';

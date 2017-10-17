@@ -38,7 +38,7 @@
 				echo '
 						<li class="cellsBlock">
 							<div class="cellPriority" style="background-color:"></div>
-							<div class="cellOffice" style="text-align: center; width: 180px; min-width: 180px;" id="4filter">'.$offices[$i]['name'].'</div>
+							<div class="cellOffice 4filter" style="text-align: center; width: 180px; min-width: 180px;" id="4filter">'.$offices[$i]['name'].'</div>
 							<div class="cellAddress" style="text-align: left">'.$offices[$i]['address'].'</div>
 							<div class="cellText" style="text-align: left">'.$offices[$i]['contacts'].'</div>
 						</li>';

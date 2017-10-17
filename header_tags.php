@@ -122,8 +122,15 @@
 			
 			<script type="text/javascript">
 				$(function(){
-					$(\'#livefilter-list\').liveFilter(\'#livefilter-input\', \'li\', {
-						filterChildSelector: \'#4filter\'
+					$("#livefilter-list").liveFilter("#livefilter-input", "li", {
+						filterChildSelector: ".4filter",
+						forPriceInInvoice: false
+					});
+				});
+				$(function(){
+					$("#lasttree").liveFilter("#livefilter-input", "p", {
+						filterChildSelector: ".4filter",
+						forPriceInInvoice: true
 					});
 				});
 			</script>

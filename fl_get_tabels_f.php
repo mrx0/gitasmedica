@@ -60,8 +60,8 @@
                         //include_once 'fl_showCalculateRezult.php';
 
                         $rezult .= '
-                            <div style="margin: 5px 0; padding: 2px; text-align: center; color: #0C0C0C; font-weight: bold;">
-                                Необработанные <br>расчётные листы
+                            <div style="margin: 5px 0; padding: 2px; text-align: center; color: #0C0C0C;">
+                                Табели сотрудника
                             </div>';
 
                         foreach ($rez as $rezData){
@@ -175,12 +175,6 @@
                         $rezult .= '
                             <div style="margin: 5px 0; padding: 2px; text-align: right;">
                                 Сумма: <span class="summCalcsNPaid calculateInvoice">0</span> руб.
-                            </div>';
-
-                        $rezult .= '
-                            <div style="margin: 5px 0; padding: 2px; text-align: right;">
-                                <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick=""><br>
-                                <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Добавить в существующий табель" onclick="">
                             </div>';
 
                         echo json_encode(array('result' => 'success', 'status' => '1', 'data' => $rezult, 'summCalc' => $summCalc));

@@ -185,7 +185,7 @@
                     echo '
 							<li class="cellsBlock2 cellsBlockHover" style="font-weight: normal; font-size: 11px; margin-bottom: -1px;">
 							    <div style="position: relative;">
-								    <a href="user.php?id='.$worker['id'].'" class="cellFullName ahref" id="4filter" style="text-align: left;">'.$worker['full_name'].'</a>
+								    <a href="user.php?id='.$worker['id'].'" class="cellFullName ahref 4filter" id="4filter" style="text-align: left;">'.$worker['full_name'].'</a>
                                     <div onclick="fl_changePersonalPercentCatdefault('.$worker['id'].');" id ="changePersonalPercentCatdefault" style="position: absolute; right: 0px; top: 2px; font-size: 12px; color: green; border: 1px solid #BFBCB5; background-color: #FFF; padding: 0 6px; cursor: pointer;">
                                         <i class="fa fa-refresh" aria-hidden="true" title="По умолчанию" style="color: red;"></i>
                                     </div>

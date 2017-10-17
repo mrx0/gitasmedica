@@ -799,7 +799,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                                                 //Цена позиции
                                                 if ($invoice_ex_zub_data['price'] > 0) {
-                                                    $sheet->setCellValue('I' . $countRow, number_format($invoice_ex_zub_data['price'], 2, ',', ' '));
+                                                    $sheet->setCellValue('I' . $countRow, number_format($invoice_ex_zub_data['price'], 2, ',', ''));
                                                     $sheet->getStyle('I' . $countRow)->applyFromArray($style_arial_8);
                                                     $sheet->getStyle('I' . $countRow)->applyFromArray($style_verical_top);
                                                     $sheet->getStyle('I' . $countRow)->getNumberFormat()->applyFromArray($style_number_money);
@@ -807,7 +807,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                                                 } else {
                                                     if ($withErrors) {
-                                                        $sheet->setCellValue('I' . $countRow, number_format($invoice_ex_zub_data['price'], 2, ',', ' '));
+                                                        $sheet->setCellValue('I' . $countRow, number_format($invoice_ex_zub_data['price'], 2, ',', ''));
                                                         $sheet->getStyle('I' . $countRow)->applyFromArray($style_arial_8);
                                                         $sheet->getStyle('I' . $countRow)->applyFromArray($style_verical_top);
                                                         $sheet->getStyle('I' . $countRow)->getNumberFormat()->applyFromArray($style_number_money);

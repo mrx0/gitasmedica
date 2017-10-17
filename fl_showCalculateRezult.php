@@ -435,7 +435,7 @@
                                             <div class="cellsBlock2" style="font-size:80%; width:400px;">
                                                 <div class="cellLeft" style="font-weight: bold;">Пациент</div>
                                                 <div class="cellRight">
-                                                    <input type="text" size="30" name="searchdata" id="search_client" placeholder="Введите ФИО пациента" value="" class="who"  autocomplete="off" style="width: 90%;"> <a href="add_client.php" class="ahref"><i class="fa fa-plus-square" title="Добавить пациента" style="color: green; font-size: 120%;"></i></a>
+                                                    <input type="text" size="30" name="searchdata" id="search_client" placeholder="Введите ФИО пациента" value="" class="who"  autocomplete="off" style="width: 90%;"> <a href="client_add.php" class="ahref"><i class="fa fa-plus-square" title="Добавить пациента" style="color: green; font-size: 120%;"></i></a>
                                                     <ul id="search_result" class="search_result"></ul><br />
                                                 </div>
                                             </div>

@@ -57,7 +57,7 @@
                 $dop = 'WHERE `place`='.$_SESSION['filial'];
             }
 
-            $query = "SELECT * FROM `zapis_online` ".$dop;
+            $query = "SELECT * FROM `zapis_online` ".$dop." ORDER BY `id` DESC";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -74,15 +74,15 @@
 					<div id="data">
 						<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
 							<li class="cellsBlock" style="font-weight:bold; font-size: 10px;">	
-							    <div class="cellTime" style="text-align: center;">Время обр.</div>
-								<div class="cellFullName" style="text-align: center">
+							    <div class="cellTime" style="text-align: center;">Время обращения</div>
+								<div class="cellName" style="text-align: center; width: 200px; max-width: 200px; min-width: 200px;">
                                     ФИО';
                 echo $block_fast_filter;
                 echo '
 								</div>';
 
 				echo '
-                                <div class="cellTime" style="text-align: center; width: 130px; max-width: 130px;">Контакты</div>
+                                <div class="cellTime" style="text-align: center; width: 130px; max-width: 130px; min-width: 130px;">Контакты</div>
                                 <div class="cellText" style="text-align: center">Комментарий</div>
                                 <div class="cellTime" style="text-align: center">Время желаемое</div>
                                 <div class="cellOffice" style="text-align: center;">Филиал / Специалист</div>
@@ -105,10 +105,10 @@
 								<div class="cellTime" style="text-align: center">
 								    ' . $zapis_online_j[$i]['datetime'] . '
 								</div>
-								<div id="4filter" class="cellFullName" style="text-align: left">
+								<div id="4filter" class="cellFullName 4filter" style="text-align: left; width: 200px; max-width: 200px; min-width: 200px;">
 								    ' . $zapis_online_j[$i]['name'] . '
 								</div>
-								<div class="cellTime" style="text-align: center; width: 130px; max-width: 130px;">
+								<div class="cellTime" style="text-align: center; width: 130px; max-width: 130px; min-width: 130px;">
 								    <b>тел. :</b><br>' . $zapis_online_j[$i]['phone'] . '<br>
 								    <b>e-mail:</b><br>' . $zapis_online_j[$i]['email'] . '
 								</div>
@@ -138,10 +138,10 @@
 								<div class="cellTime" style="text-align: center">
 								    ' . $zapis_online_j[$i]['datetime'] . '
 								</div>
-								<div id="4filter" class="cellFullName" style="text-align: left">
+								<div id="4filter" class="cellFullName 4filter" style="text-align: left; width: 200px; max-width: 200px; min-width: 200px;">
 								    ' . $zapis_online_j[$i]['name'] . '
 								</div>
-								<div class="cellTime" style="text-align: center; width: 130px; max-width: 130px;">
+								<div class="cellTime" style="text-align: center; width: 130px; max-width: 130px; min-width: 130px;">
 								    <b>тел. :</b> ' . $zapis_online_j[$i]['phone'] . '<br>
 								    <b>e-mail: </b>' . $zapis_online_j[$i]['email'] . '
 								</div>

@@ -1,9 +1,10 @@
 <?php
 
-//user.php
-//
+//client.php
+//Карточка клиента
 
 	require_once 'header.php';
+    require_once 'blocks_dom.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
@@ -22,9 +23,7 @@
             $cosm_edit = false;
             $finance_edit = false;
 
-
-
-            require 'config.php';
+            //require 'config.php';
 
 			//переменная для просроченных
 			$allPayed = true;
@@ -57,7 +56,7 @@
 				),
 			);
 			
-			$client = SelDataFromDB('spr_clients', $_GET['id'], 'user');
+			$client_j = SelDataFromDB('spr_clients', $_GET['id'], 'user');
 
 			//!!!ДР по-новому надо сделать
             /*
@@ -71,28 +70,28 @@ ORDER BY `name`;
             */
 
 
-			//var_dump($client);
-			if ($client != 0){
+			//var_dump($client_j);
+			if ($client_j != 0){
 				echo '
 					<script src="js/init.js" type="text/javascript"></script>
 					<!--<script src="js/init2.js" type="text/javascript"></script>-->
 					<div id="status">
 						<header>
 							<h2>
-								Карточка пациента #'.$client[0]['id'].'';
+								Карточка пациента #'.$client_j[0]['id'].'';
 				
 				if (($clients['edit'] == 1) || $god_mode){
-					if ($client[0]['status'] != 9){
+					if ($client_j[0]['status'] != 9){
 						echo '
 									<a href="client_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
 					}
-					if (($client[0]['status'] == 9) && (($clients['close'] == 1) || $god_mode)){
+					if (($client_j[0]['status'] == 9) && (($clients['close'] == 1) || $god_mode)){
 						echo '
 							<a href="#" onclick="Ajax_reopen_client('.$_SESSION['id'].', '.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 100%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
 					}
 				}
 				if (($clients['close'] == 1) || $god_mode){
-					if ($client[0]['status'] != 9){
+					if ($client_j[0]['status'] != 9){
 						echo '
 									<a href="move_all.php?client='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Переместить"><i class="fa fa-external-link-square" aria-hidden="true"></i></a>';
 						echo '
@@ -104,21 +103,20 @@ ORDER BY `name`;
 				echo '
 							</h2>';
 							
-				if ($client[0]['status'] == 9){
+				if ($client_j[0]['status'] == 9){
 					echo '<i style="color:red;">Пациент удалён (заблокирован).</i><br>';												
 				}
 				
 				echo '
-							Номер карты: '.$client[0]['card'].'
+							Номер карты: '.$client_j[0]['card'].'
 						</header>';
+
 				echo '
-					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">
-						<div class="cellRight">
-							<span style="font-size: 70%;">Быстрый поиск пациента</span><br />
-							<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
-							<!--<ul id="search_result_fc" class="search_result_fc"></ul><br />-->
-							<div id="search_result_fc2"></div>
-						</div>
+					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 101;">';
+
+                echo $block_fast_search_client;
+
+				echo '
 					</div>';
 
 				echo '
@@ -129,18 +127,18 @@ ORDER BY `name`;
 
 								<div class="cellsBlock2">
 									<div class="cellLeft">ФИО</div>
-									<div class="cellRight">'.$client[0]['full_name'].'</div>
+									<div class="cellRight">'.$client_j[0]['full_name'].'</div>
 								</div>
 								
 								<div class="cellsBlock2">
 									<div class="cellLeft">Дата рождения</div>
 									<div class="cellRight">';
-				if (($client[0]['birthday'] == '-1577934000') || ($client[0]['birthday'] == 0)){
+				if (($client_j[0]['birthday'] == '-1577934000') || ($client_j[0]['birthday'] == 0)){
 					echo 'не указана';
 				}else{
 					echo 
-						date('d.m.Y', $client[0]['birthday']).'<br>
-						полных лет <b>'.getyeardiff($client[0]['birthday'], 0).'</b>';
+						date('d.m.Y', $client_j[0]['birthday']).'<br>
+						полных лет <b>'.getyeardiff($client_j[0]['birthday'], 0).'</b>';
 				}
 				echo '						
 									</div>
@@ -149,11 +147,11 @@ ORDER BY `name`;
 								<div class="cellsBlock2">
 									<div class="cellLeft">Пол</div>
 									<div class="cellRight">';
-				if ($client[0]['sex'] != 0){
-					if ($client[0]['sex'] == 1){
+				if ($client_j[0]['sex'] != 0){
+					if ($client_j[0]['sex'] == 1){
 						echo 'М';
 					}
-					if ($client[0]['sex'] == 2){
+					if ($client_j[0]['sex'] == 2){
 						echo 'Ж';
 					}
 				}else{
@@ -169,13 +167,13 @@ ORDER BY `name`;
 									<div class="cellRight">
 										<div>
 											<span style="font-size: 80%; color: #AAA">мобильный</span><br>
-											'.$client[0]['telephone'].'
+											'.$client_j[0]['telephone'].'
 										</div>';
-				if ($client[0]['htelephone'] != ''){
+				if ($client_j[0]['htelephone'] != ''){
 					echo '
 										<div>
 											<span style="font-size: 80%; color: #AAA">домашний</span><br>
-											'.$client[0]['htelephone'].'
+											'.$client_j[0]['htelephone'].'
 										</div>';
 				}
 				echo '
@@ -188,24 +186,24 @@ ORDER BY `name`;
 									<div class="cellRight">
 										<div>
 											<span style="font-size: 70%; color: #AAA">Серия номер</span><br>
-											'.$client[0]['passport'].'
+											'.$client_j[0]['passport'].'
 										</div>';
-				if (($client[0]['alienpassportser'] != NULL) && ($client[0]['alienpassportnom'] != NULL)){
+				if (($client_j[0]['alienpassportser'] != NULL) && ($client_j[0]['alienpassportnom'] != NULL)){
 					echo '
 										<div>
 											<span style="font-size: 70%; color: #AAA">Серия номер (иностр.)</span><br>
-											'.$client[0]['alienpassportser'].'
-											'.$client[0]['alienpassportnom'].'
+											'.$client_j[0]['alienpassportser'].'
+											'.$client_j[0]['alienpassportnom'].'
 										</div>';
 				}
 				echo '
 										<div>
 											<span style="font-size: 70%; color: #AAA">Выдан когда</span><br>
-											'.$client[0]['passportvidandata'].'
+											'.$client_j[0]['passportvidandata'].'
 										</div>
 										<div>
 											<span style="font-size: 70%; color: #AAA">Кем</span><br>
-											'.$client[0]['passportvidankem'].'
+											'.$client_j[0]['passportvidankem'].'
 										</div>
 									</div>
 								</div>';
@@ -214,26 +212,26 @@ ORDER BY `name`;
 								<div class="cellsBlock2">
 									<div class="cellLeft">Адрес</div>
 									<div class="cellRight">
-										'.$client[0]['address'].'
+										'.$client_j[0]['address'].'
 									</div>
 								</div>';
-				if ($client[0]['polis'] != ''){
+				if ($client_j[0]['polis'] != ''){
 					echo '
 								<div class="cellsBlock2">
 									<div class="cellLeft">Полис</div>
 									<div class="cellRight">
 										<div>
 											<span style="font-size: 80%; color: #AAA">Номер</span><br>
-											'.$client[0]['polis'].'
+											'.$client_j[0]['polis'].'
 										</div>
 										<div>
 											<span style="font-size: 80%; color: #AAA">Дата</span><br>
-											'.$client[0]['polisdata'].'
+											'.$client_j[0]['polisdata'].'
 										</div>';
-					if ($client[0]['insure'] == 0){
+					if ($client_j[0]['insure'] == 0){
 						$insure = 'не указана';
 					}else{
-						$insures_j = SelDataFromDB('spr_insure', $client[0]['insure'], 'offices');
+						$insures_j = SelDataFromDB('spr_insure', $client_j[0]['insure'], 'offices');
 						if ($insures_j == 0){
 							$insure = 'ошибка';
 						}else{
@@ -250,7 +248,7 @@ ORDER BY `name`;
 								</div>';
 				}
 
-				if (($client[0]['fo'] != '') || ($client[0]['io'] != '')){
+				if (($client_j[0]['fo'] != '') || ($client_j[0]['io'] != '')){
 					echo '
 							<div class="cellsBlock2" style="margin-top: 2px; margin-bottom: 0; display: block;">
 								<div class="cellLeft" style="font-weight: bold; width: 500px;">
@@ -260,21 +258,21 @@ ORDER BY `name`;
 							<div class="cellsBlock2">
 								<div class="cellLeft">Фамилия</div>
 								<div class="cellRight">
-									'.$client[0]['fo'].'
+									'.$client_j[0]['fo'].'
 								</div>
 							</div>
 							
 							<div class="cellsBlock2">
 								<div class="cellLeft">Имя</div>
 								<div class="cellRight">
-									'.$client[0]['io'].'
+									'.$client_j[0]['io'].'
 								</div>
 							</div>
 							
 							<div class="cellsBlock2">
 								<div class="cellLeft">Отчество</div>
 								<div class="cellRight">
-									'.$client[0]['oo'].'
+									'.$client_j[0]['oo'].'
 								</div>
 							</div>
 							
@@ -283,13 +281,13 @@ ORDER BY `name`;
 								<div class="cellRight">
 									<div>
 										<span style="font-size: 80%; color: #AAA">мобильный</span><br>
-										'.$client[0]['telephoneo'].'
+										'.$client_j[0]['telephoneo'].'
 									</div>';
-					if ($client[0]['htelephoneo'] != ''){
+					if ($client_j[0]['htelephoneo'] != ''){
 						echo '
 									<div>
 										<span style="font-size: 80%; color: #AAA">домашний</span><br>
-										'.$client[0]['htelephoneo'].'
+										'.$client_j[0]['htelephoneo'].'
 									</div>';
 					}
 					echo '
@@ -299,7 +297,7 @@ ORDER BY `name`;
 				echo '					
 								<div class="cellsBlock2">
 									<div class="cellLeft">Комментарий</div>
-									<div class="cellRight">'.$client[0]['comment'].'</div>
+									<div class="cellRight">'.$client_j[0]['comment'].'</div>
 								</div>';
 								
 				if (TRUE){
@@ -309,7 +307,7 @@ ORDER BY `name`;
 										Лечащий врач<br />
 										<span style="font-size: 70%">стоматология</span>
 									</div>
-									<div class="cellRight">'.WriteSearchUser('spr_workers',$client[0]['therapist'], 'user', true).'</div>
+									<div class="cellRight">'.WriteSearchUser('spr_workers',$client_j[0]['therapist'], 'user', true).'</div>
 								</div>';
 				}
 				if (TRUE){
@@ -319,24 +317,24 @@ ORDER BY `name`;
 										Лечащий врач<br />
 										<span style="font-size: 70%">косметология</span>
 									</div>
-									<div class="cellRight">'.WriteSearchUser('spr_workers',$client[0]['therapist2'], 'user', true).'</div>
+									<div class="cellRight">'.WriteSearchUser('spr_workers',$client_j[0]['therapist2'], 'user', true).'</div>
 								</div>';
 				}
 								
 				echo '
 								<div class="cellsBlock2">
 									<span style="font-size:80%;">';
-				if (($client[0]['create_time'] != 0) || ($client[0]['create_person'] != 0)){
+				if (($client_j[0]['create_time'] != 0) || ($client_j[0]['create_person'] != 0)){
 					echo '
-										Добавлен: '.date('d.m.y H:i', $client[0]['create_time']).'<br>
-										Кем: '.WriteSearchUser('spr_workers', $client[0]['create_person'], 'user', true).'<br>';
+										Добавлен: '.date('d.m.y H:i', $client_j[0]['create_time']).'<br>
+										Кем: '.WriteSearchUser('spr_workers', $client_j[0]['create_person'], 'user', true).'<br>';
 				}else{
 					echo 'Добавлен: не указано<br>';
 				}
-				if (($client[0]['last_edit_time'] != 0) || ($client[0]['last_edit_person'] != 0)){
+				if (($client_j[0]['last_edit_time'] != 0) || ($client_j[0]['last_edit_person'] != 0)){
 					echo '
-										Последний раз редактировался: '.date('d.m.y H:i', $client[0]['last_edit_time']).'<br>
-										Кем: '.WriteSearchUser('spr_workers', $client[0]['last_edit_person'], 'user', true).'';
+										Последний раз редактировался: '.date('d.m.y H:i', $client_j[0]['last_edit_time']).'<br>
+										Кем: '.WriteSearchUser('spr_workers', $client_j[0]['last_edit_person'], 'user', true).'';
 				}
 				echo '
 									</span>
@@ -359,7 +357,7 @@ ORDER BY `name`;
                         $allPayed = false;
                     }
 
-                    /*$clientDP = DebtsPrepayments ($client[0]['id']);
+                    /*$clientDP = DebtsPrepayments ($client_j[0]['id']);
 
 					if ($clientDP != 0){
 						//var_dump ($clientDP);
@@ -385,7 +383,7 @@ ORDER BY `name`;
 						}
 					}*/
 				}
-				if ($client[0]['status'] != 9){			
+				if ($client_j[0]['status'] != 9){
 					//Вкладки 
 					echo '
 						<div id="tabs_w" style="font-family: Verdana, Calibri, Arial, sans-serif; font-size: 100% !important;">
@@ -428,17 +426,16 @@ ORDER BY `name`;
 									<ul style="margin-left: 6px; margin-bottom: 20px;">';
 									
 					$sheduler_zapis = array();
-					
-					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-					mysql_select_db($dbName) or die(mysql_error()); 
-					mysql_query("SET NAMES 'utf8'");
 
-					$query = "SELECT * FROM `zapis` WHERE `patient`='".$client[0]['id']."' ORDER BY `year`, `month`, `day`, `start_time` ASC";
+                    $msql_cnnct = ConnectToDB ();
 
-					$res = mysql_query($query) or die($query);
-					$number = mysql_num_rows($res);
+					$query = "SELECT * FROM `zapis` WHERE `patient`='".$client_j[0]['id']."' ORDER BY `year`, `month`, `day`, `start_time` ASC";
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+					$number = mysqli_num_rows($res);
 					if ($number != 0){
-						while ($arr = mysql_fetch_assoc($res)){
+						while ($arr = mysqli_fetch_assoc($res)){
 							array_push($sheduler_zapis, $arr);
 						}
 					}else
@@ -505,7 +502,7 @@ ORDER BY `name`;
 					//Счёт -->
 					
 					if (($finances['see_all'] != 0) || ($finances['see_own'] != 0) || $god_mode){
-						if ($client[0]['status'] != 9){	
+						if ($client_j[0]['status'] != 9){
 						
 							echo '
 							<div id="tabs-2">';
@@ -538,7 +535,7 @@ ORDER BY `name`;
                                             '.$client_balance['summ'].' руб.
                                         </li>-->
                                         <li style="font-size: 85%; color: #7D7D7D; margin-top: 10px;">
-                                             <a href="finance_account.php?client_id='.$client[0]['id'].'" class="b">Управление счётом</a>
+                                             <a href="finance_account.php?client_id='.$client_j[0]['id'].'" class="b">Управление счётом</a>
                                         </li>                                        
                                     </ul>
                             
@@ -568,10 +565,11 @@ ORDER BY `name`;
 
                             $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$_GET['id']."'";
 
-                            $res = mysql_query($query) or die($query);
-                            $number = mysql_num_rows($res);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                            $number = mysqli_num_rows($res);
                             if ($number != 0){
-                                while ($arr = mysql_fetch_assoc($res)){
+                                while ($arr = mysqli_fetch_assoc($res)){
                                     array_push($invoice_j, $arr);
                                 }
                             }else
@@ -690,15 +688,16 @@ ORDER BY `name`;
                             echo '
 								<ul id="orders" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px;">
-									    Внесенные оплаты/ордеры	<a href="add_order.php?client_id='.$client[0]['id'].'" class="b">Добавить новый</a>
+									    Внесенные оплаты/ордеры	<a href="add_order.php?client_id='.$client_j[0]['id'].'" class="b">Добавить новый</a>
 									</li>';
 
                             $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$_GET['id']."'";
 
-                            $res = mysql_query($query) or die($query);
-                            $number = mysql_num_rows($res);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                            $number = mysqli_num_rows($res);
                             if ($number != 0){
-                                while ($arr = mysql_fetch_assoc($res)){
+                                while ($arr = mysqli_fetch_assoc($res)){
                                     array_push($order_j, $arr);
                                 }
                             }else
@@ -803,14 +802,14 @@ ORDER BY `name`;
 								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Сертификаты пациента</li>
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
-										<a href="add_certificate.php?client_id='.$client[0]['id'].'" class="b">Добавить сертификат</a>
+										<a href="add_certificate.php?client_id='.$client_j[0]['id'].'" class="b">Добавить сертификат</a>
 									</li>';
 							echo '
 								</ul>';*/
 						
 							echo '				
 								<div class="cellsBlock2">
-									<a href="client_finance.php?client='.$client[0]['id'].'" class="b">Долги/Авансы <i class="fa fa-rub"></i> (старое)</a><br>';
+									<a href="client_finance.php?client='.$client_j[0]['id'].'" class="b">Долги/Авансы <i class="fa fa-rub"></i> (старое)</a><br>';
 
 							if (!$allPayed)
 								echo '<i style="color:red;">Есть не погашенное</i>';					
@@ -854,11 +853,11 @@ ORDER BY `name`;
 						
 						if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
 							echo '	
-								<a href="stom_history.php?client='.$client[0]['id'].'" class="b">История</a>';
+								<a href="stom_history.php?client='.$client_j[0]['id'].'" class="b">История</a>';
 						}
 						/*if (($clients['close'] == 1) || $god_mode){
 							echo '
-								<a href="stom_move.php?id='.$client[0]['id'].'" class="b">Переместить</a>';
+								<a href="stom_move.php?id='.$client_j[0]['id'].'" class="b">Переместить</a>';
 						}*/
 
 
@@ -868,15 +867,19 @@ ORDER BY `name`;
 						$t_f_data_db = array();
 						
 						/*require 'config.php';*/
-						mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+						/*mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
 						mysql_select_db($dbName) or die(mysql_error()); 
-						mysql_query("SET NAMES 'utf8'");
+						mysql_query("SET NAMES 'utf8'");*/
+
 						$time = time();
+
 						$query = "SELECT * FROM `journal_tooth_status` WHERE `client` = '{$_GET['id']}' ORDER BY `create_time` DESC LIMIT 1";
-						$res = mysql_query($query) or die($q);
-						$number = mysql_num_rows($res);
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+						$number = mysqli_num_rows($res);
 						if ($number != 0){
-							while ($arr = mysql_fetch_assoc($res)){
+							while ($arr = mysqli_fetch_assoc($res)){
 								array_push($t_f_data_db, $arr);
 							}
 						}else
@@ -921,10 +924,12 @@ ORDER BY `name`;
 								
 								//ЗО и тд
 								$query = "SELECT * FROM `journal_tooth_status_temp` WHERE `id` = '{$t_f_data_db[$z]['id']}'";
-								$res = mysql_query($query) or die($query);
-								$number = mysql_num_rows($res);
+
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+								$number = mysqli_num_rows($res);
 								if ($number != 0){
-									while ($arr = mysql_fetch_assoc($res)){
+									while ($arr = mysqli_fetch_assoc($res)){
 										array_push($dop, $arr);
 									}
 									
@@ -1536,11 +1541,11 @@ ORDER BY `name`;
 											
 							}
 							
-							$notes = SelDataFromDB ('notes', $client[0]['id'], 'client');
+							$notes = SelDataFromDB ('notes', $client_j[0]['id'], 'client');
 							include_once 'WriteNotes.php';
 							echo WriteNotes($notes);
 							
-							$removes = SelDataFromDB ('removes', $client[0]['id'], 'client');
+							$removes = SelDataFromDB ('removes', $client_j[0]['id'], 'client');
 							include_once 'WriteRemoves.php';
 							echo WriteRemoves($removes);
 							
@@ -1554,7 +1559,7 @@ ORDER BY `name`;
 						}
 
                         //Лаборатория
-                        $laborder_j = SelDataFromDB ('journal_laborder', $client[0]['id'], 'client');
+                        $laborder_j = SelDataFromDB ('journal_laborder', $client_j[0]['id'], 'client');
                         //var_dump($laborder_j);
 
                         $labors_j = SelDataFromDB('spr_labor', '', '');
@@ -1581,7 +1586,7 @@ ORDER BY `name`;
                             echo '
                                 </li>
 								<li style="margin-bottom: 10px;">
-                                    <a href="lab_order_add.php?client_id=' . $client[0]['id'] . '" class="b" style="font-size: 75%;">Добавить новый</a>
+                                    <a href="lab_order_add.php?client_id=' . $client_j[0]['id'] . '" class="b" style="font-size: 75%;">Добавить новый</a>
                                 </li>';
 
 							if ($laborder_j != 0) {
@@ -1646,7 +1651,7 @@ ORDER BY `name`;
                         }
 
 					
-						mysql_close();	
+						//mysql_close();
 						
 						echo '
 							</div>';
@@ -1667,12 +1672,12 @@ ORDER BY `name`;
 						if (($cosm['add_own'] == 1) || ($cosm['edit'] == 1) || $god_mode){
 							echo '
 								<!--<a href="add_error.php" class="b">Добавить посещение</a>-->
-								<a href="add_kd.php?client='.$client[0]['id'].'" class="b">Добавить КД</a>
-								<a href="kd.php?client='.$client[0]['id'].'" class="b">КД</a>
-								<a href="etaps.php?client='.$client[0]['id'].'" class="b">Исследования</a>';		
+								<a href="add_kd.php?client='.$client_j[0]['id'].'" class="b">Добавить КД</a>
+								<a href="kd.php?client='.$client_j[0]['id'].'" class="b">КД</a>
+								<a href="etaps.php?client='.$client_j[0]['id'].'" class="b">Исследования</a>';
 							/*if (($clients['close'] == 1) || $god_mode){
 								echo '
-								<a href="cosm_move.php?id='.$client[0]['id'].'" class="b">Переместить</a>';
+								<a href="cosm_move.php?id='.$client_j[0]['id'].'" class="b">Переместить</a>';
 							}*/
 						}
 						
@@ -1763,7 +1768,7 @@ ORDER BY `name`;
 			}
 				
 			echo '					
-				<div id="doc_title">Пациент: '.$client[0]['full_name'].' - Асмедика</div>
+				<div id="doc_title">Пациент: '.$client_j[0]['full_name'].' - Асмедика</div>
 				</div>
 			</div>
 

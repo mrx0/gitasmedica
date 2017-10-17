@@ -241,7 +241,7 @@
 				if(data.result == 'success'){   
 					//console.log('форма корректно заполнена');
 					ajax({
-						url:"add_client_f.php",
+						url:"client_add_f.php",
 						statbox:"errrror",
 						method:"POST",
 						data:
@@ -2066,6 +2066,11 @@
             invoiceInsure = 0;
         }
 
+        var patientUnic = $("input[id=patientUnic]:checked").val();
+        if (patientUnic === undefined){
+            patientUnic = 0;
+        }
+
         $.ajax({
             url:"ajax_show_result_stat_zapis_f.php",
             global: false,
@@ -2107,6 +2112,8 @@
                     invoicePaid: invoicePaid,
                     invoiceNotPaid: invoiceNotPaid,
                     invoiceInsure: invoiceInsure,
+
+                    patientUnic: patientUnic
 
                 },
             cache: false,
@@ -3377,25 +3384,38 @@
 			var rys = true;
 		}
 		if (rys){
+
+            var certData = {
+                id:id,
+                enter:enter,
+                datatable: "zapis"
+            }
+
+
 			$.ajax({
-				//statbox:SettingsScheduler,
-				// метод отправки
-				type: "POST",
-				// путь до скрипта-обработчика
 				url: "ajax_tempzapis_edit_enter_f.php",
-				// какие данные будут переданы
-				data: {
-					id:id,
-					enter:enter,
-					datatable: "zapis"
-				},
-				// действие, при ответе с сервера
-				success: function(data){
-					//document.getElementById("req").innerHTML=data;
-					//window.location.href = "";
-					setTimeout(function () {
-						location.reload()
-					}, 100);
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+
+				data: certData,
+
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+				success: function(res){
+					//console.log(res.data);
+
+                    if(res.result == 'success') {
+                        setTimeout(function () {
+                            location.reload()
+                        }, 100);
+                    }else{
+                        if(res.search_error == 1){
+                        	alert(res.data);
+						}
+					}
 				}
 			});
 		}
@@ -3618,7 +3638,7 @@
 					id: id,
 				},
 				success:function(data){
-					//console.log(data);
+					alert(data);
 				}
 			})
 		}
@@ -6654,4 +6674,6 @@
 
         //}
 	});
+
+
 

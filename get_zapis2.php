@@ -101,6 +101,8 @@
 
             $arr = mysqli_fetch_assoc($res);
 
+
+
             echo json_encode(array('result' => 'success', 'data' => $arr['total']));
         }
     }

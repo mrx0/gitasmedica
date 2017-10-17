@@ -1674,7 +1674,7 @@ input[type="number"].mod{
 #loading-content {
 	position: relative;
 	top: 15px;
-	font-size: 14зч;
+	font-size: 14px;
 	font-weight: bold;
 	/*text-align: center;*/
 	/*width: 405px;*/
@@ -2254,4 +2254,13 @@ ul.ul-drop div.drop {
 /*Заголовок страниц*/
 #doc_title{
 	display: none;
+}
+
+/*Стиль для блока с неоплаченными расчетниками, табелями*/
+.tableDataNPaidCalcs, .tableTabels{
+	border: 1px dotted #b3c0c8;
+	display: inline-block;
+	padding: 2px;
+	margin-right: 10px;
+	vertical-align: top;
 }

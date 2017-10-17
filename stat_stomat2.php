@@ -502,7 +502,7 @@
 									<a href="task_stomat_inspection.php?id='.$value['id'].'" class="cellName ahref" title="'.$value['id'].'">'.date('d.m.y H:i', $value['create_time']).' '.$dop_img.'</a>
 									<div class="cellName">'.WriteSearchUser('spr_clients', $cl_id, 'user', true).'</div>';
 						if (($stom['see_all'] == 1) || $god_mode){
-							echo '<div class="cellName" id="4filter">'.WriteSearchUser('spr_workers', $value['worker'], 'user', true).'</div>';
+							echo '<div class="cellName 4filter" id="4filter">'.WriteSearchUser('spr_workers', $value['worker'], 'user', true).'</div>';
 						}		
 
 						$decription = array();

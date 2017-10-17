@@ -44,7 +44,7 @@
         
             $(document).ready(function() {
             	 $(document).attr("title", $("#doc_title").html());
-            	 console.log($("#doc_title").html());
+            	 //console.log($("#doc_title").html());
             });
            
         

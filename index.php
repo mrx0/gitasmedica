@@ -44,10 +44,17 @@
         INNER JOIN `spr_specialization` ss ON ss.id = jws.specialization_id
         WHERE `worker_id` = '$worker_id'";*/
 
+        if ($_SESSION['permissions'] != 777) {
+            $query_dop = "AND j_ann.id IN (SELECT `annoncing_id` FROM `journal_announcing_worker` WHERE `worker_type` = '{$_SESSION['permissions']}' AND `annoncing_id` = j_ann.id)";
+        }else{
+            $query_dop = '';
+        }
+
         $query = "SELECT jann.*, jannrm.status AS read_status
         FROM `journal_announcing_readmark` jannrm
         RIGHT JOIN (
-          SELECT * FROM `journal_announcing` WHERE `status` <> '9'
+          SELECT * FROM `journal_announcing` j_ann  WHERE j_ann.status <> '9'
+          {$query_dop}
         ) jann ON jann.id = jannrm.announcing_id
         AND jannrm.create_person = '{$_SESSION['id']}'
         ORDER BY `create_time` DESC";

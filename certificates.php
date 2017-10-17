@@ -80,7 +80,7 @@
 					echo '
 							<li class="cellsBlock3" style="'.$back_color.'">
 								<div class="cellPriority" style=" margin-bottom: -1px;"></div>
-								<a href="certificate.php?id='.$cert_j[$i]['id'].'" class="cellOffice ahref" style="text-align: left; font-weight: bold; width: 180px; min-width: 180px;" id="4filter">'.$cert_j[$i]['num'].'</a>
+								<a href="certificate.php?id='.$cert_j[$i]['id'].'" class="cellOffice ahref 4filter" style="text-align: left; font-weight: bold; width: 180px; min-width: 180px;" id="4filter">'.$cert_j[$i]['num'].'</a>
 								<div class="cellOffice" style="text-align: right">'.$cert_j[$i]['nominal'].' руб.</div>
 								<div class="cellOffice" style="text-align: right">';
                     if (($cert_j[$i]['status'] == 7) && ($cert_j[$i]['status'] != '0000-00-00 00:00:00')) {

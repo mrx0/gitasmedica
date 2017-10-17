@@ -48,7 +48,7 @@
 					echo '
 							<li class="cellsBlock" style="'.$bgcolor.'">
 								<div class="cellPriority"></div>
-								<a href="insure.php?id='.$insure_j[$i]['id'].'" class="cellOffice ahref" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px; font-weight: bold;" id="4filter">'.$insure_j[$i]['name'].'</a>
+								<a href="insure.php?id='.$insure_j[$i]['id'].'" class="cellOffice ahref 4filter" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px; font-weight: bold;" id="4filter">'.$insure_j[$i]['name'].'</a>
 								<div class="cellText" style="text-align: left">'.$insure_j[$i]['contract'].'</div>
 								<div class="cellText" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;">'.$insure_j[$i]['contacts'].'</div>
 							</li>';

@@ -65,16 +65,31 @@
 
 
 			if ($percents_j !=0){
+
+                $prev_type = 0;
+
 				for ($i = 0; $i < count($percents_j); $i++) {
+
 					if ($percents_j[$i]['status'] == 9){
 						$bgcolor = 'background-color: rgba(161,161,161,1);';
 					}else{
 						$bgcolor = 'background-color: rgba('.$percents_j[$i]['color'].',1);';
 					}
+
+					//Разделитель
+                    if ($prev_type != $percents_j[$i]['type']){
+                        echo '
+							<li class="cellsBlock2" style="font-weight: bold; font-size: 11px;">
+                                <div class="cellText" style="text-align: left; border: none; font-size: 110%; color: #929292;">Тип: '.$permissions_j[$percents_j[$i]['type']].'</div>
+							</li>';
+
+                        $prev_type = $percents_j[$i]['type'];
+                    }
+
 					echo '
 							<li class="cellsBlock2 cellsBlockHover" style="font-weight: bold; font-size: 11px;'.$bgcolor.'">
 								<div class="cellPriority"></div>
-								<a href="fl_percent_cat.php?id='.$percents_j[$i]['id'].'" class="cellName ahref" style="text-align: left; width: 180px; min-width: 180px;" id="4filter">'.$percents_j[$i]['name'].'</a>
+								<a href="fl_percent_cat.php?id='.$percents_j[$i]['id'].'" class="cellName ahref 4filter" style="text-align: left; width: 180px; min-width: 180px;" id="4filter">'.$percents_j[$i]['name'].'</a>
                                 <div class="cellTime" style="text-align: center">'.$percents_j[$i]['work_percent'].'</div>
                                 <div class="cellTime" style="text-align: center;">'.$percents_j[$i]['material_percent'].'</div>
                                 <div class="cellText" style="text-align: center;">'.$permissions_j[$percents_j[$i]['type']].'</div>

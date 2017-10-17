@@ -88,7 +88,7 @@
 					echo '
 								<li class="cellsBlock" style="width: auto;">
 									<div class="cellPriority" style=""></div>
-									<a href="serviceitem.php?id='.$services_j[$i]['id'].'" class="ahref cellOffice" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$services_j[$i]['name'].'</a>
+									<a href="serviceitem.php?id='.$services_j[$i]['id'].'" class="ahref cellOffice 4filter" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$services_j[$i]['name'].'</a>
 									<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;"></div>
 								</li>';
 				}

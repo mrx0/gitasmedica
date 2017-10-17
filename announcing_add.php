@@ -61,40 +61,44 @@
 							</div>
 						</div>';
 
-			echo '		
-							<div class="cellsBlock3">
-								<div class="cellLeft">
-								    Для какого филиала<br>
-								    <span style="font-size: 70%;">Если не выбрано, то для всех</span>
-								</div>
-								<div class="cellRight">
-									<select multiple="multiple" name="filial[]" id="filial">';
-			if ($offices != 0){
-			    for ($i=0;$i<count($offices);$i++){
-											echo "<option value='".$offices[$i]['id']."'>".$offices[$i]['name']."</option>";
-				}
-			}
-			echo '
-									</select>
-									<label id="filial_error" class="error">
-								</div>
-							</div>
+            echo '
 							
 							<div class="cellsBlock3">
 								<div class="cellLeft">
 								    Для кого из сотрудников<br>
-								<span style="font-size: 70%;">Если не выбрано, то для всех</span>
+								<!--<span style="font-size: 70%;">Если не выбрано, то для всех</span>-->
 								</div>
 								<div class="cellRight">
 									<select multiple="multiple" name="workers_type[]" id="workers_type">';
 			if ($permissions != 0){
 			    for ($i=0; $i<count($permissions); $i++){
-											echo "<option value='".$permissions[$i]['id']."'>".$permissions[$i]['name']."</option>";
+											echo "<option value='".$permissions[$i]['id']."' selected>".$permissions[$i]['name']."</option>";
 				}
 			}
 			echo '
 									</select>
 									<label id="workers_type" class="workers_type">
+								</div>
+							</div>';
+
+
+
+            echo '		
+							<div class="cellsBlock3">
+								<div class="cellLeft">
+								    Для какого филиала<br>
+								    <!--<span style="font-size: 70%;">Если не выбрано, то для всех</span>-->
+								</div>
+								<div class="cellRight">
+									<select multiple="multiple" name="filial[]" id="filial">';
+            if ($offices != 0){
+                for ($i=0;$i<count($offices);$i++){
+                    echo "<option value='".$offices[$i]['id']."' selected>".$offices[$i]['name']."</option>";
+                }
+            }
+            echo '
+									</select>
+									<label id="filial_error" class="error">
 								</div>
 							</div>';
 

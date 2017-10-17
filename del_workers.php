@@ -1,6 +1,6 @@
 <?php 
 
-//ajax_tempzapis_edit_enter_f.php
+//del_workers.php
 //
 
 	session_start();

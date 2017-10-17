@@ -20,11 +20,18 @@
             $arr = array();
             $rez = array();
 
+            if ($_SESSION['permissions'] != 777) {
+                $query_dop = "AND jann.id IN (SELECT `annoncing_id` FROM `journal_announcing_worker` WHERE `worker_type` = '{$_SESSION['permissions']}' AND `annoncing_id` = jann.id)";
+            }else{
+                $query_dop = '';
+            }
+
             //Выбираем количество непрочитанных сообщений
             $query = "SELECT COUNT(*) AS total FROM `journal_announcing` jann
             WHERE jann.id NOT IN 
             (SELECT `announcing_id` FROM `journal_announcing_readmark` jannrm 
-            WHERE jannrm.create_person = '{$_SESSION['id']}' AND jann.id = jannrm.announcing_id AND jannrm.status = '1')";
+            WHERE jannrm.create_person = '{$_SESSION['id']}' AND jann.id = jannrm.announcing_id AND jannrm.status = '1')
+            {$query_dop}";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

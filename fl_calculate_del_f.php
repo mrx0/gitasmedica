@@ -15,7 +15,7 @@
 		include_once 'functions.php';
 		if ($_POST){
 
-            if (!isset($_POST['client_id']) || !isset($_POST['calculate_id']) || !isset($_POST['id'])){
+            if (!isset($_POST['client_id']) || !isset($_POST['invoice_id']) || !isset($_POST['id'])){
                 //echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
             }else {
 

@@ -44,7 +44,7 @@ if ($enter_ok){
                 echo '
 							<li class="cellsBlock" style="'.$bgcolor.'">
 								<div class="cellPriority"></div>
-								<a href="specialization.php?id='.$insure_j[$i]['id'].'" class="cellOffice ahref" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px; font-weight: bold;" id="4filter">'.$insure_j[$i]['name'].'</a>
+								<a href="specialization.php?id='.$insure_j[$i]['id'].'" class="cellOffice ahref 4filter" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px; font-weight: bold;" id="4filter">'.$insure_j[$i]['name'].'</a>
 							</li>';
             }
         }

@@ -137,7 +137,7 @@
 
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
-								<a href="tabels.php" class="b3">Важный отчёт</a>
+								<a href="fl_tabels.php" class="b3">Важный отчёт</a>
 							</li>';
                 echo '
 						</ul>';

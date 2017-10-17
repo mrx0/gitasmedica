@@ -14,17 +14,17 @@
 		//var_dump($_SESSION);
 		
 		if ($_POST) {
-			require 'config.php';
-			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-			mysql_select_db($dbName) or die(mysql_error()); 
-			mysql_query("SET NAMES 'utf8'");
+
+            $msql_cnnct = ConnectToDB ();
+
 			$time = time();
 			
 			//Генератор пароля
 			$password = PassGen();
 				
 			$query = "UPDATE `spr_workers` SET `password`='{$password}' WHERE `id`='{$_POST['id']}'";
-			mysql_query($query) or die(mysql_error().' -> '.$query);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
 			echo 'Новый пароль: '.$password;
 		}

@@ -4,6 +4,7 @@
 //Добавить клиента
 
 	require_once 'header.php';
+    require_once 'blocks_dom.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
@@ -40,13 +41,11 @@
 						Заполните поля
 					</header>';
 			echo '
-					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">
-						<div class="cellRight">
-							<span style="font-size: 70%;">Быстрый поиск пациента</span><br />
-							<input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите первые три буквы для поиска" value="" class="who_fc"  autocomplete="off">
-							<!--<ul id="search_result_fc" class="search_result_fc"></ul><br />-->
-							<div id="search_result_fc2"></div>
-						</div>
+					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">';
+
+			echo $block_fast_search_client;
+			
+            echo '
 					</div>';
 					
 			echo '
@@ -54,7 +53,7 @@
 			echo '
 						<div id="errrror"></div>';
 			echo '
-						<form action="add_client_f.php" style="font-size: 90%;" class="input_form">
+						<form action="client_add_f.php" style="font-size: 90%;" class="input_form">
 					
 							<div class="cellsBlock2">
 								<div class="cellLeft">Фамилия</div>

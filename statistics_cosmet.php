@@ -126,7 +126,7 @@
 					}
 					echo '
 						<li class="cellsBlock cellsBlockHover">
-								<a href="client.php?id='.$key.'" class="cellName ahref" id="4filter">'.$client.'</a>';
+								<a href="client.php?id='.$key.'" class="cellName ahref 4filter" id="4filter">'.$client.'</a>';
 								
 					$decription = array();
 					$decription = json_decode($value, true);
