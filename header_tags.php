@@ -271,7 +271,12 @@
 			echo '<li><a href="cosmet.php" title="Косметология">Косметология</a></li>';
 		}
 		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
-			echo '<li><a href="scheduler.php" title="График" style="position: relative">График Запись<div class="have_new-zapis notes_count" style="display: none; top: 0; right: 0; background: red;" title="Есть необработанные онлайн заявки"></div></a></li>';
+			echo '<li><a href="scheduler.php" title="График" style="position: relative">График Запись';
+            if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
+                echo '<div class="have_new-zapis notes_count" style="display: none; top: 0; right: 0; background: red;" title="Есть необработанные онлайн заявки"></div>';
+            }
+            echo '</a></li>';
+
 		}
 		if (($report['see_all'] == 1) || ($report['see_own'] == 1) || $god_mode){
 			echo '<li><a href="reports.php" title="Статистика и отчёты">Отчёты</a></li>';

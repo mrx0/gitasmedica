@@ -467,7 +467,7 @@
 							//Управление настройки -->
 									
 							echo '
-									<div class="cellName settings_text" style="background-color: rgb(240, 240, 240); text-align: center; vertical-align: middle; width: 8 0px; min-width: 80px; max-width: 80px;" onclick="contextMenuShow('.$ZapisHereQueryToday[$z]['id'].', 0, event, \'zapis_options\');">';
+									<div class="cellName settings_text" style="background-color: rgb(240, 240, 240); text-align: center; vertical-align: middle; width: 80px; min-width: 80px; max-width: 80px;" onclick="contextMenuShow('.$ZapisHereQueryToday[$z]['id'].', 0, event, \'zapis_options\');">';
 							
 							echo 'Меню [опции]';
 							

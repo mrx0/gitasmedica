@@ -1471,8 +1471,8 @@
 
         var certData = {
             num:num,
-            nominal:nominal,
-        }
+            nominal:nominal
+        };
 
         //проверка данных на валидность
         $.ajax({
@@ -3189,9 +3189,11 @@
 	};
 
 	//Добавление записи
-	function Ajax_add_TempZapis(type) {
+	function Ajax_add_TempZapis() {
         // получение данных из полей
 		//var type = document.getElementById("type").value;
+
+		var type = $("#type").val();
 
 		var filial = $("#filial").val();
 		var author = $("#author").val();
@@ -3240,7 +3242,7 @@
 			url: "edit_schedule_day_f.php",
 			// какие данные будут переданы
 			data: {
-				type:"scheduler_stom",
+				//type:"scheduler_stom",
 				author:author,
 				filial:filial,
 				kab:kab,
@@ -3264,11 +3266,16 @@
 			beforeSend: function() {
                 //Блокируем кнопку OK
                 document.getElementById("Ajax_add_TempZapis").disabled = true;
+
 				$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 			},
 			dataType: "json",
 			// действие, при ответе с сервера
 			success: function(data){
+                //Разблокируем кнопку OK
+                setTimeout(function () {
+                	document.getElementById("Ajax_add_TempZapis").disabled = false;
+                }, 200);
 				if(data.result == "success"){
 					document.getElementById("errror").innerHTML=data.data;
 					setTimeout(function () {
@@ -3448,149 +3455,272 @@
 	};
 
 	function PriemTimeCalc(){
-		var type = document.getElementById("type").value;
+		//console.log();
 
-		var work_time_h = Number(document.getElementById("work_time_h").value);
-		var work_time_m = Number(document.getElementById("work_time_m").value);
+		var type = $("#type").val();
+
+		var work_time_h = Number($("#work_time_h").val());
+		var work_time_m = Number($("#work_time_m").val());
 
 		var start_time = work_time_h*60+work_time_m;
+        //console.log(start_time);
 
-		document.getElementById("start_time").value = start_time;
+        $("#start_time").val(start_time);
 
 		//var start_time = Number(document.getElementById("start_time").value);
-		var change_hours = Number(document.getElementById("change_hours").value);
-		var change_minutes = Number(document.getElementById("change_minutes").value);
+		var change_hours = Number($("#change_hours").val());
+		var change_minutes = Number($("#change_minutes").val());
 
-		var day = Number(document.getElementById("day").value);
-		var month = Number(document.getElementById("month").value);
-		var year = Number(document.getElementById("year").value);
+		var day = Number($("#day").val());
+		var month = Number($("#month").val());
+		var year = Number($("#year").val());
 
-		var filial = Number(document.getElementById("filial").value);
-		var zapis_id = Number(document.getElementById("zapis_id").value);
-		var kab = document.getElementById("kab").innerHTML;
+		var filial = Number($("#filial").val());
+		var zapis_id = Number($("#zapis_id").val());
+		var kab = $("#kab").html();
 
+		//var wt = Number($("#wt").val());
+		var wt = change_hours*60+change_minutes;
+
+		//console.log(zapis_id);
 		//console.log(kab);
 		//console.log(wt);
 		//console.log(start_time);
 		//console.log(start_time+wt);
+        //console.log(change_hours*60+change_minutes);
 
-		if (change_minutes > 59){
-			change_minutes = 59;
-			document.getElementById("change_minutes").value = 59;
+		if (change_minutes > 55){
+			change_minutes = 55;
+            $("#change_minutes").val(55);
 		}
 		if (change_hours > 12){
 			change_hours = 11;
-			document.getElementById("change_hours").value = 11;
+            $("#change_hours").val(11);
 		}
 		if ((change_hours == 0) && (change_minutes == 0)){
 			change_minutes = 5;
-			document.getElementById("change_minutes").value = 5;
+            $("#change_minutes").val(5);
 		}
-
 
 		var next_time_start_rez = 0;
 		var next_time_end_rez = 0;
 		var query = '';
 		var idz = '';
 
-		$.ajax({
-			dataType: "json",
-			async: false,
-			// метод отправки
-			type: "POST",
-			// путь до скрипта-обработчика
+        var certData = {
+            zapis_id: zapis_id,
+
+            day: day,
+            month: month,
+            year: year,
+
+            filial: filial,
+            kab: kab,
+
+            start_time: start_time,
+            wt: wt,
+
+            type: type,
+
+            datatable:"zapis",
+
+			direction: "next"
+        };
+
+        //Проверим записи после
+
+        $.ajax({
 			url: "get_next_zapis.php",
-			// какие данные будут переданы
-			data: {
-				id: zapis_id,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
 
-				day:day,
-				month:month,
-				year:year,
+            data:certData,
 
-				filial:filial,
-				kab:kab,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
 
-				start_time:start_time,
-				wt:change_hours*60+change_minutes,
+                document.getElementById("Ajax_add_TempZapis").disabled = true;
 
-				type:type,
+				//console.log(res);
+				//console.log (res.next_time_start);
+				//document.getElementById("kab").innerHTML=res;
 
-				datatable:"zapis"
-			},
-			// действие, при ответе с сервера
-			success: function(next_zapis_data){
-				//console.log(next_zapis_data);
-				//console.log (next_zapis_data.next_time_start);
-				//document.getElementById("kab").innerHTML=nex_zapis_data;
-				next_time_start_rez = next_zapis_data.next_time_start;
-				next_time_end_rez = next_zapis_data.next_time_end;
+				next_time_start_rez = res.next_time_start;
+				next_time_end_rez = res.next_time_end;
 				//next_zapis_data;
-                query = next_zapis_data.query;
-                idz = next_zapis_data.id;
 
+                //Работаем с результатами ajax
+                //console.log (next_time_start_rez);
+                //console.log (next_time_end_rez);
+
+                /*console.log('----------------');
+                console.log (res.query);
+                console.log (res.zapis_id);
+                console.log (res.idz);
+                console.log (certData.direction+' -> '+res.id);*/
+
+                var end_time = start_time + change_hours*60 + change_minutes;
+
+                //console.log(start_time);
+                //console.log(end_time);
+
+                //if (end_time > 1260){
+                //console.log(\'Перебор\');
+                //}
+
+                //console.log(start_time+' == '+next_time_start_rez);
+
+                var real_time_h_end = end_time/60|0;
+                if (real_time_h_end > 23) real_time_h_end = real_time_h_end - 24;
+                var real_time_m_end = end_time%60;
+
+                //var real_time_h_end = (end_time + Number(wt))/60|0;
+                //var real_time_m_end = (end_time + Number(wt))%60;
+
+                if (real_time_m_end < 10) real_time_m_end = '0'+real_time_m_end;
+
+                $("#work_time_h_end").html(real_time_h_end);
+                $("#work_time_m_end").html(real_time_m_end);
+
+                $("#wt").val(change_hours*60 + change_minutes);
+
+                if (next_time_start_rez != 0){
+                    //console.log(next_time_start_rez);
+
+                    //if ((end_time > next_time_start_rez) || (start_time == next_time_start_rez)){
+                    if (
+                        (start_time <= next_time_start_rez) && (end_time > next_time_start_rez)
+					){
+                        //console.log(next_time_start_rez);
+
+                        $("#exist_zapis").html('<span style="color: red">Записи не могут пересекаться</span><br>');
+
+                        //var raznica_vremeni = Math.abs(next_time_start_rez - start_time);
+
+                        //$("#change_hours").val(raznica_vremeni/60|0);
+                        //$("#change_minutes").val(raznica_vremeni%60);
+
+                        //change_hours = raznica_vremeni/60|0;
+                        //change_minutes = raznica_vremeni%60;
+
+                        //end_time = start_time+change_hours*60+change_minutes;
+
+                        document.getElementById("Ajax_add_TempZapis").disabled = true;
+
+                    }else{
+
+                        //Теперь проверим записи до
+
+                        certData.direction = "prev";
+
+                        $.ajax({
+                            url: "get_next_zapis.php",
+                            global: false,
+                            type: "POST",
+                            dataType: "JSON",
+
+                            data:certData,
+
+                            cache: false,
+                            beforeSend: function() {
+                                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                            },
+                            success:function(res){
+
+                                document.getElementById("Ajax_add_TempZapis").disabled = true;
+
+                                //console.log(res);
+                                //console.log (res.next_time_start);
+                                //document.getElementById("kab").innerHTML=res;
+
+                                next_time_start_rez = res.next_time_start;
+                                next_time_end_rez = res.next_time_end;
+                                //next_zapis_data;
+
+                                //Работаем с результатами ajax
+                                //console.log (next_time_start_rez);
+                                //console.log (next_time_end_rez);
+
+                                //console.log (res.query);
+                                //console.log (certData.direction+' -> '+res.id);
+
+                                var end_time = start_time + change_hours*60 + change_minutes;
+
+                                //console.log(start_time);
+                                //console.log(end_time);
+
+                                //if (end_time > 1260){
+                                //console.log(\'Перебор\');
+                                //}
+
+                                //console.log(start_time+' == '+next_time_start_rez);
+
+                                var real_time_h_end = end_time/60|0;
+                                if (real_time_h_end > 23) real_time_h_end = real_time_h_end - 24;
+                                var real_time_m_end = end_time%60;
+
+                                //var real_time_h_end = (end_time + Number(wt))/60|0;
+                                //var real_time_m_end = (end_time + Number(wt))%60;
+
+                                if (real_time_m_end < 10) real_time_m_end = '0'+real_time_m_end;
+
+                                $("#work_time_h_end").html(real_time_h_end);
+                                $("#work_time_m_end").html(real_time_m_end);
+
+                                $("#wt").val(change_hours*60 + change_minutes);
+
+                                if (next_time_start_rez != 0){
+                                    //console.log(next_time_start_rez);
+
+                                    //if ((end_time > next_time_start_rez) || (start_time == next_time_start_rez)){
+                                    if (
+                                        ((start_time < next_time_end_rez) && (start_time >= next_time_start_rez))
+                                    ){
+                                        //console.log(next_time_start_rez);
+
+                                        $("#exist_zapis").html('<span style="color: red">Записи не могут пересекаться</span><br>');
+
+                                        //var raznica_vremeni = Math.abs(next_time_start_rez - start_time);
+
+                                        //$("#change_hours").val(raznica_vremeni/60|0);
+                                        //$("#change_minutes").val(raznica_vremeni%60);
+
+                                        //change_hours = raznica_vremeni/60|0;
+                                        //change_minutes = raznica_vremeni%60;
+
+                                        //end_time = start_time+change_hours*60+change_minutes;
+
+                                        document.getElementById("Ajax_add_TempZapis").disabled = true;
+                                    }else{
+                                        //if (end_time < next_time_start_rez){
+                                        $("#exist_zapis").html('');
+                                        document.getElementById("Ajax_add_TempZapis").disabled = false;
+                                    }
+                                }else{
+                                    $("#exist_zapis").html('');
+                                    document.getElementById("Ajax_add_TempZapis").disabled = false;
+                                }
+                            }
+                        });
+
+
+                        //if (end_time < next_time_start_rez){
+                        /*$("#exist_zapis").html('');
+                        document.getElementById("Ajax_add_TempZapis").disabled = false;*/
+                    }
+                }else{
+                    $("#exist_zapis").html('');
+                    document.getElementById("Ajax_add_TempZapis").disabled = false;
+                }
 			}
 		});
-
-		//console.log (next_time_start_rez);
-		//console.log (next_time_end_rez);
-
-		//console.log(change_hours);
-		//console.log(change_minutes);
-
-		var end_time = start_time+change_hours*60+change_minutes;
-
-		//if (end_time > 1260){
-			//console.log(\'Перебор\');
-		//}
-
-		//console.log(start_time+' == '+next_time_start_rez);
-
-		if (next_time_start_rez != 0){
-			//console.log(next_time_start_rez);
-
-			//if ((end_time > next_time_start_rez) || (start_time == next_time_start_rez)){
-			if (((end_time > next_time_start_rez) && (end_time < next_time_end_rez)) || ((start_time >= next_time_start_rez) && (start_time < next_time_end_rez))){
-				//console.log(next_time_start_rez);
-				document.getElementById("exist_zapis").innerHTML='<span style="color: red">Дальше есть запись</span><br>';
-
-				var raznica_vremeni = Math.abs(next_time_start_rez - start_time);
-
-				document.getElementById("change_hours").value = raznica_vremeni/60|0;
-				document.getElementById("change_minutes").value = raznica_vremeni%60;
-
-				change_hours = raznica_vremeni/60|0;
-				change_minutes = raznica_vremeni%60;
-
-				end_time = start_time+change_hours*60+change_minutes;
-
-				document.getElementById("Ajax_add_TempZapis").disabled = true;
-			}else{
-			//if (end_time < next_time_start_rez){
-				document.getElementById("exist_zapis").innerHTML='';
-				document.getElementById("Ajax_add_TempZapis").disabled = false;
-			}
-		}else{
-			document.getElementById("exist_zapis").innerHTML='';
-			document.getElementById("Ajax_add_TempZapis").disabled = false;
-		}
-
-		var real_time_h_end = end_time/60|0;
-		if (real_time_h_end > 23) real_time_h_end = real_time_h_end - 24;
-		var real_time_m_end = end_time%60;
-
-		//var real_time_h_end = (end_time + Number(wt))/60|0;
-		//var real_time_m_end = (end_time + Number(wt))%60;
-
-		if (real_time_m_end < 10) real_time_m_end = '0'+real_time_m_end;
-
-		document.getElementById("work_time_h_end").innerHTML=real_time_h_end;
-		document.getElementById("work_time_m_end").innerHTML=real_time_m_end;
-
-		document.getElementById("wt").value=change_hours*60+change_minutes;
 	}
 
-	//События при наведении/убирании мыши СуперТест!
+	//События при наведении/убирании мыши !!! СуперТест!
 	document.body.onmouseover = document.body.onmouseout = handler;
 
 	function handler(event) {
@@ -5273,7 +5403,7 @@
                     filial: $("#filial").val(),
                     worker: $("#worker").val(),
 
-                    invoice_type:invoice_type,
+                    invoice_type:invoice_type
                 },
             cache: false,
             beforeSend: function() {

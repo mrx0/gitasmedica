@@ -2227,5 +2227,141 @@
 		
 		return $rez_str;
 	}
+
+	//Для контекстной менюшки для управления записью
+    function contexMenuZapisMain ($zapisData, $filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $main_zapis){
+        //var_dump($zapisData);
+
+        $start_time_h = floor($zapisData['start_time'] / 60);
+        $start_time_m = $zapisData['start_time'] % 60;
+        if ($start_time_m < 10) $start_time_m = '0' . $start_time_m;
+        $end_time_h = floor(($zapisData['start_time'] + $zapisData['wt']) / 60);
+        if ($end_time_h > 23) $end_time_h = $end_time_h - 24;
+        $end_time_m = ($zapisData['start_time'] + $zapisData['wt']) % 60;
+        if ($end_time_m < 10) $end_time_m = '0' . $end_time_m;
+
+
+	    $rezult = '';
+
+        $rezult .= '
+               <ul id="zapis_options' . $zapisData['id'] . '" class="zapis_options" style="display: none;">';
+
+        if ($filial != 0) {
+
+            if ($filial == $zapisData['office']) {
+
+                $smena = 0;
+
+                if (($zapisData['start_time'] >= 540)  && ($zapisData['start_time'] < 900)){
+                    $smena = 1;
+                }
+                if (($zapisData['start_time'] >= 900)  && ($zapisData['start_time'] < 1260)){
+                    $smena = 2;
+                }
+                if (($zapisData['start_time'] >= 1260 )  && ($zapisData['start_time'] < 1440)){
+                    $smena = 3;
+                }
+
+
+                if ($zapisData['office'] != $zapisData['add_from']) {
+                    if ($zapisData['enter'] != 8) {
+                        $rezult .= '<li><div onclick="Ajax_TempZapis_edit_OK(' . $zapisData['id'] . ', ' . $zapisData['office'] . ')">Подтвердить</div></li>';
+                    }
+                }
+                if ($zapisData['office'] == $zapisData['add_from']) {
+                    if (($zapisData['enter'] != 8) && ($zapisData['enter'] != 9)) {
+                        $rezult .=
+                            '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $zapisData['id'] . ', 1)">Пришёл</div></li>';
+                        $rezult .=
+                            '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $zapisData['id'] . ', 9)">Не пришёл</div></li>';
+                        $rezult .=
+                            '<li><div onclick="ShowSettingsAddTempZapis(' . $zapisData['office'] . ', \'' . $office_j_arr[$zapisData['office']]['name'] . '\', ' . $zapisData['kab'] . ', ' . $year . ', '.$month.', '.$day.', '.$smena.', '.$zapisData['start_time'] . ', ' . $zapisData['wt'] . ', ' . $zapisData['worker'] . ', \'' . WriteSearchUser('spr_workers', $zapisData['worker'], 'user_full', false) . '\', \'' . WriteSearchUser('spr_clients', $zapisData['patient'], 'user_full', false) . '\', \'' . str_replace(array("\r", "\n"), " ", $zapisData['description']) . '\', ' . $zapisData['insured'] . ', ' . $zapisData['pervich'] . ', ' . $zapisData['noch'] . ', ' . $zapisData['id'] . ', ' . $zapisData['type'] . ', \'edit\')">Редактировать</div></li>';
+
+                        //var_dump($zapisData['create_time']);
+                        //var_dump($zapisData['description']);
+                        //var_dump(time());
+
+                        if (($zapisData['enter'] == 1) && ($finance_edit) && $main_zapis) {
+                            $rezult .=
+                                '<li>
+                                                                    <div>
+                                                                        <a href="invoice_add.php?client=' . $zapisData['patient'] . '&filial=' . $zapisData['office'] . '&date=' . strtotime($zapisData['day'] . '.' . $month . '.' . $zapisData['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $zapisData['id'] . '&worker=' . $zapisData['worker'] . '&type=' . $zapisData['type'] . '" class="ahref">
+                                                                            Внести наряд
+                                                                        </a>
+                                                                    </div>
+                                                                </li>';
+                        }
+
+                        $zapisDate = strtotime($zapisData['day'] . '.' . $zapisData['month'] . '.' . $zapisData['year']);
+                        if (time() < $zapisDate + 60 * 60 * 24) {
+                            $rezult .=
+                                '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $zapisData['id'] . ', 8)">Ошибка, удалить из записи</div></li>';
+                        }
+                    }
+                    $rezult .= '
+                                                            <li>
+                                                                <div onclick="Ajax_TempZapis_edit_Enter(' . $zapisData['id'] . ', 0)">
+                                                                    Отменить все изменения
+                                                                </div>
+                                                            </li>';
+                }
+            } else {
+                $rezult .=
+                    '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $zapisData['id'] . ', 8)">Ошибка, удалить из записи</div></li>';
+                $rezult .=
+                    '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $zapisData['id'] . ', 0)">Отменить все изменения</div></li>';
+            }
+        }
+
+        //Дополнительное расширение прав на добавление посещений для специалистов, god_mode и управляющих
+        if ($edit_options) {
+            if ($zapisData['office'] == $zapisData['add_from']) {
+                if ($zapisData['enter'] == 1) {
+                    //var_dump($zapisData['type']);
+
+                    if (($zapisData['type'] == 5) && $stom_edit && $main_zapis) {
+                        $rezult .= '
+                                                        <li>
+                                                            <div>
+                                                                <a href="add_task_stomat.php?client=' . $zapisData['patient'] . '&filial=' . $zapisData['office'] . '&insured=' . $zapisData['insured'] . '&pervich=' . $zapisData['pervich'] . '&noch=' . $zapisData['noch'] . '&date=' . strtotime($zapisData['day'] . '.' . $month . '.' . $zapisData['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $zapisData['id'] . '&worker=' . $zapisData['worker'] . '" class="ahref">
+                                                                    Внести Осмотр/Зубную формулу
+                                                                </a>
+                                                            </div>
+                                                        </li>';
+                    }
+                    if (($zapisData['type'] == 6) && $cosm_edit && $main_zapis) {
+                        $rezult .= '
+                                                        <li>
+                                                            <div>
+                                                                <a href="add_task_cosmet.php?client=' . $zapisData['patient'] . '&filial=' . $zapisData['office'] . '&insured=' . $zapisData['insured'] . '&pervich=' . $zapisData['pervich'] . '&noch=' . $zapisData['noch'] . '&date=' . strtotime($zapisData['day'] . '.' . $month . '.' . $zapisData['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $zapisData['id'] . '&worker=' . $zapisData['worker'] . '" class="ahref">
+                                                                    Внести посещение косм.
+                                                                </a>
+                                                            </div>
+                                                        </li>';
+                    }
+                }
+            } else {
+                $rezult .= "&nbsp";
+            }
+            if ($upr_edit) {
+                if (($zapisData['enter'] != 8) && ($zapisData['enter'] != 9) && $main_zapis){
+                    $rezult .= '
+                                                        <li>
+                                                            <div>
+                                                                <a href="edit_zapis_change_client.php?client_id=' . $zapisData['patient'] . '&zapis_id=' . $zapisData['id'] . '" class="ahref">
+                                                                    Изменить пациента
+                                                                </a>
+                                                            </div>
+                                                        </li>';
+                }
+            }
+        }
+
+        $rezult .= '</ul>';
+
+        return $rezult;
+
+    }
+
 	
 ?>

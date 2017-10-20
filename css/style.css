@@ -1323,8 +1323,9 @@ position:relative;
 	text-align: right;
 	/*background-color: rgba(119, 255, 135, 1);*/
 	background-color: rgba(255,255,0, .5);
-	overflow: auto;
-	
+	/*overflow: auto;*/
+	overflow: hidden;
+
 }
 
 .cellZapisFreeSpace{

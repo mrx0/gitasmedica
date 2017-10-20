@@ -75,7 +75,7 @@
 										}else{
 											$data = '
 												<div class="query_neok">
-													Ваш филиал не определён<br><br><a href="user.php?id='.$_SESSION['id'].'" class="ahref">определить</a>
+													Ваш филиал не определён<br><br><!--<a href="user.php?id='.$_SESSION['id'].'" class="ahref">определить</a>-->
 												</div>';
 											echo json_encode(array('result' => 'error', 'data' => $data));
 										}

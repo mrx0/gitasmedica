@@ -4,6 +4,7 @@
 //Запись на филиале
 
 	require_once 'header.php';
+    require_once 'blocks_dom.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
@@ -15,7 +16,13 @@
 
 			$offices_j = SelDataFromDB('spr_office', '', '');
 			//var_dump ($offices_j);
-			
+
+            $office_j_arr = array();
+
+            foreach ($offices_j as $office_item){
+                $office_j_arr[$office_item['id']] = $office_item;
+            }
+
 			$post_data = '';
 			$js_data = '';
 			$kabsInFilialExist = FALSE;
@@ -93,7 +100,45 @@
 				1380 => '23:00 - 23:30',
 				1410 => '23:30 - 00:00',
 			);
-			
+
+			//Права для передачи в ф-ции
+            $edit_options = false;
+            $upr_edit = false;
+            $admin_edit = false;
+            $stom_edit = false;
+            $cosm_edit = false;
+            $finance_edit = false;
+
+            if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
+                $finance_edit = true;
+                $edit_options = true;
+            }
+
+            if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode){
+                $stom_edit = true;
+                $edit_options = true;
+            }
+            if (($cosm['add_own'] == 1) || ($cosm['add_new'] == 1) || $god_mode){
+                $cosm_edit = true;
+                $edit_options = true;
+            }
+
+            if (($zapis['add_own'] == 1) || ($zapis['add_new'] == 1) || $god_mode) {
+                $admin_edit = true;
+                $edit_options = true;
+            }
+
+            if (($scheduler['see_all'] == 1) || $god_mode){
+                $upr_edit = true;
+                $edit_options = true;
+            }
+
+            if (isset($_SESSION['filial'])) {
+                $contexMenuZapisMain_filial = $_SESSION['filial'];
+            }else{
+                $contexMenuZapisMain_filial = 0;
+            }
+
 			//!!!!
 			/*if(isset($_GET['filial'])){
 				if ($_GET['filial'] == 0) $_GET['filial'] = 15;
@@ -298,11 +343,8 @@
 					}
 					
 					if (isset($_SESSION['filial'])){
-					
-						require 'config.php';
-						mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-						mysql_select_db($dbName) or die(mysql_error()); 
-						mysql_query("SET NAMES 'utf8'");
+
+                        $msql_cnnct = ConnectToDB();
 						
 						$arr = array();
 						$arr2 = array();
@@ -310,11 +352,12 @@
 						$rez2 = array();
 						
 						$query = "SELECT * FROM `zapis` WHERE `office` = '{$_SESSION['filial']}' AND `add_from` <> '{$_SESSION['filial']}' AND `enter` <> '8'";
-						
-						$res = mysql_query($query) or die($query);
-						$number = mysql_num_rows($res);
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+						$number = mysqli_num_rows($res);
 						if ($number != 0){
-							while ($arr = mysql_fetch_assoc($res)){
+							while ($arr = mysqli_fetch_assoc($res)){
 								array_push($rez, $arr);
 							}
 						}else{
@@ -322,18 +365,19 @@
 						}
 						
 						$query = "SELECT * FROM `zapis` WHERE `add_from` = '{$_SESSION['filial']}' AND `office` <> '{$_SESSION['filial']}' AND `enter` <> '8'";
-						
-						$res = mysql_query($query) or die($query);
-						$number = mysql_num_rows($res);
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+						$number = mysqli_num_rows($res);
 						if ($number != 0){
-							while ($arr2 = mysql_fetch_assoc($res)){
+							while ($arr2 = mysqli_fetch_assoc($res)){
 								array_push($rez2, $arr2);
 							}
 						}else{
 							$rez2 = 0;
 						}
 						
-						mysql_close();
+						//mysql_close();
 						//var_dump($rez);
 						if (($rez != 0) || ($rez2 != 0)){
 							echo '
@@ -507,7 +551,7 @@
 								$worker = $Work_Today_arr[$k][1]['worker'];
 								
 								echo '
-									<div class="cellsBlock5 ahref" style="border: none; font-weight: bold; font-size:80%;" >
+									<div class="cellsBlock5 ahref" style="border: none; font-weight: bold; font-size:80%; margin-bottom: -1px;" >
 										<div class="cellRight" id="month_date_worker" style="border: none; background-color:rgba(39, 183, 127, .5); height: 40px; outline: none; position: relative;">
 											1 смена каб '.$k.'<br><i>'.WriteSearchUser('spr_workers', $worker, 'user', false).'</i>
 											<div class="b" style="position: absolute; top: 0; right: 0; color: #0C0C0C; margin: 0; padding: 1px 5px;"><a href="zapis_full.php?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">Подробно</a></div>
@@ -518,7 +562,7 @@
 								$worker = 0;
 								
 								echo '
-										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
+										<div class="cellsBlock5" style="font-weight: bold; font-size:80%; margin-bottom: -1px;">
 											<div class="cellRight" id="month_date_worker" style="border: none; height: 40px; outline: none; position: relative;">
 												1 смена каб '.$k.'<br>
 												<span style="color:red;">нет врача по <a href="scheduler.php?filial='.$_GET['filial'].''.$who.'">графику</a></span>
@@ -596,7 +640,7 @@
 															$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 															$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;
 															echo '
-																<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 																	';
 																//var_dump($Zapis_key);
 															echo '
@@ -610,7 +654,7 @@
 															$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 															$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;
 															echo '
-																<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 																	';
 																//var_dump($Zapis_key);
 															echo '
@@ -622,7 +666,7 @@
 																$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 																$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;
 																echo '
-																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 																		';
 																	//var_dump($Zapis_key);
 																echo '
@@ -641,7 +685,7 @@
 															$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 															$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;
 															echo '
-																<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 																	.';
 																//var_dump($Zapis_key);
 															echo '
@@ -664,14 +708,24 @@
 															$back_color = 'background-color: rgb(119, 255, 250);';
 														}
 													}
-													echo '
-														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
-															'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'<br>
+
+                                                    $title_time = $TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m;
+                                                    $title_client = WriteSearchUser('spr_clients', $ZapisHereQueryToday_val['patient'], 'user', false);
+                                                    $title_descr = $ZapisHereQueryToday_val['description'];
+                                                    $zapis_id = $ZapisHereQueryToday_val['id'];
+
+                                                    echo '
+														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;" 
+														title="'.$title_time.' / '.$title_client.' / '.$title_descr.'" 
+														onclick="contextMenuShow('.$zapis_id.', 0, event, \'zapis_options\');">
+															'.$title_time.'<br>
 															
-																<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $ZapisHereQueryToday_val['patient'], 'user', false).'</span> : '.$ZapisHereQueryToday_val['description'].'
-															';
-													//var_dump ($NextFill);
-													echo '
+																<span style="font-weight:bold;">'.$title_client.'</span> : '.$title_descr.'';
+
+                                                    //Контекстная менюшка
+                                                    echo contexMenuZapisMain ($ZapisHereQueryToday_val, $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false);
+
+                                                    echo '
 														</div>';
 												}else{
 												}
@@ -705,7 +759,7 @@
 													$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 													$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;
 													echo '
-														<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+														<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 															';
 														//var_dump($NextFill);
 													echo '
@@ -731,7 +785,7 @@
 															$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 															$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;
 															echo '
-																<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', 'add')">
 																	4';
 																//var_dump($NextFill);
 															echo '
@@ -740,7 +794,7 @@
 														
 													}
 													echo '
-														<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+														<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 															';
 														//var_dump($NextFill);
 													echo '
@@ -784,15 +838,25 @@
 														$back_color = 'background-color: rgb(119, 255, 250);';
 													}
 												}
-												echo '
-													<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
-														'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'<br>
-														
-															<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $ZapisHereQueryToday[0]['patient'], 'user', false).'</span> : '.$ZapisHereQueryToday[0]['description'].'
-														';
-												//var_dump($NextSmenaArr[$k]['NextSmenaFill']);
-												echo '
-													</div>';
+
+                                                $title_time = $TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m;
+                                                $title_client = WriteSearchUser('spr_clients', $ZapisHereQueryToday[0]['patient'], 'user', false);
+                                                $title_descr = $ZapisHereQueryToday[0]['description'];
+                                                $zapis_id = $ZapisHereQueryToday[0]['id'];
+
+                                                echo '
+														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;" 
+														title="'.$title_time.' / '.$title_client.' / '.$title_descr.'" 
+														onclick="contextMenuShow('.$zapis_id.', 0, event, \'zapis_options\');">
+															'.$title_time.'<br>
+															
+																<span style="font-weight:bold;">'.$title_client.'</span> : '.$title_descr.'';
+
+                                                //Контекстная менюшка
+                                                echo contexMenuZapisMain ($ZapisHereQueryToday[0], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false);
+
+                                                echo '
+														</div>';
 											}else{
 											}
 											//Передать предыдущую запись
@@ -806,7 +870,7 @@
 											$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 											$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;
 											echo '
-												<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+												<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 													';
 												//var_dump($NextFill);
 											echo '
@@ -822,7 +886,7 @@
 											$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 											$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;
 											echo '
-												<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+												<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 													';
 												//var_dump($NextFill);
 											echo '
@@ -833,7 +897,7 @@
 								echo '</div>';
 							/*}else{
 								echo '
-										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
+										<div class="cellsBlock5" style="font-weight: bold; font-size:80%; margin-bottom: -1px;">
 											<div class="cellRight" id="month_date_worker" style="border: none; height: 40px; outline: none;">
 												1 смена каб '.$k.'<br>
 												<span style="color:red;">нет врача по <a href="scheduler.php?filial='.$_GET['filial'].'&who='.$who.'">графику</a></span>
@@ -888,7 +952,7 @@
 								$worker = $Work_Today_arr[$k][2]['worker'];
 								
 								echo '
-									<div class="cellsBlock5 ahref" style="border: none; font-weight: bold; font-size:80%;" >
+									<div class="cellsBlock5 ahref" style="border: none; font-weight: bold; font-size:80%; margin-bottom: -1px;" >
 										<div class="cellRight" id="month_date_worker" style="border: none; background-color:rgba(39, 183, 127, .5); height: 40px; outline: none; position: relative;">
 											2 смена каб '.$k.'<br><i>'.WriteSearchUser('spr_workers', $worker, 'user', false).'</i>
 											<div class="b" style="position: absolute; top: 0; right: 0; color: #0C0C0C; margin: 0; padding: 1px 5px;"><a href="zapis_full.php?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">Подробно</a></div>
@@ -899,7 +963,7 @@
 								$worker = 0;
 								
 								echo '
-										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
+										<div class="cellsBlock5" style="font-weight: bold; font-size:80%; margin-bottom: -1px;">
 											<div class="cellRight" id="month_date_worker" style="border: none; height: 40px; outline: none; position: relative;">
 												2 смена каб '.$k.'<br>
 												<span style="color:red;">нет врача по <a href="scheduler.php?filial='.$_GET['filial'].''.$who.'">графику</a></span>
@@ -978,16 +1042,25 @@
 													$back_color = 'background-color: rgb(119, 255, 250);';
 												}
 											}
-											echo '
-												<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
-													'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'<br>
-													
-														<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $NextSmenaArr[$k]['ZapisHereQueryToday']['patient'], 'user', false).'</span> : '.$NextSmenaArr[$k]['ZapisHereQueryToday']['description'].'
-													';
-											//var_dump($NextSmenaArr[$k]['NextSmenaFill']);
-											echo '
-												</div>';
-											//$NextSmenaArr[$k]['NextSmenaFill'] = FALSE;
+
+                                            $title_time = $TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m;
+                                            $title_client = WriteSearchUser('spr_clients', $NextSmenaArr[$k]['ZapisHereQueryToday']['patient'], 'user', false);
+                                            $title_descr = $NextSmenaArr[$k]['ZapisHereQueryToday']['description'];
+                                            $zapis_id = $NextSmenaArr[$k]['ZapisHereQueryToday']['id'];
+
+                                            echo '
+														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;" 
+														title="'.$title_time.' / '.$title_client.' / '.$title_descr.'" 
+														onclick="contextMenuShow('.$zapis_id.', 0, event, \'zapis_options\');">
+															'.$title_time.'<br>
+															
+																<span style="font-weight:bold;">'.$title_client.'</span> : '.$title_descr.'';
+
+                                            //Контекстная менюшка
+                                            echo contexMenuZapisMain ($NextSmenaArr[$k]['ZapisHereQueryToday'], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false);
+
+                                            echo '
+														</div>';
 										}
 										//$NextSmenaArr = array();
 									}
@@ -1035,7 +1108,7 @@
 																$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 																$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-900)*2;
 																echo '
-																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 																		';
 																	//var_dump($Zapis_key);
 																echo '
@@ -1049,7 +1122,7 @@
 																$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 																$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-900)*2;
 																echo '
-																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 																		';
 																	//var_dump($Zapis_key);
 																echo '
@@ -1061,7 +1134,7 @@
 																	$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 																	$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-900)*2;
 																	echo '
-																		<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																		<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', '.$type.', \'add\')">
 																			';
 																		//var_dump($Zapis_key);
 																	echo '
@@ -1080,7 +1153,7 @@
 																$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 																$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-900)*2;
 																echo '
-																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 																		';
 																	//var_dump($Zapis_key);
 																echo '
@@ -1112,15 +1185,25 @@
 																$back_color = 'background-color: rgb(119, 255, 250);';
 															}
 														}
-														echo '
-															<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
-																'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'<br>
-																
-																	<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $ZapisHereQueryToday_val['patient'], 'user', false).'</span> : '.$ZapisHereQueryToday_val['description'].'
-																';
-														//var_dump ($NextFill);
-														echo '
-															</div>';
+
+                                                        $title_time = $TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m;
+                                                        $title_client = WriteSearchUser('spr_clients', $ZapisHereQueryToday_val['patient'], 'user', false);
+                                                        $title_descr = $ZapisHereQueryToday_val['description'];
+                                                        $zapis_id = $ZapisHereQueryToday_val['id'];
+
+                                                        echo '
+														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;" 
+														title="'.$title_time.' / '.$title_client.' / '.$title_descr.'" 
+														onclick="contextMenuShow('.$zapis_id.', 0, event, \'zapis_options\');">
+															'.$title_time.'<br>
+															
+																<span style="font-weight:bold;">'.$title_client.'</span> : '.$title_descr.'';
+
+                                                        //Контекстная менюшка
+                                                        echo contexMenuZapisMain ($ZapisHereQueryToday_val, $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false);
+
+                                                        echo '															
+														</div>';
 													}else{
 													}
 													//Передать предыдущую запись
@@ -1153,7 +1236,7 @@
 														$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 														$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-900)*2;
 														echo '
-															<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+															<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 																';
 															//var_dump($NextFill);
 														echo '
@@ -1180,7 +1263,7 @@
 															$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-900)*2;
 														}
 														echo '
-															<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+															<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 																';
 															//var_dump($NextSmenaArr);
 														echo '
@@ -1211,12 +1294,24 @@
 															$back_color = 'background-color: rgb(119, 255, 250);';
 														}
 													}
-													echo '
-														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
-															'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'<br>
+
+													$title_time = $TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m;
+													$title_client = WriteSearchUser('spr_clients', $ZapisHereQueryToday[0]['patient'], 'user', false);
+													$title_descr = $ZapisHereQueryToday[0]['description'];
+                                                    $zapis_id = $ZapisHereQueryToday[0]['id'];
+
+                                                    echo '
+														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;" 
+														title="'.$title_time.' / '.$title_client.' / '.$title_descr.'" 
+														onclick="contextMenuShow('.$zapis_id.', 0, event, \'zapis_options\');">
+															'.$title_time.'<br>
 															
-																<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $ZapisHereQueryToday[0]['patient'], 'user', false).'</span> : '.$ZapisHereQueryToday[0]['description'].'
-															
+																<span style="font-weight:bold;">'.$title_client.'</span> : '.$title_descr.'';
+
+                                                    //Контекстная менюшка
+                                                    echo contexMenuZapisMain ($ZapisHereQueryToday[0], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false);
+
+													echo '		
 														</div>';
 												}else{
 												}
@@ -1252,7 +1347,7 @@
 													}
 												}
 												echo '
-													<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+													<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 														'.$mark.'';
 													//var_dump($NextFill);
 												echo '
@@ -1269,7 +1364,7 @@
 												$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 												$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-900)*2;
 												echo '
-													<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+													<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 														';
 													//var_dump($NextFill);
 												echo '
@@ -1282,7 +1377,7 @@
 								echo '</div>';
 							/*}else{
 								echo '
-										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
+										<div class="cellsBlock5" style="font-weight: bold; font-size:80%; margin-bottom: -1px;">
 											<div class="cellRight" id="month_date_worker" style="border: none; height: 40px; outline: none;">
 												2 смена каб '.$k.'<br>
 												<span style="color:red;">нет врача по <a href="scheduler.php?filial='.$_GET['filial'].'&who='.$who.'">графику</a></span>
@@ -1350,7 +1445,7 @@
 								$worker = $Work_Today_arr[$k][3]['worker'];
 								
 								echo '
-									<div class="cellsBlock5 ahref" style="border: none; font-weight: bold; font-size:80%;" >
+									<div class="cellsBlock5 ahref" style="border: none; font-weight: bold; font-size:80%; margin-bottom: -1px;" >
 										<div class="cellRight" id="month_date_worker" style="border: none; background-color:rgba(39, 183, 127, .5); height: 40px; outline: none; position: relative;">
 											3 смена каб '.$k.'<br><i>'.WriteSearchUser('spr_workers', $worker, 'user', false).'</i>
 											<div class="b" style="position: absolute; top: 0; right: 0; color: #0C0C0C; margin: 0; padding: 1px 5px;"><a href="zapis_full.php?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="ahref" style="border: none; font-weight: bold; font-size:80%;" title="Подробно">Подробно</a></div>
@@ -1361,7 +1456,7 @@
 								$worker = 0;
 								
 								echo '
-										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
+										<div class="cellsBlock5" style="font-weight: bold; font-size:80%; margin-bottom: -1px;">
 											<div class="cellRight" id="month_date_worker" style="border: none; height: 40px; outline: none; position: relative;">
 												3 смена каб '.$k.'<br>
 												<span style="color:red;">нет врача по <a href="scheduler.php?filial='.$_GET['filial'].''.$who.'">графику</a></span>
@@ -1444,16 +1539,25 @@
 													$back_color = 'background-color: rgb(119, 255, 250);';
 												}
 											}
-											echo '
-												<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
-													'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'<br>
-													
-														<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $NextSmenaArr[$k]['ZapisHereQueryToday']['patient'], 'user', false).'</span> : '.$NextSmenaArr[$k]['ZapisHereQueryToday']['description'].'
-													';
-											//var_dump($NextSmenaArr[$k]['NextSmenaFill']);
-											echo '
-												</div>';
-											//$NextSmenaArr[$k]['NextSmenaFill'] = FALSE;
+
+                                            $title_time = $TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m;
+                                            $title_client = WriteSearchUser('spr_clients', $NextSmenaArr[$k]['ZapisHereQueryToday']['patient'], 'user', false);
+                                            $title_descr = $NextSmenaArr[$k]['ZapisHereQueryToday']['description'];
+                                            $zapis_id = $NextSmenaArr[$k]['ZapisHereQueryToday']['id'];
+
+                                            echo '
+														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;" 
+														title="'.$title_time.' / '.$title_client.' / '.$title_descr.'" 
+														onclick="contextMenuShow('.$zapis_id.', 0, event, \'zapis_options\');">
+															'.$title_time.'<br>
+															
+																<span style="font-weight:bold;">'.$title_client.'</span> : '.$title_descr.'';
+
+                                            //Контекстная менюшка
+                                            echo contexMenuZapisMain ($NextSmenaArr[$k]['ZapisHereQueryToday'], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit);
+
+                                            echo '
+														</div>';
 										}
 										//$NextSmenaArr = array();
 									}
@@ -1501,7 +1605,7 @@
 																$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 																$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
 																echo '
-																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 																		';
 																	//var_dump($Zapis_key);
 																echo '
@@ -1515,7 +1619,7 @@
 																$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 																$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
 																echo '
-																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 																		';
 																	//var_dump($Zapis_key);
 																echo '
@@ -1527,7 +1631,7 @@
 																	$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 																	$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
 																	echo '
-																		<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																		<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 																			';
 																		//var_dump($Zapis_key);
 																	echo '
@@ -1546,7 +1650,7 @@
 																$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 																$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
 																echo '
-																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+																	<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 																		';
 																	//var_dump($Zapis_key);
 																echo '
@@ -1578,15 +1682,25 @@
 																$back_color = 'background-color: rgb(119, 255, 250);';
 															}
 														}
-														echo '
-															<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
-																'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'<br>
-																
-																	<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $ZapisHereQueryToday_val['patient'], 'user', false).'</span> : '.$ZapisHereQueryToday_val['description'].'
-																';
-														//var_dump ($NextFill);
-														echo '
-															</div>';
+
+                                                        $title_time = $TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m;
+                                                        $title_client = WriteSearchUser('spr_clients', $ZapisHereQueryToday_val['patient'], 'user', false);
+                                                        $title_descr = $ZapisHereQueryToday_val['description'];
+                                                        $zapis_id = $ZapisHereQueryToday_val['id'];
+
+                                                        echo '
+														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;" 
+														title="'.$title_time.' / '.$title_client.' / '.$title_descr.'" 
+														onclick="contextMenuShow('.$zapis_id.', 0, event, \'zapis_options\');">
+															'.$title_time.'<br>
+															
+																<span style="font-weight:bold;">'.$title_client.'</span> : '.$title_descr.'';
+
+                                                        //Контекстная менюшка
+                                                        echo contexMenuZapisMain ($ZapisHereQueryToday_val, $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit);
+
+														echo '	
+														</div>';
 													}else{
 													}
 													//Передать предыдущую запись
@@ -1622,7 +1736,7 @@
 														$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 														$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
 														echo '
-															<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+															<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 																';
 															//var_dump($NextFill);
 														echo '
@@ -1649,7 +1763,7 @@
 															$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
 														}
 														echo '
-															<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+															<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 																';
 															//var_dump($NextSmenaArr);
 														echo '
@@ -1680,12 +1794,24 @@
 															$back_color = 'background-color: rgb(119, 255, 250);';
 														}
 													}
-													echo '
-														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;">
-															'.$TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m.'<br>
+
+                                                    $title_time = $TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m;
+                                                    $title_client = WriteSearchUser('spr_clients', $ZapisHereQueryToday[0]['patient'], 'user', false);
+                                                    $title_descr = $ZapisHereQueryToday[0]['description'];
+                                                    $zapis_id = $ZapisHereQueryToday[0]['id'];
+
+                                                    echo '
+														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;" 
+														title="'.$title_time.' / '.$title_client.' / '.$title_descr.'" 
+														onclick="contextMenuShow('.$zapis_id.', 0, event, \'zapis_options\');">
+															'.$title_time.'<br>
 															
-																<span style="font-weight:bold;">'.WriteSearchUser('spr_clients', $ZapisHereQueryToday[0]['patient'], 'user', false).'</span> : '.$ZapisHereQueryToday[0]['description'].'
-															
+																<span style="font-weight:bold;">'.$title_client.'</span> : '.$title_descr.'';
+
+                                                    //Контекстная менюшка
+                                                    echo contexMenuZapisMain ($ZapisHereQueryToday[0], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit);
+
+													echo '		
 														</div>';
 												}else{
 												}
@@ -1723,7 +1849,7 @@
 													}
 												}
 												echo '
-													<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+													<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 														'.$mark.'';
 													//var_dump($NextFill);
 												echo '
@@ -1740,7 +1866,7 @@
 												$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 												$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-1260)*2;
 												echo '
-													<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\')">
+													<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 2, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
 														';
 													//var_dump($NextFill);
 												echo '
@@ -1753,7 +1879,7 @@
 								echo '</div>';
 							/*}else{
 								echo '
-										<div class="cellsBlock5" style="font-weight: bold; font-size:80%;">
+										<div class="cellsBlock5" style="font-weight: bold; font-size:80%; margin-bottom: -1px;">
 											<div class="cellRight" id="month_date_worker" style="border: none; height: 40px; outline: none;">
 												2 смена каб '.$k.'<br>
 												<span style="color:red;">нет врача по <a href="scheduler.php?filial='.$_GET['filial'].'&who='.$who.'">графику</a></span>
@@ -1814,128 +1940,12 @@
 					</div>
 				</div>';
 
-			echo '
-					<div id="ShowSettingsAddTempZapis" style="position: absolute; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; z-index:105; padding:10px;">
-						<a class="close" href="#" onclick="HideSettingsAddTempZapis()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(img/close.png) no-repeat;">
-							Close
-						</a>
-						
-						<div id="SettingsAddTempZapis">
+            echo $block_show_settings_add_temp_zapis;
 
-							<div style="display:inline-block;">
-								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
-									<div class="cellLeft">Число</div>
-									<div class="cellRight" id="month_date">
-									</div>
-								</div>
-								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
-									<div class="cellLeft">Смена</div>
-									<div class="cellRight" id="month_date_smena">
-									</div>
-								</div>
-								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
-									<div class="cellLeft">Филиал</div>
-									<div class="cellRight" id="filial_name">
-									</div>
-								</div>
-								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
-									<div class="cellLeft">Кабинет №</div>
-									<div class="cellRight" id="kab">
-									</div>
-								</div>
-								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
-									<div class="cellLeft">Врач</div>
-									<div class="cellRight" id="worker_name">
-										<input type="text" size="30" name="searchdata2" id="search_client2" placeholder="Введите ФИО врача" value="" class="who2"  autocomplete="off" style="width: 90%;">
-										<ul id="search_result2" class="search_result2"></ul><br />
-									</div>
-								</div>
-
-								<div class="cellsBlock2" style="font-size:80%; width:400px;">
-									<div class="cellLeft" style="font-weight: bold;">Пациент</div>
-									<div class="cellRight">
-										<div>
-											<input type="text" size="30" name="searchdata" id="search_client" placeholder="Введите ФИО пациента" value="" class="who"  autocomplete="off" style="width: 90%;">
-											<ul id="search_result" class="search_result"></ul><br>
-										</div>
-										<div id="add_client_fio" style="cursor: pointer; border: 1px dotted #555;">
-											<i class="fa fa-plus-square" style="color: green; font-size: 120%;"></i> Добавить нового
-										</div>
-									</div>
-								</div>
-								<!--<div class="cellsBlock2" style="font-size:80%; width:400px;">
-									<div class="cellLeft" style="font-weight: bold;">Телефон</div>
-									<div class="cellRight" style="">
-										<input type="text" size="30" name="contacts" id="contacts" placeholder="Введите телефон" value="" autocomplete="off">
-									</div>
-								</div>-->
-								<div class="cellsBlock2" style="font-size:80%; width:400px;">
-									<div class="cellLeft" style="font-weight: bold;">Описание</div>
-									<div class="cellRight" style="">
-										<textarea name="description" id="description" style="width:90%; overflow:auto; height: 100px;"></textarea>
-									</div>
-								</div>		
-								<div class="cellsBlock2" style="font-size:80%; width:400px;">
-									<div class="cellLeft" style="font-weight: bold;">Первичный</div>
-									<div class="cellRight">
-										<input type="checkbox" name="pervich" id="pervich" value="1"> да
-									</div>
-								</div>
-								<div class="cellsBlock2" style="font-size:80%; width:400px;">
-									<div class="cellLeft" style="font-weight: bold;">Страховой</div>
-									<div class="cellRight">
-										<input type="checkbox" name="insured" id="insured" value="1"> да
-									</div>
-								</div>
-								<div class="cellsBlock2" style="font-size:80%; width:400px;">
-									<div class="cellLeft" style="font-weight: bold;">Ночной</div>
-									<div class="cellRight">
-										<input type="checkbox" name="noch" id="noch" value="1"> да
-									</div>
-								</div>
-							</div>';
-			echo '
-							<div style="display:inline-block; vertical-align: top; width: 360px; border: 1px solid #C1C1C1;">
-								<div id="ShowTimeSettingsHere">
-								</div>
-								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
-									<div class="cellLeft">Время начала</div>
-									<div class="cellRight">
-										<!--<div id="work_time_h" style="display:inline-block;"></div>:<div id="work_time_m" style="display:inline-block;"></div>-->
-										
-										<input type="number" size="2" name="work_time_h" id="work_time_h" min="0" max="23" value="0" class="mod" onchange="PriemTimeCalc();" onkeypress = "PriemTimeCalc();"> часов
-										<input type="number" size="2" name="work_time_m" id="work_time_m" min="0" max="59" step="5" value="30" class="mod" onchange="PriemTimeCalc();" onkeypress = "PriemTimeCalc();"> минут
-									</div>
-								</div>
-								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
-									<div class="cellLeft">Длительность</div>
-									<div class="cellRight">
-										<!--<div id="work_time_h" style="display:inline-block;"></div>:<div id="work_time_m" style="display:inline-block;"></div>-->
-
-										<input type="number" size="2" name="change_hours" id="change_hours" min="0" max="11" value="0" class="mod" onchange="PriemTimeCalc();" onkeypress = "PriemTimeCalc();"> часов
-										<input type="number" size="2" name="change_minutes" id="change_minutes" min="0" max="59" step="5" value="30" class="mod" onchange="PriemTimeCalc();" onkeypress = "PriemTimeCalc();"> минут
-									</div>
-								</div>
-								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
-									<div class="cellLeft">Время окончания</div>
-									<div class="cellRight">
-										<div id="work_time_h_end" style="display:inline-block;"></div>:<div id="work_time_m_end" style="display:inline-block;"></div>
-									</div>
-								</div>
-								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
-									<div class="cellRight">
-										<div id="exist_zapis" style="display:inline-block;"></div>
-									</div>
-								</div>
-								<div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
-									<div class="cellRight">
-										<div id="errror"></div>
-									</div>
-								</div>
-							</div>
-						</div>';
-
-
+            echo '
+                                    <input type="button" class="b" value="OK" onclick="if (iCanManage) Ajax_edit_TempZapis('.$type.')" id="Ajax_add_TempZapis">
+						            <input type="button" class="b" value="Отмена" onclick="HideSettingsAddTempZapis()">
+                 </div>';
 
 			echo '
 						<input type="hidden" id="zapis_id" name="zapis_id" value="0">
@@ -1949,11 +1959,9 @@
 						<input type="hidden" id="wt" name="wt" value="0">
 						<input type="hidden" id="worker_id" name="worker_id" value="0">
 						<input type="hidden" id="type" name="type" value="'.$type.'">
-						<!--<input type="button" class="b" value="Добавить" id="Ajax_add_TempZapis" onclick="Ajax_add_TempZapis('.$type.')">-->
-						<input type="button" class="b" value="OK" onclick="if (iCanManage) Ajax_add_TempZapis('.$type.')" id="Ajax_add_TempZapis">
-						<input type="button" class="b" value="Отмена" onclick="HideSettingsAddTempZapis()">
-					</div>';	
-					
+						<!--<input type="button" class="b" value="Добавить" id="Ajax_add_TempZapis" onclick="Ajax_add_TempZapis('.$type.')">-->';
+
+
 			echo '	
 						
 					</div>
@@ -1984,181 +1992,17 @@
 						
 					</script>';
 					
-			echo '
-					<script>';
+			/*echo '
+					<script>';*/
 			
 			//если есть права или бог или костыль (ассисенты ночью)
 			if (($zapis['add_new'] == 1) || $god_mode || (($_SESSION['permissions'] == 7) && (date("H", time()-60*60) > 16))){
-				echo '		
-					function ShowSettingsAddTempZapis(filial, filial_name, kab, year, month, day, smena, time, period, worker_id, worker_name){
-						document.getElementById("errror").innerHTML="";
-						//alert(period);
-						$(\'#ShowSettingsAddTempZapis\').show();
-						$(\'#overlay\').show();
-						//alert(month_date);
-						window.scrollTo(0,0)
-						
-						document.getElementById("Ajax_add_TempZapis").disabled = false;
-						
-						
-						document.getElementById("filial").value=filial;
-						document.getElementById("year").value=year;
-						document.getElementById("month").value=month;
-						document.getElementById("day").value=day;
-						document.getElementById("start_time").value=time;
-						document.getElementById("wt").value=period;
-						document.getElementById("worker_id").value=worker_id;
-						
-						document.getElementById("filial_name").innerHTML=filial_name;
-						if (worker_id == 0){
-							document.getElementById("search_client2").value = "";
-						}else{
-							document.getElementById("search_client2").value = worker_name;
-						}
-						document.getElementById("kab").innerHTML=kab;
-						document.getElementById("month_date").innerHTML=day+\'.\'+month+\'.\'+year;
-						document.getElementById("month_date_smena").innerHTML=smena
-						
-						
-						document.getElementById("change_minutes").value = period;
-						
-						var real_time_h = time/60|0;
-						var real_time_m = time%60;
-						if (real_time_m < 10) real_time_m = "0"+real_time_m;
-						
-						var real_time_h_end = (time+period)/60|0;
-						if (real_time_h_end > 23) real_time_h_end = real_time_h_end - 24;
-						var real_time_m_end = (time+period)%60;
-						if (real_time_m_end < 10) real_time_m_end = \'0\'+real_time_m_end;
-						
-						//document.getElementById("work_time_h").innerHTML=real_time_h;
-						//document.getElementById("work_time_m").innerHTML=real_time_m;
+				echo '
+				<script src="js/zapis.js"></script>';
 
-						document.getElementById("work_time_h").value=real_time_h;
-						document.getElementById("work_time_m").value=real_time_m;
-						
-						document.getElementById("work_time_h_end").innerHTML=real_time_h_end;
-						document.getElementById("work_time_m_end").innerHTML=real_time_m_end;
-						
-						var next_time_start_rez = 0;
-						
-						$.ajax({
-								dataType: "json",
-								async: false,
-								// метод отправки 
-								type: "POST",
-								// путь до скрипта-обработчика
-								url: "get_next_zapis.php",
-								// какие данные будут переданы
-								data: {
-									day:day,
-									month:month,
-									year:year,
-									
-									filial:filial,
-									kab:kab,
-									
-									start_time:time,
-									
-									datatable:"zapis"
-								},
-								// действие, при ответе с сервера
-								success: function(next_zapis_data){
-									//alert (next_zapis_data.next_time_start);
-									//document.getElementById("kab").innerHTML=nex_zapis_data;
-									next_time_start_rez = next_zapis_data.next_time_start;
-									next_time_end_rez = next_zapis_data.next_time_end;
-									//next_zapis_data;
-									
-								}
-						});
-						
-						//alert(next_time_start_rez);
-						
-						if (next_time_start_rez != 0){
-						
-							//if ((time+period > next_time_start_rez) || (time == next_time_start_rez)){
-							if (((time+period > next_time_start_rez) && (time+period < next_time_end_rez)) || ((time >= next_time_start_rez) && (time < next_time_end_rez))){
-								//document.getElementById("exist_zapis").innerHTML=\'<span style="color: red">Дальше есть запись</span>\';
-								
-								var raznica_vremeni = Math.abs(next_time_start_rez - time);
-								
-								document.getElementById("change_hours").value = raznica_vremeni/60|0;
-								document.getElementById("change_minutes").value = raznica_vremeni%60;
-								
-								change_hours = raznica_vremeni/60|0;
-								change_minutes = raznica_vremeni%60;
-								
-								var end_time = time+change_hours*60+change_minutes;
-								
-						
-								var real_time_h_end = end_time/60|0;
-								if (real_time_h_end > 23) real_time_h_end = real_time_h_end - 24;
-								var real_time_m_end = end_time%60;
-								if (real_time_m_end < 10) real_time_m_end = "0"+real_time_m_end;
-								
-								document.getElementById("work_time_h_end").innerHTML=real_time_h_end;
-								document.getElementById("work_time_m_end").innerHTML=real_time_m_end;
-								
-								document.getElementById("wt").value=change_hours*60+change_minutes;
-								
-								document.getElementById("Ajax_add_TempZapis").disabled = true; 
-							}else{
-							//if (time+period < next_time_start_rez){
-								document.getElementById("exist_zapis").innerHTML="";
-								document.getElementById("Ajax_add_TempZapis").disabled = false; 
-							}
-						}else{
-							document.getElementById("exist_zapis").innerHTML="";
-							document.getElementById("Ajax_add_TempZapis").disabled = false; 
-						}
-						
-
-						
-					}
-					
-					function HideSettingsAddTempZapis(){
-						$(\'#ShowSettingsAddTempZapis\').hide();
-						$(\'#overlay\').hide();
-						document.getElementById("wt").value = 0;
-						document.getElementById("change_hours").value = 0;
-						document.getElementById("change_minutes").value = 30;
-					}
-					
-					function ShowWorkersSmena(){
-						var smena = 0;
-						if ( $("#smena1").prop("checked")){
-							if ( $("#smena2").prop("checked")){
-								smena = 9;
-							}else{
-								smena = 1;
-							}
-						}else if ( $("#smena2").prop("checked")){
-							smena = 2;
-						}
-						
-						$.ajax({
-							// метод отправки 
-							type: "POST",
-							// путь до скрипта-обработчика
-							url: "show_workers_free.php",
-							// какие данные будут переданы
-							data: {
-								day:$(\'#day\').val(),
-								month:$(\'#month\').val(),
-								year:$(\'#year\').val(),
-								smena:smena,
-								datatable:"'.$datatable.'"
-							},
-							// действие, при ответе с сервера
-							success: function(workers){
-								document.getElementById("ShowWorkersHere").innerHTML=workers;
-							}
-						});	
-					}';
 			}	
 			echo '	
-				</script>
+				<!--</script>-->
 			
 			
 			
@@ -2205,7 +2049,7 @@
 			echo '					
 			</script>
 				
-			<script language="JavaScript" type="text/javascript">
+			<script>
 				 /*<![CDATA[*/
 				 var s=[],s_timer=[];
 				 function show(id,h,spd)

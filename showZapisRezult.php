@@ -11,6 +11,22 @@
             include_once 'DBWork.php';
             include_once 'functions.php';
 
+            //Массив с месяцами
+            $monthsName = array(
+                '01' => 'Январь',
+                '02' => 'Февраль',
+                '03' => 'Март',
+                '04' => 'Апрель',
+                '05' => 'Май',
+                '06' => 'Июнь',
+                '07'=> 'Июль',
+                '08' => 'Август',
+                '09' => 'Сентябрь',
+                '10' => 'Октябрь',
+                '11' => 'Ноябрь',
+                '12' => 'Декабрь'
+            );
+
             $msql_cnnct = ConnectToDB ();
 
             require 'variables.php';
@@ -281,7 +297,7 @@
                         //Управление настройки -->
 
                         $rezult .= '
-                                                <div class="cellName settings_text" style="background-color: rgb(240, 240, 240); text-align: center; vertical-align: middle; width: 8 0px; min-width: 80px; max-width: 80px;" onclick="contextMenuShow(' . $ZapisHereQueryToday[$z]['id'] . ', 0, event, \'zapis_options\');">';
+                                                <div class="cellName settings_text" style="background-color: rgb(240, 240, 240); text-align: center; vertical-align: middle; width: 80px; min-width: 80px; max-width: 80px;" onclick="contextMenuShow(' . $ZapisHereQueryToday[$z]['id'] . ', 0, event, \'zapis_options\');">';
 
                         $rezult .= 'Меню [опции]';
 
@@ -291,19 +307,33 @@
                         if (isset($_SESSION['filial'])) {
 
                             if ($_SESSION['filial'] == $ZapisHereQueryToday[$z]['office']) {
+
+                                $smena = 0;
+
+                                if (($ZapisHereQueryToday[$z]['start_time'] >= 540)  && ($ZapisHereQueryToday[$z]['start_time'] < 900)){
+                                    $smena = 1;
+                                }
+                                if (($ZapisHereQueryToday[$z]['start_time'] >= 900)  && ($ZapisHereQueryToday[$z]['start_time'] < 1260)){
+                                    $smena = 2;
+                                }
+                                if (($ZapisHereQueryToday[$z]['start_time'] >= 1260 )  && ($ZapisHereQueryToday[$z]['start_time'] < 1440)){
+                                    $smena = 3;
+                                }
+
+
                                 if ($ZapisHereQueryToday[$z]['office'] != $ZapisHereQueryToday[$z]['add_from']) {
                                     if ($ZapisHereQueryToday[$z]['enter'] != 8) {
                                         $rezult .= '<li><div onclick="Ajax_TempZapis_edit_OK(' . $ZapisHereQueryToday[$z]['id'] . ', ' . $ZapisHereQueryToday[$z]['office'] . ')">Подтвердить</div></li>';
                                     }
                                 }
                                 if ($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']) {
-                                    if ($ZapisHereQueryToday[$z]['enter'] != 8) {
+                                    if (($ZapisHereQueryToday[$z]['enter'] != 8) && ($ZapisHereQueryToday[$z]['enter'] != 9)) {
                                         $rezult .=
                                             '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $ZapisHereQueryToday[$z]['id'] . ', 1)">Пришёл</div></li>';
                                         $rezult .=
                                             '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $ZapisHereQueryToday[$z]['id'] . ', 9)">Не пришёл</div></li>';
                                         $rezult .=
-                                            '<li><div onclick="ShowSettingsAddTempZapis(' . $ZapisHereQueryToday[$z]['office'] . ', \'' . $office_j_arr[$ZapisHereQueryToday[$z]['office']]['name'] . '\', ' . $ZapisHereQueryToday[$z]['kab'] . ', ' . $year . ', ' . $month . ',' . $day . ', 0, ' . $ZapisHereQueryToday[$z]['start_time'] . ', ' . $ZapisHereQueryToday[$z]['wt'] . ', ' . $ZapisHereQueryToday[$z]['worker'] . ', \'' . WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user_full', false) . '\', \'' . WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', false) . '\', \'' . str_replace(array("\r", "\n"), " ", $ZapisHereQueryToday[$z]['description']) . '\', ' . $ZapisHereQueryToday[$z]['insured'] . ', ' . $ZapisHereQueryToday[$z]['pervich'] . ', ' . $ZapisHereQueryToday[$z]['noch'] . ', ' . $ZapisHereQueryToday[$z]['id'] . ')">Редактировать</div></li>';
+                                            '<li><div onclick="ShowSettingsAddTempZapis(' . $ZapisHereQueryToday[$z]['office'] . ', \'' . $office_j_arr[$ZapisHereQueryToday[$z]['office']]['name'] . '\', ' . $ZapisHereQueryToday[$z]['kab'] . ', ' . $year . ', '.$month.', '.$day.', '.$smena.', '.$ZapisHereQueryToday[$z]['start_time'] . ', ' . $ZapisHereQueryToday[$z]['wt'] . ', ' . $ZapisHereQueryToday[$z]['worker'] . ', \'' . WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user_full', false) . '\', \'' . WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', false) . '\', \'' . str_replace(array("\r", "\n"), " ", $ZapisHereQueryToday[$z]['description']) . '\', ' . $ZapisHereQueryToday[$z]['insured'] . ', ' . $ZapisHereQueryToday[$z]['pervich'] . ', ' . $ZapisHereQueryToday[$z]['noch'] . ', ' . $ZapisHereQueryToday[$z]['id'] . ', ' . $ZapisHereQueryToday[$z]['type'] . ', \'edit\')">Редактировать</div></li>';
 
                                         //var_dump($ZapisHereQueryToday[$z]['create_time']);
                                         //var_dump($ZapisHereQueryToday[$z]['description']);
@@ -372,7 +402,8 @@
                                 $rezult .= "&nbsp";
                             }
                             if ($upr_edit) {
-                                $rezult .= '
+                                if (($ZapisHereQueryToday[$z]['enter'] != 8) && ($ZapisHereQueryToday[$z]['enter'] != 9)){
+                                    $rezult .= '
                                                         <li>
                                                             <div>
                                                                 <a href="edit_zapis_change_client.php?client_id=' . $ZapisHereQueryToday[$z]['patient'] . '&zapis_id=' . $ZapisHereQueryToday[$z]['id'] . '" class="ahref">
@@ -380,14 +411,18 @@
                                                                 </a>
                                                             </div>
                                                         </li>';
+                                }
                             }
                         }
+
+
+                        $rezult .= '</ul>';
+
+                        $rezult .= '
+                                        </div>';
+
                     }
 
-                    $rezult .= '</ul>';
-
-                    $rezult .= '
-                                        </div>';
                     //<-- Управление настройки
 
                     $rezult .= '

@@ -1454,7 +1454,7 @@
 			echo '					
 			</script>
 				
-			<script language="JavaScript" type="text/javascript">
+			<script>
 				 /*<![CDATA[*/
 				 var s=[],s_timer=[];
 				 function show(id,h,spd)

@@ -49,7 +49,8 @@
                         echo '
                                 <span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;">
                                     <i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> Данное действие невозможно будет отменить. Будут перенесены ВСЕ данные:<br>
-                                    <b>Все оплаты нарядов будут сброшены</b>
+                                    <b>Все оплаты нарядов будут сброшены</b><br>
+                                    <b>Ордеры не переносятся!</b>
                                 </span><br>';
 
                         echo '
@@ -61,7 +62,7 @@
                         // !!! **** тест с записью
                         include_once 'showZapisRezult.php';
 
-                        echo showZapisRezult($sheduler_zapis, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, 0, true, true);
+                        echo showZapisRezult($sheduler_zapis, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, 0, true, false);
 
                         echo '				
                                         <div class="cellsBlock2">
