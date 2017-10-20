@@ -256,10 +256,10 @@
 		require_once 'permissions.php';
 		
 		
-		echo '<a href="index.php" style="position: relative">Главная<div style="font-size:80%">'.$version.'</div><div class="have_new-topic notes_count" style="display: none; top: 0; right: 0; background: red;" title="Есть непрочитанные сообщения"></div></a>';
+		echo '<li><a href="index.php" style="position: relative">Главная<div style="font-size:80%">'.$version.'</div><div class="have_new-topic notes_count" style="display: none; top: 0; right: 0; background: red;" title="Есть непрочитанные сообщения"></div></a></li>';
 		
 		if (($it['see_all'] == 1) || ($it['see_own'] == 1) || $god_mode){
-			echo '<li><a href="it.php" title="IT">IT</a></li>';
+			echo '<li><a href="it.php">IT</a></li>';
 		}
 		/*if (($soft['see_all'] == 1) || ($soft['see_own'] == 1) || $god_mode){
 			echo '<li><a href="soft.php">Программа</a></li>';
@@ -268,24 +268,29 @@
 			echo '<li><a href="stomat.php" title="Стоматология">Стоматология</a></li>';
 		}*/
 		if (($cosm['see_all'] == 1) || ($cosm['see_own'] == 1) || $god_mode){
-			echo '<li><a href="cosmet.php" title="Косметология">Косметология</a></li>';
+			echo '<li><a href="cosmet.php">Косметология</a></li>';
 		}
 		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
-			echo '<li><a href="scheduler.php" title="График" style="position: relative">График Запись';
+			echo '<li><a href="scheduler.php" style="position: relative">График Запись';
+			
             if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
                 echo '<div class="have_new-zapis notes_count" style="display: none; top: 0; right: 0; background: red;" title="Есть необработанные онлайн заявки"></div>';
             }
-            echo '</a></li>';
+            echo '</a>';
+
+			echo '
+			</li>';
+
 
 		}
 		if (($report['see_all'] == 1) || ($report['see_own'] == 1) || $god_mode){
-			echo '<li><a href="reports.php" title="Статистика и отчёты">Отчёты</a></li>';
+			echo '<li><a href="reports.php">Отчёты</a></li>';
 		}
 		if (($clients['see_all'] == 1) || ($clients['see_own'] == 1) || $god_mode){
-			echo '<li><a href="clients.php" title="Пациенты">Пациенты</a></li>';
+			echo '<li><a href="clients.php">Пациенты</a></li>';
 		}
 		if (($spravka['see_all'] == 1) || ($spravka['see_own'] == 1) || $god_mode){
-			echo '<li><a href="directory.php" title="Справочники">Справочники</a></li>';
+			echo '<li><a href="directory.php">Справочники</a></li>';
 		}
 		if ($god_mode){
 			echo '<li><a href="admin.php"><i class="fa fa-cogs"></i></a></li>';
@@ -298,10 +303,10 @@
 	
 	echo
 				'</ul>
-				<ul style="float:right;">';
+				<ul style="position: absolute; right: 0; top: 0;">';
 	if (!$enter_ok){
 		echo '
-					<li><a href="enter.php" title="Вход"><i class="fa fa-power-off"></i></a></li>';
+					<li><a href="enter.php"><i class="fa fa-power-off"></i></a></li>';
 	}else{
 		
 		$alarm = 0;

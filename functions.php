@@ -2274,9 +2274,9 @@
                             '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $zapisData['id'] . ', 1)">Пришёл</div></li>';
                         $rezult .=
                             '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $zapisData['id'] . ', 9)">Не пришёл</div></li>';
-                        $rezult .=
+                        /*$rezult .=
                             '<li><div onclick="ShowSettingsAddTempZapis(' . $zapisData['office'] . ', \'' . $office_j_arr[$zapisData['office']]['name'] . '\', ' . $zapisData['kab'] . ', ' . $year . ', '.$month.', '.$day.', '.$smena.', '.$zapisData['start_time'] . ', ' . $zapisData['wt'] . ', ' . $zapisData['worker'] . ', \'' . WriteSearchUser('spr_workers', $zapisData['worker'], 'user_full', false) . '\', \'' . WriteSearchUser('spr_clients', $zapisData['patient'], 'user_full', false) . '\', \'' . str_replace(array("\r", "\n"), " ", $zapisData['description']) . '\', ' . $zapisData['insured'] . ', ' . $zapisData['pervich'] . ', ' . $zapisData['noch'] . ', ' . $zapisData['id'] . ', ' . $zapisData['type'] . ', \'edit\')">Редактировать</div></li>';
-
+*/
                         //var_dump($zapisData['create_time']);
                         //var_dump($zapisData['description']);
                         //var_dump(time());

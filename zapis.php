@@ -1943,7 +1943,7 @@
             echo $block_show_settings_add_temp_zapis;
 
             echo '
-                                    <input type="button" class="b" value="OK" onclick="if (iCanManage) Ajax_edit_TempZapis('.$type.')" id="Ajax_add_TempZapis">
+                                    <input type="button" class="b" value="OK" onclick="if (iCanManage) Ajax_add_TempZapis('.$type.')" id="Ajax_add_TempZapis">
 						            <input type="button" class="b" value="Отмена" onclick="HideSettingsAddTempZapis()">
                  </div>';
 
