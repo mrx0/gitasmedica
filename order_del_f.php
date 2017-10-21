@@ -32,9 +32,10 @@
 
                 $time = time();
 
-                $query = "SELECT * FROM `journal_payment` WHERE `client_id`='{$order_j[0]['client_id']}' AND `date_in` > '{$order_j[0]['date_in']}' LIMIT 1";
+                $query = "SELECT * FROM `journal_payment` WHERE `client_id`='{$order_j[0]['client_id']}' AND `date_in` > '{$order_j[0]['date_in']}' AND `status` <> '9' LIMIT 1";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
                 $number = mysqli_num_rows($res);
                 if ($number != 0) {
                     echo '
