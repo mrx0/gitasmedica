@@ -4,7 +4,14 @@
     <bookmark url="file://$PROJECT_DIR$/js/functions.js" line="5413" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f8f4c17b-6b78-4f1a-8b48-611bd890c0f8" name="Default" comment="" />
+    <list default="true" id="f8f4c17b-6b78-4f1a-8b48-611bd890c0f8" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/style.css" afterPath="$PROJECT_DIR$/css/style.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/footer.php" afterPath="$PROJECT_DIR$/footer.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functions.php" afterPath="$PROJECT_DIR$/functions.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/header_tags.php" afterPath="$PROJECT_DIR$/header_tags.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/zapis.php" afterPath="$PROJECT_DIR$/zapis.php" />
+    </list>
     <ignored path=".idea/dataSources.local.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -397,8 +404,8 @@
       <file leaf-file-name="style.css" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/css/style.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="2249" column="26" lean-forward="false" selection-start-line="2249" selection-start-column="26" selection-end-line="2249" selection-end-column="26" />
+            <state relative-caret-position="633">
+              <caret line="2270" column="0" lean-forward="true" selection-start-line="2270" selection-start-column="0" selection-end-line="2270" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -1165,7 +1172,7 @@
       <workItem from="1506607243207" duration="65989000" />
       <workItem from="1507632037549" duration="15347000" />
       <workItem from="1507705583363" duration="54775000" />
-      <workItem from="1508312069426" duration="56486000" />
+      <workItem from="1508312069426" duration="52640000" />
 =======
       <workItem from="1506430846745" duration="14985000" />
 >>>>>>> local
@@ -1174,6 +1181,7 @@
   </component>
   <component name="TimeTrackingManager">
 <<<<<<< origin/master
+    <option name="totallyTimeSpent" value="1119708000" />
 =======
     <option name="totallyTimeSpent" value="914271000" />
 >>>>>>> local
@@ -3649,8 +3657,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/css/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="2249" column="26" lean-forward="false" selection-start-line="2249" selection-start-column="26" selection-end-line="2249" selection-end-column="26" />
+        <state relative-caret-position="633">
+          <caret line="2270" column="0" lean-forward="true" selection-start-line="2270" selection-start-column="0" selection-end-line="2270" selection-end-column="0" />
           <folding />
         </state>
       </provider>

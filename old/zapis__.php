@@ -606,7 +606,7 @@
 			if (($scheduler['edit'] == 1) || $god_mode){
 				echo '
 					<div id="ShowSettingsSchedulerFakt" style="position: absolute; z-index: 105; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; padding:10px;">
-						<a class="close" href="#" onclick="HideSettingsSchedulerFakt()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(img/close.png) no-repeat;">
+						<a class="close" href="#" onclick="HideSettingsSchedulerFakt()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(../img/close.png) no-repeat;">
 							Close
 						</a>
 						
@@ -955,7 +955,7 @@
 			}else{
 				if (($scheduler['see_all'] == 1)|| $god_mode){
 					echo '<h2>График <span style="color:red">не заполнен</span></h2><br>
-					<a href="scheduler_template.php" class="b">Заполнить</a>';					
+					<a href="../scheduler_template.php" class="b">Заполнить</a>';
 				}else{
 					echo '<h2>График <span style="color:red">не заполнен</span>, обратитесь к руководителю</h2>';
 				}
@@ -977,7 +977,7 @@
 					</script>
 			';
 		}else{
-			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
+			echo '<h1>Не хватает прав доступа.</h1><a href="../index.php">На главную</a>';
 		}
 	}else{
 		header("location: enter.php");

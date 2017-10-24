@@ -9,7 +9,7 @@
         //alert(month_date);
         window.scrollTo(0,0);
 
-        document.getElementById("Ajax_add_TempZapis").disabled = false;
+        //document.getElementById("Ajax_add_TempZapis").disabled = false;
 
         if (add_or_edit == 'edit'){
             document.getElementById("search_client").disabled = true;
@@ -84,7 +84,15 @@
         $("#work_time_h_end").html(real_time_h_end);
         $("#work_time_m_end").html(real_time_m_end);
 
-        var next_time_start_rez = 0;
+        var Ajax_add_TempZapis_button = '<input type="button" class="b" value="OK" onclick="if (iCanManage) Ajax_add_TempZapis('+type+')" id="Ajax_add_TempZapis">';
+
+        if (add_or_edit == 'edit'){
+            Ajax_add_TempZapis_button = '<input type="button" class="b" value="OK" onclick="if (iCanManage) Ajax_edit_TempZapis('+type+')" id="Ajax_add_TempZapis">';
+        }
+
+        $("#Ajax_add_TempZapis_button").html(Ajax_add_TempZapis_button);
+
+        //var next_time_start_rez = 0;
 
         /*$.ajax({
             dataType: "json",

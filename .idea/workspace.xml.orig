@@ -1165,17 +1165,26 @@
       <workItem from="1506607243207" duration="65989000" />
       <workItem from="1507632037549" duration="15347000" />
       <workItem from="1507705583363" duration="54775000" />
-      <workItem from="1508312069426" duration="56486000" />
+<<<<<<< origin/master
+      <workItem from="1508312069426" duration="52640000" />
 =======
       <workItem from="1506430846745" duration="14985000" />
+>>>>>>> local
+=======
+      <workItem from="1508312069426" duration="56486000" />
 >>>>>>> local
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
 <<<<<<< origin/master
+<<<<<<< origin/master
+    <option name="totallyTimeSpent" value="1119708000" />
 =======
     <option name="totallyTimeSpent" value="914271000" />
+>>>>>>> local
+=======
+    <option name="totallyTimeSpent" value="1123554000" />
 >>>>>>> local
   </component>
   <component name="TodoView">

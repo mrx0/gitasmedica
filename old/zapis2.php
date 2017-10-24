@@ -1,6 +1,5 @@
 <?php
 
-//zapis.php
 //Запись на филиале
 
 	require_once 'header.php';

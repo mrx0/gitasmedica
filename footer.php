@@ -38,31 +38,19 @@
 		
         <script>
             $( "#tabs_w" ).tabs();
-        </script>
 
+            $(".vert-nav li").hover(
+                function() {
+                    $("ul", this).slideDown(110);
+                    $(".have_new-zapis_main").hide();
+                },
+                function() {
+                    $("ul", this).slideUp(110);
+                    $(".have_new-zapis_main").show();
+                }
+            );
 
-        <script type="text/javascript">
             $(document).ready(function(){
-              $("a").on("click", function(e){
-                e.preventDefault();
-              });
-                
-              $("#ddmenu li").hover(function () {
-                 clearTimeout($.data(this,"timer"));
-                 $("ul",this).stop(true,true).slideDown(200);
-              }, function () {
-                $.data(this,"timer", setTimeout($.proxy(function() {
-                  $("ul",this).stop(true,true).slideUp(200);
-                }, this), 100));
-              });
-            
-            });
-        </script>
-
-
-        <script>
-        
-            $(document).ready(function() {
             	 $(document).attr("title", $("#doc_title").html());
             	 //console.log($("#doc_title").html());
             });

@@ -2229,7 +2229,8 @@
 	}
 
 	//Для контекстной менюшки для управления записью
-    function contexMenuZapisMain ($zapisData, $filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $main_zapis){
+    function contexMenuZapisMain ($zapisData, $filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $main_zapis, $title_time, $title_client, $title_descr){
+	    //$main_zapis - это определитель места, где отображаем это меню. true - в подробной записи, false - в основной
         //var_dump($zapisData);
 
         $start_time_h = floor($zapisData['start_time'] / 60);
@@ -2262,6 +2263,18 @@
                     $smena = 3;
                 }
 
+                if ($main_zapis){
+
+                }else {
+                    $rezult .=
+                        '<li>
+                            <div style="border: 1px dotted #F9FF00; background: rgba(0, 55, 255, 0.23); cursor: context-menu;">
+                                '.$title_time.'<br><b>'.$title_client.'</b><br>'.$title_descr.'
+                            </div>
+                        </li>';
+                }
+
+
 
                 if ($zapisData['office'] != $zapisData['add_from']) {
                     if ($zapisData['enter'] != 8) {
@@ -2274,9 +2287,9 @@
                             '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $zapisData['id'] . ', 1)">Пришёл</div></li>';
                         $rezult .=
                             '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $zapisData['id'] . ', 9)">Не пришёл</div></li>';
-                        /*$rezult .=
+                        $rezult .=
                             '<li><div onclick="ShowSettingsAddTempZapis(' . $zapisData['office'] . ', \'' . $office_j_arr[$zapisData['office']]['name'] . '\', ' . $zapisData['kab'] . ', ' . $year . ', '.$month.', '.$day.', '.$smena.', '.$zapisData['start_time'] . ', ' . $zapisData['wt'] . ', ' . $zapisData['worker'] . ', \'' . WriteSearchUser('spr_workers', $zapisData['worker'], 'user_full', false) . '\', \'' . WriteSearchUser('spr_clients', $zapisData['patient'], 'user_full', false) . '\', \'' . str_replace(array("\r", "\n"), " ", $zapisData['description']) . '\', ' . $zapisData['insured'] . ', ' . $zapisData['pervich'] . ', ' . $zapisData['noch'] . ', ' . $zapisData['id'] . ', ' . $zapisData['type'] . ', \'edit\')">Редактировать</div></li>';
-*/
+
                         //var_dump($zapisData['create_time']);
                         //var_dump($zapisData['description']);
                         //var_dump(time());
@@ -2311,6 +2324,8 @@
                 $rezult .=
                     '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $zapisData['id'] . ', 0)">Отменить все изменения</div></li>';
             }
+
+            return $rezult;
         }
 
         //Дополнительное расширение прав на добавление посещений для специалистов, god_mode и управляющих
@@ -2363,5 +2378,20 @@
 
     }
 
-	
+	function drawZapisDivVal ($cellZapisValue_TopSdvig, $cellZapisValue_Height, $back_color, $title_time, $title_client, $title_descr, $zapis_id, $contexMenuZapisMain){
+
+        $rezult = '';
+
+        $rezult .= '<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;" 
+        onclick="contextMenuShow('.$zapis_id.', 0, event, \'zapis_options\');">
+            '.$title_time.'<br>
+            
+                <span style="font-weight:bold;">'.$title_client.'</span> : '.$title_descr.'';
+
+        $rezult .= $contexMenuZapisMain;
+
+        $rezult .= '</div>';
+
+        return $rezult;
+    }
 ?>

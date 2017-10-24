@@ -6,7 +6,7 @@
 	$god_mode = FALSE;
 	
 	$version = 'v 25.08.2017';
-	
+
 	echo'
 		<!DOCTYPE html>
 		<html>
@@ -230,32 +230,35 @@
 
 		</head>
 		<body>
-		
-		<!--<ul class="navigation">
-			<li class="nav-item"><a href="index.php">Главная</a></li>
-			<li class="nav-item"><a href="it.php">IT</a></li>
-			<li class="nav-item"><a href="stomat.php">Стоматология</a></li>
-			<li class="nav-item"><a href="cosmet.php">Косметология</a></li>
-			<li class="nav-item"><a href="contacts.php">Сотрудники</a></li>
-			<li class="nav-item"><a href="clients.php">Пациенты</a></li>
-			<li class="nav-item"><a href="filials.php">Филиалы</a></li>
-		</ul>
 
-		<input type="checkbox" id="nav-trigger" class="nav-trigger" />
-		<label for="nav-trigger"></label>
-
-	<div class="site-wrap">-->
 		<div class="no_print"> 
 		<header class="h">
 			<nav>
-				<ul>';
+				<ul class="vert-nav">';
 	//Если в системе
 	if ($enter_ok){
 		include_once 'DBWork.php';
 
 		require_once 'permissions.php';
-		
-		
+
+        //Для автоматизации выбора филиала
+        if (isset($_SESSION['filial']) && !empty($_SESSION['filial'])){
+            $filial_id_default = $_SESSION['filial'];
+            $filial = array();
+            $offices_j = SelDataFromDB('spr_office', $_SESSION['filial'], 'offices');
+            //var_dump($offices_j['name']);
+            $selected_fil = $offices_j[0]['name'];
+        }else{
+            $selected_fil = '-';
+            $filial_id_default = 15;
+        }
+
+
+        //Дата сегодня
+        $monthT = date('m');
+        $yearT = date('Y');
+        $dayT = date("d");
+
 		echo '<li><a href="index.php" style="position: relative">Главная<div style="font-size:80%">'.$version.'</div><div class="have_new-topic notes_count" style="display: none; top: 0; right: 0; background: red;" title="Есть непрочитанные сообщения"></div></a></li>';
 		
 		if (($it['see_all'] == 1) || ($it['see_own'] == 1) || $god_mode){
@@ -271,16 +274,48 @@
 			echo '<li><a href="cosmet.php">Косметология</a></li>';
 		}
 		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
-			echo '<li><a href="scheduler.php" style="position: relative">График Запись';
-			
-            if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
-                echo '<div class="have_new-zapis notes_count" style="display: none; top: 0; right: 0; background: red;" title="Есть необработанные онлайн заявки"></div>';
+            echo '<li>';
+
+            if (($_SESSION['permissions'] == 5) || ($_SESSION['permissions'] == 6) || ($_SESSION['permissions'] == 10)) {
+                echo '<a href="scheduler_own.php?id=' . $_SESSION['id'] . '" style="position: relative;  width: 85px;">Мой график';
+            }else {
+                echo '<a href="scheduler.php" style="position: relative;  width: 85px;">График';
             }
+
+            if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
+                echo '<div class="have_new-zapis notes_count have_new-zapis_main" style="top: 0; right: 0; background: red;" title="Есть необработанные онлайн заявки"></div>';
+            }
+
             echo '</a>';
 
+            if ((($_SESSION['permissions'] == 5) || ($_SESSION['permissions'] == 6) || ($_SESSION['permissions'] == 10))) {
+                echo '
+                    <ul style="background: #FFF; width: 108px;">
+                        <li><a href="zapis_own.php?y=' . $yearT . '&m=' . $monthT . '&d=' . $dayT . '&worker=' . $_SESSION['id'] . '" style="height: 20px; border: 1px dotted #CCC;">
+                        Моя запись
+                        </a></li>
+                    </ul>';
+            }else{
+                echo '
+                    <ul style="background: #FFF; width: 108px;">
+                        <li><a href="zapis.php?y=' . $yearT . '&m=' . $monthT . '&d=' . $dayT . '&filial=' . $filial_id_default . '" style="height: 20px; border: 1px dotted #CCC;">
+                        Запись
+                        </a>
+                        </li>
+                        <li><a href="zapis_full.php?y=' . $yearT . '&m=' . $monthT . '&d=' . $dayT . '&filial=' . $filial_id_default . '" style="height: 20px; border: 1px dotted #CCC;">
+                        Подробно
+                        </a>
+                        </li>
+                        <li><a href="zapis_online.php" style="height: 20px; border: 1px dotted #CCC;">
+                        Запись онлайн
+                        <div class="have_new-zapis notes_count" style="display: none; top: -5pxz; right: -20px; background: red;" title="Есть необработанные онлайн заявки"></div>
+                        </a>
+                        </li>
+                    </ul>';
+            }
 			echo '
 			</li>';
-
+			
 
 		}
 		if (($report['see_all'] == 1) || ($report['see_own'] == 1) || $god_mode){
@@ -303,10 +338,10 @@
 	
 	echo
 				'</ul>
-				<ul style="position: absolute; right: 0; top: 0;">';
+				<ul style="position: absolute; right: 0; top: 0; z-index: 99; background: #FFF;">';
 	if (!$enter_ok){
 		echo '
-					<li><a href="enter.php"><i class="fa fa-power-off"></i></a></li>';
+					<li><a href="enter.php" title="Вход"><i class="fa fa-power-off"></i></a></li>';
 	}else{
 		
 		$alarm = 0;
@@ -371,18 +406,7 @@
 		}else{
 			$if_removes = '';
 		}
-		
-		//Для автоматизации выбора филиала
-		if (isset($_SESSION['filial']) && !empty($_SESSION['filial'])){
-			$filial = array();
-			$offices_j = SelDataFromDB('spr_office', $_SESSION['filial'], 'offices');
-			//var_dump($offices_j['name']);
-			$selected_fil = $offices_j[0]['name'];
-		}else{
-			$selected_fil = '-';
-		}
-		
-		
+
 		echo '
 
 					<li>

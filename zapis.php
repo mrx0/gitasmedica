@@ -714,19 +714,13 @@
                                                     $title_descr = $ZapisHereQueryToday_val['description'];
                                                     $zapis_id = $ZapisHereQueryToday_val['id'];
 
-                                                    echo '
-														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;" 
-														title="'.$title_time.' / '.$title_client.' / '.$title_descr.'" 
-														onclick="contextMenuShow('.$zapis_id.', 0, event, \'zapis_options\');">
-															'.$title_time.'<br>
-															
-																<span style="font-weight:bold;">'.$title_client.'</span> : '.$title_descr.'';
+                                                    echo drawZapisDivVal ($cellZapisValue_TopSdvig, $cellZapisValue_Height, $back_color, $title_time, $title_client, $title_descr, $zapis_id, contexMenuZapisMain ($ZapisHereQueryToday_val, $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false, $title_time, $title_client, $title_descr));
 
                                                     //Контекстная менюшка
-                                                    echo contexMenuZapisMain ($ZapisHereQueryToday_val, $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false);
+                                                    //echo contexMenuZapisMain ($ZapisHereQueryToday_val, $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false);
 
-                                                    echo '
-														</div>';
+                                                    /*echo '
+														</div>';*/
 												}else{
 												}
 												//Передать предыдущую запись
@@ -844,19 +838,13 @@
                                                 $title_descr = $ZapisHereQueryToday[0]['description'];
                                                 $zapis_id = $ZapisHereQueryToday[0]['id'];
 
-                                                echo '
-														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;" 
-														title="'.$title_time.' / '.$title_client.' / '.$title_descr.'" 
-														onclick="contextMenuShow('.$zapis_id.', 0, event, \'zapis_options\');">
-															'.$title_time.'<br>
-															
-																<span style="font-weight:bold;">'.$title_client.'</span> : '.$title_descr.'';
+                                                echo drawZapisDivVal ($cellZapisValue_TopSdvig, $cellZapisValue_Height, $back_color, $title_time, $title_client, $title_descr, $zapis_id, contexMenuZapisMain ($ZapisHereQueryToday[0], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false, $title_time, $title_client, $title_descr));
 
                                                 //Контекстная менюшка
-                                                echo contexMenuZapisMain ($ZapisHereQueryToday[0], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false);
+                                                //echo contexMenuZapisMain ($ZapisHereQueryToday[0], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false);
 
-                                                echo '
-														</div>';
+                                                /*echo '
+														</div>';*/
 											}else{
 											}
 											//Передать предыдущую запись
@@ -1048,19 +1036,13 @@
                                             $title_descr = $NextSmenaArr[$k]['ZapisHereQueryToday']['description'];
                                             $zapis_id = $NextSmenaArr[$k]['ZapisHereQueryToday']['id'];
 
-                                            echo '
-														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;" 
-														title="'.$title_time.' / '.$title_client.' / '.$title_descr.'" 
-														onclick="contextMenuShow('.$zapis_id.', 0, event, \'zapis_options\');">
-															'.$title_time.'<br>
-															
-																<span style="font-weight:bold;">'.$title_client.'</span> : '.$title_descr.'';
+                                            echo drawZapisDivVal ($cellZapisValue_TopSdvig, $cellZapisValue_Height, $back_color, $title_time, $title_client, $title_descr, $zapis_id, contexMenuZapisMain ($NextSmenaArr[$k]['ZapisHereQueryToday'], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false, $title_time, $title_client, $title_descr));
 
                                             //Контекстная менюшка
-                                            echo contexMenuZapisMain ($NextSmenaArr[$k]['ZapisHereQueryToday'], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false);
+                                            //echo contexMenuZapisMain ($NextSmenaArr[$k]['ZapisHereQueryToday'], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false);
 
-                                            echo '
-														</div>';
+                                            /*echo '
+														</div>';*/
 										}
 										//$NextSmenaArr = array();
 									}
@@ -1191,19 +1173,13 @@
                                                         $title_descr = $ZapisHereQueryToday_val['description'];
                                                         $zapis_id = $ZapisHereQueryToday_val['id'];
 
-                                                        echo '
-														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;" 
-														title="'.$title_time.' / '.$title_client.' / '.$title_descr.'" 
-														onclick="contextMenuShow('.$zapis_id.', 0, event, \'zapis_options\');">
-															'.$title_time.'<br>
-															
-																<span style="font-weight:bold;">'.$title_client.'</span> : '.$title_descr.'';
+                                                        echo drawZapisDivVal ($cellZapisValue_TopSdvig, $cellZapisValue_Height, $back_color, $title_time, $title_client, $title_descr, $zapis_id, contexMenuZapisMain ($ZapisHereQueryToday_val, $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false, $title_time, $title_client, $title_descr));
 
                                                         //Контекстная менюшка
-                                                        echo contexMenuZapisMain ($ZapisHereQueryToday_val, $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false);
+                                                        //echo contexMenuZapisMain ($ZapisHereQueryToday_val, $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false);
 
-                                                        echo '															
-														</div>';
+                                                        /*echo '
+														       </div>';*/
 													}else{
 													}
 													//Передать предыдущую запись
@@ -1300,19 +1276,13 @@
 													$title_descr = $ZapisHereQueryToday[0]['description'];
                                                     $zapis_id = $ZapisHereQueryToday[0]['id'];
 
-                                                    echo '
-														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;" 
-														title="'.$title_time.' / '.$title_client.' / '.$title_descr.'" 
-														onclick="contextMenuShow('.$zapis_id.', 0, event, \'zapis_options\');">
-															'.$title_time.'<br>
-															
-																<span style="font-weight:bold;">'.$title_client.'</span> : '.$title_descr.'';
+                                                    echo drawZapisDivVal ($cellZapisValue_TopSdvig, $cellZapisValue_Height, $back_color, $title_time, $title_client, $title_descr, $zapis_id, contexMenuZapisMain ($ZapisHereQueryToday[0], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false, $title_time, $title_client, $title_descr));
 
                                                     //Контекстная менюшка
-                                                    echo contexMenuZapisMain ($ZapisHereQueryToday[0], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false);
+                                                    //echo contexMenuZapisMain ($ZapisHereQueryToday[0], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false);
 
-													echo '		
-														</div>';
+													/*echo '
+														</div>';*/
 												}else{
 												}
 												//Передать предыдущую запись
@@ -1545,19 +1515,13 @@
                                             $title_descr = $NextSmenaArr[$k]['ZapisHereQueryToday']['description'];
                                             $zapis_id = $NextSmenaArr[$k]['ZapisHereQueryToday']['id'];
 
-                                            echo '
-														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;" 
-														title="'.$title_time.' / '.$title_client.' / '.$title_descr.'" 
-														onclick="contextMenuShow('.$zapis_id.', 0, event, \'zapis_options\');">
-															'.$title_time.'<br>
-															
-																<span style="font-weight:bold;">'.$title_client.'</span> : '.$title_descr.'';
+                                            echo drawZapisDivVal ($cellZapisValue_TopSdvig, $cellZapisValue_Height, $back_color, $title_time, $title_client, $title_descr, $zapis_id, contexMenuZapisMain ($NextSmenaArr[$k]['ZapisHereQueryToday'], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $title_time, $title_client, $title_descr));
 
                                             //Контекстная менюшка
-                                            echo contexMenuZapisMain ($NextSmenaArr[$k]['ZapisHereQueryToday'], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit);
+                                            //echo contexMenuZapisMain ($NextSmenaArr[$k]['ZapisHereQueryToday'], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit);
 
-                                            echo '
-														</div>';
+                                            /*echo '
+														</div>';*/
 										}
 										//$NextSmenaArr = array();
 									}
@@ -1688,19 +1652,13 @@
                                                         $title_descr = $ZapisHereQueryToday_val['description'];
                                                         $zapis_id = $ZapisHereQueryToday_val['id'];
 
-                                                        echo '
-														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;" 
-														title="'.$title_time.' / '.$title_client.' / '.$title_descr.'" 
-														onclick="contextMenuShow('.$zapis_id.', 0, event, \'zapis_options\');">
-															'.$title_time.'<br>
-															
-																<span style="font-weight:bold;">'.$title_client.'</span> : '.$title_descr.'';
+                                                        echo drawZapisDivVal ($cellZapisValue_TopSdvig, $cellZapisValue_Height, $back_color, $title_time, $title_client, $title_descr, $zapis_id, contexMenuZapisMain ($ZapisHereQueryToday_val, $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $title_time, $title_client, $title_descr));
 
                                                         //Контекстная менюшка
-                                                        echo contexMenuZapisMain ($ZapisHereQueryToday_val, $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit);
+                                                        //echo contexMenuZapisMain ($ZapisHereQueryToday_val, $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit);
 
-														echo '	
-														</div>';
+														/*echo '
+														    </div>';*/
 													}else{
 													}
 													//Передать предыдущую запись
@@ -1800,19 +1758,13 @@
                                                     $title_descr = $ZapisHereQueryToday[0]['description'];
                                                     $zapis_id = $ZapisHereQueryToday[0]['id'];
 
-                                                    echo '
-														<div class="cellZapisVal" style="top: '.$cellZapisValue_TopSdvig.'px; height: '.$cellZapisValue_Height.'px; '.$back_color.'; text-align: left; padding: 2px;" 
-														title="'.$title_time.' / '.$title_client.' / '.$title_descr.'" 
-														onclick="contextMenuShow('.$zapis_id.', 0, event, \'zapis_options\');">
-															'.$title_time.'<br>
-															
-																<span style="font-weight:bold;">'.$title_client.'</span> : '.$title_descr.'';
+                                                    echo drawZapisDivVal ($cellZapisValue_TopSdvig, $cellZapisValue_Height, $back_color, $title_time, $title_client, $title_descr, $zapis_id, contexMenuZapisMain ($ZapisHereQueryToday[0], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false, $title_time, $title_client, $title_descr));
 
                                                     //Контекстная менюшка
-                                                    echo contexMenuZapisMain ($ZapisHereQueryToday[0], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit);
+                                                    //echo contexMenuZapisMain ($ZapisHereQueryToday[0], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit);
 
-													echo '		
-														</div>';
+													/*echo '
+														</div>';*/
 												}else{
 												}
 												//Передать предыдущую запись
@@ -1943,7 +1895,7 @@
             echo $block_show_settings_add_temp_zapis;
 
             echo '
-                                    <input type="button" class="b" value="OK" onclick="if (iCanManage) Ajax_add_TempZapis('.$type.')" id="Ajax_add_TempZapis">
+                                    <div id="Ajax_add_TempZapis_button" style="display: inline;"></div>
 						            <input type="button" class="b" value="Отмена" onclick="HideSettingsAddTempZapis()">
                  </div>';
 
