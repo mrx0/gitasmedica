@@ -496,12 +496,12 @@
     }
 
     //Для изменений в процентах персональных
-    var elems = document.getElementsByClassName("changePersonalPercentCat"), newInput;
+    var changePersonalPercentCat_elems = document.getElementsByClassName("changePersonalPercentCat"), newInput;
     //console.log(elems);
 
-    if (elems.length > 0) {
-        for (var i = 0; i < elems.length; i++) {
-            var el = elems[i];
+    if (changePersonalPercentCat_elems.length > 0) {
+        for (var i = 0; i < changePersonalPercentCat_elems.length; i++) {
+            var el = changePersonalPercentCat_elems[i];
             el.addEventListener("click", function () {
                 //var thisID = this.id;
                 var workerID = this.getAttribute("worker_id");

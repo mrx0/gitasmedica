@@ -27,7 +27,10 @@
                                         <div style="display:inline-block;">
                                             <div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">
                                                 <div class="cellLeft">Число</div>
-                                                <div class="cellRight" id="month_date">
+                                                <div class="cellRight">
+											        <input type="text" id="month_date" name="month_date" class="dateс" style="text-align: inherit; font-size: 12px; border:none; color: rgb(30, 30, 30); font-weight: bold;" value="" onfocus="this.select();_Calendar.lcs(this)" 
+												    onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
+											        <!--<span style="font-size: 100%; cursor: pointer" onclick="PriemTimeCalcChangeDate();"><i class="fa fa-check-square" style=" color: green;"></i> Изменить</span>-->
                                                 </div>
                                             </div>
                                             <div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:400px;">

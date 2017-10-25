@@ -156,7 +156,7 @@
 
 							foreach ($invoice_data as $key => $items){
 								$request .= '
-								<div class="cellsBlock" style="font-size: 100%;" >
+								<div class="cellsBlock" style="font-size: 100%; height: 45px; min-height: 45px;">
 								<!--<div class="cellCosmAct" style=" '.$bg_col.'">
 									-
 								</div>-->
@@ -274,8 +274,14 @@
 								}
 								
 								$request .= '
-								<div class="cellCosmAct invoiceItemPrice settings_text" ind="'.$ind.'" key="'.$key.'" start_price="'.$price['start_price'].'" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; '.$bg_col.'" onclick="contextMenuShow('.$ind.', '.$key.', event, \'priceItem\');">
-                                    '.$price['price'].'
+								<div class="cellCosmAct invoiceItemPrice settings_text" ind="'.$ind.'" key="'.$key.'" price="'.$price['price'].'" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; position: relative; '.$bg_col.'">
+                                    <div start_price="'.$price['start_price'].'"  onclick="contextMenuShow('.$ind.', '.$key.', event, \'priceItem\');">'.$price['price'].'</div>
+                                    <div class="invPriceUpOne" style="top: 0;" onclick="invPriceUpDownOne('.$ind.', '.$key.', '.$price['price'].', '.$price['start_price'].', \'up\');">
+                                        <i class="fa fa-caret-up" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="invPriceDownOne" style="bottom: 0;" onclick="invPriceUpDownOne('.$ind.', '.$key.', '.$price['price'].', '.$price['start_price'].', \'down\');">
+                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                    </div>
 								</div>
 								<div class="cellCosmAct spec_koeffInvoice settings_text"  speckoeff="'.$items['spec_koeff'].'" style="font-size: 90%; text-align: center; '.$bg_col.' width: 40px; min-width: 40px; max-width: 40px;" onclick="contextMenuShow('.$ind.', '.$key.', event, \'spec_koeffItem\');">
 									'.$items['spec_koeff'].'
@@ -295,7 +301,7 @@
 								}
 								$request .= '
 								</div>
-								<div class="cellCosmAct invoiceItemPriceItog" style="font-size: 100%; text-align: center; '.$bg_col.' width: 60px; min-width: 60px; max-width: 60px;">
+								<div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; font-weight: bold; text-align: center; '.$bg_col.' width: 60px; min-width: 60px; max-width: 60px; cursor: pointer" onclick="contextMenuShow('.$ind.', '.$key.', event, \'priceItemItog\');">
 									0
 								</div>
 								<div invoiceitemid="'.$key.'" class="cellCosmAct info" style="font-size: 100%; text-align: center; '.$bg_col.'" onclick="deleteInvoiceItem('.$ind.', this);">

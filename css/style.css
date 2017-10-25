@@ -2300,3 +2300,18 @@ ul.ul-drop div.drop {
 	float:left;
 	width: 85px;
 }
+
+/*Для нарядов, увеличение уменьшение цены на 1*/
+.invPriceUpOne, .invPriceDownOne{
+	position: absolute;
+	width: inherit;
+	background: rgba(210, 210, 210, 0.64);
+	margin: 0;
+	left: 0;
+	width: 68px;
+	height: 10px;
+}
+
+.invPriceUpOne:hover, .invPriceDownOne:hover{
+	background: rgba(255, 204, 204, 0.64);
+}

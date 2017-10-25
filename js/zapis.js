@@ -47,7 +47,12 @@
         }
 
         $("#kab").html(kab);
-        $("#month_date").html(day+'.'+month+'.'+year);
+        //$("#month_date").html(day+'.'+month+'.'+year);
+
+        if (Number(day) < 10) day='0'+day;
+        if (Number(month) < 10) month='0'+month;
+
+        $("#month_date").val(day+'.'+month+'.'+year);
         $("#month_date_smena").html(smena);
 
         if (pervich == 1){
@@ -85,12 +90,15 @@
         $("#work_time_m_end").html(real_time_m_end);
 
         var Ajax_add_TempZapis_button = '<input type="button" class="b" value="OK" onclick="if (iCanManage) Ajax_add_TempZapis('+type+')" id="Ajax_add_TempZapis">';
+        var month_date_change = '';
 
         if (add_or_edit == 'edit'){
             Ajax_add_TempZapis_button = '<input type="button" class="b" value="OK" onclick="if (iCanManage) Ajax_edit_TempZapis('+type+')" id="Ajax_add_TempZapis">';
+            month_date_change = '1';
         }
 
         $("#Ajax_add_TempZapis_button").html(Ajax_add_TempZapis_button);
+        $("#month_date_change").html(month_date_change);
 
         //var next_time_start_rez = 0;
 
@@ -176,9 +184,14 @@
     function HideSettingsAddTempZapis(){
         $('#ShowSettingsAddTempZapis').hide();
         $('#overlay').hide();
-        document.getElementById("wt").value = 0;
-        document.getElementById("change_hours").value = 0;
-        document.getElementById("change_minutes").value = 30;
+        $("#wt").value = 0;
+        $("#change_hours").val(0);
+        $("#change_minutes").val(30);
+
+        $("#search_client").val('');
+        $("#search_client2").val('');
+
+        $("#description").val('');
     }
 
     function ShowWorkersSmena(){
