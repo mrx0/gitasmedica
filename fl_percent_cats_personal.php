@@ -100,7 +100,7 @@
             $arr = array();
             $rez = array();
 
-            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '{$type}'";
+            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '{$type}' AND `fired` <> '1'";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
             $number = mysqli_num_rows($res);

@@ -121,6 +121,8 @@
 
 					var min_itog_price = Math.floor(itog_price / 10) * 10;
 					var max_itog_price = min_itog_price + 10;
+					if (min_itog_price < 1) min_itog_price = 1;
+
 
 					res.data =
                         '<li style="font-size: 10px;">'+
@@ -128,9 +130,9 @@
                         '</li>'+
 						'<li>'+
                         //'<input type="number" name="changePriceItem" id="changePriceItem" class="form-control" size="2" min="'+start_price+'" value="'+Number(target.html())+'" class="mod" onchange="priceItemInvoice('+ind+', '+key+', $(this).val(), '+start_price+');">'+
-                        '<input type="number" name="changePriceItem" id="changePriceItem" class="form-control" size="3" min="'+min_itog_price+'"  max="'+max_itog_price+'" value="'+itog_price+'" class="mod">'+
+                        '<input type="number" name="changePriceItogItem" id="changePriceItogItem" class="form-control" size="3" min="'+min_itog_price+'"  max="'+max_itog_price+'" value="'+itog_price+'" class="mod">'+
                         //'<input type="text" name="changePriceItem" id="changePriceItem" class="form-control" value="'+Number(target.html())+'" onkeyup="changePriceItem(this.value, '+start_price+');">'+
-						'<div style="display: inline;" onclick="priceItemInvoice('+ind+', '+key+', document.getElementById(\'changePriceItem\').value, '+start_price+')">Ok</div>'+
+						'<div style="display: inline;" onclick="priceItemItogInvoice('+ind+', '+key+', document.getElementById(\'changePriceItogItem\').value, '+min_itog_price+', '+max_itog_price+')">Ok</div>'+
 						'</li>';
 
 				}
@@ -5153,6 +5155,61 @@
 
 
 		//});*/
+
+	}
+
+	//Изменить цену у этого зуба
+	function priceItemItogInvoice(ind, key, price, min_price, max_price){
+
+		var invoice_type = document.getElementById("invoice_type").value;
+
+		console.log(ind);
+		console.log(key);
+
+        if (isNaN(price)) price = max_price;
+		if (price < min_price) price = min_price;
+		if (price > max_price) price = max_price;
+
+        console.log(min_price);
+        console.log(max_price);
+        console.log(price);
+
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+
+		$.ajax({
+			url:"add_manual_itog_price_id_in_item_invoice_f.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                ind: ind,
+				key: key,
+                price: price,
+
+				client: document.getElementById("client").value,
+				zapis_id: document.getElementById("zapis_id").value,
+				filial: document.getElementById("filial").value,
+				worker: document.getElementById("worker").value,
+
+				invoice_type: invoice_type,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+				console.log(data);
+
+				fillInvoiseRez();
+
+			}
+		});
+
 
 	}
 

@@ -301,8 +301,25 @@
 								}
 								$request .= '
 								</div>
-								<div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; font-weight: bold; text-align: center; '.$bg_col.' width: 60px; min-width: 60px; max-width: 60px; cursor: pointer" onclick="contextMenuShow('.$ind.', '.$key.', event, \'priceItemItog\');">
-									0
+								<div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; font-weight: bold; text-align: center; '.$bg_col.' width: 60px; min-width: 60px; max-width: 60px; cursor: pointer" onclick="contextMenuShow('.$ind.', '.$key.', event, \'priceItemItog\');">';
+
+
+                                if (isset($items['manual_itog_price'])){
+                                    if (isset($items['itog_price'])){
+                                        if ($items['itog_price'] > 0){
+                                            $request .= $items['itog_price'];
+                                        }else{
+                                            $request .= '0';
+                                        }
+                                    }else{
+                                        $request .= '0';
+                                    }
+                                }else{
+                                    $request .= '0';
+                                }
+
+
+                                $request .= '	
 								</div>
 								<div invoiceitemid="'.$key.'" class="cellCosmAct info" style="font-size: 100%; text-align: center; '.$bg_col.'" onclick="deleteInvoiceItem('.$ind.', this);">
 									<i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
