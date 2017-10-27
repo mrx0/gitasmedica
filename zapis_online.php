@@ -9,7 +9,7 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 
-        if (($zapis['add_new'] == 1) || $god_mode){
+        if (($zapis['add_new'] == 1) || ($_SESSION['permissions'] == 8) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 

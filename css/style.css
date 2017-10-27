@@ -2315,3 +2315,12 @@ ul.ul-drop div.drop {
 .invPriceUpOne:hover, .invPriceDownOne:hover{
 	background: rgba(255, 204, 204, 0.64);
 }
+
+.invPriceDownOne:hover{
+	color: red;
+}
+
+.invPriceUpOne:hover{
+	color: green;
+}
+

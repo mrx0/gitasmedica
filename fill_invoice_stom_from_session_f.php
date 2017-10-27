@@ -303,6 +303,8 @@
 								</div>
 								<div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; font-weight: bold; text-align: center; '.$bg_col.' width: 60px; min-width: 60px; max-width: 60px; cursor: pointer" onclick="contextMenuShow('.$ind.', '.$key.', event, \'priceItemItog\');">';
 
+                                //$request .= $items['itog_price'];
+
 
                                 if (isset($items['manual_itog_price'])){
                                     if (isset($items['itog_price'])){
@@ -340,8 +342,8 @@
 							$request .= '
 							</div>';
 					}
-					
-					echo json_encode(array('result' => 'success', 'data' => $request));
+
+					echo json_encode(array('result' => 'success', 'data' => $request, 'data2' => $_SESSION['invoice_data'][$client][$zapis_id]['data']));
 				}
 				
 				/*include_once 'functions.php';

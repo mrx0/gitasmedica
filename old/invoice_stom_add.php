@@ -491,7 +491,7 @@ require_once 'blocks_dom.php';
 									addInvoiceInSession(t_number);
 								});
 								
-								fillInvoiseRez();
+								fillInvoiseRez(true);
 							});
 						</script>
 						

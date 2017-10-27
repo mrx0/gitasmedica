@@ -15,7 +15,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         $temp_arr = array();
 
         if (!isset($_POST['ind']) || !isset($_POST['key']) || !isset($_POST['price']) || !isset($_POST['invoice_type']) || !isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['filial']) || !isset($_POST['worker'])){
-            echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
+            echo json_encode(array('result' => 'error', 'data' => $_POST));
         }else{
             //var_dump($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']]);
 
@@ -35,7 +35,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 }
             }
 
-            echo json_encode(array('result' => 'success', 'data' => $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]));
+            echo json_encode(array('result' => 'success', 'data' => $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['itog_price']));
         }
     }
 }

@@ -123,6 +123,15 @@
 											$temp_arr2['guarantee'] = (int)$invoice_ex_j_val['guarantee'];
 											$temp_arr2['spec_koeff'] = $invoice_ex_j_val['spec_koeff'];
 											$temp_arr2['discount'] = (int)$invoice_ex_j_val['discount'];
+
+											$temp_arr2['itog_price'] = (int)$invoice_ex_j_val['itog_price'];
+
+											if ($invoice_ex_j_val['manual_price'] == 1){
+                                                $temp_arr2['manual_price'] = true;
+                                            }else{
+                                                $temp_arr2['manual_price'] = false;
+                                            }
+
 											if ($invoice_ex_j_val['manual_price'] == 1){
                                                 $temp_arr2['manual_price'] = true;
                                             }else{
@@ -730,7 +739,7 @@
                                                 addInvoiceInSession(t_number);
                                             });
                                             
-                                            fillInvoiseRez();
+                                            fillInvoiseRez(true);
                                         });
                                         
                                     </script>

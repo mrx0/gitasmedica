@@ -3820,7 +3820,7 @@
 	};
 
 	//Подсчёт суммы для счёта
-	function calculateInvoice (invoice_type){
+	function calculateInvoice (invoice_type, changeItogPrice){
 
 		var Summ = 0;
 		var SummIns = 0;
@@ -3836,6 +3836,8 @@
 		}
 
 		$(".invoiceItemPrice").each(function() {
+
+            var invoiceItemPriceItog = 0;
 
 			//console.log(document.getElementById($(this).parent().find('[insure]')).getAttribute('insure'));
 			//console.log($(this).prev().prev().attr('insure'));
@@ -3891,7 +3893,7 @@
 					//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 				},
 				// действие, при ответе с сервера
-				success: function(data){
+				success: function(res){
 					//if(data.result == "success"){
 						//console.log(data.data);
 						//$('#invoice_rezult').html(data.data);
@@ -3903,7 +3905,7 @@
 				}
 			});
 
-			//коэффициентinvoiceItemPrice
+			//коэффициент
 
 			//скидка акция
 			var discount = $(this).next().next().next().attr('discount');
@@ -3941,12 +3943,116 @@
                 }
             }
 
-			//прописываем стоимость
-			if (guarantee == 0){
-				//$(this).next().next().next().next().next().html(stoim);
-				//$(this).next().next().next().next().html(stoim);
+            var invoiceItemPriceItog = stoim;
+            var ishod_price = Number($(this).parent().find('.invoiceItemPriceItog').html());
+
+            console.log(ishod_price);
+            console.log(invoiceItemPriceItog);
+            console.log(stoim);
+            console.log(changeItogPrice);
+            console.log("//////////////////////");
+
+            if (ishod_price == 0) {
                 $(this).parent().find('.invoiceItemPriceItog').html(stoim);
-			}
+            }
+
+            if (changeItogPrice) {
+                //прописываем стоимость этой позиции
+                if (guarantee == 0) {
+                    //$(this).next().next().next().next().next().html(stoim);
+                    //$(this).next().next().next().next().html(stoim);
+
+                    $(this).parent().find('.invoiceItemPriceItog').html(stoim);
+                }
+            }
+            //console.log("calculateInvoice --> changeItogPrice ---->");
+            //console.log(invoiceItemPriceItog);
+
+            if (changeItogPrice) {
+				//console.log(changeItogPrice);
+
+				/*var min_itog_price = Math.floor(invoiceItemPriceItog / 10) * 10;
+				var max_itog_price = min_itog_price + 10;
+				if (min_itog_price < 1) min_itog_price = 1;*/
+
+				//priceItemItogInvoice (ind, key, invoiceItemPriceItog, min_itog_price, max_itog_price)
+
+                $.ajax({
+                    url: "add_manual_itog_price_id_in_item_invoice_f.php",
+                    global: false,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        ind: ind,
+                        key: key,
+                        price: invoiceItemPriceItog,
+
+                        client: $("#client").val(),
+                        zapis_id: $("#zapis_id").val(),
+                        filial: $("#filial").val(),
+                        worker: $("#worker").val(),
+
+                        invoice_type: invoice_type
+                    },
+                    cache: false,
+                    beforeSend: function () {
+                        //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                    },
+                    // действие, при ответе с сервера
+                    success: function (res) {
+                        //console.log(res);
+
+                        //fillInvoiseRez();
+
+                        //$(this).parent().find('.invoiceItemPriceItog').html(invoiceItemPriceItog);
+
+                    }
+                });
+
+            }
+
+
+            //обновляем итоговую цену в сессии как можем
+            /*$.ajax({
+                url: 'add_price_itog_price_id_in_item_invoice_f.php',
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data:
+                    {
+                        client: $("#client").val(),
+                        zapis_id: $("#zapis_id").val(),
+                        filial: $("#filial").val(),
+                        worker: $("#worker").val(),
+
+                        invoice_type: invoice_type,
+
+                        ind: ind,
+                        key: key,
+
+                        price: invoiceItemPriceItog
+                    },
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function(data){
+                    //console.log(data);
+                    //if(data.result == "success"){
+                    //console.log(data.data);
+                    //$('#invoice_rezult').html(data.data);
+
+                    //}else{
+                    //console.log('error');
+                    //	$('#errror').html(data.data);
+                    //}
+
+                    //$(this).parent().find('.invoiceItemPriceItog').html(invoiceItemPriceItog);
+
+                }
+            });*/
+
 
 		});
 
@@ -3961,10 +4067,14 @@
 		//страховые не округляем
         //SummIns = Math.round(SummIns/10) * 10;
 
-		document.getElementById("calculateInvoice").innerHTML = Summ;
+        $("#calculateInvoice").html(Summ);
+
 		if (SummIns > 0){
-			document.getElementById("calculateInsInvoice").innerHTML = SummIns;
+			$("#calculateInsInvoice").html(SummIns);
 		}
+
+        console.log(Summ);
+        console.log("<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>");
 
 	};
 
@@ -4024,7 +4134,7 @@
     }
 
 	//Функция заполняет результат счета из сессии
-	function fillInvoiseRez(){
+	function fillInvoiseRez(changeItogPrice){
 
 		var invoice_type = document.getElementById("invoice_type").value;
 
@@ -4039,27 +4149,29 @@
 			dataType: "JSON",
 			data:
 			{
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client: $("#client").val(),
+				zapis_id: $("#zapis_id").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val()
 			},
 			cache: false,
 			beforeSend: function() {
 				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 			},
 			// действие, при ответе с сервера
-			success: function(data){
-				if(data.result == "success"){
-					//console.log(data.data);
-					$('#invoice_rezult').html(data.data);
+			success: function(res){
+                //console.log("fillInvoiseRez---------->");
+                //console.log(res);
+
+				if(res.result == "success"){
+					$('#invoice_rezult').html(res.data);
 
 					// !!!
-					calculateInvoice(invoice_type);
+					calculateInvoice(invoice_type, changeItogPrice);
 
 				}else{
 					//console.log('error');
-					$('#errror').html(data.data);
+					$('#errror').html(res.data);
 				}
 
 				// !!! скролл надо замутить сюда $('#invoice_rezult').scrollTop();
@@ -4091,7 +4203,8 @@
 				client: $("#client").val(),
 				zapis_id: $("#zapis_id2").val(),
 				filial: $("#filial").val(),
-				worker: $("#worker").val(),
+				worker: $("#worker").val()
+
 			},
 			cache: false,
 			beforeSend: function() {
@@ -4145,7 +4258,7 @@
 			// действие, при ответе с сервера
 			success: function(data){
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				if(data.result == "success"){
 					//$(\'#errror\').html(data.data);
@@ -4194,7 +4307,7 @@
 			// действие, при ответе с сервера
 			success: function(data){
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				//$('#errror').html(data);
 				//if(data.result == "success"){
@@ -4236,7 +4349,7 @@
         if (isNaN(price)) price = start_price;
         if (price <= start_price) price = start_price;
 
-		console.log(price);
+		//console.log(price);
 
 		$.ajax({
 			url:"add_price_up_down_one_price_id_in_invoice_f.php",
@@ -4266,7 +4379,7 @@
 			success: function(data){
 				//console.log(data);
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 			}
 		});
@@ -4311,7 +4424,7 @@
 			// действие, при ответе с сервера
 			success: function(data){
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				//$('#errror').html(data);
 				if(data.result == "success"){
@@ -4426,7 +4539,7 @@
 			// действие, при ответе с сервера
 			success: function(data){
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				//$('#errror').html(data);
 				//if(data.result == "success"){
@@ -4475,7 +4588,7 @@
 			// действие, при ответе с сервера
 			success: function(data){
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 			}
 		});
@@ -4515,7 +4628,7 @@
 			success: function(data){
                 //$('#errror').html(data);
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				/*if(data.result == "success"){
 					//console.log(data.data);
@@ -4570,7 +4683,7 @@
 			// действие, при ответе с сервера
 			success: function(data){
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				/*if(data.result == "success"){
 					//console.log(data.data);
@@ -4620,7 +4733,7 @@
 			// действие, при ответе с сервера
 			success: function(data){
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				/*if(data.result == "success"){
 					//console.log(data.data);
@@ -4678,7 +4791,7 @@
 
                 //document.getElementById("discountValue").innerHTML = Number(discount);
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				/*if(data.result == "success"){
 					//console.log(data.data);
@@ -4729,7 +4842,7 @@
 			// действие, при ответе с сервера
 			success: function(data){
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				/*if(data.result == "success"){
 					//console.log(data.data);
@@ -4782,7 +4895,7 @@
 			// действие, при ответе с сервера
 			success: function(data){
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				/*if(data.result == "success"){
 					//console.log(data.data);
@@ -4835,7 +4948,7 @@
 			// действие, при ответе с сервера
 			success: function(data){
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				/*if(data.result == "success"){
 					//console.log(data.data);
@@ -4892,7 +5005,7 @@
 			// действие, при ответе с сервера
 			success: function(data){
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				/*if(data.result == "success"){
 					//console.log(data.data);
@@ -4948,7 +5061,7 @@
             },
             // действие, при ответе с сервера
             success: function(data){
-                console.log(data);
+                //console.log(data);
 
                 fillCalculateRez();
 
@@ -5008,7 +5121,7 @@
 			// действие, при ответе с сервера
 			success: function(data){
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				/*if(data.result == "success"){
 					//console.log(data.data);
@@ -5067,7 +5180,7 @@
 			success: function(data){
 				//console.log(2);
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				/*if(data.result == "success"){
 					//console.log(data.data);
@@ -5118,6 +5231,7 @@
                 ind: ind,
 				key: key,
                 price: price,
+
                 start_price: start_price,
 
 				client: document.getElementById("client").value,
@@ -5125,17 +5239,17 @@
 				filial: document.getElementById("filial").value,
 				worker: document.getElementById("worker").value,
 
-				invoice_type: invoice_type,
+				invoice_type: invoice_type
 			},
 			cache: false,
 			beforeSend: function() {
 				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 			},
 			// действие, при ответе с сервера
-			success: function(){
-				//console.log(1);
+			success: function(res){
+				//console.log(res);
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				/*if(data.result == "success"){
 					//console.log(data.data);
@@ -5158,21 +5272,21 @@
 
 	}
 
-	//Изменить цену у этого зуба
+	//Изменить итоговую цену у этой позиции
 	function priceItemItogInvoice(ind, key, price, min_price, max_price){
 
 		var invoice_type = document.getElementById("invoice_type").value;
 
-		console.log(ind);
-		console.log(key);
+		/*console.log(ind);
+		console.log(key);*/
 
         if (isNaN(price)) price = max_price;
 		if (price < min_price) price = min_price;
 		if (price > max_price) price = max_price;
 
-        console.log(min_price);
-        console.log(max_price);
-        console.log(price);
+        //console.log(min_price);
+        //console.log(max_price);
+        //console.log(price);
 
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
@@ -5190,22 +5304,24 @@
 				key: key,
                 price: price,
 
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client: $("#client").val(),
+				zapis_id: $("#zapis_id").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val(),
 
-				invoice_type: invoice_type,
+				invoice_type: invoice_type
 			},
 			cache: false,
 			beforeSend: function() {
 				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 			},
 			// действие, при ответе с сервера
-			success: function(data){
-				console.log(data);
+			success: function(res){
+				//console.log("priceItemItogInvoice----------->");
+                console.log(res);
+				//console.log(price);
 
-				fillInvoiseRez();
+				fillInvoiseRez(false);
 
 			}
 		});
@@ -5237,7 +5353,7 @@
 			// действие, при ответе с сервера
 			success: function(data){
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				if(data.result == "success"){
 					//$('#errror').html(data.data);
@@ -5272,7 +5388,7 @@
 				zapis_id: document.getElementById("zapis_id").value,
 				zapis_insure: document.getElementById("zapis_insure").value,
 				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				worker: document.getElementById("worker").value
 			},
 			cache: false,
 			beforeSend: function() {
@@ -5282,7 +5398,7 @@
 			success: function(data){
              	//$('#errror').html(data);
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				/*if(data.result == "success"){
 					//console.log(data.data);
@@ -5312,7 +5428,7 @@
 				zapis_id: document.getElementById("zapis_id").value,
 				zapis_insure: document.getElementById("zapis_insure").value,
 				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				worker: document.getElementById("worker").value
 			},
 			cache: false,
 			beforeSend: function() {
@@ -5321,7 +5437,7 @@
 			// действие, при ответе с сервера
 			success: function(data){
 
-				fillInvoiseRez();
+                fillInvoiseRez(true);
 
 				/*if(data.result == "success"){
 					//console.log(data.data);
@@ -5360,7 +5476,7 @@
 				// действие, при ответе с сервера
 				success: function(data){
 
-					fillInvoiseRez();
+                    fillInvoiseRez(true);
 
 					colorizeTButton();
 				}
@@ -5421,7 +5537,7 @@
             },
             // действие, при ответе с сервера
             success: function(data){
-                console.log(data);
+                //console.log(data);
                 fillCalculateRez();
 
 				/*if(data.result == "success"){
