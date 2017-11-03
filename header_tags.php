@@ -5,7 +5,7 @@
 	
 	$god_mode = FALSE;
 	
-	$version = 'v 25.08.2017';
+	//$version = 'v 25.08.2017';
 
 	echo'
 		<!DOCTYPE html>
@@ -259,8 +259,9 @@
         $yearT = date('Y');
         $dayT = date("d");
 
-		echo '<li><a href="index.php" style="position: relative">Главная<div style="font-size:80%">'.$version.'</div><div class="have_new-topic notes_count" style="display: none; top: 0; right: 0; background: red;" title="Есть непрочитанные сообщения"></div></a></li>';
-		
+		//echo '<li><a href="index.php" style="position: relative">Главная<div style="font-size:80%">'.$version.'</div><div class="have_new-topic notes_count" style="display: none; top: 0; right: 0; background: red;" title="Есть непрочитанные сообщения"></div></a></li>';
+		echo '<li><a href="index.php" style="position: relative">Главная<div class="have_new-topic notes_count" style="display: none; top: 0; right: 0; background: red;" title="Есть непрочитанные сообщения"></div></a></li>';
+
 		if (($it['see_all'] == 1) || ($it['see_own'] == 1) || $god_mode){
 			echo '<li><a href="it.php">IT</a></li>';
 		}
@@ -327,6 +328,9 @@
 		if (($spravka['see_all'] == 1) || ($spravka['see_own'] == 1) || $god_mode){
 			echo '<li><a href="directory.php">Справочники</a></li>';
 		}
+
+		//echo '<li><a href="search.php"><i class="fa fa-search"></i></a></li>';
+
 		if ($god_mode){
 			echo '<li><a href="admin.php"><i class="fa fa-cogs"></i></a></li>';
 		}

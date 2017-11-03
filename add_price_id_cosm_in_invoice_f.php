@@ -50,6 +50,8 @@
 							$temp_arr['spec_koeff'] = 0;
 							$temp_arr['discount'] = 0;
 							$temp_arr['manual_price'] = false;
+							$temp_arr['itog_price'] = 0;
+							$temp_arr['manual_itog_price'] = 0;
 
                             //переменная для цены
                             $price['price'] = 0;
@@ -108,7 +110,8 @@
 
 							$temp_arr['price'] = (int)$price['price'];
                             $temp_arr['start_price'] = (int)$price['start_price'];
-							
+                            $temp_arr['manual_itog_price'] = (int)$price['price'];
+
 							//mysql_close();
 							
 							array_push($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'], $temp_arr);

@@ -320,6 +320,9 @@ if ($enter_ok){
                                             $temp_arr2['spec_koeff'] = $invoice_ex_j_val['spec_koeff'];
                                             $temp_arr2['discount'] = (int)$invoice_ex_j_val['discount'];
 
+                                            $temp_arr2['itog_price'] = (int)$invoice_ex_j_val['itog_price'];
+                                            $temp_arr2['manual_itog_price'] = (int)$invoice_ex_j_val['itog_price'];
+
                                             $query = "SELECT `id` FROM `fl_spr_percents` WHERE `type`='".$invoice_j[0]['type']."' LIMIT 1;";
                                             //var_dump($query);
 
@@ -511,7 +514,7 @@ if ($enter_ok){
                                                 </div>';
                             echo '
                                                 <div style="margin-top: 5px; font-size: 110%;">
-                                                   <b>Исполнитель: </b><input type="text" size="50" name="searchdata2" id="search_client2" placeholder="Введите первые три буквы для поиска" value="' . WriteSearchUser('spr_workers', $invoice_j[0]['worker_id'], 'user_full', false) . '" class="who2"  autocomplete="off">!!!Изменить
+                                                   <b>Исполнитель: </b><input type="text" size="50" name="searchdata2" id="search_client2" placeholder="Введите первые три буквы для поиска" value="' . WriteSearchUser('spr_workers', $invoice_j[0]['worker_id'], 'user_full', false) . '" class="who2"  autocomplete="off"><!--!!!Изменить-->
                                                     <ul id="search_result2" class="search_result2"></ul><br>
                                  
                                                 </div>';
@@ -584,89 +587,6 @@ if ($enter_ok){
                                                 </div>';
 
 
-                            //Документы закрытия/оплаты нарядов списком
-                            /*$payment_j = array();
-
-                            $query = "SELECT * FROM `journal_payment` WHERE `invoice_id`='".$_GET['invoice_id']."' ORDER BY `date_in` DESC";
-                            //var_dump($query);
-
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                            $number = mysqli_num_rows($res);
-                            if ($number != 0){
-                                while ($arr = mysqli_fetch_assoc($res)){
-                                    array_push($payment_j, $arr);
-                                }
-                            }else{
-
-                            }*/
-
-                            /*if (!empty($payment_j)) {
-                                echo '
-                                                <div class="invoceHeader" style="">
-                                                    <ul style="margin-left: 6px; margin-bottom: 10px;">
-                                                        <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
-                                                            Проведённые оплаты по наряду:
-                                                        </li>';
-                                foreach ($payment_j as $payment_item) {
-
-                                    $pay_type_mark = '';
-                                    $cert_num = '';
-
-                                    if ($payment_item['type'] == 1){
-                                        $pay_type_mark = '<i class="fa fa-certificate" aria-hidden="true" title="Оплата сертификатом"></i>';
-                                        //Найдем сертификат по его id
-                                        $query = "SELECT `num` FROM `journal_cert` WHERE `id`='".$payment_item['cert_id']."' LIMIT 1";
-                                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                                        $number = mysqli_num_rows($res);
-                                        if ($number != 0) {
-                                            $arr = mysqli_fetch_assoc($res);
-                                            $cert_num = 'Сертификатом №'.$arr['num'];
-                                        } else {
-                                            $cert_num = 'Ошибка сертификата';
-                                        }
-                                    }
-
-                                    echo '
-                                                        <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
-                                    echo '
-                                                            <a href="" class="cellOrder ahref" style="position: relative;">
-                                                                <b>Оплата #' . $payment_item['id'] . '</b> от ' . date('d.m.y', strtotime($payment_item['date_in'])) . ' '.$cert_num.'<br>
-                                                                <span style="font-size:80%;  color: #555;">';
-
-                                    if (($payment_item['create_time'] != 0) || ($payment_item['create_person'] != 0)) {
-                                        echo '
-                                                                    Добавлен: ' . date('d.m.y H:i', strtotime($payment_item['create_time'])) . '<br>
-                                                                    <!--Автор: ' . WriteSearchUser('spr_workers', $payment_item['create_person'], 'user', true) . '<br>-->';
-                                    } else {
-                                        echo 'Добавлен: не указано<br>';
-                                    }
-                                    /*if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
-                                        echo'
-                                                                Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
-                                                                <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
-                                    }*/
-                            /*        echo '
-                                                                </span>
-                                                                <span style="position: absolute; top: 2px; right: 3px;">'. $pay_type_mark .'</span>
-                                                            </a>
-                                                            <div class="cellName">
-                                                                <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                                    Сумма:<br>
-                                                                    <span class="calculateOrder" style="font-size: 13px">' . $payment_item['summ'] . '</span> руб.
-                                                                </div>
-                                                            </div>
-                                                            <div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="deletePaymentItem('.$payment_item['id'].', '.$invoice_j[0]['client_id'].', '.$invoice_j[0]['id'].');">
-                                                                <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
-                                                            </div>
-                                                            ';
-                                    echo '
-                                                        </li>';
-                                }
-
-                                echo '
-                                                    </ul>
-                                                </div>';
-                            }*/
 
                             echo '
                                             </div>';

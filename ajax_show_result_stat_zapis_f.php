@@ -32,6 +32,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         $cosm_edit = false;
         $finance_edit = false;
 
+        $datastart_temp_arr = array();
+
         include_once 'DBWork.php';
         include_once 'functions.php';
 
@@ -103,7 +105,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         if ($creatorExist && $workerExist) {
             if ($clientExist) {
-                $query .= "SELECT * FROM `zapis`";
+                $query .= "SELECT * FROM `zapis` z";
 
                 /*require 'config.php';
                 mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
@@ -111,9 +113,17 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 mysql_query("SET NAMES 'utf8'");*/
                 //$time = time();
 
+                $data_temp_arr = explode(".", $_POST['datastart']);
+                $_POST['datastart'] = $data_temp_arr[2].'-'.$data_temp_arr[1].'-'.$data_temp_arr[0];
+
+                $data_temp_arr = explode(".", $_POST['dataend']);
+                $_POST['dataend'] = $data_temp_arr[2].'-'.$data_temp_arr[1].'-'.$data_temp_arr[0];
+
                 //Дата/время
                 if ($_POST['all_time'] != 1) {
-                    $queryDop .= "`create_time` BETWEEN '" . strtotime($_POST['datastart']) . "' AND '" . strtotime($_POST['dataend'] . " 23:59:59") . "'";
+                    //$queryDop .= "`create_time` BETWEEN '" . strtotime($_POST['datastart']) . "' AND '" . strtotime($_POST['dataend'] . " 23:59:59") . "'";
+
+                    $queryDop .= "CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) BETWEEN '{$_POST['datastart']}' AND '{$_POST['dataend']}'";
                     $queryDopExist = true;
                 }
 
@@ -122,7 +132,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                     if ($queryDopExist) {
                         $queryDop .= ' AND';
                     }
-                    $queryDop .= "`create_person` = '" . $creator . "'";
+                    $queryDop .= " z.create_person = '" . $creator . "'";
                     $queryDopExist = true;
                 }
 
@@ -131,7 +141,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                     if ($queryDopExist) {
                         $queryDop .= ' AND';
                     }
-                    $queryDop .= "`worker` = '" . $worker . "'";
+                    $queryDop .= " z.worker = '" . $worker . "'";
                     $queryDopExist = true;
                 }
 
@@ -140,7 +150,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                     if ($queryDopExist) {
                         $queryDop .= ' AND';
                     }
-                    $queryDop .= "`patient` = '" . $client . "'";
+                    $queryDop .= " z.patient = '" . $client . "'";
                     $queryDopExist = true;
                 }
 
@@ -149,7 +159,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                     if ($queryDopExist) {
                         $queryDop .= ' AND';
                     }
-                    $queryDop .= "`office` = '" . $_POST['filial'] . "'";
+                    $queryDop .= " z.office = '" . $_POST['filial'] . "'";
                     $queryDopExist = true;
                 }
 
@@ -163,7 +173,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             $queryDopEx .= ' OR';
                         }
                         if ($_POST['zapisArrive'] == 1) {
-                            $queryDopEx .= "`enter` = '1'";
+                            $queryDopEx .= "z.enter = '1'";
                             $queryDopExExist = true;
                         }
                         //$queryDopExExist = true;
@@ -175,7 +185,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             $queryDopEx .= ' OR';
                         }
                         if ($_POST['zapisNotArrive'] == 1) {
-                            $queryDopEx .= "`enter` = '9'";
+                            $queryDopEx .= " z.enter = '9'";
                             $queryDopExExist = true;
                         }
                         //$queryDopExExist = true;
@@ -187,7 +197,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             $queryDopEx .= ' OR';
                         }
                         if ($_POST['zapisNull'] == 1) {
-                            $queryDopEx .= "`enter` = '0'";
+                            $queryDopEx .= " z.enter = '0'";
                             $queryDopExExist = true;
                         }
                         //$queryDopExExist = true;
@@ -199,7 +209,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             $queryDopEx .= ' OR';
                         }
                         if ($_POST['zapisError'] == 1) {
-                            $queryDopEx .= "`enter` = '8'";
+                            $queryDopEx .= " z.enter = '8'";
                             $queryDopExExist = true;
                         }
                         //$queryDopExExist = true;
@@ -211,7 +221,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                     if ($queryDopExist) {
                         $queryDop .= ' AND';
                     }
-                    $queryDop .= "`type` = '" . $_POST['typeW'] . "'";
+                    $queryDop .= " z.type = '" . $_POST['typeW'] . "'";
                     $queryDopExist = true;
                 }
 
@@ -226,7 +236,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             $queryDopEx2 .= ' OR';
                         }
                         if ($_POST['statusPervich'] == 1) {
-                            $queryDopEx2 .= "`pervich` = '1'";
+                            $queryDopEx2 .= " z.pervich = '1'";
                             $queryDopEx2Exist = true;
                         }
                         //$queryDopExExist = true;
@@ -238,7 +248,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             $queryDopEx2 .= ' OR';
                         }
                         if ($_POST['statusInsure'] == 1) {
-                            $queryDopEx2 .= "`insured` = '1'";
+                            $queryDopEx2 .= " z.insured = '1'";
                             $queryDopEx2Exist = true;
                         }
                         //$queryDopExExist = true;
@@ -250,7 +260,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             $queryDopEx2 .= ' OR';
                         }
                         if ($_POST['statusNight'] == 1) {
-                            $queryDopEx2 .= "`noch` = '1'";
+                            $queryDopEx2 .= " z.noch = '1'";
                             $queryDopEx2Exist = true;
                         }
                         //$queryDopExExist = true;
@@ -262,7 +272,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             $queryDopEx2 .= ' OR';
                         }
                         if ($_POST['statusAnother'] == 1) {
-                            $queryDopEx2 .= "`pervich` = '0' AND `insured` = '0' AND `noch` = '0'";
+                            $queryDopEx2 .= " z.pervich = '0' AND z.insured = '0' AND z.noch = '0'";
                             $queryDopEx2Exist = true;
                         }
                         //$queryDopExExist = true;
@@ -289,7 +299,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         $query .= "`client` IN (".$queryDopClient.")";
                     }*/
 
-                    $query = $query . " ORDER BY `create_time` DESC";
+                    $query = $query . " ORDER BY CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) DESC";
 
                     //var_dump($query);
 
@@ -369,7 +379,11 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         echo '
                                     <li class="cellsBlock" style="margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
                                         Всего : ' . count($journal) . '<br>
-                                    </li>';
+                                    </li>
+                                    
+                                    <!--<li class="cellsBlock" style="margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
+                                        '.$query.'
+                                    </li>-->';
 
                         echo '
                                         </ul>

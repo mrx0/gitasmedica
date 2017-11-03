@@ -53,6 +53,7 @@
 									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['price'] = $price['price'];
 									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['start_price'] = $price['start_price'];
 									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['manual_price'] = false;
+									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['manual_itog_price'] = $price['price'];
 
 								}
 							}
@@ -74,6 +75,7 @@
 								$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['price'] = $price['price'];
 								$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['start_price'] = $price['start_price'];
                                 $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['manual_price'] = false;
+                                $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['manual_itog_price'] = $price['price'];
 
 							}
 						}

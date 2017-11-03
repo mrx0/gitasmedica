@@ -42,11 +42,11 @@
             $(".vert-nav li").hover(
                 function() {
                     $("ul", this).slideDown(110);
-                    $(".have_new-zapis_main").hide();
+                    //$(".have_new-zapis_main").hide();
                 },
                 function() {
                     $("ul", this).slideUp(110);
-                    $(".have_new-zapis_main").show();
+                    //$(".have_new-zapis_main").show();
                 }
             );
 

@@ -4,6 +4,7 @@
 //Редактируем счёт
 
 	require_once 'header.php';
+    require_once 'blocks_dom.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
@@ -125,6 +126,7 @@
 											$temp_arr2['discount'] = (int)$invoice_ex_j_val['discount'];
 
 											$temp_arr2['itog_price'] = (int)$invoice_ex_j_val['itog_price'];
+											$temp_arr2['manual_itog_price'] = (int)$invoice_ex_j_val['itog_price'];
 
 											if ($invoice_ex_j_val['manual_price'] == 1){
                                                 $temp_arr2['manual_price'] = true;
@@ -582,6 +584,14 @@
                                                     </ul>
                                                     <div id="price">';
                                     //Прайс
+
+                                    //Быстрый поиск
+                                    echo '	
+                                                            <div style="margin: 0 0 5px; font-size: 11px; cursor: pointer; text-align: left;">';
+                                    echo $block_fast_filter;
+                                    echo '
+                                                            </div>';
+
                                     echo '	
                                                         <div style="margin: 10px 0 5px; font-size: 11px; cursor: pointer;">
                                                             <span class="dotyel a-action lasttreedrophide">скрыть всё</span>, <span class="dotyel a-action lasttreedropshow">раскрыть всё</span>

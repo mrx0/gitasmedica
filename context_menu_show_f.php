@@ -93,7 +93,7 @@
 				if ($_POST['mark'] == 'discountItem'){
 					$data = '
 						<li><div onclick="discountItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 0)">нет</div></li>'.
-						'<li><div><input type="number" size="2" name="discount" id="discount" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="discountItemInvoice('.$_POST['ind'].', '.$_POST['key'].', document.getElementById(\'discount\').value)"> Применить</div></div></li>';
+						'<li><div><input type="number" size="2" name="discount" id="discount" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="discountItemInvoice('.$_POST['ind'].', '.$_POST['key'].', $(\'#discount\').val())"> Применить</div></div></li>';
 				}
 				//Страховка позиция
 				if ($_POST['mark'] == 'insureItem'){

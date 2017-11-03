@@ -107,7 +107,7 @@
                         //'<input type="number" name="changePriceItem" id="changePriceItem" class="form-control" size="2" min="'+start_price+'" value="'+Number(target.html())+'" class="mod" onchange="priceItemInvoice('+ind+', '+key+', $(this).val(), '+start_price+');">'+
                         '<input type="number" name="changePriceItem" id="changePriceItem" class="form-control" size="2" min="'+start_price+'" value="'+Number(target.html())+'" class="mod">'+
                         //'<input type="text" name="changePriceItem" id="changePriceItem" class="form-control" value="'+Number(target.html())+'" onkeyup="changePriceItem(this.value, '+start_price+');">'+
-						'<div style="display: inline;" onclick="priceItemInvoice('+ind+', '+key+', document.getElementById(\'changePriceItem\').value, '+start_price+')">Ok</div>'+
+						'<div style="display: inline;" onclick="priceItemInvoice('+ind+', '+key+', $(\'#changePriceItem\').val(), '+start_price+')">Ok</div>'+
 						'</li>';
 
 				}
@@ -115,12 +115,19 @@
 				if (mark == 'priceItemItog'){
 
 				    var itog_price = Number(target.html());
+				    var manual_itog_price = Number(target.attr("manual_itog_price"));
 				    //console.log(itog_price);
+				    //console.log(target.attr("manual_itog_price"));
 				    //console.log(Math.floor(itog_price / 10) * 10);
 				    //console.log(Math.floor((itog_price) / 10) * 10 +10);
 
-					var min_itog_price = Math.floor(itog_price / 10) * 10;
-					var max_itog_price = min_itog_price + 10;
+					/*var min_itog_price = Math.floor(itog_price / 10) * 10;
+					var max_itog_price = min_itog_price + 10;*/
+					/*var min_itog_price = itog_price - 2;
+					var max_itog_price = itog_price + 2;*/
+					var min_itog_price = manual_itog_price - 2;
+					var max_itog_price = manual_itog_price + 2;
+
 					if (min_itog_price < 1) min_itog_price = 1;
 
 
@@ -132,7 +139,7 @@
                         //'<input type="number" name="changePriceItem" id="changePriceItem" class="form-control" size="2" min="'+start_price+'" value="'+Number(target.html())+'" class="mod" onchange="priceItemInvoice('+ind+', '+key+', $(this).val(), '+start_price+');">'+
                         '<input type="number" name="changePriceItogItem" id="changePriceItogItem" class="form-control" size="3" min="'+min_itog_price+'"  max="'+max_itog_price+'" value="'+itog_price+'" class="mod">'+
                         //'<input type="text" name="changePriceItem" id="changePriceItem" class="form-control" value="'+Number(target.html())+'" onkeyup="changePriceItem(this.value, '+start_price+');">'+
-						'<div style="display: inline;" onclick="priceItemItogInvoice('+ind+', '+key+', document.getElementById(\'changePriceItogItem\').value, '+min_itog_price+', '+max_itog_price+')">Ok</div>'+
+						'<div style="display: inline;" onclick="priceItemItogInvoice('+ind+', '+key+', $(\'#changePriceItogItem\').val(), '+manual_itog_price+')">Ok</div>'+
 						'</li>';
 
 				}
@@ -3830,9 +3837,10 @@
 
 		//var discount = Number(document.getElementById("discountValue").innerHTML);
 
-		document.getElementById("calculateInvoice").innerHTML = Summ;
+        $("#calculateInvoice").html(Summ);
+        
 		if (invoice_type == 5){
-			document.getElementById("calculateInsInvoice").innerHTML = SummIns;
+			$("#calculateInsInvoice").html(SummIns);
 		}
 
 		$(".invoiceItemPrice").each(function() {
@@ -3921,13 +3929,16 @@
 			//с учетом скидки акции, но если не страховая
             if (insure == 0) {
                 stoim = stoim - (stoim * discount / 100);
-            }
-            if (insure == 0) {
+
             	//Убрали округление 2017.08.09
            		//stoim = Math.round(stoim / 10) * 10;
                 //Изменили округление 2017.08.10
            		stoim = Math.round(stoim);
             }
+
+            if (!changeItogPrice) {
+                stoim = Number($(this).parent().find('.invoiceItemPriceItog').html());
+			}
 
             //console.log(stoim);
 			//console.log($(this).parent().find('.invoiceItemPriceItog').html(stoim));
@@ -3946,11 +3957,11 @@
             var invoiceItemPriceItog = stoim;
             var ishod_price = Number($(this).parent().find('.invoiceItemPriceItog').html());
 
-            console.log(ishod_price);
+            /*console.log(ishod_price);
             console.log(invoiceItemPriceItog);
             console.log(stoim);
             console.log(changeItogPrice);
-            console.log("//////////////////////");
+            console.log("//////////////////////");*/
 
             if (ishod_price == 0) {
                 $(this).parent().find('.invoiceItemPriceItog').html(stoim);
@@ -3986,6 +3997,7 @@
                         ind: ind,
                         key: key,
                         price: invoiceItemPriceItog,
+                        manual_itog_price: stoim,
 
                         client: $("#client").val(),
                         zapis_id: $("#zapis_id").val(),
@@ -4073,8 +4085,8 @@
 			$("#calculateInsInvoice").html(SummIns);
 		}
 
-        console.log(Summ);
-        console.log("<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>");
+        /*console.log(Summ);
+        console.log("<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>");*/
 
 	};
 
@@ -4213,6 +4225,7 @@
 			// действие, при ответе с сервера
 			success: function(res){
                 //console.log(res.data2);
+
 				if(res.result == "success"){
 					//console.log(res.data);
 					$('#calculate_rezult').html(res.data);
@@ -4272,11 +4285,11 @@
 		})
 	}
 	//меняет кол-во позиции
-	function changeQuantityInvoice(zub, itemId, dataObj){
+	function changeQuantityInvoice(ind, itemId, dataObj){
 		//console.log(dataObj.value);
 		//console.log(this);
 
-		var invoice_type = document.getElementById("invoice_type").value;
+		var invoice_type = $("#invoice_type").val();
 
 		//количество
 		var quantity = dataObj.value;
@@ -4290,12 +4303,12 @@
 			data:
 			{
 				key: itemId,
-				zub: zub,
+                ind: ind,
 
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client: $("#client").val(),
+				zapis_id: $("#zapis_id").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val(),
 
 				quantity: quantity,
 				invoice_type: invoice_type,
@@ -4305,7 +4318,8 @@
 				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 			},
 			// действие, при ответе с сервера
-			success: function(data){
+			success: function(res){
+                //console.log(res);
 
                 fillInvoiseRez(true);
 
@@ -4598,7 +4612,7 @@
 	function spec_koeffInvoice(spec_koeff){
 		//console.log(spec_koeff);
 
-		var invoice_type = document.getElementById("invoice_type").value;
+		var invoice_type = $("#invoice_type").val();
 
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
@@ -4613,12 +4627,12 @@
 			data:
 			{
 				spec_koeff: spec_koeff,
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client: $("#client").val(),
+				zapis_id: $("#zapis_id").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val(),
 
-				invoice_type: invoice_type,
+				invoice_type: invoice_type
 			},
 			cache: false,
 			beforeSend: function() {
@@ -5145,9 +5159,9 @@
 	}
 
 	//Изменить скидка акция у этого зуба
-	function discountItemInvoice(zub, key, discount){
+	function discountItemInvoice(ind, key, discount){
 
-		var invoice_type = document.getElementById("invoice_type").value;
+		var invoice_type = $("#invoice_type").val();
 
 		//console.log(discount);
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
@@ -5162,13 +5176,13 @@
 			dataType: "JSON",
 			data:
 			{
-				zub: zub,
+				ind: ind,
 				key: key,
 				discount: discount,
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client: $("#client").val(),
+				zapis_id: $("#zapis_id").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val(),
 
 				invoice_type: invoice_type,
 			},
@@ -5177,8 +5191,8 @@
 				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 			},
 			// действие, при ответе с сервера
-			success: function(data){
-				//console.log(2);
+			success: function(res){
+				console.log(res);
 
                 fillInvoiseRez(true);
 
@@ -5273,12 +5287,17 @@
 	}
 
 	//Изменить итоговую цену у этой позиции
-	function priceItemItogInvoice(ind, key, price, min_price, max_price){
+	function priceItemItogInvoice(ind, key, price, manual_itog_price){
 
-		var invoice_type = document.getElementById("invoice_type").value;
+		var invoice_type = $("#invoice_type").val();
 
 		/*console.log(ind);
 		console.log(key);*/
+
+        var min_price = manual_itog_price - 2;
+        var max_price = manual_itog_price + 2;
+
+        if (min_price < 0) min_price = 0;
 
         if (isNaN(price)) price = max_price;
 		if (price < min_price) price = min_price;
@@ -5303,6 +5322,7 @@
                 ind: ind,
 				key: key,
                 price: price,
+                manual_itog_price: manual_itog_price,
 
 				client: $("#client").val(),
 				zapis_id: $("#zapis_id").val(),
@@ -5318,7 +5338,7 @@
 			// действие, при ответе с сервера
 			success: function(res){
 				//console.log("priceItemItogInvoice----------->");
-                console.log(res);
+                //console.log(res);
 				//console.log(price);
 
 				fillInvoiseRez(false);
@@ -5565,12 +5585,12 @@
 		//console.log(mode);
 		$('#overlay').show();
 		
-		var Summ = document.getElementById("calculateInvoice").innerHTML;
+		var Summ = $("#calculateInvoice").html();
 		var SummIns = 0;
 		var SummInsBlock = '';
 		
 		if (invoice_type == 5){
-			SummIns = document.getElementById("calculateInsInvoice").innerHTML;
+			SummIns = $("#calculateInsInvoice").html();
 			SummInsBlock = '<div>Страховка: <span class="calculateInsInvoice">'+SummIns+'</span> руб.</div>';
 		}
 		
@@ -5697,12 +5717,12 @@
 		//console.log(mode);
 		$('#overlay').show();
 
-		var Summ = document.getElementById("calculateInvoice").innerHTML;
+		var Summ = $("#calculateInvoice").html();
 		var SummIns = 0;
 		var SummInsBlock = '';
 
 		if (invoice_type == 5){
-			SummIns = document.getElementById("calculateInsInvoice").innerHTML;
+			SummIns = $("#calculateInsInvoice").html();
 			SummInsBlock = '<div>Страховка: <span class="calculateInsInvoice">'+SummIns+'</span> руб.</div>';
 		}
 
@@ -6114,25 +6134,25 @@
 		
 		if (mode == 'edit'){
 			link = "invoice_edit_f.php";
-			invoice_id = document.getElementById("invoice_id").value;
+			invoice_id = $("#invoice_id").val();
 		}
 		
-		var invoice_type = document.getElementById("invoice_type").value;
+		var invoice_type = $("#invoice_type").val();
 		
-		var Summ = document.getElementById("calculateInvoice").innerHTML;
+		var Summ = $("#calculateInvoice").html();
 		var SummIns = 0;
 		
 		var SummInsStr = '';
 		
 		if (invoice_type == 5){
-			SummIns = document.getElementById("calculateInsInvoice").innerHTML;
+			SummIns = $("#calculateInsInvoice").html();
 			SummInsStr = '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
 							'Страховка:<br>'+
 							'<span class="calculateInsInvoice" style="font-size: 13px">'+SummIns+'</span> руб.'+
 						'</div>';
 		}
 		
-		var client = document.getElementById("client").value;
+		var client = $("#client").val();
 		
 		$.ajax({
 			url: link,
@@ -6142,9 +6162,9 @@
 			data:
 			{
 				client: client,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				zapis_id: $("#zapis_id").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val(),
 				
 				summ: Summ,
 				summins: SummIns,
@@ -6158,7 +6178,7 @@
 			},
 			// действие, при ответе с сервера
 			success: function(res){
-				//console.log(res);
+				console.log(res);
 				$('.center_block').remove();
 				$('#overlay').hide();
 				
@@ -6216,7 +6236,7 @@
 		var invoice_type = $("#invoice_type").val();
 		//console.log (invoice_type);
 
-		var Summ = document.getElementById("calculateInvoice").innerHTML;
+		var Summ = $("#calculateInvoice").html();
         //console.log (Summ);
 
 		var SummIns = 0;
@@ -6224,7 +6244,7 @@
 		var SummInsStr = '';
 
 		if (invoice_type == 5){
-			SummIns = document.getElementById("calculateInsInvoice").innerHTML;
+			SummIns = $("#calculateInsInvoice").html();
             //console.log (SummIns);
 
 			SummInsStr = '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+

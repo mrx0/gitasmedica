@@ -207,10 +207,10 @@
 								}
 								$request .= '
 								</div>
-								<div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; font-weight: bold; text-align: center; '.$bg_col.' width: 60px; min-width: 60px; max-width: 60px; cursor: pointer;" onclick="contextMenuShow('.$ind.', 0, event, \'priceItemItog\');">';
+								<div class="cellCosmAct invoiceItemPriceItog" manual_itog_price="'.$items['manual_itog_price'].'" style="font-size: 105%; font-weight: bold; text-align: center; '.$bg_col.' width: 60px; min-width: 60px; max-width: 60px; cursor: pointer;" onclick="contextMenuShow('.$ind.', 0, event, \'priceItemItog\');">';
 
 
-                                if (isset($items['manual_itog_price'])){
+                                //if (isset($items['manual_itog_price'])){
                                     if (isset($items['itog_price'])){
                                         if ($items['itog_price'] > 0){
                                             $request .= $items['itog_price'];
@@ -220,9 +220,9 @@
                                     }else{
                                         $request .= '0';
                                     }
-                                }else{
-                                    $request .= '0';
-                                }
+                                //}else{
+                                    //$request .= '0';
+                                //}
 
 
                                 $request .= '

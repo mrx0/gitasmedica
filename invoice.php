@@ -673,18 +673,25 @@
                                             <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
                                                 <b>';
 
-                                            //вычисляем стоимость
-                                            //$stoim_item = $item['quantity'] * ($price +  $price * $item['spec_koeff'] / 100);
-                                            $stoim_item = $item['quantity'] * $price;
 
-                                            //с учетом скидки акции
-                                            if ($item['insure'] == 0){
-                                                //$stoim_item = $stoim_item - ($stoim_item * $invoice_j[0]['discount'] / 100);
-                                                $stoim_item = $stoim_item - ($stoim_item * $item['discount'] / 100);
+                                            if (($item['itog_price'] != 0) && ($price != 0)){
+
+                                                $stoim_item = $item['itog_price'];
+
+                                            }else {
+                                                //вычисляем стоимость
+                                                //$stoim_item = $item['quantity'] * ($price +  $price * $item['spec_koeff'] / 100);
+                                                $stoim_item = $item['quantity'] * $price;
+
+                                                //с учетом скидки акции
+                                                if ($item['insure'] == 0) {
+                                                    //$stoim_item = $stoim_item - ($stoim_item * $invoice_j[0]['discount'] / 100);
+                                                    $stoim_item = $stoim_item - ($stoim_item * $item['discount'] / 100);
+                                                    //$stoim_item = round($stoim_item/10) * 10;
+                                                    $stoim_item = round($stoim_item);
+                                                }
                                                 //$stoim_item = round($stoim_item/10) * 10;
-                                                $stoim_item = round($stoim_item);
                                             }
-                                            //$stoim_item = round($stoim_item/10) * 10;
 
                                             echo $stoim_item;
 

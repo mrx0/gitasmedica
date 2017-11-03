@@ -2292,7 +2292,7 @@ ul.ul-drop div.drop {
 .vert-nav ul {
 	position:absolute;
 	display:none;
-	left:0;
+	left: -1px;
 	overflow: visible;
 	top: 29px;
 }
@@ -2307,9 +2307,10 @@ ul.ul-drop div.drop {
 	width: inherit;
 	background: rgba(210, 210, 210, 0.64);
 	margin: 0;
-	left: 0;
-	width: 68px;
+	left: 2px;
+	width: 64px;
 	height: 10px;
+	border-radius: 5px;
 }
 
 .invPriceUpOne:hover, .invPriceDownOne:hover{

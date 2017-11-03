@@ -245,6 +245,27 @@
                                     //$stoim_item = round($stoim_item/10) * 10;
                                     $stoim_item = round($stoim_item);
                                 }
+
+
+                                //if (isset($items['manual_itog_price'])){
+                                if (isset($items['itog_price'])){
+                                    if ($items['itog_price'] > 0){
+                                        $stoim_item2 = $items['itog_price'];
+                                    }else{
+                                        $stoim_item2 = '0';
+                                    }
+                                }else{
+                                    $stoim_item2 = '0';
+                                }
+                                //}else{
+                                //$request .= '0';
+                                //}
+
+                                if ($stoim_item2 != 0){
+                                    $stoim_item = $stoim_item2;
+                                }
+
+
                                 //$stoim_item = round($stoim_item/10) * 10;
 
 								/*if ($items['insure'] != 0){

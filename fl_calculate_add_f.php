@@ -60,6 +60,9 @@
                                         $insure = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['insure'];
                                         $insure_approve = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['insure_approve'];
                                         $price = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['price'];
+
+                                        $itog_price = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['itog_price'];
+
                                         $guarantee = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['guarantee'];
                                         $spec_koeff = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['spec_koeff'];
                                         $discount = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['discount'];
@@ -68,10 +71,14 @@
                                         $work_percent = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['work_percent'];
                                         $material_percent = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['material_percent'];
 
+                                        if ($itog_price == 0){
+                                            $itog_price_add = $price;
+                                        }
+
                                         //Добавляем в базу
                                         $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`) 
 										VALUES (
-										'{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}')";
+										'{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}')";
 
                                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -79,9 +86,15 @@
 
                                         $price =  ($price - ($price * $discount / 100));
 
-                                        $calculateInvSumm +=  round($price);
+                                        if ($itog_price == 0){
+                                            $itog_price = $price;
+                                        }
 
-                                        $calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
+                                        //$calculateInvSumm +=  round($price);
+                                        $calculateInvSumm += $itog_price;
+
+                                        //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
+                                        $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);
                                     }
 
                                     /*if (isset($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind])){
@@ -105,6 +118,9 @@
                                     $insure = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['insure'];
                                     $insure_approve = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['insure_approve'];
                                     $price = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['price'];
+
+                                    $itog_price = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['itog_price'];
+
                                     $guarantee = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['guarantee'];
                                     $spec_koeff = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['spec_koeff'];
                                     $discount = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['discount'];
@@ -113,10 +129,14 @@
                                     $work_percent = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['work_percent'];
                                     $material_percent = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['material_percent'];
 
+                                    if ($itog_price == 0){
+                                        $itog_price_add = $price;
+                                    }
+
                                     //Добавляем в базу
                                     $query = "INSERT INTO `fl_journal_calculate_ex` (`invoice_id`, `ind`, `price_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`) 
 									VALUES (
-									'{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$spec_koeff}', '{$discount}')";
+									'{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}')";
 
                                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -124,9 +144,11 @@
 
                                     $price =  ($price - ($price * $discount / 100));
 
-                                    $calculateInvSumm +=  round($price);
+                                    //$calculateInvSumm +=  round($price);
+                                    $calculateInvSumm += $itog_price;
 
-                                    $calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
+                                    //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
+                                    $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);
 
                                 }
                                 //unset($_SESSION['calculate_data']);

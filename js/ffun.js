@@ -296,6 +296,7 @@
                         '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">'+res.data+'</li>'+
                         '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
                         '<a href="finance_account.php?client_id='+client_id+'" class="b">Управление счётом</a>'+
+                        //'<a href="invoice.php?id='+invoice_id+'" class="b">Вернуться в наряд</a>'+
                         '</li>'+
                         '</ul>');
                 }else{
