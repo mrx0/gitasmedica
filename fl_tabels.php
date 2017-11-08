@@ -540,11 +540,11 @@ function cmp($a, $b)
                                     office = ids_arr[2];
                                 
                                     if (res.status == 1){
-                                        thisObj.html(res.data);
+                                        //thisObj.html(res.data);
                                         
                                         //Показываем оповещения на фио и филиале
-                                        $("#tabs_notes_"+permission+"_"+worker).show();
-                                        $("#tabs_notes_"+permission+"_"+worker+"_"+office).show();
+                                        /*$("#tabs_notes_"+permission+"_"+worker).show();
+                                        $("#tabs_notes_"+permission+"_"+worker+"_"+office).show();*/
                                         //console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
                                         
                                         //

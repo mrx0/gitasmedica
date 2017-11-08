@@ -135,12 +135,51 @@
                                                     </a>
                                                     <span style="position: absolute; top: 2px; right: 3px;">' . $paid_mark . '</span>
                                                 </div>';*/
+                            //Наряды
+                            $query = "SELECT `summ`, `summins` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}' LIMIT 1";
+
+                            /*$query2 = "SELECT `summ` AS `summ`, `summins` AS `summins` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}'
+                            UNION ALL (
+                              SELECT `name` AS `name`, `full_name` AS `full_name` FROM `spr_clients` WHERE `id`='{$rezData['client_id']}'
+                            )";*/
+
+
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                            $number = mysqli_num_rows($res);
+
+                            if ($number != 0) {
+                                /*while ($arr = mysqli_fetch_assoc($res)) {
+                                    array_push($rez, $arr);
+                                }*/
+
+                                $arr = mysqli_fetch_assoc($res);
+                                $summ = $arr['summ'];
+                                $summins = $arr['summins'];
+                            }
+
+                            $query = "SELECT `name`, `full_name` FROM `spr_clients` WHERE `id`='{$rezData['client_id']}' LIMIT 1";
+
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                            $number = mysqli_num_rows($res);
+
+                            if ($number != 0) {
+                                /*while ($arr = mysqli_fetch_assoc($res)) {
+                                    array_push($rez, $arr);
+                                }*/
+
+                                $arr = mysqli_fetch_assoc($res);
+                                $name = $arr['name'];
+                                $full_name = $arr['full_name'];
+                            }
 
 
                             $rezult .=
                                 '
                                 <div class="cellsBlockHover" style=" border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
                                     <div style="display: inline-block; width: 150px;">
+                                        <div>
                                         <a href="fl_calculate.php?id='.$rezData['id'].'" class="ahref">
                                             <div>
                                                 <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
@@ -157,7 +196,12 @@
                                             </div>
                                             
                                         </a>
-                                        '.$invoice_rez_str.'
+                                        </div>
+                                        <div style="margin: 5px 0 0 3px; font-size: 80%;">
+                                            <b>Наряд: #'.$rezData['invoice_id'].' - '.$name.'<br>
+                                            Сумма: '.$summ.' р. Страх.: '.$summins.' р.</b> <br>
+                                            
+                                        </div>
                                     </div>
                                     <div style="display: inline-block; vertical-align: top;">
                                         <div style="border: 1px solid #CCC; padding: 3px; margin: 1px;">
