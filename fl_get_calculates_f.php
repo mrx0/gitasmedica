@@ -198,7 +198,7 @@
                                         </a>
                                         </div>
                                         <div style="margin: 5px 0 0 3px; font-size: 80%;">
-                                            <b>Наряд: #'.$rezData['invoice_id'].' - '.$name.'<br>
+                                            <b>Наряд: <a href="invoice.php?id='.$rezData['invoice_id'].'" class="ahref">#'.$rezData['invoice_id'].'</a> - <a href="client.php?id='.$rezData['client_id'].'" class="ahref">'.$name.'</a><br>
                                             Сумма: '.$summ.' р. Страх.: '.$summins.' р.</b> <br>
                                             
                                         </div>
