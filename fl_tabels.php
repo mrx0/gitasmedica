@@ -4,10 +4,11 @@
 //Важный отчёт
 
 
-function cmp($a, $b)
-{
-    return sort($massive, SORT_STRING);
-}
+    //!!!Сортировка
+    function cmp($a, $b)
+    {
+        return sort($massive, SORT_STRING);
+    }
 
 
 	require_once 'header.php';
@@ -30,6 +31,9 @@ function cmp($a, $b)
 
             $msql_cnnct = ConnectToDB ();
 
+            if (!isset($_SESSION['fl_calcs_tabels'])){
+                $_SESSION['fl_calcs_tabels'] = array();
+            }
 
 			if ($_POST){
 			}else{
@@ -143,7 +147,7 @@ function cmp($a, $b)
                                 if ($office['id'] != 11) {
 
                                     echo '
-                                            <li class="tabs-' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '">
+                                            <li class="tabs-' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'\'}); ">
                                                 <a href="#tabs-' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '">
                                                     ' . $office['name'] . '<div id="tabs_notes_' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count2" style="display: none; right: 0px;"><i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i></div>
                                                 </a>

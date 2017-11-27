@@ -22,6 +22,7 @@
 			$permissions = SearchInArray($arr_permissions, $user[0]['permissions'], 'name');
 			//var_dump($permissions);
             $specializations = workerSpecialization($_GET['id']);
+            //var_dump($specializations);
 
             $specialization_j = SelDataFromDB('spr_specialization', '', '');
             //var_dump($specialization_j);
@@ -105,7 +106,7 @@
                                                 foreach ($specializations as $data) {
                                                     $specializations_temp[$data['id']] = $data;
                                                 }
-
+                                            }
 
                                                 foreach ($specialization_j as $data) {
                                                     $chckd = '';
@@ -117,7 +118,7 @@
 
                                                     echo '<input type="checkbox" name="specializations[]" value="' . $data['id'] . '" ' . $chckd . '> ' . $data['name'] . '<br>';
                                                 }
-                                            }
+                                            //}
 
 										echo '
 										

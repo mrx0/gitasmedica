@@ -607,7 +607,7 @@ if ($enter_ok){
                                     $(document).ready(function(){
 
                                         //получим активный зуб
-                                        var t_number_active = document.getElementById("t_number_active").value;
+                                        var t_number_active = $("#t_number_active").val();
                                         
                                         if (t_number_active != 0){
                                             colorizeTButton (t_number_active);

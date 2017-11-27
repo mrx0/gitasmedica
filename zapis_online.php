@@ -95,8 +95,13 @@
                         $bgcolor = 'background-color: rgba(158, 249, 142,1);';
                         $status = 'Обработано';
                     } else {
-                        $bgcolor = 'background-color: rgba(247, 162, 162, 0.5);';
-                        $status = 'Не обработано';
+                        if ($zapis_online_j[$i]['status'] == 8){
+                            $bgcolor = 'background-color: rgba(148, 189, 216, 0.63);';
+                            $status = 'Не доступен';
+                        }else {
+                            $bgcolor = 'background-color: rgba(247, 162, 162, 0.5);';
+                            $status = 'Не обработано';
+                        }
                     }
 
                     if ($zapis_online_j[$i]['status'] != 7) {

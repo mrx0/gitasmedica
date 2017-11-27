@@ -1,5 +1,44 @@
 
-	//Для добавления суммы в оплате наряда
+
+    //Взято с Хабра https://habrahabr.ru/post/134823/
+    //first — первая функция,которую нужно запустить
+    wait = function(first){
+        //класс для реализации вызова методов по цепочке
+        return new (function(){
+            var self = this;
+            var callback = function(){
+                var args;
+                if(self.deferred.length) {
+                    /* превращаем массив аргументов
+                     в обычный массив */
+                    args = [].slice.call(arguments);
+
+                    /* делаем первым аргументом функции-обертки
+                     коллбек вызова следующей функции */
+                    args.unshift(callback);
+
+                    //вызываем первую функцию в стеке функций
+                    self.deferred[0].apply(self, args);
+
+                    //удаляем запущенную функцию из стека
+                    self.deferred.shift();
+                }
+            }
+            this.deferred = []; //инициализируем стек вызываемых функций
+
+            this.wait = function(run){
+                //добавляем в стек запуска новую функцию
+                this.deferred.push(run);
+
+                //возвращаем this для вызова методов по цепочке
+                return self;
+            }
+
+            first(callback); //запуск первой функции
+        });
+    }
+
+//Для добавления суммы в оплате наряда
 	$('#addSummInPayment').click(function () {
 
 		var lefttopay = Number(document.getElementById("leftToPay").innerHTML);
@@ -619,4 +658,67 @@
             }.bind(el), false);
         }
         ;
+    };
+
+    //Собираем ID отмеченных РЛ в массив
+    function calcIDForTabelINarr() {
+        var ids_arr = {};
+        var calcIDForTabel_arr = [];
+
+        $(".chkBoxCalcs").each(function(){
+            if ($(this).attr("checked")){
+
+                ids_arr = $(this).attr("name").split("_");
+                //console.log(ids_arr[1]);
+
+                //var calcIDForTabel = ids_arr[1];
+                calcIDForTabel_arr[calcIDForTabel_arr.length] = ids_arr[1];
+                //console.log(ids_arr[1]);
+
+            }
+        });
+
+        return calcIDForTabel_arr;
+    }
+
+
+    function fl_addNewTabelIN (){
+
+        wait(function(runNext){
+
+            setTimeout(function(){
+                runNext(calcIDForTabelINarr());
+            }, 1000);
+
+        }).wait(function(runNext, calcIDForTabel_arr){
+            //используем аргументы из предыдущего вызова
+            //console.log(calcIDForTabel_arr)
+
+            $.ajax({
+                url: "fl_addCalcsIDsINSessionForTabel.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    calcArr: calcIDForTabel_arr
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res);
+
+                    if (res.result == "success") {
+                        //console.log(res);
+
+                        document.location.href = "fl_addNewTabel.php";
+
+                    }
+
+                }
+            });
+
+        });
     };

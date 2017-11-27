@@ -172,6 +172,7 @@
                                 $invoicePaid = true;
                             }else{
                                 $invoiceNotPaid = true;
+                                //var_dump($ids['summ'].' - '.$ids['paid']);
                             }
 
                             $rezultInvoice .= '
@@ -267,13 +268,17 @@
                         var_dump($showZapisRezult);*/
                     }
 
-                    /*var_dump ($dop);
-                    var_dump ($invoiceExist);
-                    var_dump ($cosmetExist);
-                    var_dump ($stomatExist);*/
-                    /*var_dump ('13_');
-                    var_dump($showZapisRezult);
-                    var_dump('__________');*/
+                    //if ($ids['summ'] - $ids['paid'] != 0) {
+                        /*var_dump($dop);
+                        var_dump($dop['invoice']['invoiceNotPaid']);
+                        var_dump($invoiceNotPaid);
+                        /*var_dump ($invoiceExist);
+                        var_dump ($cosmetExist);
+                        var_dump ($stomatExist);*/
+                        //var_dump ('13_');
+                        //var_dump($showZapisRezult);
+                        //var_dump('__________');
+                    //}
 
 
                     if ($showZapisRezult) {

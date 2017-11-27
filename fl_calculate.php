@@ -797,7 +797,8 @@
 
                                                 //вычисляем стоимость
                                                 //$stoim_item = $item['quantity'] * ($price +  $price * $item['spec_koeff'] / 100);
-                                                $stoim_item = $item['quantity'] * $price;
+                                                //$stoim_item = $item['quantity'] * $price;
+                                                $stoim_item = $price;
 
                                                 //с учетом скидки акции
                                                 if ($item['insure'] == 0){
@@ -895,7 +896,7 @@
                                                         </li>-->
 
                                                        <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
-                                                            Сумма расчёта <div id="calculateInvoice" style="">' . $summ . '</div> руб.
+                                                            Сумма расчёта <div id="calculateInvoice" style="">' . $calculate_j[0]['summ'] . '</div> руб.
                                                        </li>
                                                        <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
                                                             <!--<input type="button" class="b" value="Перерасчёт" onclick="fl_reloadPercentsCalculate()">-->

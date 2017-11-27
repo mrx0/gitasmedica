@@ -1,7 +1,7 @@
 <?php
 
-//fl_calculation_add2.php
-//Расчет
+//fl_tabel_add.php
+//Новый табель
 
 require_once 'header.php';
 
@@ -13,13 +13,6 @@ if ($enter_ok){
         include_once 'DBWork.php';
         include_once 'functions.php';
         include_once 'ffun.php';
-
-        /*var_dump (getPercents(266, 4));
-        var_dump (getPercents(288, 3));
-        var_dump (getPercents(288, 4));
-        var_dump (getPercents(288, 5));
-        var_dump (getPercents(288, 6));
-        var_dump (getPercents(288, 7));*/
 
         require 'variables.php';
 
@@ -37,11 +30,14 @@ if ($enter_ok){
         //var_dump($_SESSION);
         //unset($_SESSION['invoice_data']);
 
-        if ($_GET){
-            if (isset($_GET['invoice_id'])){
+        if (isset($_SESSION['fl_calcs_tabels'])) {
 
-                //unset($_SESSION['calculate_data']);
+            if (!empty($_SESSION['fl_calcs_tabels'])) {
 
+            }
+        }
+
+            /*
                 $invoice_j = SelDataFromDB('journal_invoice', $_GET['invoice_id'], 'id');
 
                 if ($invoice_j != 0){
@@ -124,14 +120,14 @@ if ($enter_ok){
                             }
                         }*/
 
-                        echo '			
+               /*         echo '
 										</h2>';
 
                         /*if ($invoice_j[0]['status'] == 9){
                             echo '<i style="color:red;">Наряд удалён (заблокирован).</i><br>';
                         }*/
 
-
+                /*
                         echo '
 										<div class="cellsBlock2" style="margin-bottom: 10px;">
 											<span style="font-size:80%;  color: #555;">';
@@ -148,7 +144,7 @@ if ($enter_ok){
 													Последний раз редактировался: '.date('d.m.y H:i' ,strtotime($invoice_j[0]['last_edit_time'])).'<br>
 													Кем: '.WriteSearchUser('spr_workers', $invoice_j[0]['last_edit_person'], 'user', true).'';
                         }*/
-                        echo '
+                /*        echo '
 											</span>
 										</div>';
 
@@ -336,7 +332,7 @@ if ($enter_ok){
                                                 $temp_arr2['work_percent'] = (int)$arr['work_percent'];
                                                 $temp_arr2['material_percent'] = (int)$arr['material_percent'];*/
 
-                                                $percents_j = getPercents( $invoice_j[0]['worker_id'], (int)$arr['id']);
+                  /*                              $percents_j = getPercents( $invoice_j[0]['worker_id'], (int)$arr['id']);
                                                 //var_dump($percents_j);
 
                                                 $temp_arr2['percent_cats'] = (int)$arr['id'];
@@ -420,7 +416,7 @@ if ($enter_ok){
                         //var_dump ($invoice_ex_j_mkb);
                         //var_dump ($temp_arr);
 
-                        echo '
+                 /*       echo '
 								<div id="data">';
                         if (!empty($temp_arr) || !empty($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'])) {
                             echo '	
@@ -459,7 +455,7 @@ if ($enter_ok){
                                                 <div>
                                                     <div style="">Скидка: <div id="discountValue" class="calculateInvoice" style="color: rgb(255, 0, 198);">'.$invoice_j[0]['discount'].'</div><span  class="calculateInvoice" style="color: rgb(255, 0, 198);">%</span></div>
                                                 </div>';*/
-                            echo '
+                /*            echo '
                                                 </div> 
                                                 <div style="display: inline-block; width: 300px; vertical-align: top;">';
 
@@ -510,7 +506,7 @@ if ($enter_ok){
                                                     </div>';*/
 
                             /*}*/
-                            echo '
+               /*             echo '
                                                 </div>';
                             echo '
                                                 <div style="margin-top: 5px; font-size: 110%;">
@@ -570,7 +566,7 @@ if ($enter_ok){
                                     <span style="font-size: 90%; font-weight: normal; color: #FF0202; cursor: pointer; " title="Такое происходит, если  цена позиции в прайсе меняется задним числом"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 135%;"></i> Итоговая цена не совпадает</span>';*/
                             //}
 
-                            echo '				
+            /*                echo '
                                                         
                                                 <!--</div>
                                                 <div class="cellName" style="padding: 2px 4px;">
@@ -645,10 +641,7 @@ if ($enter_ok){
                 }
             }else{
                 echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
-            }
-        }else{
-            echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
-        }
+            }*/
     }else{
         echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
     }

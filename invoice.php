@@ -693,7 +693,11 @@
                                                 //$stoim_item = round($stoim_item/10) * 10;
                                             }
 
-                                            echo $stoim_item;
+                                            if ($item['guarantee'] == 0) {
+                                                echo $stoim_item;
+                                            }else{
+                                                echo 0;
+                                            }
 
                                             //Общая стоимость
                                             if ($item['guarantee'] == 0){

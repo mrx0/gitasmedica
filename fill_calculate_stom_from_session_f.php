@@ -266,6 +266,11 @@
                                 }
 
 
+                                if ($items['guarantee'] != 0){
+                                    $stoim_item = $stoim_item2 = '0';
+                                }
+
+
                                 //$stoim_item = round($stoim_item/10) * 10;
 
 								/*if ($items['insure'] != 0){

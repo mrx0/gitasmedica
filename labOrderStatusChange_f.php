@@ -27,16 +27,44 @@
 
                     $msql_cnnct = ConnectToDB();
 
-                    $query = "INSERT INTO `journal_laborder_ex` (`laborder_id`, `office_id`, `create_person`, `create_time`, `status`)
-                        VALUES (
-                        '{$_POST['lab_order_id']}', '{$_SESSION['filial']}', '{$_SESSION['id']}', '{$time}', '{$_POST['status']}')";
+                    if ($_POST['status'] != 4) {
 
-                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                        $query = "INSERT INTO `journal_laborder_ex` (`laborder_id`, `office_id`, `create_person`, `create_time`, `status`)
+                            VALUES (
+                            '{$_POST['lab_order_id']}', '{$_SESSION['filial']}', '{$_SESSION['id']}', '{$time}', '{$_POST['status']}')";
 
-                    //Обновляем
-                    $query = "UPDATE `journal_laborder` SET `status`='{$_POST['status']}' WHERE `id`='{$_POST['lab_order_id']}'";
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                        //Обновляем
+                        $query = "UPDATE `journal_laborder` SET `status`='{$_POST['status']}' WHERE `id`='{$_POST['lab_order_id']}'";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                    }else{
+                        $query = "DELETE FROM `journal_laborder_ex` WHERE `laborder_id`='{$_POST['lab_order_id']}' ORDER BY `id` DESC LIMIT 1";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                        //Крайний статус
+                        $query = "SELECT `status` FROM `journal_laborder_ex` WHERE `laborder_id`='{$_POST['lab_order_id']}' ORDER BY `id` DESC LIMIT 1";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                        $number = mysqli_num_rows($res);
+
+                        if ($number != 0) {
+                            /*while ($arr = mysqli_fetch_assoc($res)) {
+                                array_push($rez, $arr);
+                            }*/
+
+                            $arr = mysqli_fetch_assoc($res);
+
+                            //Обновляем
+                            $query = "UPDATE `journal_laborder` SET `status`='{$arr['status']}' WHERE `id`='{$_POST['lab_order_id']}'";
+
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                        }
+                    }
 
                     echo json_encode(array('result' => 'success', 'data' => ''));
                 }else{

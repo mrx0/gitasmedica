@@ -305,20 +305,23 @@
 
                                 //$request .= $items['itog_price'];
 
-
-                                //if (isset($items['manual_itog_price'])){
-                                    if (isset($items['itog_price'])){
-                                        if ($items['itog_price'] > 0){
+                                if ($items['guarantee'] == 0) {
+                                    //if (isset($items['manual_itog_price'])){
+                                    if (isset($items['itog_price'])) {
+                                        if ($items['itog_price'] > 0) {
                                             $request .= $items['itog_price'];
-                                        }else{
+                                        } else {
                                             $request .= '0';
                                         }
-                                    }else{
+                                    } else {
                                         $request .= '0';
                                     }
-                                //}else{
+                                    //}else{
                                     //$request .= '0';
-                                //}
+                                    //}
+                                }else{
+                                    $request .= '0';
+                                }
 
 
                                 $request .= '	

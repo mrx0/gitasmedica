@@ -178,7 +178,7 @@
                             $rezult .=
                                 '
                                 <div class="cellsBlockHover" style=" border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
-                                    <div style="display: inline-block; width: 150px;">
+                                    <div style="display: inline-block; width: 190px;">
                                         <div>
                                         <a href="fl_calculate.php?id='.$rezData['id'].'" class="ahref">
                                             <div>
@@ -223,7 +223,7 @@
 
                         $rezult .= '
                             <div style="margin: 5px 0; padding: 2px; text-align: right;">
-                                <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick=""><br>
+                                <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick="fl_addNewTabelIN();"><br>
                                 <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Добавить в существующий табель" onclick="">
                             </div>';
 

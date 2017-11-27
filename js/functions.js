@@ -116,10 +116,13 @@
 
 				    var itog_price = Number(target.html());
 				    var manual_itog_price = Number(target.attr("manual_itog_price"));
-				    //console.log(itog_price);
+				    /*console.log(itog_price);
+				    console.log(manual_itog_price);*/
 				    //console.log(target.attr("manual_itog_price"));
 				    //console.log(Math.floor(itog_price / 10) * 10);
 				    //console.log(Math.floor((itog_price) / 10) * 10 +10);
+
+                    manual_itog_price = itog_price;
 
 					/*var min_itog_price = Math.floor(itog_price / 10) * 10;
 					var max_itog_price = min_itog_price + 10;*/
@@ -197,13 +200,15 @@
 
         var cboxArray = [];
 
-        $('input[type="specializations]').each(function() {
+        $('input[type="checkbox"]').each(function() {
             var cboxValue = $(this).val();
-            //console.log($(this).val());
-            if ( $(this).prop("checked")){
-                cboxArray = itemExistsChecker2(cboxArray, cboxValue);
-            }
+            //console.log($(this).attr("id"));
 
+            if ($(this).attr("id") != 'fired') {
+                if ($(this).prop("checked")) {
+                    cboxArray = itemExistsChecker2(cboxArray, cboxValue);
+                }
+            }
         });
 
         return cboxArray;
@@ -3964,7 +3969,9 @@
             console.log("//////////////////////");*/
 
             if (ishod_price == 0) {
-                $(this).parent().find('.invoiceItemPriceItog').html(stoim);
+                if (guarantee != 1) {
+                    $(this).parent().find('.invoiceItemPriceItog').html(stoim);
+                }
             }
 
             if (changeItogPrice) {
@@ -6630,7 +6637,7 @@
 			dataType: "JSON",
 			data:
 			{
-                lab_order_id:lab_order_id,
+                lab_order_id: lab_order_id,
 
                 status: status,
 

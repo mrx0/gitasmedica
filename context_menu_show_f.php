@@ -26,15 +26,15 @@
 				//Коэффициент общий
 				if ($_POST['mark'] == 'spec_koeff'){
 					$data = '
-						<li><div onclick="spec_koeffInvoice(0)">нет</div></li>'.
-						'<li><div onclick="spec_koeffInvoice(\'k1\')">Ведущий сп-т</div></li>'.
-						'<li><div onclick="spec_koeffInvoice(\'k2\')">Главный сп-т</div></li>'.
+						<li><div onclick="spec_koeffInvoice(0)">нет (очистить)</div></li>'.
+						'<li><div onclick="spec_koeffInvoice(\'k1\')">Ведущий 10%</div></li>'.
+						'<li><div onclick="spec_koeffInvoice(\'k2\')">Главный 20%</div></li>'.
 						'<li><div><input type="number" size="2" name="koeff" id="koeff" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="spec_koeffInvoice(document.getElementById(\'koeff\').value)"> Применить</div></div></li>';
 				}
 				//По гарантии общий
 				if ($_POST['mark'] == 'guarantee'){
 					$data = '
-						<li><div onclick="guaranteeInvoice(0)">нет</div></li>'.
+						<li><div onclick="guaranteeInvoice(0)">нет (очистить)</div></li>'.
 						'<li><div onclick="guaranteeInvoice(1)">По гарантии</div></li>';
 				}
 				//Страховая общее
@@ -55,33 +55,39 @@
 				//Страховая согласовано общее
 				if ($_POST['mark'] == 'insure_approve'){
 					$data = '
-						<li><div onclick="insureApproveInvoice(0)">нет</div></li>'.
+						<li><div onclick="insureApproveInvoice(0)">нет (очистить)</div></li>'.
 						'<li><div onclick="insureApproveInvoice(1)">Согласовано</div></li>';
 				}	
 				//Скидка акция общее
 				if ($_POST['mark'] == 'discounts'){
 					$data = '
-						<li><div onclick="discountInvoice(0)">нет</div></li>'.
+						<li><div onclick="discountInvoice(0)">нет (очистить)</div></li>'.
+						'<li>
+						    <div onclick="discountInvoice(10)" style="display: inline;">10%</div>'.
+                            '<div onclick="discountInvoice(15)" style="display: inline;">15%</div>'.
+                            '<div onclick="discountInvoice(30)" style="display: inline;">30%</div>'.
+                            '<div onclick="discountInvoice(50)" style="display: inline;">50%</div>
+						</li>'.
 						'<li><div><input type="number" size="2" name="discount" id="discount" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="discountInvoice(document.getElementById(\'discount\').value)"> Применить</div></div></li>';
 				}
 				//Страховая согласовано позиция
 				if ($_POST['mark'] == 'insure_approveItem'){
 					$data = '
-						<li><div onclick="insureApproveItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 0)">нет</div></li>'.
+						<li><div onclick="insureApproveItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 0)">нет (очистить)</div></li>'.
 						'<li><div onclick="insureApproveItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 1)">Согласовано</div></li>';
 				}
 				//Гарантия позиция
 				if ($_POST['mark'] == 'guaranteeItem'){
 					$data = '
-						<li><div onclick="guaranteeItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 0)">нет</div></li>'.
+						<li><div onclick="guaranteeItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 0)">нет (очистить)</div></li>'.
 						'<li><div onclick="guaranteeItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 1)">По гарантии</div></li>';
 				}
 				//Коэффициент позиция
 				if ($_POST['mark'] == 'spec_koeffItem'){
 					$data = '
-						<li><div onclick="spec_koeffItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 0)">нет</div></li>'.
-						'<li><div onclick="spec_koeffItemInvoice('.$_POST['ind'].', '.$_POST['key'].', \'k1\')">Ведущий сп-т</div></li>'.
-						'<li><div onclick="spec_koeffItemInvoice('.$_POST['ind'].', '.$_POST['key'].', \'k2\')">Главный сп-т</div></li>'.
+						<li><div onclick="spec_koeffItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 0)">нет (очистить)</div></li>'.
+						'<li><div onclick="spec_koeffItemInvoice('.$_POST['ind'].', '.$_POST['key'].', \'k1\')">Ведущий 10%</div></li>'.
+						'<li><div onclick="spec_koeffItemInvoice('.$_POST['ind'].', '.$_POST['key'].', \'k2\')">Главный 20%</div></li>'.
 						'<li><div><input type="number" size="2" name="koeff" id="koeff" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="spec_koeffItemInvoice('.$_POST['ind'].', '.$_POST['key'].', document.getElementById(\'koeff\').value)"> Применить</div></div></li>';
 				}
                 //Регуляция цены
@@ -92,7 +98,13 @@
 				//Скидки акции позиция
 				if ($_POST['mark'] == 'discountItem'){
 					$data = '
-						<li><div onclick="discountItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 0)">нет</div></li>'.
+						<li><div onclick="discountItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 0)">нет (очистить)</div></li>'.
+                        '<li>
+                            <div onclick="discountItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 10)" style="display: inline;">10%</div>
+                            <div onclick="discountItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 15)" style="display: inline;">15%</div>
+                            <div onclick="discountItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 30)" style="display: inline;">30%</div>
+                            <div onclick="discountItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 50)" style="display: inline;">50%</div>
+                        </li>'.
 						'<li><div><input type="number" size="2" name="discount" id="discount" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="discountItemInvoice('.$_POST['ind'].', '.$_POST['key'].', $(\'#discount\').val())"> Применить</div></div></li>';
 				}
 				//Страховка позиция
@@ -138,9 +150,10 @@
 				if ($_POST['mark'] == 'zapisOnlineStatusChange'){
 
 					if (($zapis['add_new'] == 1) || $god_mode){
-                        if ($_POST['key'] == 0){
+                        if (($_POST['key'] == 0) || ($_POST['key'] == 8)){
                             $data .= '
-                            <li><div onclick="changeOnlineZapisStatus('.$_POST['ind'].', 7)">Обработано</div></li>';
+                            <li><div onclick="changeOnlineZapisStatus('.$_POST['ind'].', 7)">Обработано</div></li>
+                            <li><div onclick="changeOnlineZapisStatus('.$_POST['ind'].', 8)">Не доступен</div></li>';
                         }
                         if ($_POST['key'] == 7){
                             $data .= '
@@ -186,8 +199,9 @@
                         $data .= '
                             <li><div onclick="labOrderStatusChange('.$_POST['ind'].', 0)">Восстановить</div></li>';
                     }
-                    if ($_POST['key'] == 1){
-                        $data .= '';
+                    if (($_POST['key'] == 1) && ($god_mode || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9))){
+                        $data .= '
+                            <li><div onclick="labOrderStatusChange('.$_POST['ind'].', 4)">Удалить статус "Закрыт"</div></li>';
                     }
                 }
 

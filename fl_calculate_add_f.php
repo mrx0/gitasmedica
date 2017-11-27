@@ -73,6 +73,12 @@
 
                                         if ($itog_price == 0){
                                             $itog_price_add = $price;
+                                        }else{
+                                            $itog_price_add = $itog_price;
+                                        }
+
+                                        if ($guarantee != 0){
+                                            $itog_price_add = 0;
                                         }
 
                                         //Добавляем в базу
@@ -88,6 +94,10 @@
 
                                         if ($itog_price == 0){
                                             $itog_price = $price;
+                                        }
+
+                                        if ($guarantee != 0){
+                                            $itog_price = 0;
                                         }
 
                                         //$calculateInvSumm +=  round($price);

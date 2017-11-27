@@ -45,25 +45,46 @@
                 echo '
 								</div>
 								<div class="cellOffice" style="text-align: center">Должность</div>
+								<div class="cellFullName" style="text-align: center">Специализация</div>
 								
 								<div class="cellText" style="text-align: center">Контакты</div>
 								<div class="cellName" style="text-align: center">Логин</div>
 								<div class="cellName" style="text-align: center">Пароль</div>
 							</li>';
 
-				for ($i = 0; $i < count($contacts); $i++) { 
+				for ($i = 0; $i < count($contacts); $i++) {
+                    $specializations_str_rez = '';
+
 					if ($contacts[$i]['permissions'] != '777'){
 						$permissions = SearchInArray($arr_permissions, $contacts[$i]['permissions'], 'name');
 						//var_dump($permissions);
 						$org = SearchInArray($arr_orgs, $contacts[$i]['org'], 'name');
 						//var_dump($org);
-						
+                        $specializations = workerSpecialization($contacts[$i]['id']);
+
 						if ($contacts[$i]['fired'] != 1){
 						
 							echo '
 								<li class="cellsBlock cellsBlockHover ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'">
 									<a href="user.php?id='.$contacts[$i]['id'].'" class="cellFullName ahref 4filter" id="4filter" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$contacts[$i]['full_name'].'</a>
-									<div class="cellOffice" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>', $permissions != '0' ? $permissions : '-' ,'</div>
+									<div class="cellOffice" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>', $permissions != '0' ? $permissions : '-' ,'</div>									
+									   
+									<div class="cellFullName" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>';
+
+                            if ($specializations != 0){
+                                //var_dump($specializations_j);
+                                foreach ($specializations as $data){
+                                    $specializations_str_rez .= ''.$data['name'].' ';
+                                }
+                            }else{
+                                $specializations_str_rez = '-';
+                            }
+
+                            echo $specializations_str_rez;
+
+
+							echo '
+                                    </div>
 									
 									<div class="cellText" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$contacts[$i]['contacts'].'</div>
 									<div class="cellName" style="text-align: center; ', $contacts[$i]['fired'] == '1' ? 'background-color: rgba(161,161,161,1);"' : '"' ,'>'.$contacts[$i]['login'].'</div>';
@@ -106,7 +127,27 @@
 								else
 									$fired_all .= '-';
 								$fired_all .= '</div>
-									<div class="cellText" ';
+                                    <div class="cellFullName" ';
+                                if ($contacts[$i]['fired'] == '1')
+                                    $fired_all .= 'style="background-color: rgba(161,161,161,1);"';
+                                else
+                                    $fired_all .= '' ;
+                                $fired_all .= '>';
+
+                                if ($specializations != 0){
+                                    foreach ($specializations as $data){
+                                        $specializations_str_rez .= $data['name'].' ';
+                                    }
+                                }else{
+                                    $specializations_str_rez = '-';
+                                }
+    
+                                $fired_all .= $specializations_str_rez;
+
+
+                                $fired_all .= '</div>
+                                    <div class="cellText" ';
+                                
 								if ($contacts[$i]['fired'] == '1') 
 									$fired_all .= 'style="background-color: rgba(161,161,161,1);"';
 								else
