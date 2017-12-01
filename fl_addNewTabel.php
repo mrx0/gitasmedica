@@ -34,17 +34,45 @@ if ($enter_ok){
             if (!empty($_SESSION['fl_calcs_tabels'])) {
                 //var_dump($_SESSION['fl_calcs_tabels']);
 
+                $calcData_Arr = explode('_', $_SESSION['fl_calcs_tabels']['data']);
+                $typeID = $calcData_Arr[1];
+                $filialID = $calcData_Arr[3];
+                $workerID = $calcData_Arr[2];
+
+                $summCalcs = 0;
+
+                $filial_j = SelDataFromDB('spr_office', $filialID, 'offices');
+
                 echo '
                     <div class="no_print"> 
 					<header style="margin-bottom: 5px;">
 						<h1>Новый табель</h1>
+						'.WriteSearchUser('spr_workers', $workerID, 'user', true).' / '.$filial_j[0]['name'].'<br>
+						Месяц: 
+				        <select id="tabelMonth">';
+	            foreach ($monthsName as $val => $name){
+
+                    if ($val == date('m')){
+                        $selected = 'selected';
+                    }else{
+                        $selected = '';
+                    }
+
+                    echo '<option value="'.$val.'" '.$selected.'>'.$name.'</option>';
+
+	            }
+                echo '
+			            </select>
+			            Год: <input id="tabelYear" type="number" value="'.date('Y').'" min="2000" max="2030" size="4" style="width: 60px;">
+			            
+			            
 					</header>
 					</div>';
 
                 echo '
-						<div id="data">';
+					<div id="data">';
 
-                $calcArr = $_SESSION['fl_calcs_tabels'];
+                $calcArr = $_SESSION['fl_calcs_tabels']['main_data'];
                 $queryDop = '';
                 $calcsArrayData = array();
                 $rezult = '';
@@ -101,16 +129,26 @@ if ($enter_ok){
 
                                     <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
                                 </div>';
+
+                        $summCalcs += $rezData['summ'];
+
                     }
 
                     echo $rezult;
 
                     echo '
+                        <div style="margin: 5px 0; padding: 2px; text-align: right;">
+                            Сумма: <span class="summCalcsNPaid calculateOrder">'.$summCalcs.'</span> руб.
+                        </div>
                     </div>';
 
                 }
 
                 echo '
+                    </div>
+                    <div style="margin: 5px 0;">
+
+                        <input type="button" class="b" value="Сохранить" onclick="fl_addNewTabel()">
                     </div>';
 
             }

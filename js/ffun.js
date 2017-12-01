@@ -663,7 +663,10 @@
     //Собираем ID отмеченных РЛ в массив
     function calcIDForTabelINarr() {
         var ids_arr = {};
-        var calcIDForTabel_arr = [];
+        var chkBoxData_arr = {};
+        var calcIDForTabel_arr = {};
+        calcIDForTabel_arr.data = [];
+        calcIDForTabel_arr.main_data = [];
 
         $(".chkBoxCalcs").each(function(){
             if ($(this).attr("checked")){
@@ -671,12 +674,19 @@
                 ids_arr = $(this).attr("name").split("_");
                 //console.log(ids_arr[1]);
 
+                //chkBoxData_arr  = $(this).attr("chkBoxData").split("_");
+                //console.log(chkBoxData_arr);
+
                 //var calcIDForTabel = ids_arr[1];
-                calcIDForTabel_arr[calcIDForTabel_arr.length] = ids_arr[1];
+
+                calcIDForTabel_arr.data = $(this).attr("chkBoxData");
+                calcIDForTabel_arr.main_data[calcIDForTabel_arr.main_data.length] = ids_arr[1];
                 //console.log(ids_arr[1]);
 
             }
         });
+
+        //console.log(calcIDForTabel_arr);
 
         return calcIDForTabel_arr;
     }
@@ -721,4 +731,37 @@
             });
 
         });
-    };
+    }
+
+    //Добавляем в базу табель из сессии
+    function fl_addNewTabel(){
+
+        var link = "fl_tabel_add_f.php";
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    tabelMonth: $("#tabelMonth").val(),
+                    tabelYear: $("#tabelYear").val(),
+                    summCalcs: $(".summCalcsNPaid").html(),
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res.data);
+
+                if(res.result == "success"){
+                    document.location.href = "fl_tabels.php";
+                }else{
+                    $('#errror').html(res.data);
+                }
+            }
+        });
+    }
