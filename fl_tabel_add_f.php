@@ -31,9 +31,9 @@
                         $msql_cnnct = ConnectToDB();
 
                         //Вставим новый табель
-                        $query = "INSERT INTO `fl_journal_tabels` (`office_id`, `worker_id`, `month`, `year`, `summ`)
+                        $query = "INSERT INTO `fl_journal_tabels` (`office_id`, `worker_id`, `type`, `month`, `year`, `summ`)
                           VALUES (
-                          '{$filialID}', '{$workerID}', '{$_POST['tabelMonth']}', '{$_POST['tabelYear']}', '{$_POST['summCalcs']}')";
+                          '{$filialID}', '{$workerID}', '{$typeID}', '{$_POST['tabelMonth']}', '{$_POST['tabelYear']}', '{$_POST['summCalcs']}')";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 

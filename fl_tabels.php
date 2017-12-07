@@ -166,13 +166,15 @@
                                         <div id="tabs-' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '" style="width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); font-size: 12px; margin-top: 65px;">';
 
                                     echo '
-                                            <div class="tableDataNPaidCalcs" id="'.$permission['id'] . '_' . $worker['id'] . '_' . $office['id'].'">
-                                                <div style="width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);"><img src="img/wait.gif" style="float:left;"><span style="float: right;  font-size: 90%;"> обработка...</span></div>
-                                            </div>';
-                                    echo '
                                             <div class="tableTabels" id="'.$permission['id'] . '_' . $worker['id'] . '_' . $office['id'].'_tabels">
                                                 <!--<div style="width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);"><img src="img/wait.gif" style="float:left;"><span style="float: right;  font-size: 90%;"> обработка...</span></div>-->
                                             </div>';
+
+                                    echo '
+                                            <div class="tableDataNPaidCalcs" id="'.$permission['id'] . '_' . $worker['id'] . '_' . $office['id'].'">
+                                                <div style="width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);"><img src="img/wait.gif" style="float:left;"><span style="float: right;  font-size: 90%;"> обработка...</span></div>
+                                            </div>';
+
 
                                     echo '
                                         </div>';
@@ -481,7 +483,10 @@
                                         thisObj.html("Нет данных по необработанным расчетным листам");
                                     	
                                     	//Спрячем пустые вкладки, где нет данных
-                                        $(".tabs-"+permission+"_"+worker+"_"+office).hide();
+                                    	
+                                    	console.log($(".tabs-"+permission+"_"+worker+"_"+office).css("display"));
+
+                                        //$(".tabs-"+permission+"_"+worker+"_"+office).hide();
                                     }
                                 }
                                 
@@ -544,23 +549,28 @@
                                     office = ids_arr[2];
                                 
                                     if (res.status == 1){
-                                        //thisObj.html(res.data);
+                                        thisObj.html(res.data);
                                         
                                         //Показываем оповещения на фио и филиале
-                                        /*$("#tabs_notes_"+permission+"_"+worker).show();
-                                        $("#tabs_notes_"+permission+"_"+worker+"_"+office).show();*/
+                                        $("#tabs_notes_"+permission+"_"+worker).show();
+                                        $("#tabs_notes_"+permission+"_"+worker+"_"+office).show();
                                         //console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
                                         
                                         //
-                                        //thisObj.parent().find(".summCalcsNPaid").html(res.summCalc);
+                                        thisObj.parent().find(".summTabelNPaid").html(res.summCalc);
 
                                     }
                                     
                                     if (res.status == 0){
                                         thisObj.html("Нет данных по табелям");
                                     	
+                                    	
+                                    	//!!! доделать тут чтоб правильно прятались или нет вкладки
                                     	//Спрячем пустые вкладки, где нет данных
-                                        $(".tabs-"+permission+"_"+worker+"_"+office).hide();
+                                    	
+                                    	console.log($(".tabs-"+permission+"_"+worker+"_"+office).css("display"));
+                                    	
+                                        //$(".tabs-"+permission+"_"+worker+"_"+office).hide();
                                     }
                                 }
                                 
