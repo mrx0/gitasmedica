@@ -92,7 +92,7 @@ if ($enter_ok){
 
                 if ($number != 0) {
                     while ($arr = mysqli_fetch_assoc($res)){
-                        array_push($calcsArrayData, $ );
+                        array_push($calcsArrayData, $arr);
                     }
                 }
 

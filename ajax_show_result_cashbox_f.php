@@ -69,7 +69,7 @@
                     STR_TO_DATE('".$datastart." 00:00:00', '%Y-%m-%d %H:%i:%s')
                     AND 
                     STR_TO_DATE('".$dataend." 23:59:59', '%Y-%m-%d %H:%i:%s') 
-                    ".$queryFilial."
+                    ".$queryFilial.$queryType."
                     ORDER BY `cell_time` DESC";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);

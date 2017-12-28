@@ -79,46 +79,60 @@ foreach($arrayFields as $fieldName => $oneField){
     }
 	
 	if (isset($_POST['summ'])){
-		if (!is_numeric($oneField)) {
-			$errorContainer[$fieldName] = 'В этом поле ошибка';
-		}
-		if ($oneField <= 0){
-			$errorContainer[$fieldName] = 'В этом поле ошибка';
-		}
+        if ($fieldName == 'summ') {
+            if (!is_numeric($oneField)) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка';
+            }
+            if ($oneField <= 0) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка';
+            }
+        }
 	}
 	
 	if (isset($_POST['admSettings'])){
-		if (!is_numeric($oneField)) {
-			$errorContainer[$fieldName] = 'В этом поле ошибка';
-		}
-		if ($oneField <= 0){
-			$errorContainer[$fieldName] = 'В этом поле ошибка';
-		}
+        if ($fieldName == 'admSettings') {
+            if (!is_numeric($oneField)) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка';
+            }
+            if ($oneField <= 0) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка';
+            }
+        }
 	}
 
 	if (isset($_POST['num'])){
-		if (!is_numeric($oneField)) {
-			$errorContainer[$fieldName] = 'В этом поле ошибка';
-		}
-		if ($oneField <= 0){
-			$errorContainer[$fieldName] = 'В этом поле ошибка';
-		}
+        if ($fieldName == 'num') {
+            /*if (!is_numeric($oneField)) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка';
+            }
+            if ($oneField <= 0) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка';
+            }*/
+
+            if ($oneField == '') {
+                $errorContainer[$fieldName] = 'В этом поле ошибка';
+            }
+        }
 	}
 	if (isset($_POST['nominal'])) {
-        if (!is_numeric($oneField)) {
-            $errorContainer[$fieldName] = 'В этом поле ошибка';
-        }
-        if ($oneField <= 0) {
-            $errorContainer[$fieldName] = 'В этом поле ошибка';
+        if ($fieldName == 'nominal') {
+            if (!is_numeric($oneField)) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка';
+            }
+            if ($oneField <= 0) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка';
+            }
         }
     }
 	if (isset($_POST['cell_price'])){
-		if (!is_numeric($oneField)) {
-			$errorContainer[$fieldName] = 'В этом поле ошибка';
-		}
-		if ($oneField < 0){
-			$errorContainer[$fieldName] = 'В этом поле ошибка';
-		}
+        if ($fieldName == 'cell_price') {
+            if (!is_numeric($oneField)) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка';
+            }
+            if ($oneField < 0) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка';
+            }
+        }
 	}
 
     if (isset($_POST['work_percent'])){
