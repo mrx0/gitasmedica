@@ -7090,4 +7090,15 @@
         //}
 	});
 
+	//Для фильтра в косметологии для подсчета элементов
+    $('input.filterInCosmet').keyup(function() {
+    	count = 0;
+    	$('.cosmBlock').each(function() {
+			if ($(this).css('display') != 'none'){
+				count++;
+            }
+        });
+    	//console.log(count);
+        $('.countCosmBlocks').html(count);
+	});
 

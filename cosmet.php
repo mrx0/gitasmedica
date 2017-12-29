@@ -146,7 +146,8 @@
 				echo '
 					<p style="margin: 5px 0; padding: 1px; font-size:80%;">
 						Быстрый поиск по врачу: 
-						<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
+						<input type="text" class="filter filterInCosmet" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
+						Показано: <span class="countCosmBlocks">0</span>.
 						
 					</p>
 						<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
@@ -188,7 +189,7 @@
 						//, isFired ? 'style="background-color: rgba(161,161,161,1);"' : '' ,
 						//echo $journal[$i]['worker'];
 						echo '
-							<li class="cellsBlock cellsBlockHover">
+							<li class="cellsBlock cellsBlockHover cosmBlock">
 									<a href="task_cosmet.php?id='.$journal[$i]['id'].'" class="cellName ahref" title="'.$journal[$i]['id'].'" ', isFired($journal[$i]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.date('d.m.y H:i', $journal[$i]['create_time']).'</a>
 									<a href="client.php?id='.$journal[$i]['client'].'" class="cellName ahref" ', isFired($journal[$i]['worker']) ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$client.'</a>';
 						if (($cosm['see_all'] == 1) || $god_mode){
