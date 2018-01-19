@@ -220,11 +220,12 @@
 
 							echo '
 										<div class="cellTime" style="text-align: center">';
-				if (($journal[$i]['birthday'] == '-1577934000') || ($journal[$i]['birthday'] == 0)){
+                if ($journal[$i]['birthday2'] == '0000-00-00'){
 					echo 'не указана';
 				}else{
-					echo 
-						date('d.m.Y', $journal[$i]['birthday']).'';
+					echo
+                        date('d.m.Y', strtotime($journal[$i]['birthday2'])).'';
+
 				}
 				echo '
 										</div>

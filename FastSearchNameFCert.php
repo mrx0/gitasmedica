@@ -1,35 +1,32 @@
 <?php
 	
-//FastSearchCert.php
+//FastSearchNameFCert.php
 //Поиск сертификата
 
 	//var_dump ($_POST);
 	if ($_POST){
-
-	    $rez = '';
-		$table = 'journal_cert';
-		
-		if (isset($_POST['num'])){
-			$searchdata = $_POST['num'];
-		}
-		if(($searchdata == '') || (strlen($searchdata) < 2)){
-            echo json_encode(array('result' => 'error', 'data' => 'Ошибка #3'));
+		if(($_POST['searchdata'] == '') || (strlen($_POST['searchdata']) < 2)){
+			//--
 		}else{
-			include_once 'DBWork.php';	
-			$fast_search = SelForFastSearchCert ($table, $searchdata);
+			include_once 'DBWork.php';
+
+			$fast_search = SelForFastSearchCert ('journal_cert', $_POST['searchdata']);
             if (!empty($fast_search)){
                 //var_dump ($fast_search);
-                $rez .= '<table width="100%" border="0" class="tableInsStat">';
-				for ($i = 0; $i < count($fast_search); $i++){
 
-				    $expired_txt = '';
-				    $expired = false;
+                $rez = '';
+
+                $rez .= '<table width="100%" border="0" class="tableInsStat">';
+                for ($i = 0; $i < count($fast_search); $i++){
+
+                    $expired_txt = '';
+                    $expired = false;
                     $expired_color = '';
-				    $debited_txt = '';
+                    $debited_txt = '';
                     $debited = false;
                     $debited_color = '';
 
-				    if ($fast_search[$i]['expires_time'] != '0000-00-00') {
+                    if ($fast_search[$i]['expires_time'] != '0000-00-00') {
                         //время истечения срока годности
                         $sd = $fast_search[$i]['expires_time'];
                         //текущее
@@ -45,13 +42,13 @@
                     }
 
                     //потрачено
- 				    if ($fast_search[$i]["nominal"] - $fast_search[$i]["debited"] <= 0) {
+                    if ($fast_search[$i]["nominal"] - $fast_search[$i]["debited"] <= 0) {
                         $debited_txt .= 'потрачено';
                         $debited = true;
                         $debited_color = 'background-color: rgba(239,47,55, .7)';
-                     }
+                    }
 
-                    if (($fast_search[$i]['cell_time'] != '0000-00-00 00:00:00') && ($fast_search[$i]['status'] == 7)) {
+                    //if (($fast_search[$i]['cell_time'] != '0000-00-00 00:00:00') && ($fast_search[$i]['status'] == 7)) {
                         $rez .= "<tr>
                         <td><span class='lit_grey_text'>номер</span><br><a href='certificate.php?id=".$fast_search[$i]['id']."' class='ahref'>" . $fast_search[$i]["num"] . "</a></td>
                             <td><span class='lit_grey_text'>номинал</span><br>" . $fast_search[$i]["nominal"] . "</td>
@@ -72,20 +69,15 @@
 
                         $rez .= "</td>";
 
-                        if (!$expired && !$debited) {
-                            $rez .= "<td style = 'text-align: center; cursor: pointer;' onclick = 'Ajax_cert_add_pay(".$fast_search[$i]['id'].")' ><i class='fa fa-check' aria - hidden = 'true' ></i ></td >";
-                        }else{
-                            $rez .= "<td style = 'text-align: center;'></td >";
-                        }
                         $rez .= "    
                         </tr>";
-                    }
-				}
+                    //}
+                }
                 $rez .= '</table>';
-                echo json_encode(array('result' => 'success', 'data' => $rez));
-			}else{
-                echo json_encode(array('result' => 'error', 'data' => $fast_search));
+
+                echo $rez;
             }
+			
 		}
 	}
 

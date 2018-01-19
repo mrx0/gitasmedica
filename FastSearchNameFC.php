@@ -21,11 +21,11 @@
                             <br>
                             <span style="font-size: 70%">Дата рождения: ';
 
-                    if (($fast_search[$i]['birthday'] == '-1577934000') || ($fast_search[$i]['birthday'] == 0)){
+                    if ($fast_search[$i]['birthday2'] == '0000-00-00'){
                         echo 'не указана';
                     }else{
                         echo
-                                date('d.m.Y', $fast_search[$i]['birthday']);
+                                date('d.m.Y', strtotime($fast_search[$i]['birthday2']));
                     }
                     echo '
                             </span>

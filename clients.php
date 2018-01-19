@@ -152,14 +152,16 @@
 					echo '
 								<div class="cellCosmAct" style="text-align: center" title="Добавить посещение Косметолога">К</div>';
 				}*/
-				if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){			
+
+				/*if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
 					echo '
 								<div class="cellCosmAct" style="text-align: center" title="История пациента (стоматология)">И</div>';
-				}				
+				}*/
+
 				echo '
 								<div class="cellCosmAct" style="text-align: center">Пол</div>
-								<div class="cellCosmAct" style="text-align: center; width: 60px; min-width: 60px; max-width: 60px;">Карта</div>
-								<div class="cellTime" style="text-align: center">Д. р.</div>
+								<div class="cellCosmAct" style="text-align: center; width: 80px; min-width: 80px; max-width: 80px;">Карта</div>
+								<div class="cellTime" style="text-align: center">Д. рож.</div>
 								<div class="cellCosmAct" style="text-align: center">Лет</div>
 								<div class="cellFullName" style="text-align: center">Контакты</div>
 								<div class="cellText" style="text-align: center">Комментарий</div>
@@ -211,10 +213,12 @@
 							echo '
 										<div class="cellCosmAct" style="text-align: center"><a href="add_error.php"><img src="img/cosm_add.png" title="Добавить посещение Косметолога"></a></div>';
 						}*/
-						if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
+
+						/*if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
 							echo '
 										<div class="cellCosmAct" style="text-align: center"><a href="stom_history.php?client='.$clients_j[$i]['id'].'"><img src="img/stom_hist.png" title="История пациента (стоматология)"></a></div>';
-						}
+						}*/
+
 					}else{
 						$deleted_clients .= '
 							<!--<div class="cellCosmAct" style="text-align: center"></div>-->
@@ -238,23 +242,23 @@
 						echo '
 									</div>';
 						echo '
-									<div class="cellCosmAct" style="text-align: center; width: 60px; min-width: 60px; max-width: 60px;">'.$clients_j[$i]['card'].'</div>';
+									<div class="cellCosmAct" style="text-align: center; width: 80px; min-width: 80px; max-width: 80px;">'.$clients_j[$i]['card'].'</div>';
 			
 						echo '
 									<div class="cellTime" style="text-align: center">';
-						if (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)){
+						if ($clients_j[$i]['birthday2'] == '0000-00-00'){
 							echo 'не указана';
 						}else{
-							echo date('d.m.Y', $clients_j[$i]['birthday']);
+							echo date('d.m.Y', strtotime($clients_j[$i]['birthday2']));
 						}
 						echo '				
 									</div>';
 						echo '
 									<div class="cellCosmAct" style="text-align: center">';
-						if (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)){
+						if ($clients_j[$i]['birthday2'] == '0000-00-00'){
 							echo '-';
 						}else{
-							echo '<b>'.getyeardiff($clients_j[$i]['birthday'], 0).'</b>';
+							echo '<b>'.getyeardiff(strtotime($clients_j[$i]['birthday2']), 0).'</b>';
 						}
 						echo '	
 									</div>';
@@ -299,20 +303,24 @@
 									<div class="cellCosmAct" style="text-align: center; width: 60px; min-width: 60px; max-width: 60px;">'.$clients_j[$i]['card'].'</div>';
 						$deleted_clients .= '
 									<div class="cellTime" style="text-align: center">';
-						if (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)){
+
+                        if ($clients_j[$i]['birthday2'] == '0000-00-00'){
 							$deleted_clients .= 'не указана';
 						}else{
-							$deleted_clients .= date('d.m.Y', $clients_j[$i]['birthday']);
+							$deleted_clients .= date('d.m.Y', strtotime($clients_j[$i]['birthday2']));
 						}
+
 						$deleted_clients .= '
 									</div>';
 						$deleted_clients .= '
 									<div class="cellCosmAct" style="text-align: center">';
-						if (($clients_j[$i]['birthday'] == '-1577934000') || ($clients_j[$i]['birthday'] == 0)){
+
+                        if ($clients_j[$i]['birthday2'] == '0000-00-00'){
 							$deleted_clients .= '-';
 						}else{
-							$deleted_clients .= '<b>'.getyeardiff($clients_j[$i]['birthday'], 0).'</b>';
+							$deleted_clients .= '<b>'.getyeardiff(strtotime($clients_j[$i]['birthday2']), 0).'</b>';
 						}
+
 						$deleted_clients .= '
 									</div>';
 						$deleted_clients .= '

@@ -148,7 +148,7 @@
 								</div>
 								<div class="cellTime" style="text-align: center; width: 130px; max-width: 130px; min-width: 130px;">
 								    <b>тел. :</b> ' . $zapis_online_j[$i]['phone'] . '<br>
-								    <b>e-mail: </b>' . $zapis_online_j[$i]['email'] . '
+								    <!--<b>e-mail: </b>' . $zapis_online_j[$i]['email'] . '-->
 								</div>
 								<div class="cellText" style="text-align: center">
 								    ' . $zapis_online_j[$i]['comments'] . '

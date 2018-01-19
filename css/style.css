@@ -224,7 +224,7 @@ nav a:hover {
 	position: absolute;
 	top: -5px;
 	font-size: 16px;
-	color:#FFF;
+	/*color:#FFF;*/
 	/*background: #FFF;*/
 	border-radius: 10px;
 	right: -6px;
@@ -232,7 +232,7 @@ nav a:hover {
 	text-shadow: 0px 1px 1px #AAA;
 	/*box-shadow: 0 0 5px #999;*/
 	z-index: 2;
-	 color: red;
+	color: red;
 }
 
 #change_filial {
@@ -2325,3 +2325,18 @@ ul.ul-drop div.drop {
 	color: green;
 }
 
+.paginator_btn{
+	color: #00ACED;
+	padding: 1px 8px;
+	text-decoration: none;
+	font-size: 9px;
+	border: 1px solid #b3c0c8;
+	border-radius: 2px;
+	/*background: #97D7FF;*/
+}
+
+.paginator_btn:hover{
+	color: rgba(255,255,100, 1);
+	background: #97D7FF;
+
+}

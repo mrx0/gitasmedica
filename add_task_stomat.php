@@ -165,7 +165,33 @@
                         <script src="js/init.js" type="text/javascript"></script>
                         <div id="status">
                             <header>
-                                <h2>Добавить осмотр <a href="client.php?id='.$client_j[0]['id'].'" class="ahref">пациенту</a></h2>
+                                <h2>Добавить осмотр пациенту: '.WriteSearchUser('spr_clients', $client_j[0]['id'], 'user', true).'</h2>';
+
+                    //переменная для просроченных
+                    $allPayed = true;
+
+                    //Долги/авансы
+                    //
+                    //!!! @@@
+                    //Баланс контрагента
+                    include_once 'ffun.php';
+                    //$client_balance = json_decode(calculateBalance ($client_j[0]['id']), true);
+                    //Долг контрагента
+                    $client_debt = json_decode(calculateDebt ($client_j[0]['id']), true);
+
+                    if ($client_debt['summ'] > 0){
+                        $allPayed = false;
+                    }
+
+
+                    if (!$allPayed) {
+                        echo '
+                            <div style="color: red; font-size: 13px;">
+							    <span style="font-size: 17px;"><i class="fa fa-exclamation-circle" aria-hidden="true" title="Есть долги"></i></span> У пациента есть долги.
+                            </div>';
+                    }
+
+                    echo '            
                                 Заполните поля
                             </header>';
 
@@ -515,6 +541,7 @@
 
                     echo '
                             </div>
+                            <div id="doc_title">Добавить осмотр [Стоматология] </div>
                         </div>
                         
                     <!-- Модальные окна -->

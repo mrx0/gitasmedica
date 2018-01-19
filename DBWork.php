@@ -1231,6 +1231,8 @@
 				$q = " ORDER BY `create_time` DESC";
 			}elseif (($datatable == 'journal_cosmet') || ($datatable == 'journal_cosmet1') || ($datatable == 'journal_insure_download')){
 				$q =  "ORDER BY `create_time` DESC";
+			}elseif ($datatable == 'journal_cert'){
+				$q =  "ORDER BY `num` ASC LIMIT {$type[0]}, {$type[1]}";
 			}else{
 				$q = '';
 			}
@@ -1453,9 +1455,9 @@
 				//echo "\n<li>".$row["name"]."</li>"; //$row["name"] - имя таблицы
 				array_push($rez, $arr);
 			}
-			return $rez;
-		}else
-			return $rez;
+		}
+
+		return $rez;
 	}
 
 	function SelForFastSearchFullName ($datatable, $search_data){

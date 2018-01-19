@@ -359,11 +359,11 @@
 			// какие данные будут переданы
 			data: {
 				
-				sel_date:document.getElementById("sel_date").value,
-				sel_month:document.getElementById("sel_month").value,
-				sel_year:document.getElementById("sel_year").value,
+				sel_date: $("#sel_date").val(),
+				sel_month: $("#sel_month").val(),
+				sel_year: $("#sel_year").val(),
 				
-				sex:sex_value,
+				sex: sex_value,
 			},
 			// тип передачи данных
 			dataType: "json",
@@ -1547,6 +1547,56 @@
                 }
             }
         })
+    }
+
+    function Ajax_change_expiresTime(id){
+        //console.log(id);
+
+        var link = "cert_change_expiresTime.php";
+
+        var dataCertEnd = $('#dataCertEnd').val();
+        var dataCertEnd_arr = dataCertEnd.split('.');
+
+        if ((dataCertEnd_arr[2] == undefined) ||
+			(dataCertEnd_arr[1] == undefined) ||
+			(dataCertEnd_arr[0] == undefined) ||
+			(dataCertEnd_arr[2]+"-"+dataCertEnd_arr[1]+"-"+dataCertEnd_arr[0] == '0000-00-00')) {
+
+            alert('Что-то пошло не так');
+
+        }else{
+
+            var certData = {
+                cert_id: id,
+                dataCertEnd: dataCertEnd_arr[2] + "-" + dataCertEnd_arr[1] + "-" + dataCertEnd_arr[0]
+            };
+
+            console.log(dataCertEnd_arr[2]+"-"+dataCertEnd_arr[1]+"-"+dataCertEnd_arr[0]);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: certData,
+
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log("fillInvoiseRez---------->");
+                    //console.log(res);
+
+                    if (res.result == "success") {
+                        location.reload();
+                    }
+
+                    // !!! скролл надо замутить сюда $('#invoice_rezult').scrollTop();
+                }
+            });
+        }
     }
 
 	function Ajax_edit_insure(id) {

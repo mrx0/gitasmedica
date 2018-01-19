@@ -60,6 +60,7 @@ $(document).ready(function(){
 
                         //меню при наведении
 
+                        //var color = "rgba(255, 0, 0, 0.75)";
                         var color = "#F00";
                         o.animate({fill: color}, 250);
 

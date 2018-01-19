@@ -133,12 +133,12 @@ ORDER BY `name`;
 								<div class="cellsBlock2">
 									<div class="cellLeft">Дата рождения</div>
 									<div class="cellRight">';
-				if (($client_j[0]['birthday'] == '-1577934000') || ($client_j[0]['birthday'] == 0)){
+                if ($client_j[0]['birthday2'] == '0000-00-00'){
 					echo 'не указана';
 				}else{
-					echo 
-						date('d.m.Y', $client_j[0]['birthday']).'<br>
-						полных лет <b>'.getyeardiff($client_j[0]['birthday'], 0).'</b>';
+					echo
+						date('d.m.Y', strtotime($client_j[0]['birthday2'])).'<br>
+						полных лет <b>'.getyeardiff(strtotime($client_j[0]['birthday2']), 0).'</b>';
 				}
 				echo '						
 									</div>
@@ -339,10 +339,10 @@ ORDER BY `name`;
 				echo '
 									</span>
 								</div>';
-								
+
 								
 				//Смотрим счёт (авансы/долги)
-				if (($finances['see_all'] != 0) || ($finances['see_own'] != 0) || $god_mode){
+				//if (($finances['see_all'] != 0) || ($finances['see_own'] != 0) || $god_mode){
 
 				    //Долги/авансы
                     //
@@ -382,7 +382,7 @@ ORDER BY `name`;
 								
 						}
 					}*/
-				}
+				//}
 				if ($client_j[0]['status'] != 9){
 					//Вкладки 
 					echo '
@@ -399,7 +399,7 @@ ORDER BY `name`;
 									<div class="notes_count2">
 										<i class="fa fa-exclamation-circle" aria-hidden="true" title="Есть долги"></i>
 									</div>';
-							}
+						}
 						echo '
 								</li>';
 					}
@@ -420,7 +420,14 @@ ORDER BY `name`;
 							<div id="tabs-1">';
 					
 					//Запись пациента (aka посещения) -->
-				
+
+                    if (!$allPayed) {
+                        echo '
+                            <div style="color: red; font-size: 13px;">
+							    <span style="font-size: 17px;"><i class="fa fa-exclamation-circle" aria-hidden="true" title="Есть долги"></i></span> У пациента есть долги.
+                            </div>';
+                    }
+
 					echo '
 								<div style="margin: 10px 0;">
 									<ul style="margin-left: 6px; margin-bottom: 20px;">';

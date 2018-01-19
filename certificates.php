@@ -9,17 +9,60 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 		if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
-			
+
+            //Деление на странички пагинатор paginator
+            $paginator_str = '';
+            $limit_pos[0] = 0;
+            $limit_pos[1] = 20;
+            $pages = 0;
+
+            $msql_cnnct = ConnectToDB ();
+
+            $query = "SELECT COUNT(*) AS total FROM `journal_cert`";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $arr = mysqli_fetch_assoc($res);
+
+            if ($arr['total'] != 0) {
+
+                $pages = intval($arr['total']/$limit_pos[1]);
+
+                for ($i=0; $i <= $pages; $i++) {
+                    $paginator_str .= '<a class="paginator_btn" href="certificates.php?page='.($i+1).'">'.($i+1).'</a> ';
+                }
+            }
+
+
+            if (isset($_GET)){
+                if (isset($_GET['page'])){
+                    $limit_pos[0] = ($_GET['page']-1) * $limit_pos[1];
+                }
+            }
+
+
 			echo '
 				<header>
 					<h1>Сертификаты</h1>
 				</header>';
-		if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
+
+            echo '
+					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">';
+
+            echo $block_fast_search_certificate;
+
+            echo '
+					</div>';
+
+		    if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
 				echo '
 					<a href="cert_add.php" class="b">Добавить</a>';
-			}
+		    }
 			echo '
 						<div id="data">
+						    <div style="margin: 2px 6px 3px;">
+						        '.$paginator_str.'
+						    </div>
 							<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
 			echo '
 						<li class="cellsBlock3" style="font-weight:bold; margin-bottom: -1px;">	
@@ -34,7 +77,9 @@
 						</li>';
 			
 			include_once 'DBWork.php';
-			$cert_j = SelDataFromDB('journal_cert', '', '');
+
+
+			$cert_j = SelDataFromDB('journal_cert', '', $limit_pos);
 			//var_dump ($cert_j);
 			
 			if ($cert_j !=0){
@@ -107,6 +152,9 @@
 
 			echo '
 					</ul>
+					
+					<div id="doc_title">Сертификаты</div>
+					
 				</div>';
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

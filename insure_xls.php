@@ -56,7 +56,7 @@
                                 <div class="cellOffice" style="text-align: center;">'.$office_j[0]['name'].'</div>
                                 <div class="cellOffice" style="text-align: center;">'.$insure_j[0]['name'].'</div>
                                 <div class="cellOffice" style="text-align: center;">'.WriteSearchUser('spr_workers', $insure_xls_j[$i]['create_person'], 'user', true).'</div>
-                                <div class="cellText" style="text-align: center;">'.$insure_xls_j[$i]['comment'].'</div>
+                                <div class="cellText" style="text-align: center;">#'.$insure_xls_j[$i]['id'].' '.$insure_xls_j[$i]['comment'].'</div>
                                 <div class="cellOffice" style="text-align: center;"><a href="'.$path.'" class="ahref">Скачать <i class="fa fa-file-excel-o" aria-hidden="true"></i></a></div>
                             </li>';
 					}else{
@@ -68,7 +68,7 @@
                                 <div class="cellOffice" style="text-align: center;">'.$office_j[0]['name'].'</div>
                                 <div class="cellOffice" style="text-align: center;">'.$insure_j[0]['name'].'</div>
                                 <div class="cellOffice" style="text-align: center;">'.WriteSearchUser('spr_workers', $insure_xls_j[$i]['create_person'], 'user', true).'</div>
-                                <div class="cellText" style="text-align: center;">'.$insure_xls_j[$i]['comment'].'</div>
+                                <div class="cellText" style="text-align: center;">#'.$insure_xls_j[$i]['id'].' '.$insure_xls_j[$i]['comment'].'</div>
                                 <div class="cellOffice" style="text-align: center;"><a href="'.$path.'" class="ahref">Скачать <i class="fa fa-file-excel-o" aria-hidden="true"></i></a></div>
                             </li>';
                         }else{
@@ -79,7 +79,7 @@
                                 <div class="cellOffice" style="text-align: center;">'.$office_j[0]['name'].'</div>
                                 <div class="cellOffice" style="text-align: center;">'.$insure_j[0]['name'].'</div>
                                 <div class="cellOffice" style="text-align: center;">'.WriteSearchUser('spr_workers', $insure_xls_j[$i]['create_person'], 'user', true).'</div>
-                                <div class="cellText" style="text-align: center;">'.$insure_xls_j[$i]['comment'].'</div>
+                                <div class="cellText" style="text-align: center;">#'.$insure_xls_j[$i]['id'].' '.$insure_xls_j[$i]['comment'].'</div>
                                 <div class="cellOffice" style="text-align: center;"><span class="query_neok">Не найден файл</span></div>
                             </li>';
                         }
