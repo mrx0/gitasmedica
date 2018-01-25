@@ -30,6 +30,7 @@
 			<link rel="stylesheet" type="text/css" href="css/jquery-ui.css">	
 			<link rel="stylesheet" type="text/css" href="css/pretty.css" />
 			<link rel="stylesheet" type="text/css" href="css/multi-select.css" />
+			<link rel="stylesheet" type="text/css" href="css/chosen.css" />
 			
 			<!--<link rel="stylesheet" type="text/css" href="css/drop_tree.css" />-->
 			
@@ -66,6 +67,8 @@
 			<script type="text/javascript" src="js/search_fast_client.js"></script>
 			
 			<script type="text/javascript" src="js/jquery.multi-select.js"></script>
+			
+			<script type="text/javascript" src="js/chosen.jquery.js"></script>
 			
 			<script type="text/javascript" src="js/jquery.maskedinput-1.2.2.js"></script>
 			
@@ -262,9 +265,14 @@
 		//echo '<li><a href="index.php" style="position: relative">Главная<div style="font-size:80%">'.$version.'</div><div class="have_new-topic notes_count" style="display: none; top: 0; right: 0; background: red;" title="Есть непрочитанные сообщения"></div></a></li>';
 		echo '<li><a href="index.php" style="position: relative">Главная<div class="have_new-topic notes_count" style="display: none; top: 0; right: 0; background: red;" title="Есть непрочитанные сообщения"></div></a></li>';
 
+		if (($ticket['see_all'] == 1) || ($ticket['see_own'] == 1) || $god_mode){
+			echo '<li><a href="tickets.php">Тикеты<div class="have_new-ticket notes_count" style="display: none; top: 0; right: 0; background: red;" title="">4545</div></a></li>';
+		}
+
 		if (($it['see_all'] == 1) || ($it['see_own'] == 1) || $god_mode){
 			echo '<li><a href="it.php">IT</a></li>';
 		}
+
 		/*if (($soft['see_all'] == 1) || ($soft['see_own'] == 1) || $god_mode){
 			echo '<li><a href="soft.php">Программа</a></li>';
 		}*/

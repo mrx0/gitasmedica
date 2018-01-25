@@ -124,7 +124,7 @@
 		return $rez;
 	}
 	
-	//Специализации работника
+	//Специализации работника (не должность)
 	function workerSpecialization($worker_id){
 
         $msql_cnnct = ConnectToDB ();
@@ -156,7 +156,7 @@
         return $specializations_j;
 	}
 
-	//
+	//Пишем ФИО человека
 	function WriteSearchUser($datatable, $sw, $type, $link){
 		if ($type == 'user_full'){
 			$search = 'user';
@@ -194,7 +194,40 @@
 			return 'не указан';
 		}
 	}
-	
+
+	//Собираем все филиалы
+	function getAllFilials($sort){
+		$filials_j = array();
+
+        $msql_cnnct = ConnectToDB ();
+
+        $query = "SELECT * FROM `spr_office`";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                $filials_j[$arr['id']] = $arr;
+            }
+        }
+
+        if ($sort) {
+            if (!empty($filials_j)) {
+                $filials_j_names = array();
+
+                //Определяющий массив из названий для сортировки
+                foreach ($filials_j as $key => $arr) {
+                    array_push($filials_j_names, $arr['name']);
+                }
+
+                array_multisort($filials_j_names, SORT_LOCALE_STRING, $filials_j);
+            }
+        }
+
+        return $filials_j;
+	}
+
 	//Сложение двух массивов
 	function ArraySum($array1, $array2){
 		if (count($array1) > count($array2)){
@@ -231,64 +264,70 @@
 	}
 	
 	function FilialWorker($type, $y, $m, $d, $office){
-		require 'config.php';
+		//require 'config.php';
 		$sheduler_workers = array();
-		
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+
+        $msql_cnnct = ConnectToDB ();
+
 		$query = "SELECT * FROM `scheduler` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `filial` = '{$office}' AND `type` = '{$type}'";
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($sheduler_workers, $arr);
 			}
 		}else
 			$sheduler_workers = 0;
-		mysql_close();
+
+		//mysql_close();
 		
 		return $sheduler_workers;
 	}
 	
 	function FilialKabSmenaWorker($datatable, $y, $m, $d, $office, $kab){
-		require 'config.php';
+		//require 'config.php';
 		$sheduler_workers = array();
-		
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+
+        $msql_cnnct = ConnectToDB ();
+
 		$query = "SELECT * FROM `$datatable` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$office}' AND `kab` = '{$kab}'";
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($sheduler_workers, $arr);
 			}
 		}else
 			$sheduler_workers = 0;
-		mysql_close();
+
+		//mysql_close();
 		
 		return $sheduler_workers;
 	}
 	
 	function FilialKabSmenaWorker2($datatable, $y, $m, $d, $office, $kab, $smena){
-		require 'config.php';
+		//require 'config.php';
 		$sheduler_workers = array();
-		
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+
+        $msql_cnnct = ConnectToDB ();
+
 		$query = "SELECT * FROM `$datatable` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$office}' AND `kab` = '{$kab}'";
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($sheduler_workers, $arr);
 			}
 		}else
 			$sheduler_workers = 0;
-		mysql_close();
+
+		//mysql_close();
 		
 		return $sheduler_workers;
 	}
@@ -302,49 +341,52 @@
 		}elseif($smena == 9){
 			$q_smena = " AND (`smena` = '1' OR `smena` = '2' OR `smena` = '9')";
 		}
-		
-		
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+
+        $msql_cnnct = ConnectToDB ();
+
 		$query = "SELECT * FROM `$datatable` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' {$q_smena} AND `worker` = '{$worker}'";
 		//var_dump($query);
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($work_arr, $arr);
 			}
 		}else
 			$work_arr = 0;
-		mysql_close();
+
+		//mysql_close();
 		
 		return $work_arr;
 	}
 	
 	function FilialSmenaWorker($datatable, $y, $m, $d, $worker){
-		require 'config.php';
+		//require 'config.php';
 		$sheduler_workers = array();
-		
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+
+        $msql_cnnct = ConnectToDB ();
+
 		$query = "SELECT * FROM `$datatable` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `worker` = '{$worker}'";
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($sheduler_workers, $arr);
 			}
 		}else
 			$sheduler_workers = 0;
-		mysql_close();
+
+		//mysql_close();
 		
 		return $sheduler_workers;
 	}
 	
 	function FilialKabSmenaZapis($table, $y, $m, $d, $office, $kab, $worker, $wt){
-		require 'config.php';
+		//require 'config.php';
 		if ($table == 'scheduler_stom'){
 			$datatable = 'zapis_stom';
 		}elseif ($table == 'scheduler_cosm'){
@@ -353,28 +395,30 @@
 			$datatable = 'zapis_stom';
 		}
 		$sheduler_zapis = array();
-		
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+
+        $msql_cnnct = ConnectToDB ();
+
 		$query = "SELECT * FROM `$datatable` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$office}' AND `kab` = '{$kab}' 
 		AND `worker` = '{$worker}' 
 		AND `start_time` >= '{$wt}' AND `start_time` < '".($wt + 30)."'";
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($sheduler_zapis, $arr);
 			}
 		}else
 			$sheduler_zapis = 0;
-		mysql_close();
+
+		//mysql_close();
 		
 		return $sheduler_zapis;
 	}
 	
 	function FilialKabSmenaZapisToday($table, $y, $m, $d, $office, $kab, $type){
-		require 'config.php';
+		//require 'config.php';
 		if ($table == 'scheduler_stom'){
 			$datatable = 'zapis_stom';
 		}elseif ($table == 'scheduler_cosm'){
@@ -383,27 +427,29 @@
 			$datatable = 'zapis_stom';
 		}
 		$sheduler_zapis = array();
-		
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+
+        $msql_cnnct = ConnectToDB ();
+
 		$query = "SELECT * FROM `zapis` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$office}' AND `kab` = '{$kab}' AND `type` = '{$type}' ORDER BY `start_time` ASC";
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($sheduler_zapis, $arr);
 			}
 		}else
 			$sheduler_zapis = 0;
-		mysql_close();
+
+		//mysql_close();
 		
 		return $sheduler_zapis;
 	}
 	
 	
 	function FilialKabSmenaZapisToday2($table, $y, $m, $d, $office, $kab, $wt, $type){
-		require 'config.php';
+		//require 'config.php';
 		if ($table == 'scheduler_stom'){
 			$datatable = 'zapis_stom';
 		}elseif ($table == 'scheduler_cosm'){
@@ -412,46 +458,51 @@
 			$datatable = 'zapis_stom';
 		}
 		$sheduler_zapis = array();
-		
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+
+        $msql_cnnct = ConnectToDB ();
+
 		$wt2 = $wt+30;
+
 		$query = "SELECT * FROM `zapis` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$office}' AND `kab` = '{$kab}' AND `type` = '{$type}' AND `start_time` >= '{$wt}' AND `start_time` < '{$wt2}' AND `enter` <> 9 AND `enter` <> 8 ORDER BY `start_time` ASC";
+
 		//echo $query;
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($sheduler_zapis, $arr);
 			}
 		}else
 			$sheduler_zapis = 0;
-		mysql_close();
+
+		//mysql_close();
 		
 		return $sheduler_zapis;
 	}
 	
 	function FilialWorkerSmenaZapisToday($table, $y, $m, $d, $worker){
-		require 'config.php';
+		//require 'config.php';
 
 		$sheduler_zapis = array();
-		
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+
+        $msql_cnnct = ConnectToDB ();
+
 		//$wt2 = $wt+30;
 		$query = "SELECT * FROM `zapis` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `worker` = '{$worker}' AND `enter` <> 9 AND `enter` <> 8 ORDER BY `start_time` ASC";
 		//echo $query;
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($sheduler_zapis, $arr);
 			}
 		}else
 			$sheduler_zapis = 0;
-		mysql_close();
+
+		//mysql_close();
 		
 		return $sheduler_zapis;
 	}
@@ -820,54 +871,57 @@
 
 	//Долги/Авансы
 	function DebtsPrepayments ($id){
-		require 'config.php';
+		//require 'config.php';
 		$result = array();
-		
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+
+        $msql_cnnct = ConnectToDB ();
+
 		$query = "SELECT * FROM `journal_debts_prepayments` WHERE `client` = '{$id}' AND (`type`='4' OR `type`='3')";
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
+
+		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($result, $arr);
 			}
 		}else
 			$result = 0;
-		mysql_close();
+
+		//mysql_close();
 		
 		return $result;
 	}
 	
 	//Погашения
 	function Repayments ($id){
-		require 'config.php';
+		//require 'config.php';
 		$result = array();
-		
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+
+        $msql_cnnct = ConnectToDB ();
+
 		$query = "SELECT * FROM `journal_debts_prepayments` WHERE `parent` = '{$id}' AND `type`='8'";
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($result, $arr);
 			}
 		}else
 			$result = 0;
-		mysql_close();
+
+		//mysql_close();
 		
 		return $result;
 	}
 
 	//Дерево
 	function showTree($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id){
-		require 'config.php';
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+		//require 'config.php';
+
+        $msql_cnnct = ConnectToDB ();
 						
 		$arr = array();
 		$rez = array();
@@ -910,11 +964,12 @@
 			$first = FALSE;
 		}
 		//var_dump ($query);
-		
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($rez, $arr);
 			}
 			$rezult = $rez;
@@ -993,11 +1048,13 @@
 					}
 					
 					//var_dump($query);
-					
-					$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
-					$number = mysql_num_rows($res);	
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+					$number = mysqli_num_rows($res);
+
 					if ($number != 0){
-						while ($arr2 = mysql_fetch_assoc($res)){
+						while ($arr2 = mysqli_fetch_assoc($res)){
 							array_push($rez2, $arr2);
 						}
 						$items_j = $rez2;
@@ -1042,12 +1099,12 @@
 								$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' AND `insure`='".$insure_id."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
 							}
 							//var_dump($query);
-							
-							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
-							$number = mysql_num_rows($res);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+							$number = mysqli_num_rows($res);
 							if ($number != 0){
-								$arr3 = mysql_fetch_assoc($res);
+								$arr3 = mysqli_fetch_assoc($res);
 								$price = $arr3['price'];
 							}else{
 								$price = 0;
@@ -1068,9 +1125,10 @@
 				
 				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
 				//var_dump($query);
-				
-				$res = mysql_query($query) or die($query);
-				$number = mysql_num_rows($res);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+				$number = mysqli_num_rows($res);
 				if ($number != 0){
 					//echo '_'.$value['name'].'<br>';
 					$space2 = $space. '&nbsp;&nbsp;&nbsp;';
@@ -1093,10 +1151,9 @@
 	
 	//Удаление дерева
 	function DeleteTree($level, $space, $type, $sel_id, $first, $last_level, $deleted, $deleteallin){
-		require 'config.php';
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+
+        $msql_cnnct = ConnectToDB ();
+
 		$time = time();
 		
 		//var_dump ($deleteallin);
@@ -1129,11 +1186,12 @@
 			$first = FALSE;
 		}
 		//var_dump ($query);
-		
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($rez, $arr);
 			}
 			$rezult = $rez;
@@ -1148,7 +1206,8 @@
 				//Обновили статус родителю
 				
 				$query = "UPDATE `spr_storagegroup` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `status`='9', `level`='0' WHERE `id`='{$value['id']}'";
-				mysql_query($query) or die(mysql_error().' -> '.$query);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 						
 				$arr2 = array();
 				$rez2 = array();
@@ -1159,10 +1218,12 @@
 				if ($type == 'clear'){
 					//собираем все позиции в этой группе и удаляем их из группы и их самих
 					$query = "SELECT * FROM `spr_itemsingroup` WHERE `group` = '{$value['id']}'";
-					$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-					$number = mysql_num_rows($res);
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+					$number = mysqli_num_rows($res);
 					if ($number != 0){
-						while ($arr2 = mysql_fetch_assoc($res)){
+						while ($arr2 = mysqli_fetch_assoc($res)){
 							array_push($rez2, $arr2);
 						}
 					}else{
@@ -1173,7 +1234,8 @@
 					if ($rez2 != 0){
 						//...удаляем их из группы
 						$query = "DELETE FROM `spr_itemsingroup` WHERE `group` = '{$value['id']}'";
-						mysql_query($query) or die(mysql_error().' -> '.$query);
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 						
 						if ($deleteallin == 1){
 							foreach ($rez2 as $ids){
@@ -1181,7 +1243,7 @@
 								//...и их самих
 								$query = "UPDATE `spr_pricelist_template` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `status`='9' WHERE `id`='{$ids['item']}'";
 								//var_dump($query);
-								mysql_query($query) or die(mysql_error().' -> '.$query);								
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 							}
 						}
 					}
@@ -1189,8 +1251,10 @@
 
 				//получаем группы, которые в этом родителе
 				$query = "SELECT * FROM `spr_storagegroup` WHERE `level` = '{$value['id']}'";
-				$res = mysql_query($query) or die($query);
-				$number = mysql_num_rows($res);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+				$number = mysqli_num_rows($res);
 				if ($number != 0){
 					DeleteTree($value['id'], '', $type, $sel_id, $first, 0, $deleted, $deleteallin);
 				}else{

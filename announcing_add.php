@@ -65,10 +65,11 @@
 							
 							<div class="cellsBlock3">
 								<div class="cellLeft">
-								    Для кого из сотрудников<br>
+								    Для кого из сотрудников<br><span style="font-size:80%;  color: #555;">(по умолчанию видно всем)</span>
 								<!--<span style="font-size: 70%;">Если не выбрано, то для всех</span>-->
 								</div>
 								<div class="cellRight">
+								    <span style="font-size:80%;  color: #555;">Кому не видно</span>
 									<select multiple="multiple" name="workers_type[]" id="workers_type">';
 			if ($permissions != 0){
 			    for ($i=0; $i<count($permissions); $i++){
@@ -86,10 +87,11 @@
             echo '		
 							<div class="cellsBlock3">
 								<div class="cellLeft">
-								    Для какого филиала<br>
+								    Для какого филиала<br><span style="font-size:80%;  color: #555;">(по умолчанию видно всем)</span>
 								    <!--<span style="font-size: 70%;">Если не выбрано, то для всех</span>-->
 								</div>
 								<div class="cellRight">
+								    <span style="font-size:80%;  color: #555;">Кому не видно</span>
 									<select multiple="multiple" name="filial[]" id="filial">';
             if ($offices != 0){
                 for ($i=0;$i<count($offices);$i++){

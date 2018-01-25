@@ -38,18 +38,15 @@
         $arr = array();
         $rez = array();
 
-        //Просто пример
-        /*$query = "SELECT ss.name, ss.id
-        FROM `journal_work_spec` jws
-        INNER JOIN `spr_specialization` ss ON ss.id = jws.specialization_id
-        WHERE `worker_id` = '$worker_id'";*/
-
+        //Если не "бог" надо выбрать те, которые относятся к специализации, указанной при добавлении
         if ($_SESSION['permissions'] != 777) {
             $query_dop = "AND j_ann.id IN (SELECT `annoncing_id` FROM `journal_announcing_worker` WHERE `worker_type` = '{$_SESSION['permissions']}' AND `annoncing_id` = j_ann.id)";
         }else{
             $query_dop = '';
         }
 
+        //Выборка объявлений не удалённых (j_ann.status <> '9')
+        //и плюс статус прочитан он данным сотрудником или нет
         $query = "SELECT jann.*, jannrm.status AS read_status
         FROM `journal_announcing_readmark` jannrm
         RIGHT JOIN (
@@ -58,8 +55,6 @@
         ) jann ON jann.id = jannrm.announcing_id
         AND jannrm.create_person = '{$_SESSION['id']}'
         ORDER BY `create_time` DESC";
-
-        //$query = "SELECT * FROM `journal_announcing` ORDER BY `create_time` DESC";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

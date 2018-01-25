@@ -245,7 +245,7 @@
                         $orderTemp_str .= '
                                             <li class="cellsBlock" style="width: auto;">';
                         $orderTemp_str .= '
-                                                <a href="order.php?id='.$order_item['id'].'" class="cellOrder ahref" style="position: relative;">
+                                                <a href="certificate.php?id='.$order_item['id'].'" class="cellOrder ahref" style="position: relative;">
                                                     <b>Сертификат #'.$order_item['num'].'</b>  от '.date('d.m.y' ,strtotime($order_item['cell_time'])).'<br>
                                                     '.$office_j_arr[$order_item['office_id']]['name'].'<br>
                                                     <span style="font-size:80%;  color: #555;">';

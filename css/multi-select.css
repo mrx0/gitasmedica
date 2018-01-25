@@ -91,3 +91,7 @@
   color: #aaa;
   cursor: text;
 }
+
+.ms-list-bgcolor {
+  background: rgba(15, 255, 0, 0.3);
+}

@@ -32,6 +32,7 @@
 				$finances = json_decode($permissions[0]['finances'], true);
 				$items = json_decode($permissions[0]['items'], true);
 				$invoice = json_decode($permissions[0]['invoice'], true);
+				$ticket = json_decode($permissions[0]['ticket'], true);
 				//var_dump($spravka);
 			}
 		}else{
@@ -64,6 +65,8 @@
 			$items['see_own'] = 0;
 			$invoice['see_all'] = 0;
 			$invoice['see_own'] = 0;
+            $ticket['see_all'] = 0;
+            $ticket['see_own'] = 0;
 			//
 			$it['add_new'] = 0;
 			$it['add_own'] = 0;
@@ -93,6 +96,8 @@
 			$items['add_own'] = 0;
 			$invoice['add_new'] = 0;
 			$invoice['add_own'] = 0;
+            $ticket['add_new'] = 0;
+            $ticket['add_own'] = 0;
 			//
 			$it['edit'] = 0;
 			$cosm['edit'] = 0;
@@ -108,6 +113,7 @@
 			$finances['edit'] = 0;
 			$items['edit'] = 0;
 			$invoice['edit'] = 0;
+            $ticket['edit'] = 0;
 			//
 			$it['close'] = 0;
 			$cosm['close'] = 0;
@@ -123,6 +129,7 @@
 			$finances['close'] = 0;
 			$items['close'] = 0;
 			$invoice['close'] = 0;
+            $ticket['close'] = 0;
 			//
 			$it['reopen'] = 0;
 			$cosm['reopen'] = 0;
@@ -138,6 +145,7 @@
 			$finances['reopen'] = 0;
 			$items['reopen'] = 0;
 			$invoice['reopen'] = 0;
+            $ticket['reopen'] = 0;
 			//
 			$it['add_worker'] = 0;
 			$cosm['add_worker'] = 0;
@@ -153,6 +161,7 @@
 			$finances['add_worker'] = 0;
 			$items['add_worker'] = 0;
 			$invoice['add_worker'] = 0;
+            $ticket['add_worker'] = 0;
 			//
 			
 		}

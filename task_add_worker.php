@@ -42,7 +42,7 @@
 									<div class="cellLeft">Исполнитель</div>
 									<div class="cellRight">
 										<input type="text" size="50" name="searchdata2" id="search_client2" placeholder="Введите первые три буквы для поиска" value="" class="who2"  autocomplete="off">
-										<ul id="search_result2" class="search_result2"></ul><br />
+										<ul id="search_result2" class="search_result2"></ul><br>
 									</div>
 								</div>
 								

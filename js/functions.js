@@ -1209,7 +1209,7 @@
 
         if (mode == 'edit'){
             link = "announcing_add_f.php";
-            announcing_id = $("#announcing__id").val();
+            announcing_id = $("#announcing_id").val();
         }
 
 		var announcing_type = $("#announcing_type").val();
@@ -1244,6 +1244,59 @@
                     }, 1000)
                 }else{
 					$('#errror').html(data);
+                }
+			}
+		})
+	};
+
+	//Добавить новую задачу
+	function Ajax_add_ticket(mode) {
+
+        var ticket_id = 0;
+
+        var link = "ticket_add_f.php";
+
+        if (mode == 'edit'){
+            link = "ticket_add_f.php";
+            ticket_id = $("#ticket_id").val();
+        }
+
+		var descr = $("#descr").val();
+		var plan_date = $("#iWantThisDate2").val();
+		var workers = $("#postCategory").val();
+        var workers_type = $("#workers_type").val();
+        var filial = $("#filial").val();
+		//console.log(ticket_type);
+
+        var certData = {
+            descr: descr,
+            plan_date: plan_date,
+            workers: workers,
+            workers_type: workers_type,
+            filial: filial
+        };
+
+		$.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: certData,
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			success:function(res){
+            	//console.log (res);
+
+                if(res.result == "success") {
+                    $('#data').html(res.data);
+                    setTimeout(function () {
+                        window.location.replace('tickets.php');
+                    }, 800)
+                }else{
+					$('#errror').html(res.data);
+                    //$('#descr').css({'border-color': 'red'});
                 }
 			}
 		})
@@ -1457,7 +1510,7 @@
                                 cat_name: cat_name,
                                 work_percent: work_percent,
                                 material_percent: material_percent,
-                                personal_id: personal_id,
+                                personal_id: personal_id
                             },
 
                         cache: false,
@@ -7076,6 +7129,7 @@
 
 		//for (var key in types) {
 
+			//Надо же хоть что-то передать...
             var reqData = {
                 type: 5,
             }
@@ -7130,6 +7184,36 @@
 
                             $(".have_new-topic").show();
                             $(".have_new-topic").html(res.data);
+                        }
+                    }else{
+
+                    }
+                }
+            });
+
+             //Запрос есть ли новые тикеты
+            $.ajax({
+                url:"get_ticket2.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+
+                data:reqData,
+
+                cache: false,
+                beforeSend: function() {
+                },
+                success:function(res){
+                    console.log(res);
+
+                    if(res.result == 'success'){
+                    	//console.log(res);
+
+                    	if (res.data > 0) {
+                            //console.log(res.data);
+
+                            $(".have_new-ticket").show();
+                            $(".have_new-ticket").html(res.data);
                         }
                     }else{
 

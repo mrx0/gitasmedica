@@ -4,7 +4,7 @@
 //Важный отчёт
 
 
-    //!!!Сортировка
+    //!!!Сортировка - нигде не используется??
     function cmp($a, $b)
     {
         return sort($massive, SORT_STRING);

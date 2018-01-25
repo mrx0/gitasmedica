@@ -572,6 +572,11 @@ input[type="submit"]:focus, .button:focus, .button_close:focus, .b:focus, .b2:fo
 	margin: 0;	
 }
 
+.b4{
+	margin: 2px 1px;
+}
+
+
 .b, .b2 {
 	font-size: 90%;
     /*border: 1px solid #BFBCB5; /* Рамка */
@@ -592,12 +597,37 @@ input[type="submit"]:focus, .button:focus, .button_close:focus, .b:focus, .b2:fo
 	 cursor:pointer;
 }
 
+.b4 {
+	font-size: 90%;
+    /*border: 1px solid #BFBCB5; /* Рамка */
+    display: inline-block;
+    padding: 2px 7px; /* Поля */
+    text-decoration: none; /* Убираем подчёркивание */
+    /*color: #fff; /* Цвет текста */
+
+	/*display: table-cell !important;*/
+	/*display: inline; /* для IE */
+	/*padding:4px;*/
+	border: 1px solid #BFBCB5;
+	vertical-align:middle;
+	/*width:340px;*/
+	/*min-width:340px;*/
+	background-color: rgba(255, 255, 255, 1);
+
+	cursor:pointer;
+}
+
 .b:hover, .b2:hover {
     box-shadow: 0 0 5px rgba(0,0,0,0.3); /* Тень */
     background: linear-gradient(to bottom, #fcfff4, #e9e9ce); /* Градиент */
     color: #a00;
 }
 
+.b4:hover{
+	box-shadow: 0 0 5px rgba(0,0,0,0.3); /* Тень */
+	background: linear-gradient(to bottom, #fcfff4, #e9e9ce); /* Градиент */
+	color: #a00;
+}
 
 .b3{
 	margin: 5px 2px;
@@ -2177,6 +2207,80 @@ ul.ul-drop div.drop {
 	display: inline-block;
 }
 
+.ticketBlock, .ticketBlockdone, .ticketBlockexpired2, .ticketBlockexpired, .ticketBlockdeleted {
+	border: 1px dotted #CCC;
+	margin: 5px;
+	width: 250px;
+	height: 130px;
+	/*font-size: 95%;*/
+	display: inline-block;
+	position: relative;
+}
+
+.ticketBlock{
+	background-color: rgba(245, 245, 245, 0.9);
+}
+
+.ticketBlockdone{
+	background-color: rgba(144, 247, 95, 0.37);
+}
+
+.ticketBlockexpired{
+	background-color: rgba(236, 61, 61, 0.25);
+}
+
+.ticketBlockexpired2{
+	background-color: rgba(255, 165, 0, 0.55);
+}
+
+.ticketBlockdeleted{
+	background-color: rgba(131, 133, 134, 0.9);
+}
+
+.ticketBlock:hover, .ticketBlockdone:hover, .ticketBlockexpired2:hover, .ticketBlockexpired:hover, .ticketBlockdeleted:hover {
+	background-color: rgba(247, 228, 95, 0.37);
+	border: 1px solid #C0C0C0;
+}
+
+.ticketBlockheader {
+	position: absolute;
+	top: 1px;
+	left: 1px;
+	border: 1px solid #C0C0C0;
+	width: 246px;
+	height: 19px;
+	/*text-align: right;*/
+}
+
+.ticketBlockmain {
+	position: absolute;
+	top: 30px;
+	left: 5px;
+	width: 235px;
+	font-size: 85%;
+	text-decoration: none;
+	padding: 2px;
+}
+
+.ticketBlockmain:hover{
+	/*background-color: rgba(144, 247, 102, 0.45);*/
+	/*outline: 1px solid rgb(233, 233, 233);*/
+	/*box-shadow: 1px 0px 10px rgba(204, 36, 53, 0.5);*/
+	/*text-shadow: none;*/
+	/*color: rgb(113, 110, 99);*/
+	color: rgba(12, 26, 60, 0.86);
+}
+
+.ticketBlockfooter {
+	position: absolute;
+	bottom: 5px;
+	left: 5px;
+	width: 240px;
+	font-size: 80%;
+	color: rgb(115, 112, 112);
+}
+
+
 .tableInsStat tr td {
 	padding: 5px;
 	border: 1px dotted #b3c0c8;
@@ -2340,3 +2444,4 @@ ul.ul-drop div.drop {
 	background: #97D7FF;
 
 }
+
