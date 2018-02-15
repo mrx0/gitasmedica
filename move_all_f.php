@@ -21,18 +21,16 @@
 					if ($clients[0]['id'] != $_POST['id']){
 						
 						//Косметология
-						require 'config.php';
-						mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-						mysql_select_db($dbName) or die(mysql_error()); 
-						mysql_query("SET NAMES 'utf8'");
 						$time = time();
+
+                        $msql_cnnct = ConnectToDB();
 							
 						$query = "UPDATE `journal_cosmet1` SET 
 						`client`='{$clients[0]['id']}' 
 						WHERE 
 						`client`='{$_POST['id']}'";
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 						
 						//Этапы
 						$query = "UPDATE `journal_etaps` SET 
@@ -40,7 +38,7 @@
 						WHERE 
 						`client_id`='{$_POST['id']}'";
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 						
 						//Стоматология
 						$query = "UPDATE `journal_tooth_status` SET 
@@ -48,7 +46,7 @@
 						WHERE 
 						`client`='{$_POST['id']}'";
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 						
 						//Ротовые снимки
 						$query = "UPDATE `journal_zub_img` SET 
@@ -56,7 +54,7 @@
 						WHERE 
 						`client`='{$_POST['id']}'";
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 						
 						//Заметки
 						$query = "UPDATE `notes` SET 
@@ -64,7 +62,7 @@
 						WHERE 
 						`client`='{$_POST['id']}'";
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 						
 						//Направления
 						$query = "UPDATE `removes` SET 
@@ -72,7 +70,7 @@
 						WHERE 
 						`client`='{$_POST['id']}'";
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 						
 						//Снимки КД
 						$query = "UPDATE `spr_kd_img` SET 
@@ -80,7 +78,7 @@
 						WHERE 
 						`client`='{$_POST['id']}'";
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 						
 						//Запись
 						$query = "UPDATE `zapis` SET 
@@ -88,7 +86,7 @@
 						WHERE 
 						`patient`='{$_POST['id']}'";
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 						
 						//Авансы долги
 						$query = "UPDATE `journal_debts_prepayments` SET 
@@ -96,11 +94,34 @@
 						WHERE 
 						`client`='{$_POST['id']}'";
 
-						mysql_query($query) or die(mysql_error().' -> '.$query);
-						
-						
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-						mysql_close();	
+						//Наряды
+						$query = "UPDATE `journal_invoice` SET 
+						`client_id`='{$clients[0]['id']}' 
+						WHERE 
+						`client_id`='{$_POST['id']}'";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+						//Ордеры
+						$query = "UPDATE `journal_order` SET 
+						`client_id`='{$clients[0]['id']}' 
+						WHERE 
+						`client_id`='{$_POST['id']}'";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+						//Проведение оплаты
+						$query = "UPDATE `journal_payment` SET 
+						`client_id`='{$clients[0]['id']}' 
+						WHERE 
+						`client_id`='{$_POST['id']}'";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                        CloseDB($msql_cnnct);
+
 					}else{
 						echo '
 							<div class="query_neok">

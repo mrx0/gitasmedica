@@ -84,7 +84,7 @@
 				echo '
                                 <div class="cellTime" style="text-align: center; width: 130px; max-width: 130px; min-width: 130px;">Контакты</div>
                                 <div class="cellText" style="text-align: center">Комментарий</div>
-                                <div class="cellTime" style="text-align: center">Время желаемое</div>
+                                <!--<div class="cellTime" style="text-align: center">Время желаемое</div>-->
                                 <div class="cellOffice" style="text-align: center;">Филиал / Специалист</div>
 								<div class="cellTime" style="text-align: center">Статус</div>
 							</li>';
@@ -114,15 +114,15 @@
 								    ' . $zapis_online_j[$i]['name'] . '
 								</div>
 								<div class="cellTime" style="text-align: center; width: 130px; max-width: 130px; min-width: 130px;">
-								    <b>тел. :</b><br>' . $zapis_online_j[$i]['phone'] . '<br>
+								    <b>тел.:</b><br>' . $zapis_online_j[$i]['phone'] . '<br>
 								    <!--<b>e-mail:</b><br>' . $zapis_online_j[$i]['email'] . '-->   
 								</div>
 								<div class="cellText" style="text-align: center">
 								    ' . $zapis_online_j[$i]['comments'] . '
 								</div>
-								<div class="cellTime" style="text-align: center">
+								<!--<div class="cellTime" style="text-align: center">
 								    ' . $zapis_online_j[$i]['time'] . '
-								</div>
+								</div>-->
 								<div class="cellOffice" style="text-align: center;">
 								    ' . $offices_j[$zapis_online_j[$i]['place']]['name'] . '<br>
 								    <b>' . $permissions_j[$zapis_online_j[$i]['type']]['name'] . '</b>
@@ -147,15 +147,15 @@
 								    ' . $zapis_online_j[$i]['name'] . '
 								</div>
 								<div class="cellTime" style="text-align: center; width: 130px; max-width: 130px; min-width: 130px;">
-								    <b>тел. :</b> ' . $zapis_online_j[$i]['phone'] . '<br>
+								    <b>тел.:</b>' . $zapis_online_j[$i]['phone'] . '<br>
 								    <!--<b>e-mail: </b>' . $zapis_online_j[$i]['email'] . '-->
 								</div>
 								<div class="cellText" style="text-align: center">
 								    ' . $zapis_online_j[$i]['comments'] . '
 								</div>
-								<div class="cellTime" style="text-align: center">
+								<!--<div class="cellTime" style="text-align: center">
 								    ' . $zapis_online_j[$i]['time'] . '
-								</div>
+								</div>-->
 								<div class="cellOffice" style="text-align: center;">
 								    ' . $offices_j[$zapis_online_j[$i]['place']]['name'] . '<br>
 								    <b>' . $permissions_j[$zapis_online_j[$i]['type']]['name'] . '</b>

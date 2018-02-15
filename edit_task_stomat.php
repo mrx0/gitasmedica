@@ -624,10 +624,12 @@
 							<ul id="search_result3" class="search_result3"></ul>
 						</td>
 					</tr>
+                    <tr>
+                        <td>
+                            <a href="#" class="b" id="close_mdd" onclick="AddRemoveData()" style="bottom: 10px; position: absolute;">Направить</a>
+                        </td>
+                    </tr>
 				</table>
-
-				
-				<a href="#" class="b" id="close_mdd" onclick="AddRemoveData()" style="bottom: 10px; position: absolute;">Направить</a>
 
 			</div>
 			<!-- Подложка только одна -->

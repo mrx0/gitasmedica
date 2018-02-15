@@ -46,17 +46,9 @@
 			});
 		});
 		
-		$(document).ready(function() {
-			$('.modal_close, #overlay').click( function(){ // ловим клик по крестику или оверлэю
-				$("#modal1, #modal2") // все модальные окна
-				.animate({opacity: 0, top: '45%'}, 200, // плавно прячем
-					function(){ // после этого
-						$(this).css('display', 'none');
-						$('#overlay').fadeOut(400); // прячем подложку
-					}
-				);
-			});
-		});
+		/*$(document).ready(function() {
+
+		});*/
 		
 		function CompileMenu (func_n_zuba, func_surface){
 			

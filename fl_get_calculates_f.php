@@ -181,22 +181,22 @@
                                 <div class="cellsBlockHover" style=" border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
                                     <div style="display: inline-block; width: 190px;">
                                         <div>
-                                        <a href="fl_calculate.php?id='.$rezData['id'].'" class="ahref">
-                                            <div>
-                                                <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
-                                                    <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+                                            <a href="fl_calculate.php?id='.$rezData['id'].'" class="ahref">
+                                                <div>
+                                                    <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+                                                        <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+                                                    </div>
+                                                    <div style="display: inline-block; vertical-align: middle;">
+                                                        <b>#'.$rezData['id'].'</b> <span style="    color: rgb(115, 112, 112);">'.date('d.m.y H:i', strtotime($rezData['create_time'])).'</span>
+                                                    </div>
                                                 </div>
-                                                <div style="display: inline-block; vertical-align: middle;">
-                                                    '.date('d.m.y H:i', strtotime($rezData['create_time'])).'
+                                                <div>
+                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
+                                                        Сумма расчёта: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">'.$rezData['summ'].'</span> руб.
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div>
-                                                <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
-                                                    Сумма расчёта: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">'.$rezData['summ'].'</span> руб.
-                                                </div>
-                                            </div>
-                                            
-                                        </a>
+                                                
+                                            </a>
                                         </div>
                                         <div style="margin: 5px 0 0 3px; font-size: 80%;">
                                             <b>Наряд: <a href="invoice.php?id='.$rezData['invoice_id'].'" class="ahref">#'.$rezData['invoice_id'].'</a> - <a href="client.php?id='.$rezData['client_id'].'" class="ahref">'.$name.'</a><br>
@@ -224,8 +224,8 @@
 
                         $rezult .= '
                             <div style="margin: 5px 0; padding: 2px; text-align: right;">
-                                <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick="fl_addNewTabelIN();"><br>
-                                <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Добавить в существующий табель" onclick="">
+                                <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick="fl_addNewTabelIN(true);"><br>
+                                <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Добавить в существующий табель" onclick="fl_addNewTabelIN(false);">
                             </div>';
 
                         echo json_encode(array('result' => 'success', 'status' => '1', 'data' => $rezult, 'summCalc' => $summCalc));

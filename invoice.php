@@ -367,10 +367,18 @@
                                                 </div>';
                                 }
                                 if (($invoice_j[0]['summ'] != 0) || ($invoice_j[0]['summins'] != 0)) {
-                                    echo '
+                                    if ($invoice_j[0]['type'] == 5) {
+                                        echo '
                                                 <div style="margin-top: 5px;">
                                                     <div style="display: inline-block;"><a href="fl_calculation_add3.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Внести расчётный лист</a></div>
                                                 </div>';
+                                    }
+                                    if ($invoice_j[0]['type'] == 6) {
+                                        echo '
+                                                <div style="margin-top: 5px;">
+                                                    <div style="display: inline-block;"><a href="fl_calculation_add4.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Внести расчётный лист</a></div>
+                                                </div>';
+                                    }
                                 }
                             }
                             echo '
@@ -796,12 +804,12 @@
                                     echo '
                                                         <a href="" class="cellOrder ahref" style="position: relative;">
                                                             <b>Оплата #' . $payment_item['id'] . '</b> от ' . date('d.m.y', strtotime($payment_item['date_in'])) . ' '.$cert_num.'<br>
-                                                            <span style="font-size:80%;  color: #555;">';
+                                                            <span style="font-size:90%;  color: #555;">';
 
                                     if (($payment_item['create_time'] != 0) || ($payment_item['create_person'] != 0)) {
                                         echo '
                                                                 Добавлен: ' . date('d.m.y H:i', strtotime($payment_item['create_time'])) . '<br>
-                                                                <!--Автор: ' . WriteSearchUser('spr_workers', $payment_item['create_person'], 'user', true) . '<br>-->';
+                                                                Автор: ' . WriteSearchUser('spr_workers', $payment_item['create_person'], 'user', false) . '<br>';
                                     } else {
                                         echo 'Добавлен: не указано<br>';
                                     }

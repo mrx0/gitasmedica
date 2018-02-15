@@ -1,7 +1,7 @@
 <?php
 
 //get_ticket2.php
-//есть ли новые или изменённые задачи
+//есть ли новые или изменённые Тикеты
 
     session_start();
 
@@ -55,12 +55,20 @@
             OR j_ticket.create_person = '{$_SESSION['id']}')
             AND jticket_rm.status = '1')";*/
 
-            $query = "SELECT j_ticket.*, jticket_rm.status as read_status, j_tickets_worker.worker_id FROM `journal_tickets` j_ticket
+            /*$query = "SELECT j_ticket.id, FROM `journal_tickets` j_ticket
             LEFT JOIN `journal_tickets_readmark` jticket_rm ON j_ticket.id = jticket_rm.ticket_id AND jticket_rm.create_person = '{$_SESSION['id']}'
             LEFT JOIN `journal_tickets_workers` j_tickets_worker ON j_ticket.id = j_tickets_worker.ticket_id AND j_tickets_worker.worker_id = '{$_SESSION['id']}'
-            WHERE j_ticket.status <> '9' AND jticket_rm.status = '1'
+            WHERE (j_ticket.status <> '9'
             {$query_dop}
-            OR j_ticket.create_person = '{$_SESSION['id']}')";
+            OR j_ticket.create_person = '{$_SESSION['id']}')
+            AND jticket_rm.status <> '1'";*/
+
+            $query = "SELECT COUNT(j_ticket.id) as total FROM `journal_tickets` j_ticket
+            WHERE (j_ticket.status <> '9'
+            {$query_dop}
+            OR j_ticket.create_person = '{$_SESSION['id']}')
+            AND j_ticket.id NOT IN (SELECT jticket_rm.ticket_id  FROM `journal_tickets_readmark` jticket_rm WHERE j_ticket.id = jticket_rm.ticket_id AND jticket_rm.create_person = '{$_SESSION['id']}' AND jticket_rm.status = '1')";
+
             
             
             //Выбираем количество
@@ -70,13 +78,13 @@
             WHERE jannrm.create_person = '{$_SESSION['id']}' AND jann.id = jannrm.announcing_id AND jannrm.status = '1')
             {$query_dop}";*/
 
-            //$res = mysqli_query($msql_cnnct2, $query) or die(mysqli_error($msql_cnnct2).' -> '.$query);
+            $res = mysqli_query($msql_cnnct2, $query) or die(mysqli_error($msql_cnnct2).' -> '.$query);
 
-            //$arr = mysqli_fetch_assoc($res);
+            $arr = mysqli_fetch_assoc($res);
 
             CloseDB ($msql_cnnct2);
 
-            echo json_encode(array('result' => 'success', 'data' => $query));
+            echo json_encode(array('result' => 'success', 'data' => $arr['total']));
         }
     }
 ?>

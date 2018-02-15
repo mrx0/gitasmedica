@@ -1176,9 +1176,10 @@ position:relative;
 /* Модальные Окна для ЗФ */
 .modal_div {
 	width: 400px; 
-	height: 250px; /* Размеры должны быть фиксированы */
-	border-radius: 5px;
-	border: 3px #000 solid;
+	/*height: 250px; /* Размеры должны быть фиксированы */
+	max-height: 350px;
+	/*border-radius: 5px;*/
+	border: 1px rgb(0, 24, 68) solid;
 	background: #fff;
 	position: fixed; /* чтобы окно было в видимой зоне в любом месте */
 	top: 45%; /* отступаем сверху 45%, остальные 5% подвинет скрипт */
@@ -1192,10 +1193,10 @@ position:relative;
 }
 /* Кнопка закрыть для тех кто в танке) */
 .modal_close {
-	width: 21px;
+	/*width: 21px;*/
 	height: 21px;
 	position: absolute;
-	top: 10px;
+	top: 5px;
 	right: 10px;
 	cursor: pointer;
 	display: block;
@@ -1204,7 +1205,7 @@ position:relative;
 #overlay {
 	z-index: 102; /* подложка должна быть выше слоев элементов сайта, но ниже слоя модального окна */
 	position: fixed; /* всегда перекрывает весь сайт */
-	background-color: rgba(0, 0, 0, 0.8); /* черная */
+	background-color: rgba(0, 0, 0, 0.5); /* черная */
 	/*opacity: 0.8; /* но немного прозрачна */
 	width: 100%; 
 	height: 100%; /* размером во весь экран */
@@ -1780,7 +1781,7 @@ input[type="number"].mod{
 	width: 329px;
 }
 
-.dotyel{
+.dotyel, .dotyel2 {
 	border-bottom: 1px dashed #000080; 
 	text-decoration: none;
  
@@ -1788,7 +1789,11 @@ input[type="number"].mod{
 	background-color: rgba(252, 252, 0, 0.3);
 }
 
-
+.dotyel2:hover {
+	background-color: rgba(0, 252, 0, 0.3);
+	border-bottom: 1px dashed #FF9900;
+	color: #000;
+}
 
 /*Обрезка текста !!! НЕ РАБОТАЕТ*/
 .clipsize {
@@ -2207,6 +2212,8 @@ ul.ul-drop div.drop {
 	display: inline-block;
 }
 
+/*------>*/
+
 .ticketBlock, .ticketBlockdone, .ticketBlockexpired2, .ticketBlockexpired, .ticketBlockdeleted {
 	border: 1px dotted #CCC;
 	margin: 5px;
@@ -2279,6 +2286,31 @@ ul.ul-drop div.drop {
 	font-size: 80%;
 	color: rgb(115, 112, 112);
 }
+
+.ticketBlock_in{
+	color: rgb(62, 62, 62);
+}
+
+.ticketBlockdone_in{
+	color: rgba(144, 247, 95, 1);
+}
+
+.ticketBlockexpired_in{
+	font-weight: bold;
+	color: rgba(255, 11, 11, 1);
+}
+
+.ticketBlockexpired2_in{
+	font-weight: bold;
+	color: rgba(255, 153, 0, 1);
+	text-shadow: -1px 1px 1px rgba(116, 45, 130, 0.72);
+}
+
+/*.ticketBlockexpired2_in{
+	text-shadow: -1px 1px 1px rgba(116, 45, 130, 0.72);
+}*/
+
+/*<--------*/
 
 
 .tableInsStat tr td {
@@ -2445,3 +2477,113 @@ ul.ul-drop div.drop {
 
 }
 
+/*Комментарии чат -->*/
+
+#ticket_comments {
+	padding: 0 5px;
+}
+
+.scroll-pane{
+	width: 100%;
+	background: #fff;
+	outline: 1px solid #C1C1C1;
+	height: 350px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+
+.msg_container {
+	border: 1px solid rgba(191, 188, 181, 0.45);
+	padding: 3px 6px;
+	margin: 3px;
+	border-radius: 3px;
+	max-width: 220px;
+}
+
+.msg_container:hover {
+	background: #E5E5E5;
+}
+
+.msg_container_text {
+	float:left;
+	font-size: 85%;
+	color: #373e4d;
+	white-space: pre-wrap;
+	word-break: break-all;
+	margin-bottom: 3px;
+}
+
+.msg_container_time {
+	font-size: 60%;
+	float: right;
+	color: #959595;
+	text-shadow: rgba(255, 255, 255, .5) 0 1px 0;
+}
+
+.msg_container_sender {
+	color: #3B5998;
+	font-weight: bold;
+	font-size: 70%;
+	text-decoration: none;
+	text-shadow: 1px 1px 2px #E6E6E6, 0 0 1em #FFF;
+	cursor:pointer;
+}
+
+.msg_container_sender:hover {
+	color: rgba(255, 255, 255, 0.91);
+	text-shadow: 0 0 1px #000, 0 0 2px #333;
+}
+
+input[type="text"].msg_input{
+	border: 1px solid #cccccc;
+	background: #ffffff !important;
+	outline: none;
+	height: 50px;
+	width: 100%;
+	color: #000;
+	margin: 3px 0;
+	padding: 0;
+	word-wrap: break-word;
+}
+
+#msg_input {
+	/*border: 1px solid #cccccc;*/
+	outline: 1px solid #C1C1C1;
+	background: #ffffff !important;
+	-moz-appearance: textfield;
+	-webkit-appearance: textfield;
+	/*box-shadow: 1px 1px 1px 0 lightgray inset;  */
+	margin: 3px 0;
+	padding: 0;
+	width: 100%;
+	max-width: 100%;
+	white-space: pre-wrap;
+	word-break: break-all;
+	min-height: 50px;
+	font-size: 80%;
+}
+
+
+input[type="submit"].msg_send{
+	font-size: 90%;
+	/*border: 1px solid #BFBCB5; /* Рамка */
+	display: inline-block;
+	padding: 5px 10px; /* Поля */
+	text-decoration: none; /* Убираем подчёркивание */
+	color: #fff; /* Цвет текста */
+	border: 1px solid #BFBCB5;
+	vertical-align:middle;
+	background-color: rgba(59, 89, 152, 1);
+	font-size: 12px;
+	float: right;
+	cursor: pointer;
+}
+
+input[type="submit"].msg_send:hover{
+	box-shadow: none;
+	background: rgba(59, 89, 152, 0.9);
+	color: #FFF;
+}
+
+/*<-- Комментарии чат */

@@ -1,7 +1,7 @@
 <?php 
 
 //context_menu_show_f.php
-//
+//Контекстное меню
 
 	session_start();
 	
@@ -199,11 +199,25 @@
                         $data .= '
                             <li><div onclick="labOrderStatusChange('.$_POST['ind'].', 0)">Восстановить</div></li>';
                     }
-                    if (($_POST['key'] == 1) && ($god_mode || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9))){
+                    /*if (($_POST['key'] == 1) && ($god_mode || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9))){
                         $data .= '
                             <li><div onclick="labOrderStatusChange('.$_POST['ind'].', 4)">Удалить статус "Закрыт"</div></li>';
+                    }*/
+                    if (($_POST['key'] != 1) && ($_POST['key'] != 8) && ($_POST['key'] != 5) && ($god_mode || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9))){
+                        $data .= '
+                            <li><div onclick="labOrderStatusChange('.$_POST['ind'].', 5)">Отменить заказ</div></li>';
+                    }
+                    if (($_POST['key'] != 0) && ($god_mode || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9))){
+                        $data .= '
+                            <li><div onclick="labOrderStatusChange('.$_POST['ind'].', 2)">Удалить последний статус</div></li>';
                     }
                 }
+
+				//Для РЛ в табеле
+				if ($_POST['mark'] == 'tabel_calc_options'){
+                    $data .= '
+                            <li><div onclick="fl_deleteCalculateFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить лист из табеля</div></li>';
+				}
 
 				//Настройка для записи
 				if ($_POST['mark'] == 'zapis_options'){

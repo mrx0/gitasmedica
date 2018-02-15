@@ -1,7 +1,7 @@
 <?php
 
-//ticket_add_f.php
-//Добавление тикета
+//ticket_edit_f.php
+//РЕдактирование тикета
 
     session_start();
 
@@ -15,7 +15,7 @@
             //!!!Массив тех, кому видно заявку по умолчанию, потому надо будет вывести это в базу или в другой файл
             $permissionsWhoCanSee_arr = array(2, 3, 8, 9);
 
-            if (!isset($_POST['descr'])){
+            if (!isset($_POST['descr']) || !isset($_POST['ticket_id'])){
                 //echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
             }else{
 
@@ -25,7 +25,7 @@
                 $plan_date = date('Y-m-d H:i:s', strtotime($_POST['plan_date']." 21:00:00"));
                 $workers = $_POST['workers'];
                 $workers_type = array();
-                if (!isset($_POST['workers_type'])){
+                if (!isset($_POST['workers_type']) || ($_POST['workers_type'] == '')){
                     $workers_type = $permissionsWhoCanSee_arr;
 
                     //хак для админов!!! так не должно быть
@@ -64,54 +64,76 @@
                     //Подключаемся к другой базе специально созданной для тикетов
                     $msql_cnnct2 = ConnectToDB_2 ('config_ticket');
 
-                    $query = "INSERT INTO `journal_tickets` (`filial_id`, `descr`, `plan_date`, `create_time`, `create_person`)
+                    /*$query = "INSERT INTO `journal_tickets` (`filial_id`, `descr`, `plan_date`, `create_time`, `create_person`)
                     VALUES (
-                    '{$filial_id}', '{$descr}', '{$plan_date}', '{$time}', '{$_SESSION['id']}')";
+                    '{$filial_id}', '{$descr}', '{$plan_date}', '{$time}', '{$_SESSION['id']}')";*/
+
+                    $query = "UPDATE `journal_tickets` SET 
+                    `filial_id`='$filial_id',
+                    `descr`='$descr',
+                    `plan_date`='$plan_date',
+                    `last_edit_time`='$time',
+                    `last_edit_person`='{$_SESSION['id']}'
+                     WHERE `id`='{$_POST['ticket_id']}'";
 
                     $res = mysqli_query($msql_cnnct2, $query) or die(mysqli_error($msql_cnnct2).' -> '.$query);
 
                     //ID новой позиции
-                    $mysql_insert_id = mysqli_insert_id($msql_cnnct2);
+                    //$mysql_insert_id = mysqli_insert_id($msql_cnnct2);
 
                     //Собираем строку запроса
                     $query = '';
 
                     //Добавляем филиалы
+                    $query .= "DELETE FROM `journal_tickets_filial` WHERE `ticket_id` = '{$_POST['ticket_id']}';";
+
                     if (!empty($filials) && ($filials != '')){
                         foreach ($filials as $filial_id){
                             $query .= "INSERT INTO `journal_tickets_filial` (`ticket_id`, `filial_id`)
                             VALUES (
-                            '{$mysql_insert_id}', '{$filial_id}');";
+                            '{$_POST['ticket_id']}', '{$filial_id}');";
                         }
                     }
 
                     //Добавляем категории сотрудников
+                    $query .= "DELETE FROM `journal_tickets_worker_type` WHERE `ticket_id` = '{$_POST['ticket_id']}';";
+
                     if (!empty($workers_type) && ($workers_type != '')){
                         foreach ($workers_type as $workers_type_id){
                             $query .= "INSERT INTO `journal_tickets_worker_type` (`ticket_id`, `worker_type`)
                             VALUES (
-                            '{$mysql_insert_id}', '{$workers_type_id}');";
+                            '{$_POST['ticket_id']}', '{$workers_type_id}');";
                         }
                     }
 
                     //Добавляем исполнителей
+                    $query .= "DELETE FROM `journal_tickets_workers` WHERE `ticket_id` = '{$_POST['ticket_id']}';";
+
                     if (!empty($workers)){
                         foreach ($workers    as $worker_id){
                             $query .= "INSERT INTO `journal_tickets_workers` (`ticket_id`, `worker_id`)
                             VALUES (
-                            '{$mysql_insert_id}', '{$worker_id}');";
+                            '{$_POST['ticket_id']}', '{$worker_id}');";
                         }
                     }
 
-                    //Добавляем лог
-                    $query .= "INSERT INTO `journal_tickets_logs` (`ticket_id`, `create_time`, `create_person`, `descr`)
-                        VALUES (
-                        '{$mysql_insert_id}', '{$time}', '{$_SESSION['id']}', 'Новый тикет добавлен');";
+                    //Удаляем отметки о прочтении
+                    $query .= "DELETE FROM `journal_tickets_readmark` WHERE `ticket_id` = '{$_POST['ticket_id']}';";
 
-                     //Добавляем отметку о прочтении (мы же создали это сами)
+                    //Добавляем отметку о прочтении (мы же создали это сами)
                     $query .= "INSERT INTO `journal_tickets_readmark` (`ticket_id`, `create_time`, `create_person`, `status`)
                         VALUES (
-                        '{$mysql_insert_id}', '{$time}', '{$_SESSION['id']}', '1');";
+                        '{$_POST['ticket_id']}', '{$time}', '{$_SESSION['id']}', '1');";
+
+                    //Добавляем лог
+                    $query .= "INSERT INTO `journal_tickets_logs` (`ticket_id`, `create_person`, `descr`, `create_time`)
+                        VALUES (
+                        '{$_POST['ticket_id']}', '{$_SESSION['id']}', 'Тикет был изменён', '{$time}');";
+
+                    //Добавляем отметку о прочтении (мы же создали это сами)
+                    /*$query .= "INSERT INTO `journal_tickets_readmark` (`ticket_id`, `create_time`, `create_person`, `status`)
+                        VALUES (
+                        '{$mysql_insert_id}', '{$time}', '{$_SESSION['id']}', '1');";*/
 
                     //Делаем большой запрос
                     $res = mysqli_multi_query($msql_cnnct2, $query) or die(mysqli_error($msql_cnnct2).' -> '.$query);
@@ -121,7 +143,7 @@
 
                     $data = '
                          <div class="query_ok">
-                             Задача добавлена
+                             Тикет добавлен
                          </div>';
 
                     echo json_encode(array('result' => 'success', 'data' => $data));

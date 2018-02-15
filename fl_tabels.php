@@ -35,6 +35,8 @@
                 $_SESSION['fl_calcs_tabels'] = array();
             }
 
+            //var_dump($_SESSION['fl_calcs_tabels']);
+
 			if ($_POST){
 			}else{
 
@@ -451,7 +453,7 @@
                 
                             cache: false,
                             beforeSend: function() {
-                                //$(\'#errrror\').html("<div style=\'width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);\'><img src=\'img/wait.gif\' style=\'float:left;\'><span style=\'float: right;  font-size: 90%;\'> обработка...</span></div>");
+                                thisObj.html("<div style=\'width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);\'><img src=\'img/wait.gif\' style=\'float:left;\'><span style=\'float: right;  font-size: 90%;\'> обработка...<br>загрузка расч. листов</span></div>");
                             },
                             success:function(res){
                                 //console.log(res);
@@ -484,7 +486,7 @@
                                     	
                                     	//Спрячем пустые вкладки, где нет данных
                                     	
-                                    	console.log($(".tabs-"+permission+"_"+worker+"_"+office).css("display"));
+                                    	//console.log($(".tabs-"+permission+"_"+worker+"_"+office).css("display"));
 
                                         //$(".tabs-"+permission+"_"+worker+"_"+office).hide();
                                     }
@@ -532,7 +534,7 @@
                 
                             cache: false,
                             beforeSend: function() {
-                                //$(\'#errrror\').html("<div style=\'width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);\'><img src=\'img/wait.gif\' style=\'float:left;\'><span style=\'float: right;  font-size: 90%;\'> обработка...</span></div>");
+                                thisObj.html("<div style=\'width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);\'><img src=\'img/wait.gif\' style=\'float:left;\'><span style=\'float: right;  font-size: 90%;\'> обработка...<br>загрузка табелей</span></div>");
                             },
                             success:function(res){
                                 //console.log(res);
@@ -568,7 +570,7 @@
                                     	//!!! доделать тут чтоб правильно прятались или нет вкладки
                                     	//Спрячем пустые вкладки, где нет данных
                                     	
-                                    	console.log($(".tabs-"+permission+"_"+worker+"_"+office).css("display"));
+                                    	//console.log($(".tabs-"+permission+"_"+worker+"_"+office).css("display"));
                                     	
                                         //$(".tabs-"+permission+"_"+worker+"_"+office).hide();
                                     }

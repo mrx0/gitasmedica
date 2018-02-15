@@ -196,7 +196,7 @@
 	}
 
 	//Собираем все филиалы
-	function getAllFilials($sort){
+	function getAllFilials($sort, $short_name){
 		$filials_j = array();
 
         $msql_cnnct = ConnectToDB ();
@@ -218,7 +218,11 @@
 
                 //Определяющий массив из названий для сортировки
                 foreach ($filials_j as $key => $arr) {
-                    array_push($filials_j_names, $arr['name']);
+                    if ($short_name){
+                        array_push($filials_j_names, $arr['name2']);
+                    }else {
+                        array_push($filials_j_names, $arr['name']);
+                    }
                 }
 
                 array_multisort($filials_j_names, SORT_LOCALE_STRING, $filials_j);
@@ -226,6 +230,43 @@
         }
 
         return $filials_j;
+	}
+
+	//Собираем все специальности
+	function getAllPermissions($sort, $only_name){
+		$permissions_j = array();
+
+        $msql_cnnct = ConnectToDB ();
+
+        if ($only_name){
+            $query = "SELECT `id`,`name` FROM `spr_permissions`";
+        }else {
+            $query = "SELECT * FROM `spr_permissions`";
+        }
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                $permissions_j[$arr['id']] = $arr;
+            }
+        }
+
+        if ($sort) {
+            if (!empty($permissions_j)) {
+                $permissions_j_names = array();
+
+                //Определяющий массив из названий для сортировки
+                foreach ($permissions_j as $key => $arr) {
+                    array_push($permissions_j_names, $arr['name']);
+                }
+
+                array_multisort($permissions_j_names, SORT_LOCALE_STRING, $permissions_j);
+            }
+        }
+
+        return $permissions_j;
 	}
 
 	//Сложение двух массивов

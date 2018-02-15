@@ -46,6 +46,10 @@ if ($enter_ok){
                 echo '
                     <div class="no_print"> 
 					<header style="margin-bottom: 5px;">
+                        <div class="nav">
+                            <a href="fl_tabels.php" class="b">Важный отчёт</a>
+                        </div>
+					
 						<h1>Новый табель</h1>
 						'.WriteSearchUser('spr_workers', $workerID, 'user', true).' / '.$filial_j[0]['name'].'<br>
 						Месяц: 
@@ -148,7 +152,7 @@ if ($enter_ok){
                     </div>
                     <div style="margin: 5px 0;">
 
-                        <input type="button" class="b" value="Сохранить" onclick="fl_addNewTabel()">
+                        <input type="button" class="b" value="Сохранить" onclick="fl_addNewTabel();">
                     </div>';
 
             }

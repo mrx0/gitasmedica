@@ -73,18 +73,20 @@
                         krsort($rez);
 
                         $rezult .= '
-                            <div style="margin: 5px 0; padding: 2px; text-align: center; color: #0C0C0C;">
+                            <div style="margin: 5px 0 -17px; padding: 2px; text-align: center; color: #0C0C0C;">
                                 Табели сотрудника
                             </div>';
 
                         foreach ($rez as $year => $yearData){
 
                             $rezult .= '
-                            <div style="margin: 3px 0 -2px; padding: 2px; text-align: left; color: #717171;">
+                            <div style="margin: 23px 0 -2px; padding: 2px; text-align: left; color: #717171;">
                                 Год <span style="color: #252525; font-weight: bold;">'.$year.'</span>
                             </div>';
 
                             ksort($yearData);
+
+                            //$yearData = array_reverse($yearData);
 
                             foreach ($yearData as $month => $monthData) {
 

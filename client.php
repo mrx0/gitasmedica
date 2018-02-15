@@ -1611,6 +1611,9 @@ ORDER BY `name`;
                                     if ($lab_order_data['status'] == 1) {
                                         $back_color = 'background-color: rgba(119, 255, 135, 1);';
                                         $mark_enter = 'закрыт';
+                                    } elseif ($lab_order_data['status'] == 5) {
+                                        $back_color = 'background-color: rgba(183, 41, 240, 0.7);';
+                                        $mark_enter = 'отменён';
                                     } elseif ($lab_order_data['status'] == 6) {
                                         $back_color = 'background-color: rgba(255, 102, 17, 0.7);';
                                         $mark_enter = 'отправлен в лаб.';

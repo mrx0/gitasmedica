@@ -569,10 +569,15 @@
                                     <ul id="search_result3" class="search_result3"></ul>
                                 </td>
                             </tr>
+                            <tr>
+                                <td>
+                                    <a href="#" class="b" id="close_mdd" onclick="AddRemoveData()" style="/*bottom: 10px; position: absolute;*/">Направить</a>
+                                </td>
+                            </tr>
                         </table>
         
                         
-                        <a href="#" class="b" id="close_mdd" onclick="AddRemoveData()" style="bottom: 10px; position: absolute;">Направить</a>
+                        
         
                     </div>
                     <!-- Подложка только одна -->
@@ -906,13 +911,13 @@
                             
                             
                                             //скрываем модальные окна
-                                            $("#modal1, #modal2") // все модальные окна
-                                                .animate({opacity: 0, top: \'45%\'}, 50, // плавно прячем
+                                            /*$("#modal1, #modal2") // все модальные окна
+                                                .animate({opacity: 0, top: "45%"}, 50, // плавно прячем
                                                     function(){ // после этого
-                                                        $(this).css(\'display', 'none\');
-                                                        $(\'#overlay\').fadeOut(50); // прячем подложку
+                                                        $(this).css("display", "none");
+                                                        $("#overlay").fadeOut(50); // прячем подложку
                                                     }
-                                                );
+                                                );*/
             
                         };
                     </script>

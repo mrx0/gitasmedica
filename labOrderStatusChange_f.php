@@ -27,20 +27,8 @@
 
                     $msql_cnnct = ConnectToDB();
 
-                    if ($_POST['status'] != 4) {
+                    if ($_POST['status'] == 2) {
 
-                        $query = "INSERT INTO `journal_laborder_ex` (`laborder_id`, `office_id`, `create_person`, `create_time`, `status`)
-                            VALUES (
-                            '{$_POST['lab_order_id']}', '{$_SESSION['filial']}', '{$_SESSION['id']}', '{$time}', '{$_POST['status']}')";
-
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-                        //Обновляем
-                        $query = "UPDATE `journal_laborder` SET `status`='{$_POST['status']}' WHERE `id`='{$_POST['lab_order_id']}'";
-
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-                    }else{
                         $query = "DELETE FROM `journal_laborder_ex` WHERE `laborder_id`='{$_POST['lab_order_id']}' ORDER BY `id` DESC LIMIT 1";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -64,9 +52,25 @@
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
                         }
+
+                    } elseif ($_POST['status'] == 4) {
+
+                    }else {
+
+                        $query = "INSERT INTO `journal_laborder_ex` (`laborder_id`, `office_id`, `create_person`, `create_time`, `status`)
+                            VALUES (
+                            '{$_POST['lab_order_id']}', '{$_SESSION['filial']}', '{$_SESSION['id']}', '{$time}', '{$_POST['status']}')";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                        //Обновляем
+                        $query = "UPDATE `journal_laborder` SET `status`='{$_POST['status']}' WHERE `id`='{$_POST['lab_order_id']}'";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
                     }
 
                     echo json_encode(array('result' => 'success', 'data' => ''));
+
                 }else{
                     echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">У вас не определён филиал</div>'));
                 }

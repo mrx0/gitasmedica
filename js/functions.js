@@ -1257,7 +1257,7 @@
         var link = "ticket_add_f.php";
 
         if (mode == 'edit'){
-            link = "ticket_add_f.php";
+            link = "ticket_edit_f.php";
             ticket_id = $("#ticket_id").val();
         }
 
@@ -1273,7 +1273,8 @@
             plan_date: plan_date,
             workers: workers,
             workers_type: workers_type,
-            filial: filial
+            filial: filial,
+            ticket_id: ticket_id
         };
 
 		$.ajax({
@@ -6989,7 +6990,7 @@
         })
     }
 
-    //Подгрузка записи с сайта при каждой загрузке страницы
+    //Подгрузка записи с сайта при каждой загрузке страницы и остальное
 	$(document).ready(function() {
 
         //Tree
@@ -7204,7 +7205,7 @@
                 beforeSend: function() {
                 },
                 success:function(res){
-                    console.log(res);
+                    //console.log(res);
 
                     if(res.result == 'success'){
                     	//console.log(res);
@@ -7235,4 +7236,335 @@
     	//console.log(count);
         $('.countCosmBlocks').html(count);
 	});
+
+	//Закрываем тикет
+    function Ajax_ticket_done(id, workers_exist){
+        //console.log(id);
+
+        var link = "ajax_ticket_done.php";
+
+		var certData = {
+			ticket_id: id,
+            workers_exist: workers_exist,
+            last_comment: $("#ticket_last_comment").val()
+		};
+
+		$.ajax({
+			url: link,
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data: certData,
+
+			cache: false,
+			beforeSend: function () {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function (res) {
+				//console.log(res);
+
+				if (res.result == "success") {
+					location.reload();
+				}
+			}
+		});
+    }
+
+    //Возвращаем тикет в работу
+    function Ajax_ticket_restore(id){
+        var rys = false;
+
+        var rys = confirm("Вы cобираетесь вернуть тикет в работу. \n\nВы уверены?");
+
+        if (rys){
+
+            var link = "ajax_ticket_restore.php";
+
+            var certData = {
+                ticket_id: id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: certData,
+
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res);
+
+                    if (res.result == "success") {
+                        location.reload();
+                    }
+                }
+            })
+        }
+	}
+
+    //Удаляем тикет
+    function Ajax_delete_ticket(id){
+        //console.log(id);
+
+        var link = "ajax_ticket_delete.php";
+
+        var certData = {
+            ticket_id: id,
+            last_comment: $("#ticket_last_comment").val()
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: certData,
+
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function (res) {
+                //console.log(res);
+
+                if (res.result == "success") {
+                    location.reload();
+                }
+            }
+        });
+    }
+
+    //Разблокировка тикета
+    function Ajax_reopen_ticket(id) {
+
+    	var link = "ticket_reopen_f.php";
+
+        var certData = {
+            ticket_id: id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: certData,
+
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function (res) {
+                //console.log(res);
+
+                if (res.result == "success") {
+                    location.reload();
+                }
+            }
+        });
+    }
+
+    //Получим логи для тикета
+    function getLogForTicket(id) {
+
+        var reqData = {
+            ticket_id: id,
+        }
+
+        //Запрос к базе и получение лога и вывод
+        $.ajax({
+            url:"ticket_get_log_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data:reqData,
+
+            cache: false,
+            beforeSend: function() {
+            },
+            success:function(res){
+                //console.log(res);
+
+                if(res.result == 'success'){
+					$("#ticket_change_log").html(res.data);
+                }else{
+
+                }
+            }
+        });
+    }
+
+    //Получим коменты для тикета
+    function getCommentsForTicket(id) {
+        var reqData = {
+            ticket_id: id
+        }
+
+        //Запрос к базе и получение лога и вывод
+        $.ajax({
+            url:"ticket_get_comments_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data:reqData,
+
+            cache: false,
+            beforeSend: function() {
+            },
+            success:function(res){
+                //console.log(res);
+
+                if(res.result == 'success'){
+
+                    $("#ticket_comments").html(res.data);
+
+                    //скролл !!! scroll
+                    //document.querySelector('#ticket_comments').scrollTop = document.querySelector('#ticket_comments').scrollHeight;
+                    var height= $("#ticket_comments").height();
+                    //console.log(height);
+                    $("#chat").animate({"scrollTop":height}, 100);
+                    /*$("#chat").animate({scrollTop: 0}, 100);*/
+                }else{
+
+                }
+            }
+        });
+    }
+
+	//Добавляем новый коммент в тикет
+    function Add_newComment_inTicket(id) {
+        var reqData = {
+            ticket_id: id,
+            descr: $("#msg_input").html()
+        };
+        //console.log($("#msg_input").html());
+
+        //Запрос к базе и получение лога и вывод
+        $.ajax({
+            url:"ticket_add_comments_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data:reqData,
+
+            cache: false,
+            beforeSend: function() {
+            },
+            success:function(res){
+                //console.log(res);
+                //$("#ticket_change_log").html(res);
+
+                if(res.result == 'success'){
+                    $("#msg_input").html(res.data);
+                    getCommentsForTicket(id);
+                }else{
+
+                }
+            }
+        });
+    }
+
+	//Прочитали все тикеты
+    function iReadAllOfTickts(worker_id) {
+        var rys = false;
+
+        var rys = confirm("Пометить все тикеты как прочитаные?");
+
+        if (rys) {
+
+            var reqData = {
+                worker_id: worker_id
+            };
+            //console.log($("#msg_input").html());
+
+            //Запрос к базе и получение лога и вывод
+            $.ajax({
+                url: "ticket_i_read_all_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+
+                data: reqData,
+
+                cache: false,
+                beforeSend: function () {
+                },
+                success: function (res) {
+                    //console.log(res);
+                    //$("#data").html(res.data);
+
+                    if (res.result == 'success') {
+                     //location.reload();
+                    } else {
+
+                    }
+                }
+            });
+        }
+    }
+
+    //Открываем модальные окна (закрываем тикет)
+    $('.open_modal_ticket_done, .open_modal_ticket_delete').live('click', function(event){
+        event.preventDefault(); // вырубаем стандартное поведение
+        var div = $(this).attr('href'); // возьмем строку с селектором у кликнутой ссылки
+
+		if ($("#workers_exist").val() != 'true'){
+            $("#workers_exist_warn").html('Так как задаче не назначены исполнители, назначены будете вы.');
+		}
+
+        $('#overlay').fadeIn(400, //показываем оверлэй
+            function(){ // после окончания показывания оверлэя
+                $(div) // берем строку с селектором и делаем из нее jquery объект
+                    .css('display', 'block')
+                    .animate({opacity: 1, top: '50%'}, 200); // плавно показываем
+            });
+    });
+
+    //Открываем модальные окна (удаляем тикет)
+    /*$('.open_modal_ticket_delete').live('click', function(event){
+        event.preventDefault(); // вырубаем стандартное поведение
+        var div = $(this).attr('href'); // возьмем строку с селектором у кликнутой ссылки
+
+		if ($("#workers_exist").val() != 'true'){
+            $("#workers_exist_warn").html('Так как задаче не назначены исполнители, назначены будете вы.');
+		}
+
+        $('#overlay').fadeIn(400, //показываем оверлэй
+            function(){ // после окончания показывания оверлэя
+                $(div) // берем строку с селектором и делаем из нее jquery объект
+                    .css('display', 'block')
+                    .animate({opacity: 1, top: '50%'}, 200); // плавно показываем
+            });
+    });*/
+
+    //скрываем модальные окна
+    $("#modal1, #modal2, #modal_ticket_done, #modal_ticket_delete") // все модальные окна
+        .animate({opacity: 0, top: '45%'}, 50, // плавно прячем
+    function(){ // после этого
+        $(this).css('display', 'none');
+        $('#overlay').fadeOut(50); // прячем подложку
+    }
+    );
+
+    //Закрыть модальные окна
+    $('.modal_close, #overlay').click( function(){ // ловим клик по крестику или оверлэю
+        $("#modal1, #modal2, #modal_ticket_done, #modal_ticket_delete") // все модальные окна
+            .animate({opacity: 0, top: '45%'}, 200, // плавно прячем
+                function(){ // после этого
+                    $(this).css('display', 'none');
+                    $('#overlay').fadeOut(400); // прячем подложку
+                }
+            );
+    });
 

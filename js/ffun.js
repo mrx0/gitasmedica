@@ -38,7 +38,7 @@
         });
     }
 
-//Для добавления суммы в оплате наряда
+    //Для добавления суммы в оплате наряда
 	$('#addSummInPayment').click(function () {
 
 		var lefttopay = Number(document.getElementById("leftToPay").innerHTML);
@@ -691,8 +691,8 @@
         return calcIDForTabel_arr;
     }
 
-
-    function fl_addNewTabelIN (){
+    //
+    function fl_addNewTabelIN (newTabel){
 
         wait(function(runNext){
 
@@ -722,8 +722,12 @@
 
                     if (res.result == "success") {
                         //console.log(res);
-
-                        document.location.href = "fl_addNewTabel.php";
+                        if (newTabel) {
+                            document.location.href = "fl_addNewTabel.php";
+                        }else{
+                            //console.log(12333);
+                            document.location.href = "fl_addINExistTabel.php";
+                        }
 
                     }
 
@@ -765,3 +769,100 @@
             }
         });
     }
+
+    //Добавляем в существующий табель РЛ из сессии
+    function fl_addInExistTabel(){
+
+        var link = "fl_add_in_tabel_f.php";
+        //console.log(link);
+
+        var tabelForAdding = $('input[name=tabelForAdding]:checked').val();
+        //console.log(tabelForAdding);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    tabelForAdding: tabelForAdding
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res.data);
+
+                if(res.result == "success"){
+                    document.location.href = "fl_tabels.php";
+                }else{
+                    $('#errror').html(res.data);
+                }
+            }
+        });
+    }
+
+    //Удаляем РЛ из табеля
+    function fl_deleteCalculateFromTabel(tabel_id, calculate_id){
+
+        var link = "fl_deleteCalcFromTabel_f.php";
+
+        var rys = false;
+
+        var rys = confirm("Вы хотите удалить РЛ из табеля. \n\nВы уверены?");
+        //console.log(885);
+
+        if (rys) {
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    tabel_id: tabel_id,
+                    calculate_id: calculate_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    console.log(res);
+
+                    if (res.result == "success") {
+                        location.reload();
+                    } else {
+                        $('#errror').html(res.data);
+                    }
+                }
+            });
+        }
+    }
+
+
+    $(document).ready(function() {
+        //console.log(123);
+
+        //Рабочий пример клика на элементе после подгрузки его в DOM
+        $("body").on("click", ".radioBtnCalcs", function () {
+            var checked_status = $(this).prop("checked");
+            //console.log(checked_status);
+            //console.log($(this).parent());
+
+            $(".radioBtnCalcs").each(function() {
+                $(this).parent().parent().parent().css({"background-color": ""});
+            });
+
+            if (checked_status) {
+                $(this).parent().parent().parent().css({"background-color": "#83DB53"});
+            } else {
+                $(this).parent().parent().parent().css({"background-color": ""});
+            }
+        });
+
+    });

@@ -149,5 +149,60 @@
                                         </div>
 						            </div>';
 
+    $block_modal_ticket_done = ' 
+                                    <div id="modal_ticket_done" class="modal_div">
+                                        <span class="modal_close" style="font-size: 80%;">отмена <i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;"></i></span>
+                                        <div>
+                                            <div style="text-align: center; margin: 10px 0 8px;">
+                                                Вы собираетесь завершить задачу
+                                            </div>
+                                            <div style="text-align: center;">
+                                                <div style="padding: 10px 20px 10px;">
+                                                    <div style="font-size:80%;  color: #555; margin-bottom: 10px;">Если необходимо, можете оставить комментарий</div>
+                                                    <div>
+                                                        <textarea name="ticket_last_comment" id="ticket_last_comment" cols="50" rows="5" style="vertical-align:top; text-align:left;"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="text-align: right;">
+                                                <div style="padding: 5px 20px 0px;">
+                                                    <div id="workers_exist_warn" style="font-size:80%;  color: red; margin-bottom: 7px;"></div>
+                                                </div>
+                                            </div>
+                                            <div style="text-align: right; margin-right: 10px;">
+                                                <input type="button" class="b" value="Завершить" onclick="Ajax_ticket_done($(\'#ticket_id\').val(), $(\'#workers_exist\').val());">
+                                                <!--<input type="button" class="b" value="Отмена" onclick="">-->
+                                            </div>
+                                        </div>
+                                    </div>';
+
+    $block_modal_ticket_delete = ' 
+                                    <div id="modal_ticket_delete" class="modal_div">
+                                        <span class="modal_close" style="font-size: 80%;">отмена <i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;"></i></span>
+                                        <div>
+                                            <div style="text-align: center; margin: 10px 0 8px;">
+                                                Вы собираетесь удалить задачу
+                                            </div>
+                                            <div style="text-align: center;">
+                                                <div style="padding: 10px 20px 10px;">
+                                                    <div style="font-size:80%;  color: #555; margin-bottom: 10px;">Если необходимо, можете оставить комментарий</div>
+                                                    <div>
+                                                        <textarea name="ticket_last_comment" id="ticket_last_comment" cols="50" rows="5" style="vertical-align:top; text-align:left;"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="text-align: right;">
+                                                <div style="padding: 5px 20px 0px;">
+                                                    <div id="workers_exist_warn" style="font-size:80%;  color: red; margin-bottom: 7px;"></div>
+                                                </div>
+                                            </div>
+                                            <div style="text-align: right; margin-right: 10px;">
+                                                <input type="button" class="b" value="Удалить" onclick="Ajax_delete_ticket($(\'#ticket_id\').val());">
+                                                <!--<input type="button" class="b" value="Отмена" onclick="">-->
+                                            </div>
+                                        </div>
+                                    </div>';
+
+
 
 ?>

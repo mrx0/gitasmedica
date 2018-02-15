@@ -48,12 +48,12 @@
                                         <a href="#" onclick="Ajax_reopen_lab_order('.$_GET['id'].', '.$lab_order_j[0]['client_id'].')" title="Разблокировать" class="info" style="font-size: 100%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
                             }
                         }
-                        if (($finances['close'] == 1) || $god_mode){
+                        /*if (($finances['close'] == 1) || $god_mode){
                             if ($lab_order_j[0]['status'] != 9){
                                 echo '
                                         <a href="lab_order_del.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
                             }
-                        }
+                        }*/
 
                         echo '			
                                     </h2>';
@@ -93,6 +93,9 @@
                         if ($lab_order_j[0]['status'] == 1) {
                             $back_color = 'background-color: rgba(119, 255, 135, 1);';
                             $mark_enter = 'закрыт';
+                        } elseif ($lab_order_j[0]['status'] == 5) {
+                            $back_color = 'background-color: rgba(183, 41, 240, 0.7);';
+                            $mark_enter = 'отменён';
                         } elseif ($lab_order_j[0]['status'] == 6) {
                             $back_color = 'background-color: rgba(255, 102, 17, 0.7);';
                             $mark_enter = 'отправлен в лаб.';
@@ -158,7 +161,7 @@
                         $labor_j = SelDataFromDB('spr_labor', $lab_order_j[0]['labor_id'], 'id');
 
                         echo '
-                                    <div class="cellsBlock2">
+                                    <div class="cellsBlock2"> 
                                         <div class="cellRight">
                                             <ul style="margin-left: 6px; margin-bottom: 10px;">
                                                 <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
@@ -230,7 +233,10 @@
                                 if ($lab_order_ex_j[$i]['status'] == 1) {
                                     $back_color = 'background-color: rgba(119, 255, 135, 1);';
                                     $mark_enter = 'закрыт';
-                                } elseif ($lab_order_ex_j[$i]['status'] == 6) {
+                                } elseif ($lab_order_ex_j[$i]['status'] == 5) {
+                                    $back_color = 'background-color: rgba(183, 41, 240, 0.7);';
+                                    $mark_enter = 'отменён <span style="font-size: 120%; "><i class="fa fa-times" aria-hidden="true"></i></span>';
+                                }  elseif ($lab_order_ex_j[$i]['status'] == 6) {
                                     $back_color = 'background-color: rgba(255, 102, 17, 0.7);';
                                     $mark_enter = 'отправлен в лаб.  <span style="font-size: 120%; "><i class="fa fa-long-arrow-right" aria-hidden="true"></i></span>';
                                 } elseif ($lab_order_ex_j[$i]['status'] == 7) {

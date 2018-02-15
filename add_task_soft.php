@@ -21,7 +21,7 @@
 			echo '
 					<div id="data">';
 
-			echo '
+			/*echo '
 						<form action="add_task_soft_f.php">
 					
 							<div class="cellsBlock2">
@@ -62,7 +62,11 @@
 									success:function(data){document.getElementById("status").innerHTML=data;}
 								})\'
 							>
-						</form>';	
+						</form>';	*/
+
+            echo '
+                    <h3 style="color: red;">Добавлять в этот раздел новые задачи больше необходимости нет. Пользуйтесь системой тикетов.</h3>
+                    <a href="tickets.php" class="b2">Тикеты</a>';
 				
 			echo '
 					</div>

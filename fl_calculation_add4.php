@@ -1,7 +1,7 @@
 <?php
 
-//fl_calculation_add3.php
-//Расчет для стоматологов
+//fl_calculation_add4.php
+//Расчет для косметологов
 
 require_once 'header.php';
 

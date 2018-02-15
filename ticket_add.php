@@ -13,7 +13,7 @@
 			include_once 'functions.php';
 			
 			//$offices = SelDataFromDB('spr_office', '', '');
-            $filials_j = getAllFilials(true);
+            $filials_j = getAllFilials(true, false);
             //Получили список прав
             $permissions = SelDataFromDB('spr_permissions', '', '');
             //var_dump($permissions);
@@ -26,10 +26,10 @@
 				<div id="status">
 					<header>
 						<div class="nav">
-							<a href="tickets.php" class="b">Все задачи</a>
+							<a href="tickets.php" class="b">Все тикеты</a>
 						</div>
 						
-						<h2>Новая задача</h2>
+						<h2>Новый тикет</h2>
 					</header>';
 
 			echo '
@@ -62,7 +62,7 @@
             echo '
                     <div class="cellsBlock2">
                         <div class="cellLeft">
-                            <span style="font-size: 80%;">Для кого (если необходимо)</span><br>
+                            <span style="font-size: 80%;">Для кого (если необходимо указать исполнителя)</span><br>
 
                             <div class="side-by-side clearfix">
                                 <div>
