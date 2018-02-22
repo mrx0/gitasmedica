@@ -12,6 +12,7 @@
 
         if ($_POST) {
             include_once 'DBWork.php';
+            include_once 'ffun.php';
 
             if (!isset($_POST['tabelForAdding'])) {
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
@@ -28,7 +29,7 @@
 
                         $summCalcs = 0;
 
-                        $msql_cnnct = ConnectToDB();
+                        $msql_cnnct = ConnectToDB2();
 
                         //Вставим новый табель
                         /*$query = "INSERT INTO `fl_journal_tabels` (`office_id`, `worker_id`, `type`, `month`, `year`, `summ`)
@@ -51,12 +52,27 @@
 
                         }
 
-                        $res = mysqli_multi_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                        if (count($calcArr) > 1) {
+
+                            $res = mysqli_multi_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                            while (mysqli_next_result($msql_cnnct)) // flush multi_queries
+                            {
+                                if (!mysqli_more_results($msql_cnnct)) break;
+                            }
+                        }else{
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                        }
 
                         unset($_SESSION['fl_calcs_tabels']);
 
+                        CloseDB ($msql_cnnct);
 
-                        echo json_encode(array('result' => 'success', 'data' => $query));
+                        //Обновим баланс табеля
+                        updateTabelBalance($_POST['tabelForAdding']);
+
+                        echo json_encode(array('result' => 'success', 'data' => ''));
+                        //var_dump($arr);
 
                     } else {
                         echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));

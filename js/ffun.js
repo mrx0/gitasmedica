@@ -794,7 +794,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                //console.log(res.data);
+                //console.log(res);
 
                 if(res.result == "success"){
                     document.location.href = "fl_tabels.php";

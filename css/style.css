@@ -220,19 +220,28 @@ nav a:hover {
 	box-shadow: 0 0 5px #999;
 }
 
-.notes_count2{
-	position: absolute;
-	top: -5px;
+.notes_count2, .notes_count3{
 	font-size: 16px;
-	/*color:#FFF;*/
-	/*background: #FFF;*/
 	border-radius: 10px;
-	right: -6px;
-	padding: 0;
 	text-shadow: 0px 1px 1px #AAA;
 	/*box-shadow: 0 0 5px #999;*/
-	z-index: 2;
+}
+
+.notes_count2 {
 	color: red;
+}
+
+.notes_count3 {
+	color: rgba(232, 16, 224, 0.98);
+}
+
+.notes_count_div{
+	position: absolute;
+	top: -6px;
+	font-size: 16px;
+	right: 0;
+	padding: 0;
+	z-index: 2;
 }
 
 #change_filial {

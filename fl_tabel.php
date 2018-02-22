@@ -95,7 +95,7 @@
                                     <div id="data">';
                         $summCalc = 0;
 
-                        $msql_cnnct = ConnectToDB ();
+                        $msql_cnnct = ConnectToDB2 ();
 						
 						//$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
                         $query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc WHERE jcalc.id IN (SELECT `calculate_id` FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."');";
@@ -162,7 +162,7 @@
 
                             $rezult .=
                                 '
-                                <div class="cellsBlockHover" style=" border: 1px solid #BFBCB5; margin: 1px 7px 7px;; position: relative; display: inline-block;">
+                                <div class="cellsBlockHover" style=" border: 1px solid #BFBCB5; margin: 1px 7px 7px;; position: relative; display: inline-block; vertical-align: top;">
                                     <div style="display: inline-block; width: 200px;">
                                         <div>
                                         <a href="fl_calculate.php?id='.$rezData['id'].'" class="ahref">
@@ -202,8 +202,12 @@
 
                         echo '
                                 <div style="border: 1px dotted #b3c0c8; display: inline-block; font-size: 12px; padding: 2px; margin-right: 10px; vertical-align: top;">
-                                    <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">Расчётные листы</div>
-                                    '.$rezult.'
+                                    <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
+                                        Расчётные листы <div id="allCalcsIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allCalcsIsHere\');">показать/скрыть</div>
+                                    </div>
+                                    <div id="allCalcsIsHere" style="display: none;">
+                                        '.$rezult.'
+                                    </div>
                                 </div>';
 
                         echo '	

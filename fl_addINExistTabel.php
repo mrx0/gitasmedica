@@ -81,7 +81,7 @@ if ($enter_ok){
                 $calcsArrayData = array();
                 $rezult = '';
 
-                $msql_cnnct = ConnectToDB ();
+                $msql_cnnct = ConnectToDB2 ();
 
                 for ($i = 1; $i < count($calcArr); $i++){
                     $queryDop .=  " OR `id`='{$calcArr[$i]}'";

@@ -7568,3 +7568,9 @@
             );
     });
 
+
+
+    //Функция открыть скрывтый див по его id
+	function toggleSomething (divID){
+        $(divID).toggle('normal');
+	}

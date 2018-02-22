@@ -288,12 +288,14 @@
         $prices_j = array();
         $arr = array();
 
+        $time = time();
+
         //Вытащим цены позиции
-        $query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices` WHERE `item`='".$item."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
+        $query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices` WHERE `item`='".$item."' AND $time > `date_from` ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
 
         //Если посещение страховое и у пациента прописана страховая
         if ($insure != 0){
-            $query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices_insure` WHERE `item`='".$item."' AND `insure`='".$insure."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
+            $query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices_insure` WHERE `item`='".$item."' AND `insure`='".$insure."' AND $time > `date_from` ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
         }
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -445,6 +447,25 @@
         $result = $percents;
 
         return $result;
+    }
+
+    //Обновить сумму баланса
+    function updateTabelBalance($tabel_id){
+
+        $msql_cnnct = ConnectToDB2();
+
+        $query = "SELECT SUM(`summ`) AS `summCalcs`  FROM `fl_journal_calculate` WHERE `id` IN (SELECT `calculate_id` FROM `fl_journal_tabels_ex` WHERE `tabel_id`='{$tabel_id}');";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        $arr = mysqli_fetch_assoc($res);
+
+        $query = "UPDATE `fl_journal_tabels` SET `summ` = '{$arr['summCalcs']}' WHERE `id`='{$tabel_id}';";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        CloseDB ($msql_cnnct);
+
     }
 
 ?>

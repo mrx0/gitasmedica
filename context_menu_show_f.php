@@ -216,7 +216,7 @@
 				//Для РЛ в табеле
 				if ($_POST['mark'] == 'tabel_calc_options'){
                     $data .= '
-                            <li><div onclick="fl_deleteCalculateFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить лист из табеля</div></li>';
+                            <li><div onclick="fl_deleteCalculateFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить РЛ из табеля</div></li>';
 				}
 
 				//Настройка для записи

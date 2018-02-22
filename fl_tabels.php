@@ -120,7 +120,15 @@
                             echo '
                                     <li>
                                         <a href="#tabs-' . $permission['id'] . '_' . $worker['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'\'}); ">
-                                            ' . $worker['name'] . '<div id="tabs_notes_' . $permission['id'] . '_' . $worker['id'].'" class="notes_count2" style="display: none; right: 0;"><i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i></div>
+                                            ' . $worker['name'] . '
+                                            <div  class="notes_count_div">
+                                                <div id="tabs_notes2_' . $permission['id'] . '_' . $worker['id'].'" class="notes_count3" style="display: none;">
+                                                    <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
+                                                </div>
+                                                <div id="tabs_notes_' . $permission['id'] . '_' . $worker['id'].'" class="notes_count2" style="display: none;">
+                                                    <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
+                                                </div>
+                                            </div>
                                         </a>
                                     </li>';
                         }
@@ -151,7 +159,15 @@
                                     echo '
                                             <li class="tabs-' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'\'}); ">
                                                 <a href="#tabs-' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '">
-                                                    ' . $office['name'] . '<div id="tabs_notes_' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count2" style="display: none; right: 0px;"><i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i></div>
+                                                    ' . $office['name'] . '
+                                                    <div class="notes_count_div">
+                                                        <div id="tabs_notes2_' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count3" style="display: none;">
+                                                            <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
+                                                        </div>
+                                                        <div id="tabs_notes_' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count2" style="display: none;">
+                                                            <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
+                                                        </div>
+                                                    </div>
                                                 </a>
                                             </li>';
                                 }
@@ -473,9 +489,12 @@
                                         thisObj.html(res.data);
                                         
                                         //Показываем оповещения на фио и филиале
-                                        $("#tabs_notes_"+permission+"_"+worker).show();
-                                        $("#tabs_notes_"+permission+"_"+worker+"_"+office).show();
+                                        //$("#tabs_notes_"+permission+"_"+worker).show();
+                                        //$("#tabs_notes_"+permission+"_"+worker+"_"+office).show();
                                         //console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
+                                        
+                                        $("#tabs_notes_"+permission+"_"+worker).css("display", "inline-block");
+                                        $("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display", "inline-block");
                                         
                                         thisObj.parent().find(".summCalcsNPaid").html(res.summCalc);
 
@@ -554,9 +573,12 @@
                                         thisObj.html(res.data);
                                         
                                         //Показываем оповещения на фио и филиале
-                                        $("#tabs_notes_"+permission+"_"+worker).show();
-                                        $("#tabs_notes_"+permission+"_"+worker+"_"+office).show();
+                                        /*$("#tabs_notes2_"+permission+"_"+worker).show();
+                                        $("#tabs_notes2_"+permission+"_"+worker+"_"+office).show();*/
                                         //console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
+                                        
+                                        $("#tabs_notes2_"+permission+"_"+worker).css("display", "inline-block");
+                                        $("#tabs_notes2_"+permission+"_"+worker+"_"+office).css("display", "inline-block");
                                         
                                         //
                                         thisObj.parent().find(".summTabelNPaid").html(res.summCalc);
@@ -578,7 +600,6 @@
                                 
                                 if(res.result == "error"){
                                     thisObj.html(res.data);
-                                    
                                     
                                 }
                             }

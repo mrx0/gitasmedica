@@ -55,6 +55,8 @@
 
                         unset($_SESSION['fl_calcs_tabels']);
 
+                        //Обновим баланс табеля
+                        //updateTabelBalance($mysqli_insert_id);
 
                         echo json_encode(array('result' => 'success', 'data' => $query));
 
