@@ -28,8 +28,10 @@
 
                 $msql_cnnct = ConnectToDB();
 
-                $query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$_POST['permission']}' AND `worker_id`='{$_POST['worker']}' AND `office_id`='{$_POST['office']}' AND `status` <> '7';";
+                //$query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$_POST['permission']}' AND `worker_id`='{$_POST['worker']}' AND `office_id`='{$_POST['office']}' AND `status` <> '7';";
                 //$query = "SELECT * FROM `fl_journal_calculate` WHERE `type`='{$_POST['permission']}' AND `worker_id`='{$_POST['worker']}' AND `office_id`='{$_POST['office']}' AND MONTH(`create_time`) = '09' AND `status` <> '7';";
+
+                $query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$_POST['permission']}' AND `worker_id`='{$_POST['worker']}' AND `office_id`='{$_POST['office']}';";
 
                 /*Собираем данные с дополнительными
                 $query = "SELECT jcalc.*, jcalc.id as calc_id, jcalcex.*
@@ -71,6 +73,9 @@
                         //include_once 'fl_showCalculateRezult.php';
 
                         krsort($rez);
+
+                        //счетчик непроведенных табелей
+                        $notDeployCount = 0;
 
                         $rezult .= '
                             <div style="margin: 5px 0 -17px; padding: 2px; text-align: center; color: #0C0C0C;">
@@ -183,14 +188,25 @@
                                                     </div>
                                                     <div>
                                                         <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 13px">
-                                                            Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 14px">' . $rezData['summ'] . '</span> руб.
+                                                            Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 14px">' . ($rezData['summ']-$rezData['deduction']) . '</span> руб.
                                                         </div>
                                                     </div>
                                                     
                                                 </a>
                                                 ' . $invoice_rez_str . '
-                                            </div>
+                                            </div>';
+                                    if ($rezData['status'] == 7) {
+                                        $rezult .= '
+                                            <div style="display: inline-block; vertical-align: top; font-size: 180%;">
+                                                <!--<div style="border: 1px solid #CCC; padding: 3px; margin: 1px;">-->
+                                                    <i class="fa fa-check" aria-hidden="true" style="color: green;" title="Проведён"></i>
+                                                <!--</div>-->
+                                            </div>';
 
+                                    }else{
+                                        $notDeployCount++;
+                                    }
+                                    $rezult .= '
                                         </div>';
 
                                     $summCalc += $rezData['summ'];
@@ -206,18 +222,18 @@
                                 Сумма: <span class="summTabelNPaid calculateInvoice">0</span> руб.
                             </div>';*/
 
-                        echo json_encode(array('result' => 'success', 'status' => '1', 'data' => $rezult, 'summCalc' => $summCalc));
+                        echo json_encode(array('result' => 'success', 'status' => '1', 'data' => $rezult, 'summCalc' => $summCalc, 'notDeployCount' => $notDeployCount));
                     }else{
-                        echo json_encode(array('result' => 'success', 'status' => '0', 'data' => '', 'summCalc' => $summCalc));
+                        echo json_encode(array('result' => 'success', 'status' => '0', 'data' => '', 'summCalc' => $summCalc, 'notDeployCount' => $notDeployCount));
                     }
                 } else {
-                    echo json_encode(array('result' => 'success', 'status' => '0', 'data' => '', 'summCalc' => 0));
+                    echo json_encode(array('result' => 'success', 'status' => '0', 'data' => '', 'summCalc' => 0, 'notDeployCount' => 0));
                 }
                 //echo json_encode(array('result' => 'success', 'data' => $query));
 
             }
         }else{
-            echo json_encode(array('result' => 'error', 'status' => '0', 'data' => '<div class="query_neok">Какая-то ошибка.</div>', 'summCalc' => 0));
+            echo json_encode(array('result' => 'error', 'status' => '0', 'data' => '<div class="query_neok">Какая-то ошибка.</div>', 'summCalc' => 0, 'notDeployCount' => 0));
         }
     }
 ?>

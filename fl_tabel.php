@@ -44,7 +44,7 @@
 
 						//$sheduler_zapis = array();
                         $tabel_ex_calculates_j = array();
-						//$invoice_ex_j_mkb = array();
+						$tabel_deductions_j = array();
 
                         //$invoice_j = array();
 
@@ -79,6 +79,10 @@
                             }
                         }*/
 
+                        if ($tabel_j[0]['status'] == 7) {
+                            echo ' <span style="color: green">Проведён <i class="fa fa-check" aria-hidden="true" style="color: green;"></i></span>';
+                        }
+
                         echo '			
                                         </h2>
                                         <div style="font-size: 90%;">
@@ -86,8 +90,28 @@
                                             <div>Сотрудник <b>'.WriteSearchUser('spr_workers', $tabel_j[0]['worker_id'], 'user_full', true).'</b></div>
                                             <div>Филиал <b>'.$filials_j[$tabel_j[0]['office_id']]['name'].'</b></div>
 		        						</div>
+                                        <div style="background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
+                                            Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ'] . '</span> руб.
+                                        </div>
+                                        <div style="background-color: rgba(230, 72, 72, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
+                                            <div>Сумма всех вычетов: <span class="calculateInvoice" style="font-size: 13px">' . $tabel_j[0]['deduction'] . '</span> руб.</div>
+                                            <div><a href="fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'" class="b" style="font-size: 80%;">Добавить вычет</a></div>
+                                        </div>
                                         <div style="background-color: rgba(72, 218, 230, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            Сумма: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ'] . '</span> руб.
+                                            <div>Итого: <span class="calculateOrder" style="font-size: 13px; ', $tabel_j[0]['summ'] - $tabel_j[0]['deduction'] <= 0 ? 'color: red;' : '' ,'">' . ($tabel_j[0]['summ'] - $tabel_j[0]['deduction']) . '</span> руб.</div>
+                                            <div>';
+                        if ($tabel_j[0]['status'] != 7) {
+                            echo '
+                                                <button class="b" style="font-size: 80%;" onclick="deployTabel(' . $_GET['id'] . ');">Провести табель</button>';
+                        }else{
+                            if ($tabel_j[0]['status'] == 7) {
+                                /*echo '
+                                                <button class="b" style="font-size: 80%;" onclick="deployTabelOFF(' . $_GET['id'] . ');">Распровести табель</button>';*/
+                            }
+                        }
+
+                        echo '
+                                            </div>
                                         </div>
 		        					</header>';
 
@@ -171,7 +195,7 @@
                                                     <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                 </div>
                                                 <div style="display: inline-block; vertical-align: middle; font-size: 90%;">
-                                                    <b>#'.$rezData['id'].'</b> <span style="    color: rgb(115, 112, 112);">'.date('d.m.y H:i', strtotime($rezData['create_time'])).'</span>
+                                                    <b>РЛ #'.$rezData['id'].'</b> <span style="    color: rgb(115, 112, 112);">'.date('d.m.y H:i', strtotime($rezData['create_time'])).'</span>
                                                 </div>
                                             </div>
                                             <div>
@@ -187,12 +211,17 @@
                                             Сумма: '.$summ.' р. Страх.: '.$summins.' р.</b> <br>
                                             
                                         </div>
-                                    </div>
+                                    </div>';
+                            if ($tabel_j[0]['status'] != 7) {
+                                $rezult .= '
                                     <div style="display: inline-block; vertical-align: top;">
-                                        <div class="settings_text" style="border: 1px solid #CCC; padding: 3px; margin: 1px; width: 12px; text-align: center;"  onclick="contextMenuShow('.$tabel_j[0]['id'].', '.$rezData['id'].', event, \'tabel_calc_options\');">
+                                        <div class="settings_text" style="border: 1px solid #CCC; padding: 3px; margin: 1px; width: 12px; text-align: center;"  onclick="contextMenuShow(' . $tabel_j[0]['id'] . ', ' . $rezData['id'] . ', event, \'tabel_calc_options\');">
                                             <i class="fa fa-caret-down"></i>
                                         </div>
-                                    </div>
+                                    </div>';
+                            }
+
+                            $rezult .= '
                                     <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
                                 </div>';
 
@@ -200,13 +229,92 @@
 
                         }
 
+
+                        //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
+                        $query = "SELECT * FROM `fl_journal_deductions` WHERE `tabel_id`='".$tabel_j[0]['id']."';";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0){
+                            while ($arr = mysqli_fetch_assoc($res)){
+                                array_push($tabel_deductions_j, $arr);
+                            }
+                        }else{
+                            //$sheduler_zapis = 0;
+                            //var_dump ($sheduler_zapis);
+                        }
+
+                        $rezultD = '';
+
+                        if (!empty($tabel_deductions_j)) {
+
+                            foreach ($tabel_deductions_j as $rezData) {
+
+                                $rezultD .=
+                                    '
+                                    <div class="cellsBlockHover" style=" border: 1px solid #BFBCB5; margin: 1px 7px 7px;; position: relative; display: inline-block; vertical-align: top;">
+                                        <div style="display: inline-block; width: 200px;">
+                                            <div>
+                                            <a href="#" class="ahref">
+                                                <div>
+                                                    <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+                                                        <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+                                                    </div>
+                                                    <div style="display: inline-block; vertical-align: middle; font-size: 90%;">
+                                                        <b>Вычет #' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);">' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
+                                                        Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">' . $rezData['summ'] . '</span> руб.
+                                                    </div>
+                                                </div>
+                                                
+                                            </a>
+                                            </div>
+                                            <div style="margin: 5px 0 0 3px; font-size: 80%;">
+                                                <b>Комментарий:</b> '.$rezData['descr'].'                                                
+                                            </div>
+                                        </div>';
+                                if ($tabel_j[0]['status'] != 7) {
+                                    $rezultD .= '
+                                        <div style="display: inline-block; vertical-align: top;">
+                                            <div class="settings_text" style="border: 1px solid #CCC; padding: 3px; margin: 1px; width: 12px; text-align: center;"  onclick="contextMenuShow(' . $tabel_j[0]['id'] . ', ' . $rezData['id'] . ', event, \'tabel_deduction_options\');">
+                                                <i class="fa fa-caret-down"></i>
+                                            </div>
+                                        </div>';
+                                }
+                                $rezultD .= '
+                                        <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
+                                    </div>';
+
+                                //$summCalc += $rezData['summ'];
+
+                            }
+                        }
+
+                        //Выводим
+
+                        //Расчетные листы
                         echo '
-                                <div style="border: 1px dotted #b3c0c8; display: inline-block; font-size: 12px; padding: 2px; margin-right: 10px; vertical-align: top;">
+                                <div style="border: 1px dotted #b3c0c8; display: block; font-size: 12px; padding: 2px; margin-right: 10px; margin-bottom: 20px; vertical-align: top;">
                                     <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
                                         Расчётные листы <div id="allCalcsIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allCalcsIsHere\');">показать/скрыть</div>
                                     </div>
                                     <div id="allCalcsIsHere" style="display: none;">
                                         '.$rezult.'
+                                    </div>
+                                </div>';
+
+                        //Вычеты
+                        echo '
+                                <div style="border: 1px dotted #b3c0c8; display: block; font-size: 12px; padding: 2px; margin-right: 10px; vertical-align: top;">
+                                    <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
+                                        Вычеты <div id="allDeductionssIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allDeductionssIsHere\');">показать/скрыть</div>
+                                    </div>
+                                    <div id="allDeductionssIsHere" style="display: none;">
+                                        '.$rezultD.'
                                     </div>
                                 </div>';
 

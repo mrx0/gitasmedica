@@ -449,7 +449,7 @@
         return $result;
     }
 
-    //Обновить сумму баланса
+    //Обновить сумму баланса Табеля
     function updateTabelBalance($tabel_id){
 
         $msql_cnnct = ConnectToDB2();
@@ -460,7 +460,26 @@
 
         $arr = mysqli_fetch_assoc($res);
 
-        $query = "UPDATE `fl_journal_tabels` SET `summ` = '{$arr['summCalcs']}' WHERE `id`='{$tabel_id}';";
+        $query = "UPDATE `fl_journal_tabels` SET `summ` = '".round($arr['summCalcs'], 2)."' WHERE `id`='{$tabel_id}';";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        CloseDB ($msql_cnnct);
+
+    }
+
+    //Обновить сумму баланса Вычетов табеля
+    function updateTabelDeductionsSumm($tabel_id){
+
+        $msql_cnnct = ConnectToDB2();
+
+        $query = "SELECT SUM(`summ`) AS `summCalcs`  FROM `fl_journal_deductions` WHERE `tabel_id`='{$tabel_id}';";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        $arr = mysqli_fetch_assoc($res);
+
+        $query = "UPDATE `fl_journal_tabels` SET `deduction` = '".round($arr['summCalcs'], 2)."' WHERE `id`='{$tabel_id}';";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 

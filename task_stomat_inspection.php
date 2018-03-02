@@ -417,7 +417,7 @@
                             $query = "SELECT * FROM `journal_invoice` ji
                             LEFT JOIN `journal_invoice_ex` jiex 
                             ON ji.id = jiex.invoice_id
-                            WHERE ji.zapis_id = '" . $task[0]['zapis_id'] . "';";
+                            WHERE ji.zapis_id = '" . $task[0]['zapis_id'] . "' AND ji.status <> 9;";
 
 
                             //$invoice_j = SelDataFromDB('journal_invoice', $task[0]['zapis_id'], 'id');

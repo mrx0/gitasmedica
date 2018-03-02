@@ -212,8 +212,19 @@
 								echo '		
 									</header>';
 
+                                /*var_dump($invoice_j[0]['summ']);
+                                var_dump($invoice_j[0]['paid']);
+								var_dump($invoice_j[0]['summ'] != $invoice_j[0]['paid']);
+                                var_dump('-----');
+                                var_dump($invoice_j[0]['closed_time']);
+								var_dump($invoice_j[0]['closed_time'] == 0);
+                                var_dump('-----');
+                                var_dump($invoice_j[0]['summins']);
+								var_dump($invoice_j[0]['summins'] != 0);*/
 
-                                if ((($invoice_j[0]['summ'] != $invoice_j[0]['paid']) && ($invoice_j[0]['closed_time'] == 0)) || ($invoice_j[0]['summins'] != 0)) {
+                                //var_dump(date("Y-m-d H:m:s", time()));
+
+                                if ((($invoice_j[0]['summ'] != $invoice_j[0]['paid']) && ($invoice_j[0]['closed_time'] == 0)) || ($invoice_j[0]['summins'] != 0) || (($invoice_j[0]['summins'] == 0) && ($invoice_j[0]['summ'] == 0) && ($invoice_j[0]['paid'] == 0))) {
                                     echo '
                                         <ul style="margin-left: 6px; margin-bottom: 10px;">	
                                             <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Посещение</li>';

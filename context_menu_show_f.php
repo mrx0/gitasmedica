@@ -219,6 +219,12 @@
                             <li><div onclick="fl_deleteCalculateFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить РЛ из табеля</div></li>';
 				}
 
+				//Для Вычетов в табеле
+				if ($_POST['mark'] == 'tabel_deduction_options'){
+                    $data .= '
+                            <li><div onclick="fl_deleteDeductionFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить Вычет из табеля</div></li>';
+				}
+
 				//Настройка для записи
 				if ($_POST['mark'] == 'zapis_options'){
 				}

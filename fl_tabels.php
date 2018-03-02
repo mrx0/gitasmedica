@@ -576,9 +576,10 @@
                                         /*$("#tabs_notes2_"+permission+"_"+worker).show();
                                         $("#tabs_notes2_"+permission+"_"+worker+"_"+office).show();*/
                                         //console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
-                                        
-                                        $("#tabs_notes2_"+permission+"_"+worker).css("display", "inline-block");
-                                        $("#tabs_notes2_"+permission+"_"+worker+"_"+office).css("display", "inline-block");
+                                        if (res.notDeployCount > 0){
+                                            $("#tabs_notes2_"+permission+"_"+worker).css("display", "inline-block");
+                                            $("#tabs_notes2_"+permission+"_"+worker+"_"+office).css("display", "inline-block");
+                                        }
                                         
                                         //
                                         thisObj.parent().find(".summTabelNPaid").html(res.summCalc);

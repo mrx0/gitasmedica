@@ -1971,6 +1971,48 @@
 		})
 	};
 
+	//Удаляем позицию в истории цен
+    function deletePriceHistory(id) {
+
+        var Data = {
+            id:id
+        };
+
+        var link = "deletePriceHistory.php";
+
+        var rys = false;
+
+        var rys = confirm("Вы собираетесь удалить промежуточную цену.\n\nВы уверены?");
+
+        if (rys) {
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+
+                data:Data,
+
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res);
+
+                    if (res.result == "success") {
+                        //console.log(res);
+                        location.reload();
+                    } else {
+                        $('#errror').html(res.data);
+                    }
+                }
+            });
+        }
+    };
+
 	// !!! правильный пример AJAX
 	function Ajax_change_shed() {
 
@@ -6848,6 +6890,7 @@
 
        return cboxArray;
 	}
+
 	//Удаление выбранных позиций из прайса страховой
     function delCheckedItems (insure_id){
 
@@ -7570,7 +7613,7 @@
 
 
 
-    //Функция открыть скрывтый див по его id
+    //Функция открыть скрытый див по его id
 	function toggleSomething (divID){
         $(divID).toggle('normal');
 	}

@@ -1,5 +1,6 @@
 
 
+    //Ждем ждём ожидание
     //Взято с Хабра https://habrahabr.ru/post/134823/
     //first — первая функция,которую нужно запустить
     wait = function(first){
@@ -402,65 +403,103 @@
     function deletePaymentItem(id, client_id, invoice_id){
         //console.log(id);
 
-        $.ajax({
-            url:"payment_del_f.php",
-            global: false,
-            type: "POST",
-            dataType: "JSON",
-            data:
-                {
+        var rys = false;
+
+        var rys = confirm("Удалить оплату?");
+
+        if (rys) {
+
+            $.ajax({
+                url: "payment_del_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
                     id: id,
                     client_id: client_id,
                     invoice_id: invoice_id,
                 },
-            cache: false,
-            beforeSend: function() {
-                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-            },
-            // действие, при ответе с сервера
-            success: function(res){
-                if(res.result == "success"){
-                    location.reload();
-                    //console.log(res.data);
-                }
-                if(res.result == "error"){
-                    alert(res.data);
-                }
-                //console.log(data.data);
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    if (res.result == "success") {
+                        location.reload();
+                        //console.log(res.data);
+                    }
+                    if (res.result == "error") {
+                        alert(res.data);
+                    }
+                    //console.log(data.data);
 
-            }
-        });
+                }
+            });
+        }
     }
 
     //Удалить расчет
     function fl_deleteCalculateItem(id, client_id, invoice_id){
         //console.log(id);
 
-        $.ajax({
-            url:"fl_calculate_del_f.php",
-            global: false,
-            type: "POST",
-            dataType: "JSON",
-            data:
-                {
-                    id: id,
-                    client_id: client_id,
-                    invoice_id: invoice_id,
-                },
-            cache: false,
-            beforeSend: function() {
-                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-            },
-            // действие, при ответе с сервера
-            success: function(data){
-                /*if(data.result == "success"){
+        var rys = false;
 
-                }*/
-                //console.log(data.data);
-                //location.reload();
-                window.location.href = "invoice.php?id="+invoice_id;
-            }
-        });
+        var rys = confirm("Удалить расчетный лист?");
+
+        if (rys) {
+
+            $.ajax({
+                url: "fl_check_calculate_in_tabel_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    calculate_id: id,
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    if(res.result == "success"){
+                        if (res.data == 0){
+                            //console.log(res);
+
+                            $.ajax({
+                                url: "fl_calculate_del_f.php",
+                                global: false,
+                                type: "POST",
+                                dataType: "JSON",
+                                data: {
+                                    id: id,
+                                    client_id: client_id,
+                                    invoice_id: invoice_id,
+                                },
+                                cache: false,
+                                beforeSend: function () {
+                                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                                },
+                                // действие, при ответе с сервера
+                                success: function (data) {
+                                    /*if(data.result == "success"){
+
+                                     }*/
+                                    //console.log(data.data);
+                                    //location.reload();
+                                    window.location.href = "invoice.php?id=" + invoice_id;
+                                }
+                            });
+
+                        }
+                    }
+                    if(res.result == "error"){
+                        alert("Расчётный лист добавлен в табель.\n\nНельзя удалить.\n\nОбратитесь к руководителю.");
+                    }
+                }
+            });
+        }
     }
 
     //Сбросить проценты персональные на по умолчанию
@@ -698,7 +737,7 @@
 
             setTimeout(function(){
                 runNext(calcIDForTabelINarr());
-            }, 1000);
+            }, 1500);
 
         }).wait(function(runNext, calcIDForTabel_arr){
             //используем аргументы из предыдущего вызова
@@ -844,6 +883,392 @@
         }
     }
 
+    //Удаляем Вычет из табеля
+    function fl_deleteDeductionFromTabel(tabel_id, deduction_id){
+
+        var link = "fl_deleteDeductionFromTabel_f.php";
+
+        var rys = false;
+
+        var rys = confirm("Вы хотите удалить Вычет из табеля. \n\nВы уверены?");
+        //console.log(885);
+
+        if (rys) {
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    tabel_id: tabel_id,
+                    deduction_id: deduction_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    console.log(res);
+
+                    if (res.result == "success") {
+                        location.reload();
+                    } else {
+                        $('#errror').html(res.data);
+                    }
+                }
+            });
+        }
+    }
+
+    //Добавляем/редактируем в базу вычет из табеля
+    function  fl_Ajax_deduction_add(deduction_id, tabel_id, mode, deductionData){
+
+        var link = "fl_deduction_add_f.php";
+
+        if (mode == 'edit'){
+            link = "fl_deduction_edit_f.php";
+        }
+
+        deductionData['deduction_id'] = deduction_id;
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data:deductionData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(res){
+                //console.log(res.data);
+
+                if(res.result == 'success') {
+                    //console.log('success');
+                    //$('#data').html(res.data);
+                    document.location.href = "fl_tabel.php?id="+tabel_id;
+                }else{
+                    //console.log('error');
+                    $('#errror').html(res.data);
+                    //$('#errrror').html('');
+                }
+            }
+        });
+    }
+
+    //Добавляем/редактируем в базу расход материалов для наряда
+    function fl_Ajax_MaterialsConsumptionAdd(invoice_id, mode){
+
+        var link = "fl_material_consumption_add_f.php";
+
+        if (mode == 'edit'){
+         link = "fl_material_consumption_edit_f.php";
+        }
+
+        var matConsData = {
+            invoice_id:invoice_id,
+            descr: $('#descr').val(),
+            summ: $('#mat_cons_pos_summ_all').val()
+        };
+
+        var error_marker = false;
+
+        var positionsArr = {};
+
+        wait(function(runNext){
+
+            setTimeout(function(){
+
+                $(".materials_consumption_pos").each(function(){
+                    //console.log($(this).attr("positionID"));
+                    //console.log($(this).val());
+                    //console.log($(this).parent().parent().find('.invoiceItemPriceItog').text());
+
+                    var position_id = Number($(this).attr("positionID"));
+                    var invoiceItemPriceItog = Number($(this).parent().parent().find('.invoiceItemPriceItog').text());
+                    var materials_consumption_sum = Number($(this).val());
+
+                    var checked_status = $(this).parent().find('.chkMatCons').prop("checked");
+                    //console.log(checked_status);
+
+                    if (checked_status) {
+
+                        if (invoiceItemPriceItog < materials_consumption_sum) {
+                            $('#errrror').html('<div class="query_neok">Расход не может быть больше стоимости позиции.</div>');
+                            //console.log(position_id);
+
+                            $('#overlay').hide();
+                            $('.center_block').remove();
+
+                            error_marker = true;
+
+                            return false;
+                        } else {
+                            //console.log(position_id);
+
+                            positionsArr[position_id] = {};
+                            positionsArr[position_id]['mat_cons_sum'] = materials_consumption_sum;
+
+                        }
+                    }
+                });
+
+                runNext(positionsArr, error_marker);
+
+            }, 1500);
+
+        }).wait(function(runNext, positionsArr, error_marker){
+            //используем аргументы из предыдущего вызова
+
+            if (!error_marker) {
+                //console.log(positionsArr)
+
+                matConsData["positionsArr"] = positionsArr;
+
+                $.ajax({
+                    url: link,
+                    global: false,
+                    type: "POST",
+                    dataType: "JSON",
+
+                    data: matConsData,
+
+                    cache: false,
+                    beforeSend: function() {
+                        $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                    },
+                    // действие, при ответе с сервера
+                    success:function(res){
+                        //console.log(res.data);
+                        /*$('#errrror').html(res);*/
+
+                        if(res.result == 'success') {
+                            //console.log('success');
+                            //$('#data').html(res.data);
+                            document.location.href = "invoice.php?id="+invoice_id;
+                        }else{
+                            //console.log('error');
+                            $('#overlay').hide();
+                            $('.center_block').remove();
+
+                            $('#errror').html(res.data);
+                            //$('#errrror').html('');
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+    // Добавляем/редактируем в базу расход материалов для наряда
+    function fl_showMaterialsConsumptionAdd(invoice_id, mode){
+        //console.log(invoice_id);
+
+        var Summ = $("#mat_cons_pos_summ_all").val();
+
+        if (Summ > 0) {
+
+            $('#overlay').show();
+
+
+            /*var SummIns = 0;
+             var SummInsBlock = '';*/
+
+            /*if (invoice_type == 5){
+             SummIns = $("#calculateInsInvoice").html();
+             SummInsBlock = '<div>Страховка: <span class="calculateInsInvoice">'+SummIns+'</span> руб.</div>';
+             }*/
+
+            var buttonsStr = '<input type="button" class="b" value="Применить" onclick="$(this).prop(\'disabled\', true ); fl_Ajax_MaterialsConsumptionAdd('+invoice_id+', \'add\')">';
+
+
+            if (mode == 'edit') {
+                buttonsStr = '<input type="button" class="b" value="Применить" onclick="$(this).prop(\'disabled\', true ); fl_Ajax_MaterialsConsumptionAdd('+invoice_id+', \'edit\')">';
+            }
+
+            // Создаем меню:
+            var menu = $('<div/>', {
+                class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+            })
+                .appendTo('#overlay')
+                .append(
+                    $('<div/>')
+                        .css({
+                            "height": "100%",
+                            "border": "1px solid #AAA",
+                            "position": "relative",
+                        })
+                        .append('<span style="margin: 5px;"><i>Проверьте сумму расходов на материалы.</i></span>')
+                        .append('<br><br><span style="margin: 5px; color: red"><i>Внимание! Расчётный лист будет пересчитан.</i></span>')
+                        .append(
+                            $('<div/>')
+                                .css({
+                                    "position": "absolute",
+                                    "width": "100%",
+                                    "margin": "auto",
+                                    "top": "25px",
+                                    "left": "0",
+                                    "bottom": "0",
+                                    "right": "0",
+                                    "height": "50%",
+                                })
+                                .append('<div style="margin: 15px;">Сумма: <span class="calculateInvoice">' + Summ + '</span> руб.</div>')
+                        )
+                        .append(
+                            $('<div/>')
+                                .css({
+                                    "position": "absolute",
+                                    "bottom": "2px",
+                                    "width": "100%",
+                                })
+                                .append(buttonsStr +
+                                    '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                                )
+                        )
+                );
+
+            menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+        }
+
+
+
+    }
+
+    //Промежуточная функция для вычета
+    function fl_showDeductionAdd (deduction_id, tabel_id, mode){
+        //console.log(mode);
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        var deduction_summ = $('#deduction_summ').val();
+        var descr = $('#descr').val();
+
+        var deductionData = {
+            tabel_id:tabel_id,
+            deduction_summ:deduction_summ,
+            descr:descr
+        };
+
+        //проверка данных на валидность
+        $.ajax({
+            url:"ajax_test.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data:deductionData,
+
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                if(res.result == 'success'){
+
+                    fl_Ajax_deduction_add(deduction_id, tabel_id, mode, deductionData);
+
+                    // в случае ошибок в форме
+                }else{
+                    // перебираем массив с ошибками
+                    for(var errorField in res.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(res.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                }
+            }
+        })
+    }
+
+    //Провести табель
+    function deployTabel (tabel_id){
+        //console.log(mode);
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        var deployData = {
+            tabel_id:tabel_id
+        };
+
+        var link = "fl_deployTabel_f.php";
+
+        var rys = false;
+
+        var rys = confirm("Вы собираетесь провести табель.\nПосле этого изменить его не получится.\nВы уверены?");
+        //console.log(885);
+
+        if (rys) {
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+
+                data:deployData,
+
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res);
+
+                    if (res.result == "success") {
+                        //console.log(res);
+                        location.reload();
+                    } else {
+                        $('#errror').html(res.data);
+                    }
+                }
+            });
+        }
+    }
+
+
+    //
+    function changeAllMaterials_consumption_pos() {
+
+        var materials_consumption_pos_all_summ = 0;
+
+        $(".materials_consumption_pos").each(function() {
+
+            var checked_status = $(this).parent().find('.chkMatCons').prop("checked");
+            //console.log(checked_status);
+
+            if (checked_status) {
+                if (!isNaN(Number($(this).val()))) {
+                    if (Number($(this).val()) > 0) {
+                        $(this).val(Number($(this).val()));
+                        materials_consumption_pos_all_summ += Number($(this).val());
+                    } else {
+                        $(this).val(0);
+                    }
+                } else {
+                    $(this).val(0);
+                }
+            }
+        });
+
+        $(".materials_consumption_pos_all").val(materials_consumption_pos_all_summ);
+
+    }
+
 
     $(document).ready(function() {
         //console.log(123);
@@ -863,6 +1288,61 @@
             } else {
                 $(this).parent().parent().parent().css({"background-color": ""});
             }
+        });
+
+        //Для расчета затрат на материалы
+        $("body").on("change", ".materials_consumption_pos", function () {
+            //console.log($(this).val());
+
+            changeAllMaterials_consumption_pos ();
+
+        });
+
+        $("body").on("change", ".materials_consumption_pos_all", function () {
+            //console.log($(this).val());
+
+            if (!isNaN(Number($(this).val()))) {
+                //console.log($('input[type=checkbox]:checked').length);
+
+                $(this).val(Number($(this).val()));
+
+                var mat_cons_pos_summ_all = Number($(this).val());
+                var chkBoxsCount = $('input[type=checkbox]:checked').length;
+
+                var ostatok = mat_cons_pos_summ_all % chkBoxsCount;
+                var mat_cons_pos_summ = Math.floor(mat_cons_pos_summ_all/chkBoxsCount);
+                //console.log(mat_cons_pos_summ);
+
+                var first_count = true;
+
+                $(".materials_consumption_pos").each(function() {
+
+                    var checked_status = $(this).parent().find('.chkMatCons').prop("checked");
+                    //console.log(checked_status);
+
+                    if (checked_status) {
+                        if (first_count == true) {
+                            $(this).val(mat_cons_pos_summ+ostatok);
+                            first_count = false
+                        }else{
+                            $(this).val(mat_cons_pos_summ);
+                        }
+                    }else{
+                        $(this).val(0);
+                    }
+
+                });
+
+            }else{
+                $(this).val(0);
+            }
+
+        });
+
+        $("body").on("click", ".chkMatCons", function () {
+
+            changeAllMaterials_consumption_pos ();
+
         });
 
     });

@@ -556,7 +556,7 @@ if ($enter_ok){
                                                 <div class="cellText2" style="padding: 2px 4px;">
                                                     <div style="vertical-align: middle; font-size: 11px;">
                                                         <div style="text-align: left; float: left;">	
-                                                            <input type="button" class="b" value="Сбросить" onclick="showCalculateAdd(' . $sheduler_zapis[0]['type'] . ', \'reset\')">
+                                                            <input type="button" class="b" value="Сбросить изменения" onclick="showCalculateAdd(' . $sheduler_zapis[0]['type'] . ', \'reset\')">
                                                         </div>
                                                         <div style="text-align: right;">	
                                                             <input type="button" class="b" value="Сохранить" onclick="showCalculateAdd(' . $sheduler_zapis[0]['type'] . ', \'add\')">
