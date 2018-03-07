@@ -48,6 +48,44 @@
                         //ID новой позиции
                         $mysql_insert_id = mysqli_insert_id($msql_cnnct);
 
+
+
+
+                        //Затраты на материалы
+                        $mat_cons_j_ex = array();
+
+                        $query = "SELECT jimc.*, jimcex.*, jimc.id as mc_id, jimc.summ as all_summ FROM `journal_inv_material_consumption` jimc
+                                LEFT JOIN `journal_inv_material_consumption_ex` jimcex
+                                ON jimc.id = jimcex.inv_mat_cons_id
+                                WHERE jimc.invoice_id = '".$_POST['invoice_id']."';";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                        $number = mysqli_num_rows($res);
+
+                        if ($number != 0) {
+                            while ($arr = mysqli_fetch_assoc($res)) {
+
+                                //array_push($mat_cons_j, $arr);
+
+                                if (!isset($mat_cons_j_ex['data'])){
+                                    $mat_cons_j_ex['data'] = array();
+                                }
+
+                                if (!isset($mat_cons_j_ex['data'][$arr['inv_pos_id']])){
+                                    $mat_cons_j_ex['data'][$arr['inv_pos_id']] = $arr['summ'];
+                                }
+
+                                $mat_cons_j_ex['create_person'] = $arr['create_person'];
+                                $mat_cons_j_ex['create_time'] = $arr['create_time'];
+                                $mat_cons_j_ex['all_summ'] = $arr['all_summ'];
+                                $mat_cons_j_ex['descr'] = $arr['descr'];
+                                $mat_cons_j_ex['id'] = $arr['mc_id'];
+                            }
+                        } else {
+
+                        }
+
                         foreach ($data as $ind => $calculate_data) {
 
                             if (!empty($calculate_data)) {
@@ -77,6 +115,16 @@
                                             $itog_price_add = $itog_price;
                                         }
 
+
+                                        /*if (!empty($mat_cons_j_ex['data'])){
+                                            if (isset($mat_cons_j_ex['data'][$pos_id])){
+                                                $itog_price_add = $itog_price_add - $mat_cons_j_ex['data'][$pos_id];
+                                            }else{
+                                            }
+                                        }else{
+                                        }*/
+
+
                                         if ($guarantee != 0){
                                             $itog_price_add = 0;
                                         }
@@ -90,7 +138,7 @@
 
                                         $price = $price*$quantity;
 
-                                        $price =  ($price - ($price * $discount / 100));
+                                        $price = ($price - ($price * $discount / 100));
 
                                         if ($itog_price == 0){
                                             $itog_price = $price;
@@ -102,6 +150,16 @@
 
                                         //$calculateInvSumm +=  round($price);
                                         $calculateInvSumm += $itog_price;
+
+                                        if (!empty($mat_cons_j_ex['data'])){
+                                            if (isset($mat_cons_j_ex['data'][$pos_id])){
+                                                $itog_price = $itog_price - $mat_cons_j_ex['data'][$pos_id];
+                                            }else{
+                                            }
+                                        }else{
+                                        }
+
+                                        if ($itog_price < 0) $itog_price = 0;
 
                                         //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
                                         $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);
@@ -121,7 +179,7 @@
 
                                 }
 
-                                if ($_POST['invoice_type'] == 6) {
+                                /*if ($_POST['invoice_type'] == 6) {
 
                                     $price_id = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['price_id'];
                                     $quantity = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['quantity'];
@@ -160,7 +218,7 @@
                                     //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
                                     $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);
 
-                                }
+                                }*/
                                 //unset($_SESSION['calculate_data']);
                             }
                         }

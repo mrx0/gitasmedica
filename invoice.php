@@ -88,6 +88,7 @@
                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                                 $number = mysqli_num_rows($res);
+
                                 if ($number != 0) {
                                     while ($arr = mysqli_fetch_assoc($res)) {
 
@@ -953,7 +954,7 @@
                                                         </div>
                                                         <div class="cellName">
                                                             <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                                Сумма:<br>
+                                                                Сумма к расчёту:<br>
                                                                 <span class="calculateOrder" style="font-size: 13px">' . $calculate_item['summ_inv'] . '</span> руб.
                                                             </div>
                                                         </div>
@@ -977,7 +978,7 @@
                                                 <div class="invoceHeader" style="">
                                                     <ul style="margin-left: 6px; margin-bottom: 10px;">
                                                         <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
-                                                            Расход на материалы:
+                                                            Затраты на материалы:
                                                         </li>';
                                     //foreach ($mat_cons_j_ex['data'] as $mat_cons_item) {
 
@@ -985,7 +986,7 @@
                                                         <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
                                         echo '
                                                             <a href="#" class="cellOrder ahref" style="position: relative;">
-                                                                <b>Расход #' . $mat_cons_j_ex['id'] . '</b> от ' . date('d.m.y', strtotime($calculate_item['date_in'])) . '<br>
+                                                                <b>Расход #' . $mat_cons_j_ex['id'] . '</b> от ' . date('d.m.y', strtotime($mat_cons_j_ex['create_time'])) . '<br>
                                                                 <span style="font-size:80%;  color: #555;">';
 
                                         if (($mat_cons_j_ex['create_time'] != 0) || ($mat_cons_j_ex['create_person'] != 0)) {
@@ -1013,7 +1014,7 @@
                                                                     <span class="calculateOrder" style="font-size: 13px">' . $mat_cons_j_ex['all_summ'] . '</span> руб.
                                                                 </div>
                                                             </div>
-                                                            <div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="fl_deleteMaterialConsumption_(' . $mat_cons_j_ex['id'] . ', ' . $invoice_j[0]['id'] . ');">
+                                                            <div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="fl_deleteMaterialConsumption(' . $mat_cons_j_ex['id'] . ', ' . $invoice_j[0]['id'] . ');">
                                                                 <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
                                                             </div>
                                                             ';

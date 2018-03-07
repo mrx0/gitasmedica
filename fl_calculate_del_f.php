@@ -1,6 +1,6 @@
 <?php 
 
-//calculate_id
+//fl_calculate_del_f.php
 //Функция для Удаление(блокирование) 
 
 	session_start();

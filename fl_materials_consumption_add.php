@@ -39,6 +39,7 @@ if ($enter_ok){
                     //var_dump($invoice_j[0]['closed_time'] == 0);
 
                     $sheduler_zapis = array();
+                    $mat_cons_j = array();
                     $invoice_ex_j = array();
                     $invoice_ex_j_mkb = array();
 
@@ -71,6 +72,8 @@ if ($enter_ok){
 
                         if ($sheduler_zapis[0]['month'] < 10) $month = '0'.$sheduler_zapis[0]['month'];
                         else $month = $sheduler_zapis[0]['month'];
+
+
 
                         echo '
 							<div id="status">
@@ -165,301 +168,319 @@ if ($enter_ok){
 									</ul>';
                         //}
 
-                        //Наряды
+                        if ($invoice_j[0]['status'] == 9){
+                            echo '<i style="color:red;">Для удалённого наряда не указываются затртаы на материалы.</i><br>';
+                        }else {
 
-                        //$query = "SELECT * FROM `journal_invoice` WHERE `zapis_id`='".$_GET['invoice_id']."'";
-                        //!!! пробуем JOIN
-                        //$query = "SELECT * FROM `journal_invoice_ex` LEFT JOIN `journal_invoice_ex_mkb` USING(`invoice_id`, `ind`) WHERE `invoice_id`='".$_GET['invoice_id']."';";
-                        $query = "SELECT * FROM `journal_invoice_ex` WHERE `invoice_id`='".$_GET['invoice_id']."';";
-                        //var_dump($query);
+                            //Затраты
+                            $query = "SELECT * FROM `journal_inv_material_consumption` WHERE `invoice_id`='" . $_GET['invoice_id'] . "'";
 
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                        $number = mysqli_num_rows($res);
-                        if ($number != 0){
-                            while ($arr = mysqli_fetch_assoc($res)){
-                                if (!isset($invoice_ex_j[$arr['ind']])){
-                                    $invoice_ex_j[$arr['ind']] = array();
-                                    array_push($invoice_ex_j[$arr['ind']], $arr);
-                                }else{
-                                    array_push($invoice_ex_j[$arr['ind']], $arr);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                            $number = mysqli_num_rows($res);
+                            if ($number != 0) {
+                                while ($arr = mysqli_fetch_assoc($res)) {
+                                    array_push($mat_cons_j, $arr);
                                 }
+                            } else {
+                                //$sheduler_zapis = 0;
+                                //var_dump ($sheduler_zapis);
                             }
-                        }else
-                            $invoice_ex_j = 0;
-                        //var_dump ($invoice_ex_j);
-
-                        //сортируем зубы по порядку
-                        if ($invoice_ex_j != 0){
-                            ksort($invoice_ex_j);
-                        }
-
-                        //Для МКБ
-                        $query = "SELECT * FROM `journal_invoice_ex_mkb` WHERE `invoice_id`='".$_GET['invoice_id']."';";
-                        //var_dump ($query);
-
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                        $number = mysqli_num_rows($res);
-                        if ($number != 0){
-                            while ($arr = mysqli_fetch_assoc($res)){
-                                if (!isset($invoice_ex_j_mkb[$arr['ind']])){
-                                    $invoice_ex_j_mkb[$arr['ind']] = array();
-                                    array_push($invoice_ex_j_mkb[$arr['ind']], $arr);
-                                }else{
-                                    array_push($invoice_ex_j_mkb[$arr['ind']], $arr);
-                                }
-                            }
-                        }else
-                            $invoice_ex_j_mkb = 0;
-                        //var_dump ($invoice_ex_j_mkb);
+                            //if ($client !=0){
+                            if (empty($mat_cons_j)) {
 
 
-                        echo '
-								<div id="data">';
+                                //Наряды
 
-                        echo '			
-									<div class="invoice_rezult" style="display: inline-block; border: 1px solid #c5c5c5; border-radius: 3px; position: relative;">';
+                                //$query = "SELECT * FROM `journal_invoice` WHERE `zapis_id`='".$_GET['invoice_id']."'";
+                                //!!! пробуем JOIN
+                                //$query = "SELECT * FROM `journal_invoice_ex` LEFT JOIN `journal_invoice_ex_mkb` USING(`invoice_id`, `ind`) WHERE `invoice_id`='".$_GET['invoice_id']."';";
+                                $query = "SELECT * FROM `journal_invoice_ex` WHERE `invoice_id`='" . $_GET['invoice_id'] . "';";
+                                //var_dump($query);
 
-                        echo '	
-										<div id="errror" class="invoceHeader" style="">
-                                             <div style="display: inline-block; width: 300px; vertical-align: top;">
-                                                <div>
-                                                    <div style="">Сумма: <div id="calculateInvoice" style="">'.$invoice_j[0]['summ'].'</div> руб.</div>
-                                                </div>';
-                        if ($sheduler_zapis[0]['type'] == 5) {
-                            echo '
-                                                <div>
-                                                    <div style="">Страховка: <div id="calculateInsInvoice" style="">' . $invoice_j[0]['summins'] . '</div> руб.</div>
-                                                </div>';
-                        }
-
-
-                        echo '
-											</div>';
-
-
-
-
-
-                        echo '
-										</div>';
-
-
-
-
-                        echo '
-										<div id="invoice_rezult" style="float: none; width: 850px;">';
-
-                        echo '
-											<div class="cellsBlock">
-												<div class="cellCosmAct" style="font-size: 80%; text-align: center;">';
-                        if ($sheduler_zapis[0]['type'] == 5){
-                            echo '
-													<i><b>Зуб</b></i>';
-                        }
-                        if ($sheduler_zapis[0]['type'] == 6){
-                            echo '
-													<i><b>№</b></i>';
-                        }
-                        echo '
-												</div>
-												<div class="cellText2" style="font-size: 100%; text-align: center;">
-													<i><b>Наименование</b></i>
-												</div>';
-                        /*if ($sheduler_zapis[0]['type'] == 5){
-                            echo '
-												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px;">
-													<i><b>Страх.</b></i>
-												</div>
-												<div class="cellCosmAct" style="font-size: 80%; text-align: center;">
-													<i><b>Сог.</b></i>
-												</div>';
-                        }*/
-                        echo '
-												<!--<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
-													<i><b>Цена, руб.</b></i>
-												</div>
-												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-													<i><b>Коэфф.</b></i>
-												</div>
-												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-													<i><b>Кол-во</b></i>
-												</div>
-												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-													<i><b>Скидка</b></i>
-												</div>
-												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-													<i><b>Гар.</b></i>
-												</div>-->
-												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
-													<i><b>Всего, руб.</b></i>
-												</div>
-												
-												<div class="cellText2" style="font-size: 100%; text-align: center; width: 220px; min-width: 220px; max-width: 220px;">
-													<i><b>Наименование</b></i>
-												</div>
-												
-											</div>';
-
-
-
-
-                        foreach ($invoice_ex_j as $ind => $invoice_data){
-
-                            //var_dump($invoice_data);
-                            echo '
-                                    <div class="cellsBlock">
-                                        <div class="cellCosmAct toothInInvoice" style="text-align: center;">';
-                            if ($ind == 99){
-                                echo 'П';
-                            }else{
-                                echo $ind;
-                            }
-                            echo '
-                                        </div>';
-
-
-                            foreach ($invoice_data as $item){
-                                //var_dump($item);
-
-                                //часть прайса
-                                //if (!empty($invoice_data)){
-
-                                //foreach ($invoice_data as $key => $items){
-                                echo '
-                                            <div class="cellsBlock invoicePosClass" style="font-size: 100%;" >
-                                            <!--<div class="cellCosmAct" style="">
-                                                -
-                                            </div>-->
-                                                <div class="cellText2" style="">';
-
-                                //Хочу имя позиции в прайсе
-                                $arr = array();
-                                $rez = array();
-
-                                $query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = '{$item['price_id']}'";
-
-                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
                                 $number = mysqli_num_rows($res);
-                                if ($number != 0){
-                                    while ($arr = mysqli_fetch_assoc($res)){
-                                        array_push($rez, $arr);
+                                if ($number != 0) {
+                                    while ($arr = mysqli_fetch_assoc($res)) {
+                                        if (!isset($invoice_ex_j[$arr['ind']])) {
+                                            $invoice_ex_j[$arr['ind']] = array();
+                                            array_push($invoice_ex_j[$arr['ind']], $arr);
+                                        } else {
+                                            array_push($invoice_ex_j[$arr['ind']], $arr);
+                                        }
                                     }
-                                    $rezult2 = $rez;
-                                }else{
-                                    $rezult2 = 0;
+                                } else
+                                    $invoice_ex_j = 0;
+                                //var_dump ($invoice_ex_j);
+
+                                //сортируем зубы по порядку
+                                if ($invoice_ex_j != 0) {
+                                    ksort($invoice_ex_j);
                                 }
 
-                                if ($rezult2 != 0){
+                                //Для МКБ
+                                $query = "SELECT * FROM `journal_invoice_ex_mkb` WHERE `invoice_id`='" . $_GET['invoice_id'] . "';";
+                                //var_dump ($query);
 
-                                    //echo $item['id'].' -> '.$rezult2[0]['name'];
-                                    echo $rezult2[0]['name'];
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                                $number = mysqli_num_rows($res);
+                                if ($number != 0) {
+                                    while ($arr = mysqli_fetch_assoc($res)) {
+                                        if (!isset($invoice_ex_j_mkb[$arr['ind']])) {
+                                            $invoice_ex_j_mkb[$arr['ind']] = array();
+                                            array_push($invoice_ex_j_mkb[$arr['ind']], $arr);
+                                        } else {
+                                            array_push($invoice_ex_j_mkb[$arr['ind']], $arr);
+                                        }
+                                    }
+                                } else
+                                    $invoice_ex_j_mkb = 0;
+                                //var_dump ($invoice_ex_j_mkb);
 
-                                }else{
-                                    echo '?';
+
+                                echo '
+                                        <div id="data">';
+
+                                echo '			
+                                            <div class="invoice_rezult" style="display: inline-block; border: 1px solid #c5c5c5; border-radius: 3px; position: relative;">';
+
+                                echo '	
+                                                <div id="errror" class="invoceHeader" style="">
+                                                     <div style="display: inline-block; width: 300px; vertical-align: top;">
+                                                        <div>
+                                                            <div style="">Сумма: <div id="calculateInvoice" style="">' . $invoice_j[0]['summ'] . '</div> руб.</div>
+                                                        </div>';
+                                if ($sheduler_zapis[0]['type'] == 5) {
+                                    echo '
+                                                        <div>
+                                                            <div style="">Страховка: <div id="calculateInsInvoice" style="">' . $invoice_j[0]['summins'] . '</div> руб.</div>
+                                                        </div>';
                                 }
 
+
+                                echo '
+                                                    </div>';
+
+
+                                echo '
+                                                </div>';
+
+
+                                echo '
+                                                <div id="invoice_rezult" style="float: none; width: 850px;">';
+
+                                echo '
+                                                    <div class="cellsBlock">
+                                                        <div class="cellCosmAct" style="font-size: 80%; text-align: center;">';
+                                if ($sheduler_zapis[0]['type'] == 5) {
+                                    echo '
+                                                            <i><b>Зуб</b></i>';
+                                }
+                                if ($sheduler_zapis[0]['type'] == 6) {
+                                    echo '
+                                                            <i><b>№</b></i>';
+                                }
+                                echo '
+                                                        </div>
+                                                        <div class="cellText2" style="font-size: 100%; text-align: center;">
+                                                            <i><b>Наименование</b></i>
+                                                        </div>';
+                                /*if ($sheduler_zapis[0]['type'] == 5){
+                                    echo '
+                                                        <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px;">
+                                                            <i><b>Страх.</b></i>
+                                                        </div>
+                                                        <div class="cellCosmAct" style="font-size: 80%; text-align: center;">
+                                                            <i><b>Сог.</b></i>
+                                                        </div>';
+                                }*/
+                                echo '
+                                                        <!--<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
+                                                            <i><b>Цена, руб.</b></i>
+                                                        </div>
+                                                        <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
+                                                            <i><b>Коэфф.</b></i>
+                                                        </div>
+                                                        <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
+                                                            <i><b>Кол-во</b></i>
+                                                        </div>
+                                                        <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
+                                                            <i><b>Скидка</b></i>
+                                                        </div>
+                                                        <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
+                                                            <i><b>Гар.</b></i>
+                                                        </div>-->
+                                                        <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
+                                                            <i><b>Всего, руб.</b></i>
+                                                        </div>
+                                                        
+                                                        <div class="cellText2" style="font-size: 100%; text-align: center; width: 220px; min-width: 220px; max-width: 220px;">
+                                                            <i><b>Наименование</b></i>
+                                                        </div>
+                                                        
+                                                    </div>';
+
+
+                                foreach ($invoice_ex_j as $ind => $invoice_data) {
+
+                                    //var_dump($invoice_data);
+                                    echo '
+                                            <div class="cellsBlock">
+                                                <div class="cellCosmAct toothInInvoice" style="text-align: center;">';
+                                    if ($ind == 99) {
+                                        echo 'П';
+                                    } else {
+                                        echo $ind;
+                                    }
+                                    echo '
+                                                </div>';
+
+
+                                    foreach ($invoice_data as $item) {
+                                        //var_dump($item);
+
+                                        //часть прайса
+                                        //if (!empty($invoice_data)){
+
+                                        //foreach ($invoice_data as $key => $items){
+                                        echo '
+                                                    <div class="cellsBlock invoicePosClass" style="font-size: 100%;" >
+                                                    <!--<div class="cellCosmAct" style="">
+                                                        -
+                                                    </div>-->
+                                                        <div class="cellText2" style="">';
+
+                                        //Хочу имя позиции в прайсе
+                                        $arr = array();
+                                        $rez = array();
+
+                                        $query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = '{$item['price_id']}'";
+
+                                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                                        $number = mysqli_num_rows($res);
+                                        if ($number != 0) {
+                                            while ($arr = mysqli_fetch_assoc($res)) {
+                                                array_push($rez, $arr);
+                                            }
+                                            $rezult2 = $rez;
+                                        } else {
+                                            $rezult2 = 0;
+                                        }
+
+                                        if ($rezult2 != 0) {
+
+                                            //echo $item['id'].' -> '.$rezult2[0]['name'];
+                                            echo $rezult2[0]['name'];
+
+                                        } else {
+                                            echo '?';
+                                        }
+
+                                        echo '
+                                                    </div>';
+
+                                        $price = $item['price'];
+
+
+                                        echo '
+                                                    <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
+                                                        <b>';
+
+
+                                        if (($item['itog_price'] != 0) && ($price != 0)) {
+
+                                            $stoim_item = $item['itog_price'];
+
+                                        } else {
+                                            //вычисляем стоимость
+                                            //$stoim_item = $item['quantity'] * ($price +  $price * $item['spec_koeff'] / 100);
+                                            $stoim_item = $item['quantity'] * $price;
+
+                                            //с учетом скидки акции
+                                            if ($item['insure'] == 0) {
+                                                //$stoim_item = $stoim_item - ($stoim_item * $invoice_j[0]['discount'] / 100);
+                                                $stoim_item = $stoim_item - ($stoim_item * $item['discount'] / 100);
+                                                //$stoim_item = round($stoim_item/10) * 10;
+                                                $stoim_item = round($stoim_item);
+                                            }
+                                            //$stoim_item = round($stoim_item/10) * 10;
+                                        }
+
+                                        if ($item['guarantee'] == 0) {
+                                            echo $stoim_item;
+                                        } else {
+                                            echo 0;
+                                        }
+
+                                        //Общая стоимость
+                                        if ($item['guarantee'] == 0) {
+                                            if ($item['insure'] != 0) {
+                                                if ($item['insure_approve'] != 0) {
+                                                    $summins += $stoim_item;
+                                                }
+                                            } else {
+                                                $summ += $stoim_item;
+                                            }
+                                        }
+
+
+                                        echo '</b>
+                                                    </div>
+                                                    
+                                                    
+                                                    <div class="cellText2" style="font-size: 100%; width: 220px; min-width: 220px; max-width: 220px;">
+                                                        <input type="text" name="mat_cons_pos_summ" id="mat_cons_pos_summ" positionID="' . $item['id'] . '" class="materials_consumption_pos" value="0">
+                                                        <input type="checkbox" class="chkMatCons" value="1" checked>
+                                                    </div>
+                                                        
+                                                    
+                                                </div>';
+                                    }
+                                    echo '
+                                            </div>';
+                                }
+
+
+                                echo '	
+                                                <div class="cellsBlock" style="font-size: 90%;" >
+                                                    <div class="cellText2" style="padding: 12px 4px;">
+                                            
+                                                        <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
+                                                            Общая сумма расходов на материалы (руб.)
+                                                        </div>
+                                                    
+                                                        <input type="text" name="mat_cons_pos_summ_all" id="mat_cons_pos_summ_all" class="materials_consumption_pos_all" style="font-size: 17px;" value="0">
+                                                    </div>
+                                                </div>
+                                                
+                                                
+                                                <div class="cellsBlock">
+                                                    <div class="cellText2">
+                                                        <span style="font-size:90%;  color: #555;">Комментарий</span><br>
+                                                        <textarea name="descr" id="descr" cols="60" rows="8"></textarea>
+                                                    </div>
+                                                </div>';
                                 echo '
                                             </div>';
 
-                                $price = $item['price'];
+
+                                echo '
+                                        </div>';
+                                echo '
+                                        <div id="errrror"></div>
+                                        <input type="button" class="b" value="Применить" onclick="fl_showMaterialsConsumptionAdd(' . $_GET['invoice_id'] . ', \'add\')">';
 
 
                                 echo '
-                                            <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
-                                                <b>';
+                                            <div id="doc_title">Добавить расходы материалы для Наряда #' . $_GET['invoice_id'] . ' - Асмедика</div>';
 
-
-                                if (($item['itog_price'] != 0) && ($price != 0)){
-
-                                    $stoim_item = $item['itog_price'];
-
-                                }else {
-                                    //вычисляем стоимость
-                                    //$stoim_item = $item['quantity'] * ($price +  $price * $item['spec_koeff'] / 100);
-                                    $stoim_item = $item['quantity'] * $price;
-
-                                    //с учетом скидки акции
-                                    if ($item['insure'] == 0) {
-                                        //$stoim_item = $stoim_item - ($stoim_item * $invoice_j[0]['discount'] / 100);
-                                        $stoim_item = $stoim_item - ($stoim_item * $item['discount'] / 100);
-                                        //$stoim_item = round($stoim_item/10) * 10;
-                                        $stoim_item = round($stoim_item);
-                                    }
-                                    //$stoim_item = round($stoim_item/10) * 10;
-                                }
-
-                                if ($item['guarantee'] == 0) {
-                                    echo $stoim_item;
-                                }else{
-                                    echo 0;
-                                }
-
-                                //Общая стоимость
-                                if ($item['guarantee'] == 0){
-                                    if ($item['insure'] != 0){
-                                        if ($item['insure_approve'] != 0){
-                                            $summins += $stoim_item;
-                                        }
-                                    }else{
-                                        $summ += $stoim_item;
-                                    }
-                                }
-
-
-                                echo '</b>
-                                            </div>
-                                            
-                                            
-                                            <div class="cellText2" style="font-size: 100%; width: 220px; min-width: 220px; max-width: 220px;">
-                                                <input type="text" name="mat_cons_pos_summ" id="mat_cons_pos_summ" positionID="'.$item['id'].'" class="materials_consumption_pos" value="0">
-                                                <input type="checkbox" class="chkMatCons" value="1" checked>
-                                            </div>
-												
-                                            
-                                        </div>';
+                                echo '
+                                            <!-- Подложка только одна -->
+                                            <div id="overlay"></div>';
+                            } else {
+                                echo '<i style="color:red;">У этого наряда уже указаны затраты. Больше 1 нельзя.</i><br>';
                             }
-                            echo '
-                                    </div>';
                         }
-
-
-                        echo '	
-										<div class="cellsBlock" style="font-size: 90%;" >
-											<div class="cellText2" style="padding: 12px 4px;">
-									
-                                                <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
-                                                    Общая сумма расходов на материалы (руб.)
-                                                </div>
-											
-											    <input type="text" name="mat_cons_pos_summ_all" id="mat_cons_pos_summ_all" class="materials_consumption_pos_all" style="font-size: 17px;" value="0">
-											</div>
-										</div>
-										
-										
-										<div class="cellsBlock">
-                                            <div class="cellText2">
-                                                <span style="font-size:90%;  color: #555;">Комментарий</span><br>
-                                                <textarea name="descr" id="descr" cols="60" rows="8"></textarea>
-                                            </div>
-                                        </div>';
-                        echo '
-									</div>';
-
-
-                        echo '
-								</div>';
-                        echo '
-                                <div id="errrror"></div>
-                                <input type="button" class="b" value="Применить" onclick="fl_showMaterialsConsumptionAdd('.$_GET['invoice_id'].', \'add\')">';
-
-
-                        echo '
-		                            <div id="doc_title">Добавить расходы материалы для Наряда #'.$_GET['invoice_id'].' - Асмедика</div>';
-
-                        echo '
-                                    <!-- Подложка только одна -->
-                                    <div id="overlay"></div>';
-
 
                     }else{
                         echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';

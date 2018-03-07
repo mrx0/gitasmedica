@@ -57,7 +57,9 @@
 
                         CloseDB($msql_cnnct);
 
-                        echo json_encode(array('result' => 'success', 'data' => 'Ok'));
+                        //fl_updateCalculatesData ($_POST['invoice_id'], array());
+
+                        echo json_encode(array('result' => 'success', 'data' => fl_updateCalculatesData ($_POST['invoice_id'], array())));
                     }
                 }
             }

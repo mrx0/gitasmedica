@@ -43,6 +43,7 @@
 						$sheduler_zapis = array();
 						$calculate_ex_j = array();
 						//$invoice_ex_j_mkb = array();
+                        $mat_cons_j_ex = array();
 
                         $invoice_j = array();
 
@@ -392,14 +393,52 @@
                                             array_push($calculate_ex_j[$arr['ind']], $arr);
                                         }
                                     }
-                                }else
+                                }else {
                                     //$calculate_ex_j = 0;
+                                }
                                 //var_dump ($calculate_ex_j);
 
                                 //сортируем зубы по порядку
                                 if ($calculate_ex_j != 0){
                                     ksort($calculate_ex_j);
                                 }
+
+
+                                //Затраты на материалы
+                                $query = "SELECT jimc.*, jimcex.*, jimc.id as mc_id, jimc.summ as all_summ FROM `journal_inv_material_consumption` jimc
+                                LEFT JOIN `journal_inv_material_consumption_ex` jimcex
+                                ON jimc.id = jimcex.inv_mat_cons_id
+                                WHERE jimc.invoice_id = '".$calculate_j[0]['invoice_id']."';";
+
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                                $number = mysqli_num_rows($res);
+
+                                if ($number != 0) {
+                                    while ($arr = mysqli_fetch_assoc($res)) {
+
+                                        //array_push($mat_cons_j, $arr);
+
+                                        if (!isset($mat_cons_j_ex['data'])){
+                                            $mat_cons_j_ex['data'] = array();
+                                        }
+
+                                        if (!isset($mat_cons_j_ex['data'][$arr['inv_pos_id']])){
+                                            $mat_cons_j_ex['data'][$arr['inv_pos_id']] = $arr['summ'];
+                                        }
+
+                                        $mat_cons_j_ex['create_person'] = $arr['create_person'];
+                                        $mat_cons_j_ex['create_time'] = $arr['create_time'];
+                                        $mat_cons_j_ex['all_summ'] = $arr['all_summ'];
+                                        $mat_cons_j_ex['descr'] = $arr['descr'];
+                                        $mat_cons_j_ex['id'] = $arr['mc_id'];
+                                    }
+                                } else {
+
+                                }
+
+                                //var_dump($mat_cons_j_ex);
+
 
                                 echo '
                                     <div id="data">';
@@ -534,6 +573,10 @@
                                                     </div>';
 
                                 if (($finances['see_all'] == 1) || $god_mode) {
+                                    echo '
+                                                    <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
+                                                        <i><b>Вычет затрат на материалы, руб.</b></i>
+                                                    </div>';
                                     echo '
                                                     <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
                                                         <i><b>% работа/материал</b></i>
@@ -820,8 +863,6 @@
                                             echo $stoim_item;
 
 
-
-
                                             //Общая стоимость
                                             /*if ($item['guarantee'] == 0){
                                                 if ($item['insure'] != 0){
@@ -835,6 +876,25 @@
 
 
                                             echo '
+                                                    </div>';
+
+                                            echo '
+                                                    <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
+                                                        <i><b>';
+                                            if (!empty($mat_cons_j_ex['data'])){
+                                                if (isset($mat_cons_j_ex['data'][$item['inv_pos_id']])){
+                                                    echo '<span style="color: red;">'.-$mat_cons_j_ex['data'][$item['inv_pos_id']].'</span>';
+
+                                                    $stoim_item = $stoim_item - $mat_cons_j_ex['data'][$item['inv_pos_id']];
+
+                                                }else{
+                                                    echo 0;
+                                                }
+                                            }else{
+                                                echo 0;
+                                            }
+                                            echo '
+                                                        </b></i>
                                                     </div>';
 
                                             $percents_j = SelDataFromDB('fl_spr_percents', $item['percent_cats'], 'id');
@@ -863,7 +923,7 @@
                                             echo '
                                                     <div class="cellName" style="text-align: center;">
                                                         <div>
-                                                            <i>' . $percents_j[0]['name'] . '</i>
+                                                            <i>'.$percents_j[0]['name'].'</i>
                                                         </div>
                                                     </div>
                                                 </div>';
@@ -918,6 +978,63 @@
                                                     </div>
                                                     </ul>
                                                 </div>';
+                                }
+
+
+                                if (!empty($mat_cons_j_ex)) {
+                                    if (!empty($mat_cons_j_ex['data'])) {
+                                        echo '
+                                                <div class="invoceHeader" style="">
+                                                    <ul style="margin-left: 6px; margin-bottom: 10px;">
+                                                        <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
+                                                            Затраты на материалы:
+                                                        </li>';
+                                        //foreach ($mat_cons_j_ex['data'] as $mat_cons_item) {
+
+                                        echo '
+                                                        <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
+                                        echo '
+                                                            <a href="#" class="cellOrder ahref" style="position: relative;">
+                                                                <b>Расход #' . $mat_cons_j_ex['id'] . '</b> от ' . date('d.m.y', strtotime($mat_cons_j_ex['create_time'])) . '<br>
+                                                                <span style="font-size:80%;  color: #555;">';
+
+                                        if (($mat_cons_j_ex['create_time'] != 0) || ($mat_cons_j_ex['create_person'] != 0)) {
+                                            echo '
+                                                                    Добавлен: ' . date('d.m.y H:i', strtotime($mat_cons_j_ex['create_time'])) . '<br>
+                                                                    <!--Автор: ' . WriteSearchUser('spr_workers', $mat_cons_j_ex['create_person'], 'user', true) . '<br>-->';
+                                        } else {
+                                            echo 'Добавлен: не указано<br>';
+                                        }
+                                        /*if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
+                                            echo'
+                                                                    Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
+                                                                    <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
+                                        }*/
+                                        echo '
+                                                                </span>
+                                                                
+                                                            </a>
+                                                            <div class="cellName">
+                                                                ' . $mat_cons_j_ex['descr'] . '<br>
+                                                            </div>
+                                                            <div class="cellName">
+                                                                <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+                                                                    Сумма:<br>
+                                                                    <span class="calculateOrder" style="font-size: 13px">' . $mat_cons_j_ex['all_summ'] . '</span> руб.
+                                                                </div>
+                                                            </div>
+                                                            <div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="fl_deleteMaterialConsumption(' . $mat_cons_j_ex['id'] . ', ' . $invoice_j[0]['id'] . ');">
+                                                                <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
+                                                            </div>';
+
+                                        echo '
+                                                        </li>';
+                                        //}
+
+                                        echo '
+                                                    </ul>
+                                                </div>';
+                                    }
                                 }
 
                                  echo '

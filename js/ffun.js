@@ -502,6 +502,42 @@
         }
     }
 
+    //Удалить затраты на материалы
+    function fl_deleteMaterialConsumption(id, invoice_id){
+        //console.log(id);
+
+        var rys = false;
+
+        var rys = confirm("Вы собираетесь удалить затраты на материалы.\nЭто необратимое действие.\nРасчётный лист будет пересчитан.\nВы уверены?");
+
+        if (rys) {
+
+            $.ajax({
+                url: "fl_delete_material_consumption_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    mat_cons_id: id,
+                    invoice_id: invoice_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res.data2);
+                    /*if(data.result == "success"){
+
+                     }*/
+                    //location.reload();
+                    window.location.href = "invoice.php?id=" + invoice_id;
+                }
+            });
+        }
+    }
+
     //Сбросить проценты персональные на по умолчанию
     //function fl_changePersonalPercentCatdefault(workerID, catID, typeID){
     function fl_changePersonalPercentCatdefault(workerID){
@@ -1045,13 +1081,13 @@
                     },
                     // действие, при ответе с сервера
                     success:function(res){
-                        //console.log(res.data);
+                        console.log(res.data);
                         /*$('#errrror').html(res);*/
 
                         if(res.result == 'success') {
                             //console.log('success');
                             //$('#data').html(res.data);
-                            document.location.href = "invoice.php?id="+invoice_id;
+                            //document.location.href = "invoice.php?id="+invoice_id;
                         }else{
                             //console.log('error');
                             $('#overlay').hide();
