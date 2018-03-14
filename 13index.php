@@ -25,7 +25,7 @@
 	}
 	
 	
-	
+	//
 	//var_dump($rez);
 	
 	foreach($rez as $value){
