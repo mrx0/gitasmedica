@@ -53,7 +53,7 @@
 							$query = "DELETE FROM `journal_invoice_ex_mkb` WHERE `invoice_id` = '{$mysql_insert_id}'";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-							
+
 							foreach ($data as $ind => $invoice_data){
 
 								if (!empty($invoice_data)){
@@ -69,11 +69,12 @@
 											$spec_koeff = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['spec_koeff'];
 											$discount = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['discount'];
 											$manual_price = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['manual_price'];
+                                            $itog_price = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['itog_price'];
 
 											//Добавляем в базу
-											$query = "INSERT INTO `journal_invoice_ex` (`invoice_id`, `ind`, `price_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `manual_price`) 
+											$query = "INSERT INTO `journal_invoice_ex` (`invoice_id`, `ind`, `price_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `manual_price`, `itog_price`) 
 											VALUES (
-											'{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$manual_price}')";
+											'{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$manual_price}', '{$itog_price}');";
 
                                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 										}
@@ -103,11 +104,12 @@
 										$spec_koeff = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['spec_koeff'];
 										$discount = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['discount'];
 										$manual_price = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['manual_price'];
+                                        $itog_price = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['itog_price'];
 
 										//Добавляем в базу
-										$query = "INSERT INTO `journal_invoice_ex` (`invoice_id`, `ind`, `price_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `manual_price`) 
+										$query = "INSERT INTO `journal_invoice_ex` (`invoice_id`, `ind`, `price_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `manual_price`, `itog_price`) 
 										VALUES (
-										'{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$manual_price}')";
+										'{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$manual_price}', '{$itog_price}')";
 
                                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 										
@@ -115,11 +117,11 @@
 									//unset($_SESSION['invoice_data']);
 								}
 							}
-							unset($_SESSION['invoice_data']);
+							//unset($_SESSION['invoice_data']);
 
                             //!!! @@@ Пересчет долга
                             include_once 'ffun.php';
-                            calculateDebt ($_POST['client']);
+                            //calculateDebt ($_POST['client']);
 
 							echo json_encode(array('result' => 'success', 'data' => $mysql_insert_id));
 						}

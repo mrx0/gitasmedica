@@ -489,7 +489,9 @@
 
 
     //Обновление РЛ
-    function fl_updateCalculatesData ($invoice_id, $mat_cons_j_ex){
+    function fl_updateCalculatesData ($invoice_id, $mat_cons_j_ex, $deleteMark){
+
+        //$query = '';
 
         $msql_cnnct = ConnectToDB2();
 
@@ -633,15 +635,17 @@
                                                 //$calculateInvSumm +=  round($price);
                                                 $calculateInvSumm += $itog_price;
 
-                                                /*if (!empty($mat_cons_j_ex['data'])) {
-                                                    if (isset($mat_cons_j_ex['data'][$pos_id])) {
-                                                        $itog_price = $itog_price - $mat_cons_j_ex['data'][$pos_id];
+                                                if (!$deleteMark) {
+                                                    if (!empty($mat_cons_j_ex['data'])) {
+                                                        if (isset($mat_cons_j_ex['data'][$items['inv_pos_id']])) {
+                                                            $itog_price = $itog_price - $mat_cons_j_ex['data'][$items['inv_pos_id']];
+                                                        } else {
+                                                        }
                                                     } else {
                                                     }
-                                                } else {
-                                                }*/
+                                                }
 
-                                                /*if ($itog_price < 0) $itog_price = 0;*/
+                                                if ($itog_price < 0) $itog_price = 0;
 
                                                 //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
                                                 $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);
@@ -738,7 +742,9 @@
 
             }
 
-        }else{
+        }/*else{
+
+            //sleep (10);
 
             $kr=false;
 
@@ -748,7 +754,7 @@
             $query = "SELECT jimc.*, jimcex.*, jimc.id as mc_id, jimc.summ as all_summ FROM `journal_inv_material_consumption` jimc
                                 LEFT JOIN `journal_inv_material_consumption_ex` jimcex
                                 ON jimc.id = jimcex.inv_mat_cons_id
-                                WHERE jimc.invoice_id = '".$_POST['invoice_id']."';";
+                                WHERE jimc.invoice_id = '".$invoice_id."';";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -785,7 +791,7 @@
                     $query_dop = ' AND ('.implode(' OR ', $query_dop_array).')';
                 }*/
 
-                $query = "SELECT `calculate_id` FROM `fl_journal_calculate_ex` WHERE `calculate_id` IN (SELECT `id` FROM `fl_journal_calculate` WHERE `invoice_id`='$invoice_id')".$query_dop." GROUP BY `calculate_id`";
+        /*        $query = "SELECT `calculate_id` FROM `fl_journal_calculate_ex` WHERE `calculate_id` IN (SELECT `id` FROM `fl_journal_calculate` WHERE `invoice_id`='$invoice_id')".$query_dop." GROUP BY `calculate_id`";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -848,7 +854,8 @@
                                             $quantity = $items['quantity'];
                                             $insure = $items['insure'];
                                             $insure_approve = $items['insure_approve'];*/
-                                            $price = $items['price'];
+
+        /*                                    $price = $items['price'];
 
                                             /*$itog_price = 0;
 
@@ -856,7 +863,7 @@
                                             $spec_koeff = $items['spec_koeff'];
                                             $discount = $items['discount'];*/
 
-                                            $percent_cats = $items['percent_cats'];
+        /*                                    $percent_cats = $items['percent_cats'];
                                             $work_percent = $items['work_percent'];
                                             $material_percent = $items['material_percent'];
 
@@ -903,7 +910,7 @@
                                                 $itog_price = 0;
                                             }*/
 
-                                            $itog_price = $price;
+        /*                                    $itog_price = $price;
 
                                             //$calculateInvSumm +=  round($price);
                                             $calculateInvSumm += $itog_price;
@@ -919,7 +926,7 @@
                                             /*if ($itog_price < 0) $itog_price = 0;*/
 
                                             //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
-                                            $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);
+        /*                                    $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);
                                         }
 
                                         /*if (isset($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind])){
@@ -977,7 +984,7 @@
 
                                         }*/
                                         //unset($_SESSION['calculate_data']);
-                                    }
+        /*                            }
                                 }
                             }
 
@@ -1002,7 +1009,7 @@
 
 
                         //Обновим сумму в расчете
-                        if ($calculateInvSumm > 0) {
+        /*                if ($calculateInvSumm > 0) {
                             $query = "UPDATE `fl_journal_calculate` SET `summ_inv`='{$calculateInvSumm}', `summ`='{$calculateCalcSumm}' WHERE `id`='{$data['calculate_id']}'";
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
                         }
@@ -1013,13 +1020,13 @@
 
             }
 
-        }
+        }*/
 
 
 
         CloseDB ($msql_cnnct);
 
-        return $kr;
+        return;
     }
 
 ?>

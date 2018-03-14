@@ -17,17 +17,21 @@
 			}else{
                 include_once 'ffun.php';
 
+                $arr['total'] = 0;
+
                 $msql_cnnct = ConnectToDB2 ();
 
-                $query = "SELECT COUNT(`id`) AS total FROM `fl_journal_tabels_ex` WHERE `calculate_id` = '{$_POST['calculate_id']}'";
+                $query = "SELECT `tabel_id` AS total FROM `fl_journal_tabels_ex` WHERE `calculate_id` = '{$_POST['calculate_id']}' LIMIT 1";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
 
                 $arr = mysqli_fetch_assoc($res);
 
                 CloseDB ($msql_cnnct);
 
-                if ($arr['total'] == 0){
+                if ($number <= 0){
                     echo json_encode(array('result' => 'success', 'data' => $arr['total']));
                 }else{
                     echo json_encode(array('result' => 'error', 'data' => $arr['total']));

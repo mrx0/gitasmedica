@@ -92,6 +92,8 @@
                                 if ($_POST['invoice_type'] == 5) {
                                     foreach ($calculate_data as $key => $items) {
 
+
+
                                         $pos_id = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['id'];
                                         $price_id = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['price_id'];
                                         $quantity = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['quantity'];
@@ -109,12 +111,15 @@
                                         $work_percent = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['work_percent'];
                                         $material_percent = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['material_percent'];
 
-                                        if ($itog_price == 0){
+                                        //Спрятали лишнее телодвижение
+                                        //
+                                        /*if ($itog_price == 0){
                                             $itog_price_add = $price;
                                         }else{
                                             $itog_price_add = $itog_price;
-                                        }
+                                        }*/
 
+                                        $itog_price_add = $itog_price;
 
                                         /*if (!empty($mat_cons_j_ex['data'])){
                                             if (isset($mat_cons_j_ex['data'][$pos_id])){
@@ -124,10 +129,10 @@
                                         }else{
                                         }*/
 
-
-                                        if ($guarantee != 0){
+                                        //2018.03.13 попытка разобраться с гарантийной ценой для зарплаты
+                                        /*if ($guarantee != 0){
                                             $itog_price_add = 0;
-                                        }
+                                        }*/
 
                                         //Добавляем в базу
                                         $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`) 
@@ -144,9 +149,10 @@
                                             $itog_price = $price;
                                         }
 
-                                        if ($guarantee != 0){
+                                        //2018.03.13 попытка разобраться с гарантийной ценой для зарплаты
+                                        /*if ($guarantee != 0){
                                             $itog_price = 0;
-                                        }
+                                        }*/
 
                                         //$calculateInvSumm +=  round($price);
                                         $calculateInvSumm += $itog_price;

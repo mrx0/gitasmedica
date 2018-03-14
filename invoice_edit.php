@@ -18,7 +18,7 @@
 
 				//var_dump($_SESSION['invoice_data']);
 				//unset($_SESSION['invoice_data']);
-				
+
 				if (isset($_GET['id'])){
 					
 					$invoice_j = SelDataFromDB('journal_invoice', $_GET['id'], 'id');
@@ -121,6 +121,7 @@
 											$temp_arr2['insure'] = (int)$invoice_ex_j_val['insure'];
 											$temp_arr2['insure_approve'] = (int)$invoice_ex_j_val['insure_approve'];
 											$temp_arr2['price'] = (int)$invoice_ex_j_val['price'];
+											$temp_arr2['start_price'] = (int)$invoice_ex_j_val['price'];
 											$temp_arr2['guarantee'] = (int)$invoice_ex_j_val['guarantee'];
 											$temp_arr2['spec_koeff'] = $invoice_ex_j_val['spec_koeff'];
 											$temp_arr2['discount'] = (int)$invoice_ex_j_val['discount'];

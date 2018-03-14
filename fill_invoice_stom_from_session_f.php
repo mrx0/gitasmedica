@@ -301,11 +301,12 @@
 								}
 								$request .= '
 								</div>
-								<div class="cellCosmAct invoiceItemPriceItog" manual_itog_price="'.$items['manual_itog_price'].'" style="font-size: 105%; font-weight: bold; text-align: center; '.$bg_col.' width: 60px; min-width: 60px; max-width: 60px; cursor: pointer" onclick="contextMenuShow('.$ind.', '.$key.', event, \'priceItemItog\');">';
+								<div class="cellCosmAct invoiceItemPriceItog" manual_itog_price="'.$items['itog_price'].'" style="font-size: 105%; font-weight: bold; text-align: center; '.$bg_col.' width: 60px; min-width: 60px; max-width: 60px; cursor: pointer" onclick="contextMenuShow('.$ind.', '.$key.', event, \'priceItemItog\');">';
 
-                                //$request .= $items['itog_price'];
 
-                                if ($items['guarantee'] == 0) {
+
+                                //2018.03.13 попытка разобраться с гарантийной ценой для зарплаты
+                                /*if ($items['guarantee'] == 0) {
                                     //if (isset($items['manual_itog_price'])){
                                     if (isset($items['itog_price'])) {
                                         if ($items['itog_price'] > 0) {
@@ -321,7 +322,9 @@
                                     //}
                                 }else{
                                     $request .= '0';
-                                }
+                                }*/
+
+                                $request .= $items['itog_price'];
 
 
                                 $request .= '	

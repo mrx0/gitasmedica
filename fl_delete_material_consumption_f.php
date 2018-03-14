@@ -75,7 +75,7 @@
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                 //Обновим расчётный лист
-                fl_updateCalculatesData ($_POST['invoice_id'], $mat_cons_j_ex);
+                fl_updateCalculatesData ($_POST['invoice_id'], $mat_cons_j_ex, true);
 
 
                 echo json_encode(array('result' => 'success', 'data' => 'Затраты удалены'));

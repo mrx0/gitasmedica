@@ -495,7 +495,8 @@
                         }
                     }
                     if(res.result == "error"){
-                        alert("Расчётный лист добавлен в табель.\n\nНельзя удалить.\n\nОбратитесь к руководителю.");
+                        alert("Расчётный лист добавлен в табель #"+res.data+".\n\nНельзя удалить.\n\nОбратитесь к руководителю.");
+                        $("#tabel_info").html("<div class='query_neok'><a href='fl_tabel.php?id="+res.data+"' class='ahref'>Перейти в табель #"+res.data+"</a></div>");
                     }
                 }
             });
@@ -1081,13 +1082,13 @@
                     },
                     // действие, при ответе с сервера
                     success:function(res){
-                        console.log(res.data);
+                        //console.log(res.data);
                         /*$('#errrror').html(res);*/
 
                         if(res.result == 'success') {
                             //console.log('success');
                             //$('#data').html(res.data);
-                            //document.location.href = "invoice.php?id="+invoice_id;
+                            document.location.href = "invoice.php?id="+invoice_id;
                         }else{
                             //console.log('error');
                             $('#overlay').hide();

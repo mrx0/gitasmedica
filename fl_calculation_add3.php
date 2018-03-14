@@ -95,7 +95,7 @@ if ($enter_ok){
                         //ksort($_SESSION['calculate_data'][$_GET['client']][$_GET['invoice_id']]['data']);
 
                         //var_dump($_SESSION);
-                        //var_dump($_SESSION['calculate_data'][$_GET['client']][$_GET['invoice_id']]['data']);
+                        //var_dump($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data']);
                         //var_dump($_SESSION['calculate_data'][$_GET['client']][$_GET['invoice_id']]['mkb']);
 
                         if ($sheduler_zapis[0]['month'] < 10) $month = '0'.$sheduler_zapis[0]['month'];

@@ -116,8 +116,9 @@
                                     //}
                                 //}
 
-                                echo '			
-                                            </h2>';
+                                echo '
+                                            </h2>
+                                            <div id="tabel_info"></div>';
 
                                 /*if ($calculate_j[0]['status'] == 9){
                                     echo '<i style="color:red;">Наряд удалён (заблокирован).</i><br>';
@@ -393,9 +394,8 @@
                                             array_push($calculate_ex_j[$arr['ind']], $arr);
                                         }
                                     }
-                                }else {
+                                }else
                                     //$calculate_ex_j = 0;
-                                }
                                 //var_dump ($calculate_ex_j);
 
                                 //сортируем зубы по порядку
@@ -878,24 +878,27 @@
                                             echo '
                                                     </div>';
 
-                                            echo '
+                                            if (($finances['see_all'] == 1) || $god_mode) {
+                                                echo '
                                                     <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
                                                         <i><b>';
-                                            if (!empty($mat_cons_j_ex['data'])){
-                                                if (isset($mat_cons_j_ex['data'][$item['inv_pos_id']])){
-                                                    echo '<span style="color: red;">'.-$mat_cons_j_ex['data'][$item['inv_pos_id']].'</span>';
+                                                if (!empty($mat_cons_j_ex['data'])) {
+                                                    if (isset($mat_cons_j_ex['data'][$item['inv_pos_id']])) {
+                                                        echo '<span style="color: red;">' . -$mat_cons_j_ex['data'][$item['inv_pos_id']] . '</span>';
 
-                                                    $stoim_item = $stoim_item - $mat_cons_j_ex['data'][$item['inv_pos_id']];
+                                                        $stoim_item = $stoim_item - $mat_cons_j_ex['data'][$item['inv_pos_id']];
 
-                                                }else{
+                                                    } else {
+                                                        echo 0;
+                                                    }
+                                                } else {
                                                     echo 0;
                                                 }
-                                            }else{
-                                                echo 0;
-                                            }
-                                            echo '
+                                                echo '
                                                         </b></i>
                                                     </div>';
+
+                                            }
 
                                             $percents_j = SelDataFromDB('fl_spr_percents', $item['percent_cats'], 'id');
 
@@ -923,7 +926,7 @@
                                             echo '
                                                     <div class="cellName" style="text-align: center;">
                                                         <div>
-                                                            <i>'.$percents_j[0]['name'].'</i>
+                                                            <i>' . $percents_j[0]['name']. '</i>
                                                         </div>
                                                     </div>
                                                 </div>';
@@ -1025,8 +1028,8 @@
                                                             </div>
                                                             <div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="fl_deleteMaterialConsumption(' . $mat_cons_j_ex['id'] . ', ' . $invoice_j[0]['id'] . ');">
                                                                 <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
-                                                            </div>';
-
+                                                            </div>
+                                                            ';
                                         echo '
                                                         </li>';
                                         //}

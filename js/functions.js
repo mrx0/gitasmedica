@@ -4114,10 +4114,12 @@
             console.log(changeItogPrice);
             console.log("//////////////////////");*/
 
+
             if (ishod_price == 0) {
-                if (guarantee != 1) {
+            	//2018.03.13 попытка разобраться с гарантийной ценой для зарплаты
+                //if (guarantee != 1) {
                     $(this).parent().find('.invoiceItemPriceItog').html(stoim);
-                }
+                //}
             }
 
             if (changeItogPrice) {
@@ -5493,6 +5495,7 @@
 				//console.log("priceItemItogInvoice----------->");
                 //console.log(res);
 				//console.log(price);
+				//console.log(manual_itog_price);
 
 				fillInvoiseRez(false);
 
@@ -6335,7 +6338,7 @@
 				$('.center_block').remove();
 				$('#overlay').hide();
 				
-				if(res.result == "success"){  
+				if(res.result == "success"){
 					$('#data').hide();
 					$('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
 											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован наряд</li>'+

@@ -33,6 +33,8 @@
 
                         $msql_cnnct = ConnectToDB();
 
+                        $mat_cons_j_ex = array();
+
                         $query = "INSERT INTO `journal_inv_material_consumption` (`invoice_id`, `summ`, `descr`, `create_time`, `create_person`)
                         VALUES (
                         '{$_POST['invoice_id']}', '{$_POST['summ']}', '{$_POST['descr']}', '{$time}', '{$_SESSION['id']}')";
@@ -51,6 +53,16 @@
                             VALUES (
                             '{$mysql_insert_id}', '{$inv_pos_id}', '{$data['mat_cons_sum']}');";
 
+                            //Массив для вычетов затрат
+                            if (!isset($mat_cons_j_ex['data'])){
+                                $mat_cons_j_ex['data'] = array();
+                            }
+
+                            if (!isset($mat_cons_j_ex['data'][$inv_pos_id])){
+                                $mat_cons_j_ex['data'][$inv_pos_id] = $data['mat_cons_sum'];
+                            }
+
+
                         }
 
                         $res = mysqli_multi_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -59,7 +71,7 @@
 
                         //fl_updateCalculatesData ($_POST['invoice_id'], array());
 
-                        echo json_encode(array('result' => 'success', 'data' => fl_updateCalculatesData ($_POST['invoice_id'], array())));
+                        echo json_encode(array('result' => 'success', 'data' => fl_updateCalculatesData ($_POST['invoice_id'], $mat_cons_j_ex, false)));
                     }
                 }
             }

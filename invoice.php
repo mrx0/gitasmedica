@@ -423,7 +423,7 @@
                                                     <div style="display: inline-block;">'.date('d.m.y', strtotime($invoice_j[0]['closed_time'])).'</div>
                                                 </div>';
                                 }
-                                if (($invoice_j[0]['summ'] != 0) || ($invoice_j[0]['summins'] != 0)) {
+                                //if (($invoice_j[0]['summ'] != 0) || ($invoice_j[0]['summins'] != 0)) {
                                     if ($invoice_j[0]['type'] == 5) {
                                         echo '
                                                 <div style="margin-top: 5px;">
@@ -436,7 +436,7 @@
                                                     <div style="display: inline-block;"><a href="fl_calculation_add4.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Внести расчётный лист</a></div>
                                                 </div>';
                                     }
-                                }
+                                //}
 
 
                             }
@@ -760,11 +760,14 @@
                                                 //$stoim_item = round($stoim_item/10) * 10;
                                             }
 
-                                            if ($item['guarantee'] == 0) {
+                                            //2018.03.13 попытка разобраться с гарантийной ценой для зарплаты
+                                            /*if ($item['guarantee'] == 0) {
                                                 echo $stoim_item;
                                             }else{
                                                 echo 0;
-                                            }
+                                            }*/
+                                            echo $stoim_item;
+
 
                                             //Общая стоимость
                                             if ($item['guarantee'] == 0){

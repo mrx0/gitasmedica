@@ -77,7 +77,7 @@
                                 ksort($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
 
                                 //var_dump($_SESSION);
-                                //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
+                                var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
                                 //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['mkb']);
 
                                 if ($sheduler_zapis[0]['month'] < 10) $month = '0' . $sheduler_zapis[0]['month'];

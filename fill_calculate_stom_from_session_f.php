@@ -265,10 +265,10 @@
                                     $stoim_item = $stoim_item2;
                                 }
 
-
-                                if ($items['guarantee'] != 0){
+                                //2018.03.13 попытка разобраться с гарантийной ценой для зарплаты
+                                /*if ($items['guarantee'] != 0){
                                     $stoim_item = $stoim_item2 = '0';
-                                }
+                                }*/
 
 
                                 //$stoim_item = round($stoim_item/10) * 10;
