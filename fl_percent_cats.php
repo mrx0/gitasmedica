@@ -36,22 +36,22 @@
 							<div class="cellTime" style="text-align: center;">Процент за материал (общий)</div>
 							<div class="cellText" style="text-align: center;">Персонал</div>
 						</li>';
-			
-			include_once 'DBWork.php';
-			$percents_j = SelDataFromDB('fl_spr_percents', '', '');
-			//var_dump ($percents_j);
 
+
+
+            include_once 'DBWork.php';
             //!!! @@@
             include_once 'ffun.php';
 
-            //Ну вроде все норм, поехали всё обновлять/сохранять
+
+			//$percents_j = SelDataFromDB('fl_spr_percents', '', '');
+			//var_dump ($percents_j);
+
             $msql_cnnct = ConnectToDB2 ();
 
-            $permissions_j = array();
+            $percents_j = array();
 
-            $msql_cnnct = ConnectToDB2 ();
-
-            $query = "SELECT `id`, `name` FROM `spr_permissions`";
+            $query = "SELECT * FROM `fl_spr_percents` ORDER BY `type`";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -59,12 +59,26 @@
 
             if ($number != 0){
                 while ($arr = mysqli_fetch_assoc($res)){
-                    $permissions_j[$arr['id']] = $arr['name'];
+                    array_push($percents_j, $arr);
                 }
             }
 
+            if (!empty($percents_j)){
 
-			if ($percents_j !=0){
+                $permissions_j = array();
+
+                $query = "SELECT `id`, `name` FROM `spr_permissions`";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        $permissions_j[$arr['id']] = $arr['name'];
+                    }
+                }
+
 
                 $prev_type = 0;
 

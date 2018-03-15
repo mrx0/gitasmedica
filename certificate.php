@@ -44,7 +44,8 @@
 					}
 
 					echo '
-								</h2>';
+								</h2>
+								<div id="errror"></div>';
 								
 					if ($cert_j[0]['status'] == 9){
 						echo '<i style="color:red;">Сертификат удален (заблокирован).</i><br>';
@@ -102,6 +103,11 @@
                         }else{
                             echo '-';
                         }
+                        //Удалить продажу
+                        if (($finances['see_all'] == 1) || $god_mode) {
+                            echo '<div style="float: right; cursor: pointer;" onclick="Ajax_cert_celling_del('.$_GET['id'].');" title="Отменить продажу"><i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 130%;"></i></div>';
+                        }
+
 					    echo '
                             </div>';
                     }

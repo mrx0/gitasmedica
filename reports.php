@@ -34,10 +34,10 @@
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_stomat2.php" class="b3">Пропавшая первичка</a>
 							</li>';
-			echo '				
+			/*echo '
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_stomat3.php" class="b3">Выборка</a>
-							</li>';
+							</li>';*/
 			echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_stomat4.php" class="b3">Отсутствующие зубы</a>

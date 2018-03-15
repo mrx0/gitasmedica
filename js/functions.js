@@ -6533,6 +6533,7 @@
                 cert_id: id,
                 cell_price: cell_price,
                 office_id: office_id,
+                cell_date: $('#iWantThisDate2').val(),
                 summ_type: summ_type
             },
 			cache: false,
@@ -6559,6 +6560,56 @@
 				}
 			}
 		});
+	}
+
+	//Удалим продажу сертификата
+	function Ajax_cert_celling_del(id){
+
+        var rys = false;
+
+        var rys = confirm("Вы собираетесь отменить продажу сертификата.\nВы уверены?");
+        //console.log(885);
+
+        if (rys) {
+
+            var link = "cert_cell_dell_f.php";
+
+            var Data = {
+                cert_id: id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: Data,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //$('#main').html(res);
+                    //console.log(res);
+
+					 if(res.result == "success"){
+					    //$('#data').hide();
+					    $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+					    '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Продажа отменена</li>'+
+					    '</ul>');
+					    setTimeout(function () {
+					        //window.location.replace('certificate.php?id='+id+'');
+                            location.reload();
+					        //console.log('client.php?id='+id);
+					    }, 100);
+					 }
+					 if(res.result == "error"){
+					    $('#errror').html(res.data);
+					 }
+                }
+            });
+        }
 	}
 
 	//Добавим сертификат сертификат в оплату

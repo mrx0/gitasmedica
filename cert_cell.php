@@ -1,7 +1,7 @@
 <?php
 
-//certificate.php
-//карточка сертификата
+//cert_cell.php
+//Продать сертификат
 
 require_once 'header.php';
 
@@ -69,8 +69,31 @@ if ($enter_ok){
 									    <input id="summ_type" name="summ_type" value="1" type="radio" checked> Наличный<br>
                                         <input id="summ_type" name="summ_type" value="2" type="radio"> Безналичный
 									</div>
-								</div>
-								
+								</div>';
+
+                    $day = date('d');
+                    $month = date('m');
+                    $year = date('Y');
+
+                    if (($finances['see_all'] == 1) || $god_mode){
+
+                        echo '
+                                <div class="cellsBlock2">
+									<div class="cellLeft">
+                                        Дата продажи<br><span style="font-size: 70%;">для забывчивых админов</span>
+									</div>
+									<div class="cellRight">
+										<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
+											onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
+									</div>
+								</div>';
+
+                    }else{
+                        echo '
+                            <input type="hidden" id="iWantThisDate2" value="'.date($day.'.'.$month.'.'.$year).'">';
+                    }
+
+                    echo '
 								<div class="cellsBlock2">
 									<div class="cellLeft">
 									    Цена продажи(руб.)<br>

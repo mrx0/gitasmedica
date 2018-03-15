@@ -12,7 +12,7 @@
 		
 		if ($_POST){
 
-			if (!isset($_POST['cert_id']) || !isset($_POST['office_id']) || !isset($_POST['cell_price']) || !isset($_POST['summ_type'])){
+			if (!isset($_POST['cert_id']) || !isset($_POST['office_id']) || !isset($_POST['cell_price']) || !isset($_POST['summ_type']) || !isset($_POST['cell_date'])){
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
                 include_once 'DBWork.php';
@@ -25,12 +25,15 @@
 
                     $time = date('Y-m-d H:i:s', time());
 
-                    $expires_time = date_create($time);
+                    $cell_time = date_format(date_create($_POST['cell_date'].' '.date('H:i:s', time())), 'Y-m-d  H:i:s');
+
+                    $expires_time = date_create($cell_time);
                     date_modify($expires_time, '+3 month');
                     $expires_time = date_format($expires_time, 'Y-m-d');
 
                     //Обновляем
-                    $query = "UPDATE `journal_cert` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `cell_price`='{$_POST['cell_price']}', `cell_time`='{$time}', `office_id`='{$_POST['office_id']}', `summ_type`='{$_POST['summ_type']}', `expires_time`='{$expires_time}', `status`='7' WHERE `id`='{$_POST['cert_id']}'";
+                    $query = "UPDATE `journal_cert` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `cell_price`='{$_POST['cell_price']}', `cell_time`='{$cell_time}', `office_id`='{$_POST['office_id']}', `summ_type`='{$_POST['summ_type']}', `expires_time`='{$expires_time}', `status`='7' WHERE `id`='{$_POST['cert_id']}'";
+
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                     //логирование
