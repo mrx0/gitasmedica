@@ -396,7 +396,7 @@ ORDER BY `name`;
 									<a href="#tabs-2">Счёт</a>';
 						if (!$allPayed){
 							echo '
-									<div class="notes_count2">
+									<div class="notes_count2" style="position: absolute; right: -2px; top: -4px;">
 										<i class="fa fa-exclamation-circle" aria-hidden="true" title="Есть долги"></i>
 									</div>';
 						}

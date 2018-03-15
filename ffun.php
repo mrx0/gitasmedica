@@ -196,6 +196,7 @@
         $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='$client_id' AND `status` <> '9' AND `summ` <> `paid`";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
         $number = mysqli_num_rows($res);
         if ($number != 0){
             while ($arr = mysqli_fetch_assoc($res)){

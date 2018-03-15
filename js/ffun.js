@@ -463,6 +463,8 @@
                 },
                 // действие, при ответе с сервера
                 success: function (res) {
+                    //console.log(res);
+
                     if(res.result == "success"){
                         if (res.data == 0){
                             //console.log(res);

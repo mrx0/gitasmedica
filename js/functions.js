@@ -2872,6 +2872,43 @@
 		})
 	}
 
+    //Долги авансы новые
+	function Ajax_show_result_stat_client_finance2(){
+
+		var reqData = {
+			ticket_id: 1,
+			 /*descr: $("#msg_input").html()*/
+		};
+		//console.log($("#msg_input").html());
+
+		//Запрос к базе и получение лога и вывод
+		$.ajax({
+			url:"ajax_show_result_stat_client_finance2.php",
+			global: false,
+			type: "POST",
+			//dataType: "JSON",
+
+			data:reqData,
+
+			cache: false,
+			beforeSend: function() {
+                $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			success:function(res){
+				//console.log(res);
+				//$("#ticket_change_log").html(res);
+
+				//if(res.result == 'success'){
+                    $('#qresult').html(res);
+
+				/*}else{
+
+				}*/
+			}
+		});
+
+	}
+
 	// !!!!
 	//$(document).ready(function () {
 		$('#showDiv1').click(function () {

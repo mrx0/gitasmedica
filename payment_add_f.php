@@ -82,7 +82,7 @@
                                         } else {
                                             //до того как был создан наряд
                                             //if (date("d", strtotime($invoice_j[0]['create_time'])) > date("d", strtotime($_POST['date_in'] . " 21:00:00"))) {
-                                            if (strtotime($invoice_j[0]['create_time']) > strtotime($_POST['date_in'] . " 21:00:00")) {
+                                            if (strtotime($invoice_j[0]['create_time']) > strtotime($_POST['date_in'] . " 22:30:00")) {
                                                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Оплата не может быть сделана до того, как был создан наряд</div>'));
                                             } else {
 

@@ -1,6 +1,6 @@
 <?php
 
-//calculates.php
+//fl_calculates.php
 //Расчёты
 
 	require_once 'header.php';
