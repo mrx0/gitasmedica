@@ -12,7 +12,7 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			
-			$offices = SelDataFromDB('spr_office', '', '');
+			$offices = SelDataFromDB('spr_filials', '', '');
             //Получили список прав
             $permissions = SelDataFromDB('spr_permissions', '', '');
             //var_dump($permissions);

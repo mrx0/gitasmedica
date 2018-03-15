@@ -13,7 +13,7 @@
         if (($finances['see_all'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
-			//$offices = SelDataFromDB('spr_office', '', '');
+			//$offices = SelDataFromDB('spr_filials', '', '');
 			//var_dump ($offices);
 
             require 'variables.php';

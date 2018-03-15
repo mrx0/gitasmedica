@@ -15,7 +15,7 @@
 			include_once 'filter.php';
 			include_once 'filter_f.php';
 			
-			$offices_j = SelDataFromDB('spr_office', '', '');
+			$offices_j = SelDataFromDB('spr_filials', '', '');
 
 			if ($_POST){
 			}else{
@@ -75,7 +75,7 @@
 												</ul>
 											</select>';
 				/*}else{
-                    $offices_j = SelDataFromDB('spr_office', $_SESSION['filial'], 'offices');
+                    $offices_j = SelDataFromDB('spr_filials', $_SESSION['filial'], 'offices');
                     if ($offices_j != 0) {
                         echo $offices_j[0]['name'].'
                                 <input type="hidden" id="filial" name="filial" value="'.$_SESSION['filial'].'">';

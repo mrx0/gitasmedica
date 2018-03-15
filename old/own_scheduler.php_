@@ -11,7 +11,7 @@
 		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
-			$offices = SelDataFromDB('spr_office', '', '');
+			$offices = SelDataFromDB('spr_filials', '', '');
 			//var_dump ($offices);
 			
 			$post_data = '';
@@ -181,7 +181,7 @@
 							
 							for($t=0; $t<count($Work_today); $t++){
 								$worker_today = $Work_today[$t]['worker'];
-								$filial = SelDataFromDB('spr_office', $Work_today[$t]['office'], 'offices');
+								$filial = SelDataFromDB('spr_filials', $Work_today[$t]['office'], 'offices');
 								if ($Work_today[$t]['smena'] == 1){
 									$smena1_work = '
 												<div class="smena smena_work">
@@ -273,7 +273,7 @@
 					echo '
 						</table>';
 				
-					//$filial = SelDataFromDB('spr_office', $_GET['filial'], 'offices');
+					//$filial = SelDataFromDB('spr_filials', $_GET['filial'], 'offices');
 					//var_dump($filial['name']);
 				}
 			}else{

@@ -1,5 +1,8 @@
 <?php
 
+//FIO.php
+//Временно использовалась для разбиения в базе ФИО на Ф, И, О
+
 		$temp_arr = array();
 		$rez = array();
 		require 'config.php';

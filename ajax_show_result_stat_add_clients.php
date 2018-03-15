@@ -10,6 +10,8 @@
 	}else{
 		//var_dump ($_POST);
 		if ($_POST){
+            include_once 'DBWork.php';
+
 			$workerExist = false;
 			$queryDopExist = false;
 			$queryDopExExist = false;
@@ -20,7 +22,7 @@
 			$queryDopClient = '';
 			
 			if ($_POST['worker'] != ''){
-				include_once 'DBWork.php';
+
 				$workerSearch = SelDataFromDB ('spr_workers', $_POST['worker'], 'worker_full_name');
 				
 				if ($workerSearch == 0){
@@ -36,11 +38,7 @@
 			
 			if ($workerExist){
 				$query .= "SELECT * FROM `spr_clients`";
-				
-				require 'config.php';
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
+
 				//$time = time();
 				
 				//Дата/время
@@ -151,29 +149,25 @@
 					}*/
 					
 					$query = $query." ORDER BY `create_time` DESC";
-					
-					require 'config.php';
-					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-					mysql_select_db($dbName) or die(mysql_error()); 
-					mysql_query("SET NAMES 'utf8'");
+
+                    $msql_cnnct = ConnectToDB ();
 					
 					$arr = array();
-					$rez = array();
-					
-					$res = mysql_query($query) or die($query);
-					$number = mysql_num_rows($res);
+                    $journal = array();
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+					$number = mysqli_num_rows($res);
+
 					if ($number != 0){
-						while ($arr = mysql_fetch_assoc($res)){
-							array_push($rez, $arr);
+						while ($arr = mysqli_fetch_assoc($res)){
+							array_push($journal, $arr);
 						}
-						$journal = $rez;
-					}else{
-						$journal = 0;
 					}
 					//var_dump($journal);
 					
 					//Выводим результат
-					if ($journal != 0){
+					if (!empty($journal)){
 						include_once 'functions.php';
 						
 						//Общее кол-во посещений
@@ -255,8 +249,9 @@
 				//var_dump($query);
 				//var_dump($queryDopEx);
 				//var_dump($queryDopClient);
-				
-				mysql_close();
+
+                CloseDB ($msql_cnnct);
+
 			}else{
 				echo '<span style="color: red;">Не найден сотрудник. Проверьте, что полностью введены ФИО.</span>';
 			}

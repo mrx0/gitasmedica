@@ -6,7 +6,7 @@
 	function DrawFilterOptions($sw, $it, $cosm, $stom, $workers, $clients, $offices, $god_mode){
 		include_once 'DBWork.php';
 		
-		$offices_j = SelDataFromDB('spr_office', '', '');
+		$offices_j = SelDataFromDB('spr_filials', '', '');
 		//print_r (pathinfo(__FILE__));
 		echo '
 

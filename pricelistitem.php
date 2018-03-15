@@ -17,11 +17,8 @@
 			$price = 0;
 			
 			if ($rezult != 0){
-				
-				require 'config.php';
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-				mysql_select_db($dbName) or die(mysql_error());
-				mysql_query("SET NAMES 'utf8'");
+
+                CloseDB ($msql_cnnct);
 			
 				$arr = array();
 				$rez = array();
@@ -32,11 +29,12 @@
 				//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `create_time` DESC LIMIT 1";
 				$query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
 
-                $res = mysql_query($query) or die(mysql_error().' -> '.$query);
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
-				$number = mysql_num_rows($res);
+				$number = mysqli_num_rows($res);
+
 				if ($number != 0){
-					$arr = mysql_fetch_assoc($res);
+					$arr = mysqli_fetch_assoc($res);
 					$price = $arr['price'];
 					$price2 = $arr['price2'];
 					$price3 = $arr['price3'];
@@ -132,11 +130,12 @@
 
                 $query = "SELECT * FROM `spr_pricelists_insure` WHERE `item`= '".$_GET['id']."'";
 
-                $res = mysql_query($query) or die(mysql_error().' -> '.$query);
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
-                $number = mysql_num_rows($res);
+                $number = mysqli_num_rows($res);
+
                 if ($number != 0){
-                    while ($arr = mysql_fetch_assoc($res)){
+                    while ($arr = mysqli_fetch_assoc($res)){
                         $insure_price_arr[$arr['insure']] = $arr;
                     }
                 }else{
@@ -227,18 +226,19 @@
 				$query = "SELECT * FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC, `create_time` DESC";
 				//$query = "SELECT * FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `date_from` DESC";
 
-                $res = mysql_query($query) or die(mysql_error().' -> '.$query);
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
-				$number = mysql_num_rows($res);
+				$number = mysqli_num_rows($res);
+
 				if ($number != 0){
-					while ($arr = mysql_fetch_assoc($res)){
+					while ($arr = mysqli_fetch_assoc($res)){
 						array_push($rez, $arr);
 					}
 				}else{
 					$rez = 0;
 				}
-				
-				mysql_close();
+
+                CloseDB ($msql_cnnct);
 				//var_dump($rez);				
 				
 				echo '

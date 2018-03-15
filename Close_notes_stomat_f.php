@@ -1,7 +1,7 @@
 <?php 
 
 //Close_notes_stomat_f.php
-//
+//Статус закрыт напоминалке врача
 
 	session_start();
 	
@@ -10,19 +10,18 @@
 	}else{
 		include_once 'DBWork.php';
 		//var_dump ($_POST);
+
 		if ($_POST){
 			//Добавим данные в базу
-			require 'config.php';
-			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-			mysql_select_db($dbName) or die(mysql_error()); 
-			mysql_query("SET NAMES 'utf8'");
-			$time = time();
-			$query = "UPDATE `notes` SET `closed` = '1' WHERE `id`='{$_POST['id']}'";
-			//echo $query.'<br />';
-			
-			mysql_query($query) or die(mysql_error());
-			
-			mysql_close();
+            $time = time();
+
+            $msql_cnnct = ConnectToDB ();
+
+            $query = "UPDATE `notes` SET `closed` = '1' WHERE `id`='{$_POST['id']}'";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            CloseDB ($msql_cnnct);
 							
 			echo '
 				Напоминалка закрыта, обновите страничку.<br /><br />';

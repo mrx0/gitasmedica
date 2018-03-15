@@ -43,7 +43,7 @@
 					
 				if (!empty($arr) || ($smena != 0)){
 					//надо посмотреть, а не работает ли этот врач еще где-то в эту смену в этот день
-					//$offices = SelDataFromDB('spr_office', '', '');
+					//$offices = SelDataFromDB('spr_filials', '', '');
 					//var_dump ($offices);
 					
 					$WorkerFree = TRUE;

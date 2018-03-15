@@ -1065,7 +1065,7 @@
 				for ($i=0; $i < count($cosmet_task); $i++){
 					//!а если нет офиса или работника??
 					$worker = SelDataFromDB('spr_workers', $cosmet_task[$i]['worker'], 'worker_id');
-					$offices = SelDataFromDB('spr_office', $cosmet_task[$i]['office'], 'offices');
+					$offices = SelDataFromDB('spr_filials', $cosmet_task[$i]['office'], 'offices');
 					echo '
 						<div class="cellsBlock3">
 							<div class="cellLeft">

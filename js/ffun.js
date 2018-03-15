@@ -467,7 +467,7 @@
 
                     if(res.result == "success"){
                         if (res.data == 0){
-                            //console.log(res);
+                            console.log(res);
 
                             $.ajax({
                                 url: "fl_calculate_del_f.php",

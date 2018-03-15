@@ -70,7 +70,7 @@
 						echo '
 							<div id="hidden_1" style="display:none; border: 1px solid red;">';	
 						foreach($works_today_arr as $value){
-							$filial = SelDataFromDB('spr_office', $value['office'], 'offices');
+							$filial = SelDataFromDB('spr_filials', $value['office'], 'offices');
 							//var_dump($filial);
 							if ($value['smena'] == 1){
 								$smn = 'смена 1';

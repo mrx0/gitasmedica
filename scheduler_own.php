@@ -59,7 +59,7 @@
 				
 				$worker = SelDataFromDB('spr_workers', $_GET['id'], 'user');
 				if ($worker != 0){
-					$offices_j = SelDataFromDB('spr_office', '', '');
+					$offices_j = SelDataFromDB('spr_filials', '', '');
 					//var_dump ($offices_j);
 					
 					$offices_jarr = array();
@@ -81,25 +81,22 @@
 					//получаем шаблон графика из базы
 					$query = "SELECT `filial`, `day`, `smena`, `kab`, `worker` FROM `sheduler_template` WHERE `worker` = '{$_GET['id']}'";
 					
-					$shedTemplate = 0;
-					
-					require 'config.php';
-					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-					mysql_select_db($dbName) or die(mysql_error()); 
-					mysql_query("SET NAMES 'utf8'");
+					$shedTemplate = array();
+
+                    $msql_cnnct = ConnectToDB ();
 					
 					$arr = array();
 					$rez = array();
-						
-					$res = mysql_query($query) or die($query);
-					$number = mysql_num_rows($res);
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+					$number = mysqli_num_rows($res);
+
 					if ($number != 0){
-						while ($arr = mysql_fetch_assoc($res)){
+						while ($arr = mysqli_fetch_assoc($res)){
 							$rez[$arr['day']][$arr['smena']] = $arr;
 						}
 						$shedTemplate = $rez;
-					}else{
-						$shedTemplate = 0;
 					}
 					//var_dump($shedTemplate);
 					
@@ -262,7 +259,7 @@
 						}
 					}
 						
-					$filial = SelDataFromDB('spr_office', $_GET['filial'], 'offices');
+					$filial = SelDataFromDB('spr_filials', $_GET['filial'], 'offices');
 					//var_dump($filial['name']);
 					
 					//Получаем график факт
@@ -270,18 +267,17 @@
 					
 					$markSheduler = 0;
 					
-					require 'config.php';
-					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-					mysql_select_db($dbName) or die(mysql_error()); 
-					mysql_query("SET NAMES 'utf8'");
+					//$msql_cnnct = ConnectToDB ();
 					
 					$arr = array();
 					$rez = array();
-						
-					$res = mysql_query($query) or die($query);
-					$number = mysql_num_rows($res);
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+					$number = mysqli_num_rows($res);
+
 					if ($number != 0){
-						while ($arr = mysql_fetch_assoc($res)){
+						while ($arr = mysqli_fetch_assoc($res)){
 							//Раскидываем в массив
 							$rez[$arr['day']][$arr['smena']][$arr['kab']] = $arr;
 						}
@@ -290,6 +286,8 @@
 						$rez = 0;
 					}
 					//var_dump($rez);
+
+                    CloseDB ($msql_cnnct);
 					
 					$schedulerFakt = $rez;
 		

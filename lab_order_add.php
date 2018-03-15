@@ -80,7 +80,7 @@
                             echo '
 									    </select>';
                        /* }else{
-                            $offices_j = SelDataFromDB('spr_office', $_SESSION['filial'], 'offices');
+                            $offices_j = SelDataFromDB('spr_filials', $_SESSION['filial'], 'offices');
                             if ($offices_j != 0) {
                                 echo $offices_j[0]['name'].'
                                 <input type="hidden" id="filial" name="filial" value="'.$_SESSION['filial'].'">';

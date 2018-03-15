@@ -19,7 +19,7 @@
 			$query = '';
 			$journal = 0;
 			
-			$offices = SelDataFromDB('spr_office', '', '');
+			$offices = SelDataFromDB('spr_filials', '', '');
 			$actions_cosmet = SelDataFromDB('actions_cosmet', '', '');	
 			foreach($actions_cosmet as $key=>$arr_temp){
 				$data_nomer[$key] = $arr_temp['nomer'];
@@ -72,7 +72,7 @@
 					echo 'Во всех филиалах<br />';
 				}else{
 					$arr_actions['filial'] = '`office` = \''.$_GET['filial'].'\'';
-					$filial = SelDataFromDB('spr_office', $_GET['filial'], 'offices');
+					$filial = SelDataFromDB('spr_filials', $_GET['filial'], 'offices');
 					echo 'Филиал: '.$filial[0]['name'].'<br />';
 				}
 				
@@ -233,7 +233,7 @@
 									
 									//, isFired ? 'style="background-color: rgba(161,161,161,1);"' : '' ,
 									//echo $journal[$i]['worker'];
-									$offices = SelDataFromDB('spr_office', $journal[$i]['office'], 'offices');
+									$offices = SelDataFromDB('spr_filials', $journal[$i]['office'], 'offices');
 									//var_dump ($actions_cosmet);
 									$office = $offices[0]['name'];
 

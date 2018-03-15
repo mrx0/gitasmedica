@@ -124,7 +124,7 @@
                                                     </li>
                                                     <li style="font-size: 90%; margin-bottom: 5px;">';
                                 if (($finances['see_all'] == 1) || $god_mode) {
-                                    $offices_j = SelDataFromDB('spr_office', '', '');
+                                    $offices_j = SelDataFromDB('spr_filials', '', '');
                                     echo '
                                                          <select name="filial" id="filial">';
                                     if ($offices_j != 0) {
@@ -135,7 +135,7 @@
                                     echo '
                                                          </select>';
                                 } else {
-                                    $offices_j = SelDataFromDB('spr_office', $order_j[0]['office_id'], 'offices');
+                                    $offices_j = SelDataFromDB('spr_filials', $order_j[0]['office_id'], 'offices');
                                     if ($offices_j != 0) {
                                         echo $offices_j[0]['name'] . '
                                         <input type="hidden" id="filial" name="filial" value="' . $order_j[0]['office_id'] . '">';

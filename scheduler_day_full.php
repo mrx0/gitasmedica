@@ -11,7 +11,7 @@
 		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
-			$offices = SelDataFromDB('spr_office', '', '');
+			$offices = SelDataFromDB('spr_filials', '', '');
 			//var_dump ($offices);
 
 			
@@ -151,7 +151,7 @@
 				$i = 0;
 				
 				
-				$filial = SelDataFromDB('spr_office', $_GET['filial'], 'offices');
+				$filial = SelDataFromDB('spr_filials', $_GET['filial'], 'offices');
 				//var_dump($filial['name']);
 				
 				$kabsInFilial_arr = SelDataFromDB('spr_kabs', $_GET['filial'], 'office_kabs');

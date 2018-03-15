@@ -18,51 +18,46 @@
 				if ($insure_j != 0){
 				
 					$arr = array();
-					$rez = array();
-					
-					require 'config.php';
-					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-					mysql_select_db($dbName) or die(mysql_error()); 
-					mysql_query("SET NAMES 'utf8'");
+                    $rezult = array();
+
+                    $msql_cnnct = ConnectToDB ();
 					
 					//$rezult = SelDataFromDB('spr_pricelist_template', $_GET['id'], 'id');
 					//$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = (SELECT `item` FROM `spr_pricelists_insure` WHERE `item`='{$_GET['id']}') LIMIT 1";			
-					$query = "SELECT * FROM `spr_pricelists_insure` WHERE `item`='{$_GET['id']}' LIMIT 1";			
-					
-					$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-					$number = mysql_num_rows($res);
+					$query = "SELECT * FROM `spr_pricelists_insure` WHERE `item`='{$_GET['id']}' LIMIT 1";
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+					$number = mysqli_num_rows($res);
+
 					if ($number != 0){
-						while ($arr = mysql_fetch_assoc($res)){
-							array_push($rez, $arr);
+						while ($arr = mysqli_fetch_assoc($res)){
+							array_push($rezult, $arr);
 						}
-						$rezult = $rez;
-					}else{
-						$rezult = 0;
 					}
 					//var_dump($rezult);
 					
 					$price = 0;
 				
-					if ($rezult != 0){
+					if (!empty($rezult)){
 
 						$arr = array();
-						$rez = array();
+                        $rezult2 = array();
 						
-						$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = '{$rezult[0]['item']}'";			
-						
-						$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-						$number = mysql_num_rows($res);
+						$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` = '{$rezult[0]['item']}'";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+						$number = mysqli_num_rows($res);
+
 						if ($number != 0){
-							while ($arr = mysql_fetch_assoc($res)){
-								array_push($rez, $arr);
+							while ($arr = mysqli_fetch_assoc($res)){
+								array_push($rezult2, $arr);
 							}
-							$rezult2 = $rez;
-						}else{
-							$rezult2 = 0;
 						}
 						//var_dump($rezult2);
 						
-						if ($rezult2 != 0){
+						if (!empty($rezult2)){
 					
 							//операции со временем						
 							$day = date('d');		
@@ -99,10 +94,10 @@
 												</div>
 											</div>';
 											
-							require 'config.php';
+							/*require 'config.php';
 							mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
 							mysql_select_db($dbName) or die(mysql_error()); 
-							mysql_query("SET NAMES 'utf8'");
+							mysql_query("SET NAMES 'utf8'");*/
 						
 							$arr = array();
 							$rez = array();
@@ -112,12 +107,13 @@
 
 							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$_GET['id']."' ORDER BY `create_time` DESC LIMIT 1";
 							$query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices_insure` WHERE `item`='".$_GET['id']."' AND `insure`='".$_GET['insure']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
-													
-							$res = mysql_query($query) or die($query);
 
-							$number = mysql_num_rows($res);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+							$number = mysqli_num_rows($res);
+
 							if ($number != 0){
-								$arr = mysql_fetch_assoc($res);
+								$arr = mysqli_fetch_assoc($res);
 								$price = $arr['price'];
 								$price2 = $arr['price2'];
 								$price3 = $arr['price3'];
@@ -127,7 +123,7 @@
 								$price3 = 0;
 							}
 
-							mysql_close();
+                            CloseDB ($msql_cnnct);
 							
 							echo '
 											<div class="cellsBlock2">
@@ -191,26 +187,21 @@
 								
 							$arr = array();
 							$rez = array();
-								
-							require 'config.php';
-							mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-							mysql_select_db($dbName) or die(mysql_error()); 
-							mysql_query("SET NAMES 'utf8'");
+
+                            $msql_cnnct = ConnectToDB ();
 							
 							$query = "SELECT * FROM `spr_priceprices_insure` WHERE `item`='".$_GET['id']."' AND `insure`='".$_GET['insure']."' ORDER BY `date_from` DESC, `create_time` DESC";
-												
-							$res = mysql_query($query) or die($query);
 
-							$number = mysql_num_rows($res);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+							$number = mysqli_num_rows($res);
 							if ($number != 0){
-								while ($arr = mysql_fetch_assoc($res)){
+								while ($arr = mysqli_fetch_assoc($res)){
 									array_push($rez, $arr);
 								}
-							}else{
-								$rez = 0;
 							}
-							
-							mysql_close();
+
+                            CloseDB ($msql_cnnct);
 							//var_dump($rez);				
 							
 							echo '
@@ -222,18 +213,18 @@
 										<div style="margin-bottom: 20px;">
 											<div class="cellsBlock">';
 
-                            if ($rez != 0){
+                            if (!empty($rez)){
                                 for($i=0; $i < count($rez); $i++){
                                     echo '
-                            <div>';
+                                <div>';
                                     if ((($items['close'] == 1) && ($finances['close'] == 1)) || $god_mode){
                                         echo '
 						        <i class="fa fa-times" aria-hidden="true" style="cursor: pointer; color: red;"  title="Удалить"></i>';
                                     }
                                     echo '
-                            '.$rez[$i]['price'].'/'.$rez[$i]['price2'].'/'.$rez[$i]['price3'].' руб. c '.date('d.m.y H:i', $rez[$i]['date_from']).' | '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'';
+                                '.$rez[$i]['price'].'/'.$rez[$i]['price2'].'/'.$rez[$i]['price3'].' руб. c '.date('d.m.y H:i', $rez[$i]['date_from']).' | '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'';
                                     echo '
-						    </div>';
+						        </div>';
                                     //echo '<div>'.$rez[$i]['price'].' руб. |  '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'</div>';
                                 }
                             }

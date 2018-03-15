@@ -79,7 +79,7 @@
 				echo '
 					<div id="hidden_1" style="display:none; border: 1px solid red;">';	
 				foreach($works_today as $value){
-					$filial = SelDataFromDB('spr_office', $value['filial'], 'offices');
+					$filial = SelDataFromDB('spr_filials', $value['filial'], 'offices');
 					//var_dump($filial);
 					echo '
 						<div class="cellsBlock2" style="width:320px; font-size:80%;">

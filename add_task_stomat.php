@@ -18,7 +18,7 @@
 
             $msql_cnnct = ConnectToDB ();
 			
-			//$offices = SelDataFromDB('spr_office', '', '');
+			//$offices = SelDataFromDB('spr_filials', '', '');
 			
 			$post_data = '';
 			$js_data = '';
@@ -252,7 +252,7 @@
                                     <div class="cellsBlock3">
                                         <div class="cellLeft">Филиал</div>
                                         <div class="cellRight">';
-                    $offices_j = SelDataFromDB('spr_office', $selected_fil, 'offices');
+                    $offices_j = SelDataFromDB('spr_filials', $selected_fil, 'offices');
 
                     echo $offices_j[0]['name'].'<input type="hidden" id="filial" name="filial" value="'.$selected_fil.'">';
 

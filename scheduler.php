@@ -14,7 +14,7 @@
 			include_once 'widget_calendar.php';
 			include_once 'variables.php';
 
-			$offices = $offices_j = SelDataFromDB('spr_office', '', '');
+			$offices = $offices_j = SelDataFromDB('spr_filials', '', '');
 			//var_dump ($offices);
 			
 			$kabsInFilialExist = FALSE;
@@ -209,7 +209,7 @@
 			
 			$today = date("Y-m-d");
 				
-			$filial = SelDataFromDB('spr_office', $_GET['filial'], 'offices');
+			$filial = SelDataFromDB('spr_filials', $_GET['filial'], 'offices');
 			//var_dump($filial['name']);
 
             $msql_cnnct = ConnectToDB ();

@@ -1,7 +1,7 @@
 <?php 
 
 //scheduler_workers_here.php
-//
+//Выборка врачей, кто работает здесь и сейчас
 
 	session_start();
 	
@@ -16,32 +16,29 @@
 			//получаем шаблон графика из базы
 			$query = "SELECT `worker` FROM `sheduler_template` WHERE `filial`='{$_POST['filial']}' AND `day`='{$_POST['dayW']}' AND `smena`='{$_POST['smenaN']}' AND `kab`='{$_POST['kabN']}' AND `type`='{$_POST['type']}'";
 			
-			$shedTemplate = 0;
-			
-			require 'config.php';
-			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-			mysql_select_db($dbName) or die(mysql_error()); 
-			mysql_query("SET NAMES 'utf8'");
+			$shedTemplate = array();
+
+            $msql_cnnct = ConnectToDB ();
 			
 			$arr = array();
 			$rez = array();
-				
-			$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-			$number = mysql_num_rows($res);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+			$number = mysqli_num_rows($res);
+
 			if ($number != 0){
-				while ($arr = mysql_fetch_assoc($res)){
+				while ($arr = mysqli_fetch_assoc($res)){
 					array_push($rez, $arr);
 				}
 				$shedTemplate = $rez;
-			}else{
-				$shedTemplate = 0;
 			}
 			
 			$rez = '';
 			
 			//var_dump ($shedTemplate);
 						
-			if ($shedTemplate != 0){
+			if (!empty($shedTemplate)){
 				//var_dump ($shedTemplate);
 				
 				foreach ($shedTemplate as $value){

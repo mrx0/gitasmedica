@@ -13,7 +13,7 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			//var_dump($_SESSION);
-			//$offices = SelDataFromDB('spr_office', '', '');
+			//$offices = SelDataFromDB('spr_filials', '', '');
 			
 			echo '
 				<header style="margin-bottom: 5px;">

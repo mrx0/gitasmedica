@@ -114,7 +114,7 @@
 											<select name="SelectFilial" id="SelectFilial">
 												<option value="0">Филиал не выбран</option>';
 					//Выбор филиала для сессии
-					$offices = SelDataFromDB('spr_office', '', '');
+					$offices = SelDataFromDB('spr_filials', '', '');
 					if ($offices != 0){
 						if (isset($_SESSION['filial']) && !empty($_SESSION['filial'])){
 							$selected_fil = $_SESSION['filial'];

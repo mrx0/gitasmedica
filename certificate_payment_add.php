@@ -14,8 +14,6 @@
 			include_once 'functions.php';
 
             require 'variables.php';
-			
-			require 'config.php';
 
 			//var_dump($_SESSION);
 			//unset($_SESSION['invoice_data']);
@@ -36,25 +34,24 @@
 
 						$client_j = SelDataFromDB('spr_clients', $invoice_j[0]['client_id'], 'user');
 						//var_dump($client_j);
-						
-						mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-						mysql_select_db($dbName) or die(mysql_error()); 
-						mysql_query("SET NAMES 'utf8'");
+
+                        $msql_cnnct = ConnectToDB ();
 						
 						$query = "SELECT * FROM `zapis` WHERE `id`='".$invoice_j[0]['zapis_id']."'";
-						
-						$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-						$number = mysql_num_rows($res);
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+						$number = mysqli_num_rows($res);
+
 						if ($number != 0){
-							while ($arr = mysql_fetch_assoc($res)){
+							while ($arr = mysqli_fetch_assoc($res)){
 								array_push($sheduler_zapis, $arr);
 							}
-						}else
-							$sheduler_zapis = 0;
+						}
 						//var_dump ($sheduler_zapis);
 						
 						//if ($client !=0){
-						if ($sheduler_zapis != 0){
+						if (!empty($sheduler_zapis)){
 						
 							//сортируем зубы по порядку
 							//ksort($_SESSION['invoice_data'][$_GET['client']][$_GET['invoice_id']]['data']);
@@ -167,7 +164,7 @@
 								echo '
 											<div class="cellName">';
 								
-								$offices = SelDataFromDB('spr_office', $sheduler_zapis[0]['office'], 'offices');
+								$offices = SelDataFromDB('spr_filials', $sheduler_zapis[0]['office'], 'offices');
 								echo '
 												Филиал:<br>'.
 											$offices[0]['name'];

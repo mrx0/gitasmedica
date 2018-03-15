@@ -104,7 +104,7 @@
 				if (!empty($ticket_j)){
                     if ($ticket_j[0]['id'] == $_GET['id']){
 
-                        //$offices = SelDataFromDB('spr_office', '', '');
+                        //$offices = SelDataFromDB('spr_filials', '', '');
                         $filials_j = getAllFilials(false, true);
                         //var_dump($filials_j);
                         //Получили список прав

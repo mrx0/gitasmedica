@@ -14,20 +14,19 @@
 		//var_dump ($_POST);
 		
 		if ($_POST){
-			
-			require 'config.php';
-			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-			mysql_select_db($dbName) or die(mysql_error()); 
-			mysql_query("SET NAMES 'utf8'");
-			$time = time();
-			
-			$query = "DELETE FROM `scheduler` WHERE `worker`='{$_POST['worker']}' AND
+
+            $time = time();
+
+            $msql_cnnct = ConnectToDB ();
+
+            $query = "DELETE FROM `scheduler` WHERE `worker`='{$_POST['worker']}' AND
 			`filial`='{$_POST['filial']}' AND `day`='{$_POST['day']}' AND `month`='{$_POST['month']}' AND `year`='{$_POST['year']}' AND 
 			`smena`='{$_POST['smena']}' AND `kab`='{$_POST['kab']}' AND 
 			`type`='{$_POST['type']}'";
-			
-			mysql_query($query) or die($query.' -> '.mysql_error());
-			mysql_close();
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            CloseDB ($msql_cnnct);
 			
 			//логирование
 			AddLog ('0', $_SESSION['id'], '', 'Сотрудник ['.$_POST['worker'].'] удален из Фактической смены ['.$_POST['smena'].']. Филиал ['.$_POST['filial'].']. Кабинет ['.$_POST['kab'].']. День ['.$_POST['day'].']. Месяц ['.$_POST['month'].']. Год ['.$_POST['year'].']. Тип ['.$_POST['type'].']');	

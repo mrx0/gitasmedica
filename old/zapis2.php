@@ -11,7 +11,7 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			
-			$offices_j = SelDataFromDB('spr_office', '', '');
+			$offices_j = SelDataFromDB('spr_filials', '', '');
 			//var_dump ($offices_j);
 			
 			$post_data = '';
@@ -226,7 +226,7 @@
 				$i = 0;*/
 				
 				
-				$filial = SelDataFromDB('spr_office', $_GET['filial'], 'offices');
+				$filial = SelDataFromDB('spr_filials', $_GET['filial'], 'offices');
 				//var_dump($filial['name']);
 				
 				$kabsInFilial_arr = SelDataFromDB('spr_kabs', $_GET['filial'], 'office_kabs');
@@ -277,11 +277,8 @@
 					}
 					
 					if (isset($_SESSION['filial'])){
-					
-						require 'config.php';
-						mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-						mysql_select_db($dbName) or die(mysql_error()); 
-						mysql_query("SET NAMES 'utf8'");
+
+                        $msql_cnnct = ConnectToDB2 ();
 						
 						$arr = array();
 						$arr2 = array();
@@ -289,11 +286,13 @@
 						$rez2 = array();
 						
 						$query = "SELECT * FROM `zapis` WHERE `office` = '{$_SESSION['filial']}' AND `add_from` <> '{$_SESSION['filial']}' AND `enter` <> '8'";
-						
-						$res = mysql_query($query) or die($query);
-						$number = mysql_num_rows($res);
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+						$number = mysqli_num_rows($res);
+
 						if ($number != 0){
-							while ($arr = mysql_fetch_assoc($res)){
+							while ($arr = mysqli_fetch_assoc($res)){
 								array_push($rez, $arr);
 							}
 						}else{
@@ -301,18 +300,21 @@
 						}
 						
 						$query = "SELECT * FROM `zapis` WHERE `add_from` = '{$_SESSION['filial']}' AND `office` <> '{$_SESSION['filial']}' AND `enter` <> '8'";
-						
-						$res = mysql_query($query) or die($query);
-						$number = mysql_num_rows($res);
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+						$number = mysqli_num_rows($res);
+
 						if ($number != 0){
-							while ($arr2 = mysql_fetch_assoc($res)){
+							while ($arr2 = mysqli_fetch_assoc($res)){
 								array_push($rez2, $arr2);
 							}
 						}else{
 							$rez2 = 0;
 						}
-						
-						mysql_close();
+
+                        CloseDB ($msql_cnnct);
+
 						//var_dump($rez);
 						if (($rez != 0) || ($rez2 != 0)){
 							echo '

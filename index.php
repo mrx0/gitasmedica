@@ -16,7 +16,7 @@
 
         $announcing_arr = array();
 
-		$offices = SelDataFromDB('spr_office', '', '');
+		$offices = SelDataFromDB('spr_filials', '', '');
 
 		echo '
 			<header style="margin-bottom: 5px;">

@@ -41,23 +41,26 @@
 								
 				//Выберем из базы последнюю запись
 				$t_f_data_db = array();
-				
-				require 'config.php';
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
-				$time = time();
+
+                $time = time();
+
+                $msql_cnnct = ConnectToDB ();
+
 				$query = "SELECT * FROM `journal_tooth_status` WHERE `client` = '{$_GET['id']}' ORDER BY `create_time` DESC LIMIT 1";
-				$res = mysql_query($query) or die($q);
-				$number = mysql_num_rows($res);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+				$number = mysqli_num_rows($res);
+
 				if ($number != 0){
-					while ($arr = mysql_fetch_assoc($res)){
+					while ($arr = mysqli_fetch_assoc($res)){
 						array_push($t_f_data_db, $arr);
 					}
 				}else
 					$t_f_data_db = 0;
 				}
-				mysql_close();	
+
+                CloseDB ($msql_cnnct);
 
 				//Косметология					
 				$cosmet_task = SelDataFromDB('journal_cosmet1', $_GET['id'], 'client_cosm_id');

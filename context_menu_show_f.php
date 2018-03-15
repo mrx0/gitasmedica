@@ -131,7 +131,7 @@
 							<li><div onclick="changeUserFilial(0)">открепиться</div></li>';
 
 						//Выбор филиала для сессии
-						$offices_j = SelDataFromDB('spr_office', '', '');
+						$offices_j = SelDataFromDB('spr_filials', '', '');
 						if ($offices_j != 0){
 							for ($off = 0; $off < count($offices_j); $off++){
 								if (isset($_SESSION['filial']) && !empty($_SESSION['filial']) && ($_SESSION['filial'] == $offices_j[$off]['id'])){

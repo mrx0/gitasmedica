@@ -83,7 +83,7 @@
 							$_SESSION['filial'] = $_POST['office'];
 							exit (json_encode(array('result' => 'success', 'data' => 'Вы успешно вошли в систему<br>и будете перенаправлены на <a href="index.php">главную</a>')));
 						}else{
-							$offices = SelDataFromDB('spr_office', '', '');
+							$offices = SelDataFromDB('spr_filials', '', '');
 							
 							if ($offices != 0){
 							

@@ -122,11 +122,9 @@
 							//echo $stat_zuba.'<br />';
 							
 							//Добавим данные в базу
-							require 'config.php';
-							mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-							mysql_select_db($dbName) or die(mysql_error()); 
-							mysql_query("SET NAMES 'utf8'");
 							$time = time();
+
+                            $msql_cnnct = ConnectToDB ();
 							
 							$query = "
 									INSERT INTO `journal_tooth_status` (
@@ -134,11 +132,10 @@
 									VALUES (
 										'{$_POST['filial']}', '{$client}', '{$time}', '{$_SESSION['id']}', '{$time}', '{$_SESSION['id']}', '{$worker}', '{$_POST['comment']}', '{$_POST['zapis_date']}', '{$_POST['zapis_id']}', {$stat_zuba}) ";
 							//echo $query.'<br />';
+
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 							
-							mysql_query($query) or die($query.' -> '.mysql_error());
-							
-							$task = mysql_insert_id();
-							
+							$task = mysqli_insert_id($msql_cnnct);
 							
 							if (!empty($doppol_arr)){
 								$n_zuba = '';
@@ -158,7 +155,8 @@
 										`id`, {$n_zuba}) 
 									VALUES (
 										'{$task}', {$stat_zuba}) ";
-								mysql_query($query) or die($query.' -> '.mysql_error());
+
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 								
 								//var_dump($stat_zuba);
 							}
@@ -193,8 +191,8 @@
 												VALUES (
 													'{$_POST['add_notes_type']}', 'journal_tooth_status', '{$client}', '{$task}', '{$time}', '{$_SESSION['id']}', '{$time}', '{$_SESSION['id']}', {$dead_line}, 0) ";
 										//echo $query.'<br />';
-										
-										mysql_query($query) or die(mysql_error());
+
+                                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
 										//удаление темповой записи
 										//mysql_query("DELETE FROM `journal_tooth_status_temp` WHERE `id` = '$stat_id'");
@@ -235,8 +233,8 @@
 															VALUES (
 																'{$val}', 'journal_tooth_status', '{$client}', '{$task}', '{$time}', '{$_SESSION['id']}', '{$time}', '{$_SESSION['id']}', {$RemWorker}, 0) ";
 													//echo $query.'<br />';
-													
-													mysql_query($query) or die(mysql_error());
+
+                                                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
 													//удаление темповой записи
 													//mysql_query("DELETE FROM `journal_tooth_status_temp` WHERE `id` = '$stat_id'");
@@ -278,7 +276,7 @@
 								VALUES (
 									'{$task}', '{$pervich_status}', '{$noch_status}', '{$insured_status}') ";
 
-							mysql_query($query) or die(mysql_error());
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 								
 							echo '
 								<a href="task_stomat_inspection.php?id='.$task.'" class="ahref">Посещение #'.$task.'</a> добавлено в журнал.
@@ -295,7 +293,9 @@
 								<a href="client.php?id='.$client.'" class="b">В карточку пациента</a>
 								<!--<a href="add_task_stomat.php?client='.$client.'&filial='.$_POST['filial'].'&insured='.$insured_status.'&pervich='.$pervich_status.'&noch='.$noch_status.'&date='.$_POST['zapis_date'].'&id='.$_POST['zapis_id'].'" class="b">Добавить посещение этому пациенту</a>-->
 								';
-							mysql_close();
+
+                            CloseDB ($msql_cnnct);
+
 						}else{
 							echo '
 								Указанный вами исполнитель отсутствует в нашей базе<br><br>';

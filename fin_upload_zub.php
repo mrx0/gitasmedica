@@ -15,26 +15,25 @@
 			if (($_POST['task'] == '') || !isset($_POST['task']) || !isset($_POST['imgs']) || ($_POST['imgs'] == '') || ($_POST['imgs'] == '[]')){
 				echo 'Ошибка. Обновите страницу [Ctrl+F5]<br /><br />';
 			}else{
+                include_once 'DBWork.php';
 				
 				$img_arr = explode(',', $_POST['imgs']);
-				
-				require 'config.php';
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
-				$time = time();
-				
-				foreach($img_arr as $value){
+
+                $time = time();
+
+                $msql_cnnct = ConnectToDB ();
+
+                foreach($img_arr as $value){
 				
 					$query = "INSERT INTO `journal_zub_img` (
 						`task`, `client`, `uptime`) 
 					VALUES (
 						'{$_POST['task']}', '{$_POST['client']}', '{$time}'
 					)";
-					
-					mysql_query($query) or die(mysql_error());
-					
-					$mysql_insert_id = mysql_insert_id();
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                    $mysql_insert_id = mysqli_insert_id($msql_cnnct);
 					
 /*$filename = 'uploads_etap/'.$value;
 
@@ -49,9 +48,9 @@ if (file_exists($filename)) {
 					rename('uploads_zub/'.$value, 'zub_photo/'.$mysql_insert_id.'.'.$extension);										
 				}
 
-				mysql_close();
+                CloseDB ($msql_cnnct);
 				
-					echo '
+				echo '
 						Изображения добавлены<br /><br />
 						<a href="task_stomat_inspection.php?id='.$_POST['task'].'" class="b">Перейти к формуле</a>
 						<a href="client.php?id='.$_POST['client'].'" class="b">В карточку пациента</a>';

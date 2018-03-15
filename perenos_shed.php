@@ -3,7 +3,7 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			
-			$filials = SelDataFromDB('spr_office', '', '');
+			$filials = SelDataFromDB('spr_filials', '', '');
 			if ($filials !=0){
 				require 'config.php';
 				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");

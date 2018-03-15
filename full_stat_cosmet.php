@@ -15,7 +15,7 @@
 			include_once 'filter.php';
 			include_once 'filter_f.php';
 			
-			//$offices = SelDataFromDB('spr_office', '', '');
+			//$offices = SelDataFromDB('spr_filials', '', '');
 			
 			$filter = FALSE;
 			$sw = '';
@@ -389,13 +389,13 @@
 				echo '
 						<b>По филиалам:</b><br />';
 				foreach ($office as $key => $value){
-					$filial = SelDataFromDB('spr_office', $key, 'offices');
+					$filial = SelDataFromDB('spr_filials', $key, 'offices');
 					echo $filial[0]['name'].': '.$value.'<br />';
 				}
 				echo '
 						<b>По врачам:</b><br />';
 				foreach ($doctors as $key => $value){
-					//$filial = SelDataFromDB('spr_office', $key, 'offices');
+					//$filial = SelDataFromDB('spr_filials', $key, 'offices');
 					echo WriteSearchUser('spr_workers', $key, 'user', false).': '.$value.'<br />';
 				}
 				//var_dump($worker);

@@ -136,7 +136,7 @@
                     echo '
 								<div class="cellText" style="text-align: center;">'.$status.'<br>';
                     if ($cert_j[$i]['office_id'] != 0) {
-                        $offices_j = SelDataFromDB('spr_office', $cert_j[$i]['office_id'], 'offices');
+                        $offices_j = SelDataFromDB('spr_filials', $cert_j[$i]['office_id'], 'offices');
                         if ($offices_j != 0) {
                             echo '<span style="font-size: 70%;">'.$offices_j[0]['name'].'</span>';
                         }else {

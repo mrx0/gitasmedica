@@ -248,7 +248,7 @@
         if (isset($_SESSION['filial']) && !empty($_SESSION['filial'])){
             $filial_id_default = $_SESSION['filial'];
             $filial = array();
-            $offices_j = SelDataFromDB('spr_office', $_SESSION['filial'], 'offices');
+            $offices_j = SelDataFromDB('spr_filials', $_SESSION['filial'], 'offices');
             //var_dump($offices_j['name']);
             $selected_fil = $offices_j[0]['name'];
         }else{

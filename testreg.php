@@ -71,7 +71,7 @@
 						</script>';
 					
 					}else{
-						$offices = SelDataFromDB('spr_office', '', '');
+						$offices = SelDataFromDB('spr_filials', '', '');
 						
 						echo '<h1>Вы успешно вошли в систему!</h1>
 						Выберите филиал, на котором вы сегодня работаете.

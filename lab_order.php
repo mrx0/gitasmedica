@@ -27,7 +27,7 @@
 
                     if ($lab_order_j !=0){
 
-                        $offices_j = SelDataFromDB('spr_office', $lab_order_j[0]['office_id'], 'offices');
+                        $offices_j = SelDataFromDB('spr_filials', $lab_order_j[0]['office_id'], 'offices');
 
                         $lab_order_ex_j = SelDataFromDB('journal_laborder_ex', $lab_order_j[0]['id'], 'laborder_id');
                         //var_dump( $lab_order_ex_j);
@@ -258,7 +258,7 @@
                                                     <div class="cellName" style="text-align: center; background-color:#FEFEFE;">
                                                         '.WriteSearchUser('spr_workers', $lab_order_ex_j[$i]['create_person'], 'user', true).'<br>';
                                 if ($lab_order_ex_j[$i]['office_id'] != 0){
-                                    $offices_j = SelDataFromDB('spr_office', $lab_order_ex_j[$i]['office_id'], 'offices');
+                                    $offices_j = SelDataFromDB('spr_filials', $lab_order_ex_j[$i]['office_id'], 'offices');
                                     if ($offices_j != 0) {
                                         echo $offices_j[0]['name'];
                                     }

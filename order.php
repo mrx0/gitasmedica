@@ -22,7 +22,7 @@
                     if ($order_j != 0){
                        // var_dump($order_j);
 
-                        $offices_j = SelDataFromDB('spr_office', $order_j[0]['office_id'], 'offices');
+                        $offices_j = SelDataFromDB('spr_filials', $order_j[0]['office_id'], 'offices');
 
                         echo '
                             <div id="status">

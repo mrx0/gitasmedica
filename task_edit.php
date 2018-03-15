@@ -18,12 +18,12 @@
 				
 				$closed = FALSE;
 				
-				$offices = SelDataFromDB('spr_office', '', '');
+				$offices = SelDataFromDB('spr_filials', '', '');
 				if ($task !=0){
 					if ($task[0]['office'] == 99){
 						$office = 'Во всех';
 					}else{
-						//$offices = SelDataFromDB('spr_office', '', '');
+						//$offices = SelDataFromDB('spr_filials', '', '');
 						//var_dump ($offices);
 						//$office = $offices[0]['name'];
 					}	

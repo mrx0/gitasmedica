@@ -11,7 +11,7 @@
 		if (($zapis['see_all'] == 1) || ($zapis['see_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
-			$offices = SelDataFromDB('spr_office', '', '');
+			$offices = SelDataFromDB('spr_filials', '', '');
 			//var_dump ($offices);
 
             require 'variables.php';
@@ -367,7 +367,7 @@
 									</div>';
 							echo '
 									<div class="cellName">';
-							$filial = SelDataFromDB('spr_office', $ZapisHereQueryToday[$z]['office'], 'offices');
+							$filial = SelDataFromDB('spr_filials', $ZapisHereQueryToday[$z]['office'], 'offices');
 							echo 
 										'Филиал:<br>'.
 										$filial[0]['name'];

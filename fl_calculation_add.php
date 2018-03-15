@@ -269,7 +269,7 @@
                                         echo '
                                                     <div class="cellName">';
 
-                                        $offices = SelDataFromDB('spr_office', $sheduler_zapis[0]['office'], 'offices');
+                                        $offices = SelDataFromDB('spr_filials', $sheduler_zapis[0]['office'], 'offices');
                                         echo '
                                                         Филиал:<br>' .
                                             $offices[0]['name'];

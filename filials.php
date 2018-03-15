@@ -30,7 +30,7 @@
 					</li>';
 		
 		include_once 'DBWork.php';
-		$offices = SelDataFromDB('spr_office', '', '');
+		$offices = SelDataFromDB('spr_filials', '', '');
 		//var_dump ($offices);
 		
 		if ($offices !=0){

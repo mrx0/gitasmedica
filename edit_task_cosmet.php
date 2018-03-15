@@ -22,7 +22,7 @@
 					if ($task[0]['office'] == 99){
 						$office = 'Во всех';
 					}else{
-						$offices = SelDataFromDB('spr_office', '', '');
+						$offices = SelDataFromDB('spr_filials', '', '');
 						//var_dump ($offices);
 						//$office = $offices[0]['name'];
 					}	
@@ -146,7 +146,7 @@
 											<div class="cellLeft">Филиал</div>
 											<div class="cellRight">';
 
-                        $offices_j = SelDataFromDB('spr_office', $task[0]['office'] , 'offices');
+                        $offices_j = SelDataFromDB('spr_filials', $task[0]['office'] , 'offices');
 
                         echo $offices_j[0]['name'].'<input type="hidden" id="filial" name="filial" value="'.$task[0]['office'] .'">';
 

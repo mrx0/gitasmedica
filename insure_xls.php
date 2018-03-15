@@ -46,7 +46,7 @@
 
 				    $path = 'download\insure_xls'.'\\'.$insure_xls_j[$i]['id'].'.xls';
                     $insure_j = SelDataFromDB('spr_insure', $insure_xls_j[$i]['insure_id'], 'id');
-                    $office_j = SelDataFromDB('spr_office', $insure_xls_j[$i]['office_id'], 'id');
+                    $office_j = SelDataFromDB('spr_filials', $insure_xls_j[$i]['office_id'], 'id');
 
 					if ($insure_xls_j[$i]['status'] == 9) {
                         $deleted_str .= '

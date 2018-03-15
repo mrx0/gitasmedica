@@ -7,7 +7,7 @@
 	include_once 'DBWork.php';
 	include_once 'functions.php';
 	
-	//$arr_offices = SelDataFromDB('spr_office', '', '');
+	//$arr_offices = SelDataFromDB('spr_filials', '', '');
 	//var_dump ($offices);
 	$arr_orgs = SelDataFromDB('spr_org', '', '');
 	//var_dump ($arr_orgs);

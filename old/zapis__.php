@@ -13,7 +13,7 @@
 			include_once 'functions.php';
 			include_once 'widget_calendar.php';
 			
-			$offices = $offices_j = SelDataFromDB('spr_office', '', '');
+			$offices = $offices_j = SelDataFromDB('spr_filials', '', '');
 			//var_dump ($offices);
 			
 			$kabsInFilialExist = FALSE;
@@ -165,7 +165,7 @@
 				}
 			}
 				
-			$filial = SelDataFromDB('spr_office', $_GET['filial'], 'offices');
+			$filial = SelDataFromDB('spr_filials', $_GET['filial'], 'offices');
 			//var_dump($filial['name']);
 			
 			//Получаем график факт

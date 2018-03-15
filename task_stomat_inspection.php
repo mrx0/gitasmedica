@@ -45,7 +45,7 @@
 					if ($task[0]['office'] == 99){
 						$office = 'Во всех';
 					}else{
-						$offices = SelDataFromDB('spr_office', $task[0]['office'], 'offices');
+						$offices = SelDataFromDB('spr_filials', $task[0]['office'], 'offices');
 						//var_dump ($offices);
 						$office = $offices[0]['name'];
 						

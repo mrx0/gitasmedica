@@ -24,7 +24,7 @@
 			$arr = array();
 			$rez = array();
 		
-			//$filials = SelDataFromDB('spr_office', '', '');
+			//$filials = SelDataFromDB('spr_filials', '', '');
 			
 			$filter = FALSE;
 			$sw = '';
@@ -159,7 +159,7 @@
 				
 				//////////////////////////////////////////////////	
 
-				//$offices = SelDataFromDB('spr_office', '', '');
+				//$offices = SelDataFromDB('spr_filials', '', '');
 				//var_dump ($offices);
 				
 				$workers = array();
@@ -256,7 +256,7 @@
 					
 					//по филиалам
 					foreach ($filials as $value1){
-						$offices = SelDataFromDB('spr_office', $value1, 'offices');
+						$offices = SelDataFromDB('spr_filials', $value1, 'offices');
 						//var_dump ($actions_cosmet);
 						$office = $offices[0]['name'];
 						$f_journal = array();

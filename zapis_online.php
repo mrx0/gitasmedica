@@ -21,7 +21,7 @@
 
             $msql_cnnct = ConnectToDB();
 
-            $query = "SELECT * FROM `spr_office`";
+            $query = "SELECT * FROM `spr_filials`";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -43,7 +43,7 @@
                 }
             }
 
-            //$offices = SelDataFromDB('spr_office', '', '');
+            //$offices = SelDataFromDB('spr_filials', '', '');
 
 			echo '
 				<header style="margin-bottom: 5px;">

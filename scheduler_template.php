@@ -54,7 +54,7 @@
 				7 => 'ВС',
 			);
 			
-			$offices = $offices_j = SelDataFromDB('spr_office', '', '');
+			$offices = $offices_j = SelDataFromDB('spr_filials', '', '');
 			//var_dump ($offices);
 			
 			//тип график (космет/стомат/...)
@@ -126,14 +126,14 @@
 			if (isset($_GET['filial'])){
 				if ($_GET['filial'] != 0){
 					$dopQuery .= " AND `filial`='{$_GET['filial']}'";
-					$offices = SelDataFromDB('spr_office', $_GET['filial'], 'id');
+					$offices = SelDataFromDB('spr_filials', $_GET['filial'], 'id');
 					$wFilial = '';
 				}	
 			}else{
 				if(isset($_SESSION['filial'])){
 					$_GET['filial'] = $_SESSION['filial'];
 					$dopQuery .= " AND `filial`='{$_GET['filial']}'";
-					$offices = SelDataFromDB('spr_office', $_GET['filial'], 'id');
+					$offices = SelDataFromDB('spr_filials', $_GET['filial'], 'id');
 					$wFilial = '';
 				}
 			}

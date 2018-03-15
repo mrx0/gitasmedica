@@ -74,7 +74,7 @@
 							<div class="cellsBlock2">
 								<div class="cellLeft">Филиал</div>
 								<div class="cellRight" style="text-align: right;">';
-					$filials = SelDataFromDB('spr_office', $clientDP[0]['filial'], 'offices');
+					$filials = SelDataFromDB('spr_filials', $clientDP[0]['filial'], 'offices');
 					if ($filials != 0){
 						echo '<a href="filial.php?id='.$filials[0]['id'].'" class="ahref">'.$filials[0]['name'].'</a>';	
 					}else{

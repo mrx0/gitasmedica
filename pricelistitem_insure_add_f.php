@@ -15,10 +15,8 @@
 		if ($_POST){
 			if (isset($_POST['insure']) && isset($_POST['id'])){
 
-                require 'config.php';
-                mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-                mysql_select_db($dbName) or die(mysql_error());
-                mysql_query("SET NAMES 'utf8'");
+                $msql_cnnct = ConnectToDB ();
+
                 $time = time();
 
                 $arr3 = array();
@@ -33,11 +31,12 @@
 
                 $query = "SELECT `price`, `price2`, `price3` FROM `spr_priceprices` WHERE `item`='".$_POST['id']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
 
-                $res = mysql_query($query) or die(mysql_error().' -> '.$query);
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
-                $number = mysql_num_rows($res);
+                $number = mysqli_num_rows($res);
+
                 if ($number != 0){
-                    $arr3 = mysql_fetch_assoc($res);
+                    $arr3 = mysqli_fetch_assoc($res);
                     $price = $arr3['price'];
                     $price2 = $arr3['price2'];
                     $price3 = $arr3['price3'];
@@ -54,18 +53,21 @@
                 $query = "INSERT INTO `spr_pricelists_insure` (`item`, `insure`, `create_time`, `create_person`) 
                 VALUES (
                 '{$_POST['id']}', '{$_POST['insure']}', '{$time}', '{$_SESSION['id']}')";
-                mysql_query($query) or die(mysql_error().' -> '.$query);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                 //ID новой позиции
-                $mysql_insert_id = mysql_insert_id();
+                $mysql_insert_id = mysqli_insert_id($msql_cnnct);
 
                 //Добавляем в базу цену позиции прайса для страховой
                 $query = "INSERT INTO `spr_priceprices_insure` (
                     `insure`, `item`, `price`, `price2`, `price3`, `date_from`, `create_time`, `create_person`) 
                     VALUES (
                 '{$_POST['insure']}', '{$_POST['id']}', '{$price}', '{$price2}', '{$price3}', '{$fromdate}', '{$time}', '{$_SESSION['id']}')";
-                mysql_query($query) or die(mysql_error().' -> '.$query);
 
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                CloseDB ($msql_cnnct);
 
                 echo '
                     <div class="query_ok">

@@ -41,7 +41,7 @@ if ($enter_ok){
 
                 $summCalcs = 0;
 
-                $filial_j = SelDataFromDB('spr_office', $filialID, 'offices');
+                $filial_j = SelDataFromDB('spr_filials', $filialID, 'offices');
 
                 echo '
                     <div class="no_print"> 

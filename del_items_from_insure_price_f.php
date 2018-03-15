@@ -21,11 +21,9 @@
 
                             $query_str = '';
 
-                            require 'config.php';
-                            mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-                            mysql_select_db($dbName) or die(mysql_error());
-                            mysql_query("SET NAMES 'utf8'");
                             $time = time();
+
+                            $msql_cnnct = ConnectToDB ();
 
                             for($i=0; $i < count($arr4del); $i++) {
                                 $query_str .= "`item` = '{$arr4del[$i]}'";
@@ -37,15 +35,19 @@
 
 
                             $query = "DELETE FROM `spr_pricelists_insure` WHERE `insure`='{$_POST['insure_id']}' AND ($query_str)";
-                            mysql_query($query) or die(mysql_error().' -> '.$query);
+
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                             $query = "DELETE FROM `spr_priceprices_insure` WHERE`insure`='{$_POST['insure_id']}' AND ($query_str)";
-                            mysql_query($query) or die(mysql_error().' -> '.$query);
+
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                             echo '
                                 <div class="query_ok">
                                     Позиции удалены
                                 </div>';
+
+                            CloseDB ($msql_cnnct);
                         }
 					}else{
 						echo '

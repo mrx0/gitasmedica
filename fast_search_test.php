@@ -9,7 +9,7 @@
 		require_once 'header_tags.php';
 		
 		include_once 'DBWork.php';
-		//$offices = SelDataFromDB('spr_office', '', '');
+		//$offices = SelDataFromDB('spr_filials', '', '');
 		//$post_data = '';
 		//$js_data = '';
 

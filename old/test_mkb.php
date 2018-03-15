@@ -1,7 +1,7 @@
 <?php
 
-//
-//
+//test_mkb.php
+//Временно использовалась
 
 	require_once 'header.php';
 	

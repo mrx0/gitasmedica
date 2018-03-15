@@ -15,7 +15,7 @@
 			include_once 'filter.php';
 			include_once 'filter_f.php';
 			
-			$offices = SelDataFromDB('spr_office', '', '');
+			$offices = SelDataFromDB('spr_filials', '', '');
 			//var_dump ($offices);
 			$filter = FALSE;
 			$sw = '';

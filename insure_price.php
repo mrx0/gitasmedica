@@ -102,18 +102,16 @@
 					$rez4 = array();
 					$arr3 = array();
 					$rez3 = array();
-					
-					
-					require 'config.php';
-					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-					mysql_select_db($dbName) or die(mysql_error()); 
-					mysql_query("SET NAMES 'utf8'");
-			
-					$query = "SELECT * FROM `spr_pricelists_insure` WHERE `insure`='".$_GET['id']."' LIMIT 1";
-													
-					$res = mysql_query($query) or die($query);
 
-					$number = mysql_num_rows($res);
+
+                    $msql_cnnct = ConnectToDB ();
+
+					$query = "SELECT * FROM `spr_pricelists_insure` WHERE `insure`='".$_GET['id']."' LIMIT 1";
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+					$number = mysqli_num_rows($res);
+
 					if ($number != 0){
 						//if ($services_j !=0){
 							
@@ -141,11 +139,12 @@
 							//$query = "SELECT * FROM `spr_pricelists_insure` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' AND `insure`='{$_GET['id']}' ORDER BY `name`";
 							$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `spr_pricelists_insure` WHERE `item` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' AND `insure`='{$_GET['id']}') ORDER BY `name`";
 
-							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
-							$number = mysql_num_rows($res);	
+							$number = mysqli_num_rows($res);
+
 							if ($number != 0){
-								while ($arr3 = mysql_fetch_assoc($res)){
+								while ($arr3 = mysqli_fetch_assoc($res)){
 									array_push($rez3, $arr3);
 								}
 								$items_j = $rez3;
@@ -173,12 +172,13 @@
 									//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
 									//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
 									$query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' AND `insure`='".$_GET['id']."' ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
-									
-									$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
-									$number = mysql_num_rows($res);
+                                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+									$number = mysqli_num_rows($res);
+
 									if ($number != 0){
-										$arr4 = mysql_fetch_assoc($res);
+										$arr4 = mysqli_fetch_assoc($res);
 										$price = $arr4['price'];
 										$price2 = $arr4['price2'];
 										$price3 = $arr4['price3'];
@@ -232,9 +232,8 @@
 					}else{
 						echo '<i style="color:red;">Прайс не заполнен</i>';
 					}
-					
-					mysql_close();
 
+                    CloseDB ($msql_cnnct);
 
 				}else{
 					echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';

@@ -10,38 +10,34 @@
 	}else{
 		if ($_POST){
 			//var_dump($_POST);
-			
+
+            include_once 'DBWork.php';
 			include_once 'functions.php';
 			
 			//получаем работников из базы
 			$query = "SELECT `worker` FROM `scheduler` WHERE `filial`='{$_POST['filial']}' AND `day`='{$_POST['day']}' AND `month`='{$_POST['month']}' AND `year`='{$_POST['year']}' AND `smena`='{$_POST['smena']}' AND `kab`='{$_POST['kab']}' AND `type`='{$_POST['type']}'";
 			
-			$shedWorkers = 0;
-			
-			require 'config.php';
-			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-			mysql_select_db($dbName) or die(mysql_error()); 
-			mysql_query("SET NAMES 'utf8'");
+			$shedWorkers = array();
+
+            $msql_cnnct = ConnectToDB ();
 			
 			$arr = array();
 			$rez = array();
-				
-			$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-			$number = mysql_num_rows($res);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+			$number = mysqli_num_rows($res);
 			if ($number != 0){
-				while ($arr = mysql_fetch_assoc($res)){
-					array_push($rez, $arr);
+				while ($arr = mysqli_fetch_assoc($res)){
+					array_push($shedWorkers, $arr);
 				}
-				$shedWorkers = $rez;
-			}else{
-				$shedWorkers = 0;
 			}
 			
 			$rez = '';
 			
 			//var_dump ($shedWorkers);
 						
-			if ($shedWorkers != 0){
+			if (!empty($shedWorkers)){
 				//var_dump ($shedWorkers);
 				
 				foreach ($shedWorkers as $value){

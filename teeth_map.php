@@ -9,7 +9,7 @@
 		header("location: enter.php");
 	}else{
 		include_once 'DBWork.php';
-		//$offices = SelDataFromDB('spr_office', '', '');
+		//$offices = SelDataFromDB('spr_filials', '', '');
 		
 		echo '
 			<header style="margin-bottom: 5px;">

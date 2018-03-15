@@ -92,7 +92,7 @@
 
         if (!empty($rezult) || !empty($rezult_cert)){
 
-            $office_j = SelDataFromDB('spr_office', '', '');
+            $office_j = SelDataFromDB('spr_filials', '', '');
             //var_dump($office_j);
             //!!!
             $office_j_arr = array();

@@ -32,7 +32,7 @@
                 CloseDB ($msql_cnnct);
 
                 if ($number <= 0){
-                    echo json_encode(array('result' => 'success', 'data' => $arr['total']));
+                    echo json_encode(array('result' => 'success', 'data' => $number));
                 }else{
                     echo json_encode(array('result' => 'error', 'data' => $arr['total']));
                 }

@@ -37,7 +37,7 @@
 		
 		include_once 'DBWork.php';
 		include_once 'filter.php';
-		//$offices = SelDataFromDB('spr_office', '', '');
+		//$offices = SelDataFromDB('spr_filials', '', '');
 			
 		$echo_filter = '';
 
@@ -82,7 +82,7 @@
 				$echo_filter .= 'Во всех филиалах. ';
 				$sw .= '';
 			}else{
-				$filial = SelDataFromDB('spr_office', $dataarray['filial'], 'offices');
+				$filial = SelDataFromDB('spr_filials', $dataarray['filial'], 'offices');
 				if ($filial !=0){
 					if (($ended_filter) || ($worker_filter)){
 						$sw .= 'AND '; 

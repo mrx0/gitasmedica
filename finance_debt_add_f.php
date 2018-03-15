@@ -14,11 +14,8 @@
 				include_once 'DBWork.php';
 				
 				$time = time();
-				
-				require 'config.php';
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
+
+                $msql_cnnct = ConnectToDB2 ();
 				
 				$date_expires = strtotime($_POST['date_expires'].' 00:00:00');
 				
@@ -26,24 +23,25 @@
 						`create_time`, `client`, `date_expires`, `summ`, `type`, `create_person`, `comment`) 
 						VALUES (
 						'{$time}', '{$_POST['client']}', '{$date_expires}',
-						'{$_POST['summ']}', '{$_POST['type']}', '{$_SESSION['id']}', '{$_POST['comment']}') ";				
-					mysql_query($query) or die(mysql_error());
+						'{$_POST['summ']}', '{$_POST['type']}', '{$_SESSION['id']}', '{$_POST['comment']}') ";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $mysql_insert_id = mysqli_insert_id($msql_cnnct);
+
+                CloseDB ($msql_cnnct);
 					
-					$mysql_insert_id = mysql_insert_id();
-					
-					mysql_close();
-					
-					//логирование
-					AddLog ('0', $_SESSION['id'], '', 'Добавлен долг #'.$mysql_insert_id.'. Пациент ['.$_POST['client'].']. Сумма ['.$_POST['summ'].']. Срок истечения ['.$_POST['date_expires'].']. Тип ['.$_POST['type'].']. Комментарий ['.$_POST['comment'].'].');	
+                //логирование
+                AddLog ('0', $_SESSION['id'], '', 'Добавлен долг #'.$mysql_insert_id.'. Пациент ['.$_POST['client'].']. Сумма ['.$_POST['summ'].']. Срок истечения ['.$_POST['date_expires'].']. Тип ['.$_POST['type'].']. Комментарий ['.$_POST['comment'].'].');
 				
-					if ($_POST['type'] == 3){
-						$descr = 'Аванс';
-					}
-					if ($_POST['type'] == 4){
-						$descr = 'Долг';
-					}
-					
-					echo '
+                if ($_POST['type'] == 3){
+                    $descr = 'Аванс';
+                }
+                if ($_POST['type'] == 4){
+                    $descr = 'Долг';
+                }
+
+                echo '
 						<div class="query_ok">
 							'.$descr.' <a href="finance_dp.php?id='.$mysql_insert_id.'">#'.$mysql_insert_id.'</a> добавлен.
 							<br><br>

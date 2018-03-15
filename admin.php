@@ -9,7 +9,7 @@
 		require_once 'header_tags.php';
 		if ($god_mode){
 			include_once 'DBWork.php';
-			//$offices = SelDataFromDB('spr_office', '', '');
+			//$offices = SelDataFromDB('spr_filials', '', '');
 			
 			echo '
 				<header style="margin-bottom: 5px;">

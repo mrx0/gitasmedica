@@ -1,7 +1,7 @@
 <?php 
 
 //ajax_show_result_stat_client_finance.php
-//
+//Функция для Не погашенные авансы/долги (старое)
 
 	session_start();
 	
@@ -10,6 +10,8 @@
 	}else{
 		//var_dump ($_POST);
 		if ($_POST){
+            include_once 'DBWork.php';
+
 			$workerExist = false;
 			$queryDopExist = false;
 			$queryDopExExist = false;
@@ -20,11 +22,8 @@
 			$queryDopClient = '';
 			
 			$query .= "SELECT * FROM `journal_debts_prepayments` WHERE  `type`='4' OR `type`='3'";
-			
-			require 'config.php';
-			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-			mysql_select_db($dbName) or die(mysql_error()); 
-			mysql_query("SET NAMES 'utf8'");
+
+            $msql_cnnct = ConnectToDB ();
 			//$time = time();
 			
 			//Дата/время
@@ -41,22 +40,22 @@
 			$query = $query." ORDER BY `create_time` DESC";
 			
 			$arr = array();
-			$rez = array();
-					
-			$res = mysql_query($query) or die($query);
-			$number = mysql_num_rows($res);
+            $journal = array();
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+			$number = mysqli_num_rows($res);
+
 			if ($number != 0){
-				while ($arr = mysql_fetch_assoc($res)){
-					array_push($rez, $arr);
+				while ($arr = mysqli_fetch_assoc($res)){
+					array_push($journal, $arr);
 				}
-				$journal = $rez;
-			}else{
-				$journal = 0;
+
 			}
 			//var_dump($journal);
 					
 			//Выводим результат
-			if ($journal != 0){
+			if (!empty($journal)){
 				include_once 'functions.php';
 				
 				echo '

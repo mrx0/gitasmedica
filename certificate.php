@@ -95,7 +95,7 @@
 					        <div class="cellRight" style="background-color: rgba(47, 186, 239, 0.7);">'
                                 . date('d.m.y H:i', strtotime($cert_j[0]['cell_time'])) . ' за ' . $cert_j[0]['cell_price'] . ' руб.<br>';
                         if ($cert_j[0]['office_id'] != 0){
-                            $offices_j = SelDataFromDB('spr_office', $cert_j[0]['office_id'], 'offices');
+                            $offices_j = SelDataFromDB('spr_filials', $cert_j[0]['office_id'], 'offices');
                             if ($offices_j != 0) {
                                 echo '<span style="font-size: 70%;">'.$offices_j[0]['name'].'</span>';
                             }

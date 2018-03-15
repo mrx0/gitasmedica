@@ -15,7 +15,7 @@
 			include_once 'filter.php';
 			include_once 'filter_f.php';
 			
-			$offices_j = SelDataFromDB('spr_office', '', '');
+			$offices_j = SelDataFromDB('spr_filials', '', '');
 
 			if ($_POST){
 			}else{
