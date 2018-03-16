@@ -188,7 +188,7 @@
                                                     </div>
                                                     <div>
                                                         <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 13px">
-                                                            Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 14px">' . ($rezData['summ']-$rezData['deduction']) . '</span> руб.
+                                                            Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 14px">' . ($rezData['summ']-$rezData['deduction']+$rezData['surcharge']) . '</span> руб.
                                                         </div>
                                                     </div>
                                                     

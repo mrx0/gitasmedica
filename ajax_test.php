@@ -74,6 +74,9 @@ if (isset($_POST['cell_price']))
 if (isset($_POST['deduction_summ']))
     $arrayFields['deduction_summ'] = $_POST['deduction_summ'];
 
+if (isset($_POST['surcharge_summ']))
+    $arrayFields['surcharge_summ'] = $_POST['surcharge_summ'];
+
 // проверка всех полей на пустоту
 foreach($arrayFields as $fieldName => $oneField){
 	
@@ -162,6 +165,21 @@ foreach($arrayFields as $fieldName => $oneField){
 
 if (isset($_POST['deduction_summ'])){
     if ($fieldName == 'deduction_summ') {
+        if (!is_numeric($oneField)) {
+            $errorContainer[$fieldName] = 'В этом поле ошибка';
+        }
+        if ($oneField <= 0) {
+            $errorContainer[$fieldName] = 'В этом поле ошибка';
+        }
+
+        if ($oneField == '') {
+            $errorContainer[$fieldName] = 'В этом поле ошибка';
+        }
+    }
+}
+
+if (isset($_POST['surcharge_summ'])){
+    if ($fieldName == 'surcharge_summ') {
         if (!is_numeric($oneField)) {
             $errorContainer[$fieldName] = 'В этом поле ошибка';
         }
