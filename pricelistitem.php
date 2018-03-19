@@ -18,7 +18,7 @@
 			
 			if ($rezult != 0){
 
-                CloseDB ($msql_cnnct);
+                $msql_cnnct = ConnectToDB ();
 			
 				$arr = array();
 				$rez = array();
