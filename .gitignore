@@ -1,4 +1,12 @@
-config.php
-.idea/asm_journal.iml
-.idea/workspace.xml
-/download/insure_xls/
+/config.php
+/config_ticket.php
+/fl_config.php
+/.idea/*
+/download/insure_xls/*
+/etaps/*
+/kd/*
+/uploads/*
+/uploads_etap/*
+/uploads_zub/*
+/xls/*
+/zub_photo/*
