@@ -883,6 +883,136 @@
         });
     }
 
+
+    //Показываем блок с ночными сменами
+    function showNightSmenaAddINTabel (tabel_id, nightSmenaCount){
+        //console.log(tabel_id);
+        $('#overlay').show();
+
+        var buttonsStr = '<input type="button" class="b" value="Добавить" onclick="Ajax_NightSmenaAddINTabel(tabel_id, nightSmenaCount)">';
+
+        /*if (mode == 'edit'){
+            buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'edit\')">';
+        }*/
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative"
+                    })
+                    .append('<span style="margin: 5px;"><i>Проверьте и нажмите добавить</i></span>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-10px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%"
+                            })
+                            .append('<div style="margin: 10px;">Кол-во ночных смен: <span class="calculateInsInvoice">'+nightSmenaCount+'</span></div>')
+                            .append('<div style="margin: 10px;">Общая сумма: <span class="calculateInvoice">'+nightSmenaCount*1000+'</span> руб.</div>')
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "bottom": "2px",
+                                "width": "100%"
+                            })
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                            )
+                    )
+            );
+
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+    }
+
+    //Показываем блок с "пустыми" сменами
+    function showEmptySmenaAddINTabel (tabel_id){
+        //console.log(tabel_id);
+
+        var emptySmens = $('#emptySmens').val();
+        //console.log(emptySmens);
+
+        if (emptySmens.length > 0) {
+
+            if (!isNaN(emptySmens)) {
+
+                if (emptySmens > 0) {
+
+                    emptySmens = Number(emptySmens);
+
+                    $('#overlay').show();
+
+                    var buttonsStr = '<input type="button" class="b" value="Добавить" onclick="Ajax_emptySmenaAddINTabel(tabel_id, emptySmens)">';
+
+                    /*if (mode == 'edit'){
+                     buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'edit\')">';
+                     }*/
+
+                    // Создаем меню:
+                    var menu = $('<div/>', {
+                        class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+                    })
+                        .appendTo('#overlay')
+                        .append(
+                            $('<div/>')
+                                .css({
+                                    "height": "100%",
+                                    "border": "1px solid #AAA",
+                                    "position": "relative"
+                                })
+                                .append('<span style="margin: 5px;"><i>Проверьте и нажмите добавить</i></span>')
+                                .append(
+                                    $('<div/>')
+                                        .css({
+                                            "position": "absolute",
+                                            "width": "100%",
+                                            "margin": "auto",
+                                            "top": "-10px",
+                                            "left": "0",
+                                            "bottom": "0",
+                                            "right": "0",
+                                            "height": "50%"
+                                        })
+                                        .append('<div style="margin: 10px;">Кол-во "пустых" смен: <span class="calculateInsInvoice">' + emptySmens + '</span></div>')
+                                        .append('<div style="margin: 10px;">Общая сумма: <span class="calculateInvoice">' + emptySmens * 250 + '</span> руб.</div>')
+                                )
+                                .append(
+                                    $('<div/>')
+                                        .css({
+                                            "position": "absolute",
+                                            "bottom": "2px",
+                                            "width": "100%"
+                                        })
+                                        .append(buttonsStr +
+                                            '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                                        )
+                                )
+                        );
+
+
+                    menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+                }
+            }
+        }
+
+    }
+
     //Удаляем РЛ из табеля
     function fl_deleteCalculateFromTabel(tabel_id, calculate_id){
 

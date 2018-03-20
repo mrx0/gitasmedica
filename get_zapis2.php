@@ -14,10 +14,12 @@
 
             include_once 'DBWork.php';
 
+            require 'config_zapis_online.php';
+
             $msql_cnnct = ConnectToDB();
 
             //if ($_POST['type'] == 5) {
-                $URL = 'https://www.asstom.ru/zapis_giveitotome.php?';
+                $URL = $URL_4zapis;
                 $last_id_zapis_option = 'last_id_zapis_asstom';
             //}
 
@@ -43,7 +45,7 @@
 
                 $last = $arr['value'];
 
-                $token = 'ec3d3704abf1bb0430cd82e66fefdce7';
+                $token = $token_4zapis;
 
                 $query = $URL . 'last=' . $last . '&' . 'token=' . $token;
 

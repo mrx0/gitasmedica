@@ -12,7 +12,7 @@
 		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
-			$offices = SelDataFromDB('spr_filials', '', '');
+			$offices = $offices_j = SelDataFromDB('spr_filials', '', '');
 			//var_dump ($offices);
 
             require 'variables.php';
@@ -343,7 +343,37 @@
 								<a href="?'.$dopFilial.$dopDate.'&who=stom&kab=1" class="b" style="'.$stom_color.'">Стоматологи</a>
 								<a href="?'.$dopFilial.$dopDate.'&who=cosm&kab=1" class="b" style="'.$cosm_color.'">Косметологи</a>
 								<a href="?'.$dopFilial.$dopDate.'&who=somat&kab=1" class="b" style="'.$somat_color.'">Специалисты</a>
-							</li>';
+							</li>
+							<!--<li style="width: auto; margin-bottom: 20px;">
+								<div style="display: inline-block; margin-right: 20px;">
+									<div style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
+										Филиалы
+									</div>
+									<div>
+										<select name="SelectFilial" id="SelectFilial">
+											';
+			if ($offices_j != 0){
+				for ($i=0;$i<count($offices_j);$i++){
+					$selected = '';
+					if (isset($_GET['filial'])){
+						if ($offices_j[$i]['id'] == $_GET['filial']){
+							$selected = 'selected';
+						}
+					}
+					echo "<option value='".$offices_j[$i]['id']."' $selected>".$offices_j[$i]['name']."</option>";
+				}
+			}
+			echo '
+										</select>
+									</div>
+								</div>
+								<div style="display: inline-block; margin-right: 20px;">
+
+									<div style="display: inline-block; margin-right: 20px;">
+										<a href="?'.$who.'" class="dotyel" style="font-size: 70%;">Сбросить</a>
+									</div>
+								</div>
+							</li>-->';
 							
 					$ZapisHereQueryToday = FilialKabSmenaZapisToday($datatable, $year, $month, $day, $_GET['filial'], $kab, $type);
 					//var_dump($ZapisHereQueryToday);

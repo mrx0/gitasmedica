@@ -97,63 +97,23 @@
                                             <div>Филиал <b>'.$filials_j[$tabel_j[0]['office_id']]['name'].'</b></div>
 		        						</div>';
 
-                        echo '
-                                        <div style="background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ'] . '</span> руб.
-                                        </div>';
-                        
-                        echo '
-                                        <div style="background-color: rgba(230, 72, 72, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Сумма всех вычетов: <span class="calculateInvoice" style="font-size: 13px">' . $tabel_j[0]['deduction'] . '</span> руб.</div>';
-                        if ($tabel_j[0]['status'] != 7) {
-                            echo '<div ><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'" class="b" style = "font-size: 80%;" > Добавить вычет </a ></div > ';
-                        }
-                        echo '
-                                        </div>';
 
-                        echo '
-                                        <div style="background-color: rgba(72, 230, 194, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Сумма всех надбавок: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['surcharge'] . '</span> руб.</div>';
-                        if ($tabel_j[0]['status'] != 7) {
-                            echo '<div><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'" class="b" style="font-size: 80%;">Добавить надбавку</a></div>';
-                        }
-                        echo '
-                                        </div>';
-
-                        echo '
-                                        <div style="background-color: rgba(56, 245, 70, 0.36); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Итого: <span class="calculateOrder" style="font-size: 13px; ', ($tabel_j[0]['summ'] - $tabel_j[0]['deduction'] + $tabel_j[0]['surcharge']) <= 0 ? 'color: red;' : '' ,'">' . ($tabel_j[0]['summ'] - $tabel_j[0]['deduction'] + $tabel_j[0]['surcharge']) . '</span> руб.</div>
-                                            <div>';
-                        if ($tabel_j[0]['status'] != 7) {
-                            echo '
-                                                <button class="b" style="font-size: 80%;" onclick="deployTabel(' . $_GET['id'] . ');">Провести табель</button>';
-                        }else{
-                            if ($tabel_j[0]['status'] == 7) {
-                                /*echo '
-                                                <button class="b" style="font-size: 80%;" onclick="deployTabelOFF(' . $_GET['id'] . ');">Распровести табель</button>';*/
-                            }
-                        }
-
-                        echo '
-                                            </div>
-                                        </div>';
-
-
+                        //Получение данных
                         $summCalc = 0;
 
                         $msql_cnnct = ConnectToDB2 ();
-						
-						//$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
+
+                        //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
                         $query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc WHERE jcalc.id IN (SELECT `calculate_id` FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."');";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
-						$number = mysqli_num_rows($res);
-						if ($number != 0){
-							while ($arr = mysqli_fetch_assoc($res)){
-								array_push($tabel_ex_calculates_j, $arr);
-							}
-						}else{
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0){
+                            while ($arr = mysqli_fetch_assoc($res)){
+                                array_push($tabel_ex_calculates_j, $arr);
+                            }
+                        }else{
                             //$sheduler_zapis = 0;
                             //var_dump ($sheduler_zapis);
                         }
@@ -383,6 +343,7 @@
 
                         //Смена/график
                         $rezultShed = array();
+                        $nightSmena = 0;
 
                         $query = "SELECT `id`, `day`, `smena`, `kab`, `worker` FROM `scheduler` WHERE `worker` = '{$tabel_j[0]['worker_id']}' AND `month` = '".(int)$tabel_j[0]['month']."' AND `year` = '{$tabel_j[0]['year']}' AND `filial`='{$tabel_j[0]['office_id']}'";
 
@@ -394,6 +355,10 @@
                             while ($arr = mysqli_fetch_assoc($res)){
                                 //Раскидываем в массив
                                 array_push($rezultShed, $arr);
+                                //Если ночная смена
+                                if ($arr['smena'] == 3){
+                                    $nightSmena++;
+                                }
                             }
                         }
                         /*var_dump($query);
@@ -401,16 +366,82 @@
                         var_dump($rezultShed);*/
 
 
-
-                        //Выводим
-
                         //Смены
                         echo '
-                                <div style="background-color: rgba(181, 165, 165, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                    <div>Всего смен в этом месяце: <span class="" style="font-size: 14px; font-weight: bold;">' . count($rezultShed) . '</span> руб.</div>
+                                <div style="background-color: rgba(181, 165, 165, 0.16); border: 1px dotted #AAA; margin: 5px 0 10px; padding: 1px 3px; ">
+                                    <div>
+                                        <div style="margin-bottom: 5px;">
+                                            <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
+                                                Всего смен в этом месяце: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">' . count($rezultShed) . '</span>
+                                            </div>
+                                        </div>';
+                        if ($nightSmena > 0) {
+                            echo '
+                                        <div>
+                                            <div style="font-size: 85%; color: #555;">
+                                                Из них ночных: <span class="" style="font-size: 14px; font-weight: bold;">' . $nightSmena . '</span>. Надбавка за одну ночную смену: 1000 руб.<br>
+                                            </div>
+                                            <button class="b" style="font-size: 80%;" onclick="showNightSmenaAddINTabel('.$_GET['id'].', '.$nightSmena.');">Добавить в табель оплату ночных смен</button>
+                                        </div>';
+                        }
+                        echo '
+                                        <div style="margin: 10px 0;">
+                                            <div style="font-size: 90%;  color: #555;">
+                                                <span style="color: rgba(10, 10, 10, 1);">Надбавка за "пустые смены".</span> (250 руб. за одну "пустую" смену)
+                                            </div>
+                                            <div style="font-size: 90%;  color: #555;">
+                                                Введите количество "пустых" смен: <input type="text" size="5" name="emptySmens" id="emptySmens" placeholder="0" value="" class="who2"  autocomplete="off" style="font-size: 13px;"><button class="b" style="" onclick="showEmptySmenaAddINTabel('.$_GET['id'].');">Добавить в табель оплату пустых смен</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                      <!--<div><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'" class="b" style = "font - size: 80 %;" > Добавить вычет </a ></div >-->
                                 </div>';
 
+
+
+                        echo '
+                                        <div style="background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
+                                            Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ'] . '</span> руб.
+                                        </div>';
+
+                        echo '
+                                        <div style="background-color: rgba(230, 72, 72, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
+                                            <div>Сумма всех вычетов: <span class="calculateInvoice" style="font-size: 13px">' . $tabel_j[0]['deduction'] . '</span> руб.</div>';
+                        if ($tabel_j[0]['status'] != 7) {
+                            echo '<div ><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'" class="b" style = "font-size: 80%;" > Добавить вычет </a ></div >';
+                        }
+                        echo '
+                                        </div>';
+
+                        echo '
+                                        <div style="background-color: rgba(72, 230, 194, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
+                                            <div>Сумма всех надбавок: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['surcharge'] . '</span> руб.</div>';
+                        if ($tabel_j[0]['status'] != 7) {
+                            echo '<div><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'" class="b" style="font-size: 80%;">Добавить надбавку</a></div>';
+                        }
+                        echo '
+                                        </div>';
+
+                        echo '
+                                        <div style="background-color: rgba(56, 245, 70, 0.36); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
+                                            <div>Итого: <span class="calculateOrder" style="font-size: 16px; ', ($tabel_j[0]['summ'] - $tabel_j[0]['deduction'] + $tabel_j[0]['surcharge']) <= 0 ? 'color: red;' : '' ,'">' . ($tabel_j[0]['summ'] - $tabel_j[0]['deduction'] + $tabel_j[0]['surcharge']) . '</span> руб.</div>
+                                            <div>';
+                        if ($tabel_j[0]['status'] != 7) {
+                            echo '
+                                                <button class="b" style="font-size: 80%;" onclick="deployTabel(' . $_GET['id'] . ');">Провести табель</button>';
+                        }else{
+                            if ($tabel_j[0]['status'] == 7) {
+                                /*echo '
+                                                <button class="b" style="font-size: 80%;" onclick="deployTabelOFF(' . $_GET['id'] . ');">Распровести табель</button>';*/
+                            }
+                        }
+
+                        echo '
+                                            </div>
+                                        </div>';
+
+
+                        //Выводим
 
                         //Расчетные листы
                         echo '
@@ -464,7 +495,9 @@
 					        </div>
 					        
 					        <div id="doc_title">Табель #'.$_GET['id'].' - Асмедика</div>
-					        </div>';
+					        </div>
+					        <!-- Подложка только одна -->
+					        <div id="overlay"></div>';
 
 					}else{
 						echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
