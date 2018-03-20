@@ -381,7 +381,7 @@
                                             <div style="font-size: 85%; color: #555;">
                                                 Из них ночных: <span class="" style="font-size: 14px; font-weight: bold;">' . $nightSmena . '</span>. Надбавка за одну ночную смену: 1000 руб.<br>
                                             </div>
-                                            <button class="b" style="font-size: 80%;" onclick="showNightSmenaAddINTabel('.$_GET['id'].', '.$nightSmena.');">Добавить в табель оплату ночных смен</button>
+                                            <button class="b" style="font-size: 80%;" onclick="showNightSmenaAddINTabel('.$_GET['id'].', '.$nightSmena.');">Добавить в табель оплату <b>ночных</b> смен</button>
                                         </div>';
                         }
                         echo '
@@ -390,8 +390,9 @@
                                                 <span style="color: rgba(10, 10, 10, 1);">Надбавка за "пустые смены".</span> (250 руб. за одну "пустую" смену)
                                             </div>
                                             <div style="font-size: 90%;  color: #555;">
-                                                Введите количество "пустых" смен: <input type="text" size="5" name="emptySmens" id="emptySmens" placeholder="0" value="" class="who2"  autocomplete="off" style="font-size: 13px;"><button class="b" style="" onclick="showEmptySmenaAddINTabel('.$_GET['id'].');">Добавить в табель оплату пустых смен</button>
+                                                Введите количество "пустых" смен: <input type="number" value="" min="0" max="99" size="2" name="emptySmens" id="emptySmens" class="who2" placeholder="0" style="font-size: 13px; text-align: center;">
                                             </div>
+                                            <button class="b" style="font-size: 80%;" onclick="showEmptySmenaAddINTabel('.$_GET['id'].');">Добавить в табель оплату <b>пустых</b> смен</button>
                                         </div>
                                     </div>
                                      <!--<div><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'" class="b" style = "font - size: 80 %;" > Добавить вычет </a ></div >-->

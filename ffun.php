@@ -507,6 +507,45 @@
 
     }
 
+    //Обновить сумму баланса Надбавок по ночным сменам табеля
+    function updateTabelNightSmensSumm($tabel_id){
+
+        $msql_cnnct = ConnectToDB2();
+
+        $query = "SELECT SUM(`summ`) AS `summNS`  FROM `fl_journal_tabel_nightsmens` WHERE `tabel_id`='{$tabel_id}';";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        $arr = mysqli_fetch_assoc($res);
+
+        $query = "UPDATE `fl_journal_tabels` SET `night_smena` = '".round($arr['summNS'], 2)."' WHERE `id`='{$tabel_id}';";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        CloseDB ($msql_cnnct);
+
+    }
+
+
+    //Обновить сумму баланса Надбавок по пустым сменам табеля
+    function updateTabelEmptySmensSumm($tabel_id){
+
+        $msql_cnnct = ConnectToDB2();
+
+        $query = "SELECT SUM(`summ`) AS `summES`  FROM `fl_journal_tabel_emptysmens` WHERE `tabel_id`='{$tabel_id}';";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        $arr = mysqli_fetch_assoc($res);
+
+        $query = "UPDATE `fl_journal_tabels` SET `empty_smena` = '".round($arr['summES'], 2)."' WHERE `id`='{$tabel_id}';";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        CloseDB ($msql_cnnct);
+
+    }
+
 
     //Обновление РЛ
     function fl_updateCalculatesData ($invoice_id, $mat_cons_j_ex, $deleteMark){

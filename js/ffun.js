@@ -883,13 +883,82 @@
         });
     }
 
+    //Показываем блок с ночными сменами
+    function Ajax_NightSmenaAddINTabel (tabel_id, nightSmenaCount){
+        //console.log(tabel_id);
+
+        var link = "fl_add_night_smena_in_tabel_f.php";
+        //console.log(link);
+
+        var Data = {
+            tabel_id: tabel_id,
+            count: nightSmenaCount
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: Data,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                if(res.result == "success"){
+                    location.reload();
+                }else{
+                    $('#errror').html(res.data);
+                }
+            }
+        });
+    }
+
+    //Показываем блок с ночными сменами
+    function Ajax_emptySmenaAddINTabel (tabel_id, emptySmens){
+        //console.log(tabel_id);
+
+        var link = "fl_add_empty_smena_in_tabel_f.php";
+        //console.log(link);
+
+        var Data = {
+            tabel_id: tabel_id,
+            count: emptySmens
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: Data,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                if(res.result == "success"){
+                    location.reload();
+                }else{
+                    $('#errror').html(res.data);
+                }
+            }
+        });
+    }
 
     //Показываем блок с ночными сменами
     function showNightSmenaAddINTabel (tabel_id, nightSmenaCount){
         //console.log(tabel_id);
         $('#overlay').show();
 
-        var buttonsStr = '<input type="button" class="b" value="Добавить" onclick="Ajax_NightSmenaAddINTabel(tabel_id, nightSmenaCount)">';
+        var buttonsStr = '<input type="button" class="b" value="Добавить" onclick="Ajax_NightSmenaAddINTabel('+tabel_id+', '+nightSmenaCount+')">';
 
         /*if (mode == 'edit'){
             buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'edit\')">';
@@ -958,7 +1027,7 @@
 
                     $('#overlay').show();
 
-                    var buttonsStr = '<input type="button" class="b" value="Добавить" onclick="Ajax_emptySmenaAddINTabel(tabel_id, emptySmens)">';
+                    var buttonsStr = '<input type="button" class="b" value="Добавить" onclick="Ajax_emptySmenaAddINTabel('+tabel_id+', '+emptySmens+')">';
 
                     /*if (mode == 'edit'){
                      buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'edit\')">';
