@@ -1608,6 +1608,147 @@
         }
     }
 
+    //Снять отметку о Проведении табеля
+    function deployTabelDelete (tabel_id){
+        //console.log(mode);
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        var Data = {
+            tabel_id:tabel_id
+        };
+
+        var link = "fl_deployTabel_delete_f.php";
+
+        var rys = false;
+
+        var rys = confirm("Вы уверены, что хотите\nснять отметку о проведении табеля?");
+        //console.log(885);
+
+        if (rys) {
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+
+                data: Data,
+
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res);
+
+                    if (res.result == "success") {
+                        //console.log(res);
+                        location.reload();
+                    } else {
+                        $('#errror').html(res.data);
+                    }
+                }
+            });
+        }
+    }
+
+    //Удалить ночные смены из табеля
+    function nightSmenaTabelDelete (tabel_id){
+        //console.log(mode);
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        var Data = {
+            tabel_id:tabel_id
+        };
+
+        var link = "fl_nightSmenaTabel_delete_f.php";
+
+        var rys = false;
+
+        var rys = confirm("Вы уверены, что хотите удалить \nночные смены из табеля?");
+        //console.log(885);
+
+        if (rys) {
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+
+                data: Data,
+
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res);
+
+                    if (res.result == "success") {
+                        //console.log(res);
+                        location.reload();
+                    } else {
+                        $('#errror').html(res.data);
+                    }
+                }
+            });
+        }
+    }
+
+    //Удалить пустые смены из табеля
+    function emptySmenaTabelDelete (tabel_id){
+        //console.log(mode);
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        var Data = {
+            tabel_id:tabel_id
+        };
+
+        var link = "fl_emptySmenaTabel_delete_f.php";
+
+        var rys = false;
+
+        var rys = confirm("Вы уверены, что хотите удалить \n\"пустые\" смены из табеля?");
+        //console.log(885);
+
+        if (rys) {
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+
+                data: Data,
+
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res);
+
+                    if (res.result == "success") {
+                        //console.log(res);
+                        location.reload();
+                    } else {
+                        $('#errror').html(res.data);
+                    }
+                }
+            });
+        }
+    }
+
 
     //
     function changeAllMaterials_consumption_pos() {

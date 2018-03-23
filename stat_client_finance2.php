@@ -15,10 +15,11 @@
 			include_once 'filter.php';
 			include_once 'filter_f.php';
 			
-			$offices_j = SelDataFromDB('spr_filials', '', '');
+			$offices_j = getAllFilials(true, false);
+			//var_dump($offices_j );
 
-			if ($_POST){
-			}else{
+			if ($_POST) {
+            }else{
 				echo '
 					<header style="margin-bottom: 5px;">
 						<h1>Открытые наряды</h1>
@@ -33,7 +34,7 @@
 									Выберите условие
 								</li>
 								
-								<li class="filterBlock" style="display: none">
+								<!--<li class="filterBlock" style="display: none">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
 										Выберите период
 									</div>
@@ -48,9 +49,9 @@
 											<input type="checkbox" name="all_time" value="1" checked> <span style="font-size:80%;">За всё время</span>
 										</div>
 									</div>
-								</li>
+								</li>-->
 								
-								<!--<li class="filterBlock">
+								<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
 										Филиал
 									</div>
@@ -70,7 +71,45 @@
 											</select>
 										</div>
 									</div>
-								</li>-->
+								</li>
+								<li class="filterBlock">
+									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+										Сотрудник, на кого был выписан наряд<br>
+										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
+									</div>
+									<div class="filtercellRight" style="width: 245px; min-width: 245px;">';
+                if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
+                    echo '
+										<input type="text" size="30" name="searchdata4" id="search_client4" placeholder="Минимум три буквы для поиска" value="" class="who4" autocomplete="off">
+										<ul id="search_result4" class="search_result4"></ul><br />';
+                }else{
+                    echo WriteSearchUser('spr_workers', $_SESSION['id'], 'user_full', false).'
+                                        <input type="hidden" id="search_client4" name="searchdata4" value="'.WriteSearchUser('spr_workers', $_SESSION['id'], 'user_full', false).'">';
+                }
+                echo '
+									</div>
+								</li>
+								<li class="filterBlock">
+									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+										Пациент<br>
+										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
+									</div>
+									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
+										<input type="text" size="30" name="searchdata" id="search_client" placeholder="Минимум три буквы для поиска" value="" class="who" autocomplete="off">
+										<ul id="search_result" class="search_result"></ul><br />
+									</div>
+								</li>
+								<li class="filterBlock">
+									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+										Сотрудник, который создал<br>
+										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
+									</div>
+									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
+										<input type="text" size="30" name="searchdata2" id="search_worker" placeholder="Минимум три буквы для поиска" value="" class="who2" autocomplete="off">
+										<ul id="search_result2" class="search_result2"></ul><br />
+									</div>
+								</li>
+								
 								';
 				echo '
 								<li class="cellsBlock" style="margin: 10px;">

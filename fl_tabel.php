@@ -82,6 +82,11 @@
 
                         if ($tabel_j[0]['status'] == 7) {
                             echo ' <span style="color: green">Проведён <i class="fa fa-check" aria-hidden="true" style="color: green;"></i></span>';
+
+                            echo '<span style="margin-left: 20px; font-size: 60%; color: red; cursor:pointer;" onclick="deployTabelDelete('.$_GET['id'].');">Снять отметку о проведении <i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 150%;"></i></span>';
+
+                        }else{
+                            echo '<span style="margin-left: 20px; font-size: 60%; color: red;">Не проведён </span>';
                         }
 
                         echo '			
@@ -380,19 +385,39 @@
                                         <div>
                                             <div style="font-size: 85%; color: #555;">
                                                 Из них ночных: <span class="" style="font-size: 14px; font-weight: bold;">' . $nightSmena . '</span>. Надбавка за одну ночную смену: 1000 руб.<br>
-                                            </div>
-                                            <button class="b" style="font-size: 80%;" onclick="showNightSmenaAddINTabel('.$_GET['id'].', '.$nightSmena.');">Добавить в табель оплату <b>ночных</b> смен</button>
+                                            </div>';
+                            if ($tabel_j[0]['night_smena'] == 0) {
+                                echo '
+                                            <button class="b" style="font-size: 80%;" onclick="showNightSmenaAddINTabel(' . $_GET['id'] . ', ' . $nightSmena . ');">Добавить в табель оплату <b>ночных</b> смен</button>';
+                            }else{
+                                echo '<div style="font-size: 80%; color: rgb(7, 199, 41); padding-top: 5px;">В табель уже включена сумма за ночные смены <span style="font-size: 120%; font-weight: bold;">'.$tabel_j[0]['night_smena'].'</span> руб.';
+
+                                echo '<span style="margin-left: 20px; font-size: 90%; color: red; cursor:pointer;" onclick="nightSmenaTabelDelete('.$_GET['id'].');"><i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 150%;"></i> Удалить из табеля ночные смены</span>';
+
+                                echo '</div>';
+                            }
+                            echo '
                                         </div>';
                         }
                         echo '
                                         <div style="margin: 10px 0;">
                                             <div style="font-size: 90%;  color: #555;">
                                                 <span style="color: rgba(10, 10, 10, 1);">Надбавка за "пустые смены".</span> (250 руб. за одну "пустую" смену)
-                                            </div>
+                                            </div>';
+                        if ($tabel_j[0]['empty_smena'] == 0) {
+                            echo '
                                             <div style="font-size: 90%;  color: #555;">
                                                 Введите количество "пустых" смен: <input type="number" value="" min="0" max="99" size="2" name="emptySmens" id="emptySmens" class="who2" placeholder="0" style="font-size: 13px; text-align: center;">
                                             </div>
-                                            <button class="b" style="font-size: 80%;" onclick="showEmptySmenaAddINTabel('.$_GET['id'].');">Добавить в табель оплату <b>пустых</b> смен</button>
+                                            <button class="b" style="font-size: 80%;" onclick="showEmptySmenaAddINTabel(' . $_GET['id'] . ');">Добавить в табель оплату <b>пустых</b> смен</button>';
+                        }else{
+                            echo '<div style="font-size: 80%; color: rgb(7, 199, 41); padding-top: 5px;">В табель уже включена сумма за "пустые" смены <span style="font-size: 120%; font-weight: bold;">'.$tabel_j[0]['empty_smena'].'</span> руб.';
+
+                            echo '<span style="margin-left: 20px; font-size: 90%; color: red; cursor:pointer;" onclick="emptySmenaTabelDelete('.$_GET['id'].');"><i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 150%;"></i> Удалить из табеля "пустые" смены</span>';
+
+                            echo '</div>';
+                        }
+                            echo '
                                         </div>
                                     </div>
                                      <!--<div><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'" class="b" style = "font - size: 80 %;" > Добавить вычет </a ></div >-->
@@ -425,7 +450,7 @@
 
                         echo '
                                         <div style="background-color: rgba(56, 245, 70, 0.36); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Итого: <span class="calculateOrder" style="font-size: 16px; ', ($tabel_j[0]['summ'] - $tabel_j[0]['deduction'] + $tabel_j[0]['surcharge']) <= 0 ? 'color: red;' : '' ,'">' . ($tabel_j[0]['summ'] - $tabel_j[0]['deduction'] + $tabel_j[0]['surcharge']) . '</span> руб.</div>
+                                            <div>Итого: <span class="calculateOrder" style="font-size: 16px; ', ($tabel_j[0]['summ'] - $tabel_j[0]['deduction'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena']) <= 0 ? 'color: red;' : '' ,'">' . ($tabel_j[0]['summ'] - $tabel_j[0]['deduction'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena']) . '</span> руб.</div>
                                             <div>';
                         if ($tabel_j[0]['status'] != 7) {
                             echo '

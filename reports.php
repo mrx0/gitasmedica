@@ -89,7 +89,12 @@
 
 			echo '				
 							<li class="cellsBlock" style="margin: 1px;">
-								<a href="stat_client_finance2.php" class="b3">Долги/авансы</a>
+								<a href="stat_client_finance2.php" class="b3">Открытые наряды</a>
+							</li>';
+
+			echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="stat_client_finance3.php" class="b3">Свободные средства на счетах пациентов</a>
 							</li>';
 
 			echo '				

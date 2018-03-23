@@ -2876,8 +2876,13 @@
 	function Ajax_show_result_stat_client_finance2(){
 
 		var reqData = {
-			ticket_id: 1,
-			 /*descr: $("#msg_input").html()*/
+            //Кто создал запись
+            creator:$("#search_worker").val(),
+            //Пациент
+            client:$("#search_client").val(),
+            //К кому запись
+            worker:$("#search_client4").val(),
+            filial:$("#filial").val(),
 		};
 		//console.log($("#msg_input").html());
 
