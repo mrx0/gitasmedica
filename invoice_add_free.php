@@ -1,7 +1,7 @@
 <?php
 
-//invoice_add.php
-//Выписываем счёт
+//invoice_add_free.php
+//Выписываем счёт на "пустого" покупателя
 
 	require_once 'header.php';
     require_once 'blocks_dom.php';
@@ -22,8 +22,13 @@
 			//var_dump($_SESSION['invoice_data'][20293][28205]['data']);
 			//unset($_SESSION['invoice_data']);
 			
-			if ($_GET){
-				if (isset($_GET['client']) && isset($_GET['id']) && isset($_GET['filial']) && isset($_GET['worker'])){
+			//if ($_GET){
+
+                $_GET['client'] = 1;
+                $_GET['worker'] = 0;
+                $_GET['id'] = 0;
+
+				if (isset($_GET['filial'])){
 			
 					//if (($finances['add_new'] == 1) || $god_mode){
 						//array_push($_SESSION['invoice_data'], $_GET['client']);
@@ -35,42 +40,47 @@
 						$client_j = SelDataFromDB('spr_clients', $_GET['client'], 'user');
 						//var_dump($client_j);
 
-                        if (
+                        /*if (
                             ($client_j[0]['card'] == NULL) ||
                             ($client_j[0]['birthday2'] == '0000-00-00') ||
                             ($client_j[0]['sex'] == 0) ||
                             ($client_j[0]['address'] == NULL)
                         ){
                             echo '<div class="query_neok">В <a href="client.php?id='.$_GET['client'].'">карточке пациента</a> не заполнены все необходимые графы.</div>';
-                        }else{
+                        }else{*/
 
 
                             $msql_cnnct = ConnectToDB ();
 
-                            $query = "SELECT * FROM `zapis` WHERE `id`='".$_GET['id']."'";
+                            //$query = "SELECT * FROM `zapis` WHERE `id`='".$_GET['id']."'";
 
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                            //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-                            $number = mysqli_num_rows($res);
+                            /*$number = mysqli_num_rows($res);
                             if ($number != 0){
                                 while ($arr = mysqli_fetch_assoc($res)){
                                     array_push($sheduler_zapis, $arr);
                                 }
                             }else
-                                $sheduler_zapis = 0;
+                                $sheduler_zapis = 0;*/
                             //var_dump ($sheduler_zapis);
 
                             //if ($client !=0){
-                            if ($sheduler_zapis != 0) {
+                            //if ($sheduler_zapis != 0) {
 
-                                if (!isset($_SESSION['invoice_data'][$_GET['client']][$_GET['id']])) {
+                                //if (!isset($_SESSION['invoice_data'][$_GET['client']][$_GET['id']])) {
+                                    $_SESSION['invoice_data'] = array();
+                                    $_SESSION['invoice_data'][$_GET['client']] = array();
+                                    $_SESSION['invoice_data'][$_GET['client']][$_GET['id']] = array();
+
+
                                     $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['filial'] = (int)$_GET['filial'];
                                     $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['worker'] = (int)$_GET['worker'];
                                     $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['t_number_active'] = 0;
                                     $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['discount'] = 0;
                                     $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data'] = array();
                                     $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['mkb'] = array();
-                                }
+                                //}
                                 //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]);
 
                                 //сортируем зубы по порядку
@@ -96,7 +106,7 @@
                                 echo '		
                                     </header>';
 
-                                echo '
+                                /*echo '
                                     <ul style="margin-left: 6px; margin-bottom: 10px;">	
                                         <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Посещение</li>';
 
@@ -186,10 +196,10 @@
 
                                     echo '
                                         </ul>';
-                                }
+                                }*/
 
                                 //Наряды
-                                echo '
+                                /*echo '
                                     <ul id="invoices" style="margin-left: 6px; margin-bottom: 10px;">					
                                         <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Последний выписанный наряд для этой записи</li>';
 
@@ -239,7 +249,7 @@
                                 }
 
                                 echo '
-                                    </ul>';
+                                    </ul>';*/
 
                                 $discount = $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['discount'];
 
@@ -729,19 +739,19 @@
                                             
                                         </script>';
                                 }
-                            }else{
+                            /*}else{
                                 echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
-                            }
-                        }
+                            }*/
+                        //}
 					/*}else{
 						echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 					}*/
 				}else{
 					echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 				}
-			}else{
+			/*}else{
 				echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
-			}
+			}*/
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}

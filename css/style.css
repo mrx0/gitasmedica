@@ -1832,6 +1832,7 @@ input[type="number"].mod{
 
 input.dateс {
 	width:7em; text-align:right;
+	cursor: pointer;
 }
 
 
