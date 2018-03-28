@@ -12,6 +12,9 @@
 			if ($_GET){
 				include_once 'DBWork.php';
 				include_once 'functions.php';
+
+                require 'variables.php';
+
 				include_once 'tooth_status.php';
 				
 				$task = SelDataFromDB('journal_tooth_status', $_GET['id'], 'task');
@@ -333,7 +336,12 @@
 											<td colspan="2">
 										
 												<select name="add_notes_type" id="add_notes_type">
-													<option value="0" selected>Выберите</option>
+													<option value="0" selected>Выберите</option>';
+                            foreach ($for_notes as $for_notes_id =>  $for_notes_descr){
+                                echo '<option value="'.$for_notes_id.'">'.$for_notes_descr.'</option>';
+                            }
+
+                            /*echo '
 													<option value="1">Каласепт, Метапекс, Септомиксин (Эндосольф)</option>
 													<option value="2">Временная пломба</option>
 													<option value="3">Открытый зуб</option>
@@ -343,7 +351,8 @@
 													<option value="7">Временная коронка</option>
 													<option value="10">Установлены брекеты</option>
 													<option value="8">Санированные пациенты ( поддерживающее лечение через 6 мес)</option>
-													<option value="9">Прочее</option>
+													<option value="9">Прочее</option>';*/
+                            echo '
 												</select>
 											
 											</td>

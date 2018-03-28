@@ -1,6 +1,7 @@
 <?php
+
 //user.php
-//
+//Карточка пользователя
 
 	require_once 'header.php';
 	
@@ -10,6 +11,8 @@
 		if ($_GET){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
+
+            require 'variables.php';
 			
 			$user = SelDataFromDB('spr_workers', $_GET['id'], 'user');
 			//var_dump($user);
@@ -105,7 +108,7 @@
 					echo '
 								<!--<div class="cellsBlock2">
 									<div class="cellRight" style="font-size:70%;">Настройки.</div>
-								</div>-->			
+								</div>		
 								<div class="cellsBlock2" style="font-size:80%;">
 									<div class="cellRight">
 										Филиал теперь можно выбрать/изменить в правом верхнем углу под ФИО пользователя';
@@ -158,7 +161,7 @@
 				
 				//var_dump ($notes);	
 
-				$for_notes = array (
+				/*$for_notes = array (
 					1 => 'Каласепт, Метапекс, Септомиксин (Эндосольф)',
 					2 => 'Временная пломба',
 					3 => 'Открытый зуб',
@@ -169,7 +172,7 @@
 					8 => 'Санированные пациенты ( поддерживающее лечение через 6 мес)',
 					9 => 'Прочее',					
 					10 => 'Установлены брекеты',					
-				);
+				);*/
 				
 				echo ' 
 					<div class="showHiddenDivs" style="cursor: pointer;">

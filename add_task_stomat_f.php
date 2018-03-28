@@ -22,7 +22,7 @@
 				$clients = SelDataFromDB ('spr_clients', $_POST['client'], 'client_full_name');
 				//var_dump($clients);
 				if ($clients != 0){
-					$client = $clients[0]["id"];
+                    $client_id = $client = $clients[0]["id"];
 					if ($clients[0]['therapist'] == 0){
 						UpdateTherapist($_SESSION['id'], $clients[0]["id"], $_SESSION['id'], '');
 					}
@@ -172,7 +172,7 @@
 								if ($_POST['add_notes_type'] != 0){
 									if (($_POST['add_notes_months'] != 0) || ($_POST['add_notes_days'] != 0)){
 
-										$date = date_create(date('Y-m-d', time()));
+										$date = date_create(date('Y-m-d 21:00:00', time()));
 										$dead_line_temp = date_add($date, date_interval_create_from_date_string($_POST['add_notes_months'].' months'));
 										$dead_line = date_timestamp_get(date_add($dead_line_temp, date_interval_create_from_date_string($_POST['add_notes_days'].' days'))) + 60*60*8;
 										
@@ -198,6 +198,106 @@
 										//mysql_query("DELETE FROM `journal_tooth_status_temp` WHERE `id` = '$stat_id'");
 										
 										//mysql_close();
+
+
+
+                                        //Добавим тикет
+                                        require 'variables.php';
+
+                                        $time = date('Y-m-d H:i:s', time());
+
+                                        $plan_date = date('Y-m-d H:i:s', $dead_line);
+
+                                        //Описание
+                                        $descr = '<b>'.$for_notes[$_POST['add_notes_type']].'</b><br>
+                                        '.date('d.m.Y H:i:s', $_POST['zapis_date']).'<br>
+                                        Пациент: '.$clients[0]['full_name'].'<br>
+                                        <br>';
+
+                                        //Подключаемся к другой базе специально созданной для тикетов
+                                        $msql_cnnct2 = ConnectToDB_2 ('config_ticket');
+
+                                        $query = "INSERT INTO `journal_tickets` (`filial_id`, `descr`, `plan_date`, `create_time`, `create_person`)
+                                        VALUES (
+                                        '{$_POST['filial']}', '{$descr}', '{$plan_date}', '{$time}', '{$_SESSION['id']}')";
+
+                                        $res = mysqli_query($msql_cnnct2, $query) or die(mysqli_error($msql_cnnct2).' -> '.$query);
+
+                                        //ID новой позиции
+                                        $mysql_insert_id = mysqli_insert_id($msql_cnnct2);
+
+                                        //Собираем строку запроса
+                                        $query = '';
+
+                                        //Добавляем категории сотрудников
+                                        $permissionsWhoCanSee_arr = array(3, 9);
+                                        $workers_type = $permissionsWhoCanSee_arr;
+
+                                        //array_push($workers_type, 5);
+                                        //$workers_type = array_unique($workers_type);
+
+                                        if (!empty($workers_type) && ($workers_type != '')){
+                                            foreach ($workers_type as $workers_type_id){
+                                                $query .= "INSERT INTO `journal_tickets_worker_type` (`ticket_id`, `worker_type`)
+                                                VALUES (
+                                                '{$mysql_insert_id}', '{$workers_type_id}');";
+                                            }
+                                        }
+
+                                        //Добавляем исполнителей
+                                        //if (!empty($workers)){
+                                        //    foreach ($workers    as $worker_id){
+                                                $query .= "INSERT INTO `journal_tickets_workers` (`ticket_id`, `worker_id`)
+                                                VALUES (
+                                                '{$mysql_insert_id}', '{$_SESSION['id']}');";
+                                        //    }
+                                       // }
+
+                                        //Добавляем лог
+                                        $query .= "INSERT INTO `journal_tickets_logs` (`ticket_id`, `create_time`, `create_person`, `descr`)
+                                        VALUES (
+                                        '{$mysql_insert_id}', '{$time}', '{$_SESSION['id']}', 'Новый тикет добавлен');";
+
+                                        //Добавляем отметку о прочтении (мы же создали это сами)
+                                        $query .= "INSERT INTO `journal_tickets_readmark` (`ticket_id`, `create_time`, `create_person`, `status`)
+                                        VALUES (
+                                        '{$mysql_insert_id}', '{$time}', '{$_SESSION['id']}', '1');";
+
+                                        //Добавляем комментарий
+                                        $comment = trim(preg_replace('/ +/', ' ', trim($descr, ' ')), ' ');
+
+                                        $comment = htmlspecialchars($comment);
+
+                                        $comment = mysqli_real_escape_string($msql_cnnct2, $comment);
+
+                                        if ($comment != ''){
+                                            $query .= "INSERT INTO `journal_tickets_comments` (`ticket_id`, `create_time`, `create_person`, `descr`)
+                                            VALUES (
+                                            '{$mysql_insert_id}', '{$time}', '{$_SESSION['id']}', '{$comment}');";
+                                        }
+
+
+                                        //Добавим ассоциации где показывать
+                                        $query .= "INSERT INTO `journal_ticket_associations` (`ticket_id`, `associate`, `association_id`)
+                                            VALUES (
+                                            '{$mysql_insert_id}', 'add_task_stomat_f.php', '{$task}');";
+
+                                        $query .= "INSERT INTO `journal_ticket_associations` (`ticket_id`, `associate`, `association_id`)
+                                            VALUES (
+                                            '{$mysql_insert_id}', 'client.php', '{$client_id}');";
+
+
+                                        //Делаем большой запрос
+                                        $res = mysqli_multi_query($msql_cnnct2, $query) or die(mysqli_error($msql_cnnct2).' -> '.$query);
+
+
+
+
+                                        //Закрываем соединение
+                                        CloseDB ($msql_cnnct2);
+
+
+
 									}else{
 										echo 'Вы не назначили срок напоминания<br><br>';
 									}
@@ -277,7 +377,7 @@
 									'{$task}', '{$pervich_status}', '{$noch_status}', '{$insured_status}') ";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-								
+
 							echo '
 								<a href="task_stomat_inspection.php?id='.$task.'" class="ahref">Посещение #'.$task.'</a> добавлено в журнал.
 								<br><br>

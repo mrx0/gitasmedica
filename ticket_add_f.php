@@ -96,7 +96,7 @@
 
                     //Добавляем исполнителей
                     if (!empty($workers)){
-                        foreach ($workers    as $worker_id){
+                        foreach ($workers  as $worker_id){
                             $query .= "INSERT INTO `journal_tickets_workers` (`ticket_id`, `worker_id`)
                             VALUES (
                             '{$mysql_insert_id}', '{$worker_id}');";

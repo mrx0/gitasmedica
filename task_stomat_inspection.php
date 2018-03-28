@@ -376,14 +376,21 @@
                         Открыть предыдущую</i>
                         </a>
                         </div>
-                        <div class="cellsBlock2" style="margin-bottom: 20px;">
+                        <div class="cellsBlock2" style="margin-bottom: 10px;">
                         <a href = "#" onclick = "window.open(\'task_stomat_inspection_window.php?id='.$prev_tooth_status_id.'\',\'test\', \'width=700,height=350,status=no,resizable=no,top=200,left=200\'); return false;" class="ahref" style="font-weight:bold; font-size: 80%; color: #353535;">
                         Открыть предыдущую в новом окне <i class="fa fa-external-link" aria-hidden="true"></i>
                         </a>
                         </div>
+                        <div>
                         ';
                     }
-					
+
+                    if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
+                        echo '	
+								<a href="stom_history.php?client='.$task[0]['client'].'" class="b">История ЗФ</a>';
+                    }
+
+                    echo '</div>';
 
 					//Наряд
 					if ($task[0]['zapis_id'] != 0) {
@@ -855,6 +862,189 @@
                         }
                     }
 
+
+                    //Тикеты
+                    $tickets_arr = array();
+
+                    $today = date('Y-m-d', time());
+                    $today3daysplus = date('Y-m-d', strtotime('+3 days'));
+
+                    //$filials_j = getAllFilials(false, false);
+
+                    $show_option_str_for_paginator = '';
+
+                    //Подключаемся к другой базе специально созданной для тикетов
+                    $msql_cnnct2 = ConnectToDB_2 ('config_ticket');
+
+                    $query = "SELECT j_ticket.*, jticket_rm.status as read_status, j_tickets_worker.worker_id,
+                    GROUP_CONCAT(DISTINCT j_tickets_filial.filial_id ORDER BY j_tickets_filial.filial_id ASC SEPARATOR \",\") AS filials
+                    FROM `journal_tickets` j_ticket 
+                    LEFT JOIN `journal_tickets_readmark` jticket_rm ON j_ticket.id = jticket_rm.ticket_id AND jticket_rm.create_person = '{$_SESSION['id']}'
+                    LEFT JOIN `journal_tickets_workers` j_tickets_worker ON j_ticket.id = j_tickets_worker.ticket_id AND j_tickets_worker.worker_id = '{$_SESSION['id']}'
+                    LEFT JOIN `journal_tickets_filial` j_tickets_filial ON j_tickets_filial.ticket_id = j_ticket.id 
+                    WHERE j_ticket.id IN (SELECT `ticket_id` FROM `journal_ticket_associations` WHERE `ticket_id`= j_ticket.id AND `associate`='add_task_stomat_f.php' AND `association_id`='{$_GET['id']}')
+                    AND j_ticket.status <> '9' AND j_ticket.status <> '1'
+                    GROUP BY `id` ORDER BY /*`plan_date` ASC,*/ `id` DESC";
+
+                    $res = mysqli_query($msql_cnnct2, $query) or die(mysqli_error($msql_cnnct2).' -> '.$query);
+
+                    $number = mysqli_num_rows($res);
+
+                    if ($number != 0){
+                        while ($arr = mysqli_fetch_assoc($res)){
+                            array_push($tickets_arr, $arr);
+                        }
+                    }
+                    //var_dump($tickets_arr);
+
+                    CloseDB ($msql_cnnct2);
+
+                    if (!empty($tickets_arr)) {
+                        echo '<div style="margin: 15px 0 0 -5px;">';
+                        foreach ($tickets_arr as $j_tickets) {
+
+                            $ticket_style = 'ticketBlock';
+                            $expired_icon = '';
+
+                            //Если просрочен
+                            if ($j_tickets['plan_date'] != '0000-00-00') {
+                                //время истечения срока
+                                $pd = $j_tickets['plan_date'];
+                                //текущее
+                                $nd = $today;
+                                //сравнение не прошли ли сроки исполнения
+                                if (strtotime($pd) > strtotime($nd) + 2 * 24 * 60 * 60) {
+                                    $expired = false;
+                                } else {
+                                    if (strtotime($pd) < strtotime($nd)) {
+                                        $expired = true;
+                                        $ticket_style = 'ticketBlockexpired';
+                                        $expired_icon = 'fa fa-exclamation-circle';
+                                    } else {
+                                        $expired = true;
+                                        $ticket_style = 'ticketBlockexpired2';
+                                        $expired_icon = 'fa fa-exclamation';
+                                    }
+                                }
+                                /*var_dump(strtotime($nd));
+                                var_dump(strtotime($pd));
+                                var_dump(strtotime($pd)-strtotime($nd));
+                                var_dump(3*24*60*60);*/
+                                //var_dump(date('Y-m-d', time()));
+                                //var_dump(strtotime(date('Y-m-d', time())));
+                            } else {
+                                $expired = false;
+                            }
+                            //Если выполнен и закрыт
+                            if ($j_tickets['status'] == 1) {
+                                $ticket_done = true;
+                                $ticket_style = 'ticketBlockdone';
+                            } else {
+                                $ticket_done = false;
+                            }
+                            //Если удалён
+                            if ($j_tickets['status'] == 9) {
+                                $ticket_deleted = true;
+                                $ticket_style = 'ticketBlockdeleted';
+                            } else {
+                                $ticket_deleted = false;
+                            }
+                            //Если прочитано
+                            if ($j_tickets['read_status'] == 1) {
+                                //$readStateClass = 'display: none;';
+                                $newTopic = false;
+                            } else {
+                                $newTopic = true;
+                            }
+
+
+                            //Длина строки проверка, если больше, то сокращаем
+                            if (strlen($j_tickets['descr']) > 100) {
+                                $descr = mb_strimwidth($j_tickets['descr'], 0, 50, "...", 'utf-8');
+                            } else {
+                                $descr = $j_tickets['descr'];
+                            }
+
+                            echo '
+                        <div class="' . $ticket_style . '" style="font-size: 95%;">
+                            <div class="ticketBlockheader">
+                                <div style="margin-left: 5px; text-align: left; float: left;">
+                                    <span style=" color: rgb(29, 29, 29); font-size: 80%; font-weight: bold; margin-right: 3px;">#' . $j_tickets['id'] . '</span>';
+                            if (!$ticket_deleted) {
+                                if ($ticket_done) {
+                                    echo '                                    
+                                    <i class="fa fa-check" aria-hidden="true" style="color: green; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"></i>
+                                    <span style=" color: rgb(115, 112, 112); font-size: 80%;">' . date('d.m.Y', strtotime($j_tickets['fact_date'])) . '</span>';
+                                } else {
+                                    if ($j_tickets['plan_date'] != '0000-00-00') {
+                                        echo '
+                                    <span style=" color: rgb(115, 112, 112); font-size: 80%;">до ' . date('d.m.Y', strtotime($j_tickets['plan_date'])) . '</span>';
+                                        //<i class="fa fa-times" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"></i>
+                                    }
+                                }
+                                if (!$ticket_done && $expired) {
+                                    echo '
+                                    <i class="' . $expired_icon . '" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"  title=""></i>';
+                                }
+                            } else {
+                                echo '
+                                    <span style=" color: rgb(115, 112, 112); font-size: 80%;">удалён</span>';
+                            }
+                            echo '
+                                </div>
+                                <div style="margin-right: 5px; text-align: right; float: right;">';
+                            if ($ticket_deleted) {
+                                echo '
+                                    <i class="fa fa-trash" aria-hidden="true" style="color: rgba(244, 244, 244, 0.8); text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Удалено"></i>
+                                    <!--<i class="fa fa-reply" aria-hidden="true" style="color: rgb(167, 255, 0); text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"></i>-->';
+                            } else {
+                                if ($_SESSION['id'] == $j_tickets['worker_id']) {
+                                    echo '                        
+                                        <i class="fa fa-user" aria-hidden="true" style="color: rgba(124, 0, 255, 0.68); text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Вы исполнитель"></i>';
+                                }
+                                if ($newTopic) {
+                                    echo '                        
+                                        <i class="fa fa-bell" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Обновлено"></i>';
+                                }
+                            }
+
+
+                            echo '
+                                </div>
+                            </div>
+                            <a href="ticket.php?id=' . $j_tickets['id'] . '&' . $show_option_str_for_paginator . '" class="ticketBlockmain ahref">
+                                ' . $descr . '<br>
+                                <span style="font-size: 80%; color: rgb(115, 112, 112);">нажмите, чтобы открыть</span>
+                            </a><br>
+
+                            <div class="ticketBlockfooter">
+                                <!--создан ' . date('d.m.y H:i', strtotime($j_tickets['create_time'])) . '<br>-->
+                                автор: <span style="color: rgb(51, 51, 51);">' . WriteSearchUser('spr_workers', $j_tickets['create_person'], 'user', false) . '</span><br>
+                                <!--где создано: ', $j_tickets['filial_id'] == 0 ? 'не указано' : $filials_j[$j_tickets['filial_id']]['name'], '-->';
+                            if ($j_tickets['filials'] != NULL) {
+                                echo 'филиалы: ';
+                                $filials_arr_temp = explode(',', $j_tickets['filials']);
+
+                                if (!empty($filials_arr_temp)) {
+                                    foreach ($filials_arr_temp as $f_id) {
+                                        $bgColor_filialHere = '';
+                                        if (isset($_SESSION['filial'])) {
+                                            if ($f_id == $_SESSION['filial']) {
+                                                $bgColor_filialHere = 'background-color: rgba(144,247,95, 1); border: 1px dotted rgba(65, 33, 222, 0.34);';
+                                            }
+                                        }
+                                        echo '<div style="display: inline-block; font-size: 80%; margin-right: 5px; color: rgb(59, 9, 111); ' . $bgColor_filialHere . '">' . $filials_j[$f_id]['name2'] . '</div>';
+                                    }
+                                }
+
+                            }
+                            echo '                                
+                            </div>
+                        </div>';
+                        }
+                        echo '</div>';
+                    }
+
                     echo '
 									
 									<!--<input type="hidden" id="ended" name="ended" value="">-->
@@ -873,24 +1063,25 @@
 
 					$arr = array();
 					$rez = array();
-					
-					require 'config.php';
-					mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-					mysql_select_db($dbName) or die(mysql_error()); 
-					mysql_query("SET NAMES 'utf8'");
 
-					$query = "SELECT * FROM `journal_zub_img` WHERE `task`='{$_GET['id']}'";			
-					
-					$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-					$number = mysql_num_rows($res);
+                    $msql_cnnct = ConnectToDB ();
+
+					$query = "SELECT * FROM `journal_zub_img` WHERE `task`='{$_GET['id']}'";
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                    $number = mysqli_num_rows($res);
+
 					if ($number != 0){
-						while ($arr = mysql_fetch_assoc($res)){
+						while ($arr = mysqli_fetch_assoc($res)){
 							array_push($rez, $arr);
 						}
 						$rezult = $rez;
 					}else{
 						$rezult = 0;
 					}
+
+                    CloseDB ($msql_cnnct);
 					
 					$price = 0;
 					

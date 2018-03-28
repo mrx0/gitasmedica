@@ -1,7 +1,9 @@
 <?php
 
 	function WriteNotes($notes){
-		include_once 'DBWork.php';	
+		include_once 'DBWork.php';
+
+        require 'variables.php';
 		
 		$rez = '<div class="cellsBlock">
 			';
@@ -9,7 +11,7 @@
 		if ($notes != 0){
 			//var_dump ($notes);	
 
-			$for_notes = array (
+			/*$for_notes = array (
 			1 => 'Каласепт, Метапекс, Септомиксин (Эндосольф)',
 			2 => 'Временная пломба',
 			3 => 'Открытый зуб',
@@ -20,7 +22,7 @@
 			8 => 'Санированные пациенты ( поддерживающее лечение через 6 мес)',
 			9 => 'Прочее',	
 			10 => 'Установлены брекеты',	
-			);
+			);*/
 
 			$rez .= '<br><br>Особые отметки';
 			$rez .= '
