@@ -2520,7 +2520,8 @@ ul.ul-drop div.drop {
 	font-size: 85%;
 	color: #373e4d;
 	white-space: pre-wrap;
-	word-break: break-all;
+	/*word-break: break-all;*/
+	word-break: break-word;
 	margin-bottom: 3px;
 }
 

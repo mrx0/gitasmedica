@@ -19,7 +19,7 @@
 			//require 'config.php';
 
 			//var_dump($_SESSION);
-			//var_dump($_SESSION['invoice_data'][20293][28205]['data']);
+			var_dump($_SESSION['invoice_data']['free_invoice']['data']);
 			//unset($_SESSION['invoice_data']);
 			
 			//if ($_GET){
@@ -70,34 +70,38 @@
 
                                 //if (!isset($_SESSION['invoice_data'][$_GET['client']][$_GET['id']])) {
                                     $_SESSION['invoice_data'] = array();
-                                    $_SESSION['invoice_data'][$_GET['client']] = array();
-                                    $_SESSION['invoice_data'][$_GET['client']][$_GET['id']] = array();
+                                    $_SESSION['invoice_data']['free_invoice'] = array();
+                                    $_SESSION['invoice_data']['free_invoice']['data'] = array();
 
 
-                                    $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['filial'] = (int)$_GET['filial'];
-                                    $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['worker'] = (int)$_GET['worker'];
-                                    $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['t_number_active'] = 0;
-                                    $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['discount'] = 0;
-                                    $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data'] = array();
-                                    $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['mkb'] = array();
+                                    $_SESSION['invoice_data']['free_invoice']['filial'] = (int)$_GET['filial'];
+                                    $_SESSION['invoice_data']['free_invoice']['worker'] = (int)$_GET['worker'];
+                                    $_SESSION['invoice_data']['free_invoice']['t_number_active'] = 0;
+                                    $_SESSION['invoice_data']['free_invoice']['discount'] = 0;
+                                    $_SESSION['invoice_data']['free_invoice']['data'] = array();
+                                    $_SESSION['invoice_data']['free_invoice']['mkb'] = array();
                                 //}
                                 //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]);
 
                                 //сортируем зубы по порядку
-                                ksort($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
+                                ksort($_SESSION['invoice_data']['free_invoice']['data']);
 
                                 //var_dump($_SESSION);
                                 //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
                                 //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['mkb']);
 
-                                if ($sheduler_zapis[0]['month'] < 10) $month = '0' . $sheduler_zapis[0]['month'];
-                                else $month = $sheduler_zapis[0]['month'];
+                                /*if ($sheduler_zapis[0]['month'] < 10) $month = '0' . $sheduler_zapis[0]['month'];
+                                else $month = $sheduler_zapis[0]['month'];*/
+
+                                $day = date('d');
+                                $month = date('m');
+                                $year = date('Y');
 
                                 echo '
                                 <div id="status">
                                     <header>
                                         <div class="nav">
-                                            <a href="zapis_full.php?filial=' . $_GET['filial'] . '&who=stom&d=' . $sheduler_zapis[0]['day'] . '&m=' . $month . '&y=' . $sheduler_zapis[0]['year'] . '&kab=' . $sheduler_zapis[0]['kab'] . '" class="">Запись подробно</a>
+                                            <a href="zapis_full.php">Запись подробно</a>
                                         </div>
                                         
                                         <!--<span style="color: red;">Тестовый режим. Уже сохраняется и даже как-то работает</span>-->
@@ -251,7 +255,7 @@
                                 echo '
                                     </ul>';*/
 
-                                $discount = $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['discount'];
+                                $discount = $_SESSION['invoice_data']['free_invoice']['discount'];
 
                                 echo '
                                     <div id="data">';
@@ -260,11 +264,11 @@
                                         <input type="hidden" id="client" name="client" value="' . $_GET['client'] . '">
                                         <input type="hidden" id="client_insure" name="client_insure" value="' . $client_j[0]['insure'] . '">
                                         <input type="hidden" id="zapis_id" name="zapis_id" value="' . $_GET['id'] . '">
-                                        <input type="hidden" id="zapis_insure" name="zapis_insure" value="' . $sheduler_zapis[0]['insured'] . '">
+                                        <input type="hidden" id="zapis_insure" name="zapis_insure" value="0">
                                         <input type="hidden" id="filial" name="filial" value="' . $_GET['filial'] . '">
                                         <input type="hidden" id="worker" name="worker" value="' . $_GET['worker'] . '">
-                                        <input type="hidden" id="t_number_active" name="t_number_active" value="' . $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['t_number_active'] . '">
-                                        <input type="hidden" id="invoice_type" name="invoice_type" value="' . $_GET['type'] . '">';
+                                        <input type="hidden" id="t_number_active" name="t_number_active" value="' .  $_SESSION['invoice_data']['free_invoice']['t_number_active'] . '">
+                                        <input type="hidden" id="invoice_type" name="invoice_type" value="88">';
 
                                 //Если заднее число записи
 
@@ -273,7 +277,8 @@
                                 var_dump(date("Y-m-d H:m"));*/
                                 //var_dump($sheduler_zapis[0]['year'].'-'.$month.'-'.$sheduler_zapis[0]['day'].' '.$start_time_h.':'.$start_time_m);
                                 $datetime1 = new DateTime(date("Y-m-d H:i"));
-                                $datetime2 = new DateTime($sheduler_zapis[0]['year'].'-'.$month.'-'.$sheduler_zapis[0]['day'].' '.$start_time_h.':'.$start_time_m);
+                                //$datetime2 = new DateTime($year.'-'.$month.'-'.$day.' '.$start_time_h.':'.$start_time_m);
+                                $datetime2 = new DateTime(date('Y-m-d H:i:s', time()));
                                 $interval = $datetime2->diff($datetime1);
                                 $diff_hours = $interval->h;
                                 $diff_hours = $diff_hours + ($interval->days*24);
@@ -292,7 +297,7 @@
                                 var_dump(date("m"));
                                 var_dump(date("Y"));*/
 
-                                if (
+                                /*if (
                                     (($sheduler_zapis[0]['year'] < date("Y")) ||
                                     (($sheduler_zapis[0]['year'] == date("Y")) && ($month < date("m"))) ||
                                     (($month == date("m")) && ($sheduler_zapis[0]['day'] < date("d")))) &&
@@ -308,9 +313,9 @@
                                     var_dump(date("m"));
                                     var_dump(date("Y"));*/
 
-                                    echo '<h1>Нельзя добавлять наряды задним числом</h1>';
-                                }else{
-                                    if ($sheduler_zapis[0]['type'] == 5) {
+                                /*    echo '<h1>Нельзя добавлять наряды задним числом</h1>';
+                                }else{*/
+                                    /*if ($sheduler_zapis[0]['type'] == 5) {
                                         //Зубки
                                         echo '		
                                                 <div style="font-size: 80%; color: #AAA; margin-bottom: 2px;">
@@ -552,7 +557,7 @@
                                                     </div>
                                             ';
 
-                                    }
+                                    }*/
 
                                     echo '			
                                                 <div  style="display: inline-block; width: 400px; height: 600px;">';
@@ -561,10 +566,10 @@
                                                     <div id="tabs_w" style="font-family: Verdana, Calibri, Arial, sans-serif; font-size: 100%">
                                                         <ul>
                                                             <li><a href="#price">Прайс</a></li>';
-                                    if ($sheduler_zapis[0]['type'] == 5) {
+                                    /*if ($sheduler_zapis[0]['type'] == 5) {
                                         echo '
                                                             <li><a href="#mkb">Диагноз (МКБ)</a></li>';
-                                    }
+                                    }*/
                                     echo '
                                                         </ul>
                                                         <div id="price">';
@@ -586,14 +591,14 @@
                                                             <div style=" width: 350px; height: 500px; overflow: scroll; border: 1px solid #CCC;">
                                                                 <ul class="ul-tree ul-drop live_filter" id="lasttree">';
 
-                                    showTree2(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0, $_GET['type']);
+                                    showTree2(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0, 88);
 
                                     echo '
                                                                 </ul>
                                                             </div>';
                                     echo '		
                                                         </div>';
-                                    if ($sheduler_zapis[0]['type'] == 5) {
+                                    /*if ($sheduler_zapis[0]['type'] == 5) {
                                         echo '
                                                         <div id="mkb">';
 
@@ -602,7 +607,7 @@
                                                             <ul class="ul-tree ul-drop" id="lasttree">';*/
 
                                         //Вывод справочника МКб
-                                        echo showTree3(NUll, '', 'list', 0, TRUE, 0, FALSE, 'spr_mkb', 0, 0);
+                                    /*    echo showTree3(NUll, '', 'list', 0, TRUE, 0, FALSE, 'spr_mkb', 0, 0);
 
                                         /*echo '
                                         Comming soon...<br>
@@ -617,9 +622,9 @@
                                         /*echo '
                                                             </ul>
                                                         </div>';*/
-                                        echo '
+                                    /*    echo '
                                                         </div>';
-                                    }
+                                    }*/
                                     echo '
                                                     </div>';
 
@@ -635,12 +640,12 @@
                                                         <div>
                                                             <div style="">К оплате: <div id="calculateInvoice" style="">0</div> руб.</div>
                                                         </div>';
-                                    if ($sheduler_zapis[0]['type'] == 5) {
+                                    /*if ($sheduler_zapis[0]['type'] == 5) {
                                         echo '
                                                         <div>
                                                             <div style="">Страховка: <div id="calculateInsInvoice" style="">0</div> руб.</div>
                                                         </div>';
-                                    }
+                                    }*/
                                     /*echo '
                                                         <div>
                                                             <div style="">Скидка: <div id="discountValue" class="calculateInvoice" style="color: rgb(255, 0, 198);">' . $discount . '</div><span  class="calculateInvoice" style="color: rgb(255, 0, 198);">%</span></div>
@@ -648,7 +653,7 @@
                                     echo '
                                                         <div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
                                                             <div>	
-                                                                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\')">
+                                                                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . 88 . ', \'add\')">
                                                             </div>
                                                         </div>';
                                     echo '
@@ -668,7 +673,7 @@
                                                                          <div class="settings_text" onclick="clearInvoice();">Очистить всё</div>
                                                                     </div>
                                                                 </div>';
-                                    if ($sheduler_zapis[0]['type'] == 5) {
+                                    /*if ($sheduler_zapis[0]['type'] == 5) {
                                         echo '
                                                                 <div style="margin-bottom: 2px;">
                                                                     <div style="display: inline-block; vertical-align: top;">
@@ -678,7 +683,7 @@
                                                                         <div id="insure_approve" class="settings_text">Согласовано</div>
                                                                     </div>
                                                                 </div>';
-                                    }
+                                    }*/
                                     echo '
                                                                 <div style="margin-bottom: 2px;">
                                                                     <div style="display: inline-block; vertical-align: top;">
@@ -697,7 +702,7 @@
 
                                     echo '
                                             <div>	
-                                                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\')">
+                                                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . 7 . ', \'add\')">
                                             </div>
                                         </div>
                     
@@ -738,7 +743,7 @@
                                             });
                                             
                                         </script>';
-                                }
+                                //}
                             /*}else{
                                 echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
                             }*/

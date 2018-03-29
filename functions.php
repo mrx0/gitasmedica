@@ -1709,7 +1709,7 @@
 						
 							echo '
 										<li style="cursor: pointer;">
-											<p onclick="checkPriceItem('.$items_j[$i]['id'].', '.$dtype.')"><span class="4filter">'.$items_j[$i]['name'].'</span></p>
+											<p onclick="checkPriceItem('.$items_j[$i]['id'].', '.$dtype.')"><span class="4filter"><span style="font-size: 75%; font-weight: bold;">[#'.$items_j[$i]['id'].']</span> <i>'.$items_j[$i]['code'].'</i> '.$items_j[$i]['name'].'</span></p>
 										</li>';
 						}
 					}else{
@@ -1754,10 +1754,8 @@
 
 
 	function showTree4($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype){
-		require 'config.php';
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+
+	    $msql_cnnct = ConnectToDB();
 						
 		$arr = array();
 		$rez = array();
@@ -1801,11 +1799,13 @@
 		}else{
 		}
 		//var_dump ($query);
-		
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+		$number = mysqli_num_rows($res);
+
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($rez, $arr);
 			}
 			$rezult = $rez;
@@ -1903,11 +1903,12 @@
 					}
 					
 					//var_dump($query);
-					
-					$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
-					$number = mysql_num_rows($res);	
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+					$number = mysqli_num_rows($res);
 					if ($number != 0){
-						while ($arr2 = mysql_fetch_assoc($res)){
+						while ($arr2 = mysqli_fetch_assoc($res)){
 							array_push($rez2, $arr2);
 						}
 						$items_j = $rez2;
@@ -1935,11 +1936,12 @@
 							}
 							//var_dump($query);
 
-							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-							$number = mysql_num_rows($res);
+							$number = mysqli_num_rows($res);
+
 							if ($number != 0){
-								$arr3 = mysql_fetch_assoc($res);
+								$arr3 = mysqli_fetch_assoc($res);
 								$price = $arr3['price'];
 								$price2 = $arr3['price2'];
 								$price3 = $arr3['price3'];
@@ -1971,7 +1973,7 @@
                             }
                             echo '
 												<div class="priceitemDivname">
-													<a href="'.$link.'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter"><i>'.$items_j[$i]['code'].'</i> '.$items_j[$i]['name'].'</a>
+													<a href="'.$link.'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter"><span style="font-size: 75%; font-weight: bold;">[#'.$items_j[$i]['id'].']</span> <i>'.$items_j[$i]['code'].'</i> '.$items_j[$i]['name'].'</a>
 												</div>
 												<div class="priceitemDiv">
 													<div class="priceitemDivcost"><b>'.$price.'</b> руб.</div>';
@@ -2000,9 +2002,11 @@
 				
 				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
 				//var_dump($query);
-				
-				$res = mysql_query($query) or die($query);
-				$number = mysql_num_rows($res);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+				$number = mysqli_num_rows($res);
+
 				if ($number != 0){
 					//echo '_'.$value['name'].'<br>';
 					$space2 = $space. '&nbsp;&nbsp;&nbsp;';

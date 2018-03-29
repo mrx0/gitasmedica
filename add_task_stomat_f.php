@@ -211,7 +211,7 @@
                                         //Описание
                                         $descr = '<b>'.$for_notes[$_POST['add_notes_type']].'</b><br>
                                         '.date('d.m.Y H:i:s', $_POST['zapis_date']).'<br>
-                                        Пациент: '.$clients[0]['full_name'].'<br>
+                                        Пациент: <a href="client.php?id='.$client_id.'" class="ahref">'.$clients[0]['full_name'].'</a><br>
                                         <br>';
 
                                         //Подключаемся к другой базе специально созданной для тикетов

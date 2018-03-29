@@ -4345,11 +4345,14 @@
 	//Функция заполняет результат счета из сессии
 	function fillInvoiseRez(changeItogPrice){
 
-		var invoice_type = document.getElementById("invoice_type").value;
+		var invoice_type =  $("#invoice_type").val();
 
 		var link = "fill_invoice_stom_from_session_f.php";
 		if (invoice_type == 6){
 			link = "fill_invoice_cosm_from_session_f.php";
+		}
+		if (invoice_type == 88){
+			link = "fill_invoice_free_from_session_f.php";
 		}
 		$.ajax({
 			url: link,
@@ -5593,6 +5596,9 @@
 		if (type == 6){
 			link = "add_price_id_cosm_in_invoice_f.php";
 		}
+		if (type == 88){
+			link = "add_price_id_free_in_invoice_f.php";
+		}
 		$.ajax({
 			url: link,
 			global: false,
@@ -5601,12 +5607,12 @@
 			data:
 			{
 				price_id: price_id,
-				client: document.getElementById("client").value,
-				client_insure: document.getElementById("client_insure").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				zapis_insure: document.getElementById("zapis_insure").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value
+				client: $("#client").val(),
+				client_insure: $("#client_insure").val(),
+				zapis_id: $("#zapis_id").val(),
+				zapis_insure: $("#zapis_insure").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val()
 			},
 			cache: false,
 			beforeSend: function() {

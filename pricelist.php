@@ -1,6 +1,6 @@
 <?php
 
-//services.php
+//pricelist.php
 //
 
 	require_once 'header.php';
@@ -133,11 +133,8 @@
 			$rez4 = array();
 			$arr3 = array();
 			$rez3 = array();
-			
-			require 'config.php';
-			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-			mysql_select_db($dbName) or die(mysql_error()); 
-			mysql_query("SET NAMES 'utf8'");
+
+            $msql_cnnct = ConnectToDB();
 			
 			//if ($services_j !=0){
 				
@@ -160,13 +157,13 @@
 				
 				//!!! переделать Без группы
 						
-				$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' ORDER BY `name`";			
-				
-				$res = mysql_query($query) or die(mysql_error().' -> '.$query);
+				$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` NOT IN (SELECT `item` FROM `spr_itemsingroup`) AND `status` <> '9' ORDER BY `name`";
 
-				$number = mysql_num_rows($res);	
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+				$number = mysqli_num_rows($res);
 				if ($number != 0){
-					while ($arr3 = mysql_fetch_assoc($res)){
+					while ($arr3 = mysqli_fetch_assoc($res)){
 						array_push($rez3, $arr3);
 					}
 					$items_j = $rez3;
@@ -177,7 +174,7 @@
 				//var_dump($items_j);
 				
 				if ($items_j != 0){
-					
+
 					echo '
                     <ul class="" style="width: 850px; font-size: 12px;">
 					<li class="cellsBlock" style="width: auto;">
@@ -185,7 +182,7 @@
 						<span class="cellOffice 4filter" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(255, 103, 97, 0.5);" id="4filter">Без группы</span>
 						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(255, 103, 97, 0.5);"></div>
 					</li>';
-					
+
 					for ($i = 0; $i < count($items_j); $i++) {
 						$price = 0;
 						$price2 = 0;
@@ -193,12 +190,12 @@
 
 						//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
 						$query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
-											
-						$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
-						$number = mysql_num_rows($res);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+						$number = mysqli_num_rows($res);
 						if ($number != 0){
-							$arr4 = mysql_fetch_assoc($res);
+							$arr4 = mysqli_fetch_assoc($res);
 							$price = $arr4['price'];
 							$price2 = $arr4['price2'];
 							$price3 = $arr4['price3'];
@@ -207,7 +204,7 @@
 							$price2 = 0;
 							$price3 = 0;
 						}
-				
+
 						/*echo '
 									<li class="cellsBlock" style="width: auto;">
 										<div class="cellPriority" style=""></div>
@@ -261,13 +258,13 @@
 				
 				$query = "SELECT * FROM `spr_storagegroup` WHERE `status` = '9'";			
 				//var_dump($query);
-				
-				$res = mysql_query($query) or die(mysql_error().' -> '.$query);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 				//var_dump($res);
 				
-				$number = mysql_num_rows($res);	
+				$number = mysqli_num_rows($res);
 				if ($number != 0){
-					while ($arr3 = mysql_fetch_assoc($res)){
+					while ($arr3 = mysqli_fetch_assoc($res)){
 						array_push($rez3, $arr3);
 					}
 					$items_j = $rez3;
@@ -327,13 +324,13 @@
 				
 				//Удалённые позиции
 					
-				$query = "SELECT * FROM `spr_pricelist_template` WHERE `status` = '9'";			
-				
-				$res = mysql_query($query) or die(mysql_error().' -> '.$query);
+				$query = "SELECT * FROM `spr_pricelist_template` WHERE `status` = '9'";
 
-				$number = mysql_num_rows($res);	
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+				$number = mysqli_num_rows($res);
 				if ($number != 0){
-					while ($arr3 = mysql_fetch_assoc($res)){
+					while ($arr3 = mysqli_fetch_assoc($res)){
 						array_push($rez3, $arr3);
 					}
 					$items_j = $rez3;
@@ -344,30 +341,30 @@
 				//var_dump($items_j);
 				
 				if ($items_j != 0){
-					
+
 					echo '
 					<li class="cellsBlock" style="width: auto;">
 						<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
 						<span class="cellOffice 4filter" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(114, 114, 114, 0.5);" id="4filter">Удалённые позиции</span>
 						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(114, 114, 114, 0.5);"></div>
 					</li>';
-					
+
 					for ($i = 0; $i < count($items_j); $i++) {
 						$price = 0;
-						
+
 						//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
 						$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
-											
-						$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
-						$number = mysql_num_rows($res);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+						$number = mysqli_num_rows($res);
 						if ($number != 0){
-							$arr4 = mysql_fetch_assoc($res);
+							$arr4 = mysqli_fetch_assoc($res);
 							$price = $arr4['price'];
 						}else{
 							$price = 0;
 						}
-				
+
 						echo '
 									<li class="cellsBlock" style="width: auto;">
 										<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
@@ -375,12 +372,12 @@
 										<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.'</div>
 									</li>';
 					}
-				}				
+				}
 				
 				
 			//}
-			
-			mysql_close();
+
+            CloseDB ($msql_cnnct);
 
 			echo '
 							</ul>
