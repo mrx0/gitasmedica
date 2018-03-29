@@ -261,12 +261,12 @@
                                     <div id="data">';
 
                                 echo '	
-                                        <input type="hidden" id="client" name="client" value="' . $_GET['client'] . '">
-                                        <input type="hidden" id="client_insure" name="client_insure" value="' . $client_j[0]['insure'] . '">
-                                        <input type="hidden" id="zapis_id" name="zapis_id" value="' . $_GET['id'] . '">
+                                        <input type="hidden" id="client" name="client" value="0">
+                                        <input type="hidden" id="client_insure" name="client_insure" value="0">
+                                        <input type="hidden" id="zapis_id" name="zapis_id" value="0">
                                         <input type="hidden" id="zapis_insure" name="zapis_insure" value="0">
                                         <input type="hidden" id="filial" name="filial" value="' . $_GET['filial'] . '">
-                                        <input type="hidden" id="worker" name="worker" value="' . $_GET['worker'] . '">
+                                        <input type="hidden" id="worker" name="worker" value="0">
                                         <input type="hidden" id="t_number_active" name="t_number_active" value="' .  $_SESSION['invoice_data']['free_invoice']['t_number_active'] . '">
                                         <input type="hidden" id="invoice_type" name="invoice_type" value="88">';
 
@@ -666,9 +666,9 @@
                                                                     <div style="display: inline-block; vertical-align: top;">
                                                                          <div id="spec_koeff" class="settings_text" >Коэфф.</div>
                                                                     </div> /
-                                                                    <div style="display: inline-block; vertical-align: top;">
+                                                                    <!--<div style="display: inline-block; vertical-align: top;">
                                                                          <div id="guarantee" class="settings_text">По гарантии</div>
-                                                                    </div> /
+                                                                    </div> /-->
                                                                     <div style="display: inline-block; vertical-align: top;">
                                                                          <div class="settings_text" onclick="clearInvoice();">Очистить всё</div>
                                                                     </div>

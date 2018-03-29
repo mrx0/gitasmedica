@@ -68,7 +68,7 @@
                             '<div onclick="discountInvoice(30)" style="display: inline;">30%</div>'.
                             '<div onclick="discountInvoice(50)" style="display: inline;">50%</div>
 						</li>'.
-						'<li><div><input type="number" size="2" name="discount" id="discount" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="discountInvoice(document.getElementById(\'discount\').value)"> Применить</div></div></li>';
+						'<li><div><input type="number" size="2" name="discount" id="discount" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="discountInvoice($(\'#discount\').val())"> Применить</div></div></li>';
 				}
 				//Страховая согласовано позиция
 				if ($_POST['mark'] == 'insure_approveItem'){

@@ -4814,13 +4814,18 @@
 
 		var invoice_type = $("#invoice_type").val();
 
+        var link = "add_spec_koeff_price_id_in_invoice_f.php";
+        if (invoice_type == 88){
+            link = "add_spec_koeff_price_id_in_invoice_free_f.php";
+        }
+
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
 		// Удаляем предыдущие вызванное контекстное меню:
 		$('.context-menu').remove();
 
 		$.ajax({
-			url:"add_spec_koeff_price_id_in_invoice_f.php",
+			url: link,
 			global: false,
 			type: "POST",
 			//dataType: "JSON",
@@ -4974,7 +4979,12 @@
 	function discountInvoice(discount){
 		//console.log(discount);
 
-		var invoice_type = $("#invoice_type").val();
+        var invoice_type = $("#invoice_type").val();
+
+        var link = "add_discount_price_id_in_invoice_f.php";
+        if (invoice_type == 88){
+            link = "add_discount_price_id_in_invoice_free_f.php";
+        }
 
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
@@ -4982,19 +4992,19 @@
 		$('.context-menu').remove();
 
 		$.ajax({
-			url:"add_discount_price_id_in_invoice_f.php",
+			url: link,
 			global: false,
 			type: "POST",
 			dataType: "JSON",
 			data:
 			{
 				discount: discount,
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client: $("#client").val(),
+				zapis_id: $("#zapis_id").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val(),
 
-				invoice_type: invoice_type,
+				invoice_type: invoice_type
 			},
 			cache: false,
 			beforeSend: function() {
@@ -5690,8 +5700,8 @@
 				dataType: "JSON",
 				data:
 				{
-					client: document.getElementById("client").value,
-					zapis_id: document.getElementById("zapis_id").value,
+					client: $("#client").val(),
+					zapis_id: $("#zapis_id").val()
 				},
 				cache: false,
 				beforeSend: function() {
