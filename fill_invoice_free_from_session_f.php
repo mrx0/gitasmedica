@@ -43,7 +43,7 @@
 		';
 		
 		if ($_POST){
-			if (!isset($_POST['filial']) || !isset($_POST['worker'])){
+			if (!isset($_POST['filial'])){
 				echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 				include_once 'DBWork.php';
@@ -52,13 +52,13 @@
                 include_once 'ffun.php';
 
 				$filial = $_POST['filial'];
-				$worker = $_POST['worker'];
+				//$worker = $_POST['worker'];
 
                 $price['price'] = 0;
                 $price['start_price'] = 0;
 				
 				if (!isset($_SESSION['invoice_data']['free_invoice']['data'])){
-					echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
+                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 				}else{
                     $_SESSION['invoice_data']['free_invoice']['data'] = array_values($_SESSION['invoice_data']['free_invoice']['data']);
 					//берем из сесии данные
@@ -247,7 +247,7 @@
 							';
 					}
 					
-					echo json_encode(array('result' => 'success', 'data' => $request));
+					echo json_encode(array('result' => 'success', 'data' => $request, 'data2' => $data));
 				}
 				
 				/*include_once 'functions.php';
