@@ -4021,6 +4021,7 @@
 
 	//Подсчёт суммы для счёта
 	function calculateInvoice (invoice_type, changeItogPrice){
+		//console.log("calculateInvoice");
 
 		var Summ = 0;
 		var SummIns = 0;
@@ -4029,6 +4030,13 @@
 		var insureapprove = 0;
 
 		//var discount = Number(document.getElementById("discountValue").innerHTML);
+
+		var link = 'add_price_price_id_in_item_invoice_f.php';
+
+		if (invoice_type == 88){
+            link = 'add_price_price_id_in_item_invoice_free_f.php';
+		}
+        //console.log(link);
 
         $("#calculateInvoice").html(Summ);
         
@@ -4071,16 +4079,16 @@
 
 			//обновляем цену в сессии как можем
 			$.ajax({
-				url: 'add_price_price_id_in_item_invoice_f.php',
+				url: link,
 				global: false,
 				type: "POST",
 				dataType: "JSON",
 				data:
 				{
-					client: $("#client").value,
-					zapis_id: $("#zapis_id").value,
-					filial: $("#filial").value,
-					worker: $("#worker").value,
+					client: $("#client").val(),
+					zapis_id: $("#zapis_id").val(),
+					filial: $("#filial").val(),
+					worker: $("#worker").val(),
 
 					invoice_type: invoice_type,
 
@@ -4095,8 +4103,9 @@
 				},
 				// действие, при ответе с сервера
 				success: function(res){
+                    //console.log(res);
 					//if(data.result == "success"){
-						//console.log(data.data);
+						//console.log(res);
 						//$('#invoice_rezult').html(data.data);
 
 					//}else{
@@ -4185,8 +4194,14 @@
 
 				//priceItemItogInvoice (ind, key, invoiceItemPriceItog, min_itog_price, max_itog_price)
 
+                var link2 = "add_manual_itog_price_id_in_item_invoice_f.php";
+
+                if (invoice_type == 88){
+                    link2 = 'add_manual_itog_price_id_in_item_invoice_free_f.php';
+                }
+
                 $.ajax({
-                    url: "add_manual_itog_price_id_in_item_invoice_f.php",
+                    url: link2,
                     global: false,
                     type: "POST",
                     dataType: "JSON",
@@ -4346,6 +4361,7 @@
 	function fillInvoiseRez(changeItogPrice){
 
 		var invoice_type =  $("#invoice_type").val();
+		//console.log(invoice_type);
 
 		var link = "fill_invoice_stom_from_session_f.php";
 		if (invoice_type == 6){
@@ -4354,6 +4370,7 @@
 		if (invoice_type == 88){
 			link = "fill_invoice_free_from_session_f.php";
 		}
+
 		$.ajax({
 			url: link,
 			global: false,
@@ -4376,6 +4393,7 @@
                 //console.log(res);
 
 				if(res.result == "success"){
+					//console.log(res.data2);
 					$('#invoice_rezult').html(res.data);
 
 					// !!!
@@ -4459,26 +4477,26 @@
 			data:
 			{
 				t_number: t_number,
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client: $("#client").val(),
+				zapis_id: $("#zapis_id").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val()
 			},
 			cache: false,
 			beforeSend: function() {
 				//$(\'#errrror\').html("<div style=\'width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);\'><img src=\'img/wait.gif\' style=\'float:left;\'><span style=\'float: right;  font-size: 90%;\'> обработка...</span></div>");
 			},
 			// действие, при ответе с сервера
-			success: function(data){
+			success: function(res){
 
                 fillInvoiseRez(true);
 
-				if(data.result == "success"){
-					//$(\'#errror\').html(data.data);
+				if(res.result == "success"){
+					//$(\'#errror\').html(rez.data);
 
 
 				}else{
-					$('#errror').html(data.data);
+					$('#errror').html(res.data);
 				}
 
 			}
@@ -4491,12 +4509,19 @@
 
 		var invoice_type = $("#invoice_type").val();
 
+		var link = "add_quantity_price_id_in_invoice_f.php";
+
+		if (invoice_type == 88){
+            link = "add_quantity_price_id_in_invoice_free_f.php";
+		}
+        //console.log(invoice_type);
+
 		//количество
 		var quantity = dataObj.value;
 		//console.log(quantity);
 
 		$.ajax({
-			url:"add_quantity_price_id_in_invoice_f.php",
+			url: link,
 			global: false,
 			type: "POST",
 			dataType: "JSON",
@@ -4511,7 +4536,7 @@
 				worker: $("#worker").val(),
 
 				quantity: quantity,
-				invoice_type: invoice_type,
+				invoice_type: invoice_type
 			},
 			cache: false,
 			beforeSend: function() {
@@ -4551,7 +4576,13 @@
 		//console.log(dataObj.value);
 		//console.log(this);
 
-		var invoice_type = document.getElementById("invoice_type").value;
+		var invoice_type = $("#invoice_type").val();
+
+		var link = 'add_price_up_down_one_price_id_in_invoice_f.php';
+
+		if (invoice_type == 88){
+            link = 'add_price_up_down_one_price_id_in_invoice_free_f.php';
+		}
 
         if (up_down == 'up'){
             price = Number(price) + 1;
@@ -4566,7 +4597,7 @@
 		//console.log(price);
 
 		$.ajax({
-			url:"add_price_up_down_one_price_id_in_invoice_f.php",
+			url: link,
 			global: false,
 			type: "POST",
 			dataType: "JSON",
@@ -4583,7 +4614,7 @@
 				filial: $("#filial").val(),
 				worker: $("#worker").val(),
 
-				invoice_type: invoice_type,
+				invoice_type: invoice_type
 			},
 			cache: false,
 			beforeSend: function() {
@@ -4600,8 +4631,16 @@
 	}
 
 	//Удалить текущую позицию
-	function deleteInvoiceItem(zub, dataObj){
+	function deleteInvoiceItem(ind, dataObj){
 		//console.log(dataObj.getAttribute("invoiceitemid"));
+
+        var invoice_type = $("#invoice_type").val();
+
+        var link = "delete_invoice_item_from_session_f.php";
+
+        if (invoice_type == 88){
+            link = "delete_invoice_free_item_from_session_f.php";
+        }
 
 		//номер позиции
 		var itemId = dataObj.getAttribute("invoiceitemid");
@@ -4615,36 +4654,36 @@
 		//console.log(target);
 
 		$.ajax({
-			url:"delete_invoice_item_from_session_f.php",
+			url: link,
 			global: false,
 			type: "POST",
 			dataType: "JSON",
 			data:
 			{
 				key: itemId,
-				zub: zub,
+				ind: ind,
 
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client: $("#client").val(),
+				zapis_id: $("#zapis_id").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val(),
 
-				target: target,
+				target: target
 			},
 			cache: false,
 			beforeSend: function() {
 				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 			},
 			// действие, при ответе с сервера
-			success: function(data){
+			success: function(res){
 
                 fillInvoiseRez(true);
 
 				//$('#errror').html(data);
-				if(data.result == "success"){
+				if(res.result == "success"){
 					//console.log(111);
 
-					colorizeTButton (data.t_number_active);
+					colorizeTButton (res.t_number_active);
 
 					/*$(".sel_tooth").each(function() {
 						if (Number(this.innerHTML) == data.t_number_active){
@@ -5314,7 +5353,14 @@
 	//Изменить Коэффициент у этого зуба
 	function spec_koeffItemInvoice(ind, key, spec_koeff){
 
-		var invoice_type = document.getElementById("invoice_type").value;
+		var invoice_type = $("#invoice_type").val();
+
+		var link = "add_spec_koeff_price_id_in_item_invoice_f.php";
+
+		if (invoice_type == 88){
+            link = "add_spec_koeff_price_id_in_item_invoice_free_f.php";
+		}
+		//console.log(link);
 
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
@@ -5322,28 +5368,29 @@
 		$('.context-menu').remove();
 
 		$.ajax({
-			url:"add_spec_koeff_price_id_in_item_invoice_f.php",
+			url: link,
 			global: false,
 			type: "POST",
-			//dataType: "JSON",
+			dataType: "JSON",
 			data:
 			{
 				ind: ind,
 				key: key,
 				spec_koeff: spec_koeff,
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client: $("#client").val(),
+				zapis_id: $("#zapis_id").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val(),
 
-				invoice_type: invoice_type,
+				invoice_type: invoice_type
 			},
 			cache: false,
 			beforeSend: function() {
 				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 			},
 			// действие, при ответе с сервера
-			success: function(data){
+			success: function(res){
+                //console.log(res);
 
                 fillInvoiseRez(true);
 
@@ -5373,6 +5420,12 @@
 
 		var invoice_type = $("#invoice_type").val();
 
+		var link = 'add_discount_price_id_in_item_invoice_f.php';
+
+		if (invoice_type == 88){
+            link = "add_discount_price_id_in_item_invoice_free_f.php";
+		}
+
 		//console.log(discount);
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
@@ -5380,7 +5433,7 @@
 		$('.context-menu').remove();
 
 		$.ajax({
-			url:"add_discount_price_id_in_item_invoice_f.php",
+			url: link,
 			global: false,
 			type: "POST",
 			dataType: "JSON",
@@ -5394,7 +5447,7 @@
 				filial: $("#filial").val(),
 				worker: $("#worker").val(),
 
-				invoice_type: invoice_type,
+				invoice_type: invoice_type
 			},
 			cache: false,
 			beforeSend: function() {
@@ -5501,6 +5554,12 @@
 
 		var invoice_type = $("#invoice_type").val();
 
+		var link = "add_manual_itog_price_id_in_item_invoice_f.php";
+
+		if (invoice_type == 88){
+            link = "add_manual_itog_price_id_in_item_invoice_free_f.php";
+		}
+
 		/*console.log(ind);
 		console.log(key);*/
 
@@ -5523,7 +5582,7 @@
 		$('.context-menu').remove();
 
 		$.ajax({
-			url:"add_manual_itog_price_id_in_item_invoice_f.php",
+			url: link,
 			global: false,
 			type: "POST",
 			dataType: "JSON",
@@ -5560,22 +5619,29 @@
 
 	}
 
-	//Выбор зуба из таблички
+	//Выбор позиции из таблички в наряде
 	function toothInInvoice(t_number){
+
+        var invoice_type = $("#invoice_type").val();
+
+        var link = "add_invoice_in_session_f.php";
+        if (invoice_type == 88){
+            link = "add_invoice_free_in_session_f.php";
+        }
 
 		//console.log (t_number);
 		$.ajax({
-			url:"add_invoice_in_session_f.php",
+			url: link,
 			global: false,
 			type: "POST",
 			dataType: "JSON",
 			data:
 			{
 				t_number: t_number,
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client: $("#client").val(),
+				zapis_id: $("#zapis_id").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val()
 			},
 			cache: false,
 			beforeSend: function() {
@@ -5609,11 +5675,13 @@
 		if (type == 88){
 			link = "add_price_id_free_in_invoice_f.php";
 		}
+		//console.log(link);
+
 		$.ajax({
 			url: link,
 			global: false,
 			type: "POST",
-			//dataType: "JSON",
+			dataType: "JSON",
 			data:
 			{
 				price_id: price_id,
@@ -5629,8 +5697,8 @@
 				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 			},
 			// действие, при ответе с сервера
-			success: function(data){
-             	//$('#errror').html(data);
+			success: function(res){
+                //console.log(res.data);
 
                 fillInvoiseRez(true);
 
@@ -5809,11 +5877,16 @@
 		}
 		
 		var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'add\')">';
-						
+
+		if (invoice_type == 88){
+            buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_free_add(\'add\')">';
+		}
 		
 		if (mode == 'edit'){
 			buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'edit\')">';
 		}
+
+
 		
 		// Создаем меню:
 		var menu = $('<div/>', {
@@ -6352,7 +6425,7 @@
 		}
 		
 		var invoice_type = $("#invoice_type").val();
-		
+
 		var Summ = $("#calculateInvoice").html();
 		var SummIns = 0;
 		
@@ -6396,6 +6469,97 @@
 				$('.center_block').remove();
 				$('#overlay').hide();
 				
+				if(res.result == "success"){
+					$('#data').hide();
+					$('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован наряд</li>'+
+											'<li class="cellsBlock" style="width: auto;">'+
+												'<a href="invoice.php?id='+res.data+'" class="cellName ahref">'+
+													'<b>Наряд #'+res.data+'</b><br>'+
+												'</a>'+
+												'<div class="cellName">'+
+													'<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
+														'Сумма:<br>'+
+														'<span class="calculateInvoice" style="font-size: 13px">'+Summ+'</span> руб.'+
+													'</div>'+
+													SummInsStr+
+												'</div>'+
+											'</li>'+
+											'<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+												'<a href="payment_add.php?invoice_id='+res.data+'" class="b">Оплатить</a>'+
+											'</li>'+
+											'<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+												'<a href="add_order.php?client_id='+client+'&invoice_id='+res.data+'" class="b">Добавить приходный ордер</a>'+
+											'</li>'+
+											'<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+												'<a href="finance_account.php?client_id='+client+'" class="b">Управление счётом</a>'+
+											'</li>'+
+										'</ul>');
+				}else{
+					$('#errror').html(res.data);
+				}
+			}
+		});
+	}
+
+	//Добавляем/редактируем в базу наряд из сессии "пустой"
+	function Ajax_invoice_free_add(mode){
+		//console.log(mode);
+
+		var invoice_id = 0;
+
+		var link = "invoice_free_add_f.php";
+
+		if (mode == 'edit'){
+			link = "invoice_free_edit_f.php";
+			invoice_id = $("#invoice_id").val();
+		}
+
+		var invoice_type = $("#invoice_type").val();
+
+		var Summ = $("#calculateInvoice").html();
+		var SummIns = 0;
+
+		var SummInsStr = '';
+
+		/*if (invoice_type == 5){
+			SummIns = $("#calculateInsInvoice").html();
+			SummInsStr = '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
+							'Страховка:<br>'+
+							'<span class="calculateInsInvoice" style="font-size: 13px">'+SummIns+'</span> руб.'+
+						'</div>';
+		}*/
+
+		//var client = $("#client").val();
+
+		$.ajax({
+			url: link,
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                client: $("#search_client").val(),
+				date_in: $("#iWantThisDate2").val(),
+				filial: $("#filial").val(),
+				worker: $("#search_client4").val(),
+
+				summ: Summ,
+				summins: SummIns,
+
+				invoice_type: invoice_type,
+				invoice_id: invoice_id
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//console.log(res);
+				$('.center_block').remove();
+				$('#overlay').hide();
+
 				if(res.result == "success"){
 					$('#data').hide();
 					$('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
