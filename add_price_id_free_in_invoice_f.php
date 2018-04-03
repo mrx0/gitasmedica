@@ -121,7 +121,7 @@
 				//}
 
 				
-				//echo json_encode(array('result' => 'success', 't_number_active' => $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active']));
+				echo json_encode(array('result' => 'success', 'data' => $_SESSION['invoice_data']['free_invoice']['data']));
 			}
 		}
 	}

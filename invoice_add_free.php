@@ -19,16 +19,12 @@
 			//require 'config.php';
 
 			//var_dump($_SESSION);
-			var_dump($_SESSION['invoice_data']['free_invoice']['data']);
+			//var_dump($_SESSION['invoice_data']['free_invoice']);
 			//unset($_SESSION['invoice_data']);
 			
 			//if ($_GET){
 
-                $_GET['client'] = 1;
-                $_GET['worker'] = 0;
-                $_GET['id'] = 0;
 
-				if (isset($_GET['filial'])){
 			
 					//if (($finances['add_new'] == 1) || $god_mode){
 						//array_push($_SESSION['invoice_data'], $_GET['client']);
@@ -37,7 +33,7 @@
 						$sheduler_zapis = array();
 						$invoice_j = array();
 
-						$client_j = SelDataFromDB('spr_clients', $_GET['client'], 'user');
+						//$client_j = SelDataFromDB('spr_clients', $_GET['client'], 'user');
 						//var_dump($client_j);
 
                         /*if (
@@ -68,26 +64,25 @@
                             //if ($client !=0){
                             //if ($sheduler_zapis != 0) {
 
-                                //if (!isset($_SESSION['invoice_data'][$_GET['client']][$_GET['id']])) {
+                                if (!isset($_SESSION['invoice_data']['free_invoice'])) {
                                     $_SESSION['invoice_data'] = array();
                                     $_SESSION['invoice_data']['free_invoice'] = array();
                                     $_SESSION['invoice_data']['free_invoice']['data'] = array();
 
 
-                                    $_SESSION['invoice_data']['free_invoice']['filial'] = (int)$_GET['filial'];
-                                    $_SESSION['invoice_data']['free_invoice']['worker'] = (int)$_GET['worker'];
+                                    $_SESSION['invoice_data']['free_invoice']['filial'] = (int)$_SESSION['filial'];
                                     $_SESSION['invoice_data']['free_invoice']['t_number_active'] = 0;
                                     $_SESSION['invoice_data']['free_invoice']['discount'] = 0;
                                     $_SESSION['invoice_data']['free_invoice']['data'] = array();
-                                    $_SESSION['invoice_data']['free_invoice']['mkb'] = array();
-                                //}
+
+                                }
                                 //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]);
 
                                 //сортируем зубы по порядку
                                 ksort($_SESSION['invoice_data']['free_invoice']['data']);
 
                                 //var_dump($_SESSION);
-                                //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
+                                //var_dump($_SESSION['invoice_data']['free_invoice']);
                                 //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['mkb']);
 
                                 /*if ($sheduler_zapis[0]['month'] < 10) $month = '0' . $sheduler_zapis[0]['month'];
@@ -101,15 +96,16 @@
                                 <div id="status">
                                     <header>
                                         <div class="nav">
-                                            <a href="zapis_full.php">Запись подробно</a>
+                                            <!--<a href="zapis_full.php">Запись подробно</a>-->
                                         </div>
                                         
                                         <!--<span style="color: red;">Тестовый режим. Уже сохраняется и даже как-то работает</span>-->
-                                        <h2>Новый наряд</h2>';
+                                        <h2>Новый наряд</h2>
+                                        <div id="errror"></div>';
 
                                 echo '		
                                     </header>';
-
+                if (isset($_SESSION['filial'])){
                                 /*echo '
                                     <ul style="margin-left: 6px; margin-bottom: 10px;">	
                                         <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Посещение</li>';
@@ -255,20 +251,61 @@
                                 echo '
                                     </ul>';*/
 
-                                $discount = $_SESSION['invoice_data']['free_invoice']['discount'];
+                                //$discount = $_SESSION['invoice_data']['free_invoice']['discount'];
+
+                                echo '
+                                    <ul id="invoices" style="margin-left: 6px; margin-bottom: 10px;"></ul>';
+
 
                                 echo '
                                     <div id="data">';
+
+
+                                if (($finances['see_all'] == 1) || $god_mode){
+                                    $disabled = '';
+                                }else{
+                                    $disabled = ' disabled';
+                                }
 
                                 echo '	
                                         <input type="hidden" id="client" name="client" value="0">
                                         <input type="hidden" id="client_insure" name="client_insure" value="0">
                                         <input type="hidden" id="zapis_id" name="zapis_id" value="0">
                                         <input type="hidden" id="zapis_insure" name="zapis_insure" value="0">
-                                        <input type="hidden" id="filial" name="filial" value="' . $_GET['filial'] . '">
+                                        <input type="hidden" id="filial" name="filial" value="' . $_SESSION['filial'] . '">
                                         <input type="hidden" id="worker" name="worker" value="0">
                                         <input type="hidden" id="t_number_active" name="t_number_active" value="' .  $_SESSION['invoice_data']['free_invoice']['t_number_active'] . '">
                                         <input type="hidden" id="invoice_type" name="invoice_type" value="88">';
+
+                                echo '
+                                <div class="filterBlock">
+                                    <div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+                                        Дата 
+                                    </div>
+                                    <div class="filtercellRight" style="width: 245px; min-width: 245px;">
+                                        <input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="text-align: inherit; color: rgb(30, 30, 30); font-size: 12px;" value="' . date($day . '.' . $month . '.' . $year) . '" onfocus="this.select();_Calendar.lcs(thi0s)"  
+                                            onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" '.$disabled.'> 
+                                    </div>
+                                </div>
+								<div class="filterBlock">
+									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+										Пациент
+									</div>
+									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
+										<input type="text" size="30" name="searchdata" id="search_client" placeholder="Минимум три буквы для поиска" value="" class="who" autocomplete="off">
+										<ul id="search_result" class="search_result"></ul><br>
+									</div>
+								</div>
+								<div class="filterBlock">
+									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+										Исполнитель
+									</div>
+                                    <div class="filtercellRight" style="width: 245px; min-width: 245px;">
+                                        <input type="text" size="30" name="searchdata4" id="search_client4" placeholder="Минимум три буквы для поиска" class="who4"  autocomplete="off">
+                                        <ul id="search_result4" class="search_result4"></ul><br>
+                                    </div>
+								</div>';
+
 
                                 //Если заднее число записи
 
@@ -315,251 +352,10 @@
 
                                 /*    echo '<h1>Нельзя добавлять наряды задним числом</h1>';
                                 }else{*/
-                                    /*if ($sheduler_zapis[0]['type'] == 5) {
-                                        //Зубки
-                                        echo '		
-                                                <div style="font-size: 80%; color: #AAA; margin-bottom: 2px;">
-                                                    Выберите зуб
-                                                </div>								
-                                                <div style="vertical-align: middle; margin-bottom: 5px;">
-                                                    <div id="teeth" style="display: inline-block;">
-                                                        <div class="tooth_updown">
-                                                            <div class="tooth_left" style="display: inline-block;">
-                                                                <div class="sel_tooth">
-                                                                    18
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    17
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    16
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    15
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    14
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    13
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    12
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    11
-                                                                </div>
-                                                            </div>			
-                                                            <div class="tooth_right" style="display: inline-block;">
-                                                                <div class="sel_tooth">
-                                                                    21
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    22
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    23
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    24
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    25
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    26
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    27
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    28
-                                                                </div>
-                                                            </div>
-                                                            <div class="tooth_right" style="display: inline-block;">
-                                                                <div id="teeth_polost" class="sel_toothp">
-                                                                    Полость
-                                                                </div>
-                                                            </div>	
-                                                        </div>
-                                                        <div class="tooth_updown">
-                                                            <div class="tooth_left" style="display: inline-block;">
-                                                                <div class="sel_tooth">
-                                                                    48
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    47
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    46
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    45
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    44
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    43
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    42
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    41
-                                                                </div>
-                                                            </div>			
-                                                            <div class="tooth_right" style="display: inline-block;">
-                                                                <div class="sel_tooth">
-                                                                    31
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    32
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    33
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    34
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    35
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    36
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    37
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    38
-                                                                </div>
-                                                            </div>
-                                                            <div class="tooth_right" style="display: inline-block;">
-                                                                <div id="teeth_moloch" class="sel_toothm">
-                                                                    Молочные
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>';
-                                        //Молочные зубы
-                                        echo '
-                                                    <div id="teeth_moloch_options" style="display: none;">
-                                                        <div class="tooth_updown">
-                                                            <div class="tooth_left" style="display: inline-block;">
-                                                                <!--<div class="sel_tooth">
-                                                                    58
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    57
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    56
-                                                                </div>-->
-                                                                <div class="sel_tooth">
-                                                                    55
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    54
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    53
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    52
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    51
-                                                                </div>
-                                                            </div>			
-                                                            <div class="tooth_right" style="display: inline-block;">
-                                                                <div class="sel_tooth">
-                                                                    61
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    62
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    63
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    64
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    65
-                                                                </div>
-                                                                <!--<div class="sel_tooth">
-                                                                    66
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    67
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    68
-                                                                </div>-->
-                                                            </div>
-                                                        </div>
-                                                        <div class="tooth_updown">
-                                                            <div class="tooth_left" style="display: inline-block;">
-                                                                <!--<div class="sel_tooth">
-                                                                    88
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    87
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    86
-                                                                </div>-->
-                                                                <div class="sel_tooth">
-                                                                    85
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    84
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    83
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    82
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    81
-                                                                </div>
-                                                            </div>			
-                                                            <div class="tooth_right" style="display: inline-block;">
-                                                                <div class="sel_tooth">
-                                                                    71
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    72
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    73
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    74
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    75
-                                                                </div>
-                                                                <!--<div class="sel_tooth">
-                                                                    76
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    77
-                                                                </div>
-                                                                <div class="sel_tooth">
-                                                                    78
-                                                                </div>-->
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                            ';
 
-                                    }*/
 
-                                    echo '			
+                                    echo '		
+				                                <div style="margin-bottom: 10px;">
                                                 <div  style="display: inline-block; width: 400px; height: 600px;">';
 
                                     echo '
@@ -636,7 +432,7 @@
                                                 <div class="invoice_rezult" style="display: inline-block; border: 1px solid #c5c5c5; border-radius: 3px; position: relative;">';
 
                                     echo '	
-                                                    <div id="errror" class="invoceHeader" style="position: relative;">
+                                                    <div class="invoceHeader" style="position: relative;">
                                                         <div>
                                                             <div style="">К оплате: <div id="calculateInvoice" style="">0</div> руб.</div>
                                                         </div>';
@@ -701,6 +497,7 @@
                                                 </div>';
 
                                     echo '
+                                            </div>
                                             <div>	
                                                 <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . 7 . ', \'add\')">
                                             </div>
@@ -716,7 +513,7 @@
                                             $(document).ready(function(){
             
                                                 //получим активный зуб
-                                                var t_number_active = document.getElementById("t_number_active").value;
+                                                var t_number_active = $("#t_number_active").val();
                                                 
                                                 if (t_number_active != 0){
                                                     colorizeTButton (t_number_active);
@@ -752,7 +549,8 @@
 						echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 					}*/
 				}else{
-					echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+                    echo '
+                         <span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <i class="ahref change_filial">определить</i></span><br>';
 				}
 			/*}else{
 				echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';

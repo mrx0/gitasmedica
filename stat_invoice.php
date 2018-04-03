@@ -14,17 +14,23 @@
 			include_once 'functions.php';
 			include_once 'filter.php';
 			include_once 'filter_f.php';
-			
-			$offices_j = SelDataFromDB('spr_filials', '', '');
+            include_once 'ffun.php';
+
+            $clientInvoices = array();
+
+            $filials_j = getAllFilials(false, true);
 
 			if ($_POST){
 			}else{
 				echo '
 					<header style="margin-bottom: 5px;">
 						<h1>Наряды</h1>
+						
+						<a href="invoice_add_free.php" class="b">Добавить новый (без записи)</a>
+						
 					</header>';
 
-				echo '
+				/*echo '
 						<div id="data">';
 				echo '
 							<ul style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 20px; width: 420px; font-size: 95%; background-color: rgba(245, 245, 245, 0.9); display: inline-table;">
@@ -187,7 +193,72 @@
 							<ul style="border: 1px dotted #CCC; margin: 10px; width: auto;" id="qresult">
 								Результат отобразится здесь
 							<ul>
-						</div>';
+						</div>';*/
+
+
+				//!!!Временно!!! будем показывать тут последние N нарядов
+
+                $msql_cnnct = ConnectToDB ();
+
+                $query = '';
+
+                //Соберем (неудаленные) наряды
+                if (($finances['see_all'] == 1) || $god_mode) {
+
+                }else {
+                    if (isset($_SESSION['id'])) {
+                        $query .= " AND jinv.create_person = '" . $_SESSION['id'] . "'";
+                    }
+                }
+
+                $query = "SELECT jinv.*, scli.full_name FROM `journal_invoice` jinv
+                                LEFT JOIN `spr_clients` scli
+                                ON scli.id = jinv.client_id
+                                WHERE jinv.status <> '9' AND jinv.create_time > '2017-12-01 08:30:00' ".$query." ORDER BY `create_time` DESC LIMIT 20";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        array_push($clientInvoices, $arr);
+                    }
+                }else{
+                }
+
+                //Выводим результат
+                if (!empty($clientInvoices)){
+                    include_once 'functions.php';
+
+                    echo '
+					<div id="data">';
+
+                    foreach ($clientInvoices as $data) {
+                        echo '
+									<li class="cellsBlock" style="font-weight: bold; width: auto; background-color: rgba(255, 255, 0, 0.3); margin: 2px">	
+										<a href="invoice.php?id=' . $data['id'] . '"    class="cellTime ahref" style="text-align: center; ">Наряд #'.$data['id'].' от '. $data['create_time'] . '</a>
+										    <div class="cellName" style="text-align: right; ">Сумма наряда: ' . $data['summ'] . ' руб.</div>
+										    <div class="cellName" style="text-align: right; ">Не оплачено: <span style="color:red"><BR>' . ($data['summ']-$data['paid']) . '</span> руб.</div>
+										    <a href="invoice.php?id='.$data['client_id'].'" class="ahref cellText" style="max-width: 250px;">'.$data['full_name'].'<br><br>
+										    '.$filials_j[$data['office_id']]['name2'].'
+										    </a>
+										    <div class="cellName" style="text-align: left; width: 160px; min-width: 160px;">
+										        автор: '.WriteSearchUser('spr_workers', $data['create_person'], 'user', true).'<br>
+										        исп-ль: '.WriteSearchUser('spr_workers', $data['worker_id'], 'user', true).'
+										    </div>
+										
+									</li>';
+                    }
+
+                }else{
+                    echo '<span style="color: red;">Ничего не найдено</span>';
+                }
+
+                CloseDB($msql_cnnct);
+
+
+
 						
 				echo '
 
