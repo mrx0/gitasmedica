@@ -92,12 +92,12 @@
 								<a href="stat_client_finance2.php" class="b3">Открытые наряды</a>
 							</li>';
 
-			echo '				
+			/*echo '
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_client_finance3.php" class="b3">Свободные средства на счетах пациентов</a>
-							</li>';
+							</li>';*/
 
-			echo '				
+			echo '
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_invoice.php" class="b3">Наряды</a>
 							</li>';

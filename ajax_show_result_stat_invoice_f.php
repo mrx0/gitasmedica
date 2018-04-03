@@ -8,7 +8,7 @@ session_start();
 if (empty($_SESSION['login']) || empty($_SESSION['id'])){
     header("location: enter.php");
 }else{
-    //var_dump ($_POST);
+    var_dump ($_POST);
     if ($_POST){
         $creatorExist = false;
         $workerExist = false;
@@ -41,10 +41,10 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         require_once 'permissions.php';
 
         //Дополнительные настройки, чтобы передать их дальше
-        $dop['fullAll'] = $_POST['fullAll'];
+        /*$dop['fullAll'] = $_POST['fullAll'];
         $dop['fullWOInvoice'] = $_POST['fullWOInvoice'];
         $dop['fullWOTask'] = $_POST['fullWOTask'];
-        $dop['fullOk'] = $_POST['fullOk'];
+        $dop['fullOk'] = $_POST['fullOk'];*/
 
 
         //Кто создал запись
@@ -64,7 +64,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         }
 
         //К кому запись
-        if ($_POST['worker'] != ''){
+        /*if ($_POST['worker'] != ''){
             include_once 'DBWork.php';
             $workerSearch = SelDataFromDB ('spr_workers', $_POST['worker'], 'worker_full_name');
 
@@ -77,7 +77,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         }else{
             $workerExist = true;
             $worker = 0;
-        }
+        }*/
 
         //Клиент
         if ($_POST['client'] != ''){
@@ -95,7 +95,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
             $client = 0;
         }
 
-        if ($creatorExist && $workerExist) {
+        //if ($creatorExist && $workerExist) {
+        if ($creatorExist) {
             if ($clientExist) {
                 $query .= "SELECT * FROM `zapis`";
 
@@ -121,13 +122,13 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 }
 
                 //К кому запись
-                if ($worker != 0) {
+                /*if ($worker != 0) {
                     if ($queryDopExist) {
                         $queryDop .= ' AND';
                     }
                     $queryDop .= "`worker` = '" . $worker . "'";
                     $queryDopExist = true;
-                }
+                }*/
 
                 //Клиент
                 if ($client != 0) {
@@ -148,7 +149,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 }
 
                 //Все записи
-                if ($_POST['zapisAll'] != 0) {
+                /*if ($_POST['zapisAll'] != 0) {
                     //ничего
                 } else {
                     //Пришёл
@@ -198,20 +199,20 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         }
                         //$queryDopExExist = true;
                     }
-                }
+                }*/
 
                 //Тип
-                if ($_POST['typeW'] != 0) {
+                /*if ($_POST['typeW'] != 0) {
                     if ($queryDopExist) {
                         $queryDop .= ' AND';
                     }
                     $queryDop .= "`type` = '" . $_POST['typeW'] . "'";
                     $queryDopExist = true;
-                }
+                }*/
 
 
                 //Первичный ночной страховой
-                if ($_POST['statusAll'] != 0) {
+                /*if ($_POST['statusAll'] != 0) {
                     //ничего
                 } else {
                     //Первичные
@@ -261,7 +262,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         }
                         //$queryDopExExist = true;
                     }
-                }
+                }*/
 
 
                 if ($queryDopExist) {
@@ -285,7 +286,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                     $query = $query . " ORDER BY `create_time` DESC";
 
-                    //var_dump($query);
+                    var_dump($query);
 
                     $msql_cnnct = ConnectToDB();
 

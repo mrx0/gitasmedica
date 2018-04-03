@@ -76,7 +76,7 @@ if ($enter_ok){
                     }
                     //var_dump ($sheduler_zapis);
                     //if ($client !=0){
-                    if (!empty($sheduler_zapis)){
+                    //if (!empty($sheduler_zapis)){
 
                         if (!isset($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']])){
                             $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['filial'] = $invoice_j[0]['office_id'];
@@ -98,8 +98,8 @@ if ($enter_ok){
                         //var_dump($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data']);
                         //var_dump($_SESSION['calculate_data'][$_GET['client']][$_GET['invoice_id']]['mkb']);
 
-                        if ($sheduler_zapis[0]['month'] < 10) $month = '0'.$sheduler_zapis[0]['month'];
-                        else $month = $sheduler_zapis[0]['month'];
+                        /*if ($sheduler_zapis[0]['month'] < 10) $month = '0'.$sheduler_zapis[0]['month'];
+                        else $month = $sheduler_zapis[0]['month'];*/
 
                         echo '
 							<div id="status">
@@ -156,10 +156,6 @@ if ($enter_ok){
 
                         echo '
 									</header>';
-                        echo '
-								<ul style="margin-left: 6px; margin-bottom: 10px;">	
-									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Посещение</li>';
-
 
                         $t_f_data_db = array();
                         $cosmet_data_db = array();
@@ -169,67 +165,74 @@ if ($enter_ok){
                         $summ_inv = 0;
                         $summins_inv = 0;
 
-                        //if(($sheduler_zapis[0]['enter'] != 8) || ($scheduler['see_all'] == 1) || $god_mode){
-                        if ($sheduler_zapis[0]['enter'] == 1){
-                            $back_color = 'background-color: rgba(119, 255, 135, 1);';
-                        }elseif($sheduler_zapis[0]['enter'] == 9){
-                            $back_color = 'background-color: rgba(239,47,55, .7);';
-                        }elseif($sheduler_zapis[0]['enter'] == 8){
-                            $back_color = 'background-color: rgba(137,0,81, .7);';
-                        }else{
-                            //Если оформлено не на этом филиале
-                            if($sheduler_zapis[0]['office'] != $sheduler_zapis[0]['add_from']){
-                                $back_color = 'background-color: rgb(119, 255, 250);';
-                            }else{
-                                $back_color = 'background-color: rgba(255,255,0, .5);';
+                        if ($invoice_j[0]['type'] != 88) {
+
+                            echo '
+								<ul style="margin-left: 6px; margin-bottom: 10px;">	
+									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Посещение</li>';
+
+                            //if(($sheduler_zapis[0]['enter'] != 8) || ($scheduler['see_all'] == 1) || $god_mode){
+                            if ($sheduler_zapis[0]['enter'] == 1) {
+                                $back_color = 'background-color: rgba(119, 255, 135, 1);';
+                            } elseif ($sheduler_zapis[0]['enter'] == 9) {
+                                $back_color = 'background-color: rgba(239,47,55, .7);';
+                            } elseif ($sheduler_zapis[0]['enter'] == 8) {
+                                $back_color = 'background-color: rgba(137,0,81, .7);';
+                            } else {
+                                //Если оформлено не на этом филиале
+                                if ($sheduler_zapis[0]['office'] != $sheduler_zapis[0]['add_from']) {
+                                    $back_color = 'background-color: rgb(119, 255, 250);';
+                                } else {
+                                    $back_color = 'background-color: rgba(255,255,0, .5);';
+                                }
                             }
-                        }
 
-                        $dop_img = '';
+                            $dop_img = '';
 
-                        if ($sheduler_zapis[0]['insured'] == 1){
-                            $dop_img .= '<img src="img/insured.png" title="Страховое"> ';
-                        }
-                        if ($sheduler_zapis[0]['pervich'] == 1){
-                            $dop_img .= '<img src="img/pervich.png" title="Первичное"> ';
-                        }
-                        if ($sheduler_zapis[0]['noch'] == 1){
-                            $dop_img .= '<img src="img/night.png" title="Ночное"> ';
-                        }
+                            if ($sheduler_zapis[0]['insured'] == 1) {
+                                $dop_img .= '<img src="img/insured.png" title="Страховое"> ';
+                            }
+                            if ($sheduler_zapis[0]['pervich'] == 1) {
+                                $dop_img .= '<img src="img/pervich.png" title="Первичное"> ';
+                            }
+                            if ($sheduler_zapis[0]['noch'] == 1) {
+                                $dop_img .= '<img src="img/night.png" title="Ночное"> ';
+                            }
 
-                        // !!! **** тест с записью
-                        include_once 'showZapisRezult.php';
+                            // !!! **** тест с записью
+                            include_once 'showZapisRezult.php';
 
-                        if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
-                            $finance_edit = true;
-                            $edit_options = true;
+                            if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode) {
+                                $finance_edit = true;
+                                $edit_options = true;
+                            }
+
+                            if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode) {
+                                $stom_edit = true;
+                                $edit_options = true;
+                            }
+                            if (($cosm['add_own'] == 1) || ($cosm['add_new'] == 1) || $god_mode) {
+                                $cosm_edit = true;
+                                $edit_options = true;
+                            }
+
+                            if (($zapis['add_own'] == 1) || ($zapis['add_new'] == 1) || $god_mode) {
+                                $admin_edit = true;
+                                $edit_options = true;
+                            }
+
+                            if (($scheduler['see_all'] == 1) || $god_mode) {
+                                $upr_edit = true;
+                                $edit_options = true;
+                            }
+
+                            //echo showZapisRezult($sheduler_zapis, false, false, false, false, false, false, 0, false, false);
+                            echo showZapisRezult($sheduler_zapis, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, 0, false, false);
+
+                            echo '
+                                        </ul>';
+                            //}
                         }
-
-                        if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode){
-                            $stom_edit = true;
-                            $edit_options = true;
-                        }
-                        if (($cosm['add_own'] == 1) || ($cosm['add_new'] == 1) || $god_mode){
-                            $cosm_edit = true;
-                            $edit_options = true;
-                        }
-
-                        if (($zapis['add_own'] == 1) || ($zapis['add_new'] == 1) || $god_mode) {
-                            $admin_edit = true;
-                            $edit_options = true;
-                        }
-
-                        if (($scheduler['see_all'] == 1) || $god_mode){
-                            $upr_edit = true;
-                            $edit_options = true;
-                        }
-
-                        //echo showZapisRezult($sheduler_zapis, false, false, false, false, false, false, 0, false, false);
-                        echo showZapisRezult($sheduler_zapis, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, 0, false, false);
-
-                        echo '
-									</ul>';
-                        //}
 
                         //Наряды
 
@@ -267,7 +270,12 @@ if ($enter_ok){
                             $calculate_summins_inv = 0;
 
                             //Получим уже существующие рассчёты
-                            $query = "SELECT `id`, `summ_inv`, `summ` FROM `fl_journal_calculate` WHERE `invoice_id`='".$_GET['invoice_id']."' AND `zapis_id`='".$sheduler_zapis[0]['id']."';";
+
+                            if ($invoice_j[0]['type'] != 88) {
+                                $query = "SELECT `id`, `summ_inv`, `summ` FROM `fl_journal_calculate` WHERE `invoice_id`='" . $_GET['invoice_id'] . "' AND `zapis_id`='" . $sheduler_zapis[0]['id'] . "';";
+                            }else{
+                                $query = "SELECT `id`, `summ_inv`, `summ` FROM `fl_journal_calculate` WHERE `invoice_id`='" . $_GET['invoice_id'] . "';";
+                            }
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                             $number = mysqli_num_rows($res);
@@ -302,6 +310,8 @@ if ($enter_ok){
                             //var_dump($calculate_summins_inv);
 
                             if (empty($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'])) {
+                                //var_dump($invoice_ex_j);
+
                                 //надо костыльно преобразовать массив
                                 foreach ($invoice_ex_j as $ind => $invoice_ex_j_arr) {
 
@@ -349,7 +359,7 @@ if ($enter_ok){
                                                 $temp_arr2['material_percent'] = 0;
                                                 //$invoice_ex_j = 0;
                                             }
-
+                                            //var_dump($temp_arr2);
 
 
                                             if ($invoice_ex_j_val['manual_price'] == 1) {
@@ -369,6 +379,14 @@ if ($enter_ok){
                                             if ($invoice_j[0]['type'] == 6) {
                                                 array_push($temp_arr, $temp_arr2);
                                             }
+
+                                            if ($invoice_j[0]['type'] == 88) {
+                                                if (!isset($temp_arr[$ind])) {
+                                                    $temp_arr[$ind] = array();
+                                                }
+
+                                                array_push($temp_arr[$ind], $temp_arr2);
+                                            }
                                         }
                                     }
                                 }
@@ -376,6 +394,7 @@ if ($enter_ok){
                                 //var_dump($temp_arr);
 
                                 if (!empty($temp_arr)) {
+                                    //var_dump($temp_arr);
 
                                     if ($invoice_j[0]['type'] == 5) {
                                         $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
@@ -384,8 +403,16 @@ if ($enter_ok){
                                     if ($invoice_j[0]['type'] == 6) {
                                         $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
                                     }
-                                    //скидку тут добавлю в сесиию
-                                    $discount = $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['discount'] = $invoice_j[0]['discount'];
+                                    //Костыль для пустого пациента
+                                    if ($invoice_j[0]['type'] == 88) {
+                                        $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
+                                    }
+                                    //скидку тут добавлю в сессию
+                                    if ($invoice_j[0]['type'] != 88) {
+                                        $discount = $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['discount'] = $invoice_j[0]['discount'];
+                                    }else{
+                                        $discount = $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['discount'] = $invoice_j[0]['discount'];
+                                    }
 
                                     if ($invoice_ex_j_mkb != 0) {
                                         $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['mkb'] = $invoice_ex_j_mkb;
@@ -397,7 +424,7 @@ if ($enter_ok){
 
                         //var_dump($_SESSION);
                         //var_dump($_SESSION['test']);
-                        //var_dump($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data']);
+                        var_dump($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data']);
                         //var_dump($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['mkb']);
 
                         //Для МКБ
@@ -427,8 +454,15 @@ if ($enter_ok){
                                         <input type="hidden" id="invoice_id" name="client" value="' . $invoice_j[0]['id'] . '">
                                         <input type="hidden" id="client" name="client" value="' . $invoice_j[0]['client_id'] . '">
                                         <input type="hidden" id="client_insure" name="client_insure" value="' . $client_j[0]['insure'] . '">
-                                        <input type="hidden" id="zapis_id2" name="zapis_id2" value="' . $invoice_j[0]['zapis_id'] . '">
-                                        <input type="hidden" id="zapis_insure" name="zapis_insure" value="' . $sheduler_zapis[0]['insured'] . '">
+                                        <input type="hidden" id="zapis_id2" name="zapis_id2" value="' . $invoice_j[0]['zapis_id'] . '">';
+                            if ($invoice_j[0]['type'] != 88) {
+                                echo '
+                                        <input type="hidden" id="zapis_insure" name="zapis_insure" value="' . $sheduler_zapis[0]['insured'] . '">';
+                            }else{
+                                echo '
+                                        <input type="hidden" id="zapis_insure" name="zapis_insure" value="0">';
+                            }
+                            echo '
                                         <input type="hidden" id="filial2" name="filial2" value="' . $invoice_j[0]['office_id'] . '">
                                         <input type="hidden" id="worker" name="worker" value="' . $invoice_j[0]['worker_id'] . '">
                                         <input type="hidden" id="t_number_active" name="t_number_active" value="' . $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['t_number_active'] . '">
@@ -443,7 +477,7 @@ if ($enter_ok){
                                                     <div>
                                                         <div style="">Сумма наряда: <div id="calculateInvoice" style="">' . $invoice_j[0]['summ'] . '</div> руб.</div>
                                                     </div>';
-                            if ($sheduler_zapis[0]['type'] == 5) {
+                            if ($invoice_j[0]['type'] == 5) {
                                 echo '
                                                     <div>
                                                         <div style="">Страховка наряда: <div id="calculateInsInvoice" style="">' . $invoice_j[0]['summins'] . '</div> руб.</div>
@@ -535,7 +569,7 @@ if ($enter_ok){
                                                         <i><b>Всего, руб.</b></i>
                                                     </div>
                                                     <div class="cellName" style="font-size: 80%; text-align: center;">
-                                                        <div id="percent_cats" class="settings_text" onclick="contextMenuShow(0, ' . $sheduler_zapis[0]['type'] . ', event, \'percent_cats\');">
+                                                        <div id="percent_cats" class="settings_text" onclick="contextMenuShow(0, ' . $invoice_j[0]['type'] . ', event, \'percent_cats\');">
                                                             <i><b>Тип</b></i>
                                                         </div>
                                                     </div>
@@ -556,10 +590,10 @@ if ($enter_ok){
                                                 <div class="cellText2" style="padding: 2px 4px;">
                                                     <div style="vertical-align: middle; font-size: 11px;">
                                                         <div style="text-align: left; float: left;">	
-                                                            <input type="button" class="b" value="Сбросить изменения" onclick="showCalculateAdd(' . $sheduler_zapis[0]['type'] . ', \'reset\')">
+                                                            <input type="button" class="b" value="Сбросить изменения" onclick="showCalculateAdd(' . $invoice_j[0]['type'] . ', \'reset\')">
                                                         </div>
                                                         <div style="text-align: right;">	
-                                                            <input type="button" class="b" value="Сохранить" onclick="showCalculateAdd(' . $sheduler_zapis[0]['type'] . ', \'add\')">
+                                                            <input type="button" class="b" value="Сохранить" onclick="showCalculateAdd(' . $invoice_j[0]['type'] . ', \'add\')">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -577,7 +611,7 @@ if ($enter_ok){
                                                     <div>
                                                         <div style="font-size: 90%;">Сумма: <div id="calculateInvoice" style="font-size: 110%;">' . $summ_inv . '</div> руб.</div>
                                                     </div>-->';
-                            if ($sheduler_zapis[0]['type'] == 5) {
+                            if ($invoice_j[0]['type'] == 5) {
                                 echo '
                                                     <!--<div>
                                                         <div style="font-size: 90%;">Страховка: <div id="calculateInsInvoice" style="font-size: 110%;">' . $summins_inv . '</div> руб.</div>
@@ -637,9 +671,9 @@ if ($enter_ok){
                                 
                                 
                                 ';
-                    }else{
+                    /*}else{
                         echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
-                    }
+                    }*/
                 }else{
                     echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
                 }

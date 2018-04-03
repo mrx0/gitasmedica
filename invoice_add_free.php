@@ -24,7 +24,7 @@
 			
 			//if ($_GET){
 
-				if (isset($_SESSION['filial'])){
+
 			
 					//if (($finances['add_new'] == 1) || $god_mode){
 						//array_push($_SESSION['invoice_data'], $_GET['client']);
@@ -82,7 +82,7 @@
                                 ksort($_SESSION['invoice_data']['free_invoice']['data']);
 
                                 //var_dump($_SESSION);
-                                var_dump($_SESSION['invoice_data']['free_invoice']);
+                                //var_dump($_SESSION['invoice_data']['free_invoice']);
                                 //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['mkb']);
 
                                 /*if ($sheduler_zapis[0]['month'] < 10) $month = '0' . $sheduler_zapis[0]['month'];
@@ -100,11 +100,12 @@
                                         </div>
                                         
                                         <!--<span style="color: red;">Тестовый режим. Уже сохраняется и даже как-то работает</span>-->
-                                        <h2>Новый наряд</h2>';
+                                        <h2>Новый наряд</h2>
+                                        <div id="errror"></div>';
 
                                 echo '		
                                     </header>';
-
+                if (isset($_SESSION['filial'])){
                                 /*echo '
                                     <ul style="margin-left: 6px; margin-bottom: 10px;">	
                                         <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Посещение</li>';
@@ -251,6 +252,10 @@
                                     </ul>';*/
 
                                 //$discount = $_SESSION['invoice_data']['free_invoice']['discount'];
+
+                                echo '
+                                    <ul id="invoices" style="margin-left: 6px; margin-bottom: 10px;"></ul>';
+
 
                                 echo '
                                     <div id="data">';
@@ -427,7 +432,7 @@
                                                 <div class="invoice_rezult" style="display: inline-block; border: 1px solid #c5c5c5; border-radius: 3px; position: relative;">';
 
                                     echo '	
-                                                    <div id="errror" class="invoceHeader" style="position: relative;">
+                                                    <div class="invoceHeader" style="position: relative;">
                                                         <div>
                                                             <div style="">К оплате: <div id="calculateInvoice" style="">0</div> руб.</div>
                                                         </div>';
@@ -545,7 +550,7 @@
 					}*/
 				}else{
                     echo '
-                                        <span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <i class="ahref change_filial">определить</i></span><br>';
+                         <span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <i class="ahref change_filial">определить</i></span><br>';
 				}
 			/*}else{
 				echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';

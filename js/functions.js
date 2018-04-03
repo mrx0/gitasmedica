@@ -4421,7 +4421,10 @@
 		if (invoice_type == 6){
 			link = "fill_calculate_cosm_from_session_f.php";
 		}
-        //console.log(link);
+		if (invoice_type == 88){
+			link = "fill_calculate_free_from_session_f.php";
+		}
+        console.log(link);
 
 		$.ajax({
 			url: link,
@@ -4432,7 +4435,7 @@
 			{
 				client: $("#client").val(),
 				zapis_id: $("#zapis_id2").val(),
-				filial: $("#filial").val(),
+				filial: $("#filial2").val(),
 				worker: $("#worker").val()
 
 			},
@@ -4442,7 +4445,7 @@
 			},
 			// действие, при ответе с сервера
 			success: function(res){
-                //console.log(res.data2);
+                console.log(res);
 
 				if(res.result == "success"){
 					//console.log(res.data);
@@ -6505,6 +6508,8 @@
 	//Добавляем/редактируем в базу наряд из сессии "пустой"
 	function Ajax_invoice_free_add(mode){
 		//console.log(mode);
+
+        $('#errror').html('');
 
 		var invoice_id = 0;
 
