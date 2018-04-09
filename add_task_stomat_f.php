@@ -220,7 +220,7 @@
                                         $query = "INSERT INTO `journal_tickets` (`filial_id`, `descr`, `plan_date`, `create_time`, `create_person`)
                                         VALUES (
                                         '{$_POST['filial']}', '{$descr}', '{$plan_date}', '{$time}', '{$_SESSION['id']}')";
-
+/*
                                         $res = mysqli_query($msql_cnnct2, $query) or die(mysqli_error($msql_cnnct2).' -> '.$query);
 
                                         //ID новой позиции
@@ -292,7 +292,7 @@
 
 
 
-
+*/
                                         //Закрываем соединение
                                         CloseDB ($msql_cnnct2);
 
