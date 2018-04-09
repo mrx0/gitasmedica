@@ -1,6 +1,6 @@
 <?php 
 
-//fill_calculate_stom_from_session_f.php
+//fill_calculate_free_from_session_f.php
 //
 
 	session_start();

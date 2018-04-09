@@ -560,7 +560,7 @@ if ($enter_ok){
                                              <div id="calculate_rezult_head" style="float: none; width: 850px;">
                                                 <div class="cellsBlock">
                                                     <div class="cellCosmAct" style="font-size: 80%; text-align: center;">
-                                                        <i><b>Зуб</b></i>
+                                                        <i><b>-</b></i>
                                                     </div>
                                                     <div class="cellText2" style="font-size: 100%; text-align: center;">
                                                         <i><b>Наименование</b></i>
