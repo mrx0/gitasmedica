@@ -424,7 +424,7 @@ if ($enter_ok){
 
                         //var_dump($_SESSION);
                         //var_dump($_SESSION['test']);
-                        //var_dump($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data']);
+                        var_dump($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data']);
                         //var_dump($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['mkb']);
 
                         //Для МКБ
