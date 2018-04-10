@@ -1,7 +1,7 @@
 <?php
 
-//fl_get_calculates_f.php
-//Функция поиска данных расчётов за период
+//fl_get_payrolls_f.php
+//Функция поиска данных выплат zp за период
 
     session_start();
 
@@ -27,7 +27,7 @@
 
                 $msql_cnnct = ConnectToDB();
 
-                $query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.office_id='{$_POST['office']}' AND jcalc.status <> '7' AND jcalc.id NOT IN (SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id);";
+                $query = "SELECT jcalc.* FROM `fl_journal_payroll` jproll WHERE jproll.type='{$_POST['permission']}' AND jproll.worker_id='{$_POST['worker']}' AND jproll.office_id='{$_POST['office']}' AND jproll.status <> '7' AND jproll.id NOT IN (SELECT `payroll_id` from `fl_journal_payroll_ex` WHERE `payroll_id`=jproll.id);";
                 //$query = "SELECT * FROM `fl_journal_calculate` WHERE `type`='{$_POST['permission']}' AND `worker_id`='{$_POST['worker']}' AND `office_id`='{$_POST['office']}' AND MONTH(`create_time`) = '09' AND `status` <> '7';";
 
 

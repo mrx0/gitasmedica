@@ -93,6 +93,10 @@
                                 if ($sheduler_zapis[0]['month'] < 10) $month = '0'.$sheduler_zapis[0]['month'];
                                 else $month = $sheduler_zapis[0]['month'];
 
+
+                                //Категории процентов
+                                $percent_cats_j = getAllPercentCats($invoice_j[0]['type']);
+
                                 echo '
                                 <div id="status">
                                     <header>
@@ -601,6 +605,7 @@
                                     foreach ($calculate_ex_j as $ind => $calculate_data) {
 
                                         //var_dump($calculate_data);
+
                                         echo '
                                             <div class="cellsBlock">
                                                 <div class="cellCosmAct toothInInvoice" style="text-align: center;">';
@@ -900,7 +905,8 @@
 
                                             }
 
-                                            $percents_j = SelDataFromDB('fl_spr_percents', $item['percent_cats'], 'id');
+                                            //$percents_j = SelDataFromDB('fl_spr_percents', $item['percent_cats'], 'id');
+                                            //var_dump($item['percent_cats']);
 
                                             if (($finances['see_all'] == 1) || $god_mode) {
 
@@ -926,7 +932,7 @@
                                             echo '
                                                     <div class="cellName" style="text-align: center;">
                                                         <div>
-                                                            <i>' . $percents_j[0]['name']. '</i>
+                                                            <i>' . $percent_cats_j[$item['percent_cats']]['name']. '</i>
                                                         </div>
                                                     </div>
                                                 </div>';

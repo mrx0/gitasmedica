@@ -11,8 +11,10 @@
             include_once 'DBWork.php';
             include_once 'functions.php';
 
+            require 'variables.php';
+
             //Массив с месяцами
-            $monthsName = array(
+            /*$monthsName = array(
                 '01' => 'Январь',
                 '02' => 'Февраль',
                 '03' => 'Март',
@@ -25,7 +27,7 @@
                 '10' => 'Октябрь',
                 '11' => 'Ноябрь',
                 '12' => 'Декабрь'
-            );
+            );*/
 
             $msql_cnnct = ConnectToDB ();
 
@@ -170,7 +172,7 @@
 
                     $rezult .= '
                                             <!--</div>-->
-                                            <div class="cellName" style="position: relative; cursor: pointer; ' . $back_color . '" onclick="window.location.replace(\'zapis_full.php?filial=15&who='.$ZapisHereQueryToday[$z]['type'].'&d='.$ZapisHereQueryToday[$z]['day'].'&m='.$month.'&y='.$ZapisHereQueryToday[$z]['year'].'&kab='.$ZapisHereQueryToday[$z]['kab'].'\')">';
+                                            <div class="cellName" style="position: relative; cursor: pointer; ' . $back_color . '" onclick="window.location.replace(\'zapis_full.php?filial='.$ZapisHereQueryToday[$z]['office'].'&who='.$ZapisHereQueryToday[$z]['type'].'&d='.$ZapisHereQueryToday[$z]['day'].'&m='.$month.'&y='.$ZapisHereQueryToday[$z]['year'].'&kab='.$ZapisHereQueryToday[$z]['kab'].'\')">';
 
                     $rezult .=
                         '<b>' . $day . ' ' . $monthsName[$month] . ' ' . $year . '</b><br>' .
