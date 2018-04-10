@@ -63,6 +63,9 @@
                         $rezult .= '
                             <div style="margin: 5px 0; padding: 2px; text-align: center; color: #0C0C0C; font-weight: bold;">
                                 Необработанные<br>расчётные листы
+                            </div>
+                            <div style="margin: 5px 0; padding: 2px; text-align: center; color: #0C0C0C;">
+                                Выделить всё <input type="checkbox" id="chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$_POST['office'].'" name="checkAll" class="checkAll" value="1">
                             </div>';
 
                         foreach ($rez as $rezData){

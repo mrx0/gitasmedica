@@ -400,6 +400,14 @@
                             }
                             echo '
                                         </div>';
+                        }else{
+                            echo '
+                                        <div>
+                                            <div style="font-size: 85%; color: #555;">
+                                                Ночных нет.<br>
+                                            </div>';
+                            echo '
+                                        </div>';
                         }
                         echo '
                                         <div style="margin: 10px 0;">

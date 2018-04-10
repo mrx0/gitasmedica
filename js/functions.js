@@ -80,7 +80,7 @@
 			{
 				mark: mark,
 				ind: ind,
-				key: key,
+				key: key
 			},
 			cache: false,
 			beforeSend: function() {
@@ -6656,7 +6656,7 @@
 				summins: SummIns,
 
 				invoice_type: invoice_type,
-                calculate_id: calculate_id,
+                calculate_id: calculate_id
 			},
 			cache: false,
 			beforeSend: function() {
@@ -7898,3 +7898,16 @@
 	function toggleSomething (divID){
         $(divID).toggle('normal');
 	}
+
+	//Открываем в новом окне url
+    function iOpenNewWindow(url, name, options){
+
+
+        openedWindow = window.open(url, name, options);
+
+        /*if (openedWindow.focus){
+            openedWindow.focus();
+        }
+
+        WaitForCloseWindow(openedWindow);*/
+    }

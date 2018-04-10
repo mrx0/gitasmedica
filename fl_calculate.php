@@ -122,7 +122,22 @@
 
                                 echo '
                                             </h2>
-                                            <div id="tabel_info"></div>';
+                                            <div id="tabel_info">';
+
+                                $query = "SELECT `tabel_id` AS total FROM `fl_journal_tabels_ex` WHERE `calculate_id` = '{$_GET['id']}' LIMIT 1";
+
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                                $number = mysqli_num_rows($res);
+
+                                $arr = mysqli_fetch_assoc($res);
+
+                                if ($number > 0){
+                                    echo "<span style='font-size: 80%; color: red;'>Добавлен в <a href='fl_tabel.php?id={$arr['total']}' class='ahref'>Табель #{$arr['total']}</a></span>";
+                                }
+
+                                echo '
+                                            </div>';
 
                                 /*if ($calculate_j[0]['status'] == 9){
                                     echo '<i style="color:red;">Наряд удалён (заблокирован).</i><br>';

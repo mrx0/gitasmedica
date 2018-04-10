@@ -801,10 +801,13 @@
                     if (res.result == "success") {
                         //console.log(res);
                         if (newTabel) {
-                            document.location.href = "fl_addNewTabel.php";
+                            //document.location.href = "fl_addNewTabel.php";
+                            //window.open("fl_addNewTabel.php", 'newTabelwindow', 'width=800, height=800, scrollbars=yes,resizable=yes,menubar=no,toolbar=yes,status=yes');
+                            iOpenNewWindow('fl_addNewTabel.php', 'newTabelwindow', 'width=800, height=800, scrollbars=yes,resizable=yes,menubar=no,toolbar=yes,status=yes');
                         }else{
                             //console.log(12333);
-                            document.location.href = "fl_addINExistTabel.php";
+                            //window.open("fl_addINExistTabel.php", 'oldTabelwindow', 'width=800, height=800, scrollbars=yes,resizable=yes,menubar=no,toolbar=yes,status=yes');
+                            iOpenNewWindow("fl_addINExistTabel.php", 'oldTabelwindow', 'width=800, height=800, scrollbars=yes,resizable=yes,menubar=no,toolbar=yes,status=yes');
                         }
 
                     }
@@ -840,7 +843,8 @@
                 //console.log(res.data);
 
                 if(res.result == "success"){
-                    document.location.href = "fl_tabels.php";
+                    //document.location.href = "fl_tabels.php";
+                    window.close('newTabelwindow');
                 }else{
                     $('#errror').html(res.data);
                 }
@@ -875,7 +879,8 @@
                 //console.log(res);
 
                 if(res.result == "success"){
-                    document.location.href = "fl_tabels.php";
+                    //document.location.href = "fl_tabels.php";
+                    window.close('oldTabelwindow');
                 }else{
                     $('#errror').html(res.data);
                 }
@@ -1855,3 +1860,179 @@
         });
 
     });
+
+    //Получаем необработанные расчетные листы
+    function getCalculatesfunc (thisObj, reqData){
+        $.ajax({
+            url:"fl_get_calculates_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data:reqData,
+
+            cache: false,
+            beforeSend: function() {
+                thisObj.html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка расч. листов</span></div>");
+            },
+            success:function(res){
+                //console.log(res);
+                //thisObj.html(res);
+
+                if(res.result == 'success'){
+
+                    ids = thisObj.attr("id");
+                    ids_arr = ids.split("_");
+                    //console.log(ids_arr);
+
+                    permission = ids_arr[0];
+                    worker = ids_arr[1];
+                    office = ids_arr[2];
+
+                    if (res.status == 1){
+                        thisObj.html(res.data);
+
+                        //Показываем оповещения на фио и филиале
+                        //$("#tabs_notes_"+permission+"_"+worker).show();
+                        //$("#tabs_notes_"+permission+"_"+worker+"_"+office).show();
+                        //console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
+
+                        $("#tabs_notes_"+permission+"_"+worker).css("display", "inline-block");
+                        $("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display", "inline-block");
+
+                        thisObj.parent().find(".summCalcsNPaid").html(res.summCalc);
+
+                    }
+
+                    if (res.status == 0){
+                        thisObj.html("Нет данных по необработанным расчетным листам");
+
+                        //Спрячем пустые вкладки, где нет данных
+
+                        //console.log($(".tabs-"+permission+"_"+worker+"_"+office).css("display"));
+
+                        //$(".tabs-"+permission+"_"+worker+"_"+office).hide();
+                    }
+                }
+
+                if(res.result == 'error'){
+                    thisObj.html(res.data);
+
+
+                }
+            }
+        });
+    }
+
+    //Получаем необработанные расчетные листы
+    function getTabelsfunc (thisObj, reqData){
+        $.ajax({
+            url:"fl_get_tabels_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data: reqData,
+
+            cache: false,
+            beforeSend: function() {
+                thisObj.html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка табелей</span></div>");
+            },
+            success:function(res){
+                //console.log(res);
+                //thisObj.html(res);
+
+                if(res.result == 'success'){
+
+                    ids = thisObj.attr("id");
+                    ids_arr = ids.split("_");
+                    //console.log(ids_arr);
+
+                    permission = ids_arr[0];
+                    worker = ids_arr[1];
+                    office = ids_arr[2];
+
+                    if (res.status == 1){
+                        thisObj.html(res.data);
+
+                        //Показываем оповещения на фио и филиале
+                        /*$("#tabs_notes2_"+permission+"_"+worker).show();
+                         $("#tabs_notes2_"+permission+"_"+worker+"_"+office).show();*/
+                        //console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
+                        if (res.notDeployCount > 0){
+                            $("#tabs_notes2_"+permission+"_"+worker).css("display", "inline-block");
+                            $("#tabs_notes2_"+permission+"_"+worker+"_"+office).css("display", "inline-block");
+                        }
+
+                        //
+                        thisObj.parent().find(".summTabelNPaid").html(res.summCalc);
+
+                    }
+
+                    if (res.status == 0){
+                        thisObj.html("Нет данных по табелям");
+
+
+                        //!!! доделать тут чтоб правильно прятались или нет вкладки
+                        //Спрячем пустые вкладки, где нет данных
+
+                        //console.log($(".tabs-"+permission+"_"+worker+"_"+office).css("display"));
+
+                        //$(".tabs-"+permission+"_"+worker+"_"+office).hide();
+                    }
+                }
+
+                if(res.result == "error"){
+                    thisObj.html(res.data);
+
+                }
+            }
+        });
+    }
+
+
+    //Обновим данные в табеле, но только в данной вкладке
+    function refreshOnlyThisTab(thisObj, permission_id, worker_id, office_id){
+        //console.log(permission_id+' _ '+worker_id+' _ '+office_id);
+        //console.log(thisObj.parent());
+
+        var needCalcObj = thisObj.parent().find('.tableDataNPaidCalcs')
+        var needTabelObj = thisObj.parent().find('.tableTabels')
+
+
+        var certData = {
+            permission: permission_id,
+            worker: worker_id,
+            office: office_id,
+            month: "09"
+        };
+
+        getCalculatesfunc (needCalcObj, certData);
+
+        getTabelsfunc (needTabelObj, certData);
+
+    }
+
+
+
+    //!!!! тест разбор
+    /*var openedWindow;
+    function iOpenNewWindow(url, name, options){
+
+
+        openedWindow = window.open(url, name, options);
+
+        if (openedWindow.focus){
+            openedWindow.focus();
+        }
+
+        WaitForCloseWindow(openedWindow);
+    }
+
+    function WaitForCloseWindow(openedWindow){
+        if(!openedWindow.closed){
+            setTimeout("WaitForCloseWindow(openedWindow)", 300);
+        }else{
+            alert(" Closed!");
+        }
+    }*/

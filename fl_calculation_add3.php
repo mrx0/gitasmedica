@@ -200,7 +200,7 @@ if ($enter_ok){
                             }
 
                             // !!! **** тест с записью
-                            include_once 'showZapisRezult.php';
+                                include_once 'showZapisRezult.php';
 
                             if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode) {
                                 $finance_edit = true;
