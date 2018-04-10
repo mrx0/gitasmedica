@@ -187,7 +187,7 @@
                     $rezult .= '
                                             <div class="cellName">';
                     $rezult .=
-                        'Пациент <br /><b title="'.WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', false).'">' . WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user', true) . '</b>';
+                        'Пациент <br><b title="'.WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', false).'">' . WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user', true) . '</b>';
                     $rezult .= '
                                             </div>';
                     $rezult .= '
@@ -364,12 +364,15 @@
                                                                     Отменить все изменения
                                                                 </div>
                                                             </li>';
+
+                                    $rezult .=
+                                        '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $ZapisHereQueryToday[$z]['id'] . ', 8)">Ошибка, удалить из записи</div></li>';
                                 }
-                            } else {
-                                $rezult .=
+                            /*} else {*/
+                                /*$rezult .=
                                     '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $ZapisHereQueryToday[$z]['id'] . ', 8)">Ошибка, удалить из записи</div></li>';
                                 $rezult .=
-                                    '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $ZapisHereQueryToday[$z]['id'] . ', 0)">Отменить все изменения</div></li>';
+                                    '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $ZapisHereQueryToday[$z]['id'] . ', 0)">Отменить все изменения</div></li>';*/
                             }
                         }
 

@@ -271,7 +271,8 @@ if ($enter_ok){
                     <div style="margin: 5px 0;">
 
                         <input type="button" class="b" value="Применить" onclick="fl_addInExistTabel();">
-                    </div>';
+                    </div>
+                    <div id="doc_title">Добавление расчётных листов в существующий табель - Асмедика</div>';
 
             }
         }
