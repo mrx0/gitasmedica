@@ -377,6 +377,25 @@
         return number_format($result, 2, '.', '');
     }
 
+    //Собираем все категории процентов по типу
+    function getAllPercentCats($type){
+        $percents_j = array();
+
+        $msql_cnnct = ConnectToDB ();
+
+        $query = "SELECT * FROM `fl_spr_percents` WHERE `type`='{$type}'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                $percents_j[$arr['id']] = $arr;
+            }
+        }
+
+        return $percents_j;
+    }
 
 
     //Получить категории процентов по сотруднику и категории
