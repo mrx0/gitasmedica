@@ -132,7 +132,7 @@
                         foreach ($tabel_ex_calculates_j as $rezData){
 
                             //Наряды
-                            $query = "SELECT `summ`, `summins` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}' LIMIT 1";
+                            $query = "SELECT `summ`, `summins`, `create_time` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}' LIMIT 1";
 
                             /*$query2 = "SELECT `summ` AS `summ`, `summins` AS `summins` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}'
                             UNION ALL (
@@ -152,6 +152,7 @@
                                 $arr = mysqli_fetch_assoc($res);
                                 $summ = $arr['summ'];
                                 $summins = $arr['summins'];
+                                $invoice_create_time = date('d.m.y', strtotime($arr['create_time']));
                             }
 
                             $query = "SELECT `name`, `full_name` FROM `spr_clients` WHERE `id`='{$rezData['client_id']}' LIMIT 1";
@@ -194,7 +195,7 @@
                                         </a>
                                         </div>
                                         <div style="margin: 5px 0 0 3px; font-size: 80%;">
-                                            <b>Наряд: <a href="invoice.php?id='.$rezData['invoice_id'].'" class="ahref">#'.$rezData['invoice_id'].'</a> - <a href="client.php?id='.$rezData['client_id'].'" class="ahref">'.$name.'</a><br>
+                                            <b>Наряд: <a href="invoice.php?id='.$rezData['invoice_id'].'" class="ahref">#'.$rezData['invoice_id'].'</a> от '.$invoice_create_time.'<br>пац.: <a href="client.php?id='.$rezData['client_id'].'" class="ahref">'.$name.'</a><br>
                                             Сумма: '.$summ.' р. Страх.: '.$summins.' р.</b> <br>
                                             
                                         </div>
