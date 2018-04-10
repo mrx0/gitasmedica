@@ -181,7 +181,7 @@
 
                                 if ($office['id'] != 11) {
                                     echo '
-                                        <div id="tabs-' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '" style="width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); font-size: 12px; margin-top: 65px;">';
+                                        <div id="tabs-' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '" style="position: relative; width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); font-size: 12px; margin-top: 65px;">';
 
                                     echo '
                                             <div class="tableTabels" id="'.$permission['id'] . '_' . $worker['id'] . '_' . $office['id'].'_tabels">
@@ -193,6 +193,10 @@
                                                 <div style="width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);"><img src="img/wait.gif" style="float:left;"><span style="float: right;  font-size: 90%;"> обработка...</span></div>
                                             </div>';
 
+                                    echo '
+                                            <div style="position: absolute; cursor: pointer; top: 1px; right: 5px; font-size: 180%; color: #0C0C0C;" onclick="refreshOnlyThisTab($(this), '.$permission['id'] . ',' . $worker['id'] . ',' . $office['id'].');" title="Обновить">
+                                                <i class="fa fa-refresh" aria-hidden="true"></i>
+                                            </div>';
 
                                     echo '
                                         </div>';
@@ -216,190 +220,6 @@
                     </div>';
 
 
-
-
-
-
-
-
-
-
-				/*echo '
-                            <div class="no_print"> 
-							<ul style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 20px; width: 420px; font-size: 95%; background-color: rgba(245, 245, 245, 0.9); display: inline-table;">
-								
-								<li style="margin-bottom: 10px;">
-									Выберите условие
-								</li>
-								
-								<li class="filterBlock">
-									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Выберите период
-									</div>
-									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<div style="margin-bottom: 10px;">
-											C <input type="text" id="datastart" name="datastart" class="dateс" value="'.date("01.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
-											 &bull;по <input type="text" id="dataend" name="dataend" class="dateс" value="'.date("d.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
-										</div>
-										<div style="vertical-align: middle; color: #333;">
-											<input type="checkbox" name="all_time" value="1"> <span style="font-size:80%;">За всё время</span>
-										</div>
-									</div>
-								</li>';*/
-
-				/*echo '
-								<li class="filterBlock">
-									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Филиал
-									</div>
-									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<div class="wrapper-demo">';
-				//if (($finances['see_all'] == 1) || $god_mode){
-                    echo '
-											<select id="filial" class="wrapper-dropdown-2 b2" tabindex="2" name="filial">
-												<ul class="dropdown">
-													<li><option value="99" selected>Все</option></li>';
-														if ($offices_j !=0){
-															for ($i = 0; $i < count($offices_j); $i++){
-																echo '<li><option value="'.$offices_j[$i]['id'].'" class="icon-twitter icon-large">'.$offices_j[$i]['name'].'</option></li>';
-															}
-														}
-											
-				    echo '
-												</ul>
-											</select>';
-				/*}else{
-                    $offices_j = SelDataFromDB('spr_filials', $_SESSION['filial'], 'offices');
-                    if ($offices_j != 0) {
-                        echo $offices_j[0]['name'].'
-                                <input type="hidden" id="filial" name="filial" value="'.$_SESSION['filial'].'">';
-                    }
-                }*/
-
-                /*echo '
-										</div>
-									</div>
-								</li>
-								<li class="filterBlock">
-									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Сотрудник, к кому была запись<br>
-										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
-									</div>
-									<div class="filtercellRight" style="width: 245px; min-width: 245px;">';
-                if (($finances['see_all'] == 1) || $god_mode){
-                    echo '
-										<input type="text" size="30" name="searchdata4" id="search_client4" placeholder="Минимум три буквы для поиска" value="" class="who4" autocomplete="off">
-										<ul id="search_result4" class="search_result4"></ul><br />';
-                }else{
-                    echo WriteSearchUser('spr_workers', $_SESSION['id'], 'user_full', false).'
-                                        <input type="hidden" id="search_client4" name="searchdata4" value="'.WriteSearchUser('spr_workers', $_SESSION['id'], 'user_full', false).'">';
-                }
-                echo '
-									</div>
-								</li>
-								<li class="filterBlock">
-									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Сотрудник, который добавил запись<br>
-										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
-									</div>
-									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="text" size="30" name="searchdata2" id="search_worker" placeholder="Минимум три буквы для поиска" value="" class="who2" autocomplete="off">
-										<ul id="search_result2" class="search_result2"></ul><br />
-									</div>
-								</li>
-								';
-
-
-                echo '				
-								
-								<li class="filterBlock">
-									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Состояние
-									</div>
-									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="checkbox" id="calculateAll" name="zapisAll" class="zapisType" value="1"> Все<br>
-										<input type="checkbox" id="zapisArrive" name="zapisArrive" class="zapisType" value="1" checked> Пришли<br>
-										<input type="checkbox" id="zapisNotArrive" name="zapisNotArrive" class="zapisType" value="1"> Не пришли<br>
-										<input type="checkbox" id="zapisNull" name="zapisNull" class="zapisType" value="1"> Не закрытые<br>
-										<input type="checkbox" id="zapisError" name="zapisError" class="zapisType" value="1"> Ошибочные<br>
-									</div>
-								</li>';
-
-				echo '
-							</ul>
-							<ul style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 20px; width: 420px; font-size: 95%; background-color: rgba(245, 245, 245, 0.9);display: inline-table;">
-							    
-								<li style="margin-bottom: 10px;">
-									Дополнительные условия
-								</li>
-							    
-								<li class="filterBlock">
-									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Тип
-									</div>
-									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input id="typeW" name="typeW" value="0" type="radio" checked>Все<br />
-										<input id="typeW" name="typeW" value="5" type="radio">Стоматологи<br />
-										<input id="typeW" name="typeW" value="6" type="radio">Косметологи<br />
-										<input id="typeW" name="typeW" value="10" type="radio">Специалисты<br />
-									</div>
-								</li>
-								
-								<li class="filterBlock">
-									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Заполненность
-									</div>
-									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="checkbox" id="fullAll" name="fullAll" class="fullType" value="1" checked> Все<br>
-										<input type="checkbox" id="fullWOInvoice" name="fullWOInvoice" class="fullType" value="1" checked> Без нарядов<br>
-										<input type="checkbox" id="fullWOTask" name="fullWOTask" class="fullType" value="1" checked> Без посещений<br>
-										<input type="checkbox" id="fullOk" name="fullOk" class="fullType" value="1" checked> Заполненные полностью<br>
-									</div>
-								</li>
-								
-								<li class="filterBlock">
-									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Статус
-									</div>
-									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="checkbox" id="statusAll" name="statusAll" class="statusType" value="1" checked> Все<br>
-										<input type="checkbox" id="statusPervich" name="statusPervich" class="statusType" value="1" checked> Первичные<br>
-										<input type="checkbox" id="statusInsure" name="statusInsure" class="statusType" value="1" checked> Страховые<br>
-										<input type="checkbox" id="statusNight" name="statusNight" class="statusType" value="1" checked> Ночные<br>
-										<input type="checkbox" id="statusAnother" name="statusAnother" class="statusType" value="1" checked> Все остальные<br>
-									</div>
-								</li>
-								
-								<li class="filterBlock">
-									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Наряды
-									</div>
-									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="checkbox" id="invoiceAll" name="invoiceAll" class="invoiceType" value="1" checked> Все<br>
-										<input type="checkbox" id="invoicePaid" name="invoicePaid" class="invoiceType" value="1" checked> Оплаченные<br>
-										<input type="checkbox" id="invoiceNotPaid" name="invoiceNotPaid" class="invoiceType" value="1" checked> Не оплаченные<br>
-										<input type="checkbox" id="invoiceInsure" name="invoiceInsure" class="invoiceType" value="1" checked> Страховые<br>
-										<!--<input type="checkbox" id="statusAnother" name="statusAnother" class="invoiceType" value="1" checked> Все остальные<br>-->
-									</div>
-								</li>
-								
-							</ul>
-							</div>
-						</div>';
-				
-				echo '
-                        <div class="no_print"> 
-						<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_calculate()">
-						</div>';
-
-                echo '
-						<div id="status">
-							<ul style="border: 1px dotted #CCC; margin: 10px; width: auto;" id="qresult">
-								Результат отобразится здесь
-							<ul>
-						</div>';*/
 
 				echo '
 
@@ -426,7 +246,23 @@
                         }else{
                             $(this).parent().parent().parent().css({"background-color": ""});
                         }
-                    });   
+                    });  
+                     
+                     
+                    $("body").on("click", ".checkAll", function(){
+                        var checked_status = $(this).is(":checked");
+                        var thisId = $(this).attr("id");
+                        
+                        $("."+thisId).each(function() {
+                            if (checked_status){
+                                $(this).prop("checked", true);
+                                $(this).parent().parent().parent().css({"background-color": "#83DB53"});
+                            }else{
+                                $(this).prop("checked", false);
+                                $(this).parent().parent().parent().css({"background-color": ""});
+                            }
+                        });
+                    });     
 				    
 				    
 				    
@@ -436,7 +272,7 @@
 				    var worker = 0;
 				    var office = 0;
 
-				    
+				    //Необработанные расчеты
 				    $(".tableDataNPaidCalcs").each(function() {
                         //console.log($(this).attr("id"));
                         
@@ -458,69 +294,10 @@
                         };
                         
                         
-                        //Необработанные расчеты
-                        $.ajax({
-                            url:"fl_get_calculates_f.php",
-                            global: false,
-                            type: "POST",
-                            dataType: "JSON",
-                
-                            data:certData,
-                
-                            cache: false,
-                            beforeSend: function() {
-                                thisObj.html("<div style=\'width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);\'><img src=\'img/wait.gif\' style=\'float:left;\'><span style=\'float: right;  font-size: 90%;\'> обработка...<br>загрузка расч. листов</span></div>");
-                            },
-                            success:function(res){
-                                //console.log(res);
-                                //thisObj.html(res);
-                                
-                                if(res.result == \'success\'){
-                                
-                                    ids = thisObj.attr("id");
-                                    ids_arr = ids.split("_");
-                                    //console.log(ids_arr);
-                                     
-                                    permission = ids_arr[0];
-                                    worker = ids_arr[1];
-                                    office = ids_arr[2];
-                                
-                                    if (res.status == 1){
-                                        thisObj.html(res.data);
-                                        
-                                        //Показываем оповещения на фио и филиале
-                                        //$("#tabs_notes_"+permission+"_"+worker).show();
-                                        //$("#tabs_notes_"+permission+"_"+worker+"_"+office).show();
-                                        //console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
-                                        
-                                        $("#tabs_notes_"+permission+"_"+worker).css("display", "inline-block");
-                                        $("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display", "inline-block");
-                                        
-                                        thisObj.parent().find(".summCalcsNPaid").html(res.summCalc);
-
-                                    }
-                                    
-                                    if (res.status == 0){
-                                        thisObj.html("Нет данных по необработанным расчетным листам");
-                                    	
-                                    	//Спрячем пустые вкладки, где нет данных
-                                    	
-                                    	//console.log($(".tabs-"+permission+"_"+worker+"_"+office).css("display"));
-
-                                        //$(".tabs-"+permission+"_"+worker+"_"+office).hide();
-                                    }
-                                }
-                                
-                                if(res.result == \'error\'){
-                                    thisObj.html(res.data);
-                                    
-                                    
-                                }
-                            }
-                        });
+                        getCalculatesfunc (thisObj, certData);
                     });
                     
-                    
+                    //Табели
 				    $(".tableTabels").each(function() {
                         //console.log($(this).attr("id"));
                         
@@ -541,236 +318,12 @@
                             month: "09"
                         };
                         
-                         
-                        //Табели
-                        $.ajax({
-                            url:"fl_get_tabels_f.php",
-                            global: false,
-                            type: "POST",
-                            dataType: "JSON",
-                
-                            data:certData,
-                
-                            cache: false,
-                            beforeSend: function() {
-                                thisObj.html("<div style=\'width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);\'><img src=\'img/wait.gif\' style=\'float:left;\'><span style=\'float: right;  font-size: 90%;\'> обработка...<br>загрузка табелей</span></div>");
-                            },
-                            success:function(res){
-                                //console.log(res);
-                                //thisObj.html(res);
-                                
-                                if(res.result == \'success\'){
-                                
-                                    ids = thisObj.attr("id");
-                                    ids_arr = ids.split("_");
-                                    //console.log(ids_arr);
-                                     
-                                    permission = ids_arr[0];
-                                    worker = ids_arr[1];
-                                    office = ids_arr[2];
-                                
-                                    if (res.status == 1){
-                                        thisObj.html(res.data);
-                                        
-                                        //Показываем оповещения на фио и филиале
-                                        /*$("#tabs_notes2_"+permission+"_"+worker).show();
-                                        $("#tabs_notes2_"+permission+"_"+worker+"_"+office).show();*/
-                                        //console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
-                                        if (res.notDeployCount > 0){
-                                            $("#tabs_notes2_"+permission+"_"+worker).css("display", "inline-block");
-                                            $("#tabs_notes2_"+permission+"_"+worker+"_"+office).css("display", "inline-block");
-                                        }
-                                        
-                                        //
-                                        thisObj.parent().find(".summTabelNPaid").html(res.summCalc);
-
-                                    }
-                                    
-                                    if (res.status == 0){
-                                        thisObj.html("Нет данных по табелям");
-                                    	
-                                    	
-                                    	//!!! доделать тут чтоб правильно прятались или нет вкладки
-                                    	//Спрячем пустые вкладки, где нет данных
-                                    	
-                                    	//console.log($(".tabs-"+permission+"_"+worker+"_"+office).css("display"));
-                                    	
-                                        //$(".tabs-"+permission+"_"+worker+"_"+office).hide();
-                                    }
-                                }
-                                
-                                if(res.result == "error"){
-                                    thisObj.html(res.data);
-                                    
-                                }
-                            }
-                        });
-                    });
+                        
+                        getTabelsfunc (thisObj, certData);
+                     });
 				});
 				
-				
-				
-                //Проверка и установка checkbox
-                /*$(".zapisType").click(function() {
-                    
-                    var checked_status = $(this).is(":checked");
-                    var thisId = $(this).attr("id");
-                    var pin_status = false;
-                    var allCheckStatus = false;
-                    
-                    if (thisId == "zapisAll"){
-                        if (checked_status){
-                            pin_status = true;
-                        }else{
-                            pin_status = false;
-                        }
-                        $(".zapisType").each(function() {
-                            $(this).prop("checked", pin_status);
-                        });
-                    }else{
-                        if (!checked_status){
-                            $("#zapisAll").prop("checked", false);
-                        }else{
-                            allCheckStatus = true; 
-                            $(".zapisType").each(function() {
-                                if ($(this).attr("id") != "zapisAll"){
-                                    if (!$(this).is(":checked")){
-                                        allCheckStatus = false; 
-                                    }
-                                }
-                            });
-                            if (allCheckStatus){
-                                $("#zapisAll").prop("checked", true);
-                            }
-                        }
-                    }
-                });
                 
-                $(".fullType").click(function() {
-                    
-                    var checked_status = $(this).is(":checked");
-                    var thisId = $(this).attr("id");
-                    var pin_status = false;
-                    var allCheckStatus = false;
-                    
-                    if (thisId == "fullAll"){
-                        if (checked_status){
-                            pin_status = true;
-                        }else{
-                            pin_status = false;
-                        }
-                        $(".fullType").each(function() {
-                            $(this).prop("checked", pin_status);
-                        });
-                    }else{
-                        if (!checked_status){
-                            $("#fullAll").prop("checked", false);
-                        }else{
-                            allCheckStatus = true; 
-                            $(".fullType").each(function() {
-                                if ($(this).attr("id") != "fullAll"){
-                                    if (!$(this).is(":checked")){
-                                        allCheckStatus = false; 
-                                    }
-                                }
-                            });
-                            if (allCheckStatus){
-                                $("#fullAll").prop("checked", true);
-                            }
-                        }
-                    }
-                });
-                
-                $(".statusType").click(function() {
-                    
-                    var checked_status = $(this).is(":checked");
-                    var thisId = $(this).attr("id");
-                    var pin_status = false;
-                    var allCheckStatus = false;
-                    
-                    if (thisId == "statusAll"){
-                        if (checked_status){
-                            pin_status = true;
-                        }else{
-                            pin_status = false;
-                        }
-                        $(".statusType").each(function() {
-                            $(this).prop("checked", pin_status);
-                        });
-                    }else{
-                        if (!checked_status){
-                            $("#statusAll").prop("checked", false);
-                        }else{
-                            allCheckStatus = true; 
-                            $(".statusType").each(function() {
-                                if ($(this).attr("id") != "statusAll"){
-                                    if (!$(this).is(":checked")){
-                                        allCheckStatus = false; 
-                                    }
-                                }
-                            });
-                            if (allCheckStatus){
-                                $("#statusAll").prop("checked", true);
-                            }
-                        }
-                    }
-                });*/
-                
-                //Наряды
-                /*$(".invoiceType").click(function() {
-                    
-                    var checked_status = $(this).is(":checked");
-                    var thisId = $(this).attr("id");
-                    var pin_status = false;
-                    var allCheckStatus = false;
-                    
-                    if (thisId == "invoiceAll"){
-                        if (checked_status){
-                            pin_status = true;
-                        }else{
-                            pin_status = false;
-                        }
-                        $(".invoiceType").each(function() {
-                            $(this).prop("checked", pin_status);
-                        });
-                    }else{
-                        if (!checked_status){
-                            $("#invoiceAll").prop("checked", false);
-                        }else{
-                            allCheckStatus = true; 
-                            $(".invoiceType").each(function() {
-                                if ($(this).attr("id") != "invoiceAll"){
-                                    if (!$(this).is(":checked")){
-                                        allCheckStatus = false; 
-                                    }
-                                }
-                            });
-                            if (allCheckStatus){
-                                $("#invoiceAll").prop("checked", true);
-                            }
-                        }
-                    }
-                });
-                    
-                    
-                var all_time = 0;
-                
-                $("input[name=all_time]").change(function() {
-                    all_time = $("input[name=all_time]:checked").val();
-                    
-                    if (all_time === undefined){
-                        all_time = 0;
-                    }
-                    
-                    if (all_time == 1){
-                        document.getElementById("datastart").disabled = true;
-                        document.getElementById("dataend").disabled = true;
-                    }
-                    if (all_time == 0){
-                        document.getElementById("datastart").disabled = false;
-                        document.getElementById("dataend").disabled = false;
-                    }
-                });*/
 				</script>';
 			}
 			//mysql_close();
