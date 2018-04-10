@@ -26,7 +26,7 @@
 					if (empty($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']])){
 						$keys = array_keys($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data']);
 						//$firstKey = $keys[0];
-                        if ($_POST['ind'] != 0) {
+                        if (($_POST['ind'] != 0) && !empty($keys)) {
                             $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active'] = $keys[0];
                         }else{
                             $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active'] = 0;
