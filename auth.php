@@ -4,11 +4,21 @@
 //	
 	
     session_start();
-	
-	unset($_SESSION['journal_tooth_status_temp']);
+
+	/*unset($_SESSION['journal_tooth_status_temp']);
 	unset($_SESSION['permissions']);
 	unset($_SESSION['filial']);
+    unset($_SESSION['calculate_data']);*/
+
+    unset($_SESSION['login']);
+    unset($_SESSION['name']);
+    unset($_SESSION['id']);
+    unset($_SESSION['journal_tooth_status_temp']);
+    unset($_SESSION['permissions']);
+    unset($_SESSION['filial']);
+    unset($_SESSION['invoice_data']);
     unset($_SESSION['calculate_data']);
+    unset($_SESSION['fl_calcs_tabels']);
 	
 	//вся процедура работает на сессиях. Именно в ней хранятся данные  пользователя, пока он находится на сайте. Очень важно запустить их в  самом начале странички!!!
 	if (isset($_POST['login'])){
@@ -59,6 +69,7 @@
 					$_SESSION['id']=$rezult[0]['id'];
 					$_SESSION['name']=$rezult[0]['name'];
 					$_SESSION['permissions']=$rezult[0]['permissions'];
+					$_SESSION['options'] = array();
 					//эти данные очень часто используются, вот их и будет "носить с собой" вошедший пользователь
 					
 					//!!!если пользователь определенной группы, костыль!!!

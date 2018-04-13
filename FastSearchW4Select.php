@@ -1,6 +1,6 @@
 <?php
 	
-//test_search.php
+//FastSearchW4Select.php
 //тестовый поиск
 
 	//var_dump ($_POST);
