@@ -2020,9 +2020,9 @@
 
 		//document.getElementById("changeShedOptionsReq").innerHTML = '';
 
-		var day = document.getElementById("SelectDayShedOptions").value;
-		var month = document.getElementById("SelectMonthShedOptions").value;
-		var year = document.getElementById("SelectYearShedOptions").value;
+		var day = $("#SelectDayShedOptions").val();
+		var month = $("#SelectMonthShedOptions").val();
+		var year = $("#SelectYearShedOptions").val();
 
 		var ignoreshed = $("input[name=ignoreshed]:checked").val();
 		if (typeof (ignoreshed) == 'undefined') ignoreshed = 0;
@@ -2072,7 +2072,10 @@
 		}
     }
 
-	function manageScheduler(){
+    //Функция пунта управления
+	function manageScheduler(doc_name){
+    	console.log(doc_name);
+
 		e = $('.manageScheduler');
 		if(!e.is(':visible')) {
 			e.show();
@@ -2115,12 +2118,44 @@
 		}
 
 		if (iCanManage) iCanManage = false; else iCanManage = true;
+
+        var link = "ajax_add_some_settings_in_session.php";
+
+        var reqData = {
+            manage: iCanManage,
+            doc_name: doc_name
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+            	console.log(res);
+
+                /*if(res.result == "success") {
+                    $('#data').html(res.data);
+                    setTimeout(function () {
+                        window.location.replace('index.php');
+                    }, 1000)
+                }else{
+                    $('#errror').html(data);
+                }*/
+            }
+        })
 	}
 
 
 
 	//Выборка стоматология
 	function Ajax_show_result_stat_stom3(){
+
 		$.ajax({
 			url:"ajax_show_result_stat_stom3_f.php",
 			global: false,

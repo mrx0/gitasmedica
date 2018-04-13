@@ -853,10 +853,11 @@
 							if(input[i].value=="0") input[i].checked="checked";
 						}
 						
-						document.getElementById("ShowWorkersHere").innerHTML = \'<div class="cellsBlock2" style="width:320px; font-size:80%;"><div class="cellRight">Не выбрана смена</div></div>\';
+						$("#ShowWorkersHere").html(\'<div class="cellsBlock2" style="width:320px; font-size:80%;"><div class="cellRight">Не выбрана смена</div></div>\');
 						
 						$(".error").hide();
-						document.getElementById("errror").innerHTML = "";
+						
+						$("#errror").html("");
 					}
 					
 					
@@ -1011,7 +1012,7 @@
 			echo '					
 			</script>
 				
-			<script language="JavaScript" type="text/javascript">
+			<script>
 				 /*<![CDATA[*/
 				 var s=[],s_timer=[];
 				 function show(id,h,spd)

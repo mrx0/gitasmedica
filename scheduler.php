@@ -251,11 +251,27 @@
 					$kabsInFilialExist = FALSE;
 				}
 			}
-			
-			//переменная, чтоб вкл/откл редактирование
-			echo '
-				<script>
-					var iCanManage = false;
+
+            //переменная, чтоб вкл/откл редактирование
+            $iCanManage = 'false';
+            $displayBlock = false;
+
+            echo '
+				<script>';
+            if (isset($_SESSION['options'])){
+                if (isset($_SESSION['options']['scheduler'])) {
+                    $iCanManage = $_SESSION['options']['scheduler']['manage'];
+                    if ($_SESSION['options']['scheduler']['manage'] == 'true') {
+                        $displayBlock = true;
+                    }
+                }
+            }else{
+            }
+
+            echo '
+                    var iCanManage = '.$iCanManage.';';
+
+            echo '
 				</script>';
 
 			echo '
@@ -291,7 +307,7 @@
 				echo '
 							<div class="no_print"> 
 							<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
-								<div style="cursor: pointer;" onclick="manageScheduler()">
+								<div style="cursor: pointer;" onclick="manageScheduler(\'scheduler\')">
 									<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>
 								</div>
 							</li>
@@ -473,8 +489,14 @@
 										$kabs .= $resEcho2;
 										
 										if (!empty($kabsInFilialTemp)){
-											$kabs .= '
-													<div class="manageScheduler" style="background-color: #FEEEEE; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);">
+
+											$kabs .= '<div class="manageScheduler" style="';
+
+                                            if ($displayBlock){
+                                                $kabs .= 'display: block;';
+                                            }
+
+                                            $kabs .= 'background-color: #FEEEEE; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);">
 														<div style="text-align: center; padding: 4px; margin: 1px;">';
 														
 											foreach	($kabsInFilialTemp as $keyK => $valueK){
@@ -512,14 +534,26 @@
 										//Ночные смены
 										if (($smenaN == 3) || ($smenaN == 4)){
 											$kabs .= '
-													<div class="nightSmena">
+													<div class="nightSmena" style="';
+
+                                            if ($displayBlock){
+                                                $kabs .= 'display: block;';
+                                            }
+
+                                            $kabs .= '">
 														<div style="width: 100%; height: 35px; min-height: 35px; outline: 1px solid  #BBB; display: table; margin-bottom: 3px; font-size: 70%;">
 															<div style="vertical-align: middle; width: 20px; box-shadow: 0px 5px 10px rgba(171, 254, 213, 0.59); display: table-cell !important;">
 																<div>'.$smenaN.'</div>
 															</div>
 															<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red; background-color: rgba(255, 0, 0, 0.33);">
 																<div style="margin-bottom: 7px;">никого нет</div>
-																<div class="manageScheduler">';
+																<div class="manageScheduler" style="';
+
+                                            if ($displayBlock){
+                                                $kabs .= 'display: block;';
+                                            }
+
+                                            $kabs .= '">';
 															
 											foreach	($kabsInFilial as $keyK => $valueK){
 												$kabs .= '

@@ -340,7 +340,7 @@
 				</div>';
 
 			echo '
-					<div id="ShowSettingsScheduler" style="position: absolute; z-index: 105; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; padding:10px;">
+					<div id="ShowSettingsScheduler" style="position: absolute; z-index: 105; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0 0; display:none; padding:10px;">
 						<a class="close" href="#" onclick="HideSettingsScheduler()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(../img/close.png) no-repeat;">
 							Close
 						</a>
@@ -566,13 +566,13 @@
 								month:month,
 								year:year,
 								'.$post_data.'
-								smena1:smena1_val,
-								smena2:smena2_val,
-								worker:worker,
+								smena1: smena1_val,
+								smena2: smena2_val,
+								worker: worker
 							},
 							// действие, при ответе с сервера
 							success: function(data){
-								document.getElementById("ShowSettingsScheduler").innerHTML=data;
+								$("#ShowSettingsScheduler").html(data);
 								window.scrollTo(0,0)
 							}
 						});						
@@ -583,7 +583,7 @@
 								  
 				</script>
 				
-			<script language="JavaScript" type="text/javascript">
+			<script>
 				 /*<![CDATA[*/
 				 var s=[],s_timer=[];
 				 function show(id,h,spd)
