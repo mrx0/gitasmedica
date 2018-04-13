@@ -6,7 +6,7 @@
     session_start();
 
 	if ($_POST){
-        if (isset($_POST['type'])){
+        if (isset($_POST['type']) && isset($_SESSION['id'])){
             //$_POST['type'] = 5;
 
             $rezult = '';

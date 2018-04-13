@@ -728,7 +728,7 @@
 								$t_f_data[$key][$surfaces[$key1]] = $value1;
 							}
 						}*/
-						//var_dump ($t_f_data);			
+						//var_dump ($t_f_data);
 			
 						$descr_rez = '';
 						//echo '<div><a href="#open1" onclick="show(\'hidden_'.$z.'\',200,5)">Подробно</a></div>';
@@ -736,26 +736,30 @@
 						foreach($t_f_data as $key => $value){
 							//var_dump ($value);
 							foreach ($value as $key1 => $value1){
-								
-								if ($key1 == 'status'){
-									//var_dump ($value1);	
-									if ($value1 != 0){
-										//$descr_rez .= 
-										echo t_surface_name('t'.$key.'NONE', 1).' '.t_surface_status($value1, 0).'';
-									}
-								}elseif($key1 == 'pin'){
-									if ($value1 != 0){
-										echo t_surface_status(3, 0);
-									}
-								}elseif($key1 == 'alien'){
-									
-								}elseif($key1 == 'zo'){
-									
-								}else{
-									if ($value1 != 0){
-										echo t_surface_name('t'.$key.$key1, 1).' '.t_surface_status(0, $value1);
-									}
-								}
+
+							    //!!! небольшой костыль, чтоб undef убрать
+							    if (($key1 != 'shinir') && ($key1 != 'podvizh') && ($key1 != 'retein') && ($key1 != 'skomplect')) {
+
+                                    if ($key1 == 'status') {
+                                        //var_dump ($value1);
+                                        if ($value1 != 0) {
+                                            //$descr_rez .=
+                                            echo t_surface_name('t' . $key . 'NONE', 1) . ' ' . t_surface_status($value1, 0) . '';
+                                        }
+                                    } elseif ($key1 == 'pin') {
+                                        if ($value1 != 0) {
+                                            echo t_surface_status(3, 0);
+                                        }
+                                    } elseif ($key1 == 'alien') {
+
+                                    } elseif ($key1 == 'zo') {
+
+                                    } else {
+                                        if ($value1 != 0) {
+                                            echo t_surface_name('t' . $key . $key1, 1) . ' ' . t_surface_status(0, $value1);
+                                        }
+                                    }
+                                }
 							}
 				
 						}

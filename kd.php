@@ -1,6 +1,6 @@
 <?php
 
-//
+//kd.php
 //
 
 	require_once 'header.php';
@@ -69,13 +69,16 @@
 										</div>';
 						echo '
 										<div id=hidden_'.$uptime.' style="display:none;">';
-						if (file_exists ('kd/'.$value['graf'].'.jpg')){
-							echo '<img src="kd/'.$value['graf'].'.jpg" width="768" />';
-						}elseif (file_exists ('kd/'.$value['graf'].'.png')){
-							echo '<img src="kd/'.$value['graf'].'.png" width="768" />';								
-						}else{
-						//	var_dump('Error');
-							echo 'Ошибка изображения';
+						
+						if (isset($value['graf'])){
+                            if (file_exists ('kd/'.$value['graf'].'.jpg')){
+                                echo '<img src="kd/'.$value['graf'].'.jpg" width="768" />';
+                            }elseif (file_exists ('kd/'.$value['graf'].'.png')){
+                                echo '<img src="kd/'.$value['graf'].'.png" width="768" />';
+                            }else{
+                            //	var_dump('Error');
+                                echo 'Ошибка изображения';
+                            }
 						}
 						
 						/*echo '
