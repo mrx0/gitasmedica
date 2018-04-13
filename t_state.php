@@ -1,6 +1,6 @@
 <?php
 
-//t_surface_name.php
+//t_state.php
 //
 
 	function t_surface_name ($data){
