@@ -20,6 +20,8 @@
 
             if (isset($_GET['page'])){
                 $limit_pos[0] = ($_GET['page']-1) * $limit_pos[1];
+            }else{
+                $_GET['page'] = 1;
             }
             $number = 0;
 

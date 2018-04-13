@@ -11,7 +11,8 @@
         require 'variables.php';
 
 		//var_dump ($_GET);
-		
+		//var_dump ($_SESSION);
+
 		//$get_link = '';
 		
 		//Если есть GET
@@ -26,23 +27,7 @@
 			include_once 'functions.php';
 
 			$dopQuery = '';
-			
-			//Массив с месяцами
-			/*$monthsName = array(
-				'01' => 'Январь',
-				'02' => 'Февраль',
-				'03' => 'Март',
-				'04' => 'Апрель',
-				'05' => 'Май',
-				'06' => 'Июнь',
-				'07'=> 'Июль',
-				'08' => 'Август',
-				'09' => 'Сентябрь',
-				'10' => 'Октябрь',
-				'11' => 'Ноябрь',
-				'12' => 'Декабрь'
-			);*/
-			
+
 			//Массив с днями недели
 			$dayWarr = array(
 				1 => 'ПН',
@@ -153,24 +138,22 @@
 					$dopQuery .= " AND `day`='{$_GET['dayw']}'";
 				}
 			}
-			
+
+            $msql_cnnct = ConnectToDB();
+
 			//получаем шаблон графика из базы
 			$query = "SELECT `filial`, `day`, `smena`, `kab`, `worker` FROM `sheduler_template` WHERE `type` = '$type'".$dopQuery;
 			
 			$shedTemplate = 0;
-			
-			require 'config.php';
-			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-			mysql_select_db($dbName) or die(mysql_error()); 
-			mysql_query("SET NAMES 'utf8'");
-			
+
 			$arr = array();
 			$rez = array();
-				
-			$res = mysql_query($query) or die($query);
-			$number = mysql_num_rows($res);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+			$number = mysqli_num_rows($res);
 			if ($number != 0){
-				while ($arr = mysql_fetch_assoc($res)){
+				while ($arr = mysqli_fetch_assoc($res)){
 					$rez[$arr['filial']][$arr['day']][$arr['smena']][$arr['kab']] = $arr['worker'];
 				}
 				$shedTemplate = $rez;
@@ -185,11 +168,26 @@
 			$kabsInFilial = array();
 			
 			//переменная, чтоб вкл/откл редактирование
+            $iCanManage = 'false';
+            $displayBlock = false;
+
 			echo '
-				<script>
-					var iCanManage = false;
-				</script>
-			';
+				<script>';
+            if (isset($_SESSION['options'])){
+                if (isset($_SESSION['options']['scheduler_template'])) {
+                    $iCanManage = $_SESSION['options']['scheduler_template']['manage'];
+                    if ($_SESSION['options']['scheduler_template']['manage'] == 'true') {
+                        $displayBlock = true;
+                    }
+                }
+            }else{
+            }
+
+            echo '
+                    var iCanManage = '.$iCanManage.';';
+
+            echo '
+				</script>';
 			
 			echo '
 			<div id="status">
@@ -218,10 +216,10 @@
 			if (($scheduler['edit'] == 1) || $god_mode){
 				echo '
 						<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
-							<div id="showDiv1" style="cursor: pointer;" onclick="manageScheduler()">
+							<div id="showDiv1" style="cursor: pointer;" onclick="manageScheduler(\'scheduler_template\')">
 								<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>
 							</div>
-							<div id="div1" style="width: 400px; margin-bottom: 10px; border: 1px dotted #BFBCB5; padding: 20px 10px 10px; background-color: #EEE;">
+							<div id="div1" style="', $displayBlock ? 'display: block;' : '' ,'  width: 400px; margin-bottom: 10px; border: 1px dotted #BFBCB5; padding: 20px 10px 10px; background-color: #EEE;">
 								<div id="changeShedOptionsReq"></div>
 								<div style="margin-bottom: 18px;">
 									Применить этот график на месяц ';
@@ -493,7 +491,8 @@
 					</div>';	
 			}		
 					
-			echo '	
+			echo '
+	        <div id="doc_title">Текущий график план - Асмедика</div>
 			<!-- Подложка только одна -->
 			<div id="overlay"></div>';
 
@@ -504,11 +503,11 @@
 				
 					$(function() {
 						$("#SelectFilial").change(function(){
-							var dayW = document.getElementById("SelectDayW").value;
+							var dayW = $("#SelectDayW").val();
 							document.location.href = "?filial="+$(this).val()+"&dayw="+dayW+"'.$who.'";
 						});
 						$("#SelectDayW").change(function(){
-							var filial = document.getElementById("SelectFilial").value;
+							var filial = $("#SelectFilial").val();
 							document.location.href = "?dayw="+$(this).val()+"&filial="+filial+"'.$who.'";
 						});
 					});';
@@ -580,10 +579,11 @@
 							if(input[i].value=="0") input[i].checked="checked";
 						}
 						
-						document.getElementById("ShowWorkersHere").innerHTML = \'<div class="cellsBlock2" style="width:320px; font-size:80%;"><div class="cellRight">Не выбрана смена</div></div>\';
+						$("#ShowWorkersHere").html(\'<div class="cellsBlock2" style="width:320px; font-size:80%;"><div class="cellRight">Не выбрана смена</div></div>\');
 						
 						$(".error").hide();
-						document.getElementById("errror").innerHTML = "";
+						
+						$("#errror").html("");
 					}
 					
 					
@@ -739,7 +739,7 @@
 			echo '					
 			</script>
 				
-			<script language="JavaScript" type="text/javascript">
+			<script>
 				 /*<![CDATA[*/
 				 var s=[],s_timer=[];
 				 function show(id,h,spd)
