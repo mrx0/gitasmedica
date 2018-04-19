@@ -20,35 +20,37 @@
 				//echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 				//var_dump($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']]);
-				
-				if ($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active'] != 0){
-					$t_number_active = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active'];
-					
-					if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active])){
-						
-						//проверим, нет ли уже такой позиции в акте
-						/*if (!empty($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active])){
-							$data = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active];
-							foreach ($data as $key => $invoice_data){
-								if ($invoice_data['id'] == $_POST['price_id']){
-									$iExist = true;
-									$existID = $key;
-								}
-							}
-						}*/
-						
-						//if ($iExist){
-							//$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active][$existID]['quantity']++;
-						//}else{
-							$temp_arr['id'] = (int)$_POST['price_id'];
-							$temp_arr['quantity'] = 1;
-							$temp_arr['insure'] = 0;
-							$temp_arr['insure_approve'] = 0;
-							$temp_arr['price'] = 0;
-							$temp_arr['start_price'] = 0;
-							$temp_arr['guarantee'] = 0;
-							$temp_arr['spec_koeff'] = 0;
-							$temp_arr['discount'] = 0;
+
+                if (isset($_SESSION['invoice_data'])) {
+
+                    if ($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active'] != 0) {
+                        $t_number_active = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active'];
+
+                        if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active])) {
+
+                            //проверим, нет ли уже такой позиции в акте
+                            /*if (!empty($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active])){
+                                $data = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active];
+                                foreach ($data as $key => $invoice_data){
+                                    if ($invoice_data['id'] == $_POST['price_id']){
+                                        $iExist = true;
+                                        $existID = $key;
+                                    }
+                                }
+                            }*/
+
+                            //if ($iExist){
+                            //$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active][$existID]['quantity']++;
+                            //}else{
+                            $temp_arr['id'] = (int)$_POST['price_id'];
+                            $temp_arr['quantity'] = 1;
+                            $temp_arr['insure'] = 0;
+                            $temp_arr['insure_approve'] = 0;
+                            $temp_arr['price'] = 0;
+                            $temp_arr['start_price'] = 0;
+                            $temp_arr['guarantee'] = 0;
+                            $temp_arr['spec_koeff'] = 0;
+                            $temp_arr['discount'] = 0;
                             $temp_arr['manual_price'] = false;
                             $temp_arr['itog_price'] = 0;
                             $temp_arr['manual_itog_price'] = 0;
@@ -63,7 +65,7 @@
                             include_once 'ffun.php';
 
                             //получим цены
-                            $prices = takePrices ((int)$_POST['price_id'], (int)$_POST['client_insure']);
+                            $prices = takePrices((int)$_POST['price_id'], (int)$_POST['client_insure']);
                             //var_dump($prices);
 
                             if (!empty($prices)) {
@@ -109,17 +111,17 @@
                                 $price = '?';
                             }*/
 
-							$temp_arr['price'] = (int)$price['price'];
+                            $temp_arr['price'] = (int)$price['price'];
                             $temp_arr['start_price'] = (int)$price['start_price'];
                             $temp_arr['manual_itog_price'] = (int)$price['price'];
 
-							//mysql_close();
-							
-							array_push($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active], $temp_arr);
-						//}
-					}
-				}
+                            //mysql_close();
 
+                            array_push($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active], $temp_arr);
+                            //}
+                        }
+                    }
+                }
 				
 				//echo json_encode(array('result' => 'success', 't_number_active' => $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active']));
 			}

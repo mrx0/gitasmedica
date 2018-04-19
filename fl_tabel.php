@@ -467,16 +467,21 @@
 
                         echo '
                                         <div style="background-color: rgba(56, 245, 70, 0.36); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Итого: <span class="calculateOrder" style="font-size: 16px; ', ($tabel_j[0]['summ'] - $tabel_j[0]['deduction'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena']) <= 0 ? 'color: red;' : '' ,'">' . ($tabel_j[0]['summ'] - $tabel_j[0]['deduction'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena']) . '</span> руб.</div>
+                                            <div>Итого: <span class="calculateOrder" style="font-size: 16px; ', ($tabel_j[0]['summ'] - $tabel_j[0]['deduction'] - $tabel_j[0]['paid'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena']) <= 0 ? 'color: red;' : '' ,'">' . intval($tabel_j[0]['summ'] - $tabel_j[0]['deduction'] - $tabel_j[0]['paid'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena']) . '</span> руб.<br>
+                                            <span style="font-size: 80%; color: #8C8C8C;">сумма округляется до целого для удобства расчетов</span></div>
                                             <div>';
                         if ($tabel_j[0]['status'] != 7) {
                             echo '
                                                 <button class="b" style="font-size: 80%;" onclick="deployTabel(' . $_GET['id'] . ');">Провести табель</button>';
                         }else{
-                            if ($tabel_j[0]['status'] == 7) {
+                            //if ($tabel_j[0]['status'] == 7) {
                                 /*echo '
                                                 <button class="b" style="font-size: 80%;" onclick="deployTabelOFF(' . $_GET['id'] . ');">Распровести табель</button>';*/
-                            }
+                           // }
+                        }
+                        if ($tabel_j[0]['status'] != 7) {
+                            echo '
+                                                <a href="fl_payroll_add.php?tabel_id=' . $tabel_j[0]['id'] . '&type=prepaid" class="b" style="font-size: 80%;" >Сделать выплату</a>';
                         }
 
                         echo '
