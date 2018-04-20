@@ -49,7 +49,7 @@
                 STR_TO_DATE('".$datastart." 00:00:00', '%Y-%m-%d %H:%i:%s')
                 AND 
                 STR_TO_DATE('".$dataend." 23:59:59', '%Y-%m-%d %H:%i:%s') 
-                ".$queryFilial.$queryType."
+                ".$queryFilial.$queryType." AND `org_pay` <> '1'
                 ORDER BY `date_in` DESC";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);

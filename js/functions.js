@@ -128,7 +128,7 @@
 					var max_itog_price = min_itog_price + 10;*/
 					/*var min_itog_price = itog_price - 2;
 					var max_itog_price = itog_price + 2;*/
-					var min_itog_price = manual_itog_price - 2;
+					var min_itog_price = manual_itog_price - 10;
 					var max_itog_price = manual_itog_price + 2;
 
 					if (min_itog_price < 1) min_itog_price = 1;
@@ -5601,7 +5601,7 @@
 		/*console.log(ind);
 		console.log(key);*/
 
-        var min_price = manual_itog_price - 2;
+        var min_price = manual_itog_price - 10;
         var max_price = manual_itog_price + 2;
 
         if (min_price < 0) min_price = 0;
@@ -6112,9 +6112,9 @@
     function showOrderAdd(mode){
         //console.log(mode);
 
-        var Summ = document.getElementById("summ").value;
-        var SummType = document.getElementById("summ_type").value;
-        var filial = document.getElementById("filial").value;
+        var Summ = $("#summ").val();
+        var SummType = $("#summ_type").val();
+        var filial = $("#filial").val();
 
         //проверка данных на валидность
         $.ajax({
@@ -6124,9 +6124,9 @@
             dataType: "JSON",
             data:
                 {
-                    summ:Summ,
-                    summ_type:SummType,
-                    filial:filial,
+                    summ: Summ,
+                    summ_type: SummType,
+                    filial: filial
                 },
             cache: false,
             beforeSend: function() {
@@ -6204,7 +6204,7 @@
                         // обводим инпуты красным цветом
                         // $('#'+errorField).addClass('error_input');
                     }
-                    document.getElementById("errror").innerHTML='<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>'
+                    $("#errror").html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
                 }
             }
         })
@@ -6964,6 +6964,12 @@
         var comment = document.getElementById("comment").value;
         //console.log(comment);
 
+        var org_pay = $("input[name=org_pay]:checked").val();
+
+        if (org_pay === undefined){
+            org_pay = 0;
+        }
+
         if (order_id != 0){
             paymentStr = '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
                 '<a href= "payment_add.php?invoice_id='+order_id+'" class="b">Оплатить наряд #'+order_id+'</a>'+
@@ -6983,8 +6989,9 @@
                 summtype: SummType,
                 date_in: date_in,
                 comment: comment,
+                org_pay: org_pay,
 
-                order_id: order_id,
+                order_id: order_id
 			},
 			cache: false,
 			beforeSend: function() {

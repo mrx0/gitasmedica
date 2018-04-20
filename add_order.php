@@ -74,7 +74,8 @@
                                         </li>
                                         <li style="font-size: 90%; margin-bottom: 5px;">
                                             <input id="summ_type" name="summ_type" value="1" type="radio" checked> Наличный<br>
-                                            <input id="summ_type" name="summ_type" value="2" type="radio"> Безналичный
+                                            <input id="summ_type" name="summ_type" value="2" type="radio"> Безналичный<br><br>
+                                            <input type="checkbox" name="org_pay" value="1"> от Организации
 									    </li>
 								    </ul>
 								</div>
