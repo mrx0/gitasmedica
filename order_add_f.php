@@ -21,7 +21,7 @@
 
 			$temp_arr = array();
 			
-			if (!isset($_POST['client_id']) || !isset($_POST['summ']) || !isset($_POST['summtype']) || !isset($_POST['date_in']) || !isset($_POST['office_id'])){
+			if (!isset($_POST['client_id']) || !isset($_POST['summ']) || !isset($_POST['summtype']) || !isset($_POST['date_in']) || !isset($_POST['office_id']) || !isset($_POST['org_pay'])){
 				//echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 
@@ -45,9 +45,9 @@
                     $comment = addslashes($_POST['comment']);
 
                     //Добавляем в базу
-                    $query = "INSERT INTO `journal_order` (`client_id`, `office_id`, `summ`, `summ_type`, `date_in`, `comment`, `create_person`, `create_time`) 
+                    $query = "INSERT INTO `journal_order` (`client_id`, `office_id`, `summ`, `summ_type`, `org_pay`, `date_in`, `comment`, `create_person`, `create_time`) 
                             VALUES (
-                            '{$_POST['client_id']}', '{$_POST['office_id']}', '{$_POST['summ']}', '{$_POST['summtype']}', '{$date_in}', '{$comment}', '{$_SESSION['id']}', '{$time}')";
+                            '{$_POST['client_id']}', '{$_POST['office_id']}', '{$_POST['summ']}', '{$_POST['summtype']}', '{$_POST['org_pay']}', '{$date_in}', '{$comment}', '{$_SESSION['id']}', '{$time}')";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
