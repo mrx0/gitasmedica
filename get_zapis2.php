@@ -46,7 +46,7 @@
                 $last = $arr['value'];
                 var_dump($last);
 
-                $token = $token_4zapis;v
+                $token = $token_4zapis;
                 var_dump($token);
 
                 $query = $URL . 'last=' . $last . '&' . 'token=' . $token;
