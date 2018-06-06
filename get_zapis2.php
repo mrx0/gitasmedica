@@ -64,9 +64,10 @@
                 curl_setopt($ch, CURLOPT_TIMEOUT, 15);
                 curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
 
-                echo 'Ошибка curl: ' . curl_error($ch);
+
 
                 $rezult = curl_exec($ch);
+                echo 'Ошибка curl: ' . curl_error($ch);
                 var_dump($rezult);
 
                 $rezult_arr = json_decode($rezult, true);
