@@ -5,8 +5,8 @@
 
     session_start();
 
-	if ($_POST){
-        if (isset($_POST['type'])){
+	//if ($_POST){
+        //if (isset($_POST['type'])){
             //$_POST['type'] = 5;
 
             $rezult = '';
@@ -65,6 +65,7 @@
                 curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
 
                 $rezult = curl_exec($ch);
+                echo 'Ошибка curl: ' . curl_error($ch);
                 //var_dump($rezult);
 
                 $rezult_arr = json_decode($rezult, true);
@@ -112,7 +113,7 @@
 
 
             echo json_encode(array('result' => 'success', 'data' => $arr['total']));
-        }
-    }
+        //}
+    //}
 ?>
 	
