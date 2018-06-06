@@ -5,8 +5,8 @@
 
     session_start();
 
-	//if ($_POST){
-        //if (isset($_POST['type'])){
+	if ($_POST){
+        if (isset($_POST['type'])){
             //$_POST['type'] = 5;
 
             $rezult = '';
@@ -44,12 +44,16 @@
                 $arr = mysqli_fetch_assoc($res);
 
                 $last = $arr['value'];
+                //var_dump($last);
 
                 $token = $token_4zapis;
+                //var_dump($token);
 
                 $query = $URL . 'last=' . $last . '&' . 'token=' . $token;
+                //var_dump($query);
 
                 $ch = curl_init();
+                //var_dump($ch);
 
                 curl_setopt($ch, CURLOPT_URL, $query);
 
@@ -61,8 +65,10 @@
                 curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
 
                 $rezult = curl_exec($ch);
+                //var_dump($rezult);
+
                 $rezult_arr = json_decode($rezult, true);
-                var_dump($rezult_arr);
+                //var_dump($rezult_arr);
 
                 curl_close($ch);
 
@@ -106,7 +112,7 @@
 
 
             echo json_encode(array('result' => 'success', 'data' => $arr['total']));
-        //}
-    //}
+        }
+    }
 ?>
 	
