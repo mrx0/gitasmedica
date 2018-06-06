@@ -61,16 +61,16 @@
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-                curl_setopt($ch, CURLOPT_SSLVERSION, 6);
+
                 curl_setopt($ch, CURLOPT_TIMEOUT, 15);
                 curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
 
                 $rezult = curl_exec($ch);
                 echo 'Ошибка curl: ' . curl_error($ch);
-                //var_dump($rezult);
+                var_dump($rezult);
 
                 $rezult_arr = json_decode($rezult, true);
-                //var_dump($rezult_arr);
+                var_dump($rezult_arr);
 
                 curl_close($ch);
 
