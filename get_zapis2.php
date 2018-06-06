@@ -62,7 +62,7 @@
 
                 $rezult = curl_exec($ch);
                 $rezult_arr = json_decode($rezult, true);
-                //var_dump($rezult_arr);
+                var_dump($rezult_arr);
 
                 curl_close($ch);
 
