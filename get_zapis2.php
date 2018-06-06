@@ -5,8 +5,8 @@
 
     session_start();
 
-	if ($_POST){
-        if (isset($_POST['type'])){
+	//if ($_POST){
+        //if (isset($_POST['type'])){
             //$_POST['type'] = 5;
 
             $rezult = '';
@@ -78,12 +78,12 @@
                         VALUES (
                         '{$zapis_val['id']}', '{$zapis_val['datetime']}', '{$zapis_val['name']}', '{$zapis_val['email']}', '{$zapis_val['phone']}', '{$zapis_val['time']}', '{$zapis_val['place']}', '{$zapis_val['type']}', '{$zapis_val['comments']}')";
 
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                        //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                     }
 
                     $query = "UPDATE `settings` SET `value`='{$last}' WHERE `option`='".$last_id_zapis_option."'";
 
-                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                    //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                     //echo json_encode(array('result' => 'success', 'data' => $query));
                 }else{
                     //echo json_encode(array('result' => 'success', 'data' => 0));
@@ -106,7 +106,7 @@
 
 
             echo json_encode(array('result' => 'success', 'data' => $arr['total']));
-        }
-    }
+        //}
+    //}
 ?>
 	
