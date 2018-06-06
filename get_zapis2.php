@@ -44,10 +44,13 @@
                 $arr = mysqli_fetch_assoc($res);
 
                 $last = $arr['value'];
+                var_dump($last);
 
-                $token = $token_4zapis;
+                $token = $token_4zapis;v
+                var_dump($token);
 
                 $query = $URL . 'last=' . $last . '&' . 'token=' . $token;
+                var_dump($query);
 
                 $ch = curl_init();
 
