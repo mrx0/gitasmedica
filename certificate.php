@@ -178,6 +178,57 @@
                         }
                     }
 
+                    //Список кому использовали
+                    $certPayList = array();
+
+                    $msql_cnnct = ConnectToDB ();
+
+                    $query = "SELECT * FROM `journal_payment` WHERE `cert_id`='{$cert_j[0]['id']}'";
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                    $number = mysqli_num_rows($res);
+
+                    if ($number != 0){
+                        while ($arr = mysqli_fetch_assoc($res)){
+                            array_push($certPayList, $arr);
+                        }
+
+                        if (!empty($certPayList)){
+                            //var_dump($certPayList);
+
+                            echo '
+								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
+									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Проведённые оплаты</li>';
+
+                            foreach ($certPayList as $certPayListData) {
+                                echo '<li class="cellsBlock" style="width: auto;">';
+
+
+                                echo '
+											<a href="invoice.php?id=' . $certPayListData['invoice_id'] . '" class="cellName ahref" style="position: relative;">
+												<b>Наряд #' . $certPayListData['invoice_id'] . '</b><br>
+											</a>
+											<div class="cellName">
+												<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+													Сумма:<br>
+													<span class="calculateInvoice" style="font-size: 13px">' . $certPayListData['summ'] . '</span> руб.
+												</div>
+											</div>
+											<div class="cellName">
+											    Пациент:<br>
+											    '.WriteSearchUser('spr_clients', $certPayListData['client_id'], 'user', true).'
+											</div>';
+
+                                echo '</li>';
+                            }
+
+                            echo '
+								</ul>';
+                        }
+
+                    }
+
                     echo '
                     <div id="doc_title">Сертификат #'.$cert_j[0]['id'].'</div>';
                     

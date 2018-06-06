@@ -65,7 +65,7 @@
 							//$t_f_data_db = SelDataFromDB('journal_tooth_status_temp', $_POST['new_id'], 'id');
 							
 							//$t_f_data_temp = $t_f_data_db[0];
-							$t_f_data_temp = $_SESSION['journal_tooth_status_temp'][$clients[0]["id"]];
+							$t_f_data_temp = $_SESSION['journal_tooth_status_temp'][$clients[0]['id']];
 							
 							//$stat_id = $t_f_data_temp['id'];
 							//$stat_time = $t_f_data_temp['create_time'];
