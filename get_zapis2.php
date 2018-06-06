@@ -5,8 +5,8 @@
 
     session_start();
 
-	//if ($_POST){
-        //if (isset($_POST['type'])){
+	if ($_POST){
+        if (isset($_POST['type'])){
             //$_POST['type'] = 5;
 
             $rezult = '';
@@ -50,7 +50,7 @@
                 //var_dump($token);
 
                 $query = $URL . 'last=' . $last . '&' . 'token=' . $token;
-                var_dump($query);
+                //var_dump($query);
 
                 $ch = curl_init();
                 //var_dump($ch);
@@ -65,10 +65,10 @@
                 curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
 
                 $rezult = curl_exec($ch);
-                var_dump($rezult);
+                //var_dump($rezult);
 
                 $rezult_arr = json_decode($rezult, true);
-                var_dump($rezult_arr);
+                //var_dump($rezult_arr);
 
                 curl_close($ch);
 
@@ -112,7 +112,7 @@
 
 
             echo json_encode(array('result' => 'success', 'data' => $arr['total']));
-        //}
-    //}
+        }
+    }
 ?>
 	
