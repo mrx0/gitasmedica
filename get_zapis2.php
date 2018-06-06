@@ -44,10 +44,10 @@
                 $arr = mysqli_fetch_assoc($res);
 
                 $last = $arr['value'];
-                var_dump($last);
+                //var_dump($last);
 
                 $token = $token_4zapis;
-                var_dump($token);
+                //var_dump($token);
 
                 $query = $URL . 'last=' . $last . '&' . 'token=' . $token;
                 var_dump($query);
@@ -64,6 +64,7 @@
                 curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
 
                 $rezult = curl_exec($ch);
+                var_dump($rezult);
                 $rezult_arr = json_decode($rezult, true);
                 var_dump($rezult_arr);
 
