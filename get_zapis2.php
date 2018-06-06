@@ -64,6 +64,8 @@
                 curl_setopt($ch, CURLOPT_TIMEOUT, 15);
                 curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
 
+                echo 'Ошибка curl: ' . curl_error($ch);
+
                 $rezult = curl_exec($ch);
                 var_dump($rezult);
 
