@@ -53,19 +53,20 @@
                 var_dump($query);
 
                 $ch = curl_init();
-                var_dump($ch);
+                //var_dump($ch);
 
                 curl_setopt($ch, CURLOPT_URL, $query);
 
                 curl_setopt($ch, CURLOPT_HEADER, FALSE);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
                 curl_setopt($ch, CURLOPT_TIMEOUT, 15);
                 curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
 
                 $rezult = curl_exec($ch);
                 var_dump($rezult);
+
                 $rezult_arr = json_decode($rezult, true);
                 var_dump($rezult_arr);
 
