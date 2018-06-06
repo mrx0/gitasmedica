@@ -53,6 +53,7 @@
                 var_dump($query);
 
                 $ch = curl_init();
+                var_dump($ch);
 
                 curl_setopt($ch, CURLOPT_URL, $query);
 
