@@ -31,6 +31,7 @@
                     $offices_j[$arr['id']] = $arr;
                 }
             }
+            //var_dump($offices_j);
 
             $query = "SELECT `id`, `name` FROM `spr_permissions`";
 
