@@ -52,7 +52,7 @@
                 $query = $URL . 'last=' . $last . '&' . 'token=' . $token;
                 var_dump($query);
 
-                $ch = curl_init();
+                /*$ch = curl_init();
                 //var_dump($ch);
 
                 curl_setopt($ch, CURLOPT_URL, $query);
@@ -64,16 +64,16 @@
                 curl_setopt($ch, CURLOPT_TIMEOUT, 15);
                 curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
 
-
-
                 $rezult = curl_exec($ch);
-                echo 'Ошибка curl: ' . curl_error($ch);
+                echo 'Ошибка curl: ' . curl_error($ch);*/
+
+                $rezult = file_get_contents($query);
                 var_dump($rezult);
 
                 $rezult_arr = json_decode($rezult, true);
                 var_dump($rezult_arr);
 
-                curl_close($ch);
+                //curl_close($ch);
 
                 if (!empty($rezult_arr)) {
                     foreach ($rezult_arr as $zapis_val){
