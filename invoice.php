@@ -373,6 +373,10 @@
                                                 <div>
                                                     <div style="">Страховка: <div id="calculateInsInvoice" style="">' . $invoice_j[0]['summins'] . '</div> руб.</div>
                                                 </div>';
+                                    echo '
+                                                <div>
+                                                    <div style="">Исполнитель: <div id="calculateInsInvoice" style="">' . WriteSearchUser('spr_workers', $invoice_j[0]['worker_id'], 'user', true) . '</div></div>
+                                                </div>';
                                 }
                             }else{
                                 echo '
