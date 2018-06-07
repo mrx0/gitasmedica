@@ -44,12 +44,16 @@
                 $arr = mysqli_fetch_assoc($res);
 
                 $last = $arr['value'];
+                //var_dump($last);
 
                 $token = $token_4zapis;
+                //var_dump($token);
 
                 $query = $URL . 'last=' . $last . '&' . 'token=' . $token;
+                //var_dump($query);
 
                 $ch = curl_init();
+                //var_dump($ch);
 
                 curl_setopt($ch, CURLOPT_URL, $query);
 
@@ -57,10 +61,14 @@
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+
                 curl_setopt($ch, CURLOPT_TIMEOUT, 15);
                 curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
 
                 $rezult = curl_exec($ch);
+                //echo 'Ошибка curl: ' . curl_error($ch);
+                //var_dump($rezult);
+
                 $rezult_arr = json_decode($rezult, true);
                 //var_dump($rezult_arr);
 
