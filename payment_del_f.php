@@ -4,9 +4,7 @@
 //Функция для Удаление(блокирование) 
 
 	session_start();
-	
-	$god_mode = FALSE;
-	
+
 	if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 		header("location: enter.php");
 	}else{
@@ -23,6 +21,13 @@
                 include_once 'DBWork.php';
                 //Ищем оплату
                 $payment_j = SelDataFromDB('journal_payment', $_POST['id'], 'id');
+
+                //разбираемся с правами
+                $god_mode = FALSE;
+
+                require_once 'permissions.php';
+
+
 
                 if ($payment_j != 0) {
 
@@ -41,10 +46,9 @@
 
                         $number = mysqli_num_rows($res);
 
-                        if ($number != 0){
-                            //есть расчеты
-                            echo json_encode(array('result' => 'error', 'data' => 'К наряду выписаны расчетные листы. Отменить оплату нельзя.'));
-                        }else {
+                        if (($number == 0) || ($finances['see_all']) || $god_mode){
+
+                            //Нет расчетов
 
                             //пересчитаем долги и баланс еще разок
                             //!!! @@@
@@ -95,6 +99,11 @@
                             calculateBalance($_POST['client_id']);
 
                             echo json_encode(array('result' => 'success', 'data' => $query2));
+
+                        }else {
+
+                            //есть расчеты
+                            echo json_encode(array('result' => 'error', 'data' => 'К наряду выписаны расчетные листы. Отменить оплату нельзя.'));
 
                         }
                     }
