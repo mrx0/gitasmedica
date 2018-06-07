@@ -61,10 +61,12 @@
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+
                 curl_setopt($ch, CURLOPT_TIMEOUT, 15);
                 curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
 
                 $rezult = curl_exec($ch);
+                //echo 'Ошибка curl: ' . curl_error($ch);
                 //var_dump($rezult);
 
                 $rezult_arr = json_decode($rezult, true);
@@ -84,12 +86,12 @@
                         VALUES (
                         '{$zapis_val['id']}', '{$zapis_val['datetime']}', '{$zapis_val['name']}', '{$zapis_val['email']}', '{$zapis_val['phone']}', '{$zapis_val['time']}', '{$zapis_val['place']}', '{$zapis_val['type']}', '{$zapis_val['comments']}')";
 
-                        //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                     }
 
                     $query = "UPDATE `settings` SET `value`='{$last}' WHERE `option`='".$last_id_zapis_option."'";
 
-                    //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                     //echo json_encode(array('result' => 'success', 'data' => $query));
                 }else{
                     //echo json_encode(array('result' => 'success', 'data' => 0));
