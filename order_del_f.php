@@ -37,10 +37,12 @@
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                 $number = mysqli_num_rows($res);
+
                 if ($number != 0) {
                     echo '
                     <div class="query_neok" style="padding-bottom: 10px;">
                         <h3>После внесения этого наряда, с баланса списывались средства. Удалить наряд нельзя.</h3>
+                        <!--<input type="button" class="b" value="Удалить принудительно" onclick="">-->
                     </div>';
                 } else {
 

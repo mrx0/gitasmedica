@@ -7503,7 +7503,7 @@
 
             //Запрос к базе онлайн записи и выгрузка
             $.ajax({
-                url:"get_zapis2.php",
+                url:"get_zapis3.php",
                 global: false,
                 type: "POST",
                 dataType: "JSON",
