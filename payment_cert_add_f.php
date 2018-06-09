@@ -14,6 +14,11 @@
 
 		if ($_POST){
 
+            //разбираемся с правами
+            $god_mode = FALSE;
+
+            require_once 'permissions.php';
+
 			//$temp_arr = array();
 			//переменная для дополнительного текста в запросе при обновлении наряда
             $query_invoice_dop = '';
