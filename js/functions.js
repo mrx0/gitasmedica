@@ -779,13 +779,49 @@
                 client_id: client_id
 			},
 			success:function(data){
-				document.getElementById("errrror").innerHTML=data;
-				setTimeout(function () {
+				$("#errrror").html(data);
+				/*setTimeout(function () {
 					window.location.replace('order.php?id='+id);
 					//console.log('client.php?id='+id);
-				}, 2000);
+				}, 4000);*/
 			}
 		})
+	};
+
+	//Удаление блокировка ордера по-любому
+	function Ajax_del_order_anyway(id, client_id) {
+
+        var rys = false;
+
+        var rys = confirm("Вы собираетесь удалить ордер задним числом. \nЭто невозможно будет исправить \n\nВы уверены?");
+
+        if (rys) {
+
+            $.ajax({
+                url: "order_del_anyway_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: id,
+                    client_id: client_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                	//console.log(data);
+                    $("#errrror").html(res.data);
+                    if (res.result == 'success') {
+                        setTimeout(function () {
+                            window.location.replace('order.php?id=' + id);
+                            //console.log('client.php?id='+id);
+                        }, 2000);
+                    }
+                }
+            })
+        }
 	};
 
 	function Ajax_reopen_client(session_id, id) {
@@ -6947,21 +6983,21 @@
 
 		if (mode == 'edit'){
 			link = "edit_order_f.php";
-            order_id = document.getElementById("order_id").value;
+            order_id = $("#order_id").val();
 		}
 
-        var Summ = document.getElementById("summ").value;
+        var Summ = $("#summ").val();
         //var SummType = document.getElementById("summ_type").value;
         var SummType = document.querySelector('input[name="summ_type"]:checked').value;
-        var office_id = document.getElementById("filial").value;
+        var office_id = $("#filial").val();
 
-		var client_id = document.getElementById("client_id").value;
+		var client_id = $("#client_id").val();
 		//var order_id = document.getElementById("order_id").value;
 		//console.log(invoice_id);
-		var date_in = document.getElementById("date_in").value;
+		var date_in = $("#date_in").val();
 		//console.log(date_in);
 
-        var comment = document.getElementById("comment").value;
+        var comment = $("#comment").val();
         //console.log(comment);
 
         var org_pay = $("input[name=org_pay]:checked").val();
@@ -7040,15 +7076,15 @@
 
 		if (mode == 'edit'){
 			link = "lab_order_edit_f.php";
-            lab_order_id = document.getElementById("lab_order_id").value;
+            lab_order_id = $("#lab_order_id").val();
 		}
 
-        var client_id = document.getElementById("client_id").value;
+        var client_id = $("#client_id").val();
 
-        var search_client2 = document.getElementById("search_client2").value;
-        var lab = document.getElementById("lab").value;
-        var descr = document.getElementById("descr").value;
-        var comment = document.getElementById("comment").value;
+        var search_client2 = $("#search_client2").val();
+        var lab = $("#lab").val();
+        var descr = $("#descr").val();
+        var comment = $("#comment").val();
 
 		$.ajax({
 			url: link,
