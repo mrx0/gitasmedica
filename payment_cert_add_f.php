@@ -77,7 +77,8 @@
                                     } else {
                                         //Если мы вносим оплату задним числом
                                         //+2 суток
-                                        if (time() > strtotime($_POST['date_in'] . " 21:00:00") + 2 * 24 * 60 * 60) {
+                                        //if (time() > strtotime($_POST['date_in'] . " 21:00:00") + 2 * 24 * 60 * 60) {
+                                        if ((time() > strtotime($_POST['date_in'] . " 21:00:00") + 2 * 24 * 60 * 60) &&  ($finances['add_new'] != 1) && !$god_mode){
                                             echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Нельзя вносить задним числом</div>'));
                                         } else {
                                             //до того как был создан наряд
