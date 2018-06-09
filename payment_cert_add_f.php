@@ -13,6 +13,8 @@
 		//var_dump ($_POST);
 
 		if ($_POST){
+            include_once 'DBWork.php';
+            include_once 'functions.php';
 
             //разбираемся с правами
             $god_mode = FALSE;
