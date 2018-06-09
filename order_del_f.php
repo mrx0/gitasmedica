@@ -41,8 +41,8 @@
                 if ($number != 0) {
                     echo '
                     <div class="query_neok" style="padding-bottom: 10px;">
-                        <h3>После внесения этого наряда, с баланса списывались средства. Удалить наряд нельзя.</h3>
-                        <!--<input type="button" class="b" value="Удалить принудительно" onclick="">-->
+                        <h3>После внесения этого наряда, с баланса списывались средства. Удалить ордер нельзя.</h3>
+                        <input type="button" class="b" value="Удалить принудительно" onclick="Ajax_del_order_anyway('.$_POST['id'].', '.$order_j[0]['client_id'].');">
                     </div>';
                 } else {
 
