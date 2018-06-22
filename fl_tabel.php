@@ -13,7 +13,7 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 
-			include_once 'ffun.php';
+            include_once 'ffun.php';
 
             require 'variables.php';
 			
@@ -483,6 +483,9 @@
                             echo '
                                                 <a href="fl_payroll_add.php?tabel_id=' . $tabel_j[0]['id'] . '&type=prepaid" class="b" style="font-size: 80%;" >Сделать выплату</a>';
                         }
+
+                        echo '
+                                                <a href="fl_tabel_print.php?tabel_id=' . $tabel_j[0]['id'] . '" class="b" style="font-size: 80%;" >Распечатать</a>';
 
                         echo '
                                             </div>
