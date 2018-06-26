@@ -1,7 +1,7 @@
 <?php
 
-//fl_deduction_in_tabel_add.php
-//Добавить вычет к табелю
+//fl_paidout_in_tabel_add.php
+//Добавить выплату к табелю
 
 require_once 'header.php';
 
@@ -31,22 +31,20 @@ if ($enter_ok){
                                         <!--<a href="fl_tabel.php?id='.$_GET['tabel_id'].'" class="b">Вернуться в табель #'.$_GET['tabel_id'].'</a>-->
                                         <a href="fl_tabels.php" class="b">Важный отчёт</a>
                                     </div>
-                                    <h2>Добавить удержание [';
+                                    <h2>Добавить выплату [';
 
-                    if ($_GET['type'] == 2){
-                        echo ' налог ';
+                    if ($_GET['type'] == 1){
+                        echo ' аванс ';
+                    }elseif ($_GET['type'] == 2){
+                        echo ' отпускной ';
                     }elseif ($_GET['type'] == 3){
-                        echo ' штраф ';
+                        echo ' больничный ';
                     }elseif ($_GET['type'] == 4){
-                        echo ' ссуда ';
-                    }elseif ($_GET['type'] == 5){
-                        echo ' за обучение ';
-                    }else {
-                        echo ' за материалы ';
+                        echo ' на карту ';
                     }
 
                     echo '
-                                    ] из <a href="fl_tabel.php?id='.$_GET['tabel_id'].'" class="ahref">табеля #'.$_GET['tabel_id'].'</a></h2>
+                                   ] в <a href="fl_tabel.php?id='.$_GET['tabel_id'].'" class="ahref">табель #'.$_GET['tabel_id'].'</a></h2>
                                     Заполните поля
                                 </header>';
 
@@ -55,13 +53,13 @@ if ($enter_ok){
                     echo '
                                     <div id="errrror"></div>';
                     echo '
-                                    <form action="cert_add_f.php">
+                                    <form>
                                 
                                         <div class="cellsBlock2">
                                             <div class="cellLeft">
                                             <span style="font-size:80%;  color: #555;">Сумма (руб.)</span><br>
-                                                <input type="text" name="deduction_summ" id="deduction_summ" value="">
-                                                <label id="deduction_summ_error" class="error"></label>
+                                                <input type="text" name="paidout_summ" id="paidout_summ" value="">
+                                                <label id="paidout_summ_error" class="error"></label>
                                             </div>
                                         </div>
                                         
@@ -73,7 +71,7 @@ if ($enter_ok){
                                         </div>
                                         
                                         <div id="errror"></div>                        
-                                        <input type="button" class="b" value="Добавить" onclick="fl_showDeductionAdd(0, '.$_GET['tabel_id'].', '.$_GET['type'].', \'add\')">
+                                        <input type="button" class="b" value="Добавить" onclick="fl_showPaidoutAdd(0, '.$_GET['tabel_id'].', '.$_GET['type'].', \'add\')">
                                     </form>';
 
                     echo '

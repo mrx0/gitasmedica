@@ -77,6 +77,9 @@ if (isset($_POST['deduction_summ']))
 if (isset($_POST['surcharge_summ']))
     $arrayFields['surcharge_summ'] = $_POST['surcharge_summ'];
 
+if (isset($_POST['paidout_summ']))
+    $arrayFields['paidout_summ'] = $_POST['paidout_summ'];
+
 // проверка всех полей на пустоту
 foreach($arrayFields as $fieldName => $oneField){
 	
@@ -192,6 +195,22 @@ if (isset($_POST['surcharge_summ'])){
         }
     }
 }
+
+if (isset($_POST['paidout'])){
+    if ($fieldName == 'paidout') {
+        if (!is_numeric($oneField)) {
+            $errorContainer[$fieldName] = 'В этом поле ошибка';
+        }
+        if ($oneField <= 0) {
+            $errorContainer[$fieldName] = 'В этом поле ошибка';
+        }
+
+        if ($oneField == '') {
+            $errorContainer[$fieldName] = 'В этом поле ошибка';
+        }
+    }
+}
+
  /*
 // сравнение введенных паролей
 if($arrayFields['password_user'] != $arrayFields['password_2_user'])

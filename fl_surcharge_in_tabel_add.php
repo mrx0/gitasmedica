@@ -18,7 +18,7 @@ if ($enter_ok){
         require 'variables.php';
 
         if ($_GET){
-            if (isset($_GET['tabel_id'])){
+            if (isset($_GET['tabel_id']) && isset($_GET['type'])){
 
                 $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['tabel_id'], 'id');
 
@@ -31,7 +31,18 @@ if ($enter_ok){
                                         <!--<a href="fl_tabel.php?id='.$_GET['tabel_id'].'" class="b">Вернуться в табель #'.$_GET['tabel_id'].'</a>-->
                                         <a href="fl_tabels.php" class="b">Важный отчёт</a>
                                     </div>
-                                    <h2>Добавить вычет из <a href="fl_tabel.php?id='.$_GET['tabel_id'].'" class="ahref">табеля #'.$_GET['tabel_id'].'</a></h2>
+                                    <h2>Добавить надбавку [';
+
+                    if ($_GET['type'] == 2){
+                        echo ' отпускной ';
+                    }elseif ($_GET['type'] == 3){
+                        echo ' больничный ';
+                    }else {
+                        echo ' премия ';
+                    }
+
+                    echo '
+                                   ] в <a href="fl_tabel.php?id='.$_GET['tabel_id'].'" class="ahref">табель #'.$_GET['tabel_id'].'</a></h2>
                                     Заполните поля
                                 </header>';
 
@@ -58,7 +69,7 @@ if ($enter_ok){
                                         </div>
                                         
                                         <div id="errror"></div>                        
-                                        <input type="button" class="b" value="Добавить" onclick="fl_showSurchargeAdd(0, '.$_GET['tabel_id'].', \'add\')">
+                                        <input type="button" class="b" value="Добавить" onclick="fl_showSurchargeAdd(0, '.$_GET['tabel_id'].', '.$_GET['type'].', \'add\')">
                                     </form>';
 
                     echo '
