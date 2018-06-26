@@ -526,6 +526,25 @@
 
     }
 
+    //Обновить сумму баланса Выплат табеля
+    function updateTabelPaidoutSumm($tabel_id){
+
+        $msql_cnnct = ConnectToDB2();
+
+        $query = "SELECT SUM(`summ`) AS `summCalcs`  FROM `fl_journal_paidouts` WHERE `tabel_id`='{$tabel_id}';";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        $arr = mysqli_fetch_assoc($res);
+
+        $query = "UPDATE `fl_journal_tabels` SET `paidout` = '".round($arr['summCalcs'], 2)."' WHERE `id`='{$tabel_id}';";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        CloseDB ($msql_cnnct);
+
+    }
+
     //Обновить сумму баланса Надбавок по ночным сменам табеля
     function updateTabelNightSmensSumm($tabel_id){
 

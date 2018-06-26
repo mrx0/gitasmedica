@@ -43,6 +43,8 @@
 
                         $tabel_deductions_j = array();
                         $tabel_surcharges_j = array();
+                        $tabel_surcharges_j = array();
+                        $tabel_paidouts_j = array();
 
                         $query = "SELECT `id`, `day`, `smena`, `kab`, `worker` FROM `scheduler` WHERE `worker` = '{$tabel_j[0]['worker_id']}' AND `month` = '".(int)$tabel_j[0]['month']."' AND `year` = '{$tabel_j[0]['year']}' AND `filial`='{$tabel_j[0]['office_id']}'";
 
@@ -131,8 +133,6 @@
                             }
                         }
 
-
-
                         //Вычеты
                         //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
                         $query = "SELECT * FROM `fl_journal_deductions` WHERE `tabel_id`='".$tabel_j[0]['id']."';";
@@ -152,8 +152,28 @@
                             }
                         }
 
+                        //Выплаты
+                        //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
+                        $query = "SELECT * FROM `fl_journal_paidouts` WHERE `tabel_id`='".$tabel_j[0]['id']."';";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0){
+                            while ($arr = mysqli_fetch_assoc($res)){
+                                if (!isset($tabel_paidouts_j[$arr['type']])){
+                                    $tabel_paidouts_j[$arr['type']] = array();
+                                    $tabel_paidouts_j[$arr['type']] = (int)$arr['summ'];
+                                }else{
+                                    $tabel_paidouts_j[$arr['type']] = $tabel_paidouts_j[$arr['type']] + $arr['summ'];
+                                }
+                                //array_push($tabel_surcharges_j[$arr['type']], $arr);
+                            }
+                        }
+
                         //var_dump($tabel_surcharges_j);
                         //var_dump($tabel_deductions_j);
+                        //var_dump($tabel_paidouts_j);
 
                         echo '
                             <div class="no_print"> 
@@ -475,7 +495,15 @@
 									                
 									            </td>
             						            <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-									                <div class="pay_minus_part2" style="display: inline;">0</div> р.
+									                <div class="pay_minus_part2" style="display: inline;">';
+                        if (isset($tabel_paidouts_j[1])){
+                            echo $tabel_paidouts_j[1];
+                        }else{
+                            echo 0;
+                        }
+
+                        echo '
+                                                    </div> р.
 									            </td>
 									        </tr>	
 									         
@@ -502,7 +530,15 @@
 									                
 									            </td>
             						            <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-									                <div class="pay_minus_part2" style="display: inline;">0</div> р.
+									                <div class="pay_minus_part2" style="display: inline;">';
+                        if (isset($tabel_paidouts_j[2])){
+                            echo $tabel_paidouts_j[2];
+                        }else{
+                            echo 0;
+                        }
+
+                        echo '
+                                                    </div> р.
 									            </td>
 									        </tr>
 									         
@@ -529,7 +565,15 @@
 									                
 									            </td>
             						            <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-									                <div class="pay_minus_part2" style="display: inline;">0</div> р.
+									                <div class="pay_minus_part2" style="display: inline;">';
+                        if (isset($tabel_paidouts_j[3])){
+                            echo $tabel_paidouts_j[3];
+                        }else{
+                            echo 0;
+                        }
+
+                        echo '
+                                                    </div> р.
 									            </td>
 									        </tr>
 									         
@@ -556,7 +600,15 @@
 									                
 									            </td>
             						            <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-									                <div class="pay_minus_part2" style="display: inline;">0</div> р.
+									                <div class="pay_minus_part2" style="display: inline;">';
+                        if (isset($tabel_paidouts_j[4])){
+                            echo $tabel_paidouts_j[4];
+                        }else{
+                            echo 0;
+                        }
+
+                        echo '
+                                                    </div> р.
 									            </td>
 									        </tr>
 									        

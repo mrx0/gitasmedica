@@ -46,6 +46,7 @@
                         $tabel_ex_calculates_j = array();
 						$tabel_deductions_j = array();
 						$tabel_surcharges_j = array();
+						$tabel_paidouts_j = array();
 
                         //$invoice_j = array();
 
@@ -369,6 +370,83 @@
                             }
                         }
 
+                        //Выплаты
+                        $query = "SELECT * FROM `fl_journal_paidouts` WHERE `tabel_id`='".$tabel_j[0]['id']."';";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0){
+                            while ($arr = mysqli_fetch_assoc($res)){
+                                array_push($tabel_paidouts_j, $arr);
+                            }
+                        }else{
+                            //$sheduler_zapis = 0;
+                            //var_dump ($sheduler_zapis);
+                        }
+
+                        $rezultP = '';
+
+                        if (!empty($tabel_paidouts_j)) {
+
+                            foreach ($tabel_paidouts_j as $rezData) {
+
+                                $rezultP .=
+                                    '
+                                    <div class="cellsBlockHover" style=" border: 1px solid #BFBCB5; margin: 1px 7px 7px;; position: relative; display: inline-block; vertical-align: top;">
+                                        <div style="display: inline-block; width: 200px;">
+                                            <div>
+                                            <a href="#" class="ahref">
+                                                <div>
+                                                    <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+                                                        <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+                                                    </div>
+                                                    <div style="display: inline-block; vertical-align: middle; font-size: 90%;">
+                                                        <b>';
+                                if ($rezData['type'] == 1){
+                                    $rezultP .= ' аванс ';
+                                }elseif ($rezData['type'] == 2){
+                                    $rezultP .= ' отпускной ';
+                                }elseif ($rezData['type'] == 3){
+                                    $rezultP .= ' больничный ';
+                                }elseif ($rezData['type'] == 4){
+                                    $rezultP .= ' на карту ';
+                                }else{
+                                    $rezultP .= ' !!!ошибка данных ';
+                                }
+                                $rezultP .=
+                                                        '#' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);"><br>' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
+                                                        Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">' . $rezData['summ'] . '</span> руб.
+                                                    </div>
+                                                </div>
+                                                
+                                            </a>
+                                            </div>
+                                            <div style="margin: 5px 0 0 3px; font-size: 80%;">
+                                                <b>Комментарий:</b> '.$rezData['descr'].'                                                
+                                            </div>
+                                        </div>';
+                                if ($tabel_j[0]['status'] != 7) {
+                                    $rezultP .= '
+                                        <div style="display: inline-block; vertical-align: top;">
+                                            <div class="settings_text" style="border: 1px solid #CCC; padding: 3px; margin: 1px; width: 12px; text-align: center;"  onclick="contextMenuShow(' . $tabel_j[0]['id'] . ', ' . $rezData['id'] . ', event, \'tabel_surcharge_options\');">
+                                                <i class="fa fa-caret-down"></i>
+                                            </div>
+                                        </div>';
+                                }
+                                $rezultP .= '
+                                        <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
+                                    </div>';
+
+                                //$summCalc += $rezData['summ'];
+
+                            }
+                        }
+
                         //Смена/график
                         $rezultShed = array();
                         $nightSmena = 0;
@@ -500,8 +578,23 @@
                                         </div>';
 
                         echo '
+                                        <div style="background-color: rgba(1, 94, 255, 0.22); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
+                                            <div>Всего выплачено: <span class="calculateOrder" style="font-size: 13px; color: rgb(12, 0, 167);">' . $tabel_j[0]['paidout'] . '</span> руб.</div>';
+
+                        if ($tabel_j[0]['status'] != 7) {
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style = "font-size: 80%;">Аванс +</a ></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style="font-size: 80%;">Отпусные +</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3" class="b" style="font-size: 80%;">Больничный +</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=4" class="b" style="font-size: 80%;">На карту +</a></div>';
+                        }
+
+                        echo '
+                                            </div>
+                                        </div>';
+
+                        echo '
                                         <div style="background-color: rgba(56, 245, 70, 0.36); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Итого: <span class="calculateOrder" style="font-size: 16px; ', ($tabel_j[0]['summ'] - $tabel_j[0]['deduction'] - $tabel_j[0]['paid'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena']) <= 0 ? 'color: red;' : '' ,'">' . intval($tabel_j[0]['summ'] - $tabel_j[0]['deduction'] - $tabel_j[0]['paid'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena']) . '</span> руб.<br>
+                                            <div>Итого: <span class="calculateOrder" style="font-size: 16px; ', ($tabel_j[0]['summ'] - $tabel_j[0]['deduction'] - $tabel_j[0]['paid'] - $tabel_j[0]['paidout'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena']) <= 0 ? 'color: red;' : '' ,'">' . intval($tabel_j[0]['summ'] - $tabel_j[0]['deduction'] - $tabel_j[0]['paid'] - $tabel_j[0]['paidout'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena']) . '</span> руб.<br>
                                             <span style="font-size: 80%; color: #8C8C8C;">сумма округляется до целого для удобства расчетов</span></div>
                                             <div>';
                         if ($tabel_j[0]['status'] != 7) {
@@ -513,10 +606,10 @@
                                                 <button class="b" style="font-size: 80%;" onclick="deployTabelOFF(' . $_GET['id'] . ');">Распровести табель</button>';*/
                            // }
                         }
-                        if ($tabel_j[0]['status'] != 7) {
+                        /*if ($tabel_j[0]['status'] != 7) {
                             echo '
                                                 <a href="fl_payroll_add.php?tabel_id=' . $tabel_j[0]['id'] . '&type=prepaid" class="b" style="font-size: 80%;" >Сделать выплату</a>';
-                        }
+                        }*/
 
                         echo '
                                                 <a href="fl_tabel_print.php?tabel_id=' . $tabel_j[0]['id'] . '" class="b" style="font-size: 80%;" >Распечатать</a>';
@@ -559,7 +652,7 @@
 
                         //Надбавки
                         echo '
-                                <div style="border: 1px dotted #b3c0c8; display: block; font-size: 12px; padding: 2px; margin-right: 10px; vertical-align: top;">
+                                <div style="border: 1px dotted #b3c0c8; display: block; font-size: 12px; padding: 2px; margin-right: 10px; margin-bottom: 10px; vertical-align: top;">
                                     <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
                                         Добавлено ';
                         if (mb_strlen($rezultS) > 0) {
@@ -568,6 +661,24 @@
                                     </div>
                                     <div id="allSurchargesIsHere" style="display: none;">
                                         '.$rezultS.'
+                                    </div>';
+                        }else{
+                            echo ' [отсутствуют]</div>';
+                        }
+                        echo '
+                                </div>';
+
+                        //Выплачено
+                        echo '
+                                <div style="border: 1px dotted #b3c0c8; display: block; font-size: 12px; padding: 2px; margin-right: 10px; vertical-align: top;">
+                                    <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
+                                        Выплачено ';
+                        if (mb_strlen($rezultP) > 0) {
+                            echo '
+                                        <div id="allPaidoutsIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allPaidoutsIsHere\');">показать/скрыть</div>
+                                    </div>
+                                    <div id="allPaidoutsIsHere" style="display: none;">
+                                        '.$rezultP.'
                                     </div>';
                         }else{
                             echo ' [отсутствуют]</div>';
