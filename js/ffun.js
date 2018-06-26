@@ -1465,7 +1465,7 @@
     }
 
     //Промежуточная функция для вычета
-    function fl_showDeductionAdd (deduction_id, tabel_id, mode){
+    function fl_showDeductionAdd (deduction_id, tabel_id, type, mode){
         //console.log(mode);
 
         //убираем ошибки
@@ -1475,9 +1475,10 @@
         var descr = $('#descr').val();
 
         var deductionData = {
-            tabel_id:tabel_id,
-            deduction_summ:deduction_summ,
-            descr:descr
+            tabel_id: tabel_id,
+            type: type,
+            deduction_summ: deduction_summ,
+            descr: descr
         };
 
         //проверка данных на валидность
@@ -1516,7 +1517,7 @@
     }
 
     //Промежуточная функция для надбавки
-    function fl_showSurchargeAdd (surcharge_id, tabel_id, mode){
+    function fl_showSurchargeAdd (surcharge_id, tabel_id, type, mode){
         //console.log(mode);
 
         //убираем ошибки
@@ -1527,6 +1528,7 @@
 
         var surchargeData = {
             tabel_id:tabel_id,
+            type:type,
             surcharge_summ:surcharge_summ,
             descr:descr
         };

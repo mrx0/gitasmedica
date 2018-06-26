@@ -41,6 +41,9 @@
                         $rezultShed = array();
                         $nightSmena = 0;
 
+                        $tabel_deductions_j = array();
+                        $tabel_surcharges_j = array();
+
                         $query = "SELECT `id`, `day`, `smena`, `kab`, `worker` FROM `scheduler` WHERE `worker` = '{$tabel_j[0]['worker_id']}' AND `month` = '".(int)$tabel_j[0]['month']."' AND `year` = '{$tabel_j[0]['year']}' AND `filial`='{$tabel_j[0]['office_id']}'";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -109,6 +112,48 @@
 
                         }
 
+                        //Надбавки
+                        //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
+                        $query = "SELECT * FROM `fl_journal_surcharges` WHERE `tabel_id`='".$tabel_j[0]['id']."';";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0){
+                            while ($arr = mysqli_fetch_assoc($res)){
+                                if (!isset($tabel_surcharges_j[$arr['type']])){
+                                    $tabel_surcharges_j[$arr['type']] = array();
+                                    $tabel_surcharges_j[$arr['type']] = (int)$arr['summ'];
+                                }else{
+                                    $tabel_surcharges_j[$arr['type']] = $tabel_surcharges_j[$arr['type']] + $arr['summ'];
+                                }
+                                //array_push($tabel_surcharges_j[$arr['type']], $arr);
+                            }
+                        }
+
+
+
+                        //Вычеты
+                        //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
+                        $query = "SELECT * FROM `fl_journal_deductions` WHERE `tabel_id`='".$tabel_j[0]['id']."';";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0){
+                            while ($arr = mysqli_fetch_assoc($res)){
+                                if (!isset($tabel_deductions_j[$arr['type']])){
+                                    $tabel_deductions_j[$arr['type']] = array();
+                                    $tabel_deductions_j[$arr['type']] = (int)$arr['summ'];
+                                }else{
+                                    $tabel_deductions_j[$arr['type']] = $tabel_deductions_j[$arr['type']] + $arr['summ'];
+                                }
+                                //array_push($tabel_surcharges_j[$arr['type']], $arr);
+                            }
+                        }
+
+                        //var_dump($tabel_surcharges_j);
+                        //var_dump($tabel_deductions_j);
 
                         echo '
                             <div class="no_print"> 
@@ -225,7 +270,15 @@
 									                
 									            </td>
             						            <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-									                <div class="pay_plus_part1" style="display: inline;">'.intval($tabel_j[0]['summ']).'</div> р.
+									                <div class="pay_plus_part1" style="display: inline;">';
+                        if (isset($tabel_deductions_j[1])){
+                            echo intval($tabel_j[0]['summ'] - $tabel_deductions_j[1]);
+                        }else{
+                            intval($tabel_j[0]['summ']);
+                        }
+
+                        echo '
+                                                    </div> р.
 									            </td>
             						            <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
 									                налог
@@ -234,7 +287,15 @@
 									                
 									            </td>
             						            <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-									                <div class="pay_minus_part1" style="display: inline;">0</div> р.
+									                <div class="pay_minus_part1" style="display: inline;">';
+                        if (isset($tabel_deductions_j[2])){
+                            echo $tabel_deductions_j[2];
+                        }else{
+                            echo 0;
+                        }
+
+                        echo '
+                                                    </div> р.
 									            </td>
 									        </tr>
 									         
@@ -252,7 +313,15 @@
 									                
 									            </td>
             						            <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-									                <div class="pay_plus_part1" style="display: inline;">0</div> р.
+									                <div class="pay_plus_part1" style="display: inline;">';
+                        if (isset($tabel_surcharges_j[2])){
+                            echo $tabel_surcharges_j[2];
+                        }else{
+                            echo 0;
+                        }
+
+                        echo '
+                                                    </div> р.
 									            </td>
             						            <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
 									                штраф
@@ -261,7 +330,15 @@
 									                
 									            </td>
             						            <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-									                <div class="pay_minus_part1" style="display: inline;">0</div> р.
+									                <div class="pay_minus_part1" style="display: inline;">';
+                        if (isset($tabel_deductions_j[3])){
+                            echo $tabel_deductions_j[3];
+                        }else{
+                            echo 0;
+                        }
+
+                        echo '
+                                                    </div> р.
 									            </td>
 									        </tr>
 									         
@@ -279,7 +356,15 @@
 									                
 									            </td>
             						            <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-									                <div class="pay_plus_part1" style="display: inline;">0</div> р.
+									                <div class="pay_plus_part1" style="display: inline;">';
+                        if (isset($tabel_surcharges_j[3])){
+                            echo $tabel_surcharges_j[3];
+                        }else{
+                            echo 0;
+                        }
+
+                        echo '
+                                                    </div> р.
 									            </td>
             						            <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
 									                ссуда
@@ -288,7 +373,15 @@
 									                
 									            </td>
             						            <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-									                <div class="pay_minus_part1" style="display: inline;">0</div> р.
+									                <div class="pay_minus_part1" style="display: inline;">';
+                        if (isset($tabel_deductions_j[4])){
+                            echo $tabel_deductions_j[4];
+                        }else{
+                            echo 0;
+                        }
+
+                        echo '
+                                                    </div> р.
 									            </td>
 									        </tr>
 									         
@@ -306,7 +399,15 @@
 									                
 									            </td>
             						            <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-									                <div class="pay_plus_part1" style="display: inline;">'.intval($tabel_j[0]['surcharge']).'</div> р.
+									                <div class="pay_plus_part1" style="display: inline;">';
+                        if (isset($tabel_surcharges_j[1])){
+                            echo $tabel_surcharges_j[1];
+                        }else{
+                            echo 0;
+                        }
+
+                        echo '
+                                                    </div> р.
 									            </td>
             						            <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
 									                обучение
@@ -315,7 +416,15 @@
 									                
 									            </td>
             						            <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-									                <div class="pay_minus_part1" style="display: inline;">0</div> р.
+									                <div class="pay_minus_part1" style="display: inline;">';
+                        if (isset($tabel_deductions_j[5])){
+                            echo $tabel_deductions_j[5];
+                        }else{
+                            echo 0;
+                        }
+
+                        echo '
+                                                    </div> р.
 									            </td>
 									        </tr>
 									         

@@ -18,7 +18,7 @@ if ($enter_ok){
         require 'variables.php';
 
         if ($_GET){
-            if (isset($_GET['tabel_id'])){
+            if (isset($_GET['tabel_id']) && isset($_GET['type'])){
 
                 $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['tabel_id'], 'id');
 
@@ -31,7 +31,22 @@ if ($enter_ok){
                                         <!--<a href="fl_tabel.php?id='.$_GET['tabel_id'].'" class="b">Вернуться в табель #'.$_GET['tabel_id'].'</a>-->
                                         <a href="fl_tabels.php" class="b">Важный отчёт</a>
                                     </div>
-                                    <h2>Добавить вычет из <a href="fl_tabel.php?id='.$_GET['tabel_id'].'" class="ahref">табеля #'.$_GET['tabel_id'].'</a></h2>
+                                    <h2>Добавить удержание [';
+
+                    if ($_GET['type'] == 2){
+                        echo ' налог ';
+                    }elseif ($_GET['type'] == 3){
+                        echo ' штраф ';
+                    }elseif ($_GET['type'] == 4){
+                        echo ' ссуда ';
+                    }elseif ($_GET['type'] == 5){
+                        echo ' за обучение ';
+                    }else {
+                        echo ' за материалы ';
+                    }
+
+                    echo '
+                                    ] из <a href="fl_tabel.php?id='.$_GET['tabel_id'].'" class="ahref">табеля #'.$_GET['tabel_id'].'</a></h2>
                                     Заполните поля
                                 </header>';
 
@@ -58,7 +73,7 @@ if ($enter_ok){
                                         </div>
                                         
                                         <div id="errror"></div>                        
-                                        <input type="button" class="b" value="Добавить" onclick="fl_showDeductionAdd(0, '.$_GET['tabel_id'].', \'add\')">
+                                        <input type="button" class="b" value="Добавить" onclick="fl_showDeductionAdd(0, '.$_GET['tabel_id'].', '.$_GET['type'].', \'add\')">
                                     </form>';
 
                     echo '

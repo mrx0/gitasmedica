@@ -250,7 +250,20 @@
                                                         <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                     </div>
                                                     <div style="display: inline-block; vertical-align: middle; font-size: 90%;">
-                                                        <b>Вычет #' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);">' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>
+                                                        <b>';
+                                if ($rezData['type'] == 2){
+                                    $rezultD .= ' налог ';
+                                }elseif ($rezData['type'] == 3){
+                                    $rezultD .= ' штраф ';
+                                }elseif ($rezData['type'] == 4){
+                                    $rezultD .= ' ссуда ';
+                                }elseif ($rezData['type'] == 5){
+                                    $rezultD .= ' за обучение ';
+                                }else {
+                                    $rezultD .= ' за материалы ';
+                                }
+                                $rezultD .=
+                                                        ' #' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);"><br>' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>
                                                     </div>
                                                 </div>
                                                 <div>
@@ -315,7 +328,16 @@
                                                         <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                     </div>
                                                     <div style="display: inline-block; vertical-align: middle; font-size: 90%;">
-                                                        <b>Вычет #' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);">' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>
+                                                        <b>';
+                                if ($rezData['type'] == 2){
+                                    $rezultS .= ' отпускной ';
+                                }elseif ($rezData['type'] == 3){
+                                    $rezultS .= ' больничный ';
+                                }else {
+                                    $rezultS .= ' премия ';
+                                }
+                                $rezultS .=
+                                                        '#' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);"><br>' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>
                                                     </div>
                                                 </div>
                                                 <div>
@@ -447,20 +469,32 @@
                                             Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ'] . '</span> руб.
                                         </div>';
 
-                        echo '
-                                        <div style="background-color: rgba(230, 72, 72, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Сумма всех вычетов: <span class="calculateInvoice" style="font-size: 13px">' . $tabel_j[0]['deduction'] . '</span> руб.</div>';
-                        if ($tabel_j[0]['status'] != 7) {
-                            echo '<div ><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'" class="b" style = "font-size: 80%;" > Добавить вычет </a ></div >';
-                        }
-                        echo '
-                                        </div>';
 
                         echo '
                                         <div style="background-color: rgba(72, 230, 194, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Сумма всех надбавок: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['surcharge'] . '</span> руб.</div>';
+                                            <div>Всего добавлено: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['surcharge'] . '</span> руб.</div>';
+
                         if ($tabel_j[0]['status'] != 7) {
-                            echo '<div><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'" class="b" style="font-size: 80%;">Добавить надбавку</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style = "font-size: 80%;" >Отпускной +</a ></div>';
+                            echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3" class="b" style="font-size: 80%;">Больничный +</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style="font-size: 80%;">Премия +</a></div>';
+                        }
+
+                        echo '
+                                            </div>
+                                        </div>';
+
+
+
+                        echo '
+                                        <div style="background-color: rgba(230, 72, 72, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
+                                            <div>Всего удержано: <span class="calculateInvoice" style="font-size: 13px">' . $tabel_j[0]['deduction'] . '</span> руб.</div>';
+                        if ($tabel_j[0]['status'] != 7) {
+                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style = "font-size: 80%;" >За материалы +</a ></div >';
+                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style = "font-size: 80%;" >Налог +</a ></div >';
+                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3" class="b" style = "font-size: 80%;" >Штраф +</a ></div >';
+                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=4" class="b" style = "font-size: 80%;" >Ссуда +</a ></div >';
+                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=5" class="b" style = "font-size: 80%;" >Обучение +</a ></div >';
                         }
                         echo '
                                         </div>';
@@ -509,7 +543,7 @@
                         echo '
                                 <div style="border: 1px dotted #b3c0c8; display: block; font-size: 12px; padding: 2px; margin-right: 10px; margin-bottom: 10px; vertical-align: top;">
                                     <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
-                                        Вычеты ';
+                                        Удержано ';
                         if (mb_strlen($rezultD) > 0) {
                             echo '
                                             <div id="allDeductionssIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allDeductionssIsHere\');">показать/скрыть</div>
@@ -527,7 +561,7 @@
                         echo '
                                 <div style="border: 1px dotted #b3c0c8; display: block; font-size: 12px; padding: 2px; margin-right: 10px; vertical-align: top;">
                                     <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
-                                        Надбавки ';
+                                        Добавлено ';
                         if (mb_strlen($rezultS) > 0) {
                             echo '
                                         <div id="allSurchargesIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allSurchargesIsHere\');">показать/скрыть</div>

@@ -23,9 +23,9 @@
 
                 $time = date('Y-m-d H:i:s', time());
 
-                $query = "INSERT INTO `fl_journal_deductions` (`tabel_id`, `summ`, `descr`, `create_time`, `create_person`)
+                $query = "INSERT INTO `fl_journal_deductions` (`tabel_id`, `type`, `summ`, `descr`, `create_time`, `create_person`)
                             VALUES (
-                            '{$_POST['tabel_id']}', '".round($_POST['deduction_summ'], 2)."', '{$_POST['descr']}', '{$time}', '{$_SESSION['id']}');";
+                            '{$_POST['tabel_id']}', '{$_POST['type']}', '".round($_POST['deduction_summ'], 2)."', '{$_POST['descr']}', '{$time}', '{$_SESSION['id']}');";
                             
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
