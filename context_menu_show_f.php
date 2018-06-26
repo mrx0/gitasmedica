@@ -222,13 +222,13 @@
 				//Для Вычетов в табеле
 				if ($_POST['mark'] == 'tabel_deduction_options'){
                     $data .= '
-                            <li><div onclick="fl_deleteDeductionFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить Вычет из табеля</div></li>';
+                            <li><div onclick="fl_deleteDeductionFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить из табеля</div></li>';
 				}
 
 				//Для Надбавок в табеле
 				if ($_POST['mark'] == 'tabel_surcharge_options'){
                     $data .= '
-                            <li><div onclick="fl_deleteSurchargeFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить Надбавку из табеля</div></li>';
+                            <li><div onclick="fl_deleteSurchargeFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить из табеля</div></li>';
 				}
 
 				//Настройка для записи

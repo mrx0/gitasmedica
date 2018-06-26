@@ -2598,3 +2598,10 @@ input[type="submit"].msg_send:hover{
 }
 
 /*<-- Комментарии чат */
+
+.border_tabel_print{
+	border-top: none;
+	border-right: 2px solid #525252;
+	border-bottom: 1px dotted #BFBCB5;
+	border-left: 2px solid #525252
+}
