@@ -31,7 +31,8 @@
                 //$query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$_POST['permission']}' AND `worker_id`='{$_POST['worker']}' AND `office_id`='{$_POST['office']}' AND `status` <> '7';";
                 //$query = "SELECT * FROM `fl_journal_calculate` WHERE `type`='{$_POST['permission']}' AND `worker_id`='{$_POST['worker']}' AND `office_id`='{$_POST['office']}' AND MONTH(`create_time`) = '09' AND `status` <> '7';";
 
-                $query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$_POST['permission']}' AND `worker_id`='{$_POST['worker']}' AND `office_id`='{$_POST['office']}' AND `date_in` > '2018-05-31';";
+                //$query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$_POST['permission']}' AND `worker_id`='{$_POST['worker']}' AND `office_id`='{$_POST['office']}' AND `date_in` > '2018-05-31';";
+                $query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$_POST['permission']}' AND `worker_id`='{$_POST['worker']}' AND `office_id`='{$_POST['office']}' AND `status` <> '9';";
 
                 /*Собираем данные с дополнительными
                 $query = "SELECT jcalc.*, jcalc.id as calc_id, jcalcex.*
@@ -83,6 +84,10 @@
                             </div>';
 
                         foreach ($rez as $year => $yearData){
+
+                            if ($year != date('Y', time())){
+                                $rezult .= date('Y', time());
+                            }
 
                             $rezult .= '
                             <div style="margin: 23px 0 -2px; padding: 2px; text-align: left; color: #717171;">

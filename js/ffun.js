@@ -439,6 +439,42 @@
         }
     }
 
+    //Удалить табель
+    function fl_deleteTabelItem(tabel_id){
+        //console.log(id);
+
+        var rys = false;
+
+        var rys = confirm("Вы хотите удалить табель. \nЭто необратимо. Все РЛ будут откреплены.\nВсе прикрепленные документы будут удалены\n\nВы уверены?");
+
+        if (rys) {
+
+            $.ajax({
+                url: "fl_tabel_del_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: tabel_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (data) {
+                    /*if(data.result == "success"){
+
+                     }*/
+                    //console.log(data.data);
+                    //location.reload();
+                    window.location.href = "fl_tabels.php";
+                }
+            });
+
+        }
+    }
+
     //Удалить расчет
     function fl_deleteCalculateItem(id, client_id, invoice_id){
         //console.log(id);

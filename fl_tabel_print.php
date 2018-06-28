@@ -186,10 +186,10 @@
                         echo '
                             <div>';
 
-                        echo '		
+                        /*echo '
 								
 									<input type="hidden" name="filter" value="yes">
-									<!--<input type="hidden" name="template" id="type" value="5">-->';
+									<!--<input type="hidden" name="template" id="type" value="5">-->';*/
 
                         echo '					
 									<div class="filterBlock" style="width: 650px; border-bottom: 1px dotted grey;">
