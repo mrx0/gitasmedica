@@ -651,7 +651,7 @@
                             
                                             $('.pay_plus_part1').each(function() {
                                                 pay_plus_part += Number($(this).html());
-                                                //console.log(Number($(this).html()));  
+                                                console.log(Number($(this).html()));  
                                             });
                                             //console.log(pay_plus_part);
                                             
