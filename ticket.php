@@ -410,13 +410,13 @@
                                             </div>
                                         </div>';
 
-                        echo '
+                        /*echo '
                                         <div class="cellsBlock2" style="width: 370px;">
                                             <div class="cellLeft" style="padding: 10px 20px 30px;">
                                                 <div style="font-size:80%;  color: #555; margin-bottom: 10px; margin-left: -10px;">Прикреплённые фото</div>
                                                 <div>(coming soon... (maybe))</div>
                                             </div>
-                                        </div>';
+                                        </div>';*/
 
                         echo '
                                     </div>';

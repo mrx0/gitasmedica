@@ -1528,7 +1528,7 @@
             type: "POST",
             dataType: "JSON",
 
-            data:deductionData,
+            data: {deduction_summ: deduction_summ},
 
             cache: false,
             beforeSend: function() {
@@ -1580,7 +1580,7 @@
             type: "POST",
             dataType: "JSON",
 
-            data:surchargeData,
+            data: {surcharge_summ:surcharge_summ},
 
             cache: false,
             beforeSend: function() {
@@ -1632,7 +1632,7 @@
             type: "POST",
             dataType: "JSON",
 
-            data:paidoutData,
+            data: {paidout_summ:paidout_summ},
 
             cache: false,
             beforeSend: function() {
