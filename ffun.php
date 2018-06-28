@@ -1126,4 +1126,415 @@
         return;
     }
 
+
+
+//функция для создания шаблона табеля (оасчетного листа) для печати
+function tabelPrintTemplate ($tabel_id, $month, $year, $worker_fio, $filial, $countSmen, $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3, $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1, $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm, $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount, $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3){
+
+    $rezult = '
+			<div>				
+				<div class="filterBlock" style="width: 650px; border-bottom: 1px dotted grey;">
+					<div class="filtercellLeft" style="width: 400px; text-align: center; border: none;">
+						<a href="fl_tabel.php?id='.$tabel_id.'" class="ahref">Расчетный листок</a> за '.$month.' '.$year.'
+					</div>
+				</div>
+				
+				<div class="filterBlock" style="width: 650px;">
+					<div class="filtercellLeft" style="border: none; width: 220px; min-width: 220px; max-width: 220px; padding: 5px 0;">
+						<div style="padding: 5px 0; font-size: 120%; font-weight: bold;">
+							<i>'.$worker_fio.'</i>
+						</div>
+						<div style="background-color: rgba(144,247,95, 0.4); font-size: 130%; padding: 5px;">
+							<div style="display: inline;">К выплате:</div>
+							<div style="float: right; display: inline; text-align: right; font-size: 110%;"><b><i><div class="pay_must" style="display: inline;">0</div> р.</i></b></div>
+						</div>
+						
+					</div>
+					<div class="filtercellRight" style="border: none;">
+						<div style="border-bottom: 1px dotted grey;">
+							<div style="display: inline;">Подразделение</div>
+							<div style="float: right; display: inline; text-align: right;"><b>'.$filial.'</b></div>
+						</div>
+						<div style="border-bottom: 1px dotted grey;">
+							<div style="display: inline;">Норма смен/дней</div>
+							<div style="float: right; display: inline; text-align: right;">-</div>
+						</div>
+						<div style="border-bottom: 1px dotted grey;">
+							<div style="display: inline;">Часов в смене</div>
+							<div style="float: right; display: inline; text-align: right;">-</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="filterBlock" style="width: 650px;">
+				
+					<table width="100%" style="border: 2px solid #525252; border-collapse: collapse;">
+						<tr>
+							<td rowspan="2" style="width: 100px; text-align: center; border: 2px solid #525252;">
+								Вид
+							</td>
+							<td rowspan="2" style="width: 60px; text-align: center; border: 2px solid #525252;">
+								тариф
+							</td>
+							<td colspan="2" style="width: 70px; text-align: center; border: 2px solid #525252;">
+								период
+							</td>
+							<td rowspan="2" style="width: 80px; text-align: center; border: 2px solid #525252;">
+								Сумма
+							</td>
+							<td rowspan="2" style="width: 100px; text-align: center; border: 2px solid #525252;">
+								Вид
+							</td>
+							<td style="width: 70px; text-align: center; border: 2px solid #525252;">
+								период
+							</td>
+							<td rowspan="2" style="width: 80px; text-align: center; border: 2px solid #525252;">
+								Сумма
+							</td>
+						</tr>
+						
+						
+						<tr>
+							<td style="width: 35px; text-align: center; border: 1px solid #BFBCB5; font-size: 80%;">
+								дней
+							</td>
+							<td style="width: 35px; text-align: center; border: 1px solid #BFBCB5; font-size: 80%;">
+								часов
+							</td>
+								<td style="text-align: center; border: 1px solid #BFBCB5;">
+								дней
+							</td>
+						</tr>  
+						 
+						<tr>
+							<td colspan="5" style="text-align: left; border: 2px solid #525252; padding: 5px 0 5px 5px;">
+								<b>1. Начислено</b>
+							</td>
+							<td colspan="3" style="text-align: left; border: 2px solid #525252; padding: 5px 0 5px 5px;">
+								<b>2. Удержано</b>
+							</td>
+						</tr>
+						
+						<tr>
+							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+								з/п
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+								'.$countSmen.'
+							</td>
+							<td  class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								<div class="pay_plus_part1" style="display: inline;">
+									'.$tabel_summ.'
+								</div> р.
+							</td>
+							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+								налог
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								<div class="pay_minus_part1" style="display: inline;">
+									'.$tabel_deductions_j2.'
+								</div> р.
+							</td>
+						</tr>
+						 
+						<tr>
+							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+								отпускные
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								<div class="pay_plus_part1" style="display: inline;">
+									'.$tabel_surcharges_j2.'
+								</div> р.
+							</td>
+							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+								штраф
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								<div class="pay_minus_part1" style="display: inline;">
+									'.$tabel_deductions_j3.'
+								</div> р.
+							</td>
+						</tr>
+						 
+						<tr>
+							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+								больничный
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								<div class="pay_plus_part1" style="display: inline;">
+									'.$tabel_surcharges_j3.'
+								</div> р.
+							</td>
+							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+								ссуда
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								<div class="pay_minus_part1" style="display: inline;">
+									'.$tabel_deductions_j4.'
+								</div> р.
+							</td>
+						</tr>
+						 
+						<tr>
+							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+								премия
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								<div class="pay_plus_part1" style="display: inline;">
+									'.$tabel_surcharges_j1.'
+								</div> р.
+							</td>
+							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+								обучение
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								<div class="pay_minus_part1" style="display: inline;">
+									'.$tabel_deductions_j5.'
+								</div> р.
+							</td>
+						</tr>
+						 
+						<tr style="border: 2px solid #525252;">
+							<td colspan="4" style="text-align: left; border: 1px solid #BFBCB5; padding: 3px 0 3px 3px;">
+								<b><i>Всего начислено</i></b>
+							</td>
+							<td style="text-align: right; border: 1px solid #BFBCB5; padding: 3px 3px 3px 0; font-size: 110%;">
+								<b><div class="pay_plus1" style="display: inline;">0</div> р.</b>
+							</td>
+							<td colspan="2" style="text-align: left; border-left: 2px solid #525252; padding: 3px 0 3px 3px;">
+								<b><i>Всего удержано</i></b>
+							</td>
+							<td style="text-align: right; border: 1px solid #BFBCB5; padding: 3px 3px 3px 0; font-size: 110%;">
+								<b><div class="pay_minus1" style="display: inline;">0</div> р.</b>
+							</td>
+						</tr>
+						
+						<tr>
+							<td colspan="5" style="text-align: left; border: 2px solid #525252; padding: 5px 0 5px 5px;">
+								<b>3. Прочее</b>
+							</td>
+							<td colspan="3" style="text-align: left; border: 2px solid #525252; padding: 5px 0 5px 5px;">
+								<b>4. Выплачено</b>
+							</td>
+						</tr>
+						
+						<tr>
+							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+								пустые смены
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">';
+
+    if ($emptySmenaCount != 0){
+        $rezult .= $emptySmenaPrice.' р.';
+    }
+
+    $rezult .= '
+							</td>
+							<td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">';
+
+    if ($emptySmenaCount != 0){
+        $rezult .= $emptySmenaCount;
+    }
+
+    $rezult .= '
+							</td>
+							<td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								<div class="pay_plus_part2" style="display: inline;">';
+
+    if ($emptySmenaCount != 0){
+        $rezult .= $emptySmenaSumm;
+    }
+
+    $rezult .= '
+								</div> р.
+							</td>
+							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+								аванс
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								<div class="pay_minus_part2" style="display: inline;">
+									'.$tabel_paidouts_j1.'
+								</div> р.
+							</td>
+						</tr>	
+						 
+						<tr>
+							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+								ночные смены
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">';
+
+    if ($nightSmenaCount != 0){
+        $rezult .= $nightSmenaPrice.' р.';
+    }
+
+    $rezult .= '
+							</td>
+							<td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">';
+
+    if ($nightSmenaCount != 0){
+        $rezult .= $nightSmenaCount;
+    }
+
+    $rezult .= '
+							</td>
+							<td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								<div class="pay_plus_part2" style="display: inline;">';
+
+    if ($nightSmenaCount != 0){
+        $rezult .= $nightSmenaSumm;
+    }
+
+    $rezult .= '
+								</div> р.
+							</td>
+							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+								отпускные
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								<div class="pay_minus_part2" style="display: inline;">
+									'.$tabel_paidouts_j2.'
+								</div> р.
+							</td>
+						</tr>
+						 
+						<tr>
+							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								<div class="pay_plus_part2" style="display: inline;">0</div> р.
+							</td>
+							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+								больничный
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								<div class="pay_minus_part2" style="display: inline;">
+									'.$tabel_paidouts_j3.'
+								</div> р.
+							</td>
+						</tr>
+						 
+						<tr>
+							<td class="border_tabel_print" style="text-align: left; border: 1px solid #BFBCB5; padding: 3px 0 3px 3px;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								<div class="pay_plus_part2" style="display: inline;">0</div> р.
+							</td>
+							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+								на карту
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								
+							</td>
+							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+								<div class="pay_minus_part2" style="display: inline;">
+									'.$tabel_paidouts_j4.'
+								</div> р.
+							</td>
+						</tr>
+						
+						<tr style="border: 2px solid #525252;">
+							<td colspan="4" style="text-align: left; border: 1px solid #BFBCB5; padding: 3px 0 3px 3px;">
+								<b><i></i></b>
+							</td>
+							<td style="text-align: right; border: 1px solid #BFBCB5; padding: 3px 3px 3px 0; font-size: 110%;">
+								<b><div class="pay_plus2" style="display: inline;">0</div> р.</b>
+							</td>
+							<td colspan="2" style="text-align: left; border-left: 2px solid #525252; padding: 3px 0 3px 3px;">
+								<b><i>Всего выплачено</i></b>
+							</td>
+							<td style="text-align: right; border: 1px solid #BFBCB5; padding: 3px 3px 3px 0; font-size: 110%;">
+								<b><div class="pay_minus2" style="display: inline;">0</div> р.</b>
+							</td>
+						</tr>
+						 
+					</table>
+				
+				</div>						
+			</div>';
+
+    return $rezult;
+
+}
+
 ?>
