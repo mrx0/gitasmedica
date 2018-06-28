@@ -29,7 +29,7 @@
                 if (isset($_GET['tabel_id'])){
 
                     $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['tabel_id'], 'id');
-                    var_dump($tabel_j[0]);
+                    //var_dump($tabel_j[0]);
 
                     if ($tabel_j != 0){
 
