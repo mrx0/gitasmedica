@@ -29,7 +29,7 @@
                 if (isset($_GET['tabel_id'])){
 
                     $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['tabel_id'], 'id');
-                    //var_dump($tabel_j);
+                    var_dump($tabel_j[0]);
 
                     if ($tabel_j != 0){
 
@@ -194,7 +194,7 @@
                         echo '					
 									<div class="filterBlock" style="width: 650px; border-bottom: 1px dotted grey;">
 										<div class="filtercellLeft" style="width: 400px; text-align: center; border: none;">
-											<a href="fl_tabel.php?id=146" class="ahref">Расчетный листок</a> за '.$monthsName[$tabel_j[0]['month']].' '.$tabel_j[0]['year'].'
+											<a href="fl_tabel.php?id='.$_GET['tabel_id'].'" class="ahref">Расчетный листок</a> за '.$monthsName[$tabel_j[0]['month']].' '.$tabel_j[0]['year'].'
 										</div>
 									</div>
 									
