@@ -294,7 +294,7 @@
                         if (isset($tabel_deductions_j[1])){
                             echo intval($tabel_j[0]['summ'] - $tabel_deductions_j[1]);
                         }else{
-                            intval($tabel_j[0]['summ']);
+                            echo intval($tabel_j[0]['summ']);
                         }
 
                         echo '
@@ -651,7 +651,7 @@
                             
                                             $('.pay_plus_part1').each(function() {
                                                 pay_plus_part += Number($(this).html());
-                                                console.log(Number($(this).html()));  
+                                                //console.log(Number($(this).html()));  
                                             });
                                             //console.log(pay_plus_part);
                                             
