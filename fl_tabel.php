@@ -8,38 +8,37 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 
-        if (($finances['see_all'] == 1) || $god_mode){
-	
-			include_once 'DBWork.php';
-			include_once 'functions.php';
+        if ($_GET){
+            if (isset($_GET['id'])){
+                include_once 'DBWork.php';
+                include_once 'functions.php';
 
-            include_once 'ffun.php';
+                $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['id'], 'id');
 
-            require 'variables.php';
+                if ($tabel_j != 0){
+                    //var_dump($tabel_j);
+                    //array_push($_SESSION['invoice_data'], $_GET['client']);
+                    //$_SESSION['invoice_data'] = $_GET['client'];
+                    //var_dump($calculate_j[0]['closed_time'] == 0);
+
+
+                    if (($finances['see_all'] == 1) || $god_mode || ($tabel_j[0]['worker_id'] == $_SESSION['id'])) {
+                        include_once 'ffun.php';
+
+                        require 'variables.php';
+
+                        require 'config.php';
+
+                        $edit_options = false;
+                        $upr_edit = false;
+                        $admin_edit = false;
+                        $stom_edit = false;
+                        $cosm_edit = false;
+                        $finance_edit = false;
+
+                        //var_dump($_SESSION);
+                        //unset($_SESSION['invoice_data']);
 			
-			require 'config.php';
-
-            $edit_options = false;
-            $upr_edit = false;
-            $admin_edit = false;
-            $stom_edit = false;
-            $cosm_edit = false;
-            $finance_edit = false;
-
-			//var_dump($_SESSION);
-			//unset($_SESSION['invoice_data']);
-			
-			if ($_GET){
-				if (isset($_GET['id'])){
-					
-					$tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['id'], 'id');
-					
-					if ($tabel_j != 0){
-						//var_dump($tabel_j);
-						//array_push($_SESSION['invoice_data'], $_GET['client']);
-						//$_SESSION['invoice_data'] = $_GET['client'];
-                        //var_dump($calculate_j[0]['closed_time'] == 0);
-
                         $filials_j = getAllFilials(false, false);
 
 						//$sheduler_zapis = array();
@@ -57,8 +56,15 @@
                         echo '
                                 <div id="status">
                                     <header>
-                                        <div class="nav">
-                                            <a href="fl_tabels.php" class="b">Важный отчёт</a>
+                                        <div class="nav">';
+                        if ($tabel_j[0]['worker_id'] == $_SESSION['id']){
+                            echo '
+                                            <a href="fl_my_tabels.php" class="b">Табели</a>';
+                        }else {
+                            echo '
+                                            <a href="fl_tabels.php" class="b">Важный отчёт</a>';
+                        }
+                        echo '
                                         </div>
     
                                         <h2>Табель #'.$_GET['id'].'';
@@ -188,7 +194,7 @@
                                                     <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                 </div>
                                                 <div style="display: inline-block; vertical-align: middle; font-size: 90%;">
-                                                    <b>РЛ #'.$rezData['id'].'</b> <span style="    color: rgb(115, 112, 112);">'.date('d.m.y H:i', strtotime($rezData['create_time'])).'</span>
+                                                    <b>РЛ #'.$rezData['id'].'</b> <span style="font-size: 70%; color: rgb(115, 112, 112);">'.date('d.m.y H:i', strtotime($rezData['create_time'])).'</span>
                                                 </div>
                                             </div>
                                             <div>
@@ -525,7 +531,7 @@
                                         <div style="font-size: 90%;  color: #555;">
                                             Введите количество "пустых" смен: <input type="number" value="" min="0" max="99" size="2" name="emptySmens" id="emptySmens" class="who2" placeholder="0" style="font-size: 13px; text-align: center;">
                                         </div>';
-                            if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9)) {
+                            if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && ($finances['see_all'] == 1)) {
                                 echo ' 
                                         <button class="b" style="font-size: 80%;" onclick="showEmptySmenaAddINTabel(' . $_GET['id'] . ');">Добавить в табель оплату <b>пустых</b> смен</button>';
                             }
@@ -556,7 +562,7 @@
                                         <div style="background-color: rgba(72, 230, 194, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
                                             <div>Всего начислено: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['surcharge'] . '</span> руб.</div>';
 
-                        if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9)) {
+                        if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && ($finances['see_all'] == 1)) {
                             echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style = "font-size: 80%;" >Отпускной +</a ></div>';
                             echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3" class="b" style="font-size: 80%;">Больничный +</a></div>';
                             echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style="font-size: 80%;">Премия +</a></div>';
@@ -571,7 +577,7 @@
                         echo '
                                         <div style="background-color: rgba(230, 72, 72, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
                                             <div>Всего удержано: <span class="calculateInvoice" style="font-size: 13px">' . $tabel_j[0]['deduction'] . '</span> руб.</div>';
-                        if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9)) {
+                        if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && ($finances['see_all'] == 1)) {
                             //echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style = "font-size: 80%;" >За материалы +</a ></div >';
                             echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style = "font-size: 80%;" >Налог +</a ></div >';
                             echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3" class="b" style = "font-size: 80%;" >Штраф +</a ></div >';
@@ -585,7 +591,7 @@
                                         <div style="background-color: rgba(1, 94, 255, 0.22); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
                                             <div>Всего выплачено: <span class="calculateOrder" style="font-size: 13px; color: rgb(12, 0, 167);">' . $tabel_j[0]['paidout'] . '</span> руб.</div>';
 
-                        if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9)) {
+                        if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && ($finances['see_all'] == 1)) {
                             echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style = "font-size: 80%;">Аванс +</a ></div>';
                             echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style="font-size: 80%;">Отпусные +</a></div>';
                             echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3" class="b" style="font-size: 80%;">Больничный +</a></div>';
@@ -602,7 +608,7 @@
                                             <span style="font-size: 80%; color: #8C8C8C;">сумма округляется до целого для удобства расчетов</span></div>
                                             <div>';
 
-                        if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9)) {
+                        if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && ($finances['see_all'] == 1)) {
                             echo '
                                                 <button class="b" style="font-size: 80%;" onclick="deployTabel(' . $_GET['id'] . ');">Провести табель</button>';
                         }else{
@@ -701,7 +707,7 @@
 					        <div id="overlay"></div>';
 
 					}else{
-						echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+                        echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 					}
 				}else{
 					echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
@@ -710,7 +716,7 @@
 				echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 			}
 		}else{
-			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
+            echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 		}
 	}else{
 		header("location: enter.php");
