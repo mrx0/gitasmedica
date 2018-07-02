@@ -174,7 +174,7 @@
             </script>-->';
 
                     $actions_cosmet = SelDataFromDB('actions_cosmet', '', '');
-                    var_dump ($actions_cosmet);
+                    //var_dump ($actions_cosmet);
                     if ($actions_cosmet != 0){
 
 
