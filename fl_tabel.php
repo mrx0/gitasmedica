@@ -140,7 +140,7 @@
                             //$sheduler_zapis = 0;
                             //var_dump ($sheduler_zapis);
                         }
-                        var_dump(microtime(true) - $script_start);
+                        //var_dump(microtime(true) - $script_start);
 
                         //var_dump($query);
                         //var_dump($tabel_ex_calculates_j);
