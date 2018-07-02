@@ -147,8 +147,12 @@
 					echo '
 								<a href="zapis_own.php?y='.$year.'&m='.$month.'&d='.$day.'&worker='.$_SESSION['id'].'" class="b">Запись сегодня</a>';
 			}
-			
-			if ($stom['see_own'] == 1){
+
+            echo '
+									<a href="fl_my_tabels.php" class="b">Табели</a>';
+
+
+            if ($stom['see_own'] == 1){
 				$notes = SelDataFromDB ('notes', $_SESSION['id'], 'create_person');
 			}elseif (($stom['see_all'] == 1) || $god_mode){
 				$notes = SelDataFromDB ('notes', 'dead_line', 'dead_line');

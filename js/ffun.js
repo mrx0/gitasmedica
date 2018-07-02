@@ -2056,6 +2056,8 @@
 
     //Получаем необработанные расчетные листы
     function getTabelsfunc (thisObj, reqData){
+        //console.log (reqData);
+
         $.ajax({
             url:"fl_get_tabels_f.php",
             global: false,
@@ -2069,7 +2071,7 @@
                 thisObj.html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка табелей</span></div>");
             },
             success:function(res){
-                //console.log(res);
+                console.log(res);
                 //thisObj.html(res);
 
                 if(res.result == 'success'){
@@ -2106,9 +2108,17 @@
                         //!!! доделать тут чтоб правильно прятались или нет вкладки
                         //Спрячем пустые вкладки, где нет данных
 
-                        //console.log($(".tabs-"+permission+"_"+worker+"_"+office).css("display"));
+                        //!!! пока костыль такой
+                        if (reqData['own_tabel']){
+                            //console.log($("#filial_"+reqData['office']).css("display"));
 
-                        //$(".tabs-"+permission+"_"+worker+"_"+office).hide();
+                            //$("#filial_"+reqData['office']).hide();
+                            $("#filial_"+reqData['office']).css({
+                                "pointer-events": "none",
+                                "cursor": "default",
+                                "background-color": "rgba(140, 137, 137, 0.7)",
+                            })
+                        }
                     }
                 }
 
@@ -2126,6 +2136,15 @@
         //console.log(permission_id+' _ '+worker_id+' _ '+office_id);
         //console.log(thisObj.parent());
 
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = now.getMonth();
+        month = Number(month)+1;
+        if (Number(month) < 10){
+            month = "0"+month;
+        }
+        console.log(month);
+
         var needCalcObj = thisObj.parent().find('.tableDataNPaidCalcs')
         var needTabelObj = thisObj.parent().find('.tableTabels')
 
@@ -2134,7 +2153,9 @@
             permission: permission_id,
             worker: worker_id,
             office: office_id,
-            month: "09"
+            month: month,
+            year: year,
+            own_tabel: false
         };
 
         getCalculatesfunc (needCalcObj, certData);
