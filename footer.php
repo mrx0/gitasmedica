@@ -118,6 +118,6 @@
 		</body>
 	</html>';
 
-    var_dump(microtime(true) - $script_start);
+    //var_dump(microtime(true) - $script_start);
 
 ?>
