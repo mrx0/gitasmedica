@@ -159,6 +159,7 @@
 							echo "<option value='".$offices_j[$i]['id']."' $selected>".$offices_j[$i]['name']."</option>";
 						}
 					}*/
+
 					$insures_j = SelDataFromDB('spr_insure', '', '');
 						
 					if ($insures_j != 0){
