@@ -1,6 +1,6 @@
 <?php
 
-//fl_tabels.php
+//z
 //Важный отчёт
 
 
@@ -290,7 +290,9 @@
                             permission: permission,
                             worker: worker,
                             office: office,
-                            month: "09"
+                            month: "'.date("m").'",
+                            year: "'.date("Y").'",
+                            own_tabel: false
                         };
                         
                         
@@ -315,7 +317,9 @@
                             permission: permission,
                             worker: worker,
                             office: office,
-                            month: "09"
+                            month: "'.date("m").'",
+                            year: "'.date("Y").'",
+                            own_tabel: false
                         };
                         
                         
