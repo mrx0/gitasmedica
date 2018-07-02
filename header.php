@@ -7,6 +7,9 @@
 	session_start();
 	
 	$enter_ok = FALSE;
+
+	//Время начала работы скрипта PHP
+    $script_start = microtime(true);
 	
 	if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 		$enter_ok = FALSE;
