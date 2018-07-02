@@ -148,7 +148,7 @@
 													<select name="insurecompany" id="insurecompany">
 														<option value="0">Выберите страховую</option>';
 														
-					if ($offices_j != 0){
+					/*if ($offices_j != 0){
 						for ($i=0;$i<count($offices_j);$i++){
 							$selected = '';
 							if (isset($_GET['filial'])){
@@ -158,7 +158,8 @@
 							}
 							echo "<option value='".$offices_j[$i]['id']."' $selected>".$offices_j[$i]['name']."</option>";
 						}
-					}
+					}*/
+
 					$insures_j = SelDataFromDB('spr_insure', '', '');
 						
 					if ($insures_j != 0){
