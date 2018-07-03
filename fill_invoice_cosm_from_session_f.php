@@ -30,8 +30,8 @@
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
 								<i><b>Скидка</b></i>
 							</div>
-							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-								<i><b>Гар.</b></i>
+							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 30px; min-width: 30px; max-width: 30px;">
+								<i><b>Гар.<br>Под.</b></i>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
 								<i><b>Всего, руб.</b></i>
@@ -198,15 +198,20 @@
 								<div class="cellCosmAct settings_text"  discount="'.$items['discount'].'" style="font-size: 90%; text-align: center; '.$bg_col.' width: 40px; min-width: 40px; max-width: 40px;" onclick="contextMenuShow('.$ind.', '.$ind.', event, \'discountItem\');">
 									'.$items['discount'].'
 								</div>
-								<div class="cellCosmAct settings_text" guarantee="'.$items['guarantee'].'" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px; '.$bg_col.'" onclick="contextMenuShow('.$ind.', '.$ind.', event, \'guaranteeItem\');">';
+								
+								<div class="cellCosmAct settings_text" guarantee="'.$items['guarantee'].'" gift="'.$items['gift'].'" style="font-size: 80%; text-align: center; width: 30px; min-width: 30px; max-width: 30px; '.$bg_col.'" onclick="contextMenuShow('.$ind.', '.$ind.', event, \'guaranteeGiftItem\');">';
 								if ($items['guarantee'] != 0){
 									$request .= '
 										<i class="fa fa-check" aria-hidden="true" style="color: red; font-size: 150%;"></i>';
+								}elseif ($items['gift'] != 0){
+                                    $request .= '
+                                        <i class="fa fa-gift" aria-hidden="true" style="color: blue; font-size: 150%;"></i>';
 								}else{
-									$request .= '-';
-								}
+                                    $request .= '-';
+                                }
 								$request .= '
 								</div>
+								
 								<div class="cellCosmAct invoiceItemPriceItog" manual_itog_price="'.$items['manual_itog_price'].'" style="font-size: 105%; font-weight: bold; text-align: center; '.$bg_col.' width: 60px; min-width: 60px; max-width: 60px; cursor: pointer;" onclick="contextMenuShow('.$ind.', 0, event, \'priceItemItog\');">';
 
 
