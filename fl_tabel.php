@@ -10,10 +10,13 @@
 
         if ($_GET){
             if (isset($_GET['id'])){
+
                 include_once 'DBWork.php';
                 include_once 'functions.php';
 
                 $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['id'], 'id');
+                //var_dump(microtime(true) - $script_start);
+
 
                 if ($tabel_j != 0){
                     //var_dump($tabel_j);
@@ -40,6 +43,8 @@
                         //unset($_SESSION['invoice_data']);
 			
                         $filials_j = getAllFilials(false, false);
+                        //var_dump(microtime(true) - $script_start);
+                        //var_dump($filials_j);
 
 						//$sheduler_zapis = array();
                         $tabel_ex_calculates_j = array();
@@ -116,11 +121,14 @@
 
                         //Получение данных
                         $summCalc = 0;
+                        //var_dump(microtime(true) - $script_start);
 
                         $msql_cnnct = ConnectToDB2 ();
+                        //var_dump(microtime(true) - $script_start);
 
                         //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
-                        $query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc WHERE jcalc.id IN (SELECT `calculate_id` FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."');";
+                        //$query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc WHERE jcalc.id IN (SELECT `calculate_id` FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."');";
+                        $query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '".$tabel_j[0]['id']."' WHERE jtabex.calculate_id = jcalc.id";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -133,6 +141,7 @@
                             //$sheduler_zapis = 0;
                             //var_dump ($sheduler_zapis);
                         }
+                        //var_dump(microtime(true) - $script_start);
 
                         //var_dump($query);
                         //var_dump($tabel_ex_calculates_j);
@@ -227,6 +236,7 @@
                             $summCalc += $rezData['summ'];
 
                         }
+                        //var_dump(microtime(true) - $script_start);
 
                         //Вычеты
                         //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
@@ -243,6 +253,7 @@
                             //$sheduler_zapis = 0;
                             //var_dump ($sheduler_zapis);
                         }
+                        //var_dump(microtime(true) - $script_start);
 
                         $rezultD = '';
 
@@ -305,6 +316,7 @@
 
                             }
                         }
+                        //var_dump(microtime(true) - $script_start);
 
                         //Надбавки
                         //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
@@ -321,6 +333,7 @@
                             //$sheduler_zapis = 0;
                             //var_dump ($sheduler_zapis);
                         }
+                        //var_dump(microtime(true) - $script_start);
 
                         $rezultS = '';
 
@@ -379,6 +392,7 @@
 
                             }
                         }
+                        //var_dump(microtime(true) - $script_start);
 
                         //Выплаты
                         $query = "SELECT * FROM `fl_journal_paidouts` WHERE `tabel_id`='".$tabel_j[0]['id']."';";
@@ -394,6 +408,7 @@
                             //$sheduler_zapis = 0;
                             //var_dump ($sheduler_zapis);
                         }
+                        //var_dump(microtime(true) - $script_start);
 
                         $rezultP = '';
 
@@ -456,6 +471,7 @@
 
                             }
                         }
+                        //var_dump(microtime(true) - $script_start);
 
                         //Смена/график
                         $rezultShed = array();
@@ -480,6 +496,7 @@
                         /*var_dump($query);
                         var_dump(count($rezultShed));
                         var_dump($rezultShed);*/
+                        //var_dump(microtime(true) - $script_start);
 
 
                         //Смены

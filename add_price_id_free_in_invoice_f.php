@@ -47,6 +47,7 @@
 							$temp_arr['price'] = 0;
 							$temp_arr['start_price'] = 0;
 							$temp_arr['guarantee'] = 0;
+							$temp_arr['gift'] = 0;
 							$temp_arr['spec_koeff'] = 0;
 							$temp_arr['discount'] = 0;
 							$temp_arr['manual_price'] = false;

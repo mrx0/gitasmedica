@@ -16,7 +16,7 @@
 			
 				require 'variables.php';
 
-				//var_dump($_SESSION['invoice_data']);
+				//var_dump($_SESSION['invoice_data'][16776][72534]['data']);
 				//unset($_SESSION['invoice_data']);
 
 				if (isset($_GET['id'])){
@@ -123,6 +123,7 @@
 											$temp_arr2['price'] = (int)$invoice_ex_j_val['price'];
 											$temp_arr2['start_price'] = (int)$invoice_ex_j_val['price'];
 											$temp_arr2['guarantee'] = (int)$invoice_ex_j_val['guarantee'];
+											$temp_arr2['gift'] = (int)$invoice_ex_j_val['gift'];
 											$temp_arr2['spec_koeff'] = $invoice_ex_j_val['spec_koeff'];
 											$temp_arr2['discount'] = (int)$invoice_ex_j_val['discount'];
 
@@ -679,42 +680,41 @@
                                                 </div>';
                                     echo '
                                                     <div style="position: absolute; top: 0; left: 200px; vertical-align: middle; font-size: 11px; width: 300px;">
-                                                        <div style="display: inline-block; vertical-align: top;">
-                                                            Настройки: 
-                                                        </div>
-                                                        <div style="display: inline-block; vertical-align: top;">
-                                                            <div style="margin-bottom: 2px;">
-                                                                <div style="display: inline-block; vertical-align: top;">
-                                                                     <div id="spec_koeff" class="settings_text" >Коэфф.</div>
-                                                                </div> /
-                                                                <div style="display: inline-block; vertical-align: top;">
-                                                                     <div id="guarantee" class="settings_text">По гарантии</div>
-                                                                </div> /
-                                                                <div style="display: inline-block; vertical-align: top;">
-                                                                     <div class="settings_text" onclick="clearInvoice();">Очистить всё</div>
+                                                            <div style="display: inline-block; vertical-align: top;">
+                                                                Настройки: 
+                                                            </div>
+                                                            <div style="display: inline-block; vertical-align: top;">
+                                                                <div style="margin-bottom: 2px;">
+                                                                    <div style="display: inline-block; vertical-align: top;">
+                                                                         <div id="spec_koeff" class="settings_text" >Коэфф.</div>
+                                                                    </div> /
+                                                                    <div style="display: inline-block; vertical-align: top;">
+                                                                         <div id="guaranteegift" class="settings_text">По гарантии | Подарок</div>
+                                                                    </div>
                                                                 </div>
-                                                            </div>';
+                                                                <div style="margin-bottom: 2px;">                                                                    
+                                                                    <div style="display: inline-block; vertical-align: top;">
+                                                                         <div class="settings_text" onclick="clearInvoice();">Очистить всё</div>
+                                                                    </div> / ';
                                     if ($sheduler_zapis[0]['type'] == 5) {
                                         echo '
-                                                            <div style="margin-bottom: 2px;">
-                                                                <div style="display: inline-block; vertical-align: top;">
-                                                                    <div id="insure" class="settings_text" >Страховая</div>
-                                                                </div> / 
-                                                                <div style="display: inline-block; vertical-align: top;">
-                                                                    <div id="insure_approve" class="settings_text">Согласовано</div>
-                                                                </div>
-                                                            </div>';
+                                                                    <div style="display: inline-block; vertical-align: top;">
+                                                                        <div id="insure" class="settings_text" >Страховая</div>
+                                                                    </div> / 
+                                                                    <div style="display: inline-block; vertical-align: top;">
+                                                                        <div id="insure_approve" class="settings_text">Согласовано</div>
+                                                                    </div> 
+                                                                </div>';
                                     }
                                     echo '
-                                                            <div style="margin-bottom: 2px;">
-                                                                <div style="display: inline-block; vertical-align: top;">
-                                                                    <div id="discounts" class="settings_text">Скидки (Акции)</div>
+                                                                <div style="margin-bottom: 2px;">
+                                                                    <div style="display: inline-block; vertical-align: top;">
+                                                                        <div id="discounts" class="settings_text">Скидки (Акции)</div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                ';
+                                                    </div>';
 
                                     echo '
                                                 <div id="invoice_rezult" style="width: 700px; height: 500px; overflow: scroll; float: none">
