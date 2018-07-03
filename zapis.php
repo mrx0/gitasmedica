@@ -429,10 +429,10 @@
 								<a href="?'.$dopFilial.$dopDate.'&who=cosm" class="b" style="'.$cosm_color.'">Косметологи</a>
 								<a href="?'.$dopFilial.$dopDate.'&who=somat" class="b" style="'.$somat_color.'">Специалисты</a>
 							</li>
-							<li style="width: auto; margin-bottom: 20px;">
+							<li class="cellsBlock" style="width: auto; margin-bottom: 20px;">
 								<div style="display: inline-block; margin-right: 20px;">
-									<div style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
-										Филиалы
+									<div style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
+										Выберите филиал
 									</div>
 									<div>
 										<select name="SelectFilial" id="SelectFilial">
@@ -455,7 +455,7 @@
 								<div style="display: inline-block; margin-right: 20px;">
 
 									<div style="display: inline-block; margin-right: 20px;">
-										<a href="?'.$who.'" class="dotyel" style="font-size: 70%;">Сбросить</a>
+										<a href="?'.$who.'" class="dotyel" style="font-size: 80%;">Сбросить</a>
 									</div>
 								</div>
 							</li>';
@@ -1936,10 +1936,10 @@
 								//var dayW = document.getElementById("SelectDayW").value;
 								document.location.href = "?filial="+$(this).val()+"'.$who.'";
 							});
-							$("#SelectDayW").change(function(){
+							/*$("#SelectDayW").change(function(){
 								var filial = document.getElementById("SelectFilial").value;
 								document.location.href = "?dayw="+$(this).val()+"&filial="+filial+"'.$who.'";
-							});
+							});*/
 						});
 						
 					</script>';

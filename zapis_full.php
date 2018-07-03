@@ -4,7 +4,7 @@
 //Вся щапись на день 
 
 	require_once 'header.php';
-	
+
 	if ($enter_ok){
 		require_once 'header_tags.php';
 		//var_dump($stom);
@@ -265,7 +265,17 @@
 					if ($key == 'who')
 						$dopWho .= '&'.$key.'='.$value;
 				}
-				
+
+
+                if (!isset($_GET['filial'])){
+                    //Филиал
+                    if (isset($_SESSION['filial'])){
+                        $_GET['filial'] = $_SESSION['filial'];
+                    }else{
+                        $_GET['filial'] = 15;
+                    }
+                }
+
 				
 				$filial = SelDataFromDB('spr_filials', $_GET['filial'], 'offices');
 				//var_dump($filial['name']);
@@ -344,36 +354,37 @@
 								<a href="?'.$dopFilial.$dopDate.'&who=cosm&kab=1" class="b" style="'.$cosm_color.'">Косметологи</a>
 								<a href="?'.$dopFilial.$dopDate.'&who=somat&kab=1" class="b" style="'.$somat_color.'">Специалисты</a>
 							</li>
-							<!--<li style="width: auto; margin-bottom: 20px;">
+							<li class="cellsBlock" style="width: auto; margin-bottom: 20px;">
 								<div style="display: inline-block; margin-right: 20px;">
-									<div style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
-										Филиалы
+									<div style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
+										Выберите филиал
 									</div>
 									<div>
 										<select name="SelectFilial" id="SelectFilial">
 											';
-			if ($offices_j != 0){
-				for ($i=0;$i<count($offices_j);$i++){
-					$selected = '';
-					if (isset($_GET['filial'])){
-						if ($offices_j[$i]['id'] == $_GET['filial']){
-							$selected = 'selected';
+				if ($offices_j != 0){
+					for ($i=0;$i<count($offices_j);$i++){
+						$selected = '';
+						if (isset($_GET['filial'])){
+							if ($offices_j[$i]['id'] == $_GET['filial']){
+								$selected = 'selected';
+							}
 						}
+						echo "<option value='".$offices_j[$i]['id']."' $selected>".$offices_j[$i]['name']."</option>";
 					}
-					echo "<option value='".$offices_j[$i]['id']."' $selected>".$offices_j[$i]['name']."</option>";
 				}
-			}
-			echo '
+				echo '
 										</select>
 									</div>
 								</div>
 								<div style="display: inline-block; margin-right: 20px;">
 
 									<div style="display: inline-block; margin-right: 20px;">
-										<a href="?'.$who.'" class="dotyel" style="font-size: 70%;">Сбросить</a>
+										<a href="?'.$who.'" class="dotyel" style="font-size: 80%;">Сбросить</a>
 									</div>
 								</div>
-							</li>-->';
+							</li>';
+
 							
 					$ZapisHereQueryToday = FilialKabSmenaZapisToday($datatable, $year, $month, $day, $_GET['filial'], $kab, $type);
 					//var_dump($ZapisHereQueryToday);
@@ -520,6 +531,22 @@
 			echo '	
 			<!-- Подложка только одна -->
 			<div id="overlay"></div>';
+
+            echo '
+					<script>
+					
+						$(function() {
+							$("#SelectFilial").change(function(){
+								//var dayW = document.getElementById("SelectDayW").value;
+								document.location.href = "?filial="+$(this).val()+"'.$who.'";
+							});
+							/*$("#SelectDayW").change(function(){
+								var filial = document.getElementById("SelectFilial").value;
+								document.location.href = "?dayw="+$(this).val()+"&filial="+filial+"'.$who.'";
+							});*/
+						});
+						
+					</script>';
 
             //если есть права или бог или костыль (ассисенты ночью)
             if (($zapis['add_new'] == 1) || $god_mode || (($_SESSION['permissions'] == 7) && (date("H", time()-60*60) > 16))){

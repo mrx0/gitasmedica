@@ -756,13 +756,24 @@
                                             <div class="cellCosmAct" style="font-size: 90%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
                                                 '.$item['discount'].'
                                             </div>
-                                            <div class="cellCosmAct settings_text" guarantee="'.$item['guarantee'].'" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">';
+                                            <div class="cellCosmAct settings_text" guarantee="'.$item['guarantee'].'" gift="'.$item['gift'].'" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">';
+
                                             if ($item['guarantee'] != 0){
+                                                echo '
+                                                <i class="fa fa-check" aria-hidden="true" style="color: red; font-size: 150%;"></i>';
+                                            }elseif ($item['gift'] != 0){
+                                                echo '
+                                                <i class="fa fa-gift" aria-hidden="true" style="color: blue; font-size: 150%;"></i>';
+                                            }else{
+                                                echo '-';
+                                            }
+
+                                            /*if ($item['guarantee'] != 0){
                                                 echo '
                                                     <i class="fa fa-check" aria-hidden="true" style="color: red; font-size: 150%;"></i>';
                                             }else{
                                                 echo '-';
-                                            }
+                                            }*/
                                             echo '
                                             </div>
                                             <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
@@ -798,7 +809,7 @@
 
 
                                             //Общая стоимость
-                                            if ($item['guarantee'] == 0){
+                                            if (($item['guarantee'] == 0) && ($item['gift'] == 0)){
                                                 if ($item['insure'] != 0){
                                                     if ($item['insure_approve'] != 0){
                                                         $summins += $stoim_item;
