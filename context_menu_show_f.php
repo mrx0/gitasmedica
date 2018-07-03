@@ -11,6 +11,7 @@
 		//var_dump ($_POST);
 		
 		include_once 'DBWork.php';
+        include_once 'functions.php';
 		//разбираемся с правами
 		$god_mode = FALSE;
 		
@@ -36,6 +37,19 @@
 					$data = '
 						<li><div onclick="guaranteeInvoice(0)">нет (очистить)</div></li>'.
 						'<li><div onclick="guaranteeInvoice(1)">По гарантии</div></li>';
+				}
+				//Подарок общий
+				if ($_POST['mark'] == 'gift'){
+					$data = '
+						<li><div onclick="giftInvoice(0)">нет (очистить)</div></li>'.
+						'<li><div onclick="giftInvoice(1)">Подарок</div></li>';
+				}
+				//По гарантии и Подарок общий
+				if ($_POST['mark'] == 'guaranteegift'){
+					$data = '
+						<li><div onclick="giftOrGiftInvoice(0)">нет (очистить)</div></li>'.
+						'<li><div onclick="giftOrGiftInvoice(1)">По гарантии</div></li>'.
+						'<li><div onclick="giftOrGiftInvoice(2)">Подарок</div></li>';
 				}
 				//Страховая общее
 				if ($_POST['mark'] == 'insure'){
@@ -77,10 +91,23 @@
 						'<li><div onclick="insureApproveItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 1)">Согласовано</div></li>';
 				}
 				//Гарантия позиция
-				if ($_POST['mark'] == 'guaranteeItem'){
+				/*if ($_POST['mark'] == 'guaranteeItem'){
 					$data = '
 						<li><div onclick="guaranteeItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 0)">нет (очистить)</div></li>'.
 						'<li><div onclick="guaranteeItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 1)">По гарантии</div></li>';
+				}
+				//Подарок позиция
+				if ($_POST['mark'] == 'giftItem'){
+					$data = '
+						<li><div onclick="giftItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 0)">нет (очистить)</div></li>'.
+						'<li><div onclick="giftItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 1)">Подарок</div></li>';
+				}*/
+				//Гарантия+Подарок позиция
+				if ($_POST['mark'] == 'guaranteeGiftItem'){
+                    $data = '
+						<li><div onclick="guaranteeGiftItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 0)">нет (очистить)</div></li>'.
+                        '<li><div onclick="guaranteeGiftItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 1)">По гарантии</div></li>'.
+						'<li><div onclick="guaranteeGiftItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 2)">Подарок</div></li>';
 				}
 				//Коэффициент позиция
 				if ($_POST['mark'] == 'spec_koeffItem'){
@@ -131,18 +158,31 @@
 							<li><div onclick="changeUserFilial(0)">открепиться</div></li>';
 
 						//Выбор филиала для сессии
-						$offices_j = SelDataFromDB('spr_filials', '', '');
-						if ($offices_j != 0){
-							for ($off = 0; $off < count($offices_j); $off++){
-								if (isset($_SESSION['filial']) && !empty($_SESSION['filial']) && ($_SESSION['filial'] == $offices_j[$off]['id'])){
+						//$offices_j = SelDataFromDB('spr_filials', '', '');
+                        $filials_j = getAllFilials(true, true);
+
+						/*if ($filials_j != 0){
+							for ($off = 0; $off < count($filials_j); $off++){
+								if (isset($_SESSION['filial']) && !empty($_SESSION['filial']) && ($_SESSION['filial'] == $filials_j[$off]['id'])){
 									$bg_col = 'background: rgba(83, 219, 185, 0.5) none repeat scroll 0% 0%;';
 								}else{
 									$bg_col = '';
 								}
 								$data .= '
-									<li><div onclick="changeUserFilial('.$offices_j[$off]['id'].')" style="'.$bg_col.'">'.$offices_j[$off]['name'].'</div></li>';
+									<li><div onclick="changeUserFilial('.$filials_j[$off]['id'].')" style="'.$bg_col.'">'.$filials_j[$off]['name'].'</div></li>';
 							}
-						}
+						}*/
+
+                        foreach ($filials_j as $f_id => $filials_j_data) {
+                            if (isset($_SESSION['filial']) && !empty($_SESSION['filial']) && ($_SESSION['filial'] == $filials_j_data['id'])){
+                                $bg_col = 'background: rgba(83, 219, 185, 0.5) none repeat scroll 0% 0%;';
+                            }else{
+                                $bg_col = '';
+                            }
+                            $data .= '
+									<li><div onclick="changeUserFilial('.$filials_j_data['id'].')" style="'.$bg_col.'">'.$filials_j_data['name'].'</div></li>';
+                        }
+
 					}
 				}
 

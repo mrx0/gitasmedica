@@ -19,7 +19,7 @@
 			//require 'config.php';
 
 			//var_dump($_SESSION);
-			//var_dump($_SESSION['invoice_data'][20293][28205]['data']);
+			//var_dump($_SESSION['invoice_data'][16776][72534]['data']);
 			//unset($_SESSION['invoice_data']);
 			
 			if ($_GET){
@@ -545,7 +545,7 @@
                                     }
 
                                     echo '			
-                                                <div  style="display: inline-block; width: 400px; height: 600px;">';
+                                                <div  style="display: inline-block; width: 380px; height: 600px;">';
 
                                     echo '
                                                     <div id="tabs_w" style="font-family: Verdana, Calibri, Arial, sans-serif; font-size: 100%">
@@ -652,21 +652,21 @@
                                                                          <div id="spec_koeff" class="settings_text" >Коэфф.</div>
                                                                     </div> /
                                                                     <div style="display: inline-block; vertical-align: top;">
-                                                                         <div id="guarantee" class="settings_text">По гарантии</div>
-                                                                    </div> /
+                                                                         <div id="guaranteegift" class="settings_text">По гарантии | Подарок</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div style="margin-bottom: 2px;">                                                                    
                                                                     <div style="display: inline-block; vertical-align: top;">
                                                                          <div class="settings_text" onclick="clearInvoice();">Очистить всё</div>
-                                                                    </div>
-                                                                </div>';
+                                                                    </div> / ';
                                     if ($sheduler_zapis[0]['type'] == 5) {
                                         echo '
-                                                                <div style="margin-bottom: 2px;">
                                                                     <div style="display: inline-block; vertical-align: top;">
                                                                         <div id="insure" class="settings_text" >Страховая</div>
                                                                     </div> / 
                                                                     <div style="display: inline-block; vertical-align: top;">
                                                                         <div id="insure_approve" class="settings_text">Согласовано</div>
-                                                                    </div>
+                                                                    </div> 
                                                                 </div>';
                                     }
                                     echo '
@@ -680,7 +680,7 @@
                                                     </div>';
 
                                     echo '
-                                                    <div id="invoice_rezult" style="width: 700px; height: 500px; overflow: scroll; float: none">
+                                                    <div id="invoice_rezult" style="width: 720px; height: 500px; overflow: scroll; float: none">
                                                     </div>';
                                     echo '
                                                 </div>';

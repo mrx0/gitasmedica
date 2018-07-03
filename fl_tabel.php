@@ -44,6 +44,7 @@
 			
                         $filials_j = getAllFilials(false, false);
                         //var_dump(microtime(true) - $script_start);
+                        //var_dump($filials_j);
 
 						//$sheduler_zapis = array();
                         $tabel_ex_calculates_j = array();

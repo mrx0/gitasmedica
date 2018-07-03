@@ -4135,7 +4135,11 @@
 			//получаем значение гарантии
 			var guarantee = $(this).next().next().next().next().attr('guarantee');
 			//var guarantee = $(this).next().next().next().attr('guarantee');
-			//console.log(insure);
+			//console.log(guarantee);
+
+            //получаем значение подарка
+            var gift = $(this).next().next().next().next().attr('gift');
+            //console.log(gift);
 
 			//Цена
 			//var cost = Number(this.innerHTML);
@@ -4217,7 +4221,7 @@
 			//console.log($(this).parent().find('.invoiceItemPriceItog').html(stoim));
 
             //суммируем сумму в итоги
-            if (guarantee == 0){
+            if ((guarantee == 0) && (gift == 0)) {
                 if (insure != 0){
                     if (insureapprove != 0){
                         SummIns += stoim;
@@ -4246,7 +4250,7 @@
 
             if (changeItogPrice) {
                 //прописываем стоимость этой позиции
-                if (guarantee == 0) {
+                if ((guarantee == 0) && (gift == 0)) {
                     //$(this).next().next().next().next().next().html(stoim);
                     //$(this).next().next().next().next().html(stoim);
 
@@ -4495,7 +4499,7 @@
 		if (invoice_type == 88){
 			link = "fill_calculate_free_from_session_f.php";
 		}
-        console.log(link);
+        //console.log(link);
 
 		$.ajax({
 			url: link,
@@ -5006,7 +5010,7 @@
 				filial: document.getElementById("filial").value,
 				worker: document.getElementById("worker").value,
 
-				invoice_type: invoice_type,
+				invoice_type: invoice_type
 			},
 			cache: false,
 			beforeSend: function() {
@@ -5014,6 +5018,63 @@
 			},
 			// действие, при ответе с сервера
 			success: function(data){
+
+                fillInvoiseRez(true);
+
+				/*if(data.result == "success"){
+					//console.log(data.data);
+					$('#invoice_rezult').html(data.data);
+				}else{
+					//console.log('error');
+					$('#errror').html(data.data);
+				}*/
+			}
+		});
+		//$(".invoiceItemPrice").each(function() {
+
+			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
+
+			//написали стоимость позиции
+			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
+
+
+		//});
+
+	}
+	//Изменить гарантию или подарок у всех
+	function giftOrGiftInvoice(guaranteeOrGift){
+		//console.log(guaranteeOrGift);
+
+		var invoice_type = $("#invoice_type").val();
+
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+
+		$.ajax({
+			url:"add_guarantee_gift_in_invoice_f.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                guaranteeOrGift: guaranteeOrGift,
+				client: $("#client").val(),
+				zapis_id: $("#zapis_id").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val(),
+
+				invoice_type: invoice_type
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+                //console.log(data);
+                console.log(data.data);
 
                 fillInvoiseRez(true);
 
@@ -5056,7 +5117,7 @@
 				client: document.getElementById("client").value,
 				zapis_id: document.getElementById("zapis_id").value,
 				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				worker: document.getElementById("worker").value
 			},
 			cache: false,
 			beforeSend: function() {
@@ -5332,6 +5393,63 @@
 				zapis_id: document.getElementById("zapis_id").value,
 				filial: document.getElementById("filial").value,
 				worker: document.getElementById("worker").value,
+
+				invoice_type: invoice_type,
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+
+                fillInvoiseRez(true);
+
+				/*if(data.result == "success"){
+					//console.log(data.data);
+					$('#invoice_rezult').html(data.data);
+				}else{
+					//console.log('error');
+					$('#errror').html(data.data);
+				}*/
+			}
+		});
+		//$(".invoiceItemPrice").each(function() {
+
+			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
+
+			//написали стоимость позиции
+			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
+
+
+		//});
+
+	}
+
+	//Изменить гарантию и подарок у этого зуба
+	function guaranteeGiftItemInvoice(zub, key, guaranteeOrGift){
+
+		var invoice_type = $("#invoice_type").val();
+
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+
+		$.ajax({
+			url:"add_guarantee_gift_price_id_in_item_invoice_f.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+				zub: zub,
+				key: key,
+                guaranteeOrGift: guaranteeOrGift,
+				client: $("#client").val(),
+				zapis_id: $("#zapis_id").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val(),
 
 				invoice_type: invoice_type,
 			},
@@ -7427,6 +7545,8 @@
             var elem5 = $("#insure_approve");
             var elem6 = $("#discount");
             var elem7 = $("#lab_order_status");
+            var elem8 = $("#gift");
+            var elem9 = $("#guaranteegift");
 
             if(e.target != elem[0]&&!elem.has(e.target).length &&
                 e.target != elem2[0]&&!elem2.has(e.target).length &&
@@ -7434,7 +7554,9 @@
                 e.target != elem4[0]&&!elem4.has(e.target).length &&
                 e.target != elem5[0]&&!elem5.has(e.target).length &&
                 e.target != elem6[0]&&!elem6.has(e.target).length &&
-                e.target != elem7[0]&&!elem7.has(e.target).length){
+                e.target != elem7[0]&&!elem7.has(e.target).length &&
+                e.target != elem8[0]&&!elem8.has(e.target).length &&
+                e.target != elem9[0]&&!elem9.has(e.target).length){
                 elem.hide();
             }
         });
@@ -7453,6 +7575,22 @@
             // Проверяем нажата ли именно правая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'guarantee');
+            }
+        });
+        // Вешаем слушатель события нажатие кнопок мыши для всего документа:
+        $("#gift").click(function(event) {
+
+            // Проверяем нажата ли именно правая кнопка мыши:
+            if (event.which === 1)  {
+                contextMenuShow(0, 0, event, 'gift');
+            }
+        });
+        // Вешаем слушатель события нажатие кнопок мыши для всего документа:
+        $("#guaranteegift").click(function(event) {
+
+            // Проверяем нажата ли именно правая кнопка мыши:
+            if (event.which === 1)  {
+                contextMenuShow(0, 0, event, 'guaranteegift');
             }
         });
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
