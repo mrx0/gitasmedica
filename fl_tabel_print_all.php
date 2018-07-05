@@ -1,6 +1,6 @@
 <?php
 
-//fl_tabel_print.php
+//fl_tabel_print_all.php
 //Вывод табеля на печать
 
 	require_once 'header.php';
