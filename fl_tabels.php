@@ -1,6 +1,6 @@
 <?php
 
-//z
+//fl_tabels.php
 //Важный отчёт
 
 
@@ -48,7 +48,12 @@
 				echo '
                     <div class="no_print"> 
 					<header style="margin-bottom: 5px;">
-						<h1>---</h1>
+						<h1>---</h1>';
+                echo '
+                        <div>
+						    <a href="fl_tabel_print_choice.php" class="b4">Печать пачки</a>
+						</div>';
+                echo '    
 					</header>
 					</div>';
 
