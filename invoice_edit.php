@@ -83,13 +83,15 @@
 											array_push($invoice_ex_j[$arr['ind']], $arr);
 										}
 									}
-								}else
-									$invoice_ex_j = 0;
+								}/*else
+									$invoice_ex_j = 0;*/
 								//var_dump ($invoice_ex_j);
 
-								//сортируем зубы по порядку
-								ksort($invoice_ex_j);
-								//var_dump ($invoice_ex_j);
+                                if (!empty($invoice_ex_j)) {
+                                    //сортируем зубы по порядку
+                                    ksort($invoice_ex_j);
+                                    //var_dump ($invoice_ex_j);
+                                }
 
 								//Для МКБ
 								$query = "SELECT * FROM `journal_invoice_ex_mkb` WHERE `invoice_id`='".$_GET['id']."';";
@@ -106,11 +108,11 @@
 											array_push($invoice_ex_j_mkb[$arr['ind']], $arr['mkb_id']);
 										}
 									}
-								}else
-									$invoice_ex_j_mkb = 0;
+								}/*else
+									$invoice_ex_j_mkb = 0;*/
 								//var_dump ($invoice_ex_j_mkb);
 
-								if ($invoice_ex_j != 0){
+                                if (!empty($invoice_ex_j)) {
 									//надо костыльно преобразовать массив
 									foreach($invoice_ex_j as $ind => $invoice_ex_j_arr){
 
