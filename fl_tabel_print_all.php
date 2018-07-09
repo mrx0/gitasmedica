@@ -1,40 +1,59 @@
 <?php
 
-//fl_tabel_print.php
+//fl_tabel_print_all.php
 //Вывод табеля на печать
 
-	require_once 'header.php';
-	
-	if ($enter_ok){
-		require_once 'header_tags.php';
+session_start();
 
-		//var_dump($permissions);
-		if (($report['see_all'] == 1) || $god_mode){
-			include_once 'DBWork.php';
-			include_once 'functions.php';
+if (empty($_SESSION['login']) || empty($_SESSION['id'])){
+    header("location: enter.php");
+}else {
+    //var_dump ($_POST);
+
+    if ($_POST) {
+
+        if (!isset($_POST['worker_id']) || !isset($_POST['month']) || !isset($_POST['year'])) {
+            //echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
+        } else {
+
+            include_once 'DBWork.php';
+            include_once 'functions.php';
             include_once 'ffun.php';
-			include_once 'filter.php';
-			include_once 'filter_f.php';
+            include_once 'filter.php';
+            include_once 'filter_f.php';
 
             require 'variables.php';
-		
-			/*echo '
-				<style type="text/css">
-					div.ZakazDemo { padding: 10px !important; width: 300px;}
-					.ui-widget*{font-size: 0.6em !important;}
-				</style>';*/
 
-            if ($_GET) {
+            $tabelsIDarr = array();
 
-                $msql_cnnct = ConnectToDB2 ();
+            $msql_cnnct = ConnectToDB2 ();
 
-                if (isset($_GET['tabel_id'])){
+            $query = "SELECT `id` FROM `fl_journal_tabels` WHERE `worker_id` = '{$_POST['worker_id']}' AND `month` = '{$_POST['month']}' AND `year` = '{$_POST['year']}' AND `status` <> '9'";
 
-                    $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['tabel_id'], 'id');
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    //Раскидываем в массив
+                    array_push($tabelsIDarr, $arr['id']);
+                }
+            }
+
+            if (!empty($tabelsIDarr)){
+                //echo json_encode(array('result' => 'success', 'data' => $tabelsIDarr));
+
+                $result_str = '';
+
+                foreach ($tabelsIDarr as $tabel_id){
+
+                    $tabel_j = SelDataFromDB('fl_journal_tabels', $tabel_id, 'id');
                     //var_dump($tabel_j[0]);
 
                     if ($tabel_j != 0){
 
+                        //!!! вынести это за цикл
                         $filials_j = getAllFilials(false, true);
 
                         //Смена/график !!! переделать ! нужно только количество
@@ -175,13 +194,15 @@
                         //var_dump($tabel_deductions_j);
                         //var_dump($tabel_paidouts_j);
 
+                        /*!!! временно скрыл отсюда ибо тут это лишнее
                         echo '
-                            <div class="no_print"> 
+                            <div class="no_print">
                                 <header style="margin-bottom: 5px;">';
 
                         echo '
                                 </header>
                             </div>';
+                        */
 
                         $tabel_summ = intval($tabel_j[0]['summ']);
                         if (isset($tabel_deductions_j[1])){
@@ -233,7 +254,7 @@
                         }
 
                         //Пробуем вывести расчетный лист по табелю для печати
-                        echo tabelPrintTemplate ($_GET['tabel_id'], $monthsName[$tabel_j[0]['month']], $tabel_j[0]['year'], WriteSearchUser('spr_workers', $tabel_j[0]['worker_id'], 'user', false), $filials_j[$tabel_j[0]['office_id']]['name2'], count($rezultShed),
+                        $result_str .= tabelPrintTemplate ($tabel_id, $monthsName[$tabel_j[0]['month']], $tabel_j[0]['year'], WriteSearchUser('spr_workers', $tabel_j[0]['worker_id'], 'user', false), $filials_j[$tabel_j[0]['office_id']]['name2'], count($rezultShed),
                             $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3,
                             $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1,
                             $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm,
@@ -241,33 +262,115 @@
                             $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3);
 
 
-                        echo "
+                        /*echo "
                             <script>
                                 $(document).ready(function() {
-    
-                                    fl_tabulation (".$_GET['tabel_id'].");
-                                    
+                                    //console.log();
+
+                                    var pay_plus = 0;
+                                    var pay_minus = 0;
+                                    var pay_plus_part = 0;
+                                    var pay_minus_part = 0;
+
+                                    wait(function(runNext){
+
+                                        setTimeout(function(){
+
+                                            $('.pay_plus_part1').each(function() {
+                                                pay_plus_part += Number($(this).html());
+                                                //console.log(Number($(this).html()));
+                                            });
+                                            //console.log(pay_plus_part);
+
+                                            runNext(pay_plus_part);
+
+                                        }, 100);
+
+                                    }).wait(function(runNext, pay_plus_part){
+                                        //используем аргументы из предыдущего вызова
+
+                                        $('.pay_plus1').html(pay_plus_part);
+                                        pay_plus += pay_plus_part;
+                                        pay_plus_part = 0;
+
+                                        setTimeout(function(){
+
+                                            $('.pay_minus_part1').each(function() {
+                                                pay_minus_part += Number($(this).html());
+                                                //console.log(Number($(this).html()));
+                                            });
+                                            //console.log(pay_minus_part);
+
+                                            runNext(pay_plus, pay_plus_part, pay_minus_part);
+
+                                        }, 100);
+
+                                    }).wait(function(runNext, pay_plus, pay_plus_part, pay_minus_part){
+                                        //используем аргументы из предыдущего вызова
+
+                                        $('.pay_minus1').html(pay_minus_part);
+                                        pay_minus += pay_minus_part;
+                                        pay_minus_part = 0;
+
+                                        setTimeout(function(){
+
+                                            $('.pay_plus_part2').each(function() {
+                                                pay_plus_part += Number($(this).html());
+                                                //console.log(Number($(this).html()));
+                                            });
+                                            //console.log(pay_plus_part);
+
+                                            runNext(pay_plus, pay_minus, pay_plus_part, pay_minus_part);
+
+                                        }, 100);
+
+                                    }).wait(function(runNext, pay_plus, pay_minus, pay_plus_part, pay_minus_part){
+                                        //используем аргументы из предыдущего вызова
+
+                                        $('.pay_plus2').html(pay_plus_part);
+                                        pay_plus += pay_plus_part;
+
+                                        setTimeout(function(){
+
+                                            $('.pay_minus_part2').each(function() {
+                                                pay_minus_part += Number($(this).html());
+                                                //console.log(Number($(this).html()));
+                                            });
+                                            //console.log(pay_plus_part);
+
+                                            runNext(pay_plus, pay_minus, pay_plus_part, pay_minus_part);
+
+                                        }, 100);
+
+                                    }).wait(function(runNext, pay_plus, pay_minus, pay_plus_part, pay_minus_part){
+
+                                        $('.pay_minus2').html(pay_minus_part);
+                                        pay_minus += pay_minus_part;
+
+                                        $('.pay_must').html(pay_plus - pay_minus);
+
+                                    });
+
                                 });
-                            </script>";
+                            </script>";*/
 
 
-                    }else{
-                        echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+
+
+
                     }
-                }else{
-                    echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+
                 }
+
+                echo json_encode(array('result' => 'success', 'data' => $result_str, 'tabel_ids' => json_encode($tabelsIDarr)));
+
             }else{
-                echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+                echo json_encode(array('result' => 'empty', 'data' => '<div class="query_neok">Ничего не найдено</div>'));
             }
 
-		}else{
-			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
-		}
-	}else{
-		header("location: enter.php");
-	}
-	
-	require_once 'footer.php';
+            CloseDB ($msql_cnnct);
+        }
+    }
+}
 
 ?>
