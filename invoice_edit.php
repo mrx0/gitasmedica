@@ -706,10 +706,11 @@
                                                                     </div> / 
                                                                     <div style="display: inline-block; vertical-align: top;">
                                                                         <div id="insure_approve" class="settings_text">Согласовано</div>
-                                                                    </div> 
-                                                                </div>';
+                                                                    </div>';
+
                                     }
                                     echo '
+                                                                
                                                                 <div style="margin-bottom: 2px;">
                                                                     <div style="display: inline-block; vertical-align: top;">
                                                                         <div id="discounts" class="settings_text">Скидки (Акции)</div>
