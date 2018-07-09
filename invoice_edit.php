@@ -675,6 +675,7 @@
                                                     <div style="">Скидка: <div id="discountValue" class="calculateInvoice" style="color: rgb(255, 0, 198);">'.$discount.'</div><span  class="calculateInvoice" style="color: rgb(255, 0, 198);">%</span></div>
                                                 </div>';*/
                                     echo '
+                                                </div>
                                                 <div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
                                                     <div>	
                                                         <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\')">
