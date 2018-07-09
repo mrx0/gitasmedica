@@ -229,6 +229,8 @@
 			<!--для печати-->	
 			<style type="text/css" media="print">
 			  div.no_print {display: none; }
+			  .never_print_it {display: none; }
+			  #scrollUp {display: none; }
 			</style> 
 
 		</head>
