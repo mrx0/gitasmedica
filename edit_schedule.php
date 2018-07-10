@@ -433,6 +433,9 @@
 					$(function() {
 						$(\'#SelectFilial\').change(function(){
 							//alert($(this).val());
+							
+							blockWhileWaiting (true);
+							
 							document.location.href = "?filial="+$(this).val();
 						});
 					});

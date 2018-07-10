@@ -1404,6 +1404,9 @@
                 if(res.result == 'success') {
                     //console.log('success');
                     //$('#data').html(res.data);
+
+                    blockWhileWaiting (true);
+
                     document.location.href = "fl_tabel.php?id="+tabel_id;
                 }else{
                     //console.log('error');
@@ -1444,6 +1447,9 @@
                 if(res.result == 'success') {
                     //console.log('success');
                     //$('#data').html(res.data);
+
+                    blockWhileWaiting (true);
+
                     document.location.href = "fl_tabel.php?id="+tabel_id;
                 }else{
                     //console.log('error');
@@ -1484,6 +1490,9 @@
                 if(res.result == 'success') {
                     //console.log('success');
                     //$('#data').html(res.data);
+
+                    blockWhileWaiting (true);
+
                     document.location.href = "fl_tabel.php?id="+tabel_id;
                 }else{
                     //console.log('error');
@@ -1583,6 +1592,9 @@
                         if(res.result == 'success') {
                             //console.log('success');
                             //$('#data').html(res.data);
+
+                            blockWhileWaiting (true);
+
                             document.location.href = "invoice.php?id="+invoice_id;
                         }else{
                             //console.log('error');
