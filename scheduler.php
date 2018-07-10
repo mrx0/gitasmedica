@@ -765,16 +765,22 @@
 				
 					<script>
 					
-						$(function() {
+						/*$(function() {
 							$("#SelectFilial").change(function(){
+							    
+							    blockWhileWaiting (true);
+							    
 								//var dayW = document.getElementById("SelectDayW").value;
 								document.location.href = "?filial="+$(this).val()+"'.$who.'";
 							});
 							$("#SelectDayW").change(function(){
+							    
+							    blockWhileWaiting (true);
+							
 								var filial = document.getElementById("SelectFilial").value;
 								document.location.href = "?dayw="+$(this).val()+"&filial="+filial+"'.$who.'";
 							});
-						});
+						});*/
 					
 					
 						$(function() {
@@ -1062,10 +1068,16 @@
 					
 						$(function() {
 							$("#SelectFilial").change(function(){
+							    
+							    blockWhileWaiting (true);
+							    
 								//var dayW = document.getElementById("SelectDayW").value;
 								document.location.href = "?filial="+$(this).val()+"'.$who.'";
 							});
 							$("#SelectDayW").change(function(){
+							
+							    blockWhileWaiting (true);
+							    
 								var filial = document.getElementById("SelectFilial").value;
 								document.location.href = "?dayw="+$(this).val()+"&filial="+filial+"'.$who.'";
 							});
