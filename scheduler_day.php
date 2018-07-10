@@ -1079,10 +1079,17 @@
 				
 					$(function() {
 						$(\'#SelectWho\').change(function(){
-							if (document.getElementById("SelectFilial").value != 0)
-								document.location.href = "?filial="+document.getElementById("SelectFilial").value+"&who="+$(this).val();	
+							if (document.getElementById("SelectFilial").value != 0){
+							
+							    blockWhileWaiting (true);
+							
+								document.location.href = "?filial="+document.getElementById("SelectFilial").value+"&who="+$(this).val();
+						    }
 						});
 						$(\'#SelectFilial\').change(function(){
+						
+						    blockWhileWaiting (true);
+						
 							document.location.href = "?filial="+$(this).val()+"&who="+document.getElementById("SelectWho").value;
 						});
 					});';

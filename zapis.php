@@ -1933,6 +1933,9 @@
 					
 						$(function() {
 							$("#SelectFilial").change(function(){
+							    
+							    blockWhileWaiting (true);
+							    
 								//var dayW = document.getElementById("SelectDayW").value;
 								document.location.href = "?filial="+$(this).val()+"'.$who.'";
 							});

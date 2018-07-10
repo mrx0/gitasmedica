@@ -83,13 +83,15 @@
 											array_push($invoice_ex_j[$arr['ind']], $arr);
 										}
 									}
-								}else
-									$invoice_ex_j = 0;
+								}/*else
+									$invoice_ex_j = 0;*/
 								//var_dump ($invoice_ex_j);
 
-								//сортируем зубы по порядку
-								ksort($invoice_ex_j);
-								//var_dump ($invoice_ex_j);
+                                if (!empty($invoice_ex_j)) {
+                                    //сортируем зубы по порядку
+                                    ksort($invoice_ex_j);
+                                    //var_dump ($invoice_ex_j);
+                                }
 
 								//Для МКБ
 								$query = "SELECT * FROM `journal_invoice_ex_mkb` WHERE `invoice_id`='".$_GET['id']."';";
@@ -106,11 +108,11 @@
 											array_push($invoice_ex_j_mkb[$arr['ind']], $arr['mkb_id']);
 										}
 									}
-								}else
-									$invoice_ex_j_mkb = 0;
+								}/*else
+									$invoice_ex_j_mkb = 0;*/
 								//var_dump ($invoice_ex_j_mkb);
 
-								if ($invoice_ex_j != 0){
+                                if (!empty($invoice_ex_j)) {
 									//надо костыльно преобразовать массив
 									foreach($invoice_ex_j as $ind => $invoice_ex_j_arr){
 
@@ -673,6 +675,7 @@
                                                     <div style="">Скидка: <div id="discountValue" class="calculateInvoice" style="color: rgb(255, 0, 198);">'.$discount.'</div><span  class="calculateInvoice" style="color: rgb(255, 0, 198);">%</span></div>
                                                 </div>';*/
                                     echo '
+                                                </div>
                                                 <div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
                                                     <div>	
                                                         <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\')">
@@ -703,10 +706,11 @@
                                                                     </div> / 
                                                                     <div style="display: inline-block; vertical-align: top;">
                                                                         <div id="insure_approve" class="settings_text">Согласовано</div>
-                                                                    </div> 
-                                                                </div>';
+                                                                    </div>';
+
                                     }
                                     echo '
+                                                                
                                                                 <div style="margin-bottom: 2px;">
                                                                     <div style="display: inline-block; vertical-align: top;">
                                                                         <div id="discounts" class="settings_text">Скидки (Акции)</div>

@@ -1132,7 +1132,7 @@
 function tabelPrintTemplate ($tabel_id, $month, $year, $worker_fio, $filial, $countSmen, $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3, $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1, $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm, $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount, $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3){
 
     $rezult = '
-			<div style="font-size: 95%; margin: 15px; ">				
+			<div class="rezult_item" style="font-size: 95%; margin: 15px;" fio="'.$worker_fio.'">				
 				<div class="filterBlock" style="width: 650px; border-bottom: 1px dotted grey;">
 					<div class="filtercellLeft" style="width: 400px; text-align: center; border: none; padding-bottom: 2px;">
 						<a href="fl_tabel.php?id='.$tabel_id.'" class="ahref">Расчетный листок '.$tabel_id.'</a> за '.$month.' '.$year.'
@@ -1140,7 +1140,7 @@ function tabelPrintTemplate ($tabel_id, $month, $year, $worker_fio, $filial, $co
 				</div>
 				
 				<div class="filterBlock" style="width: 650px; ">
-					<div class="filtercellLeft" style="border: none; width: 220px; min-width: 220px; max-width: 220px; padding: 2px 2px 1px;">
+					<div class="filtercellLeft" style="border: none; width: auto; min-width: auto; max-width: auto; padding: 2px 2px 1px;">
 						<div style="padding: 2px 0 3px; font-size: 115%; font-weight: bold;">
 							<i>'.$worker_fio.'</i>
 						</div>
@@ -1150,7 +1150,7 @@ function tabelPrintTemplate ($tabel_id, $month, $year, $worker_fio, $filial, $co
 						</div>
 						
 					</div>
-					<div class="filtercellRight" style="border: none; padding: 2px 2px 1px;">
+					<div class="filtercellRight" style="border: none; width: 290px; min-width: 290px; max-width: 290px; padding: 2px 2px 1px;">
 						<div style="border-bottom: 1px dotted grey;">
 							<div style="display: inline;">Подразделение</div>
 							<div style="float: right; display: inline; text-align: right;"><b>'.$filial.'</b></div>

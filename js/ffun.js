@@ -773,11 +773,14 @@
         }
     }
 
+    //Функция для поочередного вывода на экран табелей для печати
     function fl_printCheckedWorkersTabels (){
         //console.log (calcIDForTabelINarr());
 
 
         wait(function(runNext){
+
+            blockWhileWaiting (true);
 
             setTimeout(function(){
                 runNext(calcIDForTabelINarr());
@@ -787,20 +790,21 @@
             //используем аргументы из предыдущего вызова
             //console.log(workersIDs_arr.main_data)
 
-            var link = "fl_tabel_print_all.php";
+            setTimeout(function(){
 
-            //console.log($('#SelectMonth').val());
-            //console.log($('#SelectYear').val());
+                var link = "fl_tabel_print_all.php";
 
-            var month = $('#SelectMonth').val();
-            var year = $('#SelectYear').val();
+                //console.log($('#SelectMonth').val());
+                //console.log($('#SelectYear').val());
 
-            hideAllErrors ();
-            $('#rezult').html('');
+                var month = $('#SelectMonth').val();
+                var year = $('#SelectYear').val();
+
+                hideAllErrors ();
+                $('#rezult').html('');
 
 
-            workersIDs_arr.main_data.forEach(function(w_id, i, arr) {
-                //setTimeout(function() {
+                workersIDs_arr.main_data.forEach(function(w_id, i, arr) {
                     //console.log(w_id);
 
                     var reqData = {
@@ -844,8 +848,11 @@
                             }
                         }
                     });
-                //}, 100);
-            });
+                });
+
+                runNext();
+
+            }, 1500);
 
             /*$.ajax({
                 url: "fl_addWorkersIDsINSessionForPrint.php",
@@ -873,6 +880,30 @@
                     }*/
             /*    }
             });*/
+
+        }).wait(function(runNext){
+            //console.log(1);
+
+            setTimeout(function(){
+                var elems = document.getElementsByClassName('rezult_item');
+                //console.log(elems);
+                var arr = jQuery.makeArray(document.getElementsByClassName('rezult_item'));
+                //console.log(arr);
+
+                arr.sort(function (a, b) {
+                    a = $(a).attr('fio');
+                    //console.log(a);
+                    b = $(b).attr('fio');
+                    //console.log(b);
+                    return a.localeCompare(b);
+                });
+                console.log(arr);
+
+                $(arr).appendTo("#rezult");
+
+            }, 1500);
+
+            blockWhileWaiting (false);
 
         });
     }
@@ -1373,6 +1404,9 @@
                 if(res.result == 'success') {
                     //console.log('success');
                     //$('#data').html(res.data);
+
+                    blockWhileWaiting (true);
+
                     document.location.href = "fl_tabel.php?id="+tabel_id;
                 }else{
                     //console.log('error');
@@ -1413,6 +1447,9 @@
                 if(res.result == 'success') {
                     //console.log('success');
                     //$('#data').html(res.data);
+
+                    blockWhileWaiting (true);
+
                     document.location.href = "fl_tabel.php?id="+tabel_id;
                 }else{
                     //console.log('error');
@@ -1453,6 +1490,9 @@
                 if(res.result == 'success') {
                     //console.log('success');
                     //$('#data').html(res.data);
+
+                    blockWhileWaiting (true);
+
                     document.location.href = "fl_tabel.php?id="+tabel_id;
                 }else{
                     //console.log('error');
@@ -1552,6 +1592,9 @@
                         if(res.result == 'success') {
                             //console.log('success');
                             //$('#data').html(res.data);
+
+                            blockWhileWaiting (true);
+
                             document.location.href = "invoice.php?id="+invoice_id;
                         }else{
                             //console.log('error');

@@ -503,10 +503,16 @@
 				
 					$(function() {
 						$("#SelectFilial").change(function(){
+						    
+						    blockWhileWaiting (true);
+						    
 							var dayW = $("#SelectDayW").val();
 							document.location.href = "?filial="+$(this).val()+"&dayw="+dayW+"'.$who.'";
 						});
 						$("#SelectDayW").change(function(){
+						    
+						    blockWhileWaiting (true);
+						
 							var filial = $("#SelectFilial").val();
 							document.location.href = "?dayw="+$(this).val()+"&filial="+filial+"'.$who.'";
 						});
