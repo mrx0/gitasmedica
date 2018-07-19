@@ -1,7 +1,7 @@
 <?php 
 
 //showZapisRezult2.php
-//функция формирует и показывает массив записи (специально для отчета stat_zapis.php)
+//Функция формирует и показывает массив записи (специально для отчета stat_zapis.php)
 
     function showZapisRezult2($ZapisHereQueryToday, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $type, $format, $menu, $dop){
         //var_dump($ZapisHereQueryToday);
@@ -131,7 +131,9 @@
                     $query = "SELECT * FROM `journal_invoice` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' AND `status` <> '9' ORDER BY `create_time`";
                     //var_dump($query);
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
                     $number = mysqli_num_rows($res);
+
                     if ($number != 0) {
                         while ($arr = mysqli_fetch_assoc($res)) {
                             array_push($invoice_data_db, $arr);

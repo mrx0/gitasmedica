@@ -19,7 +19,7 @@
 			//require 'config.php';
 
 			//var_dump($_SESSION);
-			//var_dump($_SESSION['invoice_data'][16776][72534]['data']);
+			//var_dump($_SESSION['invoice_data'][12403][72358]['data']);
 			//unset($_SESSION['invoice_data']);
 			
 			if ($_GET){
@@ -666,9 +666,10 @@
                                                                     </div> / 
                                                                     <div style="display: inline-block; vertical-align: top;">
                                                                         <div id="insure_approve" class="settings_text">Согласовано</div>
-                                                                    </div> 
-                                                                </div>';
+                                                                    </div>';
                                     }
+                                    echo '
+                                                                </div>';
                                     echo '
                                                                 <div style="margin-bottom: 2px;">
                                                                     <div style="display: inline-block; vertical-align: top;">

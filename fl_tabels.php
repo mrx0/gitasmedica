@@ -1,6 +1,6 @@
 <?php
 
-//z
+//fl_tabels.php
 //Важный отчёт
 
 
@@ -48,7 +48,12 @@
 				echo '
                     <div class="no_print"> 
 					<header style="margin-bottom: 5px;">
-						<h1>---</h1>
+						<h1>---</h1>';
+                echo '
+                        <div>
+						    <a href="fl_tabel_print_choice.php" class="b4">Печать пачки</a>
+						</div>';
+                echo '    
 					</header>
 					</div>';
 
@@ -235,37 +240,6 @@
 				$(document).ready(function() {
 				    //console.log(123);
 				    
-				    //Рабочий пример клика на элементе после подгрузки его в DOM 
-                    $("body").on("click", ".chkBoxCalcs", function(){
-                        var checked_status = $(this).prop("checked");
-                        //console.log(checked_status);
-                        //console.log($(this).parent());
-                            
-                        if (checked_status){
-                            $(this).parent().parent().parent().css({"background-color": "#83DB53"});
-                        }else{
-                            $(this).parent().parent().parent().css({"background-color": ""});
-                        }
-                    });  
-                     
-                     
-                    $("body").on("click", ".checkAll", function(){
-                        var checked_status = $(this).is(":checked");
-                        var thisId = $(this).attr("id");
-                        
-                        $("."+thisId).each(function() {
-                            if (checked_status){
-                                $(this).prop("checked", true);
-                                $(this).parent().parent().parent().css({"background-color": "#83DB53"});
-                            }else{
-                                $(this).prop("checked", false);
-                                $(this).parent().parent().parent().css({"background-color": ""});
-                            }
-                        });
-                    });     
-				    
-				    
-				    
 				    var ids = "0_0_0";
 				    var ids_arr = {};
 				    var permission = 0;
@@ -324,7 +298,7 @@
                         
                         
                         getTabelsfunc (thisObj, certData);
-                     });
+                    });
 				});
 				
                 

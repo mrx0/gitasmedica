@@ -1,6 +1,6 @@
 <?php
 
-//specializations.php
+//specialization.php
 //
 
 require_once 'header.php';
@@ -32,9 +32,9 @@ if ($enter_ok){
 
         include_once 'DBWork.php';
         $specialization_j = SelDataFromDB('spr_specialization', '', '');
-        //var_dump ($insure_j);
+        //var_dump ($specialization_j);
 
-        if ($insure_j !=0){
+        if ($specialization_j !=0){
             for ($i = 0; $i < count($specialization_j); $i++) {
                 if ($specialization_j[$i]['status'] == 9){
                     $bgcolor = 'background-color: rgba(161,161,161,1);';
@@ -44,7 +44,7 @@ if ($enter_ok){
                 echo '
 							<li class="cellsBlock" style="'.$bgcolor.'">
 								<div class="cellPriority"></div>
-								<a href="specialization.php?id='.$insure_j[$i]['id'].'" class="cellOffice ahref 4filter" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px; font-weight: bold;" id="4filter">'.$insure_j[$i]['name'].'</a>
+								<a href="specialization.php?id='.$specialization_j[$i]['id'].'" class="cellOffice ahref 4filter" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px; font-weight: bold;" id="4filter">'.$specialization_j[$i]['name'].'</a>
 							</li>';
             }
         }

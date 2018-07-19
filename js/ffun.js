@@ -771,8 +771,144 @@
                 newInput.select();
             }.bind(el), false);
         }
-        ;
-    };
+    }
+
+    //Функция для поочередного вывода на экран табелей для печати
+    function fl_printCheckedWorkersTabels (){
+        //console.log (calcIDForTabelINarr());
+
+
+        wait(function(runNext){
+
+            blockWhileWaiting (true);
+
+            setTimeout(function(){
+                runNext(calcIDForTabelINarr());
+            }, 500);
+
+        }).wait(function(runNext, workersIDs_arr){
+            //используем аргументы из предыдущего вызова
+            //console.log(workersIDs_arr.main_data)
+
+            setTimeout(function(){
+
+                var link = "fl_tabel_print_all.php";
+
+                //console.log($('#SelectMonth').val());
+                //console.log($('#SelectYear').val());
+
+                var month = $('#SelectMonth').val();
+                var year = $('#SelectYear').val();
+                var office = $('#SelectFilialp').val();
+
+                hideAllErrors ();
+                $('#rezult').html('');
+
+
+                workersIDs_arr.main_data.forEach(function(w_id, i, arr) {
+                    //console.log(w_id);
+
+                    var reqData = {
+                        worker_id: w_id,
+                        month: month,
+                        year: year,
+                        office: office
+                    };
+
+                    $.ajax({
+                        url: link,
+                        global: false,
+                        type: "POST",
+                        dataType: "JSON",
+                        data: reqData,
+                        cache: false,
+                        beforeSend: function () {
+                            //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                        },
+                        // действие, при ответе с сервера
+                        success: function (res) {
+                            //console.log(res);
+                            //console.log(res.tabel_ids);
+
+                            if (res.result == "success") {
+                                //console.log(res);
+                                //console.log(JSON.parse(res.tabel_ids));
+
+                                $('#rezult').append(res.data);
+
+                                var tabel_ids = JSON.parse(res.tabel_ids);
+
+                                tabel_ids.forEach(function(tabel_id, j, arr2) {
+                                    fl_tabulation (tabel_id);
+                                    //console.log(tabel_id);
+                                })
+
+                            } else if (res.result == "empty") {
+
+                            } else {
+                                $('#errror').html(res.data);
+                            }
+                        }
+                    });
+                });
+
+                runNext();
+
+            }, 1500);
+
+            /*$.ajax({
+                url: "fl_addWorkersIDsINSessionForPrint.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    workersIDarr: workersIDs_arr
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    console.log(res);
+
+                    /*if (res.result == "success") {
+                        //console.log(res);
+
+                        //document.location.href = "fl_addNewTabel.php";
+                        //window.open("fl_addNewTabel.php", 'newTabelwindow', 'width=800, height=800, scrollbars=yes,resizable=yes,menubar=no,toolbar=yes,status=yes');
+
+                        iOpenNewWindow("fl_addINExistTabel.php", 'oldTabelwindow', 'width=800, height=800, scrollbars=yes,resizable=yes,menubar=no,toolbar=yes,status=yes');
+                    }*/
+            /*    }
+            });*/
+
+        }).wait(function(runNext){
+            //console.log(1);
+
+            setTimeout(function(){
+                var elems = document.getElementsByClassName('rezult_item');
+                //console.log(elems);
+                var arr = jQuery.makeArray(document.getElementsByClassName('rezult_item'));
+                //console.log(arr);
+
+                arr.sort(function (a, b) {
+                    a = $(a).attr('fio');
+                    //console.log(a);
+                    b = $(b).attr('fio');
+                    //console.log(b);
+                    return a.localeCompare(b);
+                });
+                console.log(arr);
+
+                $(arr).appendTo("#rezult");
+
+            }, 1500);
+
+            blockWhileWaiting (false);
+
+        });
+    }
 
     //Собираем ID отмеченных РЛ в массив
     function calcIDForTabelINarr() {
@@ -1270,6 +1406,9 @@
                 if(res.result == 'success') {
                     //console.log('success');
                     //$('#data').html(res.data);
+
+                    blockWhileWaiting (true);
+
                     document.location.href = "fl_tabel.php?id="+tabel_id;
                 }else{
                     //console.log('error');
@@ -1310,6 +1449,9 @@
                 if(res.result == 'success') {
                     //console.log('success');
                     //$('#data').html(res.data);
+
+                    blockWhileWaiting (true);
+
                     document.location.href = "fl_tabel.php?id="+tabel_id;
                 }else{
                     //console.log('error');
@@ -1350,6 +1492,9 @@
                 if(res.result == 'success') {
                     //console.log('success');
                     //$('#data').html(res.data);
+
+                    blockWhileWaiting (true);
+
                     document.location.href = "fl_tabel.php?id="+tabel_id;
                 }else{
                     //console.log('error');
@@ -1449,6 +1594,9 @@
                         if(res.result == 'success') {
                             //console.log('success');
                             //$('#data').html(res.data);
+
+                            blockWhileWaiting (true);
+
                             document.location.href = "invoice.php?id="+invoice_id;
                         }else{
                             //console.log('error');
@@ -1917,6 +2065,36 @@
     $(document).ready(function() {
         //console.log(123);
 
+
+        //Рабочий пример клика на элементе после подгрузки его в DOM
+        $("body").on("click", ".chkBoxCalcs", function(){
+            var checked_status = $(this).prop("checked");
+            //console.log(checked_status);
+            //console.log($(this).parent());
+
+            if (checked_status){
+                $(this).parent().parent().parent().css({"background-color": "#83DB53"});
+            }else{
+                $(this).parent().parent().parent().css({"background-color": ""});
+            }
+        });
+
+
+        $("body").on("click", ".checkAll", function(){
+            var checked_status = $(this).is(":checked");
+            var thisId = $(this).attr("id");
+
+            $("."+thisId).each(function() {
+                if (checked_status){
+                    $(this).prop("checked", true);
+                    $(this).parent().parent().parent().css({"background-color": "#83DB53"});
+                }else{
+                    $(this).prop("checked", false);
+                    $(this).parent().parent().parent().css({"background-color": ""});
+                }
+            });
+        });
+
         //Рабочий пример клика на элементе после подгрузки его в DOM
         $("body").on("click", ".radioBtnCalcs", function () {
             var checked_status = $(this).prop("checked");
@@ -2162,6 +2340,95 @@
 
         getTabelsfunc (needTabelObj, certData);
 
+    }
+
+    //Расчет табеля, подстановки данных
+    function fl_tabulation (tabel_id){
+        //console.log();
+
+        var pay_plus = 0;
+        var pay_minus = 0;
+        var pay_plus_part = 0;
+        var pay_minus_part = 0;
+
+        wait(function(runNext){
+
+            setTimeout(function(){
+
+                $('.pay_plus_part1_'+tabel_id).each(function() {
+                    pay_plus_part += Number($(this).html());
+                    //console.log(Number($(this).html()));
+                });
+                //console.log(pay_plus_part);
+
+                runNext(pay_plus_part);
+
+            }, 100);
+
+        }).wait(function(runNext, pay_plus_part){
+            //используем аргументы из предыдущего вызова
+
+            $('.pay_plus1_'+tabel_id).html(pay_plus_part);
+            pay_plus += pay_plus_part;
+            pay_plus_part = 0;
+
+            setTimeout(function(){
+
+                $('.pay_minus_part1_'+tabel_id).each(function() {
+                    pay_minus_part += Number($(this).html());
+                    //console.log(Number($(this).html()));
+                });
+                //console.log(pay_minus_part);
+
+                runNext(pay_plus, pay_plus_part, pay_minus_part);
+
+            }, 100);
+
+        }).wait(function(runNext, pay_plus, pay_plus_part, pay_minus_part){
+            //используем аргументы из предыдущего вызова
+
+            $('.pay_minus1_'+tabel_id).html(pay_minus_part);
+            pay_minus += pay_minus_part;
+            pay_minus_part = 0;
+
+            setTimeout(function(){
+
+                $('.pay_plus_part2_'+tabel_id).each(function() {
+                    pay_plus_part += Number($(this).html());
+                    //console.log(Number($(this).html()));
+                });
+                //console.log(pay_plus_part);
+
+                runNext(pay_plus, pay_minus, pay_plus_part, pay_minus_part);
+
+            }, 100);
+
+        }).wait(function(runNext, pay_plus, pay_minus, pay_plus_part, pay_minus_part){
+            //используем аргументы из предыдущего вызова
+
+            $('.pay_plus2_'+tabel_id).html(pay_plus_part);
+            pay_plus += pay_plus_part;
+
+            setTimeout(function(){
+
+                $('.pay_minus_part2_'+tabel_id).each(function() {
+                    pay_minus_part += Number($(this).html());
+                    //console.log(Number($(this).html()));
+                });
+                //console.log(pay_plus_part);
+
+                runNext(pay_plus, pay_minus, pay_plus_part, pay_minus_part);
+
+            }, 100);
+
+        }).wait(function(runNext, pay_plus, pay_minus, pay_plus_part, pay_minus_part){
+
+            $('.pay_minus2_'+tabel_id).html(pay_minus_part);
+            pay_minus += pay_minus_part;
+
+            $('.pay_must_'+tabel_id).html(pay_plus - pay_minus);
+
+        });
     }
 
 

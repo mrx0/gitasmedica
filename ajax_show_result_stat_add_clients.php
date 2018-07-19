@@ -1,6 +1,6 @@
 <?php 
 
-//ajax_show_result_stat_add_clients_f.php
+//ajax_show_result_stat_add_clients.php
 //
 
 	session_start();

@@ -45,7 +45,7 @@
                             echo '<div class="query_neok">В <a href="client.php?id='.$_GET['client'].'">карточке пациента</a> не заполнены все необходимые графы.</div>';
                         }else{*/
 
-
+            if (isset($_SESSION['filial'])){
                             $msql_cnnct = ConnectToDB ();
 
                             //$query = "SELECT * FROM `zapis` WHERE `id`='".$_GET['id']."'";
@@ -105,7 +105,7 @@
 
                                 echo '		
                                     </header>';
-                if (isset($_SESSION['filial'])){
+
                                 /*echo '
                                     <ul style="margin-left: 6px; margin-bottom: 10px;">	
                                         <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Посещение</li>';

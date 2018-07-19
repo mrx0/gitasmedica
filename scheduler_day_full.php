@@ -1,6 +1,6 @@
 <?php
 
-//scheduler.php
+//scheduler_day_full.php
 //Расписание кабинетов филиала
 
 	require_once 'header.php';

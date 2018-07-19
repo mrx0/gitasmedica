@@ -2,7 +2,7 @@
 
 	/*$hostname = "localhost";
 	$username = "root";
-	$db_pass = "94376152";
+	$db_pass = "";
 	$dbName = "asmed1";
 
 	$rez = array();
@@ -91,7 +91,7 @@
 	
 	$hostname = "localhost";
 	$username = "root";
-	$db_pass = "gfhjkm84286252";
+	$db_pass = "";
 	$dbName = "cash";
 	$dbName2 = "asmed1";
 
@@ -110,7 +110,7 @@
 	
 	function CHANGE_CLIENT ($old, $new){
 
-		mysql_connect("localhost", "root", "gfhjkm84286252") OR DIE("Не возможно создать соединение ");
+		mysql_connect("localhost", "root", "") OR DIE("Не возможно создать соединение ");
 		mysql_select_db('cash') or die(mysql_error()); 
 		
 		$query = "UPDATE `journal_cosmet1` SET `client`=$new WHERE `client`=$old";

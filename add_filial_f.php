@@ -12,7 +12,7 @@
 		
 			echo '
 				Филиал добавлен в справочник.
-				<br /><br />
+				<br><br>
 				<a href="add_filial.php" class="b">Добавить ещё</a>
 				<a href="index.php" class="b">На главную</a>
 				';

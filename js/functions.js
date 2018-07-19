@@ -54,6 +54,18 @@
 
     };
 
+    function blockWhileWaiting (show){
+    	if (show){
+            $('#overlay').show();
+
+            $('#overlay').append( "<div id='waiting' style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.7);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>" );
+            //$('#waiting').html("");
+		}else {
+            $('#overlay').html('');
+            $('#overlay').hide();
+        }
+	}
+
 	//попытка показать контекстное меню
 	function contextMenuShow(ind, key, event, mark){
 		//console.log(mark);
