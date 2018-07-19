@@ -12,7 +12,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
     if ($_POST) {
 
-        if (!isset($_POST['worker_id']) || !isset($_POST['month']) || !isset($_POST['year'])) {
+        if (!isset($_POST['worker_id']) || !isset($_POST['month']) || !isset($_POST['year']) || !isset($_POST['office'])) {
             //echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
         } else {
 
@@ -27,8 +27,13 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
             $tabelsIDarr = array();
 
             $msql_cnnct = ConnectToDB2 ();
+            if ($_POST['office'] == 0) {
+                $query_dop = '';
+            }else{
+                $query_dop = "AND `office_id`='".$_POST['office']."'";
+            }
 
-            $query = "SELECT `id` FROM `fl_journal_tabels` WHERE `worker_id` = '{$_POST['worker_id']}' AND `month` = '{$_POST['month']}' AND `year` = '{$_POST['year']}' AND `status` <> '9'";
+            $query = "SELECT `id` FROM `fl_journal_tabels` WHERE `worker_id` = '{$_POST['worker_id']}' AND `month` = '{$_POST['month']}' AND `year` = '{$_POST['year']}' AND `status` <> '9' ".$query_dop."";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

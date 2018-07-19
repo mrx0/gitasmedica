@@ -799,6 +799,7 @@
 
                 var month = $('#SelectMonth').val();
                 var year = $('#SelectYear').val();
+                var office = $('#SelectFilialp').val();
 
                 hideAllErrors ();
                 $('#rezult').html('');
@@ -810,7 +811,8 @@
                     var reqData = {
                         worker_id: w_id,
                         month: month,
-                        year: year
+                        year: year,
+                        office: office
                     };
 
                     $.ajax({
