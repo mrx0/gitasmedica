@@ -90,7 +90,9 @@
                                 echo '
                                                     <span class="info" style="font-size: 100%; cursor: pointer;" title="Удалить" onclick="fl_deleteTabelItem('.$_GET['id'].');" ><i class="fa fa-trash-o" aria-hidden="true"></i></span>';
                             }else{
-                                echo '<br><i style="color:red;">Удалён (заблокирован).</i><br>';
+                                if ($finances['close'] == 1) {
+                                    echo '<br><i style="color:red;">Удалён (заблокирован).</i><br>';
+                                }
                             }
                         }
 

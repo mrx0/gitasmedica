@@ -67,11 +67,29 @@
 									    </div>
 								    </li>
 								
-                                    <!--<li class="cellsBlock" style="margin-top: 10px;">
+                                    <li class="cellsBlock" style="margin-top: 10px;">
                                         <div style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
-                                            Выберите филиалы
+                                            Выберите филиал
                                         </div>
-                                    </li>-->
+                                        <div>';
+
+            echo '
+									        <select name="SelectFilialp" id="SelectFilialp" style="margin-right: 5px;">
+									            <option value="0" selected>Все</option>';
+
+            $offices_j = getAllFilials(true, false);
+
+            foreach ($offices_j as $offices_val){
+
+                echo '
+										        <option value="'.$offices_val['id'].'">'.$offices_val['name'].'</option>';
+            }
+            echo '
+									        </select>
+
+									    </div>
+            
+                                    </li>
 								
                                     <li class="cellsBlock" style="margin-top: 10px;">
                                         <div style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">

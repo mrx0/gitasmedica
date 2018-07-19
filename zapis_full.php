@@ -224,7 +224,8 @@
 					$month = date("m");
 				if (!isset($year) || $year < 2010 || $year > 2037)
 					$year = date("Y");
-				
+
+                if ($month < 10) $month = '0'.$month;
 				
 				if (isset($_GET['kab'])){
 					$kab = $_GET['kab'];
