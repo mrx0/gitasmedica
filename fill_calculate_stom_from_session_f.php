@@ -128,7 +128,7 @@
 
 							foreach ($invoice_data as $key => $items){
 
-                                if ($items['guarantee'] != 0) {
+                                if ($items['guarantee'] == 0) {
 
                                     $percent_cat = $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind][$key]['percent_cats'];
 
