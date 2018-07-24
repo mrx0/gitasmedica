@@ -449,7 +449,7 @@ if ($enter_ok){
 
                         echo '
 								<div id="data">';
-                        if (!empty($temp_arr) || !empty($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'])) {
+                        if ((!empty($temp_arr) || !empty($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'])) && (($invoice_j[0]['summ'] + $invoice_j[0]['summins']) - ($calculate_summ_inv) != 0)) {
                             echo '	
                                         <input type="hidden" id="invoice_id" name="client" value="' . $invoice_j[0]['id'] . '">
                                         <input type="hidden" id="client" name="client" value="' . $invoice_j[0]['client_id'] . '">
