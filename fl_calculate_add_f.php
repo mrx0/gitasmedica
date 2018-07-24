@@ -134,41 +134,44 @@
                                             $itog_price_add = 0;
                                         }*/
 
-                                        //Добавляем в базу
-                                        $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`) 
-										VALUES (
-										'{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}')";
+                                        if ($guarantee == 0) {
 
-                                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                                            //Добавляем в базу
+                                            $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`) 
+                                            VALUES (
+                                            '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}')";
 
-                                        $price = $price*$quantity;
+                                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-                                        $price = ($price - ($price * $discount / 100));
+                                            $price = $price * $quantity;
 
-                                        if ($itog_price == 0){
-                                            $itog_price = $price;
-                                        }
+                                            $price = ($price - ($price * $discount / 100));
 
-                                        //2018.03.13 попытка разобраться с гарантийной ценой для зарплаты
-                                        /*if ($guarantee != 0){
-                                            $itog_price = 0;
-                                        }*/
-
-                                        //$calculateInvSumm +=  round($price);
-                                        $calculateInvSumm += $itog_price;
-
-                                        if (!empty($mat_cons_j_ex['data'])){
-                                            if (isset($mat_cons_j_ex['data'][$pos_id])){
-                                                $itog_price = $itog_price - $mat_cons_j_ex['data'][$pos_id];
-                                            }else{
+                                            if ($itog_price == 0) {
+                                                $itog_price = $price;
                                             }
-                                        }else{
+
+                                            //2018.03.13 попытка разобраться с гарантийной ценой для зарплаты
+                                            /*if ($guarantee != 0){
+                                                $itog_price = 0;
+                                            }*/
+
+                                            //$calculateInvSumm +=  round($price);
+                                            $calculateInvSumm += $itog_price;
+
+                                            if (!empty($mat_cons_j_ex['data'])) {
+                                                if (isset($mat_cons_j_ex['data'][$pos_id])) {
+                                                    $itog_price = $itog_price - $mat_cons_j_ex['data'][$pos_id];
+                                                } else {
+                                                }
+                                            } else {
+                                            }
+
+                                            if ($itog_price < 0) $itog_price = 0;
+
+                                            //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
+                                            $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);
                                         }
-
-                                        if ($itog_price < 0) $itog_price = 0;
-
-                                        //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
-                                        $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);
                                     }
 
                                     /*if (isset($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind])){
