@@ -4543,7 +4543,7 @@
                     calculateCalculate();
 
 				}else{
-					console.log(res.data);
+					//console.log(res.data);
 					$('#errror').html(res.data);
 				}
 				// !!! скролл надо замутить сюда $('#invoice_rezult').scrollTop();
