@@ -445,9 +445,7 @@ if ($enter_ok){
                         }else
                             $invoice_ex_j_mkb = 0;*/
                         //var_dump ($invoice_ex_j_mkb);
-                        var_dump ($temp_arr);
-                        var_dump ($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data']);
-                        var_dump ($invoice_j[0]['summ'] + $invoice_j[0]['summins'] - $calculate_summ_inv);
+                        //var_dump ($temp_arr);
 
                         echo '
 								<div id="data">';
