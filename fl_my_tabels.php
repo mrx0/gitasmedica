@@ -21,14 +21,14 @@
         echo '
             <div id="tabs_w">
                 <ul>';
-        foreach ($filials_j as $f_id => $filials_j_data) {
-            if ($f_id != 11) {
+        foreach ($filials_j as $filials_j_data) {
+            if ($filials_j_data['id'] != 11) {
                 echo '
-                    <li id="filial_' . $f_id.'">
-                        <a href="#tabs-' . $f_id . '">
+                    <li id="filial_' . $filials_j_data['id'].'">
+                        <a href="#tabs-' . $filials_j_data['id'] . '">
                             '.$filials_j_data['name2'].'
                             <div class="notes_count_div">
-                                <div id="tabs_notes2_' . $_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $f_id . '" class="notes_count3" style="display: none;">
+                                <div id="tabs_notes2_' . $_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'] . '" class="notes_count3" style="display: none;">
                                     <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
                                 </div>
                             </div>
@@ -40,16 +40,16 @@
         echo '
                 </ul>';
 
-        foreach ($filials_j as $f_id => $filials_j_data) {
-            if ($f_id != 11) {
+        foreach ($filials_j as $filials_j_data) {
+            if ($filials_j_data['id'] != 11) {
                 echo '
-                <div id="tabs-'.$f_id.'">';
+                <div id="tabs-'.$filials_j_data['id'].'">';
                 echo '
                 <h1>' . $filials_j_data['name'] . '</h1>
-                <div class="tableTabels" id="'.$_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $f_id.'_tabels">
+                <div class="tableTabels" id="'.$_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'].'_tabels">
                     <!--<div style="width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);"><img src="img/wait.gif" style="float:left;"><span style="float: right;  font-size: 90%;"> обработка...</span></div>-->
                 </div>
-                <div class="tableDataNPaidCalcs" id="'.$_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $f_id.'_calcs">
+                <div class="tableDataNPaidCalcs" id="'.$_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'].'_calcs">
                 </div>';
                 echo '
                 </div>';
