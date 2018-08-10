@@ -15,7 +15,7 @@
 		//var_dump($_SESSION);
 		//var_dump(date("m"));
 
-        $filials_j = getAllFilials(true, false);
+        $filials_j = getAllFilials(true, true);
         //var_dump($filials_j);
 
         echo '
