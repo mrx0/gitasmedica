@@ -84,12 +84,18 @@
 
                         foreach ($rez as $year => $yearData){
 
+                            $bgColor = '';
+
+                            /*if (date('Y', time()) == $year) {
+                                $bgColor = 'background-color: rgba(254, 63, 63, 0.69);';
+                            }*/
+
                             if ($year != date('Y', time())){
                                 $rezult .= date('Y', time());
                             }
 
                             $rezult .= '
-                            <div style="margin: 23px 0 -2px; padding: 2px; text-align: left; color: #717171;">
+                            <div style="margin: 23px 0 -2px; padding: 2px; text-align: left; color: #717171; '.$bgColor.'">
                                 Год <span style="color: #252525; font-weight: bold;">'.$year.'</span>
                             </div>';
 
@@ -99,8 +105,14 @@
 
                             foreach ($yearData as $month => $monthData) {
 
+                                $bgColor = '';
+
+                                if (date('n', time()) == $month) {
+                                    $bgColor = 'background-color: rgba(244, 254, 63, 0.54);';
+                                }
+
                                 $rezult .= '
-                                    <div style="margin: 2px 0 2px; padding: 2px; text-align: right; color: #717171;">
+                                    <div style="margin: 2px 0 2px; padding: 2px; text-align: right; color: #717171; '.$bgColor.'">
                                         Месяц <span style="color: #252525; font-weight: bold;">'.$monthsName[$month].'</span>
                                     </div>';
 
@@ -179,7 +191,7 @@
 
                                     $rezult .=
                                         '
-                                        <div class="cellsBlockHover" style=" border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
+                                        <div class="cellsBlockHover" style=" border: 1px solid #BFBCB5; margin-top: 1px; position: relative; '.$bgColor.'">
                                             <div style="display: inline-block; width: 150px;">
                                                 <a href="fl_tabel.php?id=' . $rezData['id'] . '" class="ahref">
                                                     <div>

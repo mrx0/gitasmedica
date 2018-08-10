@@ -180,7 +180,7 @@
                                 $bg_col = '';
                             }
                             $data .= '
-									<li><div onclick="changeUserFilial('.$filials_j_data['id'].')" style="'.$bg_col.'">'.$filials_j_data['name'].'</div></li>';
+									<li><div onclick="changeUserFilial('.$filials_j_data['id'].')" style="'.$bg_col.'">'.$filials_j_data['name2'].'</div></li>';
                         }
 
 					}

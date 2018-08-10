@@ -2321,7 +2321,7 @@
         if (Number(month) < 10){
             month = "0"+month;
         }
-        console.log(month);
+        //console.log(month);
 
         var needCalcObj = thisObj.parent().find('.tableDataNPaidCalcs')
         var needTabelObj = thisObj.parent().find('.tableTabels')
