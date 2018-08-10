@@ -95,8 +95,10 @@
 
 			$workers_j = array();
 
-			$offices_j = SelDataFromDB('spr_filials', '', '');
+			//$offices_j = SelDataFromDB('spr_filials', '', '');
             //$permissions_j = SelDataFromDB('spr_permissions', '', '');
+            $filials_j = getAllFilials(true, true);
+            //var_dump($filials_j);
 
             //Получили список прав
             $permissions_j = getAllPermissions(false, true);
@@ -238,14 +240,14 @@
                                         <ul class="tabs" style="font-size: 125%; float: left;">';
 
                             //закладки по офисам
-                            foreach ($offices_j as $office){
+                            foreach ($filials_j as $office){
 
                                 if ($office['id'] != 11) {
 
                                     echo '
                                             <li class="tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'\'}); ">
                                                 <a href="#tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '">
-                                                    ' . $office['name'] . '
+                                                    ' . $office['name2'] . '
                                                     <div class="notes_count_div">
                                                         <div id="tabs_notes2_' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count3" style="display: none;">
                                                             <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
@@ -263,7 +265,7 @@
                                         </ul>';
 
                             //содержимое по офисам
-                            foreach ($offices_j as $office){
+                            foreach ($filials_j as $office){
 
                                 if ($office['id'] != 11) {
                                     echo '
@@ -280,8 +282,8 @@
                                             </div>';
 
                                     echo '
-                                            <div style="position: absolute; cursor: pointer; top: 1px; right: 5px; font-size: 180%; color: #0C0C0C;" onclick="refreshOnlyThisTab($(this), '.$type . ',' . $worker['id'] . ',' . $office['id'].');" title="Обновить">
-                                                <i class="fa fa-refresh" aria-hidden="true"></i>
+                                            <div style="position: absolute; cursor: pointer; top: 1px; right: 5px; font-size: 180%; color: #0C0C0C;" onclick="refreshOnlyThisTab($(this), '.$type . ',' . $worker['id'] . ',' . $office['id'].');" title="Обновить эту вкладку">
+                                                <span style="font-size: 50%;">Обновить эту вкладку</span> <i class="fa fa-refresh" aria-hidden="true"></i>
                                             </div>';
 
                                     echo '
