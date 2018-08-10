@@ -188,8 +188,9 @@
 
                                 }
 
-                                /*if ($_POST['invoice_type'] == 6) {
+                                if ($_POST['invoice_type'] == 6) {
 
+                                    $pos_id = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['id'];
                                     $price_id = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['price_id'];
                                     $quantity = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['quantity'];
                                     $insure = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['insure'];
@@ -206,11 +207,9 @@
                                     $work_percent = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['work_percent'];
                                     $material_percent = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['material_percent'];
 
-                                    if ($itog_price == 0){
-                                        $itog_price_add = $price;
-                                    }
+                                    $itog_price_add = $itog_price;
 
-                                    //Добавляем в базу
+                                    /*//Добавляем в базу
                                     $query = "INSERT INTO `fl_journal_calculate_ex` (`invoice_id`, `ind`, `price_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`) 
 									VALUES (
 									'{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}')";
@@ -225,9 +224,49 @@
                                     $calculateInvSumm += $itog_price;
 
                                     //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
-                                    $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);
+                                    $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);*/
 
-                                }*/
+                                    if ($guarantee == 0) {
+
+                                        //Добавляем в базу
+                                        $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`) 
+                                            VALUES (
+                                            '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}')";
+
+                                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                                        $price = $price * $quantity;
+
+                                        $price = ($price - ($price * $discount / 100));
+
+                                        if ($itog_price == 0) {
+                                            $itog_price = $price;
+                                        }
+
+                                        //2018.03.13 попытка разобраться с гарантийной ценой для зарплаты
+                                        /*if ($guarantee != 0){
+                                            $itog_price = 0;
+                                        }*/
+
+                                        //$calculateInvSumm +=  round($price);
+                                        $calculateInvSumm += $itog_price;
+
+                                        if (!empty($mat_cons_j_ex['data'])) {
+                                            if (isset($mat_cons_j_ex['data'][$pos_id])) {
+                                                $itog_price = $itog_price - $mat_cons_j_ex['data'][$pos_id];
+                                            } else {
+                                            }
+                                        } else {
+                                        }
+
+                                        if ($itog_price < 0) $itog_price = 0;
+
+                                        //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
+                                        $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);
+                                    }
+
+
+                                }
                                 //unset($_SESSION['calculate_data']);
                             }
                         }

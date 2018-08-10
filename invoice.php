@@ -437,18 +437,18 @@
                                                 </div>';
                                 }
                                 //if (($invoice_j[0]['summ'] != 0) || ($invoice_j[0]['summins'] != 0)) {
-                                    if ($invoice_j[0]['type'] == 5) {
+                                    if (($invoice_j[0]['type'] == 5) || ($invoice_j[0]['type'] == 6)) {
                                         echo '
                                                 <div style="margin-top: 5px;">
                                                     <div style="display: inline-block;"><a href="fl_calculation_add3.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Внести расчётный лист</a></div>
                                                 </div>';
                                     }
-                                    if ($invoice_j[0]['type'] == 6) {
+                                    /*if ($invoice_j[0]['type'] == 6) {
                                         echo '
                                                 <div style="margin-top: 5px;">
                                                     <div style="display: inline-block;"><a href="fl_calculation_add4.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Внести расчётный лист</a></div>
                                                 </div>';
-                                    }
+                                    }*/
                                     if ($invoice_j[0]['type'] == 88) {
                                         echo '
                                                 <div style="margin-top: 5px;">

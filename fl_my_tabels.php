@@ -26,7 +26,7 @@
                 echo '
                     <li id="filial_' . $f_id.'">
                         <a href="#tabs-' . $f_id . '">
-                            ' . $filials_j_data['name2'] . '
+                            '.$filials_j_data['name2'].'
                             <div class="notes_count_div">
                                 <div id="tabs_notes2_' . $_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $f_id . '" class="notes_count3" style="display: none;">
                                     <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
@@ -36,8 +36,10 @@
                     </li>';
             }
         }
+
         echo '
                 </ul>';
+
         foreach ($filials_j as $f_id => $filials_j_data) {
             if ($f_id != 11) {
                 echo '
@@ -46,11 +48,14 @@
                 <h1>' . $filials_j_data['name'] . '</h1>
                 <div class="tableTabels" id="'.$_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $f_id.'_tabels">
                     <!--<div style="width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);"><img src="img/wait.gif" style="float:left;"><span style="float: right;  font-size: 90%;"> обработка...</span></div>-->
+                </div>
+                <div class="tableDataNPaidCalcs" id="'.$_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $f_id.'_calcs">
                 </div>';
                 echo '
                 </div>';
             }
         }
+
         echo '
             </div>';
 
@@ -67,6 +72,33 @@
                     var permission = 0;
                     var worker = 0;
                     var office = 0;
+                    
+				    //Необработанные расчеты
+				    $(".tableDataNPaidCalcs").each(function() {
+                        //console.log($(this).attr("id"));
+                        
+                        var thisObj = $(this);
+
+                        ids = $(this).attr("id");
+                        ids_arr = ids.split("_");
+                        //console.log(ids_arr);
+                         
+                        permission = ids_arr[0];
+                        worker = ids_arr[1];
+                        office = ids_arr[2];
+                        
+                        var certData = {
+                            permission: permission,
+                            worker: worker,
+                            office: office,
+                            month: "'.date("m").'",
+                            year: "'.date("Y").'",
+                            own_tabel: false
+                        };
+                        
+                        
+                        getCalculatesfunc (thisObj, certData);
+                    });
                     
                     //Табели
                     $(".tableTabels").each(function() {
@@ -91,11 +123,9 @@
                             own_tabel: true
                         };
                         
-                        
                         getTabelsfunc (thisObj, certData);
                      });
                 });
-                    
                 
 		    </script>';
 
