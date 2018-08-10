@@ -17,7 +17,7 @@
 				//var_dump($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]);
 				if ($_POST['target'] === 'item'){
 					unset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]);
-				}elseif ($_POST['target'] === 'zub'){
+				}elseif ($_POST['target'] === 'ind'){
 					unset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]);
 					unset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$_POST['ind']]);
 				}

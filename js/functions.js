@@ -54,6 +54,7 @@
 
     };
 
+    //Блок с прогрессом ожидания
     function blockWhileWaiting (show){
     	if (show){
             $('#overlay').show();
@@ -4738,7 +4739,7 @@
 
 		//if ((itemId == 0) || (itemId == null) || (itemId == 'null') || (typeof itemId == "undefined")){
 		if ((itemId == null) || (itemId == 'null') || (typeof itemId == "undefined")){
-			target = 'zub';
+			target = 'ind';
 		}
 		//console.log(zub);
 		//console.log(target);
@@ -4804,9 +4805,10 @@
 
 		//if ((itemId == 0) || (itemId == null) || (itemId == 'null') || (typeof itemId == "undefined")){
 		if ((itemId == null) || (itemId == 'null') || (typeof itemId == "undefined")){
-			target = 'zub';
+			target = 'ind';
 		}
-		//console.log(zub);
+		//console.log(ind);
+		//console.log(itemId);
 		//console.log(target);
 
 		$.ajax({
@@ -4824,7 +4826,7 @@
 				filial: $("#filial").val(),
 				worker: $("#worker").val(),
 
-				target: target,
+				target: target
 			},
 			cache: false,
 			beforeSend: function() {

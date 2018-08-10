@@ -208,6 +208,16 @@
 				    //Категории процентов
                     $percents_j = SelDataFromDB('fl_spr_percents', $_POST['key'], 'type');
 
+                    //Надо отсортировать по названию
+                    $percent_cats_j_names = array();
+
+                    //Определяющий массив из названий для сортировки
+                    foreach ($percents_j as $key => $arr) {
+                        array_push($percent_cats_j_names, $arr['name']);
+                    }
+
+                    //Сортируем по названию
+                    array_multisort($percent_cats_j_names, SORT_LOCALE_STRING, $percents_j);
 
                     if ($percents_j != 0){
                         for ($i=0;$i<count($percents_j);$i++){
