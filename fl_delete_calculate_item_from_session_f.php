@@ -1,6 +1,6 @@
 <?php 
 
-//delete_calculate_item_from_session_f.php
+//fl_delete_calculate_item_from_session_f.php
 //
 
 	session_start();
@@ -22,13 +22,27 @@
 					unset($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$_POST['ind']]);
 				}
 				
-				if ($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active'] == $_POST['ind']){
+				/*if ($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active'] == $_POST['ind']){
 					if (empty($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']])){
 						$keys = array_keys($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data']);
 						//$firstKey = $keys[0];
 						$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active'] = $keys[0];
 					}
-				}
+				}*/
+
+                //2018.08.07 скопировал из delete_invoice_item_from_session_f.php
+                if ($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active'] == $_POST['ind']){
+                    if (empty($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']])){
+                        $keys = array_keys($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data']);
+                        //$firstKey = $keys[0];
+                        if (($_POST['ind'] != 0) && !empty($keys)) {
+                            $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active'] = $keys[0];
+                        }else{
+                            $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active'] = 0;
+                        }
+
+                    }
+                }
 				
 				if (empty($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
 					$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active'] = 0;

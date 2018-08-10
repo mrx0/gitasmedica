@@ -24,10 +24,83 @@
 			include_once 'filter_f.php';
 			include_once 'ffun.php';
 
+
+            //тип (космет/стомат/...)
+            if (isset($_GET['who'])){
+                if ($_GET['who'] == '5'){
+                    $who = '&who=5';
+                    $whose = 'Стоматологи ';
+                    $selected_stom = ' selected';
+                    $selected_cosm = ' ';
+                    $datatable = 'scheduler_stom';
+                    $kabsForDoctor = 'stom';
+                    $type = 5;
+
+                    $stom_color = 'background-color: #fff261;';
+                    $cosm_color = '';
+                    $somat_color = '';
+                }elseif($_GET['who'] == '6'){
+                    $who = '&who=6';
+                    $whose = 'Косметологи ';
+                    $selected_stom = ' ';
+                    $selected_cosm = ' selected';
+                    $datatable = 'scheduler_cosm';
+                    $kabsForDoctor = 'cosm';
+                    $type = 6;
+
+                    $stom_color = '';
+                    $cosm_color = 'background-color: #fff261;';
+                    $somat_color = '';
+                }elseif($_GET['who'] == '10'){
+                    $who = '&who=10';
+                    $whose = 'Специалисты ';
+                    $selected_stom = ' ';
+                    $selected_cosm = ' selected';
+                    $datatable = 'scheduler_somat';
+                    $kabsForDoctor = 'somat';
+                    $type = 10;
+
+                    $stom_color = '';
+                    $cosm_color = '';
+                    $somat_color = 'background-color: #fff261;';
+                }else{
+                    $who = '&who=stom';
+                    $whose = 'Стоматологи ';
+                    $selected_stom = ' selected';
+                    $selected_cosm = ' ';
+                    $datatable = 'scheduler_stom';
+                    $kabsForDoctor = 'stom';
+                    $type = 5;
+                    $_GET['who'] = 'stom';
+
+                    $stom_color = 'background-color: #fff261;';
+                    $cosm_color = '';
+                    $somat_color = '';
+                }
+            }else{
+                $who = '&who=stom';
+                $whose = 'Стоматологи ';
+                $selected_stom = ' selected';
+                $selected_cosm = ' ';
+                $datatable = 'scheduler_stom';
+                $kabsForDoctor = 'stom';
+                $type = 5;
+                $_GET['who'] = 'stom';
+
+                $stom_color = 'background-color: #fff261;';
+                $cosm_color = '';
+                $somat_color = '';
+            }
+
+
 			$workers_j = array();
 
 			$offices_j = SelDataFromDB('spr_filials', '', '');
-            $permissions_j = SelDataFromDB('spr_permissions', '', '');
+            //$permissions_j = SelDataFromDB('spr_permissions', '', '');
+
+            //Получили список прав
+            $permissions_j = getAllPermissions(false, true);
+            //var_dump($permissions_j);
 
             $msql_cnnct = ConnectToDB ();
 
@@ -58,7 +131,15 @@
 					</div>';
 
 				echo '
-						<div id="data">';
+						<div id="data">
+						    <ul style="margin-left: 6px; margin-bottom: 20px;">
+						        <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
+                                <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
+                                    <a href="?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
+                                    <a href="?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>
+                                    <a href="?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
+                                </li>
+						    </ul>';
 
 
                 echo '
@@ -66,19 +147,19 @@
                         <ul class="tabs">';
 
                 //Для теста
-                $permission['id'] = 5;
-                $permission['name'] = $permissions_j[4]['name'];
+                /*$permission['id'] = $type;
+                $permission['name'] = $permissions_j[4]['name'];*/
 
                 //вкладки по правам
                 //foreach ($permissions_j as $permission){
-                    if (($permission['id'] != 1) && ($permission['id'] != 2) && ($permission['id'] != 3) && ($permission['id'] != 8) && ($permission['id'] != 9)){
+                    /*if (($permission['id'] != 1) && ($permission['id'] != 2) && ($permission['id'] != 3) && ($permission['id'] != 8) && ($permission['id'] != 9)){
                         echo '
                             <li>
                                 <a href="#tabs-' . $permission['id'] . '">
                                     ' . $permission['name'] . '
                                 </a>
                             </li>';
-                    }
+                    }*/
                 //}
                 echo '
                         </ul>';
@@ -89,10 +170,10 @@
                     $workers_j = array();
 
 
-                    if (($permission['id'] != 1) && ($permission['id'] != 2) && ($permission['id'] != 3) && ($permission['id'] != 8) && ($permission['id'] != 9)){
+                    //if (($permission['id'] != 1) && ($permission['id'] != 2) && ($permission['id'] != 3) && ($permission['id'] != 8) && ($permission['id'] != 9)){
 
                         //Выберем всех сотрудников с такой должностью
-                        $query = "SELECT * FROM `spr_workers` WHERE `permissions`='{$permission['id']}' AND `fired` = '0'";
+                        $query = "SELECT * FROM `spr_workers` WHERE `permissions`='{$type}' AND `fired` = '0'";
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                         $number = mysqli_num_rows($res);
@@ -107,16 +188,16 @@
 
                         //содержимое по правам
                         echo '
-                        <div id="tabs-'.$permission['id'].'" style="padding: 0;">';
+                        <div id="tabs-'.$type.'" style="padding: 0;">';
 
 
                         //$tabs_rez_js .= '$( "#tabs_w'.$permission['id'].'" ).tabs();';
-                        $tabs_rez_js .= '$( "#tabs_w'.$permission['id'].'" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );';
-                        $tabs_rez_js .= '$( "#tabs_w'.$permission['id'].' li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );';
+                        $tabs_rez_js .= '$( "#tabs_w'.$type.'" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );';
+                        $tabs_rez_js .= '$( "#tabs_w'.$type.' li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );';
 
 
                         echo '
-                            <div id="tabs_w'.$permission['id'].'" style="font-size: 100%;">
+                            <div id="tabs_w'.$type.'" style="font-size: 100%;">
                                 <ul class="tabs" style="font-size: 125%; height: 500px; overflow-y: scroll;">';
 
                         //вкладки по сотрудникам
@@ -124,13 +205,13 @@
 
                             echo '
                                     <li>
-                                        <a href="#tabs-' . $permission['id'] . '_' . $worker['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'\'}); ">
+                                        <a href="#tabs-' . $type . '_' . $worker['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'\'}); ">
                                             ' . $worker['name'] . '
                                             <div  class="notes_count_div">
-                                                <div id="tabs_notes2_' . $permission['id'] . '_' . $worker['id'].'" class="notes_count3" style="display: none;">
+                                                <div id="tabs_notes2_' . $type . '_' . $worker['id'].'" class="notes_count3" style="display: none;">
                                                     <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
                                                 </div>
-                                                <div id="tabs_notes_' . $permission['id'] . '_' . $worker['id'].'" class="notes_count2" style="display: none;">
+                                                <div id="tabs_notes_' . $type . '_' . $worker['id'].'" class="notes_count2" style="display: none;">
                                                     <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
                                                 </div>
                                             </div>
@@ -146,14 +227,14 @@
 
                             echo '
 
-                                <div id="tabs-' . $permission['id'] . '_' . $worker['id'] . '" style="width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); margin-left: 150px; font-size: 12px;">';
+                                <div id="tabs-' . $type . '_' . $worker['id'] . '" style="width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); margin-left: 150px; font-size: 12px;">';
 
-                            echo '<h2>' .$permission['name'].'</h2><h1>'.$worker['name'].'</h2>';
+                            echo '<h2>' .$permissions_j[$type]['name'].'</h2><h1>'.$worker['name'].'</h2>';
 
-                            $tabs_rez_js .= '$( "#tabs_w'.$permission['id'].'_'.$worker['id'].'").tabs();';
+                            $tabs_rez_js .= '$( "#tabs_w'.$type.'_'.$worker['id'].'").tabs();';
 
                             echo '
-                                    <div id="tabs_w'.$permission['id'].'_'.$worker['id'].'" style="font-size: 100%;">
+                                    <div id="tabs_w'.$type.'_'.$worker['id'].'" style="font-size: 100%;">
                                         <ul class="tabs" style="font-size: 125%; float: left;">';
 
                             //закладки по офисам
@@ -162,14 +243,14 @@
                                 if ($office['id'] != 11) {
 
                                     echo '
-                                            <li class="tabs-' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'\'}); ">
-                                                <a href="#tabs-' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '">
+                                            <li class="tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'\'}); ">
+                                                <a href="#tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '">
                                                     ' . $office['name'] . '
                                                     <div class="notes_count_div">
-                                                        <div id="tabs_notes2_' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count3" style="display: none;">
+                                                        <div id="tabs_notes2_' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count3" style="display: none;">
                                                             <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
                                                         </div>
-                                                        <div id="tabs_notes_' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count2" style="display: none;">
+                                                        <div id="tabs_notes_' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count2" style="display: none;">
                                                             <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
                                                         </div>
                                                     </div>
@@ -186,20 +267,20 @@
 
                                 if ($office['id'] != 11) {
                                     echo '
-                                        <div id="tabs-' . $permission['id'] . '_' . $worker['id'] . '_' . $office['id'] . '" style="position: relative; width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); font-size: 12px; margin-top: 65px;">';
+                                        <div id="tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" style="position: relative; width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); font-size: 12px; margin-top: 65px;">';
 
                                     echo '
-                                            <div class="tableTabels" id="'.$permission['id'] . '_' . $worker['id'] . '_' . $office['id'].'_tabels">
+                                            <div class="tableTabels" id="'.$type . '_' . $worker['id'] . '_' . $office['id'].'_tabels">
                                                 <!--<div style="width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);"><img src="img/wait.gif" style="float:left;"><span style="float: right;  font-size: 90%;"> обработка...</span></div>-->
                                             </div>';
 
                                     echo '
-                                            <div class="tableDataNPaidCalcs" id="'.$permission['id'] . '_' . $worker['id'] . '_' . $office['id'].'">
+                                            <div class="tableDataNPaidCalcs" id="'.$type . '_' . $worker['id'] . '_' . $office['id'].'">
                                                 <div style="width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);"><img src="img/wait.gif" style="float:left;"><span style="float: right;  font-size: 90%;"> обработка...</span></div>
                                             </div>';
 
                                     echo '
-                                            <div style="position: absolute; cursor: pointer; top: 1px; right: 5px; font-size: 180%; color: #0C0C0C;" onclick="refreshOnlyThisTab($(this), '.$permission['id'] . ',' . $worker['id'] . ',' . $office['id'].');" title="Обновить">
+                                            <div style="position: absolute; cursor: pointer; top: 1px; right: 5px; font-size: 180%; color: #0C0C0C;" onclick="refreshOnlyThisTab($(this), '.$type . ',' . $worker['id'] . ',' . $office['id'].');" title="Обновить">
                                                 <i class="fa fa-refresh" aria-hidden="true"></i>
                                             </div>';
 
@@ -218,7 +299,7 @@
                             </div>
                         </div>';
 
-                    }
+                    //}
                 //}
 
                 echo '

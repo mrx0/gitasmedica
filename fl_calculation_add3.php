@@ -285,6 +285,7 @@ if ($enter_ok){
                                 }
                                 $calculate_j = $rez;
                             }
+
                             //И данные по ним
                             if (!empty($calculate_j)){
                                 //var_dump ($calculate_j);
@@ -308,6 +309,7 @@ if ($enter_ok){
                             //var_dump($calculate_exist_j);
                             //var_dump($calculate_summ_inv);
                             //var_dump($calculate_summins_inv);
+                            //var_dump($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data']);
 
                             if (empty($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'])) {
                                 //var_dump($invoice_ex_j);
@@ -317,6 +319,7 @@ if ($enter_ok){
 
                                     foreach ($invoice_ex_j_arr as $invoice_ex_j_val) {
                                         //var_dump((int)$invoice_ex_j_val['id']);
+                                        //var_dump($invoice_ex_j_arr);
 
                                         if (!in_array((int)$invoice_ex_j_val['id'], $calculate_exist_j)) {
 
@@ -449,7 +452,7 @@ if ($enter_ok){
 
                         echo '
 								<div id="data">';
-                        if (!empty($temp_arr) || !empty($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'])) {
+                        if ((!empty($temp_arr) || !empty($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'])) && (($invoice_j[0]['summ'] + $invoice_j[0]['summins'] - $calculate_summ_inv) != 0)) {
                             echo '	
                                         <input type="hidden" id="invoice_id" name="client" value="' . $invoice_j[0]['id'] . '">
                                         <input type="hidden" id="client" name="client" value="' . $invoice_j[0]['client_id'] . '">
@@ -629,7 +632,11 @@ if ($enter_ok){
                             echo '
                                         </div>';
                         }else{
-                            echo '<span style="color: red; font-weight: bold;">Вся сумма уже распределена.</span>';
+                            echo '<span style="color: red; font-weight: bold;">Вся сумма уже распределена.</span>
+                            <input type="hidden" id="invoice_type" name="invoice_type" value="'.$invoice_j[0]['type'].'">
+                            <input type="hidden" id="zapis_insure" name="zapis_insure" value="0">
+                            <input type="hidden" id="filial2" name="filial2" value="'.$invoice_j[0]['office_id'].'">
+                            <input type="hidden" id="worker" name="worker" value="'.$invoice_j[0]['worker_id'].'">';
                         }
                         echo '
 								</div>
