@@ -212,7 +212,7 @@
             }
         }
 
-        if ($sort) {
+        if ($sort){
             if (!empty($filials_j)) {
                 $filials_j_names = array();
 
