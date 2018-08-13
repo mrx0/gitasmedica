@@ -425,10 +425,10 @@
                             }
                             if ($invoice_j[0]['summ'] == $invoice_j[0]['paid']) {
                                 if ($invoice_j[0]['closed_time'] == 0){
-                                    echo '
+                                    /*echo '
                                                 <div>
                                                     <div style="display: inline-block; color: red;">Наряд оплачен, но не закрыт. Если наряд <br><b>не страховой</b>, перепроведите оплаты или обратитесь к руководителю.</div>                                                    <!--<div style="display: inline-block;"><div class="b" onclick="alert('.$invoice_j[0]['id'].');">Закрыть</div></div>-->
-                                                </div>';
+                                                </div>';*/
                                 }else{
                                     echo '
                                                 <div style="margin-top: 5px;">
