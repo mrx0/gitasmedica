@@ -618,31 +618,32 @@
 
                                     //Результат
                                     echo '			
-                                                <div class="invoice_rezult" style="display: inline-block; border: 1px solid #c5c5c5; border-radius: 3px; position: relative;">';
+                                            <div class="invoice_rezult" style="display: inline-block; border: 1px solid #c5c5c5; border-radius: 3px; position: relative;">';
 
                                     echo '	
-                                                    <div id="errror" class="invoceHeader" style="position: relative;">
-                                                        <div>
-                                                            <div style="">К оплате: <div id="calculateInvoice" style="">0</div> руб.</div>
-                                                        </div>';
+                                                <div id="errror" class="invoceHeader" style="position: relative;">
+                                                    <div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
+                                                        <div>	
+                                                            <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\')">
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div style="">К оплате: <div id="calculateInvoice" style="">0</div> руб.</div>
+                                                    </div>';
                                     if ($sheduler_zapis[0]['type'] == 5) {
                                         echo '
-                                                        <div>
-                                                            <div style="">Страховка: <div id="calculateInsInvoice" style="">0</div> руб.</div>
-                                                        </div>';
+                                                    <div>
+                                                        <div style="">Страховка: <div id="calculateInsInvoice" style="">0</div> руб.</div>
+                                                    </div>';
                                     }
                                     /*echo '
-                                                        <div>
-                                                            <div style="">Скидка: <div id="discountValue" class="calculateInvoice" style="color: rgb(255, 0, 198);">' . $discount . '</div><span  class="calculateInvoice" style="color: rgb(255, 0, 198);">%</span></div>
-                                                        </div>';*/
+                                                    <div>
+                                                        <div style="">Скидка: <div id="discountValue" class="calculateInvoice" style="color: rgb(255, 0, 198);">' . $discount . '</div><span  class="calculateInvoice" style="color: rgb(255, 0, 198);">%</span></div>
+                                                    </div>';*/
                                     echo '
-                                                        <div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
-                                                            <div>	
-                                                                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\')">
-                                                            </div>
-                                                        </div>';
+                                                </div>';
                                     echo '
-                                                        <div style="position: absolute; top: 0; left: 200px; vertical-align: middle; font-size: 11px; width: 300px;">
+                                                    <div style="position: absolute; top: 0; left: 200px; vertical-align: middle; font-size: 11px; width: 300px;">
                                                             <div style="display: inline-block; vertical-align: top;">
                                                                 Настройки: 
                                                             </div>
@@ -668,8 +669,8 @@
                                                                         <div id="insure_approve" class="settings_text">Согласовано</div>
                                                                     </div>';
                                     }
-                                    echo '
-                                                                </div>';
+                                    /*echo '
+                                                                </div>';*/
                                     echo '
                                                                 <div style="margin-bottom: 2px;">
                                                                     <div style="display: inline-block; vertical-align: top;">

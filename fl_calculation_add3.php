@@ -449,10 +449,14 @@ if ($enter_ok){
                             $invoice_ex_j_mkb = 0;*/
                         //var_dump ($invoice_ex_j_mkb);
                         //var_dump ($temp_arr);
+                        //var_dump ($invoice_j[0]['summ']);
+                        //var_dump ($invoice_j[0]['summins']);
+                        //var_dump ($calculate_summ_inv);
 
                         echo '
 								<div id="data">';
-                        if ((!empty($temp_arr) || !empty($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'])) && (($invoice_j[0]['summ'] + $invoice_j[0]['summins'] - $calculate_summ_inv) != 0)) {
+                        //if ((!empty($temp_arr) || !empty($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'])) && (($invoice_j[0]['summ'] + $invoice_j[0]['summins'] - $calculate_summ_inv) != 0)) {
+                        if (!empty($temp_arr) || !empty($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'])) {
                             echo '	
                                         <input type="hidden" id="invoice_id" name="client" value="' . $invoice_j[0]['id'] . '">
                                         <input type="hidden" id="client" name="client" value="' . $invoice_j[0]['client_id'] . '">
@@ -500,10 +504,11 @@ if ($enter_ok){
                                                 </div> 
                                                 <div style="display: inline-block; width: 300px; vertical-align: top;">';
 
-                            echo '
+                            //!!! Доделать переделать (надо чтоб сумма бралась из массива наряда)
+                            /*echo '
                                                     <div>
                                                         <div style="">Остаток для расчётов: <div class="calculateInvoice" style="color: #333;">' . (($invoice_j[0]['summ'] + $invoice_j[0]['summins']) - ($calculate_summ_inv)) . '</div> руб.</div>
-                                                    </div>';
+                                                    </div>';*/
                             echo '
                                                     <div>
                                                         <div style="">Сумма расчёта: <div id="calculateSumm" style="">' . (($invoice_j[0]['summ'] + $invoice_j[0]['summins']) - ($calculate_summ_inv)) . '</div> руб.</div>
