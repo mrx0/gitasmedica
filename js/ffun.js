@@ -1060,6 +1060,66 @@
         });
     }
 
+    //Удаляем все выделенные РЛ из программы в разделе Важный отчет
+    function fl_deleteMarkedCalculates (thisObj){
+        //console.log(thisObj);
+        //console.log(thisObj.parent());
+
+        wait(function(runNext){
+
+            setTimeout(function(){
+                runNext(calcIDForTabelINarr());
+            }, 1500);
+
+        }).wait(function(runNext, calcIDForTabel_arr){
+            //используем аргументы из предыдущего вызова
+            //console.log(calcIDForTabel_arr);
+            //console.log(typeof (calcIDForTabel_arr));
+            //console.log(calcIDForTabel_arr.main_data.length);
+
+            if (calcIDForTabel_arr.main_data.length > 0) {
+                var rys = false;
+
+                var rys = confirm("Вы хотите удалить выделенные РЛ. \nЭто необратимо. Все РЛ будут полностью удалены\nиз программы.\n\nВы уверены?");
+
+                if (rys) {
+
+                }
+
+                $.ajax({
+                    url: "fl_deleteCalcsByIDsFromDB.php",
+                    global: false,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        calcArr: calcIDForTabel_arr.main_data
+                    },
+                    cache: false,
+                    beforeSend: function () {
+                        //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                    },
+                    // действие, при ответе с сервера
+                    success: function (res) {
+                        //console.log(res);
+
+                        if (res.result == "success") {
+                            //console.log(res);
+
+                            var tableArr = calcIDForTabel_arr.data.split('_');
+                            /*console.log(tableArr[1]);
+                            console.log(tableArr[2]);
+                            console.log(tableArr[3]);*/
+
+                            refreshOnlyThisTab(thisObj, tableArr[1],tableArr[2],tableArr[3]);
+
+                        }
+
+                    }
+                });
+            }
+        });
+    }
+
     //Показываем блок с ночными сменами
     function Ajax_NightSmenaAddINTabel (tabel_id, nightSmenaCount){
         //console.log(tabel_id);
@@ -2210,6 +2270,9 @@
 
                         thisObj.parent().find(".summCalcsNPaid").html(res.summCalc);
 
+                    }else{
+                        //$("#tabs_notes_"+permission+"_"+worker).css("display", "none");
+                        $("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display", "none");
                     }
 
                     if (res.status == 0){
@@ -2272,6 +2335,9 @@
                         if (res.notDeployCount > 0){
                             $("#tabs_notes2_"+permission+"_"+worker).css("display", "inline-block");
                             $("#tabs_notes2_"+permission+"_"+worker+"_"+office).css("display", "inline-block");
+                        }else{
+                            //$("#tabs_notes2_"+permission+"_"+worker).css("display", "none");
+                            $("#tabs_notes2_"+permission+"_"+worker+"_"+office).css("display", "none");
                         }
 
                         //

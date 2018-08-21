@@ -1,3 +1,12 @@
+	//Размер объекта
+	Object.size = function(obj) {
+		var size = 0, key;
+		for (key in obj) {
+			if (obj.hasOwnProperty(key)) size++;
+		}
+		return size;
+	};
+
 	function hideAllErrors (){
         // убираем класс ошибок с инпутов
         $('input').each(function(){
@@ -17,7 +26,13 @@
         var val = $(this).val();
         //console.log(val);
 
-        if ((val.length > 1) && !isNaN(val[val.length - 1])){
+		/*console.log(val);
+		console.log(val.length);
+		console.log(val.length - 1);
+		console.log(!isNaN(val[val.length - 1]));*/
+
+        //if ((val.length > 1) && !isNaN(val[val.length - 1])){
+        if (val.length > 1){
             $.ajax({
                 url:"FastSearchCert.php",
                 global: false,
