@@ -974,12 +974,11 @@
                         //console.log(res);
                         if (newTabel) {
                             //document.location.href = "fl_addNewTabel.php";
-                            //window.open("fl_addNewTabel.php", 'newTabelwindow', 'width=800, height=800, scrollbars=yes,resizable=yes,menubar=no,toolbar=yes,status=yes');
-                            iOpenNewWindow('fl_addNewTabel.php', 'newTabelwindow', 'width=800, height=800, scrollbars=yes,resizable=yes,menubar=no,toolbar=yes,status=yes');
+                            var openedWindow = iOpenNewWindow('fl_addNewTabel.php', 'newTabelwindow', 'width=800, height=800, scrollbars=yes,resizable=yes,menubar=no,toolbar=yes,status=yes');
                         }else{
                             //console.log(12333);
-                            //window.open("fl_addINExistTabel.php", 'oldTabelwindow', 'width=800, height=800, scrollbars=yes,resizable=yes,menubar=no,toolbar=yes,status=yes');
-                            iOpenNewWindow("fl_addINExistTabel.php", 'oldTabelwindow', 'width=800, height=800, scrollbars=yes,resizable=yes,menubar=no,toolbar=yes,status=yes');
+                            var openedWindow = iOpenNewWindow("fl_addINExistTabel.php", 'oldTabelwindow', 'width=800, height=800, scrollbars=yes,resizable=yes,menubar=no,toolbar=yes,status=yes');
+
                         }
 
                     }
@@ -1083,39 +1082,115 @@
                 var rys = confirm("Вы хотите удалить выделенные РЛ. \nЭто необратимо. Все РЛ будут полностью удалены\nиз программы.\n\nВы уверены?");
 
                 if (rys) {
-
-                }
-
-                $.ajax({
-                    url: "fl_deleteCalcsByIDsFromDB.php",
-                    global: false,
-                    type: "POST",
-                    dataType: "JSON",
-                    data: {
-                        calcArr: calcIDForTabel_arr.main_data
-                    },
-                    cache: false,
-                    beforeSend: function () {
-                        //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-                    },
-                    // действие, при ответе с сервера
-                    success: function (res) {
-                        //console.log(res);
-
-                        if (res.result == "success") {
+                    $.ajax({
+                        url: "fl_deleteCalcsByIDsFromDB.php",
+                        global: false,
+                        type: "POST",
+                        dataType: "JSON",
+                        data: {
+                            calcArr: calcIDForTabel_arr.main_data
+                        },
+                        cache: false,
+                        beforeSend: function () {
+                            //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                        },
+                        // действие, при ответе с сервера
+                        success: function (res) {
                             //console.log(res);
 
-                            var tableArr = calcIDForTabel_arr.data.split('_');
-                            /*console.log(tableArr[1]);
-                            console.log(tableArr[2]);
-                            console.log(tableArr[3]);*/
+                            if (res.result == "success") {
+                                //console.log(res);
 
-                            refreshOnlyThisTab(thisObj, tableArr[1],tableArr[2],tableArr[3]);
+                                var tableArr = calcIDForTabel_arr.data.split('_');
+                                /*console.log(tableArr[1]);
+                                 console.log(tableArr[2]);
+                                 console.log(tableArr[3]);*/
 
+                                refreshOnlyThisTab(thisObj, tableArr[1],tableArr[2],tableArr[3]);
+                            }
                         }
+                    });
+                }
+            }
+        });
+    }
 
+    //Перерасчет зп (если меняли процент) во всех выделенных РЛ из программы в разделе Важный отчет
+    function fl_reloadPercentsMarkedCalculates (thisObj){
+        //console.log(thisObj);
+        //console.log(thisObj.parent());
+
+        wait(function(runNext){
+
+            setTimeout(function(){
+                runNext(calcIDForTabelINarr());
+            }, 1500);
+
+        }).wait(function(runNext, calcIDForTabel_arr){
+            //используем аргументы из предыдущего вызова
+            console.log(calcIDForTabel_arr);
+
+            if (calcIDForTabel_arr.main_data.length > 0) {
+
+                if (calcIDForTabel_arr.main_data.length > 10){
+                    alert("Рассчитать можно не более 10 РЛ за раз.");
+                }else {
+                    var rys = false;
+
+                    var rys = confirm("Вы хотите перерасчитать выделенные РЛ. \n\nВы уверены?");
+
+                    if (rys) {
+                        $.ajax({
+                            url: "fl_addCalcsIDsINSessionForReload.php",
+                            global: false,
+                            type: "POST",
+                            dataType: "JSON",
+                            data: {
+                                calcArr: calcIDForTabel_arr
+                            },
+                            cache: false,
+                            beforeSend: function () {
+                                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                            },
+                            // действие, при ответе с сервера
+                            success: function (res) {
+                                console.log(res);
+
+                                /*if (res.result == "success") {
+                                    //console.log(res);
+
+                                    $.ajax({
+                                        url: "fl_reloadPercentsMarkedCalculates.php",
+                                        global: false,
+                                        type: "POST",
+                                        dataType: "JSON",
+                                        data: {
+                                        },
+                                        cache: false,
+                                        beforeSend: function () {
+                                            //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                                        },
+                                        // действие, при ответе с сервера
+                                        success: function (res) {
+                                            console.log(res);
+
+                                            if (res.result == "success") {
+                                                //console.log(res);
+
+                                                //iOpenNewWindow('fl_addNewTabel.php', 'newTabelwindow', 'width=800, height=800, scrollbars=yes,resizable=yes,menubar=no,toolbar=yes,status=yes');
+
+                                                //refreshOnlyThisTab(thisObj, tableArr[1], tableArr[2], tableArr[3]);
+                                                //var tableArr = calcIDForTabel_arr.data.split('_');
+
+                                            }
+
+                                        }
+                                    });
+                                }*/
+                            }
+                        });
                     }
-                });
+                }
             }
         });
     }
