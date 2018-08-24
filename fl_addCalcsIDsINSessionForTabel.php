@@ -10,9 +10,10 @@
 	}else{
 		//var_dump ($_POST);
 
-        $_SESSION['fl_calcs_tabels'] = array();
-
         if (isset($_POST['calcArr'])){
+
+            $_SESSION['fl_calcs_tabels'] = array();
+
             if (!empty($_POST['calcArr'])){
                 $_SESSION['fl_calcs_tabels'] = $_POST['calcArr'];
 
