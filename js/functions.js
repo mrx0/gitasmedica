@@ -8147,12 +8147,21 @@
 	//Открываем в новом окне url
     function iOpenNewWindow(url, name, options){
 
+		//Небольшой костыль из-за хрома, в котором не работает .focus();
+        if (typeof openedWindow !== 'undefined'){
 
-        openedWindow = window.open(url, name, options);
-
-        /*if (openedWindow.focus){
-            openedWindow.focus();
+			if (navigator.userAgent.indexOf('Chrome/') > 0) {
+				if (openedWindow) {
+					openedWindow.close();
+					openedWindow = null;
+				}
+			}
         }
 
-        WaitForCloseWindow(openedWindow);*/
+        openedWindow = window.open(url, name, options);
+        openedWindow.focus();
+
+        //WaitForCloseWindow(openedWindow);
+
+        return openedWindow;
     }
