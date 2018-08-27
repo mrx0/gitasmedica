@@ -31,7 +31,7 @@
 					if (isSameFullName('spr_clients', $full_name, $_POST['id'])){
 						echo '
 							<div class="query_neok">
-								Такой пациент уже есть. Если тёзка, в конце отчества поставьте символ "*"<br /><br />
+								Такой пациент уже есть. Если тёзка, в конце отчества поставьте символ *<br /><br />
 							</div>';
 					}else{
 						$name = CreateName(firspUpperCase(trim($_POST['f'])), firspUpperCase(trim($_POST['i'])), firspUpperCase(trim($_POST['o'])));

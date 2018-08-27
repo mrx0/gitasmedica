@@ -1072,7 +1072,8 @@
                                     data:
                                     {
                                         author:document.getElementById("author").value,
-                                        client:document.getElementById("search_client").value,
+                                        //client:document.getElementById("search_client").value,
+                                        client:$("#client").val(),
                                         filial:document.getElementById("filial").value,
                                         comment:document.getElementById("comment").value,
                                                 
