@@ -1,7 +1,7 @@
 <?php 
 
 //fl_addCalcsIDsINSessionForTabel.php
-//
+//!!! НЕ используем пока нигде
 
 	session_start();
 	

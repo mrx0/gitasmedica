@@ -19,7 +19,7 @@
 					Не выбран пациент<br><br>';
 			}else{
 				//Ищем Пациента
-				$clients = SelDataFromDB ('spr_clients', $_POST['client'], 'client_full_name');
+                $clients = SelDataFromDB ('spr_clients', $_POST['client'], 'client_id');
 				//var_dump($clients);
 				if ($clients != 0){
                     $client_id = $client = $clients[0]["id"];
