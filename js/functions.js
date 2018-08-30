@@ -6043,6 +6043,7 @@
             url:"fl_add_percent_cat_in_invoice_f.php",
             global: false,
             type: "POST",
+            dataType: "JSON",
             //dataType: "JSON",
             data:
                 {
@@ -6059,16 +6060,18 @@
                 //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             // действие, при ответе с сервера
-            success: function(data){
-                //console.log(data);
+            success: function(res){
+                //console.log(res);
+                console.log(res.data);
+
                 fillCalculateRez();
 
-				/*if(data.result == "success"){
-				 //console.log(data.data);
-				 $('#invoice_rezult').html(data.data);
+				/*if(res.result == "success"){
+				 //console.log(res.data);
+				 $('#invoice_rezult').html(res.data);
 				 }else{
 				 //console.log('error');
-				 $('#errror').html(data.data);
+				 $('#errror').html(res.data);
 				 }*/
             }
         });
@@ -6864,11 +6867,11 @@
 			dataType: "JSON",
 			data:
 			{
-				client: client,
+				client_id: client,
 				zapis_id: $("#zapis_id2").val(),
 				invoice_id: invoice_id,
-				filial: $("#filial2").val(),
-				worker: $("#worker").val(),
+				filial_id: $("#filial2").val(),
+				worker_id: $("#worker").val(),
 
 				summ: Summ,
 				summins: SummIns,
