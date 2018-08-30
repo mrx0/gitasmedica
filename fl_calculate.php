@@ -413,14 +413,16 @@
                                             array_push($calculate_ex_j[$arr['ind']], $arr);
                                         }
                                     }
-                                }else
+                                }else {
                                     //$calculate_ex_j = 0;
+                                }
                                 //var_dump ($calculate_ex_j);
 
                                 //сортируем зубы по порядку
                                 if ($calculate_ex_j != 0){
                                     ksort($calculate_ex_j);
                                 }
+                                //var_dump ($calculate_ex_j);
 
 
                                 //Затраты на материалы
