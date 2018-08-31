@@ -1,6 +1,6 @@
 <?php
 
-//etap.php
+//zub_photo.php
 //
 
 	require_once 'header.php';

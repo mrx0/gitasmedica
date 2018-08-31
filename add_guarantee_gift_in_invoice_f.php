@@ -1,7 +1,7 @@
 <?php 
 
 //add_guarantee_gift_in_invoice_f.php
-//
+//Добавление гарантии или подарка в сессионную переменную наряда
 
 	session_start();
 	

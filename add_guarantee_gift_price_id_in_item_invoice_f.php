@@ -1,7 +1,8 @@
 <?php 
 
-//add_guarantee_price_id_in_item_invoice_f.php
+//add_guarantee_gift_price_id_in_item_invoice_f.php
 //
+
 
 	session_start();
 	

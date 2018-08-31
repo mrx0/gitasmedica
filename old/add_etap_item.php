@@ -1,7 +1,8 @@
 <?php
 
-//
+//add_etap_item.php
 //Это пиздец, нах я на это подписался-то
+//Нигде не используется, убираем отсюда 2018-08-31
 
 	require_once 'header.php';
 	
@@ -48,7 +49,7 @@
 								';	
 				echo '
 				
-								<form id="upload" method="post" action="upload.php" enctype="multipart/form-data">
+								<form id="upload" method="post" action="../upload.php" enctype="multipart/form-data">
 									<div id="drop">
 										Переместите сюда или нажмите Поиск
 
@@ -63,15 +64,15 @@
 								</form>
 
 								<!-- JavaScript Includes -->
-								<script src="js/jquery.knob.js"></script>
+								<script src="../js/jquery.knob.js"></script>
 
 								<!-- jQuery File Upload Dependencies -->
-								<script src="js/jquery.ui.widget.js"></script>
-								<script src="js/jquery.iframe-transport.js"></script>
-								<script src="js/jquery.fileupload.js"></script>
+								<script src="../js/jquery.ui.widget.js"></script>
+								<script src="../js/jquery.iframe-transport.js"></script>
+								<script src="../js/jquery.fileupload.js"></script>
 								
 								<!-- Our main JS file -->
-								<script src="js/script_up.js"></script>			
+								<script src="../js/script_up.js"></script>			
 						</div>
 					</div>';
 					
@@ -121,11 +122,11 @@
 					</script> 
 				';	
 			}else{
-				echo '<h1>Не выбран пациент.</h1><a href="index.php">На главную</a>';
+				echo '<h1>Не выбран пациент.</h1><a href="../index.php">На главную</a>';
 			}
 
 		}else{
-			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
+			echo '<h1>Не хватает прав доступа.</h1><a href="../index.php">На главную</a>';
 		}
 	}else{
 		header("location: enter.php");

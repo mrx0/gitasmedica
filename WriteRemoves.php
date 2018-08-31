@@ -1,5 +1,9 @@
 <?php
 
+//WriteRemoves.php
+//Вывод направлений
+//!!! Убрать в DBWork.php  или functions
+
 	function WriteRemoves($removes){
 		include_once 'DBWork.php';	
 		

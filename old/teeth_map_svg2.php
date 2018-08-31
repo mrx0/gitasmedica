@@ -1,7 +1,8 @@
 <?php
 
-//teeth_map_svg.php
+//teeth_map_svg2.php
 //Зубная карта отрисовка с меню
+//Нигде не использую, удаляю 2018-08-31
 
 	function DrawTeethMap($t_f_data_temp, $sw){
 		//var_dump ($t_f_data_temp);

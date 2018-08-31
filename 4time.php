@@ -1,5 +1,7 @@
 <?php
 
+//Разные представления времени
+
 	$ttime = time();			
 	$month = date('n', $ttime);		
 	$year = date('Y', $ttime);

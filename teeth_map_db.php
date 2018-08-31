@@ -1,7 +1,7 @@
 <?php
 
 //teeth_map_db.php
-//
+//Координаты для отрисовки ЗФ
 
 	$teeth_map_db = array (
 		0 => array(

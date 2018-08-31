@@ -1,5 +1,10 @@
 <?php
 
+//WriteNotes.php
+//Вывод Напоминаний
+//!!! Убрать в DBWork.php  или functions
+
+
 	function WriteNotes($notes){
 		include_once 'DBWork.php';
 
