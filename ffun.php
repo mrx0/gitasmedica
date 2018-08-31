@@ -1709,7 +1709,11 @@ function calculateCalculateSave (
                 $insure_approve = $calculate_data['insure_approve'];
                 $price = $calculate_data['price'];
 
-                $itog_price = $calculate_data['itog_price'];
+                if (isset($calculate_data['itog_price'])){
+                    $itog_price = $calculate_data['itog_price'];
+                }else{
+                    $itog_price = $price;
+                }
 
                 $guarantee = $calculate_data['guarantee'];
                 $spec_koeff = $calculate_data['spec_koeff'];
