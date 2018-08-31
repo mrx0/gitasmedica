@@ -61,59 +61,76 @@
 
                                     $number = mysqli_num_rows($res);
                                     if ($number != 0){
+                                        //для теста
+                                        $test_arr = array();
+
                                         while ($arr = mysqli_fetch_assoc($res)){
 
                                             //получим процентовки по всем позициям для данного врача !!! каждый раз ???
                                             $percents_j = getPercents($worker_id, $arr['percent_cats']);
 
-                                            $work_percent = (int)$percents_j[$arr['percent_cats']]['work_percent'];
-                                            $material_percent = (int)$percents_j[$arr['percent_cats']]['material_percent'];
+                                            //для теста
+                                            $test_arr[$arr['percent_cats']] = $percents_j;
 
-                                            //Если стоматологи
-                                            if ($invoice_type == 5) {
-                                                if (!isset($calculate_ex_j[$arr['ind']])) {
-                                                    $calculate_ex_j[$arr['ind']] = array();
+                                            if ($arr['percent_cats'] != 0) {
+
+                                                $work_percent = (int)$percents_j[$arr['percent_cats']]['work_percent'];
+                                                $material_percent = (int)$percents_j[$arr['percent_cats']]['material_percent'];
+
+                                                //Если стоматологи
+                                                if ($invoice_type == 5) {
+                                                    if (!isset($calculate_ex_j[$arr['ind']])) {
+                                                        $calculate_ex_j[$arr['ind']] = array();
+                                                    }
+                                                    array_push($calculate_ex_j[$arr['ind']], $arr);
+                                                    //и бахаем новые проценты
+                                                    //сначала узнаем индекс
+                                                    end($calculate_ex_j[$arr['ind']]);
+                                                    $last_id = key($calculate_ex_j[$arr['ind']]);
+                                                    //и бахаем
+                                                    $calculate_ex_j[$arr['ind']][$last_id]['material_percent'] = $material_percent;
+                                                    $calculate_ex_j[$arr['ind']][$last_id]['work_percent'] = $work_percent;
                                                 }
-                                                array_push($calculate_ex_j[$arr['ind']], $arr);
-                                                //и бахаем новые проценты
-                                                //сначала узнаем индекс
-                                                end($calculate_ex_j[$arr['ind']]);
-                                                $last_id = key($calculate_ex_j[$arr['ind']]);
-                                                //и бахаем
-                                                $calculate_ex_j[$arr['ind']][$last_id]['material_percent'] = $material_percent;
-                                                $calculate_ex_j[$arr['ind']][$last_id]['work_percent'] = $work_percent;
-                                            }
-                                            //Если косметологи
-                                            if ($invoice_type == 6) {
-                                                array_push($calculate_ex_j[$arr['ind']], $arr);
-                                                //и бахаем новые проценты
-                                                //сначала узнаем индекс
-                                                end($calculate_ex_j[$arr['ind']]);
-                                                $last_id = key($calculate_ex_j[$arr['ind']]);
-                                                //и бахаем
-                                                $calculate_ex_j[$arr['ind']][$last_id]['material_percent'] = $material_percent;
-                                                $calculate_ex_j[$arr['ind']][$last_id]['work_percent'] = $work_percent;
+                                                //Если косметологи
+                                                if ($invoice_type == 6) {
+                                                    /*if (!isset($calculate_ex_j[$arr['ind']])) {
+                                                        $calculate_ex_j[$arr['ind']] = array();
+                                                    }*/
+                                                    //array_push($calculate_ex_j[$arr['ind']], $arr);
+
+                                                   $calculate_ex_j[$arr['ind']] = $arr;
+
+                                                    //и бахаем новые проценты
+                                                    //сначала узнаем индекс
+                                                    //end($calculate_ex_j[$arr['ind']]);
+                                                    //$last_id = key($calculate_ex_j[$arr['ind']]);
+                                                    //и бахаем
+                                                    $calculate_ex_j[$arr['ind']]['material_percent'] = $material_percent;
+                                                    $calculate_ex_j[$arr['ind']]['work_percent'] = $work_percent;
+                                                }
                                             }
                                         }
 
-                                        $data = $calculate_ex_j;
+                                        if (!empty($calculate_ex_j)) {
 
-                                        //Удаляем старый РЛ
-                                        //Удаляем из БД
-                                        $query = "DELETE FROM `fl_journal_calculate` WHERE `id`='{$calc_id}'";
-                                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                            $data = $calculate_ex_j;
 
-                                        $query = "DELETE FROM `fl_journal_calculate_ex` WHERE `calculate_id`='{$calc_id}'";
-                                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                            //Отправляем на перерасчет
+                                            calculateCalculateSave($data, $zapis_id, $invoice_id, $filial_id, $client_id, $worker_id, $invoice_type, $summ, $discount, $_SESSION['id']);
 
-                                        //Отправляем на перерасчет
-                                        calculateCalculateSave ($data, $zapis_id, $invoice_id, $filial_id, $client_id, $worker_id, $invoice_type, $summ, $discount, $_SESSION['id']);
+                                            //Удаляем старый РЛ
+                                            //Удаляем из БД
+                                            $query = "DELETE FROM `fl_journal_calculate` WHERE `id`='{$calc_id}'";
+                                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                                            $query = "DELETE FROM `fl_journal_calculate_ex` WHERE `calculate_id`='{$calc_id}'";
+                                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                                        }
                                     }
-
                                 }
                             }
 
-                            echo json_encode(array('result' => 'success', 'data' => $data, 'calcsArr' => $calcsArr));
+                            echo json_encode(array('result' => 'success', 'data' => $data, 'calcsArr' => $calcsArr, 'percents_j' => $test_arr, 'query' => $query));
                         }
                     }
                 }
