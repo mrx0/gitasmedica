@@ -1,7 +1,7 @@
 <?php 
 
-//client_edit_fio_f.php
-//Изменение ФИО клиента
+//user_edit_fio_f.php
+//Изменение ФИО сотрудника
 
 	session_start();
 	

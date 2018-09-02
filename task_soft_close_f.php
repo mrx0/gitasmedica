@@ -1,4 +1,8 @@
-<?php 
+<?php
+
+//task_soft_close_f.php
+//Закрываем задачу soft
+
 	//var_dump ($_POST);
 	if ($_POST){
 		if ($_POST['task_id'] == ''){

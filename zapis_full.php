@@ -1,7 +1,7 @@
 <?php
 
 //zapis_full.php
-//Вся щапись на день 
+//Вся запись на день
 
 	require_once 'header.php';
 

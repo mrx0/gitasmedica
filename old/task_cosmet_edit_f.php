@@ -1,7 +1,8 @@
 <?php 
 
-//edit_task_cosmet_f.php
+//task_cosmet_edit_f.php
 //Функция для редактирования посещения косметолога
+//Нигде не использую, удаляю 2018-08-31
 
 	session_start();
 	

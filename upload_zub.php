@@ -1,6 +1,10 @@
 <?php
 
-var_dump($_FILES);
+//upload_zub.php
+//!!! Хз, зачем это тут, хотя и упоминается где-то
+
+//var_dump($_FILES);
+
 
 // A list of permitted file extensions
 $allowed = array('png', 'jpg');

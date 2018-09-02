@@ -2,6 +2,8 @@
 
 //add_f.php
 //Функция для добавления задачи IT в журнал
+//Вроде нигде не используем, убираем 2018-08-31
+
 	session_start();
 	
 	if (empty($_SESSION['login']) || empty($_SESSION['id'])){

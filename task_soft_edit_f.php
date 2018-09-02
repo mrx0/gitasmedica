@@ -1,7 +1,7 @@
 <?php 
 
-//task_edit_f.php
-//Функция для редактирования задачи IT
+//task_soft_edit_f.php
+//Функция для редактирования задачи Soft
 
 	session_start();
 	

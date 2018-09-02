@@ -1,6 +1,6 @@
 <?php 
 
-//add_comment_task_soft_f.php
+//add_comment_task_f.php
 //Функция для добавления комментария к  задаче IT в журнал
 	
 	session_start();
