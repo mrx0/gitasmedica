@@ -2,6 +2,7 @@
 
 //add_koeff_price_id_in_invoice_f.php
 //
+//Нигде не используем, удаляю 2018-08-31
 
 	session_start();
 	

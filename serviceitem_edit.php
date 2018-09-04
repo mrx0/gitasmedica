@@ -1,7 +1,7 @@
 <?php
 
 //serviceitem_edit.php
-//Редактирование краточки товара
+//Редактирование карточки товара
 
 	require_once 'header.php';
 	

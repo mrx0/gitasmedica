@@ -77,9 +77,9 @@
                                     //Если сумма наряда больше, чем уже оплачено, он по факту не оплачен и вроде можно двигаться дальше
                                 } elseif ($invoice_j[0]['summ'] > $invoice_j[0]['paid']) {
                                     //Если стоит метка, что наряд оплачен, надо разбираться
-                                    if ($invoice_j[0]['status'] == 5) {
+                                    /*if ($invoice_j[0]['status'] == 5) {
                                         echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка! У наряда стоит статус <оплачен>.</div>'));
-                                    } elseif ($invoice_j[0]['status'] == 9) {
+                                    } else*/if ($invoice_j[0]['status'] == 9) {
                                         echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Наряд удален/заблокирован. Операции с ним запрещены</div>'));
                                     } else {
                                         //Если мы вносим оплату задним числом

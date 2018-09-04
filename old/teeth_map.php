@@ -2,6 +2,7 @@
 
 //teeth_map.php
 //Зубная карта
+//Нигде не использую, удаляю 2018-08-31
 
 	require_once 'header.php';
 
@@ -20,7 +21,7 @@
 
 				<div id="data">
 					
-<img src="img/teeth_map.png" border="0" usemap="#teeth_map" alt="teeth_map" class="teeth_map" />
+<img src="../img/teeth_map.png" border="0" usemap="#teeth_map" alt="teeth_map" class="teeth_map" />
 	<map name="teeth_map" id="teeth_map">
 		<area shape="poly" href="/#0" coords="587,126,588,129,587,134,586,138,588,137,590,136,591,132,593,129,594,125,594,122,590,122,586,122">
 		<area shape="poly" href="/#1" coords="576,128,577,133,578,135,579,137,580,137,581,137,582,135,583,133,584,128,584,122,580,122,576,122">

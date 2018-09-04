@@ -1,5 +1,8 @@
 <?php
 
+//upload.php
+//
+
 // A list of permitted file extensions
 $allowed = array('png', 'jpg');
 

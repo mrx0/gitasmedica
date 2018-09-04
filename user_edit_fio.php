@@ -1,7 +1,7 @@
 <?php
 
-//client_edit_fio.php
-//Редактирование карточки пациента ФИО
+//user_edit_fio.php
+//Редактирование карточки сотрудника ФИО
 
 	require_once 'header.php';
 	

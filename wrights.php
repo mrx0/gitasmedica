@@ -1,7 +1,7 @@
 <?php
 
-//admin.php
-//Админка
+//wrights.php
+//Права
 
 	require_once 'header.php';
 

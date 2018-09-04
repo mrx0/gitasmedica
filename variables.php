@@ -1,6 +1,7 @@
 <?php
 
 //variables.php
+//Глобальные переменные
 
 	//Массив с месяцами
 	$monthsName = array(

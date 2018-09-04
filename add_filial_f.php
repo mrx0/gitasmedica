@@ -1,4 +1,8 @@
-<?php 
+<?php
+
+//add_filial_f.php
+//Функция для добавления филиала
+
 	//var_dump ($_POST);
 	if ($_POST){
 		if (($_POST['name'] == '') || ($_POST['address'] == '') || ($_POST['contacts'] == '')){

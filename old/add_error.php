@@ -1,7 +1,7 @@
 <?php
 
 //add_error.php
-//Добавить ошибка
+//Добавить ошибку
 
 	require_once 'header.php';
 	

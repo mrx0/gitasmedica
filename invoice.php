@@ -160,6 +160,8 @@
 										<div class="cellsBlock2" style="margin-bottom: 10px;">
 											<span style="font-size:80%;  color: #555;">';
 
+                            //echo 'Врач:'.WriteSearchUser('spr_workers', $invoice_j[0]['worker_id'], 'user', true).'<br>';
+
 							if (($invoice_j[0]['create_time'] != 0) || ($invoice_j[0]['create_person'] != 0)){
 								echo '
 													Добавлен: '.date('d.m.y H:i' ,strtotime($invoice_j[0]['create_time'])).'<br>
@@ -373,17 +375,18 @@
                                                 <div>
                                                     <div style="">Страховка: <div id="calculateInsInvoice" style="">' . $invoice_j[0]['summins'] . '</div> руб.</div>
                                                 </div>';
-                                    echo '
+                                    /*echo '
                                                 <div>
                                                     <div style="">Исполнитель: <div id="calculateInsInvoice" style="">' . WriteSearchUser('spr_workers', $invoice_j[0]['worker_id'], 'user', true) . '</div></div>
-                                                </div>';
+                                                </div>';*/
                                 }
                             }else{
-                                echo '
+
+                            }
+                            echo '
                                                 <div>
                                                     <div style="">Исполнитель: <div id="calculateInsInvoice" style="">' . WriteSearchUser('spr_workers', $invoice_j[0]['worker_id'], 'user', true) . '</div></div>
                                                 </div>';
-                            }
                             /*echo '
                                                 <div>
                                                     <div style="">Скидка: <div id="discountValue" class="calculateInvoice" style="color: rgb(255, 0, 198);">'.$invoice_j[0]['discount'].'</div><span  class="calculateInvoice" style="color: rgb(255, 0, 198);">%</span></div>

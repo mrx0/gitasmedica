@@ -1,7 +1,8 @@
 <?php
 
 //tooth_status.php
-//
+//Статусы зубов
+//!!! А не перенести ли нам это в БД ? М?
 
 	$tooth_status = array(
 		1 => array(

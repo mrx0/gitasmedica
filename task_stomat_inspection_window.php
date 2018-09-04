@@ -1,6 +1,6 @@
 <?php
 
-//task_stomat_inspection_.php
+//task_stomat_inspection_window.php
 //Описание осмотра стоматолога
 
 	require_once 'header.php';

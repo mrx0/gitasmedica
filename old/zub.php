@@ -1,7 +1,7 @@
 <?php
 
 //zub.php
-//
+//Не используем нигде, удаляю 2018-08-31
 
 	require_once 'header.php';
 	
