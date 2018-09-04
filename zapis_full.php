@@ -35,78 +35,26 @@
 			$NextSmenaArr_Bool = FALSE;
 			$NextSmenaArr_Zanimayu = 0;
 
-			//Массив с месяцами
-			/*$monthsName = array(
-				'01' => 'Январь',
-				'02' => 'Февраль',
-				'03' => 'Март',
-				'04' => 'Апрель',
-				'05' => 'Май',
-				'06' => 'Июнь',
-				'07'=> 'Июль',
-				'08' => 'Август',
-				'09' => 'Сентябрь',
-				'10' => 'Октябрь',
-				'11' => 'Ноябрь',
-				'12' => 'Декабрь'
-			);*/
-			
-			/*$zapis_times = array (
-				0 => '0:00 - 0:30',
-				30 => '0:30 - 1:00',
-				60 => '1:00 - 1:30',
-				90 => '1:30 - 2:00',
-				120 => '2:00 - 2:30',
-				150 => '2:30 - 3:00',
-				180 => '3:00 - 3:30',
-				210 => '3:30 - 4:00',	
-				240 => '4:00 - 4:30',
-				270 => '4:30 - 5:00',
-				300 => '5:00 - 5:30',
-				330 => '5:30 - 6:00',
-				360 => '6:00 - 6:30',
-				390 => '6:30 - 7:00',
-				420 => '7:00 - 7:30',
-				450 => '7:30 - 8:00',
-				480 => '8:00 - 8:30',
-				510 => '8:30 - 9:00',	
-				540 => '9:00 - 9:30',
-				570 => '9:30 - 10:00',
-				600 => '10:00 - 10:30',
-				630 => '10:30 - 11:00',
-				660 => '11:00 - 11:30',
-				690 => '11:30 - 12:00',
-				720 => '12:00 - 12:30',
-				750 => '12:30 - 13:00',
-				780 => '13:00 - 13:30',
-				810 => '13:30 - 14:00',
-				840 => '14:00 - 14:30',
-				870 => '14:30 - 15:00',
-				900 => '15:00 - 15:30',
-				930 => '15:30 - 16:00',
-				960 => '16:00 - 16:30',
-				990 => '16:30 - 17:00',
-				1020 => '17:00 - 17:30',
-				1050 => '17:30 - 18:00',
-				1080 => '18:00 - 18:30',
-				1110 => '18:30 - 19:00',
-				1140 => '19:00 - 19:30',
-				1170 => '19:30 - 20:00',
-				1200 => '20:00 - 20:30',
-				1230 => '20:30 - 21:00',
-				1260 => '21:00 - 21:30',
-				1290 => '21:30 - 22:00',
-				1320 => '22:00 - 22:30',
-				1350 => '22:30 - 23:00',
-				1380 => '23:00 - 23:30',
-				1410 => '23:30 - 00:00',
-			);*/
-			
 			$who = '&who=stom';
 			$whose = 'Стоматологов ';
 			$selected_stom = ' selected';
 			$selected_cosm = ' ';
 			$datatable = 'scheduler_stom';
+
+            //операции со временем
+            $day = date('d');
+            $month = date('m');
+            $year = date('Y');
+
+            if (!isset($_GET['filial'])){
+                //Филиал
+                if (isset($_SESSION['filial'])){
+                    $_GET['filial'] = $_SESSION['filial'];
+                }else{
+                    $_GET['filial'] = 15;
+                }
+            }
+
 			
 			if ($_GET){
 				//var_dump ($_GET);
@@ -176,46 +124,11 @@
                     $somat_color = '';
 				}
 				
-				/*$month_names=array(
-					"Январь",
-					"Февраль",
-					"Март",
-					"Апрель",
-					"Май",
-					"Июнь",
-					"Июль",
-					"Август",
-					"Сентябрь",
-					"Октябрь",
-					"Ноябрь",
-					"Декабрь"
-				); */
-				
-				/*if (isset($_GET['y']))
-					$y = $_GET['y'];
-				if (isset($_GET['m']))
-					$m = $_GET['m']; 
-				if (isset($_GET['d']))
-					$d = $_GET['d']; 
-				if (isset($_GET['date']) && strstr($_GET['date'],"-"))
-					list($y,$m) = explode("-",$_GET['date']);
-				if (!isset($y) || $y < 1970 || $y > 2037)
-					$y = date("Y");
-				if (!isset($m) || $m < 1 || $m > 12)
-					$m = date("m");
-				if (!isset($d))
-					$d = date("d");*/
-				
 				if (isset($_GET['d']) && isset($_GET['m']) && isset($_GET['y'])){
 					//операции со временем						
 					$day = $_GET['d'];
 					$month = $_GET['m'];
 					$year = $_GET['y'];
-				}else{
-					//операции со временем						
-					$day = date('d');		
-					$month = date('m');		
-					$year = date('Y');
 				}
 
 				if (!isset($day) || $day < 1 || $day > 31)
@@ -232,32 +145,7 @@
 				}else{
 					$kab = 1;
 				}
-				
-				//$month_stamp = mktime(0, 0, 0, $m, 1, $y);
-				//$day_count = date("t",$month_stamp);
-				//$weekday = date("w", $month_stamp);
-				/*if ($weekday == 0)
-					$weekday = 7;
-				$start = -($weekday-2);
-				$last = ($day_count + $weekday - 1) % 7;
-				if ($last == 0) 
-					$end = $day_count; 
-				else 
-					$end = $day_count + 7 - $last;
-				$today = date("Y-m-d");
-				$go_today = date('?\d=d&\m=m&\y=Y', mktime (0, 0, 0, date("m"), date("d"), date("Y"))); 
-				*/
-				/*$prev = date('?\d=d&\m=m&\y=Y', mktime (0, 0, 0, $m, $d-1, $y));  
-				$next = date('?\d=d&\m=m&\y=Y', mktime (0, 0, 0, $m, $d+1, $y));
-				if(isset($_GET['filial'])){
-					$prev .= '&filial='.$_GET['filial']; 
-					$next .= '&filial='.$_GET['filial'];
-					$go_today .= '&filial='.$_GET['filial'];
-					
-					$selected_fil = $_GET['filial'];
-				}
-				$i = 0;*/
-				
+
 				foreach ($_GET as $key => $value){
 					if (($key == 'd') || ($key == 'm') || ($key == 'y'))
 						$dopDate  .= '&'.$key.'='.$value;
@@ -267,17 +155,6 @@
 						$dopWho .= '&'.$key.'='.$value;
 				}
 
-
-                if (!isset($_GET['filial'])){
-                    //Филиал
-                    if (isset($_SESSION['filial'])){
-                        $_GET['filial'] = $_SESSION['filial'];
-                    }else{
-                        $_GET['filial'] = 15;
-                    }
-                }
-
-				
 				$filial = SelDataFromDB('spr_filials', $_GET['filial'], 'offices');
 				//var_dump($filial['name']);
 				
