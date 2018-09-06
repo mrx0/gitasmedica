@@ -173,6 +173,9 @@
 		
 		if ($sw != ''){
 			$user = SelDataFromDB($datatable, $sw, $search);
+			//var_dump ($user);
+			//var_dump ($search);
+
 			if ($user != 0){
 				if ($type == 'user_full'){
 					if ($link){
