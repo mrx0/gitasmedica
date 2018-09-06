@@ -34,7 +34,7 @@
 							Такая позиция уже есть.<br><br>
 						</div>';
 				}else{
-					WriteToDB_UpdatePriceItem ($name, $code, $_POST['id'], $_SESSION['id']);
+					WriteToDB_UpdatePriceItem ($name, $code, $_POST['category_id'], $_POST['id'], $_SESSION['id']);
 					if (isset($_POST['group'])){
 						if ($_POST['group'] != 0){
 							WriteToDB_UpdatePriceItemInGroup($_POST['id'], $_POST['group'], $_SESSION['id']);

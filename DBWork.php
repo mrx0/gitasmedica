@@ -222,15 +222,15 @@
 	}
 
 	//Добавление услуги.
-	function WriteToDB_EditPriceName ($name, $pricecode, $session_id){
+	function WriteToDB_EditPriceName ($name, $pricecode, $category_id, $session_id){
 
         $msql_cnnct = ConnectToDB ();
 
 		$time = time();
 		$query = "INSERT INTO `spr_pricelist_template` (
-			`name`, `code`, `create_time`, `create_person`) 
+			`name`, `category`, `code`, `create_time`, `create_person`) 
 			VALUES (
-			'{$name}', '{$pricecode}', '{$time}', '{$session_id}')";
+			'{$name}', '{$category_id}', '{$pricecode}', '{$time}', '{$session_id}')";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -245,13 +245,13 @@
 	}
 	
 	//
-	function WriteToDB_UpdatePriceItem ($name, $code, $id, $session_id){
+	function WriteToDB_UpdatePriceItem ($name, $code, $category_id, $id, $session_id){
 
         $msql_cnnct = ConnectToDB ();
 
 		$time = time();
 		
-		$query = "UPDATE `spr_pricelist_template` SET `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `name`='{$name}', `code`='{$code}' WHERE `id`='{$id}'";
+		$query = "UPDATE `spr_pricelist_template` SET `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `name`='{$name}', `code`='{$code}', `category`='{$category_id}' WHERE `id`='{$id}'";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -1227,6 +1227,8 @@
 	
 	//Выборка из БД записей из таблицы $datatable
 	function SelDataFromDB ($datatable, $sw, $type){
+        //var_dump($type);
+
 		$arr = array();
 		$rez = array();
 		$q = '';
@@ -1277,6 +1279,10 @@
 					//$q =  " WHERE `task`='$sw' ORDER BY `uptime` ASC";
 				}else{
                     $q = " WHERE `type` = '$sw'";
+
+                    if ($type == 'id'){
+                        $q = " WHERE `id` = '$sw'";
+                    }
 				}
 			}else{
 				if ($type == 'filter'){
@@ -1398,8 +1404,8 @@
         $msql_cnnct = ConnectToDB ();
 		
 		$query = "SELECT * FROM `$datatable`".$q;
-
 		//echo $query;
+
 		//$res = mysql_query($query) or die(mysql_error().' -> '.$query);
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 		

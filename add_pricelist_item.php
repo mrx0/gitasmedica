@@ -17,51 +17,14 @@
 			$month = date('m');		
 			$year = date('Y');
 			
-			//тип график (космет/стомат/...)
-			/*if (isset($_GET['who'])){
-				if ($_GET['who'] == 'stom'){
-					$who = '&who=stom';
-					$whose = 'Стоматология ';
-					$selected_stom = ' selected';
-					$selected_cosm = ' ';
-					$datatable = 'scheduler_stom';
-					$kabsForDoctor = 'stom';
-					$type = 5;
-				}elseif($_GET['who'] == 'cosm'){
-					$who = '&who=cosm';
-					$whose = 'Косметология ';
-					$selected_stom = ' ';
-					$selected_cosm = ' selected';
-					$datatable = 'scheduler_cosm';
-					$kabsForDoctor = 'cosm';
-					$type = 6;
-				}else{
-					$who = '&who=stom';
-					$whose = 'Стоматология ';
-					$selected_stom = ' selected';
-					$selected_cosm = ' ';
-					$datatable = 'scheduler_stom';
-					$kabsForDoctor = 'stom';
-					$type = 5;
-					$_GET['who'] = 'stom';
-				}
-			}else{
-				$who = '&who=stom';
-				$whose = 'Стоматология ';
-				$selected_stom = ' selected';
-				$selected_cosm = ' ';
-				$datatable = 'scheduler_stom';
-				$kabsForDoctor = 'stom';
-				$type = 5;
-				$_GET['who'] = 'stom';
-			}*/
-			
 			if (isset($_GET['addinid'])){
 				$selected = $_GET['addinid'];
 			}else{
 				$selected = 0;
 			}
-			
+
+            $category_j = SelDataFromDB('fl_spr_percents', '', '');
+
 			echo '
 				<div id="status">
 					<header>
@@ -99,6 +62,20 @@
 									<label id="pricename_error" class="error"></label>
 								</div>
 							</div>
+                            <div class="cellsBlock2">
+                                <div class="cellLeft">Категория</div>
+                                <div class="cellRight">
+                                    <select name="category_id" id="category_id">';
+                                        echo "<option value='0' selected>не указано</option>";
+            if ($category_j != 0){
+                for ($i=0; $i<count($category_j); $i++){
+                    echo "<option value='".$category_j[$i]['id']."'>".$category_j[$i]['name']."</option>";
+                }
+            }
+            echo '
+                                            </select>
+                                        </div>
+                                    </div>
 							<div class="cellsBlock2">
 								<div class="cellLeft">Цена</div>
 								<div class="cellRight">
@@ -125,7 +102,7 @@
 					echo '
 	
 								<div class="cellsBlock2">
-									<div class="cellLeft">С какого числа:</div>
+									<div class="cellLeft">С какого числа применять цену:</div>
 									<div class="cellRight">
 										<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
 										onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 

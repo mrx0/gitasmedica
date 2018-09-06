@@ -403,7 +403,7 @@
 											Изменить дату:
 											<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
 												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
-											<span style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'zapis.php?'.$dopFilial.$dopWho.'\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
+											<span class="button_tiny" style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'zapis.php?'.$dopFilial.$dopWho.'\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
 										</span>
 									</div>
 								</li>';

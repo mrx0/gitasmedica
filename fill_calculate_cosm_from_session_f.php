@@ -14,7 +14,7 @@
 
 		if ($_POST){
 			if (!isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['filial']) || !isset($_POST['worker'])){
-				echo json_encode(array('result' => 'error', 'data' => 'Ошибка #2'));
+				echo json_encode(array('result' => 'error', 'data' => 'Ошибка #9'));
 			}else{
 				include_once 'DBWork.php';
 
@@ -32,7 +32,7 @@
                 $price['start_price'] = 0;
 
 				if (!isset($_SESSION['calculate_data'][$client][$zapis_id]['data'])){
-					echo json_encode(array('result' => 'error', 'data' => 'Ошибка #1 ['.$client.'/'.$zapis_id.']'));
+					echo json_encode(array('result' => 'error', 'data' => 'Ошибка #10 ['.$client.'/'.$zapis_id.']'));
 				}else{
 					//берем из сесии данные
 					$data = $_SESSION['calculate_data'][$client][$zapis_id]['data'];
@@ -47,11 +47,11 @@
                         $mkb_data = $_SESSION['calculate_data'][$client][$zapis_id]['mkb'];
 
                         foreach ($data as $ind => $items) {
-                            if ($t_number_active == $ind) {
+                            if ($t_number_active == $ind){
                                 $bg_col = 'background: rgba(131, 219, 83, 0.5) none repeat scroll 0% 0%;';
                                 $bg_col2 = 'background: rgba(83, 219, 185, 0.5) none repeat scroll 0% 0%;';
                                 $bg_col3 = 'background: rgba(131, 219, 83, 0.5) none repeat scroll 0% 0%;';
-                            } else {
+                            }else{
                                 $bg_col = '';
                                 $bg_col2 = 'background: rgba(83, 219, 185, 0.14) none repeat scroll 0% 0%;';
                                 $bg_col3 = 'background: rgba(83, 219, 185, 0.14) none repeat scroll 0% 0%;';
@@ -60,7 +60,7 @@
 
                             $request .= '
                                 <div class="cellsBlock">
-                                    <div class="cellCosmAct toothInInvoice" style="' . $bg_col3 . '" onclick="toothInInvoice(' . $ind . ')">';
+                                    <div class="cellCosmAct toothInInvoice" style="'.$bg_col3.'" onclick="toothInInvoice('.$ind.')">';
 
                             $request .= $ind + 1;
 
@@ -68,7 +68,6 @@
                                     </div>';
 
                             //часть прайса
-                            //if (!empty($invoice_data)){
 
                             //Категории процентов
                             $percent_cats_j = SelDataFromDB('fl_spr_percents', 6, 'type');
@@ -124,7 +123,8 @@
                                 }
 
                                 if ($rezult2 != 0) {
-                                    $request .= $rezult2[0]['name'];
+                                    //$request .= $rezult2[0]['name'];
+                                    $request .= '<i>'.$rezult2[0]['code'].'</i>'.$rezult2[0]['name'].' <span style="font-size: 90%; background: rgba(197, 197, 197, 0.41);">[#'.$rezult2[0]['id'].']</span>';
 
                                     $spec_koeff = $items['spec_koeff'];
 
@@ -177,7 +177,7 @@
                                 if (isset($items['itog_price'])) {
                                     if ($items['itog_price'] > 0) {
                                         $stoim_item2 = $items['itog_price'];
-                                    } else {
+                                    }else{
                                         $stoim_item2 = '0';
                                     }
                                 } else {

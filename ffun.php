@@ -405,6 +405,7 @@
         $result = array();
         $percents = array();
         $percents_personal = array();
+        $boolean = false;
 
         $msql_cnnct = ConnectToDB2 ();
 
@@ -414,21 +415,44 @@
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
         $number = mysqli_num_rows($res);
+        //var_dump($number);
+
         if ($number != 0){
             $arr = mysqli_fetch_assoc($res);
 
             $type = $arr['type'];
 
             //Вытащим общие процентовки
-            $query = "SELECT `id`, `work_percent`, `material_percent` FROM `fl_spr_percents` WHERE `id`='".$percent_cat."' AND `type`='".$type."' LIMIT 1";
+            if ($percent_cat > 0) {
+                $query = "SELECT `id`, `work_percent`, `material_percent` FROM `fl_spr_percents` WHERE `id`='" . $percent_cat . "' AND `type`='" . $type . "' LIMIT 1";
+            }else{
+                $query = "SELECT `id`, `work_percent`, `material_percent` FROM `fl_spr_percents` WHERE `type`='" . $type . "' LIMIT 1";
+            }
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
             $number = mysqli_num_rows($res);
+            //var_dump($number);
+
             if ($number != 0){
+                $boolean = true;
+            }else{
+                $query = "SELECT `id`, `work_percent`, `material_percent` FROM `fl_spr_percents` WHERE `type`='" . $type . "' LIMIT 1";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+                if ($number != 0){
+                    $boolean = true;
+                }
+            }
+
+            if ($boolean){
+
                 while ($arr = mysqli_fetch_assoc($res)){
-                    $percents[$arr['id']]['work_percent'] = $arr['work_percent'];
-                    $percents[$arr['id']]['material_percent'] =  $arr['material_percent'];
+                    $percents[$percent_cat]['category'] = $arr['id'];
+                    $percents[$percent_cat]['work_percent'] = $arr['work_percent'];
+                    $percents[$percent_cat]['material_percent'] =  $arr['material_percent'];
                 }
 
                 //Вытащим персональные процентовки
@@ -449,22 +473,12 @@
                 }else{
 
                 }
-
-            }else{
-                $percents[$arr['id']]['work_percent'] = 0;
-                $percents[$arr['id']]['material_percent'] =  0;
             }
-        }/*else{
-            $percents[$arr['id']]['work_percent'] = 0;
-            $percents[$arr['id']]['material_percent'] =  0;
-        }*/
 
-        //$percents['q'] = $query;
-
-
-
+        }
 
         $result = $percents;
+        //var_dump($result);
 
         return $result;
     }

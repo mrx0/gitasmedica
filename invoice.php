@@ -225,55 +225,6 @@
 									$dop_img .= '<img src="img/night.png" title="Ночное"> ';
 								}
 
-								/*echo '
-										<li class="cellsBlock" style="width: auto;">';
-
-								echo '
-											<div class="cellName" style="position: relative; '.$back_color.'">';
-								$start_time_h = floor($sheduler_zapis[0]['start_time']/60);
-								$start_time_m = $sheduler_zapis[0]['start_time']%60;
-								if ($start_time_m < 10) $start_time_m = '0'.$start_time_m;
-								$end_time_h = floor(($sheduler_zapis[0]['start_time']+$sheduler_zapis[0]['wt'])/60);
-								if ($end_time_h > 23) $end_time_h = $end_time_h - 24;
-								$end_time_m = ($sheduler_zapis[0]['start_time']+$sheduler_zapis[0]['wt'])%60;
-								if ($end_time_m < 10) $end_time_m = '0'.$end_time_m;
-
-								echo
-									'<b>'.$sheduler_zapis[0]['day'].' '.$monthsName[$month].' '.$sheduler_zapis[0]['year'].'</b><br>'.
-									$start_time_h.':'.$start_time_m.' - '.$end_time_h.':'.$end_time_m;
-
-								echo '
-												<div style="position: absolute; top: 1px; right: 1px;">'.$dop_img.'</div>';
-								echo '
-											</div>';
-								echo '
-											<div class="cellName">';
-								echo
-												'Пациент <br /><b>'.WriteSearchUser('spr_clients',  $sheduler_zapis[0]['patient'], 'user', true).'</b>';
-								echo '
-											</div>';
-								echo '
-											<div class="cellName">';
-
-								$offices = SelDataFromDB('spr_filials', $sheduler_zapis[0]['office'], 'offices');
-								echo '
-												Филиал:<br>'.
-											$offices[0]['name'];
-								echo '
-											</div>';
-								echo '
-											<div class="cellName">';
-								echo
-												$sheduler_zapis[0]['kab'].' кабинет<br>'.'Врач: <br><b>'.WriteSearchUser('spr_workers', $sheduler_zapis[0]['worker'], 'user', true).'</b>';
-								echo '
-											</div>';
-								echo '
-											<div class="cellName">';
-								echo  '
-												<b><i>Описание:</i></b><br><div style="text-overflow: ellipsis; overflow: hidden; white-space: inherit; display: block; width: 120px;" title="'.$sheduler_zapis[0]['description'].'">'.$sheduler_zapis[0]['description'].'</div>';
-								echo '
-											</div>
-										</li>';*/
 
                                 // !!! **** тест с записью
                                 include_once 'showZapisRezult.php';
@@ -544,7 +495,7 @@
                                             </div>';
 
                                     if ($invoice_j[0]['type'] != 88) {
-                                        //Диагноз
+                                        //Диагноз МКБ
                                         if ($sheduler_zapis[0]['type'] == 5) {
 
                                             if (!empty($invoice_ex_j_mkb) && isset($invoice_ex_j_mkb[$ind])) {
@@ -593,23 +544,6 @@
                                                     </div>';
                                             }
 
-
-                                            /*if (isset($invoice_ex_j_mkb[''])){
-                                                echo '
-                                                    <div class="cellsBlock" style="font-size: 100%;" >
-                                                        <div class="cellText2" style="padding: 2px 4px; background: rgba(83, 219, 185, 0.14) none repeat scroll 0% 0%;">
-                                                            <b>';
-                                                if ($ind == 99){
-                                                    echo '<i>Полость</i>';
-                                                }else{
-                                                    echo '<i>Зуб</i>: '.$ind;
-                                                }
-                                                echo '
-                                                            </b>. <i>Диагноз</i>: '.$invoice_data[0]['mkb_id'].'
-                                                        </div>
-                                                    </div>';
-                                            }*/
-
                                         }
                                     }
 
@@ -646,51 +580,8 @@
 
                                         if ($rezult2 != 0) {
 
-                                            echo $rezult2[0]['name'];
+                                            echo '<i>'.$rezult2[0]['code'].'</i>'.$rezult2[0]['name'].' <span style="font-size: 90%; background: rgba(197, 197, 197, 0.41);">[#'.$rezult2[0]['id'].']</span>';
 
-                                            //Узнать цену
-                                            /*$arr = array();
-                                            $rez = array();
-                                            $price = 0;
-                                            $stoim_item = 0;
-                                            //Для отбора цены по времени создания наряда
-                                            $price_arr = array();
-
-
-
-                                            $query = "SELECT `date_from`, `price` FROM `spr_priceprices` WHERE `item`='{$item['price_id']}' ORDER BY `date_from` DESC, `create_time`";
-
-                                            if ($item['insure'] != 0){
-                                                $query = "SELECT `date_from`, `price` FROM `spr_priceprices_insure` WHERE `item`='{$item['price_id']}' AND `insure`='".$item['insure']."' ORDER BY `date_from` DESC, `create_time`";
-                                            }
-
-                                            $res = mysql_query($query) or die(mysql_error().' -> '.$query);
-                                            $number = mysql_num_rows($res);
-                                            if ($number != 0){
-                                                //если кол-во цен == 1
-                                                if ($number == 1){
-                                                    $arr = mysql_fetch_assoc($res);
-                                                    $price = $arr['price'];
-                                                //если > 1
-                                                }else{
-                                                    while ($arr = mysql_fetch_assoc($res)){
-                                                        $price_arr[$arr['date_from']] = $arr;
-                                                    }
-                                                    //обратная сортировка
-                                                    krsort($price_arr);
-                                                    //var_dump($price_arr);
-                                                    //var_dump(strtotime($invoice_j[0]['create_time']));
-
-                                                    foreach($price_arr as $date_from => $value_arr){
-                                                        if (strtotime($invoice_j[0]['create_time']) > $date_from){
-                                                            $price = $value_arr['price'];
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }else{
-                                                $price = '?';
-                                            }*/
 
                                         } else {
                                             echo '?';

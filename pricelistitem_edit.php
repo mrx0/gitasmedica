@@ -17,6 +17,9 @@
 				//var_dump($items_j);
 				
 				if ($items_j !=0){
+
+                    $category_j = SelDataFromDB('fl_spr_percents', '', '');
+
 					echo '
 						<div id="status">
 							<header>
@@ -47,6 +50,27 @@
 											<label id="pricelistitemname_error" class="error"></label>
 										</div>
 									</div>
+        
+                                    <div class="cellsBlock2">
+                                        <div class="cellLeft">Категория</div>
+                                        <div class="cellRight">
+                                            <select name="category_id" id="category_id">';
+                                        echo "<option value='0' selected>не указано</option>";
+                    if ($category_j != 0){
+                        for ($i=0; $i<count($category_j); $i++){
+                            $selected = '';
+                            if ($category_j[$i]['id'] == $items_j[0]['category']){
+                                $selected = 'selected';
+                            }
+
+											echo "<option value='".$category_j[$i]['id']."' ".$selected.">".$category_j[$i]['name']."</option>";
+                        }
+                    }
+                    echo '
+                                            </select>
+                                        </div>
+                                    </div>
+							
 									<div class="cellsBlock2">
 										<div class="cellLeft">Расположение</div>
 										<div class="cellRight">';
