@@ -26,12 +26,6 @@
         var val = $(this).val();
         //console.log(val);
 
-		/*console.log(val);
-		console.log(val.length);
-		console.log(val.length - 1);
-		console.log(!isNaN(val[val.length - 1]));*/
-
-        //if ((val.length > 1) && !isNaN(val[val.length - 1])){
         if (val.length > 1){
             $.ajax({
                 url:"FastSearchCert.php",
@@ -134,7 +128,7 @@
 						'<li>'+
                         //'<input type="number" name="changePriceItem" id="changePriceItem" class="form-control" size="2" min="'+start_price+'" value="'+Number(target.html())+'" class="mod" onchange="priceItemInvoice('+ind+', '+key+', $(this).val(), '+start_price+');">'+
                         '<input type="number" name="changePriceItem" id="changePriceItem" class="form-control" size="2" min="'+start_price+'" value="'+Number(target.html())+'" class="mod">'+
-                        //'<input type="text" name="changePriceItem" id="changePriceItem" class="form-control" value="'+Number(target.html())+'" onkeyup="changePriceItem(this.value, '+start_price+');">'+
+                        //'<input type="text" name="changePriceItem" id="changePriceItem" class="form-control" value="'+Number(target.html())+'" onkeyup="changePriceItem(this.val(), '+start_price+');">'+
 						'<div style="display: inline;" onclick="priceItemInvoice('+ind+', '+key+', $(\'#changePriceItem\').val(), '+start_price+')">Ok</div>'+
 						'</li>';
 
@@ -144,18 +138,9 @@
 
 				    var itog_price = Number(target.html());
 				    var manual_itog_price = Number(target.attr("manual_itog_price"));
-				    /*console.log(itog_price);
-				    console.log(manual_itog_price);*/
-				    //console.log(target.attr("manual_itog_price"));
-				    //console.log(Math.floor(itog_price / 10) * 10);
-				    //console.log(Math.floor((itog_price) / 10) * 10 +10);
 
                     manual_itog_price = itog_price;
 
-					/*var min_itog_price = Math.floor(itog_price / 10) * 10;
-					var max_itog_price = min_itog_price + 10;*/
-					/*var min_itog_price = itog_price - 2;
-					var max_itog_price = itog_price + 2;*/
 					var min_itog_price = manual_itog_price - 10;
 					var max_itog_price = manual_itog_price + 2;
 
@@ -167,9 +152,7 @@
                         'Введите цену (от '+min_itog_price+' до '+max_itog_price+')'+
                         '</li>'+
 						'<li>'+
-                        //'<input type="number" name="changePriceItem" id="changePriceItem" class="form-control" size="2" min="'+start_price+'" value="'+Number(target.html())+'" class="mod" onchange="priceItemInvoice('+ind+', '+key+', $(this).val(), '+start_price+');">'+
                         '<input type="number" name="changePriceItogItem" id="changePriceItogItem" class="form-control" size="3" min="'+min_itog_price+'"  max="'+max_itog_price+'" value="'+itog_price+'" class="mod">'+
-                        //'<input type="text" name="changePriceItem" id="changePriceItem" class="form-control" value="'+Number(target.html())+'" onkeyup="changePriceItem(this.value, '+start_price+');">'+
 						'<div style="display: inline;" onclick="priceItemItogInvoice('+ind+', '+key+', $(\'#changePriceItogItem\').val(), '+manual_itog_price+')">Ok</div>'+
 						'</li>';
 
@@ -274,7 +257,7 @@
                 // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             success:function(data){
-                document.getElementById("status").innerHTML=data;
+                 $("#status").html(data);
             }
         })
     };
@@ -283,22 +266,18 @@
     function Ajax_add_client(session_id) {
 		// убираем класс ошибок с инпутов
         hideAllErrors ();
-		 
+
 		$.ajax({
-			// метод отправки 
+			// метод отправки
 			type: "POST",
 			// путь до скрипта-обработчика
 			url: "ajax_test.php",
 			// какие данные будут переданы
 			data: {
-				fname:document.getElementById("f").value,
-				iname:document.getElementById("i").value,
-				oname:document.getElementById("o").value,
-				
-				//sel_date:document.getElementById("sel_date").value,
-				//sel_month:document.getElementById("sel_month").value,
-				//sel_year:document.getElementById("sel_year").value,
-				
+				fname: $("#f").val(),
+				iname: $("#i").val(),
+				oname: $("#o").val(),
+
 				sex:sex_value,
 			},
 			// тип передачи данных
@@ -306,7 +285,7 @@
 			// действие, при ответе с сервера
 			success: function(data){
 				// в случае, когда пришло success. Отработало без ошибок
-				if(data.result == 'success'){   
+				if(data.result == 'success'){
 					//console.log('форма корректно заполнена');
 					ajax({
 						url:"client_add_f.php",
@@ -314,83 +293,85 @@
 						method:"POST",
 						data:
 						{
-							f: document.getElementById("f").value,
-							i: document.getElementById("i").value,
-							o: document.getElementById("o").value,
-									
-							fo: document.getElementById("fo").value,
-							io: document.getElementById("io").value,
-							oo: document.getElementById("oo").value,
-									
-							comment:document.getElementById("comment").value,
-								
-							card:document.getElementById("card").value,
-								
-							therapist:document.getElementById("search_client2").value,
-							therapist2:document.getElementById("search_client4").value,
-							
-							sel_date:document.getElementById("sel_date").value,
-							sel_month:document.getElementById("sel_month").value,
-							sel_year:document.getElementById("sel_year").value,
-							
-							telephone:document.getElementById("telephone").value,
-							htelephone:document.getElementById("htelephone").value,
-							
-							telephoneo:document.getElementById("telephoneo").value,
-							htelephoneo:document.getElementById("htelephoneo").value,
-							
-							passport:document.getElementById("passport").value,
-							passportvidandata:document.getElementById("passportvidandata").value,
-							passportvidankem:document.getElementById("passportvidankem").value,
-							
-							alienpassportser:document.getElementById("alienpassportser").value,
-							alienpassportnom:document.getElementById("alienpassportnom").value,							
-							
-							address:document.getElementById("address").value,
-							
-							polis:document.getElementById("polis").value,
-							polisdata:document.getElementById("polisdata").value,
-							insurecompany:document.getElementById("insurecompany").value,
-							
+							f:  $("#f").val(),
+							i:  $("#i").val(),
+							o:  $("#o").val(),
+
+							fo:  $("#fo").val(),
+							io:  $("#io").val(),
+							oo:  $("#oo").val(),
+
+							comment: $("#comment").val(),
+
+							card: $("#card").val(),
+
+							therapist: $("#search_client2").val(),
+							therapist2: $("#search_client4").val(),
+
+							sel_date: $("#sel_date").val(),
+							sel_month: $("#sel_month").val(),
+							sel_year: $("#sel_year").val(),
+
+							telephone: $("#telephone").val(),
+							htelephone: $("#htelephone").val(),
+
+							telephoneo: $("#telephoneo").val(),
+							htelephoneo: $("#htelephoneo").val(),
+
+							passport: $("#passport").val(),
+							passportvidandata: $("#passportvidandata").val(),
+							passportvidankem: $("#passportvidankem").val(),
+
+							alienpassportser: $("#alienpassportser").val(),
+							alienpassportnom: $("#alienpassportnom").val(),
+
+							address: $("#address").val(),
+
+							polis: $("#polis").val(),
+							polisdata: $("#polisdata").val(),
+							insurecompany: $("#insurecompany").val(),
+
 							sex:sex_value,
-								
+
 							session_id: session_id,
 						},
-						success:function(data){document.getElementById("errrror").innerHTML=data;}
+						success:function(data){
+							$("#errrror").html(data);
+						}
 					})
 				// в случае ошибок в форме
 				}else{
 					// перебираем массив с ошибками
 					for(var errorField in data.text_error){
-						// выводим текст ошибок 
+						// выводим текст ошибок
 						$('#'+errorField+'_error').html(data.text_error[errorField]);
 						// показываем текст ошибок
 						$('#'+errorField+'_error').show();
 						// обводим инпуты красным цветом
-					   // $('#'+errorField).addClass('error_input');                      
+					   // $('#'+errorField).addClass('error_input');
 					}
-					document.getElementById("errror").innerHTML='<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>'
+					 $("#errror").html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>')
 				}
 			}
-		});		
+		});
 	};
 
 	function Ajax_edit_client(session_id) {
 		// убираем класс ошибок с инпутов
         hideAllErrors ();
-		 
+
 		$.ajax({
-			// метод отправки 
+			// метод отправки
 			type: "POST",
 			// путь до скрипта-обработчика
 			url: "ajax_test.php",
 			// какие данные будут переданы
 			data: {
-				
+
 				sel_date: $("#sel_date").val(),
 				sel_month: $("#sel_month").val(),
 				sel_year: $("#sel_year").val(),
-				
+
 				sex: sex_value,
 			},
 			// тип передачи данных
@@ -398,7 +379,7 @@
 			// действие, при ответе с сервера
 			success: function(data){
 				// в случае, когда пришло success. Отработало без ошибок
-				if(data.result == 'success'){   
+				if(data.result == 'success'){
 					//console.log('форма корректно заполнена');
 					ajax({
 						url:"client_edit_f.php",
@@ -406,68 +387,70 @@
 						method:"POST",
 						data:
 						{
-							id:document.getElementById("id").value,
-							
-							fo: document.getElementById("fo").value,
-							io: document.getElementById("io").value,
-							oo: document.getElementById("oo").value,
-							
-							comment:document.getElementById("comment").value,
-							
-							card:document.getElementById("card").value,
-							
-							therapist:document.getElementById("search_client2").value,
-							therapist2:document.getElementById("search_client4").value,
-							
-							sel_date:document.getElementById("sel_date").value,
-							sel_month:document.getElementById("sel_month").value,
-							sel_year:document.getElementById("sel_year").value,
-							
-							telephone:document.getElementById("telephone").value,
-							htelephone:document.getElementById("htelephone").value,
-							
-							telephoneo:document.getElementById("telephoneo").value,
-							htelephoneo:document.getElementById("htelephoneo").value,
-							
-							passport:document.getElementById("passport").value,
-							passportvidandata:document.getElementById("passportvidandata").value,
-							passportvidankem:document.getElementById("passportvidankem").value,
-							
-							alienpassportser:document.getElementById("alienpassportser").value,
-							alienpassportnom:document.getElementById("alienpassportnom").value,	
-							
-							address:document.getElementById("address").value,
-							
-							polis:document.getElementById("polis").value,
-							polisdata:document.getElementById("polisdata").value,
-							insurecompany:document.getElementById("insurecompany").value,
+							id: $("#id").val(),
+
+							fo:  $("#fo").val(),
+							io:  $("#io").val(),
+							oo:  $("#oo").val(),
+
+							comment: $("#comment").val(),
+
+							card: $("#card").val(),
+
+							therapist: $("#search_client2").val(),
+							therapist2: $("#search_client4").val(),
+
+							sel_date: $("#sel_date").val(),
+							sel_month: $("#sel_month").val(),
+							sel_year: $("#sel_year").val(),
+
+							telephone: $("#telephone").val(),
+							htelephone: $("#htelephone").val(),
+
+							telephoneo: $("#telephoneo").val(),
+							htelephoneo: $("#htelephoneo").val(),
+
+							passport: $("#passport").val(),
+							passportvidandata: $("#passportvidandata").val(),
+							passportvidankem: $("#passportvidankem").val(),
+
+							alienpassportser: $("#alienpassportser").val(),
+							alienpassportnom: $("#alienpassportnom").val(),
+
+							address: $("#address").val(),
+
+							polis: $("#polis").val(),
+							polisdata: $("#polisdata").val(),
+							insurecompany: $("#insurecompany").val(),
 
 							sex:sex_value,
-							
-							session_id: session_id,
+
+							session_id: session_id
 						},
-						success:function(data){document.getElementById("errrror").innerHTML=data;}
+						success:function(data){
+							$("#errrror").html(data);
+						}
 					})
 				// в случае ошибок в форме
 				}else{
 					// перебираем массив с ошибками
 					for(var errorField in data.text_error){
-						// выводим текст ошибок 
+						// выводим текст ошибок
 						$('#'+errorField+'_error').html(data.text_error[errorField]);
 						// показываем текст ошибок
 						$('#'+errorField+'_error').show();
 						// обводим инпуты красным цветом
-					   // $('#'+errorField).addClass('error_input');                      
+					   // $('#'+errorField).addClass('error_input');
 					}
-					document.getElementById("errror").innerHTML='<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>'
+					 $("#errror").html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>')
 				}
 			}
-		});	
-	}; 
-	
+		});
+	};
+
 	function Ajax_del_client(session_id) {
-		var id = document.getElementById("id").value;
-		
+		var id =  $("#id").val();
+
 		ajax({
 			url:"client_del_f.php",
 			statbox:"errrror",
@@ -478,24 +461,23 @@
 				session_id: session_id,
 			},
 			success:function(data){
-				document.getElementById("errrror").innerHTML=data;
+				 $("#errrror").html(data);
 				setTimeout(function () {
 					window.location.replace('client.php?id='+id);
 					//console.log('client.php?id='+id);
 				}, 100);
 			}
 		})
-	}; 
-	
+	};
+
 	function Ajax_del_pricelistgroup(id, session_id) {
-		
-		//var id = document.getElementById("id").value;
+
 		if ($("#deleteallin").prop("checked")){
 			var deleteallin = 1;
 		}else{
 			var deleteallin = 0;
 		}
-		
+
 		ajax({
 			url:"pricelistgroup_del_f.php",
 			statbox:"errrror",
@@ -507,7 +489,7 @@
 				session_id: session_id
 			},
 			success:function(data){
-				document.getElementById("errrror").innerHTML=data;
+				 $("#errrror").html(data);
 				setTimeout(function () {
 					window.location.replace('pricelistgroup.php?id='+id);
 					//console.log('client.php?id='+id);
@@ -515,10 +497,10 @@
 			}
 		})
 	}
-	
+
 	//Удаление позиции прайса
 	function Ajax_del_pricelistitem(id) {
-		
+
 		ajax({
 			url:"pricelistitem_del_f.php",
 			statbox:"errrror",
@@ -528,7 +510,7 @@
 				id: id
 			},
 			success:function(data){
-				document.getElementById("errrror").innerHTML=data;
+				 $("#errrror").html(data);
 				setTimeout(function () {
 					window.location.replace('pricelistitem.php?id='+id);
 					//console.log('client.php?id='+id);
@@ -536,10 +518,10 @@
 			}
 		})
 	}
-	
+
 	//Удаление позиции прайса страховой
 	function Ajax_del_pricelistitem_insure(id, insure) {
-		
+
 		ajax({
 			url:"pricelistitem_insure_del_f.php",
 			statbox:"errrror",
@@ -550,7 +532,7 @@
 				insure: insure
 			},
 			success:function(data){
-				document.getElementById("errrror").innerHTML=data;
+				 $("#errrror").html(data);
 				setTimeout(function () {
 					window.location.replace('insure_price.php?id='+insure);
 					//console.log('client.php?id='+id);
@@ -558,7 +540,7 @@
 			}
 		})
 	}
-	
+
 	//Добавление позиции основного прайса в страховой
 	function Ajax_add_pricelistitem_insure(id, insure) {
 
@@ -576,7 +558,7 @@
                // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             success:function(data){
-                //document.getElementById("errrror").innerHTML=data;
+                // $("#errrror").html(data);
                 setTimeout(function () {
                     window.location.replace('');
                     //console.log('client.php?id='+id);
@@ -587,7 +569,7 @@
 
 	//Заполнить прайс
 	function Ajax_insure_price_fill(id) {
-		
+
 		ajax({
 			url:"insure_price_fill_f.php",
 			statbox:"errrror",
@@ -595,10 +577,10 @@
 			data:
 			{
 				id: id,
-				group: document.getElementById("group").value,
+				group:  $("#group").val()
 			},
 			success:function(data){
-				document.getElementById("errrror").innerHTML=data;
+				 $("#errrror").html(data);
 				/*setTimeout(function () {
 					window.location.replace('pricelistitem.php?id='+id);
 					//console.log('client.php?id='+id);
@@ -606,7 +588,7 @@
 			}
 		})
 	}
-	
+
 	//Скопировать прайс
 	function Ajax_insure_price_copy(id) {
 
@@ -617,21 +599,17 @@
 			data:
 			{
 				id: id,
-				id2: document.getElementById("insurecompany").value
+				id2:  $("#insurecompany").val()
 			},
 			success:function(data){
-				document.getElementById("errrror").innerHTML=data;
-				/*setTimeout(function () {
-					window.location.replace('pricelistitem.php?id='+id);
-					//console.log('client.php?id='+id);
-				}, 100);*/
+				 $("#errrror").html(data);
 			}
 		})
 	}
 
-	//Очисить прайс
+	//Очистить прайс
 	function Ajax_insure_price_clear(id) {
-		
+
 		ajax({
 			url:"insure_price_clear_f.php",
 			statbox:"errrror",
@@ -641,35 +619,31 @@
 				id: id
 			},
 			success:function(data){
-				document.getElementById("errrror").innerHTML=data;
-				/*setTimeout(function () {
-					window.location.replace('pricelistitem.php?id='+id);
-					//console.log('client.php?id='+id);
-				}, 100);*/
+				 $("#errrror").html(data);
 			}
 		})
 	}
 
 	//Удаление блокировка страховой
 	function Ajax_del_insure(id) {
-		
+
 		ajax({
 			url:"insure_del_f.php",
 			statbox:"errrror",
 			method:"POST",
 			data:
 			{
-				id: id,
+				id: id
 			},
 			success:function(data){
-				document.getElementById("errrror").innerHTML=data;
+				 $("#errrror").html(data);
 				setTimeout(function () {
 					window.location.replace('insure.php?id='+id);
 					//console.log('client.php?id='+id);
 				}, 100);
 			}
 		})
-	};
+	}
 
 	//Удаление блокировка лаборатории
 	function Ajax_del_labor(id) {
@@ -680,17 +654,17 @@
 			method:"POST",
 			data:
 			{
-				id: id,
+				id: id
 			},
 			success:function(data){
-				document.getElementById("errrror").innerHTML=data;
+				 $("#errrror").html(data);
 				setTimeout(function () {
 					window.location.replace('labor.php?id='+id);
 					//console.log('client.php?id='+id);
 				}, 100);
 			}
 		})
-	};
+	}
 
 	//Удаление блокировка сертификата
 	function Ajax_del_cert(id) {
@@ -702,7 +676,7 @@
             dataType: "JSON",
 			data:
 			{
-				id: id,
+				id: id
 			},
             cache: false,
             beforeSend: function() {
@@ -719,7 +693,7 @@
                     }, 100);
                 }else{
                     //console.log(2);
-                    document.getElementById("errrror").innerHTML = res.data;
+                     $("#errrror").html(res.data);
                 }
             }
 		})
@@ -746,14 +720,14 @@
 			success:function(res){
                 if(res.result == 'success') {
                 	//console.log(1);
-                    document.getElementById("errrror").innerHTML = res.data;
+                     $("#errrror").html(res.data);
                     setTimeout(function () {
                         window.location.replace('invoice.php?id=' + id);
                         //console.log('client.php?id='+id);
                     }, 100);
                 }else{
                     //console.log(2);
-                    document.getElementById("errrror").innerHTML = res.data;
+                     $("#errrror").html(res.data);
 				}
 			}
 		})
@@ -853,8 +827,7 @@
 	};
 
 	function Ajax_reopen_client(session_id, id) {
-		//var id = document.getElementById("id").value;
-		
+
 		ajax({
 			url:"client_reopen_f.php",
 			method:"POST",
@@ -864,7 +837,7 @@
 				session_id: session_id
 			},
 			success:function(data){
-				//document.getElementById("errrror").innerHTML=data;
+				// $("#errrror").html(data);
 				setTimeout(function () {
 					window.location.replace('client.php?id='+id);
 					//console.log('client.php?id='+id);
@@ -872,10 +845,9 @@
 			}
 		})
 	}
-	
+
 	function Ajax_reopen_pricelistitem(id) {
-		//var id = document.getElementById("id").value;
-		
+
 		ajax({
 			url:"pricelistitem_reopen_f.php",
 			method:"POST",
@@ -884,7 +856,7 @@
 				id: id
 			},
 			success:function(data){
-				//document.getElementById("errrror").innerHTML=data;
+				// $("#errrror").html(data);
 				setTimeout(function () {
 					window.location.replace('pricelistitem.php?id='+id);
 					//console.log('pricelistitem.php?id='+id);
@@ -895,8 +867,7 @@
 
 	//разблокировка страховой
 	function Ajax_reopen_insure(id) {
-		//var id = document.getElementById("id").value;
-		
+
 		ajax({
 			url:"insure_reopen_f.php",
 			method:"POST",
@@ -905,7 +876,7 @@
 				id: id
 			},
 			success:function(data){
-				//document.getElementById("errrror").innerHTML=data;
+				// $("#errrror").html(data);
 				setTimeout(function () {
 					window.location.replace('insure.php?id='+id);
 					//console.log('pricelistitem.php?id='+id);
@@ -916,7 +887,6 @@
 
 	//разблокировка лаборатории
 	function Ajax_reopen_labor(id) {
-		//var id = document.getElementById("id").value;
 
 		ajax({
 			url:"labor_reopen_f.php",
@@ -926,7 +896,7 @@
 				id: id,
 			},
 			success:function(data){
-				//document.getElementById("errrror").innerHTML=data;
+				// $("#errrror").html(data);
 				setTimeout(function () {
 					window.location.replace('labor.php?id='+id);
 					//console.log('pricelistitem.php?id='+id);
@@ -937,7 +907,6 @@
 
 	//разблокировка сертификата
 	function Ajax_reopen_cert(id) {
-		//var id = document.getElementById("id").value;
 
 		ajax({
 			url:"cert_reopen_f.php",
@@ -947,7 +916,7 @@
 				id: id
 			},
 			success:function(data){
-				//document.getElementById("errrror").innerHTML=data;
+				// $("#errrror").html(data);
 				setTimeout(function () {
 					window.location.replace('certificate.php?id='+id);
 					//console.log('pricelistitem.php?id='+id);
@@ -958,7 +927,6 @@
 
 	//разблокировка наряда
 	function Ajax_reopen_invoice(id, client_id) {
-		//var id = document.getElementById("id").value;
 
 		ajax({
 			url:"invoice_reopen_f.php",
@@ -969,7 +937,7 @@
                 client_id: client_id,
 			},
 			success:function(data){
-				//document.getElementById("errrror").innerHTML=data;
+				// $("#errrror").html(data);
 				setTimeout(function () {
 					window.location.replace('invoice.php?id='+id);
 					//console.log('pricelistitem.php?id='+id);
@@ -979,7 +947,6 @@
 	};
 	//разблокировка ордера
 	function Ajax_reopen_order(id, client_id) {
-		//var id = document.getElementById("id").value;
 
 		ajax({
 			url:"order_reopen_f.php",
@@ -990,7 +957,7 @@
                 client_id: client_id,
 			},
 			success:function(data){
-				//document.getElementById("errrror").innerHTML=data;
+				// $("#errrror").html(data);
 				setTimeout(function () {
 					window.location.replace('order.php?id='+id);
 					//console.log('pricelistitem.php?id='+id);
@@ -1000,8 +967,7 @@
 	};
 
 	function Ajax_reopen_pricelistgroup(session_id, id) {
-		//var id = document.getElementById("id").value;
-		
+
 		ajax({
 			url:"pricelistgroup_reopen_f.php",
 			method:"POST",
@@ -1011,18 +977,17 @@
 				session_id: session_id,
 			},
 			success:function(data){
-				//document.getElementById("errrror").innerHTML=data;
+				// $("#errrror").html(data);
 				setTimeout(function () {
 					window.location.replace('pricelistgroup.php?id='+id);
 					//console.log('pricelistgroup.php?id='+id);
 				}, 100);
 			}
 		})
-	}; 
+	};
 	//Перемещения косметологии другому пациенту
 	function Ajax_cosm_move(session_id, id) {
-		//var id = document.getElementById("id").value;
-		
+
 		ajax({
 			url:"cosm_move_f.php",
 			method:"POST",
@@ -1037,21 +1002,21 @@
 				}, 100);
 			}
 		})
-	}; 
+	};
 	//Перемещение всего другому пациенту
 	function Ajax_move_all(id) {
-		//var id = document.getElementById("id").value;
-		var name = document.getElementById("search_client").value;
-		
+
+		var name =  $("#search_client").val();
+
 		var rys = false;
-		
+
 		var rys = confirm("Вы хотите перенести записи другому пациенту. \nЭто невозможно будет исправить \n\nВы уверены?");
 
 		if (rys){
 			$.ajax({
 				url:"move_all_f.php",
-				global: false, 
-				type: "POST", 
+				global: false,
+				type: "POST",
 				data:
 				{
 					id: id,
@@ -1069,11 +1034,11 @@
 				}
 			})
 		}
-	}; 
+	};
 	//Перемещение записи другому
 	function Ajax_edit_zapis_change_client(zapis_id, client_id) {
 
-        var name = document.getElementById("search_client").value;
+        var name =  $("#search_client").val();
 
 		var rys = false;
 
@@ -1107,24 +1072,24 @@
 	function Ajax_edit_fio_client() {
 		// убираем класс ошибок с инпутов
         hideAllErrors ();
-		 
+
 		$.ajax({
-			// метод отправки 
+			// метод отправки
 			type: "POST",
 			// путь до скрипта-обработчика
 			url: "ajax_test.php",
 			// какие данные будут переданы
 			data: {
-				fname:document.getElementById("f").value,
-				iname:document.getElementById("i").value,
-				oname:document.getElementById("o").value
+				fname: $("#f").val(),
+				iname: $("#i").val(),
+				oname: $("#o").val()
 			},
 			// тип передачи данных
 			dataType: "json",
 			// действие, при ответе с сервера
 			success: function(data){
 				// в случае, когда пришло success. Отработало без ошибок
-				if(data.result == 'success'){   
+				if(data.result == 'success'){
 					//console.log('форма корректно заполнена');
 					ajax({
 						url:"client_edit_fio_f.php",
@@ -1132,52 +1097,52 @@
 						method:"POST",
 						data:
 						{
-							id:document.getElementById("id").value,
-							
-							f:document.getElementById("f").value,
-							i:document.getElementById("i").value,
-							o:document.getElementById("o").value,
+							id: $("#id").val(),
+
+							f: $("#f").val(),
+							i: $("#i").val(),
+							o: $("#o").val(),
 						},
-						success:function(data){document.getElementById("errrror").innerHTML=data;}
+						success:function(data){ $("#errrror").html(data);}
 					})
 				// в случае ошибок в форме
 				}else{
 					// перебираем массив с ошибками
 					for(var errorField in data.text_error){
-						// выводим текст ошибок 
+						// выводим текст ошибок
 						$('#'+errorField+'_error').html(data.text_error[errorField]);
 						// показываем текст ошибок
 						$('#'+errorField+'_error').show();
 						// обводим инпуты красным цветом
-					   // $('#'+errorField).addClass('error_input');                      
+					   // $('#'+errorField).addClass('error_input');
 					}
-					document.getElementById("errror").innerHTML='<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>'
+					 $("#errror").html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>')
 				}
 			}
-		});		
-	};  
-	
+		});
+	};
+
 	function Ajax_edit_fio_user() {
 		// убираем класс ошибок с инпутов
         hideAllErrors ();
-		 
+
 		$.ajax({
-			// метод отправки 
+			// метод отправки
 			type: "POST",
 			// путь до скрипта-обработчика
 			url: "ajax_test.php",
 			// какие данные будут переданы
 			data: {
-				fname:document.getElementById("f").value,
-				iname:document.getElementById("i").value,
-				oname:document.getElementById("o").value
+				fname: $("#f").val(),
+				iname: $("#i").val(),
+				oname: $("#o").val()
 			},
 			// тип передачи данных
 			dataType: "json",
 			// действие, при ответе с сервера
 			success: function(data){
 				// в случае, когда пришло success. Отработало без ошибок
-				if(data.result == 'success'){   
+				if(data.result == 'success'){
 					//console.log('форма корректно заполнена');
 					ajax({
 						url:"user_edit_fio_f.php",
@@ -1185,42 +1150,42 @@
 						method:"POST",
 						data:
 						{
-							id:document.getElementById("id").value,
-							
-							f:document.getElementById("f").value,
-							i:document.getElementById("i").value,
-							o:document.getElementById("o").value,
+							id: $("#id").val(),
+
+							f: $("#f").val(),
+							i: $("#i").val(),
+							o: $("#o").val(),
 						},
-						success:function(data){document.getElementById("errrror").innerHTML=data;}
+						success:function(data){ $("#errrror").html(data);}
 					})
 				// в случае ошибок в форме
 				}else{
 					// перебираем массив с ошибками
 					for(var errorField in data.text_error){
-						// выводим текст ошибок 
+						// выводим текст ошибок
 						$('#'+errorField+'_error').html(data.text_error[errorField]);
 						// показываем текст ошибок
 						$('#'+errorField+'_error').show();
 						// обводим инпуты красным цветом
-					   // $('#'+errorField).addClass('error_input');                      
+					   // $('#'+errorField).addClass('error_input');
 					}
-					document.getElementById("errror").innerHTML='<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>'
+					 $("#errror").html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>')
 				}
 			}
-		});		
-	};  
-	
+		});
+	};
+
 	// !!! правильный пример AJAX
 	function Ajax_add_insure(session_id) {
 
-		var name = document.getElementById("name").value;
-		var contract = document.getElementById("contract").value;
-		var contacts = document.getElementById("contacts").value;
+		var name =  $("#name").val();
+		var contract =  $("#contract").val();
+		var contacts =  $("#contacts").val();
 
 		$.ajax({
 			url:"add_insure_f.php",
-			global: false, 
-			type: "POST", 
+			global: false,
+			type: "POST",
 			data:
 			{
 				name:name,
@@ -1236,13 +1201,13 @@
 				$('#errrror').html(data);
 			}
 		})
-	}; 
+	};
 	//Добавить лабораторию
 	function Ajax_add_labor(session_id) {
 
-		var name = document.getElementById("name").value;
-		var contract = document.getElementById("contract").value;
-		var contacts = document.getElementById("contacts").value;
+		var name =  $("#name").val();
+		var contract =  $("#contract").val();
+		var contacts =  $("#contacts").val();
 
 		$.ajax({
 			url:"labor_add_f.php",
@@ -1367,75 +1332,6 @@
 		})
 	};
 
-	//Добавить сертификат
-	/*function Ajax_add_cert(session_id) {
-        // убираем ошибки
-        hideAllErrors ();
-
-		var num = document.getElementById("num").value;
-		var nominal = document.getElementById("nominal").value;
-
-        $.ajax({
-            // метод отправки
-            type: "POST",
-            // путь до скрипта-обработчика
-            url: "ajax_test.php",
-            // какие данные будут переданы
-            data: {
-                num:num,
-                nominal:nominal,
-            },
-            // тип передачи данных
-            dataType: "json",
-            // действие, при ответе с сервера
-            success: function(data){
-                // в случае, когда пришло success. Отработало без ошибок
-                if(data.result == 'success'){
-                    //console.log('форма корректно заполнена');
-                    $.ajax({
-                        url:"cert_add_f.php",
-                        global: false,
-                        type: "POST",
-                        dataType: "JSON",
-                        data:
-                            {
-                                num:num,
-                                nominal:nominal,
-                                session_id:session_id,
-                            },
-                        cache: false,
-                        beforeSend: function() {
-                            $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-                        },
-                        success:function(data){
-                            if(data.result == 'success') {
-                                //console.log('success');
-                                $('#data').html(data.data);
-                            }else{
-                                //console.log('error');
-                                $('#errror').html(data.data);
-                                $('#errrror').html('');
-							}
-                        }
-                    })
-                // в случае ошибок в форме
-                }else{
-                    // перебираем массив с ошибками
-                    for(var errorField in data.text_error){
-                        // выводим текст ошибок
-                        $('#'+errorField+'_error').html(data.text_error[errorField]);
-                        // показываем текст ошибок
-                        $('#'+errorField+'_error').show();
-                        // обводим инпуты красным цветом
-                        // $('#'+errorField).addClass('error_input');
-                    }
-                    document.getElementById("errror").innerHTML='<div class="query_neok">Ошибка, что-то заполнено не так.</div>'
-                }
-            }
-        });
-	};*/
-
-
     //Добавляем/редактируем в базу сертификат
     function  Ajax_cert_add(id, mode, certData){
 
@@ -1531,10 +1427,6 @@
         var work_percent = $('#work_percent').val();
         var material_percent = $('#material_percent').val();
         var personal_id = $('#personal_id').val();
-        /*console.log(cat_name);
-        console.log(work_percent);
-        console.log(material_percent);
-        console.log(personal_id);*/
 
         // убираем класс ошибок с инпутов
         $("input").each(function(){
@@ -1704,8 +1596,6 @@
                 },
                 // действие, при ответе с сервера
                 success: function (res) {
-                    //console.log("fillInvoiseRez---------->");
-                    //console.log(res);
 
                     if (res.result == "success") {
                         location.reload();
@@ -1721,9 +1611,9 @@
 		//убираем класс ошибок с инпутов
         hideAllErrors ();
 
-		var name = document.getElementById("name").value;
-		var contract = document.getElementById("contract").value;
-		var contacts = document.getElementById("contacts").value;
+		var name =  $("#name").val();
+		var contract =  $("#contract").val();
+		var contacts =  $("#contacts").val();
 
 		$.ajax({
 			// метод отправки
@@ -1753,7 +1643,7 @@
 							contract:contract,
 							contacts:contacts,
 						},
-						success:function(data){document.getElementById("errrror").innerHTML=data;}
+						success:function(data){ $("#errrror").html(data);}
 					})
 				// в случае ошибок в форме
 				}else{
@@ -1766,7 +1656,7 @@
 						// обводим инпуты красным цветом
 					   // $('#'+errorField).addClass('error_input');
 					}
-					document.getElementById("errrror").innerHTML='<div class="query_neok">Ошибка, что-то заполнено не так.</div>'
+					 $("#errrror").html('<div class="query_neok">Ошибка, что-то заполнено не так.</div>')
 				}
 			}
 		});
@@ -1777,9 +1667,9 @@
 		// убираем класс ошибок с инпутов
 		$hideAllErrors ();
 
-		var name = document.getElementById("name").value;
-		var contract = document.getElementById("contract").value;
-		var contacts = document.getElementById("contacts").value;
+		var name =  $("#name").val();
+		var contract =  $("#contract").val();
+		var contacts =  $("#contacts").val();
 
 		$.ajax({
 			// метод отправки
@@ -1809,7 +1699,7 @@
 							contract:contract,
 							contacts:contacts,
 						},
-						success:function(data){document.getElementById("errrror").innerHTML=data;}
+						success:function(data){ $("#errrror").html(data);}
 					})
 				// в случае ошибок в форме
 				}else{
@@ -1822,7 +1712,7 @@
 						// обводим инпуты красным цветом
 					   // $('#'+errorField).addClass('error_input');
 					}
-					document.getElementById("errrror").innerHTML='<div class="query_neok">Ошибка, что-то заполнено не так.</div>'
+					 $("#errrror").html('<div class="query_neok">Ошибка, что-то заполнено не так.</div>')
 				}
 			}
 		});
@@ -1832,13 +1722,14 @@
 	// !!! правильный пример AJAX
 	function Ajax_add_priceitem(session_id) {
 
-		var pricename = document.getElementById("pricename").value;
-		var pricecode = document.getElementById("pricecode").value;
-		var price = document.getElementById("price").value;
-		var price2 = document.getElementById("price2").value;
-		var price3 = document.getElementById("price3").value;
-		var group = document.getElementById("group").value;
-		var iWantThisDate2 = document.getElementById("iWantThisDate2").value;
+		var pricename = $("#pricename").val();
+		var category_id = $("#category_id").val();
+		var pricecode = $("#pricecode").val();
+		var price = $("#price").val();
+		var price2 = $("#price2").val();
+		var price3 = $("#price3").val();
+		var group = $("#group").val();
+		var iWantThisDate2 = $("#iWantThisDate2").val();
 
 		$.ajax({
 			url:"add_priceitem_f.php",
@@ -1847,6 +1738,7 @@
 			data:
 			{
 				pricename:pricename,
+                category_id:category_id,
                 pricecode:pricecode,
 				price:price,
 				price2:price2,
@@ -1868,10 +1760,10 @@
 	//Добавить в прайс страховой
 	function Ajax_add_insure_priceitem() {
 
-		var pricename = document.getElementById("pricename").value;
-		var price = document.getElementById("price").value;
-		var group = document.getElementById("group").value;
-		var iWantThisDate2 = document.getElementById("iWantThisDate2").value;
+		var pricename =  $("#pricename").val();
+		var price =  $("#price").val();
+		var group =  $("#group").val();
+		var iWantThisDate2 =  $("#iWantThisDate2").val();
 
 		$.ajax({
 			url:"add_priceitem_f.php",
@@ -1898,8 +1790,8 @@
 	// Добавим группу прайса
 	function Ajax_add_pricegroup(session_id) {
 
-		var groupname = document.getElementById("groupname").value;
-		var group = document.getElementById("group").value;
+		var groupname =  $("#groupname").val();
+		var group =  $("#group").val();
 
 		$.ajax({
 			url:"add_pricegroup_f.php",
@@ -1923,9 +1815,10 @@
 
 	function Ajax_edit_pricelistitem(id, session_id) {
 
-		var pricelistitemname = document.getElementById("pricelistitemname").value;
-		var pricelistitemcode = document.getElementById("pricelistitemcode").value;
-		var group = document.getElementById("group").value;
+		var pricelistitemname = $("#pricelistitemname").val();
+		var pricelistitemcode = $("#pricelistitemcode").val();
+		var group = $("#group").val();
+		var category_id = $("#category_id").val();
 
 		$.ajax({
 			url:"pricelistitem_edit_f.php",
@@ -1937,6 +1830,7 @@
                 pricelistitemcode:pricelistitemcode,
 				session_id:session_id,
 				group:group,
+                category_id:category_id,
 				id: id,
 			},
 			cache: false,
@@ -1951,8 +1845,8 @@
 
 	function Ajax_edit_pricelistgroup(id, session_id) {
 
-		var pricelistgroupname = document.getElementById("pricelistgroupname").value;
-		var group = document.getElementById("group").value;
+		var pricelistgroupname =  $("#pricelistgroupname").val();
+		var group =  $("#group").val();
 
 		$.ajax({
 			url:"pricelistgroup_edit_f.php",
@@ -1963,7 +1857,7 @@
 				pricelistgroupname:pricelistgroupname,
 				session_id:session_id,
 				group:group,
-				id: id,
+				id: id
 			},
 			cache: false,
 			beforeSend: function() {
@@ -1973,14 +1867,14 @@
 				$('#errror').html(data);
 			}
 		})
-	};
+	}
 
 	function Ajax_edit_price(id, session_id) {
 
-		var price = document.getElementById("price").value;
-		var price2 = document.getElementById("price2").value;
-		var price3 = document.getElementById("price3").value;
-		var iWantThisDate2 = document.getElementById("iWantThisDate2").value;
+		var price =  $("#price").val();
+		var price2 =  $("#price2").val();
+		var price3 =  $("#price3").val();
+		var iWantThisDate2 =  $("#iWantThisDate2").val();
 
 		$.ajax({
 			url:"priceprice_edit_f.php",
@@ -1993,7 +1887,7 @@
 				price2:price2,
 				price3:price3,
 				iWantThisDate2:iWantThisDate2,
-				id: id,
+				id: id
 			},
 			cache: false,
 			beforeSend: function() {
@@ -2003,14 +1897,14 @@
 				$('#errror').html(data);
 			}
 		})
-	};
+	}
 
 	function Ajax_edit_price_insure(id, insure) {
 
-		var price = document.getElementById("price").value;
-		var price2 = document.getElementById("price2").value;
-		var price3 = document.getElementById("price3").value;
-		var iWantThisDate2 = document.getElementById("iWantThisDate2").value;
+		var price =  $("#price").val();
+		var price2 =  $("#price2").val();
+		var price3 =  $("#price3").val();
+		var iWantThisDate2 =  $("#iWantThisDate2").val();
 
 		$.ajax({
 			url:"priceprice_insure_edit_f.php",
@@ -2023,7 +1917,7 @@
 				price3: price3,
 				iWantThisDate2: iWantThisDate2,
 				id: id,
-				insure: insure,
+				insure: insure
 			},
 			cache: false,
 			beforeSend: function() {
@@ -2033,7 +1927,7 @@
 				$('#errror').html(data);
 			}
 		})
-	};
+	}
 
 	//Удаляем позицию в истории цен
     function deletePriceHistory(id) {
@@ -2075,14 +1969,10 @@
                 }
             });
         }
-    };
+    }
 
 	// !!! правильный пример AJAX
 	function Ajax_change_shed() {
-
-		//document.getElementById("changeShedOptionsReq").innerHTML = '<img src="img/wait.gif"> обработка...';
-
-		//document.getElementById("changeShedOptionsReq").innerHTML = '';
 
 		var day = $("#SelectDayShedOptions").val();
 		var month = $("#SelectMonthShedOptions").val();
@@ -2102,7 +1992,7 @@
 				day:day,
 				month:month,
 				year:year,
-				ignoreshed:ignoreshed,
+				ignoreshed:ignoreshed
 			},
 			cache: false,
 			beforeSend: function() {
@@ -2115,22 +2005,22 @@
 	};
 
 	function iWantThisDate(path){
-		var iWantThisMonth = document.getElementById("iWantThisMonth").value;
-		var iWantThisYear = document.getElementById("iWantThisYear").value;
+		var iWantThisMonth =  $("#iWantThisMonth").val();
+		var iWantThisYear =  $("#iWantThisYear").val();
 
 		window.location.replace(path+'&m='+iWantThisMonth+'&y='+iWantThisYear);
 	}
 
 	function iWantThisDate2(path){
-		var iWantThisDate2 = document.getElementById("iWantThisDate2").value;
-		var ThisDate = iWantThisDate2.split('.')
+		var iWantThisDate2 =  $("#iWantThisDate2").val();
+		var ThisDate = iWantThisDate2.split('.');
 
 		window.location.replace(path+'&d='+ThisDate[0]+'&m='+ThisDate[1]+'&y='+ThisDate[2]);
 	}
 
 	//переход к прайсу страховой
     function iWantThisInsurePrice(){
-        var insure_id = document.getElementById("insurecompany").value;
+        var insure_id =  $("#insurecompany").val();
 		if (insure_id != 0){
             window.location.replace('insure_price.php?id='+insure_id);
 		}
@@ -2203,14 +2093,6 @@
             success:function(res){
             	console.log(res);
 
-                /*if(res.result == "success") {
-                    $('#data').html(res.data);
-                    setTimeout(function () {
-                        window.location.replace('index.php');
-                    }, 1000)
-                }else{
-                    $('#errror').html(data);
-                }*/
             }
         })
 	}
@@ -2227,15 +2109,15 @@
 			data:
 			{
 				all_time:all_time,
-				datastart:document.getElementById("datastart").value,
-				dataend:document.getElementById("dataend").value,
+				datastart: $("#datastart").val(),
+				dataend: $("#dataend").val(),
 
 				all_age:all_age,
-				agestart:document.getElementById("agestart").value,
-				ageend:document.getElementById("ageend").value,
+				agestart: $("#agestart").val(),
+				ageend: $("#ageend").val(),
 
-				worker:document.getElementById("search_worker").value,
-				filial:document.getElementById("filial").value,
+				worker: $("#search_worker").val(),
+				filial: $("#filial").val(),
 
 				pervich:document.querySelector('input[name="pervich"]:checked').value,
 				insured:document.querySelector('input[name="insured"]:checked').value,
@@ -2245,7 +2127,7 @@
 				wo_sex:wo_sex,
 
                 age:document.querySelector('input[name="age"]:checked').value,
-				wo_age:wo_age,
+				wo_age:wo_age
 
 			},
 			cache: false,
@@ -2363,8 +2245,8 @@
             data:
                 {
                     all_time:all_time,
-                    datastart: document.getElementById("datastart").value,
-                    dataend: document.getElementById("dataend").value,
+                    datastart:  $("#datastart").val(),
+                    dataend:  $("#dataend").val(),
 
                     //Кто создал запись
                     creator:$("#search_worker").val(),
@@ -2511,8 +2393,8 @@
             data:
                 {
                     all_time:all_time,
-                    datastart: document.getElementById("datastart").value,
-                    dataend: document.getElementById("dataend").value,
+                    datastart:  $("#datastart").val(),
+                    dataend:  $("#dataend").val(),
 
                     //Кто создал запись
                     creator:$("#search_worker").val(),
@@ -2544,7 +2426,7 @@
                     invoiceAll: invoiceAll,
                     invoicePaid: invoicePaid,
                     invoiceNotPaid: invoiceNotPaid,
-                    invoiceInsure: invoiceInsure,
+                    invoiceInsure: invoiceInsure
 
                 },
             cache: false,
@@ -2575,60 +2457,10 @@
             paidNot = 0;
         }
 
-        /*var zapisError = $("input[id=zapisError]:checked").val();
-        if (zapisError === undefined){
-            zapisError = 0;
-        }*/
-
         var insureTrue = $("input[id=insureTrue]:checked").val();
         if (insureTrue === undefined){
             insureTrue = 0;
         }
-
-        /*var fullAll = $("input[id=fullAll]:checked").val();
-        if (fullAll === undefined){
-            fullAll = 0;
-        }
-
-        var fullWOInvoice = $("input[id=fullWOInvoice]:checked").val();
-        if (fullWOInvoice === undefined){
-            fullWOInvoice = 0;
-        }
-
-        var fullWOTask = $("input[id=fullWOTask]:checked").val();
-        if (fullWOTask === undefined){
-            fullWOTask = 0;
-        }
-
-        var fullOk = $("input[id=fullOk]:checked").val();
-        if (fullOk === undefined){
-            fullOk = 0;
-        }
-
-        var statusAll = $("input[id=statusAll]:checked").val();
-        if (statusAll === undefined){
-            statusAll = 0;
-        }
-
-        var statusPervich = $("input[id=statusPervich]:checked").val();
-        if (statusPervich === undefined){
-            statusPervich = 0;
-        }
-
-        var statusInsure = $("input[id=statusInsure]:checked").val();
-        if (statusInsure === undefined){
-            statusInsure = 0;
-        }
-
-        var statusNight = $("input[id=statusNight]:checked").val();
-        if (statusNight === undefined){
-            statusNight = 0;
-        }
-
-        var statusAnother = $("input[id=statusAnother]:checked").val();
-        if (statusAnother === undefined){
-            statusAnother = 0;
-        }*/
 
         $.ajax({
             url:"ajax_show_result_stat_invoice_f.php",
@@ -2637,8 +2469,8 @@
             data:
                 {
                     all_time:all_time,
-                    datastart: document.getElementById("datastart").value,
-                    dataend: document.getElementById("dataend").value,
+                    datastart:  $("#datastart").val(),
+                    dataend:  $("#dataend").val(),
 
                     //Кто создал запись
                     creator:$("#search_worker").val(),
@@ -2654,18 +2486,7 @@
                     paidTrue: paidTrue,
                     paidNot: paidNot,
                     //zapisError: zapisError,
-                    insureTrue: insureTrue,
-
-                    /*fullAll: fullAll,
-                    fullWOInvoice: fullWOInvoice,
-                    fullWOTask: fullWOTask,
-                    fullOk: fullOk,
-
-                    statusAll: statusAll,
-                    statusPervich: statusPervich,
-                    statusInsure: statusInsure,
-                    statusNight: statusNight,
-                    statusAnother: statusAnother,*/
+                    insureTrue: insureTrue
 
                 },
             cache: false,
@@ -2711,18 +2532,18 @@
             data:
                 {
                     all_time:all_time,
-                    datastart: document.getElementById("datastart").value,
-                    dataend: document.getElementById("dataend").value,
+                    datastart:  $("#datastart").val(),
+                    dataend:  $("#dataend").val(),
 
-                    //worker:document.getElementById("search_worker").value,
-                    insure: document.getElementById("insure_sel").value,
-                    filial: document.getElementById("filial").value,
+                    //worker: $("#search_worker").val(),
+                    insure:  $("#insure_sel").val(),
+                    filial:  $("#filial").val(),
 
                     zapisAll: zapisAll,
                     zapisArrive: zapisArrive,
                     zapisNotArrive: zapisNotArrive,
                     zapisError: zapisError,
-                    zapisNull: zapisNull,
+                    zapisNull: zapisNull
 
                 },
             cache: false,
@@ -2738,29 +2559,6 @@
     //Подготовка файла xls для выгрузки
     function Ajax_repare_insure_xls(){
 
-        /*var zapisAll = $("input[id=zapisAll]:checked").val();
-        if (zapisAll === undefined){
-            zapisAll = 0;
-        }
-        var zapisArrive = $("input[id=zapisArrive]:checked").val();
-        if (zapisArrive === undefined){
-            zapisArrive = 0;
-        }
-        var zapisNotArrive = $("input[id=zapisNotArrive]:checked").val();
-        if (zapisNotArrive === undefined){
-            zapisNotArrive = 0;
-        }
-
-        var zapisError = $("input[id=zapisError]:checked").val();
-        if (zapisError === undefined){
-            zapisError = 0;
-        }
-
-        var zapisNull = $("input[id=zapisNull]:checked").val();
-        if (zapisNull === undefined){
-            zapisNull = 0;
-        }*/
-
         $.ajax({
             url:"ajax_repare_insure_xls_f.php",
             global: false,
@@ -2769,18 +2567,12 @@
                 {
                     all_time:all_time,
                     showError:showError,
-                    datastart: document.getElementById("datastart").value,
-                    dataend: document.getElementById("dataend").value,
+                    datastart:  $("#datastart").val(),
+                    dataend:  $("#dataend").val(),
 
-                    //worker:document.getElementById("search_worker").value,
-                    insure: document.getElementById("insure_sel").value,
-                    filial: document.getElementById("filial").value,
-
-                    /*zapisAll: zapisAll,
-                    zapisArrive: zapisArrive,
-                    zapisNotArrive: zapisNotArrive,
-                    zapisError: zapisError,
-                    zapisNull: zapisNull,*/
+                    //worker: $("#search_worker").val(),
+                    insure:  $("#insure_sel").val(),
+                    filial:  $("#filial").val(),
 
                 },
             cache: false,
@@ -2802,15 +2594,15 @@
 			data:
 			{
 				all_time:all_time,
-				datastart:document.getElementById("datastart").value,
-				dataend:document.getElementById("dataend").value,
+				datastart: $("#datastart").val(),
+				dataend: $("#dataend").val(),
 
 				all_age:all_age,
-				agestart:document.getElementById("agestart").value,
-				ageend:document.getElementById("ageend").value,
+				agestart: $("#agestart").val(),
+				ageend: $("#ageend").val(),
 
-				worker:document.getElementById("search_worker").value,
-				filial:document.getElementById("filial").value,
+				worker: $("#search_worker").val(),
+				filial: $("#filial").val(),
 
 				pervich:document.querySelector('input[name="pervich"]:checked').value,
 				insured:document.querySelector('input[name="insured"]:checked').value,
@@ -2841,7 +2633,7 @@
 			opt = options[i];
 
 			//if (opt.selected) {
-				result.push(opt.value || opt.text);
+				result.push(opt.val() || opt.text);
 			//}
 		}
 		return result;
@@ -2853,14 +2645,11 @@
 		var condition = [];
 		var effect = [];
 
-		var el_condition = document.getElementById("multi_d_to");
-		var el_effect = document.getElementById("multi_d_to_2");
+		var el_condition =  $("#multi_d_to");
+		var el_effect =  $("#multi_d_to_2");
 
 		condition = getSelectValues(el_condition);
 		effect = getSelectValues(el_effect);
-
-		//console.log(condition);
-		//console.log(effect);
 
 		$.ajax({
 			url:"ajax_show_result_stat_cosm_ex2_f.php",
@@ -2869,15 +2658,15 @@
 			data:
 			{
 				all_time:all_time,
-				datastart:document.getElementById("datastart").value,
-				dataend:document.getElementById("dataend").value,
+				datastart: $("#datastart").val(),
+				dataend: $("#dataend").val(),
 
 				all_age:all_age,
-				agestart:document.getElementById("agestart").value,
-				ageend:document.getElementById("ageend").value,
+				agestart: $("#agestart").val(),
+				ageend: $("#ageend").val(),
 
-				worker:document.getElementById("search_worker").value,
-				filial:document.getElementById("filial").value,
+				worker: $("#search_worker").val(),
+				filial: $("#filial").val(),
 
 				//pervich:document.querySelector('input[name="pervich"]:checked').value,
 
@@ -2908,21 +2697,11 @@
 			data:
 			{
 				all_time:all_time,
-				datastart:document.getElementById("datastart").value,
-				dataend:document.getElementById("dataend").value,
+				datastart: $("#datastart").val(),
+				dataend: $("#dataend").val(),
 
-				//all_age:all_age,
-				//agestart:document.getElementById("agestart").value,
-				//ageend:document.getElementById("ageend").value,
-
-				worker:document.getElementById("search_worker").value,
-				//filial:document.getElementById("filial").value,
+				worker: $("#search_worker").val(),
 				filial:99,
-
-				//pervich:document.querySelector('input[name="pervich"]:checked').value,
-
-				//sex:document.querySelector('input[name="sex"]:checked').value,
-				//wo_sex:wo_sex,
 
 			},
 			cache: false,
@@ -2944,21 +2723,10 @@
 			data:
 			{
 				all_time:all_time,
-				datastart:document.getElementById("datastart").value,
-				dataend:document.getElementById("dataend").value,
+				datastart: $("#datastart").val(),
+				dataend: $("#dataend").val(),
 
-				//all_age:all_age,
-				//agestart:document.getElementById("agestart").value,
-				//ageend:document.getElementById("ageend").value,
-
-				//worker:document.getElementById("search_worker").value,
-				//filial:document.getElementById("filial").value,
 				filial:99,
-
-				//pervich:document.querySelector('input[name="pervich"]:checked').value,
-
-				//sex:document.querySelector('input[name="sex"]:checked').value,
-				//wo_sex:wo_sex,
 
 			},
 			cache: false,
@@ -2999,44 +2767,32 @@
                 $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 			},
 			success:function(res){
-				//console.log(res);
-				//$("#ticket_change_log").html(res);
-
-				//if(res.result == 'success'){
-                    $('#qresult').html(res);
-
-				/*}else{
-
-				}*/
+            	$('#qresult').html(res);
 			}
 		});
 
 	}
 
-	// !!!!
-	//$(document).ready(function () {
-		$('#showDiv1').click(function () {
-			$('#div1').stop(true, true).slideToggle('slow');
-			$('#div2').slideUp('slow');
-		});
-		$('#showDiv2').click(function () {
-			$('#div2').stop(true, true).slideToggle('slow');
-			$('#div1').slideUp('slow');
-		});
-	//});
+	$('#showDiv1').click(function () {
+		$('#div1').stop(true, true).slideToggle('slow');
+		$('#div2').slideUp('slow');
+	});
+	$('#showDiv2').click(function () {
+		$('#div2').stop(true, true).slideToggle('slow');
+		$('#div1').slideUp('slow');
+	});
 
-	//$(document).ready(function () {
-		$('#toggleDiv1').click(function () {
-			$('#div1').stop(true, true).slideToggle('slow');
+	$('#toggleDiv1').click(function () {
+		$('#div1').stop(true, true).slideToggle('slow');
 
-		});
-		$('#toggleDiv2').click(function () {
-			$('#div2').stop(true, true).slideToggle('slow');
-		});
-		$('#toggleDiv3').click(function () {
-			$('#div3').stop(true, true).slideToggle('slow');
-		});
-	//});
+	});
+	$('#toggleDiv2').click(function () {
+		$('#div2').stop(true, true).slideToggle('slow');
+	});
+	$('#toggleDiv3').click(function () {
+		$('#div3').stop(true, true).slideToggle('slow');
+	});
+
 
 	//Кнопка "ясно" в объявлениях на главной странице
     $('.iUnderstand').click(function () {
@@ -3253,7 +3009,7 @@
 			url: "ajax_test.php",
 			// какие данные будут переданы
 			data: {
-				summ:document.getElementById("summ").value,
+				summ: $("#summ").val()
 			},
 			cache: false,
 			// тип передачи данных
@@ -3267,7 +3023,7 @@
 				if(data.result == "success"){
 					//console.log("форма корректно заполнена");
 
-					var type = document.getElementById("type").value;
+					var type =  $("#type").val();
 
 					if (type == 3){
 						var uri = 'finance_prepayment_add_f.php';
@@ -3284,21 +3040,21 @@
 						data:
 						{
 							client: client,
-							summ:document.getElementById("summ").value,
+							summ: $("#summ").val(),
 							type:type,
 
-							date_expires:document.getElementById("dataend").value,
+							date_expires: $("#dataend").val(),
 
-							comment:document.getElementById("comment").value,
+							comment: $("#comment").val(),
 
-							session_id: session_id,
+							session_id: session_id
 						},
 						cache: false,
 						beforeSend: function() {
 							$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 						},
 						success:function(data){
-							document.getElementById("status").innerHTML=data;
+							 $("#status").html(data);
 						}
 					})
 				// в случае ошибок в форме
@@ -3312,11 +3068,11 @@
 						// обводим инпуты красным цветом
 					   // $("#"+errorField).addClass("error_input");
 					}
-					document.getElementById("errror").innerHTML='<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>'
+					 $("#errror").html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>')
 				}
 			}
 		});
-	};
+	}
 
 	//Редактировать аванас ИЛИ платёж
 	function Ajax_finance_debt_edit(id, session_id) {
@@ -3334,7 +3090,7 @@
 			url: "ajax_test.php",
 			// какие данные будут переданы
 			data: {
-				summ:document.getElementById("summ").value,
+				summ: $("#summ").val()
 			},
 			cache: false,
 			beforeSend: function() {
@@ -3355,20 +3111,16 @@
 						data:
 						{
 							id: id,
-
-							summ: document.getElementById("summ").value,
-
-							date_expires:document.getElementById("dataend").value,
-
-							comment: document.getElementById("comment").value,
-
-							session_id: session_id,
+							summ:  $("#summ").val(),
+							date_expires: $("#dataend").val(),
+							comment:  $("#comment").val(),
+							session_id: session_id
 						},
 						cache: false,
 						beforeSend: function() {
 							$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 						},
-						success:function(data){document.getElementById("status").innerHTML=data;}
+						success:function(data){ $("#status").html(data);}
 					})
 					// в случае ошибок в форме
 				}else{
@@ -3381,11 +3133,11 @@
 					// обводим инпуты красным цветом
 					 // $("#"+errorField).addClass("error_input");
 					}
-					document.getElementById("errror").innerHTML="<span style='color: red'>Ошибка, что-то заполнено не так.</span>"
+					 $("#errror").html("<span style='color: red'>Ошибка, что-то заполнено не так.</span>")
 				}
 			}
 		});
-	};
+	}
 
 	//Закрыть (Полное погашение) аванас ИЛИ платёж
 	function Ajax_finance_dp_repayment_add(id) {
@@ -3403,7 +3155,7 @@
 			url: "ajax_test.php",
 			// какие данные будут переданы
 			data: {
-				summ:document.getElementById("summ").value,
+				summ: $("#summ").val()
 			},
 			cache: false,
 			beforeSend: function() {
@@ -3424,15 +3176,14 @@
 						data:
 						{
 							id: id,
-							comment: document.getElementById("comment").value,
-							summ: document.getElementById("summ").value,
-
+							comment:  $("#comment").val(),
+							summ:  $("#summ").val()
 						},
 						cache: false,
 						beforeSend: function() {
 							$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 						},
-						success:function(data){document.getElementById("status").innerHTML=data;}
+						success:function(data){ $("#status").html(data);}
 					})
 					// в случае ошибок в форме
 				}else{
@@ -3445,11 +3196,11 @@
 					// обводим инпуты красным цветом
 					 // $("#"+errorField).addClass("error_input");
 					}
-					document.getElementById("errror").innerHTML="<span style='color: red'>Ошибка, что-то заполнено не так.</span>"
+					 $("#errror").html("<span style='color: red'>Ошибка, что-то заполнено не так.</span>")
 				}
 			}
 		});
-	};
+	}
 
 	//Редактировать погашение
 	function Ajax_finance_dp_repayment_edit(id) {
@@ -3467,7 +3218,7 @@
 			url: "ajax_test.php",
 			// какие данные будут переданы
 			data: {
-				summ:document.getElementById("summ").value,
+				summ: $("#summ").val()
 			},
 			cache: false,
 			beforeSend: function() {
@@ -3488,15 +3239,15 @@
 						data:
 						{
 							id: id,
-							comment: document.getElementById("comment").value,
-							summ: document.getElementById("summ").value,
+							comment:  $("#comment").val(),
+							summ:  $("#summ").val()
 
 						},
 						cache: false,
 						beforeSend: function() {
 							$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 						},
-						success:function(data){document.getElementById("status").innerHTML=data;}
+						success:function(data){ $("#status").html(data);}
 					})
 					// в случае ошибок в форме
 				}else{
@@ -3509,7 +3260,7 @@
 					// обводим инпуты красным цветом
 					 // $("#"+errorField).addClass("error_input");
 					}
-					document.getElementById("errror").innerHTML="<span style='color: red'>Ошибка, что-то заполнено не так.</span>"
+					 $("#errror").html("<span style='color: red'>Ошибка, что-то заполнено не так.</span>")
 				}
 			}
 		});
@@ -3518,7 +3269,6 @@
 	//Добавление записи
 	function Ajax_add_TempZapis() {
         // получение данных из полей
-		//var type = document.getElementById("type").value;
 
 		var type = $("#type").val();
 
@@ -3536,7 +3286,7 @@
 		var start_time = $("#start_time").val();
 		var wt = $("#wt").val();
 
-		var kab = document.getElementById("kab").innerHTML;
+		var kab =  $("#kab").html();
 
 		var worker = $("#search_client2").val();
 		//console.log(worker);
@@ -3558,9 +3308,6 @@
 		}else{
 			var noch = 0;
 		}
-
-        //var window_location_href_arr = (window.location.href).split("#");
-        //var window_location_href = window_location_href_arr[0];
 
 		$.ajax({
 			global: false,
@@ -3592,7 +3339,7 @@
 			cache: false,
 			beforeSend: function() {
                 //Блокируем кнопку OK
-                document.getElementById("Ajax_add_TempZapis").disabled = true;
+                 $("#Ajax_add_TempZapis").disabled = true;
 
 				$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
 			},
@@ -3601,10 +3348,10 @@
 			success: function(data){
                 //Разблокируем кнопку OK
                 setTimeout(function () {
-                	document.getElementById("Ajax_add_TempZapis").disabled = false;
+                	 $("#Ajax_add_TempZapis").disabled = false;
                 }, 200);
 				if(data.result == "success"){
-					document.getElementById("errror").innerHTML=data.data;
+					 $("#errror").html(data.data);
 					setTimeout(function () {
                         //console.log(window.location.href);
 
@@ -3613,7 +3360,7 @@
                         location.reload();
 					}, 50);
 				}else{
-					document.getElementById("errror").innerHTML=data.data;
+					 $("#errror").html(data.data);
 				}
 			}
 		});
@@ -3623,7 +3370,7 @@
 	function Ajax_edit_TempZapis(type) {
 
 		// получение данных из полей
-		//var type = document.getElementById("type").value;
+		//var type =  $("#type").val();
 
 		var filial = $("#filial").val();
 		var author = $("#author").val();
@@ -3639,9 +3386,9 @@
 		var start_time = $("#start_time").val();
 		var wt = $("#wt").val();
 
-		var id = document.getElementById("zapis_id").value;
+		var id =  $("#zapis_id").val();
 
-		var kab = document.getElementById("kab").innerHTML;
+		var kab =  $("#kab").html();
 
 		var worker = $("#search_client2").val();
 		//console.log(worker);
@@ -3700,12 +3447,12 @@
 			// действие, при ответе с сервера
 			success: function(data){
 				if(data.result == "success"){
-					document.getElementById("errror").innerHTML=data.data;
+					 $("#errror").html(data.data);
 					setTimeout(function () {
 						location.reload()
 					}, 100);
 				}else{
-					document.getElementById("errror").innerHTML=data.data;
+					 $("#errror").html(data.data);
 				}
 			}
 		});
@@ -3724,7 +3471,6 @@
                 enter:enter,
                 datatable: "zapis"
             }
-
 
 			$.ajax({
 				url: "ajax_tempzapis_edit_enter_f.php",
@@ -3772,7 +3518,7 @@
 			},
 			// действие, при ответе с сервера
 			success: function(data){
-				//document.getElementById("req").innerHTML=data;
+				// $("#req").html(data);
 				//window.location.href = "";
 				setTimeout(function () {
 					location.reload()
@@ -3794,7 +3540,7 @@
 
         $("#start_time").val(start_time);
 
-		//var start_time = Number(document.getElementById("start_time").value);
+		//var start_time = Number( $("#start_time").val());
 		var change_hours = Number($("#change_hours").val());
 		var change_minutes = Number($("#change_minutes").val());
 
@@ -3802,23 +3548,12 @@
 		var month = Number($("#month").val());
 		var year = Number($("#year").val());
 
-        /*console.log(day);
-        console.log(month);
-        console.log(year);*/
-
 		var filial = Number($("#filial").val());
 		var zapis_id = Number($("#zapis_id").val());
 		var kab = $("#kab").html();
 
 		//var wt = Number($("#wt").val());
 		var wt = change_hours*60+change_minutes;
-
-		//console.log(zapis_id);
-		//console.log(kab);
-		//console.log(wt);
-		//console.log(start_time);
-		//console.log(start_time+wt);
-        //console.log(change_hours*60+change_minutes);
 
 		if (change_minutes > 55){
 			change_minutes = 55;
@@ -3859,7 +3594,6 @@
         };
 
         //Проверим записи после
-
         $.ajax({
 			url: "get_next_zapis.php",
             global: false,
@@ -3874,43 +3608,16 @@
             },
             success:function(res){
 
-                document.getElementById("Ajax_add_TempZapis").disabled = true;
-
-				//console.log(res);
-				//console.log (res.next_time_start);
-				//document.getElementById("kab").innerHTML=res;
+                 $("#Ajax_add_TempZapis").disabled = true;
 
 				next_time_start_rez = res.next_time_start;
 				next_time_end_rez = res.next_time_end;
-				//next_zapis_data;
-
-                //Работаем с результатами ajax
-                //console.log (next_time_start_rez);
-                //console.log (next_time_end_rez);
-
-                /*console.log('----------------');
-                console.log (res.query);
-                console.log (res.zapis_id);
-                console.log (res.idz);
-                console.log (certData.direction+' -> '+res.id);*/
 
                 var end_time = start_time + change_hours*60 + change_minutes;
-
-                //console.log(start_time);
-                //console.log(end_time);
-
-                //if (end_time > 1260){
-                //console.log(\'Перебор\');
-                //}
-
-                //console.log(start_time+' == '+next_time_start_rez);
 
                 var real_time_h_end = end_time/60|0;
                 if (real_time_h_end > 23) real_time_h_end = real_time_h_end - 24;
                 var real_time_m_end = end_time%60;
-
-                //var real_time_h_end = (end_time + Number(wt))/60|0;
-                //var real_time_m_end = (end_time + Number(wt))%60;
 
                 if (real_time_m_end < 10) real_time_m_end = '0'+real_time_m_end;
 
@@ -3920,32 +3627,17 @@
                 $("#wt").val(change_hours*60 + change_minutes);
 
                 if (next_time_start_rez != 0){
-                    //console.log(next_time_start_rez);
-
-                    //if ((end_time > next_time_start_rez) || (start_time == next_time_start_rez)){
                     if (
                         (start_time <= next_time_start_rez) && (end_time > next_time_start_rez)
 					){
-                        //console.log(next_time_start_rez);
 
                         $("#exist_zapis").html('<span style="color: red">Записи не могут пересекаться</span><br>');
 
-                        //var raznica_vremeni = Math.abs(next_time_start_rez - start_time);
-
-                        //$("#change_hours").val(raznica_vremeni/60|0);
-                        //$("#change_minutes").val(raznica_vremeni%60);
-
-                        //change_hours = raznica_vremeni/60|0;
-                        //change_minutes = raznica_vremeni%60;
-
-                        //end_time = start_time+change_hours*60+change_minutes;
-
-                        document.getElementById("Ajax_add_TempZapis").disabled = true;
+                         $("#Ajax_add_TempZapis").disabled = true;
 
                     }else{
 
                         //Теперь проверим записи до
-
                         certData.direction = "prev";
 
                         $.ajax({
@@ -3962,40 +3654,16 @@
                             },
                             success:function(res){
 
-                                document.getElementById("Ajax_add_TempZapis").disabled = true;
-
-                                //console.log(res);
-                                //console.log (res.next_time_start);
-                                //document.getElementById("kab").innerHTML=res;
+                                $("#Ajax_add_TempZapis").disabled = true;
 
                                 next_time_start_rez = res.next_time_start;
                                 next_time_end_rez = res.next_time_end;
-                                //next_zapis_data;
-
-                                //Работаем с результатами ajax
-                                //console.log (next_time_start_rez);
-                                //console.log (next_time_end_rez);
-
-                                //console.log (res.query);
-                                //console.log (certData.direction+' -> '+res.id);
 
                                 var end_time = start_time + change_hours*60 + change_minutes;
-
-                                //console.log(start_time);
-                                //console.log(end_time);
-
-                                //if (end_time > 1260){
-                                //console.log(\'Перебор\');
-                                //}
-
-                                //console.log(start_time+' == '+next_time_start_rez);
 
                                 var real_time_h_end = end_time/60|0;
                                 if (real_time_h_end > 23) real_time_h_end = real_time_h_end - 24;
                                 var real_time_m_end = end_time%60;
-
-                                //var real_time_h_end = (end_time + Number(wt))/60|0;
-                                //var real_time_m_end = (end_time + Number(wt))%60;
 
                                 if (real_time_m_end < 10) real_time_m_end = '0'+real_time_m_end;
 
@@ -4005,47 +3673,27 @@
                                 $("#wt").val(change_hours*60 + change_minutes);
 
                                 if (next_time_start_rez != 0){
-                                    //console.log(next_time_start_rez);
-
-                                    //if ((end_time > next_time_start_rez) || (start_time == next_time_start_rez)){
                                     if (
                                         ((start_time < next_time_end_rez) && (start_time >= next_time_start_rez))
                                     ){
-                                        //console.log(next_time_start_rez);
-
                                         $("#exist_zapis").html('<span style="color: red">Записи не могут пересекаться</span><br>');
 
-                                        //var raznica_vremeni = Math.abs(next_time_start_rez - start_time);
-
-                                        //$("#change_hours").val(raznica_vremeni/60|0);
-                                        //$("#change_minutes").val(raznica_vremeni%60);
-
-                                        //change_hours = raznica_vremeni/60|0;
-                                        //change_minutes = raznica_vremeni%60;
-
-                                        //end_time = start_time+change_hours*60+change_minutes;
-
-                                        document.getElementById("Ajax_add_TempZapis").disabled = true;
+                                         $("#Ajax_add_TempZapis").disabled = true;
                                     }else{
-                                        //if (end_time < next_time_start_rez){
+
                                         $("#exist_zapis").html('');
-                                        document.getElementById("Ajax_add_TempZapis").disabled = false;
+                                         $("#Ajax_add_TempZapis").disabled = false;
                                     }
                                 }else{
                                     $("#exist_zapis").html('');
-                                    document.getElementById("Ajax_add_TempZapis").disabled = false;
+                                     $("#Ajax_add_TempZapis").disabled = false;
                                 }
                             }
                         });
-
-
-                        //if (end_time < next_time_start_rez){
-                        /*$("#exist_zapis").html('');
-                        document.getElementById("Ajax_add_TempZapis").disabled = false;*/
                     }
                 }else{
                     $("#exist_zapis").html('');
-                    document.getElementById("Ajax_add_TempZapis").disabled = false;
+                     $("#Ajax_add_TempZapis").disabled = false;
                 }
 			}
 		});
@@ -4068,11 +3716,6 @@
 	document.body.onmouseover = document.body.onmouseout = handler;
 
 	function handler(event) {
-
-		/*function str(el) {
-			if (!el) return "null"
-			return el.className || el.tagName;
-		}*/
 
 		e = $('#ShowDescrTempZapis');
 
@@ -4128,7 +3771,7 @@
 		var insure = 0;
 		var insureapprove = 0;
 
-		//var discount = Number(document.getElementById("discountValue").innerHTML);
+		//var discount = Number( $("#discountValue").html());
 
 		var link = 'add_price_price_id_in_item_invoice_f.php';
 
@@ -4138,7 +3781,7 @@
         //console.log(link);
 
         $("#calculateInvoice").html(Summ);
-        
+
 		if (invoice_type == 5){
 			$("#calculateInsInvoice").html(SummIns);
 		}
@@ -4146,10 +3789,6 @@
 		$(".invoiceItemPrice").each(function() {
 
             var invoiceItemPriceItog = 0;
-
-			//console.log(document.getElementById($(this).parent().find('[insure]')).getAttribute('insure'));
-			//console.log($(this).prev().prev().attr('insure'));
-			//console.log($(this).attr("insure"));
 
 			if (invoice_type == 5){
 				//получаем значение страховой
@@ -4162,23 +3801,16 @@
 
 			//получаем значение гарантии
 			var guarantee = $(this).next().next().next().next().attr('guarantee');
-			//var guarantee = $(this).next().next().next().attr('guarantee');
-			//console.log(guarantee);
 
             //получаем значение подарка
             var gift = $(this).next().next().next().next().attr('gift');
             //console.log(gift);
 
 			//Цена
-			//var cost = Number(this.innerHTML);
 			var cost = Number($(this).attr('price'));
-			//console.log(cost);
 
 			var ind = $(this).attr('ind');
 			var key = $(this).attr('key');
-			//console.log(ind);
-			//console.log(key);
-			//console.log(cost);
 
 			//обновляем цену в сессии как можем
 			$.ajax({
@@ -4206,15 +3838,7 @@
 				},
 				// действие, при ответе с сервера
 				success: function(res){
-                    //console.log(res);
-					//if(data.result == "success"){
-						//console.log(res);
-						//$('#invoice_rezult').html(data.data);
 
-					//}else{
-						//console.log('error');
-					//	$('#errror').html(data.data);
-					//}
 				}
 			});
 
@@ -4245,9 +3869,6 @@
                 stoim = Number($(this).parent().find('.invoiceItemPriceItog').html());
 			}
 
-            //console.log(stoim);
-			//console.log($(this).parent().find('.invoiceItemPriceItog').html(stoim));
-
             //суммируем сумму в итоги
             if ((guarantee == 0) && (gift == 0)) {
                 if (insure != 0){
@@ -4262,13 +3883,6 @@
             var invoiceItemPriceItog = stoim;
             var ishod_price = Number($(this).parent().find('.invoiceItemPriceItog').html());
 
-            /*console.log(ishod_price);
-            console.log(invoiceItemPriceItog);
-            console.log(stoim);
-            console.log(changeItogPrice);
-            console.log("//////////////////////");*/
-
-
             if (ishod_price == 0) {
             	//2018.03.13 попытка разобраться с гарантийной ценой для зарплаты
                 //if (guarantee != 1) {
@@ -4279,8 +3893,6 @@
             if (changeItogPrice) {
                 //прописываем стоимость этой позиции
                 if ((guarantee == 0) && (gift == 0)) {
-                    //$(this).next().next().next().next().next().html(stoim);
-                    //$(this).next().next().next().next().html(stoim);
 
                     $(this).parent().find('.invoiceItemPriceItog').html(stoim);
                 }
@@ -4290,12 +3902,6 @@
 
             if (changeItogPrice) {
 				//console.log(changeItogPrice);
-
-				/*var min_itog_price = Math.floor(invoiceItemPriceItog / 10) * 10;
-				var max_itog_price = min_itog_price + 10;
-				if (min_itog_price < 1) min_itog_price = 1;*/
-
-				//priceItemItogInvoice (ind, key, invoiceItemPriceItog, min_itog_price, max_itog_price)
 
                 var link2 = "add_manual_itog_price_id_in_item_invoice_f.php";
 
@@ -4328,63 +3934,13 @@
                     // действие, при ответе с сервера
                     success: function (res) {
                         //console.log(res);
-
-                        //fillInvoiseRez();
-
-                        //$(this).parent().find('.invoiceItemPriceItog').html(invoiceItemPriceItog);
-
                     }
                 });
 
             }
-
-
-            //обновляем итоговую цену в сессии как можем
-            /*$.ajax({
-                url: 'add_price_itog_price_id_in_item_invoice_f.php',
-                global: false,
-                type: "POST",
-                dataType: "JSON",
-                data:
-                    {
-                        client: $("#client").val(),
-                        zapis_id: $("#zapis_id").val(),
-                        filial: $("#filial").val(),
-                        worker: $("#worker").val(),
-
-                        invoice_type: invoice_type,
-
-                        ind: ind,
-                        key: key,
-
-                        price: invoiceItemPriceItog
-                    },
-                cache: false,
-                beforeSend: function() {
-                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-                },
-                // действие, при ответе с сервера
-                success: function(data){
-                    //console.log(data);
-                    //if(data.result == "success"){
-                    //console.log(data.data);
-                    //$('#invoice_rezult').html(data.data);
-
-                    //}else{
-                    //console.log('error');
-                    //	$('#errror').html(data.data);
-                    //}
-
-                    //$(this).parent().find('.invoiceItemPriceItog').html(invoiceItemPriceItog);
-
-                }
-            });*/
-
-
 		});
 
         //Summ = Math.round(Summ - (Summ * discount / 100));
-
         //Убрали округление 2017.08.09
         //Summ = Math.round(Summ/10) * 10;
         //Изменили округление 2017.08.10
@@ -4399,10 +3955,6 @@
 		if (SummIns > 0){
 			$("#calculateInsInvoice").html(SummIns);
 		}
-
-        /*console.log(Summ);
-        console.log("<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>");*/
-
 	};
 
 	//Подсчёт суммы для расчёта
@@ -4442,6 +3994,34 @@
 
 	}
 
+	//Смена исполнителя для расчета
+    function changeWorkerInCalculate (){
+
+        var link = "search_user_f.php";
+
+        var reqData = {
+            workerFIO: $("#search_client2").val(),
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function (res) {
+                //console.log(res);
+
+               $("#worker").val(res.data.id);
+            }
+        });
+	}
+
     //Окрасить кнопки с зубами
     function colorizeTButton (t_number_active){
         $(".sel_tooth").each(function() {
@@ -4453,7 +4033,7 @@
             $(".sel_toothp").css({'background': "#83DB53"});
         }else{
             $(".sel_tooth").each(function() {
-                if (Number(this.innerHTML) == t_number_active){
+                if (Number(this.html()) == t_number_active){
                     this.style.background = '#83DB53';
                 }
             });
@@ -4510,8 +4090,6 @@
 				// !!! скролл надо замутить сюда $('#invoice_rezult').scrollTop();
 			}
 		});
-		//$('#errror').html('Результат');
-		//calculateInvoice();
 	}
 
 	//Функция заполняет результат расчета из сессии
@@ -4539,7 +4117,8 @@
 				client: $("#client").val(),
 				zapis_id: $("#zapis_id2").val(),
 				filial: $("#filial2").val(),
-				worker: $("#worker").val()
+				worker: $("#worker").val(),
+                invoice_type: invoice_type
 
 			},
 			cache: false,
@@ -4569,7 +4148,7 @@
 		//calculateInvoice();
 	}
 
-	// что-то как-то я хз, типа добавляем в сессию новый зуб
+	// что-то как-то я хз, типа добавляем в сессию новый зуб (наряд)
 	function addInvoiceInSession(t_number){
 
 		colorizeTButton(t_number);
@@ -4610,7 +4189,7 @@
 	}
 	//меняет кол-во позиции
 	function changeQuantityInvoice(ind, itemId, dataObj){
-		//console.log(dataObj.value);
+		//console.log(dataObj.val());
 		//console.log(this);
 
 		var invoice_type = $("#invoice_type").val();
@@ -4623,7 +4202,7 @@
         //console.log(invoice_type);
 
 		//количество
-		var quantity = dataObj.value;
+		var quantity = dataObj.val();
 		//console.log(quantity);
 
 		$.ajax({
@@ -4654,32 +4233,13 @@
 
                 fillInvoiseRez(true);
 
-				//$('#errror').html(data);
-				//if(data.result == "success"){
-				//	console.log(data.data);
-
-				//	colorizeTButton (data.t_number_active);
-
-					/*$(".sel_tooth").each(function() {
-						if (Number(this.innerHTML) == data.t_number_active){
-							this.style.background = '#83DB53';
-						}else{
-							this.style.background = '';
-						}
-					});*/
-				//}
-				/*else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
-
 			}
 		});
 	}
 
 	//Для измения цены +1
 	function invPriceUpDownOne(ind, itemId, price, start_price, up_down){
-		//console.log(dataObj.value);
+		//console.log(dataObj.val());
 		//console.log(this);
 
 		var invoice_type = $("#invoice_type").val();
@@ -4791,20 +4351,7 @@
 
 					colorizeTButton (res.t_number_active);
 
-					/*$(".sel_tooth").each(function() {
-						if (Number(this.innerHTML) == data.t_number_active){
-							this.style.background = '#83DB53';
-						}else{
-							this.style.background = '';
-						}
-					});*/
 				}
-				/*else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
-
-
 			}
 		});
 	}
@@ -4822,9 +4369,6 @@
 		if ((itemId == null) || (itemId == 'null') || (typeof itemId == "undefined")){
 			target = 'ind';
 		}
-		//console.log(ind);
-		//console.log(itemId);
-		//console.log(target);
 
 		$.ajax({
 			url:"fl_delete_calculate_item_from_session_f.php",
@@ -4854,17 +4398,7 @@
 
 				//$('#errror').html(data);
 				if(data.result == "success"){
-					//console.log(111);
 
-					//colorizeTButton (data.t_number_active);
-
-					/*$(".sel_tooth").each(function() {
-						if (Number(this.innerHTML) == data.t_number_active){
-							this.style.background = '#83DB53';
-						}else{
-							this.style.background = '';
-						}
-					});*/
 				}else{
 					//console.log('error');
 					$('#errror').html(data.data);
@@ -4887,10 +4421,10 @@
 			{
 				zub: zub,
 
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client:  $("#client").val(),
+				zapis_id:  $("#zapis_id").val(),
+				filial:  $("#filial").val(),
+				worker:  $("#worker").val(),
 			},
 			cache: false,
 			beforeSend: function() {
@@ -4901,24 +4435,6 @@
 
                 fillInvoiseRez(true);
 
-				//$('#errror').html(data);
-				//if(data.result == "success"){
-					//console.log(111);
-
-					//colorizeTButton (data.t_number_active);
-
-					/*$(".sel_tooth").each(function() {
-						if (Number(this.innerHTML) == data.t_number_active){
-							this.style.background = '#83DB53';
-						}else{
-							this.style.background = '';
-						}
-					});*/
-				//}
-				/*else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
 			}
 		});
 	}
@@ -4936,10 +4452,10 @@
 				ind: ind,
 				key: key,
 
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client:  $("#client").val(),
+				zapis_id:  $("#zapis_id").val(),
+				filial:  $("#filial").val(),
+				worker:  $("#worker").val(),
 			},
 			cache: false,
 			beforeSend: function() {
@@ -4995,31 +4511,15 @@
 
                 fillInvoiseRez(true);
 
-				/*if(data.result == "success"){
-					//console.log(data.data);
-					$('#invoice_rezult').html(data.data);
-				}else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
 			}
 		});
-		//$(".invoiceItemPrice").each(function() {
-
-			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
-
-			//написали стоимость позиции
-			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
-
-
-		//});
 
 	}
 
 	//Изменить гарантию у всех
 	function guaranteeInvoice(guarantee){
 
-		var invoice_type = document.getElementById("invoice_type").value;
+		var invoice_type =  $("#invoice_type").val();
 
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
@@ -5034,10 +4534,10 @@
 			data:
 			{
 				guarantee: guarantee,
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client:  $("#client").val(),
+				zapis_id:  $("#zapis_id").val(),
+				filial:  $("#filial").val(),
+				worker:  $("#worker").val(),
 
 				invoice_type: invoice_type
 			},
@@ -5050,24 +4550,8 @@
 
                 fillInvoiseRez(true);
 
-				/*if(data.result == "success"){
-					//console.log(data.data);
-					$('#invoice_rezult').html(data.data);
-				}else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
 			}
 		});
-		//$(".invoiceItemPrice").each(function() {
-
-			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
-
-			//написали стоимость позиции
-			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
-
-
-		//});
 
 	}
 	//Изменить гарантию или подарок у всех
@@ -5102,31 +4586,13 @@
 			},
 			// действие, при ответе с сервера
 			success: function(data){
-                //console.log(data);
-                //console.log(data.data);
 
                 fillInvoiseRez(true);
 
-				/*if(data.result == "success"){
-					//console.log(data.data);
-					$('#invoice_rezult').html(data.data);
-				}else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
 			}
 		});
-		//$(".invoiceItemPrice").each(function() {
-
-			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
-
-			//написали стоимость позиции
-			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
-
-
-		//});
-
 	}
+
 	//Изменить согласование у всех
 	function insureApproveInvoice(approve){
 
@@ -5143,10 +4609,10 @@
 			data:
 			{
 				approve: approve,
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value
+				client:  $("#client").val(),
+				zapis_id:  $("#zapis_id").val(),
+				filial:  $("#filial").val(),
+				worker:  $("#worker").val()
 			},
 			cache: false,
 			beforeSend: function() {
@@ -5157,25 +4623,8 @@
 
                 fillInvoiseRez(true);
 
-				/*if(data.result == "success"){
-					//console.log(data.data);
-					$('#invoice_rezult').html(data.data);
-				}else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
 			}
 		});
-		//$(".invoiceItemPrice").each(function() {
-
-			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
-
-			//написали стоимость позиции
-			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
-
-
-		//});
-
 	}
 
 	//Изменить скидку у всех
@@ -5216,29 +4665,12 @@
 			// действие, при ответе с сервера
 			success: function(data){
 
-                //document.getElementById("discountValue").innerHTML = Number(discount);
+                // $("#discountValue").html(Number(discount));
 
                 fillInvoiseRez(true);
 
-				/*if(data.result == "success"){
-					//console.log(data.data);
-					$('#invoice_rezult').html(data.data);
-				}else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
 			}
 		});
-		//$(".invoiceItemPrice").each(function() {
-
-			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
-
-			//написали стоимость позиции
-			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
-
-
-		//});
-
 	}
 
 	//Изменить страховую у всех
@@ -5257,10 +4689,10 @@
 			data:
 			{
 				insure: insure,
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client:  $("#client").val(),
+				zapis_id:  $("#zapis_id").val(),
+				filial:  $("#filial").val(),
+				worker:  $("#worker").val(),
 			},
 			cache: false,
 			beforeSend: function() {
@@ -5271,25 +4703,8 @@
 
                 fillInvoiseRez(true);
 
-				/*if(data.result == "success"){
-					//console.log(data.data);
-					$('#invoice_rezult').html(data.data);
-				}else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
 			}
 		});
-		//$(".invoiceItemPrice").each(function() {
-
-			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
-
-			//написали стоимость позиции
-			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
-
-
-		//});
-
 	}
 
 	//Изменить страховую у этого зуба
@@ -5310,10 +4725,10 @@
 				zub: zub,
 				key: key,
 				insure: insure,
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client:  $("#client").val(),
+				zapis_id:  $("#zapis_id").val(),
+				filial:  $("#filial").val(),
+				worker:  $("#worker").val(),
 			},
 			cache: false,
 			beforeSend: function() {
@@ -5324,25 +4739,8 @@
 
                 fillInvoiseRez(true);
 
-				/*if(data.result == "success"){
-					//console.log(data.data);
-					$('#invoice_rezult').html(data.data);
-				}else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
 			}
 		});
-		//$(".invoiceItemPrice").each(function() {
-
-			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
-
-			//написали стоимость позиции
-			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
-
-
-		//});
-
 	}
 
 	//Изменить согласование у этого зуба
@@ -5363,10 +4761,10 @@
 				zub: zub,
 				key: key,
 				approve: approve,
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client:  $("#client").val(),
+				zapis_id:  $("#zapis_id").val(),
+				filial:  $("#filial").val(),
+				worker:  $("#worker").val(),
 			},
 			cache: false,
 			beforeSend: function() {
@@ -5377,31 +4775,14 @@
 
                 fillInvoiseRez(true);
 
-				/*if(data.result == "success"){
-					//console.log(data.data);
-					$('#invoice_rezult').html(data.data);
-				}else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
 			}
 		});
-		//$(".invoiceItemPrice").each(function() {
-
-			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
-
-			//написали стоимость позиции
-			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
-
-
-		//});
-
 	}
 
 	//Изменить гарантию у этого зуба
 	function guaranteeItemInvoice(zub, key, guarantee){
 
-		var invoice_type = document.getElementById("invoice_type").value;
+		var invoice_type =  $("#invoice_type").val();
 
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
@@ -5418,10 +4799,10 @@
 				zub: zub,
 				key: key,
 				guarantee: guarantee,
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client:  $("#client").val(),
+				zapis_id:  $("#zapis_id").val(),
+				filial:  $("#filial").val(),
+				worker:  $("#worker").val(),
 
 				invoice_type: invoice_type,
 			},
@@ -5434,25 +4815,8 @@
 
                 fillInvoiseRez(true);
 
-				/*if(data.result == "success"){
-					//console.log(data.data);
-					$('#invoice_rezult').html(data.data);
-				}else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
 			}
 		});
-		//$(".invoiceItemPrice").each(function() {
-
-			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
-
-			//написали стоимость позиции
-			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
-
-
-		//});
-
 	}
 
 	//Изменить гарантию и подарок у этого зуба
@@ -5491,25 +4855,8 @@
 
                 fillInvoiseRez(true);
 
-				/*if(data.result == "success"){
-					//console.log(data.data);
-					$('#invoice_rezult').html(data.data);
-				}else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
 			}
 		});
-		//$(".invoiceItemPrice").each(function() {
-
-			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
-
-			//написали стоимость позиции
-			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
-
-
-		//});
-
 	}
 
     //Изменить категорию процентов
@@ -5549,25 +4896,8 @@
 
                 fillCalculateRez();
 
-                /*if(data.result == "success"){
-                 //console.log(data.data);
-                 $('#invoice_rezult').html(data.data);
-                 }else{
-                 //console.log('error');
-                 $('#errror').html(data.data);
-                 }*/
             }
         });
-        //$(".invoiceItemPrice").each(function() {
-
-        //this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
-
-        //написали стоимость позиции
-        //$(this).next().next().next().html(quantity * Number(this.innerHTML));
-
-
-        //});
-
     }
 
 
@@ -5615,25 +4945,8 @@
 
                 fillInvoiseRez(true);
 
-				/*if(data.result == "success"){
-					//console.log(data.data);
-					$('#invoice_rezult').html(data.data);
-				}else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
 			}
 		});
-		//$(".invoiceItemPrice").each(function() {
-
-			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
-
-			//написали стоимость позиции
-			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
-
-
-		//});
-
 	}
 
 	//Изменить скидка акция у этого зуба
@@ -5680,36 +4993,14 @@
 
                 fillInvoiseRez(true);
 
-				/*if(data.result == "success"){
-					//console.log(data.data);
-					$('#invoice_rezult').html(data.data);
-				}else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
 			}
 		});
-		//$(".invoiceItemPrice").each(function() {
-
-			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
-
-			//написали стоимость позиции
-			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
-
-
-		//});
-
 	}
 
 	//Изменить цену у этого зуба
 	function priceItemInvoice(ind, key, price, start_price){
 
-		var invoice_type = document.getElementById("invoice_type").value;
-
-		/*console.log(ind);
-		console.log(key);
-		console.log(price);
-		console.log(start_price);*/
+		var invoice_type =  $("#invoice_type").val();
 
         if (isNaN(price)) price = start_price;
 		if (price <= start_price) price = start_price;
@@ -5732,10 +5023,10 @@
 
                 start_price: start_price,
 
-				client: document.getElementById("client").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value,
+				client:  $("#client").val(),
+				zapis_id:  $("#zapis_id").val(),
+				filial:  $("#filial").val(),
+				worker:  $("#worker").val(),
 
 				invoice_type: invoice_type
 			},
@@ -5749,25 +5040,8 @@
 
                 fillInvoiseRez(true);
 
-				/*if(data.result == "success"){
-					//console.log(data.data);
-					$('#invoice_rezult').html(data.data);
-				}else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
 			}
 		});
-		//$(".invoiceItemPrice").each(function() {
-
-			//this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
-
-			//написали стоимость позиции
-			//$(this).next().next().next().html(quantity * Number(this.innerHTML));
-
-
-		//});*/
-
 	}
 
 	//Изменить итоговую цену у этой позиции
@@ -5827,10 +5101,6 @@
 			},
 			// действие, при ответе с сервера
 			success: function(res){
-				//console.log("priceItemItogInvoice----------->");
-                //console.log(res);
-				//console.log(price);
-				//console.log(manual_itog_price);
 
 				fillInvoiseRez(false);
 
@@ -5923,13 +5193,6 @@
 
                 fillInvoiseRez(true);
 
-				/*if(data.result == "success"){
-					//console.log(data.data);
-					$('#invoice_rezult').html(data.data);
-				}else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
 			}
 		});
 
@@ -5946,12 +5209,12 @@
 			data:
 			{
 				mkb_id: mkb_id,
-				client: document.getElementById("client").value,
-				client_insure: document.getElementById("client_insure").value,
-				zapis_id: document.getElementById("zapis_id").value,
-				zapis_insure: document.getElementById("zapis_insure").value,
-				filial: document.getElementById("filial").value,
-				worker: document.getElementById("worker").value
+				client:  $("#client").val(),
+				client_insure:  $("#client_insure").val(),
+				zapis_id:  $("#zapis_id").val(),
+				zapis_insure:  $("#zapis_insure").val(),
+				filial:  $("#filial").val(),
+				worker:  $("#worker").val()
 			},
 			cache: false,
 			beforeSend: function() {
@@ -5962,13 +5225,6 @@
 
                 fillInvoiseRez(true);
 
-				/*if(data.result == "success"){
-					//console.log(data.data);
-					$('#invoice_rezult').html(data.data);
-				}else{
-					//console.log('error');
-					$('#errror').html(data.data);
-				}*/
 			}
 		});
 
@@ -6022,7 +5278,7 @@
 				data: filial,
 			},
 			success:function(data){
-				//document.getElementById("status_notes").innerHTML=data;
+				// $("#status_notes").html(data);
 				//console.log("Ok");
 				location.reload();
 			}
@@ -6066,52 +5322,37 @@
 
                 fillCalculateRez();
 
-				/*if(res.result == "success"){
-				 //console.log(res.data);
-				 $('#invoice_rezult').html(res.data);
-				 }else{
-				 //console.log('error');
-				 $('#errror').html(res.data);
-				 }*/
             }
         });
-        //$(".invoiceItemPrice").each(function() {
 
-        //this.innerHTML = Number(this.innerHTML) + Number(this.innerHTML) / 100 * koeff
-
-        //написали стоимость позиции
-        //$(this).next().next().next().html(quantity * Number(this.innerHTML));
-
-
-        //});
 	}
 
 	//Показываем блок с суммами и кнопками Для наряда
 	function showInvoiceAdd(invoice_type, mode){
 		//console.log(mode);
 		$('#overlay').show();
-		
+
 		var Summ = $("#calculateInvoice").html();
 		var SummIns = 0;
 		var SummInsBlock = '';
-		
+
 		if (invoice_type == 5){
 			SummIns = $("#calculateInsInvoice").html();
 			SummInsBlock = '<div>Страховка: <span class="calculateInsInvoice">'+SummIns+'</span> руб.</div>';
 		}
-		
+
 		var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'add\')">';
 
 		if (invoice_type == 88){
             buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_free_add(\'add\')">';
 		}
-		
+
 		if (mode == 'edit'){
 			buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'edit\')">';
 		}
 
 
-		
+
 		// Создаем меню:
 		var menu = $('<div/>', {
 			class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
@@ -6155,73 +5396,6 @@
 		menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
 
 	}
-
-	//Показываем блок с суммами и кнопками Для расчета
-	/*function showCalculateAdd(invoice_type, mode){
-		//console.log(mode);
-		$('#overlay').show();
-
-		var Summ = document.getElementById("calculateInvoice").innerHTML;
-		var SummIns = 0;
-		var SummInsBlock = '';
-
-		if (invoice_type == 5){
-			SummIns = document.getElementById("calculateInsInvoice").innerHTML;
-			SummInsBlock = '<div>Страховка: <span class="calculateInsInvoice">'+SummIns+'</span> руб.</div>';
-		}
-
-		var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_calculate_add(\'add\')">';
-
-
-		if (mode == 'edit'){
-			buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_calculate_add(\'edit\')">';
-		}
-
-		// Создаем меню:
-		var menu = $('<div/>', {
-			class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
-		}).css({
-			"height": "100px",
-		})
-		.appendTo('#overlay')
-		.append(
-			$('<div/>')
-			.css({
-				"height": "100%",
-				"border": "1px solid #AAA",
-				"position": "relative",
-			})
-			.append('<span style="margin: 5px;"><i>Это действие нельзя будет отменить. Вы уверены?</i></span>')
-			.append(
-				$('<div/>')
-				.css({
-					"position": "absolute",
-					"width": "100%",
-					"margin": "auto",
-					"top": "-10px",
-					"left": "0",
-					"bottom": "0",
-					"right": "0",
-					"height": "50%",
-				})
-				//.append('<div style="margin: 10px;">Сумма: <span class="calculateInvoice">'+Summ+'</span> руб.</div>'+SummInsBlock)
-			)
-			.append(
-				$('<div/>')
-				.css({
-					"position": "absolute",
-					"bottom": "2px",
-					"width": "100%",
-				})
-				.append(buttonsStr+
-						'<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
-				)
-			)
-		);
-
-		menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
-
-	}*/
 
 	//Показываем блок с суммами и кнопками Для расчета
 	function showCalculateAdd(invoice_type, mode){
@@ -6289,8 +5463,8 @@
 				)
 			)
 		);
-
-		menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+		// Показываем меню с небольшим стандартным эффектом jQuery.
+		menu.show();
 
 	}
 
@@ -6322,12 +5496,6 @@
                 if(data.result == 'success'){
                     $('#overlay').show();
 
-                    //var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'add\')">';
-
-                    /*if (mode == 'edit'){
-                        buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'edit\')">';
-                    }*/
-
                     if (mode == 'add'){
                         Ajax_order_add('add');
                     }
@@ -6335,49 +5503,6 @@
                     if (mode == 'edit'){
                         Ajax_order_add('edit');
                     }
-
-                    // Создаем меню:
-                    /*var menu = $('<div/>', {
-                        class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
-                    })
-                        .appendTo('#overlay')
-                        .append(
-                            $('<div/>')
-                                .css({
-                                    "height": "100%",
-                                    "border": "1px solid #AAA",
-                                    "position": "relative",
-                                })
-                                .append('<span style="margin: 5px;"><i>Проверьте сумму и нажмите сохранить</i></span>')
-                                .append(
-                                    $('<div/>')
-                                        .css({
-                                            "position": "absolute",
-                                            "width": "100%",
-                                            "margin": "auto",
-                                            "top": "-10px",
-                                            "left": "0",
-                                            "bottom": "0",
-                                            "right": "0",
-                                            "height": "50%",
-                                        })
-                                        .append('<div style="margin: 10px;">Сумма: <span class="calculateInvoice">'+Summ+'</span> руб.</div>')
-                                )
-                                .append(
-                                    $('<div/>')
-                                        .css({
-                                            "position": "absolute",
-                                            "bottom": "2px",
-                                            "width": "100%",
-                                        })
-                                        .append(buttonsStr+
-                                            '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
-                                        )
-                                )
-                        );
-
-                    menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
-                    */
 
                 // в случае ошибок в форме
                 }else{
@@ -6426,18 +5551,6 @@
                     $('#overlay').show();
 
                     var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_cert_cell('+id+', '+cell_price+', '+office_id+')">';
-
-                    /*if (mode == 'edit'){
-                        buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'edit\')">';
-                    }*/
-
-                    /*if (mode == 'add'){
-                        Ajax_order_add('add');
-                    }
-
-                    if (mode == 'edit'){
-                        Ajax_order_add('edit');
-                    }*/
 
                     // Создаем меню:
                     var menu = $('<div/>', {
@@ -6501,15 +5614,9 @@
 
     //Показываем блок для поиска и добавления сертификата
     function showCertPayAdd(){
-        //console.log(id);
-        //hideAllErrors ();
-
-        //var search_cert_input = $('#search_cert_input').html();
-		//console.log(search_cert_input);
 
         $('#overlay').show();
 
-        //var buttonsStr = '<input type="button" class="b" value="Добавить" onclick="Ajax_cert_add_pay()">';
         var buttonsStr = '';
 
         // Создаем меню:
@@ -6540,10 +5647,7 @@
                                 "height": "50%",
                             })
                             .append(
-                                //search_cert_input
 								'<div id="search_cert_input_target">'+
-								//	'<input type="text" size="30" name="searchdata" id="search_cert" placeholder="Наберите номер сертификата" value="" class="who"  autocomplete="off" style="width: 90%;">'+
-            					//'<ul id="search_result" class="search_result"></ul>'+
 								'</div>'
 							)
                     )
@@ -6572,16 +5676,16 @@
         //console.log(mode);
 
         $('.error').each(function(){
-            //console.log(this.innerHTML);
-            this.innerHTML = '';
+            //console.log(this.html());
+            this.html('');
         });
 
-        document.getElementById("errror").innerHTML = '';
+         $("#errror").html('');
 
-        var search_client2 = document.getElementById("search_client2").value;
-        var lab = document.getElementById("lab").value;
-        var descr = document.getElementById("descr").value;
-        var comment = document.getElementById("comment").value;
+        var search_client2 =  $("#search_client2").val();
+        var lab =  $("#lab").val();
+        var descr =  $("#descr").val();
+        var comment =  $("#comment").val();
 
         //проверка данных на валидность
         $.ajax({
@@ -6601,13 +5705,6 @@
             },
             success:function(data){
                 if(data.result == 'success'){
-                    //$('#overlay').show();
-
-                    //var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'add\')">';
-
-                    /*if (mode == 'edit'){
-                        buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_order_add(\'edit\')">';
-                    }*/
 
                     if (mode == 'add'){
                         Ajax_lab_order_add('add');
@@ -6628,7 +5725,7 @@
                         // обводим инпуты красным цветом
                         // $('#'+errorField).addClass('error_input');
                     }
-                    document.getElementById("errror").innerHTML='<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>'
+                     $("#errror").html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>')
                 }
             }
         })
@@ -6638,23 +5735,23 @@
 	//Добавляем/редактируем в базу наряд из сессии
 	function Ajax_invoice_add(mode){
 		//console.log(mode);
-		
+
 		var invoice_id = 0;
-		
+
 		var link = "invoice_add_f.php";
-		
+
 		if (mode == 'edit'){
 			link = "invoice_edit_f.php";
 			invoice_id = $("#invoice_id").val();
 		}
-		
+
 		var invoice_type = $("#invoice_type").val();
 
 		var Summ = $("#calculateInvoice").html();
 		var SummIns = 0;
-		
+
 		var SummInsStr = '';
-		
+
 		if (invoice_type == 5){
 			SummIns = $("#calculateInsInvoice").html();
 			SummInsStr = '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
@@ -6662,13 +5759,13 @@
 							'<span class="calculateInsInvoice" style="font-size: 13px">'+SummIns+'</span> руб.'+
 						'</div>';
 		}
-		
+
 		var client = $("#client").val();
-		
+
 		$.ajax({
 			url: link,
-			global: false, 
-			type: "POST", 
+			global: false,
+			type: "POST",
 			dataType: "JSON",
 			data:
 			{
@@ -6676,10 +5773,10 @@
 				zapis_id: $("#zapis_id").val(),
 				filial: $("#filial").val(),
 				worker: $("#worker").val(),
-				
+
 				summ: Summ,
 				summins: SummIns,
-				
+
 				invoice_type: invoice_type,
 				invoice_id: invoice_id,
 			},
@@ -6692,7 +5789,7 @@
 				console.log(res);
 				$('.center_block').remove();
 				$('#overlay').hide();
-				
+
 				if(res.result == "success"){
 					$('#data').hide();
 					$('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
@@ -6747,16 +5844,6 @@
 		var SummIns = 0;
 
 		var SummInsStr = '';
-
-		/*if (invoice_type == 5){
-			SummIns = $("#calculateInsInvoice").html();
-			SummInsStr = '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
-							'Страховка:<br>'+
-							'<span class="calculateInsInvoice" style="font-size: 13px">'+SummIns+'</span> руб.'+
-						'</div>';
-		}*/
-
-		//var client = $("#client").val();
 
 		$.ajax({
 			url: link,
@@ -6895,30 +5982,6 @@
                         location.reload();
                     }else {
                         $('#data').hide();
-                        /*$('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
-                            '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован наряд</li>' +
-                            '<li class="cellsBlock" style="width: auto;">' +
-                            '<a href="invoice.php?id=' + res.data + '" class="cellName ahref">' +
-                            '<b>Наряд #' + res.data + '</b><br>' +
-                            '</a>' +
-                            '<div class="cellName">' +
-                            '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">' +
-                            'Сумма:<br>' +
-                            '<span class="calculateInvoice" style="font-size: 13px">' + Summ + '</span> руб.' +
-                            '</div>' +
-                            SummInsStr +
-                            '</div>' +
-                            '</li>' +
-                            '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">' +
-                            '<a href="payment_add.php?invoice_id=' + res.data + '" class="b">Оплатить</a>' +
-                            '</li>' +
-                            '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">' +
-                            '<a href="add_order.php?client_id=' + client + '&invoice_id=' + res.data + '" class="b">Добавить приходный ордер</a>' +
-                            '</li>' +
-                            '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">' +
-                            '<a href="finance_account.php?client_id=' + client + '" class="b">Управление счётом</a>' +
-                            '</li>' +
-                            '</ul>');*/
                         window.location.replace('invoice.php?id='+invoice_id+'');
                     }
 				}else{
@@ -6979,7 +6042,6 @@
         var rys = false;
 
         var rys = confirm("Вы собираетесь отменить продажу сертификата.\nВы уверены?");
-        //console.log(885);
 
         if (rys) {
 
@@ -7001,8 +6063,6 @@
                 },
                 // действие, при ответе с сервера
                 success: function (res) {
-                    //$('#main').html(res);
-                    //console.log(res);
 
 					 if(res.result == "success"){
 					    //$('#data').hide();
@@ -7010,9 +6070,7 @@
 					    '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Продажа отменена</li>'+
 					    '</ul>');
 					    setTimeout(function () {
-					        //window.location.replace('certificate.php?id='+id+'');
                             location.reload();
-					        //console.log('client.php?id='+id);
 					    }, 100);
 					 }
 					 if(res.result == "error"){
@@ -7071,13 +6129,6 @@
 	//Очистить все сертификаты
 	function certsResultDel(){
 
-        /*$('#overlay').hide();
-        $('#search_cert_input').append($('#search_cert_input_target').children());
-        $('.center_block').remove();
-        $('#search_result_cert').html('');
-        $('#search_cert').val('');*/
-
-        //$('.have_money_or_not').show();
         $('#certs_result').hide();
         $('#showCertPayAdd_button').show();
 
@@ -7092,33 +6143,6 @@
 
         $('#summ').html(0);
 
-		/*$.ajax({
-			url: "FastSearchCertOne.php",
-			global: false,
-			type: "POST",
-			dataType: "JSON",
-			data:
-			{
-                id: id,
-            },
-			cache: false,
-			beforeSend: function() {
-				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-			},
-			// действие, при ответе с сервера
-			success: function(res){
-				//console.log(res);
-				$('.center_block').remove();
-				$('#overlay').hide();
-
-				if(res.result == "success"){
-					//$('#data').hide();
-                    $('#certs_result').append(res.data);
-				}else{
-					//$('#errror').html(res.data);
-				}
-			}
-		});*/
 	}
 
 	//Добавляем/редактируем в базу ордер
@@ -7137,12 +6161,12 @@
 		}
 
         var Summ = $("#summ").val();
-        //var SummType = document.getElementById("summ_type").value;
+        //var SummType =  $("#summ_type").val();
         var SummType = document.querySelector('input[name="summ_type"]:checked').value;
         var office_id = $("#filial").val();
 
 		var client_id = $("#client_id").val();
-		//var order_id = document.getElementById("order_id").value;
+		//var order_id =  $("#order_id").val();
 		//console.log(invoice_id);
 		var date_in = $("#date_in").val();
 		//console.log(date_in);
@@ -7303,9 +6327,6 @@
 			},
 			// действие, при ответе с сервера
 			success: function(res){
-				//console.log(res);
-				//$('.center_block').remove();
-				//$('#overlay').hide();
 
 				if(res.result == "success"){
 					//$('#data').hide();
@@ -7342,9 +6363,6 @@
 			},
 			// действие, при ответе с сервера
 			success: function(res){
-				//console.log(res);
-				//$('.center_block').remove();
-				//$('#overlay').hide();
 
 				if(res.result == "success"){
 					//$('#data').hide();
@@ -7359,9 +6377,9 @@
 
 	//Для перехода в добавление нового клиента из записи
 	$('#add_client_fio').click(function () {
-		var client_fio = document.getElementById("search_client").value;
+		var client_fio =  $("#search_client").val();
 		if (client_fio != ''){
-			window.location.replace('client_add.php?fio='+document.getElementById("search_client").value);
+			window.location.replace('client_add.php?fio='+ $("#search_client").val());
 		}else{
 			window.location.replace('client_add.php');
 		}
@@ -7434,7 +6452,7 @@
     function moveCheckedItems (){
 		//console.log(880);
 
-        var group = document.getElementById("group").value;
+        var group =  $("#group").val();
         //console.log(group);
 
         var rys = false;
@@ -7686,115 +6704,106 @@
             if (event.which === 1)  {
                 //console.log(71);
 
-                var lab_order_id = document.getElementById("lab_order_id").value;
-                var status_now = document.getElementById("status_now").value;
+                var lab_order_id =  $("#lab_order_id").val();
+                var status_now =  $("#status_now").val();
                 //console.log(status_now);
 
                 contextMenuShow(lab_order_id, status_now, event, 'lab_order_status');
             }
         });
 
+		//Надо же хоть что-то передать...
+		var reqData = {
+			type: 5,
+		}
+
+		//Запрос к базе онлайн записи и выгрузка
+		$.ajax({
+			url:"get_zapis3.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+
+			data:reqData,
+
+			cache: false,
+			beforeSend: function() {
+			},
+			success:function(res){
+				//console.log(res);
+
+				if(res.result == 'success'){
+					if (res.data > 0) {
+						$(".have_new-zapis").show();
+						$(".have_new-zapis").html(res.data);
+					}
+				}else{
+
+				}
+			}
+		});
 
 
+		//Запрос есть ли новые объявления
+		$.ajax({
+			url:"get_topic2.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
 
-		//типы пользователей
-		//var types = [5, 6, 10];
+			data:reqData,
 
-		//for (var key in types) {
+			cache: false,
+			beforeSend: function() {
+			},
+			success:function(res){
+				//console.log(res);
 
-			//Надо же хоть что-то передать...
-            var reqData = {
-                type: 5,
-            }
+				if(res.result == 'success'){
+					//console.log(res);
 
-            //Запрос к базе онлайн записи и выгрузка
-            $.ajax({
-                url:"get_zapis3.php",
-                global: false,
-                type: "POST",
-                dataType: "JSON",
+					if (res.data > 0) {
+						//console.log(res.data);
 
-                data:reqData,
+						$(".have_new-topic").show();
+						$(".have_new-topic").html(res.data);
+					}
+				}else{
 
-                cache: false,
-                beforeSend: function() {
-                },
-                success:function(res){
-                    //console.log(res);
+				}
+			}
+		});
 
-                    if(res.result == 'success'){
-                    	if (res.data > 0) {
-                            $(".have_new-zapis").show();
-                            $(".have_new-zapis").html(res.data);
-                        }
-                    }else{
+		 //Запрос есть ли новые тикеты
+		$.ajax({
+			url:"get_ticket2.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
 
-                    }
-                }
-            });
+			data:reqData,
 
+			cache: false,
+			beforeSend: function() {
+			},
+			success:function(res){
+				//console.log(res);
 
-            //Запрос есть ли новые объявления
-            $.ajax({
-                url:"get_topic2.php",
-                global: false,
-                type: "POST",
-                dataType: "JSON",
+				if(res.result == 'success'){
+					//console.log(res);
 
-                data:reqData,
+					if (res.data > 0) {
+						//console.log(res.data);
 
-                cache: false,
-                beforeSend: function() {
-                },
-                success:function(res){
-                    //console.log(res);
+						$(".have_new-ticket").show();
+						$(".have_new-ticket").html(res.data);
+					}
+				}else{
 
-                    if(res.result == 'success'){
-                    	//console.log(res);
+				}
+			}
+		});
 
-                    	if (res.data > 0) {
-                            //console.log(res.data);
-
-                            $(".have_new-topic").show();
-                            $(".have_new-topic").html(res.data);
-                        }
-                    }else{
-
-                    }
-                }
-            });
-
-             //Запрос есть ли новые тикеты
-            $.ajax({
-                url:"get_ticket2.php",
-                global: false,
-                type: "POST",
-                dataType: "JSON",
-
-                data:reqData,
-
-                cache: false,
-                beforeSend: function() {
-                },
-                success:function(res){
-                    //console.log(res);
-
-                    if(res.result == 'success'){
-                    	//console.log(res);
-
-                    	if (res.data > 0) {
-                            //console.log(res.data);
-
-                            $(".have_new-ticket").show();
-                            $(".have_new-ticket").html(res.data);
-                        }
-                    }else{
-
-                    }
-                }
-            });
-
-        //}
 	});
 
 	//Для фильтра в косметологии для подсчета элементов
@@ -8103,22 +7112,6 @@
             });
     });
 
-    //Открываем модальные окна (удаляем тикет)
-    /*$('.open_modal_ticket_delete').live('click', function(event){
-        event.preventDefault(); // вырубаем стандартное поведение
-        var div = $(this).attr('href'); // возьмем строку с селектором у кликнутой ссылки
-
-		if ($("#workers_exist").val() != 'true'){
-            $("#workers_exist_warn").html('Так как задаче не назначены исполнители, назначены будете вы.');
-		}
-
-        $('#overlay').fadeIn(400, //показываем оверлэй
-            function(){ // после окончания показывания оверлэя
-                $(div) // берем строку с селектором и делаем из нее jquery объект
-                    .css('display', 'block')
-                    .animate({opacity: 1, top: '50%'}, 200); // плавно показываем
-            });
-    });*/
 
     //скрываем модальные окна
     $("#modal1, #modal2, #modal_ticket_done, #modal_ticket_delete") // все модальные окна

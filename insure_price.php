@@ -38,7 +38,7 @@
 			        }
 			        echo '
 							</select>
-							<span style="font-size: 90%; cursor: pointer" onclick="iWantThisInsurePrice()"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
+							<span class="button_tiny" style="font-size: 90%; cursor: pointer" onclick="iWantThisInsurePrice()"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
 						</div>
 						</header>';
 				

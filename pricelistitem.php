@@ -100,6 +100,11 @@
 								<div class="cellLeft">Название</div>
 								<div class="cellRight">'.$rezult[0]['name'].'</div>
 							</div>';
+                echo '
+							<div class="cellsBlock2">
+								<div class="cellLeft">Категория</div>
+								<div class="cellRight">'.WriteSearchUser('fl_spr_percents', $rezult[0]['category'], 'id', false).'</div>
+							</div>';
 				echo '
 							<div class="cellsBlock2">
 								<div class="cellLeft" style="font-size: 90%;">
