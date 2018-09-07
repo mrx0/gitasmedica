@@ -8,32 +8,26 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 
-		//var_dump($permissions);
-		if (($report['see_all'] == 1) || $god_mode){
-			include_once 'DBWork.php';
-			include_once 'functions.php';
+        if ($_GET) {
+            include_once 'DBWork.php';
+            include_once 'functions.php';
             include_once 'ffun.php';
-			include_once 'filter.php';
-			include_once 'filter_f.php';
+            include_once 'filter.php';
+            include_once 'filter_f.php';
 
             require 'variables.php';
-		
-			/*echo '
-				<style type="text/css">
-					div.ZakazDemo { padding: 10px !important; width: 300px;}
-					.ui-widget*{font-size: 0.6em !important;}
-				</style>';*/
 
-            if ($_GET) {
+            $msql_cnnct = ConnectToDB2 ();
 
-                $msql_cnnct = ConnectToDB2 ();
+            if (isset($_GET['tabel_id'])){
 
-                if (isset($_GET['tabel_id'])){
+                $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['tabel_id'], 'id');
+                //var_dump($tabel_j[0]);
 
-                    $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['tabel_id'], 'id');
-                    //var_dump($tabel_j[0]);
+                if ($tabel_j != 0){
 
-                    if ($tabel_j != 0){
+                    //var_dump($permissions);
+                    if (($report['see_all'] == 1) || $god_mode || ($tabel_j[0]['worker_id'] == $_SESSION['id'])){
 
                         $filials_j = getAllFilials(false, true);
 
@@ -250,9 +244,8 @@
                                 });
                             </script>";
 
-
                     }else{
-                        echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+                        echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
                     }
                 }else{
                     echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
@@ -260,10 +253,9 @@
             }else{
                 echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
             }
-
-		}else{
-			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
-		}
+        }else{
+            echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+        }
 	}else{
 		header("location: enter.php");
 	}
