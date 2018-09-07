@@ -4202,7 +4202,7 @@
         //console.log(invoice_type);
 
 		//количество
-		var quantity = dataObj.val();
+		var quantity = dataObj.value;
 		//console.log(quantity);
 
 		$.ajax({
@@ -4239,7 +4239,7 @@
 
 	//Для измения цены +1
 	function invPriceUpDownOne(ind, itemId, price, start_price, up_down){
-		//console.log(dataObj.val());
+		//console.log(dataObj.value);
 		//console.log(this);
 
 		var invoice_type = $("#invoice_type").val();
