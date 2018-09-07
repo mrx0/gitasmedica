@@ -8,37 +8,32 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 
-        if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
-	
-			include_once 'DBWork.php';
-			include_once 'functions.php';
+        if ($_GET){
+            if (isset($_GET['id'])){
 
-			include_once 'ffun.php';
+                $calculate_j = SelDataFromDB('fl_journal_calculate', $_GET['id'], 'id');
+                //var_dump($calculate_j);
 
-            require 'variables.php';
-			
-			require 'config.php';
+                if ($calculate_j != 0){
 
-            $edit_options = false;
-            $upr_edit = false;
-            $admin_edit = false;
-            $stom_edit = false;
-            $cosm_edit = false;
-            $finance_edit = false;
+                    if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode || ($calculate_j[0]['worker_id'] == $_SESSION['id'])){
 
-			//var_dump($_SESSION);
-			//unset($_SESSION['invoice_data']);
-			
-			if ($_GET){
-				if (isset($_GET['id'])){
-					
-					$calculate_j = SelDataFromDB('fl_journal_calculate', $_GET['id'], 'id');
-					
-					if ($calculate_j != 0){
-						//var_dump($calculate_j);
-						//array_push($_SESSION['invoice_data'], $_GET['client']);
-						//$_SESSION['invoice_data'] = $_GET['client'];
-                        //var_dump($calculate_j[0]['closed_time'] == 0);
+                        include_once 'DBWork.php';
+                        include_once 'functions.php';
+
+                        include_once 'ffun.php';
+
+                        require 'variables.php';
+
+                        require 'config.php';
+
+                        $edit_options = false;
+                        $upr_edit = false;
+                        $admin_edit = false;
+                        $stom_edit = false;
+                        $cosm_edit = false;
+                        $finance_edit = false;
+
 
 						$sheduler_zapis = array();
 						$calculate_ex_j = array();
@@ -593,7 +588,7 @@
                                                         <i><b>Цена из наряда, руб.</b></i>
                                                     </div>';
 
-                                if (($finances['see_all'] == 1) || $god_mode) {
+                                if (($finances['see_all'] == 1) || $god_mode || ($calculate_j[0]['worker_id'] == $_SESSION['id'])) {
                                     echo '
                                                     <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
                                                         <i><b>Вычет затрат на материалы, руб.</b></i>
@@ -900,7 +895,7 @@
                                             echo '
                                                     </div>';
 
-                                            if (($finances['see_all'] == 1) || $god_mode) {
+                                            if (($finances['see_all'] == 1) || $god_mode || ($calculate_j[0]['worker_id'] == $_SESSION['id'])) {
                                                 echo '
                                                     <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
                                                         <i><b>';
@@ -925,7 +920,7 @@
                                             //$percents_j = SelDataFromDB('fl_spr_percents', $item['percent_cats'], 'id');
                                             //var_dump($item['percent_cats']);
 
-                                            if (($finances['see_all'] == 1) || $god_mode) {
+                                            if (($finances['see_all'] == 1) || $god_mode || ($calculate_j[0]['worker_id'] == $_SESSION['id'])) {
 
                                                 echo '
                                                         <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
@@ -986,7 +981,7 @@
 
                                     echo '
                                                 </div>';
-                                if (($finances['see_all'] == 1) || $god_mode) {
+                                if (($finances['see_all'] == 1) || $god_mode || ($calculate_j[0]['worker_id'] == $_SESSION['id'])) {
                                     echo '                
                                                 <div class="invoceHeader" style="">
                                                     <ul style="margin-left: 6px; margin-bottom: 10px;">
@@ -1078,18 +1073,18 @@
 						}else{
 							echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 						}
-					}else{
-						echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
-					}
-				}else{
-					echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
-				}
-			}else{
-				echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
-			}
-		}else{
-			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
-		}
+                    }else{
+                        echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
+                    }
+                }else{
+                    echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+                }
+            }else{
+                echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+            }
+        }else{
+            echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+        }
 	}else{
 		header("location: enter.php");
 	}

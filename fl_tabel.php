@@ -106,6 +106,9 @@
                                 echo '<span style="margin-left: 20px; font-size: 60%; color: red;">Не проведён </span>';
                             }
                         }
+                        if ($tabel_j[0]['status'] == 9){
+                            echo '<i style="color:red;"> удален (заблокирован).</i><br>';
+                        }
 
                         echo '			
                                         </h2>
@@ -629,6 +632,8 @@
 
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
                             echo '
+                                                <button class="b" style="font-size: 80%;" onclick="prikazNomerVosem(' . $_GET['id'] . ');">Применить приказ №8</button>';
+                            echo '
                                                 <button class="b" style="font-size: 80%;" onclick="deployTabel(' . $_GET['id'] . ');">Провести табель</button>';
                         }else{
                             //if ($tabel_j[0]['status'] == 7) {
@@ -650,7 +655,6 @@
 
 
                         //Выводим
-
                         //Расчетные листы
                         echo '
                                 <div style="border: 1px dotted #b3c0c8; display: block; font-size: 12px; padding: 2px; margin-right: 10px; margin-bottom: 10px; vertical-align: top;">
