@@ -4033,7 +4033,7 @@
             $(".sel_toothp").css({'background': "#83DB53"});
         }else{
             $(".sel_tooth").each(function() {
-                if (Number(this.html()) == t_number_active){
+                if (Number(this.innerHTML) == t_number_active){
                     this.style.background = '#83DB53';
                 }
             });
