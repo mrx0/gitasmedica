@@ -5674,7 +5674,7 @@
 
         $('.error').each(function(){
             //console.log(this.html());
-            this.html('');
+            this.innerHTML('');
         });
 
          $("#errror").html('');
