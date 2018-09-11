@@ -19,33 +19,17 @@
             $deleted_zapis = '';
 
             //Деление на странички пагинатор paginator
-            $paginator_str = '';
             $limit_pos[0] = 0;
-            $limit_pos[1] = 10;
+            $limit_pos[1] = 15;
             $pages = 0;
 
             if (isset($_GET['page'])){
                 $limit_pos[0] = ($_GET['page']-1) * $limit_pos[1];
+            }else{
+                $_GET['page'] = 1;
             }
-            //var_dump($limit_pos);
 
             $msql_cnnct = ConnectToDB();
-
-            $query = "SELECT COUNT(*) AS total FROM `zapis_online`";
-
-            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-            $arr = mysqli_fetch_assoc($res);
-
-            if ($arr['total'] != 0) {
-
-                $pages = intval($arr['total']/$limit_pos[1]);
-
-                for ($i=0; $i <= $pages; $i++) {
-                    $paginator_str .= '<a class="paginator_btn" href="zapis_online.php?page='.($i+1).'">'.($i+1).'</a> ';
-                }
-            }
-
 
             $query = "SELECT * FROM `spr_filials`";
 
@@ -86,7 +70,7 @@
             }
 
             //$query = "SELECT * FROM `zapis_online` ".$dop." ORDER BY `id` DESC LIMIT {$limit_pos[0]}, {$limit_pos[1]};";
-            $query = "SELECT * FROM `zapis_online` ".$dop." ORDER BY `id` DESC;";
+            $query = "SELECT * FROM `zapis_online` ".$dop." ORDER BY `status`, `id` DESC LIMIT {$limit_pos[0]}, {$limit_pos[1]};";
             //var_dump($query);
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -102,8 +86,12 @@
 				echo '
 				
 					<div id="data">
-                        <div style="margin: 2px 6px 3px;">
-                            <!--'.$paginator_str.'-->
+                        <div style="margin: 2px 6px 3px;">';
+
+                //Пагинатор
+                echo paginationCreate ($limit_pos[1], $_GET['page'], 'zapis_online', 'zapis_online.php', $msql_cnnct, $dop);
+
+                echo '
                         </div>
 						<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
 							<li class="cellsBlock" style="font-weight:bold; font-size: 10px;">	
@@ -128,7 +116,7 @@
                         $bgcolor = 'background-color: rgba(158, 249, 142,1);';
                         $status = 'Обработано';
                     } else {
-                        if ($zapis_online_j[$i]['status'] == 8){
+                        if ($zapis_online_j[$i]['status'] == 6){
                             $bgcolor = 'background-color: rgba(148, 189, 216, 0.63);';
                             $status = 'Не доступен';
                         }else {
