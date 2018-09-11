@@ -2506,4 +2506,162 @@
 
         return $rezult;
     }
+
+    //Пагинатор
+    function paginationCreate ($count_on_page, $page_number, $db, $file_name, $msql_cnnct, $dop){
+        $paginator_str = '';
+        $pages = 0;
+
+        $rezult_str = '';
+        $rezult = array();
+
+        //Хочу получить общее количество
+        $query = "SELECT COUNT(*) AS total_ids FROM `$db` $dop;";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0){
+            $arr = mysqli_fetch_assoc($res);
+            $total_ids = $arr['total_ids'];
+        }else{
+            $total_ids = 0;
+        }
+
+        if ($total_ids != 0) {
+
+            $pages = (int)ceil($total_ids/$count_on_page);
+            //var_dump($pages);
+
+            if ($pages > 10){
+                $pg_btn_bgcolor = 'background: rgb(249, 255, 1); color: red;';
+
+                //next
+                if ($page_number != 1) {
+                    $paginator_str .= '<a href="' . $file_name . '?page=' . ($page_number - 1) . '" class="paginator_btn" style=""><i class="fa fa-caret-left" aria-hidden="true"></i></a> ';
+                }
+
+                if (($page_number == 1) || ($page_number == 2) || ($page_number == $pages) || ($page_number == $pages-1)){
+                    //1я
+                    $paginator_str .= '<a href="'.$file_name.'?page=1" class="paginator_btn" style="';
+
+                    if ($page_number == 1){
+                        $paginator_str .= $pg_btn_bgcolor;
+                    }
+
+                    $paginator_str .= '">1</a> ';
+
+                    //2я
+                    $paginator_str .= '<a href="'.$file_name.'?page=2" class="paginator_btn" style="';
+
+                    if ($page_number == 2){
+                        $paginator_str .= $pg_btn_bgcolor;
+                    }
+
+                    $paginator_str .= '">2</a> ';
+
+                    //3я
+                    $paginator_str .= '<a href="'.$file_name.'?page=3" class="paginator_btn" style="';
+
+                    if ($page_number == 3){
+                        $paginator_str .= $pg_btn_bgcolor;
+                    }
+
+                    $paginator_str .= '">3</a> ... ';
+
+                    //Препредпоследняя
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($pages-2) . '" class="paginator_btn" style="';
+
+                    if ($page_number == $pages-2){
+                        $paginator_str .= $pg_btn_bgcolor;
+                    }
+
+                    $paginator_str .= '">' . ($pages-2) . '</a>';
+                    $paginator_str .= '</a> ';
+
+                    //Предпоследняя
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($pages-1) . '" class="paginator_btn" style="';
+
+                    if ($page_number == $pages-1){
+                        $paginator_str .= $pg_btn_bgcolor;
+                    }
+
+                    $paginator_str .= '">' . ($pages-1) . '</a>';
+                    $paginator_str .= '</a> ';
+
+                    //Последняя
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($pages) . '" class="paginator_btn" style="';
+
+                    if ($page_number == $pages){
+                        $paginator_str .= $pg_btn_bgcolor;
+                    }
+
+                    $paginator_str .= '">' . ($pages) . '</a>';
+                    $paginator_str .= '</a> ';
+                }else {
+
+                    //1я
+                    $paginator_str .= '<a href="' . $file_name . '?page=1" class="paginator_btn" style="';
+                    $paginator_str .= '">1</a> ';
+
+                    if ($page_number - 1 != 2){
+                        $paginator_str .= '... ';
+                    }
+
+                    //
+                    $paginator_str .= '<a href="' . $file_name . '?page=' . ($page_number - 1) . '" class="paginator_btn" style="';
+                    $paginator_str .= '">' . ($page_number - 1) . '</a> ';
+
+                    //
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($page_number) . '" class="paginator_btn" style="';
+                    $paginator_str .= $pg_btn_bgcolor;
+                    $paginator_str .= '">' . ($page_number) . '</a> ';
+
+                    //
+                    $paginator_str .= '<a href="' . $file_name . '?page=' . ($page_number + 1) . '" class="paginator_btn" style="';
+                    $paginator_str .= '">' . ($page_number + 1) . '</a> ';
+
+                    if ($page_number+1 != $pages-1){
+                        $paginator_str .= '... ';
+                    }
+
+                    //Последняя
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($pages) . '" class="paginator_btn" style="';
+                    $paginator_str .= '">' . ($pages) . '</a> ';
+
+                }
+                //next
+                if ($page_number != $pages) {
+                    $paginator_str .= '<a href="' . $file_name . '?page=' . ($page_number + 1) . '" class="paginator_btn" style=""><i class="fa fa-caret-right" aria-hidden="true"></i></a> ';
+                }
+
+            }else {
+                for ($i = 1; $i <= $pages; $i++) {
+                    $pg_btn_bgcolor = '';
+                    if (isset($_GET)) {
+                        if (isset($page_number)) {
+                            if ($page_number == $i) {
+                                $pg_btn_bgcolor = 'background: rgb(249, 255, 1); color: red;';
+                            }
+                        } else {
+                            if ($i == 1) {
+                                $pg_btn_bgcolor = 'background: rgb(249, 255, 1); color: red;';
+                            }
+                        }
+                    }
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($i) . '" class="paginator_btn" style="' . $pg_btn_bgcolor . '">' . ($i) . '</a> ';
+                }
+            }
+        }
+
+        if ($pages > 1) {
+            $rezult_str = '<div style="margin: 2px 6px 3px;">
+						        <span style="font-size: 80%; color: rgb(0, 172, 237);">Перейти на страницу: </span>' . $paginator_str . '
+						   </div>';
+        }
+
+        return $rezult_str;
+
+    }
 ?>
