@@ -63,85 +63,17 @@
 
                         $rezult .= '
                             <div style="margin: 5px 0; padding: 2px; text-align: center; color: #0C0C0C; font-weight: bold;">
-                                Необработанные<br>расчётные листы
+                                Необработанные расчётные листы
                             </div>
                             <div style="margin: 5px 0; padding: 2px; text-align: center; color: #0C0C0C;">
                                 Выделить всё <input type="checkbox" id="chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$_POST['office'].'" name="checkAll" class="checkAll" value="1">
-                            </div>';
+                            </div>
+                            <div>';
 
                         $rezArrayTemp = array();
 
                         foreach ($rez as $rezData){
 
-                            /*$invoice_data_db = array();
-                            $zapis_data_db = array();
-                            $invoice_rez_str = '';
-                            $zapis_rez_str = '';
-
-                            //Данные записи от расчёта
-                            //$query = "SELECT `summ` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}' LIMIT 1;";
-
-                            $query = "SELECT * FROM `zapis` WHERE `id` = '{$rezData['zapis_id']}' LIMIT 1";
-                            //var_dump($query);
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                            $number = mysqli_num_rows($res);
-                            if ($number != 0) {
-                                while ($arr = mysqli_fetch_assoc($res)) {
-                                    array_push($zapis_data_db, $arr);
-                                }
-                            }
-
-                            //Данные наряда от расчёта
-                            //$query = "SELECT `summ` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}' LIMIT 1;";
-
-                            $query = "SELECT * FROM `journal_invoice` WHERE `id` = '{$rezData['invoice_id']}' LIMIT 1";
-                            //var_dump($query);
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                            $number = mysqli_num_rows($res);
-                            if ($number != 0) {
-                                while ($arr = mysqli_fetch_assoc($res)) {
-                                    array_push($invoice_data_db, $arr);
-                                }
-                            }*/
-
-                            //var_dump($invoice_data_db);
-
-
-                                //Отметка об объеме оплат
-                                /*$paid_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;"></i>';
-
-                                if ($invoice_data_db[0]['summ'] == $invoice_data_db[0]['paid']) {
-                                    $paid_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i>';
-                                }
-
-                                $invoice_rez_str .= '
-                                                <div class="" style="border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
-                                                    <a href="invoice.php?id=' . $invoice_data_db[0]['id'] . '" class="ahref">
-                                                        <div>
-                                                            <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
-                                                                <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
-                                                            </div>
-                                                            <div style="display: inline-block; vertical-align: middle;">
-                                                                ' . date('d.m.y', strtotime($invoice_data_db[0]['create_time'])) . '
-                                                            </div>
-                                                        </div>
-                                                        <div>
-                                                            <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
-                                                                <span class="calculateInvoice" style="font-size: 11px">' . $invoice_data_db[0]['summ'] . '</span> руб.
-                                                            </div>';
-                                if ($invoice_data_db[0]['summins'] != 0) {
-                                    $invoice_rez_str .= '
-                                                            <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
-                                                                Страховка:<br>
-                                                                <span class="calculateInsInvoice" style="font-size: 11px">' . $invoice_data_db[0]['summins'] . '</span> руб.
-                                                            </div>';
-                                }
-                                $invoice_rez_str .= '
-                                                        </div>
-                                                        
-                                                    </a>
-                                                    <span style="position: absolute; top: 2px; right: 3px;">' . $paid_mark . '</span>
-                                                </div>';*/
                             //Наряды
                             $query = "SELECT `summ`, `summins`, `create_time` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}' LIMIT 1";
 
@@ -185,7 +117,7 @@
 
                             $rezult .=
                                 '
-                                <div class="cellsBlockHover" style=" border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
+                                <div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
                                     <div style="display: inline-block; width: 190px;">
                                         <div>
                                             <a href="fl_calculate.php?id='.$rezData['id'].'" class="ahref">
@@ -205,7 +137,7 @@
                                                 
                                             </a>
                                         </div>
-                                        <div style="margin: 5px 0 0 3px; font-size: 80%;">
+                                        <div style="margin: 5px 0 5px 3px; font-size: 80%;">
                                             <b>Наряд: <a href="invoice.php?id='.$rezData['invoice_id'].'" class="ahref">#'.$rezData['invoice_id'].'</a> от '.$invoice_create_time.'<br>пац.: <a href="client.php?id='.$rezData['client_id'].'" class="ahref">'.$name.'</a><br>
                                             Сумма: '.$summ.' р. Страх.: '.$summins.' р.</b> <br>
                                             
@@ -225,7 +157,8 @@
 
 
                         $rezult .= '
-                            <div style="margin: 5px 0; padding: 2px; text-align: right;">
+                            </div>
+                            <div style="margin: 15px 0 5px; padding: 2px; text-align: right;">
                                 Сумма: <span class="summCalcsNPaid calculateInvoice">0</span> руб.
                             </div>';
 

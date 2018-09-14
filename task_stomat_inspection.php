@@ -1052,8 +1052,8 @@
 									<input type="hidden" id="worker" name="worker" value="'.$_SESSION['id'].'">';
 									
 					$notes = SelDataFromDB ('notes', $_GET['id'], 'task');
-					include_once 'WriteNotes.php';
-					echo WriteNotes($notes);
+					//include_once 'WriteNotes.php';
+					echo WriteNotes($notes, 0, true);
 									
 					$removes = SelDataFromDB ('removes', $_GET['id'], 'task');
 					include_once 'WriteRemoves.php';

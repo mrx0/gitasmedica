@@ -2186,7 +2186,7 @@
             if (checked_status){
                 $(this).parent().parent().parent().css({"background-color": "#83DB53"});
             }else{
-                $(this).parent().parent().parent().css({"background-color": ""});
+                $(this).parent().parent().parent().css({"background-color": "rgb(255, 255, 255);"});
             }
         });
 
@@ -2201,7 +2201,7 @@
                     $(this).parent().parent().parent().css({"background-color": "#83DB53"});
                 }else{
                     $(this).prop("checked", false);
-                    $(this).parent().parent().parent().css({"background-color": ""});
+                    $(this).parent().parent().parent().css({"background-color": "rgb(255, 255, 255);"});
                 }
             });
         });
@@ -2549,14 +2549,45 @@
     }
 
     //Приказ №8 перерасчёт
-    function prikazNomerVosem(tabel_id){
+    function prikazNomerVosem(worker_id, tabel_id){
 
-        var rys = false;
+        var rys = true;
 
-        rys = confirm("Табель будет пересчитан. \n\nВы уверены?");;
+        //rys = confirm("Табель будет пересчитан. \n\nВы уверены?");;
 
         if (rys) {
-            console.log(tabel_id);
+            console.log(worker_id);
+
+            var link = "fl_prikazNomerVosem.php";
+
+            var reqData = {
+                worker_id: worker_id,
+                tabel_id: tabel_id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                //dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function(res){
+                    console.log(res);
+
+                    $("#errrror").html(res);
+
+                    /*if(res.result == "success"){
+
+                    }else{
+
+                    }*/
+                }
+            });
         }
     }
 

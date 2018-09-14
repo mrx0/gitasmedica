@@ -2664,4 +2664,110 @@
         return $rezult_str;
 
     }
+
+    //Вывод напоминаний
+    function WriteNotes($notes, $worker_id, $option){
+        require 'variables.php';
+
+        $rez = '
+            <div id="notes_change"></div>
+            <div class="cellsBlock">';
+
+        if (!empty($notes)){
+
+            $rez .= '
+                <ul class="live_filter" style="margin-left:6px;">
+                    <li class="cellsBlock" style="font-weight:bold;">	
+                        <div class="cellPriority" style="text-align: center"></div>
+                        <div class="cellTime" style="text-align: center">Срок</div>
+                        <div class="cellName" style="text-align: center">Пациент</div>
+                        <div class="cellName" style="text-align: center">Посещение</div>
+                        <div class="cellText" style="text-align: center">Описание</div>';
+            if ($option) {
+                $rez .= '
+                        <div class="cellTime" style="text-align: center">Управление</div>';
+            }
+            $rez .= '
+                        <div class="cellTime" style="text-align: center">Создано</div>
+                        <div class="cellName" style="text-align: center">Автор</div>
+                        <div class="cellTime" style="text-align: center">Закрыто</div>
+                    </li>';
+            for ($i = 0; $i < count($notes); $i++) {
+                $dead_line_time = $notes[$i]['dead_line'] - time() ;
+                if ($dead_line_time <= 0){
+                    $priority_color = '#FF1F0F';
+                }elseif (($dead_line_time > 0) && ($dead_line_time <= 2*24*60*60)){
+                    $priority_color = '#FF9900';
+                }elseif (($dead_line_time > 2*24*60*60) && ($dead_line_time <= 3*24*60*60)){
+                    $priority_color = '#EFDF3F';
+                }else{
+                    $priority_color = '#FFF';
+                }
+
+
+                if ($notes[$i]['closed'] == 0){
+                    $ended = 'Нет';
+                    $background_style = '';
+                    $background_style2 = '
+                            background: rgba(231,55,71, 0.9);
+                            color:#fff;
+                            ';
+                    if ($dead_line_time <= 0){
+                        $background_style = '
+                                background: rgba(239,23,63, 0.5);
+                                background: -moz-linear-gradient(45deg, rgba(239,23,63, 1) 0%, rgba(231,55,39, 0.7) 33%, rgba(239,23,63, 0.4) 71%, rgba(255,255,255, 0.5) 91%);
+                                background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(239,23,63, 0.4)), color-stop(33%,rgba(231,55,39, 0.7)), color-stop(71%,rgba(239,23,63, 0.6)), color-stop(91%,rgba(255,255,255, 0.5)));
+                                background: -webkit-linear-gradient(45deg, rgba(239,23,63, 1) 0%,rgba(231,55,39, 0.7) 33%,rgba(239,23,63, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                                background: -o-linear-gradient(45deg, rgba(239,23,63, 1) 0%,rgba(231,55,39, 0.7) 33%,rgba(239,23,63, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                                background: -ms-linear-gradient(45deg, rgba(239,23,63, 1) 0%,rgba(231,55,39, 0.7) 33%,rgba(239,23,63, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                                background: linear-gradient(-135deg, rgba(239,23,63, 1) 0%,rgba(231,55,39, 0.7) 33%,rgba(239,23,63, 0.4) 71%,rgba(255,255,255, 0.5) 91%);';
+                    }
+                }else{
+                    $ended = 'Да';
+                    $background_style = '
+                            background: rgba(144,247,95, 0.5);
+                            background: -moz-linear-gradient(45deg, rgba(144,247,95, 1) 0%, rgba(55,215,119, 0.7) 33%, rgba(144,247,95, 0.4) 71%, rgba(255,255,255, 0.5) 91%);
+                            background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(144,247,95, 0.4)), color-stop(33%,rgba(55,215,119, 0.7)), color-stop(71%,rgba(144,247,95, 0.6)), color-stop(91%,rgba(255,255,255, 0.5)));
+                            background: -webkit-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                            background: -o-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                            background: -ms-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                            background: linear-gradient(-135deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);';
+                    $background_style2 = 'background: rgba(144,247,95, 0.5);';
+                }
+                $rez .= '
+                    <li class="cellsBlock cellsBlockHover">
+                        <div class="cellPriority" style="background-color:'.$priority_color.'"></div>
+                        <div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $notes[$i]['dead_line']).'</div>
+                        <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients', $notes[$i]['client'], 'user', true).'</div>
+                        <a href="task_stomat_inspection.php?id='.$notes[$i]['task'].'" class="ahref cellName" style="text-align: center">#'.$notes[$i]['task'].'</a>
+                        <div class="cellText" style="'.$background_style.'">'.$for_notes[$notes[$i]['description']].'</div>';
+                if ($option) {
+                    $rez .= '
+                        <div class="cellTime Change_notes_stomat" style="text-align: center;">';
+                    if ($_SESSION['id'] == $notes[$i]['create_person']) {
+                        if ($notes[$i]['closed'] != 1) {
+                            if ($worker_id != 0) {
+                                $rez .= '<a href="#" onclick="Change_notes_stomat(' . $notes[$i]['id'] . ', ' . $notes[$i]['description'] . ', ' . $worker_id . ' , $(this))">ред.</a>';
+                            }
+                            $rez .= '<a href="#" onclick="Close_notes_stomat(' . $notes[$i]['id'] . ', ' . $worker_id . ')">закр.</a>';
+                        }
+                    }
+                    $rez .= '
+                        </div>';
+                }
+                $rez .= ' 
+                        <div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $notes[$i]['create_time']).'</div>
+                        <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$notes[$i]['create_person'], 'user', true).'</div>
+                        <div class="cellTime" style="text-align: center; '.$background_style2.'">'.$ended.'</div>
+                    </li>';
+            }
+            $rez .= '</ul>';
+        }else{
+        }
+        $rez .= '</div>';
+
+        return $rez;
+    }
+
+
 ?>

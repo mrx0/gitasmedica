@@ -632,7 +632,7 @@
 
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
                             echo '
-                                                <button class="b" style="font-size: 80%;" onclick="prikazNomerVosem(' . $_GET['id'] . ');">Применить приказ №8</button>';
+                                                <button class="b" style="font-size: 80%;" onclick="prikazNomerVosem('.$tabel_j[0]['worker_id'].', '.$_GET['id'].');">Применить приказ №8</button>';
                             echo '
                                                 <button class="b" style="font-size: 80%;" onclick="deployTabel(' . $_GET['id'] . ');">Провести табель</button>';
                         }else{
@@ -723,6 +723,7 @@
                         echo '	
 						
 					        </div>
+					        <div id="errrror"></div>
 					        
 					        <div id="doc_title">Табель #'.$_GET['id'].' - Асмедика</div>
 					        </div>
