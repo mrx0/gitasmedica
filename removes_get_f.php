@@ -21,168 +21,77 @@
             $removesMy = 0;
             $removesMe = 0;
 
-            $rezult = '';
+            $rezult = '<a href="" class="b">Подробно</a>';
 
             if (!isset($_POST['worker_id'])){
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>', 'summCalc' => 0));
             }else {
 
-                if ($_SESSION['id'] == $_POST['worker_id']){
+                $msql_cnnct = ConnectToDB ();
+                $removesMy = array();
+                $removesMe = array();
+                $number = 0;
+                $number2 = 0;
+
+                if (($_SESSION['id'] == $_POST['worker_id']) && !$god_mode && ($stom['see_all'] != 1)){
                     //Перенаправления мои
-                    $removesMy = SelDataFromDB ('removes', $_SESSION['id'], 'create_person');
+                    //$removesMy = SelDataFromDB ('removes', $_SESSION['id'], 'create_person');
+
+                    $query = "SELECT * FROM `removes` WHERE `create_person`='".$_SESSION['id']."' AND `closed` <> 1 ORDER BY `create_time` DESC";
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                    $number = mysqli_num_rows($res);
+
                     //... Ко мне
-                    $removesMe = SelDataFromDB ('removes', $_SESSION['id'], 'whom');
+                    //$removesMe = SelDataFromDB ('removes', $_SESSION['id'], 'whom');
+
+                    $query = "SELECT * FROM `removes` WHERE `whom`='".$_SESSION['id']."' AND `closed` <> 1 ORDER BY `create_time` DESC";
+
+                    $res2 = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                    $number2 = mysqli_num_rows($res2);
+
                 }else{
                     if (($stom['see_all'] == 1) || $god_mode){
                         //Перенаправления мои
-                        $removesMy = SelDataFromDB ('removes',  $_POST['worker_id'], 'create_person');
+                        //$removesMy = SelDataFromDB ('removes',  $_POST['worker_id'], 'create_person');
                         //... Ко мне
-                        $removesMe = SelDataFromDB ('removes',  $_POST['worker_id'], 'whom');
+                        //$removesMe = SelDataFromDB ('removes',  $_POST['worker_id'], 'whom');
+
+                        //... Все не закрытые
+                        $query = "SELECT * FROM `removes` WHERE `closed` <> 1 ORDER BY `create_time` DESC";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                        $number = mysqli_num_rows($res);
+
                     }
                 }
 
-                if (($removesMy != 0) || ($removesMe != 0)){
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        array_push($removesMy, $arr);
+                    }
+                }
 
-                    $rezult .= 'Направления';
-                    $rezult .= '
-							<ul class="live_filter" style="margin-left:6px;">
-								<li class="cellsBlock" style="font-weight:bold;">	
-									<div class="cellName" style="text-align: center">К кому</div>
-									<div class="cellName" style="text-align: center">Пациент</div>
-									<div class="cellName" style="text-align: center">Посещение</div>
-									<div class="cellText" style="text-align: center">Описание</div>
-									<div class="cellTime" style="text-align: center">Управление</div>
-									<div class="cellTime" style="text-align: center">Создано</div>
-									<div class="cellName" style="text-align: center">Автор</div>
-									<div class="cellTime" style="text-align: center">Закрыто</div>
-								</li>';
+                if ($number2 != 0){
+                    while ($arr = mysqli_fetch_assoc($res2)){
+                        array_push($removesMe, $arr);
+                    }
+                }
 
-                    if($removesMy != 0){
+                if (empty($removesMy) && empty($removesMe)){
+                    $rezult .= '<br><br><div style="display: inline-block; color: red;"><i>Открытых направлений нет.</i></div>';
+                }else {
 
-                        $rezult .= '<b>Мои</b>';
-                        for ($i = 0; $i < count($removesMy); $i++) {
-
-                            if ($removesMy[$i]['closed'] == 0){
-                                $ended = 'Нет';
-                                $background_style = '';
-                                $background_style2 = '
-								background: rgba(231,55,71, 0.9);
-								color:#fff;
-								';
-
-                                $background_style = '
-								background: rgba(255,255,71, 0.5);
-								background: -moz-linear-gradient(45deg, rgba(255,255,71, 1) 0%, rgba(255,255,157, 0.7) 33%, rgba(255,255,71, 0.4) 71%, rgba(255,255,255, 0.5) 91%);
-								background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(255,255,71, 0.4)), color-stop(33%,rgba(255,255,157, 0.7)), color-stop(71%,rgba(255,255,71, 0.6)), color-stop(91%,rgba(255,255,255, 0.5)));
-								background: -webkit-linear-gradient(45deg, rgba(255,255,71, 1) 0%,rgba(255,255,157, 0.7) 33%,rgba(255,255,71, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-								background: -o-linear-gradient(45deg, rgba(255,255,71, 1) 0%,rgba(255,255,157, 0.7) 33%,rgba(255,255,71, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-								background: -ms-linear-gradient(45deg, rgba(255,255,71, 1) 0%,rgba(255,255,157, 0.7) 33%,rgba(255,255,71, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-								background: linear-gradient(-135deg, rgba(255,255,71, 1) 0%,rgba(255,255,157, 0.7) 33%,rgba(255,255,71, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-								';
-                                $showHiddenDivs = '';
-                            }else{
-                                $ended = 'Да';
-                                $background_style = '
-								background: rgba(144,247,95, 0.5);
-								background: -moz-linear-gradient(45deg, rgba(144,247,95, 1) 0%, rgba(55,215,119, 0.7) 33%, rgba(144,247,95, 0.4) 71%, rgba(255,255,255, 0.5) 91%);
-								background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(144,247,95, 0.4)), color-stop(33%,rgba(55,215,119, 0.7)), color-stop(71%,rgba(144,247,95, 0.6)), color-stop(91%,rgba(255,255,255, 0.5)));
-								background: -webkit-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-								background: -o-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-								background: -ms-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-								background: linear-gradient(-135deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-								';
-                                $background_style2 = '
-								background: rgba(144,247,95, 0.5);
-								';
-                                $showHiddenDivs = 'hiddenDivs';
-                            }
-
-                            $rezult .= '
-							    <li class="cellsBlock cellsBlockHover '.$showHiddenDivs.'">
-									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removesMy[$i]['whom'], 'user', true).'</div>
-									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$removesMy[$i]['client'], 'user', true).'</div>
-									<a href="task_stomat_inspection.php?id='.$removesMy[$i]['task'].'" class="ahref cellName" style="text-align: center">#'.$removesMy[$i]['task'].'</a>
-									<div class="cellText" style="'.$background_style.'">'.$removesMy[$i]['description'].'</div>
-									<div class="cellTime" style="text-align: center">';
-                            if ($_SESSION['id'] == $removesMy[$i]['create_person']){
-                                $rezult .= '
-										<a href="#" id="Close_removes_stomat" onclick="Close_removes_stomat('.$removesMy[$i]['id'].', '.$_POST['worker_id'].')">закр.</a>';
-                            }
-                            $rezult .= '
-									</div>
-									<div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $removesMy[$i]['create_time']).'</div>
-									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removesMy[$i]['create_person'], 'user', true).'</div>
-									<div class="cellTime" style="text-align: center; '.$background_style2.'">'.$ended.'</div>
-							</li>';
-                        }
+                    if (!empty($removesMy)) {
+                        $rezult .= WriteRemoves($removesMy, $_POST['worker_id'], false, true);
                     }
 
-                    if($removesMe != 0){
-                        $rezult .= '<b>Ко мне</b>';
-                        for ($i = 0; $i < count($removesMe); $i++) {
-
-                            if ($removesMe[$i]['closed'] == 0){
-                                $ended = 'Нет';
-                                $background_style = '';
-                                $background_style2 = '
-								background: rgba(231,55,71, 0.9);
-								color:#fff;
-								';
-
-                                $background_style = '
-								background: rgba(55,127,223, 0.5);
-								background: -moz-linear-gradient(45deg, rgba(55,127,223, 1) 0%, rgba(151,223,255, 0.7) 33%, rgba(55,127,223, 0.4) 71%, rgba(255,255,255, 0.5) 91%);
-								background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(55,127,223, 0.4)), color-stop(33%,rgba(151,223,255, 0.7)), color-stop(71%,rgba(55,127,223, 0.6)), color-stop(91%,rgba(255,255,255, 0.5)));
-								background: -webkit-linear-gradient(45deg, rgba(55,127,223, 1) 0%,rgba(151,223,255, 0.7) 33%,rgba(55,127,223, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-								background: -o-linear-gradient(45deg, rgba(55,127,223, 1) 0%,rgba(151,223,255, 0.7) 33%,rgba(55,127,223, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-								background: -ms-linear-gradient(45deg, rgba(55,127,223, 1) 0%,rgba(151,223,255, 0.7) 33%,rgba(55,127,223, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-								background: linear-gradient(-135deg, rgba(55,127,223, 1) 0%,rgba(151,223,255, 0.7) 33%,rgba(55,127,223, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-								';
-                                $showHiddenDivs = '';
-                            }else{
-                                $ended = 'Да';
-                                $background_style = '
-								background: rgba(144,247,95, 0.5);
-								background: -moz-linear-gradient(45deg, rgba(144,247,95, 1) 0%, rgba(55,215,119, 0.7) 33%, rgba(144,247,95, 0.4) 71%, rgba(255,255,255, 0.5) 91%);
-								background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(144,247,95, 0.4)), color-stop(33%,rgba(55,215,119, 0.7)), color-stop(71%,rgba(144,247,95, 0.6)), color-stop(91%,rgba(255,255,255, 0.5)));
-								background: -webkit-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-								background: -o-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-								background: -ms-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-								background: linear-gradient(-135deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
-								';
-                                $background_style2 = '
-								background: rgba(144,247,95, 0.5);
-								';
-                                $showHiddenDivs = 'hiddenDivs';
-                            }
-
-                            $rezult .= '
-							    <li class="cellsBlock cellsBlockHover '.$showHiddenDivs.'">
-									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removesMe[$i]['whom'], 'user', true).'</div>
-									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$removesMe[$i]['client'], 'user', true).'</div>
-									<a href="task_stomat_inspection.php?id='.$removesMe[$i]['task'].'" class="ahref cellName" style="text-align: center">#'.$removesMe[$i]['task'].'</a>
-									<div class="cellText" style="'.$background_style.'">'.$removesMe[$i]['description'].'</div>
-									<div class="cellTime" style="text-align: center">';
-                            if ($_SESSION['id'] == $removesMe[$i]['whom']){
-                                $rezult .= '
-										<a href="#" id="Close_removes_stomat" onclick="Close_removes_stomat('.$removesMe[$i]['id'].', '.$_POST['worker_id'].')">закр.</a>';
-                            }
-                            $rezult .= '
-									</div>
-									<div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $removesMe[$i]['create_time']).'</div>
-									<div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removesMe[$i]['create_person'], 'user', true).'</div>
-									<div class="cellTime" style="text-align: center; '.$background_style2.'">'.$ended.'</div>
-							    </li>';
-                        }
-                    }else{
-                        echo json_encode(array('result' => 'error', 'data' => 'Ошибка #12'));
+                    if (!empty($removesMe)) {
+                        $rezult .= WriteRemoves($removesMe, $_POST['worker_id'], true, true);
                     }
-
-                    $rezult .= '
-					        </ul>';
-
-                }else{
-                    echo json_encode(array('result' => 'error', 'data' => 'Ошибка #11'));
                 }
 
                 echo json_encode(array('result' => 'success', 'data' => $rezult));

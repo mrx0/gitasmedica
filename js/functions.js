@@ -7185,7 +7185,8 @@
                 if(res.result == "success") {
                     $("#removes").html(res.data);
                 }else{
-                    console.log (res);
+                	//Показываем ошибку в консоли
+                    console.log (res.data);
                 }
             }
         })

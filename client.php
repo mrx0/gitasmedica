@@ -1755,8 +1755,8 @@ ORDER BY `name`;
                             }
 
                             //Направления
+                            //!!! Привести к одному виду с напоминаниями получение данных
 							$removes = SelDataFromDB ('removes', $client_j[0]['id'], 'client');
-							include_once 'WriteRemoves.php';
 
 							//Вывод всего
                             if (!empty($notes) || ($removes != 0)) {
@@ -1765,7 +1765,7 @@ ORDER BY `name`;
                                 echo WriteNotes($notes, 0, true);
 
                                 if ($removes != 0){
-                                    echo WriteRemoves($removes);
+                                    echo WriteRemoves($removes, 0, 0, false);
                                 }
 
                             }

@@ -22,7 +22,7 @@
             $removesMy = 0;
             $removesMe = 0;
 
-            $rezult = '';
+            $rezult = '<a href="" class="b">Подробно</a>';
 
             if (!isset($_POST['worker_id'])){
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>', 'summCalc' => 0));
@@ -32,7 +32,7 @@
                 $notes = array();
                 $number = 0;
 
-                if ($stom['see_own'] == 1){
+                if (($stom['see_own'] == 1) && ($stom['see_all'] != 1) && !$god_mode){
                     //$notes = SelDataFromDB ('notes', $_SESSION['id'], 'create_person');
                     $query = "SELECT * FROM `notes` WHERE `create_person`='".$_SESSION['id']."' AND `closed` <> 1 ORDER BY `dead_line` ASC";
 
@@ -60,17 +60,17 @@
 
                 if (!empty($notes)){
 
-                    $rezult .= '<a href="" class="b">Подробно</a>';
 
-                    if ($stom['see_own'] == 1){
+                    //if ($stom['see_own'] == 1){
                         //$rezult .= 'Мои напоминания';
-                    }elseif (($stom['see_all'] == 1) || $god_mode){
-                        $rezult .= 'Все просроченные незакрытые напоминания';
-                    }
+                    //}elseif (($stom['see_all'] == 1) || $god_mode){
+                        //$rezult .= 'Все просроченные незакрытые напоминания';
+                    //}
 
                     $rezult .= WriteNotes($notes, $_POST['worker_id'], true);
 
                 }else{
+                    $rezult .= '<br><br><div style="display: inline-block; color: red;"><i>Открытых напоминаний нет.</i></div>';
                 }
 
                 echo json_encode(array('result' => 'success', 'data' => $rezult));
