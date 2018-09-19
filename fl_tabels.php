@@ -207,7 +207,7 @@
 
                             echo '
                                     <li>
-                                        <a href="#tabs-' . $type . '_' . $worker['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'\'}); ">
+                                        <a href="#tabs-' . $type . '_' . $worker['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'#FFF\'}); ">
                                             ' . $worker['name'] . '
                                             <div  class="notes_count_div">
                                                 <div id="tabs_notes2_' . $type . '_' . $worker['id'].'" class="notes_count3" style="display: none;">
@@ -245,7 +245,7 @@
                                 if ($office['id'] != 11) {
 
                                     echo '
-                                            <li class="tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'\'}); ">
+                                            <li class="tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'#FFF\'}); ">
                                                 <a href="#tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '">
                                                     ' . $office['name2'] . '
                                                     <div class="notes_count_div">
@@ -272,12 +272,12 @@
                                         <div id="tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" style="position: relative; width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); font-size: 12px; margin-top: 65px;">';
 
                                     echo '
-                                            <div class="tableTabels" id="'.$type . '_' . $worker['id'] . '_' . $office['id'].'_tabels">
+                                            <div class="tableTabels" style="background-color: rgba(210, 255, 167, 0.64)" id="'.$type . '_' . $worker['id'] . '_' . $office['id'].'_tabels">
                                                 <!--<div style="width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);"><img src="img/wait.gif" style="float:left;"><span style="float: right;  font-size: 90%;"> обработка...</span></div>-->
                                             </div>';
 
                                     echo '
-                                            <div class="tableDataNPaidCalcs" id="'.$type . '_' . $worker['id'] . '_' . $office['id'].'">
+                                            <div class="tableDataNPaidCalcs" style="width: 444px; background-color: rgba(251, 170, 170, 0.18);" id="'.$type . '_' . $worker['id'] . '_' . $office['id'].'">
                                                 <div style="width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);"><img src="img/wait.gif" style="float:left;"><span style="float: right;  font-size: 90%;"> обработка...</span></div>
                                             </div>';
 

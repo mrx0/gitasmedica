@@ -52,7 +52,7 @@
 
                         }
 
-                        //тут пример ожидание, ждём все инсерты перед седектом
+                        //тут пример ожидание MySQL, ждём все инсерты перед селектом
                         if (count($calcArr) > 1) {
 
                             $res = mysqli_multi_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -61,6 +61,7 @@
                             {
                                 if (!mysqli_more_results($msql_cnnct)) break;
                             }
+                        //А если всего 1, то и нечего паузы ставить
                         }else{
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
                         }

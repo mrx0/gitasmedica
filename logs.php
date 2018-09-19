@@ -10,20 +10,22 @@
 
 		if ($god_mode){
 			include_once 'DBWork.php';
+			include_once 'functions.php';
 			//$offices = SelDataFromDB('spr_filials', '', '');
 
             //Деление на странички пагинатор paginator
-            $paginator_str = '';
+            //$paginator_str = '';
             $limit_pos[0] = 0;
             $limit_pos[1] = 30;
             $pages = 0;
+            $dop = '';
 
             if (isset($_GET['page'])){
                 $limit_pos[0] = ($_GET['page']-1) * $limit_pos[1];
             }else{
                 $_GET['page'] = 1;
             }
-            $number = 0;
+            //$number = 0;
 
 			echo '
 			<style type="text/css">
@@ -71,108 +73,11 @@
                 }
             }
 
-            //Хочу получить общее количество
-            $query = "SELECT COUNT(*) AS total_logs_id FROM
-            `logs`;";
-
-            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-            $number = mysqli_num_rows($res);
-
-            if ($number != 0){
-                $arr = mysqli_fetch_assoc($res);
-                $total_logs_ids = $arr['total_logs_id'];
-            }else{
-                $total_logs_ids = 0;
-            }
-
-
             if (!empty($logs_j)){
 				//var_dump ($logs_j);
 
-                //Для пагинатора
-                if ($number != 0) {
-
-                    $pages = (int)ceil($total_logs_ids/$limit_pos[1]);
-                    //var_dump($pages);
-
-                    if ($pages > 10){
-                        $pg_btn_bgcolor = 'background: rgb(249, 255, 1); color: red;';
-
-                        if (($_GET['page'] == 1) || ($_GET['page'] == $pages)){
-                            $paginator_str .= '<a href="logs.php?page=1" class="paginator_btn" style="';
-
-                            if ($_GET['page'] == 1){
-                                $paginator_str .= $pg_btn_bgcolor;
-                            }
-
-                            $paginator_str .= '">1</a> ';
-
-                            $paginator_str .= '<a href="logs.php?page=2" class="paginator_btn" style="';
-
-                            if ($_GET['page'] == 2){
-                                $paginator_str .= $pg_btn_bgcolor;
-                            }
-
-                            $paginator_str .= '">2</a> ... ';
-
-                            $paginator_str .= '<a href="logs.php?page=' . ($pages-1) . '" class="paginator_btn" style="';
-
-                            if ($_GET['page'] == $pages-1){
-                                $paginator_str .= $pg_btn_bgcolor;
-                            }
-
-                            $paginator_str .= '">' . ($pages-1) . '</a>';
-                            $paginator_str .= '</a> ';
-
-                            $paginator_str .= '<a href="logs.php?page=' . ($pages) . '" class="paginator_btn" style="';
-
-                            if ($_GET['page'] == $pages){
-                                $paginator_str .= $pg_btn_bgcolor;
-                            }
-
-                            $paginator_str .= '">' . ($pages) . '</a>';
-                            $paginator_str .= '</a> ';
-                        }else{
-
-                            $paginator_str .= '<a href="logs.php?page=1" class="paginator_btn" style="' . $pg_btn_bgcolor . '">1</a> ... ';
-                            //$paginator_str .= '<a href="logs.php?page=' . ($_GET['page']-2) . '" class="paginator_btn" style="' . $pg_btn_bgcolor . '">' . ($_GET['page']-1) . '</a> ';
-                            $paginator_str .= '<a href="logs.php?page=' . ($_GET['page']-1) . '" class="paginator_btn" style="' . $pg_btn_bgcolor . '">' . ($_GET['page']-1) . '</a> ';
-                            $paginator_str .= '<a href="logs.php?page=' . ($_GET['page']) . '" class="paginator_btn" style="' . $pg_btn_bgcolor . '">' . ($_GET['page']) . '</a> ';
-                            $paginator_str .= '<a href="logs.php?page=' . ($_GET['page']+1) . '" class="paginator_btn" style="' . $pg_btn_bgcolor . '">' . ($_GET['page']+1) . '</a> ... ';
-                            //$paginator_str .= '<a href="logs.php?page=' . ($_GET['page']+2) . '" class="paginator_btn" style="' . $pg_btn_bgcolor . '">' . ($_GET['page']+1) . '</a> ';
-                            $paginator_str .= '<a href="logs.php?page=' . ($pages) . '" class="paginator_btn" style="' . $pg_btn_bgcolor . '">' . ($pages) . '</a> ';
-
-                        }
-
-
-
-                    }else {
-                        for ($i = 1; $i <= $pages; $i++) {
-                            $pg_btn_bgcolor = '';
-                            if (isset($_GET)) {
-                                if (isset($_GET['page'])) {
-                                    if ($_GET['page'] == $i) {
-                                        $pg_btn_bgcolor = 'background: rgb(249, 255, 1); color: red;';
-                                    }
-                                } else {
-                                    if ($i == 1) {
-                                        $pg_btn_bgcolor = 'background: rgb(249, 255, 1); color: red;';
-                                    }
-                                }
-                            }
-                            $paginator_str .= '<a href="logs.php?page=' . ($i) . '" class="paginator_btn" style="' . $pg_btn_bgcolor . '">' . ($i) . '</a> ';
-                        }
-                    }
-                }
-
-                if ($pages > 1) {
-                    echo '
-						    <div style="margin: 2px 6px 3px;">
-						        <span style="font-size: 80%; color: rgb(0, 172, 237);">Перейти на страницу: </span>' . $paginator_str . '
-						    </div>';
-                }
-
+                //Пагинатор
+                echo paginationCreate ($limit_pos[1], $_GET['page'], 'logs', 'logs.php', $msql_cnnct, $dop);
 
 				for ($i=0; $i<count($logs_j); $i++){
 					echo '

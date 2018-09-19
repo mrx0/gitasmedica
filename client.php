@@ -1735,13 +1735,40 @@ ORDER BY `name`;
 
 
 							
-							$notes = SelDataFromDB ('notes', $client_j[0]['id'], 'client');
-							include_once 'WriteNotes.php';
-							echo WriteNotes($notes);
-							
+							//$notes = SelDataFromDB ('notes', $client_j[0]['id'], 'client');
+							//include_once 'WriteNotes.php';
+
+                            //Напоминания
+                            $notes = array();
+
+                            //$query = "SELECT * FROM `notes` WHERE `client`='".$client_j[0]['id']."' AND `closed` <> 1 ORDER BY `dead_line` ASC";
+                            $query = "SELECT * FROM `notes` WHERE `client`='".$client_j[0]['id']."' ORDER BY `dead_line` ASC";
+
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                            $number = mysqli_num_rows($res);
+
+                            if ($number != 0){
+                                while ($arr = mysqli_fetch_assoc($res)){
+                                    array_push($notes, $arr);
+                                }
+                            }
+
+                            //Направления
+                            //!!! Привести к одному виду с напоминаниями получение данных
 							$removes = SelDataFromDB ('removes', $client_j[0]['id'], 'client');
-							include_once 'WriteRemoves.php';
-							echo WriteRemoves($removes);
+
+							//Вывод всего
+                            if (!empty($notes) || ($removes != 0)) {
+                                echo 'Особые отметки<br>';
+
+                                echo WriteNotes($notes, 0, true);
+
+                                if ($removes != 0){
+                                    echo WriteRemoves($removes, 0, 0, false);
+                                }
+
+                            }
 							
 						}else{
 							echo '
@@ -1998,11 +2025,7 @@ ORDER BY `name`;
 					}, 10);
 				 }
 				 /*]]>*/
-			 </script>
-								
-								
-								
-								';	
+			 </script>';
 					
 			}else{
 				echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';

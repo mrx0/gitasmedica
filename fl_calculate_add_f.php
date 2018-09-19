@@ -30,10 +30,6 @@
 
                         $calculateSaveResult = calculateCalculateSave ($data, $_POST['zapis_id'], $_POST['invoice_id'], $_POST['filial_id'], $_POST['client_id'], $_POST['worker_id'], $_POST['invoice_type'], $_POST['summ'], $discount, $_SESSION['id']);
 
-                        //!!! @@@ Пересчет долга
-                        //include_once 'ffun.php';
-                        //calculateDebt ($_POST['client_id']);
-
 						echo json_encode(array('result' => $calculateSaveResult['result'], 'data' => $calculateSaveResult['data']));
 					}
 				}

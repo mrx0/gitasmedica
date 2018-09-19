@@ -7,7 +7,7 @@
 
 	if ($enter_ok){
 		require_once 'header_tags.php';
-		if (($spravka['see_all'] == 1) || ($spravka['see_own'] == 1) || $god_mode){
+		if (($finances['see_all'] == 1) || $god_mode){
 			
 			echo '
 				<header>
