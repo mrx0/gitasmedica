@@ -22,7 +22,7 @@
                 //Подключаемся к другой базе специально созданной для тикетов
                 $msql_cnnct = ConnectToDB ();
 
-                //Добавляем категории сотрудников
+                //
                 $query = "DELETE FROM `fl_journal_tabels_ex` WHERE `tabel_id` = '{$_POST['tabel_id']}' AND `calculate_id` = '{$_POST['calculate_id']}' ;";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);

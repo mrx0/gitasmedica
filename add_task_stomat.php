@@ -578,7 +578,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <a href="#" class="b" id="close_mdd" onclick="AddRemoveData()" style="/*bottom: 10px; position: absolute;*/">Направить</a>
+                                    <a href="#" class="b" id="close_mdd" onclick="AddRemoveData()" style="">Направить</a>
                                 </td>
                             </tr>
                         </table>

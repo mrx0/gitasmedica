@@ -10,34 +10,20 @@
 		require_once 'header_tags.php';
 		if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
 
+            include_once 'functions.php';
+
             //Деление на странички пагинатор paginator
-            $paginator_str = '';
             $limit_pos[0] = 0;
             $limit_pos[1] = 20;
             $pages = 0;
+            $dop = '';
 
             $msql_cnnct = ConnectToDB ();
 
-            $query = "SELECT COUNT(*) AS total FROM `journal_cert`";
-
-            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-            $arr = mysqli_fetch_assoc($res);
-
-            if ($arr['total'] != 0) {
-
-                $pages = intval($arr['total']/$limit_pos[1]);
-
-                for ($i=0; $i <= $pages; $i++) {
-                    $paginator_str .= '<a class="paginator_btn" href="certificates.php?page='.($i+1).'">'.($i+1).'</a> ';
-                }
-            }
-
-
-            if (isset($_GET)){
-                if (isset($_GET['page'])){
-                    $limit_pos[0] = ($_GET['page']-1) * $limit_pos[1];
-                }
+            if (isset($_GET['page'])){
+                $limit_pos[0] = ($_GET['page']-1) * $limit_pos[1];
+            }else{
+                $_GET['page'] = 1;
             }
 
 
@@ -59,10 +45,12 @@
 					<a href="cert_add.php" class="b">Добавить</a>';
 		    }
 			echo '
-						<div id="data">
-						    <div style="margin: 2px 6px 3px;">
-						        '.$paginator_str.'
-						    </div>
+						<div id="data">';
+
+            //Пагинатор
+            echo paginationCreate ($limit_pos[1], $_GET['page'], 'journal_cert', 'certificates.php', $msql_cnnct, $dop);
+
+            echo '		    
 							<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
 			echo '
 						<li class="cellsBlock3" style="font-weight:bold; margin-bottom: -1px;">	

@@ -1,7 +1,7 @@
 <?php 
 
 //fl_reloadPercentsMarkedCalculates.php
-//
+//Пересчет РЛ
 
     session_start();
 
@@ -35,6 +35,32 @@
                             //$worker_id = $temp_arr[2];
                             //$filial_id = $temp_arr[3];
 
+                            //Эта переменная объявляется ниже, а тут я решил от греха подальше в 0 её обозначит
+                            //А то вдруг undef будет
+                            $newCalcID = 0;
+
+                            //Переменная маркер, если будет true, значит
+                            //Кто-то захотел применить % вручную, не глядя на справочник
+                            //Например в случае Приказа №8
+                            $handMadePercent = false;
+
+                            //ID табеля, в котором могли находиться эти РЛ
+                            $tabel_id = 0;
+                            //Если сюда передали таки ID табеля, зафиксируем его
+                            if (isset($_POST['calcArr']['tabel_id'])){
+                                $tabel_id = $_POST['calcArr']['tabel_id'];
+                            }
+
+                            //Если сюда передали таки новый процент к категорям (которые тоже передали),
+                            //то, зафиксируем их и будем дальше с ними наверное работать
+                            if (isset($_POST['calcArr']['newPercent']) && isset($_POST['calcArr']['controlCategories'])){
+                                $controlCategories_arr = $_POST['calcArr']['controlCategories'];
+                                $newPercent = $_POST['calcArr']['newPercent'];
+
+                                $handMadePercent = true;
+                            }
+
+                            //Для каждого ID РЛ
                             foreach ($calcsArr as $calc_id){
                                 //получим РЛ по id
                                 $calculate_j = SelDataFromDB('fl_journal_calculate', $calc_id, 'id');
@@ -46,7 +72,7 @@
                                     $filial_id = $calculate_j[0]['office_id'];
                                     $client_id = $calculate_j[0]['client_id'];
                                     $worker_id = $calculate_j[0]['worker_id'];
-                                    //$invoice_type
+
                                     $summ = $calculate_j[0]['summ'];
                                     $discount = $calculate_j[0]['discount'];
                                     //$_SESSION['id']
@@ -76,6 +102,15 @@
 
                                                 $work_percent = (int)$percents_j[$arr['percent_cats']]['work_percent'];
                                                 $material_percent = (int)$percents_j[$arr['percent_cats']]['material_percent'];
+
+                                                //Поменяем % в массиве, так как мы тут вообще-то вручнукю хотим % поставить
+                                                if ($handMadePercent){
+                                                    //Если конечно такое надо менять
+                                                    if (in_array($arr['percent_cats'], $controlCategories_arr)){
+                                                        //Меняем только % за работу
+                                                        $work_percent = $newPercent;
+                                                    }
+                                                }
 
                                                 //Если стоматологи
                                                 if ($invoice_type == 5) {
@@ -113,10 +148,13 @@
 
                                         if (!empty($calculate_ex_j)) {
 
+                                            //Лишняя операция вообще-то
                                             $data = $calculate_ex_j;
 
-                                            //Отправляем на перерасчет
-                                            calculateCalculateSave($data, $zapis_id, $invoice_id, $filial_id, $client_id, $worker_id, $invoice_type, $summ, $discount, $_SESSION['id']);
+                                            //Отправляем на перерасчет, заодно там создасться новый РЛ с этими данными
+                                            $calculateSaveResult = calculateCalculateSave($data, $zapis_id, $invoice_id, $filial_id, $client_id, $worker_id, $invoice_type, $summ, $discount, $_SESSION['id']);
+                                            //ID нового РЛ
+                                            $newCalcID = $calculateSaveResult['data'];
 
                                             //Удаляем старый РЛ
                                             //Удаляем из БД
@@ -125,12 +163,33 @@
 
                                             $query = "DELETE FROM `fl_journal_calculate_ex` WHERE `calculate_id`='{$calc_id}'";
                                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                                            //А если у нас вдруг сюда был передан tabel_id
+                                            //То мы предполагаем, что РЛ были в каком-то табеле
+                                            //И надо 1. удалить привязку 2. добавить новые РЛ туда же 3. Пересчитать табель с этим ID
+                                            if ($tabel_id > 0){
+
+                                                //1. Удаляем привязку
+                                                $query = "DELETE FROM `fl_journal_tabels_ex` WHERE `tabel_id` = '{$tabel_id}' AND `calculate_id` = '{$calc_id}' ;";
+                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                                                //2. добавить новый РЛ туда же
+                                                $query = "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`) VALUES ('{$tabel_id}', '{$newCalcID}');";
+                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                                                //3. Пересчитать табель с этим ID
+                                                //Это мы вынесем за этот цикл и выполним после всех этих "волшебных преобразований"
+
+                                            }
+
                                         }
                                     }
                                 }
                             }
 
-                            echo json_encode(array('result' => 'success', 'data' => $data, 'calcsArr' => $calcsArr, 'percents_j' => $test_arr, 'query' => $query));
+                            CloseDB ($msql_cnnct);
+
+                            echo json_encode(array('result' => 'success', 'data' => $data, 'newCalcID' => $newCalcID));
                         }
                     }
                 }

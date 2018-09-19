@@ -4033,7 +4033,7 @@
             $(".sel_toothp").css({'background': "#83DB53"});
         }else{
             $(".sel_tooth").each(function() {
-                if (Number(this.html()) == t_number_active){
+                if (Number(this.innerHTML) == t_number_active){
                     this.style.background = '#83DB53';
                 }
             });
@@ -4202,7 +4202,7 @@
         //console.log(invoice_type);
 
 		//количество
-		var quantity = dataObj.val();
+		var quantity = dataObj.value;
 		//console.log(quantity);
 
 		$.ajax({
@@ -4239,7 +4239,7 @@
 
 	//Для измения цены +1
 	function invPriceUpDownOne(ind, itemId, price, start_price, up_down){
-		//console.log(dataObj.val());
+		//console.log(dataObj.value);
 		//console.log(this);
 
 		var invoice_type = $("#invoice_type").val();
@@ -5674,7 +5674,7 @@
 
         $('.error').each(function(){
             //console.log(this.html());
-            this.html('');
+            $(this).html('');
         });
 
          $("#errror").html('');
@@ -6315,7 +6315,7 @@
 			{
                 lab_order_id: lab_order_id,
 
-                status: status,
+                status: status
 
 			},
 			cache: false,
@@ -6351,7 +6351,7 @@
 			{
                 online_zapis_id:online_zapis_id,
 
-                status: status,
+                status: status
 
 			},
 			cache: false,
@@ -6429,7 +6429,7 @@
                 type: "POST",
                 data: {
                     items: checkedItems(),
-                    insure_id: insure_id,
+                    insure_id: insure_id
                 },
                 cache: false,
                 beforeSend: function () {
@@ -7157,4 +7157,193 @@
         //WaitForCloseWindow(openedWindow);
 
         return openedWindow;
+    }
+
+    //Получаем, показываем направления
+    function getRemovesfunc(worker_id){
+        //console.log (worker_id);
+
+    	var link = "removes_get_f.php";
+
+		var reqData = {
+            worker_id: worker_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+				$("#removes").html("<div style='width: 120px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка</span></div>");
+            },
+            success:function(res){
+                //console.log (res);
+
+                if(res.result == "success") {
+                    $("#removes").html(res.data);
+                }else{
+                	//Показываем ошибку в консоли
+                    console.log (res.data);
+                }
+            }
+        })
+	}
+
+	//Получаем, показываем напоминания
+    function getNotesfunc(worker_id){
+
+    	var link = "notes_get_f.php";
+
+		var reqData = {
+            worker_id: worker_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+				$("#notes").html("<div style='width: 120px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка</span></div>");
+            },
+            success:function(res){
+                //console.log (res);
+
+                if(res.result == "success") {
+                    $("#notes").html(res.data);
+                }else{
+                }
+            }
+        })
+	}
+
+	//Редактирование напоминание
+    function Change_notes_stomat(id, type, worker_id, thisObj) {
+    	//console.log(thisObj.parent().parent().html());
+
+		var note = thisObj.parent().parent().html();
+
+        var link = "Change_notes_stomat.php";
+
+        var reqData = {
+            id: id,
+            type: type,
+            worker_id: worker_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+            },
+            success:function(res){
+                //console.log (res);
+
+                if(res.result == "success") {
+                    $("#notes_change").show();
+                    $("#notes_change").html(res.data);
+                    $("#notes_change_note").html('<li class="cellsBlock">'+note+'</li>');
+                }else{
+                }
+            }
+        })
+    }
+
+    //Закрыть напоминание
+    function Close_notes_stomat(id, worker_id) {
+
+        var link = "Close_notes_stomat_f.php";
+
+        var reqData = {
+            id: id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+            },
+            success:function(res){
+                if(res.result == "success") {
+                    getNotesfunc (worker_id);
+                }else{
+                }
+            }
+        })
+    }
+
+    //Обновить изменить напоминание
+    function Ajax_change_notes_stomat(id, worker_id) {
+
+        var link = "Change_notes_stomat_f.php";
+
+        var reqData = {
+            id:id,
+            change_notes_months: $("#change_notes_months").val(),
+            change_notes_days: $("#change_notes_days").val(),
+            change_notes_type: $("#change_notes_type").val()
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+            },
+            success:function(res){
+                //console.log (res);
+
+                if(res.result == "success") {
+                    getNotesfunc (worker_id);
+                }else{
+                }
+            }
+        })
+    }
+
+    //Закрыть направление
+    function Close_removes_stomat(id, worker_id) {
+
+        var link = "Close_removes_stomat_f.php";
+
+        var reqData = {
+            id: id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+            },
+            success:function(res){
+                //console.log (res);
+
+                if(res.result == "success") {
+                    //console.log (res.data);
+
+                    getRemovesfunc(worker_id);
+                }else{
+                }
+            }
+        })
     }

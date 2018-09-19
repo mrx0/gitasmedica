@@ -382,8 +382,8 @@
 						}
 										
 						$removes = SelDataFromDB ('removes', $task[0]['id'], 'task');
-						include_once 'WriteRemoves.php';
-						echo WriteRemoves($removes);
+
+						echo WriteRemoves($removes, 0, 0, false);
 						echo '
 							<div class="cellsBlock3">
 								<div class="cellLeft">
@@ -635,7 +635,7 @@
 					</tr>
                     <tr>
                         <td>
-                            <a href="#" class="b" id="close_mdd" onclick="AddRemoveData()" style="bottom: 10px; position: absolute;">Направить</a>
+                            <a href="#" class="b" id="close_mdd" onclick="AddRemoveData()" style="">Направить</a>
                         </td>
                     </tr>
 				</table>

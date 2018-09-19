@@ -1052,12 +1052,12 @@
 									<input type="hidden" id="worker" name="worker" value="'.$_SESSION['id'].'">';
 									
 					$notes = SelDataFromDB ('notes', $_GET['id'], 'task');
-					include_once 'WriteNotes.php';
-					echo WriteNotes($notes);
+
+					echo WriteNotes($notes, 0, true);
 									
 					$removes = SelDataFromDB ('removes', $_GET['id'], 'task');
-					include_once 'WriteRemoves.php';
-					echo WriteRemoves($removes);
+
+					echo WriteRemoves($removes, 0, 0, false);
 									
 					//Фотки			
 

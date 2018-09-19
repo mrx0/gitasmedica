@@ -2506,4 +2506,381 @@
 
         return $rezult;
     }
+
+    //Пагинатор
+    function paginationCreate ($count_on_page, $page_number, $db, $file_name, $msql_cnnct, $dop){
+        $paginator_str = '';
+        $pages = 0;
+
+        $rezult_str = '';
+        $rezult = array();
+
+        //Хочу получить общее количество
+        $query = "SELECT COUNT(*) AS total_ids FROM `$db` $dop;";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0){
+            $arr = mysqli_fetch_assoc($res);
+            $total_ids = $arr['total_ids'];
+        }else{
+            $total_ids = 0;
+        }
+
+        if ($total_ids != 0) {
+
+            $pages = (int)ceil($total_ids/$count_on_page);
+            //var_dump($pages);
+
+            if ($pages > 10){
+                $pg_btn_bgcolor = 'background: rgb(249, 255, 1); color: red;';
+
+                //next
+                if ($page_number != 1) {
+                    $paginator_str .= '<a href="' . $file_name . '?page=' . ($page_number - 1) . '" class="paginator_btn" style=""><i class="fa fa-caret-left" aria-hidden="true"></i></a> ';
+                }
+
+                if (($page_number == 1) || ($page_number == 2) || ($page_number == $pages) || ($page_number == $pages-1)){
+                    //1я
+                    $paginator_str .= '<a href="'.$file_name.'?page=1" class="paginator_btn" style="';
+
+                    if ($page_number == 1){
+                        $paginator_str .= $pg_btn_bgcolor;
+                    }
+
+                    $paginator_str .= '">1</a> ';
+
+                    //2я
+                    $paginator_str .= '<a href="'.$file_name.'?page=2" class="paginator_btn" style="';
+
+                    if ($page_number == 2){
+                        $paginator_str .= $pg_btn_bgcolor;
+                    }
+
+                    $paginator_str .= '">2</a> ';
+
+                    //3я
+                    $paginator_str .= '<a href="'.$file_name.'?page=3" class="paginator_btn" style="';
+
+                    if ($page_number == 3){
+                        $paginator_str .= $pg_btn_bgcolor;
+                    }
+
+                    $paginator_str .= '">3</a> ... ';
+
+                    //Препредпоследняя
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($pages-2) . '" class="paginator_btn" style="';
+
+                    if ($page_number == $pages-2){
+                        $paginator_str .= $pg_btn_bgcolor;
+                    }
+
+                    $paginator_str .= '">' . ($pages-2) . '</a>';
+                    $paginator_str .= '</a> ';
+
+                    //Предпоследняя
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($pages-1) . '" class="paginator_btn" style="';
+
+                    if ($page_number == $pages-1){
+                        $paginator_str .= $pg_btn_bgcolor;
+                    }
+
+                    $paginator_str .= '">' . ($pages-1) . '</a>';
+                    $paginator_str .= '</a> ';
+
+                    //Последняя
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($pages) . '" class="paginator_btn" style="';
+
+                    if ($page_number == $pages){
+                        $paginator_str .= $pg_btn_bgcolor;
+                    }
+
+                    $paginator_str .= '">' . ($pages) . '</a>';
+                    $paginator_str .= '</a> ';
+                }else {
+
+                    //1я
+                    $paginator_str .= '<a href="' . $file_name . '?page=1" class="paginator_btn" style="';
+                    $paginator_str .= '">1</a> ';
+
+                    if ($page_number - 1 != 2){
+                        $paginator_str .= '... ';
+                    }
+
+                    //
+                    $paginator_str .= '<a href="' . $file_name . '?page=' . ($page_number - 1) . '" class="paginator_btn" style="';
+                    $paginator_str .= '">' . ($page_number - 1) . '</a> ';
+
+                    //
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($page_number) . '" class="paginator_btn" style="';
+                    $paginator_str .= $pg_btn_bgcolor;
+                    $paginator_str .= '">' . ($page_number) . '</a> ';
+
+                    //
+                    $paginator_str .= '<a href="' . $file_name . '?page=' . ($page_number + 1) . '" class="paginator_btn" style="';
+                    $paginator_str .= '">' . ($page_number + 1) . '</a> ';
+
+                    if ($page_number+1 != $pages-1){
+                        $paginator_str .= '... ';
+                    }
+
+                    //Последняя
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($pages) . '" class="paginator_btn" style="';
+                    $paginator_str .= '">' . ($pages) . '</a> ';
+
+                }
+                //next
+                if ($page_number != $pages) {
+                    $paginator_str .= '<a href="' . $file_name . '?page=' . ($page_number + 1) . '" class="paginator_btn" style=""><i class="fa fa-caret-right" aria-hidden="true"></i></a> ';
+                }
+
+            }else {
+                for ($i = 1; $i <= $pages; $i++) {
+                    $pg_btn_bgcolor = '';
+                    if (isset($_GET)) {
+                        if (isset($page_number)) {
+                            if ($page_number == $i) {
+                                $pg_btn_bgcolor = 'background: rgb(249, 255, 1); color: red;';
+                            }
+                        } else {
+                            if ($i == 1) {
+                                $pg_btn_bgcolor = 'background: rgb(249, 255, 1); color: red;';
+                            }
+                        }
+                    }
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($i) . '" class="paginator_btn" style="' . $pg_btn_bgcolor . '">' . ($i) . '</a> ';
+                }
+            }
+        }
+
+        if ($pages > 1) {
+            $rezult_str = '<div style="margin: 2px 6px 3px;">
+						        <span style="font-size: 80%; color: rgb(0, 172, 237);">Перейти на страницу: </span>' . $paginator_str . '
+						   </div>';
+        }
+
+        return $rezult_str;
+
+    }
+
+    //Вывод напоминаний
+    function WriteNotes($notes, $worker_id, $option){
+        require 'variables.php';
+
+        $rez = '
+            <div id="notes_change"></div>
+            <div class="cellsBlock">';
+
+        if (!empty($notes)){
+
+            $rez .= '
+                <ul class="live_filter" style="margin-left:6px;">
+                    <li class="cellsBlock" style="font-weight:bold;">	
+                        <div class="cellPriority" style="text-align: center"></div>
+                        <div class="cellTime" style="text-align: center">Срок</div>
+                        <div class="cellName" style="text-align: center">Пациент</div>
+                        <div class="cellName" style="text-align: center">Посещение</div>
+                        <div class="cellText" style="text-align: center">Описание</div>';
+            if ($option) {
+                $rez .= '
+                        <div class="cellTime" style="text-align: center">Управление</div>';
+            }
+            $rez .= '
+                        <div class="cellTime" style="text-align: center">Создано</div>
+                        <div class="cellName" style="text-align: center">Автор</div>
+                        <div class="cellTime" style="text-align: center">Закрыто</div>
+                    </li>';
+            for ($i = 0; $i < count($notes); $i++) {
+                $dead_line_time = $notes[$i]['dead_line'] - time() ;
+                if ($dead_line_time <= 0){
+                    $priority_color = '#FF1F0F';
+                }elseif (($dead_line_time > 0) && ($dead_line_time <= 2*24*60*60)){
+                    $priority_color = '#FF9900';
+                }elseif (($dead_line_time > 2*24*60*60) && ($dead_line_time <= 3*24*60*60)){
+                    $priority_color = '#EFDF3F';
+                }else{
+                    $priority_color = '#FFF';
+                }
+
+
+                if ($notes[$i]['closed'] == 0){
+                    $ended = 'Нет';
+                    $background_style = '';
+                    $background_style2 = '
+                            background: rgba(231,55,71, 0.9);
+                            color:#fff;
+                            ';
+                    if ($dead_line_time <= 0){
+                        $background_style = '
+                                background: rgba(239,23,63, 0.5);
+                                background: -moz-linear-gradient(45deg, rgba(239,23,63, 1) 0%, rgba(231,55,39, 0.7) 33%, rgba(239,23,63, 0.4) 71%, rgba(255,255,255, 0.5) 91%);
+                                background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(239,23,63, 0.4)), color-stop(33%,rgba(231,55,39, 0.7)), color-stop(71%,rgba(239,23,63, 0.6)), color-stop(91%,rgba(255,255,255, 0.5)));
+                                background: -webkit-linear-gradient(45deg, rgba(239,23,63, 1) 0%,rgba(231,55,39, 0.7) 33%,rgba(239,23,63, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                                background: -o-linear-gradient(45deg, rgba(239,23,63, 1) 0%,rgba(231,55,39, 0.7) 33%,rgba(239,23,63, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                                background: -ms-linear-gradient(45deg, rgba(239,23,63, 1) 0%,rgba(231,55,39, 0.7) 33%,rgba(239,23,63, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                                background: linear-gradient(-135deg, rgba(239,23,63, 1) 0%,rgba(231,55,39, 0.7) 33%,rgba(239,23,63, 0.4) 71%,rgba(255,255,255, 0.5) 91%);';
+                    }
+                }else{
+                    $ended = 'Да';
+                    $background_style = '
+                            background: rgba(144,247,95, 0.5);
+                            background: -moz-linear-gradient(45deg, rgba(144,247,95, 1) 0%, rgba(55,215,119, 0.7) 33%, rgba(144,247,95, 0.4) 71%, rgba(255,255,255, 0.5) 91%);
+                            background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(144,247,95, 0.4)), color-stop(33%,rgba(55,215,119, 0.7)), color-stop(71%,rgba(144,247,95, 0.6)), color-stop(91%,rgba(255,255,255, 0.5)));
+                            background: -webkit-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                            background: -o-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                            background: -ms-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                            background: linear-gradient(-135deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);';
+                    $background_style2 = 'background: rgba(144,247,95, 0.5);';
+                }
+                $rez .= '
+                    <li class="cellsBlock cellsBlockHover">
+                        <div class="cellPriority" style="background-color:'.$priority_color.'"></div>
+                        <div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $notes[$i]['dead_line']).'</div>
+                        <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients', $notes[$i]['client'], 'user', true).'</div>
+                        <a href="task_stomat_inspection.php?id='.$notes[$i]['task'].'" class="ahref cellName" style="text-align: center">#'.$notes[$i]['task'].'</a>
+                        <div class="cellText" style="'.$background_style.'">'.$for_notes[$notes[$i]['description']].'</div>';
+                if ($option) {
+                    $rez .= '
+                        <div class="cellTime Change_notes_stomat" style="text-align: center;">';
+                    if ($_SESSION['id'] == $notes[$i]['create_person']) {
+                        if ($notes[$i]['closed'] != 1) {
+                            if ($worker_id != 0) {
+                                $rez .= '<a href="#" onclick="Change_notes_stomat(' . $notes[$i]['id'] . ', ' . $notes[$i]['description'] . ', ' . $worker_id . ' , $(this))">ред.</a>';
+                            }
+                            $rez .= '<a href="#" onclick="Close_notes_stomat(' . $notes[$i]['id'] . ', ' . $worker_id . ')">закр.</a>';
+                        }
+                    }
+                    $rez .= '
+                        </div>';
+                }
+                $rez .= ' 
+                        <div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $notes[$i]['create_time']).'</div>
+                        <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$notes[$i]['create_person'], 'user', true).'</div>
+                        <div class="cellTime" style="text-align: center; '.$background_style2.'">'.$ended.'</div>
+                    </li>';
+            }
+            $rez .= '</ul>';
+        }else{
+        }
+        $rez .= '</div>';
+
+        return $rez;
+    }
+
+    //Вывод направлений
+    function WriteRemoves($removes, $worker_id, $toMe, $option){
+        include_once 'DBWork.php';
+
+        $rez = '<div class="cellsBlock">';
+
+        if (!empty($removes)){
+
+            $rez .= '<br>';
+
+            if ($toMe === 0) {
+                $rez .= '';
+            }else{
+                if ($toMe) {
+                    $rez .= 'Ко мне';
+                } else {
+                    $rez .= 'Мои';
+                }
+            }
+            //$rez .= ' направления';
+
+            $rez .= '
+                                <ul class="live_filter" style="margin-left:6px;">
+                                    <li class="cellsBlock" style="font-weight:bold;">	
+                                        <div class="cellName" style="text-align: center">К кому</div>
+                                        <div class="cellName" style="text-align: center">Пациент</div>
+                                        <div class="cellName" style="text-align: center">Посещение</div>
+                                        <div class="cellText" style="text-align: center">Описание</div>';
+            if ($option) {
+                $rez .= '
+                                        <div class="cellTime" style="text-align: center">Управление</div>';
+            }
+            $rez .= '
+                                        <div class="cellTime" style="text-align: center">Создано</div>
+                                        <div class="cellName" style="text-align: center">Автор</div>
+                                        <div class="cellTime" style="text-align: center">Закрыто</div>
+                                    </li>';
+
+            for ($i = 0; $i < count($removes); $i++) {
+                if ($removes[$i]['closed'] == 0){
+                    $ended = 'Нет';
+
+                    $background_style = '
+                            background: rgba(55,127,223, 0.5);
+                            background: -moz-linear-gradient(45deg, rgba(55,127,223, 1) 0%, rgba(151,223,255, 0.7) 33%, rgba(55,127,223, 0.4) 71%, rgba(255,255,255, 0.5) 91%);
+                            background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(55,127,223, 0.4)), color-stop(33%,rgba(151,223,255, 0.7)), color-stop(71%,rgba(55,127,223, 0.6)), color-stop(91%,rgba(255,255,255, 0.5)));
+                            background: -webkit-linear-gradient(45deg, rgba(55,127,223, 1) 0%,rgba(151,223,255, 0.7) 33%,rgba(55,127,223, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                            background: -o-linear-gradient(45deg, rgba(55,127,223, 1) 0%,rgba(151,223,255, 0.7) 33%,rgba(55,127,223, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                            background: -ms-linear-gradient(45deg, rgba(55,127,223, 1) 0%,rgba(151,223,255, 0.7) 33%,rgba(55,127,223, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                            background: linear-gradient(-135deg, rgba(55,127,223, 1) 0%,rgba(151,223,255, 0.7) 33%,rgba(55,127,223, 0.4) 71%,rgba(255,255,255, 0.5) 91%);';
+
+                    $background_style2 = '
+                            background: rgba(231,55,71, 0.9);
+                            color:#fff;';
+                    if ($toMe === 0) {
+
+                    }else{
+                        if ($toMe) {
+                        }else{
+                            $background_style = '
+                            background: rgba(255,255,71, 0.5);
+                            background: -moz-linear-gradient(45deg, rgba(255,255,71, 1) 0%, rgba(255,255,157, 0.7) 33%, rgba(255,255,71, 0.4) 71%, rgba(255,255,255, 0.5) 91%);
+                            background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(255,255,71, 0.4)), color-stop(33%,rgba(255,255,157, 0.7)), color-stop(71%,rgba(255,255,71, 0.6)), color-stop(91%,rgba(255,255,255, 0.5)));
+                            background: -webkit-linear-gradient(45deg, rgba(255,255,71, 1) 0%,rgba(255,255,157, 0.7) 33%,rgba(255,255,71, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                            background: -o-linear-gradient(45deg, rgba(255,255,71, 1) 0%,rgba(255,255,157, 0.7) 33%,rgba(255,255,71, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                            background: -ms-linear-gradient(45deg, rgba(255,255,71, 1) 0%,rgba(255,255,157, 0.7) 33%,rgba(255,255,71, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                            background: linear-gradient(-135deg, rgba(255,255,71, 1) 0%,rgba(255,255,157, 0.7) 33%,rgba(255,255,71, 0.4) 71%,rgba(255,255,255, 0.5) 91%);';
+                        }
+                    }
+
+
+                }else{
+                    $ended = 'Да';
+                    $background_style = '
+                            background: rgba(144,247,95, 0.5);
+                            background: -moz-linear-gradient(45deg, rgba(144,247,95, 1) 0%, rgba(55,215,119, 0.7) 33%, rgba(144,247,95, 0.4) 71%, rgba(255,255,255, 0.5) 91%);
+                            background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(144,247,95, 0.4)), color-stop(33%,rgba(55,215,119, 0.7)), color-stop(71%,rgba(144,247,95, 0.6)), color-stop(91%,rgba(255,255,255, 0.5)));
+                            background: -webkit-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                            background: -o-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                            background: -ms-linear-gradient(45deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);
+                            background: linear-gradient(-135deg, rgba(144,247,95, 1) 0%,rgba(55,215,119, 0.7) 33%,rgba(144,247,95, 0.4) 71%,rgba(255,255,255, 0.5) 91%);';
+                    $background_style2 = '
+                            background: rgba(144,247,95, 0.5);';
+                }
+
+                $rez .= '
+                        <li class="cellsBlock cellsBlockHover">
+                            <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removes[$i]['whom'], 'user', true).'</div>
+                            <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$removes[$i]['client'], 'user', true).'</div>
+                            <a href="task_stomat_inspection.php?id='.$removes[$i]['task'].'" class="ahref cellName" style="text-align: center">#'.$removes[$i]['task'].'</a>
+                            <div class="cellText" style="'.$background_style.'">'.$removes[$i]['description'].'</div>';
+                if ($option) {
+                    if (($_SESSION['id'] == $removes[$i]['create_person']) || ($_SESSION['id'] == $removes[$i]['whom'])) {
+                        $rez .= '
+                            <div class="cellTime" style="text-align: center">
+							    <a href="#" id="Close_removes_stomat" onclick="Close_removes_stomat(' . $removes[$i]['id'] . ', ' . $worker_id . ')">закр.</a>
+							</div>';
+                    }
+                }
+                $rez .= '
+                            <div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $removes[$i]['create_time']).'</div>
+                            <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removes[$i]['create_person'], 'user', true).'</div>
+                            <div class="cellTime" style="text-align: center; '.$background_style2.'">'.$ended.'</div>
+                        </li>';
+            }
+            $rez .= '</ul>';
+        }else{
+            //echo '<h1>Нечего показывать.</h1>';
+        }
+        $rez .= '</div>';
+
+        return $rez;
+    }
+
 ?>

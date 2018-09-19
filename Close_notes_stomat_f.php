@@ -4,8 +4,8 @@
 //Статус закрыт напоминалке врача
 
 	session_start();
-	
-	if (empty($_SESSION['id'])){
+
+    if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 		header("location: enter.php");
 	}else{
 		include_once 'DBWork.php';
@@ -22,9 +22,8 @@
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
             CloseDB ($msql_cnnct);
-							
-			echo '
-				Напоминалка закрыта, обновите страничку.<br /><br />';
+
+            echo json_encode(array('result' => 'success', 'data' => 'Ok'));
 		}
 	}
 ?>
