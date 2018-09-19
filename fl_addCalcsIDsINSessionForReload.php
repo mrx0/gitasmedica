@@ -1,6 +1,6 @@
 <?php 
 
-//fl_addCalcsIDsINSessionForTabel.php
+//fl_addCalcsIDsINSessionForReload.php
 //!!! НЕ используем пока нигде
 
 	session_start();

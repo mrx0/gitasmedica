@@ -723,7 +723,6 @@
                         echo '	
 						
 					        </div>
-					        <div id="errrror"></div>
 					        
 					        <div id="doc_title">Табель #'.$_GET['id'].' - Асмедика</div>
 					        </div>

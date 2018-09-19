@@ -6315,7 +6315,7 @@
 			{
                 lab_order_id: lab_order_id,
 
-                status: status,
+                status: status
 
 			},
 			cache: false,
@@ -6351,7 +6351,7 @@
 			{
                 online_zapis_id:online_zapis_id,
 
-                status: status,
+                status: status
 
 			},
 			cache: false,
@@ -6429,7 +6429,7 @@
                 type: "POST",
                 data: {
                     items: checkedItems(),
-                    insure_id: insure_id,
+                    insure_id: insure_id
                 },
                 cache: false,
                 beforeSend: function () {
