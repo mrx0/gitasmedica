@@ -193,7 +193,7 @@
                         if (($_POST['key'] == 0) || ($_POST['key'] == 8)){
                             $data .= '
                             <li><div onclick="changeOnlineZapisStatus('.$_POST['ind'].', 7)">Обработано</div></li>
-                            <li><div onclick="changeOnlineZapisStatus('.$_POST['ind'].', 8)">Не доступен</div></li>';
+                            <li><div onclick="changeOnlineZapisStatus('.$_POST['ind'].', 6)">Не доступен</div></li>';
                         }
                         if ($_POST['key'] == 7){
                             $data .= '
