@@ -12,6 +12,10 @@
         if ($_POST){
             include_once 'fl_DBWork.php';
 
+            //разбираемся с правами
+            $god_mode = FALSE;
+            require_once 'permissions.php';
+
             $rez = array();
             $arr = array();
 
@@ -82,7 +86,6 @@
                               SELECT `name` AS `name`, `full_name` AS `full_name` FROM `spr_clients` WHERE `id`='{$rezData['client_id']}'
                             )";*/
 
-
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                             $number = mysqli_num_rows($res);
@@ -114,9 +117,7 @@
                                 $full_name = $arr['full_name'];
                             }
 
-
-                            $rezult .=
-                                '
+                            $rezult .= '
                                 <div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
                                     <div style="display: inline-block; width: 190px;">
                                         <div>
@@ -162,13 +163,16 @@
                                 Сумма: <span class="summCalcsNPaid calculateInvoice">0</span> руб.
                             </div>';
 
-                        $rezult .= '
+                        if (($finances['see_all']) || $god_mode) {
+
+                            $rezult .= '
                             <div style="margin: 5px 0; padding: 2px; text-align: right;">
                                 <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick="fl_addNewTabelIN(true);"><br>
                                 <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Добавить в существующий табель" onclick="fl_addNewTabelIN(false);"><br><br>
                                 <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Удалить выделенные" onclick="fl_deleteMarkedCalculates($(this).parent().parent());"><br>
                                 <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Перерасчитать (не более 10 РЛ за раз)" onclick="fl_reloadPercentsMarkedCalculates($(this).parent().parent());">
                             </div>';
+                        }
 
                         echo json_encode(array('result' => 'success', 'status' => '1', 'data' => $rezult, 'summCalc' => $summCalc));
                     }else{
