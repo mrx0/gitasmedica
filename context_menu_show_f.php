@@ -190,7 +190,7 @@
 				if ($_POST['mark'] == 'zapisOnlineStatusChange'){
 
 					if (($zapis['add_new'] == 1) || $god_mode){
-                        if (($_POST['key'] == 0) || ($_POST['key'] == 8)){
+                        if (($_POST['key'] == 0) || ($_POST['key'] == 6)){
                             $data .= '
                             <li><div onclick="changeOnlineZapisStatus('.$_POST['ind'].', 7)">Обработано</div></li>
                             <li><div onclick="changeOnlineZapisStatus('.$_POST['ind'].', 6)">Не доступен</div></li>';
