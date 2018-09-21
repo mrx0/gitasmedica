@@ -1,6 +1,6 @@
 <?php 
 
-//ajax_show_result_cashbox_f.php
+//ajax_add_some_settings_in_session.php
 //
 
 	session_start();
