@@ -118,7 +118,7 @@
 
 				echo '
 								<li class="cellsBlock" style="margin: 10px;">
-									<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_cashbox()">
+									<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_cashbox();">
 								</li>';
 				echo '
 							</ul>
