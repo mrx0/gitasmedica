@@ -23,7 +23,7 @@
             $cosm_edit = false;
             $finance_edit = false;
 
-            //require 'config.php';
+            $msql_cnnct = ConnectToDB ();
 
 			//переменная для просроченных
 			$allPayed = true;
@@ -357,31 +357,6 @@ ORDER BY `name`;
                         $allPayed = false;
                     }
 
-                    /*$clientDP = DebtsPrepayments ($client_j[0]['id']);
-
-					if ($clientDP != 0){
-						//var_dump ($clientDP);
-						$allPayed = false;
-						for ($i=0; $i<count($clientDP); $i++){
-							$repayments = Repayments($clientDP[$i]['id']);
-							//var_dump ($repayments);
-							
-							if ($repayments != 0){
-								//var_dump ($repayments);
-								
-								$ostatok = 0;
-								foreach($repayments as $value){
-									$ostatok += $value['summ'];
-								}
-								if ($clientDP[$i]['summ'] - $ostatok == 0){
-									$allPayed = true;
-								}else{
-									$allPayed = false;
-								}
-							}
-								
-						}
-					}*/
 				//}
 				if ($client_j[0]['status'] != 9){
 					//Вкладки 
@@ -423,88 +398,19 @@ ORDER BY `name`;
 
                     if (!$allPayed) {
                         echo '
-                            <div style="color: red; font-size: 13px;">
-							    <span style="font-size: 17px;"><i class="fa fa-exclamation-circle" aria-hidden="true" title="Есть долги"></i></span> У пациента есть долги.
-                            </div>';
+                                <div style="color: red; font-size: 13px;">
+                                    <span style="font-size: 17px;"><i class="fa fa-exclamation-circle" aria-hidden="true" title="Есть долги"></i></span> У пациента есть долги.
+                                </div>';
                     }
 
-					echo '
-								<div style="margin: 10px 0;">
-									<ul style="margin-left: 6px; margin-bottom: 20px;">';
-									
-					$sheduler_zapis = array();
+                    echo '
+                                <div id="zapis"></div>';
 
-                    $msql_cnnct = ConnectToDB ();
-
-					$query = "SELECT * FROM `zapis` WHERE `patient`='".$client_j[0]['id']."' ORDER BY `year`, `month`, `day`, `start_time` ASC";
-
-                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-					$number = mysqli_num_rows($res);
-					if ($number != 0){
-						while ($arr = mysqli_fetch_assoc($res)){
-							array_push($sheduler_zapis, $arr);
-						}
-					}else
-						$sheduler_zapis = 0;
-					
-					//var_dump ($sheduler_zapis);
-
-                    if ($sheduler_zapis != 0){
-
-                        $sheduler_zapis = array_reverse($sheduler_zapis);
-
-                         // !!! **** тест с записью
-                        include_once 'showZapisRezult.php';
-
-                        if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
-                            $finance_edit = true;
-                            $edit_options = true;
-                        }
-
-                        if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode){
-                            $stom_edit = true;
-                            $edit_options = true;
-                        }
-                        if (($cosm['add_own'] == 1) || ($cosm['add_new'] == 1) || $god_mode){
-                            $cosm_edit = true;
-                            $edit_options = true;
-                        }
-
-                        if (($zapis['add_own'] == 1) || ($zapis['add_new'] == 1) || $god_mode) {
-                            $admin_edit = true;
-                            $edit_options = true;
-                        }
-
-                        if (($scheduler['see_all'] == 1) || $god_mode){
-                            $upr_edit = true;
-                            $edit_options = true;
-                        }
-
-                        echo showZapisRezult($sheduler_zapis, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, 0, true, true);
-
-					}else{
-						echo '
-										<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-											<span style="color: rgb(255, 30, 30);">Нет записи</span>
-										</li>';
-
-					}
-
-
-
-
-
-
-					echo '
-									</ul>
-								</div>';
-						
 					echo '
 							</div>';
 
 					//--> Запись пациента (aka посещения)
-					
+
 					
 					//Счёт -->
 					
@@ -514,14 +420,9 @@ ORDER BY `name`;
 							echo '
 							<div id="tabs-2">';
 
-							echo '<div>';
+							echo '
+                                <div>';
 
-							//!!! @@@
-                            //Баланс контрагента
-                            //include_once 'ffun.php';
-                            //$client_balance = json_decode(calculateBalance ($_GET['id']), true);
-                            //Долг контрагента
-                            //$client_debt = json_decode(calculateDebt ($_GET['id']), true);
 
                             //Если доступный остаток ОТРИЦАТЕЛЕН
                             $dostOstatok = $client_balance['summ'] - $client_balance['debited'];
@@ -556,21 +457,26 @@ ORDER BY `name`;
                                       
                                      </ul>';
 
-                            echo '</div>';
-
-                            echo '<div>';
-
-
-
-                            //Выписанные наряды
-                            $arr = array();
-                            $invoice_j = array();
+                            echo '
+                                </div>';
 
                             echo '
-								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
-									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Выписанные наряды</li>';
+                                <div id="giveMeYourMoney"></div>';
 
-                            $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$_GET['id']."'";
+
+                          /*  echo '<div>';*/
+
+
+
+/*                            //Выписанные наряды
+                            $arr = array();
+                            $invoice_j = array();*/
+
+/*                            echo '
+								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
+									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Выписанные наряды</li>';*/
+
+/*                            $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$_GET['id']."'";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -586,10 +492,10 @@ ORDER BY `name`;
                             $invoiceAll_str = '';
                             $invoiceClose_str = '';
 
-                            if ($invoice_j != 0) {
+                            if ($invoice_j != 0) {*/
                                 //var_dump ($invoice_j);
 
-                                foreach ($invoice_j as $invoice_item) {
+/*                                foreach ($invoice_j as $invoice_item) {
 
                                     $invoiceTemp_str = '';
 
@@ -663,13 +569,13 @@ ORDER BY `name`;
                                         $invoiceClose_str .= $invoiceTemp_str;
                                     }
 
-                                }
+                                }*/
 
-                                if (strlen($invoiceAll_str) > 1){
+/*                                if (strlen($invoiceAll_str) > 1){
                                     echo $invoiceAll_str;
                                 }else{
                                     echo '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 20px; color: red;">Нет нарядов</li>';
-                                }
+                                }*/
 
                                 //Удалённые
                                 /*if ((strlen($invoiceClose_str) > 1) && (($finances['see_all'] != 0) || $god_mode)) {
@@ -679,16 +585,16 @@ ORDER BY `name`;
                                     echo '</div>';
                                 }*/
 
-                            }else{
+               /*             }else{
                                 echo '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 5px; color: red;">Нет нарядов</li>';
-                            }
-
+                            }*/
+/*
                             echo '
-								</ul>';
+								</ul>';*/
 
 
 
-                            //Внесенные оплаты/ордеры
+/*                            //Внесенные оплаты/ордеры
                             $arr = array();
                             $order_j = array();
 
@@ -696,9 +602,9 @@ ORDER BY `name`;
 								<ul id="orders" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px;">
 									    Внесенные оплаты/ордеры	<a href="add_order.php?client_id='.$client_j[0]['id'].'" class="b">Добавить новый</a>
-									</li>';
+									</li>';*/
 
-                            $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$_GET['id']."'";
+/*                            $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$_GET['id']."'";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -765,7 +671,7 @@ ORDER BY `name`;
 													<span class="calculateInsInvoice" style="font-size: 13px">'.$order_item['summins'].'</span> руб.
 												</div>';
                                     }*/
-                                    $orderTemp_str .= '
+                            /*        $orderTemp_str .= '
 											</div>';
                                     $orderTemp_str .= '
 										</li>';
@@ -793,16 +699,16 @@ ORDER BY `name`;
                                     echo '</div>';
                                 }*/
 
-                            }else{
+                            /*}else{
                                 echo '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 5px; color: red;">Нет ордеров</li>';
                             }
 
                             echo '
-								</ul>';
+								</ul>';*/
 
 
-
-                            echo '</div>';
+/*
+                            echo '</div>';*/
 
 							//Сертификаты
 							/*echo '
@@ -822,7 +728,7 @@ ORDER BY `name`;
 								echo '<i style="color:red;">Есть не погашенное</i>';					
 										
 							echo '
-									</div>';
+								</div>';
 					
 							echo '
 							</div>';
@@ -900,31 +806,6 @@ ORDER BY `name`;
 							//Выберем из базы первую запись
 							$t_f_data_db_first = array();
 							
-							/*require 'config.php';
-							mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-							mysql_select_db($dbName) or die(mysql_error()); 
-							mysql_query("SET NAMES 'utf8'");
-							$time = time();
-							$query = "SELECT * FROM `journal_tooth_status` WHERE `client` = '{$_GET['id']}' ORDER BY `create_time` ASC LIMIT 1";
-							$res = mysql_query($query) or die($q);
-							$number = mysql_num_rows($res);
-							if ($number != 0){
-								while ($arr = mysql_fetch_assoc($res)){
-									array_push($t_f_data_db_first, $arr);
-								}
-							}else
-								$t_f_data_db_first = 0;
-							mysql_close();*/
-							
-							//$t_f_data_db = SelDataFromDB('journal_tooth_status', $_GET['id'], 'id');								
-							//var_dump ($t_f_data_db);
-							//var_dump ($t_f_data_db_first);
-							/*if ($t_f_data_db_first !=0){
-								if ($t_f_data_db_first[0]['id'] != $t_f_data_db[0]['id']){
-									$t_f_data_db[count($t_f_data_db)] = $t_f_data_db_first[0];
-								}
-							}*/
-									
 							for ($z = 0; $z < count ($t_f_data_db); $z++){
 								$dop = array();
 								
@@ -1002,19 +883,7 @@ ORDER BY `name`;
 										}
 									}
 								}
-								
-								/*unset($t_f_data['id']);
-								unset($t_f_data['office']);
-								unset($t_f_data['client']);
-								unset($t_f_data['create_time']);
-								unset($t_f_data['create_person']);
-								unset($t_f_data['last_edit_time']);
-								unset($t_f_data['last_edit_person']);
-								unset($t_f_data['worker']);
-								unset($t_f_data['comment']);*/
-								
-								//unset($dop[0]['id']);
-								
+
 								//var_dump ($t_f_data);
 								if (!empty($dop[0])){
 									//var_dump($dop[0]);
@@ -1051,13 +920,7 @@ ORDER BY `name`;
 										}
 									}
 								}
-							
-								//$t_f_data_temp_refresh = json_encode($t_f_data_db[0], true);
-								//$t_f_data_temp_refresh = json_encode($t_f_data_db[0], true);
-								//var_dump($t_f_data);
-								//echo $t_f_data_temp_refresh;
-								
-								
+
 								echo '
 										<div class="map'.$n.' map_exist" id="map'.$n.'">
 											<div class="text_in_map" style="left: 15px">8</div>
@@ -1231,13 +1094,12 @@ ORDER BY `name`;
 													}
 												}
 												
-												
-								//!Костыль для радикса(корень)/статус 34
-								if ((($t_f_data[$i.$j]['root1'] == '34') || ($t_f_data[$i.$j]['root2'] == '34') || ($t_f_data[$i.$j]['root3'] == '34')) && 
-										(($t_f_data[$i.$j]['status'] != '1') && ($t_f_data[$i.$j]['status'] != '2') && 
-										($t_f_data[$i.$j]['status'] != '18') && ($t_f_data[$i.$j]['status'] != '19') &&
-										($t_f_data[$i.$j]['status'] != '9')))
-								{
+                                                //!Костыль для радикса(корень)/статус 34
+                                                if ((($t_f_data[$i.$j]['root1'] == '34') || ($t_f_data[$i.$j]['root2'] == '34') || ($t_f_data[$i.$j]['root3'] == '34')) &&
+                                                        (($t_f_data[$i.$j]['status'] != '1') && ($t_f_data[$i.$j]['status'] != '2') &&
+                                                        ($t_f_data[$i.$j]['status'] != '18') && ($t_f_data[$i.$j]['status'] != '19') &&
+                                                        ($t_f_data[$i.$j]['status'] != '9')))
+                                                {
 													$surface = 'NONE';
 													$color = '#FF0000';
 													$coordinates = $teeth_map_d[$n_zuba];								
@@ -1479,73 +1341,6 @@ ORDER BY `name`;
 									</div>
 								</div>';
 								
-								/*echo '
-								<div class="cellsBlock3" style="font-size:80%;">
-									<div class="cellLeft">';
-
-								//$decription = $t_f_data_db[$z];
-
-								/*$t_f_data = array();
-					
-								//собрали массив с зубами и статусами по поверхностям
-								foreach ($decription as $key => $value){
-									$surfaces_temp = explode(',', $value);
-									foreach ($surfaces_temp as $key1 => $value1){
-										$t_f_data[$key][$surfaces[$key1]] = $value1;
-									}
-								}
-								
-								unset($t_f_data['id']);
-								unset($t_f_data['office']);
-								unset($t_f_data['client']);
-								unset($t_f_data['create_time']);
-								unset($t_f_data['create_person']);
-								unset($t_f_data['last_edit_time']);
-								unset($t_f_data['last_edit_person']);
-								unset($t_f_data['worker']);
-								unset($t_f_data['comment']);
-								
-								//var_dump ($t_f_data);			
-					*/
-								/*$descr_rez = '';
-								/*echo '
-										<div><a href="#open1" onclick="show(\'hidden_'.$z.'\',200,5)">Подробно</a></div>';	*/
-								/*echo '
-										<div id=hidden_'.$z.' style="display:none;">';		
-								foreach($t_f_data as $key => $value){
-									//var_dump ($value);
-									foreach ($value as $key1 => $value1){
-										
-										if ($key1 == 'status'){
-											//var_dump ($value1);	
-											if ($value1 != 0){
-												//$descr_rez .= 
-												echo t_surface_name('t'.$key.'NONE', 1).' '.t_surface_status($value1, 0).'';
-											}
-										}elseif($key1 == 'pin'){
-											if ($value1 != 0){
-												echo t_surface_status(3, 0);
-											}
-										}elseif($key1 == 'alien'){
-											
-										}elseif($key1 == 'zo'){
-											
-										}else{
-											if ($value1 != 0){
-												echo t_surface_name('t'.$key.$key1, 1).' '.t_surface_status(0, $value1);
-											}
-										}
-									}
-						
-								}*/
-								/*echo '
-									</div>';*/
-										
-								/*echo '
-								</div>';*/
-                                /*echo '
-							</div>';*/
-											
 							}
 
 
@@ -1694,7 +1489,6 @@ ORDER BY `name`;
                                         }
                                     }
 
-
                                     echo '
                                 </div>
                             </div>
@@ -1731,10 +1525,6 @@ ORDER BY `name`;
                                 echo '</div>';
                             }
 
-
-
-
-							
 							//$notes = SelDataFromDB ('notes', $client_j[0]['id'], 'client');
 							//include_once 'WriteNotes.php';
 
@@ -1792,7 +1582,6 @@ ORDER BY `name`;
                             $labors_jarr[$labor_val['id']] = $labor_val;
                         }
                         //var_dump ($labors_jrr);
-
 
                         if (TRUE) {
                             echo '
@@ -1930,19 +1719,19 @@ ORDER BY `name`;
 								$decription_temp_arr = array();
 								$decription_temp = '';
 								
-								/*!!!ЛАйфхак для посещений из-за переделки структуры бд*/
+								/*!!!Лайфхак для посещений из-за переделки структуры бд*/
 								foreach($cosmet_task[$i] as $key => $value){
 									if (($key != 'id') && ($key != 'office') && ($key != 'client') && ($key != 'create_time') && ($key != 'create_person') && ($key != 'last_edit_time') && ($key != 'last_edit_person') && ($key != 'worker') && ($key != 'comment')){
 										$decription_temp_arr[mb_substr($key, 1)] = $value;
 									}
 								}
 									
-									//var_dump ($decription_temp_arr);
-									
-									$decription = $decription_temp_arr;
-									/*$decription = array();
-								$decription = json_decode($cosmet_task[$i]['description'], true);
-								var_dump ($actions_cosmet);	*/	
+                                //var_dump ($decription_temp_arr);
+
+                                $decription = $decription_temp_arr;
+                                /*$decription = array();
+                                $decription = json_decode($cosmet_task[$i]['description'], true);
+                                var_dump ($actions_cosmet);	*/
 								
 								echo '<div class="cellLeft">';
 								
@@ -1963,7 +1752,7 @@ ORDER BY `name`;
 								echo '
 										</div>
 										<div class="cellRight">';
-								//!!!!!!if ($SESION_ID == )
+								//!!!!!!if ($SESSION_ID == )
 								echo $cosmet_task[$i]['comment'];
 								echo '
 										</div>
@@ -1998,6 +1787,13 @@ ORDER BY `name`;
 
 
 			<script language="JavaScript" type="text/javascript">
+			
+                $(document).ready(function() {
+                    //Получаем, показываем запись
+                    getZapisfunc ('.$_GET['id'].');
+                    getClientMoney ('.$_GET['id'].');
+                });			
+			
 				 /*<![CDATA[*/
 				 var s=[],s_timer=[];
 				 function show(id,h,spd)
