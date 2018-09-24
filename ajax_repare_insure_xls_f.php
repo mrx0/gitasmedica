@@ -1,6 +1,6 @@
 <?php
 
-//ajax_show_result_stat_insure_f.php
+//ajax_repare_insure_xls_f.php
 //
 
 session_start();

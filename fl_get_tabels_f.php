@@ -100,9 +100,6 @@
 
                                 foreach ($monthData as $rezData) {
 
-
-
-
                                     $rezult .=
                                         '
                                         <div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); border: 1px solid #BFBCB5; margin-top: 1px; position: relative; '.$bgColor.'">
@@ -112,8 +109,8 @@
                                                         <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
                                                             <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                         </div>
-                                                        <div style="display: inline-block; vertical-align: middle;">
-                                                            #' . $rezData['id'] . '
+                                                        <div style="display: inline-block; vertical-align: middle; font-size: 123%">
+                                                            <b><i>Табель #' . $rezData['id'] . '</i></b>
                                                         </div>
                                                     </div>
                                                     <div>
