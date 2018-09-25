@@ -2883,4 +2883,22 @@
         return $rez;
     }
 
+    //Приводим месяц или день к виду 01 02 09 ...
+    function dateTransformation ($data){
+        //Взято отсюда http://www.cyberforum.ru/php-beginners/thread1460348.html
+        //var_dump($data);
+
+        if ((int)$data < 10) {
+            if (strrpos($data, '0') === false) {
+                $data = '0' . $data;
+            }
+        }
+        if (strrpos($data, '0') !== false) {
+            $data = join(array_unique(preg_split("//u", $data)));
+        }
+        //var_dump($month);
+
+        return $data;
+    }
+
 ?>

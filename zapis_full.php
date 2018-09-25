@@ -138,7 +138,9 @@
 				if (!isset($year) || $year < 2010 || $year > 2037)
 					$year = date("Y");
 
-                //if ((int)$month < 10) $month = '0'.$month;
+				//Приводим месяц к виду 01 02 09 ...
+                $month = dateTransformation ($month);
+
 				
 				if (isset($_GET['kab'])){
 					$kab = $_GET['kab'];

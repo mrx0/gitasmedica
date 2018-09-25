@@ -10,6 +10,14 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 }else{
     //var_dump ($_POST);
     if ($_POST){
+        include_once 'DBWork.php';
+        include_once 'functions.php';
+
+        //разбираемся с правами
+        $god_mode = FALSE;
+
+        require_once 'permissions.php';
+
         //$workerExist = false;
         $queryDopExist = false;
         $queryDopExExist = false;
@@ -25,14 +33,6 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         $stom_edit = false;
         $cosm_edit = false;
         $finance_edit = false;
-
-        include_once 'DBWork.php';
-        include_once 'functions.php';
-
-        //разбираемся с правами
-        $god_mode = FALSE;
-
-        require_once 'permissions.php';
 
         $msql_cnnct = ConnectToDB();
 

@@ -66,7 +66,7 @@
 
     		$dop = '';
     		if (isset($_SESSION['filial'])){
-                $dop = 'WHERE `place`='.$_SESSION['filial'];
+                $dop = "WHERE `place`='".$_SESSION['filial']."'";
             }
 
             //$query = "SELECT * FROM `zapis_online` ".$dop." ORDER BY `id` DESC LIMIT {$limit_pos[0]}, {$limit_pos[1]};";

@@ -177,7 +177,8 @@
 
 			$day_count = date("t", $month_stamp);
 			//var_dump($day_count);
-			
+
+            //День недели по счёту
 			$weekday = date("w", $month_stamp);
 			if ($weekday == 0){
 				$weekday = 7;

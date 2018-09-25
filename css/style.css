@@ -2620,3 +2620,18 @@ input[type="submit"].msg_send:hover{
 	border: 2px solid rgb(89, 71, 123);
 	box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
+
+
+/**Для отчёт(ов)**/
+.report {
+	font-family: Arial;
+	font-weight: normal;
+	font-variant: normal;
+	font-size: 14px;
+}
+
+.cellsTimereport {
+	width: 70px;
+	min-width: 70px;
+	padding: 4px 0;
+}

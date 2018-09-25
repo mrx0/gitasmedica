@@ -94,7 +94,7 @@
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
 										<div class="wrapper-demo">';
-				if (($finances['see_all'] == 1) || $god_mode){
+				if (!isset($_SESSION['filial'])){
                     echo '
 											<select id="filial" class="wrapper-dropdown-2 b2" tabindex="2" name="filial">
 												<ul class="dropdown">
@@ -116,37 +116,6 @@
                     }
                 }
 
-                /*echo '
-										</div>
-									</div>
-								</li>
-								<li class="filterBlock">
-									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Сотрудник<br>
-										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
-									</div>
-									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="text" size="35" name="searchdata2" id="search_worker" placeholder="Введите первые три буквы для поиска" value="" class="who2" autocomplete="off">
-										<ul id="search_result2" class="search_result2"></ul><br />
-									</div>
-								</li>';*/
-
-
-                /*echo '
-								
-								<li class="filterBlock">
-									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Статус
-									</div>
-									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="checkbox" id="zapisAll" name="zapisAll" class="zapisType" value="1" checked> Все<br>
-										<input type="checkbox" id="zapisArrive" name="zapisArrive" class="zapisType" value="1" checked> Пришёл<br>
-										<input type="checkbox" id="zapisNotArrive" name="zapisNotArrive" class="zapisType" value="1" checked> Не пришёл<br>
-										<input type="checkbox" id="zapisNull" name="zapisNull" class="zapisType" value="1" checked> Не закрытая<br>
-										<input type="checkbox" id="zapisError" name="zapisError" class="zapisType" value="1" checked> Ошибочные<br>
-									</div>
-								</li>';*/
-
 				echo '
 								<li class="cellsBlock" style="margin: 10px;">
 									<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_insure()">
@@ -166,42 +135,6 @@
 				echo '
 
 				<script type="text/javascript">
-				    //Проверка и установка checkbox
-                    /*$(".zapisType").click(function() {
-                        
-					    var checked_status = $(this).is(":checked");
-					    var thisId = $(this).attr("id");
-					    var pin_status = false;
-					    var allCheckStatus = false;
-					    
-                        if (thisId == "zapisAll"){
-                            if (checked_status){
-                                pin_status = true;
-                            }else{
-                                pin_status = false;
-                            }
-                            $(".zapisType").each(function() {
-                                $(this).prop("checked", pin_status);
-                            });
-                        }else{
-                            if (!checked_status){
-                                $("#zapisAll").prop("checked", false);
-                            }else{
-                                allCheckStatus = true; 
-                                $(".zapisType").each(function() {
-                                    if ($(this).attr("id") != "zapisAll"){
-                                        if (!$(this).is(":checked")){
-                                            allCheckStatus = false; 
-                                        }
-                                    }
-                                });
-                                if (allCheckStatus){
-                                    $("#zapisAll").prop("checked", true);
-                                }
-                            }
-                        }
-					});*/
-                    
                     
 					var all_time = 0;
 					var showError = 1;

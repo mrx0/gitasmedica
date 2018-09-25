@@ -24,10 +24,7 @@
 
                 //разбираемся с правами
                 $god_mode = FALSE;
-
                 require_once 'permissions.php';
-
-
 
                 if ($payment_j != 0) {
 

@@ -1,6 +1,7 @@
 <?php
 
-//scheduler.php v 2.0
+//scheduler2.php
+// v 2.0
 //Расписание кабинетов филиала
 
 	require_once 'header.php';

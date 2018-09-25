@@ -1613,6 +1613,7 @@
 
 		var name =  $("#name").val();
 		var contract =  $("#contract").val();
+		var contract2 =  $("#contract2").val();
 		var contacts =  $("#contacts").val();
 
 		$.ajax({
@@ -1641,6 +1642,7 @@
 
 							name:name,
 							contract:contract,
+							contract2:contract2,
 							contacts:contacts,
 						},
 						success:function(data){ $("#errrror").html(data);}
@@ -7216,6 +7218,66 @@
 
                 if(res.result == "success") {
                     $("#notes").html(res.data);
+                }else{
+                }
+            }
+        })
+	}
+
+	//Получаем, показываем записи в карточке клиента
+    function getZapisfunc(client_id){
+
+    	var link = "zapis_get_f.php";
+
+		var reqData = {
+            client_id: client_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+				$("#zapis").html("<div style='width: 120px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка</span></div>");
+            },
+            success:function(res){
+                //console.log (res);
+
+                if(res.result == "success") {
+                    $("#zapis").html(res.data);
+                }else{
+                }
+            }
+        })
+	}
+
+	//Получаем, показываем движение денег в карточке клиента
+    function getClientMoney(client_id){
+
+    	var link = "money_get_f.php";
+
+		var reqData = {
+            client_id: client_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+				$("#giveMeYourMoney").html("<div style='width: 120px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка</span></div>");
+            },
+            success:function(res){
+                //console.log (res);
+
+                if(res.result == "success") {
+                    $("#giveMeYourMoney").html(res.data);
                 }else{
                 }
             }

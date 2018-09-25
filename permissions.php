@@ -8,31 +8,47 @@
             $god_mode = TRUE;
         } else {
             //Получили список прав
-            $permissions = SelDataFromDB('spr_permissions', $_SESSION['permissions'], 'id');
-            //var_dump($permissions);
+            //$permissions_j = SelDataFromDB('spr_permissions', $_SESSION['permissions'], 'id');
+            //var_dump($permissions_j);
+
+            $permissions_j = array();
+
+            $msql_cnnct = ConnectToDB();
+
+            $query = "SELECT * FROM `spr_permissions` WHERE `id`='{$_SESSION['permissions']}';";
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0) {
+                while ($arr = mysqli_fetch_assoc($res)) {
+                    array_push($permissions_j, $arr);
+                }
+            }
         }
+
         if (!$god_mode) {
-            if ($permissions != 0) {
-                /*foreach ($permissions[0] as $name => $data){
+            if (!empty($permissions_j)) {
+                /*foreach ($permissions_j[0] as $name => $data){
                     var_dump($name);
                 }*/
 
-                $it = json_decode($permissions[0]['it'], true);
+                $it = json_decode($permissions_j[0]['it'], true);
                 //var_dump($it);
-                $cosm = json_decode($permissions[0]['cosm'], true);
-                $stom = json_decode($permissions[0]['stom'], true);
-                $clients = json_decode($permissions[0]['clients'], true);
-                $workers = json_decode($permissions[0]['workers'], true);
-                $offices = json_decode($permissions[0]['offices'], true);
-                $soft = json_decode($permissions[0]['soft'], true);
-                $scheduler = json_decode($permissions[0]['scheduler'], true);
-                $zapis = json_decode($permissions[0]['zapis'], true);
-                $report = json_decode($permissions[0]['report'], true);
-                $spravka = json_decode($permissions[0]['spravka'], true);
-                $finances = json_decode($permissions[0]['finances'], true);
-                $items = json_decode($permissions[0]['items'], true);
-                $invoice = json_decode($permissions[0]['invoice'], true);
-                $ticket = json_decode($permissions[0]['ticket'], true);
+                $cosm = json_decode($permissions_j[0]['cosm'], true);
+                $stom = json_decode($permissions_j[0]['stom'], true);
+                $clients = json_decode($permissions_j[0]['clients'], true);
+                $workers = json_decode($permissions_j[0]['workers'], true);
+                $offices = json_decode($permissions_j[0]['offices'], true);
+                $soft = json_decode($permissions_j[0]['soft'], true);
+                $scheduler = json_decode($permissions_j[0]['scheduler'], true);
+                $zapis = json_decode($permissions_j[0]['zapis'], true);
+                $report = json_decode($permissions_j[0]['report'], true);
+                $spravka = json_decode($permissions_j[0]['spravka'], true);
+                $finances = json_decode($permissions_j[0]['finances'], true);
+                $items = json_decode($permissions_j[0]['items'], true);
+                $invoice = json_decode($permissions_j[0]['invoice'], true);
+                $ticket = json_decode($permissions_j[0]['ticket'], true);
                 //var_dump($spravka);
             }
         } else {

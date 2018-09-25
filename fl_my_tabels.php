@@ -46,10 +46,10 @@
                 <div id="tabs-'.$filials_j_data['id'].'">';
                 echo '
                 <h1>' . $filials_j_data['name'] . '</h1>
-                <div class="tableTabels" id="'.$_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'].'_tabels">
+                <div id="'.$_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'].'_tabels" class="tableTabels" style="background-color: rgba(210, 255, 167, 0.64);">
                     <!--<div style="width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);"><img src="img/wait.gif" style="float:left;"><span style="float: right;  font-size: 90%;"> обработка...</span></div>-->
                 </div>
-                <div class="tableDataNPaidCalcs" id="'.$_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'].'_calcs">
+                <div id="'.$_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'].'_calcs" class="tableDataNPaidCalcs" style="width: 80%; background-color: rgba(251, 170, 170, 0.18);">
                 </div>';
                 echo '
                 </div>';
