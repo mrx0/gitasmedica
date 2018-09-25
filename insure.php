@@ -65,6 +65,11 @@
 								</div>
 									
 								<div class="cellsBlock2">
+									<div class="cellLeft">№ договора для док-ов</div>
+									<div class="cellRight">'.$insure_j[0]['contract2'].'</div>
+								</div>
+									
+								<div class="cellsBlock2">
 									<div class="cellLeft">Контакты</div>
 									<div class="cellRight">'.$insure_j[0]['contacts'].'</div>
 								</div>

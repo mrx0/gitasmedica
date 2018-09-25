@@ -21,7 +21,7 @@
 					</div>';
 			}else{
 				
-				WriteInsureToDB_Update ($_SESSION['id'], $_POST['id'], $_POST['name'], $_POST['contract'], $_POST['contacts']);
+				WriteInsureToDB_Update ($_SESSION['id'], $_POST['id'], $_POST['name'], $_POST['contract'], $_POST['contract2'], $_POST['contacts']);
 				
 				echo '
 					<div class="query_ok">

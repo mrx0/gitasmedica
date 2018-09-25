@@ -1613,6 +1613,7 @@
 
 		var name =  $("#name").val();
 		var contract =  $("#contract").val();
+		var contract2 =  $("#contract2").val();
 		var contacts =  $("#contacts").val();
 
 		$.ajax({
@@ -1641,6 +1642,7 @@
 
 							name:name,
 							contract:contract,
+							contract2:contract2,
 							contacts:contacts,
 						},
 						success:function(data){ $("#errrror").html(data);}
