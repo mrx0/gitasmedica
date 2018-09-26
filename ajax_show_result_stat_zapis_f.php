@@ -10,6 +10,15 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 }else{
     //var_dump ($_POST);
     if ($_POST){
+
+        include_once 'DBWork.php';
+        include_once 'functions.php';
+
+        //разбираемся с правами
+        $god_mode = FALSE;
+
+        require_once 'permissions.php';
+
         $creatorExist = false;
         $workerExist = false;
         $clientExist = false;
@@ -33,14 +42,6 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         $finance_edit = false;
 
         $datastart_temp_arr = array();
-
-        include_once 'DBWork.php';
-        include_once 'functions.php';
-
-        //разбираемся с правами
-        $god_mode = FALSE;
-
-        require_once 'permissions.php';
 
         //Дополнительные настройки, чтобы передать их дальше
         $dop['zapis']['fullAll'] = $_POST['fullAll'];
