@@ -2633,7 +2633,7 @@
 			opt = options[i];
 
 			//if (opt.selected) {
-				result.push(opt.val() || opt.text);
+				result.push(opt.value || opt.text);
 			//}
 		}
 		return result;
@@ -2645,11 +2645,15 @@
 		var condition = [];
 		var effect = [];
 
-		var el_condition =  $("#multi_d_to");
-		var el_effect =  $("#multi_d_to_2");
+		var el_condition =  document.getElementById("multi_d_to");
+        //console.log(el_condition);
+		var el_effect =  document.getElementById("multi_d_to_2");
+        //console.log(el_effect);
 
 		condition = getSelectValues(el_condition);
+		//console.log(condition);
 		effect = getSelectValues(el_effect);
+        //console.log(effect);
 
 		$.ajax({
 			url:"ajax_show_result_stat_cosm_ex2_f.php",
@@ -2657,11 +2661,11 @@
 			type: "POST",
 			data:
 			{
-				all_time:all_time,
+				all_time: all_time,
 				datastart: $("#datastart").val(),
 				dataend: $("#dataend").val(),
 
-				all_age:all_age,
+				all_age: all_age,
 				agestart: $("#agestart").val(),
 				ageend: $("#ageend").val(),
 
@@ -2673,8 +2677,8 @@
 				condition:condition,
 				effect:effect,
 
-				sex:document.querySelector('input[name="sex"]:checked').value,
-				wo_sex:wo_sex,
+				sex: document.querySelector('input[name="sex"]:checked').value,
+				wo_sex: wo_sex,
 
 			},
 			cache: false,
