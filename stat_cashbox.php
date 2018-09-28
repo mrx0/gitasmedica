@@ -21,7 +21,12 @@
 			}else{
 				echo '
 					<header style="margin-bottom: 5px;">
-						<h1>Касса</h1>
+						<h1>Касса</h1>';
+                echo '
+                        <div>
+						    <a href="fl_give_out_cash_add.php" class="b4">Добавить расход</a>
+						</div>';
+                echo '		
 					</header>';
 
 				echo '
