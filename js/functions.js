@@ -3754,7 +3754,7 @@
 				method:"POST",
 				data:
 				{
-					id: id,
+					id: id
 				},
 				success:function(data){
 					alert(data);

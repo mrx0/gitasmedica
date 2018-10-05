@@ -60,7 +60,7 @@
 
                         $rezult .= '
                             <div style="margin: 5px 0 -17px; padding: 2px; text-align: center; color: #0C0C0C;">
-                                Табели сотрудника
+                                <b><i>Табели сотрудника</i></b>
                             </div>';
 
                         foreach ($rez as $year => $yearData){

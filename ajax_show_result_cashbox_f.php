@@ -298,10 +298,15 @@
                 if (strlen($orderAll_str) > 1){
                     $filialData_str .= '
                         <li class="cellsBlock" style="margin-bottom: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
-                            Всего<br>
-                            <!--Наличные:  руб.<br>
-                            Безналичные:  руб.<br>-->
-                            Общая сумма: '.$Summ.' руб.<br>
+                            <div>
+                                Всего<br>
+                                <!--Наличные:  руб.<br>
+                                Безналичные:  руб.<br>-->
+                                Общая сумма: '.$Summ.' руб.<br>
+                            </div>
+                            <div style="margin-top: 10px;">
+                                 <a href="fl_createDailyReport.php" class="b">Ежедневный отчёт</a>
+                            </div>
                         </li>';
 
                     $filialData_str .= $orderAll_str;
@@ -328,12 +333,13 @@
 
             //начинаем формировать ответ
             $result .= '<div id="tabs_w" style="font-family: Verdana, Calibri, Arial, sans-serif; font-size: 100% !important;">';
+
             //Заголовки вкладок
             $result .= '<ul>';
             $result .= $filialHeader_str;
             $result .= '</ul>';
-            //Данные во вкладках
 
+            //Данные во вкладках
             $result .= $filialDataAll_str;
 
             $result .= '</div>';

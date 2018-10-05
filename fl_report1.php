@@ -14,6 +14,8 @@
 			include_once 'functions.php';
 			include_once 'ffun.php';
 
+            require 'variables.php';
+
 			//!!!Для теста ID филиала ПР54
             $filial_id = 13;
 
@@ -42,7 +44,7 @@
             echo '
 			    <div id="data" class="report">';
             echo '
-                    <ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
+                    <ul class="live_filter" id="livefilter-list" style="margin-left:6px; background-color: #FFF;">';
 
             echo '
                         <li class="cellsBlock cellsBlockHover" style="font-weight:bold;">';
@@ -63,6 +65,58 @@
                                   Z-отчёт
                             </div>';
             echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                  Аренда
+                            </div>';
+            echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                  Серт-ты проданные за НАЛ
+                            </div>';
+            echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                  Серт-ты проданные за БЕЗнал
+                            </div>';
+            echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                 ЛЕЧЕНИЕ<br>нал
+                            </div>';
+            echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                  ЛЕЧЕНИЕ<br>б/н + серт
+                            </div>';
+            echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                 ОРТО<br>нал
+                            </div>';
+            echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                  ОРТО<br>б/н + серт
+                            </div>';
+            echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                  ОРТО<br>кол-во
+                            </div>';
+            echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                  нал
+                            </div>';
+            echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                  безнал
+                            </div>';
+            echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                  серт-ты
+                            </div>';
+            echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                  Солярий<br>нал
+                            </div>';
+            echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                  Солярий<br>б/н + серт
+                            </div>';
+            echo '
                             <div class="cellText">
                             </div>';
 
@@ -71,17 +125,87 @@
 
             //С первого дня месяца по последний
             for($d = 1; $d <= $day_count; $d++){
+                //приводим дату в норм вид
                 $data = dateTransformation ($d).'.'.dateTransformation ($month).'.'.$year;
+                //день недели
+                $week_day = date("w", strtotime($year.'-'.$month.'-'.$d));
+                //var_dump($dayWeek_arr[$week_day]);
+
+                //цвет дня на выходных
+                $weekend_block = 'cellsBlock';
+                if (($week_day == 6) || ($week_day == 0)){
+                    $weekend_block = 'cellsBlock6';
+                }
 
                 echo '
-                        <li class="cellsBlock cellsBlockHover" style="font-weight:bold;">';
+                        <li class="'.$weekend_block.' cellsBlockHover" style="font-weight:bold;">';
                 echo '
                             <div class="cellTime cellsTimereport" style="text-align: center">
                                 '.$data.'
                             </div>';
                 echo '
                             <div class="cellTime cellsTimereport" style="text-align: center">
-                                '.$data.'
+                                
+                            </div>';
+                echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                
+                            </div>';
+                echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                
+                            </div>';
+                echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                
+                            </div>';
+                echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                
+                            </div>';
+                echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                
+                            </div>';
+                echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                
+                            </div>';
+                echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                
+                            </div>';
+                echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                
+                            </div>';
+                echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                
+                            </div>';
+                echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                
+                            </div>';
+                echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                
+                            </div>';
+                echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                
+                            </div>';
+                echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                
+                            </div>';
+                echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                
+                            </div>';
+                echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                
                             </div>';
                 echo '
                             <div class="cellText">
@@ -100,8 +224,9 @@
 				<script type="text/javascript">
 				
                     $(document).ready(function() {
-                        //console.log(798798);
-                        
+                        $("#main").css({margin: \'0\', padding: \'10px 0 20px\'});                        
+                        $("#data").css({margin: \'10px \'});                        
+                        $("#livefilter-list").css({width: \'min-content\'});                        
                     });
 				
                 

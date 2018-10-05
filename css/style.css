@@ -300,7 +300,7 @@ area {
 	background-color: rgba(103,103,103,1);
 }
 */
-.cellsBlock {
+.cellsBlock, .cellsBlock6 {
 	display: table;
 	table-layout: auto;
 	width: 100%;
@@ -446,6 +446,10 @@ area {
 
 .cellsBlock4 {
 	display:inline-block;
+}
+
+.cellsBlock6 {
+	background-color: rgba(204, 204, 204, 0.43);
 }
 
 .tableTeeth{
