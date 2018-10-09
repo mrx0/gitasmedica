@@ -2651,11 +2651,8 @@
 		var condition = [];
 		var effect = [];
 
-		var el_condition =  $("#multi_d_to");
-		//console.log(el_condition);
-
-		var el_effect =  $("#multi_d_to_2");
-        //console.log(el_effect);
+        var el_condition = document.getElementById("multi_d_to");
+        var el_effect = document.getElementById("multi_d_to_2");
 
 		condition = getSelectValues(el_condition);
 		effect = getSelectValues(el_effect);
