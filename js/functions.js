@@ -2627,8 +2627,12 @@
 	// Return an array of the selected opion values
 	// select is an HTML select element
 	function getSelectValues(select) {
+        //console.log(select);
+
 		var result = [];
 		var options = select && select.options;
+        //console.log(options);
+
 		var opt;
 
 		for (var i=0, iLen=options.length; i<iLen; i++) {
@@ -2648,7 +2652,10 @@
 		var effect = [];
 
 		var el_condition =  $("#multi_d_to");
+		//console.log(el_condition);
+
 		var el_effect =  $("#multi_d_to_2");
+        //console.log(el_effect);
 
 		condition = getSelectValues(el_condition);
 		effect = getSelectValues(el_effect);
