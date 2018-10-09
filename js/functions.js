@@ -2639,7 +2639,7 @@
 			opt = options[i];
 
 			//if (opt.selected) {
-				result.push(opt.val() || opt.text);
+            result.push(opt.value || opt.text);
 			//}
 		}
 		return result;
