@@ -1065,8 +1065,10 @@
                                 echo '
                                         </div>';
                                 echo '
-                                    </div>
-                                ';
+                                    </div>';
+
+                                echo '
+		                            <div id="doc_title">РЛ #'.$_GET['id'].' - Асмедика</div>';
                             }else{
                                 echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
                             }

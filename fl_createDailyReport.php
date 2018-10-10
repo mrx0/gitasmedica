@@ -50,20 +50,32 @@
                                 </div>
                             <div class="cellRight">';
 
+            $filial_id = 0;
+
             if (($finances['see_all'] == 1) || $god_mode){
 
                 echo '
-                            <select id="filial" name="filial">';
+                            <select name="SelectFilial" id="SelectFilial">';
 
                 foreach ($filials_j as $filial_item){
 
                     $selected = '';
+                    if (isset($_GET['filial_id'])){
+                        $filial_id = $_GET['filial_id'];
 
-                    if (isset($_SESSION['filial'])) {
-                        if ($_SESSION['filial'] == $filial_item['id']) {
+                        if ($_GET['filial_id'] == $filial_item['id']) {
                             $selected = 'selected';
                         }
+                    }else {
+                        if (isset($_SESSION['filial'])) {
+                            $filial_id = $_SESSION['filial'];
+
+                            if ($_SESSION['filial'] == $filial_item['id']) {
+                                $selected = 'selected';
+                            }
+                        }
                     }
+
                     echo '<option value="'.$filial_item['id'].'" '.$selected.'>'.$filial_item['name'].'</option>';
                 }
 
@@ -71,6 +83,8 @@
                             </select>';
             }else{
                 if (isset($_SESSION['filial'])) {
+                    $filial_id = $_SESSION['filial'];
+
                     echo $filials_j[$_SESSION['filial']]['name'].'<input type="hidden" id="filial" name="filial" value="'.$_SESSION['filial'].'">';
                 }
             }
@@ -98,8 +112,45 @@
 								<li style="border-top-left-radius: 0; border-top-right-radius: 0;"><a href="#tabs-11" style="padding: 3px 10px; font-size: 12px;">Дети</a></li>
 							</ul>';
 
+            $invoices_arr = array();
+
+            $msql_cnnct = ConnectToDB ();
+
+            $today = date('Y-m-d', time());
+
+            $query = "SELECT jc.* FROM `journal_invoice` ji 
+                      LEFt JOIN `fl_journal_calculate` jc ON jc.invoice_id = ji.id
+                      WHERE 
+                      DATE_FORMAT(ji.closed_time, '%Y-%m-%d') ='{$today}'
+                      AND ji.status = '5'
+                      AND ji.summ = ji.paid
+                      AND ji.office_id = '{$filial_id}'";
+            //var_dump($query);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($invoices_arr, $arr['id']);
+                }
+            }
+
+            if (!empty($invoices_arr)){
+                var_dump($invoices_arr);
+            }
+
+
+
+
             echo '
 							<div id="tabs-1">';
+
+
+
+
+
             echo '
 							</div>';
             echo '
@@ -169,7 +220,28 @@
 
             echo '
                     </div>
-                </div>';
+                </div>
+                <div id="doc_title">Ежедневный отчёт - Асмедика</div>';
+
+
+            echo '	
+			<!-- Подложка только одна -->
+			<div id="overlay"></div>';
+
+            echo '
+					<script>
+					
+						$(function() {
+							$("#SelectFilial").change(function(){
+							    
+							    blockWhileWaiting (true);
+							    
+								document.location.href = "?filial_id="+$(this).val();
+							});
+						});
+						
+					</script>';
+
         }else{
             echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
         }
