@@ -19,28 +19,33 @@
 								<i><b>Наименование</b></i>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px;">
-								<i><b>Страх.</b></i>
+								<div id="insure" class="settings_text" title="Страховая"><i>Страх.</i></div>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center;">
-								<i><b>Сог.</b></i>
+								<div id="insure_approve" class="settings_text" title="Согласовано"><i>Сог.</i></div>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
 								<i><b>Цена, руб.</b></i>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-								<i><b>Коэфф.</b></i>
+								<div id="spec_koeff" class="settings_text" title="Коэффициент"><i>Коэфф.</i></div>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
 								<i><b>Кол-во</b></i>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-								<i><b>Скидка</b></i>
+								<div id="discounts" class="settings_text" title="Скидки (Акции)"><i>Скидка</i></div>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 30px; min-width: 30px; max-width: 30px;">
-								<i><b>Гар.<br>Под.</b></i>
+								<div id="guaranteegift" class="settings_text" title="По гарантии | Подарок"><i>Гар.<br>Под.</i></div>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
 								<i><b>Всего, руб.</b></i>
+							</div>
+							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px;">
+                                <div id="percent_cats" class="settings_text" onclick="contextMenuShow(0, ' . $_POST['invoice_type'] . ', event, \'percent_cats\');">
+                                    <i><b>Категория</b></i>
+                                </div>
 							</div>
 							<div class="cellCosmAct" style="font-size: 70%; text-align: center;">
 								<i><b>-</b></i>
@@ -48,7 +53,7 @@
 						</div>';
 		
 		if ($_POST){
-			if (!isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['filial']) || !isset($_POST['worker'])){
+			if (!isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['filial']) || !isset($_POST['worker']) || !isset($_POST['invoice_type'])){
 				echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 				include_once 'DBWork.php';
@@ -77,6 +82,23 @@
 					
 					$t_number_active = $_SESSION['invoice_data'][$client][$zapis_id]['t_number_active'];
 					$mkb_data = $_SESSION['invoice_data'][$client][$zapis_id]['mkb'];
+
+
+                    //Категории процентов
+                    $percent_cats_j = SelDataFromDB('fl_spr_percents', $_POST['invoice_type'], 'type');
+                    //var_dump( $percent_cats_j);
+
+                    //Надо отсортировать по названию
+                    $percent_cats_j_names = array();
+
+                    //Определяющий массив из названий для сортировки
+                    foreach ($percent_cats_j as $key => $arr) {
+                        array_push($percent_cats_j_names, $arr['name']);
+                    }
+
+                    //Сортируем по названию
+                    array_multisort($percent_cats_j_names, SORT_LOCALE_STRING, $percent_cats_j);
+
 
 					foreach ($data as $ind => $invoice_data){
 						if ($t_number_active == $ind){
@@ -149,10 +171,11 @@
 									</div>
 								</div>';
 						}
-								
-								
+
+
 						//часть прайса		
 						if (!empty($invoice_data)){
+						    //var_dump($invoice_data);
 
 							foreach ($invoice_data as $key => $items){
 								$request .= '
@@ -334,6 +357,27 @@
 
                                 $request .= '	
 								</div>
+                                <div class="cellCosmAct" style="font-size: 100%; text-align: center; width: 80px; min-width: 80px; max-width: 80px; '.$bg_col.'">';
+
+                                $request .= '
+                                    <select name="percent_cat" id="percent_cat" style="width: 80px; max-width: 80px;" onchange="changeItemPerCatInvoice(' . $ind . ', ' . $key . ', this.value);">';
+
+                                if ($percent_cats_j != 0) {
+                                    for ($i = 0; $i < count($percent_cats_j); $i++) {
+                                        if ($items['percent_cat'] == $percent_cats_j[$i]['id']) {
+                                            $selected = ' selected';
+                                        } else {
+                                            $selected = '';
+                                        }
+
+                                        $request .= "<option value='" . $percent_cats_j[$i]['id'] . "' " . $selected . "><i>" . $percent_cats_j[$i]['name'] . "</i></option>";
+                                    }
+                                }
+                                $request .= '
+                                                    </select>';
+
+                                $request .= '
+                                </div>
 								<div invoiceitemid="'.$key.'" class="cellCosmAct info" style="font-size: 100%; text-align: center; '.$bg_col.'" onclick="deleteInvoiceItem('.$ind.', this);">
 									<i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
 								</div>

@@ -424,9 +424,9 @@
 
             //Вытащим общие процентовки
             if ($percent_cat > 0) {
-                $query = "SELECT `id`, `work_percent`, `material_percent` FROM `fl_spr_percents` WHERE `id`='" . $percent_cat . "' AND `type`='" . $type . "' LIMIT 1";
+                $query = "SELECT `id`, `work_percent`, `material_percent`, `name` FROM `fl_spr_percents` WHERE `id`='" . $percent_cat . "' AND `type`='" . $type . "' LIMIT 1";
             }else{
-                $query = "SELECT `id`, `work_percent`, `material_percent` FROM `fl_spr_percents` WHERE `type`='" . $type . "' LIMIT 1";
+                $query = "SELECT `id`, `work_percent`, `material_percent`, `name` FROM `fl_spr_percents` WHERE `type`='" . $type . "' LIMIT 1";
             }
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -437,7 +437,7 @@
             if ($number != 0){
                 $boolean = true;
             }else{
-                $query = "SELECT `id`, `work_percent`, `material_percent` FROM `fl_spr_percents` WHERE `type`='" . $type . "' LIMIT 1";
+                $query = "SELECT `id`, `work_percent`, `material_percent`, `name` FROM `fl_spr_percents` WHERE `type`='" . $type . "' LIMIT 1";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -451,6 +451,7 @@
 
                 while ($arr = mysqli_fetch_assoc($res)){
                     $percents[$percent_cat]['category'] = $arr['id'];
+                    $percents[$percent_cat]['name'] = $arr['name'];
                     $percents[$percent_cat]['work_percent'] = $arr['work_percent'];
                     $percents[$percent_cat]['material_percent'] =  $arr['material_percent'];
                 }

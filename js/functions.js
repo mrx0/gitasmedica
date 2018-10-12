@@ -4070,7 +4070,8 @@
 				client: $("#client").val(),
 				zapis_id: $("#zapis_id").val(),
 				filial: $("#filial").val(),
-				worker: $("#worker").val()
+				worker: $("#worker").val(),
+                invoice_type: invoice_type
 			},
 			cache: false,
 			beforeSend: function() {
@@ -4193,6 +4194,7 @@
 			}
 		})
 	}
+
 	//меняет кол-во позиции
 	function changeQuantityInvoice(ind, itemId, dataObj){
 		//console.log(dataObj.val());
@@ -4864,6 +4866,59 @@
 			}
 		});
 	}
+
+    //меняет категорию позиции
+    function changeItemPerCatInvoice(ind, itemId, catValue){
+        //console.log(catValue);
+        //console.log(this);
+
+        var invoice_type = $("#invoice_type").val();
+
+        var link = "add_percent_cat_id_in_invoice_f.php";
+
+        if (invoice_type == 88){
+            link = "add_percent_cats_id_in_invoice_free_f.php";
+        }
+        //console.log(invoice_type);
+
+        //категория
+        //var category = catValue;
+        //console.log(category);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    key: itemId,
+                    ind: ind,
+
+                    client: $("#client").val(),
+                    zapis_id: $("#zapis_id").val(),
+                    filial: $("#filial").val(),
+                    worker: $("#worker").val(),
+
+                    percent_cat: catValue,
+                    invoice_type: invoice_type
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                fillInvoiseRez(true);
+
+            }
+        });
+    }
+
+
+
 
     //Изменить категорию процентов
     function fl_changeItemPercentCat(ind, key, percent_cat){
@@ -5833,7 +5888,7 @@
 				summins: SummIns,
 
 				invoice_type: invoice_type,
-				invoice_id: invoice_id,
+				invoice_id: invoice_id
 			},
 			cache: false,
 			beforeSend: function() {
@@ -5841,7 +5896,8 @@
 			},
 			// действие, при ответе с сервера
 			success: function(res){
-				console.log(res);
+				//console.log(res);
+
 				$('.center_block').remove();
 				$('#overlay').hide();
 
@@ -6754,39 +6810,78 @@
         });
 
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
-        $("#spec_koeff").click(function(event) {
+        /*$("#spec_koeff").click(function(event) {
+        	//console.log(1);
+
+            // Проверяем нажата ли именно правая кнопка мыши:
+            if (event.which === 1)  {
+                contextMenuShow(0, 0, event, 'spec_koeff');
+            }
+        });*/
+
+        $("body").on("click", "#spec_koeff", function(event){
+            //console.log(1);
 
             // Проверяем нажата ли именно правая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'spec_koeff');
             }
         });
+
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
-        $("#guarantee").click(function(event) {
+        /*$("#guarantee").click(function(event) {
 
             // Проверяем нажата ли именно правая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'guarantee');
             }
-        });
+        });*/
+
+        /*$("body").on("click", "#guarantee", function(){
+
+            // Проверяем нажата ли именно правая кнопка мыши:
+            if (event.which === 1)  {
+                contextMenuShow(0, 0, event, 'guarantee');
+            }
+        });*/
+
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
-        $("#gift").click(function(event) {
+        /*$("#gift").click(function(event) {
 
             // Проверяем нажата ли именно правая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'gift');
             }
-        });
+        });*/
+
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
-        $("#guaranteegift").click(function(event) {
+        /*$("#guaranteegift").click(function(event) {
+
+            // Проверяем нажата ли именно правая кнопка мыши:
+            if (event.which === 1)  {
+                contextMenuShow(0, 0, event, 'guaranteegift');
+            }
+        });*/
+
+        $("body").on("click", "#guaranteegift", function(event){
 
             // Проверяем нажата ли именно правая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'guaranteegift');
             }
         });
+
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
-        $("#insure").click(function(event) {
+        /*$("#insure").click(function(event) {
+
+            // Проверяем нажата ли именно правая кнопка мыши:
+            if (event.which === 1)  {
+                //console.log(1);
+                contextMenuShow(0, 0, event, 'insure');
+            }
+        });*/
+
+        $("body").on("click", "#insure", function(event){
 
             // Проверяем нажата ли именно правая кнопка мыши:
             if (event.which === 1)  {
@@ -6794,8 +6889,18 @@
                 contextMenuShow(0, 0, event, 'insure');
             }
         });
+
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
-        $("#insure_approve").click(function(event) {
+/*        $("#insure_approve").click(function(event) {
+
+            // Проверяем нажата ли именно правая кнопка мыши:
+            if (event.which === 1)  {
+                //console.log(1);
+                contextMenuShow(0, 0, event, 'insure_approve');
+            }
+        });*/
+
+        $("body").on("click", "#insure_approve", function(event){
 
             // Проверяем нажата ли именно правая кнопка мыши:
             if (event.which === 1)  {
@@ -6803,8 +6908,18 @@
                 contextMenuShow(0, 0, event, 'insure_approve');
             }
         });
+
         //Скидки Вешаем слушатель события нажатие кнопок мыши для всего документа:
-        $("#discounts").click(function(event) {
+        /*$("#discounts").click(function(event) {
+
+            // Проверяем нажата ли именно правая кнопка мыши:
+            if (event.which === 1)  {
+                //console.log(71);
+                contextMenuShow(0, 0, event, 'discounts');
+            }
+        });*/
+
+        $("body").on("click", "#discounts", function(event){
 
             // Проверяем нажата ли именно правая кнопка мыши:
             if (event.which === 1)  {
@@ -6812,6 +6927,7 @@
                 contextMenuShow(0, 0, event, 'discounts');
             }
         });
+
         //для категорий процентов
 		/*$("#percent_cats").click(function(event) {
 

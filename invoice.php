@@ -59,6 +59,21 @@
                             //$sheduler_zapis = 0;
                             //var_dump ($sheduler_zapis);
                         }
+
+                        $percent_cat_j = array();
+
+                        $query = "SELECT `id`, `name` FROM `fl_spr_percents`";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0){
+                            while ($arr = mysqli_fetch_assoc($res)){
+                                //array_push($percent_cat_j, $arr);
+                                $percent_cat_j[$arr['id']] = $arr['name'];
+                            }
+                        }
+                        //var_dump($percent_cat_j);
+
 						//if ($client !=0){
 						//if (!empty($sheduler_zapis) || ){
 
@@ -424,7 +439,7 @@
 
 
 							echo '
-										<div id="invoice_rezult" style="float: none; width: 850px;">';
+										<div id="invoice_rezult" style="float: none; width: 900px;">';
 
 							echo '
 											<div class="cellsBlock">
@@ -474,6 +489,9 @@
 												</div>
 												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
 													<i><b>Всего, руб.</b></i>
+												</div>
+												<div class="cellName" style="font-size: 80%; text-align: center;">
+													<i><b>Категория</b></i>
 												</div>
 											</div>';
 
@@ -714,8 +732,25 @@
                                         }
 
 
-                                        echo '</b>
-                                                </div>
+                                        echo '
+                                                    </b>
+                                                </div>';
+
+
+
+                                        if ($item['percent_cat'] > 0) {
+                                            $percent_cat = $percent_cat_j[$item['percent_cat']];
+                                        }else{
+                                            $percent_cat = '<i style="color: red;">Ошибка #15</i>';
+                                        }
+
+
+                                        echo '
+                                                <div class="cellName" style="font-size: 90%; text-align: right;">
+                                                    <i>'.$percent_cat.'</i>
+                                                </div>';
+
+                                        echo '
                                             </div>';
                                     }
                                     echo '

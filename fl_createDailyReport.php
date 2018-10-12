@@ -29,10 +29,13 @@
             echo '
                     
                             <div class="cellsBlock2">
-                                <div class="cellLeft">Дата отчёта</div>
+                                <div class="cellLeft">
+                                    Дата отчёта
+                                </div>
                                 <div class="cellRight">
-                                    <input type="text" id="datastart" name="datastart" class="dateс" value="'.date("d.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
+                                    <input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" value="'.date("d.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
                                                 onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
+                                    <span class="button_tiny" style="font-size: 80%; cursor: pointer" onclick="iWantThisDate2(\'fl_createDailyReport.php?filial_id=14\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>            
                                 </div>
                             </div>
                             

@@ -159,7 +159,7 @@ if ($enter_ok){
                             }
 
                             // !!! **** тест с записью
-                                include_once 'showZapisRezult.php';
+                            include_once 'showZapisRezult.php';
 
                             if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode) {
                                 $finance_edit = true;
@@ -295,10 +295,13 @@ if ($enter_ok){
                                             $temp_arr2['itog_price'] = (int)$invoice_ex_j_val['itog_price'];
                                             $temp_arr2['manual_itog_price'] = (int)$invoice_ex_j_val['itog_price'];
 
-                                            $temp_arr2['percent_cats'] = 1;
+                                            //$temp_arr2['percent_cats'] = 1;
+                                            $temp_arr2['percent_cats'] = (int)$invoice_ex_j_val['percent_cat'];
                                             $temp_arr2['work_percent'] = 0;
                                             $temp_arr2['material_percent'] = 0;
 
+
+                                            //Категории по прайсу
                                             //$query = "SELECT `id` FROM `fl_spr_percents` WHERE `type`='".$invoice_j[0]['type']."' LIMIT 1;";
                                             $query = "SELECT `category` FROM `spr_pricelist_template` WHERE `id`='".$invoice_ex_j_val['price_id']."' LIMIT 1;";
                                             //var_dump($query);
@@ -310,12 +313,12 @@ if ($enter_ok){
                                             if ($number != 0) {
                                                 $arr = mysqli_fetch_assoc($res);
 
-                                                $percents_j = getPercents($invoice_j[0]['worker_id'], (int)$arr['category']);
+                                                //$percents_j = getPercents($invoice_j[0]['worker_id'], (int)$arr['category']);
                                                 //var_dump($percents_j);
 
-                                                $temp_arr2['percent_cats'] = (int)$percents_j[(int)$arr['category']]['category'];
+                                                /*$temp_arr2['percent_cats'] = (int)$percents_j[(int)$arr['category']]['category'];
                                                 $temp_arr2['work_percent'] = (int)$percents_j[(int)$arr['category']]['work_percent'];
-                                                $temp_arr2['material_percent'] = (int)$percents_j[(int)$arr['category']]['material_percent'];
+                                                $temp_arr2['material_percent'] = (int)$percents_j[(int)$arr['category']]['material_percent'];*/
 
 
                                             }else {
@@ -542,7 +545,7 @@ if ($enter_ok){
                                                     </div>
                                                     <div class="cellName" style="font-size: 80%; text-align: center;">
                                                         <div id="percent_cats" class="settings_text" onclick="contextMenuShow(0, ' . $invoice_j[0]['type'] . ', event, \'percent_cats\');">
-                                                            <i><b>Тип</b></i>
+                                                            <i><b>Категория</b></i>
                                                         </div>
                                                     </div>
                                                     <div class="cellCosmAct" style="font-size: 70%; text-align: center;">
