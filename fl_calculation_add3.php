@@ -296,7 +296,7 @@ if ($enter_ok){
                                             $temp_arr2['manual_itog_price'] = (int)$invoice_ex_j_val['itog_price'];
 
                                             //$temp_arr2['percent_cats'] = 1;
-                                            $temp_arr2['percent_cats'] = (int)$invoice_ex_j_val['percent_cat'];
+                                            $temp_arr2['percent_cat'] = (int)$invoice_ex_j_val['percent_cat'];
                                             $temp_arr2['work_percent'] = 0;
                                             $temp_arr2['material_percent'] = 0;
 
@@ -492,10 +492,21 @@ if ($enter_ok){
                                                     </div>';
                                 }
                             }
+
+                            echo '
+                                                </div>
+                                                <div style="display: inline-block; vertical-align: top;">';
+
                             if ($invoice_j[0]['summ'] != $invoice_j[0]['paid']) {
                                 echo '
                                                     <div style="color: red; ">
-                                                        Наряд не закрыт (оплачен не полностью)
+                                                        Наряд не оплачен
+                                                    </div>';
+                            }
+                            if ($invoice_j[0]['status'] != 5) {
+                                echo '
+                                                    <div style="color: red; ">
+                                                        Работа не закрыта
                                                     </div>';
                             }
                             /*if ($invoice_j[0]['summ'] == $invoice_j[0]['paid']) {
@@ -567,8 +578,12 @@ if ($enter_ok){
                                                         <div style="text-align: left; float: left;">	
                                                             <input type="button" class="b" value="Сбросить изменения" onclick="showCalculateAdd(' . $invoice_j[0]['type'] . ', \'reset\')">
                                                         </div>
-                                                        <div style="text-align: right;">	
-                                                            <input type="button" class="b" value="Сохранить" onclick="showCalculateAdd(' . $invoice_j[0]['type'] . ', \'add\')">
+                                                        <div style="text-align: right;">';
+                            if ($god_mode || ($finances['see_all'] == 1) || (($invoice_j[0]['summ'] == $invoice_j[0]['paid']) && ($invoice_j[0]['status'] == 5))) {
+                                echo '
+                                                            <input type="button" class="b" value="Сохранить" onclick="showCalculateAdd(' . $invoice_j[0]['type'] . ', \'add\')">';
+                            }
+                            echo '
                                                         </div>
                                                     </div>
                                                 </div>

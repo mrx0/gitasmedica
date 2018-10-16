@@ -37,7 +37,9 @@
 								<i><b>Всего, руб.</b></i>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px;">
-								<i><b>Категория</b></i>
+                                <div id="percent_cats" class="settings_text" onclick="contextMenuShow(0, ' . $_POST['invoice_type'] . ', event, \'percent_cats\');">
+                                    <i><b>Категория</b></i>
+                                </div>
 							</div>
 							<div class="cellCosmAct" style="font-size: 70%; text-align: center;">
 								<i><b>-</b></i>

@@ -611,7 +611,7 @@
                                 echo '
                                                     <div class="cellName" style="font-size: 80%; text-align: center;">
                                                         <div>
-                                                            <i><b>Тип</b></i>
+                                                            <i><b>Категория</b></i>
                                                         </div>
                                                     </div>
                                                 </div>';

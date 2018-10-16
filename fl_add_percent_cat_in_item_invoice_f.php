@@ -36,14 +36,14 @@
 
 					if ($_POST['invoice_type'] == 5){
 						if (isset($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']])){
-							$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['percent_cats'] = (int)$_POST['percent_cat'];
+							$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['percent_cat'] = (int)$_POST['percent_cat'];
 							$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['work_percent'] = $work_percent;
 							$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['material_percent'] = $material_percent;
 						}
 					}
 					if ($_POST['invoice_type'] == 6){
 						if (isset($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']])){
-							$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['percent_cats'] = (int)$_POST['percent_cat'];
+							$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['percent_cat'] = (int)$_POST['percent_cat'];
 							$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['work_percent'] = $work_percent;
 							$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['material_percent'] = $material_percent;
 						}

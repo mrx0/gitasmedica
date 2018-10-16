@@ -768,6 +768,41 @@
 		})
 	}
 
+	//Редактирование времени наряда
+	function Ajax_invoice_close_time_edit(invoice_id) {
+
+        $.ajax({
+			url:"invoice_close_time_edit_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+			data:
+			{
+                invoice_id: invoice_id,
+				new_time: $("#datanew").val()
+			},
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+			success:function(res){
+                //console.log(res);
+                if(res.result == 'success') {
+                	//console.log(1);
+                   $("#errrror").html(res.data);
+                    setTimeout(function () {
+                        window.location.replace('invoice.php?id=' + invoice_id);
+                        //console.log('client.php?id='+id);
+                    }, 500);
+                }else{
+                    //console.log(2);
+                    $("#errrror").html(res.data);
+				}
+			}
+		})
+	}
+
 	//Удаление блокировка ордера
 	function Ajax_del_order(id, client_id) {
 
@@ -4909,7 +4944,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                //console.log(res);
+                console.log(res);
 
                 fillInvoiseRez(true);
 
@@ -5343,7 +5378,7 @@
 		});
 	}
 
-	//Сменить филиал в сессии пользователя
+	//Сменить категории процентов в сессии пользователя
 	function fl_changePercentCat(percent_cat){
 
         var invoice_type = $("#invoice_type").val();
@@ -5363,7 +5398,7 @@
                 {
                     percent_cat: percent_cat,
                     client: $("#client").val(),
-                    zapis_id: $("#zapis_id2").val(),
+                    zapis_id: $("#zapis_id").val(),
                     filial: $("#filial").val(),
                     worker: $("#worker").val(),
 
@@ -5376,9 +5411,9 @@
             // действие, при ответе с сервера
             success: function(res){
                 //console.log(res);
-                console.log(res.data);
+                //console.log(res.data);
 
-                fillCalculateRez();
+                fillInvoiseRez(true);
 
             }
         });
@@ -5453,6 +5488,86 @@
 
 		menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
 
+	}
+
+	//Показываем блок с суммами и кнопками Для закрытия наряда
+	function showInvoiceClose(invoice_id){
+		//console.log(mode);
+        var rys = false;
+
+        rys = confirm("Закрыть работу?");
+
+        if (rys) {
+
+            var link = "invoice_close_f.php";
+
+            var reqData = {
+                invoice_id: invoice_id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    //console.log (res);
+
+                    if (res.result == "success") {
+                        setTimeout(function () {
+                            window.location.href = "invoice.php?id="+invoice_id;
+                        }, 200);
+                    } else {
+
+                    }
+                }
+            })
+        }
+	}
+
+	//Показываем блок с суммами и кнопками Для окрытия наряда
+	function showInvoiceOpen(invoice_id){
+		//console.log(mode);
+        var rys = false;
+
+        rys = confirm("Снять отметку о звершении работы?");
+
+        if (rys) {
+
+            var link = "invoice_open_f.php";
+
+            var reqData = {
+                invoice_id: invoice_id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    //console.log (res);
+
+                    if (res.result == "success") {
+                        setTimeout(function () {
+                            window.location.href = "invoice.php?id="+invoice_id;
+                        }, 200);
+                    } else {
+
+                    }
+                }
+            })
+        }
 	}
 
 	//Показываем блок с суммами и кнопками Для расчета
@@ -6083,7 +6198,7 @@
 			},
 			// действие, при ответе с сервера
 			success: function(res){
-				//console.log(res);
+				console.log(res);
 
 				$('.center_block').remove();
 				$('#overlay').hide();

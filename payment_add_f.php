@@ -34,7 +34,9 @@
 
                 $comment = addslashes($_POST['comment']);
 
-                //переменная для суммы оплаты
+                $res_data = '';
+
+                    //переменная для суммы оплаты
                 $payed = 0;
                 //переменная для потрачено с баланса
                 $debited = 0;
@@ -162,7 +164,8 @@
                                                                 //Обновим наряд его сумму оплаты
                                                                 //Если набралась сумма оплат равная общей суммы долга по наряду, то ставим статус - оплачено и дату date_in
                                                                 if ($payed == $invoice_j[0]['summ']) {
-                                                                    $query_invoice_dop = ", `closed_time`='{$date_in}', `status`='5'";
+                                                                    //$query_invoice_dop = ", `closed_time`='{$date_in}'";
+                                                                    $query_invoice_dop = "";
                                                                 }
                                                                 $query = "UPDATE `journal_invoice` SET `paid`='$payed'$query_invoice_dop WHERE `id`='$invoice_id'";
                                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -179,7 +182,14 @@
                                                                 mysql_query($query) or die(mysql_error() . ' -> ' . $query);*/
 
 
-                                                                echo json_encode(array('result' => 'success', 'data' => 'Оплата прошла успешно'));
+                                                                if ($invoice_j[0]['status'] == 5) {
+                                                                    $res_data = 'Оплата прошла успешно';
+                                                                }else{
+                                                                    $res_data = 'Оплата прошла успешно <input type="button" class="b" value="Закрыть работу" onclick="showInvoiceClose(' . $invoice_id . ')">';
+                                                                }
+
+
+                                                                echo json_encode(array('result' => 'success', 'data' => $res_data));
                                                             }
                                                         }
 

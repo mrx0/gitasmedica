@@ -19,8 +19,8 @@
 			}else{
 				//var_dump($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']]);
 					
-				if (isset($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
-					$data = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'];
+				if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
+					$data = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'];
 
                     include_once 'DBWork.php';
 
@@ -36,22 +36,22 @@
 							if ($_POST['invoice_type'] == 5){
 								foreach ($invoice_data as $key => $items){
 
-									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['percent_cats'] = (int)$_POST['percent_cat'];
-									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['work_percent'] = $work_percent;
-									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['material_percent'] = $material_percent;
+									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['percent_cat'] = (int)$_POST['percent_cat'];
+									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['work_percent'] = $work_percent;
+									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['material_percent'] = $material_percent;
 
 								}
 							}
 							if ($_POST['invoice_type'] == 6){
 
-									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['percent_cats'] = (int)$_POST['percent_cat'];
-									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['work_percent'] = $work_percent;
-									$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['material_percent'] = $material_percent;
+									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['percent_cat'] = (int)$_POST['percent_cat'];
+									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['work_percent'] = $work_percent;
+									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['material_percent'] = $material_percent;
 
 							}
 						}
 					}
-                    echo json_encode(array('result' => 'success', 'data' => $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data']));
+                    echo json_encode(array('result' => 'success', 'data' => $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data']));
 				}
 			}
 		}

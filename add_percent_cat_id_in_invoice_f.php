@@ -32,7 +32,7 @@
                     }
                 }
 
-                echo json_encode(array('result' => 'success', 'data' => 'Ok'));
+                echo json_encode(array('result' => 'success', 'data' => 'Ok', 'data2' => $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data']));
             }
         }
     }
