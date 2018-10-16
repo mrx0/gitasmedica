@@ -59,6 +59,21 @@
                             //$sheduler_zapis = 0;
                             //var_dump ($sheduler_zapis);
                         }
+
+                        $percent_cat_j = array();
+
+                        $query = "SELECT `id`, `name` FROM `fl_spr_percents`";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0){
+                            while ($arr = mysqli_fetch_assoc($res)){
+                                //array_push($percent_cat_j, $arr);
+                                $percent_cat_j[$arr['id']] = $arr['name'];
+                            }
+                        }
+                        //var_dump($percent_cat_j);
+
 						//if ($client !=0){
 						//if (!empty($sheduler_zapis) || ){
 
@@ -316,105 +331,141 @@
 
 							echo '	
 										<div id="errror" class="invoceHeader" style="">
-                                             <div style="display: inline-block; width: 300px; vertical-align: top;">
-                                                <div>
-                                                    <div style="">Сумма: <div id="calculateInvoice" style="">'.$invoice_j[0]['summ'].'</div> руб.</div>
-                                                </div>';
+                                            <div>
+                                                <div style="display: inline-block; width: 300px; vertical-align: top;">
+                                                    <div>
+                                                        <div style="">Сумма: <div id="calculateInvoice" style="">'.$invoice_j[0]['summ'].'</div> руб.</div>
+                                                    </div>';
 							if ($invoice_j[0]['type'] != 88) {
                                 if ($sheduler_zapis[0]['type'] == 5) {
                                     echo '
-                                                <div>
-                                                    <div style="">Страховка: <div id="calculateInsInvoice" style="">' . $invoice_j[0]['summins'] . '</div> руб.</div>
-                                                </div>';
-                                    /*echo '
-                                                <div>
-                                                    <div style="">Исполнитель: <div id="calculateInsInvoice" style="">' . WriteSearchUser('spr_workers', $invoice_j[0]['worker_id'], 'user', true) . '</div></div>
-                                                </div>';*/
+                                                    <div>
+                                                        <div style="">Страховка: <div id="calculateInsInvoice" style="">' . $invoice_j[0]['summins'] . '</div> руб.</div>
+                                                    </div>';
                                 }
                             }else{
-
+                                //--
                             }
                             echo '
-                                                <div>
-                                                    <div style="">Исполнитель: <div id="calculateInsInvoice" style="">' . WriteSearchUser('spr_workers', $invoice_j[0]['worker_id'], 'user', true) . '</div></div>
+                                                    <div>
+                                                        <div style="">Исполнитель: <div id="calculateInsInvoice" style="">' . WriteSearchUser('spr_workers', $invoice_j[0]['worker_id'], 'user', true) . '</div></div>
+                                                    </div>
                                                 </div>';
-                            /*echo '
-                                                <div>
-                                                    <div style="">Скидка: <div id="discountValue" class="calculateInvoice" style="color: rgb(255, 0, 198);">'.$invoice_j[0]['discount'].'</div><span  class="calculateInvoice" style="color: rgb(255, 0, 198);">%</span></div>
-                                                </div>';*/
-
-                            if ($invoice_j[0]['summ'] == $invoice_j[0]['paid']) {
-                                //Расход материалов
-                                if (($finances['see_all'] == 1) || $god_mode) {
-                                    echo '
-                                                <div style="margin-top: 5px; margin-left: -2px;">
-                                                    <div style="display: inline-block;"><a href="fl_materials_consumption_add.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Внести расходы на материалы</a></div>
-                                                </div>';
-                                }
-                            }
 
                             echo '
-											</div> 
-                                            <div style="display: inline-block; width: 300px; vertical-align: top;">
-                                                <div>
-                                                    <div style="">Оплачено: <div id="calculateInvoice" style="color: #333;">'.$invoice_j[0]['paid'].'</div> руб.</div>
-                                                </div>';
+                                                <div style="display: inline-block; width: 300px; vertical-align: top;">
+                                                    <div>
+                                                        <div style="">Оплачено: <div id="calculateInvoice" style="color: #333;">'.$invoice_j[0]['paid'].'</div> руб.</div>
+                                                    </div>';
                             if ($invoice_j[0]['summ'] != $invoice_j[0]['paid']) {
                                 if ($invoice_j[0]['status'] != 9) {
                                     echo '
-                                                <div>
-                                                    <div style="display: inline-block;">Осталось внести: <div id="calculateInvoice" style="">' . ($invoice_j[0]['summ'] - $invoice_j[0]['paid']) . '</div> руб.</div>
-                                                </div>
-                                                <div>
-                                                    <div style="display: inline-block;"><a href="payment_add.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Оплатить</a></div>
-                                                    <div style="display: inline-block;"><a href="certificate_payment_add.php?invoice_id='.$invoice_j[0]['id'].'" class="b">Оплатить сертификатом</a></div>
-                                                </div>';
+                                                        <div>
+                                                            <div style="display: inline-block;">Осталось внести: <div id="calculateInvoice" style="">' . ($invoice_j[0]['summ'] - $invoice_j[0]['paid']) . '</div> руб.</div>
+                                                        </div>
+                                                    <div>
+                                                        <div style="display: inline-block;"><a href="payment_add.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Оплатить</a></div>
+                                                        <div style="display: inline-block;"><a href="certificate_payment_add.php?invoice_id='.$invoice_j[0]['id'].'" class="b">Оплатить сертификатом</a></div>
+                                                    </div>';
                                 }
 							}
+							echo '
+							                    </div>';
+
+
+                            echo '
+                                                <div style="display: inline-block; vertical-align: top;">';
+
+                            //Если сумма выписанная не равна сумме оплаченной
                             if ($invoice_j[0]['summ'] != $invoice_j[0]['paid']) {
                                 echo '
-                                                <div style="color: red; ">
-                                                    Наряд не закрыт (оплачен не полностью)
-                                                </div>';
+                                                    <div style="color: red; ">
+                                                        Наряд не оплачен
+                                                    </div>';
+                            }else{
+                                echo '
+                                                    <div style="margin-top: 5px;">
+                                                        <div style="display: inline-block; color: green;">Наряд оплачен</div>
+                                                    </div>';
                             }
-                            if ($invoice_j[0]['summ'] == $invoice_j[0]['paid']) {
-                                if ($invoice_j[0]['closed_time'] == 0){
-                                    /*echo '
-                                                <div>
-                                                    <div style="display: inline-block; color: red;">Наряд оплачен, но не закрыт. Если наряд <br><b>не страховой</b>, перепроведите оплаты или обратитесь к руководителю.</div>                                                    <!--<div style="display: inline-block;"><div class="b" onclick="alert('.$invoice_j[0]['id'].');">Закрыть</div></div>-->
-                                                </div>';*/
-                                }else{
+
+                            //Если статус не равен 5, то есть не закрыт
+                            if ($invoice_j[0]['status'] != 5) {
+                                echo '
+                                                    <div style="color: red; ">
+                                                        Работа не закрыта
+                                                    </div>';
+
+                                //if ($invoice_j[0]['summ'] == $invoice_j[0]['paid']) {
                                     echo '
-                                                <div style="margin-top: 5px;">
-                                                    <div style="display: inline-block; color: green;">Наряд закрыт</div>
-                                                    <div style="display: inline-block;">'.date('d.m.y', strtotime($invoice_j[0]['closed_time'])).'</div>
-                                                </div>';
-                                }
-                                //if (($invoice_j[0]['summ'] != 0) || ($invoice_j[0]['summins'] != 0)) {
-                                    if (($invoice_j[0]['type'] == 5) || ($invoice_j[0]['type'] == 6)) {
-                                        echo '
-                                                <div style="margin-top: 5px;">
-                                                    <div style="display: inline-block;"><a href="fl_calculation_add3.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Внести расчётный лист</a></div>
-                                                </div>';
-                                    }
-                                    /*if ($invoice_j[0]['type'] == 6) {
-                                        echo '
-                                                <div style="margin-top: 5px;">
-                                                    <div style="display: inline-block;"><a href="fl_calculation_add4.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Внести расчётный лист</a></div>
-                                                </div>';
-                                    }*/
-                                    if ($invoice_j[0]['type'] == 88) {
-                                        echo '
-                                                <div style="margin-top: 5px;">
-                                                    <div style="display: inline-block;"><a href="fl_calculation_add3.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Внести расчётный лист</a></div>
-                                                </div>';
-                                    }
+                                        <div style="display: inline-block;">
+                                            <!--<a href="invoice_status_close.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Закрыть работу</a>-->
+                                            <input type="button" class="b" value="Закрыть работу" onclick="showInvoiceClose(' . $invoice_j[0]['id'] . ')">
+                                        </div>';
                                 //}
 
+                            }else{
+                                echo '
+                                                    <div style="margin-top: 5px;">
+                                                        <div style="display: inline-block; color: green;">
+                                                            Работа закрыта '.date('d.m.Y', strtotime($invoice_j[0]['closed_time']));
+                                //var_dump(date('Y-m-d', strtotime($invoice_j[0]['create_time'])));
+                                //var_dump(date('Y-m-d'));
 
+                                if ((($finances['see_all'] == 1) || $god_mode) ||
+                                (($finances['see_all'] != 1) && !$god_mode && (date('Y-m-d', strtotime($invoice_j[0]['create_time'])) == date('Y-m-d'))))
+                                {
+                                    echo '
+                                                            <i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%; cursor: pointer;" title="Снять отметку о закрытии работы" onclick="showInvoiceOpen(' . $invoice_j[0]['id'] . ')"></i>';
+                                }
+                                echo '
+                                                        </div>
+                                                    </div>';
                             }
+
                             echo '
-                                            </div>';
+										        </div>';
+
+
+                            echo '
+                                                <div style="margin-top: 5px; margin-left: -2px;">';
+
+                            //Если всё оплачено, вносим расход материалов
+                            if ($invoice_j[0]['summ'] == $invoice_j[0]['paid']) {
+
+                                //Расход материалов
+                                if (($finances['see_all'] == 1) || $god_mode) {
+                                    echo '
+                                                    <div style="display: inline-block;"><a href="fl_materials_consumption_add.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Внести расходы на материалы</a></div>';
+                                }
+                            }
+                            //Корректировка даты закрытия
+                            if ((($finances['see_all'] == 1) || $god_mode) && ($invoice_j[0]['status'] == 5)){
+                                echo '
+                                                    <div style="display: inline-block;"><a href="invoice_change_close_time.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Корректировать дату закрытия работы</a></div>';
+                            }
+                            //Если закрыта работа
+                            if ((($invoice_j[0]['status'] == 5) && (($finances['see_all'] == 1) || $god_mode)) ||
+                            (($invoice_j[0]['status'] == 5) && ($invoice_j[0]['summ'] == $invoice_j[0]['paid']) && ($finances['see_all'] != 1) && !$god_mode))
+                            {
+
+                                //Добавить расчетный лист
+                                //if (($invoice_j[0]['type'] == 5) || ($invoice_j[0]['type'] == 6)) {
+                                    echo '
+                                                    <div style="display: inline-block;"><a href="fl_calculation_add3.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Внести расчётный лист</a></div>';
+                                //}
+                                //if ($invoice_j[0]['type'] == 88) {
+                                //    echo '
+                                //                    <div style="display: inline-block;"><a href="fl_calculation_add3.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Внести расчётный лист</a></div>';
+                                //}
+                            }
+
+                            echo '
+                                                </div>';
+
+                            echo '
+											</div>';
+
 
 
 							echo '
@@ -424,7 +475,7 @@
 
 
 							echo '
-										<div id="invoice_rezult" style="float: none; width: 850px;">';
+										<div id="invoice_rezult" style="float: none; width: 900px;">';
 
 							echo '
 											<div class="cellsBlock">
@@ -474,6 +525,9 @@
 												</div>
 												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
 													<i><b>Всего, руб.</b></i>
+												</div>
+												<div class="cellName" style="font-size: 80%; text-align: center;">
+													<i><b>Категория</b></i>
 												</div>
 											</div>';
 
@@ -714,8 +768,25 @@
                                         }
 
 
-                                        echo '</b>
-                                                </div>
+                                        echo '
+                                                    </b>
+                                                </div>';
+
+
+
+                                        if ($item['percent_cat'] > 0) {
+                                            $percent_cat = $percent_cat_j[$item['percent_cat']];
+                                        }else{
+                                            $percent_cat = '<i style="color: red;">Ошибка #15</i>';
+                                        }
+
+
+                                        echo '
+                                                <div class="cellName" style="font-size: 80%; text-align: right;">
+                                                    <i>'.$percent_cat.'</i>
+                                                </div>';
+
+                                        echo '
                                             </div>';
                                     }
                                     echo '
@@ -777,6 +848,7 @@
                                                     <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
                                                         Проведённые оплаты по наряду:
                                                     </li>';
+
                                 foreach ($payment_j as $payment_item) {
 
                                     $pay_type_mark = '';

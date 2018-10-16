@@ -62,7 +62,7 @@
                             $payed = $invoice_j[0]['paid'] - $payment_j[0]['summ'];
 
                             //Обновим цифру оплаты в наряде
-                            $query = "UPDATE `journal_invoice` SET `paid`='$payed', `status`='0', `closed_time`='0'  WHERE `id`='{$_POST['invoice_id']}'";
+                            $query = "UPDATE `journal_invoice` SET `paid`='$payed' WHERE `id`='{$_POST['invoice_id']}'";
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                             if ($payment_j[0]['type'] != 1) {

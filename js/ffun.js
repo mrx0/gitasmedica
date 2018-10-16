@@ -2180,7 +2180,7 @@
         //console.log(123);
 
 
-        //Рабочий пример клика на элементе после подгрузки его в DOM
+        //Рабочий пример клика на элементе после подгрузки загрузки его в DOM
         $("body").on("click", ".chkBoxCalcs", function(){
             var checked_status = $(this).prop("checked");
             //console.log(checked_status);
