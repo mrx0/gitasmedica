@@ -44,11 +44,13 @@
                 $invoiceAll_str = '';
                 $invoiceClose_str = '';
 
-                if (!empty($invoice_j)) {
-
-                    $rezult .= '
+                $rezult .= '
 								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Выписанные наряды</li>';
+
+                if (!empty($invoice_j)) {
+
+
 
                     foreach ($invoice_j as $invoice_item) {
 
@@ -127,14 +129,14 @@
                         if (strlen($invoiceAll_str) > 1){
                             $rezult .= $invoiceAll_str;
                         }else{
-                            $rezult .= '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 20px; color: red;">Нет нарядов</li>';
+                            $rezult .= '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 20px; color: red;"><i>Нет нарядов</i></li>';
                         }
 
                     }
 
 
                 }else{
-                    $rezult .= '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 5px; color: red;">Нет нарядов</li>';
+                    $rezult .= '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 5px; color: red;"><i>Нет нарядов<i></li>';
                 }
 
                 $rezult .= '

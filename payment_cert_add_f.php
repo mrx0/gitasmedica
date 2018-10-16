@@ -36,6 +36,8 @@
 
                 $comment = addslashes($_POST['comment']);
 
+                $res_data = '';
+
                 //переменная для суммы оплаты
                 $payed = 0;
                 //переменная для потрачено с баланса
@@ -169,7 +171,8 @@
                                                                 //Обновим наряд его сумму оплаты
                                                                 //Если набралась сумма оплат равная общей суммы долга по наряду, то ставим статус - оплачено и дату date_in
                                                                 if ($payed == $invoice_j[0]['summ']) {
-                                                                    $query_invoice_dop = ", `closed_time`='{$date_in}', `status`='5'";
+                                                                    //$query_invoice_dop = ", `closed_time`='{$date_in}'";
+                                                                    $query_invoice_dop = "";
                                                                 }
                                                                 $query = "UPDATE `journal_invoice` SET `paid`='$payed'$query_invoice_dop WHERE `id`='$invoice_id'";
                                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -184,7 +187,8 @@
 
                                                                 //Обновим в сертификатие "потрачено" и Проверяем не закрыть ли нам сертификат
                                                                 if ($debited >= $cert_j[0]['nominal']) {
-                                                                    $query_cert_dop = ", `closed_time`='{$date_in}', `status`='5'";
+                                                                    //$query_cert_dop = ", `closed_time`='{$date_in}'";
+                                                                    $query_cert_dop = "";
                                                                 }
                                                                 $query = "UPDATE `journal_cert` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `debited`='$debited'$query_cert_dop WHERE `id`='$cert_id'";
                                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -196,8 +200,13 @@
                                                                 /*$query = "UPDATE `journal_debt` SET `summ`='$debited'  WHERE `client_id`='$client_id'";
                                                                 mysql_query($query) or die(mysql_error() . ' -> ' . $query);*/
 
+                                                                if ($invoice_j[0]['status'] == 5) {
+                                                                    $res_data = 'Оплата прошла успешно';
+                                                                }else{
+                                                                    $res_data = 'Оплата прошла успешно <input type="button" class="b" value="Закрыть работу" onclick="showInvoiceClose(' . $invoice_id . ')">';
+                                                                }
 
-                                                                echo json_encode(array('result' => 'success', 'data' => 'Оплата прошла успешно'));
+                                                                echo json_encode(array('result' => 'success', 'data' => $res_data));
                                                             //}
                                                         }
 

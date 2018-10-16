@@ -22,19 +22,22 @@
 								<i><b>Цена, руб.</b></i>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-								<i><b>Коэфф.</b></i>
+								<div id="spec_koeff" class="settings_text" title="Коэффициент"><i>Коэфф.</i></div>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
 								<i><b>Кол-во</b></i>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-								<i><b>Скидка</b></i>
+								<div id="discounts" class="settings_text" title="Скидки (Акции)"><i>Скидка</i></div>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 30px; min-width: 30px; max-width: 30px;">
-								<i><b>Гар.<br>Под.</b></i>
+								<div id="guaranteegift" class="settings_text" title="По гарантии | Подарок"><i>Гар.<br>Под.</i></div>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
 								<i><b>Всего, руб.</b></i>
+							</div>
+							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px;">
+								<i><b>Категория</b></i>
 							</div>
 							<div class="cellCosmAct" style="font-size: 70%; text-align: center;">
 								<i><b>-</b></i>
@@ -50,6 +53,8 @@
 
                 //!!! @@@
                 include_once 'ffun.php';
+
+                $msql_cnnct = ConnectToDB ();
 
 				$filial = $_POST['filial'];
 				//$worker = $_POST['worker'];
@@ -70,8 +75,21 @@
 					$t_number_active = $_SESSION['invoice_data']['free_invoice']['t_number_active'];
 					//$mkb_data = $_SESSION['invoice_data'][$client][$zapis_id]['mkb'];
 
-                    $msql_cnnct = ConnectToDB ();
-					
+                    //Категории процентов
+                    $percent_cats_j = SelDataFromDB('fl_spr_percents', $_POST['invoice_type'], 'type');
+                    //var_dump( $percent_cats_j);
+
+                    //Надо отсортировать по названию
+                    $percent_cats_j_names = array();
+
+                    //Определяющий массив из названий для сортировки
+                    foreach ($percent_cats_j as $key => $arr) {
+                        array_push($percent_cats_j_names, $arr['name']);
+                    }
+
+                    //Сортируем по названию
+                    array_multisort($percent_cats_j_names, SORT_LOCALE_STRING, $percent_cats_j);
+
 					foreach ($data as $ind => $items){
 						if ($t_number_active == $ind){
 							$bg_col = 'background: rgba(131, 219, 83, 0.5) none repeat scroll 0% 0%;';
@@ -228,8 +246,29 @@
                                 //}
 
 
-                                $request .= '
+                            $request .= '	
 								</div>
+                                <div class="cellCosmAct" style="font-size: 100%; text-align: center; width: 80px; min-width: 80px; max-width: 80px; '.$bg_col.'">';
+
+                            $request .= '
+                                    <select name="percent_cat" id="percent_cat" style="width: 80px; max-width: 80px;" onchange="changeItemPerCatInvoice(' . $ind . ', ' . $key . ', this.value);">';
+
+                            if ($percent_cats_j != 0) {
+                                for ($i = 0; $i < count($percent_cats_j); $i++) {
+                                    if ($items['percent_cat'] == $percent_cats_j[$i]['id']) {
+                                        $selected = ' selected';
+                                    } else {
+                                        $selected = '';
+                                    }
+
+                                    $request .= "<option value='" . $percent_cats_j[$i]['id'] . "' " . $selected . "><i>" . $percent_cats_j[$i]['name'] . "</i></option>";
+                                }
+                            }
+                            $request .= '
+                                                    </select>';
+
+                            $request .= '
+                                </div>
 								<div class="cellCosmAct info" style="font-size: 100%; text-align: center; '.$bg_col.'" onclick="deleteInvoiceItem('.$ind.', this);">
 									<i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
 								</div>

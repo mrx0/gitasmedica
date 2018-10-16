@@ -123,7 +123,7 @@
 				echo '
                     <div class="no_print"> 
 					<header style="margin-bottom: 5px;">
-						<h1>---</h1>';
+						<h1>Важный отчёт</h1>';
                 echo '
                         <div>
 						    <a href="fl_tabel_print_choice.php" class="b4">Печать пачки</a>
@@ -133,7 +133,7 @@
 					</div>';
 
 				echo '
-						<div id="data">
+						<div id="data" style="margin: 10px 0 0;">
 						    <ul style="margin-left: 6px; margin-bottom: 20px;">
 						        <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
                                 <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
@@ -307,7 +307,8 @@
                 echo '
                     </div>';
 
-
+                echo '
+		            <div id="doc_title">Важный отчёт - Асмедика</div>';
 
 				echo '
 

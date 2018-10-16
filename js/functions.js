@@ -768,6 +768,41 @@
 		})
 	}
 
+	//Редактирование времени наряда
+	function Ajax_invoice_close_time_edit(invoice_id) {
+
+        $.ajax({
+			url:"invoice_close_time_edit_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+			data:
+			{
+                invoice_id: invoice_id,
+				new_time: $("#datanew").val()
+			},
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+			success:function(res){
+                //console.log(res);
+                if(res.result == 'success') {
+                	//console.log(1);
+                   $("#errrror").html(res.data);
+                    setTimeout(function () {
+                        window.location.replace('invoice.php?id=' + invoice_id);
+                        //console.log('client.php?id='+id);
+                    }, 500);
+                }else{
+                    //console.log(2);
+                    $("#errrror").html(res.data);
+				}
+			}
+		})
+	}
+
 	//Удаление блокировка ордера
 	function Ajax_del_order(id, client_id) {
 
@@ -2627,15 +2662,19 @@
 	// Return an array of the selected opion values
 	// select is an HTML select element
 	function getSelectValues(select) {
+        //console.log(select);
+
 		var result = [];
 		var options = select && select.options;
+        //console.log(options);
+
 		var opt;
 
 		for (var i=0, iLen=options.length; i<iLen; i++) {
 			opt = options[i];
 
 			//if (opt.selected) {
-				result.push(opt.val() || opt.text);
+            result.push(opt.value || opt.text);
 			//}
 		}
 		return result;
@@ -2647,8 +2686,8 @@
 		var condition = [];
 		var effect = [];
 
-		var el_condition =  $("#multi_d_to");
-		var el_effect =  $("#multi_d_to_2");
+        var el_condition = document.getElementById("multi_d_to");
+        var el_effect = document.getElementById("multi_d_to_2");
 
 		condition = getSelectValues(el_condition);
 		effect = getSelectValues(el_effect);
@@ -2659,7 +2698,7 @@
 			type: "POST",
 			data:
 			{
-				all_time:all_time,
+				all_time: all_time,
 				datastart: $("#datastart").val(),
 				dataend: $("#dataend").val(),
 
@@ -2672,11 +2711,11 @@
 
 				//pervich:document.querySelector('input[name="pervich"]:checked').value,
 
-				condition:condition,
-				effect:effect,
+				condition: condition,
+				effect: effect,
 
 				sex:document.querySelector('input[name="sex"]:checked').value,
-				wo_sex:wo_sex,
+				wo_sex: wo_sex
 
 			},
 			cache: false,
@@ -3754,7 +3793,7 @@
 				method:"POST",
 				data:
 				{
-					id: id,
+					id: id
 				},
 				success:function(data){
 					alert(data);
@@ -4066,7 +4105,8 @@
 				client: $("#client").val(),
 				zapis_id: $("#zapis_id").val(),
 				filial: $("#filial").val(),
-				worker: $("#worker").val()
+				worker: $("#worker").val(),
+                invoice_type: invoice_type
 			},
 			cache: false,
 			beforeSend: function() {
@@ -4189,6 +4229,7 @@
 			}
 		})
 	}
+
 	//меняет кол-во позиции
 	function changeQuantityInvoice(ind, itemId, dataObj){
 		//console.log(dataObj.val());
@@ -4861,6 +4902,59 @@
 		});
 	}
 
+    //меняет категорию позиции
+    function changeItemPerCatInvoice(ind, itemId, catValue){
+        //console.log(catValue);
+        //console.log(this);
+
+        var invoice_type = $("#invoice_type").val();
+
+        var link = "add_percent_cat_id_in_invoice_f.php";
+
+        if (invoice_type == 88){
+            link = "add_percent_cats_id_in_invoice_free_f.php";
+        }
+        //console.log(invoice_type);
+
+        //категория
+        //var category = catValue;
+        //console.log(category);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    key: itemId,
+                    ind: ind,
+
+                    client: $("#client").val(),
+                    zapis_id: $("#zapis_id").val(),
+                    filial: $("#filial").val(),
+                    worker: $("#worker").val(),
+
+                    percent_cat: catValue,
+                    invoice_type: invoice_type
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                console.log(res);
+
+                fillInvoiseRez(true);
+
+            }
+        });
+    }
+
+
+
+
     //Изменить категорию процентов
     function fl_changeItemPercentCat(ind, key, percent_cat){
 
@@ -5284,7 +5378,7 @@
 		});
 	}
 
-	//Сменить филиал в сессии пользователя
+	//Сменить категории процентов в сессии пользователя
 	function fl_changePercentCat(percent_cat){
 
         var invoice_type = $("#invoice_type").val();
@@ -5304,7 +5398,7 @@
                 {
                     percent_cat: percent_cat,
                     client: $("#client").val(),
-                    zapis_id: $("#zapis_id2").val(),
+                    zapis_id: $("#zapis_id").val(),
                     filial: $("#filial").val(),
                     worker: $("#worker").val(),
 
@@ -5317,9 +5411,9 @@
             // действие, при ответе с сервера
             success: function(res){
                 //console.log(res);
-                console.log(res.data);
+                //console.log(res.data);
 
-                fillCalculateRez();
+                fillInvoiseRez(true);
 
             }
         });
@@ -5394,6 +5488,86 @@
 
 		menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
 
+	}
+
+	//Показываем блок с суммами и кнопками Для закрытия наряда
+	function showInvoiceClose(invoice_id){
+		//console.log(mode);
+        var rys = false;
+
+        rys = confirm("Закрыть работу?");
+
+        if (rys) {
+
+            var link = "invoice_close_f.php";
+
+            var reqData = {
+                invoice_id: invoice_id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    //console.log (res);
+
+                    if (res.result == "success") {
+                        setTimeout(function () {
+                            window.location.href = "invoice.php?id="+invoice_id;
+                        }, 200);
+                    } else {
+
+                    }
+                }
+            })
+        }
+	}
+
+	//Показываем блок с суммами и кнопками Для окрытия наряда
+	function showInvoiceOpen(invoice_id){
+		//console.log(mode);
+        var rys = false;
+
+        rys = confirm("Снять отметку о звершении работы?");
+
+        if (rys) {
+
+            var link = "invoice_open_f.php";
+
+            var reqData = {
+                invoice_id: invoice_id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    //console.log (res);
+
+                    if (res.result == "success") {
+                        setTimeout(function () {
+                            window.location.href = "invoice.php?id="+invoice_id;
+                        }, 200);
+                    } else {
+
+                    }
+                }
+            })
+        }
 	}
 
 	//Показываем блок с суммами и кнопками Для расчета
@@ -5501,6 +5675,58 @@
 
                     if (mode == 'edit'){
                         Ajax_order_add('edit');
+                    }
+
+                // в случае ошибок в форме
+                }else{
+                    // перебираем массив с ошибками
+                    for(var errorField in data.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(data.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    $("#errror").html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                }
+            }
+        })
+    }
+
+    //Показываем блок с суммами и кнопками Для РАСХОДНОГО ордера
+    function showGiveOutCashAdd(mode){
+        //console.log(mode);
+
+        var Summ = $("#summ").val();
+        var type = $("#type").val();
+        var filial = $("#filial").val();
+
+        //проверка данных на валидность
+        $.ajax({
+            url:"ajax_test.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    summ: Summ,
+                    filial: filial
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                if(data.result == 'success'){
+                    $('#overlay').show();
+
+                    if (mode == 'add'){
+                        Ajax_GiveOutCash_add('add');
+                    }
+
+                    if (mode == 'edit'){
+                        Ajax_GiveOutCash_add('edit');
                     }
 
                 // в случае ошибок в форме
@@ -5777,7 +6003,7 @@
 				summins: SummIns,
 
 				invoice_type: invoice_type,
-				invoice_id: invoice_id,
+				invoice_id: invoice_id
 			},
 			cache: false,
 			beforeSend: function() {
@@ -5785,7 +6011,8 @@
 			},
 			// действие, при ответе с сервера
 			success: function(res){
-				console.log(res);
+				//console.log(res);
+
 				$('.center_block').remove();
 				$('#overlay').hide();
 
@@ -5971,7 +6198,7 @@
 			},
 			// действие, при ответе с сервера
 			success: function(res){
-				//console.log(res);
+				console.log(res);
 
 				$('.center_block').remove();
 				$('#overlay').hide();
@@ -6230,6 +6457,93 @@
                         					paymentStr+
 					                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
 						                        '<a href="finance_account.php?client_id='+client_id+'" class="b">Управление счётом</a>'+
+					                        '</li>'+
+										'</ul>');
+				}else{
+					$('#errror').html(res.data);
+				}
+			}
+		});
+	}
+
+	//Добавляем/редактируем в базу ордер
+	function Ajax_GiveOutCash_add(mode){
+		//console.log(mode);
+
+        var giveoutcash_id = 0;
+
+		var link = "fl_give_out_cash_add_f.php";
+
+		//var paymentStr = '';
+
+		if (mode == 'edit'){
+			link = "fl_give_out_cash_edit_f.php";
+            giveoutcash_id = $("#giveoutcash_id").val();
+		}
+
+        var Summ = $("#summ").val();
+        //var SummType =  $("#summ_type").val();
+        var type = $("#type").val();
+        var office_id = $("#filial").val();
+
+		//var client_id = $("#client_id").val();
+		//var order_id =  $("#order_id").val();
+		//console.log(invoice_id);
+		var date_in = $("#date_in").val();
+		//console.log(date_in);
+
+        var comment = $("#comment").val();
+        //console.log(comment);
+
+        /*if (giveoutcash_id != 0){
+            paymentStr = '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+                '<a href= "payment_add.php?invoice_id='+order_id+'" class="b">Оплатить наряд #'+order_id+'</a>'+
+                '</li>';
+		}*/
+
+		$.ajax({
+			url: link,
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                office_id: office_id,
+				summ: Summ,
+                type: type,
+                date_in: date_in,
+                comment: comment,
+
+                giveoutcash_id: giveoutcash_id
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//console.log(res);
+				$('.center_block').remove();
+				$('#overlay').hide();
+
+				if(res.result == "success"){
+					//$('#data').hide();
+					$('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован расходный ордер</li>'+
+											'<li class="cellsBlock" style="width: auto;">'+
+												'<a href="order.php?id='+res.data+'" class="cellName ahref">'+
+													'<b>Ордер #'+res.data+'</b><br>'+
+												'</a>'+
+												'<div class="cellName">'+
+													'<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
+														'Сумма:<br>'+
+														'<span class="calculateInvoice" style="font-size: 13px">'+Summ+'</span> руб.'+
+													'</div>'+
+												'</div>'+
+											'</li>'+
+                        					/*paymentStr+*/
+					                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+						                        '<a href="stat_cashbox.php" class="b">Касса</a>'+
 					                        '</li>'+
 										'</ul>');
 				}else{
@@ -6611,39 +6925,78 @@
         });
 
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
-        $("#spec_koeff").click(function(event) {
+        /*$("#spec_koeff").click(function(event) {
+        	//console.log(1);
+
+            // Проверяем нажата ли именно правая кнопка мыши:
+            if (event.which === 1)  {
+                contextMenuShow(0, 0, event, 'spec_koeff');
+            }
+        });*/
+
+        $("body").on("click", "#spec_koeff", function(event){
+            //console.log(1);
 
             // Проверяем нажата ли именно правая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'spec_koeff');
             }
         });
+
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
-        $("#guarantee").click(function(event) {
+        /*$("#guarantee").click(function(event) {
 
             // Проверяем нажата ли именно правая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'guarantee');
             }
-        });
+        });*/
+
+        /*$("body").on("click", "#guarantee", function(){
+
+            // Проверяем нажата ли именно правая кнопка мыши:
+            if (event.which === 1)  {
+                contextMenuShow(0, 0, event, 'guarantee');
+            }
+        });*/
+
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
-        $("#gift").click(function(event) {
+        /*$("#gift").click(function(event) {
 
             // Проверяем нажата ли именно правая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'gift');
             }
-        });
+        });*/
+
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
-        $("#guaranteegift").click(function(event) {
+        /*$("#guaranteegift").click(function(event) {
+
+            // Проверяем нажата ли именно правая кнопка мыши:
+            if (event.which === 1)  {
+                contextMenuShow(0, 0, event, 'guaranteegift');
+            }
+        });*/
+
+        $("body").on("click", "#guaranteegift", function(event){
 
             // Проверяем нажата ли именно правая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'guaranteegift');
             }
         });
+
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
-        $("#insure").click(function(event) {
+        /*$("#insure").click(function(event) {
+
+            // Проверяем нажата ли именно правая кнопка мыши:
+            if (event.which === 1)  {
+                //console.log(1);
+                contextMenuShow(0, 0, event, 'insure');
+            }
+        });*/
+
+        $("body").on("click", "#insure", function(event){
 
             // Проверяем нажата ли именно правая кнопка мыши:
             if (event.which === 1)  {
@@ -6651,8 +7004,18 @@
                 contextMenuShow(0, 0, event, 'insure');
             }
         });
+
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
-        $("#insure_approve").click(function(event) {
+/*        $("#insure_approve").click(function(event) {
+
+            // Проверяем нажата ли именно правая кнопка мыши:
+            if (event.which === 1)  {
+                //console.log(1);
+                contextMenuShow(0, 0, event, 'insure_approve');
+            }
+        });*/
+
+        $("body").on("click", "#insure_approve", function(event){
 
             // Проверяем нажата ли именно правая кнопка мыши:
             if (event.which === 1)  {
@@ -6660,8 +7023,18 @@
                 contextMenuShow(0, 0, event, 'insure_approve');
             }
         });
+
         //Скидки Вешаем слушатель события нажатие кнопок мыши для всего документа:
-        $("#discounts").click(function(event) {
+        /*$("#discounts").click(function(event) {
+
+            // Проверяем нажата ли именно правая кнопка мыши:
+            if (event.which === 1)  {
+                //console.log(71);
+                contextMenuShow(0, 0, event, 'discounts');
+            }
+        });*/
+
+        $("body").on("click", "#discounts", function(event){
 
             // Проверяем нажата ли именно правая кнопка мыши:
             if (event.which === 1)  {
@@ -6669,6 +7042,7 @@
                 contextMenuShow(0, 0, event, 'discounts');
             }
         });
+
         //для категорий процентов
 		/*$("#percent_cats").click(function(event) {
 
@@ -7409,3 +7783,5 @@
             }
         })
     }
+
+    //showGiveOutCashAdd('add');

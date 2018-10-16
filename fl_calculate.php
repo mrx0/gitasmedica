@@ -588,15 +588,20 @@
                                                         <i><b>Цена из наряда, руб.</b></i>
                                                     </div>';
 
-                                if (($finances['see_all'] == 1) || $god_mode || ($calculate_j[0]['worker_id'] == $_SESSION['id'])) {
+                                //if (($finances['see_all'] == 1) || $god_mode || ($calculate_j[0]['worker_id'] == $_SESSION['id'])) {
+                                if (($finances['see_all'] == 1) || $god_mode) {
                                     echo '
                                                     <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
                                                         <i><b>Вычет затрат на материалы, руб.</b></i>
                                                     </div>';
+
                                     echo '
                                                     <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
                                                         <i><b>% работа/материал</b></i>
                                                     </div>';
+                                }
+
+                                if (($finances['see_all'] == 1) || $god_mode || ($calculate_j[0]['worker_id'] == $_SESSION['id'])) {
                                     echo '
                                                     <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 120px; min-width: 120px; max-width: 120px;">
                                                         <i><b>Расчёт, руб.</b></i>
@@ -606,7 +611,7 @@
                                 echo '
                                                     <div class="cellName" style="font-size: 80%; text-align: center;">
                                                         <div>
-                                                            <i><b>Тип</b></i>
+                                                            <i><b>Категория</b></i>
                                                         </div>
                                                     </div>
                                                 </div>';
@@ -895,7 +900,7 @@
                                             echo '
                                                     </div>';
 
-                                            if (($finances['see_all'] == 1) || $god_mode || ($calculate_j[0]['worker_id'] == $_SESSION['id'])) {
+                                            if (($finances['see_all'] == 1) || $god_mode) {
                                                 echo '
                                                     <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
                                                         <i><b>';
@@ -920,13 +925,17 @@
                                             //$percents_j = SelDataFromDB('fl_spr_percents', $item['percent_cats'], 'id');
                                             //var_dump($item['percent_cats']);
 
-                                            if (($finances['see_all'] == 1) || $god_mode || ($calculate_j[0]['worker_id'] == $_SESSION['id'])) {
+                                            //if (($finances['see_all'] == 1) || $god_mode || ($calculate_j[0]['worker_id'] == $_SESSION['id'])) {
+                                            if (($finances['see_all'] == 1) || $god_mode) {
 
                                                 echo '
                                                         <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
-                                                            <i><b>' . $item['work_percent'] . ' / ' . $item['material_percent'] . '</b></i>
+                                                            <i><b>'.$item['work_percent'].' / '.$item['material_percent'].'</b></i>
                                                         </div>';
 
+                                            }
+
+                                            if (($finances['see_all'] == 1) || $god_mode || ($calculate_j[0]['worker_id'] == $_SESSION['id'])) {
 
                                                 echo '
                                                         <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 120px; min-width: 120px; max-width: 120px;">
@@ -1065,8 +1074,10 @@
                                 echo '
                                         </div>';
                                 echo '
-                                    </div>
-                                ';
+                                    </div>';
+
+                                echo '
+		                            <div id="doc_title">РЛ #'.$_GET['id'].' - Асмедика</div>';
                             }else{
                                 echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
                             }
