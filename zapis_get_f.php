@@ -51,6 +51,13 @@
                     // !!! **** тест с записью
                     include_once 'showZapisRezult.php';
 
+                    $edit_options = false;
+                    $upr_edit = false;
+                    $admin_edit = false;
+                    $stom_edit = false;
+                    $cosm_edit = false;
+                    $finance_edit = false;
+
                     if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
                         $finance_edit = true;
                         $edit_options = true;
