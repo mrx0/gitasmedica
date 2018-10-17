@@ -1031,7 +1031,7 @@
 	}
 	
 	//Редактирование карточки страховой из-под Web
-	function WriteInsureToDB_Update ($session_id, $id, $name, $contract, $contacts){
+	function WriteInsureToDB_Update ($session_id, $id, $name, $contract, $contract2, $contacts){
 		$old = '';
 
         $msql_cnnct = ConnectToDB ();
@@ -1045,13 +1045,13 @@
 
 		if ($number != 0){
 			$arr = mysqli_fetch_assoc($res);
-			$old = 'Название: ['.$arr['name'].']. Договор: ['.$arr['contract'].']. Контакты: ['.$arr['contacts'].']';
+			$old = 'Название: ['.$arr['name'].']. Договор: ['.$arr['contract'].']/['.$arr['contract2'].']. Контакты: ['.$arr['contacts'].']';
 		}else{
 			$old = 'Не нашли старую запись.';
 		}
 		$time = time();
 
-		$query = "UPDATE `spr_insure` SET `name`='{$name}', `contract`='{$contract}', `contacts`='{$contacts}' WHERE `id`='{$id}'";
+		$query = "UPDATE `spr_insure` SET `name`='{$name}', `contract`='{$contract}', `contract2`='{$contract2}', `contacts`='{$contacts}' WHERE `id`='{$id}'";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

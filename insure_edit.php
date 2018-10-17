@@ -43,6 +43,13 @@
 									</div>
 							
 									<div class="cellsBlock2">
+										<div class="cellLeft">№ договора для док-ов </div>
+										<div class="cellRight">
+											<textarea name="contract2" id="contract2" cols="35" rows="5">'.$insure_j[0]['contract2'].'</textarea>
+										</div>
+									</div>
+							
+									<div class="cellsBlock2">
 										<div class="cellLeft">Контакты</div>
 										<div class="cellRight">
 											<textarea name="contacts" id="contacts" cols="35" rows="5">'.$insure_j[0]['contacts'].'</textarea>

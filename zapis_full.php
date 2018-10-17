@@ -138,18 +138,9 @@
 				if (!isset($year) || $year < 2010 || $year > 2037)
 					$year = date("Y");
 
-				//Сначала добавил...
-                //Потом убрал
-                //Теперь снова добавил 2018-09-21, но немного изменил, чтоб работало
-                //!!! Можно использовать как пример наверное
-                //Взято отсюда http://www.cyberforum.ru/php-beginners/thread1460348.html
-                if ((int)$month < 10) {
-                    if (strrpos($month, '0') === false) {
-                        $month = '0' . $month;
-                    }
-                }
-                $month = join(array_unique(preg_split("//u", $month)));
-                //var_dump($month);
+				//Приводим месяц к виду 01 02 09 ...
+                $month = dateTransformation ($month);
+
 				
 				if (isset($_GET['kab'])){
 					$kab = $_GET['kab'];

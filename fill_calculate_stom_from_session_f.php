@@ -75,6 +75,7 @@
                             $request .= '
                                     </div>';
 
+                            //часть прайса
 
                             //Категории процентов
                             $percent_cats_j = SelDataFromDB('fl_spr_percents', $_POST['invoice_type'], 'type');
@@ -91,17 +92,18 @@
                             //Сортируем по названию
                             array_multisort($percent_cats_j_names, SORT_LOCALE_STRING, $percent_cats_j);
 
-                            //часть прайса
+
                             if (!empty($invoice_data)){
 
                                 foreach ($invoice_data as $key => $items){
 
                                     if ($items['guarantee'] == 0) {
 
-                                        $percent_cat = $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind][$key]['percent_cats'];
+                                        $percent_cat = $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind][$key]['percent_cat'];
 
                                         $percents_j = getPercents($_POST['worker'], $percent_cat);
 
+                                        $percent_cat_name = $percents_j[$percent_cat]['name'];
                                         $work_percent = (int)$percents_j[$percent_cat]['work_percent'];
                                         $material_percent = (int)$percents_j[$percent_cat]['material_percent'];
 
@@ -203,8 +205,8 @@
                                         <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 100%; text-align: center; ' . $bg_col . ' width: 60px; min-width: 60px; max-width: 60px;">
                                             ' . $stoim_item . '
                                         </div>
-                                                    <div class="cellName" style="font-size: 80%; width: 120px; max-width: 120px;">';
-                                        $request .= '
+                                                    <div class="cellName" style="font-size: 90%; text-align: right; width: 120px; max-width: 120px;' . $bg_col . '">';
+                                        /*$request .= '
                                                     <select name="percent_cat' . $ind . '_' . $key . '" id="percent_cat' . $ind . '_' . $key . '" style="width: 110px; max-width: 110px;" onchange="fl_changeItemPercentCat(' . $ind . ', ' . $key . ', $(\'#percent_cat' . $ind . '_' . $key . '\').val());">';
 
                                         if ($percent_cats_j != 0) {
@@ -219,7 +221,10 @@
                                             }
                                         }
                                         $request .= '
-                                                    </select>';
+                                                    </select>';*/
+
+                                        $request .= '<i>'.$percent_cat_name.'</i>';
+
                                         $request .= '
                                                     </div>
                                             <div invoiceitemid="' . $key . '" class="cellCosmAct info" style="font-size: 100%; text-align: center; ' . $bg_col . '" onclick="deleteCalculateItem(' . $ind . ', this);">

@@ -18,14 +18,6 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         require_once 'permissions.php';
 
-        include_once 'DBWork.php';
-        include_once 'functions.php';
-
-        //разбираемся с правами
-        $god_mode = FALSE;
-
-        require_once 'permissions.php';
-
         //$workerExist = false;
         $queryDopExist = false;
         $queryDopExExist = false;
@@ -42,8 +34,11 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         $cosm_edit = false;
         $finance_edit = false;
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> dev
         $msql_cnnct = ConnectToDB();
 
         /*if ($_POST['worker'] != ''){

@@ -339,12 +339,12 @@ if ($enter_ok){
                                                 $percents_j = getPercents( $invoice_j[0]['worker_id'], (int)$arr['id']);
                                                 //var_dump($percents_j);
 
-                                                $temp_arr2['percent_cats'] = (int)$arr['id'];
+                                                $temp_arr2['percent_cat'] = (int)$arr['id'];
                                                 $temp_arr2['work_percent'] = (int)$percents_j[(int)$arr['id']]['work_percent'];
                                                 $temp_arr2['material_percent'] = (int)$percents_j[(int)$arr['id']]['material_percent'];
 
                                             } else {
-                                                $temp_arr2['percent_cats'] = 0;
+                                                $temp_arr2['percent_cat'] = 0;
                                                 $temp_arr2['work_percent'] = 0;
                                                 $temp_arr2['material_percent'] = 0;
                                                 //$invoice_ex_j = 0;

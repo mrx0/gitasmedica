@@ -2280,7 +2280,7 @@
 					<!--<span class="dotyel a-action lasttreedrophide">скрыть всё</span>, <span class="dotyel a-action lasttreedropshow">раскрыть всё</span>-->
 				</div>';
 			$rez_str .= '	
-				<div style="width: 350px; height: 500px; overflow: scroll; border: 1px solid #CCC;">
+				<div style="/*width: 350px;*/ height: 492px; overflow: scroll; border: 1px solid #CCC;">
 					<ul class="ul-tree ul-drop" id="lasttree">';
 		}
 		
@@ -2881,6 +2881,24 @@
         $rez .= '</div>';
 
         return $rez;
+    }
+
+    //Приводим месяц или день к виду 01 02 09 ...
+    function dateTransformation ($data){
+        //Взято отсюда http://www.cyberforum.ru/php-beginners/thread1460348.html
+        //var_dump($data);
+
+        if ((int)$data < 10) {
+            if (strrpos($data, '0') === false) {
+                $data = '0' . $data;
+            }
+        }
+        if (strrpos($data, '0') !== false) {
+            $data = join(array_unique(preg_split("//u", $data)));
+        }
+        //var_dump($month);
+
+        return $data;
     }
 
 ?>

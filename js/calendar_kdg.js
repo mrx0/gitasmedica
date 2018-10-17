@@ -176,7 +176,7 @@ prepcalendar:function( hd, cm, cy ){
 			if (_Calendar.sccm == cm && _Calendar.sccd == (d-cd) && _Calendar.sccy == cy){
 				vd.style.background='rgb(70, 222, 40) none repeat scroll 0% 0%';
 				vd.style.color='#FFFF00';
-				vd.style.textShadow = '1px 1px 1px #6c6c6c';
+				//vd.style.textShadow = '1px 1px 1px #6c6c6c';
 				vd.style.fontSize = '14px';
 				vd.style.fontWeight='bold'; // сегодня
 				
@@ -187,7 +187,7 @@ prepcalendar:function( hd, cm, cy ){
 			if (_Calendar.sccm == cm && hd == d-(cd) && _Calendar.sccy == cy){
 				vd.style.background='rgb(222, 72, 40) none repeat scroll 0% 0%';
 				vd.style.color='#FFFF00';
-				vd.style.textShadow = '1px 1px 1px #6c6c6c';
+				//vd.style.textShadow = '1px 1px 1px #6c6c6c';
 				vd.style.fontSize = '14px';
 				vd.style.fontWeight='bold'; // Выбраный день
 			}
