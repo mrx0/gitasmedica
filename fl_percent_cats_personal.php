@@ -195,7 +195,7 @@
 
                         $percents_personal_j = array();
 
-                        $query = "SELECT * FROM `fl_spr_percents_personal` WHERE `worker_id` = '{$worker['id']}' AND `percent_cat` = '{$cat_id}'";
+                        $query = "SELECT * FROM `fl_spr_percents_personal` WHERE `worker_id` = '{$worker['id']}' AND `percent_cats` = '{$cat_id}'";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

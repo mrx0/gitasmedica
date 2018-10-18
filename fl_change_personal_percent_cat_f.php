@@ -32,7 +32,7 @@
 
                 $msql_cnnct = ConnectToDB2 ();
 
-                $query = "SELECT `id` FROM `fl_spr_percents_personal` WHERE `worker_id` = '{$_POST['worker_id']}' AND `percent_cat` = '{$_POST['cat_id']}' AND `type` = '{$_POST['type']}' LIMIT 1";
+                $query = "SELECT `id` FROM `fl_spr_percents_personal` WHERE `worker_id` = '{$_POST['worker_id']}' AND `percent_cats` = '{$_POST['cat_id']}' AND `type` = '{$_POST['type']}' LIMIT 1";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -52,7 +52,7 @@
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                 }else {
                     $query = "INSERT INTO `fl_spr_percents_personal` (
-						`percent_cat`, `worker_id`, `type`, `percent`, `create_time`, `create_person`)
+						`percent_cats`, `worker_id`, `type`, `percent`, `create_time`, `create_person`)
 						VALUES (
 						'{$_POST['cat_id']}', '{$_POST['worker_id']}', '{$_POST['type']}', '{$_POST['val']}', '{$time}', '{$_SESSION['id']}'
 						);";
