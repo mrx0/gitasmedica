@@ -239,7 +239,7 @@
 									<li class="cellsBlock" style="font-weight: bold; width: auto; background-color: rgba(255, 255, 0, 0.3); margin: 2px">	
 										<a href="invoice.php?id=' . $data['id'] . '"    class="cellTime ahref" style="text-align: center; ">Наряд #'.$data['id'].' от '. $data['create_time'] . '</a>
 										    <div class="cellName" style="text-align: right; ">Сумма наряда: ' . $data['summ'] . ' руб.</div>
-										    <div class="cellName" style="text-align: right; ">Не оплачено: <span style="color:red"><BR>' . ($data['summ']-$data['paid']) . '</span> руб.</div>
+										    <div class="cellName" style="text-align: right; ">Не оплачено: <span style="color:', ($data['summ']-$data['paid'] > 0) ? 'red' : 'green' ,'"><BR>' . ($data['summ']-$data['paid']) . '</span> руб.</div>
 										    <a href="invoice.php?id='.$data['client_id'].'" class="ahref cellText" style="max-width: 250px;">'.$data['full_name'].'<br><br>
 										    '.$filials_j[$data['office_id']]['name2'].'
 										    </a>

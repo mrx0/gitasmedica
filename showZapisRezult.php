@@ -254,10 +254,15 @@
                             foreach ($invoice_data_db as $ids) {
 
                                 //Отметка об объеме оплат
-                                $paid_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;"></i>';
+                                $paid_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;" title="Не оплачено"></i>';
+                                $status_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;" title="Не закрыт"></i>';
 
                                 if ($ids['summ'] == $ids['paid']) {
-                                    $paid_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i>';
+                                    $paid_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Оплачено"></i>';
+                                }
+
+                                if ($ids['status'] == 5) {
+                                    $status_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Закрыт"></i>';
                                 }
 
                                 $rezult .= '
@@ -268,7 +273,7 @@
                                                                     <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                                 </div>
                                                                 <div style="display: inline-block; vertical-align: middle;">
-                                                                    ' . date('d.m.y', strtotime($ids['create_time'])) . '
+                                                                    <i>#'.$ids['id'].'</i> <span style="font-size: 80%;"><!--от ' . date('d.m.y', strtotime($ids['create_time'])) . '--></span>
                                                                 </div>
                                                             </div>
                                                             <div>
@@ -286,7 +291,7 @@
                                                             </div>
                                                             
                                                         </a>
-                                                        <span style="position: absolute; top: 2px; right: 3px;">' . $paid_mark . '</span>
+                                                        <span style="position: absolute; top: 2px; right: 3px;">' . $paid_mark . ' ' . $status_mark . '</span>
                                                     </div>';
                             }
                         }

@@ -1,5 +1,8 @@
 <?php
 
+//переход на новую систему 2018.10.17
+//автоматический перенос категорий из РЛ в наряды
+
 	include_once '../DBWork.php';
 
     $rez = array();
@@ -47,9 +50,14 @@
                 foreach ($rez2 as $data2) {
 
                     $query = "UPDATE `journal_invoice_ex` SET `percent_cat`='" . $data2['percent_cats'] . "' WHERE `id`='" . $data2['inv_pos_id'] . "' AND `percent_cat` = '0'";
-                    var_dump('calculate_id => '.$data2['calculate_id']);
+
 
                     mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+
+                    if (mysqli_affected_rows ($msql_cnnct) > 0) {
+                        var_dump('id => '.$data2['inv_pos_id']. '|| calculate_id => ' . $data2['calculate_id'].'['.mysqli_affected_rows ($msql_cnnct).']');
+                    }
                 }
             }
 
@@ -61,7 +69,7 @@
 				echo $client['id'].' => '.$client['birthday'].' = '.date('Y-m-d', $client['birthday']).' => '.$client['birthday2'].'<br>';
 			}*/
 
-			echo 'Ok!!!';
+			echo 'Ok!!! ThE eNd';
 
 		//}
 
