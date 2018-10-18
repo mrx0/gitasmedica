@@ -179,6 +179,7 @@
                                 $summins = $arr['summins'];
                                 $invoice_create_time = date('d.m.y', strtotime($arr['create_time']));
                                 $zapis_id = $arr['zapis_id'];
+                                $invoice_type = $arr['type'];
                             }
 
                             $query = "SELECT `name`, `full_name` FROM `spr_clients` WHERE `id`='{$rezData['client_id']}' LIMIT 1";
@@ -200,11 +201,20 @@
                             //Зубные формулы и запись косметолога
                             $doctor_mark = '';
 
-                            $query = "SELECT `id` FROM `journal_tooth_status` WHERE `zapis_id`='$zapis_id' LIMIT 1";
+                            if ($invoice_type == 5) {
+                                $query = "SELECT `id` FROM `journal_tooth_status` WHERE `zapis_id`='$zapis_id' LIMIT 1";
 
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-                            $number = mysqli_num_rows($res);
+                                $number = mysqli_num_rows($res);
+                            }
+                            if ($invoice_type == 6) {
+                                $query = "SELECT `id` FROM `journal_cosmet1` WHERE `zapis_id`='$zapis_id' LIMIT 1";
+
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                                $number = mysqli_num_rows($res);
+                            }
 
                             if ($number == 0) {
                                 $doctor_mark = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет отметки врача"></i>';
