@@ -30,7 +30,7 @@
 
                 $msql_cnnct = ConnectToDB ();
 
-                $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$_POST['client_id']."'";
+                $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$_POST['client_id']."' ORDER BY `create_time` DESC";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -50,17 +50,20 @@
 
                 if (!empty($invoice_j)) {
 
-
-
                     foreach ($invoice_j as $invoice_item) {
 
                         $invoiceTemp_str = '';
 
                         //Отметка об объеме оплат
-                        $paid_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;"></i>';
+                        $paid_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;" title="Не оплачено"></i>';
+                        $status_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;" title="Не закрыт"></i>';
 
                         if ($invoice_item['summ'] == $invoice_item['paid']) {
                             $paid_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i>';
+                        }
+
+                        if ($invoice_item['status'] == 5) {
+                            $status_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Закрыт"></i>';
                         }
 
                         $invoiceTemp_str .= '
@@ -84,7 +87,7 @@
                         }
                         $invoiceTemp_str .= '
 												</span>
-												<span style="position: absolute; top: 2px; right: 3px;">'.$paid_mark.'</span>
+												<span style="position: absolute; top: 2px; right: 3px;">' . $paid_mark . ' ' . $status_mark . '</span>
 											</a>
 											<div class="cellName">
 												<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
@@ -126,12 +129,12 @@
                             $invoiceClose_str .= $invoiceTemp_str;
                         }
 
-                        if (strlen($invoiceAll_str) > 1){
-                            $rezult .= $invoiceAll_str;
-                        }else{
-                            $rezult .= '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 20px; color: red;"><i>Нет нарядов</i></li>';
-                        }
+                    }
 
+                    if (strlen($invoiceAll_str) > 1){
+                        $rezult .= $invoiceAll_str;
+                    }else{
+                        $rezult .= '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 20px; color: red;"><i>Нет нарядов</i></li>';
                     }
 
 
@@ -153,7 +156,7 @@
                                 </li>';
 
 
-                $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$_POST['client_id']."'";
+                $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$_POST['client_id']."' ORDER BY `create_time` DESC";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
