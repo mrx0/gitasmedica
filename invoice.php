@@ -774,8 +774,8 @@
 
 
 
-                                        if ($item['percent_cat'] > 0) {
-                                            $percent_cat = $percent_cat_j[$item['percent_cat']];
+                                        if ($item['percent_cats'] > 0) {
+                                            $percent_cat = $percent_cat_j[$item['percent_cats']];
                                         }else{
                                             $percent_cat = '<i style="color: red;">Ошибка #15</i>';
                                         }

@@ -88,7 +88,7 @@
 
                             if ($items['guarantee'] == 0) {
 
-                                $percent_cat = $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind]['percent_cat'];
+                                $percent_cat = $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind]['percent_cats'];
 
                                 $percents_j = getPercents($_POST['worker'], $percent_cat);
 

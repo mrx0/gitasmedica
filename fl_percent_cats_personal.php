@@ -203,7 +203,7 @@
 
                         if ($number != 0){
                             while ($arr = mysqli_fetch_assoc($res)){
-                                $percents_personal_j[$arr['percent_cat']][$arr['type']] = $arr;
+                                $percents_personal_j[$arr['percent_cats']][$arr['type']] = $arr;
                             }
                         }
                         //var_dump($percents_personal_j);

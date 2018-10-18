@@ -360,11 +360,11 @@
                                 <div class="cellCosmAct" style="font-size: 100%; text-align: center; width: 80px; min-width: 80px; max-width: 80px; '.$bg_col.'">';
 
                                 $request .= '
-                                    <select name="percent_cat" id="percent_cat" style="width: 80px; max-width: 80px;" onchange="changeItemPerCatInvoice(' . $ind . ', ' . $key . ', this.value);">';
+                                    <select name="percent_cats" id="percent_cats" style="width: 80px; max-width: 80px;" onchange="changeItemPerCatInvoice(' . $ind . ', ' . $key . ', this.value);">';
 
                                 if ($percent_cats_j != 0) {
                                     for ($i = 0; $i < count($percent_cats_j); $i++) {
-                                        if ($items['percent_cat'] == $percent_cats_j[$i]['id']) {
+                                        if ($items['percent_cats'] == $percent_cats_j[$i]['id']) {
                                             $selected = ' selected';
                                         } else {
                                             $selected = '';

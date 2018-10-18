@@ -670,7 +670,7 @@ if ($enter_ok){
                                             </div>
                                             <div class="cellName" style="font-size: 80%; width: 120px; max-width: 120px;">';
                                 echo '
-                                            <select name="percent_cat" id="percent_cat" style="width: 110px; max-width: 110px;">';
+                                            <select name="percent_cats" id="percent_cats" style="width: 110px; max-width: 110px;">';
 
                                                 if ($percents_j != 0){
                                                     for ($i=0;$i<count($percents_j);$i++){

@@ -296,7 +296,7 @@ if ($enter_ok){
                                             $temp_arr2['manual_itog_price'] = (int)$invoice_ex_j_val['itog_price'];
 
                                             //$temp_arr2['percent_cats'] = 1;
-                                            $temp_arr2['percent_cat'] = (int)$invoice_ex_j_val['percent_cat'];
+                                            $temp_arr2['percent_cats'] = (int)$invoice_ex_j_val['percent_cats'];
                                             $temp_arr2['work_percent'] = 0;
                                             $temp_arr2['material_percent'] = 0;
 
@@ -555,9 +555,9 @@ if ($enter_ok){
                                                         <i><b>Всего, руб.</b></i>
                                                     </div>
                                                     <div class="cellName" style="font-size: 80%; text-align: center;">
-                                                        <div id="percent_cats" class="settings_text" onclick="contextMenuShow(0, ' . $invoice_j[0]['type'] . ', event, \'percent_cats\');">
+                                                        <!--<div id="percent_cats" class="settings_text" onclick="contextMenuShow(0, ' . $invoice_j[0]['type'] . ', event, \'percent_cats\');">-->
                                                             <i><b>Категория</b></i>
-                                                        </div>
+                                                        <!--</div>-->
                                                     </div>
                                                     <div class="cellCosmAct" style="font-size: 70%; text-align: center;">
                                                         <i><b>-</b></i>
