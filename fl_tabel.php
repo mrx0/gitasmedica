@@ -157,7 +157,7 @@
                         foreach ($tabel_ex_calculates_j as $rezData){
 
                             //Наряды
-                            $query = "SELECT `summ`, `summins`, `zapis_id`, `create_time` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}' LIMIT 1";
+                            $query = "SELECT `summ`, `summins`, `zapis_id`, `type`, `create_time` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}' LIMIT 1";
 
                             /*$query2 = "SELECT `summ` AS `summ`, `summins` AS `summins` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}'
                             UNION ALL (
