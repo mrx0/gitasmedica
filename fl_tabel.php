@@ -197,8 +197,8 @@
                                 $full_name = $arr['full_name'];
                             }
 
-                            //Зубные формулы
-                            $stom_mark = '';
+                            //Зубные формулы и запись косметолога
+                            $doctor_mark = '';
 
                             $query = "SELECT `id` FROM `journal_tooth_status` WHERE `zapis_id`='$zapis_id' LIMIT 1";
 
@@ -207,7 +207,7 @@
                             $number = mysqli_num_rows($res);
 
                             if ($number == 0) {
-                                $stom_mark = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет зубной формулы"></i>';
+                                $doctor_mark = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет отметки врача"></i>';
                             }
 
                             $rezult .=
@@ -250,7 +250,7 @@
                             $rezult .= '
                                     <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
                                     <div style="position: absolute; bottom: 2px; right: 3px;">
-                                        '.$stom_mark.'
+                                        '.$doctor_mark.'
                                     </div>
                                 </div>';
 
