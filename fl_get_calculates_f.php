@@ -79,7 +79,7 @@
                         foreach ($rez as $rezData){
 
                             //Наряды
-                            $query = "SELECT `summ`, `summins`, `create_time` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}' LIMIT 1";
+                            $query = "SELECT `summ`, `summins`, `zapis_id`, `create_time` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}' LIMIT 1";
 
                             /*$query2 = "SELECT `summ` AS `summ`, `summins` AS `summins` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}'
                             UNION ALL (
@@ -99,8 +99,10 @@
                                 $summ = $arr['summ'];
                                 $summins = $arr['summins'];
                                 $invoice_create_time = date('d.m.y', strtotime($arr['create_time']));
+                                $zapis_id = $arr['zapis_id'];
                             }
 
+                            //Клиент
                             $query = "SELECT `name`, `full_name` FROM `spr_clients` WHERE `id`='{$rezData['client_id']}' LIMIT 1";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -115,6 +117,19 @@
                                 $arr = mysqli_fetch_assoc($res);
                                 $name = $arr['name'];
                                 $full_name = $arr['full_name'];
+                            }
+
+                            //Зубные формулы
+                            $stom_mark = '';
+
+                            $query = "SELECT `id` FROM `journal_tooth_status` WHERE `zapis_id`='$zapis_id' LIMIT 1";
+
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                            $number = mysqli_num_rows($res);
+
+                            if ($number == 0) {
+                                $stom_mark = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет зубной формулы"></i>';
                             }
 
                             $rezult .= '
@@ -150,6 +165,9 @@
                                         </div>
                                     </div>
                                     <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
+                                    <div style="position: absolute; bottom: 2px; right: 3px;">
+                                        '.$stom_mark.'
+                                    </div>
                                 </div>';
 
                             $summCalc += $rezData['summ'];
