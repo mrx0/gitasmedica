@@ -121,7 +121,7 @@
 								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Выписанные наряды</li>';
 
-                        $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$client_j[0]['id']."'";
+                        $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC ";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                         $number = mysqli_num_rows($res);
@@ -129,14 +129,15 @@
                             while ($arr = mysqli_fetch_assoc($res)){
                                 array_push($invoice_j, $arr);
                             }
-                        }else
-                            $invoice_j = 0;
+                        }
                         //var_dump ($invoice_j);
 
-                        $invoiceAll_str = '';
-                        $invoiceClose_str = '';
+                        echo showInvoiceDivRezult($invoice_j, false, true, true, true);
 
-                        if ($invoice_j != 0) {
+                        /*$invoiceAll_str = '';
+                        $invoiceClose_str = '';*/
+
+                        /*if ($invoice_j != 0) {
                             //var_dump ($invoice_j);
 
                             foreach ($invoice_j as $invoice_item) {
@@ -242,7 +243,7 @@
 
                         }else{
                             echo '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 5px; color: red;">Нет нарядов</li>';
-                        }
+                        }*/
 
                         echo '
 								</ul>';
@@ -259,7 +260,7 @@
 									    Внесенные оплаты/ордеры	<a href="add_order.php?client_id='.$client_j[0]['id'].'" class="b">Добавить новый</a>
 									</li>';
 
-                            $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$client_j[0]['id']."'";
+                            $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC ";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                             $number = mysqli_num_rows($res);
@@ -377,6 +378,11 @@
 
                             echo '
 							</div>';
+
+
+                            echo '
+		                            <div id="doc_title">Счёт пациента '.WriteSearchUser('spr_clients',   $client_j[0]['id'], 'user', false).' - Асмедика</div>';
+
 
                             echo '<script src="js/dds.js" type="text/javascript"></script>';
 
