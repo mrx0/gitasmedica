@@ -132,7 +132,10 @@
                         }
                         //var_dump ($invoice_j);
 
-                        echo showInvoiceDivRezult($invoice_j, false, true, true, true);
+                        $rezultInvoices = showInvoiceDivRezult($invoice_j, false, true, true, true, false);
+                        //$data, $minimal, $show_categories, $show_absent, $show_deleted
+
+                        echo $rezultInvoices['data'];
 
                         /*$invoiceAll_str = '';
                         $invoiceClose_str = '';*/
@@ -254,6 +257,9 @@
                             $arr = array();
                             $order_j = array();
 
+                            $offices_j = getAllFilials(false, false);
+                            //var_dump($offices_j);
+
                             echo '
 								<ul id="orders" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px;">
@@ -292,26 +298,32 @@
                                     $orderTemp_str = '';
 
                                     $orderTemp_str .= '
-                                            <li class="cellsBlock" style="width: auto;">';
+                                            <li class="cellsBlock" style="width: auto; border: 1px solid rgba(255, 67, 197, 0.36); box-shadow: -2px 2px 9px 0px rgba(165, 158, 158, 0.92);">';
                                     $orderTemp_str .= '
                                                 <a href="order.php?id='.$order_item['id'].'" class="cellOrder ahref" style="position: relative;">
-                                                    <b>Ордер #'.$order_item['id'].'</b> от '.date('d.m.y' ,strtotime($order_item['date_in'])).'<br>
-                                                    <span style="font-size:80%;  color: #555;">';
+                                                    <div style="font-weight: bold;">Ордер #'.$order_item['id'].'<span style="font-weight: normal;"> от '.date('d.m.y' ,strtotime($order_item['date_in'])).'</span></div>
+                                                    <div style="margin: 3px;">';
 
-                                    if (($order_item['create_time'] != 0) || ($order_item['create_person'] != 0)){
+                                    $orderTemp_str .= 'Филиал: '.$offices_j[$order_item['office_id']]['name'];
+
+                                    $orderTemp_str .= '
+                                                    </div>
+                                                    <div style="font-size:80%;  color: #555;">';
+
+                                    /*if (($order_item['create_time'] != 0) || ($order_item['create_person'] != 0)){
                                         $orderTemp_str .= '
                                                             Добавлен: '.date('d.m.y H:i' ,strtotime($order_item['create_time'])).'<br>
                                                             <!--Автор: '.WriteSearchUser('spr_workers', $order_item['create_person'], 'user', true).'<br>-->';
                                     }else{
                                         $orderTemp_str .= 'Добавлен: не указано<br>';
-                                    }
+                                    }*/
                                     if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
                                         $orderTemp_str .= '
                                                             Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
                                                             <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
                                     }
                                     $orderTemp_str .= '
-                                                    </span>
+                                                    </div>
                                                     <span style="position: absolute; top: 2px; right: 3px;">'. $order_type_mark.'</span>
                                                 </a>
                                                 <div class="cellName">
@@ -368,10 +380,10 @@
 
                             echo '				
 								<div class="cellsBlock2">
-									<a href="client_finance.php?client='.$client_j[0]['id'].'" class="b">Долги/Авансы <i class="fa fa-rub"></i> (старое)</a><br>';
+									<!--<a href="client_finance.php?client='.$client_j[0]['id'].'" class="b">Долги/Авансы <i class="fa fa-rub"></i> (старое)</a><br>-->';
 
-                            if (!$allPayed)
-                                echo '<i style="color:red;">Есть не погашенное</i>';
+                            /*if (!$allPayed)
+                                echo '<i style="color:red;">Есть не погашенное</i>';*/
 
                             echo '
 									</div>';

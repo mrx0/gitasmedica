@@ -724,8 +724,8 @@ ORDER BY `name`;
 								<div class="cellsBlock2">
 									<!--<a href="client_finance.php?client='.$client_j[0]['id'].'" class="b">Долги/Авансы <i class="fa fa-rub"></i> (старое)</a><br>-->';
 
-							if (!$allPayed)
-								echo '<i style="color:red;">Есть не погашенное</i>';					
+							/*if (!$allPayed)
+								echo '<i style="color:red;">Есть не погашенное</i>';	*/
 										
 							echo '
 								</div>';

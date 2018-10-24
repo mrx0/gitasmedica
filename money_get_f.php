@@ -41,16 +41,33 @@
                     }
                 }
 
-                $rezult .= '
+                $rezultInvoices = showInvoiceDivRezult($invoice_j, false, false, true, true, true);
+                //$data, $minimal, $show_categories, $show_absent, $show_deleted
+                //var_dump (count($rezultInvoices));
+
+                if ($rezultInvoices['count'] > 0) {
+                    $rezult .= '
 								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
-									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Выписанные наряды</li>';
+									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Выписанные <span style="color: red;">не закрытые</span> наряды</li>';
 
-                $rezult .= showInvoiceDivRezult($invoice_j, false, false, false, true);
+                    $rezult .= $rezultInvoices['data'];
 
-
-                $rezult .= '    
+                    $rezult .= '    
                                     </li>
                                 </ul>';
+                }else{
+                    $rezult .= '
+								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
+									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">
+									    Все выписанные наряды <span style="color: darkgreen;">закрыты</span>
+									</li>';
+
+                    $rezult .= $rezultInvoices['data'];
+
+                    $rezult .= '    
+                                    </li>
+                                </ul>';
+                }
 
                 //Внесенные оплаты/ордеры
                 $arr = array();
@@ -59,11 +76,11 @@
                 $rezult .= '
                             <ul id="orders" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
                                 <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px;">
-                                    Внесенные оплаты/ордеры	<a href="add_order.php?client_id='.$_POST['client_id'].'" class="b">Добавить новый</a>
+                                    Внесенные оплаты/ордеры	<span style="color: red;">(последние 5)</span> <a href="add_order.php?client_id='.$_POST['client_id'].'" class="b">Добавить новый</a>
                                 </li>';
 
 
-                $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$_POST['client_id']."' ORDER BY `create_time` DESC";
+                $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$_POST['client_id']."' ORDER BY `create_time` DESC LIMIT 5";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
