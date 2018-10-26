@@ -31,7 +31,35 @@
 
                 $msql_cnnct = ConnectToDB();
 
-                $query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.office_id='{$_POST['office']}' AND jcalc.status <> '7' AND jcalc.id NOT IN (SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id) AND jcalc.date_in > '2018-05-31';";
+
+                //Категории процентов
+                $percent_cats_j = array();
+                //Для сортировки по названию
+                $percent_cats_j_names = array();
+                //$percent_cats_j = SelDataFromDB('fl_spr_percents', '', '');
+                $query = "SELECT `id`, `name` FROM `fl_spr_percents`";
+                //var_dump( $percent_cats_j);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        $percent_cats_j[$arr['id']] = $arr['name'];
+                        //array_push($percent_cats_j_names, $arr['name']);
+                    }
+                }
+
+                //Основные данные
+                $query = "SELECT jcalc.*, 
+                            GROUP_CONCAT(DISTINCT jcalcex.percent_cats ORDER BY jcalcex.percent_cats ASC SEPARATOR ',') AS percent_cats 
+                            FROM `fl_journal_calculate` jcalc
+                            LEFT JOIN `fl_journal_calculate_ex` jcalcex ON jcalc.id = jcalcex.calculate_id
+                            WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.office_id='{$_POST['office']}' AND jcalc.status <> '7'
+                                            AND jcalc.id NOT IN ( SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id ) 
+                            AND jcalc.date_in > '2018-05-31'
+                            GROUP BY jcalc.id";
+                //$query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.office_id='{$_POST['office']}' AND jcalc.status <> '7' AND jcalc.id NOT IN (SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id) AND jcalc.date_in > '2018-05-31';";
                 //$query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.office_id='{$_POST['office']}' AND jcalc.status <> '7' AND jcalc.id NOT IN (SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id);";
                 //$query = "SELECT * FROM `fl_journal_calculate` WHERE `type`='{$_POST['permission']}' AND `worker_id`='{$_POST['worker']}' AND `office_id`='{$_POST['office']}' AND MONTH(`create_time`) = '09' AND `status` <> '7';";
 
@@ -169,9 +197,20 @@
                                             Сумма: '.$summ.' р. Страх.: '.$summins.' р.</b> <br>
                                             
                                         </div>
+                                        <div style="margin: 5px 0 5px 3px; font-size: 80%;">';
+
+                            //Категории процентов(работ)
+                            $percent_cats_arr = explode(',', $rezData['percent_cats']);
+
+                            foreach ($percent_cats_arr as $percent_cat){
+                                $rezult .= '<i style="color: rgb(15, 6, 142); font-size: 110%;">'.$percent_cats_j[$percent_cat].'</i><br>';
+                            }
+
+                            $rezult .= '                                            
+                                        </div>
                                     </div>
                                     <div style="display: inline-block; vertical-align: top;">
-                                        <div style="border: 1px solid #CCC; padding: 3px; margin: 1px;">
+                                        <div style="/*border: 1px solid #CCC;*/ padding: 3px; margin: 1px;" title="Выделить">
                                             <input type="checkbox" class="chkBoxCalcs chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$_POST['office'].'" name="nPaidCalcs_'.$rezData['id'].'" chkBoxData="chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$_POST['office'].'" value="1">
                                         </div>
                                     </div>

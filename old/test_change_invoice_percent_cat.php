@@ -49,7 +49,7 @@
 
                 foreach ($rez2 as $data2) {
 
-                    $query = "UPDATE `journal_invoice_ex` SET `percent_cat`='" . $data2['percent_cats'] . "' WHERE `id`='" . $data2['inv_pos_id'] . "' AND `percent_cat` = '0'";
+                    $query = "UPDATE `journal_invoice_ex` SET `percent_cats`='" . $data2['percent_cats'] . "' WHERE `id`='" . $data2['inv_pos_id'] . "' AND `percent_cats` = '0'";
 
 
                     mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);

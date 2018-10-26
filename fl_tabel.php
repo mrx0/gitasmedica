@@ -131,9 +131,39 @@
                         $msql_cnnct = ConnectToDB2 ();
                         //var_dump(microtime(true) - $script_start);
 
+                        //Категории процентов
+                        $percent_cats_j = array();
+                        //Для сортировки по названию
+                        $percent_cats_j_names = array();
+                        //$percent_cats_j = SelDataFromDB('fl_spr_percents', '', '');
+                        $query = "SELECT `id`, `name` FROM `fl_spr_percents`";
+                        //var_dump( $percent_cats_j);
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0){
+                            while ($arr = mysqli_fetch_assoc($res)){
+                                $percent_cats_j[$arr['id']] = $arr['name'];
+                                //array_push($percent_cats_j_names, $arr['name']);
+                            }
+                        }
+
+                        //Основные данные
+                        $query = "SELECT jcalc.*, 
+                            GROUP_CONCAT(DISTINCT jcalcex.percent_cats ORDER BY jcalcex.percent_cats ASC SEPARATOR ',') AS percent_cats 
+                            FROM `fl_journal_calculate` jcalc
+                            LEFT JOIN `fl_journal_calculate_ex` jcalcex ON jcalc.id = jcalcex.calculate_id
+                            LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '".$tabel_j[0]['id']."'
+                            WHERE jtabex.calculate_id = jcalc.id
+                            GROUP BY jcalc.id";
+
+                        /*$query = "SELECT jcalc.*
+                            FROM `fl_journal_calculate` jcalc
+                            LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '".$tabel_j[0]['id']."'
+                            WHERE jtabex.calculate_id = jcalc.id";*/
                         //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
                         //$query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc WHERE jcalc.id IN (SELECT `calculate_id` FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."');";
-                        $query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '".$tabel_j[0]['id']."' WHERE jtabex.calculate_id = jcalc.id";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -157,7 +187,7 @@
                         foreach ($tabel_ex_calculates_j as $rezData){
 
                             //Наряды
-                            $query = "SELECT `summ`, `summins`, `zapis_id`, `create_time` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}' LIMIT 1";
+                            $query = "SELECT `summ`, `summins`, `zapis_id`, `type`, `create_time` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}' LIMIT 1";
 
                             /*$query2 = "SELECT `summ` AS `summ`, `summins` AS `summins` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}'
                             UNION ALL (
@@ -247,7 +277,19 @@
                                             Сумма: '.$summ.' р. Страх.: '.$summins.' р.</b> <br>
                                             
                                         </div>
+                                        <div style="margin: 5px 0 5px 3px; font-size: 80%;">';
+
+                            //Категории процентов(работ)
+                            $percent_cats_arr = explode(',', $rezData['percent_cats']);
+
+                            foreach ($percent_cats_arr as $percent_cat){
+                                $rezult .= '<i style="color: rgb(15, 6, 142); font-size: 110%;">'.$percent_cats_j[$percent_cat].'</i><br>';
+                            }
+
+                            $rezult .= '                                            
+                                        </div>
                                     </div>';
+
                             if ($tabel_j[0]['status'] != 7) {
                                 $rezult .= '
                                     <div style="display: inline-block; vertical-align: top;">
@@ -687,7 +729,7 @@
                                     <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
                                         Расчётные листы <div id="allCalcsIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allCalcsIsHere\');">показать/скрыть</div>
                                     </div>
-                                    <div id="allCalcsIsHere" style="display: none;">
+                                    <div id="allCalcsIsHere" style="">
                                         '.$rezult.'
                                     </div>
                                 </div>';

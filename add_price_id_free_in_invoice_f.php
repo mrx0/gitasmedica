@@ -50,7 +50,7 @@
 							$temp_arr['gift'] = 0;
 							$temp_arr['spec_koeff'] = 0;
 							$temp_arr['discount'] = 0;
-							$temp_arr['percent_cat'] = 0;
+							$temp_arr['percent_cats'] = 0;
 							$temp_arr['manual_price'] = false;
 							$temp_arr['itog_price'] = 0;
 							$temp_arr['manual_itog_price'] = 0;

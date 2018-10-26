@@ -255,7 +255,7 @@
 
                             if ($percent_cats_j != 0) {
                                 for ($i = 0; $i < count($percent_cats_j); $i++) {
-                                    if ($items['percent_cat'] == $percent_cats_j[$i]['id']) {
+                                    if ($items['percent_cats'] == $percent_cats_j[$i]['id']) {
                                         $selected = ' selected';
                                     } else {
                                         $selected = '';

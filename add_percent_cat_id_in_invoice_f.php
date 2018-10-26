@@ -14,7 +14,7 @@
 
             $temp_arr = array();
 
-            if (!isset($_POST['ind']) || !isset($_POST['key']) || !isset($_POST['percent_cat']) || !isset($_POST['invoice_type']) || !isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['filial']) || !isset($_POST['worker'])){
+            if (!isset($_POST['ind']) || !isset($_POST['key']) || !isset($_POST['percent_cats']) || !isset($_POST['invoice_type']) || !isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['filial']) || !isset($_POST['worker'])){
                 //echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
             }else{
                 //var_dump($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']]);
@@ -22,12 +22,12 @@
                 if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
                     if ($_POST['invoice_type'] == 5){
                         if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']])){
-                            $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['percent_cat'] = (int)$_POST['percent_cat'];
+                            $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['percent_cats'] = (int)$_POST['percent_cats'];
                         }
                     }
                     if ($_POST['invoice_type'] == 6){
                         if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']])){
-                            $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['percent_cat'] = (int)$_POST['percent_cat'];
+                            $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['percent_cats'] = (int)$_POST['percent_cats'];
                         }
                     }
                 }

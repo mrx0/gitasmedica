@@ -53,7 +53,7 @@
                             $temp_arr['spec_koeff'] = 0;
                             $temp_arr['discount'] = 0;
 
-                            //$temp_arr['percent_cat'] = 0;
+                            //$temp_arr['percent_cats'] = 0;
 
                             include_once 'DBWork.php';
 
@@ -76,12 +76,12 @@
                                 //$percents_j = getPercents( $invoice_j[0]['worker_id'], (int)$arr['id']);
                                 //var_dump($percents_j);
 
-                                $temp_arr['percent_cat'] = (int)$arr['id'];
+                                $temp_arr['percent_cats'] = (int)$arr['id'];
                                 //$temp_arr2['work_percent'] = (int)$percents_j[(int)$arr['id']]['work_percent'];
                                 //$temp_arr2['material_percent'] = (int)$percents_j[(int)$arr['id']]['material_percent'];
 
                             } else {
-                                $temp_arr['percent_cat'] = 0;
+                                $temp_arr['percent_cats'] = 0;
                                 //$invoice_ex_j = 0;
                             }
 

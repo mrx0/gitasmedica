@@ -4939,7 +4939,7 @@
                     filial: $("#filial").val(),
                     worker: $("#worker").val(),
 
-                    percent_cat: catValue,
+                    percent_cats: catValue,
                     invoice_type: invoice_type
                 },
             cache: false,
@@ -4960,7 +4960,7 @@
 
 
     //Изменить категорию процентов
-    function fl_changeItemPercentCat(ind, key, percent_cat){
+    function fl_changeItemPercentCat(ind, key, percent_cats){
 
         var invoice_type = $("#invoice_type").val();
 
@@ -4978,7 +4978,7 @@
                 {
                     ind: ind,
                     key: key,
-                    percent_cat: percent_cat,
+                    percent_cats: percent_cats,
                     client: $("#client").val(),
                     zapis_id: $("#zapis_id2").val(),
                     filial: $("#filial").val(),
@@ -5383,7 +5383,7 @@
 	}
 
 	//Сменить категории процентов в сессии пользователя
-	function fl_changePercentCat(percent_cat){
+	function fl_changePercentCat(percent_cats){
 
         var invoice_type = $("#invoice_type").val();
 
@@ -5400,7 +5400,7 @@
             //dataType: "JSON",
             data:
                 {
-                    percent_cat: percent_cat,
+                    percent_cats: percent_cats,
                     client: $("#client").val(),
                     zapis_id: $("#zapis_id").val(),
                     filial: $("#filial").val(),

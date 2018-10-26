@@ -72,11 +72,11 @@
                         //но мало ли надо будет потом
                         //affected_rows
 
-                        echo json_encode(array('result' => 'success', 'data' => $calc_arr));
+                        echo json_encode(array('result' => 'success', 'data' => $calc_arr, 'data2' => $query));
 
+                    }else{
+                        echo json_encode(array('result' => 'error', 'data' => $query));
                     }
-
-
                 }
             }
         }
