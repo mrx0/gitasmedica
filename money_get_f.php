@@ -56,7 +56,7 @@
                                     </li>
                                 </ul>';
                 }else{
-                    $rezult .= '
+                    /*$rezult .= '
 								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">
 									    Все выписанные наряды <span style="color: darkgreen;">закрыты</span>
@@ -66,7 +66,9 @@
 
                     $rezult .= '    
                                     </li>
-                                </ul>';
+                                </ul>';*/
+
+                    $rezult = '';
                 }
 
                 //Внесенные оплаты/ордеры
@@ -92,7 +94,12 @@
                 }
                 //var_dump ($order_j);
 
-                $orderAll_str = '';
+                $rezultOrders = showOrderDivRezult($order_j, false, true, false);
+                //$data, $minimal, $show_absent, $show_deleted
+
+                $rezult .= $rezultOrders['data'];
+
+                /*$orderAll_str = '';
                 $orderClose_str = '';
 
                 if (!empty($order_j)){
@@ -112,7 +119,7 @@
                         $orderTemp_str = '';
 
                         $orderTemp_str .= '
-										<li class="cellsBlock" style="width: auto;">';
+										<li class="cellsBlock" style="width: auto; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(225, 255, 67, 0.69);">';
                         $orderTemp_str .= '
 											<a href="order.php?id='.$order_item['id'].'" class="cellOrder ahref" style="position: relative;">
 												<b>Ордер #'.$order_item['id'].'</b> от '.date('d.m.y' ,strtotime($order_item['date_in'])).'<br>
@@ -146,7 +153,7 @@
                                         <span class="calculateInsInvoice" style="font-size: 13px">'.$order_item['summins'].'</span> руб.
                                     </div>';
                         }*/
-                        $orderTemp_str .= '
+                /*        $orderTemp_str .= '
 											</div>';
                         $orderTemp_str .= '
 										</li>';
@@ -174,9 +181,9 @@
                         echo '</div>';
                     }*/
 
-                }else{
+                /*}else{
                     $rezult .= '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 5px; color: red;"><i>Нет ордеров</i></li>';
-                }
+                }*/
 
                 $rezult .= '
                             </ul>';

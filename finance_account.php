@@ -137,156 +137,48 @@
 
                         echo $rezultInvoices['data'];
 
-                        /*$invoiceAll_str = '';
-                        $invoiceClose_str = '';*/
-
-                        /*if ($invoice_j != 0) {
-                            //var_dump ($invoice_j);
-
-                            foreach ($invoice_j as $invoice_item) {
-
-                                $invoiceTemp_str = '';
-
-                                //Отметка об объеме оплат
-                                $paid_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;" title="Не закрыт"></i>';
-
-                                if ($invoice_item['summ'] == $invoice_item['paid']) {
-                                    $paid_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Закрыт"></i>';
-                                }
-
-                                $invoiceTemp_str .= '
-                                            <li class="cellsBlock" style="width: auto;">';
-                                if ($invoice_item['status'] != 9) {
-                                    $invoiceTemp_str .= '
-                                                <div class="cellName" style="position: relative;" invoice_attrib="true" invoice_id="' . $invoice_item['id'] . '"
-                                                ondragenter="return dragEnter(event)"
-                                                ondrop="return dragDrop(event)" 
-                                                ondragover="return dragOver(event)" 
-                                                >';
-                                }else{
-                                        $invoiceTemp_str .= '<div class="cellName" style="position: relative;"';
-                                }
-                                $invoiceTemp_str .= '
-                                                <a href="invoice.php?id=' . $invoice_item['id'] . '" class="ahref">
-                                                    <b>Наряд #' . $invoice_item['id'] . '</b><br>
-                                                    <span style="font-size:80%;  color: #555;">';
-
-                                if (($invoice_item['create_time'] != 0) || ($invoice_item['create_person'] != 0)) {
-                                    $invoiceTemp_str .= '
-                                                            Добавлен: ' . date('d.m.y H:i', strtotime($invoice_item['create_time'])) . '<br>
-                                                            <!--Автор: ' . WriteSearchUser('spr_workers', $invoice_item['create_person'], 'user', true) . '<br>-->';
-                                } else {
-                                    $invoiceTemp_str .= 'Добавлен: не указано<br>';
-                                }
-                                if (($invoice_item['last_edit_time'] != 0) || ($invoice_item['last_edit_person'] != 0)) {
-                                    $invoiceTemp_str .= '
-                                                            Последний раз редактировался: ' . date('d.m.y H:i', strtotime($invoice_item['last_edit_time'])) . '<br>
-                                                            <!--Кем: ' . WriteSearchUser('spr_workers', $invoice_item['last_edit_person'], 'user', true) . '-->';
-                                }
-                                $invoiceTemp_str .= '
-                                                    </span>
-                                                </a>
-                                                <div style="position: absolute; top: 2px; right: 3px;">'.$paid_mark.'</div>
-                                                </div>
-                                                <div class="cellName">
-                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                        Сумма:<br>
-                                                        <span class="calculateInvoice" style="font-size: 13px">' . $invoice_item['summ'] . '</span> руб.
-                                                    </div>';
-                                if ($invoice_item['summins'] != 0) {
-                                    $invoiceTemp_str .= '
-                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                        Страховка:<br>
-                                                        <span class="calculateInsInvoice" style="font-size: 13px">' . $invoice_item['summins'] . '</span> руб.
-                                                    </div>';
-                                }
-                                $invoiceTemp_str .= '
-                                                </div>';
-
-                                $invoiceTemp_str .= '
-                                                <div class="cellName">
-                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                        Оплачено: <br>
-                                                        <span class="calculateInvoice" style="font-size: 13px; color: #333;">' . $invoice_item['paid'] . '</span> руб.
-                                                    </div>';
-                                if ($invoice_item['summ'] != $invoice_item['paid']) {
-                                    $invoiceTemp_str .= '
-                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                        Осталось <a href="payment_add.php?invoice_id='.$invoice_item['id'].'" class="ahref">внести <i class="fa fa-thumb-tack" aria-hidden="true"></i></a><br>
-                                                        <span class="calculateInvoice" style="font-size: 13px">'.($invoice_item['summ'] - $invoice_item['paid']).'</span> руб.
-                                                    </div>';
-                                }
-
-                                $invoiceTemp_str .= '
-                                                </div>';
-                                $invoiceTemp_str .= '
-                                            </li>';
-
-                                if ($invoice_item['status'] != 9) {
-                                    $invoiceAll_str .= $invoiceTemp_str;
-                                } else {
-                                    $invoiceClose_str .= $invoiceTemp_str;
-                                }
-
-                            }
-
-                            if (strlen($invoiceAll_str) > 1){
-                                echo $invoiceAll_str;
-                            }else{
-                                echo '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 20px; color: red;">Нет нарядов</li>';
-                            }
-
-                            //Удалённые
-                            if ((strlen($invoiceClose_str) > 1) && (($finances['see_all'] != 0) || $god_mode)) {
-                                echo '<div style="background-color: rgba(255, 214, 240, 0.5); padding: 5px; margin-top: 5px;">';
-                                echo '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Удалённые из программы наряды</li>';
-                                echo $invoiceClose_str;
-                                echo '</div>';
-                            }
-
-                        }else{
-                            echo '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 5px; color: red;">Нет нарядов</li>';
-                        }*/
-
                         echo '
 								</ul>';
 
 
 
-                            //Внесенные оплаты/ордеры
-                            $arr = array();
-                            $order_j = array();
+                        //Внесенные оплаты/ордеры
+                        $arr = array();
+                        $order_j = array();
 
-                            $offices_j = getAllFilials(false, false);
-                            //var_dump($offices_j);
 
-                            echo '
+
+                        echo '
 								<ul id="orders" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px;">
 									    Внесенные оплаты/ордеры	<a href="add_order.php?client_id='.$client_j[0]['id'].'" class="b">Добавить новый</a>
 									</li>';
 
-                            $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC ";
+                        $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC ";
 
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                            $number = mysqli_num_rows($res);
-                            if ($number != 0){
-                                while ($arr = mysqli_fetch_assoc($res)){
-                                    array_push($order_j, $arr);
-                                }
-                            }else
-                                $order_j = 0;
-                            //var_dump ($order_j);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0){
+                            while ($arr = mysqli_fetch_assoc($res)){
+                                array_push($order_j, $arr);
+                            }
+                        }
+                        //var_dump ($order_j);
 
-                            $orderAll_str = '';
+                        $rezultOrders = showOrderDivRezult($order_j, false, true, false);
+                        //$data, $minimal, $show_absent, $show_deleted
+
+                        echo $rezultOrders['data'];
+
+                            /*$orderAll_str = '';
                             $orderClose_str = '';
 
-                            if ($order_j != 0){
+                            /*if ($order_j != 0){
                                 //var_dump ($order_j);
 
                                 foreach($order_j as $order_item){
 
-                                    $order_type_mark = '';
+                                /*    $order_type_mark = '';
 
                                     if ($order_item['summ_type'] == 1){
                                         $order_type_mark = '<i class="fa fa-money" aria-hidden="true" title="Нал"></i>';
@@ -298,7 +190,7 @@
                                     $orderTemp_str = '';
 
                                     $orderTemp_str .= '
-                                            <li class="cellsBlock" style="width: auto; border: 1px solid rgba(255, 67, 197, 0.36); box-shadow: -2px 2px 9px 0px rgba(165, 158, 158, 0.92);">';
+                                            <li class="cellsBlock" style="width: auto; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(225, 255, 67, 0.69);">';
                                     $orderTemp_str .= '
                                                 <a href="order.php?id='.$order_item['id'].'" class="cellOrder ahref" style="position: relative;">
                                                     <div style="font-weight: bold;">Ордер #'.$order_item['id'].'<span style="font-weight: normal;"> от '.date('d.m.y' ,strtotime($order_item['date_in'])).'</span></div>
@@ -317,7 +209,7 @@
                                     }else{
                                         $orderTemp_str .= 'Добавлен: не указано<br>';
                                     }*/
-                                    if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
+                             /*       if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
                                         $orderTemp_str .= '
                                                             Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
                                                             <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
@@ -338,7 +230,7 @@
                                                     <span class="calculateInsInvoice" style="font-size: 13px">'.$order_item['summins'].'</span> руб.
                                                 </div>';
                                     }*/
-                                    $orderTemp_str .= '
+                            /*        $orderTemp_str .= '
                                                 </div>';
                                     $orderTemp_str .= '
                                             </li>';
@@ -368,7 +260,7 @@
 
                             }else{
                                 echo '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 5px; color: red;">Нет ордеров</li>';
-                            }
+                            }*/
 
                             echo '
 								</ul>';
