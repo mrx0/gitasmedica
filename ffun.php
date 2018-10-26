@@ -457,7 +457,7 @@
                 }
 
                 //Вытащим персональные процентовки
-                $query = "SELECT * FROM `fl_spr_percents_personal` WHERE `worker_id`='".$worker_id."' AND `percent_cat`='".$percent_cat."'";
+                $query = "SELECT * FROM `fl_spr_percents_personal` WHERE `worker_id`='".$worker_id."' AND `percent_cats`='".$percent_cat."'";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -695,7 +695,7 @@
                                                 $spec_koeff = $items['spec_koeff'];
                                                 $discount = $items['discount'];*/
 
-                                                $percent_cats = $items['percent_cat'];
+                                                $percent_cats = $items['percent_cats'];
                                                 $work_percent = $items['work_percent'];
                                                 $material_percent = $items['material_percent'];
 
@@ -1634,7 +1634,7 @@ function calculateCalculateSave (
                     $spec_koeff = $items['spec_koeff'];
                     $discount = $items['discount'];
 
-                    $percent_cats = $items['percent_cat'];
+                    $percent_cats = $items['percent_cats'];
                     $work_percent = $items['work_percent'];
                     $material_percent = $items['material_percent'];
 
@@ -1734,7 +1734,7 @@ function calculateCalculateSave (
                 $spec_koeff = $calculate_data['spec_koeff'];
                 $discount = $calculate_data['discount'];
 
-                $percent_cats = $calculate_data['percent_cat'];
+                $percent_cats = $calculate_data['percent_cats'];
                 $work_percent = $calculate_data['work_percent'];
                 $material_percent = $calculate_data['material_percent'];
 

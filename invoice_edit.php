@@ -129,10 +129,10 @@
 											$temp_arr2['spec_koeff'] = $invoice_ex_j_val['spec_koeff'];
 											$temp_arr2['discount'] = (int)$invoice_ex_j_val['discount'];
 
-											if ((int)$invoice_ex_j_val['percent_cat'] > 0) {
-                                                $temp_arr2['percent_cat'] = (int)$invoice_ex_j_val['percent_cat'];
+											if ((int)$invoice_ex_j_val['percent_cats'] > 0) {
+                                                $temp_arr2['percent_cats'] = (int)$invoice_ex_j_val['percent_cats'];
                                             }else{
-                                                //$temp_arr2['percent_cat'] = 1;
+                                                //$temp_arr2['percent_cats'] = 1;
 
 											    //выбрать первую из категорий указанного типа
                                                 $query = "SELECT `id` FROM `fl_spr_percents` WHERE `type`='".$invoice_j[0]['type']."' LIMIT 1;";
@@ -151,12 +151,12 @@
                                                     //$percents_j = getPercents( $invoice_j[0]['worker_id'], (int)$arr['id']);
                                                     //var_dump($percents_j);
 
-                                                    $temp_arr2['percent_cat'] = (int)$arr['id'];
+                                                    $temp_arr2['percent_cats'] = (int)$arr['id'];
                                                     //$temp_arr2['work_percent'] = (int)$percents_j[(int)$arr['id']]['work_percent'];
                                                     //$temp_arr2['material_percent'] = (int)$percents_j[(int)$arr['id']]['material_percent'];
 
                                                 } else {
-                                                    $temp_arr2['percent_cat'] = 0;
+                                                    $temp_arr2['percent_cats'] = 0;
                                                     //$invoice_ex_j = 0;
                                                 }
                                             }
@@ -261,7 +261,7 @@
                                 //var_dump(date("Y-m-d H:m:s", time()));
 
 
-                                if (($invoice_j[0]['summ'] == $invoice_j[0]['paid']) || ($invoice_j[0]['status'] == 5) || ($invoice_j[0]['summins'] != 0)){
+                                if ((($invoice_j[0]['summ'] == $invoice_j[0]['paid']) || ($invoice_j[0]['status'] == 5) || ($invoice_j[0]['summins'] != 0)) && !($god_mode || ($finances['see_all'] == 1))){
                                     echo '
                                                 <div>
                                                     <div style="display: inline-block; color: red;">Наряд оплачен или работа закрыта. Редактировать нельзя</div>

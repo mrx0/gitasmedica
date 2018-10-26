@@ -2674,7 +2674,11 @@
 			opt = options[i];
 
 			//if (opt.selected) {
+<<<<<<< HEAD
+				result.push(opt.value || opt.text);
+=======
             result.push(opt.value || opt.text);
+>>>>>>> dev
 			//}
 		}
 		return result;
@@ -2686,10 +2690,15 @@
 		var condition = [];
 		var effect = [];
 
-        var el_condition = document.getElementById("multi_d_to");
-        var el_effect = document.getElementById("multi_d_to_2");
+<<<<<<< HEAD
+		var el_condition =  document.getElementById("multi_d_to");
+        //console.log(el_condition);
 		var el_effect =  document.getElementById("multi_d_to_2");
         //console.log(el_effect);
+=======
+        var el_condition = document.getElementById("multi_d_to");
+        var el_effect = document.getElementById("multi_d_to_2");
+>>>>>>> dev
 
 		condition = getSelectValues(el_condition);
 		//console.log(condition);
@@ -2718,8 +2727,13 @@
 				condition: condition,
 				effect: effect,
 
+<<<<<<< HEAD
 				sex: document.querySelector('input[name="sex"]:checked').value,
+				wo_sex: wo_sex,
+=======
+				sex:document.querySelector('input[name="sex"]:checked').value,
 				wo_sex: wo_sex
+>>>>>>> dev
 
 			},
 			cache: false,
@@ -4939,7 +4953,7 @@
                     filial: $("#filial").val(),
                     worker: $("#worker").val(),
 
-                    percent_cats: catValue,
+                    percent_cat: catValue,
                     invoice_type: invoice_type
                 },
             cache: false,
@@ -4960,7 +4974,7 @@
 
 
     //Изменить категорию процентов
-    function fl_changeItemPercentCat(ind, key, percent_cats){
+    function fl_changeItemPercentCat(ind, key, percent_cat){
 
         var invoice_type = $("#invoice_type").val();
 
@@ -4978,7 +4992,7 @@
                 {
                     ind: ind,
                     key: key,
-                    percent_cats: percent_cats,
+                    percent_cat: percent_cat,
                     client: $("#client").val(),
                     zapis_id: $("#zapis_id2").val(),
                     filial: $("#filial").val(),
@@ -5383,7 +5397,7 @@
 	}
 
 	//Сменить категории процентов в сессии пользователя
-	function fl_changePercentCat(percent_cats){
+	function fl_changePercentCat(percent_cat){
 
         var invoice_type = $("#invoice_type").val();
 
@@ -5400,7 +5414,7 @@
             //dataType: "JSON",
             data:
                 {
-                    percent_cats: percent_cats,
+                    percent_cat: percent_cat,
                     client: $("#client").val(),
                     zapis_id: $("#zapis_id").val(),
                     filial: $("#filial").val(),

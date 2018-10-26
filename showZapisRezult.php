@@ -163,11 +163,11 @@
                         $invoice_data_db = 0;
                     //var_dump($invoice_data_db);
 
-                    if ($invoice_data_db != 0) {
+                    /*if ($invoice_data_db != 0) {
                         foreach ($invoice_data_db as $ids) {
                             //
                         }
-                    }
+                    }*/
 
 
                     $rezult .= '
@@ -241,65 +241,27 @@
                     if (!empty($cosmet_data_db)) {
                         foreach ($cosmet_data_db as $ids) {
                             $rezult .= '
-                                                    <div class="cellsBlockHover" style="border: 1px solid #BFBCB5; margin-top: 1px;">
-                                                        <a href="task_cosmet.php?id=' . $ids['id'] . '" class="ahref">
-                                                            <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding-left: 2px; font-weight: bold; font-style: italic;">K</div> <div style="display: inline-block; vertical-align: middle;">' . date('d.m.y H:i', $ids['zapis_date']) . '</div>
-                                                        </a>	
-                                                    </div>';
+                                                <div class="cellsBlockHover" style="border: 1px solid #BFBCB5; margin-top: 1px;">
+                                                    <a href="task_cosmet.php?id=' . $ids['id'] . '" class="ahref">
+                                                        <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding-left: 2px; font-weight: bold; font-style: italic;">K</div> <div style="display: inline-block; vertical-align: middle;">' . date('d.m.y H:i', $ids['zapis_date']) . '</div>
+                                                    </a>	
+                                                </div>';
                         }
                     }
                     if ($format) {
-                        if ($invoice_data_db != 0) {
-                            //var_dump($invoice_data_db);
-                            foreach ($invoice_data_db as $ids) {
 
-                                //Отметка об объеме оплат
-                                $paid_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;" title="Не оплачено"></i>';
-                                $status_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;" title="Не закрыт"></i>';
+                        $rezultInvoices = showInvoiceDivRezult($invoice_data_db, true, false, false, false, false);
+                        //$data, $minimal, $show_categories, $show_absent, $show_deleted
 
-                                if ($ids['summ'] == $ids['paid']) {
-                                    $paid_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Оплачено"></i>';
-                                }
+                        $rezult .= $rezultInvoices['data'];
 
-                                if ($ids['status'] == 5) {
-                                    $status_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Закрыт"></i>';
-                                }
 
-                                $rezult .= '
-                                                    <div class="cellsBlockHover" style="border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
-                                                        <a href="invoice.php?id=' . $ids['id'] . '" class="ahref">
-                                                            <div>
-                                                                <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
-                                                                    <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
-                                                                </div>
-                                                                <div style="display: inline-block; vertical-align: middle;">
-                                                                    <i>#'.$ids['id'].'</i> <span style="font-size: 80%;"><!--от ' . date('d.m.y', strtotime($ids['create_time'])) . '--></span>
-                                                                </div>
-                                                            </div>
-                                                            <div>
-                                                                <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
-                                                                    <span class="calculateInvoice" style="font-size: 11px">' . $ids['summ'] . '</span> руб.
-                                                                </div>';
-                                if ($ids['summins'] != 0) {
-                                    $rezult .= '
-                                                                <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
-                                                                    Страховка:<br>
-                                                                    <span class="calculateInsInvoice" style="font-size: 11px">' . $ids['summins'] . '</span> руб.
-                                                                </div>';
-                                }
-                                $rezult .= '
-                                                            </div>
-                                                            
-                                                        </a>
-                                                        <span style="position: absolute; top: 2px; right: 3px;">' . $paid_mark . ' ' . $status_mark . '</span>
-                                                    </div>';
-                            }
-                        }
-                        //<-- Формулы посещения наряды
-
-                        $rezult .= '
-                                                </div>';
                     }
+
+                    //<-- Формулы посещения наряды
+                    $rezult .= '
+                                            </div>';
+
                     if ($menu){
                         //Управление настройки -->
 

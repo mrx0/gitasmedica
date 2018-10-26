@@ -31,7 +31,35 @@
 
                 $msql_cnnct = ConnectToDB();
 
-                $query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.office_id='{$_POST['office']}' AND jcalc.status <> '7' AND jcalc.id NOT IN (SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id) AND jcalc.date_in > '2018-05-31';";
+
+                //Категории процентов
+                $percent_cats_j = array();
+                //Для сортировки по названию
+                $percent_cats_j_names = array();
+                //$percent_cats_j = SelDataFromDB('fl_spr_percents', '', '');
+                $query = "SELECT `id`, `name` FROM `fl_spr_percents`";
+                //var_dump( $percent_cats_j);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        $percent_cats_j[$arr['id']] = $arr['name'];
+                        //array_push($percent_cats_j_names, $arr['name']);
+                    }
+                }
+
+                //Основные данные
+                $query = "SELECT jcalc.*, 
+                            GROUP_CONCAT(DISTINCT jcalcex.percent_cats ORDER BY jcalcex.percent_cats ASC SEPARATOR ',') AS percent_cats 
+                            FROM `fl_journal_calculate` jcalc
+                            LEFT JOIN `fl_journal_calculate_ex` jcalcex ON jcalc.id = jcalcex.calculate_id
+                            WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.office_id='{$_POST['office']}' AND jcalc.status <> '7'
+                                            AND jcalc.id NOT IN ( SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id ) 
+                            AND jcalc.date_in > '2018-05-31'
+                            GROUP BY jcalc.id";
+                //$query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.office_id='{$_POST['office']}' AND jcalc.status <> '7' AND jcalc.id NOT IN (SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id) AND jcalc.date_in > '2018-05-31';";
                 //$query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.office_id='{$_POST['office']}' AND jcalc.status <> '7' AND jcalc.id NOT IN (SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id);";
                 //$query = "SELECT * FROM `fl_journal_calculate` WHERE `type`='{$_POST['permission']}' AND `worker_id`='{$_POST['worker']}' AND `office_id`='{$_POST['office']}' AND MONTH(`create_time`) = '09' AND `status` <> '7';";
 
@@ -79,7 +107,7 @@
                         foreach ($rez as $rezData){
 
                             //Наряды
-                            $query = "SELECT `summ`, `summins`, `zapis_id`, `create_time` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}' LIMIT 1";
+                            $query = "SELECT `summ`, `summins`, `zapis_id`, `type`, `create_time` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}' LIMIT 1";
 
                             /*$query2 = "SELECT `summ` AS `summ`, `summins` AS `summins` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}'
                             UNION ALL (
@@ -100,6 +128,7 @@
                                 $summins = $arr['summins'];
                                 $invoice_create_time = date('d.m.y', strtotime($arr['create_time']));
                                 $zapis_id = $arr['zapis_id'];
+                                $invoice_type = $arr['type'];
                             }
 
                             //Клиент
@@ -119,17 +148,27 @@
                                 $full_name = $arr['full_name'];
                             }
 
-                            //Зубные формулы
-                            $stom_mark = '';
+                            //Зубные формулы и запись косметолога
+                            $doctor_mark = '';
 
-                            $query = "SELECT `id` FROM `journal_tooth_status` WHERE `zapis_id`='$zapis_id' LIMIT 1";
+                            if ($invoice_type == 5) {
+                                $query = "SELECT `id` FROM `journal_tooth_status` WHERE `zapis_id`='$zapis_id' LIMIT 1";
 
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-                            $number = mysqli_num_rows($res);
+                                $number = mysqli_num_rows($res);
+                            }
 
-                            if ($number == 0) {
-                                $stom_mark = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет зубной формулы"></i>';
+                            if ($invoice_type == 6) {
+                                $query = "SELECT `id` FROM `journal_cosmet1` WHERE `zapis_id`='$zapis_id' LIMIT 1";
+
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                                $number = mysqli_num_rows($res);
+                            }
+
+                            if ($number == 0){
+                                $doctor_mark = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет отметки врача"></i>';
                             }
 
                             $rezult .= '
@@ -158,15 +197,26 @@
                                             Сумма: '.$summ.' р. Страх.: '.$summins.' р.</b> <br>
                                             
                                         </div>
+                                        <div style="margin: 5px 0 5px 3px; font-size: 80%;">';
+
+                            //Категории процентов(работ)
+                            $percent_cats_arr = explode(',', $rezData['percent_cats']);
+
+                            foreach ($percent_cats_arr as $percent_cat){
+                                $rezult .= '<i style="color: rgb(15, 6, 142); font-size: 110%;">'.$percent_cats_j[$percent_cat].'</i><br>';
+                            }
+
+                            $rezult .= '                                            
+                                        </div>
                                     </div>
                                     <div style="display: inline-block; vertical-align: top;">
-                                        <div style="border: 1px solid #CCC; padding: 3px; margin: 1px;">
+                                        <div style="/*border: 1px solid #CCC;*/ padding: 3px; margin: 1px;" title="Выделить">
                                             <input type="checkbox" class="chkBoxCalcs chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$_POST['office'].'" name="nPaidCalcs_'.$rezData['id'].'" chkBoxData="chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$_POST['office'].'" value="1">
                                         </div>
                                     </div>
                                     <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
                                     <div style="position: absolute; bottom: 2px; right: 3px;">
-                                        '.$stom_mark.'
+                                        '.$doctor_mark.'
                                     </div>
                                 </div>';
 

@@ -2577,7 +2577,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                //console.log(res);
+                console.log(res);
 
                 var calc_ids_arr = Array.from(res.data);
 
