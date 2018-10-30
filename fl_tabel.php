@@ -228,8 +228,9 @@
                                 $full_name = $arr['full_name'];
                             }
 
-                            //Зубные формулы и запись косметолога
+                            //Зубные формулы и запись врача
                             $doctor_mark = '';
+                            $background_color = 'background-color: rgb(255, 255, 255);';
 
                             if ($invoice_type == 5) {
                                 $query = "SELECT `id` FROM `journal_tooth_status` WHERE `zapis_id`='$zapis_id' LIMIT 1";
@@ -248,11 +249,12 @@
 
                             if ($number == 0) {
                                 $doctor_mark = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет отметки врача"></i>';
+                                $background_color = 'background-color: rgba(255, 141, 141, 0.2);';
                             }
 
                             $rezult .=
                                 '
-                                <div class="cellsBlockHover" style=" border: 1px solid #BFBCB5; margin: 1px 7px 7px;; position: relative; display: inline-block; vertical-align: top;">
+                                <div class="cellsBlockHover" style="'.$background_color.' border: 1px solid #BFBCB5; margin: 1px 7px 7px;; position: relative; display: inline-block; vertical-align: top;">
                                     <div style="display: inline-block; width: 200px;">
                                         <div>
                                         <a href="fl_calculate.php?id='.$rezData['id'].'" class="ahref">
@@ -578,7 +580,7 @@
                                     <div>
                                         <div style="margin-bottom: 5px;">
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
-                                                Всего смен в этом месяце: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">' . count($rezultShed) . '</span>
+                                                Всего смен в этом месяце в этом филиале: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">' . count($rezultShed) . '</span>
                                             </div>
                                         </div>';
                         if ($nightSmena > 0) {

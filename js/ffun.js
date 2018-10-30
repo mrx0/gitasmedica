@@ -2447,7 +2447,7 @@
         var needTabelObj = thisObj.parent().find('.tableTabels')
 
 
-        var certData = {
+        var reqData = {
             permission: permission_id,
             worker: worker_id,
             office: office_id,
@@ -2456,9 +2456,9 @@
             own_tabel: false
         };
 
-        getCalculatesfunc (needCalcObj, certData);
+        getCalculatesfunc (needCalcObj, reqData);
 
-        getTabelsfunc (needTabelObj, certData);
+        getTabelsfunc (needTabelObj, reqData);
 
     }
 
