@@ -1534,15 +1534,16 @@
     }
 
     //Добавляем/редактируем в базу надбавку в табель
-    function  fl_Ajax_surcharge_add(surcharge_id, tabel_id, mode, surchargeData){
+    function  fl_Ajax_surcharge_add(surcharge_id, tabel_id, mode, reqData){
+        console.log(reqData);
 
         var link = "fl_surcharge_add_f.php";
 
         if (mode == 'edit'){
-            link = "fl_surcharge_edit_f.php";
+            //link = "fl_surcharge_edit_f.php";
         }
 
-        surchargeData['surcharge_id'] = surcharge_id;
+        reqData['surcharge_id'] = surcharge_id;
 
         $.ajax({
             url: link,
@@ -1550,7 +1551,7 @@
             type: "POST",
             dataType: "JSON",
 
-            data:surchargeData,
+            data:reqData,
 
             cache: false,
             beforeSend: function() {
@@ -1863,12 +1864,20 @@
 
         var surcharge_summ = $('#surcharge_summ').val();
         var descr = $('#descr').val();
+        var filial_id = $('#SelectFilial').val();
+        var worker_id = $('#worker_id').val();
+        var month = $('#tabelMonth').val();
+        var year = $('#tabelYear').val();
 
-        var surchargeData = {
+        var reqData = {
             tabel_id:tabel_id,
             type:type,
             surcharge_summ:surcharge_summ,
-            descr:descr
+            descr:descr,
+            filial_id: filial_id,
+            month: month,
+            year: year,
+            worker_id: worker_id
         };
 
         //проверка данных на валидность
@@ -1887,7 +1896,7 @@
             success:function(res){
                 if(res.result == 'success'){
 
-                    fl_Ajax_surcharge_add(surcharge_id, tabel_id, mode, surchargeData);
+                    fl_Ajax_surcharge_add(surcharge_id, tabel_id, mode, reqData);
 
                     // в случае ошибок в форме
                 }else{

@@ -1,7 +1,7 @@
 <?php
 
 //fl_surcharge_add_f.php
-//Функция добавления надбавки в табель непосредственно в БД
+//Функция добавления надбавки в непосредственно в БД
 
     session_start();
 
@@ -23,9 +23,9 @@
 
                 $time = date('Y-m-d H:i:s', time());
 
-                $query = "INSERT INTO `fl_journal_surcharges` (`tabel_id`, `type`, `summ`, `descr`, `create_time`, `create_person`)
+                $query = "INSERT INTO `fl_journal_surcharges` (`filial_id`, `worker_id`, `month`, `year`, `type`, `summ`, `descr`, `create_time`, `create_person`)
                             VALUES (
-                            '{$_POST['tabel_id']}', '{$_POST['type']}', '".round($_POST['surcharge_summ'], 2)."', '{$_POST['descr']}', '{$time}', '{$_SESSION['id']}');";
+                            '{$_POST['filial_id']}', '{$_POST['worker_id']}', '{$_POST['month']}', '{$_POST['year']}', '{$_POST['type']}', '".round($_POST['surcharge_summ'], 2)."', '{$_POST['descr']}', '{$time}', '{$_SESSION['id']}');";
                             
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 

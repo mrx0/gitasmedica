@@ -395,7 +395,8 @@
 
                         //Надбавки
                         //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
-                        $query = "SELECT * FROM `fl_journal_surcharges` WHERE `tabel_id`='".$tabel_j[0]['id']."';";
+                        //$query = "SELECT * FROM `fl_journal_surcharges` WHERE `tabel_id`='".$tabel_j[0]['id']."';";
+                        $query = "SELECT * FROM `fl_journal_surcharges` WHERE `worker_id`= '{$tabel_j[0]['worker_id']}' AND `summ` <> `debt`;";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
