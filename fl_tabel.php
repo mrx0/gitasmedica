@@ -580,7 +580,7 @@
                                     <div>
                                         <div style="margin-bottom: 5px;">
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
-                                                Всего смен в этом месяце: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">' . count($rezultShed) . '</span>
+                                                Всего смен в этом месяце в этом филиале: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">' . count($rezultShed) . '</span>
                                             </div>
                                         </div>';
                         if ($nightSmena > 0) {
