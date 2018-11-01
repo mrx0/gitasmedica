@@ -16,6 +16,29 @@
             $filials_j = getAllFilials(false, false);
             //var_dump($filials_j);
 
+            $d = date('d', time());
+            $m = date('n', time());
+            $y = date('Y', time());
+            //$filial_id = $_GET['filial_id'];
+
+            if (isset($_GET['d'])) {
+                $d = $_GET['d'];
+            }
+            if (isset($_GET['d'])) {
+                $m = $_GET['m'];
+            }
+            if (isset($_GET['d'])) {
+                $y = $_GET['y'];
+            }
+            if (isset($_GET['filial_id'])) {
+                $filial_id = $_GET['filial_id'];
+            }
+
+            $report_date = $d.'.'.$m.'.'.$y;
+
+            //!!! тип (стоматолог...
+            $type = 5;
+
             echo '
                 <div id="status">
                     <header>
@@ -33,9 +56,9 @@
                                     Дата отчёта
                                 </div>
                                 <div class="cellRight">
-                                    <input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" value="'.date("d.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
+                                    <input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" value="'. $report_date.'" onfocus="this.select();_Calendar.lcs(this)"
                                                 onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
-                                    <span class="button_tiny" style="font-size: 80%; cursor: pointer" onclick="iWantThisDate2(\'fl_createDailyReport.php?filial_id=14\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>            
+                                    <span class="button_tiny" style="font-size: 80%; cursor: pointer" onclick="iWantThisDate2(\'fl_createDailyReport.php?filial_id='.$filial_id.'\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>            
                                 </div>
                             </div>
                             
@@ -53,8 +76,6 @@
                                 </div>
                             <div class="cellRight">';
 
-            $filial_id = 0;
-
             if (($finances['see_all'] == 1) || $god_mode){
 
                 echo '
@@ -63,20 +84,9 @@
                 foreach ($filials_j as $filial_item){
 
                     $selected = '';
-                    if (isset($_GET['filial_id'])){
-                        $filial_id = $_GET['filial_id'];
 
-                        if ($_GET['filial_id'] == $filial_item['id']) {
-                            $selected = 'selected';
-                        }
-                    }else {
-                        if (isset($_SESSION['filial'])) {
-                            $filial_id = $_SESSION['filial'];
-
-                            if ($_SESSION['filial'] == $filial_item['id']) {
-                                $selected = 'selected';
-                            }
-                        }
+                    if ($filial_id == $filial_item['id']) {
+                        $selected = 'selected';
                     }
 
                     echo '<option value="'.$filial_item['id'].'" '.$selected.'>'.$filial_item['name'].'</option>';
@@ -85,17 +95,70 @@
                 echo '
                             </select>';
             }else{
-                if (isset($_SESSION['filial'])) {
+                /*if (isset($_GET['filial_id'])) {
                     $filial_id = $_SESSION['filial'];
 
-                    echo $filials_j[$_SESSION['filial']]['name'].'<input type="hidden" id="filial" name="filial" value="'.$_SESSION['filial'].'">';
-                }
+                    echo $filials_j[$_GET['filial_id']]['name'].'<input type="hidden" id="filial" name="filial" value="'.$_GET['filial_id'].'">';
+                }else {
+                    if (isset($_SESSION['filial'])) {
+                        $filial_id = $_SESSION['filial'];*/
+
+                        echo $filials_j[$_SESSION['filial']]['name'] . '<input type="hidden" id="filial" name="filial" value="' . $_SESSION['filial'] . '">';
+                /*    }
+                }*/
             }
 
             echo '
 										</div>
 									</div>
 								</div>';
+
+            $msql_cnnct = ConnectToDB ();
+
+            $sheduler_zapis = array();
+
+            $query = "SELECT * FROM `zapis` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$filial_id}' AND `type` = '{$type}' AND `enter` = '1'";
+            var_dump($query);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($sheduler_zapis, $arr);
+                }
+            }
+            var_dump($sheduler_zapis);
+
+            /*$invoices_arr = array();
+
+            $msql_cnnct = ConnectToDB ();
+
+            $today = date('Y-m-d', time());
+
+            $query = "SELECT jc.* FROM `journal_invoice` ji
+                      LEFt JOIN `fl_journal_calculate` jc ON jc.invoice_id = ji.id
+                      WHERE
+                      DATE_FORMAT(ji.closed_time, '%Y-%m-%d') ='{$today}'
+                      AND ji.status = '5'
+                      AND ji.summ = ji.paid
+                      AND ji.office_id = '{$filial_id}'";
+            //var_dump($query);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($invoices_arr, $arr['id']);
+                }
+            }
+
+            if (!empty($invoices_arr)){
+                var_dump($invoices_arr);
+            }*/
+
 
 
             //Вкладки для отчёта
@@ -115,43 +178,10 @@
 								<li style="border-top-left-radius: 0; border-top-right-radius: 0;"><a href="#tabs-11" style="padding: 3px 10px; font-size: 12px;">Дети</a></li>
 							</ul>';
 
-            $invoices_arr = array();
-
-            $msql_cnnct = ConnectToDB ();
-
-            $today = date('Y-m-d', time());
-
-            $query = "SELECT jc.* FROM `journal_invoice` ji 
-                      LEFt JOIN `fl_journal_calculate` jc ON jc.invoice_id = ji.id
-                      WHERE 
-                      DATE_FORMAT(ji.closed_time, '%Y-%m-%d') ='{$today}'
-                      AND ji.status = '5'
-                      AND ji.summ = ji.paid
-                      AND ji.office_id = '{$filial_id}'";
-            //var_dump($query);
-
-            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-            $number = mysqli_num_rows($res);
-
-            if ($number != 0){
-                while ($arr = mysqli_fetch_assoc($res)){
-                    array_push($invoices_arr, $arr['id']);
-                }
-            }
-
-            if (!empty($invoices_arr)){
-                var_dump($invoices_arr);
-            }
-
-
 
 
             echo '
 							<div id="tabs-1">';
-
-
-
 
 
             echo '

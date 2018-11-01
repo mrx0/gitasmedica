@@ -1515,7 +1515,7 @@
                                             $title_descr = $NextSmenaArr[$k]['ZapisHereQueryToday']['description'];
                                             $zapis_id = $NextSmenaArr[$k]['ZapisHereQueryToday']['id'];
 
-                                            echo drawZapisDivVal ($cellZapisValue_TopSdvig, $cellZapisValue_Height, $back_color, $title_time, $title_client, $title_descr, $zapis_id, contexMenuZapisMain ($NextSmenaArr[$k]['ZapisHereQueryToday'], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $title_time, $title_client, $title_descr));
+                                            echo drawZapisDivVal ($cellZapisValue_TopSdvig, $cellZapisValue_Height, $back_color, $title_time, $title_client, $title_descr, $zapis_id, contexMenuZapisMain ($NextSmenaArr[$k]['ZapisHereQueryToday'], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false, $title_time, $title_client, $title_descr));
 
                                             //Контекстная менюшка
                                             //echo contexMenuZapisMain ($NextSmenaArr[$k]['ZapisHereQueryToday'], $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit);
@@ -1652,7 +1652,7 @@
                                                         $title_descr = $ZapisHereQueryToday_val['description'];
                                                         $zapis_id = $ZapisHereQueryToday_val['id'];
 
-                                                        echo drawZapisDivVal ($cellZapisValue_TopSdvig, $cellZapisValue_Height, $back_color, $title_time, $title_client, $title_descr, $zapis_id, contexMenuZapisMain ($ZapisHereQueryToday_val, $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $title_time, $title_client, $title_descr));
+                                                        echo drawZapisDivVal ($cellZapisValue_TopSdvig, $cellZapisValue_Height, $back_color, $title_time, $title_client, $title_descr, $zapis_id, contexMenuZapisMain ($ZapisHereQueryToday_val, $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false, $title_time, $title_client, $title_descr));
 
                                                         //Контекстная менюшка
                                                         //echo contexMenuZapisMain ($ZapisHereQueryToday_val, $contexMenuZapisMain_filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit);
