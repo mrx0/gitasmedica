@@ -304,8 +304,30 @@
                                 Безналичные:  руб.<br>-->
                                 Общая сумма: '.$Summ.' руб.<br>
                             </div>
-                            <div style="margin-top: 10px;">
-                                 <a href="fl_createDailyReport.php" class="b">Ежедневный отчёт</a>
+                            <div style="margin-top: 10px;">';
+                    /*if (isset($_POST['filial'])) {
+                        if (($_POST['filial'] != 99) && ($_POST['filial'] != 0)) {
+                            $filialData_str .= '
+                                 <a href="fl_createDailyReport.php" class="b">Ежедневный отчёт</a>';
+                        }else{
+                            $filialData_str .= '<span style="color: red"><i>Для формирования ежедневного отчёта должен быть выбран филиал</i></span>';
+                        }
+                    }else{
+                        $filialData_str .= '<span style="color: red"><i>Для формирования ежедневного отчёта должен быть выбран филиал</i></span>';
+                    }*/
+
+                    //var_dump($datastart);
+                    $datastart_array = explode('-', $datastart);
+                    //var_dump($datastart_array);
+                    $d = $datastart_array[2];
+                    $m = $datastart_array[1];
+                    $y = $datastart_array[0];
+
+
+                    $filialData_str .= '
+                                 <a href="fl_createDailyReport.php?filial_id='.$order_item['office_id'].'&d='.$d.'&m='.$m.'&y='.$y.'" class="b">Ежедневный отчёт</a>';
+
+                    $filialData_str .= '
                             </div>
                         </li>';
 
