@@ -261,7 +261,7 @@
                                 //var_dump(date("Y-m-d H:m:s", time()));
 
 
-                                if ((($invoice_j[0]['summ'] == $invoice_j[0]['paid']) || ($invoice_j[0]['status'] == 5) || ($invoice_j[0]['summins'] != 0) || ($invoice_j[0]['summ'] != 0)) && !($god_mode || ($finances['see_all'] == 1))){
+                                if (((($invoice_j[0]['summ'] == $invoice_j[0]['paid']) && ($invoice_j[0]['summ'] != 0)) || ($invoice_j[0]['status'] == 5) || ($invoice_j[0]['summins'] != 0)) && !($god_mode || ($finances['see_all'] == 1))){
                                     echo '
                                                 <div>
                                                     <div style="display: inline-block; color: red;">Наряд оплачен или работа закрыта. Редактировать нельзя</div>
