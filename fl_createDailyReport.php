@@ -113,7 +113,7 @@
 									</div>
 								</div>';
 
-            $msql_cnnct = ConnectToDB ();
+            /*$msql_cnnct = ConnectToDB ();
 
             $sheduler_zapis = array();
 
@@ -128,7 +128,7 @@
                     array_push($sheduler_zapis, $arr);
                 }
             }
-            var_dump($sheduler_zapis);
+            var_dump($sheduler_zapis);*/
 
             /*$invoices_arr = array();
 

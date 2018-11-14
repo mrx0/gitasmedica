@@ -1,6 +1,6 @@
 <?php 
 
-//
+//fin_upload.php
 //
 
 	session_start();
@@ -59,12 +59,12 @@
 				
 				
 				mysql_close();
-				
-					echo '
-						Изображения добавлены<br /><br />
-						<a href="client.php?id='.$_POST['client'].'" class="b">Вернуться в карточку</a>
-						<a href="kd.php?client='.$_POST['client'].'" class="b">Посмотреть КД</a>
-						<a href="add_kd.php?client='.$_POST['client'].'" class="b">Добавить этому пациенту КД</a>';
+
+                echo '
+                    Изображения добавлены<br /><br />
+                    <a href="client.php?id='.$_POST['client'].'" class="b">Вернуться в карточку</a>
+                    <a href="kd.php?client='.$_POST['client'].'" class="b">Посмотреть КД</a>
+                    <a href="add_kd.php?client='.$_POST['client'].'" class="b">Добавить этому пациенту КД</a>';
 					
 			}
 		}

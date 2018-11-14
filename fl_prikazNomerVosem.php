@@ -94,7 +94,7 @@
                     //var_dump($controlCategoriesSumm);
                     //var_dump($allSumm);
 
-                    //Вычисляем % от общего
+                    //Вычисляем процент от общего %
 
                     $controlPercent = $controlCategoriesSumm * 100 / $allSumm;
                     //var_dump($controlPercent);

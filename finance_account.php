@@ -132,7 +132,11 @@
                         }
                         //var_dump ($invoice_j);
 
-                        $rezultInvoices = showInvoiceDivRezult($invoice_j, false, true, true, true, false);
+                        if (($finances['see_all'] != 0) || $god_mode){
+                            $rezultInvoices = showInvoiceDivRezult($invoice_j, false, true, true, true, false);
+                        }else{
+                            $rezultInvoices = showInvoiceDivRezult($invoice_j, false, true, true, false, false);
+                        }
                         //$data, $minimal, $show_categories, $show_absent, $show_deleted
 
                         echo $rezultInvoices['data'];
@@ -165,7 +169,12 @@
                         }
                         //var_dump ($order_j);
 
-                        $rezultOrders = showOrderDivRezult($order_j, false, true, false);
+
+                        if (($finances['see_all'] != 0) || $god_mode){
+                            $rezultOrders = showOrderDivRezult($order_j, false, true, true);
+                        }else{
+                            $rezultOrders = showOrderDivRezult($order_j, false, true, false);
+                        }
                         //$data, $minimal, $show_absent, $show_deleted
 
                         echo $rezultOrders['data'];
