@@ -11,9 +11,9 @@
             include_once 'DBWork.php';
             include_once 'functions.php';
 
-            $msql_cnnct = ConnectToDB ();
-
             require 'variables.php';
+
+            $msql_cnnct = ConnectToDB ();
 
             $rezult = '';
 

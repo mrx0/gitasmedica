@@ -4,7 +4,7 @@
     //Взято с Хабра https://habrahabr.ru/post/134823/
     //first — первая функция,которую нужно запустить
     wait = function(first){
-        //класс для реализации вызова методов по цепочке
+        //класс для реализации вызова методов по цепочке #поочередный вызов
         return new (function(){
             var self = this;
             var callback = function(){

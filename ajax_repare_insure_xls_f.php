@@ -779,7 +779,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                                 //Название
                                                 if ($rezult2 != 0) {
 
-                                                    $sheet->setCellValue('F' . $countRow, $rezult2[0]['name']);
+                                                    $sheet->setCellValue('F' . $countRow, htmlspecialchars_decode($rezult2[0]['name']));
                                                     $sheet->getStyle('F' . $countRow)->applyFromArray($style_arial_8);
                                                     $sheet->getStyle('F' . $countRow)->applyFromArray($style_horizontal_left);
                                                     $sheet->getStyle('F' . $countRow)->applyFromArray($style_verical_top);

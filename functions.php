@@ -3182,10 +3182,24 @@
             }
 
 
+            //Удалённые
             $rezult .= $itemAll_str;
+
+            if ($show_deleted && !$minimal){
+                //if ((strlen($itemClose_str) > 1) && (($finances['see_all'] != 0) || $god_mode)) {
+                    $rezult .= '<div style="background-color: rgba(255, 214, 240, 0.5); padding: 5px; margin-top: 5px;">';
+                    $rezult .= '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Удалённые из программы ордеры</li>';
+                    $rezult .= $itemClose_str;
+                    $rezult .= '</div>';
+                //}
+                //$rezult .= $itemClose_str;
+            }
+
+
+/*            $rezult .= $itemAll_str;
             if ($show_deleted && !$minimal){
                 $rezult .= $itemClose_str;
-            }
+            }*/
 
             return array('data' => $rezult, 'count' => $rezult_count);
 
@@ -3308,8 +3322,15 @@
             }*/
 
             $rezult .= $itemAll_str;
+
             if ($show_deleted && !$minimal){
-                $rezult .= $itemClose_str;
+                //if ((strlen($itemClose_str) > 1) && (($finances['see_all'] != 0) || $god_mode)) {
+                    $rezult .= '<div style="background-color: rgba(255, 214, 240, 0.5); padding: 5px; margin-top: 5px;">';
+                    $rezult .= '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Удалённые из программы ордеры</li>';
+                    $rezult .= $itemClose_str;
+                    $rezult .= '</div>';
+                //}
+                //$rezult .= $itemClose_str;
             }
 
             return array('data' => $rezult, 'count' => $rezult_count);

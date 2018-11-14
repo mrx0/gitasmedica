@@ -1,119 +1,130 @@
 <?php 
 
-//showZapisRezult3.php
-//функция формирует и показывает записи
+//showZapisRezult.php
+//функция формирует и показывает массив записи
 
-    function showZapisRezult($ZapisHereQueryToday, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $type, $format, $menu){
-        //var_dump($ZapisHereQueryToday);
+    session_start();
 
-        if ($ZapisHereQueryToday != 0) {
+    if (empty($_SESSION['login']) || empty($_SESSION['id'])){
+        header("location: enter.php");
+    }else{
+        include_once 'DBWork.php';
+        include_once 'functions.php';
+        //var_dump ($_POST);
 
-            include_once 'DBWork.php';
-            include_once 'functions.php';
+        require 'variables.php';
 
-            require 'variables.php';
+        if ($_POST){
 
-            $msql_cnnct = ConnectToDB ();
+
+            $data = $_POST['data'];
+
+            $filials_j = getAllFilials(false, false);
 
             $rezult = '';
+            
+    //function showZapisRezult($ZapisHereQueryToday, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $type, $format, $menu){
+        //var_dump($ZapisHereQueryToday);
 
-            $office_j = SelDataFromDB('spr_filials', '', '');
+
+
+            //$office_j = SelDataFromDB('spr_filials', '', '');
             //var_dump($office_j);
             //!!!
-            $office_j_arr = array();
+            //$office_j_arr = array();
 
-            foreach ($office_j as $office_item){
-                $office_j_arr[$office_item['id']] = $office_item;
-            }
+            //foreach ($office_j as $office_item){
+                //$office_j_arr[$office_item['id']] = $office_item;
+            //}
             //var_dump($office_j_arr);
 
 
-            for ($z = 0; $z < count($ZapisHereQueryToday); $z++) {
+            //for ($z = 0; $z < count($ZapisHereQueryToday); $z++) {
 
-                $t_f_data_db = array();
-                $cosmet_data_db = array();
-                $invoice_data_db = array();
+                //$t_f_data_db = array();
+                //$cosmet_data_db = array();
+                //$invoice_data_db = array();
                 $back_color = '';
                 $mark_enter = '';
 
-                if (($ZapisHereQueryToday[$z]['enter'] != 8) || (($ZapisHereQueryToday[$z]['enter'] == 8) && $upr_edit)) {
+                if (!empty($data)) {
 
 
-                    if ($ZapisHereQueryToday[$z]['enter'] == 1) {
-                        $back_color = 'background-color: rgba(119, 255, 135, 1);';
-                        $mark_enter = 'пришёл';
-                    } elseif ($ZapisHereQueryToday[$z]['enter'] == 9) {
+                    if ($data['enter'] == 1) {
+                        //$back_color = 'background-color: rgba(119, 255, 135, 0.69);';
+                        //$mark_enter = 'пришёл';
+                    }/* elseif ($data['enter'] == 9) {
                         $back_color = 'background-color: rgba(239,47,55, .7);';
                         $mark_enter = 'не пришёл';
-                    } elseif ($ZapisHereQueryToday[$z]['enter'] == 8) {
+                    } elseif ($data['enter'] == 8) {
                         $back_color = 'background-color: rgba(137,0,81, .7);';
                         $mark_enter = 'удалено';
                     } else {
                         //Если оформлено не на этом филиале
-                        if ($ZapisHereQueryToday[$z]['office'] != $ZapisHereQueryToday[$z]['add_from']) {
+                        if ($data['office'] != $data['add_from']) {
                             $back_color = 'background-color: rgb(119, 255, 250);';
                             $mark_enter = 'подтвердить';
                         } else {
                             $back_color = 'background-color: rgba(255,255,0, .5);';
                             $mark_enter = '';
                         }
-                    }
+                    }*/
 
                     $dop_img = '';
 
-                    if ($ZapisHereQueryToday[$z]['insured'] == 1) {
+                    if ($data['insured'] == 1) {
                         $dop_img .= '<img src="img/insured.png" title="Страховое"> ';
                     }
-                    if ($ZapisHereQueryToday[$z]['pervich'] == 1) {
+                    if ($data['pervich'] == 1) {
                         $dop_img .= '<img src="img/pervich.png" title="Первичное"> ';
                     }
-                    if ($ZapisHereQueryToday[$z]['noch'] == 1) {
+                    if ($data['noch'] == 1) {
                         $dop_img .= '<img src="img/night.png" title="Ночное"> ';
                     }
 
-                    $start_time_h = floor($ZapisHereQueryToday[$z]['start_time'] / 60);
-                    $start_time_m = $ZapisHereQueryToday[$z]['start_time'] % 60;
+                    /*$start_time_h = floor($data['start_time'] / 60);
+                    $start_time_m = $data['start_time'] % 60;
                     if ($start_time_m < 10) $start_time_m = '0' . $start_time_m;
-                    $end_time_h = floor(($ZapisHereQueryToday[$z]['start_time'] + $ZapisHereQueryToday[$z]['wt']) / 60);
+                    $end_time_h = floor(($data['start_time'] + $data['wt']) / 60);
                     if ($end_time_h > 23) $end_time_h = $end_time_h - 24;
-                    $end_time_m = ($ZapisHereQueryToday[$z]['start_time'] + $ZapisHereQueryToday[$z]['wt']) % 60;
-                    if ($end_time_m < 10) $end_time_m = '0' . $end_time_m;
+                    $end_time_m = ($data['start_time'] + $data['wt']) % 60;
+                    if ($end_time_m < 10) $end_time_m = '0' . $end_time_m;*/
 
-                    $day = $ZapisHereQueryToday[$z]['day'];
+                    $day = $data['day'];
 
-                    if ($ZapisHereQueryToday[$z]['month'] < 10) $month = '0' . $ZapisHereQueryToday[$z]['month'];
-                    else $month = $ZapisHereQueryToday[$z]['month'];
+                    if ($data['month'] < 10) $month = '0' . $data['month'];
+                    else $month = $data['month'];
 
-                    $year = $ZapisHereQueryToday[$z]['year'];
+                    $year = $data['year'];
 
                     $rezult .= '
-                                        <li class="cellsBlock" style="width: auto;">
+                                        <li id="'.$data['id'].'" class="cellsBlock zapisDiv" style="display: inline-block; width: auto; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 0px 0px rgba(67, 255, 91, 0.49);">
                                             <!--<div class="cellCosmAct">-->';
 
-                    if ($ZapisHereQueryToday[$z]['type'] == 5) {
+                    //if ($data['type'] == 5) {
                         //Формулы зубные
-                        $query = "SELECT `id`, `zapis_date`  FROM `journal_tooth_status` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
+                        //$query = "SELECT `id`, `zapis_date`  FROM `journal_tooth_status` WHERE `zapis_id` = '{$data['id']}' ORDER BY `create_time`";
                         //var_dump($query);
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-                        $number = mysqli_num_rows($res);
-                        if ($number != 0) {
-                            while ($arr = mysqli_fetch_assoc($res)) {
-                                array_push($t_f_data_db, $arr);
-                            }
-                        } else
+                        //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                        //$number = mysqli_num_rows($res);
+                        //if ($number != 0) {
+                        //    while ($arr = mysqli_fetch_assoc($res)) {
+                        //        array_push($t_f_data_db, $arr);
+                        //    }
+                        //} else
                             //$t_f_data_db = 0;
                         //var_dump($t_f_data_db);
 
-                        if ($t_f_data_db != 0) {
+                        //if ($t_f_data_db != 0) {
                             /*foreach ($t_f_data_db as $ids) {
                                 //
                             }*/
-                        }
-                    }
+                        //}
+                    //}
 
-                    if ($ZapisHereQueryToday[$z]['type'] == 6) {
+                    /*if ($data['type'] == 6) {
                         //Посещения косметологов
-                        $query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
+                        $query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$data['id']}' ORDER BY `create_time`";
                         //var_dump($query);
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
                         $number = mysqli_num_rows($res);
@@ -128,12 +139,12 @@
                         if ($cosmet_data_db != 0) {
                             /*foreach ($cosmet_data_db as $ids) {
                                 //
-                            }*/
+                            }
                         }
-                    }
+                    }*/
 
                     //Наряды
-                    $query = "SELECT * FROM `journal_invoice` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' AND `status` <> '9' ORDER BY `create_time`";
+                    /*$query = "SELECT * FROM `journal_invoice` WHERE `zapis_id` = '{$data['id']}' AND `status` <> '9' ORDER BY `create_time`";
                     //var_dump($query);
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                     $number = mysqli_num_rows($res);
@@ -142,7 +153,7 @@
                             array_push($invoice_data_db, $arr);
                         }
                     } else
-                        $invoice_data_db = 0;
+                        $invoice_data_db = 0;*/
                     //var_dump($invoice_data_db);
 
                     /*if ($invoice_data_db != 0) {
@@ -154,11 +165,12 @@
 
                     $rezult .= '
                                             <!--</div>-->
-                                            <div class="cellName" style="position: relative; cursor: pointer; ' . $back_color . '" onclick="window.location.replace(\'zapis_full.php?filial='.$ZapisHereQueryToday[$z]['office'].'&who='.$ZapisHereQueryToday[$z]['type'].'&d='.$ZapisHereQueryToday[$z]['day'].'&m='.$month.'&y='.$ZapisHereQueryToday[$z]['year'].'&kab='.$ZapisHereQueryToday[$z]['kab'].'\')">';
+                                            <div class="cellName" style="position: relative; cursor: pointer;' . $back_color . '" onclick="">';
 
                     $rezult .=
-                        '<b>' . $day . ' ' . $monthsName[$month] . ' ' . $year . '</b><br>' .
-                        $start_time_h . ':' . $start_time_m . ' - ' . $end_time_h . ':' . $end_time_m;
+                        '<b>' . $day . ' ' . $monthsName[$month] . ' ' . $year . '</b><br>'.
+                        //$start_time_h . ':' . $start_time_m . ' - ' . $end_time_h . ':' . $end_time_m;
+                        '<i>Филиал:<br>' . $filials_j[$data['office']]['name'].'</i>';
 
                     $rezult .= '
                                                 <div style="position: absolute; top: 1px; right: 1px;">' . $dop_img . '</div>';
@@ -167,46 +179,48 @@
                     $rezult .= '
                                             </div>';
                     $rezult .= '
-                                            <div class="cellName">';
+                                            <div class="cellName" style="width: 150px;">';
                     $rezult .=
-                        'Пациент <br><b title="'.WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', false).'">' . WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user', true) . '</b>';
+                        'Пациент <br><b title="">' . WriteSearchUser('spr_clients', $data['patient'], 'user', true) . '</b><br>';
+                    $rezult .=
+                        'Врач: <br><b>' . WriteSearchUser('spr_workers', $data['worker'], 'user', true) . '</b>';
                     $rezult .= '
                                             </div>';
-                    $rezult .= '
-                                            <div class="cellName">';
-                    $rezult .=
-                        'Филиал:<br>' .
-                        $office_j_arr[$ZapisHereQueryToday[$z]['office']]['name'];
-                    $rezult .= '
-                                            </div>';
-                    $rezult .= '
-                                            <div class="cellName">';
-                    $rezult .=
-                        $ZapisHereQueryToday[$z]['kab'] . ' кабинет<br>' . 'Врач: <br><b>' . WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user', true) . '</b>';
-                    $rezult .= '
-                                            </div>';
-                    $rezult .= '
-                                            <div class="cellName" style="max-width: 120px; overflow: auto;">';
-                    $rezult .=
-                        '<b><i>Описание:</i></b><br><div style="text-overflow: ellipsis; overflow: hidden; white-space: inherit; display: block; width: 120px;" title="' . $ZapisHereQueryToday[$z]['description'] . '">' . $ZapisHereQueryToday[$z]['description'] . '</div>';
-                    $rezult .= '
-                                            </div>';
-                    if ($format) {
+                    /*$rezult .= '
+                                            <div class="cellName">';*/
+                    //$rezult .=
+
+                    /*$rezult .= '
+                                            </div>';*/
+                    /*$rezult .= '
+                                            <div class="cellName">';*/
+                    //$rezult .=
+                        //$data['kab'] . ' кабинет<br>' . 'Врач: <br><b>' . WriteSearchUser('spr_workers', $data['worker'], 'user', true) . '</b>';
+                    //    ;
+                    /*$rezult .= '
+                                            </div>';*/
+                    /*$rezult .= '
+                                            <div class="cellName" style="max-width: 120px; overflow: auto;">';*/
+                    /*$rezult .=
+                        '<b><i>Описание:</i></b><br><div style="text-overflow: ellipsis; overflow: hidden; white-space: inherit; display: block; width: 120px;" title="' . $data['description'] . '">' . $data['description'] . '</div>';*/
+                    /*$rezult .= '
+                                            </div>';*/
+                    /*if ($format) {
                         $rezult .= '
                                                 <div class="cellName">';
                         $rezult .= '
-                                                    Добавлено<br>' . date('d.m.y H:i', $ZapisHereQueryToday[$z]['create_time']) . '<br>
-                                                    Кем: ' . WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['create_person'], 'user', true);
-                        if (($ZapisHereQueryToday[$z]['last_edit_time'] != 0) || ($ZapisHereQueryToday[$z]['last_edit_person'] != 0)) {
+                                                    Добавлено<br>' . date('d.m.y H:i', $data['create_time']) . '<br>
+                                                    Кем: ' . WriteSearchUser('spr_workers', $data['create_person'], 'user', true);
+                        if (($data['last_edit_time'] != 0) || ($data['last_edit_person'] != 0)) {
                             $rezult .= '<hr>
-                                                    Изменено: ' . date('d.m.y H:i', $ZapisHereQueryToday[$z]['last_edit_time']) . '<br>
-                                                    Кем: ' . WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['last_edit_person'], 'user', true) . '';
+                                                    Изменено: ' . date('d.m.y H:i', $data['last_edit_time']) . '<br>
+                                                    Кем: ' . WriteSearchUser('spr_workers', $data['last_edit_person'], 'user', true) . '';
                         }
                         $rezult .= '
                                                 </div>';
-                    }
+                    }*/
                     //Формулы посещения наряды -->
-                    $rezult .= '
+                    /*$rezult .= '
                                             <div class="cellName" style="vertical-align: top;">';
 
                     if (!empty($t_f_data_db)) {
@@ -238,114 +252,114 @@
                         $rezult .= $rezultInvoices['data'];
 
 
-                    }
+                    }*/
 
                     //<-- Формулы посещения наряды
-                    $rezult .= '
-                                            </div>';
+                    /*$rezult .= '
+                                            </div>';*/
 
-                    if ($menu){
+                    /*if ($menu){
                         //Управление настройки -->
 
                         $rezult .= '
-                                                <div class="cellName settings_text" style="background-color: rgb(240, 240, 240); text-align: center; vertical-align: middle; width: 80px; min-width: 80px; max-width: 80px;" onclick="contextMenuShow(' . $ZapisHereQueryToday[$z]['id'] . ', 0, event, \'zapis_options\');">';
+                                                <div class="cellName settings_text" style="background-color: rgb(240, 240, 240); text-align: center; vertical-align: middle; width: 80px; min-width: 80px; max-width: 80px;" onclick="contextMenuShow(' . $data['id'] . ', 0, event, \'zapis_options\');">';
 
                         $rezult .= 'Меню [опции]';
 
                         $rezult .= '
-                                                    <ul id="zapis_options' . $ZapisHereQueryToday[$z]['id'] . '" class="zapis_options" style="display: none;">';
+                                                    <ul id="zapis_options' . $data['id'] . '" class="zapis_options" style="display: none;">';
 
                         if (isset($_SESSION['filial'])) {
 
-                            if ($_SESSION['filial'] == $ZapisHereQueryToday[$z]['office']) {
+                            if ($_SESSION['filial'] == $data['office']) {
 
-                                $smena = 0;
+                                /*$smena = 0;
 
-                                if (($ZapisHereQueryToday[$z]['start_time'] >= 540)  && ($ZapisHereQueryToday[$z]['start_time'] < 900)){
+                                if (($data['start_time'] >= 540)  && ($data['start_time'] < 900)){
                                     $smena = 1;
                                 }
-                                if (($ZapisHereQueryToday[$z]['start_time'] >= 900)  && ($ZapisHereQueryToday[$z]['start_time'] < 1260)){
+                                if (($data['start_time'] >= 900)  && ($data['start_time'] < 1260)){
                                     $smena = 2;
                                 }
-                                if (($ZapisHereQueryToday[$z]['start_time'] >= 1260 )  && ($ZapisHereQueryToday[$z]['start_time'] < 1440)){
+                                if (($data['start_time'] >= 1260 )  && ($data['start_time'] < 1440)){
                                     $smena = 3;
                                 }
 
 
-                                if ($ZapisHereQueryToday[$z]['office'] != $ZapisHereQueryToday[$z]['add_from']) {
-                                    if ($ZapisHereQueryToday[$z]['enter'] != 8) {
-                                        $rezult .= '<li><div onclick="Ajax_TempZapis_edit_OK(' . $ZapisHereQueryToday[$z]['id'] . ', ' . $ZapisHereQueryToday[$z]['office'] . ')">Подтвердить</div></li>';
+                                if ($data['office'] != $data['add_from']) {
+                                    if ($data['enter'] != 8) {
+                                        $rezult .= '<li><div onclick="Ajax_TempZapis_edit_OK(' . $data['id'] . ', ' . $data['office'] . ')">Подтвердить</div></li>';
                                     }
                                 }
-                                if ($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']) {
-                                    if (($ZapisHereQueryToday[$z]['enter'] != 8) && ($ZapisHereQueryToday[$z]['enter'] != 9)) {
+                                if ($data['office'] == $data['add_from']) {
+                                    if (($data['enter'] != 8) && ($data['enter'] != 9)) {
                                         $rezult .=
-                                            '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $ZapisHereQueryToday[$z]['id'] . ', 1)">Пришёл</div></li>';
+                                            '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $data['id'] . ', 1)">Пришёл</div></li>';
                                         $rezult .=
-                                            '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $ZapisHereQueryToday[$z]['id'] . ', 9)">Не пришёл</div></li>';
+                                            '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $data['id'] . ', 9)">Не пришёл</div></li>';
                                         $rezult .=
-                                            '<li><div onclick="ShowSettingsAddTempZapis(' . $ZapisHereQueryToday[$z]['office'] . ', \'' . $office_j_arr[$ZapisHereQueryToday[$z]['office']]['name'] . '\', ' . $ZapisHereQueryToday[$z]['kab'] . ', ' . $year . ', '.$month.', '.$day.', '.$smena.', '.$ZapisHereQueryToday[$z]['start_time'] . ', ' . $ZapisHereQueryToday[$z]['wt'] . ', ' . $ZapisHereQueryToday[$z]['worker'] . ', \'' . WriteSearchUser('spr_workers', $ZapisHereQueryToday[$z]['worker'], 'user_full', false) . '\', \'' . WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', false) . '\', \'' . str_replace(array("\r", "\n"), " ", $ZapisHereQueryToday[$z]['description']) . '\', ' . $ZapisHereQueryToday[$z]['insured'] . ', ' . $ZapisHereQueryToday[$z]['pervich'] . ', ' . $ZapisHereQueryToday[$z]['noch'] . ', ' . $ZapisHereQueryToday[$z]['id'] . ', ' . $ZapisHereQueryToday[$z]['type'] . ', \'edit\')">Редактировать</div></li>';
+                                            '<li><div onclick="ShowSettingsAddTempZapis(' . $data['office'] . ', \'' . $office_j_arr[$data['office']]['name'] . '\', ' . $data['kab'] . ', ' . $year . ', '.$month.', '.$day.', '.$smena.', '.$data['start_time'] . ', ' . $data['wt'] . ', ' . $data['worker'] . ', \'' . WriteSearchUser('spr_workers', $data['worker'], 'user_full', false) . '\', \'' . WriteSearchUser('spr_clients', $data['patient'], 'user_full', false) . '\', \'' . str_replace(array("\r", "\n"), " ", $data['description']) . '\', ' . $data['insured'] . ', ' . $data['pervich'] . ', ' . $data['noch'] . ', ' . $data['id'] . ', ' . $data['type'] . ', \'edit\')">Редактировать</div></li>';
 
-                                        //var_dump($ZapisHereQueryToday[$z]['create_time']);
-                                        //var_dump($ZapisHereQueryToday[$z]['description']);
+                                        //var_dump($data['create_time']);
+                                        //var_dump($data['description']);
                                         //var_dump(time());
 
-                                        if (($ZapisHereQueryToday[$z]['enter'] == 1) && ($finance_edit)) {
+                                        if (($data['enter'] == 1) && ($finance_edit)) {
                                             $rezult .=
                                                 '<li>
                                                                     <div>
-                                                                        <a href="invoice_add.php?client=' . $ZapisHereQueryToday[$z]['patient'] . '&filial=' . $ZapisHereQueryToday[$z]['office'] . '&date=' . strtotime($ZapisHereQueryToday[$z]['day'] . '.' . $month . '.' . $ZapisHereQueryToday[$z]['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $ZapisHereQueryToday[$z]['id'] . '&worker=' . $ZapisHereQueryToday[$z]['worker'] . '&type=' . $ZapisHereQueryToday[$z]['type'] . '" class="ahref">
+                                                                        <a href="invoice_add.php?client=' . $data['patient'] . '&filial=' . $data['office'] . '&date=' . strtotime($data['day'] . '.' . $month . '.' . $data['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $data['id'] . '&worker=' . $data['worker'] . '&type=' . $data['type'] . '" class="ahref">
                                                                             Внести наряд
                                                                         </a>
                                                                     </div>
                                                                 </li>';
                                         }
 
-                                        $zapisDate = strtotime($ZapisHereQueryToday[$z]['day'] . '.' . $ZapisHereQueryToday[$z]['month'] . '.' . $ZapisHereQueryToday[$z]['year']);
+                                        $zapisDate = strtotime($data['day'] . '.' . $data['month'] . '.' . $data['year']);
                                         if (time() < $zapisDate + 60 * 60 * 24) {
                                             $rezult .=
-                                                '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $ZapisHereQueryToday[$z]['id'] . ', 8)">Ошибка, удалить из записи</div></li>';
+                                                '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $data['id'] . ', 8)">Ошибка, удалить из записи</div></li>';
                                         }
                                     }
                                     $rezult .= '
                                                             <li>
-                                                                <div onclick="Ajax_TempZapis_edit_Enter(' . $ZapisHereQueryToday[$z]['id'] . ', 0)">
+                                                                <div onclick="Ajax_TempZapis_edit_Enter(' . $data['id'] . ', 0)">
                                                                     Отменить все изменения
                                                                 </div>
                                                             </li>';
 
                                     $rezult .=
-                                        '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $ZapisHereQueryToday[$z]['id'] . ', 8)">Ошибка, удалить из записи</div></li>';
-                                }
+                                        '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $data['id'] . ', 8)">Ошибка, удалить из записи</div></li>';
+                                }*/
                             /*} else {*/
                                 /*$rezult .=
-                                    '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $ZapisHereQueryToday[$z]['id'] . ', 8)">Ошибка, удалить из записи</div></li>';
+                                    '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $data['id'] . ', 8)">Ошибка, удалить из записи</div></li>';
                                 $rezult .=
-                                    '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $ZapisHereQueryToday[$z]['id'] . ', 0)">Отменить все изменения</div></li>';*/
-                            }
-                        }
+                                    '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $data['id'] . ', 0)">Отменить все изменения</div></li>';*/
+/*                            }
+                        }*/
 
                         //Дополнительное расширение прав на добавление посещений для специалистов, god_mode и управляющих
-                        if ($edit_options) {
-                            if ($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']) {
-                                if ($ZapisHereQueryToday[$z]['enter'] == 1) {
-                                    //var_dump($ZapisHereQueryToday[$z]['type']);
+                    /*    if ($edit_options) {
+                            if ($data['office'] == $data['add_from']) {
+                                if ($data['enter'] == 1) {
+                                    //var_dump($data['type']);
 
-                                    if (($ZapisHereQueryToday[$z]['type'] == 5) && $stom_edit) {
+                                    if (($data['type'] == 5) && $stom_edit) {
                                         $rezult .= '
                                                         <li>
                                                             <div>
-                                                                <a href="add_task_stomat.php?client=' . $ZapisHereQueryToday[$z]['patient'] . '&filial=' . $ZapisHereQueryToday[$z]['office'] . '&insured=' . $ZapisHereQueryToday[$z]['insured'] . '&pervich=' . $ZapisHereQueryToday[$z]['pervich'] . '&noch=' . $ZapisHereQueryToday[$z]['noch'] . '&date=' . strtotime($ZapisHereQueryToday[$z]['day'] . '.' . $month . '.' . $ZapisHereQueryToday[$z]['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $ZapisHereQueryToday[$z]['id'] . '&worker=' . $ZapisHereQueryToday[$z]['worker'] . '" class="ahref">
+                                                                <a href="add_task_stomat.php?client=' . $data['patient'] . '&filial=' . $data['office'] . '&insured=' . $data['insured'] . '&pervich=' . $data['pervich'] . '&noch=' . $data['noch'] . '&date=' . strtotime($data['day'] . '.' . $month . '.' . $data['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $data['id'] . '&worker=' . $data['worker'] . '" class="ahref">
                                                                     Внести Осмотр/Зубную формулу
                                                                 </a>
                                                             </div>
                                                         </li>';
                                     }
-                                    if (($ZapisHereQueryToday[$z]['type'] == 6) && $cosm_edit) {
+                                    if (($data['type'] == 6) && $cosm_edit) {
                                         $rezult .= '
                                                         <li>
                                                             <div>
-                                                                <a href="add_task_cosmet.php?client=' . $ZapisHereQueryToday[$z]['patient'] . '&filial=' . $ZapisHereQueryToday[$z]['office'] . '&insured=' . $ZapisHereQueryToday[$z]['insured'] . '&pervich=' . $ZapisHereQueryToday[$z]['pervich'] . '&noch=' . $ZapisHereQueryToday[$z]['noch'] . '&date=' . strtotime($ZapisHereQueryToday[$z]['day'] . '.' . $month . '.' . $ZapisHereQueryToday[$z]['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $ZapisHereQueryToday[$z]['id'] . '&worker=' . $ZapisHereQueryToday[$z]['worker'] . '" class="ahref">
+                                                                <a href="add_task_cosmet.php?client=' . $data['patient'] . '&filial=' . $data['office'] . '&insured=' . $data['insured'] . '&pervich=' . $data['pervich'] . '&noch=' . $data['noch'] . '&date=' . strtotime($data['day'] . '.' . $month . '.' . $data['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $data['id'] . '&worker=' . $data['worker'] . '" class="ahref">
                                                                     Внести посещение косм.
                                                                 </a>
                                                             </div>
@@ -354,36 +368,36 @@
                                 }
                             } else {
                                 $rezult .= "&nbsp";
-                            }
-                            if ($upr_edit) {
-                                if (($ZapisHereQueryToday[$z]['enter'] != 8) && ($ZapisHereQueryToday[$z]['enter'] != 9)){
+                            }*/
+                    /*        if ($upr_edit) {
+                                if (($data['enter'] != 8) && ($data['enter'] != 9)){
                                     $rezult .= '
                                                         <li>
                                                             <div>
-                                                                <a href="edit_zapis_change_client.php?client_id=' . $ZapisHereQueryToday[$z]['patient'] . '&zapis_id=' . $ZapisHereQueryToday[$z]['id'] . '" class="ahref">
+                                                                <a href="edit_zapis_change_client.php?client_id=' . $data['patient'] . '&zapis_id=' . $data['id'] . '" class="ahref">
                                                                     Изменить пациента
                                                                 </a>
                                                             </div>
                                                         </li>';
                                 }
-                            }
-                        }
+                            }*/
+                    //    }
 
 
-                        $rezult .= '</ul>';
+                    /*    $rezult .= '</ul>';
 
                         $rezult .= '
                                         </div>';
 
-                    }
+                    }*/
 
                     //<-- Управление настройки
 
                     $rezult .= '
                                     </li>';
                 }
-            }
-            $rezult .= '
+            //}
+            /*$rezult .= '
                                 <div id="ShowSettingsAddTempZapis" style="position: absolute; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; z-index:105; padding:10px;">
                                     <a class="close" href="#" onclick="HideSettingsAddTempZapis()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(img/close.png) no-repeat;">
                                         Close
@@ -513,17 +527,17 @@
                                     <!--<input type="button" class="b" value="Добавить" id="Ajax_add_TempZapis" onclick="Ajax_add_TempZapis(' . $type . ')">-->
                                     <input type="button" class="b" value="OK" onclick="if (iCanManage) Ajax_edit_TempZapis(' . $type . ')" id="Ajax_add_TempZapis">
                                     <input type="button" class="b" value="Отмена" onclick="HideSettingsAddTempZapis()">
-                                </div>';
+                                </div>';*/
 
 
             /*$rezult .= '
                             </div>';*/
-            $rezult .= '
+            /*$rezult .= '
                             <!--</div>-->
-                            <div id="req"></div>';
+                            <div id="req"></div>';*/
 
 
-            return $rezult;
+            //echo $rezult;
 
         }
 
