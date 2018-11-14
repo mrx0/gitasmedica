@@ -110,11 +110,11 @@
                     //$newPaymentSumm = 0;
 
                     //Вычисляем % премии
-                    if ($controlPercent <= 39){
+                    if ($controlPercent < 40){
                         $newPaymentPercent = 25;
-                    }elseif(($controlPercent >= 40) && ($controlPercent <= 59)){
+                    }elseif(($controlPercent >= 40) && ($controlPercent < 60)){
                         $newPaymentPercent = 20;
-                    }elseif(($controlPercent >= 60) && ($controlPercent <= 69)){
+                    }elseif(($controlPercent >= 60) && ($controlPercent < 70)){
                         $newPaymentPercent = 15;
                     }elseif($controlPercent >= 70){
                         $newPaymentPercent = 10;
