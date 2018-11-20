@@ -375,21 +375,36 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         //Сортируем по значению
                         arsort($temp_cat_array);
 
-                        echo 'Общая сумма по выполненным (закрытым) работам: <b>' . number_format($all_summ, 0, ',', ' ') . ' руб.</b> <br><br>';
+                        echo '
+                                <div style="padding: 10px 4px;">
+                                    Общая сумма по выполненным (закрытым) работам: <b>' . number_format($all_summ, 0, ',', ' ') . ' руб.</b>
+                                </div>
+                                <div>
+                                    <div style="display: inline-block; vertical-align: top;">';
 
                         if (!empty($temp_cat_array)){
                             foreach ($temp_cat_array as $item_id => $item_summ) {
 
                                 $percent_from_all_summ = $item_summ * 100 / $all_summ;
+                                $percent_from_all_summ = number_format($percent_from_all_summ, 2, ',', '');
 
                                 if ($item_id != 0) {
-                                    echo '<li><div class="cellOrder">'.$percent_cats_j[$item_id] . '</div><div class="cellName" style="text-align: right;">' . number_format($item_summ, 0, ',', ' ') . ' руб.</b></div><div class="cellName" style="text-align: right;">' . number_format($percent_from_all_summ, 2, ',', '') . ' %</div></li>';
+                                    echo '<li><div class="cellOrder">'.$percent_cats_j[$item_id].'</div><div class="cellName" style="text-align: right;">' . number_format($item_summ, 0, ',', ' ') . ' руб.</b></div><div class="cellName categoryItem" percentCat="'.$percent_from_all_summ.'" nameCat="'.$percent_cats_j[$item_id].'"  style="text-align: right;">' . $percent_from_all_summ . ' %</div></li>';
                                 }else{
-                                    echo '<li><div class="cellOrder" style="color: red;">'.'Не указана категория ' . '</div><div class="cellName" style="text-align: right; color: red;">' . number_format($item_summ, 0, ',', ' ')   . ' руб.</b></div><div class="cellName" style="text-align: right; color: red;">' . number_format($percent_from_all_summ, 2, ',', '') . ' %</div></li>';
+                                    echo '<li><div class="cellOrder" style="color: red;">'.'Не указана категория ' . '</div><div class="cellName" style="text-align: right; color: red;">' . number_format($item_summ, 0, ',', ' ')   . ' руб.</b></div><div class="cellName" style="text-align: right; color: red;">' . $percent_from_all_summ . ' %</div></li>';
                                 }
 
                             }
                         }
+
+                        echo '
+                                    </div>';
+
+                        echo '
+                                    <!--<div id="canvas-holder" style="display: inline-block; vertical-align: top; /*border: 1px dotted #CCC;*/ width: 450px;">
+                                        <canvas id="chart-area"></canvas>
+                                    </div>-->
+                                </div>';
 
 
 

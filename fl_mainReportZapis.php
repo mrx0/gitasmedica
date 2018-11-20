@@ -397,6 +397,7 @@
 						}
 					});
 				</script>';
+
 			}
 			//mysql_close();
 		}else{
