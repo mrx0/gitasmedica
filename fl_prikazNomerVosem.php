@@ -80,15 +80,22 @@
                     //Категории по которым идёт контроль %
                     //Сейчас тут Диод и Александрит
                     $controlCategories = array(9, 11);
+                    //Категории, которые надо вычесть перед контролем
+                    $controlCategoriesMinus = array(15, 14);
 
                     $controlCategoriesSumm = 0;
+                    //Не используем пока, ибо не надо
+                    $controlCategoriesMinusSumm = 0;
                     $allSumm = 0;
 
                     foreach ($tabel_ex_calculates_j as $item){
                         if (in_array((int)$item['percent_cats'], $controlCategories)) {
                             $controlCategoriesSumm += (int)$item['price'];
                         }
-                        $allSumm += (int)$item['price'];
+
+                        if (!in_array((int)$item['percent_cats'], $controlCategoriesMinus)) {
+                            $allSumm += (int)$item['price'];
+                        }
                     }
 
                     //var_dump($controlCategoriesSumm);

@@ -43,7 +43,9 @@
 			<script type="text/javascript" src="js/dict.js"></script>
 			<script type="text/javascript" src="js/common1.js"></script>
 
-			<script src="js/chart.js" type="text/javascript"></script>
+			<script src="js/utils.js" type="text/javascript"></script>
+			<script src="js/Chart.js" type="text/javascript"></script>
+			<!--<script src="js/chart2.js" type="text/javascript"></script>-->
 
 			<script src="js/tooth_status.js" type="text/javascript"></script>
 			<script src="js/path2.js" type="text/javascript"></script>

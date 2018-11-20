@@ -2758,7 +2758,7 @@
                 $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             success:function(res){
-                console.log(res);
+                //console.log(res);
                 $('#qresult').html(res);
 
                 /*if (res.result == "success") {
@@ -2865,6 +2865,11 @@
                     //console.log('Done');
 
                     blockWhileWaiting (false);
+
+
+
+                    //Показываем график
+                	showChart ();
 
                     //$('#qresult').html('Ok');
 
@@ -8338,3 +8343,100 @@
     }
 
     //showGiveOutCashAdd('add');
+
+
+
+
+	/*Для круговой диаграммы*/
+    var randomScalingFactor = function() {
+        return Math.round(Math.random() * 100);
+    };
+
+	/*document.getElementById('randomizeData').addEventListener('click', function() {
+        config.data.datasets.forEach(function(dataset) {
+            dataset.data = dataset.data.map(function() {
+                return randomScalingFactor();
+            });
+        });
+
+        window.myPie.update();
+    });*/
+
+    var colorNames = Object.keys(window.chartColors);
+
+    /*document.getElementById('addDataset').addEventListener('click', function() {
+        var newDataset = {
+            backgroundColor: [],
+            data: [],
+            label: 'New dataset ' + config.data.datasets.length,
+        };
+
+        for (var index = 0; index < config.data.labels.length; ++index) {
+            newDataset.data.push(randomScalingFactor());
+
+            var colorName = colorNames[index % colorNames.length];
+            var newColor = window.chartColors[colorName];
+            newDataset.backgroundColor.push(newColor);
+        }
+
+        config.data.datasets.push(newDataset);
+        window.myPie.update();
+    });*/
+
+    /*document.getElementById('removeDataset').addEventListener('click', function() {
+        config.data.datasets.splice(0, 1);
+        window.myPie.update();
+    });*/
+
+
+    function showChart() {
+
+        var mainData = [];
+        var mainLabel = [];
+
+		$('.categoryItem').each(function() {
+			//console.log($(this).attr('nameCat'));
+
+			if ($(this).attr('percentCat').replace(',', '.') > 2) {
+
+                //Массив данных
+                mainData.push($(this).attr('percentCat').replace(',', '.'));
+
+                //Массив названий
+                mainLabel.push($(this).attr('nameCat'));
+            }
+		});
+
+		//console.log(mainData);
+		//console.log(mainLabel);
+
+        var config = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: mainData,
+                    backgroundColor: [
+                        window.chartColors.red,
+                        window.chartColors.orange,
+                        window.chartColors.yellow,
+                        window.chartColors.green,
+                        window.chartColors.cyan,
+                        window.chartColors.blue,
+                        window.chartColors.indigo,
+                    ],
+                    label: 'Dataset 1'
+                }],
+                labels: mainLabel
+            },
+            options: {
+                responsive: true
+            }
+        };
+
+        var ctx = document.getElementById('chart-area').getContext('2d');
+
+        window.myPie = new Chart(ctx, config);
+
+    };
+
+

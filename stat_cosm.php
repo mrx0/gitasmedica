@@ -585,8 +585,8 @@
 
 										var context = document.getElementById(\'clientOs_'.$key.'_'.$key1.'_KDI\').getContext(\'2d\');
 										var clientsChart = new Chart(context).Bar(barData);
-									</script>
-									';
+										
+									</script>';
 									
 							echo '		
 									<script>

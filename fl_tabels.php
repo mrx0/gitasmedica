@@ -330,6 +330,34 @@
 				    var worker = 0;
 				    var office = 0;
 
+
+                    //Табели
+				    $(".tableTabels").each(function() {
+                        //console.log($(this).attr("id"));
+                        
+                        var thisObj = $(this);
+
+                        ids = $(this).attr("id");
+                        ids_arr = ids.split("_");
+                        //console.log(ids_arr);
+                         
+                        permission = ids_arr[0];
+                        worker = ids_arr[1];
+                        office = ids_arr[2];
+                        
+                        var certData = {
+                            permission: permission,
+                            worker: worker,
+                            office: office,
+                            month: "'.date("m").'",
+                            year: "'.date("Y").'",
+                            own_tabel: false
+                        };
+                        
+                        
+                        getTabelsfunc (thisObj, certData);
+                    });
+
 				    //Необработанные расчеты
 				    $(".tableDataNPaidCalcs").each(function() {
                         //console.log($(this).attr("id"));
@@ -357,32 +385,6 @@
                         getCalculatesfunc (thisObj, certData);
                     });
                     
-                    //Табели
-				    $(".tableTabels").each(function() {
-                        //console.log($(this).attr("id"));
-                        
-                        var thisObj = $(this);
-
-                        ids = $(this).attr("id");
-                        ids_arr = ids.split("_");
-                        //console.log(ids_arr);
-                         
-                        permission = ids_arr[0];
-                        worker = ids_arr[1];
-                        office = ids_arr[2];
-                        
-                        var certData = {
-                            permission: permission,
-                            worker: worker,
-                            office: office,
-                            month: "'.date("m").'",
-                            year: "'.date("Y").'",
-                            own_tabel: false
-                        };
-                        
-                        
-                        getTabelsfunc (thisObj, certData);
-                    });
 				});
 				
                 

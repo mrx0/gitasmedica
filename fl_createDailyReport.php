@@ -183,6 +183,7 @@
             echo '
 							<div id="tabs-1">';
 
+            echo '';
 
             echo '
 							</div>';
@@ -232,24 +233,8 @@
 							
 				        </div>';
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             echo '
-                            <input type="button" class="b" value="Добавить" onclick="">';
+                        <input type="button" class="b" value="Добавить" onclick="">';
 
             echo '
                     </div>
