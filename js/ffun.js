@@ -2766,6 +2766,7 @@
 
                     }else{
                         console.log(res);
+                        
                     }
                 }
             });
@@ -2793,3 +2794,65 @@
             alert(" Closed!");
         }
     }*/
+
+    //Суммируем все поля в отчете
+    function calculateDailyReportSumm(){
+
+        var summ = 0;
+
+        $(".allSumm").each(function(){
+            summ += Number($(this).html());
+        });
+        $(".allSummInput").each(function(){
+            summ += Number($(this).val());
+        });
+        
+        summ = summ - $(".summMinus").val();
+
+        $("#allsumm").html(summ);
+
+    }
+
+    //Добавление ежедневного отчёта в бд
+    function fl_createDailyReport_add(){
+
+        var link = "fl_createDailyReport_add_f.php";
+
+        var reqData = {
+            date: $("#iWantThisDate2").val(),
+            filial_id: $("#SelectFilial").val(),
+            allsumm: $("#allsumm").html(),
+            SummNal: $("#SummNal").html(),
+            SummBeznal: $("#SummBeznal").html(),
+            CertCount: $("#CertCount").html(),
+            SummCertNal: $("#SummCertNal").html(),
+            SummCertBeznal: $("#SummCertBeznal").html(),
+            ortoSummNal: $("#ortoSummNal").val(),
+            ortoSummBeznal: $("#ortoSummBeznal").val(),
+            specialistSummNal: $("#specialistSummNal").val(),
+            specialistSummBeznal: $("#specialistSummBeznal").val(),
+            analizSummNal: $("#analizSummNal").val(),
+            analizSummBeznal: $("#analizSummBeznal").val(),
+            solarSummNal: $("#solarSummNal").val(),
+            solarSummBeznal: $("#solarSummBeznal").val(),
+            summMinusNal: $("#summMinusNal").val()
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                console.log(res);
+
+
+            }
+        });
+    }
