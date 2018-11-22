@@ -49,7 +49,7 @@
                 echo json_encode(array('result' => 'success', 'data' => '<div class="query_ok">Отчёт сформирован и отправлен</div>'));
 
 			}else{
-                echo json_encode(array('result' => 'success', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
+                echo json_encode(array('result' => 'success', 'data' => '<div class="query_neok">Что-то пошло не так</div>', 'post' => $_POST));
 			}
 		}
 	}
