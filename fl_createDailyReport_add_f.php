@@ -24,40 +24,30 @@
 				$time = time();
 
                 $msql_cnnct = ConnectToDB ();
-				
-				//$date_expires = strtotime($_POST['date_expires'].' 00:00:00');
+
+                $data_temp_arr = explode(".", $_POST['date']);
+
+                $d = $data_temp_arr[0];
+                $m = $data_temp_arr[1];
+                $y = $data_temp_arr[2];
+
+				$create_time = date('Y-m-d H:i:s', time());
 				
 				$query = "INSERT INTO `fl_journal_daily_report` 
-                (`filial`, `day`, `month`, `year`, `summ`, `cashbox_nal`, `cashbox_beznal`, `cashbox_cert_count`, `cashbox_cert_nal`, `cashbox_cert_beznal`, `temp_orto_nal`, `temp_orto_beznal`, `temp_specialist_nal`, `temp_specialist_beznal`, `temp_analiz_nal`, `temp_analiz_beznal`, `temp_solar_nal`, `temp_solar_beznal`, `temp_giveoutcash`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`, `status`) 
-                VALUES ('0', '00', '00', '0000', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0000-00-00 00:00:00', '0', '0000-00-00 00:00:00', '0', '0');";
+                (`filial_id`, `day`, `month`, `year`, `summ`, `cashbox_nal`, `cashbox_beznal`, `cashbox_cert_count`, `cashbox_cert_nal`, `cashbox_cert_beznal`, `temp_orto_nal`, `temp_orto_beznal`, `temp_specialist_nal`, `temp_specialist_beznal`, `temp_analiz_nal`, `temp_analiz_beznal`, `temp_solar_nal`, `temp_solar_beznal`, `temp_giveoutcash`, `create_time`, `create_person`) 
+                VALUES ('{$_POST['filial_id']}', '{$d}', '{$m}', '{$y}', '{$_POST['allsumm']}', '{$_POST['SummNal']}', '{$_POST['SummBeznal']}', '{$_POST['CertCount']}', '{$_POST['SummCertNal']}', '{$_POST['SummCertBeznal']}', '{$_POST['ortoSummNal']}', '{$_POST['ortoSummBeznal']}', '{$_POST['specialistSummNal']}', '{$_POST['specialistSummBeznal']}', '{$_POST['analizSummNal']}', '{$_POST['analizSummBeznal']}', '{$_POST['solarSummNal']}', '{$_POST['solarSummBeznal']}', '{$_POST['summMinusNal']}', '{$create_time}', '{$_SESSION['id']}');";
 
-                /*$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
-                $mysql_insert_id = mysqli_insert_id($msql_cnnct);
+                //$mysql_insert_id = mysqli_insert_id($msql_cnnct);
 
-
-					
                 //логирование
                 //AddLog ('0', $_SESSION['id'], '', 'Добавлен долг #'.$mysql_insert_id.'. Пациент ['.$_POST['client'].']. Сумма ['.$_POST['summ'].']. Срок истечения ['.$_POST['date_expires'].']. Тип ['.$_POST['type'].']. Комментарий ['.$_POST['comment'].'].');
-				
-                if ($_POST['type'] == 3){
-                    $descr = 'Аванс';
-                }
-                if ($_POST['type'] == 4){
-                    $descr = 'Долг';
-                }*/
 
                 CloseDB ($msql_cnnct);
 
-                echo json_encode(array('result' => 'success', 'data' => $_POST));
+                echo json_encode(array('result' => 'success', 'data' => '<div class="query_ok">Отчёт сформирован и отправлен</div>'));
 
-                /*echo '
-						<div class="query_ok">
-							'.$descr.' <a href="finance_dp.php?id='.$mysql_insert_id.'">#'.$mysql_insert_id.'</a> добавлен.
-							<br><br>
-							<a href="client.php?id='.$_POST['client'].'" class="b">Карточка пациента</a>
-							<a href="client_finance.php?client='.$_POST['client'].'" class="b">Счёт <i class="fa fa-rub"></i></a>
-						</div>';*/
 			}else{
                 echo json_encode(array('result' => 'success', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}
