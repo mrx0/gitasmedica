@@ -2816,6 +2816,9 @@
     //Добавление ежедневного отчёта в бд
     function fl_createDailyReport_add(){
 
+        //убираем ошибки
+        hideAllErrors ();
+
         var link = "fl_createDailyReport_add_f.php";
 
         var reqData = {
@@ -2850,9 +2853,20 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                console.log(res);
+                //console.log(res);
 
-
+                if(res.result == 'success') {
+                    //console.log('success');
+                    $('#data').html(res.data);
+                    setTimeout(function () {
+                        window.location.replace('stat_cashbox.php');
+                        //console.log('client.php?id='+id);
+                    }, 300);
+                }else{
+                    //console.log('error');
+                    $('#errrror').html(res.data);
+                    //$('#errrror').html('');
+                }
             }
         });
     }

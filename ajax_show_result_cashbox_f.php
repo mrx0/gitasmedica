@@ -278,6 +278,8 @@
 
                         $filialData_str .= $orderAll_str;
                     } else {
+                        $filialData_str .= '
+                                     <a href="fl_createDailyReport.php?filial_id=' . $order_item['office_id'] . '&d=' . $d . '&m=' . $m . '&y=' . $y . '" class="b">Ежедневный отчёт</a>';
                         $filialData_str .= '<span style="color: red;">По запрошенным условиям ничего не найдено.</span>';
                     }
 
@@ -315,7 +317,9 @@
                 echo $result;
 
             } else {
-                echo '<span style="color: red;">По запрошенным условиям ничего не найдено.</span>';
+                echo '
+                     <span style="color: red;">По запрошенным условиям ничего не найдено.</span><br><br>
+                     <a href="fl_createDailyReport.php" class="b">Ежедневный отчёт</a>';
             }
         }
 	}
