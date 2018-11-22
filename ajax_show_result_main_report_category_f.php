@@ -321,11 +321,11 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                     if ($number != 0) {
                         while ($arr = mysqli_fetch_assoc($res)) {
-                            array_push($journal, $arr);
+                            //array_push($journal, $arr);
+                            $journal[$arr['id']] = $arr;
                         }
                     }
                     //var_dump($journal);
-
 
                     //echo json_encode(array('result' => 'success', 'data' => $journal, 'query' => $query));
 
@@ -355,21 +355,30 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             }
                         }
 
+                        //var_dump($temp_cat_array);
 
                         foreach ($journal as $item){
                             //var_dump($item);
+                            //var_dump($item['id']);
+                            //var_dump($item['price']);
                             //echo $item['id'].'<br>';
 
                             //if ($item['price'] != 0) {
+                            if ($item['id'] != NULL) {
                                 if (!isset($temp_cat_array[$item['percent_cats']])) {
                                     $temp_cat_array[$item['percent_cats']] = $item['price'];
+                                    //var_dump($item['percent_cats']);
+                                    //var_dump($temp_cat_array);
+
                                 } else {
                                     $temp_cat_array[$item['percent_cats']] += $item['price'];
                                 }
+                            }
                             //}
                             $all_summ += $item['price'];
 
                         }
+                        //var_dump($temp_cat_array);
 
                         //var_dump($temp_cat_array);
                         //Сортируем по значению

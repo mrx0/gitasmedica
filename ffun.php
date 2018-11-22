@@ -24,7 +24,7 @@
     }
 
 
-//добавляем клиенту новую запись с балансом
+    //добавляем клиенту новую запись с балансом
     function addClientBalanceNew ($client_id, $balance){
 
         $msql_cnnct = ConnectToDB2 ();
@@ -1143,530 +1143,610 @@
 
 
 
-//функция для создания шаблона табеля (оасчетного листа) для печати
-function tabelPrintTemplate ($tabel_id, $month, $year, $worker_fio, $filial, $countSmen, $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3, $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1, $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm, $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount, $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3){
+    //функция для создания шаблона табеля (оасчетного листа) для печати
+    function tabelPrintTemplate ($tabel_id, $month, $year, $worker_fio, $filial, $countSmen, $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3, $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1, $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm, $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount, $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3){
 
-    $rezult = '
-			<div class="rezult_item" style="font-size: 95%; margin: 15px;" fio="'.$worker_fio.'">				
-				<div class="filterBlock" style="width: 650px; border-bottom: 1px dotted grey;">
-					<div class="filtercellLeft" style="width: 400px; text-align: center; border: none; padding-bottom: 2px;">
-						<a href="fl_tabel.php?id='.$tabel_id.'" class="ahref">Расчетный листок '.$tabel_id.'</a> за '.$month.' '.$year.'
-					</div>
-				</div>
-				
-				<div class="filterBlock" style="width: 650px; ">
-					<div class="filtercellLeft" style="border: none; width: auto; min-width: auto; max-width: auto; padding: 2px 2px 1px;">
-						<div style="padding: 2px 0 3px; font-size: 115%; font-weight: bold;">
-							<i>'.$worker_fio.'</i>
-						</div>
-						<div style="background-color: rgba(144,247,95, 0.4); font-size: 130%; padding: 5px 5px 2px;">
-							<div style="display: inline;">К выплате:</div>
-							<div style="float: right; display: inline; text-align: right; font-size: 110%;"><b><i><div class="pay_must_'.$tabel_id.'" style="display: inline;">0</div> р.</i></b></div>
-						</div>
-						
-					</div>
-					<div class="filtercellRight" style="border: none; width: 290px; min-width: 290px; max-width: 290px; padding: 2px 2px 1px;">
-						<div style="border-bottom: 1px dotted grey;">
-							<div style="display: inline;">Подразделение</div>
-							<div style="float: right; display: inline; text-align: right;"><b>'.$filial.'</b></div>
-						</div>
-						<div style="border-bottom: 1px dotted grey;">
-							<div style="display: inline;">Норма смен/дней</div>
-							<div style="float: right; display: inline; text-align: right;">-</div>
-						</div>
-						<div style="border-bottom: 1px dotted grey;">
-							<div style="display: inline;">Часов в смене</div>
-							<div style="float: right; display: inline; text-align: right;">-</div>
-						</div>
-					</div>
-				</div>
-				
-				<div class="filterBlock" style="width: 650px;">
-				
-					<table width="100%" style="border: 2px solid #525252; border-collapse: collapse;">
-						<tr>
-							<td rowspan="2" style="width: 100px; text-align: center; border: 2px solid #525252;">
-								Вид
-							</td>
-							<td rowspan="2" style="width: 60px; text-align: center; border: 2px solid #525252;">
-								тариф
-							</td>
-							<td colspan="2" style="width: 70px; text-align: center; border: 2px solid #525252;">
-								период
-							</td>
-							<td rowspan="2" style="width: 80px; text-align: center; border: 2px solid #525252;">
-								Сумма
-							</td>
-							<td rowspan="2" style="width: 100px; text-align: center; border: 2px solid #525252;">
-								Вид
-							</td>
-							<td style="width: 70px; text-align: center; border: 2px solid #525252;">
-								период
-							</td>
-							<td rowspan="2" style="width: 80px; text-align: center; border: 2px solid #525252;">
-								Сумма
-							</td>
-						</tr>
-						
-						
-						<tr>
-							<td style="width: 35px; text-align: center; border: 1px solid #BFBCB5; font-size: 80%;">
-								дней
-							</td>
-							<td style="width: 35px; text-align: center; border: 1px solid #BFBCB5; font-size: 80%;">
-								часов
-							</td>
-								<td style="text-align: center; border: 1px solid #BFBCB5;">
-								дней
-							</td>
-						</tr>  
-						 
-						<tr>
-							<td colspan="5" style="text-align: left; border: 2px solid #525252; padding: 3px 0 3px 3px;">
-								<b>1. Начислено</b>
-							</td>
-							<td colspan="3" style="text-align: left; border: 2px solid #525252; padding: 3px 0 3px 3px;">
-								<b>2. Удержано</b>
-							</td>
-						</tr>
-						
-						<tr>
-							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-								з/п
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
-								'.$countSmen.'
-							</td>
-							<td  class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								<div class="pay_plus_part1_'.$tabel_id.'" style="display: inline;">
-									'.$tabel_summ.'
-								</div> р.
-							</td>
-							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-								налог
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								<div class="pay_minus_part1_'.$tabel_id.'" style="display: inline;">
-									'.$tabel_deductions_j2.'
-								</div> р.
-							</td>
-						</tr>
-						 
-						<tr>
-							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-								отпускные
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								<div class="pay_plus_part1_'.$tabel_id.'" style="display: inline;">
-									'.$tabel_surcharges_j2.'
-								</div> р.
-							</td>
-							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-								штраф
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								<div class="pay_minus_part1_'.$tabel_id.'" style="display: inline;">
-									'.$tabel_deductions_j3.'
-								</div> р.
-							</td>
-						</tr>
-						 
-						<tr>
-							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-								больничный
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								<div class="pay_plus_part1_'.$tabel_id.'" style="display: inline;">
-									'.$tabel_surcharges_j3.'
-								</div> р.
-							</td>
-							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-								ссуда
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								<div class="pay_minus_part1_'.$tabel_id.'" style="display: inline;">
-									'.$tabel_deductions_j4.'
-								</div> р.
-							</td>
-						</tr>
-						 
-						<tr>
-							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-								премия
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								<div class="pay_plus_part1_'.$tabel_id.'" style="display: inline;">
-									'.$tabel_surcharges_j1.'
-								</div> р.
-							</td>
-							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-								обучение
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								<div class="pay_minus_part1_'.$tabel_id.'" style="display: inline;">
-									'.$tabel_deductions_j5.'
-								</div> р.
-							</td>
-						</tr>
-						 
-						<tr style="border: 2px solid #525252;">
-							<td colspan="4" style="text-align: left; border: 1px solid #BFBCB5; padding: 2px 0 1px 3px;">
-								<b><i>Всего начислено</i></b>
-							</td>
-							<td style="text-align: right; border: 1px solid #BFBCB5; padding-right: 3px; font-size: 110%;">
-								<b><div class="pay_plus1_'.$tabel_id.'" style="display: inline;">0</div> р.</b>
-							</td>
-							<td colspan="2" style="text-align: left; border-left: 2px solid #525252; padding: 2px 0 1px 3px;">
-								<b><i>Всего удержано</i></b>
-							</td>
-							<td style="text-align: right; border: 1px solid #BFBCB5; padding: 2px 0 1px 3px; font-size: 110%;">
-								<b><div class="pay_minus1_'.$tabel_id.'" style="display: inline;">0</div> р.</b>
-							</td>
-						</tr>
-						
-						<tr>
-							<td colspan="5" style="text-align: left; border: 2px solid #525252; padding: 3px 0 3px 3px;">
-								<b>3. Прочее</b>
-							</td>
-							<td colspan="3" style="text-align: left; border: 2px solid #525252; padding: 3px 0 3px 3px;">
-								<b>4. Выплачено</b>
-							</td>
-						</tr>
-						
-						<tr>
-							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-								пустые смены
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">';
+        $rezult = '
+                <div class="rezult_item" style="font-size: 95%; margin: 15px;" fio="'.$worker_fio.'">				
+                    <div class="filterBlock" style="width: 650px; border-bottom: 1px dotted grey;">
+                        <div class="filtercellLeft" style="width: 400px; text-align: center; border: none; padding-bottom: 2px;">
+                            <a href="fl_tabel.php?id='.$tabel_id.'" class="ahref">Расчетный листок '.$tabel_id.'</a> за '.$month.' '.$year.'
+                        </div>
+                    </div>
+                    
+                    <div class="filterBlock" style="width: 650px; ">
+                        <div class="filtercellLeft" style="border: none; width: auto; min-width: auto; max-width: auto; padding: 2px 2px 1px;">
+                            <div style="padding: 2px 0 3px; font-size: 115%; font-weight: bold;">
+                                <i>'.$worker_fio.'</i>
+                            </div>
+                            <div style="background-color: rgba(144,247,95, 0.4); font-size: 130%; padding: 5px 5px 2px;">
+                                <div style="display: inline;">К выплате:</div>
+                                <div style="float: right; display: inline; text-align: right; font-size: 110%;"><b><i><div class="pay_must_'.$tabel_id.'" style="display: inline;">0</div> р.</i></b></div>
+                            </div>
+                            
+                        </div>
+                        <div class="filtercellRight" style="border: none; width: 290px; min-width: 290px; max-width: 290px; padding: 2px 2px 1px;">
+                            <div style="border-bottom: 1px dotted grey;">
+                                <div style="display: inline;">Подразделение</div>
+                                <div style="float: right; display: inline; text-align: right;"><b>'.$filial.'</b></div>
+                            </div>
+                            <div style="border-bottom: 1px dotted grey;">
+                                <div style="display: inline;">Норма смен/дней</div>
+                                <div style="float: right; display: inline; text-align: right;">-</div>
+                            </div>
+                            <div style="border-bottom: 1px dotted grey;">
+                                <div style="display: inline;">Часов в смене</div>
+                                <div style="float: right; display: inline; text-align: right;">-</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filterBlock" style="width: 650px;">
+                    
+                        <table width="100%" style="border: 2px solid #525252; border-collapse: collapse;">
+                            <tr>
+                                <td rowspan="2" style="width: 100px; text-align: center; border: 2px solid #525252;">
+                                    Вид
+                                </td>
+                                <td rowspan="2" style="width: 60px; text-align: center; border: 2px solid #525252;">
+                                    тариф
+                                </td>
+                                <td colspan="2" style="width: 70px; text-align: center; border: 2px solid #525252;">
+                                    период
+                                </td>
+                                <td rowspan="2" style="width: 80px; text-align: center; border: 2px solid #525252;">
+                                    Сумма
+                                </td>
+                                <td rowspan="2" style="width: 100px; text-align: center; border: 2px solid #525252;">
+                                    Вид
+                                </td>
+                                <td style="width: 70px; text-align: center; border: 2px solid #525252;">
+                                    период
+                                </td>
+                                <td rowspan="2" style="width: 80px; text-align: center; border: 2px solid #525252;">
+                                    Сумма
+                                </td>
+                            </tr>
+                            
+                            
+                            <tr>
+                                <td style="width: 35px; text-align: center; border: 1px solid #BFBCB5; font-size: 80%;">
+                                    дней
+                                </td>
+                                <td style="width: 35px; text-align: center; border: 1px solid #BFBCB5; font-size: 80%;">
+                                    часов
+                                </td>
+                                    <td style="text-align: center; border: 1px solid #BFBCB5;">
+                                    дней
+                                </td>
+                            </tr>  
+                             
+                            <tr>
+                                <td colspan="5" style="text-align: left; border: 2px solid #525252; padding: 3px 0 3px 3px;">
+                                    <b>1. Начислено</b>
+                                </td>
+                                <td colspan="3" style="text-align: left; border: 2px solid #525252; padding: 3px 0 3px 3px;">
+                                    <b>2. Удержано</b>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+                                    з/п
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+                                    '.$countSmen.'
+                                </td>
+                                <td  class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    <div class="pay_plus_part1_'.$tabel_id.'" style="display: inline;">
+                                        '.$tabel_summ.'
+                                    </div> р.
+                                </td>
+                                <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+                                    налог
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    <div class="pay_minus_part1_'.$tabel_id.'" style="display: inline;">
+                                        '.$tabel_deductions_j2.'
+                                    </div> р.
+                                </td>
+                            </tr>
+                             
+                            <tr>
+                                <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+                                    отпускные
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    <div class="pay_plus_part1_'.$tabel_id.'" style="display: inline;">
+                                        '.$tabel_surcharges_j2.'
+                                    </div> р.
+                                </td>
+                                <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+                                    штраф
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    <div class="pay_minus_part1_'.$tabel_id.'" style="display: inline;">
+                                        '.$tabel_deductions_j3.'
+                                    </div> р.
+                                </td>
+                            </tr>
+                             
+                            <tr>
+                                <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+                                    больничный
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    <div class="pay_plus_part1_'.$tabel_id.'" style="display: inline;">
+                                        '.$tabel_surcharges_j3.'
+                                    </div> р.
+                                </td>
+                                <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+                                    ссуда
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    <div class="pay_minus_part1_'.$tabel_id.'" style="display: inline;">
+                                        '.$tabel_deductions_j4.'
+                                    </div> р.
+                                </td>
+                            </tr>
+                             
+                            <tr>
+                                <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+                                    премия
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    <div class="pay_plus_part1_'.$tabel_id.'" style="display: inline;">
+                                        '.$tabel_surcharges_j1.'
+                                    </div> р.
+                                </td>
+                                <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+                                    обучение
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    <div class="pay_minus_part1_'.$tabel_id.'" style="display: inline;">
+                                        '.$tabel_deductions_j5.'
+                                    </div> р.
+                                </td>
+                            </tr>
+                             
+                            <tr style="border: 2px solid #525252;">
+                                <td colspan="4" style="text-align: left; border: 1px solid #BFBCB5; padding: 2px 0 1px 3px;">
+                                    <b><i>Всего начислено</i></b>
+                                </td>
+                                <td style="text-align: right; border: 1px solid #BFBCB5; padding-right: 3px; font-size: 110%;">
+                                    <b><div class="pay_plus1_'.$tabel_id.'" style="display: inline;">0</div> р.</b>
+                                </td>
+                                <td colspan="2" style="text-align: left; border-left: 2px solid #525252; padding: 2px 0 1px 3px;">
+                                    <b><i>Всего удержано</i></b>
+                                </td>
+                                <td style="text-align: right; border: 1px solid #BFBCB5; padding: 2px 0 1px 3px; font-size: 110%;">
+                                    <b><div class="pay_minus1_'.$tabel_id.'" style="display: inline;">0</div> р.</b>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td colspan="5" style="text-align: left; border: 2px solid #525252; padding: 3px 0 3px 3px;">
+                                    <b>3. Прочее</b>
+                                </td>
+                                <td colspan="3" style="text-align: left; border: 2px solid #525252; padding: 3px 0 3px 3px;">
+                                    <b>4. Выплачено</b>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+                                    пустые смены
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">';
 
-    if ($emptySmenaCount != 0){
-        $rezult .= $emptySmenaPrice.' р.';
-    }
-
-    $rezult .= '
-							</td>
-							<td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">';
-
-    if ($emptySmenaCount != 0){
-        $rezult .= $emptySmenaCount;
-    }
-
-    $rezult .= '
-							</td>
-							<td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								<div class="pay_plus_part2_'.$tabel_id.'" style="display: inline;">';
-
-    //if ($emptySmenaCount != 0){
-        $rezult .= $emptySmenaSumm;
-    //}
-
-    $rezult .= '
-								</div> р.
-							</td>
-							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-								аванс
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								<div class="pay_minus_part2_'.$tabel_id.'" style="display: inline;">
-									'.$tabel_paidouts_j1.'
-								</div> р.
-							</td>
-						</tr>	
-						 
-						<tr>
-							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-								ночные смены
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">';
-
-    if ($nightSmenaCount != 0){
-        $rezult .= $nightSmenaPrice.' р.';
-    }
-
-    $rezult .= '
-							</td>
-							<td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">';
-
-    if ($nightSmenaCount != 0){
-        $rezult .= $nightSmenaCount;
-    }
-
-    $rezult .= '
-							</td>
-							<td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								<div class="pay_plus_part2_'.$tabel_id.'" style="display: inline;">';
-
-    //if ($nightSmenaCount != 0){
-        $rezult .= $nightSmenaSumm;
-    //}
-
-    $rezult .= '
-								</div> р.
-							</td>
-							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-								отпускные
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								<div class="pay_minus_part2_'.$tabel_id.'" style="display: inline;">
-									'.$tabel_paidouts_j2.'
-								</div> р.
-							</td>
-						</tr>
-						 
-						<tr>
-							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								<div class="pay_plus_part2_'.$tabel_id.'" style="display: inline;">0</div> р.
-							</td>
-							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-								больничный
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								<div class="pay_minus_part2_'.$tabel_id.'" style="display: inline;">
-									'.$tabel_paidouts_j3.'
-								</div> р.
-							</td>
-						</tr>
-						 
-						<tr>
-							<td class="border_tabel_print" style="text-align: left; border: 1px solid #BFBCB5; padding: 3px 0 3px 3px;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								<div class="pay_plus_part2_'.$tabel_id.'" style="display: inline;">0</div> р.
-							</td>
-							<td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-								на карту
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								
-							</td>
-							<td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-								<div class="pay_minus_part2_'.$tabel_id.'" style="display: inline;">
-									'.$tabel_paidouts_j4.'
-								</div> р.
-							</td>
-						</tr>
-						
-						<tr style="border: 2px solid #525252;">
-							<td colspan="4" style="text-align: left; border: 1px solid #BFBCB5; padding: 2px 0 1px 3px;">
-								<b><i>Всего</i></b>
-							</td>
-							<td style="text-align: right; border: 1px solid #BFBCB5; padding-right: 3px; font-size: 110%;">
-								<b><div class="pay_plus2_'.$tabel_id.'" style="display: inline;">0</div> р.</b>
-							</td>
-							<td colspan="2" style="text-align: left; border-left: 2px solid #525252; padding: 2px 0 1px 3px;">
-								<b><i>Всего выплачено</i></b>
-							</td>
-							<td style="text-align: right; border: 1px solid #BFBCB5; padding-right: 3px; font-size: 110%;">
-								<b><div class="pay_minus2_'.$tabel_id.'" style="display: inline;">0</div> р.</b>
-							</td>
-						</tr>
-						 
-					</table>
-				
-				</div>						
-			</div>';
-
-    return $rezult;
-
-}
-
-//Рассчет РЛ и сохранение в БД
-function calculateCalculateSave (
-    $data, $zapis_id, $invoice_id, $filial_id, $client_id, $worker_id, $invoice_type, $summ, $discount, $author
-){
-
-    $calculateInvSumm = 0;
-    $calculateCalcSumm = 0;
-
-    $msql_cnnct = ConnectToDB2();
-
-    $time = date('Y-m-d H:i:s', time());
-
-    //$discount = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['discount'];
-
-    //Добавляем в базу
-    $query = "INSERT INTO `fl_journal_calculate` (`zapis_id`, `invoice_id`, `office_id`, `client_id`, `worker_id`, `type`, `summ_inv`, `discount`, `summ`, `date_in`, `create_person`, `create_time`) 
-						VALUES (
-						'{$zapis_id}', '{$invoice_id}', '{$filial_id}', '{$client_id}', '{$worker_id}', '{$invoice_type}', '{$summ}', '{$discount}', '{$summ}', '{$time}', '{$author}', '{$time}')";
-
-    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-    //ID новой позиции
-    $mysql_insert_id = mysqli_insert_id($msql_cnnct);
-
-    //Затраты на материалы
-    $mat_cons_j_ex = array();
-
-    $query = "SELECT jimc.*, jimcex.*, jimc.id as mc_id, jimc.summ as all_summ FROM `journal_inv_material_consumption` jimc
-                                LEFT JOIN `journal_inv_material_consumption_ex` jimcex
-                                ON jimc.id = jimcex.inv_mat_cons_id
-                                WHERE jimc.invoice_id = '".$invoice_id."';";
-
-    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-    $number = mysqli_num_rows($res);
-
-    if ($number != 0) {
-        while ($arr = mysqli_fetch_assoc($res)) {
-
-            //array_push($mat_cons_j, $arr);
-
-            if (!isset($mat_cons_j_ex['data'])){
-                $mat_cons_j_ex['data'] = array();
-            }
-
-            if (!isset($mat_cons_j_ex['data'][$arr['inv_pos_id']])){
-                $mat_cons_j_ex['data'][$arr['inv_pos_id']] = $arr['summ'];
-            }
-
-            $mat_cons_j_ex['create_person'] = $arr['create_person'];
-            $mat_cons_j_ex['create_time'] = $arr['create_time'];
-            $mat_cons_j_ex['all_summ'] = $arr['all_summ'];
-            $mat_cons_j_ex['descr'] = $arr['descr'];
-            $mat_cons_j_ex['id'] = $arr['mc_id'];
+        if ($emptySmenaCount != 0){
+            $rezult .= $emptySmenaPrice.' р.';
         }
-    } else {
+
+        $rezult .= '
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">';
+
+        if ($emptySmenaCount != 0){
+            $rezult .= $emptySmenaCount;
+        }
+
+        $rezult .= '
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    <div class="pay_plus_part2_'.$tabel_id.'" style="display: inline;">';
+
+        //if ($emptySmenaCount != 0){
+            $rezult .= $emptySmenaSumm;
+        //}
+
+        $rezult .= '
+                                    </div> р.
+                                </td>
+                                <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+                                    аванс
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    <div class="pay_minus_part2_'.$tabel_id.'" style="display: inline;">
+                                        '.$tabel_paidouts_j1.'
+                                    </div> р.
+                                </td>
+                            </tr>	
+                             
+                            <tr>
+                                <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+                                    ночные смены
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">';
+
+        if ($nightSmenaCount != 0){
+            $rezult .= $nightSmenaPrice.' р.';
+        }
+
+        $rezult .= '
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">';
+
+        if ($nightSmenaCount != 0){
+            $rezult .= $nightSmenaCount;
+        }
+
+        $rezult .= '
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    <div class="pay_plus_part2_'.$tabel_id.'" style="display: inline;">';
+
+        //if ($nightSmenaCount != 0){
+            $rezult .= $nightSmenaSumm;
+        //}
+
+        $rezult .= '
+                                    </div> р.
+                                </td>
+                                <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+                                    отпускные
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    <div class="pay_minus_part2_'.$tabel_id.'" style="display: inline;">
+                                        '.$tabel_paidouts_j2.'
+                                    </div> р.
+                                </td>
+                            </tr>
+                             
+                            <tr>
+                                <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    <div class="pay_plus_part2_'.$tabel_id.'" style="display: inline;">0</div> р.
+                                </td>
+                                <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+                                    больничный
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    <div class="pay_minus_part2_'.$tabel_id.'" style="display: inline;">
+                                        '.$tabel_paidouts_j3.'
+                                    </div> р.
+                                </td>
+                            </tr>
+                             
+                            <tr>
+                                <td class="border_tabel_print" style="text-align: left; border: 1px solid #BFBCB5; padding: 3px 0 3px 3px;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    <div class="pay_plus_part2_'.$tabel_id.'" style="display: inline;">0</div> р.
+                                </td>
+                                <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+                                    на карту
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    <div class="pay_minus_part2_'.$tabel_id.'" style="display: inline;">
+                                        '.$tabel_paidouts_j4.'
+                                    </div> р.
+                                </td>
+                            </tr>
+                            
+                            <tr style="border: 2px solid #525252;">
+                                <td colspan="4" style="text-align: left; border: 1px solid #BFBCB5; padding: 2px 0 1px 3px;">
+                                    <b><i>Всего</i></b>
+                                </td>
+                                <td style="text-align: right; border: 1px solid #BFBCB5; padding-right: 3px; font-size: 110%;">
+                                    <b><div class="pay_plus2_'.$tabel_id.'" style="display: inline;">0</div> р.</b>
+                                </td>
+                                <td colspan="2" style="text-align: left; border-left: 2px solid #525252; padding: 2px 0 1px 3px;">
+                                    <b><i>Всего выплачено</i></b>
+                                </td>
+                                <td style="text-align: right; border: 1px solid #BFBCB5; padding-right: 3px; font-size: 110%;">
+                                    <b><div class="pay_minus2_'.$tabel_id.'" style="display: inline;">0</div> р.</b>
+                                </td>
+                            </tr>
+                             
+                        </table>
+                    
+                    </div>						
+                </div>';
+
+        return $rezult;
 
     }
 
-    foreach ($data as $ind => $calculate_data) {
+    //Рассчет РЛ и сохранение в БД
+    function calculateCalculateSave (
+        $data, $zapis_id, $invoice_id, $filial_id, $client_id, $worker_id, $invoice_type, $summ, $discount, $author
+    ){
 
-        if (!empty($calculate_data)) {
-            if ($invoice_type == 5) {
-                foreach ($calculate_data as $key => $items) {
+        $calculateInvSumm = 0;
+        $calculateCalcSumm = 0;
 
-                    $pos_id = $items['id'];
-                    $price_id = $items['price_id'];
-                    $quantity = $items['quantity'];
-                    $insure = $items['insure'];
-                    $insure_approve = $items['insure_approve'];
-                    $price = $items['price'];
+        $msql_cnnct = ConnectToDB2();
 
-                    if (isset($items['itog_price'])){
-                        $itog_price = $items['itog_price'];
+        $time = date('Y-m-d H:i:s', time());
+
+        //$discount = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['discount'];
+
+        //Добавляем в базу
+        $query = "INSERT INTO `fl_journal_calculate` (`zapis_id`, `invoice_id`, `office_id`, `client_id`, `worker_id`, `type`, `summ_inv`, `discount`, `summ`, `date_in`, `create_person`, `create_time`) 
+                            VALUES (
+                            '{$zapis_id}', '{$invoice_id}', '{$filial_id}', '{$client_id}', '{$worker_id}', '{$invoice_type}', '{$summ}', '{$discount}', '{$summ}', '{$time}', '{$author}', '{$time}')";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        //ID новой позиции
+        $mysql_insert_id = mysqli_insert_id($msql_cnnct);
+
+        //Затраты на материалы
+        $mat_cons_j_ex = array();
+
+        $query = "SELECT jimc.*, jimcex.*, jimc.id as mc_id, jimc.summ as all_summ FROM `journal_inv_material_consumption` jimc
+                                    LEFT JOIN `journal_inv_material_consumption_ex` jimcex
+                                    ON jimc.id = jimcex.inv_mat_cons_id
+                                    WHERE jimc.invoice_id = '".$invoice_id."';";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0) {
+            while ($arr = mysqli_fetch_assoc($res)) {
+
+                //array_push($mat_cons_j, $arr);
+
+                if (!isset($mat_cons_j_ex['data'])){
+                    $mat_cons_j_ex['data'] = array();
+                }
+
+                if (!isset($mat_cons_j_ex['data'][$arr['inv_pos_id']])){
+                    $mat_cons_j_ex['data'][$arr['inv_pos_id']] = $arr['summ'];
+                }
+
+                $mat_cons_j_ex['create_person'] = $arr['create_person'];
+                $mat_cons_j_ex['create_time'] = $arr['create_time'];
+                $mat_cons_j_ex['all_summ'] = $arr['all_summ'];
+                $mat_cons_j_ex['descr'] = $arr['descr'];
+                $mat_cons_j_ex['id'] = $arr['mc_id'];
+            }
+        } else {
+
+        }
+
+        foreach ($data as $ind => $calculate_data) {
+
+            if (!empty($calculate_data)) {
+                if ($invoice_type == 5) {
+                    foreach ($calculate_data as $key => $items) {
+
+                        $pos_id = $items['id'];
+                        $price_id = $items['price_id'];
+                        $quantity = $items['quantity'];
+                        $insure = $items['insure'];
+                        $insure_approve = $items['insure_approve'];
+                        $price = $items['price'];
+
+                        if (isset($items['itog_price'])){
+                            $itog_price = $items['itog_price'];
+                        }else{
+                            $itog_price = $price;
+                        }
+
+                        $guarantee = $items['guarantee'];
+                        $spec_koeff = $items['spec_koeff'];
+                        $discount = $items['discount'];
+
+                        $percent_cats = $items['percent_cats'];
+                        $work_percent = $items['work_percent'];
+                        $material_percent = $items['material_percent'];
+
+                        //Спрятали лишнее телодвижение
+                        //
+                        /*if ($itog_price == 0){
+                            $itog_price_add = $price;
+                        }else{
+                            $itog_price_add = $itog_price;
+                        }*/
+
+                        $itog_price_add = $itog_price;
+
+                        /*if (!empty($mat_cons_j_ex['data'])){
+                            if (isset($mat_cons_j_ex['data'][$pos_id])){
+                                $itog_price_add = $itog_price_add - $mat_cons_j_ex['data'][$pos_id];
+                            }else{
+                            }
+                        }else{
+                        }*/
+
+                        //2018.03.13 попытка разобраться с гарантийной ценой для зарплаты
+                        /*if ($guarantee != 0){
+                            $itog_price_add = 0;
+                        }*/
+
+                        if ($guarantee == 0) {
+
+                            //Добавляем в базу
+                            $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`) 
+                                                VALUES (
+                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}')";
+
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                            $price = $price * $quantity;
+
+                            $price = ($price - ($price * $discount / 100));
+
+                            if ($itog_price == 0) {
+                                $itog_price = $price;
+                            }
+
+                            //2018.03.13 попытка разобраться с гарантийной ценой для зарплаты
+                            /*if ($guarantee != 0){
+                                $itog_price = 0;
+                            }*/
+
+                            //$calculateInvSumm +=  round($price);
+                            $calculateInvSumm += $itog_price;
+
+                            if (!empty($mat_cons_j_ex['data'])) {
+                                if (isset($mat_cons_j_ex['data'][$pos_id])) {
+                                    $itog_price = $itog_price - $mat_cons_j_ex['data'][$pos_id];
+                                } else {
+                                }
+                            } else {
+                            }
+
+                            if ($itog_price < 0) $itog_price = 0;
+
+                            //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
+                            $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);
+                        }
+                    }
+
+                    /*if (isset($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind])){
+                        $mkb_data = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind];
+                        foreach ($mkb_data as $mkb_id){
+                            //Добавляем в базу МКБ
+                            $query = "INSERT INTO `journal_invoice_ex_mkb` (`invoice_id`, `ind`, `mkb_id`)
+                            VALUES (
+                            '{$mysql_insert_id}', '{$ind}', '{$mkb_id}')";
+
+                            mysql_query($query) or die(mysql_error().' -> '.$query);
+                        }
+                    }*/
+
+                }
+
+                if ($invoice_type == 6) {
+
+                    $pos_id = $calculate_data['id'];
+                    $price_id = $calculate_data['price_id'];
+                    $quantity = $calculate_data['quantity'];
+                    $insure = $calculate_data['insure'];
+                    $insure_approve = $calculate_data['insure_approve'];
+                    $price = $calculate_data['price'];
+
+                    if (isset($calculate_data['itog_price'])){
+                        $itog_price = $calculate_data['itog_price'];
                     }else{
                         $itog_price = $price;
                     }
 
-                    $guarantee = $items['guarantee'];
-                    $spec_koeff = $items['spec_koeff'];
-                    $discount = $items['discount'];
+                    $guarantee = $calculate_data['guarantee'];
+                    $spec_koeff = $calculate_data['spec_koeff'];
+                    $discount = $calculate_data['discount'];
 
-                    $percent_cats = $items['percent_cats'];
-                    $work_percent = $items['work_percent'];
-                    $material_percent = $items['material_percent'];
-
-                    //Спрятали лишнее телодвижение
-                    //
-                    /*if ($itog_price == 0){
-                        $itog_price_add = $price;
-                    }else{
-                        $itog_price_add = $itog_price;
-                    }*/
+                    $percent_cats = $calculate_data['percent_cats'];
+                    $work_percent = $calculate_data['work_percent'];
+                    $material_percent = $calculate_data['material_percent'];
 
                     $itog_price_add = $itog_price;
 
-                    /*if (!empty($mat_cons_j_ex['data'])){
-                        if (isset($mat_cons_j_ex['data'][$pos_id])){
-                            $itog_price_add = $itog_price_add - $mat_cons_j_ex['data'][$pos_id];
-                        }else{
-                        }
-                    }else{
-                    }*/
-
-                    //2018.03.13 попытка разобраться с гарантийной ценой для зарплаты
-                    /*if ($guarantee != 0){
-                        $itog_price_add = 0;
-                    }*/
 
                     if ($guarantee == 0) {
 
                         //Добавляем в базу
                         $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`) 
-                                            VALUES (
-                                            '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}')";
+                                                VALUES (
+                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}')";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -1699,107 +1779,98 @@ function calculateCalculateSave (
                         //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
                         $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);
                     }
+
+
                 }
-
-                /*if (isset($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind])){
-                    $mkb_data = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind];
-                    foreach ($mkb_data as $mkb_id){
-                        //Добавляем в базу МКБ
-                        $query = "INSERT INTO `journal_invoice_ex_mkb` (`invoice_id`, `ind`, `mkb_id`)
-                        VALUES (
-                        '{$mysql_insert_id}', '{$ind}', '{$mkb_id}')";
-
-                        mysql_query($query) or die(mysql_error().' -> '.$query);
-                    }
-                }*/
-
+                //unset($_SESSION['calculate_data']);
             }
-
-            if ($invoice_type == 6) {
-
-                $pos_id = $calculate_data['id'];
-                $price_id = $calculate_data['price_id'];
-                $quantity = $calculate_data['quantity'];
-                $insure = $calculate_data['insure'];
-                $insure_approve = $calculate_data['insure_approve'];
-                $price = $calculate_data['price'];
-
-                if (isset($calculate_data['itog_price'])){
-                    $itog_price = $calculate_data['itog_price'];
-                }else{
-                    $itog_price = $price;
-                }
-
-                $guarantee = $calculate_data['guarantee'];
-                $spec_koeff = $calculate_data['spec_koeff'];
-                $discount = $calculate_data['discount'];
-
-                $percent_cats = $calculate_data['percent_cats'];
-                $work_percent = $calculate_data['work_percent'];
-                $material_percent = $calculate_data['material_percent'];
-
-                $itog_price_add = $itog_price;
-
-
-                if ($guarantee == 0) {
-
-                    //Добавляем в базу
-                    $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`) 
-                                            VALUES (
-                                            '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}')";
-
-                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-                    $price = $price * $quantity;
-
-                    $price = ($price - ($price * $discount / 100));
-
-                    if ($itog_price == 0) {
-                        $itog_price = $price;
-                    }
-
-                    //2018.03.13 попытка разобраться с гарантийной ценой для зарплаты
-                    /*if ($guarantee != 0){
-                        $itog_price = 0;
-                    }*/
-
-                    //$calculateInvSumm +=  round($price);
-                    $calculateInvSumm += $itog_price;
-
-                    if (!empty($mat_cons_j_ex['data'])) {
-                        if (isset($mat_cons_j_ex['data'][$pos_id])) {
-                            $itog_price = $itog_price - $mat_cons_j_ex['data'][$pos_id];
-                        } else {
-                        }
-                    } else {
-                    }
-
-                    if ($itog_price < 0) $itog_price = 0;
-
-                    //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
-                    $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);
-                }
-
-
-            }
-            //unset($_SESSION['calculate_data']);
         }
+
+        //Обновим сумму в расчете
+        if ($calculateInvSumm > 0) {
+            $query = "UPDATE `fl_journal_calculate` SET `summ_inv`='{$calculateInvSumm}', `summ`='{$calculateCalcSumm}' WHERE `id`='{$mysql_insert_id}'";
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+        }
+
+        unset($_SESSION['calculate_data']);
+
+        //!!! @@@ Пересчет долга
+        //include_once 'ffun.php';
+        //calculateDebt ($_POST['client']);
+
+        return (array('result' => 'success', 'data' => $mysql_insert_id));
     }
 
-    //Обновим сумму в расчете
-    if ($calculateInvSumm > 0) {
-        $query = "UPDATE `fl_journal_calculate` SET `summ_inv`='{$calculateInvSumm}', `summ`='{$calculateCalcSumm}' WHERE `id`='{$mysql_insert_id}'";
-        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+    //Для отчета касса
+    function ajaxShowResultCashbox ($datastart, $dataend, $filial, $summtype, $certificatesShow){
+        //var_dump(func_get_args());
+
+        $msql_cnnct = ConnectToDB2 ();
+
+        $rezult = array();
+        $rezult_cert = array();
+        $arr = array();
+
+        //Переменная для строчки запроса по филиалу и типу
+        $queryFilial = '';
+        $queryType = '';
+
+        //Филиал
+        if ($filial != 99){
+            $queryFilial .= "AND `office_id` = '".$filial."'";
+        }
+
+        if ($summtype != 0){
+            $queryType .= "AND `summ_type` = '".$summtype."'";
+        }
+
+        //Приход денег вытащим
+        $query = "SELECT * FROM `journal_order` WHERE
+                `date_in` BETWEEN 
+                STR_TO_DATE('".$datastart." 00:00:00', '%Y-%m-%d %H:%i:%s')
+                AND 
+                STR_TO_DATE('".$dataend." 23:59:59', '%Y-%m-%d %H:%i:%s') 
+                ".$queryFilial.$queryType." AND `org_pay` <> '1'
+                ORDER BY `date_in` DESC";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                array_push($rezult, $arr);
+            }
+        }else{
+            //addClientBalanceNew ($client_id, $Summ);
+        }
+
+        //Приход денег за сертификаты вытащим
+        if ($certificatesShow != 0){
+            $query = "SELECT * FROM `journal_cert` WHERE
+                    `cell_time` BETWEEN 
+                    STR_TO_DATE('".$datastart." 00:00:00', '%Y-%m-%d %H:%i:%s')
+                    AND 
+                    STR_TO_DATE('".$dataend." 23:59:59', '%Y-%m-%d %H:%i:%s') 
+                    ".$queryFilial.$queryType."
+                    ORDER BY `cell_time` DESC";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($rezult_cert, $arr);
+                }
+            }else{
+                //addClientBalanceNew ($client_id, $Summ);
+            }
+        }
+
+        $result['rezult'] = $rezult;
+        $result['rezult_cert'] = $rezult_cert;
+
+        return $result;
+
     }
-
-    unset($_SESSION['calculate_data']);
-
-    //!!! @@@ Пересчет долга
-    //include_once 'ffun.php';
-    //calculateDebt ($_POST['client']);
-
-    return (array('result' => 'success', 'data' => $mysql_insert_id));
-}
 
 
 ?>
