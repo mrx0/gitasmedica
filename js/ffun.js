@@ -2858,10 +2858,10 @@
                 if(res.result == 'success') {
                     //console.log('success');
                     $('#data').html(res.data);
-                    setTimeout(function () {
-                        window.location.replace('stat_cashbox.php');
+                    //setTimeout(function () {
+                        //window.location.replace('stat_cashbox.php');
                         //console.log('client.php?id='+id);
-                    }, 300);
+                    //}, 300);
                 }else{
                     //console.log('error');
                     $('#errrror').html(res.data);
