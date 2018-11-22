@@ -140,7 +140,7 @@
                                 </select>';
                     } else {
 
-                        echo $filials_j[$_SESSION['filial']]['name'] . '<input type="hidden" id="filial" name="filial" value="' . $_SESSION['filial'] . '">';
+                        echo $filials_j[$_SESSION['filial']]['name'] . '<input type="hidden" id="SelectFilial" name="SelectFilial" value="' . $_SESSION['filial'] . '">';
 
                     }
 
