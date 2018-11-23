@@ -184,11 +184,11 @@
                                 ЛЕЧЕНИЕ<br>б/н + серт
                             </div>';*/
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center">
+                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18);">
                                 ОРТО<br>нал
                             </div>';
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center">
+                            <div class="cellTime cellsTimereport" style="text-align: center;  background-color: rgba(63, 0, 255, 0.18);">
                                 ОРТО<br>безнал
                             </div>';
                 /*echo '
