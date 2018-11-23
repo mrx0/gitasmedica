@@ -47,7 +47,7 @@
                     <ul class="live_filter" id="livefilter-list" style="margin-left:6px; background-color: #FFF;">';
 
             echo '
-                        <li class="cellsBlock cellsBlockHover" style="font-weight:bold;">';
+                        <li class="cellsBlock" style="font-weight:bold;">';
             echo '
                             <div class="cellTime cellsTimereport" style="text-align: center">
                                 Дата
