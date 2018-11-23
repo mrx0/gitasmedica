@@ -345,6 +345,7 @@
             }
         });
     }
+
     //Выборка касса
     function Ajax_show_result_stat_cashbox(){
 

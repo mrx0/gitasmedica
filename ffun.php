@@ -24,7 +24,7 @@
     }
 
 
-//добавляем клиенту новую запись с балансом
+    //добавляем клиенту новую запись с балансом
     function addClientBalanceNew ($client_id, $balance){
 
         $msql_cnnct = ConnectToDB2 ();
@@ -237,7 +237,7 @@
         //return ($Summ);
     }
 
-     //считаем по нарядам, сколько потрачено и обновляем
+    //считаем по нарядам, сколько потрачено и обновляем
     function calculatePayment ($client_id){
 
         $rezult = array();
