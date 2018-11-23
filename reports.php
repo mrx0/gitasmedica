@@ -89,6 +89,11 @@
 
 			echo '				
 							<li class="cellsBlock" style="margin: 1px;">
+								<a href="fl_consolidated_report_admin.php" class="b3">Сводный отчёт админ-ов</a>
+							</li>';
+
+			echo '				
+							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_client_finance2.php" class="b3">Открытые наряды</a>
 							</li>';
 
@@ -102,10 +107,10 @@
 								<a href="stat_invoice.php" class="b3">Наряды</a>
 							</li>';
 
-            echo '				
+            /*echo '
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_client_finance.php" class="b3">Долги/авансы (старое)</a>
-							</li>';
+							</li>';*/
 			echo '
 						</ul>
 						<ul class="reportBlock" style="">

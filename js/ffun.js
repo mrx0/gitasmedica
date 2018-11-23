@@ -2944,6 +2944,10 @@
                     if (res.count > 0){
                         //console.log(res.data[0]);
 
+                        thisObj.css({
+                            "color": "#333"
+                        });
+
                         //zReport.html              (number_format(res.data[0].summ, 0, '.', ' '));
                         allSumm.html                (number_format(res.data[0].summ, 0, '.', ' '));
                         SummNal.html                (number_format(res.data[0].cashbox_nal, 0, '.', ' '));

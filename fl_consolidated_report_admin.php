@@ -9,7 +9,7 @@
 		require_once 'header_tags.php';
 		//var_dump($_SESSION);
 
-		if (($finances['see_all'] == 1) || $god_mode){
+		if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			include_once 'ffun.php';
@@ -59,7 +59,7 @@
                         <div class="nav">
                             <a href="stat_cashbox.php" class="b">Касса</a>
                         </div>
-                        <h2 style="padding: 0;">Сводный отчёт </h2>
+                        <h2 style="padding: 0;">Сводный отчёт админ-ов</h2>
                     </header>';
 
             echo '
@@ -70,7 +70,7 @@
             //Выбор филиала
             echo '
                         <div style="font-size: 90%; ">
-                            Филиал:';
+                            Филиал: ';
 
             if (($finances['see_all'] == 1) || $god_mode) {
 
@@ -123,6 +123,7 @@
             echo '
 			                </select>
 			                <span class="button_tiny" style="font-size: 90%; cursor: pointer" onclick="iWantThisDate(\'fl_consolidated_report_admin.php?filial_id='. $filial_id . '\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
+			                <div style="font-size: 90%; color: rgb(125, 125, 125); float: right;">Сегодня: <a href="fl_consolidated_report_admin.php" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></div>
 			            </div>';
 
             //Если определён филиал
@@ -253,9 +254,9 @@
                     //var_dump(date('d') . '.' . date('m') . '.' . date('Y'));
 
                     echo '
-                        <li class="' . $weekend_block . ' cellsBlockHover blockControl" style="font-weight:bold; ' . $today_color . '">';
+                        <li class="' . $weekend_block . ' cellsBlockHover blockControl" style="font-weight: bold; font-size: 12px; color: #949393; ' . $today_color . '">';
                     echo '
-                            <div class="cellTime cellsTimereport reportDate" style="text-align: center;">
+                            <div class="cellTime cellsTimereport reportDate" style="text-align: center; color: #333;">
                                 ' . $data . '
                             </div>';
                     echo '
