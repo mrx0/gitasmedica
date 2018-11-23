@@ -29,10 +29,10 @@
             if (isset($_GET['d'])) {
                 $d = $_GET['d'];
             }
-            if (isset($_GET['d'])) {
+            if (isset($_GET['m'])) {
                 $m = $_GET['m'];
             }
-            if (isset($_GET['d'])) {
+            if (isset($_GET['y'])) {
                 $y = $_GET['y'];
             }
             if (isset($_GET['filial_id'])) {
@@ -226,7 +226,7 @@
                     echo '
                         <div class="cellsBlock2" style="font-size: 90%;">
                             <div class="cellLeft">
-                                Ортопантомограмма
+                                Ортопантомограмма + КТ
                                 <span style="font-size:80%; color: #999; "></span>
                             </div>
                             <div class="cellRight">

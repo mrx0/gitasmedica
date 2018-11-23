@@ -2821,9 +2821,11 @@
 
         var link = "fl_createDailyReport_add_f.php";
 
+        var filial_id = $("#SelectFilial").val();
+
         var reqData = {
             date: $("#iWantThisDate2").val(),
-            filial_id: $("#SelectFilial").val(),
+            filial_id: filial_id,
             allsumm: $("#allsumm").html(),
             SummNal: $("#SummNal").html(),
             SummBeznal: $("#SummBeznal").html(),
@@ -2859,7 +2861,8 @@
                     //console.log('success');
                     $('#data').html(res.data);
                     setTimeout(function () {
-                        window.location.replace('stat_cashbox.php');
+                        //window.location.replace('stat_cashbox.php');
+                        window.location.replace('fl_consolidated_report_admin.php?filial_id='+filial_id);
                         //console.log('client.php?id='+id);
                     }, 300);
                 }else{
@@ -2870,3 +2873,123 @@
             }
         });
     }
+
+    //Получение отчёта по какому-то дню из филиала и заполнение отчета
+    function fl_getDailyReports(thisObj){
+
+        //Дата
+        var date = (thisObj.find(".reportDate").html().replace(/\s{2,}/g, ''));
+        //console.log(date);
+
+        //Блоки, где будут:
+        //- z-отчет
+        //var zReport = (thisObj.find(".zReport"));
+        //- общая сумма
+        var allSumm = (thisObj.find(".allSumm"));
+        //- сумма нал
+        var SummNal = (thisObj.find(".SummNal"));
+        //- сумма безнал
+        var SummBezal = (thisObj.find(".SummBezal"));
+        //- сертификаты нал
+        var SummCertNal = (thisObj.find(".SummCertNal"));
+        //- сертификаты безнал
+        var SummCertBeznal = (thisObj.find(".SummCertBeznal"));
+        //- орто нал
+        var ortoSummNal = (thisObj.find(".ortoSummNal"));
+        //- орто безнал
+        var ortoSummBeznal = (thisObj.find(".ortoSummBeznal"));
+        //- специалисты нал
+        var specialistSummNal = (thisObj.find(".specialistSummNal"));
+        //- специалисты безнал
+        var specialistSummBeznal = (thisObj.find(".specialistSummBeznal"));
+        //- анализы нал
+        var analizSummNal = (thisObj.find(".analizSummNal"));
+        //- анализы безнал
+        var analizSummBeznal = (thisObj.find(".analizSummBeznal"));
+        //- солярий нал
+        var solarSummNal = (thisObj.find(".solarSummNal"));
+        //- солярий безнал
+        var solarSummBeznal = (thisObj.find(".solarSummBeznal"));
+        //- расход
+        var summMinusNal = (thisObj.find(".summMinusNal"));
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        var link = "fl_getDailyReports_f.php";
+
+        var reqData = {
+            date: date,
+            filial_id: $("#SelectFilial").val()
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+                //console.log(res.count);
+
+                if(res.result == 'success') {
+                    //console.log('success');
+                    //$('#data').html(res.data);
+                    if (res.count > 0){
+                        //console.log(res.data[0]);
+
+                        thisObj.css({
+                            "color": "#333"
+                        });
+
+                        //zReport.html              (number_format(res.data[0].summ, 0, '.', ' '));
+                        allSumm.html                (number_format(res.data[0].summ, 0, '.', ' '));
+                        SummNal.html                (number_format(res.data[0].cashbox_nal, 0, '.', ' '));
+                        SummBezal.html              (number_format(res.data[0].cashbox_beznal, 0, '.', ' '));
+                        SummCertNal.html            (number_format(res.data[0].cashbox_cert_nal, 0, '.', ' '));
+                        SummCertBeznal.html         (number_format(res.data[0].cashbox_cert_beznal, 0, '.', ' '));
+                        ortoSummNal.html            (number_format(res.data[0].temp_orto_nal, 0, '.', ' '));
+                        ortoSummBeznal.html         (number_format(res.data[0].temp_orto_beznal, 0, '.', ' '));
+                        specialistSummNal.html      (number_format(res.data[0].temp_specialist_nal, 0, '.', ' '));
+                        specialistSummBeznal.html   (number_format(res.data[0].temp_specialist_beznal, 0, '.', ' '));
+                        analizSummNal.html          (number_format(res.data[0].temp_analiz_nal, 0, '.', ' '));
+                        analizSummBeznal.html       (number_format(res.data[0].temp_analiz_beznal, 0, '.', ' '));
+                        solarSummNal.html           (number_format(res.data[0].temp_solar_nal, 0, '.', ' '));
+                        solarSummBeznal.html        (number_format(res.data[0].temp_solar_beznal, 0, '.', ' '));
+                        summMinusNal.html           (number_format(res.data[0].temp_giveoutcash, 0, '.', ' '));
+                    }else{
+                        //console.log(res.count);
+
+                        allSumm.html('-');
+                        SummNal.html('-');
+                        SummBezal.html('-');
+                        //zReport.html('-');
+                        SummCertNal.html('-');
+                        SummCertBeznal.html('-');
+                        ortoSummNal.html('-');
+                        ortoSummBeznal.html('-');
+                        specialistSummNal.html('-');
+                        specialistSummBeznal.html('-');
+                        analizSummNal.html('-');
+                        analizSummBeznal.html('-');
+                        solarSummNal.html('-');
+                        solarSummBeznal.html('-');
+                        summMinusNal.html('-');
+
+                    }
+                }else{
+                    //console.log('error');
+                    $('#errrror').html(res.data);
+                    //$('#errrror').html('');
+                }
+            }
+        });
+    }
+
+
