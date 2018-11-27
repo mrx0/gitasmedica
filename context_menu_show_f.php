@@ -309,7 +309,7 @@
                     if ($_POST['key'] == 0) {
                         if ($_POST['ind'] != 0) {
                             $data .=
-                                '<li><div onclick="fl_check_consRepEdit(' . $_POST['ind'] . ');">Редактировать</div></li>';
+                                '<li><div onclick="fl_edit_consRepAdm(' . $_POST['ind'] . ');">Редактировать</div></li>';
                         }
                     }
                     if ($_POST['key'] == 0) {
