@@ -50,6 +50,7 @@
                     $filial_id = $_SESSION['filial'];
                 }else{
                     $have_target_filial = false;
+                    $filial_id = 0;
                 }
             }
 
@@ -220,7 +221,7 @@
                                 Солярий<br>безнал
                             </div>';
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center">
+                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18);">
                                 Расход
                             </div>';
                 echo '
@@ -238,57 +239,71 @@
                     $week_day = date("w", strtotime($year . '-' . $month . '-' . $d));
                     //var_dump($dayWeek_arr[$week_day]);
 
-                    //цвет дня на выходных
                     $weekend_block = 'cellsBlock';
+                    $today_color = 'color: #333;';
+                    $today_outline = '';
+                    $today_border = '';
+                    $today_border_l = '';
+
+                    //цвет дня на выходных
                     if (($week_day == 6) || ($week_day == 0)) {
                         $weekend_block = 'cellsBlock6';
+                        //$today_color = ' outline: 1px solid red;';
+                        $today_color = 'color: rgb(255, 18, 246);';
+
+                        if ($week_day == 6){
+                            $today_border = 'border-top: 1px solid rgb(255, 18, 246);';
+                            $today_border_l = 'border-left: 1px solid rgb(255, 18, 246); ';
+                        }else{
+                            $today_border = 'border-bottom: 1px solid rgb(255, 18, 246);';
+                            $today_border_l = 'border-left: 1px solid rgb(255, 18, 246);';
+                        }
                     }
 
                     //Цвет текущего дня
-                    $today_color = '';
                     if ($data === date('d') . '.' . date('m') . '.' . date('Y')) {
                         //$today_color = 'background-color: green;';
-                        $today_color = ' outline: 1px solid red;';
+                        $today_outline = ' outline: 1px solid red;';
                     }
                     //var_dump($data);
                     //var_dump(date('d') . '.' . date('m') . '.' . date('Y'));
 
                     echo '
-                        <li class="' . $weekend_block . ' cellsBlockHover blockControl" style="font-weight: bold; font-size: 12px; color: #949393; ' . $today_color . '">';
+                        <li class="' . $weekend_block . ' cellsBlockHover blockControl" style="font-weight: bold; font-size: 12px; color: #949393; ' . $today_outline . '">';
                     echo '
-                            <div class="cellTime cellsTimereport reportDate" style="text-align: center; color: #333;">
+                            <div class="cellTime cellsTimereport reportDate" status="4" report_id="0" style="text-align: center; cursor: pointer; ' . $today_color . ' '. $today_border .''. $today_border_l .'">
                                 ' . $data . '
                             </div>';
                     echo '
-                            <div class="cellTime cellsTimereport zReport" style="text-align: center; font-weight: normal;">
+                            <div class="cellTime cellsTimereport zReport" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
-                            <div class="cellTime cellsTimereport allSumm" style="text-align: center; font-weight: normal;">
+                            <div class="cellTime cellsTimereport allSumm" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
-                            <div class="cellTime cellsTimereport SummNal" style="text-align: center; font-weight: normal;">
+                            <div class="cellTime cellsTimereport SummNal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
-                            <div class="cellTime cellsTimereport SummBezal" style="text-align: center; font-weight: normal;">
+                            <div class="cellTime cellsTimereport SummBezal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
-                            <div class="cellTime cellsTimereport SummCertNal" style="text-align: center; font-weight: normal;">
+                            <div class="cellTime cellsTimereport SummCertNal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
-                            <div class="cellTime cellsTimereport SummCertBeznal" style="text-align: center; font-weight: normal;">
+                            <div class="cellTime cellsTimereport SummCertBeznal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
-                            <div class="cellTime cellsTimereport ortoSummNal" style="text-align: center; font-weight: normal;">
+                            <div class="cellTime cellsTimereport ortoSummNal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
-                            <div class="cellTime cellsTimereport ortoSummBeznal" style="text-align: center; font-weight: normal;">
+                            <div class="cellTime cellsTimereport ortoSummBeznal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     /*echo '
@@ -296,35 +311,35 @@
                                 
                             </div>';*/
                     echo '
-                            <div class="cellTime cellsTimereport specialistSummNal" style="text-align: center; font-weight: normal;">
+                            <div class="cellTime cellsTimereport specialistSummNal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
-                            <div class="cellTime cellsTimereport specialistSummBeznal" style="text-align: center; font-weight: normal;">
+                            <div class="cellTime cellsTimereport specialistSummBeznal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
-                            <div class="cellTime cellsTimereport analizSummNal" style="text-align: center; font-weight: normal;">
+                            <div class="cellTime cellsTimereport analizSummNal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
-                            <div class="cellTime cellsTimereport analizSummBeznal" style="text-align: center; font-weight: normal;">
+                            <div class="cellTime cellsTimereport analizSummBeznal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
-                            <div class="cellTime cellsTimereport solarSummNal" style="text-align: center; font-weight: normal;">
+                            <div class="cellTime cellsTimereport solarSummNal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
-                            <div class="cellTime cellsTimereport solarSummBeznal" style="text-align: center; font-weight: normal;">
+                            <div class="cellTime cellsTimereport solarSummBeznal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
-                            <div class="cellTime cellsTimereport summMinusNal" style="text-align: center; font-weight: normal;">
+                            <div class="cellTime cellsTimereport summMinusNal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
-                            <div class="cellText">
+                            <div class="cellText" style="text-align: center; font-weight: normal; '. $today_border .'">
                             </div>';
                     echo '
                         </li>';
@@ -405,6 +420,20 @@
                             fl_getDailyReports($(this));
                         });                        
                         
+
+                        //Клик на дате
+                        $("body").on("click", ".reportDate", function(event){
+
+                            // Проверяем нажата ли именно правая кнопка мыши:
+                            if (event.which === 1){
+                                
+                                // Получаем элемент на котором был совершен клик:
+                                var target = $(event.target);
+                                //console.log(target.attr(\'status\'));                            
+                                
+                                contextMenuShow(target.attr(\'report_id\'), target.attr(\'status\'), event, \'consRepAdm\');
+                            }
+                        });
 
                     });				
                 

@@ -2864,7 +2864,7 @@
                         //window.location.replace('stat_cashbox.php');
                         window.location.replace('fl_consolidated_report_admin.php?filial_id='+filial_id);
                         //console.log('client.php?id='+id);
-                    }, 300);
+                    }, 500);
                 }else{
                     //console.log('error');
                     $('#errrror').html(res.data);
@@ -2880,6 +2880,7 @@
         //Дата
         var date = (thisObj.find(".reportDate").html().replace(/\s{2,}/g, ''));
         //console.log(date);
+        //console.log(getTodayDate());
 
         //Блоки, где будут:
         //- z-отчет
@@ -2937,32 +2938,54 @@
             success: function(res){
                 //console.log(res);
                 //console.log(res.count);
+                //console.log(date == getTodayDate());
 
                 if(res.result == 'success') {
                     //console.log('success');
                     //$('#data').html(res.data);
+
                     if (res.count > 0){
-                        //console.log(res.data[0]);
+                        //console.log(res.data);
+                        //console.log(Object.size(res.data));
 
                         thisObj.css({
                             "color": "#333"
                         });
 
-                        //zReport.html              (number_format(res.data[0].summ, 0, '.', ' '));
-                        allSumm.html                (number_format(res.data[0].summ, 0, '.', ' '));
-                        SummNal.html                (number_format(res.data[0].cashbox_nal, 0, '.', ' '));
-                        SummBezal.html              (number_format(res.data[0].cashbox_beznal, 0, '.', ' '));
-                        SummCertNal.html            (number_format(res.data[0].cashbox_cert_nal, 0, '.', ' '));
-                        SummCertBeznal.html         (number_format(res.data[0].cashbox_cert_beznal, 0, '.', ' '));
-                        ortoSummNal.html            (number_format(res.data[0].temp_orto_nal, 0, '.', ' '));
-                        ortoSummBeznal.html         (number_format(res.data[0].temp_orto_beznal, 0, '.', ' '));
-                        specialistSummNal.html      (number_format(res.data[0].temp_specialist_nal, 0, '.', ' '));
-                        specialistSummBeznal.html   (number_format(res.data[0].temp_specialist_beznal, 0, '.', ' '));
-                        analizSummNal.html          (number_format(res.data[0].temp_analiz_nal, 0, '.', ' '));
-                        analizSummBeznal.html       (number_format(res.data[0].temp_analiz_beznal, 0, '.', ' '));
-                        solarSummNal.html           (number_format(res.data[0].temp_solar_nal, 0, '.', ' '));
-                        solarSummBeznal.html        (number_format(res.data[0].temp_solar_beznal, 0, '.', ' '));
-                        summMinusNal.html           (number_format(res.data[0].temp_giveoutcash, 0, '.', ' '));
+                        //Если массив не пустой
+                        //if (date == getTodayDate()){
+                        if (Object.size(res.data) > 0){
+
+                            //zReport.html              (number_format(res.data.summ, 0, '.', ' '));
+                            allSumm.html                (number_format(res.data.summ, 0, '.', ' '));
+                            SummNal.html                (number_format(res.data.cashbox_nal, 0, '.', ' '));
+                            SummBezal.html              (number_format(res.data.cashbox_beznal, 0, '.', ' '));
+                            SummCertNal.html            (number_format(res.data.cashbox_cert_nal, 0, '.', ' '));
+                            SummCertBeznal.html         (number_format(res.data.cashbox_cert_beznal, 0, '.', ' '));
+                            ortoSummNal.html            (number_format(res.data.temp_orto_nal, 0, '.', ' '));
+                            ortoSummBeznal.html         (number_format(res.data.temp_orto_beznal, 0, '.', ' '));
+                            specialistSummNal.html      (number_format(res.data.temp_specialist_nal, 0, '.', ' '));
+                            specialistSummBeznal.html   (number_format(res.data.temp_specialist_beznal, 0, '.', ' '));
+                            analizSummNal.html          (number_format(res.data.temp_analiz_nal, 0, '.', ' '));
+                            analizSummBeznal.html       (number_format(res.data.temp_analiz_beznal, 0, '.', ' '));
+                            solarSummNal.html           (number_format(res.data.temp_solar_nal, 0, '.', ' '));
+                            solarSummBeznal.html        (number_format(res.data.temp_solar_beznal, 0, '.', ' '));
+                            summMinusNal.html           (number_format(res.data.temp_giveoutcash, 0, '.', ' '));
+
+                            //Прописываем статус отчета
+                            $(thisObj).find(".reportDate").attr('status', res.data.status);
+                            //И id
+                            $(thisObj).find(".reportDate").attr('report_id', res.data.id);
+                            //Меняем цвет, если проверено
+                            $(thisObj).css({"background-color": "rgba(216, 255, 196, 0.98)"})
+
+                        }else{
+
+                            thisObj.html('<div class="cellTime cellsTimereport reportDate" status="0" report_id="0" style="text-align: center; cursor: pointer; color: #333;">'+date+'</div>' +
+                            '<div class="cellText" style="color: rgb(48, 185, 91); font-weight: normal; padding-left: 35px;"><i>Отчёт уже был заполнен и добавлен в архив</i></div>');
+
+                        }
+
                     }else{
                         //console.log(res.count);
 
@@ -2981,7 +3004,6 @@
                         solarSummNal.html('-');
                         solarSummBeznal.html('-');
                         summMinusNal.html('-');
-
                     }
                 }else{
                     //console.log('error');
@@ -2990,6 +3012,49 @@
                 }
             }
         });
+    }
+
+    //Удаление ежедневного отчёта администраторов
+    function fl_delete_consRepEdit(id){
+
+        var reqData = {
+            report_id: id
+        };
+
+        var link = "fl_deleteDailyReport_f.php";
+
+        var rys = false;
+
+        rys = confirm("Вы действительно хотите удалить отчёт?");
+
+        if (rys) {
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res);
+
+                    if (res.result == "success") {
+                        //location.reload();
+                        //console.log(res.data);
+                    }
+                    if (res.result == "error") {
+                        alert(res.data);
+                    }
+                    //console.log(data.data);
+
+                }
+            });
+        }
     }
 
 
