@@ -2976,14 +2976,18 @@
                             $(thisObj).find(".reportDate").attr('status', res.data.status);
                             //И id
                             $(thisObj).find(".reportDate").attr('report_id', res.data.id);
-                            //Меняем цвет, если проверено
-                            $(thisObj).css({"background-color": "rgba(216, 255, 196, 0.98)"})
+
 
                         }else{
 
                             thisObj.html('<div class="cellTime cellsTimereport reportDate" status="0" report_id="0" style="text-align: center; cursor: pointer; color: #333;">'+date+'</div>' +
-                            '<div class="cellText" style="color: rgb(48, 185, 91); font-weight: normal; padding-left: 35px;"><i>Отчёт уже был заполнен и добавлен в архив</i></div>');
+                            '<div class="cellText" style="color: rgb(48, 185, 91); font-weight: normal; padding-left: 35px;"><i>Отчёт был заполнен и добавлен в архив</i></div>');
 
+                        }
+
+                        //Меняем цвет, если проверено
+                        if (res.data.status == 7) {
+                            $(thisObj).css({"background-color": "rgba(216, 255, 196, 0.98)"});
                         }
 
                     }else{
@@ -3044,7 +3048,7 @@
                     //console.log(res);
 
                     if (res.result == "success") {
-                        //location.reload();
+                        location.reload();
                         //console.log(res.data);
                     }
                     if (res.result == "error") {
@@ -3055,6 +3059,80 @@
                 }
             });
         }
+    }
+
+    //Установить статус проверено в ежедневный отчет администраторов
+    function fl_check_consRepAdm(id){
+
+        var reqData = {
+            report_id: id
+        };
+
+        var link = "fl_checkDailyReport_f.php";
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function (res) {
+                //console.log(res);
+
+                if (res.result == "success") {
+                    location.reload();
+                    //console.log(res.data);
+                }
+                if (res.result == "error") {
+                    alert(res.data);
+                }
+                //console.log(data.data);
+
+            }
+        });
+
+    }
+
+    //Снять статус проверено в ежедневный отчет администраторов
+    function fl_uncheck_consRepEdit(id){
+
+        var reqData = {
+            report_id: id
+        };
+
+        var link = "fl_uncheckDailyReport_f.php";
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function (res) {
+                //console.log(res);
+
+                if (res.result == "success") {
+                    location.reload();
+                    //console.log(res.data);
+                }
+                if (res.result == "error") {
+                    alert(res.data);
+                }
+                //console.log(data.data);
+
+            }
+        });
+
     }
 
 
