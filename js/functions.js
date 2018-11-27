@@ -18,6 +18,26 @@
         $('#errror').html('');
 	}
 
+	//Сегодня дата
+	function getTodayDate (){
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+        var yyyy = today.getFullYear();
+
+        if(dd<10) {
+            dd = '0'+dd
+        }
+
+        if(mm<10) {
+            mm = '0'+mm
+        }
+
+        today = dd + '.' + mm + '.' + yyyy;
+
+        return today;
+	}
+
 	//Форматирование числа в красивый вид
     function number_format( number, decimals = 0, dec_point = '.', thousands_sep = ',' ) {
 
@@ -8448,7 +8468,7 @@
                         window.chartColors.green,
                         window.chartColors.cyan,
                         window.chartColors.blue,
-                        window.chartColors.indigo,
+                        window.chartColors.indigo
                     ],
                     label: 'Dataset 1'
                 }],

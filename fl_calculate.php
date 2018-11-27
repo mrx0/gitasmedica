@@ -957,7 +957,7 @@
                                             if ($item['percent_cats'] > 0) {
                                                 echo '<i>' . $percent_cats_j[$item['percent_cats']]['name'] . '</i>';
                                             }else{
-                                                echo '<i style="color: red; font-size: 100%;">Ошибка #15</i><br>';
+                                                echo '<i style="color: red; font-size: 100%;">Ошибка #16</i><br>';
                                             }
 
                                             echo '

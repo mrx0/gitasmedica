@@ -1,6 +1,6 @@
 <?php
 
-//fl_deployTabel_f.php
+//fl_deployTabel_delete_f.php
 //Распровести табель
 
     session_start();

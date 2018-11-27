@@ -281,7 +281,7 @@
 				}
 
 				//Для Надбавок в табеле
-				if ($_POST['mark'] == 'tabel_surcharge_options'){
+                if ($_POST['mark'] == 'tabel_surcharge_options'){
                     $data .= '
                             <li><div onclick="fl_deleteSurchargeFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить из табеля</div></li>';
 				}
@@ -292,6 +292,39 @@
 				//Настройка для молочных в наряде
 				if ($_POST['mark'] == 'teeth_moloch'){
 				}
+
+				//Настройка для сводного отчета администраторов
+                if ($_POST['mark'] == 'consRepAdm'){
+                    if ($_POST['key'] == 0) {
+                        if (($finances['add_new'] == 1) || $god_mode) {
+                            $data .=
+                                '<li><div onclick="fl_check_consRepAdm(' . $_POST['ind'] . ');">Проверено</div></li>';
+                        }
+                    }
+                    if ($_POST['key'] == 4) {
+                        /*$data .=
+                            //'<li><div onclick="fl_add_consRepAdm('.$_POST['ind'].');">Добавить</div></li>';
+                            '<li><div onclick="window.location.replace(\'stat_cashbox.php\');">Добавить</div></li>';*/
+                    }
+                    if ($_POST['key'] == 0) {
+                        if ($_POST['ind'] != 0) {
+                            $data .=
+                                '<li><div onclick="fl_check_consRepEdit(' . $_POST['ind'] . ');">Редактировать</div></li>';
+                        }
+                    }
+                    if ($_POST['key'] == 0) {
+                        if ($_POST['ind'] != 0) {
+                            $data .=
+                                '<li><div onclick="fl_delete_consRepEdit(' . $_POST['ind'] . ');">Удалить отчёт</div></li>';
+                        }
+                    }
+                    if ($_POST['key'] == 7) {
+                        if (($finances['add_new'] == 1) || $god_mode) {
+                            $data .=
+                                '<li><div onclick="fl_uncheck_consRepEdit(' . $_POST['ind'] . ');">Отменить проверку</div></li>';
+                        }
+                    }
+                }
 
 				echo json_encode(array('result' => 'success', 'data' => $data));
 
