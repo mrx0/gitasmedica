@@ -89,7 +89,7 @@
 
 			echo '				
 							<li class="cellsBlock" style="margin: 1px;">
-								<a href="fl_consolidated_report_admin.php" class="b3">Сводный отчёт админ-ов</a>
+								<a href="fl_consolidated_report_admin.php" class="b3">Сводный отчёт по филиалам</a>
 							</li>';
 
 			echo '				

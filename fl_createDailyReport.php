@@ -215,11 +215,11 @@
                                 <span style="font-size:80%; color: #999; ">всё, что добавляется через программу</span>
                             </div>
                             <div class="cellRight" id="general">
-                                <div style="margin: 2px 0; ">Наличная оплата: <b><i id="SummNal" class="allSumm">' . $SummNal . '</i></b> руб.</div>
-                                <div style="margin: 2px 0; ">Безналичная оплата: <b><i id="SummBeznal" class="allSumm">' . $SummBeznal . '</i></b> руб.</div>
-                                <div style="margin: 6px 0 2px; ">Продано сертификатов: <b><i id="CertCount" class="">' . $CertCount . '</i></b> руб.</div>
-                                <div style="margin: 2px 0; ">- наличная оплата: <b><i id="SummCertNal" class="allSumm">' . $SummCertNal . '</i></b> руб.</div>
-                                <div style="margin: 2px 0; ">- безналичная оплата: <b><i id="SummCertBeznal" class="allSumm">' . $SummCertBeznal . '</i></b> руб.</div>
+                                <div style="margin: 2px 0;">Наличная оплата: <b><i id="SummNal" class="allSumm">' . $SummNal . '</i></b> руб.</div>
+                                <div style="margin: 2px 0;">Безналичная оплата: <b><i id="SummBeznal" class="allSumm">' . $SummBeznal . '</i></b> руб.</div>
+                                <div style="margin: 6px 0 2px;">Продано сертификатов: <b><i id="CertCount" class="">' . $CertCount . '</i></b> руб.</div>
+                                <div style="margin: 2px 0;">- наличная оплата: <b><i id="SummCertNal" class="allSumm">' . $SummCertNal . '</i></b> руб.</div>
+                                <div style="margin: 2px 0;">- безналичная оплата: <b><i id="SummCertBeznal" class="allSumm">' . $SummCertBeznal . '</i></b> руб.</div>
                             </div>
                         </div>';
 

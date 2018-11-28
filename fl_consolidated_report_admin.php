@@ -60,7 +60,7 @@
                         <div class="nav">
                             <a href="stat_cashbox.php" class="b">Касса</a>
                         </div>
-                        <h2 style="padding: 0;">Сводный отчёт админ-ов</h2>
+                        <h2 style="padding: 0;">Сводный отчёт по филиалам</h2>
                     </header>';
 
             echo '
