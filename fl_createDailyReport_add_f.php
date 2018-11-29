@@ -52,7 +52,7 @@
 
                     $query = "INSERT INTO `fl_journal_daily_report` 
                   (`filial_id`, `day`, `month`, `year`, `summ`, `cashbox_nal`, `cashbox_beznal`, `cashbox_cert_count`, `cashbox_cert_nal`, `cashbox_cert_beznal`, `temp_orto_nal`, `temp_orto_beznal`, `temp_specialist_nal`, `temp_specialist_beznal`, `temp_analiz_nal`, `temp_analiz_beznal`, `temp_solar_nal`, `temp_solar_beznal`, `temp_giveoutcash`, `create_time`, `create_person`) 
-                  VALUES ('{$_POST['filial_id']}', '{$d}', '{$m}', '{$y}', '{$_POST['allsumm']}', '{$_POST['SummNal']}', '{$_POST['SummBeznal']}', '{$_POST['CertCount']}', '{$_POST['SummCertNal']}', '{$_POST['SummCertBeznal']}', '{$_POST['ortoSummNal']}', '{$_POST['ortoSummBeznal']}', '{$_POST['specialistSummNal']}', '{$_POST['specialistSummBeznal']}', '{$_POST['analizSummNal']}', '{$_POST['analizSummBeznal']}', '{$_POST['solarSummNal']}', '{$_POST['solarSummBeznal']}', '{$_POST['summMinusNal']}', '{$create_time}', '{$_SESSION['id']}');";
+                  VALUES ('{$_POST['filial_id']}', '{$d}', '{$m}', '{$y}', '".str_replace(' ', '', $_POST['allsumm'])."', '{$_POST['SummNal']}', '{$_POST['SummBeznal']}', '{$_POST['CertCount']}', '{$_POST['SummCertNal']}', '{$_POST['SummCertBeznal']}', '{$_POST['ortoSummNal']}', '{$_POST['ortoSummBeznal']}', '{$_POST['specialistSummNal']}', '{$_POST['specialistSummBeznal']}', '{$_POST['analizSummNal']}', '{$_POST['analizSummBeznal']}', '{$_POST['solarSummNal']}', '{$_POST['solarSummBeznal']}', '{$_POST['summMinusNal']}', '{$create_time}', '{$_SESSION['id']}');";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -63,7 +63,7 @@
 
                     CloseDB($msql_cnnct);
 
-                    echo json_encode(array('result' => 'success', 'data' => '<div class="query_ok">Отчёт сформирован и отправлен</div>'));
+                    echo json_encode(array('result' => 'success', 'data' => '<div class="query_ok">Отчёт сформирован и отправлен</div>', 'q' => $query));
                 }else{
                     echo json_encode(array('result' => 'success', 'data' => '<div class="query_neok">Отчёт за указаную дату для этого филиала уже был сформирован.</div>', 'post' => $_POST));
                 }
