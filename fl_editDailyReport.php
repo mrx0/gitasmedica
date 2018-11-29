@@ -224,7 +224,7 @@
                             </div>';
 
                         echo '
-                            <input type="button" class="b" value="Добавить" onclick="fl_editDailyReport_add('.$_GET['report_id'].');">';
+                            <input type="button" class="b" value="Применить" onclick="fl_editDailyReport_add('.$_GET['report_id'].');">';
 
                     }else{
                         echo '<span style="color: red;">Ничего не найдено</span>';
