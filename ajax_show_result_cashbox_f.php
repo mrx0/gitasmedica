@@ -24,7 +24,7 @@
             $datastart = date('Y-m-d', strtotime($_POST['datastart'].' 00:00:00'));
             $dataend = date('Y-m-d', strtotime($_POST['dataend'].' 23:59:59'));
 
-            $rezult_temp = ajaxShowResultCashbox($datastart, $dataend, $_POST['filial'], $_POST['summtype'], $_POST['certificatesShow']);
+            $rezult_temp = ajaxShowResultCashbox($datastart, $dataend, $_POST['filial'], $_POST['summtype'], $_POST['certificatesShow'], true);
 
 
             $rezult = $rezult_temp['rezult'];
