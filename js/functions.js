@@ -127,8 +127,22 @@
 		
 		// Получаем элемент на котором был совершен клик:
 		var target = $(event.target);
-
         //console.log(target.attr('start_price'));
+        //console.log(target.html());
+
+		var dopReq = {};
+
+        if (mark == 'consRepAdm') {
+            var date = (target.html().replace(/\s{2,}/g, ''));
+            //console.log(date);
+
+			var filial_id = target.attr('filial_id');
+            //console.log(filial_id);
+
+            dopReq.date = date;
+            dopReq.filial_id = filial_id;
+            //console.log(dopReq);
+        }
 
 		// Добавляем класс selected-html-element что бы наглядно показать на чем именно мы кликнули (исключительно для тестирования):
 		target.addClass('selected-html-element');
@@ -142,7 +156,9 @@
 			{
 				mark: mark,
 				ind: ind,
-				key: key
+				key: key,
+
+				dop: dopReq
 			},
 			cache: false,
 			beforeSend: function() {
@@ -201,6 +217,7 @@
 				if (mark == 'teeth_moloch'){
 					res.data = $('#teeth_moloch_options').html();
 				}
+
 
 				// Создаем меню:
 				var menu = $('<div/>', {
@@ -289,7 +306,7 @@
                     permissions: permissions,
                     contacts: contacts,
                     fired: fired,
-                    specializations:checkedItems2(),
+                    specializations:checkedItems2()
 
                 },
             cache: false,
@@ -1501,6 +1518,7 @@
         var cat_name = $('#cat_name').val();
         var work_percent = $('#work_percent').val();
         var material_percent = $('#material_percent').val();
+        var summ_special = $('#summ_special').val();
         var personal_id = $('#personal_id').val();
 
         // убираем класс ошибок с инпутов
@@ -1521,6 +1539,7 @@
                 cat_name: cat_name,
                 work_percent: work_percent,
                 material_percent: material_percent,
+                summ_special: summ_special,
                 personal_id: personal_id
             },
 
@@ -1542,6 +1561,7 @@
                                 cat_name: cat_name,
                                 work_percent: work_percent,
                                 material_percent: material_percent,
+                                summ_special: summ_special,summ_special: summ_special,
                                 personal_id: personal_id
                             },
 
@@ -8434,7 +8454,7 @@
         window.myPie.update();
     });*/
 
-
+	//пробная для круговой диаграммы
     function showChart() {
 
         var mainData = [];

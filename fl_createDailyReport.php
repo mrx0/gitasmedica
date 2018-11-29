@@ -58,8 +58,9 @@
                     <header>
                         <div class="nav">
                             <a href="stat_cashbox.php" class="b">Касса</a>
+                            <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт по филиалу</a>
                         </div>
-                        <h2>Добавить ежедневный отчёт</h2>
+                        <h2>Ежедневный отчёт</h2>
                     </header>';
 
             echo '
@@ -92,12 +93,13 @@
 
                 //Если нет отчета в этом филиале за этот день
                 //Или отчёт есть, но мы имеем право смотреть тут
-                if ((empty($dailyReports_j)) || (!empty($dailyReports_j) && (($finances['add_new'] == 1) || $god_mode))) {
+                //if ((empty($dailyReports_j)) || (!empty($dailyReports_j) && (($finances['add_new'] == 1) || $god_mode))) {
+                if (empty($dailyReports_j)) {
 
-                    if (!empty($dailyReports_j)){
+                    /*if (!empty($dailyReports_j)){
                         echo '
-                         <span style="color: red;">Отчёт за указаную дату для этого филиала уже был сформирован.</span><br><br>';
-                    }
+                            <style="color: red;"><a href="fl_editDailyReport.php?report_id='.$dailyReports_j[0]['id'].'" class="">Отчёт</a> за указаную дату для этого филиала уже был сформирован.</span><br><br>';
+                    }*/
 
 
                     echo '
@@ -174,7 +176,7 @@
                     $SummCertBeznal = 0;
                     $CertCount = 0;
 
-                    $result = ajaxShowResultCashbox($datastart, $dataend, $filial_id, 0, 1);
+                    $result = ajaxShowResultCashbox($datastart, $dataend, $filial_id, 0, 1, false);
 
                     if (!empty($result)) {
                         if (!empty($result['rezult'])) {
@@ -215,11 +217,11 @@
                                 <span style="font-size:80%; color: #999; ">всё, что добавляется через программу</span>
                             </div>
                             <div class="cellRight" id="general">
-                                <div style="margin: 2px 0; ">Наличная оплата: <b><i id="SummNal" class="allSumm">' . $SummNal . '</i></b> руб.</div>
-                                <div style="margin: 2px 0; ">Безналичная оплата: <b><i id="SummBeznal" class="allSumm">' . $SummBeznal . '</i></b> руб.</div>
-                                <div style="margin: 6px 0 2px; ">Продано сертификатов: <b><i id="CertCount" class="">' . $CertCount . '</i></b> руб.</div>
-                                <div style="margin: 2px 0; ">- наличная оплата: <b><i id="SummCertNal" class="allSumm">' . $SummCertNal . '</i></b> руб.</div>
-                                <div style="margin: 2px 0; ">- безналичная оплата: <b><i id="SummCertBeznal" class="allSumm">' . $SummCertBeznal . '</i></b> руб.</div>
+                                <div style="margin: 2px 0;">Наличная оплата: <b><i id="SummNal" class="allSumm">' . $SummNal . '</i></b> руб.</div>
+                                <div style="margin: 2px 0;">Безналичная оплата: <b><i id="SummBeznal" class="allSumm">' . $SummBeznal . '</i></b> руб.</div>
+                                <div style="margin: 6px 0 2px;">Продано сертификатов: <b><i id="CertCount" class="">' . $CertCount . '</i></b> руб.</div>
+                                <div style="margin: 2px 0;">- наличная оплата: <b><i id="SummCertNal" class="allSumm">' . $SummCertNal . '</i></b> руб.</div>
+                                <div style="margin: 2px 0;">- безналичная оплата: <b><i id="SummCertBeznal" class="allSumm">' . $SummCertBeznal . '</i></b> руб.</div>
                             </div>
                         </div>';
 
@@ -288,8 +290,14 @@
                     echo '
                     </div>';
                 }else{
-                    echo '
-                         <span style="color: red;">Отчёт за указаную дату для этого филиала уже был сформирован.</span>';
+                    if (($finances['see_all'] == 1) || $god_mode){
+                        echo '
+                            <span style="color: red;">Отчёт за указаную дату для этого филиала уже был сформирован.</span><br>
+                            <span style="color: red;">Вы можете его <a href="fl_editDailyReport.php?report_id='.$dailyReports_j[0]['id'].'" class="">отредактировать</a></span>';
+                    }else{
+                        echo '
+                            <span style="color: red;">Отчёт за указаную дату для этого филиала уже был сформирован.</span>';
+                    }
                 }
             }else{
                 echo '
@@ -367,7 +375,7 @@
             	            //console.log($("#doc_title").html());
                         });
 						
-						$("#ortoSummNal, #ortoSummBeznal, #specialistSummNal, specialistSummBeznal, #analizSummNal, #analizSummBeznal, #summMinusNal, #summMinusBeznal, #solarSummNal, #solarSummBeznal").blur(function() {
+						$("#ortoSummNal, #ortoSummBeznal, #specialistSummNal, #specialistSummBeznal, #analizSummNal, #analizSummBeznal, #summMinusNal, #summMinusBeznal, #solarSummNal, #solarSummBeznal").blur(function() {
                             //console.log($(this).val());
                             
                             var value = $(this).val();
@@ -386,25 +394,32 @@
                                         }else{
                                             //Всё норм с типами данных
                                             //console.log("Всё норм с типами данных")
+                                            
+                                            calculateDailyReportSumm();
                                         }
                                     }
                                 }
                             }
                             
-                            calculateDailyReportSumm();
+                            //calculateDailyReportSumm();
                             
                         });
 						
                         //Живой поиск
-                        $("#ortoSummNal, #ortoSummBeznal, #specialistSummNal, specialistSummBeznal, #analizSummNal, #analizSummBeznal, #summMinusNal, #summMinusBeznal, #solarSummNal, #solarSummBeznal").bind("change keyup input click", function() {
+                        $("#ortoSummNal, #ortoSummBeznal, #specialistSummNal, #specialistSummBeznal, #analizSummNal, #analizSummBeznal, #summMinusNal, #summMinusBeznal, #solarSummNal, #solarSummBeznal").bind("change keyup input click", function() {
                             if($(this).val().length > 0){
                                 //console.log($(this).val().length);
+                                
+                                //меняем запятую на точку (разделитель)
+                                $(this).val($(this).val().replace(\',\', \'.\'));
                                 
                                 if ($(this).val() == 0){
                                     $(this).val("")
                                 }
                             }
-                            calculateDailyReportSumm();
+                            if (!isNaN($(this).val())){
+                                calculateDailyReportSumm();
+                            }
                         })
 						
 					</script>';

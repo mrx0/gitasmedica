@@ -296,20 +296,33 @@
 				//Настройка для сводного отчета администраторов
                 if ($_POST['mark'] == 'consRepAdm'){
                     if ($_POST['key'] == 0) {
-                        if (($finances['add_new'] == 1) || $god_mode) {
+                        if (($finances['see_all'] == 1) || $god_mode) {
                             $data .=
                                 '<li><div onclick="fl_check_consRepAdm(' . $_POST['ind'] . ');">Проверено</div></li>';
                         }
                     }
                     if ($_POST['key'] == 4) {
-                        /*$data .=
-                            //'<li><div onclick="fl_add_consRepAdm('.$_POST['ind'].');">Добавить</div></li>';
-                            '<li><div onclick="window.location.replace(\'stat_cashbox.php\');">Добавить</div></li>';*/
+                        //if (($finances['see_all'] == 1) || $god_mode) {
+                            if (!empty($_POST['dop'])) {
+
+                                $date_arr = explode('.', $_POST['dop']['date']);
+                                $d = $date_arr[0];
+                                $m = $date_arr[1];
+                                $y = $date_arr[2];
+
+                                $data .=
+                                    //'<li><div onclick="fl_add_consRepAdm('.$_POST['ind'].');">Добавить</div></li>';
+                                    '<li><div onclick="window.location.replace(\'fl_createDailyReport.php?filial_id=' . $_POST['dop']['filial_id'] . '&d='.$d.'&m='.$m.'&y='.$y.' \');">Добавить</div></li>';
+                            }else{
+                                $data .=
+                                    '<li><div onclick="window.location.replace(\'stat_cashbox.php\');">Добавить</div></li>';
+                            }
+                        //}
                     }
                     if ($_POST['key'] == 0) {
                         if ($_POST['ind'] != 0) {
                             $data .=
-                                '<li><div onclick="fl_edit_consRepAdm(' . $_POST['ind'] . ');">Редактировать</div></li>';
+                                '<li><div onclick="window.location.replace(\'fl_editDailyReport.php?report_id=' . $_POST['ind'] . '\');">Редактировать</div></li>';
                         }
                     }
                     if ($_POST['key'] == 0) {
@@ -319,7 +332,7 @@
                         }
                     }
                     if ($_POST['key'] == 7) {
-                        if (($finances['add_new'] == 1) || $god_mode) {
+                        if (($finances['see_all'] == 1) || $god_mode) {
                             $data .=
                                 '<li><div onclick="fl_uncheck_consRepEdit(' . $_POST['ind'] . ');">Отменить проверку</div></li>';
                         }

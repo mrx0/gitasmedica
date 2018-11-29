@@ -60,7 +60,7 @@
                         <div class="nav">
                             <a href="stat_cashbox.php" class="b">Касса</a>
                         </div>
-                        <h2 style="padding: 0;">Сводный отчёт админ-ов</h2>
+                        <h2 style="padding: 0;">Сводный отчёт по филиалу</h2>
                     </header>';
 
             echo '
@@ -158,11 +158,11 @@
                             </div>';
                 echo '
                             <div class="cellTime cellsTimereport" style="text-align: center">
-                                Наличные
+                                Наличные из отчёта
                             </div>';
                 echo '
                             <div class="cellTime cellsTimereport" style="text-align: center">
-                                Безнал.
+                                Безнал. из отчёта
                             </div>';
                 /*echo '
                             <div class="cellTime cellsTimereport" style="text-align: center">
@@ -271,7 +271,7 @@
                     echo '
                         <li class="' . $weekend_block . ' cellsBlockHover blockControl" style="font-weight: bold; font-size: 12px; color: #949393; ' . $today_outline . '">';
                     echo '
-                            <div class="cellTime cellsTimereport reportDate" status="4" report_id="0" style="text-align: center; cursor: pointer; ' . $today_color . ' '. $today_border .''. $today_border_l .'">
+                            <div class="cellTime cellsTimereport reportDate" status="4" report_id="0" filial_id="'.$filial_id.'" style="text-align: center; cursor: pointer; ' . $today_color . ' '. $today_border .''. $today_border_l .'">
                                 ' . $data . '
                             </div>';
                     echo '

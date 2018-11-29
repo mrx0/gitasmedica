@@ -1802,7 +1802,7 @@
     }
 
     //Для отчета касса
-    function ajaxShowResultCashbox ($datastart, $dataend, $filial, $summtype, $certificatesShow){
+    function ajaxShowResultCashbox ($datastart, $dataend, $filial, $summtype, $certificatesShow, $show_deleted){
         //var_dump(func_get_args());
 
         $msql_cnnct = ConnectToDB2 ();
@@ -1824,13 +1824,18 @@
             $queryType .= "AND `summ_type` = '".$summtype."'";
         }
 
+        $show_deleted_str = '';
+        if ($show_deleted){
+            $show_deleted_str = "AND `status` <> '9'";
+        }
+
         //Приход денег вытащим
         $query = "SELECT * FROM `journal_order` WHERE
                 `date_in` BETWEEN 
                 STR_TO_DATE('".$datastart." 00:00:00', '%Y-%m-%d %H:%i:%s')
                 AND 
                 STR_TO_DATE('".$dataend." 23:59:59', '%Y-%m-%d %H:%i:%s') 
-                ".$queryFilial.$queryType." AND `org_pay` <> '1'
+                ".$queryFilial.$queryType." AND `org_pay` <> '1' ".$show_deleted_str."
                 ORDER BY `date_in` DESC";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);

@@ -51,6 +51,14 @@ if ($enter_ok){
                                     <input type="text" name="material_percent" id="material_percent" value="">
                                     <label id="material_percent_error" class="error"></label>
                                 </div>
+                            </div>
+
+                            <div class="cellsBlock2">
+                                <div class="cellLeft">Сумма за работу, руб.</div>
+                                <div class="cellRight">
+                                    <input type="text" name="summ_special" id="summ_special" value="">
+                                    <label id="summ_special_error" class="error"></label>
+                                </div>
                             </div>';
 
         echo '					

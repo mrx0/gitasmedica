@@ -159,7 +159,13 @@
 
                     if (!empty($invoice_data_db)) {
                         //var_dump($invoice_data_db);
-                        foreach ($invoice_data_db as $ids) {
+
+                        $rezultInvoices = showInvoiceDivRezult($invoice_data_db, true, false, false, false, false);
+                        //$data, $minimal, $show_categories, $show_absent, $show_deleted
+
+                        $rezultInvoice .= $rezultInvoices['data'];
+
+                        /*foreach ($invoice_data_db as $ids) {
                             //var_dump($ids['id']);
 
                             //Отметка об объеме оплат
@@ -202,11 +208,11 @@
                             }
                             $rezultInvoice .= '
                                                                 </div>
-                                                                
+
                                                             </a>
                                                             <span style="position: absolute; top: 2px; right: 3px;">' . $paid_mark . '</span>
                                                         </div>';
-                        }
+                        }*/
                     }
 
 

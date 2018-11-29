@@ -50,16 +50,16 @@
     }
 
     //Вставка и обновление категории процентов из-под Web
-	function WritePercentCatToDB_Edit ($session_id, $cat_name, $work_percent, $material_percent, $personal_id){
+	function WritePercentCatToDB_Edit ($session_id, $cat_name, $work_percent, $material_percent, $summ_special, $personal_id){
 
         $msql_cnnct = ConnectToDB ();
 
         $time = date('Y-m-d H:i:s', time());
 
         $query = "INSERT INTO `fl_spr_percents` (
-			`name`, `work_percent`, `material_percent`, `type`, `personal_id`, `create_time`, `create_person`)
+			`name`, `work_percent`, `material_percent`, `summ_special`, `type`, `personal_id`, `create_time`, `create_person`)
 			VALUES (
-			'{$cat_name}', '{$work_percent}', '{$material_percent}', '{$personal_id}', '{$personal_id}', '{$time}', '{$session_id}') ";
+			'{$cat_name}', '{$work_percent}', '{$material_percent}', '{$summ_special}', '{$personal_id}', '{$personal_id}', '{$time}', '{$session_id}') ";
 
         //mysqli_query($query) or die($query.' -> '.mysql_error());
         //mysqli_close();
@@ -69,7 +69,7 @@
         $mysql_insert_id = mysqli_insert_id($msql_cnnct);
 
         //логирование
-        AddLog (GetRealIp(), $session_id, '', 'Добавлена категория процентов. Название: ['.$cat_name.']. Работа: ['.$work_percent.']. Материал: ['.$material_percent.']. Тип: ['.$personal_id.'].');
+        AddLog (GetRealIp(), $session_id, '', 'Добавлена категория процентов. Название: ['.$cat_name.']. Работа: ['.$work_percent.']. Материал: ['.$material_percent.']. Спец цена: ['.$summ_special.']. Тип: ['.$personal_id.'].');
 
         return ($mysql_insert_id);
     }

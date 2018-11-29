@@ -2809,7 +2809,7 @@
         
         summ = summ - $(".summMinus").val();
 
-        $("#allsumm").html(summ);
+        $("#allsumm").html(number_format(summ, 2, '.', ' '));
 
     }
 
@@ -2826,6 +2826,66 @@
         var reqData = {
             date: $("#iWantThisDate2").val(),
             filial_id: filial_id,
+            allsumm: $("#allsumm").html(),
+            SummNal: $("#SummNal").html(),
+            SummBeznal: $("#SummBeznal").html(),
+            CertCount: $("#CertCount").html(),
+            SummCertNal: $("#SummCertNal").html(),
+            SummCertBeznal: $("#SummCertBeznal").html(),
+            ortoSummNal: $("#ortoSummNal").val(),
+            ortoSummBeznal: $("#ortoSummBeznal").val(),
+            specialistSummNal: $("#specialistSummNal").val(),
+            specialistSummBeznal: $("#specialistSummBeznal").val(),
+            analizSummNal: $("#analizSummNal").val(),
+            analizSummBeznal: $("#analizSummBeznal").val(),
+            solarSummNal: $("#solarSummNal").val(),
+            solarSummBeznal: $("#solarSummBeznal").val(),
+            summMinusNal: $("#summMinusNal").val()
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                if(res.result == 'success') {
+                    //console.log('success');
+                    $('#data').html(res.data);
+                    setTimeout(function () {
+                        //window.location.replace('stat_cashbox.php');
+                        window.location.replace('fl_consolidated_report_admin.php?filial_id='+filial_id);
+                        //console.log('client.php?id='+id);
+                    }, 500);
+                }else{
+                    //console.log('error');
+                    $('#errrror').html(res.data);
+                    //$('#errrror').html('');
+                }
+            }
+        });
+    }
+
+    //Редактирование ежедневного отчёта в бд
+    function fl_editDailyReport_add(report_id){
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        var link = "fl_editDailyReport_add_f.php";
+
+        var filial_id = $("#SelectFilial").val();
+
+        var reqData = {
+            report_id: report_id,
             allsumm: $("#allsumm").html(),
             SummNal: $("#SummNal").html(),
             SummBeznal: $("#SummBeznal").html(),
@@ -3132,6 +3192,47 @@
 
             }
         });
+
+    }
+
+    //Добавить ежедневный отчет администраторов
+    function fl_add_consRepAdm(event){
+        //console.log(event);
+
+        var target = $(event.target);
+        console.log(target);
+
+        /*var reqData = {
+            report_id: id
+        };
+
+        var link = "fl_uncheckDailyReport_f.php";
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function (res) {
+                //console.log(res);
+
+                if (res.result == "success") {
+                    location.reload();
+                    //console.log(res.data);
+                }
+                if (res.result == "error") {
+                    alert(res.data);
+                }
+                //console.log(data.data);
+
+            }
+        });*/
 
     }
 
