@@ -346,6 +346,9 @@
                             if($(this).val().length > 0){
                                 //console.log($(this).val().length);
                                 
+                                //меняем запятую на точку (разделитель)
+                                $(this).val($(this).val().replace(\',\', \'.\'));
+                                
                                 if ($(this).val() == 0){
                                     $(this).val("")
                                 }
