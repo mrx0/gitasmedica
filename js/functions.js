@@ -1561,7 +1561,7 @@
                                 cat_name: cat_name,
                                 work_percent: work_percent,
                                 material_percent: material_percent,
-                                summ_special: summ_special,
+                                summ_special: summ_special,summ_special: summ_special,
                                 personal_id: personal_id
                             },
 
@@ -8454,7 +8454,7 @@
         window.myPie.update();
     });*/
 
-
+	//пробная для круговой диаграммы
     function showChart() {
 
         var mainData = [];

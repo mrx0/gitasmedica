@@ -2809,7 +2809,7 @@
         
         summ = summ - $(".summMinus").val();
 
-        $("#allsumm").html(summ);
+        $("#allsumm").html(number_format(summ, 2, '.', ' '));
 
     }
 
