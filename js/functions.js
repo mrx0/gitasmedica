@@ -4712,7 +4712,7 @@
 		//console.log(invoice_type);
 
 		var link = "fill_invoice_stom_from_session_f.php";
-		if (invoice_type == 6){
+		if ((invoice_type == 6) || (invoice_type == 10)){
 			link = "fill_invoice_cosm_from_session_f.php";
 		}
 		if (invoice_type == 88){
@@ -4742,7 +4742,7 @@
                 //console.log(res);
 
 				if(res.result == "success"){
-					//console.log(res.data2);
+					//console.log(res.data);
 					$('#invoice_rezult').html(res.data);
 
 					// !!!
@@ -5877,7 +5877,7 @@
 
 		var link = "add_price_id_stom_in_invoice_f.php";
 
-		if (type == 6){
+		if ((type == 6) || (type == 10)){
 			link = "add_price_id_cosm_in_invoice_f.php";
 		}
 		if (type == 88){

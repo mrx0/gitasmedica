@@ -53,7 +53,7 @@
                             $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['manual_itog_price'] = $price['price'];
 						}
 					}
-					if ($_POST['invoice_type'] == 6){
+					if (($_POST['invoice_type'] == 6) || ($_POST['invoice_type'] == 10)){
 						if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']])){
                             $item =  $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['id'];
                             $insure = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['insure'];
@@ -78,7 +78,7 @@
 					}
 				}
 
-				//echo json_encode(array('result' => 'success', 'data' => $_POST['key']));
+				echo json_encode(array('result' => 'success'));
 			}
 		}
 	}
