@@ -152,6 +152,9 @@
 							//mysql_close();
 							
 							array_push($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'], $temp_arr);
+
+
+                        echo json_encode(array('result' => 'success'));
 						//}
 					}
 					

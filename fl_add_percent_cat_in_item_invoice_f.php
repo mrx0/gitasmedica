@@ -41,7 +41,7 @@
 							$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['material_percent'] = $material_percent;
 						}
 					}
-					if ($_POST['invoice_type'] == 6){
+					if (($_POST['invoice_type'] == 6) || ($_POST['invoice_type'] == 10)){
 						if (isset($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']])){
 							$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['percent_cats'] = (int)$_POST['percent_cats'];
 							$_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['work_percent'] = $work_percent;
