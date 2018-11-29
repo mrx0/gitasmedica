@@ -302,7 +302,7 @@
                         }
                     }
                     if ($_POST['key'] == 4) {
-                        if (($finances['see_all'] == 1) || $god_mode) {
+                        //if (($finances['see_all'] == 1) || $god_mode) {
                             if (!empty($_POST['dop'])) {
 
                                 $date_arr = explode('.', $_POST['dop']['date']);
@@ -317,7 +317,7 @@
                                 $data .=
                                     '<li><div onclick="window.location.replace(\'stat_cashbox.php\');">Добавить</div></li>';
                             }
-                        }
+                        //}
                     }
                     if ($_POST['key'] == 0) {
                         if ($_POST['ind'] != 0) {
