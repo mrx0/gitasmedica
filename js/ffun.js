@@ -3017,7 +3017,7 @@
                         if (Object.size(res.data) > 0){
 
                             //zReport.html              (number_format(res.data.summ, 0, '.', ' '));
-                            allSumm.html                (number_format(res.data.summ, 0, '.', ' '));
+                            allSumm.html                (number_format(res.data.summ, 2, '.', ' '));
                             SummNal.html                (number_format(res.data.cashbox_nal, 0, '.', ' '));
                             SummBezal.html              (number_format(res.data.cashbox_beznal, 0, '.', ' '));
                             SummCertNal.html            (number_format(res.data.cashbox_cert_nal, 0, '.', ' '));
@@ -3030,7 +3030,7 @@
                             analizSummBeznal.html       (number_format(res.data.temp_analiz_beznal, 0, '.', ' '));
                             solarSummNal.html           (number_format(res.data.temp_solar_nal, 0, '.', ' '));
                             solarSummBeznal.html        (number_format(res.data.temp_solar_beznal, 0, '.', ' '));
-                            summMinusNal.html           (number_format(res.data.temp_giveoutcash, 0, '.', ' '));
+                            summMinusNal.html           (number_format(res.data.temp_giveoutcash, 2, '.', ' '));
 
                             //Прописываем статус отчета
                             $(thisObj).find(".reportDate").attr('status', res.data.status);
