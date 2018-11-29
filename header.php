@@ -10,6 +10,10 @@
 
 	//Время начала работы скрипта PHP
     $script_start = microtime(true);
+
+    //текущая страница
+    $_SESSION['current_page'] = $_SERVER['REQUEST_URI'];
+    //var_dump($_SESSION);
 	
 	if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 		$enter_ok = FALSE;

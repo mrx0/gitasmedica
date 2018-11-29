@@ -26,6 +26,7 @@
     unset($_SESSION['fl_calcs_tabels']);
 
 	//Переадресовываем на главную
-	header("location: index.php");
+	//header("location: index.php");
+	header("location: enter.php");
 
 ?>
