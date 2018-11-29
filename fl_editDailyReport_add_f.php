@@ -34,7 +34,7 @@
                 $create_time = date('Y-m-d H:i:s', time());
 
                 $query = "UPDATE `fl_journal_daily_report` SET
-                `summ`='{$_POST['allsumm']}', `cashbox_nal`='{$_POST['SummNal']}',
+                `summ`='".str_replace(' ', '', $_POST['allsumm'])."', `cashbox_nal`='{$_POST['SummNal']}',
                  `cashbox_beznal`='{$_POST['SummBeznal']}', `cashbox_cert_count`='{$_POST['CertCount']}', 
                  `cashbox_cert_nal`='{$_POST['SummCertNal']}', `cashbox_cert_beznal`='{$_POST['SummCertBeznal']}', 
                  `temp_orto_nal`='{$_POST['ortoSummNal']}', `temp_orto_beznal`='{$_POST['ortoSummBeznal']}', 
