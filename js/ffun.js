@@ -2815,6 +2815,7 @@
 
     //Добавление ежедневного отчёта в бд
     function fl_createDailyReport_add(){
+        //console.log($("#allsumm").html().replace(/\s{2,}/g, ''));
 
         //убираем ошибки
         hideAllErrors ();
@@ -2826,7 +2827,7 @@
         var reqData = {
             date: $("#iWantThisDate2").val(),
             filial_id: filial_id,
-            allsumm: $("#allsumm").html(),
+            allsumm: $("#allsumm").html().replace(/\s{2,}/g, ''),
             SummNal: $("#SummNal").html(),
             SummBeznal: $("#SummBeznal").html(),
             CertCount: $("#CertCount").html(),
@@ -2886,7 +2887,7 @@
 
         var reqData = {
             report_id: report_id,
-            allsumm: $("#allsumm").html(),
+            allsumm: $("#allsumm").html().replace(/\s{2,}/g, ''),
             SummNal: $("#SummNal").html(),
             SummBeznal: $("#SummBeznal").html(),
             CertCount: $("#CertCount").html(),
