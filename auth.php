@@ -82,7 +82,7 @@
 
 						//Потом пробуем сразу перевести на последнюю страничку
                         if (isset($_SESSION['current_page'])){
-                            $current_page = $_SESSION['current_page'];
+                            //$current_page = $_SESSION['current_page'];
                         }
 
 						

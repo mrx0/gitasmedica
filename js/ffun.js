@@ -2809,7 +2809,17 @@
         
         summ = summ - $(".summMinus").val();
 
+        //Общая сумма без аренды
         $("#allsumm").html(number_format(summ, 2, '.', ' '));
+
+        $(".itogSummInput").each(function(){
+            summ += Number($(this).val());
+        });
+        //console.log(summ);
+
+        //Итоговая сумма
+        $("#itogSummShow").html(number_format(summ, 2, '.', ' '));
+        $("#itogSumm").val(number_format(summ, 2, '.', ' '));
 
     }
 
@@ -2827,6 +2837,9 @@
         var reqData = {
             date: $("#iWantThisDate2").val(),
             filial_id: filial_id,
+            itogSumm: $("#itogSumm").val(),
+            arenda: $("#arendaNal").val(),
+            zreport: $("#zreport").val(),
             allsumm: $("#allsumm").html(),
             SummNal: $("#SummNal").html(),
             SummBeznal: $("#SummBeznal").html(),
@@ -2843,6 +2856,7 @@
             solarSummBeznal: $("#solarSummBeznal").val(),
             summMinusNal: $("#summMinusNal").val()
         };
+        console.log(reqData);
 
         $.ajax({
             url: link,
@@ -2887,6 +2901,9 @@
 
         var reqData = {
             report_id: report_id,
+            itogSumm: $("#itogSumm").val(),
+            arenda: $("#arendaNal").val(),
+            zreport: $("#zreport").val(),
             allsumm: $("#allsumm").html(),
             SummNal: $("#SummNal").html(),
             SummBeznal: $("#SummBeznal").html(),
@@ -2944,8 +2961,12 @@
         //console.log(getTodayDate());
 
         //Блоки, где будут:
+        //- Итог общий
+        var itogSumm = (thisObj.find(".itogSumm"));
+        //- Аренда
+        var arenda = (thisObj.find(".arenda"));
         //- z-отчет
-        //var zReport = (thisObj.find(".zReport"));
+        var zReport = (thisObj.find(".zReport"));
         //- общая сумма
         var allSumm = (thisObj.find(".allSumm"));
         //- сумма нал
@@ -3017,7 +3038,9 @@
                         //if (date == getTodayDate()){
                         if (Object.size(res.data) > 0){
 
-                            //zReport.html              (number_format(res.data.summ, 0, '.', ' ')).css({"text-align": "right"});
+                            itogSumm.html                (number_format(res.data.itogSumm, 2, '.', ' ')).css({"text-align": "right"});
+                            arenda.html                 (number_format(res.data.arenda, 0, '.', ' ')).css({"text-align": "right"});
+                            zReport.html                (number_format(res.data.zreport, 2, '.', ' ')).css({"text-align": "right"});
                             allSumm.html                (number_format(res.data.summ, 2, '.', ' ')).css({"text-align": "right"});
                             SummNal.html                (number_format(res.data.cashbox_nal, 0, '.', ' ')).css({"text-align": "right"});
                             SummBezal.html              (number_format(res.data.cashbox_beznal, 0, '.', ' ')).css({"text-align": "right"});
@@ -3054,10 +3077,12 @@
                     }else{
                         //console.log(res.count);
 
+                        itogSumm.html('-');
+                        arenda.html('-');
+                        zReport.html('-');
                         allSumm.html('-');
                         SummNal.html('-');
                         SummBezal.html('-');
-                        //zReport.html('-');
                         SummCertNal.html('-');
                         SummCertBeznal.html('-');
                         ortoSummNal.html('-');

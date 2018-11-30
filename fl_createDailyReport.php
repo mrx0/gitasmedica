@@ -150,18 +150,30 @@
                             </div>
                         </div>';
 
+                    if (($finances['see_all'] == 1) || $god_mode) {
+                        echo '
+                        <div class="cellsBlock2">
+                            <div class="cellLeft" style="font-size: 90%; border: 1px solid rgb(2, 108, 33);">Итоговая сумма</div>
+                            <div class="cellRight calculateOrder" style="border: 1px solid rgb(2, 108, 33);">
+                                <span id="itogSummShow">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
+                            </div>
+                        </div>';
+                    }
+
+                    echo '<input type="hidden" id="itogSumm" value="0">';
+
                     echo '
                         <div class="cellsBlock2">
                             <div class="cellLeft" style="font-size: 90%;">Z-отчёт, руб.</div>
                             <div class="cellRight">
-                                <input type="text" name="zreport" id="zreport" value="" style="font-size: 12px;" disabled>
+                                <input type="text" name="zreport" id="zreport" value="0" style="font-size: 12px;" disabled>
                             </div>
                         </div>';
 
                     echo '
                         <div class="cellsBlock2">
                             <div class="cellLeft" style="font-size: 90%;">Общая сумма</div>
-                            <div class="cellRight calculateOrder">
+                            <div class="cellRight calculateOrder" style="font-size: 13px;">
                                 <span id="allsumm">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
                             </div>
                         </div>';
@@ -224,6 +236,21 @@
                                 <div style="margin: 2px 0;">- безналичная оплата: <b><i id="SummCertBeznal" class="allSumm">' . $SummCertBeznal . '</i></b> руб.</div>
                             </div>
                         </div>';
+
+                    if (($finances['see_all'] == 1) || $god_mode) {
+                        echo '
+                        <div class="cellsBlock2" style="font-size: 90%;">
+                            <div class="cellLeft">
+                                Аренда
+                                <span style="font-size:80%; color: #999; "></span>
+                            </div>
+                            <div class="cellRight">
+                                <input type="text" id="arendaNal" class="itogSummInput" style="font-size: 12px; color: rgb(206, 0, 255);" value="0"><span  style="font-size: 90%;"> руб.</span>
+                            </div>
+                        </div>';
+                    }
+
+                    ///echo '<input type="hidden" id="arendaNal" value="0">';
 
                     echo '
                         <div class="cellsBlock2" style="font-size: 90%;">
@@ -375,7 +402,7 @@
             	            //console.log($("#doc_title").html());
                         });
 						
-						$("#ortoSummNal, #ortoSummBeznal, #specialistSummNal, #specialistSummBeznal, #analizSummNal, #analizSummBeznal, #summMinusNal, #summMinusBeznal, #solarSummNal, #solarSummBeznal").blur(function() {
+						$("#arendaNal, #ortoSummNal, #ortoSummBeznal, #specialistSummNal, #specialistSummBeznal, #analizSummNal, #analizSummBeznal, #summMinusNal, #summMinusBeznal, #solarSummNal, #solarSummBeznal").blur(function() {
                             //console.log($(this).val());
                             
                             var value = $(this).val();
@@ -406,7 +433,7 @@
                         });
 						
                         //Живой поиск
-                        $("#ortoSummNal, #ortoSummBeznal, #specialistSummNal, #specialistSummBeznal, #analizSummNal, #analizSummBeznal, #summMinusNal, #summMinusBeznal, #solarSummNal, #solarSummBeznal").bind("change keyup input click", function() {
+                        $("#arendaNal, #ortoSummNal, #ortoSummBeznal, #specialistSummNal, #specialistSummBeznal, #analizSummNal, #analizSummBeznal, #summMinusNal, #summMinusBeznal, #solarSummNal, #solarSummBeznal").bind("change keyup input click", function() {
                             if($(this).val().length > 0){
                                 //console.log($(this).val().length);
                                 

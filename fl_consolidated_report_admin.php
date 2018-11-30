@@ -148,13 +148,29 @@
                             <div class="cellTime cellsTimereport" style="text-align: center">
                                 Дата
                             </div>';
+
+                if (($finances['see_all'] == 1) || $god_mode){
+                    echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                Итог
+                            </div>';
+                }
+
+                if (($finances['see_all'] == 1) || $god_mode) {
+                    echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center">
+                                Аренда
+                            </div>';
+                }
+
                 echo '
                             <div class="cellTime cellsTimereport" style="text-align: center">
                                 Z-отчёт
                             </div>';
+
                 echo '
                             <div class="cellTime cellsTimereport" style="text-align: center">
-                                Всего
+                                Всего в кассе
                             </div>';
                 echo '
                             <div class="cellTime cellsTimereport" style="text-align: center">
@@ -274,6 +290,21 @@
                             <div class="cellTime cellsTimereport reportDate" status="4" report_id="0" filial_id="'.$filial_id.'" style="text-align: center; cursor: pointer; ' . $today_color . ' '. $today_border .''. $today_border_l .'">
                                 ' . $data . '
                             </div>';
+
+                    if (($finances['see_all'] == 1) || $god_mode){
+                        echo '
+                            <div class="cellTime cellsTimereport itogSumm" style="text-align: center; font-weight: normal; '. $today_border .'">
+                                -
+                            </div>';
+                    }
+
+                    if (($finances['see_all'] == 1) || $god_mode) {
+                        echo '
+                            <div class="cellTime cellsTimereport arenda" style="text-align: center; font-weight: normal; '. $today_border .'">
+                                -
+                            </div>';
+                    }
+
                     echo '
                             <div class="cellTime cellsTimereport zReport" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
