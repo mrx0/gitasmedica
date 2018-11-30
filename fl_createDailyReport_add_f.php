@@ -11,7 +11,7 @@
 		//var_dump ($_POST);
 		if ($_POST){
 			if (isset($_POST['date']) && isset($_POST['filial_id'])
-                && isset($_POST['allsumm']) && isset($_POST['itogSumm']) && isset($_POST['arenda']) && isset($_POST['zreport'])
+                && isset($_POST['allsumm']) && isset($_POST['itogSumm']) && isset($_POST['zreport'])
                 && isset($_POST['SummNal']) && isset($_POST['SummBeznal'])
                 && isset($_POST['CertCount']) && isset($_POST['SummCertNal']) && isset($_POST['SummCertBeznal'])
                 && isset($_POST['ortoSummNal']) && isset($_POST['ortoSummBeznal'])
