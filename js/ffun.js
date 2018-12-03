@@ -2952,6 +2952,234 @@
         });
     }
 
+    //Подсчет итогов за месяц
+    function fl_getDailyReportsSummAllMonth(){
+
+        $("#itogSummAllMonth").html(0);
+        $("#arendaAllMonth").html(0);
+        $("#zReportAllMonth").html(0);
+        $("#allSummAllMonth").html(0);
+        $("#SummNalAllMonth").html(0);
+        $("#SummBezalAllMonth").html(0);
+        $("#SummCertNal").html(0);
+        $("#SummCertBeznalAllMonth").html(0);
+        $("#ortoSummNal").html(0);
+        $("#ortoSummBeznal").html(0);
+        $("#specialistSummNal").html(0);
+        $("#specialistSummBeznal").html(0);
+        $("#analizSummNal").html(0);
+        $("#analizSummBeznal").html(0);
+        $("#solarSummNal").html(0);
+        $("#solarSummBeznal").html(0);
+        $("#summMinusNal").html(0);
+
+        //- Итог общий
+        $(".itogSumm").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var itogSummAllMonth = Number($("#itogSummAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#itogSummAllMonth").html(number_format((itogSummAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- Аренда
+        $(".arenda").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var arendaAllMonth = Number($("#arendaAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#arendaAllMonth").html(number_format((arendaAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- z-отчет
+        $(".zReport").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var zReportAllMonth = Number($("#zReportAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#zReportAllMonth").html(number_format((zReportAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- общая сумма
+        $(".allSumm").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var allSummAllMonth = Number($("#allSummAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#allSummAllMonth").html(number_format((allSummAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- сумма нал
+        $(".SummNal").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var SummNalAllMonth = Number($("#SummNalAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#SummNalAllMonth").html(number_format((SummNalAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- сумма безнал
+        $(".SummBezal").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var SummBezalAllMonth = Number($("#SummBezalAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#SummBezalAllMonth").html(number_format((SummBezalAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- сертификаты нал
+        $(".SummCertNal").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var SummCertNalAllMonth = Number($("#SummCertNalAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#SummCertNalAllMonth").html(number_format((SummCertNalAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- сертификаты безнал
+        $(".SummCertBeznal").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var SummCertBeznalAllMonth = Number($("#SummCertBeznalAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#SummCertBeznalAllMonth").html(number_format((SummCertBeznalAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- орто нал
+        $(".ortoSummNal").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var ortoSummNalAllMonth = Number($("#ortoSummNalAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#ortoSummNalAllMonth").html(number_format((ortoSummNalAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- орто безнал
+        $(".ortoSummBeznal").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var ortoSummBeznalAllMonth = Number($("#ortoSummBeznalAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#ortoSummBeznalAllMonth").html(number_format((ortoSummBeznalAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- специалисты нал
+        $(".specialistSummNal").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var specialistSummNalAllMonth = Number($("#specialistSummNalAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#specialistSummNalAllMonth").html(number_format((specialistSummNalAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- специалисты безнал
+        $(".specialistSummBeznal").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var specialistSummBeznalAllMonth = Number($("#specialistSummBeznalAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#specialistSummBeznalAllMonth").html(number_format((specialistSummBeznalAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- анализы нал
+        $(".analizSummNal").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var analizSummNalAllMonth = Number($("#analizSummNalAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#analizSummNalAllMonth").html(number_format((analizSummNalAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- анализы безнал
+        $(".analizSummBeznal").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var analizSummBeznalAllMonth = Number($("#analizSummBeznalAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#analizSummBeznalAllMonth").html(number_format((analizSummBeznalAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- солярий нал
+        $(".solarSummNal").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var solarSummNalAllMonth = Number($("#solarSummNalAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#solarSummNalAllMonth").html(number_format((solarSummNalAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- солярий безнал
+        $(".solarSummBeznal").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var solarSummBeznalAllMonth = Number($("#solarSummBeznalAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#solarSummBeznalAllMonth").html(number_format((solarSummBeznalAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- расход
+        $(".summMinusNal").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var summMinusNalAllMonth = Number($("#summMinusNalAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#summMinusNalAllMonth").html(number_format((summMinusNalAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+
+    }
+
     //Получение отчёта по какому-то дню из филиала и заполнение отчета
     function fl_getDailyReports(thisObj){
 
@@ -3038,7 +3266,7 @@
                         //if (date == getTodayDate()){
                         if (Object.size(res.data) > 0){
 
-                            itogSumm.html                (number_format(res.data.itogSumm, 2, '.', ' ')).css({"text-align": "right"});
+                            itogSumm.html               (number_format(res.data.itogSumm, 2, '.', ' ')).css({"text-align": "right"});
                             arenda.html                 (number_format(res.data.arenda, 0, '.', ' ')).css({"text-align": "right"});
                             zReport.html                (number_format(res.data.zreport, 2, '.', ' ')).css({"text-align": "right"});
                             allSumm.html                (number_format(res.data.summ, 2, '.', ' ')).css({"text-align": "right"});
