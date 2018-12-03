@@ -10,7 +10,8 @@
 	}else{
 		//var_dump ($_POST);
 		if ($_POST){
-			if (isset($_POST['report_id']) && isset($_POST['allsumm'])
+			if (isset($_POST['report_id'])
+                && isset($_POST['allsumm']) && isset($_POST['itogSumm']) && isset($_POST['zreport'])
                 && isset($_POST['SummNal']) && isset($_POST['SummBeznal'])
                 && isset($_POST['CertCount']) && isset($_POST['SummCertNal']) && isset($_POST['SummCertBeznal'])
                 && isset($_POST['ortoSummNal']) && isset($_POST['ortoSummBeznal'])
@@ -34,7 +35,8 @@
                 $create_time = date('Y-m-d H:i:s', time());
 
                 $query = "UPDATE `fl_journal_daily_report` SET
-                `summ`='".str_replace(' ', '', $_POST['allsumm'])."', `cashbox_nal`='{$_POST['SummNal']}',
+                  `itogSumm`='".str_replace(' ', '', $_POST['itogSumm'])."', `arenda`='{$_POST['arenda']}', `zreport`='{$_POST['zreport']}',
+                  `summ`='".str_replace(' ', '', $_POST['allsumm'])."', `cashbox_nal`='{$_POST['SummNal']}',
                  `cashbox_beznal`='{$_POST['SummBeznal']}', `cashbox_cert_count`='{$_POST['CertCount']}', 
                  `cashbox_cert_nal`='{$_POST['SummCertNal']}', `cashbox_cert_beznal`='{$_POST['SummCertBeznal']}', 
                  `temp_orto_nal`='{$_POST['ortoSummNal']}', `temp_orto_beznal`='{$_POST['ortoSummBeznal']}', 

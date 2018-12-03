@@ -50,7 +50,7 @@
                         echo json_encode(array('result' => 'success', 'data' => $rez[0], 'count' => count($rez)));
                     }else{
                         //Если есть права, то возвращаем данные
-                        if (($finances['add_new'] == 1) || $god_mode) {
+                        if (($finances['see_all'] == 1) || $god_mode) {
                             echo json_encode(array('result' => 'success', 'data' => $rez[0], 'count' => count($rez)));
                         //Если нет прав, то возвращаем пустой массив, но указываем кол-во элементов в нём
                         }else{

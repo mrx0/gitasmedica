@@ -145,51 +145,63 @@
                 echo '
                         <li class="cellsBlock" style="font-weight:bold;">';
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center">
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Дата
                             </div>';
+
+                if (($finances['see_all'] == 1) || $god_mode){
+                    echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+                                Итог
+                            </div>';
+                }
+
+                if (($finances['see_all'] == 1) || $god_mode) {
+                    echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+                                Аренда
+                            </div>';
+                }
+
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center">
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Z-отчёт
                             </div>';
+
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center">
-                                Всего
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+                                Всего в кассе
                             </div>';
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center">
-                                Наличные из отчёта
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+                                Наличные стом+косм
                             </div>';
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center">
-                                Безнал. из отчёта
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+                                Безнал. стом+косм
                             </div>';
-                /*echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center">
-                                Аренда
-                            </div>';*/
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center">
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Серт-ты<br>нал
                             </div>';
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center">
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Серт-ты безнал
                             </div>';
                 /*echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center">
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 ЛЕЧЕНИЕ<br>нал
                             </div>';
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center">
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 ЛЕЧЕНИЕ<br>б/н + серт
                             </div>';*/
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18);">
+                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 ОРТО<br>нал
                             </div>';
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center;  background-color: rgba(63, 0, 255, 0.18);">
+                            <div class="cellTime cellsTimereport" style="text-align: center;  background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 ОРТО<br>безнал
                             </div>';
                 /*echo '
@@ -197,31 +209,31 @@
                                 ? ОРТО<br>кол-во
                             </div>';*/
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18);">
+                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Спец-ты<br>нал
                             </div>';
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18);">
+                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Спец-ты безнал
                             </div>';
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18);">
+                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Анализы нал
                             </div>';
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18);">
+                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Анализы безнал
                             </div>';
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18);">
+                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Солярий<br>нал
                             </div>';
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18);">
+                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Солярий<br>безнал
                             </div>';
                 echo '
-                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18);">
+                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Расход
                             </div>';
                 echo '
@@ -263,7 +275,7 @@
                     //Цвет текущего дня
                     if ($data === date('d') . '.' . date('m') . '.' . date('Y')) {
                         //$today_color = 'background-color: green;';
-                        $today_outline = ' outline: 1px solid red;';
+                        $today_outline = ' outline: 1px solid red; background-color: rgb(169, 255, 153);';
                     }
                     //var_dump($data);
                     //var_dump(date('d') . '.' . date('m') . '.' . date('Y'));
@@ -274,6 +286,21 @@
                             <div class="cellTime cellsTimereport reportDate" status="4" report_id="0" filial_id="'.$filial_id.'" style="text-align: center; cursor: pointer; ' . $today_color . ' '. $today_border .''. $today_border_l .'">
                                 ' . $data . '
                             </div>';
+
+                    if (($finances['see_all'] == 1) || $god_mode){
+                        echo '
+                            <div class="cellTime cellsTimereport itogSumm" style="text-align: center; font-weight: normal; '. $today_border .'">
+                                -
+                            </div>';
+                    }
+
+                    if (($finances['see_all'] == 1) || $god_mode) {
+                        echo '
+                            <div class="cellTime cellsTimereport arenda" style="text-align: center; font-weight: normal; '. $today_border .'">
+                                -
+                            </div>';
+                    }
+
                     echo '
                             <div class="cellTime cellsTimereport zReport" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
@@ -346,6 +373,95 @@
 
                 }
 
+                if (($finances['see_all'] == 1) || $god_mode) {
+                    echo '
+                        <li class="' . $weekend_block . ' cellsBlockHover blockControl" style="font-weight: bold; font-size: 12px; background-color: rgb(255, 193, 7);">';
+                    echo '
+                            <div class="cellTime cellsTimereport reportDate" style="text-align: left; cursor: pointer; ' . $today_color .'">
+                                Всего
+                            </div>';
+
+                    echo '
+                            <div id="itogSummAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+
+                    echo '
+                            <div id="arendaAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+
+                    echo '
+                            <div id="zReportAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="allSummAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="SummNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="SummBezalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="SummCertNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="SummCertBeznalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="ortoSummNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="ortoSummBeznalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    /*echo '
+                            <div class="cellTime cellsTimereport " style="text-align: right; font-weight: bold;">
+
+                            </div>';*/
+                    echo '
+                            <div id="specialistSummNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="specialistSummBeznalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="analizSummNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="analizSummBeznalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="solarSummNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="solarSummBeznalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="summMinusNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div class="cellText" style="text-align: center; font-weight: normal;">
+                            </div>';
+                    echo '
+                        </li>';
+                }
+
                 echo '
                     </ul>
 			    </div>';
@@ -409,6 +525,20 @@
                     
                     $(document).ready(function(){
 
+                        var elems = $(".blockControl"), count = elems.length;
+
+                        elems.each( function() {
+                            
+                            fl_getDailyReports($(this));
+                            
+                            if (!--count){
+                                console.log(count);
+                                
+                                //fl_getDailyReportsSummAllMonth ();
+                            }
+
+                        });
+/*                        
                         //Выделить в отдельную функцию?
                         $(".blockControl").each(function(){
                             //console.log(1);
@@ -418,7 +548,14 @@
                             //console.log(date);
                             
                             fl_getDailyReports($(this));
-                        });                        
+                            
+                        }).promise().done( function(){ 
+                            //Суммы за месяц
+                            alert(1); 
+                            fl_getDailyReportsSummAllMonth (); 
+                        });*/
+                        
+
                         
 
                         //Клик на дате
