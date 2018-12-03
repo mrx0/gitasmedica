@@ -2875,11 +2875,11 @@
                 if(res.result == 'success') {
                     //console.log('success');
                     $('#data').html(res.data);
-                    setTimeout(function () {
+/*                    setTimeout(function () {
                         //window.location.replace('stat_cashbox.php');
                         window.location.replace('fl_consolidated_report_admin.php?filial_id='+filial_id);
                         //console.log('client.php?id='+id);
-                    }, 500);
+                    }, 500);*/
                 }else{
                     //console.log('error');
                     $('#errrror').html(res.data);
