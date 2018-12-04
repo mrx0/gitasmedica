@@ -43,6 +43,13 @@ foreach ($rez as $item) {
 
     var_dump('---------------------------');
 
+
+    $query = "UPDATE `fl_journal_daily_report` SET `nal` = '{$nal}', `beznal` = '{$beznal}', `itogSumm`='".($nal+$beznal+$item['arenda'])."' WHERE `id`='{$item['id']}'";
+
+    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
 }
+
+CloseDB($msql_cnnct);
 
 ?>
