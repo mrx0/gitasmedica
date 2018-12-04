@@ -20,50 +20,55 @@
                 && isset($_POST['analizSummNal']) && isset($_POST['analizSummBeznal'])
                 && isset($_POST['solarSummNal']) && isset($_POST['solarSummBeznal'])
                 && isset($_POST['summMinusNal'])
-            ){
-				include_once 'DBWork.php';
+            ) {
 
-				$time = time();
+                if (($_POST['zreport'] == "") || ($_POST['zreport'] == 0) || ($_POST['zreport'] == '0')) {
+                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Z-отчёт надо заполнять.</div>'));
+                }else{
 
-                $msql_cnnct = ConnectToDB ();
+                    include_once 'DBWork.php';
 
-                /*$data_temp_arr = explode(".", $_POST['date']);
+                    $time = time();
 
-                $d = $data_temp_arr[0];
-                $m = $data_temp_arr[1];
-                $y = $data_temp_arr[2];*/
+                    $msql_cnnct = ConnectToDB();
 
-                $create_time = date('Y-m-d H:i:s', time());
+                    /*$data_temp_arr = explode(".", $_POST['date']);
 
-                $query = "UPDATE `fl_journal_daily_report` SET
-                  `itogSumm`='".str_replace(' ', '', $_POST['itogSumm'])."', `arenda`='{$_POST['arenda']}', `zreport`='{$_POST['zreport']}',
-                  `summ`='".str_replace(' ', '', $_POST['allsumm'])."', 
-                  `nal`='".str_replace(' ', '', $_POST['SummNal'])."', `beznal`='".str_replace(' ', '', $_POST['SummBeznal'])."',
-                  `cashbox_nal`='".str_replace(' ', '', $_POST['SummNalStomCosm'])."', `cashbox_beznal`='".str_replace(' ', '', $_POST['SummBeznalStomCosm'])."', 
-                  `cashbox_cert_count`='{$_POST['CertCount']}', `cashbox_cert_nal`='{$_POST['SummCertNal']}', `cashbox_cert_beznal`='{$_POST['SummCertBeznal']}', 
-                  `temp_orto_nal`='{$_POST['ortoSummNal']}', `temp_orto_beznal`='{$_POST['ortoSummBeznal']}', 
-                  `temp_specialist_nal`='{$_POST['specialistSummNal']}', `temp_specialist_beznal`='{$_POST['specialistSummBeznal']}', 
-                  `temp_analiz_nal`='{$_POST['analizSummNal']}', `temp_analiz_beznal`='{$_POST['analizSummBeznal']}',
-                  `temp_solar_nal`='{$_POST['solarSummNal']}', `temp_solar_beznal`='{$_POST['solarSummBeznal']}', 
-                  `temp_giveoutcash`='{$_POST['summMinusNal']}', 
-                  `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}' 
-                WHERE `id`='{$_POST['report_id']}'";
+                    $d = $data_temp_arr[0];
+                    $m = $data_temp_arr[1];
+                    $y = $data_temp_arr[2];*/
 
+                    $create_time = date('Y-m-d H:i:s', time());
 
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-                //$mysql_insert_id = mysqli_insert_id($msql_cnnct);
-
-                //логирование
-                //AddLog ('0', $_SESSION['id'], '', 'Добавлен долг #'.$mysql_insert_id.'. Пациент ['.$_POST['client'].']. Сумма ['.$_POST['summ'].']. Срок истечения ['.$_POST['date_expires'].']. Тип ['.$_POST['type'].']. Комментарий ['.$_POST['comment'].'].');
-
-                CloseDB($msql_cnnct);
-
-                echo json_encode(array('result' => 'success', 'data' => '<div class="query_ok">Отчёт обновлён</div>'));
+                    $query = "UPDATE `fl_journal_daily_report` SET
+                      `itogSumm`='" . str_replace(' ', '', $_POST['itogSumm']) . "', `arenda`='{$_POST['arenda']}', `zreport`='{$_POST['zreport']}',
+                      `summ`='" . str_replace(' ', '', $_POST['allsumm']) . "', 
+                      `nal`='" . str_replace(' ', '', $_POST['SummNal']) . "', `beznal`='" . str_replace(' ', '', $_POST['SummBeznal']) . "',
+                      `cashbox_nal`='" . str_replace(' ', '', $_POST['SummNalStomCosm']) . "', `cashbox_beznal`='" . str_replace(' ', '', $_POST['SummBeznalStomCosm']) . "', 
+                      `cashbox_cert_count`='{$_POST['CertCount']}', `cashbox_cert_nal`='{$_POST['SummCertNal']}', `cashbox_cert_beznal`='{$_POST['SummCertBeznal']}', 
+                      `temp_orto_nal`='{$_POST['ortoSummNal']}', `temp_orto_beznal`='{$_POST['ortoSummBeznal']}', 
+                      `temp_specialist_nal`='{$_POST['specialistSummNal']}', `temp_specialist_beznal`='{$_POST['specialistSummBeznal']}', 
+                      `temp_analiz_nal`='{$_POST['analizSummNal']}', `temp_analiz_beznal`='{$_POST['analizSummBeznal']}',
+                      `temp_solar_nal`='{$_POST['solarSummNal']}', `temp_solar_beznal`='{$_POST['solarSummBeznal']}', 
+                      `temp_giveoutcash`='{$_POST['summMinusNal']}', 
+                      `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}' 
+                    WHERE `id`='{$_POST['report_id']}'";
 
 
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                    //$mysql_insert_id = mysqli_insert_id($msql_cnnct);
+
+                    //логирование
+                    //AddLog ('0', $_SESSION['id'], '', 'Добавлен долг #'.$mysql_insert_id.'. Пациент ['.$_POST['client'].']. Сумма ['.$_POST['summ'].']. Срок истечения ['.$_POST['date_expires'].']. Тип ['.$_POST['type'].']. Комментарий ['.$_POST['comment'].'].');
+
+                    CloseDB($msql_cnnct);
+
+                    echo json_encode(array('result' => 'success', 'data' => '<div class="query_ok">Отчёт обновлён</div>'));
+
+			    }
 			}else{
-                echo json_encode(array('result' => 'success', 'data' => '<div class="query_neok">Что-то пошло не так</div>', 'post' => $_POST));
+                echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}
 		}
 	}
