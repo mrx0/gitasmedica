@@ -37,8 +37,8 @@
                     errror.innerHTML = '<span class="query_ok">'+res.data+'</span>';
                     setTimeout(function () {
                         //console.log(res.current_page);
-                        //window.location.href = "index.php";
-                        window.location.href = res.current_page;
+                        window.location.href = "index.php";
+                        //window.location.href = res.current_page;
                     }, 1000);
                 }else{
                     if(res.result == "office"){

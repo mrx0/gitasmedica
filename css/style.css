@@ -415,7 +415,7 @@ area {
 }
 /**/
 /*Для табличек*/
-.cellsBlock2, .cellsBlock3, .cellsBlock4, .cellsBlock5{
+.cellsBlock2, .cellsBlock3, .cellsBlock4, .cellsBlock5, .cellsBlock400px{
 	display: table;
 	table-layout: auto;
 	margin-bottom: 3px;
@@ -427,6 +427,10 @@ area {
 
 .cellsBlock2 {
 	width: 500px;
+}
+
+.cellsBlock400px {
+	width: 400px;
 }
 
 .cellsBlock4{
