@@ -2827,19 +2827,18 @@
         summ = summ - $(".summMinus").val();
         summNal = summNal - $(".summMinus").val();
 
+        $("#SummNal").html(number_format(summNal, 2, '.', ' '));
+        $("#SummBeznal").html(number_format(summBeznal, 2, '.', ' '));
+
         //Общая сумма без аренды
         $("#allsumm").html(number_format(summ, 2, '.', ' '));
 
-        //
+        //Итоговые сумма
         $(".itogSummInputNal").each(function(){
             summ += Number($(this).val());
             summNal += Number($(this).val());
         });
         //console.log(summ);
-
-        //Итоговые сумма
-        $("#SummNal").html(number_format(summNal, 2, '.', ' '));
-        $("#SummBeznal").html(number_format(summBeznal, 2, '.', ' '));
 
         $("#itogSummShow").html(number_format(summ, 2, '.', ' '));
         $("#itogSumm").val(number_format(summ, 2, '.', ' '));
