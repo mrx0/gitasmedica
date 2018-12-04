@@ -73,67 +73,95 @@
                                 <div id="errrror"></div>';
 
                         echo '
-                                <div class="cellsBlock2">
-                                    <div class="cellLeft" style="font-size: 90%;">
-                                        Дата отчёта
-                                    </div>
-                                    <div class="cellRight">
-                                        ' . $report_date . '            
-                                    </div>
-                                </div>';
+                                <div style="">';
+
+                        //начало левого блока
+                        echo '
+                                    <div style="display: inline-block; vertical-align: top; border: 2px dotted rgb(201, 206, 206);">';
+
+                        
+                        echo '
+                                        <div class="cellsBlock400px">
+                                            <div class="cellLeft" style="font-size: 90%;">
+                                                Дата отчёта
+                                            </div>
+                                            <div class="cellRight">
+                                                ' . $report_date . '            
+                                            </div>
+                                        </div>';
 
                         echo '				
-                                <div class="cellsBlock2">
-                                    <div class="cellLeft" style="font-size: 90%;">
-                                        Филиал
-                                    </div>
-                                    <div class="cellRight">';
+                                        <div class="cellsBlock400px">
+                                            <div class="cellLeft" style="font-size: 90%;">
+                                                Филиал
+                                            </div>
+                                            <div class="cellRight">';
 
                         echo $filials_j[$dailyReports_j[0]['filial_id']]['name'].'<input type="hidden" id="SelectFilial" name="SelectFilial" value="' . $dailyReports_j[0]['filial_id'] . '">';
 
                         echo '
-                                    </div>
-                                </div>';
+                                            </div>
+                                        </div>';
 
 
 
                         if (($finances['see_all'] == 1) || $god_mode) {
                             echo '
-                                <div class="cellsBlock2">
-                                    <div class="cellLeft" style="font-size: 90%; border: 1px solid rgb(2, 108, 33);">Итоговая сумма</div>
-                                    <div class="cellRight calculateOrder" style="border: 1px solid rgb(2, 108, 33);">
-                                        <span id="itogSummShow">'.$dailyReports_j[0]['itogSumm'].'</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
-                                    </div>
-                                </div>';
+                                        <div class="cellsBlock400px">
+                                            <div class="cellLeft" style="font-size: 90%; border: 1px solid rgb(2, 108, 33);">Итоговая сумма</div>
+                                            <div class="cellRight calculateOrder" style="border: 1px solid rgb(2, 108, 33);">
+                                                <span id="itogSummShow">'.$dailyReports_j[0]['itogSumm'].'</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
+                                            </div>
+                                        </div>';
                         }
 
-                        echo '<input type="hidden" id="itogSumm" value="'.$dailyReports_j[0]['itogSumm'].'">';
+                        echo '
+                                        <input type="hidden" id="itogSumm" value="'.$dailyReports_j[0]['itogSumm'].'">';
 
                         echo '
-                                <div class="cellsBlock2">
-                                    <div class="cellLeft" style="font-size: 90%;">
-                                        Z-отчёт, руб.<br>
-                                        <span style="font-size:80%; color: #999; ">Сумма всех Z-отчётов за смену</span>
-                                    </div>
-                                    <div class="cellRight">
-                                        <input type="text" name="zreport" id="zreport" value="'.$dailyReports_j[0]['zreport'].'" style="font-size: 12px;">
+                                        <div class="cellsBlock400px">
+                                            <div class="cellLeft" style="font-size: 90%;">
+                                                Z-отчёт, руб.<br>
+                                                <span style="font-size:80%; color: #999; ">Сумма всех Z-отчётов за смену</span>
+                                            </div>
+                                            <div class="cellRight">
+                                                <input type="text" name="zreport" id="zreport" value="'.$dailyReports_j[0]['zreport'].'" style="font-size: 12px;">
+                                            </div>
+                                        </div>';
+
+                        echo '
+                                        <div class="cellsBlock400px">
+                                            <div class="cellLeft" style="font-size: 90%;">Общая сумма</div>
+                                            <div class="cellRight calculateOrder" style="font-size: 13px;">
+                                                <span id="allsumm">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
+                                            </div>
+                                        </div>';
+
+
+                        $SummNal = 0;
+                        $SummBeznal = 0;
+
+                        echo '
+                                <div class="cellsBlock400px">
+                                    <div class="cellLeft" style="font-size: 90%;">Наличные</div>
+                                    <div class="cellRight calculateOrder" style="font-size: 13px; font-weight: normal;">
+                                        <span id="SummNal">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
                                     </div>
                                 </div>';
 
                         echo '
-                                <div class="cellsBlock2">
-                                    <div class="cellLeft" style="font-size: 90%;">Общая сумма</div>
-                                    <div class="cellRight calculateOrder" style="font-size: 13px;">
-                                        <span id="allsumm">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
+                                <div class="cellsBlock400px">
+                                    <div class="cellLeft" style="font-size: 90%;">Безнал.</div>
+                                    <div class="cellRight calculateOrder" style="font-size: 13px; font-weight: normal;">
+                                        <span id="SummBeznal">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
                                     </div>
                                 </div>';
-
 
                         //Получаем данные по отчету касса
                         //var_dump(ajaxShowResultCashbox($datastart, $dataend, $filial_id, 0, 1));
 
-                        $SummNal = 0;
-                        $SummBeznal = 0;
+                        $SummNalStomCosm = 0;
+                        $SummBeznalStomCosm = 0;
                         $SummCertNal = 0;
                         $SummCertBeznal = 0;
                         $CertCount = 0;
@@ -144,10 +172,10 @@
                             if (!empty($result['rezult'])) {
                                 foreach ($result['rezult'] as $item) {
                                     if ($item['summ_type'] == 1) {
-                                        $SummNal += $item['summ'];
+                                        $SummNalStomCosm += $item['summ'];
                                     }
                                     if ($item['summ_type'] == 2) {
-                                        $SummBeznal += $item['summ'];
+                                        $SummBeznalStomCosm += $item['summ'];
                                     }
                                 }
                             }
@@ -167,95 +195,111 @@
                         }
 
                         echo '
-                            <div class="cellsBlock2" style="font-size: 90%;">
-                                <div class="cellLeft">
-                                    Приход из отчёта "Касса"<br>
-                                    <span style="font-size:80%; color: #999; ">всё, что добавляется через программу</span>
-                                </div>
-                                <div class="cellRight" id="general">
-                                    <div style="margin: 2px 0;">Наличная оплата: <b><i id="SummNal" class="allSumm">' . $SummNal . '</i></b> руб.</div>
-                                    <div style="margin: 2px 0;">Безналичная оплата: <b><i id="SummBeznal" class="allSumm">' . $SummBeznal . '</i></b> руб.</div>
-                                    <div style="margin: 6px 0 2px;">Продано сертификатов: <b><i id="CertCount" class="">' . $CertCount . '</i></b> руб.</div>
-                                    <div style="margin: 2px 0;">- наличная оплата: <b><i id="SummCertNal" class="allSumm">' . $SummCertNal . '</i></b> руб.</div>
-                                    <div style="margin: 2px 0;">- безналичная оплата: <b><i id="SummCertBeznal" class="allSumm">' . $SummCertBeznal . '</i></b> руб.</div>
-                                </div>
-                            </div>';
+                                <div class="cellsBlock400px" style="font-size: 90%;">
+                                    <div class="cellLeft">
+                                        Средства из отчёта "Касса"<br>
+                                        <span style="font-size:80%; color: #999; ">всё, что добавляется через программу (стом+косм)</span>
+                                    </div>
+                                    <div class="cellRight" id="general">
+                                        <div style="margin: 2px 0;">Наличная оплата: <b><i id="SummNalStomCosm" class="allSummNal">' . $SummNalStomCosm . '</i></b> руб.</div>
+                                        <div style="margin: 2px 0;">Безналичная оплата: <b><i id="SummBeznalStomCosm" class="allSummBeznal">' . $SummBeznalStomCosm . '</i></b> руб.</div>
+                                        <div style="margin: 6px 0 2px;">Продано сертификатов: <b><i id="CertCount" class="">' . $CertCount . '</i></b> шт.</div>
+                                        <div style="margin: 2px 0;">- наличная оплата: <b><i id="SummCertNal" class="allSummNal">' . $SummCertNal . '</i></b> руб.</div>
+                                        <div style="margin: 2px 0;">- безналичная оплата: <b><i id="SummCertBeznal" class="allSummBeznal">' . $SummCertBeznal . '</i></b> руб.</div>
+                                    </div>
+                                </div>';
 
 
                         if (($finances['see_all'] == 1) || $god_mode) {
                             echo '
-                            <div class="cellsBlock2" style="font-size: 90%;">
-                                <div class="cellLeft">
-                                    Аренда
-                                    <span style="font-size:80%; color: #999; "></span>
-                                </div>
-                                <div class="cellRight">
-                                    <input type="text" id="arendaNal" class="itogSummInput" style="font-size: 12px; color: rgb(206, 0, 255);" value="'.$dailyReports_j[0]['arenda'].'"><span  style="font-size: 90%;"> руб.</span>
-                                </div>
-                            </div>';
+                                <div class="cellsBlock400px" style="font-size: 90%;">
+                                    <div class="cellLeft">
+                                        Аренда
+                                        <span style="font-size:80%; color: #999; "></span>
+                                    </div>
+                                    <div class="cellRight">
+                                        <input type="text" id="arendaNal" class="itogSummInputNal" style="font-size: 12px; color: rgb(206, 0, 255);" value="'.$dailyReports_j[0]['arenda'].'"><span  style="font-size: 90%;"> руб.</span>
+                                    </div>
+                                </div>';
                         }else {
 
-                            echo '<input type="hidden" id="arendaNal" class="itogSummInput" value="' . $dailyReports_j[0]['arenda'] . '">';
+                            echo '
+                                <input type="hidden" id="arendaNal" class="itogSummInput" value="' . $dailyReports_j[0]['arenda'] . '">';
                         }
 
                         echo '
-                            <div class="cellsBlock2" style="font-size: 90%;">
-                                <div class="cellLeft">
-                                    Ортопантомограмма + КТ
-                                    <span style="font-size:80%; color: #999; "></span>
-                                </div>
-                                <div class="cellRight">
-                                    <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="ortoSummNal" class="allSummInput" value="'.$dailyReports_j[0]['temp_orto_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
-                                    <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="ortoSummBeznal" class="allSummInput" value="'.$dailyReports_j[0]['temp_orto_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
-                                </div>
-                            </div>';
+                                <div class="cellsBlock400px" style="font-size: 90%;">
+                                    <div class="cellLeft">
+                                        Ортопантомограмма + КТ
+                                        <span style="font-size:80%; color: #999; "></span>
+                                    </div>
+                                    <div class="cellRight">
+                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="ortoSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_orto_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
+                                        <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="ortoSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_orto_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
+                                    </div>
+                                </div>';
 
                         echo '
-                            <div class="cellsBlock2" style="font-size: 90%;">
-                                <div class="cellLeft">
-                                    Специалисты<br>
-                                    <span style="font-size:80%; color: #999; ">для ПР72</span>
-                                </div>
-                                <div class="cellRight">
-                                    <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="specialistSummNal" class="allSummInput" value="'.$dailyReports_j[0]['temp_specialist_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
-                                    <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="specialistSummBeznal" class="allSummInput" value="'.$dailyReports_j[0]['temp_specialist_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
-                                </div>
-                            </div>';
+                                <div class="cellsBlock400px" style="font-size: 90%;">
+                                    <div class="cellLeft">
+                                        Специалисты<br>
+                                        <span style="font-size:80%; color: #999; ">для ПР72</span>
+                                    </div>
+                                    <div class="cellRight">
+                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="specialistSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_specialist_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
+                                        <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="specialistSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_specialist_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
+                                    </div>
+                                </div>';
 
                         echo '
-                            <div class="cellsBlock2" style="font-size: 90%;">
-                                <div class="cellLeft">
-                                    Анализы<br>
-                                    <span style="font-size:80%; color: #999; ">для ПР72</span>
-                                </div>
-                                <div class="cellRight">
-                                    <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="analizSummNal" class="allSummInput" value="'.$dailyReports_j[0]['temp_analiz_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
-                                    <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="analizSummBeznal" class="allSummInput" value="'.$dailyReports_j[0]['temp_analiz_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
-                                </div>
-                            </div>';
+                                <div class="cellsBlock400px" style="font-size: 90%;">
+                                    <div class="cellLeft">
+                                        Анализы<br>
+                                        <span style="font-size:80%; color: #999; ">для ПР72</span>
+                                    </div>
+                                    <div class="cellRight">
+                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="analizSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_analiz_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
+                                        <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="analizSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_analiz_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
+                                    </div>
+                                </div>';
 
                         echo '
-                            <div class="cellsBlock2" style="font-size: 90%;">
-                                <div class="cellLeft">
-                                    Солярий<br>
-                                    <span style="font-size:80%; color: #999; "></span>
-                                </div>
-                                <div class="cellRight">
-                                    <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="solarSummNal" class="allSummInput" value="'.$dailyReports_j[0]['temp_solar_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
-                                    <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="solarSummBeznal" class="allSummInput" value="'.$dailyReports_j[0]['temp_solar_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
-                                </div>
+                                <div class="cellsBlock400px" style="font-size: 90%;">
+                                    <div class="cellLeft">
+                                        Солярий<br>
+                                        <span style="font-size:80%; color: #999; "></span>
+                                    </div>
+                                    <div class="cellRight">
+                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="solarSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_solar_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
+                                        <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="solarSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_solar_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
+                                    </div>
+                                </div>';
+
+                        //конец левого блока
+                        echo '
                             </div>';
 
+                        //начало правого блока
                         echo '
-                            <div class="cellsBlock2" style="font-size: 90%;">
-                                <div class="cellLeft">
-                                    Расход<br>
-                                    <span style="font-size:80%; color: #999; ">Выдано из кассы</span>
-                                </div>
-                                <div class="cellRight" style="color: red;">
-                                    <input type="text" id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; " value="'.$dailyReports_j[0]['temp_giveoutcash'].'"><span  style="font-size: 90%;"> руб.</span>
-                                </div>
+                            <div style="display: inline-block; vertical-align: top; /*border: 2px dotted rgb(201, 206, 206);*/">';
+
+                        echo '
+                                <div class="cellsBlock400px" style="font-size: 90%;">
+                                    <div class="cellLeft">
+                                        Расход<br>
+                                        <span style="font-size:80%; color: #999; ">Выдано из кассы</span>
+                                    </div>
+                                    <div class="cellRight" style="color: red;">
+                                        <input type="text" id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; " value="'.$dailyReports_j[0]['temp_giveoutcash'].'"><span  style="font-size: 90%;"> руб.</span>
+                                    </div>
+                                </div>';
+
+                        echo '
                             </div>';
+                        //конец правого блока
+
+                        echo '
+                        </div>';
 
                         echo '
                             <input type="button" class="b" value="Применить" onclick="fl_editDailyReport_add('.$_GET['report_id'].');">';

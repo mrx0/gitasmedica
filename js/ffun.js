@@ -2798,26 +2798,49 @@
     //Суммируем все поля в отчете
     function calculateDailyReportSumm(){
 
+        var summNal = 0;
+        var summBeznal = 0;
         var summ = 0;
 
-        $(".allSumm").each(function(){
+        //Готовые суммы из отчёта "Касса" нал
+        $(".allSummNal").each(function(){
+            summNal += Number($(this).html());
             summ += Number($(this).html());
         });
-        $(".allSummInput").each(function(){
+        //Готовые суммы из отчёта "Касса" безнал
+        $(".allSummBeznal").each(function(){
+            summBeznal += Number($(this).html());
+            summ += Number($(this).html());
+        });
+
+        //Суммы ручной ввод  из отчёта "Касса" нал
+        $(".allSummInputNal").each(function(){
+            summNal += Number($(this).val());
             summ += Number($(this).val());
         });
-        
+        //Суммы ручной ввод  из отчёта "Касса" безнал
+        $(".allSummInputBeznal").each(function(){
+            summBeznal += Number($(this).val());
+            summ += Number($(this).val());
+        });
+
         summ = summ - $(".summMinus").val();
+        summNal = summNal - $(".summMinus").val();
 
         //Общая сумма без аренды
         $("#allsumm").html(number_format(summ, 2, '.', ' '));
 
-        $(".itogSummInput").each(function(){
+        //
+        $(".itogSummInputNal").each(function(){
             summ += Number($(this).val());
+            summNal += Number($(this).val());
         });
         //console.log(summ);
 
-        //Итоговая сумма
+        //Итоговые сумма
+        $("#SummNal").html(number_format(summNal, 2, '.', ' '));
+        $("#SummBeznal").html(number_format(summBeznal, 2, '.', ' '));
+
         $("#itogSummShow").html(number_format(summ, 2, '.', ' '));
         $("#itogSumm").val(number_format(summ, 2, '.', ' '));
 
@@ -2843,6 +2866,8 @@
             allsumm: $("#allsumm").html(),
             SummNal: $("#SummNal").html(),
             SummBeznal: $("#SummBeznal").html(),
+            SummNalStomCosm: $("#SummNalStomCosm").html(),
+            SummBeznalStomCosm: $("#SummBeznalStomCosm").html(),
             CertCount: $("#CertCount").html(),
             SummCertNal: $("#SummCertNal").html(),
             SummCertBeznal: $("#SummCertBeznal").html(),
@@ -2856,7 +2881,7 @@
             solarSummBeznal: $("#solarSummBeznal").val(),
             summMinusNal: $("#summMinusNal").val()
         };
-        console.log(reqData);
+        //console.log(reqData);
 
         $.ajax({
             url: link,
@@ -2875,11 +2900,11 @@
                 if(res.result == 'success') {
                     //console.log('success');
                     $('#data').html(res.data);
-/*                    setTimeout(function () {
+                    setTimeout(function () {
                         //window.location.replace('stat_cashbox.php');
                         window.location.replace('fl_consolidated_report_admin.php?filial_id='+filial_id);
                         //console.log('client.php?id='+id);
-                    }, 500);*/
+                    }, 500);
                 }else{
                     //console.log('error');
                     $('#errrror').html(res.data);
@@ -2907,6 +2932,8 @@
             allsumm: $("#allsumm").html(),
             SummNal: $("#SummNal").html(),
             SummBeznal: $("#SummBeznal").html(),
+            SummNalStomCosm: $("#SummNalStomCosm").html(),
+            SummBeznalStomCosm: $("#SummBeznalStomCosm").html(),
             CertCount: $("#CertCount").html(),
             SummCertNal: $("#SummCertNal").html(),
             SummCertBeznal: $("#SummCertBeznal").html(),
@@ -2960,7 +2987,9 @@
         $("#zReportAllMonth").html(0);
         $("#allSummAllMonth").html(0);
         $("#SummNalAllMonth").html(0);
-        $("#SummBezalAllMonth").html(0);
+        $("#SummBeznalAllMonth").html(0);
+        $("#SummNalStomCosmMonth").html(0);
+        $("#SummBeznalStomCosmAllMonth").html(0);
         $("#SummCertNalAllMonth").html(0);
         $("#SummCertBeznalAllMonth").html(0);
         $("#ortoSummNalAllMonth").html(0);
@@ -3034,14 +3063,14 @@
             }
         });
         //- сумма безнал
-        $(".SummBezal").each(function(){
+        $(".SummBeznal").each(function(){
             //console.log($(this).html().replace(/\s{1,}/g, ''));
 
             if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var SummBezalAllMonth = Number($("#SummBezalAllMonth").html().replace(/\s{1,}/g, ''));
+                var SummBeznalAllMonth = Number($("#SummBeznalAllMonth").html().replace(/\s{1,}/g, ''));
                 var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
 
-                $("#SummBezalAllMonth").html(number_format((SummBezalAllMonth + thisSumm), 2, '.', ' '));
+                $("#SummBeznalAllMonth").html(number_format((SummBeznalAllMonth + thisSumm), 2, '.', ' '));
 
             }
         });
@@ -3200,7 +3229,11 @@
         //- сумма нал
         var SummNal = (thisObj.find(".SummNal"));
         //- сумма безнал
-        var SummBezal = (thisObj.find(".SummBezal"));
+        var SummBeznal = (thisObj.find(".SummBeznal"));
+        //- сумма нал стом+косм
+        var SummNalStomCosm = (thisObj.find(".SummNalStomCosm"));
+        //- сумма безнал стом+косм
+        var SummBeznalStomCosm = (thisObj.find(".SummBeznalStomCosm"));
         //- сертификаты нал
         var SummCertNal = (thisObj.find(".SummCertNal"));
         //- сертификаты безнал
@@ -3270,8 +3303,10 @@
                             arenda.html                 (number_format(res.data.arenda, 0, '.', ' ')).css({"text-align": "right"});
                             zReport.html                (number_format(res.data.zreport, 2, '.', ' ')).css({"text-align": "right", "color": "rgb(18, 0, 255)"});
                             allSumm.html                (number_format(res.data.summ, 2, '.', ' ')).css({"text-align": "right"});
-                            SummNal.html                (number_format(res.data.cashbox_nal, 0, '.', ' ')).css({"text-align": "right"});
-                            SummBezal.html              (number_format(res.data.cashbox_beznal, 0, '.', ' ')).css({"text-align": "right"});
+                            SummNal.html                (number_format(res.data.nal, 0, '.', ' ')).css({"text-align": "right"});
+                            SummBeznal.html             (number_format(res.data.beznal, 0, '.', ' ')).css({"text-align": "right"});
+                            SummNalStomCosm.html        (number_format(res.data.cashbox_nal, 0, '.', ' ')).css({"text-align": "right"});
+                            SummBeznalStomCosm.html     (number_format(res.data.cashbox_beznal, 0, '.', ' ')).css({"text-align": "right"});
                             SummCertNal.html            (number_format(res.data.cashbox_cert_nal, 0, '.', ' ')).css({"text-align": "right"});
                             SummCertBeznal.html         (number_format(res.data.cashbox_cert_beznal, 0, '.', ' ')).css({"text-align": "right"});
                             ortoSummNal.html            (number_format(res.data.temp_orto_nal, 0, '.', ' ')).css({"text-align": "right"});
@@ -3310,7 +3345,7 @@
                         zReport.html('-');
                         allSumm.html('-');
                         SummNal.html('-');
-                        SummBezal.html('-');
+                        SummBeznal.html('-');
                         SummCertNal.html('-');
                         SummCertBeznal.html('-');
                         ortoSummNal.html('-');

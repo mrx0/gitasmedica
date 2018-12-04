@@ -172,7 +172,17 @@
 
                 $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
-                                Всего в кассе
+                                Всего по кассе
+                            </div>';
+
+                $report_header .= '
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+                                Всего нал
+                            </div>';
+
+                $report_header .= '
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+                                Всего безнал
                             </div>';
                 $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
@@ -319,7 +329,15 @@
                                 -
                             </div>';
                     echo '
-                            <div class="cellTime cellsTimereport SummBezal" style="text-align: center; font-weight: normal; '. $today_border .'">
+                            <div class="cellTime cellsTimereport SummBeznal" style="text-align: center; font-weight: normal; '. $today_border .'">
+                                -
+                            </div>';
+                    echo '
+                            <div class="cellTime cellsTimereport SummNalStomCosm" style="text-align: center; font-weight: normal; '. $today_border .'">
+                                -
+                            </div>';
+                    echo '
+                            <div class="cellTime cellsTimereport SummBeznalStomCosm" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
@@ -380,7 +398,7 @@
 
                 if (($finances['see_all'] == 1) || $god_mode) {
                     echo '
-                        <li class="' . $weekend_block . ' cellsBlockHover blockControl" style="font-weight: bold; font-size: 12px; background-color: rgb(255, 193, 7);">';
+                        <li class="' . $weekend_block . ' cellsBlockHover" style="font-weight: bold; font-size: 12px; background-color: rgb(255, 193, 7);">';
                     echo '
                             <div class="cellTime cellsTimereport reportDate" style="text-align: right; cursor: pointer; ' . $today_color .'"
                              onclick="fl_getDailyReportsSummAllMonth();">
@@ -411,7 +429,15 @@
                                 0
                             </div>';
                     echo '
-                            <div id="SummBezalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                            <div id="SummBeznalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="SummNalStomCosmAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="SummBeznalStomCosmAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
                             </div>';
                     echo '

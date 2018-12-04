@@ -11,8 +11,9 @@
 		//var_dump ($_POST);
 		if ($_POST){
 			if (isset($_POST['report_id'])
-                && isset($_POST['allsumm']) && isset($_POST['itogSumm']) && isset($_POST['zreport'])
+                && isset($_POST['allsumm']) && isset($_POST['itogSumm']) && isset($_POST['zreport']) && isset($_POST['arenda'])
                 && isset($_POST['SummNal']) && isset($_POST['SummBeznal'])
+                && isset($_POST['SummNalStomCosm']) && isset($_POST['SummBeznalStomCosm'])
                 && isset($_POST['CertCount']) && isset($_POST['SummCertNal']) && isset($_POST['SummCertBeznal'])
                 && isset($_POST['ortoSummNal']) && isset($_POST['ortoSummBeznal'])
                 && isset($_POST['specialistSummNal']) && isset($_POST['specialistSummBeznal'])
@@ -36,15 +37,16 @@
 
                 $query = "UPDATE `fl_journal_daily_report` SET
                   `itogSumm`='".str_replace(' ', '', $_POST['itogSumm'])."', `arenda`='{$_POST['arenda']}', `zreport`='{$_POST['zreport']}',
-                  `summ`='".str_replace(' ', '', $_POST['allsumm'])."', `cashbox_nal`='{$_POST['SummNal']}',
-                 `cashbox_beznal`='{$_POST['SummBeznal']}', `cashbox_cert_count`='{$_POST['CertCount']}', 
-                 `cashbox_cert_nal`='{$_POST['SummCertNal']}', `cashbox_cert_beznal`='{$_POST['SummCertBeznal']}', 
-                 `temp_orto_nal`='{$_POST['ortoSummNal']}', `temp_orto_beznal`='{$_POST['ortoSummBeznal']}', 
-                 `temp_specialist_nal`='{$_POST['specialistSummNal']}', `temp_specialist_beznal`='{$_POST['specialistSummBeznal']}', 
-                 `temp_analiz_nal`='{$_POST['analizSummNal']}', `temp_analiz_beznal`='{$_POST['analizSummBeznal']}',
-                 `temp_solar_nal`='{$_POST['solarSummNal']}', `temp_solar_beznal`='{$_POST['solarSummBeznal']}', 
-                 `temp_giveoutcash`='{$_POST['summMinusNal']}', 
-                 `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}' 
+                  `summ`='".str_replace(' ', '', $_POST['allsumm'])."', 
+                  `nal`='".str_replace(' ', '', $_POST['SummNal'])."', `beznal`='".str_replace(' ', '', $_POST['SummBeznal'])."',
+                  `cashbox_nal`='".str_replace(' ', '', $_POST['SummNalStomCosm'])."', `cashbox_beznal`='".str_replace(' ', '', $_POST['SummBeznalStomCosm'])."', 
+                  `cashbox_cert_count`='{$_POST['CertCount']}', `cashbox_cert_nal`='{$_POST['SummCertNal']}', `cashbox_cert_beznal`='{$_POST['SummCertBeznal']}', 
+                  `temp_orto_nal`='{$_POST['ortoSummNal']}', `temp_orto_beznal`='{$_POST['ortoSummBeznal']}', 
+                  `temp_specialist_nal`='{$_POST['specialistSummNal']}', `temp_specialist_beznal`='{$_POST['specialistSummBeznal']}', 
+                  `temp_analiz_nal`='{$_POST['analizSummNal']}', `temp_analiz_beznal`='{$_POST['analizSummBeznal']}',
+                  `temp_solar_nal`='{$_POST['solarSummNal']}', `temp_solar_beznal`='{$_POST['solarSummBeznal']}', 
+                  `temp_giveoutcash`='{$_POST['summMinusNal']}', 
+                  `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}' 
                 WHERE `id`='{$_POST['report_id']}'";
 
 
