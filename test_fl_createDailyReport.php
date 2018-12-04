@@ -35,12 +35,14 @@ foreach ($rez as $item) {
     var_dump($nal);
     var_dump($beznal);
 
-    echo $nal . ' + ' . $beznal . ' = ' . $item['summ'];
+    echo $nal . ' + ' . $beznal . '('.($nal+$beznal).') = ' . $item['summ'];
 
     var_dump($item['arenda']);
 
-    echo $nal . ' + ' . $beznal . ' + ' . $item['arenda'] . ' = ' . $item['itogSumm'];
-    
+    echo $nal . ' + ' . $beznal . ' + ' . $item['arenda'] . '('.($nal+$beznal+$item['arenda']).') = ' . $item['itogSumm'];
+
+    var_dump('---------------------------');
+
 }
 
 ?>
