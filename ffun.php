@@ -1825,7 +1825,7 @@
         }
 
         $show_deleted_str = '';
-        if ($show_deleted){
+        if (!$show_deleted){
             $show_deleted_str = "AND `status` <> '9'";
         }
 

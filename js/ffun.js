@@ -2961,17 +2961,17 @@
         $("#allSummAllMonth").html(0);
         $("#SummNalAllMonth").html(0);
         $("#SummBezalAllMonth").html(0);
-        $("#SummCertNal").html(0);
+        $("#SummCertNalAllMonth").html(0);
         $("#SummCertBeznalAllMonth").html(0);
-        $("#ortoSummNal").html(0);
-        $("#ortoSummBeznal").html(0);
-        $("#specialistSummNal").html(0);
-        $("#specialistSummBeznal").html(0);
-        $("#analizSummNal").html(0);
-        $("#analizSummBeznal").html(0);
-        $("#solarSummNal").html(0);
-        $("#solarSummBeznal").html(0);
-        $("#summMinusNal").html(0);
+        $("#ortoSummNalAllMonth").html(0);
+        $("#ortoSummBeznalAllMonth").html(0);
+        $("#specialistSummNalAllMonth").html(0);
+        $("#specialistSummBeznalAllMonth").html(0);
+        $("#analizSummNalAllMonth").html(0);
+        $("#analizSummBeznalAllMonth").html(0);
+        $("#solarSummNalAllMonth").html(0);
+        $("#solarSummBeznalAllMonth").html(0);
+        $("#summMinusNalAllMonth").html(0);
 
         //- Итог общий
         $(".itogSumm").each(function(){
@@ -3268,7 +3268,7 @@
 
                             itogSumm.html               (number_format(res.data.itogSumm, 2, '.', ' ')).css({"text-align": "right"});
                             arenda.html                 (number_format(res.data.arenda, 0, '.', ' ')).css({"text-align": "right"});
-                            zReport.html                (number_format(res.data.zreport, 2, '.', ' ')).css({"text-align": "right"});
+                            zReport.html                (number_format(res.data.zreport, 2, '.', ' ')).css({"text-align": "right", "color": "rgb(18, 0, 255)"});
                             allSumm.html                (number_format(res.data.summ, 2, '.', ' ')).css({"text-align": "right"});
                             SummNal.html                (number_format(res.data.cashbox_nal, 0, '.', ' ')).css({"text-align": "right"});
                             SummBezal.html              (number_format(res.data.cashbox_beznal, 0, '.', ' ')).css({"text-align": "right"});

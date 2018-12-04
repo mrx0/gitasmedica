@@ -137,111 +137,116 @@
                 //или так
                 //$day_count = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
+                $report_header = '';
+
                 echo '
 			    <div id="report" class="report" style="margin-top: 10px;">';
                 echo '
                     <ul class="live_filter" id="livefilter-list" style="margin-left:6px; background-color: #FFF;">';
 
-                echo '
+                $report_header .= '
                         <li class="cellsBlock" style="font-weight:bold;">';
-                echo '
+                $report_header .= ' 
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Дата
                             </div>';
 
                 if (($finances['see_all'] == 1) || $god_mode){
-                    echo '
+                    $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Итог
                             </div>';
                 }
 
                 if (($finances['see_all'] == 1) || $god_mode) {
-                    echo '
+                    $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Аренда
                             </div>';
                 }
 
-                echo '
+                $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Z-отчёт
                             </div>';
 
-                echo '
+                $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Всего в кассе
                             </div>';
-                echo '
+                $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Наличные стом+косм
                             </div>';
-                echo '
+                $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Безнал. стом+косм
                             </div>';
-                echo '
+                $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Серт-ты<br>нал
                             </div>';
-                echo '
+                $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Серт-ты безнал
                             </div>';
-                /*echo '
+                /*$report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 ЛЕЧЕНИЕ<br>нал
                             </div>';
-                echo '
+                $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 ЛЕЧЕНИЕ<br>б/н + серт
                             </div>';*/
-                echo '
+                $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 ОРТО<br>нал
                             </div>';
-                echo '
+                $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center;  background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 ОРТО<br>безнал
                             </div>';
-                /*echo '
+                /*$report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center">
                                 ? ОРТО<br>кол-во
                             </div>';*/
-                echo '
+                $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Спец-ты<br>нал
                             </div>';
-                echo '
+                $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Спец-ты безнал
                             </div>';
-                echo '
+                $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Анализы нал
                             </div>';
-                echo '
+                $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Анализы безнал
                             </div>';
-                echo '
+                $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Солярий<br>нал
                             </div>';
-                echo '
+                $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Солярий<br>безнал
                             </div>';
-                echo '
+                $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Расход
                             </div>';
-                echo '
+                $report_header .= '
                             <div class="cellText">
                             </div>';
 
-                echo '
+                $report_header .= '
                         </li>';
+
+
+                echo $report_header;
 
                 //С первого дня месяца по последний
                 for ($d = 1; $d <= $day_count; $d++) {
@@ -302,7 +307,7 @@
                     }
 
                     echo '
-                            <div class="cellTime cellsTimereport zReport" style="text-align: center; font-weight: normal; '. $today_border .'">
+                            <div class="cellTime cellsTimereport zReport" style="text-align: center; font-weight: normal;'. $today_border .'">
                                 -
                             </div>';
                     echo '
@@ -377,8 +382,10 @@
                     echo '
                         <li class="' . $weekend_block . ' cellsBlockHover blockControl" style="font-weight: bold; font-size: 12px; background-color: rgb(255, 193, 7);">';
                     echo '
-                            <div class="cellTime cellsTimereport reportDate" style="text-align: left; cursor: pointer; ' . $today_color .'">
+                            <div class="cellTime cellsTimereport reportDate" style="text-align: right; cursor: pointer; ' . $today_color .'"
+                             onclick="fl_getDailyReportsSummAllMonth();">
                                 Всего
+                                <span style="font-size: 50%;"></span> <i class="fa fa-refresh" aria-hidden="true" style=" color: red;"></i>
                             </div>';
 
                     echo '
@@ -392,7 +399,7 @@
                             </div>';
 
                     echo '
-                            <div id="zReportAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                            <div id="zReportAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold; background-color: rgb(80, 241, 255);">
                                 0
                             </div>';
                     echo '
@@ -461,6 +468,8 @@
                     echo '
                         </li>';
                 }
+
+                echo $report_header;
 
                 echo '
                     </ul>
