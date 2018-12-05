@@ -139,7 +139,8 @@
                         <div class="nav">
                             <a href="fl_percent_cats.php" class="b">Общие</a>
                         </div>
-                        <h1>Персональные категории процентов</h1>';
+                        <h1>Персональные категории процентов</h1>
+                        <span style= "color: red; font-size: 90%;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> При расчётах, если указана "Cпец. цена", проценты будут игнорироваться.</span>';
             echo '			
                     </header>';
 
@@ -148,7 +149,7 @@
                     <div id="infoDiv" style="display: none; position: absolute; background-color: rgba(249, 255, 171, 0.89);" class="query_neok">
 
                     </div>
-                    <div id="data">';
+                    <div id="data" style="margin: 8px 0 0;">';
 
             echo '		
                         <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
@@ -171,10 +172,11 @@
 								</div>';
                 foreach ($spr_percents_j as $percent_cat){
                     echo '
-                                <div class="cellName" style="text-align: center; width: 140px; min-width: 140px; padding: 4px 0 0; background-color: rgba('.$percent_cat['color'].', 0.7)">
+                                <div class="cellName" style="text-align: center; width: 210px; min-width: 210px; padding: 4px 0 0; background-color: rgba('.$percent_cat['color'].', 0.7)">
                                     '.$percent_cat['name'].'<br>
                                     <div class="cellDivide" style="width: 65px; font-size: 10px;">Работа</div>
                                     <div class="cellDivide" style="width: 65px; font-size: 10px;">Материал</div>
+                                    <div class="cellDivide" style="width: 65px; font-size: 10px;">Спец. цена</div>
                                 </div>';
                 }
 
@@ -215,7 +217,7 @@
                         }*/
 
                         echo '
-                                <div class="cellName" style="text-align: center; width: 140px; min-width: 140px; padding: 0;background-color: rgba('.$percent_cat['color'].', 0.7); font-size: 120%; font-weight: bold;">
+                                <div class="cellName" style="text-align: center; width: 210px; min-width: 210px; padding: 0;background-color: rgba('.$percent_cat['color'].', 0.7); font-size: 120%; font-weight: bold;">
                                     <div class="cellDivide" style="width: 65px; font-size: 10px; position: relative;">';
                         echo '
                                         <span class="changePersonalPercentCat" worker_id="'.$worker['id'].'" cat_id="'.$cat_id.'" type_id="1" style="cursor: pointer;">';
@@ -243,7 +245,24 @@
 
                         echo '</span>%';
                         echo '            
-                                    </div>
+                                    </div>';
+
+                        //Спец цены (не зависит от процента, тупо фиксированная)
+                        echo ' 
+                                    <div class="cellDivide" style="width: 65px; font-size: 10px; position: relative;">
+                                        <span class="changePersonalPercentCat" worker_id="'.$worker['id'].'" cat_id="'.$cat_id.'" type_id="3" style="cursor: pointer;">';
+
+                        //Если есть индивидуальные
+                        if (isset($percents_personal_j[$cat_id][3])){
+                            echo $percents_personal_j[$cat_id][3]['percent'];
+                        }else{
+                            echo $percent_cat['summ_special'];
+                        }
+
+                        echo '</span> руб.';
+                        echo '  
+                                    </div>'
+                        ;echo '  
                                 </div>';
                     }
                     echo '

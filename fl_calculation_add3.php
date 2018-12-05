@@ -299,6 +299,7 @@ if ($enter_ok){
                                             $temp_arr2['percent_cats'] = (int)$invoice_ex_j_val['percent_cats'];
                                             $temp_arr2['work_percent'] = 0;
                                             $temp_arr2['material_percent'] = 0;
+                                            $temp_arr2['summ_special'] = 0;
 
 
                                             //Категории по прайсу
@@ -342,7 +343,7 @@ if ($enter_ok){
                                                 array_push($temp_arr[$ind], $temp_arr2);
                                             }
 
-                                            if ($invoice_j[0]['type'] == 6) {
+                                            if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10)) {
                                                 array_push($temp_arr, $temp_arr2);
                                             }
 
@@ -366,7 +367,7 @@ if ($enter_ok){
                                         $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
                                     }
                                     //Костыль для сессионых данных косметологов
-                                    if ($invoice_j[0]['type'] == 6) {
+                                    if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10)) {
                                         $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
                                     }
                                     //Костыль для пустого пациента

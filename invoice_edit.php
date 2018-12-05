@@ -184,7 +184,7 @@
 											    array_push($temp_arr[$ind], $temp_arr2);
                                             }
 
-                                            if ($invoice_j[0]['type'] == 6){
+                                            if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10)){
                                                 array_push($temp_arr, $temp_arr2);
                                             }
 										}
@@ -195,8 +195,8 @@
 	                                if ($invoice_j[0]['type'] == 5) {
                                         $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
                                     }
-                                    //Костыль для сессионых данных косметологов
-	                                if ($invoice_j[0]['type'] == 6) {
+                                    //Костыль для сессионых данных косметологов и специалистов
+	                                if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10)) {
                                         $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
                                     }
                                     //скидку тут добавлю в сесиию

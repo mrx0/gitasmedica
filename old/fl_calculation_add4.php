@@ -342,11 +342,14 @@ if ($enter_ok){
                                                 $temp_arr2['percent_cats'] = (int)$arr['id'];
                                                 $temp_arr2['work_percent'] = (int)$percents_j[(int)$arr['id']]['work_percent'];
                                                 $temp_arr2['material_percent'] = (int)$percents_j[(int)$arr['id']]['material_percent'];
+                                                //Спец. цена
+                                                $temp_arr2['summ_special'] = (int)$percents_j[(int)$arr['id']]['summ_special'];
 
                                             } else {
                                                 $temp_arr2['percent_cats'] = 0;
                                                 $temp_arr2['work_percent'] = 0;
                                                 $temp_arr2['material_percent'] = 0;
+                                                $temp_arr2['summ_special'] = 0;
                                                 //$invoice_ex_j = 0;
                                             }
 
@@ -366,7 +369,7 @@ if ($enter_ok){
                                                 array_push($temp_arr[$ind], $temp_arr2);
                                             }
 
-                                            if ($invoice_j[0]['type'] == 6) {
+                                            if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10)) {
                                                 array_push($temp_arr, $temp_arr2);
                                             }
                                         }
@@ -380,8 +383,8 @@ if ($enter_ok){
                                     if ($invoice_j[0]['type'] == 5) {
                                         $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
                                     }
-                                    //Костыль для сессионых данных косметологов
-                                    if ($invoice_j[0]['type'] == 6) {
+                                    //Костыль для сессионых данных косметологов и специалистов
+                                    if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10)) {
                                         $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
                                     }
                                     //скидку тут добавлю в сесиию

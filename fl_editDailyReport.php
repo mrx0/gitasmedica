@@ -198,7 +198,7 @@
                                 <div class="cellsBlock400px" style="font-size: 90%;">
                                     <div class="cellLeft">
                                         Средства из отчёта "Касса"<br>
-                                        <span style="font-size:80%; color: #999; ">всё, что добавляется через программу (стом+косм)</span>
+                                        <span style="font-size:80%; color: #999; ">всё, что добавляется через программу (врачи)</span>
                                     </div>
                                     <div class="cellRight" id="general">
                                         <div style="margin: 2px 0;">Наличная оплата: <b><i id="SummNalStomCosm" class="allSummNal">' . $SummNalStomCosm . '</i></b> руб.</div>

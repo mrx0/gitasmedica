@@ -597,7 +597,7 @@
 
                                     echo '
                                                     <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
-                                                        <i><b>% работа/материал</b></i>
+                                                        <i><b>% раб./мат-л/спец.цена</b></i>
                                                     </div>';
                                 }
 
@@ -930,7 +930,7 @@
 
                                                 echo '
                                                         <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
-                                                            <i><b>'.$item['work_percent'].' / '.$item['material_percent'].'</b></i>
+                                                            <i><b>'.$item['work_percent'].' / '.$item['material_percent'].' / '.$item['summ_special'].'</b></i>
                                                         </div>';
 
                                             }
@@ -941,9 +941,9 @@
                                                         <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 120px; min-width: 120px; max-width: 120px;">
                                                         <b>';
 
-                                                echo calculateResult($stoim_item, $item['work_percent'], $item['material_percent']);
+                                                echo calculateResult($stoim_item, $item['work_percent'], $item['material_percent'], $item['summ_special']);
 
-                                                $summ += calculateResult($stoim_item, $item['work_percent'], $item['material_percent']);
+                                                $summ += calculateResult($stoim_item, $item['work_percent'], $item['material_percent'], $item['summ_special']);
 
                                                 echo '
                                                         </b>

@@ -130,9 +130,12 @@
 
                                 $work_percent = (int)$percents_j[$percent_cat]['work_percent'];
                                 $material_percent = (int)$percents_j[$percent_cat]['material_percent'];
+                                //Спец. цена
+                                $summ_special = (int)$percents_j[$percent_cat]['summ_special'];
 
                                 $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind][$key]['work_percent'] = $work_percent;
                                 $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind][$key]['material_percent'] = $material_percent;
+                                $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind][$key]['summ_special'] = $summ_special;
 
 								$request .= '
 								<div class="cellsBlock" style="font-size: 100%;" >
