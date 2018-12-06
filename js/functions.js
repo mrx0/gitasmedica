@@ -3499,6 +3499,12 @@
                         anotherObj2.removeClass("blink1");
                     }, 500);
 
+                    setTimeout(function() {
+                    	
+                        document.location.reload(true);
+
+                    }, 100);
+
                     //location.reload();
                 }
 
