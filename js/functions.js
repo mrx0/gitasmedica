@@ -5906,7 +5906,9 @@
 				zapis_id: $("#zapis_id").val(),
 				zapis_insure: $("#zapis_insure").val(),
 				filial: $("#filial").val(),
-				worker: $("#worker").val()
+				worker: $("#worker").val(),
+
+                type: type
 			},
 			cache: false,
 			beforeSend: function() {

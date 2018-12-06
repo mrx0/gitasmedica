@@ -58,7 +58,7 @@
                             $msql_cnnct = ConnectToDB ();
 
                             //выбрать первую из категорий указанного типа
-                            $query = "SELECT `id` FROM `fl_spr_percents` WHERE `type`='6' LIMIT 1;";
+                            $query = "SELECT `id` FROM `fl_spr_percents` WHERE `type`='{$_POST['type']}' LIMIT 1;";
                             //var_dump($query);
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);

@@ -131,6 +131,9 @@
 
 											if ((int)$invoice_ex_j_val['percent_cats'] > 0) {
                                                 $temp_arr2['percent_cats'] = (int)$invoice_ex_j_val['percent_cats'];
+
+                                                //var_dump($invoice_j[0]['type']);
+
                                             }else{
                                                 //$temp_arr2['percent_cats'] = 1;
 
