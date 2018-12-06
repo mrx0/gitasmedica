@@ -4765,7 +4765,7 @@
         //console.log(invoice_type);
 
 		var link = "fill_calculate_stom_from_session_f.php";
-		if (invoice_type == 6){
+		if ((invoice_type == 6) || (invoice_type == 10)){
 			link = "fill_calculate_cosm_from_session_f.php";
 		}
 		if (invoice_type == 88){

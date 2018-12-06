@@ -186,11 +186,11 @@
                             </div>';
                 $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
-                                Наличные стом+косм
+                                Наличные из нарядов
                             </div>';
                 $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
-                                Безнал. стом+косм
+                                Безнал. из нарядов
                             </div>';
                 $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
@@ -200,14 +200,6 @@
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Серт-ты безнал
                             </div>';
-                /*$report_header .= '
-                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
-                                ЛЕЧЕНИЕ<br>нал
-                            </div>';
-                $report_header .= '
-                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
-                                ЛЕЧЕНИЕ<br>б/н + серт
-                            </div>';*/
                 $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 ОРТО<br>нал

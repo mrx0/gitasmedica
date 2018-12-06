@@ -697,7 +697,7 @@
 
                     newInput = document.createElement("input");
                     newInput.type = "text";
-                    newInput.maxLength = 3;
+                    newInput.maxLength = 5;
                     newInput.setAttribute("size", 20);
                     newInput.style.width = "40px";
                     newInput.addEventListener("blur", function () {
@@ -714,7 +714,8 @@
                         //changePersonalPercentCatdefault.addEventListener("click", fl_changePersonalPercentCatdefault(workerID, catID, typeID), false);
 
                         //Новые данные
-                        if ((newInput.value == "") || (isNaN(newInput.value)) || (newInput.value < 0) || (newInput.value > 100) || (isNaN(parseInt(newInput.value, 10)))) {
+                        //if ((newInput.value == "") || (isNaN(newInput.value)) || (newInput.value < 0) || (newInput.value > 100) || (isNaN(parseInt(newInput.value, 10)))) {
+                        if ((newInput.value == "") || (isNaN(newInput.value)) || (newInput.value < 0) || (isNaN(parseInt(newInput.value, 10)))) {
                             //newInput.parentNode.innerHTML = 0;
                             newInput.parentNode.innerHTML = thisVal;
                             newVal = thisVal;
@@ -738,7 +739,7 @@
                                     worker_id: workerID,
                                     cat_id: catID,
                                     type: typeID,
-                                    val: newVal,
+                                    val: newVal
                                 },
                                 cache: false,
                                 beforeSend: function () {

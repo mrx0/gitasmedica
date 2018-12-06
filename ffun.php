@@ -368,11 +368,17 @@
 
 
     //Результат расчета от процентов
-    function calculateResult($summ, $koeffW, $koeffM){
+    function calculateResult($summ, $koeffW, $koeffM, $SummSpec){
 
-        $result = 0;
+        //$result = 0;
 
-        $result = ($summ - ($summ / 100 * $koeffM)) / 100 * $koeffW;
+        //Если есть спеццена
+        if ($SummSpec > 0){
+            $result = $SummSpec;
+        //а иначе процент
+        }else {
+            $result = ($summ - ($summ / 100 * $koeffM)) / 100 * $koeffW;
+        }
 
         return number_format($result, 2, '.', '');
     }
@@ -424,9 +430,9 @@
 
             //Вытащим общие процентовки
             if ($percent_cat > 0) {
-                $query = "SELECT `id`, `work_percent`, `material_percent`, `name` FROM `fl_spr_percents` WHERE `id`='" . $percent_cat . "' AND `type`='" . $type . "' LIMIT 1";
+                $query = "SELECT `id`, `work_percent`, `material_percent`, `summ_special`, `name` FROM `fl_spr_percents` WHERE `id`='" . $percent_cat . "' AND `type`='" . $type . "' LIMIT 1";
             }else{
-                $query = "SELECT `id`, `work_percent`, `material_percent`, `name` FROM `fl_spr_percents` WHERE `type`='" . $type . "' LIMIT 1";
+                $query = "SELECT `id`, `work_percent`, `material_percent`, `summ_special`, `name` FROM `fl_spr_percents` WHERE `type`='" . $type . "' LIMIT 1";
             }
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -437,7 +443,7 @@
             if ($number != 0){
                 $boolean = true;
             }else{
-                $query = "SELECT `id`, `work_percent`, `material_percent`, `name` FROM `fl_spr_percents` WHERE `type`='" . $type . "' LIMIT 1";
+                $query = "SELECT `id`, `work_percent`, `material_percent`, `summ_special`, `name` FROM `fl_spr_percents` WHERE `type`='" . $type . "' LIMIT 1";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -454,6 +460,7 @@
                     $percents[$percent_cat]['name'] = $arr['name'];
                     $percents[$percent_cat]['work_percent'] = $arr['work_percent'];
                     $percents[$percent_cat]['material_percent'] =  $arr['material_percent'];
+                    $percents[$percent_cat]['summ_special'] =  $arr['summ_special'];
                 }
 
                 //Вытащим персональные процентовки
@@ -469,6 +476,9 @@
                         }
                         if ($arr['type'] == 2){
                             $percents[$percent_cat]['material_percent'] = $arr['percent'];
+                        }
+                        if ($arr['type'] == 3){
+                            $percents[$percent_cat]['summ_special'] = $arr['percent'];
                         }
                     }
                 }else{
@@ -698,6 +708,7 @@
                                                 $percent_cats = $items['percent_cats'];
                                                 $work_percent = $items['work_percent'];
                                                 $material_percent = $items['material_percent'];
+                                                $summ_special = $items['summ_special'];
 
                                                 /*if ($itog_price == 0) {
                                                     $itog_price_add = $price;
@@ -760,7 +771,7 @@
                                                 if ($itog_price < 0) $itog_price = 0;
 
                                                 //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
-                                                $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);
+                                                $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent, $summ_special);
                                             }
 
                                             /*if (isset($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind])){
@@ -1637,6 +1648,7 @@
                         $percent_cats = $items['percent_cats'];
                         $work_percent = $items['work_percent'];
                         $material_percent = $items['material_percent'];
+                        $summ_special = $items['summ_special'];
 
                         //Спрятали лишнее телодвижение
                         //
@@ -1664,9 +1676,9 @@
                         if ($guarantee == 0) {
 
                             //Добавляем в базу
-                            $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`) 
+                            $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`, `summ_special`) 
                                                 VALUES (
-                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}')";
+                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}', '{$summ_special}')";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -1715,7 +1727,7 @@
 
                 }
 
-                if ($invoice_type == 6) {
+                if (($invoice_type == 6) || ($invoice_type == 10)) {
 
                     $pos_id = $calculate_data['id'];
                     $price_id = $calculate_data['price_id'];
@@ -1737,6 +1749,7 @@
                     $percent_cats = $calculate_data['percent_cats'];
                     $work_percent = $calculate_data['work_percent'];
                     $material_percent = $calculate_data['material_percent'];
+                    $summ_special = $calculate_data['summ_special'];
 
                     $itog_price_add = $itog_price;
 
@@ -1744,9 +1757,9 @@
                     if ($guarantee == 0) {
 
                         //Добавляем в базу
-                        $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`) 
+                        $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`, `summ_special`) 
                                                 VALUES (
-                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}')";
+                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}', '{$summ_special}')";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -1777,7 +1790,7 @@
                         if ($itog_price < 0) $itog_price = 0;
 
                         //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
-                        $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);
+                        $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent, $summ_special);
                     }
 
 
