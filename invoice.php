@@ -543,7 +543,7 @@
                                     if ($ind == 99) {
                                         echo 'П';
                                     } else {
-                                        echo $ind;
+                                        echo $ind+1;
                                     }
                                     echo '
                                             </div>';
