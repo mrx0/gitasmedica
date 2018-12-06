@@ -3459,6 +3459,8 @@
 	});
 
 
+
+
 	//Кнопка "ясно" в объявлениях на главной странице
     $('.iUnderstand').click(function () {
 
@@ -3500,10 +3502,10 @@
                     }, 500);
 
                     setTimeout(function() {
-                    	
+
                         document.location.reload(true);
 
-                    }, 100);
+                    }, 1000);
 
                     //location.reload();
                 }
