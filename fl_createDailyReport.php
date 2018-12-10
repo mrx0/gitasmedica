@@ -173,7 +173,7 @@
                                 <div class="cellsBlock400px">
                                     <div class="cellLeft" style="font-size: 90%;">Z-отчёт, руб.</div>
                                     <div class="cellRight">
-                                        <input type="text" name="zreport" id="zreport" value="0" style="font-size: 12px;">
+                                        <input type="text" name="zreport" id="zreport" value="" style="font-size: 12px;">
                                     </div>
                                 </div>';
 

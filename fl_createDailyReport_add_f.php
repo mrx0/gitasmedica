@@ -22,7 +22,7 @@
                 && isset($_POST['summMinusNal'])
             ){
 
-                if (($_POST['zreport'] == "") || ($_POST['zreport'] == 0) || ($_POST['zreport'] == '0')) {
+                if ($_POST['zreport'] == "") {
                     echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Z-отчёт надо заполнять.</div>'));
                 }else{
 
