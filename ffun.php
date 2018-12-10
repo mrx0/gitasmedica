@@ -1709,7 +1709,7 @@
                             if ($itog_price < 0) $itog_price = 0;
 
                             //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
-                            $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent);
+                            $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent, $summ_special);
                         }
                     }
 
