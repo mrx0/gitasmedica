@@ -543,7 +543,11 @@
                                     if ($ind == 99) {
                                         echo 'П';
                                     } else {
-                                        echo $ind+1;
+                                        if ($invoice_j[0]['type'] == 5) {
+                                            echo $ind;
+                                        }else{
+                                            echo $ind + 1;
+                                        }
                                     }
                                     echo '
                                             </div>';
