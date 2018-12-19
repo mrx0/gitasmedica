@@ -6856,6 +6856,7 @@
 
         var summ_type = document.querySelector('input[name="summ_type"]:checked').value;
         //console.log(summ_type);
+        var expirationDate =  $('#expirationDate').val();
 
 		$.ajax({
 			url: "cert_cell_f.php",
@@ -6868,7 +6869,8 @@
                 cell_price: cell_price,
                 office_id: office_id,
                 cell_date: $('#iWantThisDate2').val(),
-                summ_type: summ_type
+                summ_type: summ_type,
+                expirationDate: expirationDate
             },
 			cache: false,
 			beforeSend: function() {

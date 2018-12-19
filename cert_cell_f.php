@@ -12,7 +12,7 @@
 		
 		if ($_POST){
 
-			if (!isset($_POST['cert_id']) || !isset($_POST['office_id']) || !isset($_POST['cell_price']) || !isset($_POST['summ_type']) || !isset($_POST['cell_date'])){
+			if (!isset($_POST['cert_id']) || !isset($_POST['office_id']) || !isset($_POST['cell_price']) || !isset($_POST['summ_type']) || !isset($_POST['cell_date']) || !isset($_POST['expirationDate'])){
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
                 include_once 'DBWork.php';
@@ -28,7 +28,18 @@
                     $cell_time = date_format(date_create($_POST['cell_date'].' '.date('H:i:s', time())), 'Y-m-d  H:i:s');
 
                     $expires_time = date_create($cell_time);
-                    date_modify($expires_time, '+3 month');
+
+                    if ($_POST['expirationDate'] == 3) {
+                        date_modify($expires_time, '+3 month');
+                    }
+                    if ($_POST['expirationDate'] == 6) {
+                        date_modify($expires_time, '+6 month');
+                    }
+                    if ($_POST['expirationDate'] == 12) {
+                        date_modify($expires_time, '+12 month');
+                    }
+
+                    //date_modify($expires_time, '+3 month');
                     $expires_time = date_format($expires_time, 'Y-m-d');
 
                     //Обновляем
