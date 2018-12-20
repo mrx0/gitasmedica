@@ -239,17 +239,20 @@
                                     </div>
                                 </div>';
 
-                        echo '
-                                <div class="cellsBlock400px" style="font-size: 90%; /*display: none;*/">
-                                    <div class="cellLeft">
-                                        Специалисты<br>
-                                        <span style="font-size:80%; color: #999; ">для ПР72</span>
-                                    </div>
-                                    <div class="cellRight">
-                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="specialistSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_specialist_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
-                                        <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="specialistSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_specialist_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
-                                    </div>
-                                </div>';
+//                        echo '
+//                                <div class="cellsBlock400px" style="font-size: 90%; /*display: none;*/">
+//                                    <div class="cellLeft">
+//                                        Специалисты<br>
+//                                        <span style="font-size:80%; color: #999; ">для ПР72</span>
+//                                    </div>
+//                                    <div class="cellRight">
+//                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="specialistSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_specialist_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
+//                                        <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="specialistSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_specialist_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
+//                                    </div>
+//                                </div>';
+
+                        echo '<input type="hidden" id="specialistSummNal" value="0">';
+                        echo '<input type="hidden" id="specialistSummNal" value="0">';
 
                         echo '
                                 <div class="cellsBlock400px" style="font-size: 90%;">
