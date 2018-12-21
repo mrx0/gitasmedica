@@ -2028,7 +2028,226 @@
 					
 					echo '
 						</li>';
-				
+
+			}
+		}
+	}
+
+	//Для дерева категорий номенлатуры
+	function showTree5($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype){
+		//var_dump($level);
+		//var_dump(func_get_args());
+
+	    $msql_cnnct = ConnectToDB();
+
+		$arr = array();
+        $rezult = array();
+		$style_name = '';
+		$color_array = array(
+			'background-color: rgba(255, 236, 24, 0.5);',
+			'background-color: rgba(103, 251, 66, 0.5);',
+			'background-color: rgba(97, 227, 255, 0.5);',
+		);
+		$color_index = $last_level;
+
+		$deleted_str = '';
+
+		if ($deleted){
+			//$deleted_str = 'AND `status` = 9';
+		}else{
+			//выбираем не удалённые
+			$deleted_str = 'AND `status` <> 9';
+		}
+
+		$q_dop = '';
+		$dbprices = 'spr_priceprices';
+		$link = 'pricelistitem.php?';
+
+		//Выбираем всё из нулевого уровня
+        $query = "SELECT * FROM `spr_equipment_groups` WHERE `parent_id` IS NULL ".$deleted_str." ORDER BY `name`";
+
+		//Если не из корня смотрим, то выбираем всё, что в этой группе
+		if ($first && ($level != 0) && ($type == 'list')){
+			$query = "SELECT * FROM `spr_equipment_groups` WHERE `parent_id` ='{$level}' ".$deleted_str." ORDER BY `name`";
+			$first = FALSE;
+		}
+		//var_dump ($query);
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+		$number = mysqli_num_rows($res);
+
+		if ($number != 0){
+			while ($arr = mysqli_fetch_assoc($res)){
+				array_push($rezult, $arr);
+			}
+		}
+		//var_dump($rezult);
+
+		//Выводим группу
+		if (!empty($rezult)){
+
+			foreach ($rezult as $key => $value){
+
+				$arr2 = array();
+				$rez2 = array();
+				$arr3 = array();
+				$rez3 = array();
+
+				if ($type == 'list'){
+                    //var_dump($dbtable);
+					//echo $space.$value['name'].'<br>';
+
+					if ($value['parent_id'] == 0) {
+						$style_name = 'font-size: 130%;';
+						$style_name .= $color_array[0];
+						//$this_level = 0;
+					}else{
+						$style_name = 'font-size: 110%; font-style: oblique;';
+						//$style_name .= 'background-color: rgba(97, 227, 255, 0.5)';
+						if (isset($color_array[$color_index])){
+							$style_name .= $color_array[$color_index];
+						}else{
+							$style_name .= 'background-color: rgba(225, 126, 255, 0.5);';
+						}
+					}
+
+                    //$style_name .= 'position: relative;';
+
+					echo '
+						<li style="border: none; position: relative;">
+							<div class="drop" style="background-position: 0px 0px;"></div>
+							<p class="drop" style="'.$style_name.'">
+								<b>
+								    '.$space.$value['name'].'
+								</b>
+							</p>';
+
+                    if ($insure_id == 0) {
+                        echo '
+							<div style="position: absolute; top: 0; right: 3px;">
+							   <a href="pricelistgroup.php?id=' . $value['id'] . '" class="ahref" style="font-weight: bold;" title="Открыть карточку группы">
+                                    <i class="fa fa-folder-open" aria-hidden="true"></i>								    
+							   </a>
+								<div style="font-style: normal; font-size: 13px; display: inline-block;">
+								    <div class="managePriceList">
+                                        <a href="pricelistgroup_edit.php?id=' . $value['id'] . '" class="ahref"><i id="PriceListGroupEdit" class="fa fa-pencil-square-o pricemenu" aria-hidden="true" style="color: #777;" title="Редактировать карточку группы"></i></a>
+                                        <a href="add_pricelist_item.php?addinid=' . $value['id'] . '" class="ahref"><i id="PriceListGroupAdd" class="fa fa-plus pricemenu" aria-hidden="true" style="color: #36EA5E;" title="Добавить в эту группу"></i></a>
+                                        <!--<a href="pricelistgroup_del.php?id=' . $value['id'] . '" class="ahref"><i id="" class="fa fa-bars pricemenu" aria-hidden="true" style="" title="Изменить порядок"></i></a>-->
+                                        <a href="pricelistgroup_del.php?id=' . $value['id'] . '" class="ahref"><i id="PriceListGroupDelete" class="fa fa-trash pricemenu" aria-hidden="true" style="color: #FF3636" title="Удалить эту группу"></i></a>
+									</div>
+								</div>
+							</div>';
+                    }
+
+					echo '
+							<ul style="display: none;">';
+
+
+                    //Смотрим элементы в этой группе
+					$query = "SELECT * FROM `{$dbtable}` WHERE `parent_id`='{$value['id']}' ".$deleted_str." ".$q_dop." ORDER BY `name`";
+
+					/*if ($insure_id != 0){
+						$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `{$dbtable}` WHERE `item` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$q_dop.") ".$deleted_str." ORDER BY `name`";
+					}*/
+
+					//var_dump($query);
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+					$number = mysqli_num_rows($res);
+					if ($number != 0){
+						while ($arr2 = mysqli_fetch_assoc($res)){
+							array_push($rez2, $arr2);
+						}
+						$items_j = $rez2;
+					}
+					//var_dump($items_j);
+
+					if (!empty($items_j)){
+
+						$anything_here = true;
+
+						for ($i = 0; $i < count($items_j); $i++) {
+
+						    //позиции
+							echo '
+										<li>
+											<table width="808px" style="margin: -2px -4px -3px 2.5em; ">
+												<tr>
+												
+													<td width="408px" style="padding: 0 0 0 4px; border: 1px solid #CCC;">
+														<a href="'.$link.'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter">'.$items_j[$i]['name'].'</a>
+													</td>
+													<td width="200px" style="text-align: right; border: 1px solid #CCC;">
+														<i>'.$items_j[$i]['id'].'</i>
+													</td>
+                                                    <td width="200px" style="text-align: right; border: 1px solid #CCC;">
+                                                    	'.$items_j[$i]['serial_n'].'
+                                                   	</td>
+
+												</tr>
+											</table>
+										</li>';
+
+                            //позиции
+                           /* echo '
+										<li>
+											<div class="priceitem" style="border: none; margin: -2px -4px -3px 2.5em;">
+												<div class="cellsBlock2" style="width: 100%; margin: 0;">
+													<div class="cellText2" style="padding: 0 0 0 4px;">
+														<a href="'.$link.'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter">'.$items_j[$i]['name'].'</a>
+													</div>
+													<div class="cellName" style="text-align: right; border-left: 0; padding: 0 2px 0 4px;">
+														<i>'.$items_j[$i]['id'].'</i>
+													</div>
+                                                    <div class="cellName" style="text-align: right; border-left: 0; padding: 0 2px 0 4px;">
+                                                    	'.$items_j[$i]['serial_n'].'
+                                                   	</div >
+												</div>
+											</div>
+										</li>';*/
+						}
+					}else{
+						//
+					}
+
+				}
+
+
+				//Смотрим, есть ли в этой группе другие подгруппы
+				$query = "SELECT * FROM `spr_equipment_groups` WHERE `parent_id`='{$value['id']}' ".$deleted_str."";
+				//var_dump($query);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+				$number = mysqli_num_rows($res);
+
+				if ($number != 0){
+					//echo '_'.$value['name'].'<br>';
+					$space2 = $space. '&nbsp;&nbsp;&nbsp;';
+					$last_level2 = $last_level+1;
+					showTree5($value['id'], $space2, $type, $sel_id, $first, $last_level2, $deleted, $dbtable, $insure_id, $dtype);
+					/*var_dump($value['id']);
+					var_dump($space2);
+					var_dump($type);
+					var_dump($sel_id);
+					var_dump($first);
+					var_dump($last_level2);
+                    var_dump($deleted);
+					var_dump($dbtable);
+					var_dump($insure_id);
+					var_dump($dtype);*/
+
+				}else{
+					//---
+				}
+
+					echo '
+							</ul>';
+					echo '
+						</li>';
+
 			}
 		}
 	}

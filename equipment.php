@@ -99,136 +99,20 @@
 				
             echo '
 					    <div style="width: 900px; max-width: 900px; min-width: 900px;">
-						    <ul class="ul-tree ul-drop" id="lasttree" style="width: 850px; font-size: 12px;">';
-
-            //Основные группы
-            $arr = array();
-            $main_groups_j = array();
-
-            $query = "SELECT * FROM `spr_equipment` WHERE `parent_id` IS NULL AND `is_group` IS NOT NULL ORDER BY `name`";
-
-            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-            $number = mysqli_num_rows($res);
-
-            if ($number != 0){
-                while ($arr = mysqli_fetch_assoc($res)){
-                    array_push($main_groups_j, $arr);
-                }
-            }
-            //var_dump($main_groups_j);
-
-
-            //Если что-то найдено
-            if (!empty($main_groups_j)){
-
-                $style_name = 'font-size: 110%; font-style: oblique;';
-
-                foreach ($main_groups_j as $main_grops_item){
-                    echo '
-                                <li style="border: none; position: relative;">
-                                    <div class="drop" style="background-position: 0px 0px;"></div>
-                                    <p class="drop" style="font-size: 130%; background-color: rgba(255, 236, 24, 0.5);">
-                                        <b>
-                                            '.$main_grops_item['name'].'
-                                        </b>
-                                    </p>';
-
-                    //Редактирование, кнопки, иконки
-                    if (true) {
-                        echo '
-                                    <div style="position: absolute; top: 0; right: 3px;">
-                                       <a href="pricelistgroup.php?id=' . $main_grops_item['id'] . '" class="ahref" style="font-weight: bold;" title="Открыть карточку группы">
-                                            <i class="fa fa-folder-open" aria-hidden="true"></i>								    
-                                       </a>
-                                        <div style="font-style: normal; font-size: 13px; display: inline-block;">
-                                            <div class="managePriceList">
-                                                <a href="pricelistgroup_edit.php?id=' . $main_grops_item['id'] . '" class="ahref"><i id="PriceListGroupEdit" class="fa fa-pencil-square-o pricemenu" aria-hidden="true" style="color: #777;" title="Редактировать карточку группы"></i></a>
-                                                <a href="add_pricelist_item.php?addinid=' . $main_grops_item['id'] . '" class="ahref"><i id="PriceListGroupAdd" class="fa fa-plus pricemenu" aria-hidden="true" style="color: #36EA5E;" title="Добавить в эту группу"></i></a>
-                                                <!--<a href="pricelistgroup_del.php?id=' . $main_grops_item['id'] . '" class="ahref"><i id="" class="fa fa-bars pricemenu" aria-hidden="true" style="" title="Изменить порядок"></i></a>-->
-                                                <a href="pricelistgroup_del.php?id=' . $main_grops_item['id'] . '" class="ahref"><i id="PriceListGroupDelete" class="fa fa-trash pricemenu" aria-hidden="true" style="color: #FF3636" title="Удалить эту группу"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>';
-                    }
-
-                    //Подгруппы
-                    $arr = array();
-                    $groups_j = array();
-
-                    $query = "SELECT * FROM `spr_equipment` WHERE `parent_id` IS NULL AND `is_group` IS NOT NULL ORDER BY `name`";
-
-                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-                    $number = mysqli_num_rows($res);
-
-                    if ($number != 0){
-                        while ($arr = mysqli_fetch_assoc($res)){
-                            array_push($main_groups_j, $arr);
-                        }
-                    }
-                    //var_dump($main_groups_j);
-
-
-                    //Если что-то найдено
-                    if (!empty($main_groups_j)){
-
-                    /*echo '
-                                    <ul style="display: none;">';*/
-
-
-                    echo '
-                                    <ul>';
-
-                    //позиции с ценами
-                    echo '
-                                    <li>
-                                        <div class="priceitem">';
-                    if ($insure_id != 0) {
-                        echo '
-                                            <div class="cellManage" style="display: none;">
-                                              <span style="font-size: 80%; color: #777;">
-                                                <input type="checkbox" name="propDel[]" value="' . $items_j[$i]['id'] . '"> пометить на удаление
-                                              </span>
-                                            </div>';
-                    }
-                    echo '
-                                            <div class="priceitemDivname">
-                                                <a href="'.$link.'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter"><span style="font-size: 75%; font-weight: bold;">[#'.$items_j[$i]['id'].']</span> <i>'.$items_j[$i]['code'].'</i> '.$items_j[$i]['name'].'</a>
-                                            </div>
-                                            <div class="priceitemDiv">
-                                                <div class="priceitemDivcost"><b>'.$price.'</b> руб.</div>';
-                    if ($insure_id == 0) {
-                        echo '
-                                                <div class="priceitemDivcost" ><b > '.$price2.'</b > руб.</div >
-                                                <div class="priceitemDivcost" ><b > '.$price3.'</b > руб.</div >';
-                    }
-                    echo '
-
-                                            </div>
-                                        </div>
-                                    </li>';
+						    <ul class="ul-tree ul-drop" id="lasttree" style="width: 850px; font-size: 11px;">';
 
 
 
-                    echo '
-                        </ul>';
+            showTree5(0, '', 'list', 0, TRUE, 0, TRUE, 'spr_equipment', 0, 0);
+            //showTree5($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype){
 
-                    echo '
-                    </li>';
+            echo '
+						    </ul>
+					    </div>';
 
-
-                }
-            }
-
-
-				//showTree4(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0, 0);
-							
-				echo '
-						</ul>
-					</div>';
-
-
+            echo '
+                    </ul>
+                </div>';
 				
 
 
