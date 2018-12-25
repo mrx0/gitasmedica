@@ -8420,6 +8420,37 @@
         })
     }
 
+    //Закрыть направление
+    function getEquipmentItemsForGroup(equipment_group_id) {
+
+        var link = "getEquipmentItemsForGroup_f.php";
+
+        var reqData = {
+            equipment_group_id: equipment_group_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+            },
+            success:function(res){
+                //console.log (res);
+
+                if(res.result == "success") {
+                    //console.log (res.data);
+
+					$('#rezult').html(res.data);
+                }else{
+                }
+            }
+        })
+    }
+
     //showGiveOutCashAdd('add');
 
 

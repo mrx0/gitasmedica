@@ -98,16 +98,19 @@
                         </div>';
 				
             echo '
-					    <div style="width: 900px; max-width: 900px; min-width: 900px;">
-						    <ul class="ul-tree ul-drop" id="lasttree" style="width: 850px; font-size: 11px;">';
+					    <div style="width: 300px; max-width: 300px; min-width: 300px; display: inline-block; vertical-align: top;">
+						    <ul class="" id="" style="font-size: 11px;">';
 
 
 
-            showTree5(0, '', 'list', 0, TRUE, 0, TRUE, 'spr_equipment', 0, 0);
+            showTree5(0, 20, 'list', 0, TRUE, 0, TRUE, 'spr_equipment', 0, 0);
             //showTree5($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype){
 
             echo '
 						    </ul>
+					    </div>
+					    <div id="rezult" style=" border: 1px dotted #CCC; display: inline-block; vertical-align: top;">
+					        
 					    </div>';
 
             echo '
@@ -122,6 +125,16 @@
 	
 			<!-- Подложка только одна -->
 			<div id="overlay"></div>';
+
+            //Скрипты которые грузят данные при загрузке
+            echo '
+                <script>
+                    $(document).ready(function() {
+                        //Соберем оборудование, которое ни в одной группе
+                        getEquipmentItemsForGroup(0);
+                    })
+                </script>';
+
 
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
