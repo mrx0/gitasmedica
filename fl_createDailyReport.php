@@ -213,8 +213,10 @@
                     $SummCertNal = 0;
                     $SummCertBeznal = 0;
                     $CertCount = 0;
+                    $SummGiveOutCash = 0;
 
                     $result = ajaxShowResultCashbox($datastart, $dataend, $filial_id, 0, 1, false);
+                    //var_dump($result);
 
                     if (!empty($result)) {
                         if (!empty($result['rezult'])) {
@@ -240,6 +242,12 @@
                                 }
                             }
                         }
+                        if (!empty($result['rezult_give_out_cash'])){
+                            foreach ($result['rezult_give_out_cash'] as $item) {
+                                $SummGiveOutCash += $item['summ'];
+                            }
+                        }
+
                     }
 
                     /*var_dump($SummNal);
@@ -291,17 +299,17 @@
                                     </div>
                                 </div>';
 
-//                    echo '
-//                                <div class="cellsBlock400px" style="font-size: 90%; /*display: none;*/">
-//                                    <div class="cellLeft">
-//                                        Специалисты<br>
-//                                        <span style="font-size:80%; color: #999; ">для ПР72</span>
-//                                    </div>
-//                                    <div class="cellRight">
-//                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="specialistSummNal" class="allSummInputNal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
-//                                        <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="specialistSummBeznal" class="allSummInputBeznal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
-//                                    </div>
-//                                </div>';
+                    echo '
+                                <div class="cellsBlock400px" style="font-size: 90%; display: none;">
+                                    <div class="cellLeft">
+                                        Специалисты<br>
+                                        <span style="font-size:80%; color: #999; ">для ПР72</span>
+                                    </div>
+                                    <div class="cellRight">
+                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="specialistSummNal" class="allSummInputNal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
+                                        <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="specialistSummBeznal" class="allSummInputBeznal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
+                                    </div>
+                                </div>';
 
                     echo '<input type="hidden" id="specialistSummNal" value="0">';
                     echo '<input type="hidden" id="specialistSummNal" value="0">';
@@ -338,6 +346,8 @@
                     echo '
                             <div style="display: inline-block; vertical-align: top; /*border: 2px dotted rgb(201, 206, 206);*/">';
 
+                    //Расход
+
                     echo '
                                 <div class="cellsBlock400px" style="font-size: 90%; ">
                                     <div class="cellLeft">
@@ -345,7 +355,8 @@
                                         <span style="font-size:80%; color: #999; ">Выдано из кассы</span>
                                     </div>
                                     <div class="cellRight" style="">
-                                        <input type="text" id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; " value="0"><span  style="font-size: 90%;"> руб.</span>
+                                        <!--<input type="text" id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; " value="'.$SummGiveOutCashNal.'"><span  style="font-size: 90%;"> руб.</span>-->
+                                        <span id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; ">'.$SummGiveOutCash.'</span><span  style="font-size: 90%;"> руб.</span>
                                     </div>
                                 </div>';
                     echo '
@@ -433,7 +444,7 @@
             	            //console.log($("#doc_title").html());
                         });
 						
-						$("#arendaNal, #ortoSummNal, #ortoSummBeznal, #specialistSummNal, #specialistSummBeznal, #analizSummNal, #analizSummBeznal, #summMinusNal, #summMinusBeznal, #solarSummNal, #solarSummBeznal").blur(function() {
+						$("#arendaNal, #ortoSummNal, #ortoSummBeznal, #specialistSummNal, #specialistSummBeznal, #analizSummNal, #analizSummBeznal, /*#summMinusNal, #summMinusBeznal,*/ #solarSummNal, #solarSummBeznal").blur(function() {
                             //console.log($(this).val());
                             
                             var value = $(this).val();
@@ -464,7 +475,7 @@
                         });
 						
                         //Живой поиск
-                        $("#arendaNal, #ortoSummNal, #ortoSummBeznal, #specialistSummNal, #specialistSummBeznal, #analizSummNal, #analizSummBeznal, #summMinusNal, #summMinusBeznal, #solarSummNal, #solarSummBeznal").bind("change keyup input click", function() {
+                        $("#arendaNal, #ortoSummNal, #ortoSummBeznal, #specialistSummNal, #specialistSummBeznal, #analizSummNal, #analizSummBeznal, /*#summMinusNal, #summMinusBeznal,*/ #solarSummNal, #solarSummBeznal").bind("change keyup input click", function() {
                             if($(this).val().length > 0){
                                 //console.log($(this).val().length);
                                 

@@ -6344,8 +6344,7 @@
             dataType: "JSON",
             data:
                 {
-                    summ: Summ,
-                    filial: filial
+                    summ: Summ
                 },
             cache: false,
             beforeSend: function() {
@@ -7131,6 +7130,9 @@
         var comment = $("#comment").val();
         //console.log(comment);
 
+        var additional_info = $("#additional_info").val();
+        //console.log(additional_info);
+
         /*if (giveoutcash_id != 0){
             paymentStr = '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
                 '<a href= "payment_add.php?invoice_id='+order_id+'" class="b">Оплатить наряд #'+order_id+'</a>'+
@@ -7149,6 +7151,7 @@
                 type: type,
                 date_in: date_in,
                 comment: comment,
+                additional_info: additional_info,
 
                 giveoutcash_id: giveoutcash_id
 			},
@@ -7167,8 +7170,8 @@
 					$('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
 											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован расходный ордер</li>'+
 											'<li class="cellsBlock" style="width: auto;">'+
-												'<a href="order.php?id='+res.data+'" class="cellName ahref">'+
-													'<b>Ордер #'+res.data+'</b><br>'+
+												'<a href="give_out_cash_order.php?id='+res.data+'" class="cellName ahref">'+
+													'<b>Расходный ордер #'+res.data+'</b><br>'+
 												'</a>'+
 												'<div class="cellName">'+
 													'<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+

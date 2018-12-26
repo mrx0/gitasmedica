@@ -23,6 +23,9 @@
             echo '
             <div id="status">
                 <header>
+                    <div class="nav">
+                        <a href="stat_cashbox.php" class="b">Касса</a>
+                    </div>
                     <h2>Новый расходный ордер</h2>
                     <ul style="margin-left: 6px; margin-bottom: 10px;">
                         <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
@@ -71,16 +74,32 @@
 
             echo '
                                     <select name="type" id="type">';
-
+            echo '
+                                        <option value="0" selected>Прочее</option>';
             if ($give_out_cash_types_j != 0){
                 for ($i=0; $i<count($give_out_cash_types_j); $i++){
                     echo "<option value='".$give_out_cash_types_j[$i]['id']."'>".$give_out_cash_types_j[$i]['name']."</option>";
+
                 }
             }
 
             echo '
                                     </select>';
             echo '
+                                </li>
+                            </ul>
+                        </div>';
+
+
+            echo '
+                   
+                        <div id="additional_info_block" class="cellRight">
+                            <ul style="margin-left: 6px; margin-bottom: 10px;">
+                                <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
+                                    Описание если выбрано "Прочее"
+                                </li>
+                                <li style="font-size: 90%; margin-bottom: 5px;">
+                                    <textarea name="additional_info" id="additional_info" cols="35" rows="2"></textarea>
                                 </li>
                             </ul>
                         </div>
@@ -127,7 +146,6 @@
                         </div>
                     </div>';
 
-
             echo '
                     <div class="cellsBlock2">
                         <div class="cellRight">
@@ -154,6 +172,24 @@
             <!-- Подложка только одна -->
             <div id="overlay"></div>';
 
+
+            //Скрипты которые грузят данные при загрузке
+            echo '
+                <script>
+                    $(document).ready(function() {
+                        $(\'#type\').change(function(){
+                            console.log($(\'#type\').val());
+                            
+                            if ($(\'#type\').val() != 0){
+                                $(\'#additional_info_block\').hide();
+                                $(\'#additional_info_block\').removeClass(\'cellRight\');
+                            }else{
+                                $(\'#additional_info_block\').show();
+                                $(\'#additional_info_block\').addClass(\'cellRight\');
+                            }
+                        });
+                    })
+                </script>';
 
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

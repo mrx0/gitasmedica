@@ -1822,6 +1822,7 @@
 
         $rezult = array();
         $rezult_cert = array();
+        $rezult_give_out_cash = array();
         $arr = array();
 
         //Переменная для строчки запроса по филиалу и типу
@@ -1883,8 +1884,31 @@
             }
         }
 
+        //Расход вытащим
+        if ($certificatesShow != 0){
+            $query = "SELECT * FROM `journal_giveoutcash` WHERE
+                    `date_in` BETWEEN 
+                    STR_TO_DATE('".$datastart." 00:00:00', '%Y-%m-%d %H:%i:%s')
+                    AND 
+                    STR_TO_DATE('".$dataend." 23:59:59', '%Y-%m-%d %H:%i:%s') 
+                    ".$queryFilial."
+                    ORDER BY `date_in` DESC";
+            //var_dump($query);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($rezult_give_out_cash, $arr);
+                }
+            }else{
+                //addClientBalanceNew ($client_id, $Summ);
+            }
+        }
+
         $result['rezult'] = $rezult;
         $result['rezult_cert'] = $rezult_cert;
+        $result['rezult_give_out_cash'] = $rezult_give_out_cash;
 
         return $result;
 
