@@ -2825,8 +2825,9 @@
             summ += Number($(this).val());
         });
 
-        summ = summ - $(".summMinus").val();
-        summNal = summNal - $(".summMinus").val();
+        //summ = summ - $(".summMinus").val();
+        summ = summ - $(".summMinus").html();
+        summNal = summNal - Number($(".summMinus").val());
 
         $("#SummNal").html(number_format(summNal, 2, '.', ' '));
         $("#SummBeznal").html(number_format(summBeznal, 2, '.', ' '));
@@ -2846,6 +2847,7 @@
 
     }
 
+    //!!! Эта функция и следующая - фактически одинаковые
     //Добавление ежедневного отчёта в бд
     function fl_createDailyReport_add(){
         //console.log($("#allsumm").html().replace(/\s{2,}/g, ''));
@@ -2879,7 +2881,8 @@
             analizSummBeznal: $("#analizSummBeznal").val(),
             solarSummNal: $("#solarSummNal").val(),
             solarSummBeznal: $("#solarSummBeznal").val(),
-            summMinusNal: $("#summMinusNal").val()
+            //summMinusNal: $("#summMinusNal").val()
+            summMinusNal: $("#summMinusNal").html()
         };
         //console.log(reqData);
 
@@ -2945,7 +2948,8 @@
             analizSummBeznal: $("#analizSummBeznal").val(),
             solarSummNal: $("#solarSummNal").val(),
             solarSummBeznal: $("#solarSummBeznal").val(),
-            summMinusNal: $("#summMinusNal").val()
+            //summMinusNal: $("#summMinusNal").val()
+            summMinusNal: $("#summMinusNal").html()
         };
 
         $.ajax({

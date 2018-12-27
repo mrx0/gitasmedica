@@ -21,7 +21,7 @@
 
 			$temp_arr = array();
 			
-			if (!isset($_POST['client_id']) || !isset($_POST['summ']) || !isset($_POST['summtype']) || !isset($_POST['date_in']) || !isset($_POST['office_id']) || !isset($_POST['org_pay'])){
+			if (!isset($_POST['summ']) || !isset($_POST['type']) || !isset($_POST['office_id']) || !isset($_POST['date_in']) || !isset($_POST['comment']) || !isset($_POST['additional_info'])){
 				//echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 
@@ -43,11 +43,16 @@
 
 
                     $comment = addslashes($_POST['comment']);
+                    if ($_POST['type'] == 0) {
+                        $additional_info = addslashes($_POST['additional_info']);
+                    }else{
+                        $additional_info = '';
+                    }
 
                     //Добавляем в базу
-                    $query = "INSERT INTO `journal_order` (`client_id`, `office_id`, `summ`, `summ_type`, `org_pay`, `date_in`, `comment`, `create_person`, `create_time`) 
+                    $query = "INSERT INTO `journal_giveoutcash` (`office_id`, `summ`, `type`, `date_in`, `comment`, `additional_info`, `create_person`, `create_time`) 
                             VALUES (
-                            '{$_POST['client_id']}', '{$_POST['office_id']}', '{$_POST['summ']}', '{$_POST['summtype']}', '{$_POST['org_pay']}', '{$date_in}', '{$comment}', '{$_SESSION['id']}', '{$time}')";
+                            '{$_POST['office_id']}', '{$_POST['summ']}', '{$_POST['type']}', '{$date_in}', '{$comment}', '{$additional_info}', '{$_SESSION['id']}', '{$time}')";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -55,8 +60,8 @@
                     $mysql_insert_id = mysqli_insert_id($msql_cnnct);
 
                     //!!! @@@ Пересчет баланса
-                    include_once 'ffun.php';
-                    calculateBalance ($_POST['client_id']);
+                    //include_once 'ffun.php';
+                    //calculateBalance ($_POST['client_id']);
 
                     echo json_encode(array('result' => 'success', 'data' => $mysql_insert_id));
                 }

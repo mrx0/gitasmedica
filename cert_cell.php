@@ -80,7 +80,7 @@ if ($enter_ok){
                         echo '
                                 <div class="cellsBlock2">
 									<div class="cellLeft">
-                                        Дата продажи<br><span style="font-size: 70%;">для забывчивых админов</span>
+                                        Дата продажи<br><span style="font-size: 70%;">если админы забыли продать вовремя</span>
 									</div>
 									<div class="cellRight">
 										<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
@@ -92,6 +92,18 @@ if ($enter_ok){
                         echo '
                             <input type="hidden" id="iWantThisDate2" value="'.date($day.'.'.$month.'.'.$year).'">';
                     }
+
+                    echo '
+                                <div class="cellsBlock2">
+                                    <div class="cellLeft">Срок годности (месяцев)</div>
+                                    <div class="cellRight">
+                                        <select name="expirationDate" id="expirationDate">
+                                                <option value="3">3</option>
+                                                <option value="6">6</option>
+                                                <option value="12">12</option>
+                                        </select>
+                                    </div>
+                                </div>';
 
                     echo '
 								<div class="cellsBlock2">

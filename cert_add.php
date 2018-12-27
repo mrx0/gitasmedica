@@ -43,6 +43,17 @@ if ($enter_ok){
 							</div>
 						</div>
 						
+						<div class="cellsBlock2">
+							<div class="cellLeft">Срок годности (месяцев)</div>
+							<div class="cellRight">
+								<select name="expirationDate" id="expirationDate">
+										<option value="3">3</option>
+										<option value="6">6</option>
+										<option value="12">12</option>
+							    </select>
+							</div>
+						</div>
+						
 						<div id="errror"></div>                        
 						<input type="button" class="b" value="Добавить" onclick="showCertAdd(0, \'add\')">
 					</form>';

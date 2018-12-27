@@ -6344,8 +6344,7 @@
             dataType: "JSON",
             data:
                 {
-                    summ: Summ,
-                    filial: filial
+                    summ: Summ
                 },
             cache: false,
             beforeSend: function() {
@@ -6856,6 +6855,7 @@
 
         var summ_type = document.querySelector('input[name="summ_type"]:checked').value;
         //console.log(summ_type);
+        var expirationDate =  $('#expirationDate').val();
 
 		$.ajax({
 			url: "cert_cell_f.php",
@@ -6868,7 +6868,8 @@
                 cell_price: cell_price,
                 office_id: office_id,
                 cell_date: $('#iWantThisDate2').val(),
-                summ_type: summ_type
+                summ_type: summ_type,
+                expirationDate: expirationDate
             },
 			cache: false,
 			beforeSend: function() {
@@ -7100,7 +7101,7 @@
 		});
 	}
 
-	//Добавляем/редактируем в базу ордер
+	//Добавляем/редактируем в базу расходный ордер
 	function Ajax_GiveOutCash_add(mode){
 		//console.log(mode);
 
@@ -7129,6 +7130,9 @@
         var comment = $("#comment").val();
         //console.log(comment);
 
+        var additional_info = $("#additional_info").val();
+        //console.log(additional_info);
+
         /*if (giveoutcash_id != 0){
             paymentStr = '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
                 '<a href= "payment_add.php?invoice_id='+order_id+'" class="b">Оплатить наряд #'+order_id+'</a>'+
@@ -7147,6 +7151,7 @@
                 type: type,
                 date_in: date_in,
                 comment: comment,
+                additional_info: additional_info,
 
                 giveoutcash_id: giveoutcash_id
 			},
@@ -7165,9 +7170,9 @@
 					$('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
 											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован расходный ордер</li>'+
 											'<li class="cellsBlock" style="width: auto;">'+
-												'<a href="order.php?id='+res.data+'" class="cellName ahref">'+
-													'<b>Ордер #'+res.data+'</b><br>'+
-												'</a>'+
+												'<div class="cellName">'+
+													'<b>Расходный ордер #'+res.data+'</b><br>'+
+												'</div>'+
 												'<div class="cellName">'+
 													'<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
 														'Сумма:<br>'+
@@ -7177,7 +7182,8 @@
 											'</li>'+
                         					/*paymentStr+*/
 					                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-						                        '<a href="stat_cashbox.php" class="b">Касса</a>'+
+                        						'<a href="stat_cashbox.php" class="b">Касса</a>'+
+                        						'<a href="giveout_cash.php" class="b">Расходные ордеры</a>'+
 					                        '</li>'+
 										'</ul>');
 				}else{
@@ -7187,7 +7193,70 @@
 		});
 	}
 
-	//Добавляем/редактируем в базу заказ в лабораторию
+    //Удаление(блокировка) расходного ордера
+    function fl_deleteGiveout_cash (order_id){
+
+        var rys = false;
+
+        rys = confirm("Вы хотите удалить расходный ордер. \n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "fl_delete_give_out_cash_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: order_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    $('#errrror').html(data);
+                    setTimeout(function () {
+                        window.location.replace('');
+                        //console.log('client.php?id='+id);
+                    }, 100);
+                }
+            })
+        }
+    }
+
+    //Восстановление(разблокировка) расходного ордера
+    function fl_reopenGiveout_cash (order_id){
+
+        var rys = false;
+
+        rys = confirm("Вы хотите восстановить расходный ордер. \n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "fl_reopen_give_out_cash_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: order_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    $('#errrror').html(data);
+                    setTimeout(function () {
+                        window.location.replace('');
+                        //console.log('client.php?id='+id);
+                    }, 100);
+                }
+            })
+        }
+    }
+
+
+    //Добавляем/редактируем в базу заказ в лабораторию
 	function Ajax_lab_order_add(mode){
 		//console.log(mode);
 
@@ -8412,6 +8481,37 @@
                     //console.log (res.data);
 
                     getRemovesfunc(worker_id);
+                }else{
+                }
+            }
+        })
+    }
+
+    //Закрыть направление
+    function getEquipmentItemsForGroup(equipment_group_id) {
+
+        var link = "getEquipmentItemsForGroup_f.php";
+
+        var reqData = {
+            equipment_group_id: equipment_group_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+            },
+            success:function(res){
+                //console.log (res);
+
+                if(res.result == "success") {
+                    //console.log (res.data);
+
+					$('#rezult').html(res.data);
                 }else{
                 }
             }
