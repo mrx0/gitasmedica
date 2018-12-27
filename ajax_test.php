@@ -38,6 +38,8 @@ if (isset($_POST['work_percent']))
     $arrayFields['work_percent'] = $_POST['work_percent'];
 if (isset($_POST['material_percent']))
     $arrayFields['material_percent'] = $_POST['material_percent'];
+if (isset($_POST['summ_special']))
+    $arrayFields['summ_special'] = $_POST['summ_special'];
 if (isset($_POST['personal_id']))
     $arrayFields['personal_id'] = $_POST['personal_id'];
 
@@ -83,7 +85,7 @@ if (isset($_POST['paidout_summ']))
 // проверка всех полей на пустоту
 foreach($arrayFields as $fieldName => $oneField){
 	
-    if($oneField == '' || !isset($oneField) || (($oneField == '0') && (!isset($_POST['cell_price'])) && (!isset($_POST['material_percent'])))){
+    if($oneField == '' || !isset($oneField) || (($oneField == '0') && (!isset($_POST['cell_price'])) && (!isset($_POST['material_percent'])) && (!isset($_POST['summ_special'])))){
         $errorContainer[$fieldName] = 'В этом поле ошибка';
     }
 	
@@ -156,6 +158,16 @@ foreach($arrayFields as $fieldName => $oneField){
     }
     if (isset($_POST['material_percent'])){
         if ($fieldName == 'material_percent') {
+            if (!is_numeric($oneField)) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка';
+            }
+            if ($oneField < 0) {
+                $errorContainer[$fieldName] = 'В этом поле ошибка';
+            }
+        }
+    }
+    if (isset($_POST['summ_special'])){
+        if ($fieldName == 'summ_special') {
             if (!is_numeric($oneField)) {
                 $errorContainer[$fieldName] = 'В этом поле ошибка';
             }

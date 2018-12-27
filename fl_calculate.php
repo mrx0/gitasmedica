@@ -597,7 +597,7 @@
 
                                     echo '
                                                     <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
-                                                        <i><b>% работа/материал</b></i>
+                                                        <i><b>% раб./мат-л/спец.цена</b></i>
                                                     </div>';
                                 }
 
@@ -629,77 +629,10 @@
                                         if ($ind == 99) {
                                             echo 'П';
                                         } else {
-                                            echo $ind;
+                                            echo $ind+1;
                                         }
                                         echo '
                                                 </div>';
-
-                                        //Диагноз
-                                        if ($sheduler_zapis[0]['type'] == 5) {
-
-                                            /*if (!empty($invoice_ex_j_mkb) && isset($invoice_ex_j_mkb[$ind])){
-                                                echo '
-                                                    <div class="cellsBlock" style="font-size: 100%;" >
-                                                        <div class="cellText2" style="padding: 2px 4px; background: rgba(83, 219, 185, 0.16) none repeat scroll 0% 0%;">
-                                                            <b>';
-                                                if ($ind == 99){
-                                                    echo '<i>Полость</i>';
-                                                }else{
-                                                    echo '<i>Зуб</i>: '.$ind;
-                                                }
-                                                echo '
-                                                            </b>. <i>Диагноз</i>: ';
-
-                                                foreach ($invoice_ex_j_mkb[$ind] as $mkb_key => $mkb_data_val){
-                                                    $rez = array();
-                                                    //$rezult2 = array();
-
-                                                    $query = "SELECT `name`, `code` FROM `spr_mkb` WHERE `id` = '{$mkb_data_val['mkb_id']}'";
-
-                                                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                                                    $number = mysqli_num_rows($res);
-                                                    if ($number != 0){
-                                                        while ($arr = mysqli_fetch_assoc($res)){
-                                                            $rez[$mkb_data_val['mkb_id']] = $arr;
-                                                        }
-                                                    }else{
-                                                        $rez = 0;
-                                                    }
-                                                    if ($rez != 0){
-                                                        foreach ($rez as $mkb_name_val){
-                                                            echo '
-                                                                <div class="mkb_val" style="background: rgb(239, 255, 255); border: 1px dotted #bababa;"><b>'.$mkb_name_val['code'].'</b> '.$mkb_name_val['name'].'
-
-                                                                </div>';
-                                                        }
-                                                    }else{
-                                                        echo '<div class="mkb_val">???</div>';
-                                                    }
-
-                                                }
-
-                                                echo '
-                                                        </div>
-                                                    </div>';
-                                            }*/
-
-                                            /*if (isset($invoice_ex_j_mkb[''])){
-                                                echo '
-                                                    <div class="cellsBlock" style="font-size: 100%;" >
-                                                        <div class="cellText2" style="padding: 2px 4px; background: rgba(83, 219, 185, 0.14) none repeat scroll 0% 0%;">
-                                                            <b>';
-                                                if ($ind == 99){
-                                                    echo '<i>Полость</i>';
-                                                }else{
-                                                    echo '<i>Зуб</i>: '.$ind;
-                                                }
-                                                echo '
-                                                            </b>. <i>Диагноз</i>: '.$calculate_data[0]['mkb_id'].'
-                                                        </div>
-                                                    </div>';
-                                            }*/
-
-                                        }
 
                                         foreach ($calculate_data as $item) {
                                             //var_dump($item);
@@ -736,54 +669,9 @@
                                                 $rezult2 = 0;
                                             }
 
+                                            //Напишем название
                                             if ($rezult2 != 0) {
-
                                                 echo $rezult2[0]['name'];
-
-                                                //Узнать цену
-                                                /*$arr = array();
-                                                $rez = array();
-                                                $price = 0;
-                                                $stoim_item = 0;
-                                                //Для отбора цены по времени создания наряда
-                                                $price_arr = array();
-
-
-
-                                                $query = "SELECT `date_from`, `price` FROM `spr_priceprices` WHERE `item`='{$item['price_id']}' ORDER BY `date_from` DESC, `create_time`";
-
-                                                if ($item['insure'] != 0){
-                                                    $query = "SELECT `date_from`, `price` FROM `spr_priceprices_insure` WHERE `item`='{$item['price_id']}' AND `insure`='".$item['insure']."' ORDER BY `date_from` DESC, `create_time`";
-                                                }
-
-                                                $res = mysql_query($query) or die(mysql_error().' -> '.$query);
-                                                $number = mysql_num_rows($res);
-                                                if ($number != 0){
-                                                    //если кол-во цен == 1
-                                                    if ($number == 1){
-                                                        $arr = mysql_fetch_assoc($res);
-                                                        $price = $arr['price'];
-                                                    //если > 1
-                                                    }else{
-                                                        while ($arr = mysql_fetch_assoc($res)){
-                                                            $price_arr[$arr['date_from']] = $arr;
-                                                        }
-                                                        //обратная сортировка
-                                                        krsort($price_arr);
-                                                        //var_dump($price_arr);
-                                                        //var_dump(strtotime($calculate_j[0]['create_time']));
-
-                                                        foreach($price_arr as $date_from => $value_arr){
-                                                            if (strtotime($calculate_j[0]['create_time']) > $date_from){
-                                                                $price = $value_arr['price'];
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
-                                                }else{
-                                                    $price = '?';
-                                                }*/
-
                                             } else {
                                                 echo '?';
                                             }
@@ -793,71 +681,7 @@
 
                                             $price = $item['price'];
 
-                                            /*if ($sheduler_zapis[0]['type'] == 5){
-                                                if ($item['insure'] != 0){
-                                                    //Написать страховую
-                                                    $insure_j = SelDataFromDB('spr_insure', $item['insure'], 'id');
-
-                                                    if ($insure_j != 0){
-                                                        $insure_name = $insure_j[0]['name'];
-                                                    }else{
-                                                        $insure_name = '?';
-                                                    }
-                                                }else{
-                                                    $insure_name = 'нет';
-                                                }
-                                            }*/
-
-                                            /*if ($sheduler_zapis[0]['type'] == 5){
-                                                echo '
-                                                <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic;">
-                                                    '.$insure_name.'
-                                                </div>';
-
-
-                                                if ($item['insure'] != 0){
-                                                    if ($item['insure_approve'] == 1){
-                                                        echo '
-                                                            <div class="cellCosmAct" style="font-size: 70%; text-align: center;">
-                                                                <i class="fa fa-check" aria-hidden="true" style="font-size: 150%;"></i>
-                                                            </div>';
-                                                    }else{
-                                                        echo '
-                                                        <div class="cellCosmAct" style="font-size: 100%; text-align: center; background: rgba(255, 0, 0, 0.5) none repeat scroll 0% 0%;">
-                                                            <i class="fa fa-ban" aria-hidden="true"></i>
-                                                        </div>';
-                                                    }
-
-                                                }else{
-                                                    echo '
-                                                    <div class="cellCosmAct" insureapprove="'.$item['insure_approve'].'" style="font-size: 70%; text-align: center;">
-                                                        -
-                                                    </div>';
-                                                }
-                                            }*/
-
                                             echo '
-                                                    <!--<div class="cellCosmAct invoiceItemPrice" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
-                                                        <b>' . $price . '</b>
-                                                    </div>
-                                                    <div class="cellCosmAct" style="font-size: 90%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-                                                        ' . $item['spec_koeff'] . '
-                                                    </div>
-                                                    <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-                                                        <b>' . $item['quantity'] . '</b>
-                                                    </div>
-                                                    <div class="cellCosmAct" style="font-size: 90%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">
-                                                        ' . $item['discount'] . '
-                                                    </div>-->
-                                                    <!--<div class="cellCosmAct settings_text" guarantee="' . $item['guarantee'] . '" style="font-size: 80%; text-align: center; width: 40px; min-width: 40px; max-width: 40px;">';
-                                            if ($item['guarantee'] != 0) {
-                                                echo '
-                                                            <i class="fa fa-check" aria-hidden="true" style="color: red; font-size: 150%;"></i>';
-                                            } else {
-                                                echo '-';
-                                            }
-                                            echo '
-                                                    </div>-->
                                                     <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">';
 
                                             //вычисляем стоимость
@@ -874,32 +698,16 @@
                                             }
                                             //$stoim_item = round($stoim_item/10) * 10;
 
-
-
-
                                             //!!! надо сделать чтоб в базу попадало сразу как надо, а то при пересчете пиздец какой-то, так быть не должно
-
 
                                             $stoim_item = $price;
 
                                             echo $stoim_item;
 
-
-                                            //Общая стоимость
-                                            /*if ($item['guarantee'] == 0){
-                                                if ($item['insure'] != 0){
-                                                    if ($item['insure_approve'] != 0){
-                                                        $summins += $stoim_item;
-                                                    }
-                                                }else{
-                                                    $summ += $stoim_item;
-                                                }
-                                            }*/
-
-
                                             echo '
                                                     </div>';
 
+                                            //Затраты на материалы
                                             if (($finances['see_all'] == 1) || $god_mode) {
                                                 echo '
                                                     <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
@@ -930,7 +738,7 @@
 
                                                 echo '
                                                         <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
-                                                            <i><b>'.$item['work_percent'].' / '.$item['material_percent'].'</b></i>
+                                                            <i><b>'.$item['work_percent'].' / '.$item['material_percent'].' / '.$item['summ_special'].'</b></i>
                                                         </div>';
 
                                             }
@@ -941,9 +749,9 @@
                                                         <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 120px; min-width: 120px; max-width: 120px;">
                                                         <b>';
 
-                                                echo calculateResult($stoim_item, $item['work_percent'], $item['material_percent']);
+                                                echo calculateResult($stoim_item, $item['work_percent'], $item['material_percent'], $item['summ_special']);
 
-                                                $summ += calculateResult($stoim_item, $item['work_percent'], $item['material_percent']);
+                                                $summ += calculateResult($stoim_item, $item['work_percent'], $item['material_percent'], $item['summ_special']);
 
                                                 echo '
                                                         </b>
@@ -952,8 +760,15 @@
 
                                             echo '
                                                     <div class="cellName" style="text-align: center;">
-                                                        <div>
-                                                            <i>' . $percent_cats_j[$item['percent_cats']]['name']. '</i>
+                                                        <div>';
+
+                                            if ($item['percent_cats'] > 0) {
+                                                echo '<i>' . $percent_cats_j[$item['percent_cats']]['name'] . '</i>';
+                                            }else{
+                                                echo '<i style="color: red; font-size: 100%;">Ошибка #16</i><br>';
+                                            }
+
+                                            echo '
                                                         </div>
                                                     </div>
                                                 </div>';

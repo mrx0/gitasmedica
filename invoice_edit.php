@@ -131,6 +131,9 @@
 
 											if ((int)$invoice_ex_j_val['percent_cats'] > 0) {
                                                 $temp_arr2['percent_cats'] = (int)$invoice_ex_j_val['percent_cats'];
+
+                                                //var_dump($invoice_j[0]['type']);
+
                                             }else{
                                                 //$temp_arr2['percent_cats'] = 1;
 
@@ -184,7 +187,7 @@
 											    array_push($temp_arr[$ind], $temp_arr2);
                                             }
 
-                                            if ($invoice_j[0]['type'] == 6){
+                                            if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10)){
                                                 array_push($temp_arr, $temp_arr2);
                                             }
 										}
@@ -195,8 +198,8 @@
 	                                if ($invoice_j[0]['type'] == 5) {
                                         $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
                                     }
-                                    //Костыль для сессионых данных косметологов
-	                                if ($invoice_j[0]['type'] == 6) {
+                                    //Костыль для сессионых данных косметологов и специалистов
+	                                if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10)) {
                                         $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
                                     }
                                     //скидку тут добавлю в сесиию
@@ -261,7 +264,7 @@
                                 //var_dump(date("Y-m-d H:m:s", time()));
 
 
-                                if ((($invoice_j[0]['summ'] == $invoice_j[0]['paid']) || ($invoice_j[0]['status'] == 5) || ($invoice_j[0]['summins'] != 0)) && !($god_mode || ($finances['see_all'] == 1))){
+                                if (((($invoice_j[0]['summ'] == $invoice_j[0]['paid']) && ($invoice_j[0]['summ'] != 0)) || ($invoice_j[0]['status'] == 5) || ($invoice_j[0]['summins'] != 0)) && !($god_mode || ($finances['see_all'] == 1))){
                                     echo '
                                                 <div>
                                                     <div style="display: inline-block; color: red;">Наряд оплачен или работа закрыта. Редактировать нельзя</div>

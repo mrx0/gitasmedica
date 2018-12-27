@@ -375,6 +375,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
 
                         echo showZapisRezult2($journal, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, 0, true, false, $dop);
+                        //$ZapisHereQueryToday, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $type, $format, $menu, $dop
 
 
                         echo '

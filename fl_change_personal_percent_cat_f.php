@@ -50,15 +50,22 @@
                     $query = "UPDATE `fl_spr_percents_personal` SET `percent`='{$_POST['val']}', `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}' WHERE `id`='{$percents_personal_j_id}'";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                }else {
+                }else{
                     $query = "INSERT INTO `fl_spr_percents_personal` (
-						`percent_cats`, `worker_id`, `type`, `percent`, `create_time`, `create_person`)
-						VALUES (
-						'{$_POST['cat_id']}', '{$_POST['worker_id']}', '{$_POST['type']}', '{$_POST['val']}', '{$time}', '{$_SESSION['id']}'
-						);";
+                    `percent_cats`, `worker_id`, `type`, `percent`, `create_time`, `create_person`)
+                    VALUES (
+                    '{$_POST['cat_id']}', '{$_POST['worker_id']}', '{$_POST['type']}', '{$_POST['val']}', '{$time}', '{$_SESSION['id']}'
+                    );";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                 }
+
+                //Если спец. цена, обнулим все остальное
+                /*if ($_POST['type'] == 3){
+                    $query = "UPDATE `fl_spr_percents_personal` SET `percent`='0', `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}' WHERE `worker_id` = '{$_POST['worker_id']}' AND `percent_cats` = '{$_POST['cat_id']}' AND (`type` = '1' OR  `type` = '2')";
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                }*/
 
                 //Удаляем из БД
                 //$query = "DELETE FROM `fl_journal_calculate` WHERE `id`='{$_POST['id']}'";

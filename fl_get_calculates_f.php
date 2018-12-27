@@ -148,8 +148,9 @@
                                 $full_name = $arr['full_name'];
                             }
 
-                            //Зубные формулы и запись косметолога
+                            //Зубные формулы и запись врача
                             $doctor_mark = '';
+                            $background_color = 'background-color: rgb(255, 255, 255);';
 
                             if ($invoice_type == 5) {
                                 $query = "SELECT `id` FROM `journal_tooth_status` WHERE `zapis_id`='$zapis_id' LIMIT 1";
@@ -169,10 +170,11 @@
 
                             if ($number == 0){
                                 $doctor_mark = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет отметки врача"></i>';
+                                $background_color = 'background-color: rgba(255, 141, 141, 0.2);';
                             }
 
                             $rezult .= '
-                                <div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
+                                <div class="cellsBlockHover" style="'.$background_color.' width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
                                     <div style="display: inline-block; width: 190px;">
                                         <div>
                                             <a href="fl_calculate.php?id='.$rezData['id'].'" class="ahref">
@@ -203,7 +205,11 @@
                             $percent_cats_arr = explode(',', $rezData['percent_cats']);
 
                             foreach ($percent_cats_arr as $percent_cat){
-                                $rezult .= '<i style="color: rgb(15, 6, 142); font-size: 110%;">'.$percent_cats_j[$percent_cat].'</i><br>';
+                                if ($percent_cat > 0) {
+                                    $rezult .= '<i style="color: rgb(15, 6, 142); font-size: 110%;">' . $percent_cats_j[$percent_cat] . '</i><br>';
+                                }else{
+                                    $rezult .= '<i style="color: red; font-size: 100%;">Ошибка #17</i><br>';
+                                }
                             }
 
                             $rezult .= '                                            

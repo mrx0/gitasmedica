@@ -80,21 +80,28 @@
                     //Категории по которым идёт контроль %
                     //Сейчас тут Диод и Александрит
                     $controlCategories = array(9, 11);
+                    //Категории, которые надо вычесть перед контролем
+                    $controlCategoriesMinus = array(15, 14);
 
                     $controlCategoriesSumm = 0;
+                    //Не используем пока, ибо не надо
+                    $controlCategoriesMinusSumm = 0;
                     $allSumm = 0;
 
                     foreach ($tabel_ex_calculates_j as $item){
                         if (in_array((int)$item['percent_cats'], $controlCategories)) {
                             $controlCategoriesSumm += (int)$item['price'];
                         }
-                        $allSumm += (int)$item['price'];
+
+                        if (!in_array((int)$item['percent_cats'], $controlCategoriesMinus)) {
+                            $allSumm += (int)$item['price'];
+                        }
                     }
 
                     //var_dump($controlCategoriesSumm);
                     //var_dump($allSumm);
 
-                    //Вычисляем % от общего
+                    //Вычисляем процент от общего %
 
                     $controlPercent = $controlCategoriesSumm * 100 / $allSumm;
                     //var_dump($controlPercent);
@@ -110,11 +117,11 @@
                     //$newPaymentSumm = 0;
 
                     //Вычисляем % премии
-                    if ($controlPercent <= 39){
+                    if ($controlPercent < 40){
                         $newPaymentPercent = 25;
-                    }elseif(($controlPercent >= 40) && ($controlPercent <= 59)){
+                    }elseif(($controlPercent >= 40) && ($controlPercent < 60)){
                         $newPaymentPercent = 20;
-                    }elseif(($controlPercent >= 60) && ($controlPercent <= 69)){
+                    }elseif(($controlPercent >= 60) && ($controlPercent < 70)){
                         $newPaymentPercent = 15;
                     }elseif($controlPercent >= 70){
                         $newPaymentPercent = 10;

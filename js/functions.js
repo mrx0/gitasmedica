@@ -18,6 +18,46 @@
         $('#errror').html('');
 	}
 
+	//Сегодня дата
+	function getTodayDate (){
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+        var yyyy = today.getFullYear();
+
+        if(dd<10) {
+            dd = '0'+dd
+        }
+
+        if(mm<10) {
+            mm = '0'+mm
+        }
+
+        today = dd + '.' + mm + '.' + yyyy;
+
+        return today;
+	}
+
+	//Форматирование числа в красивый вид
+    function number_format( number, decimals = 0, dec_point = '.', thousands_sep = ',' ) {
+
+        let sign = number < 0 ? '-' : '';
+
+        let s_number = Math.abs(parseInt(number = (+number || 0).toFixed(decimals))) + "";
+        let len = s_number.length;
+        let tchunk = len > 3 ? len % 3 : 0;
+
+        let ch_first = (tchunk ? s_number.substr(0, tchunk) + thousands_sep : '');
+        let ch_rest = s_number.substr(tchunk)
+            .replace(/(\d\d\d)(?=\d)/g, '$1' + thousands_sep);
+        let ch_last = decimals ?
+            dec_point + (Math.abs(number) - s_number)
+                .toFixed(decimals)
+                .slice(2) :
+            '';
+
+        return sign + ch_first + ch_rest + ch_last;
+    }
 
     //Для поиска сертификата из модального окна
     $('#search_cert').bind("change keyup input click", function() {
@@ -68,7 +108,7 @@
     	if (show){
             $('#overlay').show();
 
-            $('#overlay').append( "<div id='waiting' style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.7);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>" );
+            $('#overlay').append( "<div id='waiting' style='padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 1);'><img src='img/wait.gif' style='float:left;'><span class='loadingMessage' style='font-size: 90%;'> обработка...</span></div>" );
             //$('#waiting').html("");
 		}else {
             $('#overlay').html('');
@@ -87,8 +127,22 @@
 		
 		// Получаем элемент на котором был совершен клик:
 		var target = $(event.target);
-
         //console.log(target.attr('start_price'));
+        //console.log(target.html());
+
+		var dopReq = {};
+
+        if (mark == 'consRepAdm') {
+            var date = (target.html().replace(/\s{2,}/g, ''));
+            //console.log(date);
+
+			var filial_id = target.attr('filial_id');
+            //console.log(filial_id);
+
+            dopReq.date = date;
+            dopReq.filial_id = filial_id;
+            //console.log(dopReq);
+        }
 
 		// Добавляем класс selected-html-element что бы наглядно показать на чем именно мы кликнули (исключительно для тестирования):
 		target.addClass('selected-html-element');
@@ -102,7 +156,9 @@
 			{
 				mark: mark,
 				ind: ind,
-				key: key
+				key: key,
+
+				dop: dopReq
 			},
 			cache: false,
 			beforeSend: function() {
@@ -161,6 +217,7 @@
 				if (mark == 'teeth_moloch'){
 					res.data = $('#teeth_moloch_options').html();
 				}
+
 
 				// Создаем меню:
 				var menu = $('<div/>', {
@@ -249,7 +306,7 @@
                     permissions: permissions,
                     contacts: contacts,
                     fired: fired,
-                    specializations:checkedItems2(),
+                    specializations:checkedItems2()
 
                 },
             cache: false,
@@ -1461,6 +1518,7 @@
         var cat_name = $('#cat_name').val();
         var work_percent = $('#work_percent').val();
         var material_percent = $('#material_percent').val();
+        var summ_special = $('#summ_special').val();
         var personal_id = $('#personal_id').val();
 
         // убираем класс ошибок с инпутов
@@ -1481,6 +1539,7 @@
                 cat_name: cat_name,
                 work_percent: work_percent,
                 material_percent: material_percent,
+                summ_special: summ_special,
                 personal_id: personal_id
             },
 
@@ -1502,6 +1561,7 @@
                                 cat_name: cat_name,
                                 work_percent: work_percent,
                                 material_percent: material_percent,
+                                summ_special: summ_special,summ_special: summ_special,
                                 personal_id: personal_id
                             },
 
@@ -1678,7 +1738,7 @@
 							name:name,
 							contract:contract,
 							contract2:contract2,
-							contacts:contacts,
+							contacts:contacts
 						},
 						success:function(data){ $("#errrror").html(data);}
 					})
@@ -2042,6 +2102,9 @@
 	};
 
 	function iWantThisDate(path){
+
+        blockWhileWaiting (true);
+
 		var iWantThisMonth =  $("#iWantThisMonth").val();
 		var iWantThisYear =  $("#iWantThisYear").val();
 
@@ -2049,6 +2112,9 @@
 	}
 
 	function iWantThisDate2(path){
+
+        blockWhileWaiting (true);
+
 		var iWantThisDate2 =  $("#iWantThisDate2").val();
 		var ThisDate = iWantThisDate2.split('.');
 
@@ -2065,7 +2131,7 @@
 
     //Функция пунта управления
 	function manageScheduler(doc_name){
-    	console.log(doc_name);
+    	//console.log(doc_name);
 
 		e = $('.manageScheduler');
 		if(!e.is(':visible')) {
@@ -2326,6 +2392,560 @@
             },
             success:function(data){
                 $('#qresult').html(data);
+            }
+        })
+    }
+
+    //Выборка отчёта по записи
+    function Ajax_show_result_main_report_zapis(){
+
+        blockWhileWaiting (true);
+
+        var link = "ajax_show_result_main_report_zapis_f.php";
+
+        var typeW = document.querySelector('input[name="typeW"]:checked').value;
+
+        var zapisAll = $("input[id=zapisAll]:checked").val();
+        if (zapisAll === undefined){
+            zapisAll = 0;
+        }
+        var zapisArrive = $("input[id=zapisArrive]:checked").val();
+        if (zapisArrive === undefined){
+            zapisArrive = 0;
+        }
+        var zapisNotArrive = $("input[id=zapisNotArrive]:checked").val();
+        if (zapisNotArrive === undefined){
+            zapisNotArrive = 0;
+        }
+
+        var zapisError = $("input[id=zapisError]:checked").val();
+        if (zapisError === undefined){
+            zapisError = 0;
+        }
+
+        var zapisNull = $("input[id=zapisNull]:checked").val();
+        if (zapisNull === undefined){
+            zapisNull = 0;
+        }
+
+        var fullAll = $("input[id=fullAll]:checked").val();
+        if (fullAll === undefined){
+            fullAll = 0;
+        }
+
+        var fullWOInvoice = $("input[id=fullWOInvoice]:checked").val();
+        if (fullWOInvoice === undefined){
+            fullWOInvoice = 0;
+        }
+
+        var fullWOTask = $("input[id=fullWOTask]:checked").val();
+        if (fullWOTask === undefined){
+            fullWOTask = 0;
+        }
+
+        var fullOk = $("input[id=fullOk]:checked").val();
+        if (fullOk === undefined){
+            fullOk = 0;
+        }
+
+        var statusAll = $("input[id=statusAll]:checked").val();
+        if (statusAll === undefined){
+            statusAll = 0;
+        }
+
+        var statusPervich = $("input[id=statusPervich]:checked").val();
+        if (statusPervich === undefined){
+            statusPervich = 0;
+        }
+
+        var statusInsure = $("input[id=statusInsure]:checked").val();
+        if (statusInsure === undefined){
+            statusInsure = 0;
+        }
+
+        var statusNight = $("input[id=statusNight]:checked").val();
+        if (statusNight === undefined){
+            statusNight = 0;
+        }
+
+        var statusAnother = $("input[id=statusAnother]:checked").val();
+        if (statusAnother === undefined){
+            statusAnother = 0;
+        }
+
+        var invoiceAll = $("input[id=invoiceAll]:checked").val();
+        if (invoiceAll === undefined){
+            invoiceAll = 0;
+        }
+
+        var invoicePaid = $("input[id=invoicePaid]:checked").val();
+        if (invoicePaid === undefined){
+            invoicePaid = 0;
+        }
+
+        var invoiceNotPaid = $("input[id=invoiceNotPaid]:checked").val();
+        if (invoiceNotPaid === undefined){
+            invoiceNotPaid = 0;
+        }
+
+        var invoiceInsure = $("input[id=invoiceInsure]:checked").val();
+        if (invoiceInsure === undefined){
+            invoiceInsure = 0;
+        }
+
+        var patientUnic = $("input[id=patientUnic]:checked").val();
+        if (patientUnic === undefined){
+            patientUnic = 0;
+        }
+
+        var reqData = {
+            //all_time: all_time,
+            all_time: 0,
+            datastart:  $("#datastart").val(),
+            dataend:  $("#dataend").val(),
+
+            //Кто создал запись
+            creator:$("#search_worker").val(),
+            //Пациент
+            client:$("#search_client").val(),
+            //К кому запись
+            worker:$("#search_client4").val(),
+            filial:$("#filial").val(),
+
+            typeW:typeW,
+
+            zapisAll: zapisAll,
+            zapisArrive: zapisArrive,
+            zapisNotArrive: zapisNotArrive,
+            zapisError: zapisError,
+            zapisNull: zapisNull,
+
+            fullAll: fullAll,
+            fullWOInvoice: fullWOInvoice,
+            fullWOTask: fullWOTask,
+            fullOk: fullOk,
+
+            statusAll: statusAll,
+            statusPervich: statusPervich,
+            statusInsure: statusInsure,
+            statusNight: statusNight,
+            statusAnother: statusAnother,
+
+            invoiceAll: invoiceAll,
+            invoicePaid: invoicePaid,
+            invoiceNotPaid: invoiceNotPaid,
+            invoiceInsure: invoiceInsure,
+
+            patientUnic: patientUnic
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                //console.log(res);
+
+                if (res.result == "success") {
+                    //console.log(res.query);
+                    //console.log(res.data);
+
+                    $('#qresult').html('Всего: ' + res.data.length + '<br>' +
+					'Первичных: <span id="res_pervich">0</span><br>' +
+					'Ночных: <span id="res_noch">0</span><br>' +
+					'Страховых: <span id="res_insured">0</span><br>' +
+					'<span id="res_temp"></span><br>' +
+					'');
+
+                    var pervich = 0;
+                    var noch = 0;
+                    var insured = 0;
+
+                    var noch_pervich = 0;
+                    var noch_insured = 0;
+                    var insured_pervich = 0;
+
+                    //массив пациентов
+                    var clients_arr = [];
+
+                    res.data.forEach(function(element) {
+
+                        //showZapisRezult2($journal, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, 0, true, false, $dop);
+
+						//Вывод на экран
+                        /*link = "showZapisRezult3.php";
+
+                        reqData = {
+                            data: element
+						};
+
+                        $.ajax({
+                            url: link,
+                            global: false,
+                            type: "POST",
+                            //dataType: "JSON",
+                            data: reqData,
+                            cache: false,
+                            //async: false,
+                            beforeSend: function() {
+                                //$('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                            },
+                            success:function(res){
+                            	//console.log(res);
+
+                                $('#res_temp').append(res);
+                            }
+                        });*/
+
+                        //$('#qresult').append(element.id + '<br>');
+
+                        if (element.pervich == 1) {
+                            pervich++;
+                        }
+						if (element.noch == 1){
+							noch++
+
+							if (element.pervich == 1){
+                                noch_pervich++;
+							}
+							if (element.insured == 1){
+                                noch_insured++;
+							}
+						}
+						if (element.insured == 1) {
+                            insured++;
+
+                            if (element.pervich == 1){
+                                insured_pervich++;
+                            }
+                        }
+                        //console.log(element.patient);
+
+                        //Хочу собрать массив пациентов
+                        //console.log(clients_arr.indexOf(element.patient));
+
+                        if (clients_arr.indexOf(element.patient) == -1) {
+                            clients_arr.push(element.patient);
+                        }else{
+
+                        }
+
+                    });
+                    console.log(clients_arr.length);
+
+                    $('#res_pervich').html(pervich);
+                    $('#res_noch').html(noch);
+                    $('#res_insured').html(insured);
+
+                    if (noch_pervich != 0){
+                        $('#res_noch').append('. Из них первичные: ' + noch_pervich);
+					}
+                    if (noch_insured != 0){
+                        $('#res_noch').append('. Из них страховые: ' + noch_insured);
+					}
+                    if (insured_pervich != 0){
+                        $('#res_insured').append('. Из них первичные: ' + insured_pervich);
+					}
+
+                    //console.log('Done');
+
+                    blockWhileWaiting (false);
+
+                    //$('#qresult').html('Ok');
+
+                } else {
+                    $('#qresult').html(res.data);
+
+                    blockWhileWaiting (false);
+                }
+
+
+            }
+        })
+    }
+
+    //Выборка отчёта по категориям
+    function Ajax_show_result_main_report_category(){
+
+        blockWhileWaiting (true);
+
+        var link = "ajax_show_result_main_report_category_f.php";
+
+        var typeW = document.querySelector('input[name="typeW"]:checked').value;
+
+        var zapisAll = $("input[id=zapisAll]:checked").val();
+        if (zapisAll === undefined){
+            zapisAll = 0;
+        }
+        var zapisArrive = $("input[id=zapisArrive]:checked").val();
+        if (zapisArrive === undefined){
+            zapisArrive = 0;
+        }
+        var zapisNotArrive = $("input[id=zapisNotArrive]:checked").val();
+        if (zapisNotArrive === undefined){
+            zapisNotArrive = 0;
+        }
+
+        var zapisError = $("input[id=zapisError]:checked").val();
+        if (zapisError === undefined){
+            zapisError = 0;
+        }
+
+        var zapisNull = $("input[id=zapisNull]:checked").val();
+        if (zapisNull === undefined){
+            zapisNull = 0;
+        }
+
+        var fullAll = $("input[id=fullAll]:checked").val();
+        if (fullAll === undefined){
+            fullAll = 0;
+        }
+
+        var fullWOInvoice = $("input[id=fullWOInvoice]:checked").val();
+        if (fullWOInvoice === undefined){
+            fullWOInvoice = 0;
+        }
+
+        var fullWOTask = $("input[id=fullWOTask]:checked").val();
+        if (fullWOTask === undefined){
+            fullWOTask = 0;
+        }
+
+        var fullOk = $("input[id=fullOk]:checked").val();
+        if (fullOk === undefined){
+            fullOk = 0;
+        }
+
+        var statusAll = $("input[id=statusAll]:checked").val();
+        if (statusAll === undefined){
+            statusAll = 0;
+        }
+
+        var statusPervich = $("input[id=statusPervich]:checked").val();
+        if (statusPervich === undefined){
+            statusPervich = 0;
+        }
+
+        var statusInsure = $("input[id=statusInsure]:checked").val();
+        if (statusInsure === undefined){
+            statusInsure = 0;
+        }
+
+        var statusNight = $("input[id=statusNight]:checked").val();
+        if (statusNight === undefined){
+            statusNight = 0;
+        }
+
+        var statusAnother = $("input[id=statusAnother]:checked").val();
+        if (statusAnother === undefined){
+            statusAnother = 0;
+        }
+
+        var invoiceAll = $("input[id=invoiceAll]:checked").val();
+        if (invoiceAll === undefined){
+            invoiceAll = 0;
+        }
+
+        var invoicePaid = $("input[id=invoicePaid]:checked").val();
+        if (invoicePaid === undefined){
+            invoicePaid = 0;
+        }
+
+        var invoiceNotPaid = $("input[id=invoiceNotPaid]:checked").val();
+        if (invoiceNotPaid === undefined){
+            invoiceNotPaid = 0;
+        }
+
+        var invoiceInsure = $("input[id=invoiceInsure]:checked").val();
+        if (invoiceInsure === undefined){
+            invoiceInsure = 0;
+        }
+
+        var patientUnic = $("input[id=patientUnic]:checked").val();
+        if (patientUnic === undefined){
+            patientUnic = 0;
+        }
+
+        var reqData = {
+            //all_time: all_time,
+            all_time: 0,
+            datastart:  $("#datastart").val(),
+            dataend:  $("#dataend").val(),
+
+            //Кто создал запись
+            creator:$("#search_worker").val(),
+            //Пациент
+            client:$("#search_client").val(),
+            //К кому запись
+            worker:$("#search_client4").val(),
+            filial:$("#filial").val(),
+
+            typeW:typeW,
+
+            zapisAll: zapisAll,
+            zapisArrive: zapisArrive,
+            zapisNotArrive: zapisNotArrive,
+            zapisError: zapisError,
+            zapisNull: zapisNull,
+
+            fullAll: fullAll,
+            fullWOInvoice: fullWOInvoice,
+            fullWOTask: fullWOTask,
+            fullOk: fullOk,
+
+            statusAll: statusAll,
+            statusPervich: statusPervich,
+            statusInsure: statusInsure,
+            statusNight: statusNight,
+            statusAnother: statusAnother,
+
+            invoiceAll: invoiceAll,
+            invoicePaid: invoicePaid,
+            invoiceNotPaid: invoiceNotPaid,
+            invoiceInsure: invoiceInsure,
+
+            patientUnic: patientUnic
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                //console.log(res);
+                $('#qresult').html(res);
+
+                /*if (res.result == "success") {
+                    //console.log(res.query);
+                    //console.log(res.data);
+
+                    $('#qresult').html('Всего: ' + res.data.length + '<br>' +
+					'Первичных: <span id="res_pervich">0</span><br>' +
+					'Ночных: <span id="res_noch">0</span><br>' +
+					'Страховых: <span id="res_insured">0</span><br>' +
+					'<span id="res_temp"></span><br>' +
+					'');
+
+                    var pervich = 0;
+                    var noch = 0;
+                    var insured = 0;
+
+                    var noch_pervich = 0;
+                    var noch_insured = 0;
+                    var insured_pervich = 0;
+
+                    //массив пациентов
+                    var clients_arr = [];
+
+                    res.data.forEach(function(element) {*/
+
+                        //showZapisRezult2($journal, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, 0, true, false, $dop);
+
+						//Вывод на экран
+                        /*link = "showZapisRezult3.php";
+
+                        reqData = {
+                            data: element
+						};
+
+                        $.ajax({
+                            url: link,
+                            global: false,
+                            type: "POST",
+                            //dataType: "JSON",
+                            data: reqData,
+                            cache: false,
+                            //async: false,
+                            beforeSend: function() {
+                                //$('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                            },
+                            success:function(res){
+                            	//console.log(res);
+
+                                $('#res_temp').append(res);
+                            }
+                        });*/
+
+                        //$('#qresult').append(element.id + '<br>');
+
+                /*        if (element.pervich == 1) {
+                            pervich++;
+                        }
+						if (element.noch == 1){
+							noch++
+
+							if (element.pervich == 1){
+                                noch_pervich++;
+							}
+							if (element.insured == 1){
+                                noch_insured++;
+							}
+						}
+						if (element.insured == 1) {
+                            insured++;
+
+                            if (element.pervich == 1){
+                                insured_pervich++;
+                            }
+                        }*/
+                        //console.log(element.patient);
+
+                        //Хочу собрать массив пациентов
+                        //console.log(clients_arr.indexOf(element.patient));
+
+                /*        if (clients_arr.indexOf(element.patient) == -1) {
+                            clients_arr.push(element.patient);
+                        }else{
+
+                        }
+
+                    });
+                    console.log(clients_arr.length);
+
+                    $('#res_pervich').html(pervich);
+                    $('#res_noch').html(noch);
+                    $('#res_insured').html(insured);
+
+                    if (noch_pervich != 0){
+                        $('#res_noch').append('. Из них первичные: ' + noch_pervich);
+					}
+                    if (noch_insured != 0){
+                        $('#res_noch').append('. Из них страховые: ' + noch_insured);
+					}
+                    if (insured_pervich != 0){
+                        $('#res_insured').append('. Из них первичные: ' + insured_pervich);
+					}*/
+
+                    //console.log('Done');
+
+                    blockWhileWaiting (false);
+
+
+
+                    //Показываем график
+                	showChart ();
+
+                    //$('#qresult').html('Ok');
+
+                /*} else {
+                    $('#qresult').html(res.data);
+
+                    blockWhileWaiting (false);
+                }
+*/
+
             }
         })
     }
@@ -2839,6 +3459,8 @@
 	});
 
 
+
+
 	//Кнопка "ясно" в объявлениях на главной странице
     $('.iUnderstand').click(function () {
 
@@ -2878,6 +3500,12 @@
                         anotherObj.show();
                         anotherObj2.removeClass("blink1");
                     }, 500);
+
+                    setTimeout(function() {
+
+                        document.location.reload(true);
+
+                    }, 1000);
 
                     //location.reload();
                 }
@@ -4092,7 +4720,7 @@
 		//console.log(invoice_type);
 
 		var link = "fill_invoice_stom_from_session_f.php";
-		if (invoice_type == 6){
+		if ((invoice_type == 6) || (invoice_type == 10)){
 			link = "fill_invoice_cosm_from_session_f.php";
 		}
 		if (invoice_type == 88){
@@ -4122,7 +4750,7 @@
                 //console.log(res);
 
 				if(res.result == "success"){
-					//console.log(res.data2);
+					//console.log(res.data);
 					$('#invoice_rezult').html(res.data);
 
 					// !!!
@@ -4145,7 +4773,7 @@
         //console.log(invoice_type);
 
 		var link = "fill_calculate_stom_from_session_f.php";
-		if (invoice_type == 6){
+		if ((invoice_type == 6) || (invoice_type == 10)){
 			link = "fill_calculate_cosm_from_session_f.php";
 		}
 		if (invoice_type == 88){
@@ -5257,7 +5885,7 @@
 
 		var link = "add_price_id_stom_in_invoice_f.php";
 
-		if (type == 6){
+		if ((type == 6) || (type == 10)){
 			link = "add_price_id_cosm_in_invoice_f.php";
 		}
 		if (type == 88){
@@ -5278,7 +5906,9 @@
 				zapis_id: $("#zapis_id").val(),
 				zapis_insure: $("#zapis_insure").val(),
 				filial: $("#filial").val(),
-				worker: $("#worker").val()
+				worker: $("#worker").val(),
+
+                type: type
 			},
 			cache: false,
 			beforeSend: function() {
@@ -5714,8 +6344,7 @@
             dataType: "JSON",
             data:
                 {
-                    summ: Summ,
-                    filial: filial
+                    summ: Summ
                 },
             cache: false,
             beforeSend: function() {
@@ -6202,7 +6831,7 @@
 			},
 			// действие, при ответе с сервера
 			success: function(res){
-				console.log(res);
+				//console.log(res);
 
 				$('.center_block').remove();
 				$('#overlay').hide();
@@ -6226,6 +6855,7 @@
 
         var summ_type = document.querySelector('input[name="summ_type"]:checked').value;
         //console.log(summ_type);
+        var expirationDate =  $('#expirationDate').val();
 
 		$.ajax({
 			url: "cert_cell_f.php",
@@ -6238,7 +6868,8 @@
                 cell_price: cell_price,
                 office_id: office_id,
                 cell_date: $('#iWantThisDate2').val(),
-                summ_type: summ_type
+                summ_type: summ_type,
+                expirationDate: expirationDate
             },
 			cache: false,
 			beforeSend: function() {
@@ -6470,7 +7101,7 @@
 		});
 	}
 
-	//Добавляем/редактируем в базу ордер
+	//Добавляем/редактируем в базу расходный ордер
 	function Ajax_GiveOutCash_add(mode){
 		//console.log(mode);
 
@@ -6499,6 +7130,9 @@
         var comment = $("#comment").val();
         //console.log(comment);
 
+        var additional_info = $("#additional_info").val();
+        //console.log(additional_info);
+
         /*if (giveoutcash_id != 0){
             paymentStr = '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
                 '<a href= "payment_add.php?invoice_id='+order_id+'" class="b">Оплатить наряд #'+order_id+'</a>'+
@@ -6517,6 +7151,7 @@
                 type: type,
                 date_in: date_in,
                 comment: comment,
+                additional_info: additional_info,
 
                 giveoutcash_id: giveoutcash_id
 			},
@@ -6535,9 +7170,9 @@
 					$('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
 											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован расходный ордер</li>'+
 											'<li class="cellsBlock" style="width: auto;">'+
-												'<a href="order.php?id='+res.data+'" class="cellName ahref">'+
-													'<b>Ордер #'+res.data+'</b><br>'+
-												'</a>'+
+												'<div class="cellName">'+
+													'<b>Расходный ордер #'+res.data+'</b><br>'+
+												'</div>'+
 												'<div class="cellName">'+
 													'<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
 														'Сумма:<br>'+
@@ -6547,7 +7182,8 @@
 											'</li>'+
                         					/*paymentStr+*/
 					                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-						                        '<a href="stat_cashbox.php" class="b">Касса</a>'+
+                        						'<a href="stat_cashbox.php" class="b">Касса</a>'+
+                        						'<a href="giveout_cash.php" class="b">Расходные ордеры</a>'+
 					                        '</li>'+
 										'</ul>');
 				}else{
@@ -6557,7 +7193,70 @@
 		});
 	}
 
-	//Добавляем/редактируем в базу заказ в лабораторию
+    //Удаление(блокировка) расходного ордера
+    function fl_deleteGiveout_cash (order_id){
+
+        var rys = false;
+
+        rys = confirm("Вы хотите удалить расходный ордер. \n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "fl_delete_give_out_cash_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: order_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    $('#errrror').html(data);
+                    setTimeout(function () {
+                        window.location.replace('');
+                        //console.log('client.php?id='+id);
+                    }, 100);
+                }
+            })
+        }
+    }
+
+    //Восстановление(разблокировка) расходного ордера
+    function fl_reopenGiveout_cash (order_id){
+
+        var rys = false;
+
+        rys = confirm("Вы хотите восстановить расходный ордер. \n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "fl_reopen_give_out_cash_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: order_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    $('#errrror').html(data);
+                    setTimeout(function () {
+                        window.location.replace('');
+                        //console.log('client.php?id='+id);
+                    }, 100);
+                }
+            })
+        }
+    }
+
+
+    //Добавляем/редактируем в базу заказ в лабораторию
 	function Ajax_lab_order_add(mode){
 		//console.log(mode);
 
@@ -7788,4 +8487,132 @@
         })
     }
 
+    //Закрыть направление
+    function getEquipmentItemsForGroup(equipment_group_id) {
+
+        var link = "getEquipmentItemsForGroup_f.php";
+
+        var reqData = {
+            equipment_group_id: equipment_group_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+            },
+            success:function(res){
+                //console.log (res);
+
+                if(res.result == "success") {
+                    //console.log (res.data);
+
+					$('#rezult').html(res.data);
+                }else{
+                }
+            }
+        })
+    }
+
     //showGiveOutCashAdd('add');
+
+
+
+
+	/*Для круговой диаграммы*/
+    var randomScalingFactor = function() {
+        return Math.round(Math.random() * 100);
+    };
+
+	/*document.getElementById('randomizeData').addEventListener('click', function() {
+        config.data.datasets.forEach(function(dataset) {
+            dataset.data = dataset.data.map(function() {
+                return randomScalingFactor();
+            });
+        });
+
+        window.myPie.update();
+    });*/
+
+    var colorNames = Object.keys(window.chartColors);
+
+    /*document.getElementById('addDataset').addEventListener('click', function() {
+        var newDataset = {
+            backgroundColor: [],
+            data: [],
+            label: 'New dataset ' + config.data.datasets.length,
+        };
+
+        for (var index = 0; index < config.data.labels.length; ++index) {
+            newDataset.data.push(randomScalingFactor());
+
+            var colorName = colorNames[index % colorNames.length];
+            var newColor = window.chartColors[colorName];
+            newDataset.backgroundColor.push(newColor);
+        }
+
+        config.data.datasets.push(newDataset);
+        window.myPie.update();
+    });*/
+
+    /*document.getElementById('removeDataset').addEventListener('click', function() {
+        config.data.datasets.splice(0, 1);
+        window.myPie.update();
+    });*/
+
+	//пробная для круговой диаграммы
+    function showChart() {
+
+        var mainData = [];
+        var mainLabel = [];
+
+		$('.categoryItem').each(function() {
+			//console.log($(this).attr('nameCat'));
+
+			if ($(this).attr('percentCat').replace(',', '.') > 2) {
+
+                //Массив данных
+                mainData.push($(this).attr('percentCat').replace(',', '.'));
+
+                //Массив названий
+                mainLabel.push($(this).attr('nameCat'));
+            }
+		});
+
+		//console.log(mainData);
+		//console.log(mainLabel);
+
+        var config = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: mainData,
+                    backgroundColor: [
+                        window.chartColors.red,
+                        window.chartColors.orange,
+                        window.chartColors.yellow,
+                        window.chartColors.green,
+                        window.chartColors.cyan,
+                        window.chartColors.blue,
+                        window.chartColors.indigo
+                    ],
+                    label: 'Dataset 1'
+                }],
+                labels: mainLabel
+            },
+            options: {
+                responsive: true
+            }
+        };
+
+        var ctx = document.getElementById('chart-area').getContext('2d');
+
+        window.myPie = new Chart(ctx, config);
+
+    };
+
+

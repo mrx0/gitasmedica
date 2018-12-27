@@ -486,7 +486,7 @@
                                                     <i><b>Зуб</b></i>';
                                 }
 
-                                if ($sheduler_zapis[0]['type'] == 6) {
+                                if (($sheduler_zapis[0]['type'] == 6) || ($sheduler_zapis[0]['type'] == 10)) {
                                     echo '
                                                     <i><b>№</b></i>';
                                 }
@@ -543,7 +543,11 @@
                                     if ($ind == 99) {
                                         echo 'П';
                                     } else {
-                                        echo $ind;
+                                        if ($invoice_j[0]['type'] == 5) {
+                                            echo $ind;
+                                        }else{
+                                            echo $ind + 1;
+                                        }
                                     }
                                     echo '
                                             </div>';

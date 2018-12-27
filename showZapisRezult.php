@@ -1,7 +1,7 @@
 <?php 
 
-//showZapisRezult.php
-//функция формирует и показывает массив записи
+//showZapisRezult3.php
+//функция формирует и показывает записи
 
     function showZapisRezult($ZapisHereQueryToday, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $type, $format, $menu){
         //var_dump($ZapisHereQueryToday);
@@ -13,25 +13,7 @@
 
             require 'variables.php';
 
-            //Массив с месяцами
-            /*$monthsName = array(
-                '01' => 'Январь',
-                '02' => 'Февраль',
-                '03' => 'Март',
-                '04' => 'Апрель',
-                '05' => 'Май',
-                '06' => 'Июнь',
-                '07'=> 'Июль',
-                '08' => 'Август',
-                '09' => 'Сентябрь',
-                '10' => 'Октябрь',
-                '11' => 'Ноябрь',
-                '12' => 'Декабрь'
-            );*/
-
             $msql_cnnct = ConnectToDB ();
-
-            require 'variables.php';
 
             $rezult = '';
 

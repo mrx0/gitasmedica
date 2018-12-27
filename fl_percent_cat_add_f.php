@@ -30,7 +30,7 @@
                     echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Эта категория уже заполнена, попробуйте её отредактировать.</div>'));
                 } else {
                     //Добавляем категорию процентов в базу
-                    $percent_cat_id = WritePercentCatToDB_Edit($_SESSION['id'], $_POST['cat_name'], (int)$_POST['work_percent'], (int)$_POST['material_percent'], $_POST['personal_id']);
+                    $percent_cat_id = WritePercentCatToDB_Edit($_SESSION['id'], $_POST['cat_name'], (int)$_POST['work_percent'], (int)$_POST['material_percent'], (int)$_POST['summ_special'], $_POST['personal_id']);
 
                     echo json_encode(array('result' => 'success', 'data' => '<div class="query_ok"><a href="certificate.php?id=1" class="ahref">Категория процентов</a> добавлена.</div>'));
                 }

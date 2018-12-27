@@ -21,11 +21,11 @@
 			}else{
 				echo '
 					<header style="margin-bottom: 5px;">
+					    <div class="nav">
+                            <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт</a>
+                            <a href="giveout_cash.php" class="b">Расходные ордеры</a>
+                        </div>
 						<h1>Касса</h1>';
-                echo '
-                        <div>
-						    <a href="fl_give_out_cash_add.php" class="b4">Добавить расход</a>
-						</div>';
                 echo '		
 					</header>';
 

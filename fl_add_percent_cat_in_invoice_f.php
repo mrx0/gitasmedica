@@ -29,6 +29,7 @@
 
                     $work_percent = (int)$percents_j[0]['work_percent'];
                     $material_percent = (int)$percents_j[0]['material_percent'];
+                    $summ_special = (int)$percents_j[0]['summ_special'];
 
 					foreach ($data as $ind => $invoice_data){
 
@@ -39,14 +40,16 @@
 									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['percent_cats'] = (int)$_POST['percent_cats'];
 									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['work_percent'] = $work_percent;
 									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['material_percent'] = $material_percent;
+									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['summ_special'] = $summ_special;
 
 								}
 							}
-							if ($_POST['invoice_type'] == 6){
+							if (($_POST['invoice_type'] == 6) || ($_POST['invoice_type'] == 10)){
 
 									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['percent_cats'] = (int)$_POST['percent_cats'];
 									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['work_percent'] = $work_percent;
 									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['material_percent'] = $material_percent;
+									$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['summ_special'] = $summ_special;
 
 							}
 						}

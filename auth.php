@@ -50,6 +50,9 @@
     $login = trim($login);
     $password = trim($password);
 
+    //Последняя страничка, на который был пользователь типа
+    $current_page = 'index.php';
+
 	include_once 'DBWork.php';
 
 	$rezult = SelDataFromDB('spr_workers', $login, 'login');
@@ -76,8 +79,14 @@
 					if (($_SESSION['permissions'] != 4) && ($_SESSION['permissions'] != 7)){
 						//логирование
 						AddLog (GetRealIp(), $_SESSION['id'], '', 'Пользователь вошёл в систему');
+
+						//Потом пробуем сразу перевести на последнюю страничку
+                        if (isset($_SESSION['current_page'])){
+                            //$current_page = $_SESSION['current_page'];
+                        }
+
 						
-						exit (json_encode(array('result' => 'success', 'data' => 'Вы успешно вошли в систему<br>и будете перенаправлены на <a href="index.php">главную</a>')));
+						exit (json_encode(array('result' => 'success', 'data' => 'Вы успешно вошли в систему<br>и будете перенаправлены на <a href="index.php">главную</a>', 'current_page' => $current_page)));
 					
 					}else{
 						

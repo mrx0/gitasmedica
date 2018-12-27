@@ -102,8 +102,10 @@
 
                                                 $work_percent = (int)$percents_j[$arr['percent_cats']]['work_percent'];
                                                 $material_percent = (int)$percents_j[$arr['percent_cats']]['material_percent'];
+                                                //Спец. цена
+                                                $summ_special = (int)$percents_j[$arr['percent_cats']]['summ_special'];
 
-                                                //Поменяем % в массиве, так как мы тут вообще-то вручнукю хотим % поставить
+                                                //Поменяем % в массиве, так как мы тут вообще-то вручную хотим % поставить
                                                 if ($handMadePercent){
                                                     //Если конечно такое надо менять
                                                     if (in_array($arr['percent_cats'], $controlCategories_arr)){
@@ -125,9 +127,10 @@
                                                     //и бахаем
                                                     $calculate_ex_j[$arr['ind']][$last_id]['material_percent'] = $material_percent;
                                                     $calculate_ex_j[$arr['ind']][$last_id]['work_percent'] = $work_percent;
+                                                    $calculate_ex_j[$arr['ind']][$last_id]['summ_special'] = $summ_special;
                                                 }
                                                 //Если косметологи
-                                                if ($invoice_type == 6) {
+                                                if (($invoice_type == 6) || ($invoice_type == 10)) {
                                                     /*if (!isset($calculate_ex_j[$arr['ind']])) {
                                                         $calculate_ex_j[$arr['ind']] = array();
                                                     }*/
@@ -142,6 +145,7 @@
                                                     //и бахаем
                                                     $calculate_ex_j[$arr['ind']]['material_percent'] = $material_percent;
                                                     $calculate_ex_j[$arr['ind']]['work_percent'] = $work_percent;
+                                                    $calculate_ex_j[$arr['ind']]['summ_special'] = $summ_special;
                                                 }
                                             }
                                         }
