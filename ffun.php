@@ -1891,6 +1891,7 @@
                     STR_TO_DATE('".$datastart." 00:00:00', '%Y-%m-%d %H:%i:%s')
                     AND 
                     STR_TO_DATE('".$dataend." 23:59:59', '%Y-%m-%d %H:%i:%s') 
+                    AND `status` <> '9'
                     ".$queryFilial."
                     ORDER BY `date_in` DESC";
             //var_dump($query);

@@ -25,6 +25,7 @@
                 <header>
                     <div class="nav">
                         <a href="stat_cashbox.php" class="b">Касса</a>
+                        <a href="giveout_cash.php" class="b">Расходные ордеры</a>
                     </div>
                     <h2>Новый расходный ордер</h2>
                     <ul style="margin-left: 6px; margin-bottom: 10px;">
@@ -169,9 +170,11 @@
 
                 
             </div>
+            
+            <div id="doc_title">Новый расходный ордер - Асмедика</div>
+            
             <!-- Подложка только одна -->
             <div id="overlay"></div>';
-
 
             //Скрипты которые грузят данные при загрузке
             echo '

@@ -78,54 +78,67 @@
 							</li>';
 
 			echo '
-						</ul>
+						</ul>';
+            if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode) {
+
+                echo '
 						<ul class="reportBlock" style="">
 								<h1>Финансы</h1>';
 
-			echo '				
+                echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_cashbox.php" class="b3">Касса</a>
 							</li>';
 
-			echo '				
+                echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="giveout_cash.php" class="b3">Расходные ордеры</a>
+							</li>';
+
+                echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_consolidated_report_admin.php" class="b3">Сводный отчёт по филиалу</a>
 							</li>';
 
-			echo '				
+                echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_client_finance2.php" class="b3">Открытые наряды</a>
 							</li>';
 
-			/*echo '
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="stat_client_finance3.php" class="b3">Свободные средства на счетах пациентов</a>
-							</li>';*/
+                /*echo '
+                                <li class="cellsBlock" style="margin: 1px;">
+                                    <a href="stat_client_finance3.php" class="b3">Свободные средства на счетах пациентов</a>
+                                </li>';*/
 
-			echo '
+                echo '
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_invoice.php" class="b3">Наряды</a>
 							</li>';
 
-            /*echo '
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="stat_client_finance.php" class="b3">Долги/авансы (старое)</a>
-							</li>';*/
-			echo '
-						</ul>
+                /*echo '
+                                <li class="cellsBlock" style="margin: 1px;">
+                                    <a href="stat_client_finance.php" class="b3">Долги/авансы (старое)</a>
+                                </li>';*/
+                echo '
+						</ul>';
+            }
+
+            if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode) {
+                echo '
 						<ul class="reportBlock" style="">
 								<h1>Страховые</h1>';
-            echo '				
+                echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_insure.php" class="b3">Страховые</a>
 							</li>';
-            echo '				
+                echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="insure_xls.php" class="b3">Страховые выгрузки</a>
 							</li>';
 
-			echo '
+                echo '
 						</ul>';
+            }
             /*echo '
 						<ul class="reportBlock" style="">
 								<h1>Работы</h1>';

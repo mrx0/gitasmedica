@@ -355,8 +355,9 @@
                                         <span style="font-size:80%; color: #999; ">Выдано из кассы</span>
                                     </div>
                                     <div class="cellRight" style="">
-                                        <!--<input type="text" id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; " value="'.$SummGiveOutCashNal.'"><span  style="font-size: 90%;"> руб.</span>-->
+                                        <!--<input type="text" id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; " value="'.$SummGiveOutCash.'"><span  style="font-size: 90%;"> руб.</span>-->
                                         <span id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; ">'.$SummGiveOutCash.'</span><span  style="font-size: 90%;"> руб.</span>
+                                        <a href="giveout_cash.php?filial_id='.$filial_id.'" class="ahref button_tiny" style="font-size: 80%; cursor: pointer; float: right;">Подробно</a>
                                     </div>
                                 </div>';
                     echo '
