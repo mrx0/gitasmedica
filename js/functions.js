@@ -4132,8 +4132,9 @@
 	};
 
 	function Ajax_TempZapis_edit_Enter(id, enter) {
+
 		if (enter == 8){
-			var rys = confirm("Вы хотите удалить запись. \nЕё невозможно будет восстановить. \n\nВы уверены?");
+			var rys = confirm("Вы хотите удалить запись. \n\nВы уверены?");
 		}else{
 			var rys = true;
 		}
