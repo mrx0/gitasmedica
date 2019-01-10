@@ -49,11 +49,13 @@
 										if (isset($_SESSION['filial'])){
 											
 											//Первичка
-											if ($_POST['pervich'] != 0){
+											/*if ($_POST['pervich'] != 0){
 												$pervich = 1;
 											}else{
 												$pervich = 0;
-											}
+											}*/
+                                            $pervich = $_POST['pervich'];
+
 											//Страховые
 											if ($_POST['insured'] != 0){
 												$insured = 1;

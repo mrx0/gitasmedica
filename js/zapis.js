@@ -2,6 +2,7 @@
     function ShowSettingsAddTempZapis(filial, filial_name, kab, year, month, day, smena, time, period, worker_id, worker_name, patient_name, description, insured, pervich, noch, zapis_id, type, add_or_edit){
         document.getElementById("errror").innerHTML="";
         //alert(period);
+        console.log(pervich);
 
         $("#ShowSettingsAddTempZapis").show();
         $("#overlay").show();
@@ -55,10 +56,15 @@
         $("#month_date").val(day+'.'+month+'.'+year);
         $("#month_date_smena").html(smena);
 
-        if (pervich == 1){
+        /*if (pervich == 1){
             var pervich_checkbox = document.getElementById("pervich");
             pervich_checkbox.checked = true;
-        }
+        }*/
+
+        //Выставляем статус первички
+        //$("#pervich").val(pervich);
+        choosePervich(pervich);
+
         if (insured == 1){
             var insured_checkbox = document.getElementById("insured");
             insured_checkbox.checked = true;
@@ -192,6 +198,8 @@
         $("#search_client2").val('');
 
         $("#description").val('');
+
+        $('.context-menu').remove();
     }
 
     function ShowWorkersSmena(){
@@ -224,4 +232,32 @@
                 document.getElementById("ShowWorkersHere").innerHTML=workers;
             }
         });
+    }
+
+    //Функция для выбора первичек/вторичек и так далее
+    function choosePervich(status){
+        //console.log($("#pervich").val());
+        //console.log(status);
+
+        $("#pervich").val(status);
+        //console.log($("#pervich").val());
+
+        $('.context-menu').remove();
+
+        if (status == 1) {
+            $("#pervich_status").html("<div><img src='img/pervich.png' title='Посещение для пациента первое без работы'> Первичный</div>");
+        }
+        if (status == 2) {
+            $("#pervich_status").html("<div><img src='img/pervich_ostav_2.png' title='Посещение для пациента первое с работой'> Перв. остался</div>");
+        }
+        if (status == 3) {
+            $("#pervich_status").html("<div><img src='img/vtorich_3.png' title='Посещение для пациента не первое'> Вторичный</div>");
+        }
+        if (status == 4) {
+            $("#pervich_status").html("<div><img src = 'img/vtorich_davno_4.png' title = 'Посещение для пациента не первое, но был более полугода назад'> Вторичный (полгода)</div>");
+        }
+
+        if (status == 0) {
+            $("#pervich_status").html("<span style='color: red'> Не выбрано </span>");
+        }
     }
