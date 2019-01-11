@@ -96,9 +96,10 @@
 						$queryDopEx .= ' AND';
 					}
 					if ($_POST['pervich'] == 1){
-						$queryDopEx .= "`pervich` = '1'";
+						$queryDopEx .= "(`pervich` = '1' OR pervich = '2')";
+
 					}else{
-						$queryDopEx .= "`pervich` <> '1'";
+						$queryDopEx .= "(`pervich` = '0' OR pervich = '3' OR pervich = '4')";
 					}
 					$queryDopExExist = true;
 				}
@@ -300,9 +301,21 @@
                                         if ($dop[0]['insured'] == 1) {
                                             $dop_img .= '<img src="img/insured.png" title="Страховое">';
                                         }
-                                        if ($dop[0]['pervich'] == 1) {
+
+                                        /*if ($dop[0]['pervich'] == 1) {
                                             $dop_img .= '<img src="img/pervich.png" title="Первичное">';
+                                        }*/
+
+                                        if ($dop[0]['pervich'] == 1) {
+                                            $dop_img .= '<img src="img/pervich.png" title="Посещение для пациента первое без работы"> ';
+                                        }elseif ($dop[0]['pervich'] == 2) {
+                                            $dop_img .= '<img src="img/pervich_ostav_2.png" title="Посещение для пациента первое с работой"> ';
+                                        }elseif ($dop[0]['pervich'] == 3) {
+                                            $dop_img .= '<img src="img/vtorich_3.png" title="Посещение для пациента не первое"> ';
+                                        }elseif ($dop[0]['pervich'] == 4) {
+                                            $dop_img .= '<img src="img/vtorich_davno_4.png" title="Посещение для пациента не первое, но был более полугода назад"> ';
                                         }
+
                                         if ($dop[0]['noch'] == 1) {
                                             $dop_img .= '<img src="img/night.png" title="Ночное">';
                                         }

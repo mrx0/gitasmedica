@@ -121,6 +121,9 @@ ORDER BY `name`;
                         </header>';
 
 				echo '
+                    <div style="margin-top: 7px; font-size: 70%; color: #777;">
+                        * В карточке обязательно должны быть заполнены поля: номер карты, дата рождения, пол, адрес
+                    </div>
 					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 101;">';
 
                 echo $block_fast_search_client;

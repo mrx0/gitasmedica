@@ -65,9 +65,20 @@
                     if ($ZapisHereQueryToday[$z]['insured'] == 1) {
                         $dop_img .= '<img src="img/insured.png" title="Страховое"> ';
                     }
-                    if ($ZapisHereQueryToday[$z]['pervich'] == 1) {
+                    /*if ($ZapisHereQueryToday[$z]['pervich'] == 1) {
                         $dop_img .= '<img src="img/pervich.png" title="Первичное"> ';
+                    }*/
+
+                    if ($ZapisHereQueryToday[$z]['pervich'] == 1) {
+                        $dop_img .= '<img src="img/pervich.png" title="Посещение для пациента первое без работы"> ';
+                    }elseif ($ZapisHereQueryToday[$z]['pervich'] == 2) {
+                        $dop_img .= '<img src="img/pervich_ostav_2.png" title="Посещение для пациента первое с работой"> ';
+                    }elseif ($ZapisHereQueryToday[$z]['pervich'] == 3) {
+                        $dop_img .= '<img src="img/vtorich_3.png" title="Посещение для пациента не первое"> ';
+                    }elseif ($ZapisHereQueryToday[$z]['pervich'] == 4) {
+                        $dop_img .= '<img src="img/vtorich_davno_4.png" title="Посещение для пациента не первое, но был более полугода назад"> ';
                     }
+
                     if ($ZapisHereQueryToday[$z]['noch'] == 1) {
                         $dop_img .= '<img src="img/night.png" title="Ночное"> ';
                     }

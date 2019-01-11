@@ -237,7 +237,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             $queryDopEx2 .= ' OR';
                         }
                         if ($_POST['statusPervich'] == 1) {
-                            $queryDopEx2 .= " z.pervich = '1'";
+                            $queryDopEx2 .= " z.pervich = '1' OR z.pervich = '2'";
                             $queryDopEx2Exist = true;
                         }
                         //$queryDopExExist = true;
@@ -273,7 +273,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             $queryDopEx2 .= ' OR';
                         }
                         if ($_POST['statusAnother'] == 1) {
-                            $queryDopEx2 .= " z.pervich = '0' AND z.insured = '0' AND z.noch = '0'";
+                            $queryDopEx2 .= " (z.pervich = '0' OR z.pervich = '3' OR z.pervich = '4') AND z.insured = '0' AND z.noch = '0'";
                             $queryDopEx2Exist = true;
                         }
                         //$queryDopExExist = true;
