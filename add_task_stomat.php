@@ -119,7 +119,7 @@
                 $selected_fil = 0;
 			}
 			
-			if (isset($_GET['pervich']) && ($_GET['pervich'] == 1)){
+			if (isset($_GET['pervich']) && (($_GET['pervich'] == 1) || ($_GET['pervich'] == 2))){
 				$pervich_check = ' checked';
 			}else{
 				$pervich_check = '';			

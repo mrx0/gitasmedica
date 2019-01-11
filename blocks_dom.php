@@ -92,9 +92,12 @@
                                                 </div>
                                             </div>		
                                             <div class="cellsBlock2" style="font-size:80%; width:400px;">
-                                                <div class="cellLeft" style="font-weight: bold;">Первичный</div>
+                                                <div class="cellLeft" style="font-weight: bold;">Первичный/Вторичный...</div>
                                                 <div class="cellRight">
-                                                    <input type="checkbox" name="pervich" id="pervich" value="1"> да
+                                                    <div id="pervich_status" style="margin-bottom: 5px;"><span style="color: red">Не выбрано</span></div>
+                                                    <!--<input type="checkbox" name="pervich" id="pervich" value="1"> да-->
+                                                    <span class="button_tiny" style="border: 1px solid rgb(148, 143, 143); font-size: 90%; cursor: pointer; background-color: #c8e0c8;" onclick="contextMenuShow(0, 0, event, \'pervich\');"></i> Выбрать/изменить</span>
+                                                    <input type="hidden" name="pervich" id="pervich" value="0">
                                                 </div>
                                             </div>
                                             <div class="cellsBlock2" style="font-size:80%; width:400px;">
