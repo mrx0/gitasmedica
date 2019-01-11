@@ -345,7 +345,8 @@
                             <li><div onclick="choosePervich(1)"><img src="img/pervich.png" title="Посещение для пациента первое без работы"> Первичный</div></li>
                             <li><div onclick="choosePervich(2)"><img src="img/pervich_ostav_2.png" title="Посещение для пациента первое с работой"> Перв. остался</div></li>
                             <li><div onclick="choosePervich(3)"><img src="img/vtorich_3.png" title="Посещение для пациента не первое"> Вторичный</div></li>
-                            <li><div onclick="choosePervich(4)"><img src="img/vtorich_davno_4.png" title="Посещение для пациента не первое, но был более полугода назад"> Вторичный (полгода)</div></li>';
+                            <li><div onclick="choosePervich(4)"><img src="img/vtorich_davno_4.png" title="Посещение для пациента не первое, но был более полугода назад"> Вторичный (полгода)</div></li>
+                            <li><div onclick="choosePervich(5)"><img src="img/prodolzhenie.png" title="Продолжение работы"> Продолжение работы</div></li>';
                 }
 
 

@@ -77,6 +77,8 @@
                         $dop_img .= '<img src="img/vtorich_3.png" title="Посещение для пациента не первое"> ';
                     }elseif ($ZapisHereQueryToday[$z]['pervich'] == 4) {
                         $dop_img .= '<img src="img/vtorich_davno_4.png" title="Посещение для пациента не первое, но был более полугода назад"> ';
+                    }elseif ($ZapisHereQueryToday[$z]['pervich'] == 5) {
+                        $dop_img .= '<img src="img/prodolzhenie.png" title="Продолжение работы"> ';
                     }
 
                     if ($ZapisHereQueryToday[$z]['noch'] == 1) {

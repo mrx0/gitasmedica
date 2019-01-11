@@ -256,6 +256,9 @@
         if (status == 4) {
             $("#pervich_status").html("<div><img src = 'img/vtorich_davno_4.png' title = 'Посещение для пациента не первое, но был более полугода назад'> Вторичный (полгода)</div>");
         }
+        if (status == 5) {
+            $("#pervich_status").html("<div><img src = 'img/prodolzhenie.png' title = 'Продолжение работы'> Продолжение работы</div>");
+        }
 
         if (status == 0) {
             $("#pervich_status").html("<span style='color: red'> Не выбрано </span>");

@@ -341,6 +341,8 @@
                                                 $dop_img .= '<img src="img/vtorich_3.png" title="Посещение для пациента не первое"> ';
                                             }elseif ($dop[0]['pervich'] == 4) {
                                                 $dop_img .= '<img src="img/vtorich_davno_4.png" title="Посещение для пациента не первое, но был более полугода назад"> ';
+                                            }elseif ($dop[0]['pervich'] == 5) {
+                                                $dop_img .= '<img src="img/prodolzhenie.png" title="Продолжение работы"> ';
                                             }
 
 											if ($dop[0]['noch'] == 1){
