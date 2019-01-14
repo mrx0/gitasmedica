@@ -30,7 +30,8 @@
 			$dopWho = '';
 			$dopDate = '';
 			$dopFilial = '';
-			
+            $dopClient = '';
+
 			$NextSmenaArr_Bool = FALSE;
 			$NextSmenaArr_Zanimayu = 0;
 
@@ -271,7 +272,17 @@
 					$dopFilial .= '&'.$key.'='.$value;
 				if ($key == 'who')
 					$dopWho .= '&'.$key.'='.$value;
+                if ($key == 'client_id')
+					$dopClient .= '&'.$key.'='.$value;
 			}
+
+            $default_client_id = 0;
+            $default_client_name = '';
+
+            if (isset($_GET['client_id'])){
+                $default_client_id = $_GET['client_id'];
+                $default_client_name = WriteSearchUser('spr_clients', $_GET['client_id'], 'user_full', false);
+            }
 				
 				/*$today = date("Y-m-d");
 				$go_today = date('?\d=d&\m=m&\y=Y'.$dopFilial.$dopWho, mktime (0, 0, 0, date("m"), date("d"), date("Y"))); 
@@ -321,7 +332,7 @@
 						<div id="status">
 							<header>
 								<div class="nav">
-									<a href="scheduler.php?'.$dopFilial.$dopWho.$dopDate.'" class="b">График</a>
+									<a href="scheduler.php?'.$dopFilial.$dopWho.$dopDate.$dopClient.'" class="b">График</a>
 									<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>
 								</div>
 							
@@ -330,7 +341,32 @@
 								<span style="color: green; font-size: 120%; font-weight: bold;">'.$whose.'</span><br>
 							</header>';
 
-					echo '
+            echo '
+					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 1;">';
+
+            echo $block_fast_search_client;
+
+            echo '
+					</div>';
+
+            if (($zapis['see_all'] == 1) || ($zapis['add_own'] == 1) || $god_mode) {
+                if ($default_client_id > 0) {
+                    echo '
+					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 435px;">';
+                    echo '
+                        <div class="cellRight" style="box-shadow: -1px 1px 8px #333; background-color: rgba(249, 183, 183, 0.68);">
+                            <span style="font-size: 70%;">Добавление записи пациенту:</span><br>
+                            ' . $default_client_name . ' <a href="zapis.php?' . $dopWho . $dopDate . $dopFilial . '" class="ahref"><i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 130%;" title="Отменить"></i></a>
+                        </div>';
+                    echo '
+					</div>';
+                }
+            }
+
+
+
+
+            echo '
 							<div id="data" style="margin: 0">
 								<ul style="margin-left: 6px; margin-bottom: 20px;">';
 					if (($zapis['edit'] == 1) || $god_mode){
@@ -425,9 +461,9 @@
 			echo '			
 							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-								<a href="?'.$dopFilial.$dopDate.'&who=stom" class="b" style="'.$stom_color.'">Стоматологи</a>
-								<a href="?'.$dopFilial.$dopDate.'&who=cosm" class="b" style="'.$cosm_color.'">Косметологи</a>
-								<a href="?'.$dopFilial.$dopDate.'&who=somat" class="b" style="'.$somat_color.'">Специалисты</a>
+								<a href="?'.$dopFilial.$dopDate.$dopClient.'&who=stom" class="b" style="'.$stom_color.'">Стоматологи</a>
+								<a href="?'.$dopFilial.$dopDate.$dopClient.'&who=cosm" class="b" style="'.$cosm_color.'">Косметологи</a>
+								<a href="?'.$dopFilial.$dopDate.$dopClient.'&who=somat" class="b" style="'.$somat_color.'">Специалисты</a>
 							</li>
 							<li class="cellsBlock" style="width: auto; margin-bottom: 20px;">
 								<div style="display: inline-block; margin-right: 20px;">
@@ -455,7 +491,7 @@
 								<div style="display: inline-block; margin-right: 20px;">
 
 									<div style="display: inline-block; margin-right: 20px;">
-										<a href="?'.$who.'" class="dotyel" style="font-size: 80%;">Сбросить</a>
+										<a href="?'.$who.$dopClient.'" class="dotyel" style="font-size: 80%;">Сбросить</a>
 									</div>
 								</div>
 							</li>';
@@ -469,7 +505,7 @@
 											Изменить дату:
 											<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
 												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
-											<span class="button_tiny" style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'zapis.php?'.$dopFilial.$dopWho.'\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
+											<span class="button_tiny" style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'zapis.php?'.$dopFilial.$dopWho.$dopClient.'\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
 										</span>
 									</div>
 								</li>';
@@ -1911,6 +1947,9 @@
 						<input type="hidden" id="wt" name="wt" value="0">
 						<input type="hidden" id="worker_id" name="worker_id" value="0">
 						<input type="hidden" id="type" name="type" value="'.$type.'">
+						
+						<input type="hidden" id="default_client_id" value="'.$default_client_id.'">
+						<input type="hidden" id="default_client_name" value="'.$default_client_name.'">
 						<!--<input type="button" class="b" value="Добавить" id="Ajax_add_TempZapis" onclick="Ajax_add_TempZapis('.$type.')">-->';
 
 
@@ -1937,7 +1976,7 @@
 							    blockWhileWaiting (true);
 							    
 								//var dayW = document.getElementById("SelectDayW").value;
-								document.location.href = "?filial="+$(this).val()+"'.$who.'";
+								document.location.href = "?filial="+$(this).val()+"'.$who.$dopClient.'";
 							});
 							/*$("#SelectDayW").change(function(){
 								var filial = document.getElementById("SelectFilial").value;

@@ -2,7 +2,7 @@
     function ShowSettingsAddTempZapis(filial, filial_name, kab, year, month, day, smena, time, period, worker_id, worker_name, patient_name, description, insured, pervich, noch, zapis_id, type, add_or_edit){
         document.getElementById("errror").innerHTML="";
         //alert(period);
-        console.log(pervich);
+        //console.log(pervich);
 
         $("#ShowSettingsAddTempZapis").show();
         $("#overlay").show();
@@ -40,9 +40,17 @@
             $("#search_client2").val(worker_name);
         }
 
+        //Имя пациента
         if (patient_name.length > 0) {
             $("#search_client").val(patient_name);
+        }else{
+            console.log($("#default_client_id").val());
+
+            if ($("#default_client_id").val() > 0){
+                $("#search_client").val($("#default_client_name").val());
+            }
         }
+
         if (description.length > 0) {
             $("#description").val(description);
         }
