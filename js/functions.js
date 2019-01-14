@@ -18,6 +18,45 @@
         $('#errror').html('');
 	}
 
+	//Функция для работы с GET
+	function urlGetWork(addIt, deleteIt){
+
+        var get_data_str = "";
+
+		var params = window
+            .location
+            .search
+            .replace("?","")
+            .split("&")
+            .reduce(
+                function(p,e){
+                    var a = e.split('=');
+                    p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+                    return p;
+                },
+                {}
+            );
+        //console.log(params);
+
+        for (key in params) {
+        	//console.log(key.length);
+
+			//Если ключ есть и он не undef
+            if (key.length > 0) {
+            	if (deleteIt.indexOf(key) == -1){
+                	get_data_str = get_data_str + "&" + key + "=" + params[key];
+                }
+            }
+        }
+
+        //!!! Дописать про добавление параметров
+
+        //console.log(get_data_str);
+
+		//Переходим по новой ссылке, удалив перед этим первый символ, который у нас "&"
+        document.location.href = "?"+get_data_str.slice(1);
+	}
+
 	//Сегодня дата
 	function getTodayDate (){
         var today = new Date();
@@ -393,7 +432,8 @@
 							session_id: session_id,
 						},
 						success:function(data){
-							$("#errrror").html(data);
+							/*$("#errrror").html(data);*/
+							$("#data").html(data);
 						}
 					})
 				// в случае ошибок в форме
@@ -4036,7 +4076,10 @@
 
                             //window.location.replace(window_location_href+"#tabs-4");
 
-                            location.reload();
+                            //location.reload();
+
+                            urlGetWork([], ["client_id"]);
+
                         }, 50);
                     } else {
                         $("#errror").html(data.data);

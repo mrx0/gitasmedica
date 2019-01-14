@@ -100,6 +100,13 @@ ORDER BY `name`;
 					
 				}
 
+                if (($finances['see_all'] != 0) || ($finances['see_own'] != 0) || $god_mode) {
+                    if ($client_j[0]['status'] != 9) {
+                        echo '<a href="finance_account.php?client_id='.$client_j[0]['id'].'" class="b" style="display: inline; margin-left: 20px; font-size: 70%; padding: 2px 5px;">Управление счётом</a>';
+                        echo '<a href="zapis.php?client_id='.$client_j[0]['id'].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Записать пациента</a>';
+                    }
+                }
+
 				echo '
 							</h2>';
 							
@@ -109,13 +116,6 @@ ORDER BY `name`;
 				
 				echo '
 							Номер карты: '.$client_j[0]['card'].'';
-
-
-                if (($finances['see_all'] != 0) || ($finances['see_own'] != 0) || $god_mode) {
-                    if ($client_j[0]['status'] != 9) {
-                        echo '<a href="finance_account.php?client_id='.$client_j[0]['id'].'" class="b" style="display: inline; margin-left: 20px; font-size: 80%; padding: 2px 5px;">Управление счётом</a>';
-                    }
-                }
 
                 echo '
                         </header>';

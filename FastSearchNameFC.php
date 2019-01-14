@@ -16,6 +16,7 @@
 				for ($i = 0; $i < count($fast_search); $i++){
 					echo '
                     <div style="border-bottom: 1px #ccc solid; width: 350px;">
+                        <div>
                         <a href="client.php?id='.$fast_search[$i]["id"].'" class="ahref" style="display: block; height: 100%;">
                             <span style="font-size: 80%; font-weight: bold;">'.$fast_search[$i]["full_name"].'</span>
                             <br>
@@ -55,6 +56,14 @@
                             <br>
                             <span style="font-size: 70%">№ карты: '.$fast_search[$i]['card'].'</span>
                         </a>
+                        </div>';
+                    echo '
+                        <div style="padding: 10px;">
+                            <a href="finance_account.php?client_id='.$fast_search[$i]["id"].'" class="b" style="display: inline; font-size: 70%; padding: 2px 5px;">Управление счётом</a>
+                            <a href="zapis.php?client_id='.$fast_search[$i]["id"].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Записать пациента</a>
+                        </div>';
+
+                    echo '
 					</div>';
 				}
 			}

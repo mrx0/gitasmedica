@@ -128,8 +128,11 @@
 								<div><a href="add_task_cosmet.php?client='.$new_client.'" class="b" style="font-size: 70%;">Добавить посещение косметолога</a></div>';
 						}*/
 						echo '
-								<div stle="font-size: 70%; margin-top: 10px;"><a href="client_add.php" class="b">Добавить пациента</a>
-								<a href="clients.php" class="b">К списку пациентов</a></div>
+								<div style="font-size: 80%; margin-top: 10px;">
+								    <a href="zapis.php?client_id='.$new_client.'" class="b">Записать пациента</a>
+								    <a href="client_add.php" class="b">Добавить пациента</a>
+								    <a href="clients.php" class="b">К списку пациентов</a>
+								</div>
 							</div>';
 					}
 				}
