@@ -22,6 +22,10 @@
 
             echo '<a href="laboratories.php" class="b3" title="Лаборатории">Лаборатории</a>';
 
+            if (($finances['see_all'] == 1) || $god_mode) {
+                echo '<a href="fl_salaries.php" class="b3" title="Оклады сотрудников">Оклады сотрудников</a>';
+            }
+
             echo '<a href="pricelist.php" class="b3" title="Прайс">Прайс</a>';
 
             echo '<a href="certificates.php" class="b3" title="Сертификаты">Сертификаты</a>';
