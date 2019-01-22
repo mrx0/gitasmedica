@@ -212,14 +212,14 @@
                             <div class="cellTime cellsTimereport" style="text-align: center">
                                 ? ОРТО<br>кол-во
                             </div>';*/
-                $report_header .= '
+               /* $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Спец-ты<br>нал
-                            </div>';
-                $report_header .= '
+                            </div>';*/
+                /*$report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Спец-ты безнал
-                            </div>';
+                            </div>';*/
                 $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Анализы нал
@@ -352,14 +352,14 @@
                             <div class="cellTime cellsTimereport " style="text-align: center; font-weight: normal;">
                                 
                             </div>';*/
-                    echo '
+                    /*echo '
                             <div class="cellTime cellsTimereport specialistSummNal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
                             <div class="cellTime cellsTimereport specialistSummBeznal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
-                            </div>';
+                            </div>';*/
                     echo '
                             <div class="cellTime cellsTimereport analizSummNal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
@@ -452,14 +452,14 @@
                             <div class="cellTime cellsTimereport " style="text-align: right; font-weight: bold;">
 
                             </div>';*/
-                    echo '
+                    /*echo '
                             <div id="specialistSummNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
                             </div>';
                     echo '
                             <div id="specialistSummBeznalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
-                            </div>';
+                            </div>';*/
                     echo '
                             <div id="analizSummNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0

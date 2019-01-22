@@ -1,6 +1,6 @@
 <?php 
 
-//showZapisRezult.php
+//showZapisRezult3.php
 //функция формирует и показывает массив записи
 
     session_start();
@@ -75,9 +75,23 @@
                     if ($data['insured'] == 1) {
                         $dop_img .= '<img src="img/insured.png" title="Страховое"> ';
                     }
-                    if ($data['pervich'] == 1) {
+
+                    /*if ($data['pervich'] == 1) {
                         $dop_img .= '<img src="img/pervich.png" title="Первичное"> ';
+                    }*/
+
+                    if ($data['pervich'] == 1) {
+                        $dop_img .= '<img src="img/pervich.png" title="Посещение для пациента первое без работы"> ';
+                    }elseif ($data['pervich'] == 2) {
+                        $dop_img .= '<img src="img/pervich_ostav_2.png" title="Посещение для пациента первое с работой"> ';
+                    }elseif ($data['pervich'] == 3) {
+                        $dop_img .= '<img src="img/vtorich_3.png" title="Посещение для пациента не первое"> ';
+                    }elseif ($data['pervich'] == 4) {
+                        $dop_img .= '<img src="img/vtorich_davno_4.png" title="Посещение для пациента не первое, но был более полугода назад"> ';
+                    }elseif ($data['pervich'] == 5) {
+                        $dop_img .= '<img src="img/prodolzhenie.png" title="Продолжение работы"> ';
                     }
+
                     if ($data['noch'] == 1) {
                         $dop_img .= '<img src="img/night.png" title="Ночное"> ';
                     }

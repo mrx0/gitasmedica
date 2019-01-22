@@ -166,10 +166,10 @@
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_mainReportCategory.php" class="b3">Отчёт по категориям</a>
 							</li>';
-                /*echo '
+                echo '
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_mainReportZapis.php" class="b3">Отчёт по записи</a>
-							</li>';*/
+							</li>';
                 /*echo '
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="absents.php" class="b3">Отпуск/больничный</a>

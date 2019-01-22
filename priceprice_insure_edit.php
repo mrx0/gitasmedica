@@ -156,7 +156,7 @@
 											<div class="cellLeft">С какого числа:</div>
 											<div class="cellRight">
 												<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off"> 
 											</div>
 										</div>';
 										

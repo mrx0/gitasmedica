@@ -127,9 +127,23 @@
 								if ($sheduler_zapis[0]['insured'] == 1){
 									$dop_img .= '<img src="img/insured.png" title="Страховое"> ';
 								}
-								if ($sheduler_zapis[0]['pervich'] == 1){
+
+								/*if ($sheduler_zapis[0]['pervich'] == 1){
 									$dop_img .= '<img src="img/pervich.png" title="Первичное"> ';
-								}
+								}*/
+
+                                if ($sheduler_zapis[0]['pervich'] == 1) {
+                                    $dop_img .= '<img src="img/pervich.png" title="Посещение для пациента первое без работы"> ';
+                                }elseif ($sheduler_zapis[0]['pervich'] == 2) {
+                                    $dop_img .= '<img src="img/pervich_ostav_2.png" title="Посещение для пациента первое с работой"> ';
+                                }elseif ($sheduler_zapis[0]['pervich'] == 3) {
+                                    $dop_img .= '<img src="img/vtorich_3.png" title="Посещение для пациента не первое"> ';
+                                }elseif ($sheduler_zapis[0]['pervich'] == 4) {
+                                    $dop_img .= '<img src="img/vtorich_davno_4.png" title="Посещение для пациента не первое, но был более полугода назад"> ';
+                                }elseif ($sheduler_zapis[0]['pervich'] == 5) {
+                                    $dop_img .= '<img src="img/prodolzhenie.png" title="Продолжение работы"> ';
+                                }
+
 								if ($sheduler_zapis[0]['noch'] == 1){
 									$dop_img .= '<img src="img/night.png" title="Ночное"> ';
 								}

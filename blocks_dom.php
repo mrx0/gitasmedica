@@ -12,7 +12,7 @@
     $block_fast_search_client = '
                                 <div class="cellRight" style="box-shadow: -1px 1px 8px #333;">
                                     <span style="font-size: 70%;">Быстрый поиск пациента</span><br />
-                                    <input type="text" size="50" name="searchdata_fc" id="search_client" placeholder="Введите для поиска" value="" class="who_fc"  autocomplete="off">
+                                    <input type="text" size="50" name="searchdata_fc" id="search_clients" placeholder="Введите для поиска" value="" class="who_fc"  autocomplete="off">
                                     <!--<ul id="search_result_fc" class="search_result_fc"></ul><br />-->
                                     <div id="search_result_fc2"></div>
                                 </div>';
@@ -92,9 +92,12 @@
                                                 </div>
                                             </div>		
                                             <div class="cellsBlock2" style="font-size:80%; width:400px;">
-                                                <div class="cellLeft" style="font-weight: bold;">Первичный</div>
+                                                <div class="cellLeft" style="font-weight: bold;">Первичный/Вторичный...</div>
                                                 <div class="cellRight">
-                                                    <input type="checkbox" name="pervich" id="pervich" value="1"> да
+                                                    <div id="pervich_status" style="margin-bottom: 5px;"><span style="color: red">Не выбрано</span></div>
+                                                    <!--<input type="checkbox" name="pervich" id="pervich" value="1"> да-->
+                                                    <span class="button_tiny" style="border: 1px solid rgb(148, 143, 143); font-size: 90%; cursor: pointer; background-color: #c8e0c8;" onclick="contextMenuShow(0, 0, event, \'pervich\');"></i> Выбрать/изменить</span>
+                                                    <input type="hidden" name="pervich" id="pervich" value="0">
                                                 </div>
                                             </div>
                                             <div class="cellsBlock2" style="font-size:80%; width:400px;">

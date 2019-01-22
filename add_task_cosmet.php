@@ -40,7 +40,7 @@
                 $selected_fil = 0;
 			}
 
-			if (isset($_GET['pervich']) && ($_GET['pervich'] == 1)){
+			if (isset($_GET['pervich']) && (($_GET['pervich'] == 1) || ($_GET['pervich'] == 2))){
 				$pervich_check = ' checked';
 			}else{
 				$pervich_check = '';			
@@ -233,7 +233,7 @@
                                         <span style="font-size: 70%;">Определяется из записи пациента</span>
                                     </div>
                                     <div class="cellRight">
-                                        <input type="checkbox" name="pervich" id="pervich" value="1" '.$pervich_check.'> да
+                                        <input type="checkbox" name="pervich" id="pervich" value="1" '.$pervich_check.' disabled> да
                                     </div>
                                 </div>';
 

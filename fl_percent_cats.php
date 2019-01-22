@@ -80,7 +80,7 @@
 				<header>
         			<div class="nav">
 					    <a href="fl_percent_cats_personal.php" class="b">Персональные</a>
-					    <a href="fl_salaries.php" class="b">Оклады</a>
+					    <a href="fl_salaries.php" class="b">Оклады сотрудников</a>
 					</div>
 					<h1>Категории процентов</h1>
 					<span style= "color: red; font-size: 90%;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> При расчётах, если указана "Cпец. цена", проценты будут игнорироваться.</span>

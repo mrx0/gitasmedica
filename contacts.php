@@ -19,8 +19,169 @@
 				<header style="margin-bottom: 5px;">
 					<h1>Список сотрудников</h1>';
 
-			$contacts = SelDataFromDB('spr_workers', '', '');
-			//var_dump ($contacts);
+            $contacts = array();
+
+            $who = '&who=5';
+            $whose = 'Стоматологов ';
+            $selected_stom = ' selected';
+            $selected_cosm = ' ';
+            $datatable = 'scheduler_stom';
+
+            //тип (космет/стомат/...)
+            if (isset($_GET['who'])){
+                if ($_GET['who'] == 5){
+                    $who = '&who=5';
+                    $whose = 'Стоматологи ';
+                    $selected_stom = ' selected';
+                    $selected_cosm = ' ';
+                    $datatable = 'scheduler_stom';
+                    $kabsForDoctor = 'stom';
+                    $type = 5;
+
+                    $stom_color = 'background-color: #fff261;';
+                    $cosm_color = '';
+                    $somat_color = '';
+                    $admin_color = '';
+                    $assist_color = '';
+                    $other_color = '';
+                    $all_color = '';
+                }elseif($_GET['who'] == 6){
+                    $who = '&who=6';
+                    $whose = 'Косметологи ';
+                    $selected_stom = ' ';
+                    $selected_cosm = ' selected';
+                    $datatable = 'scheduler_cosm';
+                    $kabsForDoctor = 'cosm';
+                    $type = 6;
+
+                    $stom_color = '';
+                    $cosm_color = 'background-color: #fff261;';
+                    $somat_color = '';
+                    $admin_color = '';
+                    $assist_color = '';
+                    $other_color = '';
+                    $all_color = '';
+                }elseif($_GET['who'] == 10){
+                    $who = '&who=10';
+                    $whose = 'Специалисты ';
+                    $selected_stom = ' ';
+                    $selected_cosm = ' selected';
+                    $datatable = 'scheduler_somat';
+                    $kabsForDoctor = 'somat';
+                    $type = 10;
+
+
+                    $stom_color = '';
+                    $cosm_color = '';
+                    $somat_color = 'background-color: #fff261;';
+                    $admin_color = '';
+                    $assist_color = '';
+                    $other_color = '';
+                    $all_color = '';
+                }elseif($_GET['who'] == 4){
+                    $who = '&who=4';
+                    $whose = 'Администраторы ';
+                    $selected_stom = ' ';
+                    $selected_cosm = ' selected';
+                    /*$datatable = 'scheduler_somat';
+                    $kabsForDoctor = 'somat';*/
+                    $type = 4;
+
+                    $stom_color = '';
+                    $cosm_color = '';
+                    $somat_color = '';
+                    $admin_color = 'background-color: #fff261;';
+                    $assist_color = '';
+                    $other_color = '';
+                    $all_color = '';
+                }elseif($_GET['who'] == 7){
+                    $who = '&who=7';
+                    $whose = 'Ассистенты ';
+                    $selected_stom = ' ';
+                    $selected_cosm = ' selected';
+                    /*$datatable = 'scheduler_somat';
+                    $kabsForDoctor = 'somat';*/
+                    $type = 7;
+
+                    $stom_color = '';
+                    $cosm_color = '';
+                    $somat_color = '';
+                    $admin_color = '';
+                    $assist_color = 'background-color: #fff261;';
+                    $other_color = '';
+                    $all_color = '';
+                }elseif($_GET['who'] == 11){
+                    $who = '&who=11';
+                    $whose = 'Ассистенты ';
+                    $selected_stom = ' ';
+                    $selected_cosm = ' selected';
+                    /*$datatable = 'scheduler_somat';
+                    $kabsForDoctor = 'somat';*/
+                    $type = 11;
+
+                    $stom_color = '';
+                    $cosm_color = '';
+                    $somat_color = '';
+                    $admin_color = '';
+                    $assist_color = '';
+                    $other_color = 'background-color: #fff261;';
+                    $all_color = '';
+                }else{
+                    $who = '&who=5';
+                    $whose = 'Стоматологи ';
+                    $selected_stom = ' selected';
+                    $selected_cosm = ' ';
+                    $datatable = 'scheduler_stom';
+                    $kabsForDoctor = 'stom';
+                    $type = 5;
+
+                    $stom_color = 'background-color: #fff261;';
+                    $cosm_color = '';
+                    $somat_color = '';
+                    $admin_color = '';
+                    $assist_color = '';
+                    $other_color = '';
+                    $all_color = '';
+                }
+            }else{
+                $who = '';
+                $whose = 'Все ';
+                $selected_stom = ' selected';
+                $selected_cosm = ' ';
+                $datatable = 'scheduler_stom';
+                $kabsForDoctor = 'stom';
+                $type = 0;
+
+                $stom_color = '';
+                $cosm_color = '';
+                $somat_color = '';
+                $admin_color = '';
+                $assist_color = '';
+                $other_color = '';
+                $all_color = 'background-color: #fff261;';
+            }
+
+            if ($_GET){
+
+                $msql_cnnct = ConnectToDB ();
+
+                $query = "SELECT * FROM `spr_workers` WHERE `permissions`='".$type."'";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                $number = mysqli_num_rows($res);
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        array_push($contacts, $arr);
+                    }
+                }else{
+                    //$sheduler_zapis = 0;
+                    //var_dump ($sheduler_zapis);
+                }
+            }else {
+                $contacts = SelDataFromDB('spr_workers', '', '');
+                //var_dump ($contacts);
+            }
+
 			$arr_permissions = SelDataFromDB('spr_permissions', '', '');
 			//var_dump ($arr_permissions);
 			$arr_orgs = SelDataFromDB('spr_org', '', '');
@@ -33,6 +194,20 @@
 					<a href="add_worker.php" class="b">Добавить</a>
 				</header>';			
 			}
+
+
+            echo '		    
+                <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
+                    <a href="contacts.php" class="b" style="'.$all_color.'">Все</a>
+                    <a href="?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
+                    <a href="?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>
+                    <a href="?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
+                    <a href="?who=4" class="b" style="'.$admin_color.'">Администраторы</a>
+                    <a href="?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
+                    <a href="?who=11" class="b" style="'.$other_color.'">Прочие</a>
+                </li>';
+
+
 			if ($contacts != 0){
 
 				echo '
@@ -88,8 +263,8 @@
 									
 									<div class="cellText" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$contacts[$i]['contacts'].'</div>
 									<div class="cellName" style="text-align: center; ', $contacts[$i]['fired'] == '1' ? 'background-color: rgba(161,161,161,1);"' : '"' ,'>'.$contacts[$i]['login'].'</div>';
-							if (($god_mode || ($workers['see_own'] == 1)) && 
-							(($contacts[$i]['permissions'] == 4) || ($contacts[$i]['permissions'] == 5) ||  ($contacts[$i]['permissions'] == 6) ||  ($contacts[$i]['permissions'] == 7) ||  ($contacts[$i]['permissions'] == 9))){ 			
+							if (($workers['see_own'] == 1) &&
+							(($contacts[$i]['permissions'] == 4) || ($contacts[$i]['permissions'] == 5) ||  ($contacts[$i]['permissions'] == 6) ||  ($contacts[$i]['permissions'] == 7) ||  ($contacts[$i]['permissions'] == 9)) || $god_mode){
 								echo '
 										<div class="cellName" style="text-align: center; ', $contacts[$i]['fired'] == '1' ? 'background-color: rgba(161,161,161,1);"' : '"' ,'>
 											<div style="display:inline-block;">'.$contacts[$i]['password'].'</div> <div style="color: red; display: inline-block; cursor: pointer;" title="Сменить пароль" onclick=changePass('.$contacts[$i]['id'].')><i class="fa fa-key" aria-hidden="true"></i></div>

@@ -4,6 +4,7 @@
 //Вся запись на день
 
 	require_once 'header.php';
+    require_once 'blocks_dom.php';
 
 	if ($enter_ok){
 		require_once 'header_tags.php';
@@ -223,6 +224,14 @@
 						echo '
 								<span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <i class="ahref change_filial">определить</i></span><br>';							
 					}
+
+                    echo '
+					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 1;">';
+
+                    echo $block_fast_search_client;
+
+                    echo '
+					</div>';
 	
 					/*echo '
 							<div id="data">';*/

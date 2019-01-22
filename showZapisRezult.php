@@ -1,6 +1,6 @@
 <?php 
 
-//showZapisRezult3.php
+//showZapisRezult.php
 //функция формирует и показывает записи
 
     function showZapisRezult($ZapisHereQueryToday, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $type, $format, $menu){
@@ -64,9 +64,23 @@
                     if ($ZapisHereQueryToday[$z]['insured'] == 1) {
                         $dop_img .= '<img src="img/insured.png" title="Страховое"> ';
                     }
-                    if ($ZapisHereQueryToday[$z]['pervich'] == 1) {
+
+                    /*if ($ZapisHereQueryToday[$z]['pervich'] == 1) {
                         $dop_img .= '<img src="img/pervich.png" title="Первичное"> ';
+                    }*/
+
+                    if ($ZapisHereQueryToday[$z]['pervich'] == 1) {
+                        $dop_img .= '<img src="img/pervich.png" title="Посещение для пациента первое без работы"> ';
+                    }elseif ($ZapisHereQueryToday[$z]['pervich'] == 2) {
+                        $dop_img .= '<img src="img/pervich_ostav_2.png" title="Посещение для пациента первое с работой"> ';
+                    }elseif ($ZapisHereQueryToday[$z]['pervich'] == 3) {
+                        $dop_img .= '<img src="img/vtorich_3.png" title="Посещение для пациента не первое"> ';
+                    }elseif ($ZapisHereQueryToday[$z]['pervich'] == 4) {
+                        $dop_img .= '<img src="img/vtorich_davno_4.png" title="Посещение для пациента не первое, но был более полугода назад"> ';
+                    }elseif ($ZapisHereQueryToday[$z]['pervich'] == 5) {
+                        $dop_img .= '<img src="img/prodolzhenie.png" title="Продолжение работы"> ';
                     }
+
                     if ($ZapisHereQueryToday[$z]['noch'] == 1) {
                         $dop_img .= '<img src="img/night.png" title="Ночное"> ';
                     }
@@ -277,6 +291,8 @@
                                         $rezult .= '<li><div onclick="Ajax_TempZapis_edit_OK(' . $ZapisHereQueryToday[$z]['id'] . ', ' . $ZapisHereQueryToday[$z]['office'] . ')">Подтвердить</div></li>';
                                     }
                                 }
+                                //var_dump($ZapisHereQueryToday[$z]);
+
                                 if ($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']) {
                                     if (($ZapisHereQueryToday[$z]['enter'] != 8) && ($ZapisHereQueryToday[$z]['enter'] != 9)) {
                                         $rezult .=
@@ -440,9 +456,12 @@
                                                 </div>
                                             </div>		
                                             <div class="cellsBlock2" style="font-size:80%; width:400px;">
-                                                <div class="cellLeft" style="font-weight: bold;">Первичный</div>
+                                                <div class="cellLeft" style="font-weight: bold;">Первичный/Вторичный...</div>
                                                 <div class="cellRight">
-                                                    <input type="checkbox" name="pervich" id="pervich" value="1"> да
+                                                    <div id="pervich_status" style="margin-bottom: 5px;"><span style="color: red">Не выбрано</span></div>
+                                                    <!--<input type="checkbox" name="pervich" id="pervich" value="1"> да-->
+                                                    <span class="button_tiny" style="border: 1px solid rgb(148, 143, 143); font-size: 90%; cursor: pointer; background-color: #c8e0c8;" onclick="contextMenuShow(0, 0, event, \'pervich\');"></i> Выбрать/изменить</span>
+                                                    <input type="hidden" name="pervich" id="pervich" value="0">
                                                 </div>
                                             </div>
                                             <div class="cellsBlock2" style="font-size:80%; width:400px;">
