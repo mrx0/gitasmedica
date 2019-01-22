@@ -53,10 +53,11 @@
 
                             $currentSalary = $salaries_j[0];
                         }else{
-
+                            $currentSalary['summ'] = 0;
                         }
-                        /*var_dump($salaries_j);
-                        var_dump(end($salaries_j));*/
+                        //var_dump($salaries_j);
+                        //var_dump(end($salaries_j));
+                        //var_dump($currentSalary);
 
                         echo '
                                         <ul id="balance" style="padding: 0 5px; margin: 0 5px 20px; display: block; vertical-align: top; /*border: 1px outset #AAA;*/">
@@ -64,11 +65,11 @@
                                                 Текущий оклад:
                                             </li>
                                             <li class="calculateOrder" style="font-size: 110%; font-weight: bold;">
-                                                <div id="currentSalary" style="display: inline; cursor: pointer;" >'.number_format($currentSalary['summ'], 0, '', '').'</div> <div id="textAfterSalary" style="display: inline;">руб.</div>
+                                                <div id="currentSalary" style="display: inline; cursor: pointer;" >'.number_format($currentSalary['summ'], 0, '', '').'</div> <div id="textAfterSalary" style="display: inline;">руб. ', !empty($salaries_j) ? '<span style="font-size: 85%; font-weight: normal; color: #333; ">с '.date('d.m.Y', strtotime($currentSalary['date_from'])).'</span>' : '' ,'</div>
                                             </li>
                                             <div id="addSalaryDate" style="display: none;">
                                                 <li id="" style="font-size: 85%; color: #7D7D7D; margin: 10px 0;">
-                                                    Введите дату:
+                                                    Введите дату, с которой начнется применение новой суммы:
                                                 </li>
                                                 <li>
                                                     <input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="text-align: inherit; color: rgb(30, 30, 30); font-size: 12px;" value="' . date('01.m.Y', time()) . '" onfocus="this.select();_Calendar.lcs(this)"  
@@ -87,7 +88,7 @@
                         if (!empty($salaries_j)){
                             foreach ($salaries_j as $item){
                                 echo '
-                                    <li style="font-size: 80%;"><i class="fa fa-times" aria-hidden="true" style="cursor: pointer; color: red; font-size: 120%;"   title="Удалить" onclick="deleteThisSalary();"></i> <i style="font-size: 120%;">'.$item['summ'].'</i> c '.date('d.m.y', strtotime($item['date_from'])).'  -   добавлено ['.date('d.m.y H:i', strtotime($item['create_time'])).'] <b>'.WriteSearchUser('spr_workers', $item['create_person'], 'user', true).'</b></li>';
+                                    <li style="font-size: 80%;"><i class="fa fa-times" aria-hidden="true" style="cursor: pointer; color: red; font-size: 120%;"   title="Удалить" onclick="deleteThisSalary('.$item['id'].');"></i> <i style="font-size: 120%;">'.$item['summ'].' руб.</i> c '.date('d.m.y', strtotime($item['date_from'])).'  -   добавлено ['.date('d.m.y H:i', strtotime($item['create_time'])).'] <b>'.WriteSearchUser('spr_workers', $item['create_person'], 'user', true).'</b></li>';
                             }
                         }else{
                             echo '<span style="color:red">Ничего не указано</span>';
@@ -112,7 +113,7 @@
 
 
                         echo '
-                                        <div id="doc_title">Оклад сотрудника '.WriteSearchUser('spr_workers',   $worker_j[0]['id'], 'user_full', true).' - Асмедика</div>';
+                                        <div id="doc_title">Оклад сотрудника '.WriteSearchUser('spr_workers',   $worker_j[0]['id'], 'user', false).' - Асмедика</div>';
 
 
 

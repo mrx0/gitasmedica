@@ -38,6 +38,9 @@
                     $stom_color = 'background-color: #fff261;';
                     $cosm_color = '';
                     $somat_color = '';
+                    $admin_color = '';
+                    $assist_color = '';
+                    $other_color = '';
                 }elseif($_GET['who'] == 6){
                     $who = '&who=6';
                     $whose = 'Косметологи ';
@@ -50,6 +53,9 @@
                     $stom_color = '';
                     $cosm_color = 'background-color: #fff261;';
                     $somat_color = '';
+                    $admin_color = '';
+                    $assist_color = '';
+                    $other_color = '';
                 }elseif($_GET['who'] == 10){
                     $who = '&who=10';
                     $whose = 'Специалисты ';
@@ -59,9 +65,58 @@
                     $kabsForDoctor = 'somat';
                     $type = 10;
 
+
                     $stom_color = '';
                     $cosm_color = '';
                     $somat_color = 'background-color: #fff261;';
+                    $admin_color = '';
+                    $assist_color = '';
+                    $other_color = '';
+                }elseif($_GET['who'] == 4){
+                    $who = '&who=4';
+                    $whose = 'Администраторы ';
+                    $selected_stom = ' ';
+                    $selected_cosm = ' selected';
+                    /*$datatable = 'scheduler_somat';
+                    $kabsForDoctor = 'somat';*/
+                    $type = 4;
+
+                    $stom_color = '';
+                    $cosm_color = '';
+                    $somat_color = '';
+                    $admin_color = 'background-color: #fff261;';
+                    $assist_color = '';
+                    $other_color = '';
+                }elseif($_GET['who'] == 7){
+                    $who = '&who=7';
+                    $whose = 'Ассистенты ';
+                    $selected_stom = ' ';
+                    $selected_cosm = ' selected';
+                    /*$datatable = 'scheduler_somat';
+                    $kabsForDoctor = 'somat';*/
+                    $type = 7;
+
+                    $stom_color = '';
+                    $cosm_color = '';
+                    $somat_color = '';
+                    $admin_color = '';
+                    $assist_color = 'background-color: #fff261;';
+                    $other_color = '';
+                }elseif($_GET['who'] == 11){
+                    $who = '&who=11';
+                    $whose = 'Ассистенты ';
+                    $selected_stom = ' ';
+                    $selected_cosm = ' selected';
+                    /*$datatable = 'scheduler_somat';
+                    $kabsForDoctor = 'somat';*/
+                    $type = 11;
+
+                    $stom_color = '';
+                    $cosm_color = '';
+                    $somat_color = '';
+                    $admin_color = '';
+                    $assist_color = '';
+                    $other_color = 'background-color: #fff261;';
                 }else{
                     $who = '&who=5';
                     $whose = 'Стоматологи ';
@@ -74,6 +129,9 @@
                     $stom_color = 'background-color: #fff261;';
                     $cosm_color = '';
                     $somat_color = '';
+                    $admin_color = '';
+                    $assist_color = '';
+                    $other_color = '';
                 }
             }else{
                 $who = '&who=5';
@@ -87,6 +145,9 @@
                 $stom_color = 'background-color: #fff261;';
                 $cosm_color = '';
                 $somat_color = '';
+                $admin_color = '';
+                $assist_color = '';
+                $other_color = '';
             }
 
             include_once 'ffun.php';
@@ -156,6 +217,9 @@
                                 <a href="?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
                                 <a href="?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>
                                 <a href="?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
+                                <a href="?who=4" class="b" style="'.$admin_color.'">Администраторы</a>
+                                <a href="?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
+                                <a href="?who=11" class="b" style="'.$other_color.'">Прочие</a>
                             </li>';
 
             if (!empty($workers_j)){

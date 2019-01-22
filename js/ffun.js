@@ -3621,3 +3621,39 @@
     /*$("body").on("click", "#click_id", function(){
         alert('1234');
     });*/
+
+
+    function deleteThisSalary(salary_id){
+
+        var rys = false;
+
+        rys = confirm("Вы хотите удалить оклад. \nЭто необратимо.\nПо умолчанию будет оклад с более поздней датой.\n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "salary_del_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: salary_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    if (res.result == "success") {
+                        location.reload();
+                        //console.log(res.data);
+                    }
+                    if (res.result == "error") {
+                        //alert(res.data);
+                    }
+                    //console.log(data.data);
+
+                }
+            });
+        }
+    }
