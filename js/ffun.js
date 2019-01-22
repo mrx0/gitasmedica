@@ -74,7 +74,7 @@
             dataType: "JSON",
             data:
                 {
-                    summ:Summ,
+                    summ:Summ
                 },
             cache: false,
             beforeSend: function() {
@@ -3529,4 +3529,131 @@
 
     }
 
+    //Редактирование оклада / добавление новой строчки
+    var el = document.getElementById("currentSalary"), newInput;
 
+    el.addEventListener("click", function () {
+        //console.log(el);
+
+        $("#addSalaryOptions").html("<span id='newSalarySave' class='button_tiny' style='color: rgb(125, 125, 125); font-size: 11px; cursor: pointer;'><i class='fa fa-check' aria-hidden='true' style='color: green;' title='Сохранить'></i> Применить</span> <span id='newSalaryCancel' class='button_tiny' style='color: rgb(125, 125, 125); font-size: 11px; cursor: pointer;'><i class='fa fa-times' aria-hidden='true' style='color: red;'></i> Отменить</span>");
+        $("#addSalaryDate").show();
+        $("#salaryText").html("Введите новое значение:");
+
+        var thisVal = this.innerHTML;
+        var newVal = thisVal;
+
+        var inputs = this.getElementsByTagName("input");
+        if (inputs.length > 0) return;
+        if (!newInput) {
+
+            newInput = document.createElement("input");
+            newInput.type = "text";
+            newInput.maxLength = 7;
+            newInput.setAttribute("size", 20);
+            newInput.style.width = "80px";
+            newInput.style.fontSize = "18px";
+
+            //Клик вне поля
+            //newInput.addEventListener("blur", function () {
+
+            $("body").on("click", "#newSalaryCancel", function(event) {
+                //console.log("blur");
+
+                //$("#textAfterSalary").html("руб.");
+                $("#addSalaryOptions").html("");
+                $("#addSalaryDate").hide();
+                $("#salaryText").html("Текущий оклад:");
+
+                newInput.parentNode.innerHTML = thisVal;
+                newVal = thisVal;
+            });
+            //}, false);
+
+            $("body").on("click", "#newSalarySave", function(event) {
+                //alert();
+
+                newVal = parseInt(newInput.value, 10);
+
+                $.ajax({
+                    url: "fl_add_new_salary_f.php",
+                    global: false,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        worker_id: $("#worker_id").val(),
+                        date_from: $("#iWantThisDate2").val(),
+                        summ: newVal
+                    },
+                    cache: false,
+                    beforeSend: function () {
+                        //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                    },
+                    // действие, при ответе с сервера
+                    success: function (res) {
+                        if (res.result == "success") {
+                            console.log(res.data);
+
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1000);
+
+                        }
+
+                    }
+                });
+
+            });
+
+        }
+
+        //newInput.value = this.firstChild.innerHTML;
+        newInput.value = thisVal;
+        this.innerHTML = "";
+        //this.appendChild(buttonDiv);
+        this.appendChild(newInput);
+        //newInput.innerHTML = ('<i class="fa fa-check" aria-hidden="true"></i>');
+        newInput.focus();
+        newInput.select();
+
+    }.bind(el), false);
+
+
+    /*$("body").on("click", "#click_id", function(){
+        alert('1234');
+    });*/
+
+
+    function deleteThisSalary(salary_id){
+
+        var rys = false;
+
+        rys = confirm("Вы хотите удалить оклад. \nЭто необратимо.\nПо умолчанию будет оклад с более поздней датой.\n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "salary_del_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: salary_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    if (res.result == "success") {
+                        location.reload();
+                        //console.log(res.data);
+                    }
+                    if (res.result == "error") {
+                        //alert(res.data);
+                    }
+                    //console.log(data.data);
+
+                }
+            });
+        }
+    }

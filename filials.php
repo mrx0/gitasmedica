@@ -34,9 +34,13 @@
 		//var_dump ($offices);
 		
 		if ($offices !=0){
-			for ($i = 0; $i < count($offices); $i++) { 
+			for ($i = 0; $i < count($offices); $i++) {
+                $bgColor = '';
+			    if ($offices[$i]['status'] == 9){
+                    $bgColor = "background-color: #8C8C8C;";
+                }
 				echo '
-						<li class="cellsBlock">
+						<li class="cellsBlock" style="'.$bgColor.'">
 							<div class="cellPriority" style="background-color:"></div>
 							<div class="cellOffice 4filter" style="text-align: center; width: 180px; min-width: 180px;" id="4filter">'.$offices[$i]['name'].'</div>
 							<div class="cellAddress" style="text-align: left">'.$offices[$i]['address'].'</div>
