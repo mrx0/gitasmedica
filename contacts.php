@@ -165,7 +165,16 @@
 
                 $msql_cnnct = ConnectToDB ();
 
-                $query = "SELECT * FROM `spr_workers` WHERE `permissions`='".$type."'";
+                $query = "SELECT sw.*, sc.name AS category
+                FROM `journal_work_cat` jwcat
+                RIGHT JOIN (
+                  SELECT * FROM `spr_categories`
+                ) sc ON sc.id = jwcat.worker_id
+                RIGHT JOIN (
+                  SELECT * FROM `spr_workers` s_w WHERE s_w.permissions = '".$type."'
+                ) sw ON sw.id = jwcat.worker_id";
+
+                var_dump($query);
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                 $number = mysqli_num_rows($res);
@@ -181,6 +190,8 @@
                 $contacts = SelDataFromDB('spr_workers', '', '');
                 //var_dump ($contacts);
             }
+
+            var_dump($contacts);
 
 			$arr_permissions = SelDataFromDB('spr_permissions', '', '');
 			//var_dump ($arr_permissions);
@@ -220,6 +231,7 @@
                 echo '
 								</div>
 								<div class="cellOffice" style="text-align: center">Должность</div>
+								<div class="cellName" style="text-align: center">Категория</div>
 								<div class="cellFullName" style="text-align: center">Специализация</div>
 								
 								<div class="cellText" style="text-align: center">Контакты</div>
@@ -243,6 +255,12 @@
 								<li class="cellsBlock cellsBlockHover ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'">
 									<a href="user.php?id='.$contacts[$i]['id'].'" class="cellFullName ahref 4filter" id="4filter" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$contacts[$i]['full_name'].'</a>
 									<div class="cellOffice" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>', $permissions != '0' ? $permissions : '-' ,'</div>									
+									<div class="cellName" style="text-align: center">';
+
+							        //if ()
+
+                            echo '
+                                    </div>									
 									   
 									<div class="cellFullName" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>';
 
