@@ -8677,3 +8677,9 @@
 
     };
 
+    //Очистить поле ввода поиска
+	function clearSearchInput(){
+		$("#search_clients").val("");
+        $(".button_in_input").hide();
+        $("#search_result_fc2").html("");
+	}

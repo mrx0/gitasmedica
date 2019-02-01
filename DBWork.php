@@ -1463,7 +1463,7 @@
 		$datatable = trim(strip_tags(stripcslashes(htmlspecialchars($datatable))));
 
 		//$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' LIMIT 5";
-		$query = "SELECT * FROM `$datatable` WHERE `num` LIKE '%$search_data%' AND `status`<> 9 ORDER BY `num` ASC LIMIT 3";
+		$query = "SELECT * FROM `$datatable` WHERE `num` LIKE '%$search_data%' AND `status`<> 9 ORDER BY `num` ASC LIMIT 5";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

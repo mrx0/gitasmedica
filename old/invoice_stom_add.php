@@ -78,7 +78,7 @@ require_once 'blocks_dom.php';
 						echo '
 						<div id="status">
 							<header>
-								<span style="color: red;">Тестовый режим. Уже сохраняется и даже как-то работает</span>
+								<!--<span style="color: red;">Тестовый режим. Уже сохраняется и даже как-то работает</span>-->
 								<h2>Наряд '.WriteSearchUser('spr_clients', $_GET['client'], 'user', true).'</h2>';
 								
 								

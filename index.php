@@ -4,6 +4,7 @@
 //Главная
 
 	require_once 'header.php';
+    require_once 'blocks_dom.php';
 
 	//var_dump($_SESSION);
 	//var_dump($_SESSION['calculate_data']);
@@ -32,6 +33,16 @@
         if (($it['add_own'] == 1) || ($it['add_new'] == 1) || $god_mode){
             echo '<a href="announcing_add.php" class="b">Добавить объявление</a><br>';
         }
+
+
+        echo '
+					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 1;">';
+
+        echo $block_fast_search_client;
+
+        echo '
+					</div>';
+
 
         $msql_cnnct = ConnectToDB ();
 

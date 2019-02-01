@@ -2681,3 +2681,11 @@ input[type="submit"].msg_send:hover{
 	z-index: 105; /* окно должно быть наиболее большем слое */
 	padding: 20px 10px;
 }
+
+.button_in_input{
+	position: absolute;
+	cursor: pointer;
+	top: 23px;
+	right: 68px;
+	display: none;
+}

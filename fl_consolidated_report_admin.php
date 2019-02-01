@@ -392,7 +392,7 @@
                     echo '
                         <li class="' . $weekend_block . ' cellsBlockHover" style="font-weight: bold; font-size: 12px; background-color: rgb(255, 193, 7);">';
                     echo '
-                            <div class="cellTime cellsTimereport reportDate" style="text-align: right; cursor: pointer; ' . $today_color .'"
+                            <div class="cellTime cellsTimereport" style="text-align: right; cursor: pointer; ' . $today_color .'"
                              onclick="fl_getDailyReportsSummAllMonth();">
                                 Всего
                                 <span style="font-size: 50%;"></span> <i class="fa fa-refresh" aria-hidden="true" style=" color: red;"></i>

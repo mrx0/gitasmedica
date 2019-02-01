@@ -190,7 +190,7 @@
             echo '
 				<header>
 					<h1>'.$show_option_str_for_header.'</h1>
-					<span style="color: red">Тестовый режим</span>
+					<!--<span style="color: red">Тестовый режим</span>-->
 					
 				</header>';
 

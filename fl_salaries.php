@@ -214,8 +214,8 @@
             echo '		
                             <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
                             <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-                                <!--<a href="?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
-                                <a href="?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>-->
+                                <a href="?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
+                                <a href="?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>
                                 <a href="?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
                                 <a href="?who=4" class="b" style="'.$admin_color.'">Администраторы</a>
                                 <a href="?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>

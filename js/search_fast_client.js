@@ -2,6 +2,14 @@ $(function(){
 	    
 	//Живой поиск
 	$('.who_fc').bind("change keyup input click", function() {
+		//console.log(111);
+
+		if(this.value.length > 0){
+            $(".button_in_input").show();
+        }else {
+            $(".button_in_input").hide();
+        }
+
 		if(this.value.length > 2){
 			$.ajax({
 				url: "FastSearchNameFC.php", //Путь к обработчику
@@ -14,14 +22,14 @@ $(function(){
 				response: 'text',
 				success: function(data){
 					//$(".search_result_fc").html(data).fadeIn(); //Выводим полученые данные в списке
-					document.getElementById("search_result_fc2").innerHTML = data; //Выводим полученые данные в списке
-					//document.getElementById("search_result_fc2").innerHTML = data;
+                    $("#search_result_fc2").html(data); //Выводим полученые данные в списке
 				}
 			})
+
 	    }else{
-			document.getElementById("search_result_fc2").innerHTML = '';
+			$("#search_result_fc2").html("");
 			//var elemFC2 = $("#search_result_fc2"); 
-			//elemFC2.hide(); 
+			//elemFC2.hide();
 		}
 	})
 	    
@@ -46,12 +54,11 @@ $(function(){
 				response: 'text',
 				success: function(data){
 					//$(".search_result_fc").html(data).fadeIn(); //Выводим полученые данные в списке
-					document.getElementById("search_result_fcert2").innerHTML = data; //Выводим полученые данные в списке
-					//document.getElementById("search_result_fc2").innerHTML = data;
+                    $("#search_result_fcert2").html(data); //Выводим полученые данные в списке
 				}
 			})
 	    }else{
-			document.getElementById("search_result_fcert2").innerHTML = '';
+            $("#search_result_fcert2").html('');
 			//var elemFC2 = $("#search_result_fc2");
 			//elemFC2.hide();
 		}

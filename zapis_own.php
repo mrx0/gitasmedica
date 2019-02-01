@@ -234,7 +234,7 @@
 										<span style="color: rgb(125, 125, 125);">
 											Изменить дату:
 											<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off"> 
 											<span style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'zapis_own.php?&worker='.$_GET['worker'].'\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
 										</span>
 									</div>
