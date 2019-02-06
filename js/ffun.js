@@ -3532,91 +3532,92 @@
     //Редактирование оклада / добавление новой строчки
     var el = document.getElementById("currentSalary"), newInput;
 
-    el.addEventListener("click", function () {
-        //console.log(el);
+    if(el) {
+        el.addEventListener("click", function () {
+            //console.log(el);
 
-        $("#addSalaryOptions").html("<span id='newSalarySave' class='button_tiny' style='color: rgb(125, 125, 125); font-size: 11px; cursor: pointer;'><i class='fa fa-check' aria-hidden='true' style='color: green;' title='Сохранить'></i> Применить</span> <span id='newSalaryCancel' class='button_tiny' style='color: rgb(125, 125, 125); font-size: 11px; cursor: pointer;'><i class='fa fa-times' aria-hidden='true' style='color: red;'></i> Отменить</span>");
-        $("#addSalaryDate").show();
-        $("#salaryText").html("Введите новое значение:");
+            $("#addSalaryOptions").html("<span id='newSalarySave' class='button_tiny' style='color: rgb(125, 125, 125); font-size: 11px; cursor: pointer;'><i class='fa fa-check' aria-hidden='true' style='color: green;' title='Сохранить'></i> Применить</span> <span id='newSalaryCancel' class='button_tiny' style='color: rgb(125, 125, 125); font-size: 11px; cursor: pointer;'><i class='fa fa-times' aria-hidden='true' style='color: red;'></i> Отменить</span>");
+            $("#addSalaryDate").show();
+            $("#salaryText").html("Введите новое значение:");
 
-        var thisVal = this.innerHTML;
-        var newVal = thisVal;
+            var thisVal = this.innerHTML;
+            var newVal = thisVal;
 
-        var inputs = this.getElementsByTagName("input");
-        if (inputs.length > 0) return;
-        if (!newInput) {
+            var inputs = this.getElementsByTagName("input");
+            if (inputs.length > 0) return;
+            if (!newInput) {
 
-            newInput = document.createElement("input");
-            newInput.type = "text";
-            newInput.maxLength = 7;
-            newInput.setAttribute("size", 20);
-            newInput.style.width = "80px";
-            newInput.style.fontSize = "18px";
+                newInput = document.createElement("input");
+                newInput.type = "text";
+                newInput.maxLength = 7;
+                newInput.setAttribute("size", 20);
+                newInput.style.width = "80px";
+                newInput.style.fontSize = "18px";
 
-            //Клик вне поля
-            //newInput.addEventListener("blur", function () {
+                //Клик вне поля
+                //newInput.addEventListener("blur", function () {
 
-            $("body").on("click", "#newSalaryCancel", function(event) {
-                //console.log("blur");
+                $("body").on("click", "#newSalaryCancel", function (event) {
+                    //console.log("blur");
 
-                //$("#textAfterSalary").html("руб.");
-                $("#addSalaryOptions").html("");
-                $("#addSalaryDate").hide();
-                $("#salaryText").html("Текущий оклад:");
+                    //$("#textAfterSalary").html("руб.");
+                    $("#addSalaryOptions").html("");
+                    $("#addSalaryDate").hide();
+                    $("#salaryText").html("Текущий оклад:");
 
-                newInput.parentNode.innerHTML = thisVal;
-                newVal = thisVal;
-            });
-            //}, false);
+                    newInput.parentNode.innerHTML = thisVal;
+                    newVal = thisVal;
+                });
+                //}, false);
 
-            $("body").on("click", "#newSalarySave", function(event) {
-                //alert();
+                $("body").on("click", "#newSalarySave", function (event) {
+                    //alert();
 
-                newVal = parseInt(newInput.value, 10);
+                    newVal = parseInt(newInput.value, 10);
 
-                $.ajax({
-                    url: "fl_add_new_salary_f.php",
-                    global: false,
-                    type: "POST",
-                    dataType: "JSON",
-                    data: {
-                        worker_id: $("#worker_id").val(),
-                        date_from: $("#iWantThisDate2").val(),
-                        summ: newVal
-                    },
-                    cache: false,
-                    beforeSend: function () {
-                        //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-                    },
-                    // действие, при ответе с сервера
-                    success: function (res) {
-                        if (res.result == "success") {
-                            console.log(res.data);
+                    $.ajax({
+                        url: "fl_add_new_salary_f.php",
+                        global: false,
+                        type: "POST",
+                        dataType: "JSON",
+                        data: {
+                            worker_id: $("#worker_id").val(),
+                            date_from: $("#iWantThisDate2").val(),
+                            summ: newVal
+                        },
+                        cache: false,
+                        beforeSend: function () {
+                            //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                        },
+                        // действие, при ответе с сервера
+                        success: function (res) {
+                            if (res.result == "success") {
+                                console.log(res.data);
 
-                            setTimeout(function () {
-                                location.reload();
-                            }, 1000);
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 1000);
+
+                            }
 
                         }
+                    });
 
-                    }
                 });
 
-            });
+            }
 
-        }
+            //newInput.value = this.firstChild.innerHTML;
+            newInput.value = thisVal;
+            this.innerHTML = "";
+            //this.appendChild(buttonDiv);
+            this.appendChild(newInput);
+            //newInput.innerHTML = ('<i class="fa fa-check" aria-hidden="true"></i>');
+            newInput.focus();
+            newInput.select();
 
-        //newInput.value = this.firstChild.innerHTML;
-        newInput.value = thisVal;
-        this.innerHTML = "";
-        //this.appendChild(buttonDiv);
-        this.appendChild(newInput);
-        //newInput.innerHTML = ('<i class="fa fa-check" aria-hidden="true"></i>');
-        newInput.focus();
-        newInput.select();
-
-    }.bind(el), false);
-
+        }.bind(el), false);
+    }
 
     /*$("body").on("click", "#click_id", function(){
         alert('1234');
@@ -3656,4 +3657,111 @@
                 }
             });
         }
+    }
+
+    //Функция изменения процента от выручки
+    function Ajax_revenue_percent_change (type, filial_id, category){
+
+        var value = $("#revenuePercent").val();
+        value =  value.replace(',', '.');
+        //console.log(value);
+
+        if (!isNaN(value)) {
+            if (value.length > 0){
+
+                var link = "fl_revenue_percent_change_f.php";
+
+                var reqData = {
+                    permission: type,
+                    filial_id: filial_id,
+                    category: category,
+                    value: value
+                };
+
+                $.ajax({
+                    url: link,
+                    global: false,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: reqData,
+                    cache: false,
+                    beforeSend: function () {
+                        //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                    },
+                    success: function (res) {
+                        //console.log (res);
+
+                        if (res.result == "success") {
+                            setTimeout(function () {
+                                location.reload()
+                            }, 200);
+                        } else {
+
+                        }
+                    }
+                })
+
+            }else {
+            }
+        }else{
+            //console.log(value);
+        }
+    }
+
+    //Показывает окно для изменения процента от выручки
+    function revenuePercentChangeShow (haveValue, type, type_name, filial_id, filial_name, category, category_name, value){
+        //console.log(mode);
+        $('#overlay').show();
+
+
+        var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_revenue_percent_change('+type+', '+filial_id+', '+category+')">';
+
+        // if (haveValue){
+        // }
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative"
+                    })
+                    .append('<div style="margin: 5px;"><i><b>'+filial_name+'</b></i></div>')
+                    .append('<div style="margin: 5px;">'+type_name+'</div>')
+                    .append('<div style="margin: 5px;">Категория: <i>'+category_name+'</i></div>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-10px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%",
+                            })
+                            .append('<div style="margin: 50px;"><input type="text" id="revenuePercent" value="'+value+'">%</div>')
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "bottom": "2px",
+                                "width": "100%",
+                            })
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                            )
+                    )
+            );
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+        $("#revenuePercent").focus();
     }

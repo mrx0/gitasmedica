@@ -24,9 +24,15 @@
 			//var_dump($permissions);
 			$specializations = workerSpecialization($_GET['id']);
 			//var_dump($specializations);
-			$org = SearchInArray($arr_orgs, $user[0]['org'], 'name');
+			//$org = SearchInArray($arr_orgs, $user[0]['org'], 'name');
 			//var_dump($org);
-			
+            $category_j = SelDataFromDB('journal_work_cat', $_GET['id'], 'worker_id');
+            //var_dump($category);
+            if ($category_j != 0){
+                $category = SelDataFromDB('spr_categories', $category_j[0]['category'], 'id');
+            }
+            //var_dump($category);
+
 			//операции со временем						
 			$month = date('m');		
 			$year = date('Y');
@@ -85,13 +91,20 @@
                             </div>
                         </div>
 							
-            <!--		<div class="cellsBlock2">
-                            <div class="cellLeft">Организация</div>
+                		<div class="cellsBlock2">
+                            <div class="cellLeft">Категория</div>
                             <div class="cellRight">';
-			echo $org;
+			//var_dump($category_j);
+
+			if ($category_j != 0){
+                echo $category[0]['name'];
+            }else{
+			    echo 'не указано';
+            }
+
 			echo '	
                             </div>
-                        </div>-->
+                        </div>
                                         
                         <div class="cellsBlock2">
                             <div class="cellLeft">Логин</div>

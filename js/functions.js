@@ -331,8 +331,10 @@
         var org = 0;
         var permissions = $('#permissions').val();
         var contacts = $('#contacts').val();
-
-        //console.log(checkedItems2());
+        var category = $('#SelectCategory').val();
+        if((typeof category == "undefined") || (category == "")) category = 0;
+        // console.log(category);
+        // console.log(checkedItems2());
 
         $.ajax({
             url:"user_edit_f.php",
@@ -345,7 +347,8 @@
                     permissions: permissions,
                     contacts: contacts,
                     fired: fired,
-                    specializations:checkedItems2()
+                    specializations: checkedItems2(),
+                    category: category
 
                 },
             cache: false,
@@ -1511,6 +1514,7 @@
         }
 
         var name = $('#name').val();
+        var permission = $('#permissions').val();
 
         $.ajax({
             url: link,
@@ -1521,6 +1525,7 @@
             data:
 			{
 				name: name,
+                permission: permission
 			},
 
             cache: false,
@@ -6395,6 +6400,8 @@
         //console.log(mode);
 
         var Summ = $("#summ").val();
+        Summ =  Summ.replace(',', '.');
+        //console.log(Summ);
         var type = $("#type").val();
         var filial = $("#filial").val();
 
@@ -7179,6 +7186,7 @@
 		}
 
         var Summ = $("#summ").val();
+        Summ =  Summ.replace(',', '.');
         //var SummType =  $("#summ_type").val();
         var type = $("#type").val();
         var office_id = $("#filial").val();
