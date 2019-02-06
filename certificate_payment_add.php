@@ -382,7 +382,7 @@
 								</div>
 								<div id="search_cert_input" style="display: none;">
 							        <input type="text" size="30" name="searchdata" id="search_cert" placeholder="Наберите номер сертификата для поиска" value="" class="who"  autocomplete="off" style="width: 90%;">
-							        <span class="lit_grey_text" style="font-size: 75%">Нажмите на галочку, чтобы добавить</span>
+							        <br><span class="lit_grey_text" style="font-size: 75%">Нажмите на галочку, чтобы добавить</span>
                                     <div id="search_result_cert" class="search_result_cert" style="text-align: left;"></div>
 							    </div>
 

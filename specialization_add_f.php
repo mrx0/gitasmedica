@@ -27,7 +27,7 @@
                 //var_dump($rezult);
 
                 if ($rezult == 0){
-                    $specialization_id = WriteToDB_EditSpecialization ($name, $_SESSION['id']);
+                    $specialization_id = WriteToDB_EditSpecialization ($name, $_POST['permission'], $_SESSION['id']);
 
                     echo json_encode(array('result' => 'success', 'data' => '<div class="query_ok"><a href="specialization.php?id=' . $specialization_id . '" class="ahref">Специализация</a> добавлена.</div>'));
 

@@ -238,12 +238,17 @@
                         echo '
 									<li class="cellsBlock" style="font-weight: bold; width: auto; background-color: rgba(255, 255, 0, 0.3); margin: 2px">	
 										<a href="invoice.php?id=' . $data['id'] . '"    class="cellTime ahref" style="text-align: center; ">Наряд #'.$data['id'].' от '. $data['create_time'] . '</a>
-										    <div class="cellName" style="text-align: right; ">Сумма наряда: ' . $data['summ'] . ' руб.</div>
+										    <div class="cellName" style="text-align: right; ">Сумма наряда:<br>' . $data['summ'] . ' руб.';
+                        if ($data['summins'] > 0){
+                            echo '
+                                            <br>Сумма страховая:<br><span style="color: blue;">' . $data['summins'] . '</span> руб.';
+                        }
+                        echo '              </div>
 										    <div class="cellName" style="text-align: right; ">Не оплачено: <span style="color:', ($data['summ']-$data['paid'] > 0) ? 'red' : 'green' ,'"><BR>' . ($data['summ']-$data['paid']) . '</span> руб.</div>
 										    <a href="invoice.php?id='.$data['client_id'].'" class="ahref cellText" style="max-width: 250px;">'.$data['full_name'].'<br><br>
 										    '.$filials_j[$data['office_id']]['name2'].'
 										    </a>
-										    <div class="cellName" style="text-align: left; width: 160px; min-width: 160px;">
+										    <div class="cellName" style="text-align: left; width: 180px; min-width: 180px;">
 										        автор: '.WriteSearchUser('spr_workers', $data['create_person'], 'user', true).'<br>
 										        исп-ль: '.WriteSearchUser('spr_workers', $data['worker_id'], 'user', true).'
 										    </div>
