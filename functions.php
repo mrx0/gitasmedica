@@ -491,7 +491,7 @@
 		return $sheduler_zapis;
 	}
 	
-	
+	//Получение записи в кабинете за дату
 	function FilialKabSmenaZapisToday2($table, $y, $m, $d, $office, $kab, $wt, $type){
 		//require 'config.php';
 		if ($table == 'scheduler_stom'){
@@ -525,6 +525,47 @@
 		return $sheduler_zapis;
 	}
 	
+	function FilialKabSmenaZapisToday3($table, $y, $m, $d, $office, $type){
+		//require 'config.php';
+		if ($table == 'scheduler_stom'){
+			$datatable = 'zapis_stom';
+		}elseif ($table == 'scheduler_cosm'){
+			$datatable = 'zapis_cosm';
+		}else{
+			$datatable = 'zapis_stom';
+		}
+		$sheduler_zapis = array();
+
+        $msql_cnnct = ConnectToDB ();
+
+		//$wt2 = $wt+30;
+
+		$query = "SELECT * FROM `zapis` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$office}' AND `type` = '{$type}' AND `enter` <> 9 AND `enter` <> 8 ORDER BY `kab`, `start_time` ASC";
+
+		//echo $query;
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
+		if ($number != 0){
+			while ($arr = mysqli_fetch_assoc($res)){
+				//array_push($sheduler_zapis, $arr);
+				if (!isset($sheduler_zapis[$arr['kab']])){
+                    $sheduler_zapis[$arr['kab']] = array();
+				}
+                if (!isset($sheduler_zapis[$arr['kab']][$arr['start_time']])){
+                    $sheduler_zapis[$arr['kab']][$arr['start_time']] = array();
+                }
+                $sheduler_zapis[$arr['kab']][$arr['start_time']] = $arr;
+			}
+		}else {
+            //$sheduler_zapis = 0;
+        }
+
+		//mysql_close();
+
+		return $sheduler_zapis;
+	}
+
 	function FilialWorkerSmenaZapisToday($table, $y, $m, $d, $worker){
 		//require 'config.php';
 
@@ -3870,6 +3911,143 @@
 
     }*/
 
+	function prepareDrawZapisDay($zapis, $start, $end, $worker_id, $filials_j, $filial_id, $kab, $year, $month, $day, $type, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit){
+		//var_dump($zapis);
 
+		$rezult = '';
+
+        $NextTime = FALSE;
+        $ThatTimeFree = TRUE;
+        $PeredannNextTime = FALSE;
+        $NextTime_val = 0;
+        //сдвиг для блоков времени
+        $cellZapisTime_TopSdvig = 0;
+        $cellZapisValue_TopSdvig = 0;
+        $PrevZapis = array();
+        $NextFill = FALSE;
+
+        $weHaveZapisHere = FALSE;
+        $next_smena = FALSE;
+
+		//Филиал в сессии
+        if (isset($_SESSION['filial'])) {
+            $contexMenuZapisMain_filial = $_SESSION['filial'];
+        }else{
+            $contexMenuZapisMain_filial = 0;
+        }
+
+        //Если назначен врач в смену в этот кабинет
+        if ($worker_id != 0) {
+            $bg_color = '';
+        } else {
+            //Если нет
+            $bg_color = ' background-color: #f0f0f0;';
+        }
+
+        //массив для времен начала записей
+        $time_start_arr = array();
+
+        //Если в этом кабинете есть запись
+        if (isset($zapis[$kab])){
+            //var_dump($zapis[$kab]);
+            //var_dump(array_keys($zapis[$kab]));
+
+			$time_start_arr = array_keys($zapis[$kab]);
+        }
+
+		//Проходим про смене через каждые полчаса
+		for ($wt=$start; $wt < $end; $wt=$wt+30) {
+
+            $back_color = '';
+
+            if (!empty($time_start_arr)) {
+                //Проходим про всем временам существующих записей
+                foreach ($time_start_arr as $time_start_item) {
+                	//Если время начала работы совпадает с расчетным начало (1 раз в полчаса)
+                    if ($time_start_item == $wt){
+                        //var_dump($zapis[$kab][$time_start_item]);
+
+						$weHaveZapisHere = TRUE;
+                        $time_start_item_have_zapis = $time_start_item;
+					}
+					//Если время начала работы позже расчетного начала (1 раз в полчаса) но меньше следующей расчетной точки (через полчаса)
+					if (($time_start_item > $wt) && ($time_start_item < $wt+30)){
+                        //var_dump($zapis[$kab][$time_start_item]);
+
+                        $weHaveZapisHere = TRUE;
+                        $time_start_item_have_zapis = $time_start_item;
+					}
+
+
+				}
+				//Если есть запись
+				if ($weHaveZapisHere){
+                    //вычисляем время начала приёма
+                    $TempStartWorkTime_h = floor($zapis[$kab][$time_start_item_have_zapis]['start_time']/60);
+                    $TempStartWorkTime_m = $zapis[$kab][$time_start_item_have_zapis]['start_time']%60;
+                    if ($TempStartWorkTime_m < 10) $TempStartWorkTime_m = '0'.$TempStartWorkTime_m;
+
+                    //вычисляем время окончания приёма
+                    $TempEndWorkTime_h = floor(($zapis[$kab][$time_start_item_have_zapis]['start_time']+$zapis[$kab][$time_start_item_have_zapis]['wt'])/60);
+                    if ($TempEndWorkTime_h > 23) $TempEndWorkTime_h = $TempEndWorkTime_h - 24;
+                    $TempEndWorkTime_m = ($zapis[$kab][$time_start_item_have_zapis]['start_time']+$zapis[$kab][$time_start_item_have_zapis]['wt'])%60;
+                    if ($TempEndWorkTime_m < 10) $TempEndWorkTime_m = '0'.$TempEndWorkTime_m;
+
+                    //Сдвиг для блока
+                    $cellZapisValue_TopSdvig = (floor(($zapis[$kab][$time_start_item_have_zapis]['start_time']-$end)/30)*60 + ($zapis[$kab][$time_start_item_have_zapis]['start_time']-$start)%30*2);
+                    //Высота блока
+                    $cellZapisValue_Height = $zapis[$kab][$time_start_item_have_zapis]['wt']*2;
+
+                    //Если время выполнения работы больше чем осталось до конца смены
+                    if ($zapis[$kab][$time_start_item_have_zapis]['start_time'] + $zapis[$kab][$time_start_item_have_zapis]['wt'] > $end){
+                        //var_dump($zapis[$kab][$time_start_item_have_zapis]['start_time']);
+                        //var_dump($zapis[$kab][$time_start_item_have_zapis]['wt']);
+                        //var_dump($end);
+
+                        $cellZapisValue_Height = ($end - $zapis[$kab][$time_start_item_have_zapis]['start_time'])*2;
+
+                        $next_smena = TRUE;
+					}
+
+
+                    //Если пришёл
+                    if ($zapis[$kab][$time_start_item_have_zapis]['enter'] == 1){
+                        $back_color = 'background-color: rgba(119, 255, 135, 1);';
+                    }else{
+                        //Если оформлено не на этом филиале
+                        if($zapis[$kab][$time_start_item_have_zapis]['office'] != $zapis[$kab][$time_start_item_have_zapis]['add_from']){
+                            $back_color = 'background-color: rgb(119, 255, 250);';
+                        }
+                    }
+
+                    $title_time = $TempStartWorkTime_h.':'.$TempStartWorkTime_m.' - '.$TempEndWorkTime_h.':'.$TempEndWorkTime_m;
+                    $title_client = WriteSearchUser('spr_clients', $zapis[$kab][$time_start_item_have_zapis]['patient'], 'user', false);
+                    $title_descr = $zapis[$kab][$time_start_item_have_zapis]['description'];
+                    $zapis_id = $zapis[$kab][$time_start_item_have_zapis]['id'];
+
+                    echo drawZapisDivVal ($cellZapisValue_TopSdvig+720, $cellZapisValue_Height, $back_color, $title_time, $title_client, $title_descr, $zapis_id, contexMenuZapisMain ($zapis[$kab][$time_start_item_have_zapis], $contexMenuZapisMain_filial, $filials_j, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, false, $title_time, $title_client, $title_descr));
+                }
+            }
+
+            $cellZapisTime_TopSdvig = $cellZapisTime_TopSdvig + 60;
+
+            //Если нет записи тут вообще
+            $wt_FreeSpace = 30;
+            $wt_start_FreeSpace = $wt;
+            $cellZapisFreeSpace_Height = $wt_FreeSpace*2;
+            $cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-$start)*2;
+
+            $rezult .= '
+												<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$filial_id.', \''.$filial_id.'\', '.$kab.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker_id.', \''.WriteSearchUser('spr_workers', $worker_id, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">';
+            $rezult .= '
+												</div>';
+
+
+
+
+        }
+
+		return $rezult;
+	}
 
 ?>

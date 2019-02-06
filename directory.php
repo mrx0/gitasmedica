@@ -24,6 +24,8 @@
 
             if (($finances['see_all'] == 1) || $god_mode) {
                 echo '<a href="fl_salaries.php" class="b3" title="Оклады сотрудников">Оклады сотрудников</a>';
+
+                echo '<a href="fl_spr_revenue_percent.php" class="b3" title="Проценты от выручки">Проценты от выручки</a>';
             }
 
             echo '<a href="pricelist.php" class="b3" title="Прайс">Прайс</a>';

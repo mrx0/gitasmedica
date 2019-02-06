@@ -920,7 +920,7 @@
 	}
 	
 	//Обновление карточки пользователя из-под Web
-	function WriteWorkerToDB_Update($session_id, $worker_id, $org, $permissions, $specializations, $contacts, $fired){
+	function WriteWorkerToDB_Update($session_id, $worker_id, $org, $permissions, $specializations, $category, $contacts, $fired){
 
         $msql_cnnct = ConnectToDB ();
 
@@ -953,6 +953,15 @@
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
             }
+        }
+
+        //Категории
+        $query = "DELETE FROM `journal_work_cat` WHERE `worker_id`='".$worker_id."'";
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        if ($category != 0) {
+            $query = "INSERT INTO `journal_work_cat` (`worker_id`, `category`) VALUES ('$worker_id', '$category')";
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
         }
 
 		//логирование
@@ -1169,16 +1178,16 @@
 	}
 
 	//Вставка и обновление специализации из-под Web
-	function WriteToDB_EditSpecialization ($name, $session_id){
+	function WriteToDB_EditSpecialization ($name, $permission, $session_id){
 
         $msql_cnnct = ConnectToDB ();
 
         $time = date('Y-m-d H:i:s', time());
 
 		$query = "INSERT INTO `spr_specialization` (
-			`name`, `create_time`, `create_person`)
+			`name`, `permission`, `create_time`, `create_person`)
 			VALUES (
-			'{$name}', '{$time}', '{$session_id}') ";
+			'{$name}', '{$permission}', '{$time}', '{$session_id}') ";
 
 		//mysqli_query($query) or die($query.' -> '.mysql_error());
 		//mysqli_close();
@@ -1311,7 +1320,7 @@
 				}
 				if ($type == 'worker_id'){
 					$q = " WHERE `id` = '$sw'";
-                    if ($datatable == 'journal_work_spec'){
+                    if (($datatable == 'journal_work_spec') || ($datatable == 'journal_work_cat')){
                         $q = " WHERE `worker_id` = '$sw'";
                     }
 				}
@@ -1390,6 +1399,9 @@
 				if ($type == 'type'){
 					$q = " WHERE `type` = '$sw'";
 				}
+                if ($type == 'permission'){
+					$q = " WHERE `permission` = '$sw'";
+				}
 			}
 		
 		}
@@ -1463,7 +1475,7 @@
 		$datatable = trim(strip_tags(stripcslashes(htmlspecialchars($datatable))));
 
 		//$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' LIMIT 5";
-		$query = "SELECT * FROM `$datatable` WHERE `num` LIKE '%$search_data%' AND `status`<> 9 ORDER BY `num` ASC LIMIT 3";
+		$query = "SELECT * FROM `$datatable` WHERE `num` LIKE '%$search_data%' AND `status`<> 9 ORDER BY `num` ASC LIMIT 5";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

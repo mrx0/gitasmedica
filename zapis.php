@@ -302,7 +302,7 @@
 				
 				$filial = SelDataFromDB('spr_filials', $_GET['filial'], 'offices');
 				//var_dump($filial['name']);
-				
+
 				$kabsInFilial_arr = SelDataFromDB('spr_kabs', $_GET['filial'], 'office_kabs');
 				if ($kabsInFilial_arr != 0){
 					$kabsInFilial_json = $kabsInFilial_arr[0][$kabsForDoctor];
@@ -504,7 +504,7 @@
 										<span style="color: rgb(125, 125, 125);">
 											Изменить дату:
 											<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off"> 
 											<span class="button_tiny" style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'zapis.php?'.$dopFilial.$dopWho.$dopClient.'\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
 										</span>
 									</div>
@@ -576,6 +576,11 @@
 						}
 						echo '</div>
 							</td>';
+
+
+                        //Соберём всю запись за сегодня на филиале у этих специалистов
+                        //$ZapisHereQueryToday3 = FilialKabSmenaZapisToday3($datatable, $year, $month, $day, $_GET['filial'], $type);
+                        //var_dump ($ZapisHereQueryToday3);
 						
 						for ($k = 1; $k <= count($kabsInFilial); $k++){
 							echo '
@@ -612,7 +617,7 @@
 								//Выбрать записи пациентов, если есть
 								//$ZapisHereQueryToday = FilialKabSmenaZapisToday($datatable, $y, $m, $d, $_GET['filial'], $k);
 								//var_dump ($ZapisHereQueryToday);
-								
+
 								$NextTime = FALSE;
 								$ThatTimeFree = TRUE;
 								$PeredannNextTime = FALSE;
@@ -624,13 +629,13 @@
 								$NextFill = FALSE;
 
 								for ($wt=540; $wt < 900; $wt=$wt+30){
-									
+
 									if (isset($Work_Today_arr[$k][1])){
 										$bg_color = '';
 									}else{
 										$bg_color = ' background-color: #f0f0f0;';
 									}
-									
+
 									$back_color = '';
 									/*echo '
 										<div class="cellZapisTime" style="text-align: -moz-center; text-align: center; text-align: -webkit-center; top: '.$cellZapisTime_TopSdvig.'px;" onclick="window.location.href = \'zapis_full.php?filial='.$_GET['filial'].'&who='.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'\'">
@@ -639,11 +644,11 @@
 									echo '
 										</div>';*/
 									$cellZapisTime_TopSdvig = $cellZapisTime_TopSdvig + 60;
-									
+
 									//Выбрать записи пациентов, если есть
 									$ZapisHereQueryToday = FilialKabSmenaZapisToday2($datatable, $year, $month, $day, $_GET['filial'], $k, $wt, $type);
 									//var_dump ($ZapisHereQueryToday);
-									
+
 									if ($ZapisHereQueryToday != 0){
 										//Если тут записей больше 1
 										if (count($ZapisHereQueryToday) > 1){
@@ -657,7 +662,7 @@
 													$TempEndWorkTime_h = floor(($ZapisHereQueryToday_val['start_time']+$ZapisHereQueryToday_val['wt'])/60);
 													if ($TempEndWorkTime_h > 23) $TempEndWorkTime_h = $TempEndWorkTime_h - 24;
 													$TempEndWorkTime_m = ($ZapisHereQueryToday_val['start_time']+$ZapisHereQueryToday_val['wt'])%60;
-													if ($TempEndWorkTime_m < 10) $TempEndWorkTime_m = '0'.$TempEndWorkTime_m;	
+													if ($TempEndWorkTime_m < 10) $TempEndWorkTime_m = '0'.$TempEndWorkTime_m;
 													//Сдвиг для блока
 													$cellZapisValue_TopSdvig = (floor(($ZapisHereQueryToday_val['start_time']-540)/30)*60 + ($ZapisHereQueryToday_val['start_time']-540)%30*2);
 													//Высота блока
@@ -667,7 +672,7 @@
 														$NextFill = TRUE;
 														//$PrevZapis = $ZapisHereQueryToday_val;
 													}
-													
+
 													//Если перед первой работой от начала промежутка есть свободное время
 													if ($Zapis_key == 0){
 														if ($ZapisHereQueryToday_val['start_time'] > $wt){
@@ -713,8 +718,8 @@
 																	$NextFill = TRUE;
 																	//$PrevZapis = $ZapisHereQueryToday_val;
 																}
-															}	
-															
+															}
+
 														}else{
 															$wt_FreeSpace = $ZapisHereQueryToday_val['start_time'] - ($PrevZapis['start_time']+$PrevZapis['wt']);
 															$wt_start_FreeSpace = $PrevZapis['start_time'] + $PrevZapis['wt'];
@@ -728,7 +733,7 @@
 																</div>';
 														}
 													}
-													
+
 													//Если время выполнения работы больше чем осталось до конца смены
 													if ($wt == 870){
 														if ($cellZapisValue_Height > 60){
@@ -772,7 +777,7 @@
 												$TempEndWorkTime_h = floor(($ZapisHereQueryToday[0]['start_time']+$ZapisHereQueryToday[0]['wt'])/60);
 												if ($TempEndWorkTime_h > 23) $TempEndWorkTime_h = $TempEndWorkTime_h - 24;
 												$TempEndWorkTime_m = ($ZapisHereQueryToday[0]['start_time']+$ZapisHereQueryToday[0]['wt'])%60;
-												if ($TempEndWorkTime_m < 10) $TempEndWorkTime_m = '0'.$TempEndWorkTime_m;	
+												if ($TempEndWorkTime_m < 10) $TempEndWorkTime_m = '0'.$TempEndWorkTime_m;
 												//Сдвиг для блока
 												$cellZapisValue_TopSdvig = (floor(($ZapisHereQueryToday[0]['start_time']-540)/30)*60 + ($ZapisHereQueryToday[0]['start_time']-540)%30*2);
 												//Высота блока
@@ -807,7 +812,7 @@
 														$wt_start_FreeSpace = $wt;
 														$cellZapisFreeSpace_Height = $wt_FreeSpace*2;
 														$cellZapisFreeSpace_TopSdvig = ($wt_start_FreeSpace-540)*2;
-														
+
 														/*if ($PrevZapis['start_time'] + $PrevZapis['wt'] < $wt+30){
 															$NextFill = FALSE;
 															$wt_FreeSpace = $wt+30-($PrevZapis['start_time'] + $PrevZapis['wt']);
@@ -821,7 +826,7 @@
 															echo '
 																</div>';
 														}*/
-														
+
 													}
 													echo '
 														<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$_GET['filial'].', \''.$filial[0]['name'].'\', '.$k.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker.', \''.WriteSearchUser('spr_workers', $worker, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">
@@ -830,7 +835,7 @@
 													echo '
 														</div>';
 												}
-												
+
 												//Если время выполнения работы больше чем осталось до конца смены
 												if ($wt == 870){
 													if ($cellZapisValue_Height > 60){
@@ -1108,7 +1113,7 @@
 														$TempEndWorkTime_h = floor(($ZapisHereQueryToday_val['start_time']+$ZapisHereQueryToday_val['wt'])/60);
 														if ($TempEndWorkTime_h > 23) $TempEndWorkTime_h = $TempEndWorkTime_h - 24;
 														$TempEndWorkTime_m = ($ZapisHereQueryToday_val['start_time']+$ZapisHereQueryToday_val['wt'])%60;
-														if ($TempEndWorkTime_m < 10) $TempEndWorkTime_m = '0'.$TempEndWorkTime_m;	
+														if ($TempEndWorkTime_m < 10) $TempEndWorkTime_m = '0'.$TempEndWorkTime_m;
 														//Сдвиг для блока
 														$cellZapisValue_TopSdvig = (floor(($ZapisHereQueryToday_val['start_time']-900)/30)*60 + ($ZapisHereQueryToday_val['start_time']-540)%30*2);
 														//Высота блока

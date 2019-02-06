@@ -34,6 +34,27 @@
 							</div>
 						</div>
 
+						<div class="cellsBlock2">
+							<div class="cellLeft">Для сотрудников</div>
+							<div class="cellRight">';
+
+		//Типы сотрудников
+        $arr_permissions = SelDataFromDB('spr_permissions', '', '');
+
+        echo '
+                                <select name="permissions" id="permissions">
+                                    <option value="0">Нажми и выбери</option>';
+
+        for ($i=0;$i<count($arr_permissions);$i++){
+                echo "<option value='".$arr_permissions[$i]['id']."'>".$arr_permissions[$i]['name']."</option>";
+        }
+        echo '
+                                </select>';
+
+        echo '
+							</div>
+						</div>
+
 						<input type="button" class="b" value="Добавить" onclick="Ajax_specialization_add(\'add\')">
 					</form>';	
 			

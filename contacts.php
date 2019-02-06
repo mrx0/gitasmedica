@@ -163,24 +163,50 @@
 
             if ($_GET){
 
-                $msql_cnnct = ConnectToDB ();
+//                $query = "SELECT sw.*, sc.name AS category
+//                FROM `journal_work_cat` jwcat
+//                RIGHT JOIN (
+//                  SELECT * FROM `spr_categories`
+//                ) sc ON sc.id = jwcat.worker_id
+//                RIGHT JOIN (
+//                  SELECT * FROM `spr_workers` s_w WHERE s_w.permissions = '".$type."'
+//                ) sw ON sw.id = jwcat.worker_id";
 
-                $query = "SELECT * FROM `spr_workers` WHERE `permissions`='".$type."'";
 
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                $number = mysqli_num_rows($res);
-                if ($number != 0){
-                    while ($arr = mysqli_fetch_assoc($res)){
-                        array_push($contacts, $arr);
-                    }
-                }else{
-                    //$sheduler_zapis = 0;
-                    //var_dump ($sheduler_zapis);
-                }
+                $query = "SELECT sw.*, sc.name AS category
+                FROM `spr_workers` sw  
+                LEFT JOIN `journal_work_cat` jwcat ON sw.id = jwcat.worker_id
+                LEFT JOIN `spr_categories` sc ON jwcat.category = sc.id
+                WHERE sw.permissions = '".$type."'";
+
+                //var_dump($query);
+
             }else {
-                $contacts = SelDataFromDB('spr_workers', '', '');
-                //var_dump ($contacts);
+                //!!! переделать с категориями
+                //$contacts = SelDataFromDB('spr_workers', '', '');
+
+                $query = "SELECT sw.*, sc.name AS category
+                FROM `spr_workers` sw  
+                LEFT JOIN `journal_work_cat` jwcat ON sw.id = jwcat.worker_id
+                LEFT JOIN `spr_categories` sc ON jwcat.category = sc.id";
+
             }
+
+            $msql_cnnct = ConnectToDB ();
+
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($contacts, $arr);
+                }
+            }else{
+                //$sheduler_zapis = 0;
+                //var_dump ($sheduler_zapis);
+            }
+
+            //var_dump($contacts);
 
 			$arr_permissions = SelDataFromDB('spr_permissions', '', '');
 			//var_dump ($arr_permissions);
@@ -220,6 +246,7 @@
                 echo '
 								</div>
 								<div class="cellOffice" style="text-align: center">Должность</div>
+								<div class="cellName" style="text-align: center">Категория</div>
 								<div class="cellFullName" style="text-align: center">Специализация</div>
 								
 								<div class="cellText" style="text-align: center">Контакты</div>
@@ -242,9 +269,17 @@
 							echo '
 								<li class="cellsBlock cellsBlockHover ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'">
 									<a href="user.php?id='.$contacts[$i]['id'].'" class="cellFullName ahref 4filter" id="4filter" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$contacts[$i]['full_name'].'</a>
-									<div class="cellOffice" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>', $permissions != '0' ? $permissions : '-' ,'</div>									
+									<div class="cellOffice" style="text-align: right;">', $permissions != '0' ? $permissions : '-' ,'</div>									
+									<div class="cellName" style="text-align: right;">';
+
+							        //категория
+
+                            echo $contacts[$i]['category'];
+
+                            echo '
+                                    </div>									
 									   
-									<div class="cellFullName" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>';
+									<div class="cellFullName"  style="text-align: right;">';
 
                             if ($specializations != 0){
                                 //var_dump($specializations_j);
@@ -261,8 +296,8 @@
 							echo '
                                     </div>
 									
-									<div class="cellText" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$contacts[$i]['contacts'].'</div>
-									<div class="cellName" style="text-align: center; ', $contacts[$i]['fired'] == '1' ? 'background-color: rgba(161,161,161,1);"' : '"' ,'>'.$contacts[$i]['login'].'</div>';
+									<div class="cellText" >'.$contacts[$i]['contacts'].'</div>
+									<div class="cellName" style="text-align: center;">'.$contacts[$i]['login'].'</div>';
 							if (($workers['see_own'] == 1) &&
 							(($contacts[$i]['permissions'] == 4) || ($contacts[$i]['permissions'] == 5) ||  ($contacts[$i]['permissions'] == 6) ||  ($contacts[$i]['permissions'] == 7) ||  ($contacts[$i]['permissions'] == 9)) || $god_mode){
 								echo '
@@ -278,83 +313,71 @@
 							echo '
 									</li>';
 						}else{
+						    //Уволенные
 							$fired_all .= '
-								<li class="cellsBlock cellsBlockHover ';
-								if ($contacts[$i]['fired'] == '1') 
-									$fired_all .= 'style="background-color: rgba(161,161,161,1);"'; 
-								else 
-									$fired_all .= ''; 
-								$fired_all .= '">
-									<a href="user.php?id='.$contacts[$i]['id'].'" class="cellFullName ahref 4filter" id="4filter" ';
-								if ($contacts[$i]['fired'] == '1') 
-									$fired_all .= 'style="background-color: rgba(161,161,161,1);"';
-								else 
-									$fired_all .= '';
-								$fired_all .= '>'.$contacts[$i]['full_name'].'</a>
-									<div class="cellOffice" ';
-								if ($contacts[$i]['fired'] == '1') 
-									$fired_all .= 'style="background-color: rgba(161,161,161,1);"';
-								else 
-									$fired_all .= '' ;
-								$fired_all .= '>';
-								if ($permissions != '0') 
-									$fired_all .= $permissions;
-								else
-									$fired_all .= '-';
-								$fired_all .= '</div>
-                                    <div class="cellFullName" ';
-                                if ($contacts[$i]['fired'] == '1')
-                                    $fired_all .= 'style="background-color: rgba(161,161,161,1);"';
-                                else
-                                    $fired_all .= '' ;
-                                $fired_all .= '>';
+								<li class="cellsBlock cellsBlockHover" ';
 
-                                if ($specializations != 0){
-                                    foreach ($specializations as $data){
-                                        $specializations_str_rez .= $data['name'].' ';
-                                    }
-                                }else{
-                                    $specializations_str_rez = '-';
+                            if ($contacts[$i]['fired'] == '1')
+                                $fired_all .= 'style="background-color: rgba(161,161,161,1);"';
+                            else
+                                $fired_all .= '';
+
+                            $fired_all .= '>
+							        <a href="user.php?id='.$contacts[$i]['id'].'" class="cellFullName ahref 4filter" id="4filter">
+							            '.$contacts[$i]['full_name'].'
+							        </a>
+								    <div class="cellOffice" style="text-align: right;">';
+
+                            if ($permissions != '0')
+                                $fired_all .= $permissions;
+                            else
+                                $fired_all .= '-';
+
+                            $fired_all .= '
+                                    </div>';
+
+                            //категория
+                            $fired_all .= '
+                                    <div class="cellName" style="text-align: right;">
+                                        '.$contacts[$i]['category'].'
+                                    </div>';
+
+                            //Специализации
+
+                            if ($specializations != 0){
+                                foreach ($specializations as $data){
+                                    $specializations_str_rez .= $data['name'].' ';
                                 }
-    
-                                $fired_all .= $specializations_str_rez;
+                            }else{
+                                $specializations_str_rez = '-';
+                            }
 
+                            $fired_all .= '
+                                    <div class="cellFullName">
+                                        '.$specializations_str_rez.'
+                                    </div>
+                                    
+                                    <div class="cellText">
+                                        '.$contacts[$i]['contacts'].'
+                                    </div>
+                                    
+                                    <div class="cellName" style="text-align: center;">
+                                        '.$contacts[$i]['login'].'
+                                    </div>';
 
-                                $fired_all .= '</div>
-                                    <div class="cellText" ';
-                                
-								if ($contacts[$i]['fired'] == '1') 
-									$fired_all .= 'style="background-color: rgba(161,161,161,1);"';
-								else
-									$fired_all .= '';
-								$fired_all .= '>'.$contacts[$i]['contacts'].'</div>
-									<div class="cellName" style="text-align: center; ';
-								if ($contacts[$i]['fired'] == '1') 
-									$fired_all .= 'background-color: rgba(161,161,161,1);"';
-								else 
-									$fired_all .= '"';
-								$fired_all .= '>'.$contacts[$i]['login'].'</div>';
 							if ($god_mode){			
-								$fired_all .= '
-										<div class="cellName" style="text-align: center; ';
-								if ($contacts[$i]['fired'] == '1') 
-									$fired_all .= 'background-color: rgba(161,161,161,1);"';
-								else
-									$fired_all .= '"';
-								$fired_all .= '>'.$contacts[$i]['password'].'</div>';
+								$fired_all .= '<div class="cellName" style="text-align: center;">'.$contacts[$i]['password'].'</div>';
 							}else{
-								$fired_all .= '<div class="cellName" style="text-align: center; ';
-								if ($contacts[$i]['fired'] == '1') 
-									$fired_all .= 'background-color: rgba(161,161,161,1);"';
-								else
-									$fired_all .= '"';
-								$fired_all .= '>****</div>';
+								$fired_all .= '<div class="cellName" style="text-align: center;">****</div>';
 							}
+
 							$fired_all .= '
-									</li>';
+							    </li>';
 						}
 					}
 				}
+
+				//Выводим уволенных
 				if ($fired_all != ''){
 					if (($workers['see_own'] == 1) || $god_mode){
 						if (true || $god_mode){
