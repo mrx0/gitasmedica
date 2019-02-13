@@ -33,6 +33,8 @@
             }
             //var_dump($category);
 
+            $filials_j = getAllFilials(false, false);
+
 			//операции со временем						
 			$month = date('m');		
 			$year = date('Y');
@@ -103,6 +105,20 @@
             }
 
 			echo '	
+                            </div>
+                        </div>
+                        
+                        <div class="cellsBlock2">
+                            <div class="cellLeft">Филиал</div>
+                            <div class="cellRight">';
+
+			if ($user[0]['filial_id'] != 0){
+                echo  $filials_j[$user[0]['filial_id']]['name'];
+            }else{
+			    echo 'нет привязки';
+            }
+
+            echo '
                             </div>
                         </div>
                                         

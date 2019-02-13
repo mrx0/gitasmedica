@@ -19,7 +19,8 @@
     unset($_SESSION['invoice_data']);
     unset($_SESSION['calculate_data']);
     unset($_SESSION['fl_calcs_tabels']);
-	
+    unset($_SESSION['scheduler3']);
+
 	//вся процедура работает на сессиях. Именно в ней хранятся данные  пользователя, пока он находится на сайте. Очень важно запустить их в  самом начале странички!!!
 	if (isset($_POST['login'])){
 		$login = $_POST['login']; 

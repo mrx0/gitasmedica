@@ -336,6 +336,8 @@
         // console.log(category);
         // console.log(checkedItems2());
 
+        var filial = $('#SelectFilial').val();
+
         $.ajax({
             url:"user_edit_f.php",
             global: false,
@@ -348,7 +350,8 @@
                     contacts: contacts,
                     fired: fired,
                     specializations: checkedItems2(),
-                    category: category
+                    category: category,
+                    filial: filial
 
                 },
             cache: false,
@@ -2241,6 +2244,11 @@
             success:function(res){
             	console.log(res);
 
+            	if (res.data == "true"){
+					$("#manageMessage").html("Управление выключить");
+				}else{
+                    $("#manageMessage").html("Управление включить");
+				}
             }
         })
 	}
@@ -8691,3 +8699,285 @@
         $(".button_in_input").hide();
         $("#search_result_fc2").html("");
 	}
+
+
+	//Для графика фактического
+    function ShowSettingsSchedulerFakt(filial, filial_name, kabN, year, month, day, smenaN){
+        $("#ShowSettingsSchedulerFakt").show();
+        $("#overlay").show();
+        //alert(month_date);
+        window.scrollTo(0,0);
+
+        $("#filial_value").html(filial);
+        $("#filial_name").html(filial_name);
+
+        $("#month_date").html(day+'.'+month+'.'+year);
+        $("#year").html(year);
+        $("#month").html(month);
+        $("#day").html(day);
+
+        $("#kabN").html(kabN);
+        $("#smenaN").html(smenaN);
+
+
+        //Те, кто уже есть
+        $.ajax({
+            // метод отправки
+            type: "POST",
+            // путь до скрипта-обработчика
+            url: "scheduler_workers_here_fakt.php",
+            // какие данные будут переданы
+            data: {
+                day: day,
+                month: month,
+                year: year,
+                kab: kabN,
+                smena: smenaN,
+                filial: filial,
+                type: $("#type").val()
+            },
+            // действие, при ответе с сервера
+            success: function(workers_here){
+                $("#workersTodayDelete").html(workers_here);
+            }
+        });
+
+        //Те, кто свободен
+        $.ajax({
+            // метод отправки
+            type: "POST",
+            // путь до скрипта-обработчика
+            url: "scheduler_workers_free_fakt.php",
+            // какие данные будут переданы
+            data: {
+                day: day,
+                month: month,
+                year: year,
+                smena: smenaN,
+                type: $("#type").val()
+            },
+            // действие, при ответе с сервера
+            success: function(workers){
+                $("#ShowWorkersHere").html(workers);
+            }
+        });
+
+        //Если надо указать тип графика, то показываем галочку
+        // if ($("#type").val() == 4){
+        // 	$("#schedulerType").show();
+        //     $("#twobytwo").prop("checked", false);
+        // }
+    }
+
+    function HideSettingsSchedulerFakt(){
+        $("#ShowSettingsSchedulerFakt").hide();
+        $("#overlay").hide();
+        var input = document.getElementsByName("DateForMove");
+        for (var i=0; i<input.length; i++)  {
+            if(input[i].value=="0") input[i].checked="checked";
+        }
+
+        $('.error').hide();
+        document.getElementById("errror").innerHTML = '';
+    }
+
+    function ShowWorkersSmena(){
+        var smena = 0;
+        if ( $("#smena1").prop("checked")){
+            if ( $("#smena2").prop("checked")){
+                smena = 9;
+            }else{
+                smena = 1;
+            }
+        }else if ( $("#smena2").prop("checked")){
+            smena = 2;
+        }
+
+        $.ajax({
+            // метод отправки
+            type: "POST",
+            // путь до скрипта-обработчика
+            url: "show_workers_free.php",
+            // какие данные будут переданы
+            data: {
+                day: $('#day').val(),
+				month: $('#month').val(),
+				year: $('#year').val(),
+				smena: smena,
+            	type: $('type').val()
+    		},
+			// действие, при ответе с сервера
+			success: function(workers){
+                $("#ShowWorkersHere").html(workers);
+			}
+    	});
+    }
+
+    //Удаляем из смены
+    function DeleteWorkersSmenaFakt(worker, filial, day, month, year, smena, kab, type){
+        var rys = confirm("Удалить сотрудника из смены?");
+        if (rys){
+            $.ajax({
+                // метод отправки
+                type: "POST",
+                // путь до скрипта-обработчика
+                url: "scheduler_worker_delete_fakt.php",
+                // какие данные будут переданы
+                data: {
+                    worker: worker,
+                    filial: filial,
+                    day: day,
+                    month: month,
+                    year: year,
+                    smena: smena,
+                    kab: kab,
+                    type: type
+                },
+                // действие, при ответе с сервера
+                success: function(request){
+                    document.getElementById("workersTodayDelete").innerHTML=request;
+                    setTimeout(function () {
+                        location.reload()
+                    }, 100);
+                }
+            });
+        }
+    }
+
+    function ChangeWorkerShedulerFakt() {
+		//console.log($("#twobytwo").prop("checked"));
+
+        $(".error").hide();
+        document.getElementById("errrror").innerHTML = "";
+
+        // получение данных из полей
+        var day = $("#day").html();
+        var month = $("#month").html();
+        var year = $("#year").html();
+        var filial = $("#filial_value").html();
+        var kab = $("#kabN").html();
+        var smena = $("#smenaN").html();
+        var type = $("#type").val();
+
+        var worker = $("input[name=worker]:checked").val();
+        if(typeof worker == "undefined") worker = 0;
+
+        var twobytwo = 0;
+        // if ($("#twobytwo").prop("checked")){
+         //     twobytwo = 1;
+		// }
+
+        $.ajax({
+            dataType: "json",
+            //statbox:SettingsScheduler,
+            // метод отправки
+            type: "POST",
+            // путь до скрипта-обработчика
+            url: "scheduler_worker_edit_fakt_f.php",
+            // какие данные будут переданы
+            data: {
+                day: day,
+                month: month,
+                year: year,
+                filial: filial,
+                kab: kab,
+                smena: smena,
+                type: type,
+                worker: worker,
+                twobytwo: twobytwo
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+            	//console.log(res);
+
+                //document.getElementById("errrror").innerHTML = data;
+                if (res.req == "ok"){
+                    // прячем текст ошибок
+                    $(".error").hide();
+                    document.getElementById("errrror").innerHTML = "";
+                    setTimeout(function () {
+                        location.reload()
+                    }, 100);
+                }
+            }
+        });
+    };
+
+    //Показать/скрыть текст внутри
+    function SetVisible(obj, val){
+    	//console.log(obj.getElementsByTagName('div').className);
+        obj.getElementsByTagName('div').className = val ? "div_up_visible" : "div_up_hidden";
+
+		if (val){
+            $(obj).find('div').show();
+		}else{
+            $(obj).find('div').hide();
+		}
+    }
+
+    //Для изменения графика админов, ассистентов, ...  (scheduler3.php)
+	// !! 2019.02.13 пока не знаю, будет писаться сразу в базу или все таки собираться в массив и потом по кнопке сохранить...
+    function changeTempSchedulerTempSession(obj, worker_id, filial_id, day, month, year, holiday){
+    	//!!!Тест выводим все аргументы функции
+		//console.log(arguments);
+		//console.log($(obj).attr("selectedDate"));
+
+        //blockWhileWaiting (true);
+
+        //маркер выделено или нет
+        var selected = 0;
+        var selectedDate = $(obj).attr("selectedDate");
+
+        //Если было не выбрано, ставим выбор
+        if (selectedDate == 0){
+            $(obj).css('backgroundColor', 'rgba(49, 239, 96, 0.52)');
+
+        	//меняем значение
+            $(obj).attr("selectedDate", 1);
+
+            selected = 1;
+		}else{
+        	//Если было выбрано, снимаем выбор
+			if ((holiday == 6) || (holiday == 7)) {
+                $(obj).css('backgroundColor', 'rgba(234, 123, 32, 0.15)');
+            }else{
+                $(obj).css('backgroundColor', 'rgba(255, 255, 255, 0.15)');
+			}
+            //меняем значение
+            $(obj).attr("selectedDate", 0);
+
+            selected = 0;
+		}
+
+        //Добавляем в сессию
+        var link = "";
+
+        var reqData = {
+            worker_id: worker_id,
+            filial_id: filial_id,
+            day: day,
+            month: month,
+            year: year,
+            selected: selected
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+
+                blockWhileWaiting (false);
+            }
+
+        });
+
+
+    }

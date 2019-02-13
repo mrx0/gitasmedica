@@ -24,6 +24,7 @@
 	unset($_SESSION['invoice_data']);
     unset($_SESSION['calculate_data']);
     unset($_SESSION['fl_calcs_tabels']);
+    unset($_SESSION['scheduler3']);
 
 	//Переадресовываем на главную
 	//header("location: index.php");
