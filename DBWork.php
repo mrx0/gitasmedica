@@ -920,7 +920,7 @@
 	}
 	
 	//Обновление карточки пользователя из-под Web
-	function WriteWorkerToDB_Update($session_id, $worker_id, $org, $permissions, $specializations, $category, $contacts, $fired){
+	function WriteWorkerToDB_Update($session_id, $worker_id, $org, $permissions, $specializations, $category, $filial_id, $contacts, $fired){
 
         $msql_cnnct = ConnectToDB ();
 
@@ -938,7 +938,7 @@
 			$old = 'Не нашли старую запись.';
 		}
 		$time = time();
-		$query = "UPDATE `spr_workers` SET `org`='{$org}', `permissions`='{$permissions}', `contacts`='{$contacts}', `fired`='{$fired}' WHERE `id`='{$worker_id}'";
+		$query = "UPDATE `spr_workers` SET `org`='{$org}', `permissions`='{$permissions}', `filial_id`='{$filial_id}', `contacts`='{$contacts}', `fired`='{$fired}' WHERE `id`='{$worker_id}'";
 
 		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

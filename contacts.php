@@ -13,7 +13,8 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			//var_dump($_SESSION);
-			//$offices = SelDataFromDB('spr_filials', '', '');
+
+            $filials_j = getAllFilials(false, false);
 			
 			echo '
 				<header style="margin-bottom: 5px;">
@@ -247,6 +248,7 @@
 								</div>
 								<div class="cellOffice" style="text-align: center">Должность</div>
 								<div class="cellName" style="text-align: center">Категория</div>
+								<div class="cellName" style="text-align: center">Филиал</div>
 								<div class="cellFullName" style="text-align: center">Специализация</div>
 								
 								<div class="cellText" style="text-align: center">Контакты</div>
@@ -277,7 +279,18 @@
                             echo $contacts[$i]['category'];
 
                             echo '
-                                    </div>									
+                                    </div>';
+
+                            //Филиал
+                            echo '
+                                    <div class="cellName" style="text-align: right;">';
+
+                            if ($contacts[$i]['filial_id'] != 0){
+                                echo $filials_j[$contacts[$i]['filial_id']]['name'];
+                            }
+
+                            echo '
+                                    </div>
 									   
 									<div class="cellFullName"  style="text-align: right;">';
 
@@ -342,6 +355,17 @@
                                         '.$contacts[$i]['category'].'
                                     </div>';
 
+                            //Филиал
+                            $fired_all .= '
+                                    <div class="cellName" style="text-align: right;">';
+
+                            if ($contacts[$i]['filial_id'] != 0){
+                                $fired_all .= $filials_j[$contacts[$i]['filial_id']]['name'];
+                            }
+
+                            $fired_all .= '
+                                    </div>';
+
                             //Специализации
 
                             if ($specializations != 0){
@@ -353,7 +377,7 @@
                             }
 
                             $fired_all .= '
-                                    <div class="cellFullName">
+                                    <div class="cellFullName" style="text-align: right;">
                                         '.$specializations_str_rez.'
                                     </div>
                                     

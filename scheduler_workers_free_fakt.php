@@ -1,6 +1,6 @@
 <?php 
 
-//scheduler_workers_free.php
+//scheduler_workers_free_fakt.php
 //
 
 	session_start();

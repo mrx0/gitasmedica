@@ -31,7 +31,7 @@
 
                 $category = SelDataFromDB('journal_work_cat', $_GET['id'], 'worker_id');
                 //var_dump($category);
-			
+                $filials_j = getAllFilials(false, false);
 			
                 if ($user !=0){
                     echo '
@@ -169,9 +169,33 @@
                     }
                     echo '
 									</div>
-								</div>
-								';
+								</div>';
 
+                    echo '
+                                <div class="cellsBlock2">
+                                    <div class="cellLeft">Филиал</div>
+                                    <div class="cellRight">';
+
+                    echo '
+                                        <select name="SelectFilial" id="SelectFilial">
+                                            <option value="0">нет привязки</option>';
+
+                    foreach ($filials_j as $filial_item) {
+
+                        $selected = '';
+
+                        if ($user[0]['filial_id'] == $filial_item['id']) {
+                            $selected = 'selected';
+                        }
+
+                        echo '
+                                <option value="' . $filial_item['id'] . '" ' . $selected . '>' . $filial_item['name'] . '</option>';
+                    }
+
+                    echo '
+                                        </select>
+                                    </div>
+								</div>';
 				    echo '								
 								
 								<div class="cellsBlock2">
