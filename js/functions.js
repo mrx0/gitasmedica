@@ -8905,19 +8905,24 @@
 
     //Показать/скрыть текст внутри
     function SetVisible(obj, val){
+    	//console.log(val);
     	//console.log(obj.getElementsByTagName('div').className);
+        //console.log(obj.className);
+
         obj.getElementsByTagName('div').className = val ? "div_up_visible" : "div_up_hidden";
 
 		if (val){
             $(obj).find('div').show();
+            //$("."+obj.className).addClass("cellsBlockHover2");
 		}else{
             $(obj).find('div').hide();
+            //$("."+obj.className).removeClass("cellsBlockHover2");
 		}
     }
 
     //Для изменения графика админов, ассистентов, ...  (scheduler3.php)
 	// !! 2019.02.13 пока не знаю, будет писаться сразу в базу или все таки собираться в массив и потом по кнопке сохранить...
-    function changeTempSchedulerTempSession(obj, worker_id, filial_id, day, month, year, holiday){
+    function changeTempSchedulerSession(obj, worker_id, filial_id, day, month, year, holiday){
     	//!!!Тест выводим все аргументы функции
 		//console.log(arguments);
 		//console.log($(obj).attr("selectedDate"));
@@ -8930,7 +8935,11 @@
 
         //Если было не выбрано, ставим выбор
         if (selectedDate == 0){
-            $(obj).css('backgroundColor', 'rgba(49, 239, 96, 0.52)');
+            if ((holiday == 6) || (holiday == 7)) {
+                $(obj).css('backgroundColor', 'rgba(24, 144, 54, 0.52) !important');
+            }else{
+                $(obj).css('backgroundColor', 'rgba(49, 239, 96, 0.52) !important');
+			}
 
         	//меняем значение
             $(obj).attr("selectedDate", 1);
@@ -8939,9 +8948,9 @@
 		}else{
         	//Если было выбрано, снимаем выбор
 			if ((holiday == 6) || (holiday == 7)) {
-                $(obj).css('backgroundColor', 'rgba(234, 123, 32, 0.15)');
+                $(obj).css('backgroundColor', 'rgba(234, 123, 32, 0.15) !important');
             }else{
-                $(obj).css('backgroundColor', 'rgba(255, 255, 255, 0.15)');
+                $(obj).css('backgroundColor', 'rgba(255, 255, 255, 0.15) !important');
 			}
             //меняем значение
             $(obj).attr("selectedDate", 0);
@@ -8950,7 +8959,7 @@
 		}
 
         //Добавляем в сессию
-        var link = "";
+        var link = "add_temp_scheduler_in_session_f.php";
 
         var reqData = {
             worker_id: worker_id,
@@ -8974,10 +8983,93 @@
             success: function (res) {
                 //console.log (res);
 
+				if (res.isset){
+                    //console.log (res);
+
+                    $("#ShowSettingsSchedulerFakt").show();
+				}else{
+                    $("#ShowSettingsSchedulerFakt").hide();
+				}
+
                 blockWhileWaiting (false);
             }
 
         });
+    }
+
+    //Отменение всех изменений
+    //Для изменения графика админов, ассистентов, ...  (scheduler3.php)
+	function cancelChangeTempScheduler(){
+        blockWhileWaiting (true);
+
+        //Чистим сессионный переменную
+        var link = "cancel_temp_scheduler_in_session_f.php";
+
+        var reqData = {
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == "success") {
+                    $("#ShowSettingsSchedulerFakt").hide();
+                    location.reload();
+                }
 
 
+                blockWhileWaiting (false);
+            }
+
+        });
+	}
+
+    //Сохранение всех изменений
+    //Для изменения графика админов, ассистентов, ...  (scheduler3.php)
+	function Ajax_tempScheduler_scheduler3_add(filial_id, month, year){
+        blockWhileWaiting (true);
+
+        //Чистим сессионный переменную
+        var link = "ajax_scheduler3_add_f.php";
+
+        var reqData = {
+            filial_id: filial_id,
+            month: month,
+            year: year,
+            type: $("#type").val()
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == "success") {
+                    //console.log (res);
+
+                    $("#ShowSettingsSchedulerFakt").hide();
+                    location.reload();
+                }
+
+                blockWhileWaiting (false);
+            }
+
+        });
     }
