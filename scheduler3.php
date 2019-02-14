@@ -319,7 +319,7 @@
 			$arr = array();
             $schedulerFaktOther = array();
 
-            $query = "SELECT `id`, `day`, `worker` FROM `scheduler` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year' AND `filial` <> '{$_GET['filial']}'";
+            $query = "SELECT `id`, `day`, `worker`, `filial` FROM `scheduler` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year' AND `filial` <> '{$_GET['filial']}'";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 			$number = mysqli_num_rows($res);
 			if ($number != 0){
@@ -332,7 +332,7 @@
                         $schedulerFaktOther[$arr['worker']][$arr['day']] = array();
                     }
                     //array_push($schedulerFakt[$arr['worker']][$arr['day']], $arr);
-                    $schedulerFaktOther[$arr['worker']][$arr['day']] = 1;
+                    $schedulerFaktOther[$arr['worker']][$arr['day']] = $arr['filial'];
 				}
 			}
 			//var_dump($query);
@@ -532,6 +532,8 @@
                     for ($i=1; $i<=$day_count; $i++){
                         //var_dump(isset($schedulerFakt[$worker_data['id']][$i]));
 
+                        $title = '';
+
                         $selectedDate = 0;
 
                         //Если нет сотрудника
@@ -566,6 +568,8 @@
                         if (isset($schedulerFaktOther[$worker_data['id']])){
                             if (isset($schedulerFaktOther[$worker_data['id']][$i])){
 
+                                $title = $filials_j[$schedulerFaktOther[$worker_data['id']][$i]]['name'];
+
                                 if (!$worker_is_here) {
 
                                     $selectedDate = 2;
@@ -593,7 +597,7 @@
                         }
 
                         echo '
-                            <td selectedDate="'.$selectedDate.'" class="hoverDate'.$i.'" style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="SetVisible(this,true); $(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');" onmouseout="SetVisible(this,false); $(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');">
+                            <td selectedDate="'.$selectedDate.'" class="hoverDate'.$i.'" style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="SetVisible(this,true); $(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');" onmouseout="SetVisible(this,false); $(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');" title="'.$title.'">
                                 <div style="display: none;"><i>'.$i.'</i></div>
                             </td>';
 
@@ -644,6 +648,8 @@
                     //Выведем даты месяца
                     for ($i=1; $i<=$day_count; $i++){
 
+                        $title = '';
+
                         $selectedDate = 0;
 
                         //Если нет сотрудника
@@ -679,6 +685,8 @@
                         if (isset($schedulerFaktOther[$worker_data['id']])){
                             if (isset($schedulerFaktOther[$worker_data['id']][$i])){
 
+                                $title = $filials_j[$schedulerFaktOther[$worker_data['id']][$i]]['name'];
+
                                 if (!$worker_is_here) {
 
                                     $selectedDate = 2;
@@ -706,7 +714,7 @@
                         }
 
                         echo '
-                            <td selectedDate="'.$selectedDate.'" class="hoverDate'.$i.'" style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="SetVisible(this,true); /*$(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');*/" onmouseout="SetVisible(this,false); /*$(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');*/">
+                            <td selectedDate="'.$selectedDate.'" class="hoverDate'.$i.'" style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="SetVisible(this,true); /*$(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');*/" onmouseout="SetVisible(this,false); /*$(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');*/" title="'.$title.'">
                                 <div style="display: none;"><i>'.$i.'</i></div>
                             </td>';
 
