@@ -178,18 +178,19 @@
                 FROM `spr_workers` sw  
                 LEFT JOIN `journal_work_cat` jwcat ON sw.id = jwcat.worker_id
                 LEFT JOIN `spr_categories` sc ON jwcat.category = sc.id
-                WHERE sw.permissions = '".$type."'";
+                WHERE sw.permissions = '".$type."'
+                ORDER BY sw.full_name ASC";
 
                 //var_dump($query);
 
             }else {
-                //!!! переделать с категориями
                 //$contacts = SelDataFromDB('spr_workers', '', '');
 
                 $query = "SELECT sw.*, sc.name AS category
                 FROM `spr_workers` sw  
                 LEFT JOIN `journal_work_cat` jwcat ON sw.id = jwcat.worker_id
-                LEFT JOIN `spr_categories` sc ON jwcat.category = sc.id";
+                LEFT JOIN `spr_categories` sc ON jwcat.category = sc.id
+                ORDER BY sw.full_name ASC";
 
             }
 
