@@ -43,13 +43,13 @@
                                     //Проход по массиву и выполнение запросов
                                     foreach ($data as $day => $sch_item){
                                         foreach ($sch_item as $worker_id => $selected){
-                                            if ($selected == 0){
+                                            if (($selected == 0) || ($selected == 2)){
                                                 //Удаляем отметку о рабочей смене
                                                 $query = "DELETE FROM `scheduler` WHERE `worker`='{$worker_id}' AND `filial`='{$_POST['filial_id']}' AND `year`='{$_POST['year']}' AND `month`='{$_POST['month']}' AND `day`='{$day}';";
 
                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
                                             }
-                                            if ($selected == 1){
+                                            if (($selected == 1) || ($selected == 3)){
                                                 //Добавляем отметку о рабочей смене
                                                 $query = "INSERT INTO `scheduler` (`worker`, `filial`, `year`, `month`, `day`, `type`, `create_person`) 
 						                        VALUES (

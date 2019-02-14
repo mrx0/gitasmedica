@@ -8933,7 +8933,7 @@
         var selected = 0;
         var selectedDate = $(obj).attr("selectedDate");
 
-        //Если было не выбрано, ставим выбор
+        //Если было НЕ выбрано на этом филиале, ставим выбор
         if (selectedDate == 0){
             if ((holiday == 6) || (holiday == 7)) {
                 $(obj).css('backgroundColor', 'rgba(24, 144, 54, 0.52) !important');
@@ -8945,8 +8945,9 @@
             $(obj).attr("selectedDate", 1);
 
             selected = 1;
-		}else{
-        	//Если было выбрано, снимаем выбор
+		}
+        //Если было выбрано на этом филиале, снимаем выбор
+        if (selectedDate == 1){
 			if ((holiday == 6) || (holiday == 7)) {
                 $(obj).css('backgroundColor', 'rgba(234, 123, 32, 0.15) !important');
             }else{
@@ -8956,6 +8957,30 @@
             $(obj).attr("selectedDate", 0);
 
             selected = 0;
+		}
+        //Если было выбрано на другом филиале, но не выбрано на этом, ставим выбор
+        if (selectedDate == 2){
+			if ((holiday == 6) || (holiday == 7)) {
+                $(obj).css('backgroundColor', 'rgba(130, 34, 35, 0.52) !important');
+            }else{
+                $(obj).css('backgroundColor', 'rgba(236, 107, 107, 0.52) !important');
+			}
+            //меняем значение
+            $(obj).attr("selectedDate", 3);
+
+            selected = 3;
+		}
+        //Если было выбрано на другом филиале, и выбрано на этом, снимаем выбор
+        if (selectedDate == 3){
+			if ((holiday == 6) || (holiday == 7)) {
+                $(obj).css('backgroundColor', 'rgba(35, 137, 146, 0.52) !important');
+            }else{
+                $(obj).css('backgroundColor', 'rgba(49, 224, 239, 0.52) !important');
+			}
+            //меняем значение
+            $(obj).attr("selectedDate", 2);
+
+            selected = 2;
 		}
 
         //Добавляем в сессию

@@ -1,7 +1,7 @@
 <?php 
 
 //add_temp_scheduler_in_session_f.php
-//
+//Работаем с сессионной переменной для графика //Для изменения графика админов, ассистентов, ...  (scheduler3.php)
 
 	session_start();
 	
