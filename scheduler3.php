@@ -3,18 +3,6 @@
 //scheduler3.php
 //Расписание администраторов и ассистентов v2.0
 
-
-
-
-
-
-
-
-
-
-//!!!!! продолжай с $_SESSION['scheduler3'] добавление и так далее
-
-
 	require_once 'header.php';
 	
 	if ($enter_ok){
@@ -218,6 +206,7 @@
 			$day = date("d");
 			
 			$month_stamp = mktime(0, 0, 0, $month, 1, $year);
+            //var_dump($month_stamp);
 
 			//Дней в месяце
 			$day_count = date("t", $month_stamp);
@@ -304,7 +293,7 @@
 			//$markSheduler = 0;
 
 			$arr = array();
-			$rez = array();
+            $schedulerFakt = array();
 
             $query = "SELECT `id`, `day`, `worker` FROM `scheduler` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year' AND `filial`='{$_GET['filial']}'";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -312,17 +301,21 @@
 			if ($number != 0){
 				while ($arr = mysqli_fetch_assoc($res)){
 					//Раскидываем в массив
-                    if (!isset($rez[$arr['day']])) {
-                        $rez[$arr['day']] = array();
+                    if (!isset($schedulerFakt[$arr['worker']])) {
+                        $schedulerFakt[$arr['worker']] = array();
                     }
-                    array_push($rez[$arr['day']], $arr);
+                    if (!isset($schedulerFakt[$arr['worker']][$arr['day']])) {
+                        $schedulerFakt[$arr['worker']][$arr['day']] = array();
+                    }
+                    //array_push($schedulerFakt[$arr['worker']][$arr['day']], $arr);
+                    $schedulerFakt[$arr['worker']][$arr['day']] = 1;
 				}
 				//$markSheduler = 1;
 			}
 			//var_dump($query);
 			
-			$schedulerFakt = $rez;
-            //var_dump($schedulerFakt);
+			//$schedulerFakt = $rez;
+            //var_dump($schedulerFakt[287]);
 
             //переменная, чтоб вкл/откл редактирование
             $iCanManage = 'false';
@@ -360,7 +353,7 @@
 					</header>
 					<!--<a href="own_scheduler.php" class="b">График сотрудника</a>-->';
 			echo '
-					Администраторы
+					<!--Администраторы-->
 					</div>';
 			echo '
 					<div id="data">
@@ -449,17 +442,17 @@
 
 
 
-			//Новый календарик
-
-            $weekday_temp = $weekday;
-
+			//Календарная сетка
             echo '
                 <table style="border-bottom: 1px solid #BFBCB5; border-right: 1px solid #BFBCB5; margin:5px; font-size: 80%;">
                     <tr class="<!--sticky f-sticky-->">
                         <td style="width: 260px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>ФИО</b><br><span style="color: rgb(35, 175, 53); font-size: 80%;">прикреплены к филиалу</span></td>';
 
+            $weekday_temp = $weekday;
+
             //Выведем даты месяца
             for ($i=1; $i<=$day_count; $i++){
+                //var_dump($weekday_temp);
 
                 //суббота воскресение
                 if (($weekday_temp == 6) || ($weekday_temp == 7)){
@@ -484,13 +477,20 @@
             //Для сотрудников прикрепленных к этому филиалу выведем
             if (!empty($filial_workers)) {
                 foreach ($filial_workers as $worker_data) {
+
                     echo '
                     <tr class="cellsBlockHover">
                         <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>'.$worker_data['full_name'].'</b></td>';
 
+                    $weekday_temp = $weekday;
+
                     //Выведем даты месяца
                     for ($i=1; $i<=$day_count; $i++){
+                        //var_dump(isset($schedulerFakt[$worker_data['id']][$i]));
 
+                        $selectedDate = 0;
+
+                        //Если нет сотрудника
                         //суббота воскресение
                         if (($weekday_temp == 6) || ($weekday_temp == 7)){
                             $BgColor = ' background-color: rgba(234, 123, 32, 0.15);';
@@ -499,8 +499,24 @@
                             $BgColor = ' background-color: rgba(255, 255, 255, 0.15);';
                         }
 
+                        //Если тут есть сотрудник по графику
+                        if (isset($schedulerFakt[$worker_data['id']])){
+                            if (isset($schedulerFakt[$worker_data['id']][$i])){
+
+                                $selectedDate = 1;
+
+                                //суббота воскресение
+                                if (($weekday_temp == 6) || ($weekday_temp == 7)){
+                                    $BgColor = ' background-color: rgba(24, 144, 54, 0.52) !important;';
+                                }else{
+                                    //будни
+                                    $BgColor = ' background-color: rgba(49, 239, 96, 0.52) !important;';
+                                }
+                            }
+                        }
+
                         echo '
-                            <td selectedDate="0" style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerTempSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="SetVisible(this,true);" onmouseout="SetVisible(this,false);">
+                            <td selectedDate="'.$selectedDate.'" class="hoverDate'.$i.'" style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="SetVisible(this,true); $(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');" onmouseout="SetVisible(this,false); $(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');">
                                 <div style="display: none;"><i>'.$i.'</i></div>
                             </td>';
 
@@ -546,9 +562,14 @@
                     <tr class="cellsBlockHover">
                         <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>'.$worker_data['full_name'].'</b></td>';
 
+                    $weekday_temp = $weekday;
+
                     //Выведем даты месяца
                     for ($i=1; $i<=$day_count; $i++){
 
+                        $selectedDate = 0;
+
+                        //Если нет сотрудника
                         //суббота воскресение
                         if (($weekday_temp == 6) || ($weekday_temp == 7)){
                             $BgColor = ' background-color: rgba(234, 123, 32, 0.15);';
@@ -557,8 +578,24 @@
                             $BgColor = ' background-color: rgba(255, 255, 255, 0.15);';
                         }
 
+                        //Если тут есть сотрудник по графику
+                        if (isset($schedulerFakt[$worker_data['id']])){
+                            if (isset($schedulerFakt[$worker_data['id']][$i])){
+
+                                $selectedDate = 1;
+
+                                //суббота воскресение
+                                if (($weekday_temp == 6) || ($weekday_temp == 7)){
+                                    $BgColor = ' background-color: rgba(24, 144, 54, 0.52) !important;';
+                                }else{
+                                    //будни
+                                    $BgColor = ' background-color: rgba(49, 239, 96, 0.52) !important;';
+                                }
+                            }
+                        }
+
                         echo '
-                            <td selectedDate="0" style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerTempSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="SetVisible(this,true);" onmouseout="SetVisible(this,false);">
+                            <td selectedDate="'.$selectedDate.'" class="hoverDate'.$i.'" style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="SetVisible(this,true); /*$(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');*/" onmouseout="SetVisible(this,false); /*$(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');*/">
                                 <div style="display: none;"><i>'.$i.'</i></div>
                             </td>';
 
@@ -576,324 +613,33 @@
             echo '
                 </table>';
 
-
-
-
-//						echo '
-//							<table style="border:1px solid #BFBCB5;">
-//								<tr style="text-align:center; vertical-align:top; font-weight:bold; height:20px;">
-//									<td style="border:1px solid #BFBCB5;">
-//										Понедельник
-//									</td>
-//									<td style="border:1px solid #BFBCB5;">
-//										Вторник
-//									</td>
-//									<td style="border:1px solid #BFBCB5;">
-//										Среда
-//									</td>
-//									<td style="border:1px solid #BFBCB5;">
-//										Четверг
-//									</td>
-//									<td style="border:1px solid #BFBCB5;">
-//										Пятница
-//									</td>
-//									<td style="border:1px solid #BFBCB5;">
-//										Суббота
-//									</td>
-//									<td style="border:1px solid #BFBCB5;">
-//										Воскресенье
-//									</td>
-//								</tr>';
-//
-//						//отсутствие сотрудников в клинике
-//						$now_ahtung = TRUE;
-//						$ahtung = TRUE;
-//
-//						for($d = $start; $d <= $end; $d++){
-//							if (!($di++ % 7)){
-//								echo '
-//									<tr style="height: 142px;">';
-//							}
-//
-//							$kabsNone = '';
-//							$kabs = '
-//								<div class="cellTime" style="padding: 0; text-align: center; background-color: #FEFEFE; border: 0; width: 150px; min-width: 125px; max-width: 150px;">';
-//
-//							//Проверяем, есть ли сегодня тут кто.
-//							if (isset($schedulerFakt[$d])){
-//                                //var_dump($schedulerFakt[$d]);
-//
-//                                //отсутствие врачей в клинике
-//                                $now_ahtung = TRUE;
-//                                $ahtung = TRUE;
-//
-//                                $kabs .= '
-//                                        <div style="width: 100%; outline: 1px solid  #BBB; display: table; margin-bottom: 3px; font-size: 70%;">';
-//
-//                                //переменная для вывода
-//                                $resEcho2 = '';
-//
-//                                //Отсортируем
-//                                ksort ($schedulerFakt[$d]);
-//
-//                                foreach($schedulerFakt[$d] as $worker_val){
-//                                    //var_dump($worker_val);
-//
-//                                    $resEcho = '';
-//                                    $resEcho = WriteSearchUser('spr_workers', $worker_val['worker'], 'user', false).' <a href="scheduler_own.php?id='.$worker_val['worker'].'" class="info"><i class="fa fa-info-circle" title="График администратора"></i></a>';
-//                                    $ahtung = FALSE;
-//                                    $fontSize = 'font-size: 70%;';
-//                                    $resEcho2 .= '
-//                                            <div style="box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);" onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$_GET['filial'].', \''.$filials_j[$_GET['filial']]['name'].'\', 0, '.$year.', '.$month.','.$d.', 0)">
-//                                                <div style="text-align: right; color: #555;">
-//
-//                                                </div>
-//                                                <div style="text-align: left; padding: 6px;">';
-//                                    $resEcho2 .= $resEcho;
-//                                    $resEcho2 .= '
-//                                                </div>
-//                                            </div>';
-//
-//                                }
-//
-//                                $BgColor = ' background-color: rgba(171, 254, 213, 0.59);';
-//
-//                                $kabs .= '
-//                                        <div style="text-align: center; display: table-cell !important; width: 100%;'.$BgColor.'">';
-//                                $kabs .= $resEcho2;
-//
-//                                $kabs .= '<div class="manageScheduler" style="';
-//
-//                                if ($displayBlock){
-//                                    $kabs .= 'display: block;';
-//                                }
-//
-//                                $kabs .= 'background-color: #FEEEEE; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);">
-//                                                    <div style="text-align: center; padding: 4px; margin: 1px;">';
-//
-//                                $kabs .= '
-//                                                <div style="display: inline-block; bottom: 0; font-size: 110%; cursor: pointer; border: 1px dotted #9F9D9D; width: 15px; margin-right: 2px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$_GET['filial'].', \''.$filials_j[$_GET['filial']]['name'].'\', 0, '.$year.', '.$month.','.$d.', 0)"><span style="color: #333;"></span><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
-//
-//                                $kabs .= '
-//                                        </div>
-//                                    </div>';
-//
-//							}else{
-//								//Если вообще никого целый день
-//								$ahtung = TRUE;
-//
-//                                $kabsNone .= '
-//                                        <div style="width: 100%; height: 35px; min-height: 35px; outline: 1px solid  #BBB; display: table; margin-bottom: 3px; font-size: 70%;">
-//
-//                                            <div style="width: 100%; vertical-align: middle; display: table; margin-bottom: 3px; color: red; background-color: rgba(255, 0, 0, 0.33);">
-//                                                <div style="margin-bottom: 7px;">никого нет</div>
-//                                                <div class="manageScheduler" style="';
-//
-//                                if ($displayBlock){
-//                                    $kabsNone .= 'display: block;';
-//                                }
-//
-//                                $kabsNone .= '">';
-//
-//                                $kabsNone .= '<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$_GET['filial'].', \''.$filials_j[$_GET['filial']]['name'].'\', 0, '.$year.', '.$month.','.$d.', 0)"><span style="color: #333;"></span><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
-//
-//                                $kabsNone .= '
-//                                                </div>
-//                                            </div>
-//                                        </div>';
-//
-//							}
-//							$kabsNone .= '
-//											</div>';
-//							//выделение сегодня цветом
-//							$now="$year-$month-".sprintf("%02d",$d);
-//							if ($now == $today){
-//                                $today_color = 'border: 1px solid red; outline: 2px solid red;';
-//                            }else{
-//                                $today_color = 'border:1px solid #BFBCB5;';
-//                            }
-//							//Выделение цветом выходных
-//							if (($di % 7 == 0) || ($di % 7 == 6)){
-//								$holliday_color = 'color: red;';
-//							}else{
-//								$holliday_color = '';
-//							}
-//
-//
-//							echo '
-//										<td style="'.$today_color.' text-align: center; text-align: -moz-center; text-align: -webkit-center; vertical-align: top;">';
-//							if ($d < 1 || $d > $day_count){
-//								echo "&nbsp";
-//							}else{
-//
-//								echo '
-//											<div style="vertical-align:top;'.$holliday_color.'" id="blink2">
-//												<!--<div><span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b"  onclick="document.location.href = \'scheduler_day.php?y='.$year.'&m='.$month.'&d='.$d.'&filial='.$_GET['filial'].$who.'\'">запись</span>-->
-//												<div>';
-//								if ($zapis['see_own'] == 1){
-//									if ($type == $_SESSION['permissions']){
-//										echo '
-//													<span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b">
-//														<div class="no_print"> <a href="zapis_own.php?y='.$year.'&m='.$month.'&d='.$d.'&worker='.$_SESSION['id'].'" class="ahref">ваша запись</a></div>
-//													</span>';
-//									}
-//								}
-//								if (($zapis['add_new'] == 1) || $god_mode){
-//									echo '
-//													<span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b">
-//														<div class="no_print">
-//															<a href="zapis.php?y='.$year.'&m='.$month.'&d='.$d.'&filial='.$_GET['filial'].$who.'" class="ahref">запись</a>
-//														</div>
-//													</span>
-//													<span style="font-size:70%; color: #0C0C0C; float:left; margin: 0; padding: 1px 5px;" class="b">
-//														<div class="no_print">
-//															<a href="zapis_full.php?y='.$year.'&m='.$month.'&d='.$d.'&filial='.$_GET['filial'].$who.'" class="ahref">под-но</a>
-//														</div>
-//													</span>';
-//								}
-//								echo '
-//													<div style="text-align: right;">
-//														<strong>'.$d.'</strong>
-//													</div>
-//												</div>
-//											</div>
-//											<div style="text-align: middle; display: table-cell !important; width: 100%;">';
-//
-//								echo $kabs;
-//
-//								if (!$ahtung OR !$now_ahtung){
-//									//echo $kabs;
-//								}else{
-//									echo $kabsNone;
-//								}
-//								echo '
-//										</div>';
-//							}
-//													/*}else
-//														echo '
-//																<td style="border:1px solid #BFBCB5; vertical-align:top;">&nbsp;</td>';*/
-//									//			}
-//							echo '
-//										</td>';
-//							if (!($di % 7)){
-//								echo '
-//									</tr>';
-//							}
-//						}
-//						echo '
-//							</table>';
-				echo '
+    		echo '
 						</div>
 					</div>';
-			if (($scheduler['edit'] == 1) || $god_mode){
-				echo '
-					<div id="ShowSettingsSchedulerFakt" style="position: absolute; z-index: 105; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; padding:10px;">
-						<a class="close" href="#" onclick="HideSettingsSchedulerFakt()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(img/close.png) no-repeat;">
-							Close
-						</a>
-						
-						<div id="SettingsSchedulerFakt">
-                            <label id="smena_error" class="error"></label><br>
-                            <label id="worker_error" class="error"></label>
-                            <div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
-                                <div class="cellLeft">Число</div>
-                                <div class="cellRight" id="month_date"></div>
-                                <div style="display: none;" id="day"></div>
-                                <div style="display: none;" id="month"></div>
-                                <div style="display: none;" id="year"></div>
-                            </div>
-                            <div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
-                                <div class="cellLeft">Филиал</div>
-                                <div class="cellRight" id="filial_name">					
-                                </div>
-                                <div style="display: none;" id="filial_value"></div>
-                            </div>
-                            <div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
-                                <div class="cellLeft">Кабинет №</div>
-                                <div class="cellRight" id="kabN">
-                                </div>
-                            </div>
 
-                            <div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
-                                <div class="cellLeft">Смена</div>
-                                <div class="cellRight" id="smenaN">
-                                </div>
-                            </div>
-                            <div id="schedulerType" class="cellsBlock2" style="display: none; font-weight: bold; font-size:80%; width:350px;">
-                                <div class="cellLeft">Тип графика</div>
-                                <div class="cellRight">
-                                    <input type="checkbox" id="twobytwo" name="twobytwo" value="1"> 2 через 2<br>
-                                </div>
-                            </div>
-                            <div class="cellsBlock2" style="font-weight: bold; font-size:80%; width:350px;">
-                                <div class="cellRight">
-                                    <div id="workersTodayDelete"></div>
-                                    <div id="errrror"></div>
-                                </div>
-                            </div>';
-
-				//Врачи
-				echo '
-								<div id="ShowWorkersHere" style="vertical-align: top; height: 200px; border: 1px solid #C1C1C1; overflow-x: hidden; overflow-y: scroll;">
-								</div>';
-
-				echo '	
-						</div>';
-			}
-			echo '
-						<input type="button" class="b" value="OK" onclick="if (iCanManage) ChangeWorkerShedulerFakt()" id="changeworkersheduletbutton">
-						<input type="button" class="b" value="Отмена" onclick="HideSettingsSchedulerFakt()">
+			if (($scheduler['edit'] == 1) || $god_mode) {
+                echo '
+					<div id="ShowSettingsSchedulerFakt" style="position: fixed; z-index: 105; right: 100px; top: 70px; background: rgb(224, 226, 226) none repeat scroll 0% 0%; display: none; padding: 10px; border: 1px rgba(146, 128, 128, 0.16) solid;">
+					    <ul>
+					        <li style="color: rgb(243, 0, 0); font-size: 80%; margin-bottom: 15px;">
+					            Сохранить изменения графика
+					        </li>
+					        <li style="text-align: right;">
+					            <input type="button" class="b" value="Сохранить" onclick="Ajax_tempScheduler_scheduler3_add('.$_GET['filial'].', '.$month.', '.$year.');">
+                                <input type="button" class="b" value="Отмена" onclick="cancelChangeTempScheduler();">
+                            </li>
+                        </ul>
 					</div>';
-	
-			echo '	
+            }
+			echo '
+
 			<!-- Подложка только одна -->
 			<div id="overlay"></div>';
 
-
-				echo '	
-		
-				
-				
-					<script>  
-						function changeStyle(idd){
-							if ( $("#"+idd).prop("checked"))
-								document.getElementById(idd+"_2").style.background = \'#83DB53\';
-							else
-								document.getElementById(idd+"_2").style.background = \'#F0F0F0\';
-						}
-
-						$(document).ready(function() {
-							$("#smena1").click(function() {
-								var checked_status = this.checked;
-								 $(".smena1").each(function() {
-									this.checked = checked_status;
-									if ( $(this).prop("checked"))
-										this.style.background = \'#83DB53\';
-									else
-										this.style.background = \'#F0F0F0\';
-								});
-								
-								var ShowWorkersSmena1 = ShowWorkersSmena();
-							});
-							$("#smena2").click(function() {
-								var checked_status = this.checked;
-								 $(".smena2").each(function() {
-									this.checked = checked_status;
-									if ( $(this).prop("checked"))
-										this.style.background = \'#83DB53\';
-									else
-										this.style.background = \'#F0F0F0\';
-								});
-								
-								var ShowWorkersSmena1 = ShowWorkersSmena();
-							});
-						});';
-
 			echo '					
-			</script>
-					
 				<script>
 					 /*<![CDATA[*/
+					 /*!!! проверить надо ли это тут и в других местах*/
 					 var s=[],s_timer=[];
 					 function show(id,h,spd)
 					 { 
