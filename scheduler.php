@@ -157,7 +157,7 @@
 
             $msql_cnnct = ConnectToDB ();
 
-			//Получаем график факт
+			//Получаем график факт на текущий филиал
 			$markSheduler = 0;
 
 			$arr = array();

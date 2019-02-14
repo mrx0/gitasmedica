@@ -286,12 +286,9 @@
                     //Раскидываем в массив
                     array_push($filial_not_workers, $arr);
                 }
-                //$markSheduler = 1;
             }
 
-            //Получаем график факт
-			//$markSheduler = 0;
-
+            //Получаем график факт этого филиала
 			$arr = array();
             $schedulerFakt = array();
 
@@ -310,12 +307,36 @@
                     //array_push($schedulerFakt[$arr['worker']][$arr['day']], $arr);
                     $schedulerFakt[$arr['worker']][$arr['day']] = 1;
 				}
-				//$markSheduler = 1;
 			}
 			//var_dump($query);
 			
 			//$schedulerFakt = $rez;
-            //var_dump($schedulerFakt[287]);
+            //var_dump($schedulerFakt);
+
+            //Получаем график факт с других филиалов
+			$arr = array();
+            $schedulerFaktOther = array();
+
+            $query = "SELECT `id`, `day`, `worker` FROM `scheduler` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year' AND `filial` <> '{$_GET['filial']}'";
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+			$number = mysqli_num_rows($res);
+			if ($number != 0){
+				while ($arr = mysqli_fetch_assoc($res)){
+					//Раскидываем в массив
+                    if (!isset($schedulerFaktOther[$arr['worker']])) {
+                        $schedulerFaktOther[$arr['worker']] = array();
+                    }
+                    if (!isset($schedulerFaktOther[$arr['worker']][$arr['day']])) {
+                        $schedulerFaktOther[$arr['worker']][$arr['day']] = array();
+                    }
+                    //array_push($schedulerFakt[$arr['worker']][$arr['day']], $arr);
+                    $schedulerFaktOther[$arr['worker']][$arr['day']] = 1;
+				}
+			}
+			//var_dump($query);
+
+			//$schedulerFakt = $rez;
+            //var_dump($schedulerFaktOther);
 
             //переменная, чтоб вкл/откл редактирование
             $iCanManage = 'false';
@@ -499,11 +520,14 @@
                             $BgColor = ' background-color: rgba(255, 255, 255, 0.15);';
                         }
 
+                        $worker_is_here = false;
+
                         //Если тут есть сотрудник по графику
                         if (isset($schedulerFakt[$worker_data['id']])){
                             if (isset($schedulerFakt[$worker_data['id']][$i])){
 
                                 $selectedDate = 1;
+                                $worker_is_here = true;
 
                                 //суббота воскресение
                                 if (($weekday_temp == 6) || ($weekday_temp == 7)){
@@ -511,6 +535,36 @@
                                 }else{
                                     //будни
                                     $BgColor = ' background-color: rgba(49, 239, 96, 0.52) !important;';
+                                }
+                            }
+                        }
+
+                        //Если сотрудник по графику есть в другом филиале
+                        if (isset($schedulerFaktOther[$worker_data['id']])){
+                            if (isset($schedulerFaktOther[$worker_data['id']][$i])){
+
+                                if (!$worker_is_here) {
+
+                                    $selectedDate = 2;
+
+                                    //суббота воскресение
+                                    if (($weekday_temp == 6) || ($weekday_temp == 7)) {
+                                        $BgColor = ' background-color: rgba(35, 137, 146, 0.52) !important;';
+                                    } else {
+                                        //будни
+                                        $BgColor = ' background-color: rgba(49, 224, 239, 0.52) !important;';
+                                    }
+                                }else{
+
+                                    $selectedDate = 3;
+
+                                    //суббота воскресение
+                                    if (($weekday_temp == 6) || ($weekday_temp == 7)) {
+                                        $BgColor = ' background-color: rgba(130, 34, 35, 0.52) !important;';
+                                    } else {
+                                        //будни
+                                        $BgColor = ' background-color: rgba(236, 107, 107, 0.52) !important;';
+                                    }
                                 }
                             }
                         }
@@ -578,11 +632,14 @@
                             $BgColor = ' background-color: rgba(255, 255, 255, 0.15);';
                         }
 
+                        $worker_is_here = false;
+
                         //Если тут есть сотрудник по графику
                         if (isset($schedulerFakt[$worker_data['id']])){
                             if (isset($schedulerFakt[$worker_data['id']][$i])){
 
                                 $selectedDate = 1;
+                                $worker_is_here = true;
 
                                 //суббота воскресение
                                 if (($weekday_temp == 6) || ($weekday_temp == 7)){
@@ -590,6 +647,37 @@
                                 }else{
                                     //будни
                                     $BgColor = ' background-color: rgba(49, 239, 96, 0.52) !important;';
+                                }
+                            }
+                        }
+
+
+                        //Если сотрудник по графику есть в другом филиале
+                        if (isset($schedulerFaktOther[$worker_data['id']])){
+                            if (isset($schedulerFaktOther[$worker_data['id']][$i])){
+
+                                if (!$worker_is_here) {
+
+                                    $selectedDate = 2;
+
+                                    //суббота воскресение
+                                    if (($weekday_temp == 6) || ($weekday_temp == 7)) {
+                                        $BgColor = ' background-color: rgba(35, 137, 146, 0.52) !important;';
+                                    } else {
+                                        //будни
+                                        $BgColor = ' background-color: rgba(49, 224, 239, 0.52) !important;';
+                                    }
+                                }else{
+
+                                    $selectedDate = 3;
+
+                                    //суббота воскресение
+                                    if (($weekday_temp == 6) || ($weekday_temp == 7)) {
+                                        $BgColor = ' background-color: rgba(130, 34, 35, 0.52) !important;';
+                                    } else {
+                                        //будни
+                                        $BgColor = ' background-color: rgba(236, 107, 107, 0.52) !important;';
+                                    }
                                 }
                             }
                         }
