@@ -344,14 +344,22 @@
 
             //Пробежимся по сотрудникам НЕ из этого филиала
             //Если у них есть смены в этом филиале, поднимаем их вверх
+
+            $filial_not_workers_temp = array();
+
             foreach ($filial_not_workers as $workers_item){
 			    //var_dump($workers_item);
 
-                //!!! Тест перемещение любого элемента ассоциативного массива в начало этого же массива
+
                 if (isset($schedulerFakt[$workers_item['id']])){
-                    $filial_not_workers = array($workers_item['id'] => $filial_not_workers[$workers_item['id']]) + $filial_not_workers;
+                    //!!! Тест перемещение любого элемента ассоциативного массива в начало этого же массива
+                    //$filial_not_workers = array($workers_item['id'] => $filial_not_workers[$workers_item['id']]) + $filial_not_workers;
+                    $filial_not_workers_temp[$workers_item['id']] = $filial_not_workers[$workers_item['id']];
                 }
             }
+
+            $filial_not_workers = $filial_not_workers_temp + $filial_not_workers;
+            //var_dump($filial_not_workers );
 
             //переменная, чтоб вкл/откл редактирование
             $iCanManage = 'false';
