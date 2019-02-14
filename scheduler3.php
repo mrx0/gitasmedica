@@ -271,7 +271,7 @@
                 //$markSheduler = 1;
             }
 
-            //Получаем сотрудников не из этого филиала
+            //Получаем сотрудников НЕ из этого филиала
             $arr = array();
             $filial_not_workers = array();
 
@@ -284,9 +284,11 @@
             if ($number != 0){
                 while ($arr = mysqli_fetch_assoc($res)){
                     //Раскидываем в массив
-                    array_push($filial_not_workers, $arr);
+                    //array_push($filial_not_workers, $arr);
+                    $filial_not_workers[$arr['id']] = $arr;
                 }
             }
+            //var_dump($filial_not_workers);
 
             //Получаем график факт этого филиала
 			$arr = array();
@@ -337,6 +339,19 @@
 
 			//$schedulerFakt = $rez;
             //var_dump($schedulerFaktOther);
+
+            //var_dump($schedulerFakt);
+
+            //Пробежимся по сотрудникам НЕ из этого филиала
+            //Если у них есть смены в этом филиале, поднимаем их вверх
+            foreach ($filial_not_workers as $workers_item){
+			    //var_dump($workers_item);
+
+                //!!! Тест перемещение любого элемента ассоциативного массива в начало этого же массива
+                if (isset($schedulerFakt[$workers_item['id']])){
+                    $filial_not_workers = array($workers_item['id'] => $filial_not_workers[$workers_item['id']]) + $filial_not_workers;
+                }
+            }
 
             //переменная, чтоб вкл/откл редактирование
             $iCanManage = 'false';
