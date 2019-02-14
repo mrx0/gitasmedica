@@ -265,6 +265,7 @@
 								<a href="?'.$dopFilial.$dopDate.'&who=cosm" class="b" style="'.$cosm_color.'">Косметологи</a>
 								<a href="?'.$dopFilial.$dopDate.'&who=somat" class="b" style="'.$somat_color.'">Специалисты</a>
 								<a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=4" class="b" style="">Администраторы</a>
+								<a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
 							</li>
 							<li style="width: auto; margin-bottom: 20px;">
 								<div style="display: inline-block; margin-right: 20px;">
