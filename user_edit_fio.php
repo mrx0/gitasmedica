@@ -8,7 +8,8 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 		
-		if ($god_mode || $_SESSION['permissions'] == 3 || ($user['add_own'] == 1)){
+		//if ($god_mode || $_SESSION['permissions'] == 3 || ($user['add_own'] == 1)){
+        if ($god_mode || ($workers['edit'] == 1)){
 			if ($_GET){
 				include_once 'DBWork.php';
 				include_once 'functions.php';

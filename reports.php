@@ -72,10 +72,15 @@
 			echo '
 						</ul>
 						<ul class="reportBlock" style="">
-								<h1>Запись</h1>';
+								<h1>Запись и график</h1>';
 			echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_zapis.php" class="b3">Запись</a>
+							</li>';
+
+			echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="fl_scheduler_report_admin.php" class="b3">Рабочие часы</a>
 							</li>';
 
             echo '				
