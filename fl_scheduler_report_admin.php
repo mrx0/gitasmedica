@@ -1,7 +1,7 @@
 <?php
 
-//scheduler3.php
-//Расписание администраторов и ассистентов v2.0
+//fl_scheduler_report_admin.php
+//Отчет по рабочим часам
 
 	require_once 'header.php';
 	
@@ -415,21 +415,21 @@
 			}
 			echo '			
 							<div class="no_print"> 
-                                <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
-                                <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-                                    <a href="scheduler.php?'.$dopFilial.$dopDate.'&who=stom" class="b" style="'.$stom_color.'">Стоматологи</a>
-                                    <a href="scheduler.php?'.$dopFilial.$dopDate.'&who=cosm" class="b" style="'.$cosm_color.'">Косметологи</a>
-                                    <a href="scheduler.php?'.$dopFilial.$dopDate.'&who=somat" class="b" style="'.$somat_color.'">Специалисты</a>
-                                    <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=4" class="b" style="'.$admin_color.'">Администраторы</a>
-                                    <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
-                                </li>
-                                <li style="width: auto; margin-bottom: 20px;">
-                                    <div style="display: inline-block; margin-right: 20px;">
-                                        <div style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
-                                            Филиалы
-                                        </div>
-                                        <div>
-                                            <select name="SelectFilial" id="SelectFilial">
+							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
+							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
+								<a href="scheduler.php?'.$dopFilial.$dopDate.'&who=stom" class="b" style="'.$stom_color.'">Стоматологи</a>
+								<a href="scheduler.php?'.$dopFilial.$dopDate.'&who=cosm" class="b" style="'.$cosm_color.'">Косметологи</a>
+								<a href="scheduler.php?'.$dopFilial.$dopDate.'&who=somat" class="b" style="'.$somat_color.'">Специалисты</a>
+								<a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=4" class="b" style="'.$admin_color.'">Администраторы</a>
+								<a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
+							</li>
+							<li style="width: auto; margin-bottom: 20px;">
+								<div style="display: inline-block; margin-right: 20px;">
+									<div style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
+										Филиалы
+									</div>
+									<div>
+										<select name="SelectFilial" id="SelectFilial">
 											';
             if (!empty($filials_j)) {
                 foreach ($filials_j as $f_id => $filials_j_data) {
@@ -443,17 +443,37 @@
 				}
 			}
 			echo '
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div style="display: inline-block; margin-right: 20px;">
-    
-                                        <div style="display: inline-block; margin-right: 20px;">
-                                            <a href="?'.$who.'" class="dotyel" style="font-size: 70%;">Сбросить</a>
-                                        </div>
-                                    </div>
-                                </li>
-                                
+										</select>
+									</div>
+								</div>
+								<div style="display: inline-block; margin-right: 20px;">
+
+									<div style="display: inline-block; margin-right: 20px;">
+										<a href="?'.$who.'" class="dotyel" style="font-size: 70%;">Сбросить</a>
+									</div>
+								</div>
+							</li>
+							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">';
+//			if ($zapis['see_own'] == 1){
+//				if ($type == $_SESSION['permissions']){
+//					echo '
+//								<a href="zapis_own.php?y='.$year.'&m='.$month.'&d='.$day.'&worker='.$_SESSION['id'].'" class="b">Ваша запись сегодня</a>';
+//				}
+//			}
+			if (($zapis['add_new'] == 1) || $god_mode){
+				echo '
+								<a href="zapis.php?y='.$year.'&m='.$month.'&d='.$day.'&filial='.$_GET['filial'].''.$who.'" class="b">Запись сегодня</a>';
+                //if (isset($_SESSION['filial'])) {
+                    //if ($_SESSION['filial'] == 15) {
+                        echo '
+								<a href="zapis_online.php" class="b" style="position: relative">Запись онлайн<div class="have_new-zapis notes_count" style="display: none;" title="Есть необработанные"></div></a>';
+                    //}
+                //}
+				/*echo '
+								<a href="zapis_full.php?y='.$year.'&m='.$month.'&d='.$day.'&filial='.$_GET['filial'].''.$who.'" class="b">Подробно</a>';*/
+			}
+			echo '
+							</li>
 							</div>';
 								
 			echo '<div class="no_print">';
@@ -475,7 +495,7 @@
             $weekday_temp = $weekday;
 
             //Выведем даты месяца
-            for ($i=1; $i <= $day_count; $i++){
+            for ($i=1; $i<=$day_count; $i++){
                 //var_dump($weekday_temp);
 
                 //суббота воскресение
@@ -485,9 +505,6 @@
                     //будни
                     $BgColor = ' background-color: rgba(220, 220, 220, 0.5);';
                 }
-
-                //Выделим, если сегодня
-                //if ($day =
 
                 echo '
                         <td style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;"><b><i>'.$i.'</i></b></td>';
