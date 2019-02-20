@@ -1,6 +1,6 @@
 <?php
 
-//fl_spr_revenue_percent
+//fl_spr_revenue_percent.php
 //Проценты от выручки
 
     require_once 'header.php';

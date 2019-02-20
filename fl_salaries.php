@@ -198,10 +198,9 @@
                     <div id="status">
                         <header>
                             <div class="nav">
-                                <a href="fl_percent_cats.php" class="b">Категории процентов</a>
-                                <a href="fl_percent_cats.php" class="b">Персональные</a>
+                                <a href="fl_salaries_category.php" class="b">Оклады по должностям</a>
                             </div>
-                            <h1>Оклады</h1>
+                            <h1>Оклады сотрудников</h1>
                         </header>';
 
 
@@ -300,6 +299,8 @@
                 <!-- Подложка только одна -->
                 <div id="overlay"></div>';
 
+            echo '
+                 <div id="doc_title">Оклады сотрудников - Асмедика</div>';
 
         }else{
             echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

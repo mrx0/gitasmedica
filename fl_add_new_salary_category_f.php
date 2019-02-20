@@ -1,7 +1,7 @@
 <?php 
 
-//fl_add_new_salary_f.php
-//Функция добавления нового оклада сотрудника
+//fl_add_new_salary_category_f.php
+//Функция добавления нового оклада категории
 
 	session_start();
 	
@@ -14,7 +14,7 @@
             include_once 'DBWork.php';
             include_once 'functions.php';
 
-			if (!isset($_POST['worker_id']) || !isset($_POST['summ']) || !isset($_POST['date_from'])){
+			if (!isset($_POST['category_id']) || !isset($_POST['permission_id']) || !isset($_POST['summ']) || !isset($_POST['date_from'])){
 				//echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 
@@ -24,10 +24,10 @@
                 $msql_cnnct = ConnectToDB ();
 
                 //Вставим новую запись
-                $query = "INSERT INTO `fl_spr_salaries` (
-                  `worker_id`, `summ`, `date_from`, `create_time`, `create_person`)
+                $query = "INSERT INTO `fl_spr_salaries_category` (
+                  `permission`, `category`, `summ`, `date_from`, `create_time`, `create_person`)
                 VALUES (
-                  '{$_POST['worker_id']}', '{$_POST['summ']}', '{$date_from}', '{$time}', '{$_SESSION['id']}')";
+                  '{$_POST['permission_id']}',  '{$_POST['category_id']}', '{$_POST['summ']}', '{$date_from}', '{$time}', '{$_SESSION['id']}')";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
