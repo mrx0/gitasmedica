@@ -3575,16 +3575,33 @@
 
                     newVal = parseInt(newInput.value, 10);
 
-                    $.ajax({
-                        url: "fl_add_new_salary_f.php",
-                        global: false,
-                        type: "POST",
-                        dataType: "JSON",
-                        data: {
+                    var link = $("#pass").val()+".php";
+                    //console.log(link);
+
+                    if (link == "fl_add_new_salary_f.php") {
+                        var reqData = {
                             worker_id: $("#worker_id").val(),
                             date_from: $("#iWantThisDate2").val(),
                             summ: newVal
-                        },
+                        };
+                    }
+
+                    if (link == "fl_add_new_salary_category_f.php") {
+                        var reqData = {
+                            category_id: $("#category_id").val(),
+                            permission_id: $("#permission_id").val(),
+                            date_from: $("#iWantThisDate2").val(),
+                            summ: newVal
+                        };
+                    }
+                    //console.log(reqData);
+
+                    $.ajax({
+                        url: link,
+                        global: false,
+                        type: "POST",
+                        dataType: "JSON",
+                        data: reqData,
                         cache: false,
                         beforeSend: function () {
                             //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
@@ -3592,7 +3609,7 @@
                         // действие, при ответе с сервера
                         success: function (res) {
                             if (res.result == "success") {
-                                console.log(res.data);
+                                //console.log(res.data);
 
                                 setTimeout(function () {
                                     location.reload();
@@ -3624,7 +3641,8 @@
     });*/
 
 
-    function deleteThisSalary(salary_id){
+    function deleteThisSalary(salary_id, type){
+        //console.log(type);
 
         var rys = false;
 
@@ -3637,7 +3655,8 @@
                 type: "POST",
                 dataType: "JSON",
                 data: {
-                    id: salary_id
+                    id: salary_id,
+                    type: type
                 },
                 cache: false,
                 beforeSend: function () {

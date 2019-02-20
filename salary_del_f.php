@@ -13,14 +13,21 @@
 		include_once 'functions.php';
 		if ($_POST){
 
-            if (!isset($_POST['id'])){
+            if (!isset($_POST['id']) || !isset($_POST['type'])){
                 //echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
             }else {
 
                 $msql_cnnct = ConnectToDB ();
 
                 //Удаляем оплату из БД
-                $query = "DELETE FROM `fl_spr_salaries` WHERE `id`='{$_POST['id']}'";
+                if ($_POST['type'] == 'worker') {
+                    $query = "DELETE FROM `fl_spr_salaries` WHERE `id`='{$_POST['id']}'";
+                }
+
+                if ($_POST['type'] == 'category') {
+                    $query = "DELETE FROM `fl_spr_salaries_category` WHERE `id`='{$_POST['id']}'";
+                }
+
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                 echo json_encode(array('result' => 'success', 'data' => ''));
