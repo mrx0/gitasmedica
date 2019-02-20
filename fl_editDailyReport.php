@@ -61,6 +61,7 @@
                                 <div class="nav">
                                     <a href="stat_cashbox.php" class="b">Касса</a>
                                     <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт по филиалу</a>
+                                    <a href="fl_createSchedulerReport.php" class="b">Добавить рабочие часы</a>
                                 </div>
                                 <h2>Редактировать ежедневный отчёт</h2>
                             </header>';

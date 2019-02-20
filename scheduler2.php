@@ -330,7 +330,7 @@
 							<div class="no_print"> 
 							<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
 								<div style="cursor: pointer;" onclick="manageScheduler(\'scheduler\')">
-									<span id="manageMessage" style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">', $displayBlock ? 'Управление выключить' : 'Управление включить' ,'</span> <i class="fa fa-cog" title="Настройки"></i>
+									<span id="manageMessage" style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">', $displayBlock ? 'Управление <span style=\'color: green;\'>включено</span>' : 'Управление <span style=\'color: red;\'>выключено</span>' ,'</span> <i class="fa fa-cog" title="Настройки"></i>
 								</div>
 							</li>
 							</div>';

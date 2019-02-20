@@ -78,10 +78,10 @@
 								<a href="stat_zapis.php" class="b3">Запись</a>
 							</li>';
 
-			echo '				
+			/*echo '
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_createSchedulerReport.php" class="b3">Ежедневный отчёт по часам</a>
-							</li>';
+							</li>';*/
 
             echo '				
 							<li class="cellsBlock" style="margin: 1px;">

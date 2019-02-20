@@ -2774,7 +2774,7 @@
         }
     }
 
-    //!!!! тест разбор
+    //!!!!тест разбор
     /*var openedWindow;
     function iOpenNewWindow(url, name, options){
 
@@ -2992,15 +2992,18 @@
 
         //Соберём данные по часам
         var workerHoursValues_arr = {};
+        var workerTypesValues_arr = {};
 
         $(".workerHoursValue").each(function(){
             // console.log($(this).attr('worker_id'));
             // console.log($(this).val());
 
             workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
+            workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
 
         });
         //console.log(workerHoursValues_arr);
+        console.log(workerTypesValues_arr);
 
         var link = "fl_createSchedulerReport_add_f.php";
 
@@ -3009,7 +3012,8 @@
         var reqData = {
             date: $("#iWantThisDate2").val(),
             filial_id: filial_id,
-            wokers_hours_data: workerHoursValues_arr
+            workers_hours_data: workerHoursValues_arr,
+            workers_types_data: workerTypesValues_arr
         };
         //console.log(reqData);
 
@@ -3025,24 +3029,131 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                console.log(res.data);
+                //console.log(res.data);
 
-                // if(res.result == 'success') {
-                //     //console.log('success');
-                //     $('#data').html(res.data);
-                //     setTimeout(function () {
-                //         //window.location.replace('stat_cashbox.php');
-                //         window.location.replace('fl_consolidated_report_admin.php?filial_id='+filial_id);
-                //         //console.log('client.php?id='+id);
-                //     }, 500);
-                // }else{
-                //     //console.log('error');
-                //     $('#errrror').html(res.data);
-                //     //$('#errrror').html('');
-                // }
+                //!!! Переделать тут нормально
+                if(res.result == 'success') {
+                    //console.log('success');
+                    $('#data').html(res.data);
+                    setTimeout(function () {
+                        //window.location.replace('stat_cashbox.php');
+                        //window.location.replace('scheduler3.php?filial_id='+filial_id);
+                        window.location.href = 'scheduler3.php?filial_id='+filial_id;
+                        //console.log('client.php?id='+id);
+                    }, 500);
+                }else{
+                    //console.log('error');
+                    $('#errrror').html(res.data);
+                    //$('#errrror').html('');
+                }
             }
         });
     }
+
+    //Редактирование рабочих часов сотрудникам на филиале
+    function fl_editSchedulerReport_add(report_ids){
+        //console.log(report_ids);
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        //Соберём данные по часам
+        var workerHoursValues_arr = {};
+        var workerTypesValues_arr = {};
+
+        $(".workerHoursValue").each(function(){
+            // console.log($(this).attr('worker_id'));
+            // console.log($(this).val());
+
+            workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
+            workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
+
+        });
+        //console.log(workerHoursValues_arr);
+
+        var link = "fl_editSchedulerReport_add_f.php";
+
+        var filial_id = $("#SelectFilial").val();
+
+        var reqData = {
+            report_ids: report_ids,
+            date: $("#iWantThisDate2").val(),
+            filial_id: filial_id,
+            workers_hours_data: workerHoursValues_arr,
+            workers_types_data: workerTypesValues_arr
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                if(res.result == 'success') {
+                    //console.log('success');
+                    $('#data').html(res.data);
+                    setTimeout(function () {
+                        //window.location.replace('stat_cashbox.php');
+                        //window.location.replace('scheduler3.php?filial_id='+filial_id);
+                        window.location.href = 'scheduler3.php?filial_id='+filial_id;
+                        //console.log('client.php?id='+id);
+                    }, 500);
+                }else{
+                    //console.log('error');
+                    $('#errrror').html(res.data);
+                    //$('#errrror').html('');
+                }
+            }
+        });
+    }
+
+    //Удалить часы за смену по id
+    function fl_deleteSchedulerReportItem(report_id){
+        //console.log(report_id);
+
+        var rys = false;
+
+        rys = confirm("Вы хотите удалить часы сотрудника за смену. \nЭто необратимо.\n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "scheduler_report_del_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    report_id: report_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    if (res.result == "success") {
+                        location.reload();
+                        //console.log(res.data);
+                    }
+                    if (res.result == "error") {
+                        //alert(res.data);
+                    }
+                    //console.log(data.data);
+
+                }
+            });
+        }
+    }
+
+
 
     //Подсчет итогов за месяц
     function fl_getDailyReportsSummAllMonth(){

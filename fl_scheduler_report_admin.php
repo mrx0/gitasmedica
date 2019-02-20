@@ -355,7 +355,7 @@ if ($enter_ok){
 
 
             if (isset($schedulerFakt[$workers_item['id']])){
-                //!!! Тест перемещение любого элемента ассоциативного массива в начало этого же массива
+                //!!!Тест перемещение любого элемента ассоциативного массива в начало этого же массива
                 //$filial_not_workers = array($workers_item['id'] => $filial_not_workers[$workers_item['id']]) + $filial_not_workers;
                 $filial_not_workers_temp[$workers_item['id']] = $filial_not_workers[$workers_item['id']];
             }
@@ -411,7 +411,7 @@ if ($enter_ok){
 							<div class="no_print"> 
 							<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
 								<div style="cursor: pointer;" onclick="manageScheduler(\'scheduler\')">
-									<span id="manageMessage" style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">', $displayBlock ? 'Управление выключить' : 'Управление включить' ,'</span> <i class="fa fa-cog" title="Настройки"></i>
+									<span id="manageMessage" style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">', $displayBlock ? 'Управление <span style=\'color: green;\'>включено</span>' : 'Управление <span style=\'color: red;\'>выключено</span>' ,'</span> <i class="fa fa-cog" title="Настройки"></i>
 								</div>
 							</li>
 							</div>';

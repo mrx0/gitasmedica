@@ -61,7 +61,9 @@
                         <div class="nav">
                             <a href="stat_cashbox.php" class="b">Касса</a>
                             <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт по филиалу</a>
+                            <a href="scheduler3.php" class="b">График</a>
                         </div>
+                        <span style="color: red;">Тестовый режим</span>
                         <h2>Добавить рабочие часы</h2>
                         <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Проставьте данные и нажмите "Добавить"</span><br>
                     </header>';
@@ -114,7 +116,7 @@
                     echo '
                                 <div class="cellsBlock400px">
                                     <div class="cellLeft" style="font-size: 90%;">
-                                        Дата отчёта
+                                        <b>Дата отчёта</b>
                                     </div>
                                     <div class="cellRight">
                                         <input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" value="' . $report_date . '" onfocus="this.select();_Calendar.lcs(this)"
@@ -126,7 +128,7 @@
                     echo '				
                                 <div class="cellsBlock400px">
                                     <div class="cellLeft" style="font-size: 90%;">
-                                        Филиал
+                                        <b>Филиал</b>
                                     </div>
                                     <div class="cellRight">';
 
@@ -205,7 +207,7 @@
                                         <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'.$sch_item['type_name'].'</span>
                                     </div>
                                     <div class="cellRight" style="font-size: 13px;">
-                                        <input type="text" size="1" class="workerHoursValue" worker_id="'.$sch_item['worker'].'" value="12" autocomplete="off"> часов
+                                        <input type="text" size="1" class="workerHoursValue" worker_id="'.$sch_item['worker'].'" worker_type="'.$sch_item['type'].'" value="12" autocomplete="off"> часов
                                         <label id="hours_'.$sch_item['worker'].'_num_error" class="error"></label>
                                     </div>
                                 </div>';
@@ -250,14 +252,14 @@
                         $get_str .= $item['id'].',';
                     }
 
-                    if (($finances['see_all'] == 1) || (($finances['see_all'] != 1) && ($d == date('d', time())) && ($m == date('m', time())) && ($y == date('Y', time()))) || $god_mode){
+//                    if (($finances['see_all'] == 1) || (($finances['see_all'] != 1) && ($d == date('d', time())) && ($m == date('m', time())) && ($y == date('Y', time()))) || $god_mode){
                         echo '
                             <span style="color: red;">Отчёт за указаную дату для этого филиала уже был сформирован.</span><br>
                             <span style="color: red;">Вы можете его <a href="fl_editSchedulerReport.php?report_id='.$get_str.'" class="">отредактировать</a></span>';
-                    }else{
-                        echo '
-                            <span style="color: red;">Отчёт за указаную дату для этого филиала уже был сформирован.</span>';
-                    }
+//                    }else{
+//                        echo '
+//                            <span style="color: red;">Отчёт за указаную дату для этого филиала уже был сформирован.</span>';
+//                    }
                 }
             }else{
                 echo '
