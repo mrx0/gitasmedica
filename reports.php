@@ -80,7 +80,7 @@
 
 			echo '				
 							<li class="cellsBlock" style="margin: 1px;">
-								<a href="fl_scheduler_report_admin.php" class="b3">Рабочие часы</a>
+								<a href="fl_createSchedulerReport.php" class="b3">Ежедневный отчёт по часам</a>
 							</li>';
 
             echo '				

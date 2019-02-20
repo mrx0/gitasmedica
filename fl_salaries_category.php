@@ -16,6 +16,9 @@ if ($enter_ok){
 
         require 'variables.php';
 
+        $filials_j = getAllFilials(true, false);
+        //var_dump ($filials_j);
+
         /*$who = '&who=5';
         $whose = 'Стоматологов ';
         $selected_stom = ' selected';
@@ -253,63 +256,63 @@ if ($enter_ok){
         if (!empty($categories_j)){
             //var_dump($rezult2);
             echo '
-                            <ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
-                                <li class="cellsBlock2" style="font-weight: bold; font-size: 11px; background: #FFF;">	
-                                    <div class="cellFullName" style="text-align: center">
-                                        Категория';
-            //echo $block_fast_filter;
-            echo '
-                                        
+                            <ul style="margin-left:6px;">
+                                <li class="cellsBlock2" style="font-weight: bold; font-size: 11px; background: #FFF; margin-bottom: -1px;">	
+                                    <div class="cellName" style="text-align: center">
+                                        Филиал                                        
                                     </div>';
 
-            echo '
-                                    <div class="cellName" style="text-align: center; padding: 4px 0 0;">
-                                        Сумма оклада
-                                    </div>
-                                    <!--<div class="cellName" style="text-align: center; padding: 4px 0 0;">
-                                        С какого числа
-                                    </div>-->
-                                    ';
-
+            foreach ($categories_j as $category) {
+                echo '
+                                
+                                    <div class="cellName" style="text-align: center;">
+                                        '.$category['name'].'
+                                    </div>';
+            }
 
             echo '
                                 </li>';
 
-            foreach ($categories_j as $category){
+            foreach ($filials_j as $filial_item) {
+
                 echo '
                                 <li class="cellsBlock2 cellsBlockHover" style="font-weight: normal; font-size: 11px; margin-bottom: -1px;">
-                                    <div class="cellFullName 4filter" id="4filter" style="text-align: left;">
-                                        '.$category['name'].'
+                                    <div class="cellName" style="text-align: left;">
+                                        '.$filial_item['name'].'                                      
                                     </div>';
 
-                //Оклад этого сотрудника, который действует сейчас
-                $arr = array();
-                $rez = array();
+                foreach ($categories_j as $category) {
 
-                $salary = 0;
+                    //Оклад этого сотрудника, который действует сейчас
+                    $arr = array();
+                    $rez = array();
 
-                $query = "SELECT * FROM `fl_spr_salaries_category` WHERE `category` = '{$category['id']}' ORDER BY `date_from` DESC LIMIT 1";
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                    $salary = 0;
 
-                $number = mysqli_num_rows($res);
-                if ($number != 0){
-                    while ($arr = mysqli_fetch_assoc($res)){
-                        $salary = $arr['summ'];
+                    $query = "SELECT * FROM `fl_spr_salaries_category` WHERE `category` = '{$category['id']}' AND `filial_id` = '{$filial_item['id']}' ORDER BY `date_from` DESC LIMIT 1";
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                    $number = mysqli_num_rows($res);
+                    if ($number != 0) {
+                        while ($arr = mysqli_fetch_assoc($res)) {
+                            $salary = $arr['summ'].' руб.';
+                        }
+                    } else {
+                        $salary = '<span style="color: red;">Не указано</span>';
                     }
-                }else{
-                    $salary = '<span style="color: red;">Не указано</span>';
+
+                    echo '
+                                        <div class="cellName" style="text-align: center;">
+                                            <a href="fl_edit_salary_category.php?category_id=' . $category['id'] . '&filial_id='.$filial_item['id'].'" class="ahref">' . $salary . '</a>
+                                        </div>
+                                        <!--<div class="cellName" style="text-align: center; padding: 4px 0 0;">
+                                            С какого числа
+                                        </div>-->
+                                        ';
+
+
+
                 }
-
-                echo '
-                                    <div class="cellName" style="text-align: center; padding: 4px 0 0;">
-                                        <a href="fl_edit_salary_category.php?category_id='.$category['id'].'" class="ahref">'.$salary.'</a>
-                                    </div>
-                                    <!--<div class="cellName" style="text-align: center; padding: 4px 0 0;">
-                                        С какого числа
-                                    </div>-->
-                                    ';
-
-
                 echo '
                                 </li>';
             }
