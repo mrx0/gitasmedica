@@ -22,7 +22,8 @@
             //var_dump($filials_j);
 
             $d = date('d', time());
-            $m = date('n', time());
+            //$m = date('n', time());
+            $m = date('m', time());
             $y = date('Y', time());
             //$filial_id = $_GET['filial_id'];
 
@@ -115,7 +116,7 @@
                                     </div>
                                     <div class="cellRight">
                                         <input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" value="' . $report_date . '" onfocus="this.select();_Calendar.lcs(this)"
-                                                    onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
+                                                    onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off">
                                         <span class="button_tiny" style="font-size: 80%; cursor: pointer" onclick="iWantThisDate2(\'fl_createDailyReport.php?filial_id=' . $filial_id . '\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>            
                                     </div>
                                 </div>';

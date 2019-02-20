@@ -202,8 +202,11 @@
 				$month = date('m');		
 				$year = date('Y');
 			}
-			
+
+			//Сегодняшняя дата
 			$day = date("d");
+            $cur_month = date("m");
+            $cur_year = date("Y");
 			
 			$month_stamp = mktime(0, 0, 0, $month, 1, $year);
             //var_dump($month_stamp);
@@ -486,11 +489,26 @@
                     $BgColor = ' background-color: rgba(220, 220, 220, 0.5);';
                 }
 
-                //Выделим, если сегодня
-                //if ($day =
+                //Выделим, если сегодняшний день
+                $Shtrih = '';
+                $currentDayColor = '';
+
+                if (($i == $day) && ($cur_month == $month) && ($cur_year == $year)) {
+                    $currentDayColor = 'color: red; font-weight: bold;';
+
+                    //суббота воскресение
+                    if (($weekday_temp == 6) || ($weekday_temp == 7)){
+                        //$Shtrih = 'background: linear-gradient(135deg, rgba(234, 123, 32, 0.33) 49.9%, rgba(179, 179, 179, 0.67) 49.9%, rgba(179, 179, 179, 0.67) 60%, rgba(234, 123, 32, 0.33) 60% ), linear-gradient(135deg, rgba(179, 179, 179, 0.67) 10%, rgba(234, 123, 32, 0.33) 10% ); background-size: 0.5em 0.5em;';
+                    }else{
+                        //будни
+                        //$Shtrih = 'background: linear-gradient(135deg, rgba(220, 220, 220, 0.5) 49.9%, rgba(179, 179, 179, 0.67) 49.9%, rgba(179, 179, 179, 0.67) 60%, rgba(220, 220, 220, 0.5) 60% ), linear-gradient(135deg, rgba(179, 179, 179, 0.67) 10%, rgba(220, 220, 220, 0.5) 10% ); background-size: 0.5em 0.5em;';
+                    }
+                }
 
                 echo '
-                        <td style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;"><b><i>'.$i.'</i></b></td>';
+                        <td style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; '.$Shtrih.' padding: 5px; text-align: right;">
+                            <b><i style="'.$currentDayColor.'">'.$i.'</i></b>
+                        </td>';
 
                 //Если счетчик дней недели зашел за 7, возвращаем на понедельник
                 $weekday_temp++;
@@ -512,7 +530,7 @@
                     $weekday_temp = $weekday;
 
                     //Выведем даты месяца
-                    for ($i=1; $i<=$day_count; $i++){
+                    for ($i=1; $i <= $day_count; $i++){
                         //var_dump(isset($schedulerFakt[$worker_data['id']][$i]));
 
                         $title = '';
@@ -526,6 +544,22 @@
                         }else{
                             //будни
                             $BgColor = ' background-color: rgba(255, 255, 255, 0.15);';
+                        }
+
+                        //Выделим, если сегодняшний день
+                        $Shtrih = '';
+                        $currentDayColor = '';
+
+                        if (($i == $day) && ($cur_month == $month) && ($cur_year == $year)) {
+                            $currentDayColor = 'color: red; font-weight: bold;';
+
+                            //суббота воскресение
+                            if (($weekday_temp == 6) || ($weekday_temp == 7)){
+                                //$Shtrih = 'background: linear-gradient(135deg, rgba(234, 123, 32, 0.33) 49.9%, rgba(179, 179, 179, 0.67) 49.9%, rgba(179, 179, 179, 0.67) 60%, rgba(234, 123, 32, 0.33) 60% ), linear-gradient(135deg, rgba(179, 179, 179, 0.67) 10%, rgba(234, 123, 32, 0.33) 10% ); background-size: 0.5em 0.5em;';
+                            }else{
+                                //будни
+                                //$Shtrih = 'background: linear-gradient(135deg, rgba(220, 220, 220, 0.5) 49.9%, rgba(179, 179, 179, 0.67) 49.9%, rgba(179, 179, 179, 0.67) 60%, rgba(220, 220, 220, 0.5) 60% ), linear-gradient(135deg, rgba(179, 179, 179, 0.67) 10%, rgba(220, 220, 220, 0.5) 10% ); background-size: 0.5em 0.5em;';
+                            }
                         }
 
                         $worker_is_here = false;
@@ -580,8 +614,8 @@
                         }
 
                         echo '
-                            <td selectedDate="'.$selectedDate.'" class="hoverDate'.$i.'" style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="SetVisible(this,true); $(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');" onmouseout="SetVisible(this,false); $(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');" title="'.$title.'">
-                                <div style="display: none;"><i>'.$i.'</i></div>
+                            <td selectedDate="'.$selectedDate.'" class="hoverDate'.$i.'" style="width: 20px; '.$BgColor.' '.$Shtrih.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="SetVisible(this,true); $(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');" onmouseout="SetVisible(this,false); $(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');" title="'.$title.'">
+                                <div style="display: none;"><i style="'.$currentDayColor.'">'.$i.'</i></div>
                             </td>';
 
                         //Если счетчик дней недели зашел за 7, возвращаем на понедельник
@@ -644,6 +678,22 @@
                             $BgColor = ' background-color: rgba(255, 255, 255, 0.15);';
                         }
 
+                        //Выделим, если сегодняшний день
+                        $Shtrih = '';
+                        $currentDayColor = '';
+
+                        if (($i == $day) && ($cur_month == $month) && ($cur_year == $year)) {
+                            $currentDayColor = 'color: red; font-weight: bold;';
+
+                            //суббота воскресение
+                            if (($weekday_temp == 6) || ($weekday_temp == 7)){
+                                //$Shtrih = 'background: linear-gradient(135deg, rgba(234, 123, 32, 0.15) 49.9%, rgba(179, 179, 179, 0.67) 49.9%, rgba(179, 179, 179, 0.67) 60%, rgba(234, 123, 32, 0.15) 60% ), linear-gradient(135deg, rgba(179, 179, 179, 0.67) 10%, rgba(234, 123, 32, 0.15) 10% ); background-size: 0.5em 0.5em;';
+                            }else{
+                                //будни
+                                //$Shtrih = 'background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 49.9%, rgba(179, 179, 179, 0.67) 49.9%, rgba(179, 179, 179, 0.67) 60%, rgba(255, 255, 255, 0.15) 60% ), linear-gradient(135deg, rgba(179, 179, 179, 0.67) 10%, rgba(255, 255, 255, 0.15) 10% ); background-size: 0.5em 0.5em;';
+                            }
+                        }
+
                         $worker_is_here = false;
 
                         //Если тут есть сотрудник по графику
@@ -697,8 +747,8 @@
                         }
 
                         echo '
-                            <td selectedDate="'.$selectedDate.'" class="hoverDate'.$i.'" style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="SetVisible(this,true); /*$(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');*/" onmouseout="SetVisible(this,false); /*$(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');*/" title="'.$title.'">
-                                <div style="display: none;"><i>'.$i.'</i></div>
+                            <td selectedDate="'.$selectedDate.'" class="hoverDate'.$i.'" style="width: 20px; '.$BgColor.' '.$Shtrih.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="SetVisible(this,true); /*$(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');*/" onmouseout="SetVisible(this,false); /*$(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');*/" title="'.$title.'">
+                                <div style="display: none;"><i style="'.$currentDayColor.'">'.$i.'</i></div>
                             </td>';
 
                         //Если счетчик дней недели зашел за 7, возвращаем на понедельник

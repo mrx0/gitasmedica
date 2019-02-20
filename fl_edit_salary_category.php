@@ -14,8 +14,10 @@
 
             require 'variables.php';
 
+            $filials_j = getAllFilials(false, false);
+
             if ($_GET){
-                if (isset($_GET['category_id'])){
+                if ((isset($_GET['category_id'])) && (isset($_GET['filial_id']))){
 
                     $category_j = SelDataFromDB('spr_categories', $_GET['category_id'], 'id');
                     //var_dump($category_j);
@@ -33,12 +35,14 @@
                                             <a href="fl_salaries_category.php" class="b">Оклады по должностям</a>
                                         </div>
                                         <h1>Оклад для должности "'.$permissions_j[0]['name'].'"</h1>
+                                        Филиал: '.$filials_j[$_GET['filial_id']]['name'].'<br>  
                                         Категория: '.$category_j[0]['name'].'
                                     </header>';
 
                             echo '
                                     <div id="data">
                                         <input type="hidden" id="category_id" value="'.$category_j[0]['id'].'">
+                                        <input type="hidden" id="filial_id" value="'.$_GET['filial_id'].'">
                                         <input type="hidden" id="permission_id" value="'.$permissions_j[0]['id'].'">
                                         <input type="hidden" id="pass" value="fl_add_new_salary_category_f">';
 
@@ -47,7 +51,7 @@
                             $salaries_j = array();
 
                             //$query = "SELECT * FROM `fl_spr_percents` ORDER BY `type`";
-                            $query = "SELECT * FROM `fl_spr_salaries_category` WHERE `permission`='{$permissions_j[0]['id']}' AND `category`='{$category_j[0]['id']}'  ORDER BY `date_from` DESC";
+                            $query = "SELECT * FROM `fl_spr_salaries_category` WHERE `permission`='{$permissions_j[0]['id']}' AND `category`='{$category_j[0]['id']}' AND `filial_id`='{$_GET['filial_id']}'  ORDER BY `date_from` DESC";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
