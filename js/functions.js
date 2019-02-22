@@ -324,8 +324,8 @@
     //Редактирование сотрудника
     function Ajax_user_edit(worker_id) {
 
-        var fired = $("input[name=fired]:checked").val();
-        if((typeof fired == "undefined") || (fired == "")) fired = 0;
+        // var fired = $("input[name=fired]:checked").val();
+        // if((typeof fired == "undefined") || (fired == "")) fired = 0;
 
         var org = 0;
         var permissions = $('#permissions').val();
@@ -334,6 +334,8 @@
         if((typeof category == "undefined") || (category == "")) category = 0;
         // console.log(category);
         // console.log(checkedItems2());
+
+        var status = $('#w_status').val();
 
         var filial = $('#SelectFilial').val();
 
@@ -347,7 +349,8 @@
                     org: org,
                     permissions: permissions,
                     contacts: contacts,
-                    fired: fired,
+                    //fired: fired,
+                    status: status,
                     specializations: checkedItems2(),
                     category: category,
                     filial: filial

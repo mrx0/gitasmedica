@@ -259,6 +259,7 @@
 
 				for ($i = 0; $i < count($contacts); $i++) {
                     $specializations_str_rez = '';
+                    $bgColor = '';
 
 					if ($contacts[$i]['permissions'] != '777'){
 						$permissions = SearchInArray($arr_permissions, $contacts[$i]['permissions'], 'name');
@@ -267,13 +268,17 @@
 						//var_dump($org);
                         $specializations = workerSpecialization($contacts[$i]['id']);
 
-						if ($contacts[$i]['fired'] != 1){
-						
+						if ($contacts[$i]['status'] != 8){
+
+						    if ($contacts[$i]['status'] == 6){
+						        $bgColor = 'background-color: rgba(213, 22, 239, 0.3)';
+                            }
+
 							echo '
-								<li class="cellsBlock cellsBlockHover ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'">
-									<a href="user.php?id='.$contacts[$i]['id'].'" class="cellFullName ahref 4filter" id="4filter" ', $contacts[$i]['fired'] == '1' ? 'style="background-color: rgba(161,161,161,1);"' : '' ,'>'.$contacts[$i]['full_name'].'</a>
-									<div class="cellOffice" style="text-align: right;">', $permissions != '0' ? $permissions : '-' ,'</div>									
-									<div class="cellName" style="text-align: right;">';
+								<li class="cellsBlock cellsBlockHover '.$bgColor.'">
+									<a href="user.php?id='.$contacts[$i]['id'].'" class="cellFullName ahref 4filter" id="4filter" style="'.$bgColor.'">'.$contacts[$i]['full_name'].'</a>
+									<div class="cellOffice" style="text-align: right; '.$bgColor.'">', $permissions != '0' ? $permissions : '-' ,'</div>									
+									<div class="cellName" style="text-align: right; '.$bgColor.'">';
 
 							        //категория
 
@@ -284,7 +289,7 @@
 
                             //Филиал
                             echo '
-                                    <div class="cellName" style="text-align: right;">';
+                                    <div class="cellName" style="text-align: right; '.$bgColor.'">';
 
                             if ($contacts[$i]['filial_id'] != 0){
                                 echo $filials_j[$contacts[$i]['filial_id']]['name'];
@@ -293,7 +298,7 @@
                             echo '
                                     </div>
 									   
-									<div class="cellFullName"  style="text-align: right;">';
+									<div class="cellFullName"  style="text-align: right; '.$bgColor.'">';
 
                             if ($specializations != 0){
                                 //var_dump($specializations_j);
@@ -310,17 +315,17 @@
 							echo '
                                     </div>
 									
-									<div class="cellText" >'.$contacts[$i]['contacts'].'</div>
-									<div class="cellName" style="text-align: center;">'.$contacts[$i]['login'].'</div>';
+									<div class="cellText" style="'.$bgColor.'">'.$contacts[$i]['contacts'].'</div>
+									<div class="cellName" style="text-align: center; '.$bgColor.'">'.$contacts[$i]['login'].'</div>';
 							if (($workers['see_own'] == 1) &&
 							(($contacts[$i]['permissions'] == 4) || ($contacts[$i]['permissions'] == 5) ||  ($contacts[$i]['permissions'] == 6) ||  ($contacts[$i]['permissions'] == 7) ||  ($contacts[$i]['permissions'] == 9)) || $god_mode){
 								echo '
-										<div class="cellName" style="text-align: center; ', $contacts[$i]['fired'] == '1' ? 'background-color: rgba(161,161,161,1);"' : '"' ,'>
+										<div class="cellName" style="text-align: center; '.$bgColor.'">
 											<div style="display:inline-block;">'.$contacts[$i]['password'].'</div> <div style="color: red; display: inline-block; cursor: pointer;" title="Сменить пароль" onclick=changePass('.$contacts[$i]['id'].')><i class="fa fa-key" aria-hidden="true"></i></div>
 										</div>';
 							}else{
 								echo '
-										<div class="cellName" style="text-align: center; ', $contacts[$i]['fired'] == '1' ? 'background-color: rgba(161,161,161,1);"' : '"' ,'>
+										<div class="cellName" style="text-align: center; '.$bgColor.'">
 											****
 										</div>';
 							}
@@ -331,7 +336,7 @@
 							$fired_all .= '
 								<li class="cellsBlock cellsBlockHover" ';
 
-                            if ($contacts[$i]['fired'] == '1')
+                            if ($contacts[$i]['status'] == '8')
                                 $fired_all .= 'style="background-color: rgba(161,161,161,1);"';
                             else
                                 $fired_all .= '';

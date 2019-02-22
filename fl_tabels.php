@@ -175,7 +175,7 @@
                     //if (($permission['id'] != 1) && ($permission['id'] != 2) && ($permission['id'] != 3) && ($permission['id'] != 8) && ($permission['id'] != 9)){
 
                         //Выберем всех сотрудников с такой должностью
-                        $query = "SELECT * FROM `spr_workers` WHERE `permissions`='{$type}' AND `fired` = '0'";
+                        $query = "SELECT * FROM `spr_workers` WHERE `permissions`='{$type}' AND `status` <> '8'";
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                         $number = mysqli_num_rows($res);

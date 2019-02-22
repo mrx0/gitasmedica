@@ -99,7 +99,7 @@
             $arr = array();
             $workers_rez = array();
 
-            $query = "SELECT `id`, `name` FROM `spr_workers` WHERE `permissions` = '5' AND `fired` <> '1'";
+            $query = "SELECT `id`, `name` FROM `spr_workers` WHERE `permissions` = '5' AND `status` <> '8'";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

@@ -9,7 +9,7 @@
 
 	$msql_cnnct = ConnectToDB();
 
-    $query = "UPDATE `spr_workers` SET `status`='8' WHERE `fired` = '1'";
+    $query = "UPDATE `spr_workers` SET `status`='8' WHERE `status` = '8'";
 
     mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

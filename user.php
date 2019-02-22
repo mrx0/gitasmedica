@@ -53,8 +53,11 @@
 			echo '
 						</h2>
 					</header>';
-			if ($user[0]['fired'] == '1'){
+			if ($user[0]['status'] == '8'){
 				echo '<span style="color:#EF172F;font-weight:bold;">УВОЛЕН</span>';
+			}
+			if ($user[0]['status'] == '6'){
+				echo '<span style="color: rgb(213, 22, 239) ;font-weight:bold;">ДЕКРЕТ</span>';
 			}
 
 			echo '
