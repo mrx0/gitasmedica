@@ -667,7 +667,7 @@
                         }
 
                         echo '
-                            <td selectedDate="'.$selectedDate.'" class="hoverDate'.$i.' schedulerItem" style="width: 20px; '.$BgColor.' '.$Shtrih.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\''.$ii.'.'.$month.'.'.$year.'\', 0, event, \'showCurDate\');*/ $(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');" onmouseout="SetVisible(this,false); $(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');" title="'.$title.'">
+                            <td selectedDate="'.$selectedDate.'" class="hoverDate'.$i.' schedulerItem" style="width: 20px; '.$BgColor.' '.$Shtrih.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\''.$ii.'.'.$month.'.'.$year.'\', 0, event, \'showCurDate\');*/ $(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');" title="'.$title.'">
                                 <div id="" class="">'.$hours.'</div>
                                 <!--<div style="display: none;"><i style="'.$currentDayColor.'">'.$i.'</i></div>-->
                             </td>';
@@ -816,7 +816,7 @@
                         }
 
                         echo '
-                            <td selectedDate="'.$selectedDate.'" worker_id='.$worker_data['id'].' day='.$i.' class="hoverDate'.$i.' schedulerItem" style="width: 20px; '.$BgColor.' '.$Shtrih.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\''.$ii.'.'.$month.'.'.$year.'\', 0, event, \'showCurDate\'); *//*$(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');*/" onmouseout="SetVisible(this,false); /*$(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');*/" title="'.$title.'">
+                            <td selectedDate="'.$selectedDate.'" worker_id='.$worker_data['id'].' day='.$i.' class="hoverDate'.$i.' schedulerItem" style="width: 20px; '.$BgColor.' '.$Shtrih.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\''.$ii.'.'.$month.'.'.$year.'\', 0, event, \'showCurDate\'); *//*$(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');*/" onmouseout="/*SetVisible(this,false);*/ /*$(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');*/" title="'.$title.'">
                                 <div id="" class="">'.$hours.'</div>
                                 <!--<div style="display: none;"><i style="'.$currentDayColor.'">'.$i.'</i></div>-->
                             </td>';

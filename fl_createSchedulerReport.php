@@ -61,7 +61,7 @@
                         <div class="nav">
                             <a href="stat_cashbox.php" class="b">Касса</a>
                             <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт по филиалу</a>
-                            <a href="scheduler3.php" class="b">График</a>
+                            <a href="scheduler3.php?filial='.$filial_id.'&who=4" class="b">График</a>
                         </div>
                         <span style="color: red;">Тестовый режим</span>
                         <h2>Добавить рабочие часы</h2>
