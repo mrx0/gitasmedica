@@ -256,11 +256,27 @@
 
             $msql_cnnct = ConnectToDB ();
 
+
+            //Получаем нормы смен для этого типа
+            $arr = array();
+            $normaSmen = array();
+
+            $query = "SELECT * FROM `fl_spr_normasmen` WHERE `type` = '$type'";
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    //Раскидываем в массив
+                    $normaSmen[$arr['month']] = $arr['count'];
+                }
+            }
+            //var_dump($normaSmen);
+
             //Получаем сотрудников этого филиала
             $arr = array();
             $filial_workers = array();
 
-            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$type' AND `filial_id` = '{$_GET['filial']}' AND `status` == '0' ORDER BY `full_name` ASC";
+            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$type' AND `filial_id` = '{$_GET['filial']}' AND `status` = '0' ORDER BY `full_name` ASC";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -278,7 +294,7 @@
             $arr = array();
             $filial_not_workers = array();
 
-            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$type' AND `filial_id` <> '{$_GET['filial']}' AND `status` == '0' ORDER BY `full_name` ASC";
+            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$type' AND `filial_id` <> '{$_GET['filial']}' AND `status` = '0' ORDER BY `full_name` ASC";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -507,6 +523,12 @@
                     <tr class="<!--sticky f-sticky-->">
                         <td style="width: 260px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>ФИО</b><br><span style="color: rgb(35, 175, 53); font-size: 80%;">прикреплены к филиалу</span></td>';
 
+            //Всего
+            echo '
+                        <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center; cursor: pointer;">
+                            -
+                        </td>';
+
             $weekday_temp = $weekday;
 
             //Выведем даты месяца
@@ -562,8 +584,15 @@
                 foreach ($filial_workers as $worker_data) {
 
                     echo '
-                    <tr class="cellsBlockHover">
+                    <tr class="cellsBlockHover workerItem" worker_id="'.$worker_data['id'].'">
                         <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>'.$worker_data['full_name'].'</b></td>';
+
+                    //Всего
+                    echo '
+                        <td class="hoverDate schedulerItem" style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" title="">
+                            <div id="allMonthHours_'.$worker_data['id'].'" class="allMonthHours" style="display: inline;">0</div>/<div id="allMonthNorma_'.$worker_data['id'].'" style="display: inline;">'.($normaSmen[(int)$month]*12).'</div>(<div id="hoursMonthPercent_'.$worker_data['id'].'" style="display: inline;">0</div>%)
+                        </td>';
+
 
                     $weekday_temp = $weekday;
 
@@ -668,7 +697,7 @@
 
                         echo '
                             <td selectedDate="'.$selectedDate.'" class="hoverDate'.$i.' schedulerItem" style="width: 20px; '.$BgColor.' '.$Shtrih.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\''.$ii.'.'.$month.'.'.$year.'\', 0, event, \'showCurDate\');*/ $(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');" title="'.$title.'">
-                                <div id="" class="">'.$hours.'</div>
+                                <div id="" class="dayHours_'.$worker_data['id'].'">'.$hours.'</div>
                                 <!--<div style="display: none;"><i style="'.$currentDayColor.'">'.$i.'</i></div>-->
                             </td>';
 
@@ -711,10 +740,17 @@
             if (!empty($filial_not_workers)) {
                 foreach ($filial_not_workers as $worker_data) {
                     echo '
-                    <tr class="cellsBlockHover">
+                    <tr class="cellsBlockHover workerItem" worker_id="'.$worker_data['id'].'">
                         <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>'.$worker_data['full_name'].'</b></td>';
 
                     $weekday_temp = $weekday;
+
+                    //Всего
+                    echo '
+                        <td class="hoverDate schedulerItem" style="width: 20px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" title="">
+                            <div id="allMonthHours_'.$worker_data['id'].'" class="allMonthHours" style="display: inline;">0</div>/<div id="allMonthNorma_'.$worker_data['id'].'" style="display: inline;">'.($normaSmen[(int)$month]*12).'</div>(<div id="hoursMonthPercent_'.$worker_data['id'].'" style="display: inline;">0</div>%)
+                        </td>';
+
 
                     //Выведем даты месяца
                     for ($i=1; $i<=$day_count; $i++){
@@ -817,7 +853,7 @@
 
                         echo '
                             <td selectedDate="'.$selectedDate.'" worker_id='.$worker_data['id'].' day='.$i.' class="hoverDate'.$i.' schedulerItem" style="width: 20px; '.$BgColor.' '.$Shtrih.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\''.$ii.'.'.$month.'.'.$year.'\', 0, event, \'showCurDate\'); *//*$(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');*/" onmouseout="/*SetVisible(this,false);*/ /*$(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');*/" title="'.$title.'">
-                                <div id="" class="">'.$hours.'</div>
+                                <div id="" class="dayHours_'.$worker_data['id'].'">'.$hours.'</div>
                                 <!--<div style="display: none;"><i style="'.$currentDayColor.'">'.$i.'</i></div>-->
                             </td>';
 
@@ -892,6 +928,11 @@
                         }else{
                             document.oncontextmenu = function() {};
                         }
+                    });
+                                
+                    //Посчитаем кол-во всех часов за месяц для каждого
+                    $(document).ready(function() {
+                        calculateWorkerHours(); 
                     });
   
 

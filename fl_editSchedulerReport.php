@@ -164,7 +164,7 @@
                                     <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'.$sch_item['type_name'].'</span>
                                 </div>
                                 <div class="cellRight" style="font-size: 13px;">
-                                    <input type="text" size="1" class="workerHoursValue" worker_id="'.$sch_item['worker_id'].'" value="'.$sch_item['hours'].'" autocomplete="off"> часов
+                                    <input type="text" size="1" class="workerHoursValue" worker_id="'.$sch_item['worker_id'].'" worker_type="'.$sch_item['type'].'" value="'.$sch_item['hours'].'" autocomplete="off"> часов
                                     <label id="hours_'.$sch_item['worker_id'].'_num_error" class="error"></label>
                                 </div>';
                             if (($finances['see_all'] == 1) || $god_mode) {

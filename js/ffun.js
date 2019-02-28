@@ -3957,3 +3957,37 @@
 
         $("#revenuePercent").focus();
     }
+
+
+    //Рассчёт общих часов сотрудников за месяц
+    function calculateWorkerHours(){
+        $(".workerItem").each(function() {
+            var worker_id = ($(this).attr("worker_id"));
+            //console.log(worker_id);
+
+            var summHours = 0;
+
+            $(".dayHours_"+worker_id).each(function() {
+                summHours += parseInt($(this).html(), 10) || 0;
+                //summHours += $(this).html();
+                //console.log($(this).html());
+                //console.log(parseInt($(this).html(), 10));
+            });
+            //console.log(summHours);
+
+            //Выведем кол-во часов
+            $("#allMonthHours_"+worker_id).html(summHours);
+
+            //Берем норму смен этого месяца для этого сотрудника
+            //!!! Хотя норма для всех одинакова по сути... короче бред тут каждый раз брать одно и то же с разных мест
+
+            var normaSmen = parseInt($("#allMonthNorma_"+worker_id).html(), 10) || 0;
+            //console.log(normaSmen);
+
+            //var hoursMonthPercent = 0;
+            var hoursMonthPercent = summHours*100/normaSmen;
+
+            $("#hoursMonthPercent_"+worker_id).html(number_format(hoursMonthPercent, 0, '.', ' '));
+
+        });
+    }
