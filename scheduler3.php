@@ -410,8 +410,6 @@
             //var_dump($query);
             //var_dump($hours_j);
 
-
-
             //переменная, чтоб вкл/откл редактирование
             $iCanManage = 'false';
             $displayBlock = false;
@@ -690,8 +688,14 @@
                                 $ii = $i;
                             }
 
-                            if (isset($hours_j[$worker_data['id']][$ii][$_GET['filial']])){
+                            //Сумма часов только на этом филиале
+                            /*if (isset($hours_j[$worker_data['id']][$ii][$_GET['filial']])){
                                 $hours = $hours_j[$worker_data['id']][$ii][$_GET['filial']];
+                            }*/
+
+                            //Сумма часов только на всех филиалах
+                            if (isset($hours_j[$worker_data['id']][$ii])) {
+                                $hours = array_sum($hours_j[$worker_data['id']][$ii]);
                             }
                         }
 
@@ -846,8 +850,14 @@
                                 $ii = $i;
                             }
 
-                            if (isset($hours_j[$worker_data['id']][$ii][$_GET['filial']])){
+                            //Сумма часов только на этом филиале
+                            /*if (isset($hours_j[$worker_data['id']][$ii][$_GET['filial']])){
                                 $hours = $hours_j[$worker_data['id']][$ii][$_GET['filial']];
+                            }*/
+
+                            //Сумма часов только на всех филиалах
+                            if (isset($hours_j[$worker_data['id']][$ii])) {
+                                $hours = array_sum($hours_j[$worker_data['id']][$ii]);
                             }
                         }
 
