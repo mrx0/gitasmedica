@@ -14,7 +14,7 @@
 
             require 'variables.php';
 
-            $filials_j = getAllFilials(false, false);
+            $filials_j = getAllFilials(false, false, false);
 
             if ($_GET){
                 if ((isset($_GET['category_id'])) && (isset($_GET['filial_id']))){

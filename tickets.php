@@ -102,7 +102,7 @@
                 }
             }
 
-            $filials_j = getAllFilials(false, true);
+            $filials_j = getAllFilials(false, true, true);
 
             $msql_cnnct2 = ConnectToDB_2 ('config_ticket');
 
@@ -182,7 +182,7 @@
                 $total_ticket_ids = 0;
             }
 
-            $filials_j = getAllFilials(false, false);
+            $filials_j = getAllFilials(false, false, true);
             //var_dump ($filials_j);
 
             CloseDB ($msql_cnnct2);

@@ -19,7 +19,7 @@
 
             $data = $_POST['data'];
 
-            $filials_j = getAllFilials(false, false);
+            $filials_j = getAllFilials(false, false, false);
 
             $rezult = '';
             

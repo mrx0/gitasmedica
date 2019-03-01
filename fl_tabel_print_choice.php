@@ -77,7 +77,7 @@
 									        <select name="SelectFilialp" id="SelectFilialp" style="margin-right: 5px;">
 									            <option value="0" selected>Все</option>';
 
-            $offices_j = getAllFilials(true, false);
+            $offices_j = getAllFilials(true, false, false);
 
             foreach ($offices_j as $offices_val){
 

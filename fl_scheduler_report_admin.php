@@ -14,7 +14,7 @@ if ($enter_ok){
         include_once 'widget_calendar.php';
         include_once 'variables.php';
 
-        $filials_j = getAllFilials(false, false);
+        $filials_j = getAllFilials(false, false, false);
         //var_dump ($filials_j);
 
         //обнулим сессионные данные для редактирования
@@ -228,7 +228,7 @@ if ($enter_ok){
         $last = ($day_count + $weekday - 1) % 7;
         //var_dump($last);
 
-        $somat_color = '';
+        //$somat_color = '';
         if ($last == 0){
             $end = $day_count;
         }else{

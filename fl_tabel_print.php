@@ -29,7 +29,7 @@
                     //var_dump($permissions);
                     if (($report['see_all'] == 1) || $god_mode || ($tabel_j[0]['worker_id'] == $_SESSION['id'])){
 
-                        $filials_j = getAllFilials(false, true);
+                        $filials_j = getAllFilials(false, true, true);
 
                         //Смена/график !!! переделать ! нужно только количество
                         $rezultShed = array();

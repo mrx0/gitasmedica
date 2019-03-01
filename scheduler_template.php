@@ -26,10 +26,12 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 
+            require 'variables.php';
+
 			$dopQuery = '';
 
 			//Массив с днями недели
-			$dayWarr = array(
+			/*$dayWarr = array(
 				1 => 'ПН',
 				2 => 'ВТ',
 				3 => 'СР',
@@ -37,11 +39,9 @@
 				5 => 'ПТ',
 				6 => 'СБ',
 				7 => 'ВС',
-			);
+			);*/
 			
-			$offices = $offices_j = SelDataFromDB('spr_filials', '', '');
-			//var_dump ($offices);
-			
+
 			//тип график (космет/стомат/...)
 			if (isset($_GET['who'])){
 				if ($_GET['who'] == 'stom'){
@@ -108,21 +108,22 @@
 			}
 			
 			//Филиал
-			if (isset($_GET['filial'])){
-				if ($_GET['filial'] != 0){
-					$dopQuery .= " AND `filial`='{$_GET['filial']}'";
-					$offices = SelDataFromDB('spr_filials', $_GET['filial'], 'id');
-					$wFilial = '';
-				}	
-			}else{
-				if(isset($_SESSION['filial'])){
-					$_GET['filial'] = $_SESSION['filial'];
-					$dopQuery .= " AND `filial`='{$_GET['filial']}'";
-					$offices = SelDataFromDB('spr_filials', $_GET['filial'], 'id');
-					$wFilial = '';
-				}
-			}
-			
+
+            $filials_j = getAllFilials(true, false, false);
+			//var_dump($filials_j);
+
+            $filials_j2 = getAllFilials(false, false, false);
+
+            if (isset($_GET['filial'])){
+                if ($_GET['filial'] > 0) {
+                    $dopQuery .= " AND `filial`='{$_GET['filial']}'";
+                }
+            }else{
+                if (isset($_SESSION['filial'])) {
+                    $dopQuery .= " AND `filial`='{$_SESSION['filial']}'";
+                }
+            }
+
 			$weekDays = '
 						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>ПН</b></div>
 						<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>ВТ</b></div>
@@ -143,24 +144,23 @@
 
 			//получаем шаблон графика из базы
 			$query = "SELECT `filial`, `day`, `smena`, `kab`, `worker` FROM `sheduler_template` WHERE `type` = '$type'".$dopQuery;
+			//var_dump($query);
 			
-			$shedTemplate = 0;
+			$shedTemplate = array();
 
 			$arr = array();
-			$rez = array();
+			//$rez = array();
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
 			$number = mysqli_num_rows($res);
 			if ($number != 0){
 				while ($arr = mysqli_fetch_assoc($res)){
-					$rez[$arr['filial']][$arr['day']][$arr['smena']][$arr['kab']] = $arr['worker'];
+                    $shedTemplate[$arr['filial']][$arr['day']][$arr['smena']][$arr['kab']] = $arr['worker'];
 				}
-				$shedTemplate = $rez;
-			}else{
-				$shedTemplate = 0;
 			}
-			//var_dump($shedTemplate);
+            //$shedTemplate = $rez;
+			//var_dump($shedTemplate[12]);
 			
 			//есть ли кабинеты в филиале
 			$kabsInFilialExist = FALSE;
@@ -217,7 +217,8 @@
 				echo '
 						<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
 							<div id="showDiv1" style="cursor: pointer;" onclick="manageScheduler(\'scheduler_template\')">
-								<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>
+								<!--<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>-->
+								<span id="manageMessage" style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">', $displayBlock ? 'Управление <span style=\'color: green;\'>включено</span>' : 'Управление <span style=\'color: red;\'>выключено</span>' ,'</span> <i class="fa fa-cog" title="Настройки"></i>
 							</div>
 							<div id="div1" style="', $displayBlock ? 'display: block;' : '' ,'  width: 400px; margin-bottom: 10px; border: 1px dotted #BFBCB5; padding: 20px 10px 10px; background-color: #EEE;">
 								<div id="changeShedOptionsReq"></div>
@@ -225,6 +226,7 @@
 									Применить этот график на месяц ';
 				echo '
 									<select name="SelectMonthShedOptions" id="SelectMonthShedOptions">';
+
 				foreach ($monthsName as $mNumber => $mName){
 					$selected = '';
 					if ((int)$mNumber == (int)date('m')+1){
@@ -244,6 +246,21 @@
 								<div style="margin-bottom: 18px;">
 									Начиная с <input id="SelectDayShedOptions" type="number" value="1" min="1" max="31" size="2" style="width: 40px;"> числа
 								</div>
+								<div s  tyle="margin-bottom: 18px;">
+                                    <span style="color: red;">Выбор филиалов временнно не работает</span><br>';
+
+                echo '<input type="checkbox" id="fullAll" name="fullAll" class="fullType" value="1" checked> Все<br>';
+
+                if (!empty($filials_j)){
+                    foreach ($filials_j as $filials_j_data) {
+                        echo '<input type="checkbox" id="filial_'.$filials_j_data['id'].'" name="filial_'.$filials_j_data['id'].'" class="fullType filialItem" value="1" checked> '.$filials_j_data['name'].'<br>';
+
+                    }
+                }
+
+
+                echo '
+				                </div>
 								<div style="margin-bottom: 18px;">
 									Игнорировать существующий график <input type="checkbox" name="ignoreshed" id="ignoreshed" value="1">
 								</div>
@@ -266,15 +283,15 @@
 								<div>
 									<select name="SelectFilial" id="SelectFilial">
 										<option value="0">Все</option>';
-			if ($offices_j != 0){
-				for ($i=0;$i<count($offices_j);$i++){
+			if (!empty($filials_j)){
+                foreach ($filials_j as $filials_j_data) {
 					$selected = '';
 					if (isset($_GET['filial'])){
-						if ($offices_j[$i]['id'] == $_GET['filial']){
+						if ($filials_j_data['id'] == $_GET['filial']){
 							$selected = 'selected';
 						}
 					}
-					echo "<option value='".$offices_j[$i]['id']."' $selected>".$offices_j[$i]['name']."</option>";
+					echo "<option value='".$filials_j_data['id']."' $selected>".$filials_j_data['name']."</option>";
 				}
 			}
 			echo '
@@ -286,7 +303,7 @@
 								<div>
 									<select name="SelectDayW" id="SelectDayW">
 										<option value="0">Все</option>';
-				for ($i=1; $i<=count($dayWarr); $i++){
+				for ($i=1; $i<=count($dayWeek_arr); $i++){
 					$selected = '';
 					if (isset($_GET['dayw'])){
 						if ($i == $_GET['dayw']){
@@ -295,11 +312,11 @@
 							if ($_GET['dayw'] != 0){
 								//Какой день отображать
 								$weekDays = '
-									<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>'.$dayWarr[$i].'</b></div>';
+									<div class="cellTime" style="padding: 4px 0; text-align: center; background-color:#FEFEFE; width: 150px; min-width: 125px; max-width: 150px;"><b>'.$dayWeek_arr[$i].'</b></div>';
 							}
 						}
 					}
-					echo "<option value='$i' $selected>".$dayWarr[$i]."</option>";
+					echo "<option value='$i' $selected>".$dayWeek_arr[$i]."</option>";
 			}
 			echo '
 									</select>
@@ -318,123 +335,141 @@
 			echo '
 					</div>';
 			
-			if ($offices != 0){
+			if (!empty($shedTemplate)){
+			    //var_dump($shedTemplate);
 				//Пробегаемся по филиалам
-				foreach ($offices as $filial_val){
-					//смотрим, какие кабинеты есть
-					$kabsInFilial_arr = SelDataFromDB('spr_kabs', $filial_val['id'], 'office_kabs');
-					if ($kabsInFilial_arr != 0){
-						$kabsInFilial_json = $kabsInFilial_arr[0][$kabsForDoctor];
-						//var_dump($kabsInFilial_json);
-						
-						if ($kabsInFilial_json != NULL){
-							$kabsInFilialExist = TRUE;
-							$kabsInFilial = json_decode($kabsInFilial_json, true);
-							//var_dump($kabsInFilial);
-							
-						}else{
-							$kabsInFilialExist = FALSE;
-						}
-						
-					}
-					
-					//Если кабинеты все таки есть
-					if ($kabsInFilialExist){
-						//var_dump($kabsInFilial);
-						echo '
-							<div class="cellsBlock cellsBlockHover">
-								<div class="cellName" style="font:size: 110%; text-align: left; background-color: #FEFEFE; width: 120px; min-width: 120px; max-width: 120px;">
-									'.$filial_val['name'].'
-								</div>
-						';			
-						
-						//Дни недели
-						$dayWcount = 7;
-						if (isset($_GET['dayw'])){
-							if ($_GET['dayw'] != 0){
-								$dayWcount = 1;
-								$dayWvalue = $_GET['dayw'];
-							}
-						}
-						
-						for ($dayW = 1; $dayW <= $dayWcount; $dayW++) {
-							if ($dayWcount > 1) $dayWvalue = $dayW;
-							echo '
-								<div class="cellTime" style="padding: 0; text-align: center; background-color: #FEFEFE; width: 150px; min-width: 125px; max-width: 150px;">';
-							//номера смен 1 - день 2- вечер 3 - ночь 4 - утро
-							for ($smenaN = 1; $smenaN <= 4; $smenaN++) {
-								echo '
-									<div style="outline: 1px solid #666; display: table; margin-bottom: 3px;">
-										<div style="vertical-align: middle; width: 5px; box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2); display: table-cell !important;">
-											'.$smenaN.'
-										</div>';
-								
-								//отсутствие врачей в клинике
-								$now_ahtung = TRUE;
-								$ahtung = TRUE;
-								//переменная для вывода
-								$resEcho2 = '';
-								
-								//Кабинеты
-								for ($kabN = 1; $kabN <= count($kabsInFilial); $kabN++){
-									$resEcho = '';
-									//если врач есть
-									if (isset($shedTemplate[$filial_val['id']][$dayWvalue][$smenaN][$kabN])){
-										$resEcho = WriteSearchUser('spr_workers', $shedTemplate[$filial_val['id']][$dayWvalue][$smenaN][$kabN], 'user', false).' <a href="scheduler_own.php?id='.$shedTemplate[$filial_val['id']][$dayWvalue][$smenaN][$kabN].'" class="info"><i class="fa fa-info-circle" title="График врача"></i></a>';
-										$ahtung = FALSE;
-										$fontSize = 'font-size: 100%;';
-									}else{
-										$resEcho = '<span style="color: red;">никого</span>';
-										$now_ahtung = TRUE;
-										$fontSize = '';
-									}
-									$resEcho2 .= '
-											<div style="box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);" onclick="if (iCanManage) ShowSettingsScheduler('.$filial_val['id'].', \''.$filial_val['name'].'\', '.$dayWvalue.', '.$smenaN.', '.$kabN.')">
-												<div style="text-align: right; color: #555;">
-													<b>каб. '.$kabN.'</b>
-												</div>
-												<div style="text-align: left; '.$fontSize.' padding: 4px;">';
-									$resEcho2 .= $resEcho;
-									$resEcho2 .= '
-												</div>
-											</div>';
-								}
-								
-								if (!$ahtung OR !$now_ahtung){
-									$BgColor = ' background-color: rgba(81, 249, 89, 0.47);';
-								}else{
-									$BgColor = ' background-color: rgba(252, 153, 153, 0.7);';
-								}
-								if ($smenaN > 2){
-									$BgColor = ' background-color: rgba(220, 220, 220, 0.5);';
-								}
-								
-								echo '
-										<div style="text-align: middle; display: table-cell !important; width: 100%;'.$BgColor.'">';
-								echo $resEcho2;
-								echo '		
-										</div>
-										
-										
-									</div>';
-							}
-							
-							echo '
-								</div>';
-						}
-						echo '
-							</div>';
-					}else{
-						echo '
+                    foreach ($shedTemplate as $filial_id => $shed_data) {
+                        //                    var_dump($filial_id);
+                        //                    var_dump($shed_data);
+
+                        if (isset($filials_j2[$filial_id])) {
+
+                            //смотрим, какие кабинеты есть
+                            $kabsInFilial_arr = SelDataFromDB('spr_kabs', $filial_id, 'office_kabs');
+
+                            if ($kabsInFilial_arr != 0) {
+
+                                $kabsInFilial_json = $kabsInFilial_arr[0][$kabsForDoctor];
+                                //var_dump($kabsInFilial_json);
+
+                                if ($kabsInFilial_json != NULL) {
+                                    $kabsInFilialExist = TRUE;
+                                    $kabsInFilial = json_decode($kabsInFilial_json, true);
+                                    //var_dump($kabsInFilial);
+
+                                } else {
+                                    $kabsInFilialExist = FALSE;
+                                }
+
+                            }
+
+                            //var_dump($kabsInFilialExist);
+                            //Если кабинеты все таки есть
+                            if ($kabsInFilialExist) {
+                                //var_dump($kabsInFilial);
+                                echo '
+                                <div class="cellsBlock cellsBlockHover">
+                                    <div class="cellName" style="font:size: 110%; text-align: left; background-color: #FEFEFE; width: 120px; min-width: 120px; max-width: 120px;">
+                                        ' . $filials_j2[$filial_id]['name'] . '
+                                    </div>
+                            ';
+
+                                //Дни недели
+                                $dayWcount = 7;
+                                if (isset($_GET['dayw'])) {
+                                    if ($_GET['dayw'] != 0) {
+                                        $dayWcount = 1;
+                                        $dayWvalue = $_GET['dayw'];
+                                    }
+                                }
+
+                                for ($dayW = 1; $dayW <= $dayWcount; $dayW++) {
+                                    if ($dayWcount > 1) $dayWvalue = $dayW;
+                                    echo '
+                                    <div class="cellTime" style="padding: 0; text-align: center; background-color: #FEFEFE; width: 150px; min-width: 125px; max-width: 150px;">';
+                                    //номера смен 1 - день 2- вечер 3 - ночь 4 - утро
+                                    for ($smenaN = 1; $smenaN <= 4; $smenaN++) {
+                                        echo '
+                                        <div style="outline: 1px solid #666; display: table; margin-bottom: 3px;">
+                                            <div style="vertical-align: middle; width: 5px; box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2); display: table-cell !important;">
+                                                ' . $smenaN . '
+                                            </div>';
+
+                                        //отсутствие врачей в клинике
+                                        $now_ahtung = TRUE;
+                                        $ahtung = TRUE;
+                                        //переменная для вывода
+                                        $resEcho2 = '';
+
+                                        //Кабинеты
+                                        for ($kabN = 1; $kabN <= count($kabsInFilial); $kabN++) {
+                                            $resEcho = '';
+                                            //если врач есть
+                                            if (isset($shedTemplate[$filial_id][$dayWvalue][$smenaN][$kabN])) {
+                                                $resEcho = WriteSearchUser('spr_workers', $shedTemplate[$filial_id][$dayWvalue][$smenaN][$kabN], 'user', false) . ' <a href="scheduler_own.php?id=' . $shedTemplate[$filial_id][$dayWvalue][$smenaN][$kabN] . '" class="info"><i class="fa fa-info-circle" title="График врача"></i></a>';
+                                                $ahtung = FALSE;
+                                                $fontSize = 'font-size: 100%;';
+                                            } else {
+                                                $resEcho = '<span style="color: red;">никого</span>';
+                                                $now_ahtung = TRUE;
+                                                $fontSize = '';
+                                            }
+                                            $resEcho2 .= '
+                                                <div style="box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);" onclick="if (iCanManage) ShowSettingsScheduler(' . $filial_id . ', \'' . $filials_j2[$filial_id]['name'] . '\', ' . $dayWvalue . ', ' . $smenaN . ', ' . $kabN . ')">
+                                                    <div style="text-align: right; color: #555;">
+                                                        <b>каб. ' . $kabN . '</b>
+                                                    </div>
+                                                    <div style="text-align: left; ' . $fontSize . ' padding: 4px;">';
+                                            $resEcho2 .= $resEcho;
+                                            $resEcho2 .= '
+                                                    </div>
+                                                </div>';
+                                        }
+
+                                        if (!$ahtung OR !$now_ahtung) {
+                                            $BgColor = ' background-color: rgba(81, 249, 89, 0.47);';
+                                        } else {
+                                            $BgColor = ' background-color: rgba(252, 153, 153, 0.7);';
+                                        }
+                                        if ($smenaN > 2) {
+                                            $BgColor = ' background-color: rgba(220, 220, 220, 0.5);';
+                                        }
+
+                                        echo '
+                                            <div style="text-align: middle; display: table-cell !important; width: 100%;' . $BgColor . '">';
+                                        echo $resEcho2;
+                                        echo '		
+                                            </div>
+                                            
+                                            
+                                        </div>';
+                                    }
+
+                                    echo '
+                                    </div>';
+                                }
+                                echo '
+                                </div>';
+                            } else {
+                                echo '
+                                <div class="cellsBlock cellsBlockHover" style="height: auto;">
+                                    <div class="cellName" style="text-align: left; background-color: #FEFEFE; width: auto;">
+                                        ' . $filials_j2[$filial_id]['name'] . ' нет кабинетов ' . $whose . '
+                                    </div>
+                                </div>
+                            ';
+                            }
+                        }
+                    }
+			}else{
+                echo '
 							<div class="cellsBlock cellsBlockHover" style="height: auto;">
 								<div class="cellName" style="text-align: left; background-color: #FEFEFE; width: auto;">
-									'.$filial_val['name'].' нет кабинетов '.$whose.'
+									 нет кабинетов '.$whose.'
 								</div>
 							</div>
-						';	
-					}
-				}
-			}
+						';
+            }
 			if (($scheduler['edit'] == 1) || $god_mode){
 				echo '
 					<div id="ShowSettingsScheduler" style="position: absolute; z-index: 105; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; padding:10px;">
@@ -656,11 +691,43 @@
 					}';
 			}	
 			echo '	
-				</script>
-			
-			
-			
-				<script>  
+				  
+                    $(".fullType").click(function() {
+                        
+					    var checked_status = $(this).is(":checked");
+					    var thisId = $(this).attr("id");
+					    var pin_status = false;
+					    var allCheckStatus = false;
+					    
+                        if (thisId == "fullAll"){
+                            if (checked_status){
+                                pin_status = true;
+                            }else{
+                                pin_status = false;
+                            }
+                            $(".fullType").each(function() {
+                                $(this).prop("checked", pin_status);
+                            });
+                        }else{
+                            if (!checked_status){
+                                $("#fullAll").prop("checked", false);
+                            }else{
+                                allCheckStatus = true; 
+                                $(".fullType").each(function() {
+                                    if ($(this).attr("id") != "fullAll"){
+                                        if (!$(this).is(":checked")){
+                                            allCheckStatus = false; 
+                                        }
+                                    }
+                                });
+                                if (allCheckStatus){
+                                    $("#fullAll").prop("checked", true);
+                                }
+                            }
+                        }
+					});
+				  
+				  
 					function changeStyle(idd){
 						if ( $("#"+idd).prop("checked"))
 							document.getElementById(idd+"_2").style.background = \'#83DB53\';

@@ -18,7 +18,7 @@
                     //!!! @@@
                     include_once 'ffun.php';
 
-                    $filials_j = getAllFilials(false, false);
+                    $filials_j = getAllFilials(false, false, false);
                     //var_dump($filials_j);
 
                     //Сегодняшняя дата

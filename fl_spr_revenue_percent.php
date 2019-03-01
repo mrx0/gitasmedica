@@ -196,7 +196,7 @@
 
             include_once 'ffun.php';
 
-            $filials_j = getAllFilials(true, false);
+            $filials_j = getAllFilials(true, false, false);
 
             $msql_cnnct = ConnectToDB2 ();
 

@@ -18,7 +18,7 @@
 
             $have_target_filial = true;
 
-            $filials_j = getAllFilials(false, false);
+            $filials_j = getAllFilials(false, false, false);
             //var_dump($filials_j);
 
             $d = date('d', time());

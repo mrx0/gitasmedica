@@ -159,7 +159,7 @@
 
 						//Выбор филиала для сессии
 						//$offices_j = SelDataFromDB('spr_filials', '', '');
-                        $filials_j = getAllFilials(true, true);
+                        $filials_j = getAllFilials(true, true, true);
 
 						/*if ($filials_j != 0){
 							for ($off = 0; $off < count($filials_j); $off++){

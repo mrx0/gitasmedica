@@ -42,7 +42,7 @@
                         //var_dump($_SESSION);
                         //unset($_SESSION['invoice_data']);
 			
-                        $filials_j = getAllFilials(false, false);
+                        $filials_j = getAllFilials(false, false, false);
                         //var_dump(microtime(true) - $script_start);
                         //var_dump($filials_j);
 

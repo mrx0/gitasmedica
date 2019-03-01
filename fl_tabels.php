@@ -97,7 +97,7 @@
 
 			//$offices_j = SelDataFromDB('spr_filials', '', '');
             //$permissions_j = SelDataFromDB('spr_permissions', '', '');
-            $filials_j = getAllFilials(true, true);
+            $filials_j = getAllFilials(true, true, true);
             //var_dump($filials_j);
 
             //Получили список прав
@@ -140,6 +140,8 @@
                                     <a href="?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
                                     <a href="?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>
                                     <a href="?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
+                                    <a href="fl_tabels2.php?who=4" class="b" style="">Администраторы</a>
+								    <a href="fl_tabels2.php?who=7" class="b" style="">Ассистенты</a>
                                 </li>
 						    </ul>';
 

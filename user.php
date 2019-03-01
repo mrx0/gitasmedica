@@ -33,7 +33,7 @@
             }
             //var_dump($category);
 
-            $filials_j = getAllFilials(false, false);
+            $filials_j = getAllFilials(false, false, true);
 
 			//операции со временем						
 			$month = date('m');		

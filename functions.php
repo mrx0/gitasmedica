@@ -199,12 +199,16 @@
 	}
 
 	//Собираем все филиалы
-	function getAllFilials($sort, $short_name){
+	function getAllFilials($sort, $short_name, $closed){
 		$filials_j = array();
 
         $msql_cnnct = ConnectToDB ();
 
         $query = "SELECT * FROM `spr_filials`";
+
+        if (!$closed){
+            $query .= " WHERE `status` = '0'";
+		}
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -3498,7 +3502,7 @@
 
             $msql_cnnct = ConnectToDB ();
 
-            $offices_j = getAllFilials(false, false);
+            $offices_j = getAllFilials(false, false, false);
             //var_dump($offices_j);
 
             foreach ($data as $items) {

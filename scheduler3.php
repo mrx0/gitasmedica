@@ -14,7 +14,7 @@
 			include_once 'widget_calendar.php';
 			include_once 'variables.php';
 
-            $filials_j = getAllFilials(false, false);
+            $filials_j = getAllFilials(false, false, false);
             //var_dump ($filials_j);
 
             //обнулим сессионные данные для редактирования
@@ -228,7 +228,8 @@
 			$last = ($day_count + $weekday - 1) % 7;
 			//var_dump($last);
 
-            $somat_color = '';
+            //$somat_color = '';
+
 			if ($last == 0){
 				$end = $day_count; 
 			}else{
@@ -523,7 +524,7 @@
 
             //Всего
             echo '
-                        <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center; cursor: pointer;">
+                        <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">
                             -
                         </td>';
 
@@ -587,7 +588,7 @@
 
                     //Всего
                     echo '
-                        <td class="hoverDate schedulerItem" style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" title="">
+                        <td class="hoverDate schedulerItem" style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;" title="">
                             <div id="allMonthHours_'.$worker_data['id'].'" class="allMonthHours" style="display: inline;">0</div>/<div id="allMonthNorma_'.$worker_data['id'].'" style="display: inline;">'.($normaSmen[(int)$month]*12).'</div>(<div id="hoursMonthPercent_'.$worker_data['id'].'" style="display: inline;">0</div>%)
                         </td>';
 
@@ -719,6 +720,9 @@
             echo '
                     <tr>
                         <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>ФИО</b><br><span style="color: rgb(243, 0, 0); font-size: 80%;">не прикреплены к филиалу</span></td>';
+            echo '
+                        <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">
+                        </td>';
 
             for ($i=1; $i<=$day_count; $i++){
 

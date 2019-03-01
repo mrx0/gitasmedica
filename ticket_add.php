@@ -13,7 +13,7 @@
 			include_once 'functions.php';
 			
 			//$offices = SelDataFromDB('spr_filials', '', '');
-            $filials_j = getAllFilials(true, false);
+            $filials_j = getAllFilials(true, false, true);
             //Получили список прав
             $permissions = SelDataFromDB('spr_permissions', '', '');
             //var_dump($permissions);

@@ -14,7 +14,7 @@
 			include_once 'functions.php';
 			//var_dump($_SESSION);
 
-            $filials_j = getAllFilials(false, false);
+            $filials_j = getAllFilials(false, false, true);
 			
 			echo '
 				<header style="margin-bottom: 5px;">

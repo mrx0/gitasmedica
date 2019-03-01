@@ -31,7 +31,7 @@
 
                 $category = SelDataFromDB('journal_work_cat', $_GET['id'], 'worker_id');
                 //var_dump($category);
-                $filials_j = getAllFilials(false, false);
+                $filials_j = getAllFilials(false, false, true);
 			
                 if ($user !=0){
                     echo '

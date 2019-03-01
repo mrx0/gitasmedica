@@ -2118,7 +2118,7 @@
         }
     }
 
-	// !!! правильный пример AJAX
+	//Меняем фактический график по шаблону планового
 	function Ajax_change_shed() {
 
 		var day = $("#SelectDayShedOptions").val();
