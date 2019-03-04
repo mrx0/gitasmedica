@@ -295,11 +295,18 @@ area {
 	/*border: 1px solid #00ff00;*/
 	z-index: 900;
 }
+
+.cellsBlockHover2 {
+	background-color: rgba(151,255,255,.4);
+	z-index: 900;
+}
+
 /*
 .cellsBlockFired {
 	background-color: rgba(103,103,103,1);
 }
 */
+
 .cellsBlock, .cellsBlock6 {
 	display: table;
 	table-layout: auto;
@@ -2688,4 +2695,14 @@ input[type="submit"].msg_send:hover{
 	top: 23px;
 	right: 68px;
 	display: none;
+}
+
+
+.div_up_hidden{
+	opacity:0;
+}
+
+/*Для показать/скрыть текст внутри*/
+.div_up_visible{
+	opacity:1.0;
 }

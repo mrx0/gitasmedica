@@ -33,6 +33,8 @@
             }
             //var_dump($category);
 
+            $filials_j = getAllFilials(false, false, true);
+
 			//операции со временем						
 			$month = date('m');		
 			$year = date('Y');
@@ -51,8 +53,11 @@
 			echo '
 						</h2>
 					</header>';
-			if ($user[0]['fired'] == '1'){
+			if ($user[0]['status'] == '8'){
 				echo '<span style="color:#EF172F;font-weight:bold;">УВОЛЕН</span>';
+			}
+			if ($user[0]['status'] == '6'){
+				echo '<span style="color: rgb(213, 22, 239) ;font-weight:bold;">ДЕКРЕТ</span>';
 			}
 
 			echo '
@@ -103,6 +108,20 @@
             }
 
 			echo '	
+                            </div>
+                        </div>
+                        
+                        <div class="cellsBlock2">
+                            <div class="cellLeft">Филиал</div>
+                            <div class="cellRight">';
+
+			if ($user[0]['filial_id'] != 0){
+                echo  $filials_j[$user[0]['filial_id']]['name'];
+            }else{
+			    echo 'нет привязки';
+            }
+
+            echo '
                             </div>
                         </div>
                                         

@@ -34,19 +34,17 @@
 			$query = "SELECT `filial`, `day`, `smena`, `kab`, `worker`, `type` FROM `sheduler_template`";
 			
 			$shedTemplate = 0;
-			
-			require 'config.php';
-			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-			mysql_select_db($dbName) or die(mysql_error()); 
-			mysql_query("SET NAMES 'utf8'");
+
+            $msql_cnnct = ConnectToDB ();
 			
 			$arr = array();
 			$rez = array();
-				
-			$res = mysql_query($query) or die($query);
-			$number = mysql_num_rows($res);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+			$number = mysqli_num_rows($res);
 			if ($number != 0){
-				while ($arr = mysql_fetch_assoc($res)){
+				while ($arr = mysqli_fetch_assoc($res)){
 					$rez[$arr['day']][$arr['smena']][$arr['filial']][$arr['type']][$arr['kab']][$arr['worker']] = true;
 				}
 				$shedTemplate = $rez;
@@ -71,9 +69,13 @@
 									foreach ($valueT as $kab => $valueK){
 										//Смотрим нет ли такой записи
 										$workerHere = FALSE;
+
 										$query = "SELECT `worker` FROM `scheduler` WHERE `day`='{$i}' AND `month`='{$month}' AND `year`='{$year}' AND `smena`='{$smena}' AND `filial`='{$filial}' AND `kab`='{$kab}' AND `type`='{$type}'";
-										$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-										$number = mysql_num_rows($res);
+
+                                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+										$number = mysqli_num_rows($res);
+
 										if ($number != 0){
 											$workerHere = TRUE;
 										}
@@ -82,16 +84,16 @@
 										if ($workerHere){
 											if ($_POST['ignoreshed'] == 1){
 												$query = "DELETE FROM `scheduler` WHERE `month`='{$month}' AND `day`>='{$day}'";
-													
-												mysql_query($query) or die($query.' -> '.mysql_error());
+
+                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 												
 												foreach($valueK as $worker => $val){
 													//Вставляем запись
 													$query = "INSERT INTO `scheduler` (`year`, `month`, `day`, `filial`, `kab`, `smena`, `smena_t`, `worker`, `type`)
 													VALUES 
 													('{$year}', '{$month}', '{$i}', '{$filial}', '{$kab}', '{$smena}', NULL, '{$worker}', '{$type}')";
-													
-													mysql_query($query) or die($query.' -> '.mysql_error());
+
+                                                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 												}
 											}else{
 												$canUpdate = FALSE;
@@ -103,8 +105,8 @@
 												$query = "INSERT INTO `scheduler` (`year`, `month`, `day`, `filial`, `kab`, `smena`, `smena_t`, `worker`, `type`)
 												VALUES 
 												('{$year}', '{$month}', '{$i}', '{$filial}', '{$kab}', '{$smena}', NULL, '{$worker}', '{$type}')";
-												
-												mysql_query($query) or die($query.' -> '.mysql_error());
+
+                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 											}
 										}
 									}
@@ -114,7 +116,8 @@
 					}
 					//}
 				}
-				mysql_close();
+				
+                CloseDB ($msql_cnnct);
 				
 				if (!$canUpdate){
 					echo '

@@ -42,6 +42,12 @@
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_stomat4.php" class="b3">Отсутствующие зубы</a>
 							</li>';
+
+            echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="stat_labor.php" class="b3">Заказы в лабораторию</a>
+							</li>';
+
 			/*echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_stomat5.php" class="b3">Все просроченные незакрытые напоминания стоматологов</a>
@@ -66,11 +72,16 @@
 			echo '
 						</ul>
 						<ul class="reportBlock" style="">
-								<h1>Запись</h1>';
+								<h1>Запись и график</h1>';
 			echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_zapis.php" class="b3">Запись</a>
 							</li>';
+
+			/*echo '
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="fl_createSchedulerReport.php" class="b3">Ежедневный отчёт по часам</a>
+							</li>';*/
 
             echo '				
 							<li class="cellsBlock" style="margin: 1px;">

@@ -19,7 +19,8 @@
     unset($_SESSION['invoice_data']);
     unset($_SESSION['calculate_data']);
     unset($_SESSION['fl_calcs_tabels']);
-	
+    unset($_SESSION['scheduler3']);
+
 	//вся процедура работает на сессиях. Именно в ней хранятся данные  пользователя, пока он находится на сайте. Очень важно запустить их в  самом начале странички!!!
 	if (isset($_POST['login'])){
 		$login = $_POST['login']; 
@@ -64,7 +65,7 @@
 			exit (json_encode(array('result' => 'error', 'data' => 'Что-то пошло не так')));
 		}else{
 			//Если уволен - не пускать
-			if ($rezult[0]['fired'] != '1'){
+			if ($rezult[0]['status'] != '8'){
 				//если существует, то сверяем пароли
 				if ($rezult[0]['password'] == $password){
 					//если пароли совпадают, то запускаем пользователю сессию! Можете его поздравить, он вошел!

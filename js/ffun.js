@@ -2582,7 +2582,7 @@
 
                 var calc_ids_arr = Array.from(res.data);
 
-                //!!! Хороший пример пацзы в цикле
+                //!!! Хороший пример паузы в цикле (пауза в цикле)
                 //Не использовать, если есть вариант, что массив изменится во время
                 //И если обязательно индексы цифровые и по порядку
                 if (calc_ids_arr.length > 0) {
@@ -2774,7 +2774,7 @@
         }
     }
 
-    //!!!! тест разбор
+    //!!!!тест разбор
     /*var openedWindow;
     function iOpenNewWindow(url, name, options){
 
@@ -2982,6 +2982,178 @@
             }
         });
     }
+
+    //Добавление рабочих часов сотрудникам на филиале
+    function fl_createSchedulerReport_add(){
+        //console.log($("#allsumm").html().replace(/\s{2,}/g, ''));
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        //Соберём данные по часам
+        var workerHoursValues_arr = {};
+        var workerTypesValues_arr = {};
+
+        $(".workerHoursValue").each(function(){
+            // console.log($(this).attr('worker_id'));
+            // console.log($(this).val());
+
+            workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
+            workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
+
+        });
+        //console.log(workerHoursValues_arr);
+        console.log(workerTypesValues_arr);
+
+        var link = "fl_createSchedulerReport_add_f.php";
+
+        var filial_id = $("#SelectFilial").val();
+
+        var reqData = {
+            date: $("#iWantThisDate2").val(),
+            filial_id: filial_id,
+            workers_hours_data: workerHoursValues_arr,
+            workers_types_data: workerTypesValues_arr
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res.data);
+
+                //!!! Переделать тут нормально
+                if(res.result == 'success') {
+                    //console.log('success');
+                    $('#data').html(res.data);
+                    setTimeout(function () {
+                        //window.location.replace('stat_cashbox.php');
+                        //window.location.replace('scheduler3.php?filial_id='+filial_id);
+                        window.location.href = 'scheduler3.php?filial_id='+filial_id;
+                        //console.log('client.php?id='+id);
+                    }, 500);
+                }else{
+                    //console.log('error');
+                    $('#errrror').html(res.data);
+                    //$('#errrror').html('');
+                }
+            }
+        });
+    }
+
+    //Редактирование рабочих часов сотрудникам на филиале
+    function fl_editSchedulerReport_add(report_ids){
+        //console.log(report_ids);
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        //Соберём данные по часам
+        var workerHoursValues_arr = {};
+        var workerTypesValues_arr = {};
+
+        $(".workerHoursValue").each(function(){
+            // console.log($(this).attr('worker_id'));
+            // console.log($(this).val());
+
+            workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
+            workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
+
+        });
+        //console.log(workerHoursValues_arr);
+
+        var link = "fl_editSchedulerReport_add_f.php";
+
+        var filial_id = $("#SelectFilial").val();
+
+        var reqData = {
+            report_ids: report_ids,
+            date: $("#iWantThisDate2").val(),
+            filial_id: filial_id,
+            workers_hours_data: workerHoursValues_arr,
+            workers_types_data: workerTypesValues_arr
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                if(res.result == 'success') {
+                    //console.log('success');
+                    $('#data').html(res.data);
+                    setTimeout(function () {
+                        //window.location.replace('stat_cashbox.php');
+                        //window.location.replace('scheduler3.php?filial_id='+filial_id);
+                        window.location.href = 'scheduler3.php?filial_id='+filial_id;
+                        //console.log('client.php?id='+id);
+                    }, 500);
+                }else{
+                    //console.log('error');
+                    $('#errrror').html(res.data);
+                    //$('#errrror').html('');
+                }
+            }
+        });
+    }
+
+    //Удалить часы за смену по id
+    function fl_deleteSchedulerReportItem(report_id){
+        //console.log(report_id);
+
+        var rys = false;
+
+        rys = confirm("Вы хотите удалить часы сотрудника за смену. \nЭто необратимо.\n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "scheduler_report_del_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    report_id: report_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    if (res.result == "success") {
+                        location.reload();
+                        //console.log(res.data);
+                    }
+                    if (res.result == "error") {
+                        //alert(res.data);
+                    }
+                    //console.log(data.data);
+
+                }
+            });
+        }
+    }
+
+
 
     //Подсчет итогов за месяц
     function fl_getDailyReportsSummAllMonth(){
@@ -3575,16 +3747,34 @@
 
                     newVal = parseInt(newInput.value, 10);
 
-                    $.ajax({
-                        url: "fl_add_new_salary_f.php",
-                        global: false,
-                        type: "POST",
-                        dataType: "JSON",
-                        data: {
+                    var link = $("#pass").val()+".php";
+                    //console.log(link);
+
+                    if (link == "fl_add_new_salary_f.php") {
+                        var reqData = {
                             worker_id: $("#worker_id").val(),
                             date_from: $("#iWantThisDate2").val(),
                             summ: newVal
-                        },
+                        };
+                    }
+
+                    if (link == "fl_add_new_salary_category_f.php") {
+                        var reqData = {
+                            category_id: $("#category_id").val(),
+                            filial_id: $("#filial_id").val(),
+                            permission_id: $("#permission_id").val(),
+                            date_from: $("#iWantThisDate2").val(),
+                            summ: newVal
+                        };
+                    }
+                    //console.log(reqData);
+
+                    $.ajax({
+                        url: link,
+                        global: false,
+                        type: "POST",
+                        dataType: "JSON",
+                        data: reqData,
                         cache: false,
                         beforeSend: function () {
                             //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
@@ -3592,7 +3782,7 @@
                         // действие, при ответе с сервера
                         success: function (res) {
                             if (res.result == "success") {
-                                console.log(res.data);
+                                //console.log(res.data);
 
                                 setTimeout(function () {
                                     location.reload();
@@ -3624,7 +3814,8 @@
     });*/
 
 
-    function deleteThisSalary(salary_id){
+    function deleteThisSalary(salary_id, type){
+        //console.log(type);
 
         var rys = false;
 
@@ -3637,7 +3828,8 @@
                 type: "POST",
                 dataType: "JSON",
                 data: {
-                    id: salary_id
+                    id: salary_id,
+                    type: type
                 },
                 cache: false,
                 beforeSend: function () {
@@ -3764,4 +3956,113 @@
         menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
 
         $("#revenuePercent").focus();
+    }
+
+
+    //Рассчёт общих часов сотрудников за месяц
+    function calculateWorkerHours(){
+        $(".workerItem").each(function() {
+            var worker_id = ($(this).attr("worker_id"));
+            //console.log(worker_id);
+
+            var summHours = 0;
+
+            $(".dayHours_"+worker_id).each(function() {
+                summHours += parseInt($(this).html(), 10) || 0;
+                //summHours += $(this).html();
+                //console.log($(this).html());
+                //console.log(parseInt($(this).html(), 10));
+            });
+            //console.log(summHours);
+
+            //Выведем кол-во часов
+            $("#allMonthHours_"+worker_id).html(summHours);
+
+            //Берем норму смен этого месяца для этого сотрудника
+            //!!! Хотя норма для всех одинакова по сути... короче бред тут каждый раз брать одно и то же с разных мест
+
+            var normaSmen = parseInt($("#allMonthNorma_"+worker_id).html(), 10) || 0;
+            //console.log(normaSmen);
+
+            //var hoursMonthPercent = 0;
+            var hoursMonthPercent = summHours*100/normaSmen;
+
+            $("#hoursMonthPercent_"+worker_id).html(number_format(hoursMonthPercent, 0, '.', ' '));
+
+        });
+    }
+
+    //Получение выручек всех филиалов
+    function fl_getAllFilialMoney (month, year, typeW){
+        // console.log(month);
+        // console.log(year);
+        // console.log(w_type);
+
+        var link = "fl_getAllFilialMoney_f.php";
+
+        var reqData = {
+            month: month,
+            year: year,
+            typeW: typeW
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+
+                if (res.result == "success") {
+                    //console.log (res);
+
+                    $(".filialMoney").each(function(){
+                        //console.log($(this).attr("filial_id"));
+
+                        var filial_id = $(this).attr("filial_id");
+                        var worker_id = $(this).attr("w_id");
+
+                        //Если есть прикрепление к филиалу
+                        if (filial_id > 0){
+                            //console.log(filial_id);
+                            //console.log(res.data[filial_id]);
+
+                            $(this).html(number_format(res.data[filial_id], 2, '.', ' '));
+
+                            $("#w_id_"+worker_id).attr("filialMoney", number_format(res.data[filial_id], 2, '.', ''));
+                        }else{
+                            //$(this).html('<span style="color: rgb(243, 0, 0);">не прикреплен</span>');
+                            $(this).html('0.00');
+
+                            $("#w_id_"+worker_id).attr("filialMoney", number_format(res.data[filial_id], 2, '.', ''));
+                        }
+                    });
+
+                    $(".itogZP").each(function(){
+
+                        var oklad = Number($(this).attr("oklad"));
+                        var w_percentHours = Number($(this).attr("w_percentHours"));
+                        var worker_revenue_percent = Number($(this).attr("worker_revenue_percent"));
+                        var filialMoney = Number($(this).attr("filialMoney"));
+
+                        if (w_percentHours > 0){
+                            var itogZP = oklad + ((((filialMoney / 100) * worker_revenue_percent)/ 100) * w_percentHours);
+                            //console.log(itogZP);
+
+                            $(this).html(number_format(itogZP, 2, '.', ''));
+                        }else{
+                            $(this).html(number_format(itogZP, 2, '.', ''));
+                        }
+                    })
+
+                }else{
+                    //--
+                }
+            }
+        })
     }

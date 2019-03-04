@@ -271,14 +271,13 @@
 					$('<ul/>').append(res.data)
 				);
 
-
-				
 				if ((mark == 'insure') || (mark == 'insureItem')){
 					menu.css({
 						'height': '300px',
 						'overflow-y': 'scroll',
 					});
 				}
+
                 // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
 				menu.show();
 		
@@ -325,8 +324,8 @@
     //Редактирование сотрудника
     function Ajax_user_edit(worker_id) {
 
-        var fired = $("input[name=fired]:checked").val();
-        if((typeof fired == "undefined") || (fired == "")) fired = 0;
+        // var fired = $("input[name=fired]:checked").val();
+        // if((typeof fired == "undefined") || (fired == "")) fired = 0;
 
         var org = 0;
         var permissions = $('#permissions').val();
@@ -335,6 +334,10 @@
         if((typeof category == "undefined") || (category == "")) category = 0;
         // console.log(category);
         // console.log(checkedItems2());
+
+        var status = $('#w_status').val();
+
+        var filial = $('#SelectFilial').val();
 
         $.ajax({
             url:"user_edit_f.php",
@@ -346,9 +349,11 @@
                     org: org,
                     permissions: permissions,
                     contacts: contacts,
-                    fired: fired,
+                    //fired: fired,
+                    status: status,
                     specializations: checkedItems2(),
-                    category: category
+                    category: category,
+                    filial: filial
 
                 },
             cache: false,
@@ -2113,7 +2118,7 @@
         }
     }
 
-	// !!! правильный пример AJAX
+	//Меняем фактический график по шаблону планового
 	function Ajax_change_shed() {
 
 		var day = $("#SelectDayShedOptions").val();
@@ -2175,51 +2180,54 @@
     }
 
     //Функция пунта управления
-	function manageScheduler(doc_name){
-    	//console.log(doc_name);
+	function manageScheduler(doc_name) {
+        //console.log(doc_name);
 
-		e = $('.manageScheduler');
-		if(!e.is(':visible')) {
-			e.show();
-		}else{
-			e.hide();
-		}
+        e = $('.manageScheduler');
+        if (!e.is(':visible')) {
+            e.show();
+        } else {
+            e.hide();
+        }
 
-		e2 = $('.nightSmena');
-		if(!e2.is(':visible')) {
-			e2.show();
-		}else{
-			e2.hide();
-		}
+        e2 = $('.nightSmena');
+        if (!e2.is(':visible')) {
+            e2.show();
+        } else {
+            e2.hide();
+        }
 
-		e3 = $('.fa-info-circle');
-		if(e3.is(':visible')) {
-			e3.hide();
-		}else{
-			e3.show();
-		}
+        e3 = $('.fa-info-circle');
+        if (e3.is(':visible')) {
+            e3.hide();
+        } else {
+            e3.show();
+        }
 
 
+        e4 = $('.managePriceList');
+        e5 = $('.cellManage');
+        e6 = $('#DIVdelCheckedItems');
 
-		e4 = $('.managePriceList');
-		e5 = $('.cellManage');
-		e6 = $('#DIVdelCheckedItems');
-
-		if((e4.is(':visible')) || (e5.is(':visible')) || (e6.is(':visible'))) {
-			e4.hide();
-			//e5.children().remove();
+        if ((e4.is(':visible')) || (e5.is(':visible')) || (e6.is(':visible'))) {
+            e4.hide();
+            //e5.children().remove();
             e5.hide();
             e6.hide();
-		}else{
-			e4.show();
+        } else {
+            e4.show();
             e5.show();
             e6.show();
             //e5.append('<span style="font-size: 80%; color: #777;"><input type="checkbox" name="propDel[]" value="1"> пометить на удаление</span>');
             //меняет цвет
-			//e5.parent().css({"background-color": "#ffbcbc"});
-		}
+            //e5.parent().css({"background-color": "#ffbcbc"});
+        }
 
-		if (iCanManage) iCanManage = false; else iCanManage = true;
+        if (iCanManage) {
+            iCanManage = false;
+        } else {
+        	iCanManage = true;
+    	}
 
         var link = "ajax_add_some_settings_in_session.php";
 
@@ -2239,8 +2247,13 @@
                 //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             success:function(res){
-            	console.log(res);
+            	console.log(res.data);
 
+            	if (res.data == "true"){
+					$("#manageMessage").html("Управление <span style='color: green;'>включено</span>");
+				}else{
+                    $("#manageMessage").html("Управление <span style='color: red;'>выключено</span>");
+				}
             }
         })
 	}
@@ -2290,6 +2303,159 @@
 
     //Выборка статистики  записи
     function Ajax_show_result_stat_zapis(){
+
+        var typeW = document.querySelector('input[name="typeW"]:checked').value;
+
+        var zapisAll = $("input[id=zapisAll]:checked").val();
+        if (zapisAll === undefined){
+            zapisAll = 0;
+        }
+        var zapisArrive = $("input[id=zapisArrive]:checked").val();
+        if (zapisArrive === undefined){
+            zapisArrive = 0;
+        }
+        var zapisNotArrive = $("input[id=zapisNotArrive]:checked").val();
+        if (zapisNotArrive === undefined){
+            zapisNotArrive = 0;
+        }
+
+        var zapisError = $("input[id=zapisError]:checked").val();
+        if (zapisError === undefined){
+            zapisError = 0;
+        }
+
+        var zapisNull = $("input[id=zapisNull]:checked").val();
+        if (zapisNull === undefined){
+            zapisNull = 0;
+        }
+
+        var fullAll = $("input[id=fullAll]:checked").val();
+        if (fullAll === undefined){
+            fullAll = 0;
+        }
+
+        var fullWOInvoice = $("input[id=fullWOInvoice]:checked").val();
+        if (fullWOInvoice === undefined){
+            fullWOInvoice = 0;
+        }
+
+        var fullWOTask = $("input[id=fullWOTask]:checked").val();
+        if (fullWOTask === undefined){
+            fullWOTask = 0;
+        }
+
+        var fullOk = $("input[id=fullOk]:checked").val();
+        if (fullOk === undefined){
+            fullOk = 0;
+        }
+
+        var statusAll = $("input[id=statusAll]:checked").val();
+        if (statusAll === undefined){
+            statusAll = 0;
+        }
+
+        var statusPervich = $("input[id=statusPervich]:checked").val();
+        if (statusPervich === undefined){
+            statusPervich = 0;
+        }
+
+        var statusInsure = $("input[id=statusInsure]:checked").val();
+        if (statusInsure === undefined){
+            statusInsure = 0;
+        }
+
+        var statusNight = $("input[id=statusNight]:checked").val();
+        if (statusNight === undefined){
+            statusNight = 0;
+        }
+
+        var statusAnother = $("input[id=statusAnother]:checked").val();
+        if (statusAnother === undefined){
+            statusAnother = 0;
+        }
+
+        var invoiceAll = $("input[id=invoiceAll]:checked").val();
+        if (invoiceAll === undefined){
+            invoiceAll = 0;
+        }
+
+        var invoicePaid = $("input[id=invoicePaid]:checked").val();
+        if (invoicePaid === undefined){
+            invoicePaid = 0;
+        }
+
+        var invoiceNotPaid = $("input[id=invoiceNotPaid]:checked").val();
+        if (invoiceNotPaid === undefined){
+            invoiceNotPaid = 0;
+        }
+
+        var invoiceInsure = $("input[id=invoiceInsure]:checked").val();
+        if (invoiceInsure === undefined){
+            invoiceInsure = 0;
+        }
+
+        var patientUnic = $("input[id=patientUnic]:checked").val();
+        if (patientUnic === undefined){
+            patientUnic = 0;
+        }
+
+        $.ajax({
+            url:"ajax_show_result_stat_zapis_f.php",
+            global: false,
+            type: "POST",
+            data:
+                {
+                    all_time:all_time,
+                    datastart:  $("#datastart").val(),
+                    dataend:  $("#dataend").val(),
+
+                    //Кто создал запись
+                    creator:$("#search_worker").val(),
+                    //Пациент
+                    client:$("#search_client").val(),
+                    //К кому запись
+                    worker:$("#search_client4").val(),
+                    filial:$("#filial").val(),
+
+                    typeW:typeW,
+
+                    zapisAll: zapisAll,
+                    zapisArrive: zapisArrive,
+                    zapisNotArrive: zapisNotArrive,
+                    zapisError: zapisError,
+                    zapisNull: zapisNull,
+
+                    fullAll: fullAll,
+                    fullWOInvoice: fullWOInvoice,
+                    fullWOTask: fullWOTask,
+                    fullOk: fullOk,
+
+                    statusAll: statusAll,
+                    statusPervich: statusPervich,
+                    statusInsure: statusInsure,
+                    statusNight: statusNight,
+                    statusAnother: statusAnother,
+
+                    invoiceAll: invoiceAll,
+                    invoicePaid: invoicePaid,
+                    invoiceNotPaid: invoiceNotPaid,
+                    invoiceInsure: invoiceInsure,
+
+                    patientUnic: patientUnic
+
+                },
+            cache: false,
+            beforeSend: function() {
+                $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                $('#qresult').html(data);
+            }
+        })
+    }
+
+    // !!!!  Выборка отчета лабораторий
+    function Ajax_show_result_stat_labor(){
 
         var typeW = document.querySelector('input[name="typeW"]:checked').value;
 
@@ -7701,7 +7867,7 @@
         /*$("#spec_koeff").click(function(event) {
         	//console.log(1);
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+		 // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'spec_koeff');
             }
@@ -7710,7 +7876,7 @@
         $("body").on("click", "#spec_koeff", function(event){
             //console.log(1);
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+            // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'spec_koeff');
             }
@@ -7719,7 +7885,7 @@
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
         /*$("#guarantee").click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+		 // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'guarantee');
             }
@@ -7727,7 +7893,7 @@
 
         /*$("body").on("click", "#guarantee", function(){
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+		 // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'guarantee');
             }
@@ -7736,7 +7902,7 @@
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
         /*$("#gift").click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+		 // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'gift');
             }
@@ -7745,7 +7911,7 @@
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
         /*$("#guaranteegift").click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+		 // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'guaranteegift');
             }
@@ -7753,7 +7919,7 @@
 
         $("body").on("click", "#guaranteegift", function(event){
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+            // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'guaranteegift');
             }
@@ -7762,7 +7928,7 @@
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
         /*$("#insure").click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+		 // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(1);
                 contextMenuShow(0, 0, event, 'insure');
@@ -7771,7 +7937,7 @@
 
         $("body").on("click", "#insure", function(event){
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+            // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(1);
                 contextMenuShow(0, 0, event, 'insure');
@@ -7781,7 +7947,7 @@
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
 /*        $("#insure_approve").click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+ // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(1);
                 contextMenuShow(0, 0, event, 'insure_approve');
@@ -7790,7 +7956,7 @@
 
         $("body").on("click", "#insure_approve", function(event){
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+            // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(1);
                 contextMenuShow(0, 0, event, 'insure_approve');
@@ -7800,7 +7966,7 @@
         //Скидки Вешаем слушатель события нажатие кнопок мыши для всего документа:
         /*$("#discounts").click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+		 // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(71);
                 contextMenuShow(0, 0, event, 'discounts');
@@ -7809,7 +7975,7 @@
 
         $("body").on("click", "#discounts", function(event){
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+            // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(71);
                 contextMenuShow(0, 0, event, 'discounts');
@@ -7819,7 +7985,7 @@
         //для категорий процентов
 		/*$("#percent_cats").click(function(event) {
 
-		 // Проверяем нажата ли именно правая кнопка мыши:
+		 // Проверяем нажата ли именно левая кнопка мыши:
 		 if (event.which === 1)  {
 		 //console.log(71);
 		 contextMenuShow(0, 0, event, 'percent_cats');
@@ -7828,7 +7994,7 @@
         //Для прикрепления к филиалу
         $(".change_filial").click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+            // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(71);
                 contextMenuShow(0, 0, event, 'change_filial');
@@ -7837,7 +8003,7 @@
         //Для отображения списка молочных зубов
         $('#teeth_moloch').click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+            // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(71);
                 contextMenuShow(0, 0, event, 'teeth_moloch');
@@ -7846,7 +8012,7 @@
         //Для отображения меню изменения статуса
         $('#lab_order_status').click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+            // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(71);
 
@@ -8691,3 +8857,402 @@
         $(".button_in_input").hide();
         $("#search_result_fc2").html("");
 	}
+
+
+	//Для графика фактического
+    function ShowSettingsSchedulerFakt(filial, filial_name, kabN, year, month, day, smenaN){
+        $("#ShowSettingsSchedulerFakt").show();
+        $("#overlay").show();
+        //alert(month_date);
+        window.scrollTo(0,0);
+
+        $("#filial_value").html(filial);
+        $("#filial_name").html(filial_name);
+
+        $("#month_date").html(day+'.'+month+'.'+year);
+        $("#year").html(year);
+        $("#month").html(month);
+        $("#day").html(day);
+
+        $("#kabN").html(kabN);
+        $("#smenaN").html(smenaN);
+
+
+        //Те, кто уже есть
+        $.ajax({
+            // метод отправки
+            type: "POST",
+            // путь до скрипта-обработчика
+            url: "scheduler_workers_here_fakt.php",
+            // какие данные будут переданы
+            data: {
+                day: day,
+                month: month,
+                year: year,
+                kab: kabN,
+                smena: smenaN,
+                filial: filial,
+                type: $("#type").val()
+            },
+            // действие, при ответе с сервера
+            success: function(workers_here){
+                $("#workersTodayDelete").html(workers_here);
+            }
+        });
+
+        //Те, кто свободен
+        $.ajax({
+            // метод отправки
+            type: "POST",
+            // путь до скрипта-обработчика
+            url: "scheduler_workers_free_fakt.php",
+            // какие данные будут переданы
+            data: {
+                day: day,
+                month: month,
+                year: year,
+                smena: smenaN,
+                type: $("#type").val()
+            },
+            // действие, при ответе с сервера
+            success: function(workers){
+                $("#ShowWorkersHere").html(workers);
+            }
+        });
+
+        //Если надо указать тип графика, то показываем галочку
+        // if ($("#type").val() == 4){
+        // 	$("#schedulerType").show();
+        //     $("#twobytwo").prop("checked", false);
+        // }
+    }
+
+    function HideSettingsSchedulerFakt(){
+        $("#ShowSettingsSchedulerFakt").hide();
+        $("#overlay").hide();
+        var input = document.getElementsByName("DateForMove");
+        for (var i=0; i<input.length; i++)  {
+            if(input[i].value=="0") input[i].checked="checked";
+        }
+
+        $('.error').hide();
+        document.getElementById("errror").innerHTML = '';
+    }
+
+    function ShowWorkersSmena(){
+        var smena = 0;
+        if ( $("#smena1").prop("checked")){
+            if ( $("#smena2").prop("checked")){
+                smena = 9;
+            }else{
+                smena = 1;
+            }
+        }else if ( $("#smena2").prop("checked")){
+            smena = 2;
+        }
+
+        $.ajax({
+            // метод отправки
+            type: "POST",
+            // путь до скрипта-обработчика
+            url: "show_workers_free.php",
+            // какие данные будут переданы
+            data: {
+                day: $('#day').val(),
+				month: $('#month').val(),
+				year: $('#year').val(),
+				smena: smena,
+            	type: $('type').val()
+    		},
+			// действие, при ответе с сервера
+			success: function(workers){
+                $("#ShowWorkersHere").html(workers);
+			}
+    	});
+    }
+
+    //Удаляем из смены
+    function DeleteWorkersSmenaFakt(worker, filial, day, month, year, smena, kab, type){
+        var rys = confirm("Удалить сотрудника из смены?");
+        if (rys){
+            $.ajax({
+                // метод отправки
+                type: "POST",
+                // путь до скрипта-обработчика
+                url: "scheduler_worker_delete_fakt.php",
+                // какие данные будут переданы
+                data: {
+                    worker: worker,
+                    filial: filial,
+                    day: day,
+                    month: month,
+                    year: year,
+                    smena: smena,
+                    kab: kab,
+                    type: type
+                },
+                // действие, при ответе с сервера
+                success: function(request){
+                    document.getElementById("workersTodayDelete").innerHTML=request;
+                    setTimeout(function () {
+                        location.reload()
+                    }, 100);
+                }
+            });
+        }
+    }
+
+    function ChangeWorkerShedulerFakt() {
+		//console.log($("#twobytwo").prop("checked"));
+
+        $(".error").hide();
+        document.getElementById("errrror").innerHTML = "";
+
+        // получение данных из полей
+        var day = $("#day").html();
+        var month = $("#month").html();
+        var year = $("#year").html();
+        var filial = $("#filial_value").html();
+        var kab = $("#kabN").html();
+        var smena = $("#smenaN").html();
+        var type = $("#type").val();
+
+        var worker = $("input[name=worker]:checked").val();
+        if(typeof worker == "undefined") worker = 0;
+
+        var twobytwo = 0;
+        // if ($("#twobytwo").prop("checked")){
+         //     twobytwo = 1;
+		// }
+
+        $.ajax({
+            dataType: "json",
+            //statbox:SettingsScheduler,
+            // метод отправки
+            type: "POST",
+            // путь до скрипта-обработчика
+            url: "scheduler_worker_edit_fakt_f.php",
+            // какие данные будут переданы
+            data: {
+                day: day,
+                month: month,
+                year: year,
+                filial: filial,
+                kab: kab,
+                smena: smena,
+                type: type,
+                worker: worker,
+                twobytwo: twobytwo
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+            	//console.log(res);
+
+                //document.getElementById("errrror").innerHTML = data;
+                if (res.req == "ok"){
+                    // прячем текст ошибок
+                    $(".error").hide();
+                    document.getElementById("errrror").innerHTML = "";
+                    setTimeout(function () {
+                        location.reload()
+                    }, 100);
+                }
+            }
+        });
+    };
+
+    //Показать/скрыть текст внутри
+    function SetVisible(obj, val){
+    	//console.log(val);
+    	//console.log(obj.getElementsByTagName('div').className);
+        //console.log(obj.className);
+
+        obj.getElementsByTagName('div').className = val ? "div_up_visible" : "div_up_hidden";
+
+		if (val){
+            $(obj).find('div').show();
+            //$("."+obj.className).addClass("cellsBlockHover2");
+		}else{
+            $(obj).find('div').hide();
+            //$("."+obj.className).removeClass("cellsBlockHover2");
+		}
+    }
+
+    //Для изменения графика админов, ассистентов, ...  (scheduler3.php)
+	// !! 2019.02.13 пока не знаю, будет писаться сразу в базу или все таки собираться в массив и потом по кнопке сохранить...
+    function changeTempSchedulerSession(obj, worker_id, filial_id, day, month, year, holiday){
+    	//!!!Тест выводим все аргументы функции
+		//console.log(arguments);
+		//console.log($(obj).attr("selectedDate"));
+
+        //blockWhileWaiting (true);
+
+        //маркер выделено или нет
+        var selected = 0;
+        var selectedDate = $(obj).attr("selectedDate");
+
+        //Если было НЕ выбрано на этом филиале, ставим выбор
+        if (selectedDate == 0){
+            if ((holiday == 6) || (holiday == 7)) {
+                $(obj).css('backgroundColor', 'rgba(24, 144, 54, 0.52) !important');
+            }else{
+                $(obj).css('backgroundColor', 'rgba(49, 239, 96, 0.52) !important');
+			}
+
+        	//меняем значение
+            $(obj).attr("selectedDate", 1);
+
+            selected = 1;
+		}
+        //Если было выбрано на этом филиале, снимаем выбор
+        if (selectedDate == 1){
+			if ((holiday == 6) || (holiday == 7)) {
+                $(obj).css('backgroundColor', 'rgba(234, 123, 32, 0.15) !important');
+            }else{
+                $(obj).css('backgroundColor', 'rgba(255, 255, 255, 0.15) !important');
+			}
+            //меняем значение
+            $(obj).attr("selectedDate", 0);
+
+            selected = 0;
+		}
+        //Если было выбрано на другом филиале, но не выбрано на этом, ставим выбор
+        if (selectedDate == 2){
+			if ((holiday == 6) || (holiday == 7)) {
+                $(obj).css('backgroundColor', 'rgba(130, 34, 35, 0.52) !important');
+            }else{
+                $(obj).css('backgroundColor', 'rgba(236, 107, 107, 0.52) !important');
+			}
+            //меняем значение
+            $(obj).attr("selectedDate", 3);
+
+            selected = 3;
+		}
+        //Если было выбрано на другом филиале, и выбрано на этом, снимаем выбор
+        if (selectedDate == 3){
+			if ((holiday == 6) || (holiday == 7)) {
+                $(obj).css('backgroundColor', 'rgba(35, 137, 146, 0.52) !important');
+            }else{
+                $(obj).css('backgroundColor', 'rgba(49, 224, 239, 0.52) !important');
+			}
+            //меняем значение
+            $(obj).attr("selectedDate", 2);
+
+            selected = 2;
+		}
+
+        //Добавляем в сессию
+        var link = "add_temp_scheduler_in_session_f.php";
+
+        var reqData = {
+            worker_id: worker_id,
+            filial_id: filial_id,
+            day: day,
+            month: month,
+            year: year,
+            selected: selected
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+
+				if (res.isset){
+                    //console.log (res);
+
+                    $("#ShowSettingsSchedulerFakt").show();
+				}else{
+                    $("#ShowSettingsSchedulerFakt").hide();
+				}
+
+                blockWhileWaiting (false);
+            }
+
+        });
+    }
+
+    //Отменение всех изменений
+    //Для изменения графика админов, ассистентов, ...  (scheduler3.php)
+	function cancelChangeTempScheduler(){
+        blockWhileWaiting (true);
+
+        //Чистим сессионный переменную
+        var link = "cancel_temp_scheduler_in_session_f.php";
+
+        var reqData = {
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == "success") {
+                    $("#ShowSettingsSchedulerFakt").hide();
+                    location.reload();
+                }
+
+
+                blockWhileWaiting (false);
+            }
+
+        });
+	}
+
+    //Сохранение всех изменений
+    //Для изменения графика админов, ассистентов, ...  (scheduler3.php)
+	function Ajax_tempScheduler_scheduler3_add(filial_id, month, year){
+        blockWhileWaiting (true);
+
+        //Чистим сессионный переменную
+        var link = "ajax_scheduler3_add_f.php";
+
+        var reqData = {
+            filial_id: filial_id,
+            month: month,
+            year: year,
+            type: $("#type").val()
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == "success") {
+                    //console.log (res);
+
+                    $("#ShowSettingsSchedulerFakt").hide();
+                    location.reload();
+                }
+
+                blockWhileWaiting (false);
+            }
+
+        });
+    }

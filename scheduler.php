@@ -25,66 +25,6 @@
 			$dopFilial = '';
 			$di = 0;
 			
-			//Массив с месяцами
-			/*$monthsName = array(
-				'01' => 'Январь',
-				'02' => 'Февраль',
-				'03' => 'Март',
-				'04' => 'Апрель',
-				'05' => 'Май',
-				'06' => 'Июнь',
-				'07'=> 'Июль',
-				'08' => 'Август',
-				'09' => 'Сентябрь',
-				'10' => 'Октябрь',
-				'11' => 'Ноябрь',
-				'12' => 'Декабрь'
-			);*/
-			
-			//Массив с днями недели
-			/*$dayWarr = array(
-				1 => 'ПН',
-				2 => 'ВТ',
-				3 => 'СР',
-				4 => 'ЧТ',
-				5 => 'ПТ',
-				6 => 'СБ',
-				7 => 'ВС',
-			);*/
-		
-			/*$sheduler_times = array (
-				1 => '9:00 - 9:30',
-				2 => '9:30 - 10:00',
-				3 => '10:00 - 10:30',
-				4 => '10:30 - 11:00',
-				5 => '11:00 - 11:30',
-				6 => '11:30 - 12:00',
-				7 => '12:00 - 12:30',
-				8 => '12:30 - 13:00',
-				9 => '13:00 - 13:30',
-				10 => '13:30 - 14:00',
-				11 => '14:00 - 14:30',
-				12 => '14:30 - 15:00',
-				13 => '15:00 - 15:30',
-				14 => '15:30 - 16:00',
-				15 => '16:00 - 16:30',
-				16 => '16:30 - 17:00',
-				17 => '17:00 - 17:30',
-				18 => '17:30 - 18:00',
-				19 => '18:00 - 18:30',
-				20 => '18:30 - 19:00',
-				21 => '19:00 - 19:30',
-				22 => '19:30 - 20:00',
-				23 => '20:00 - 20:30',
-				24 => '20:30 - 21:00',
-			);*/
-			
-			//!!!!
-			/*if(isset($_GET['filial'])){
-				if ($_GET['filial'] == 0) $_GET['filial'] = 15;
-				$selected_fil = $_GET['filial'];
-			}*/
-			
 			if (!isset($_GET['filial'])){
 				//Филиал	
 				if (isset($_SESSION['filial'])){
@@ -93,9 +33,11 @@
 					$_GET['filial'] = 15;
 				}
 			}
-			
+
 			//тип график (космет/стомат/...)
 			if (isset($_GET['who'])){
+                //var_dump($_GET['who']);
+
 				if ($_GET['who'] == 'stom'){
 					$who = '&who=stom';
 					$whose = 'Стоматологов ';
@@ -188,7 +130,7 @@
 			
 			$last = ($day_count + $weekday - 1) % 7;
 			//var_dump($last);
-            $somat_color = '';
+
 			if ($last == 0){
 				$end = $day_count; 
 			}else{
@@ -215,7 +157,7 @@
 
             $msql_cnnct = ConnectToDB ();
 
-			//Получаем график факт
+			//Получаем график факт на текущий филиал
 			$markSheduler = 0;
 
 			$arr = array();
@@ -303,13 +245,14 @@
 					</div>';
 			echo '
 					<div id="data">
+					    <input type="hidden" id="type" value="'.$type.'">
 						<ul style="margin-left: 6px; margin-bottom: 20px;">';
 			if (($scheduler['edit'] == 1) || $god_mode){
 				echo '
 							<div class="no_print"> 
 							<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
 								<div style="cursor: pointer;" onclick="manageScheduler(\'scheduler\')">
-									<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>
+									<span id="manageMessage" style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">', $displayBlock ? 'Управление <span style=\'color: green;\'>включено</span>' : 'Управление <span style=\'color: red;\'>выключено</span>' ,'</span> <i class="fa fa-cog" title="Настройки"></i>
 								</div>
 							</li>
 							</div>';
@@ -321,6 +264,8 @@
 								<a href="?'.$dopFilial.$dopDate.'&who=stom" class="b" style="'.$stom_color.'">Стоматологи</a>
 								<a href="?'.$dopFilial.$dopDate.'&who=cosm" class="b" style="'.$cosm_color.'">Косметологи</a>
 								<a href="?'.$dopFilial.$dopDate.'&who=somat" class="b" style="'.$somat_color.'">Специалисты</a>
+								<a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=4" class="b" style="">Администраторы</a>
+								<a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=7" class="b" style="">Ассистенты</a>
 							</li>
 							<li style="width: auto; margin-bottom: 20px;">
 								<div style="display: inline-block; margin-right: 20px;">
@@ -354,7 +299,7 @@
 							</li>
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">';
 			if ($zapis['see_own'] == 1){
-				if ($type == $_SESSION['permissions']){
+				if (($type == $_SESSION['permissions']) && (($type == 5) || ($type == 6) || ($type == 10))){
 					echo '
 								<a href="zapis_own.php?y='.$year.'&m='.$month.'&d='.$day.'&worker='.$_SESSION['id'].'" class="b">Ваша запись сегодня</a>';
 				}
@@ -521,7 +466,12 @@
 														</div>
 														<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red; background-color: rgba(255, 0, 0, 0.33);">
 															<div style="margin-bottom: 7px;">никого нет</div>
-															<div class="manageScheduler">';
+															<div class="manageScheduler" style="';
+
+                                            if ($displayBlock){
+                                                $kabs .= 'display: block;';
+                                            }
+                                            $kabs .= '">';
 															
 											foreach	($kabsInFilial as $keyK => $valueK){
 												$kabs .= '
@@ -581,7 +531,12 @@
 														</div>
 														<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red; background-color: rgba(255, 0, 0, 0.33);">
 															<div style="margin-bottom: 7px;">никого нет</div>
-															<div class="manageScheduler">';
+															<div class="manageScheduler" style="';
+
+                                            if ($displayBlock){
+                                                $kabsNone .= 'display: block;';
+                                            }
+                                            $kabsNone .= '">';
 															
 											foreach	($kabsInFilial as $keyK => $valueK){
 												$kabsNone .= '
@@ -602,7 +557,12 @@
 															</div>
 															<div style="width: 130px; vertical-align: middle; display: table; margin-bottom: 3px; color: red; background-color: rgba(255, 0, 0, 0.33);">
 																<div style="margin-bottom: 7px;">никого нет</div>
-																<div class="manageScheduler">';
+																<div class="manageScheduler" style="';
+
+                                            if ($displayBlock){
+                                                $kabsNone .= 'display: block;';
+                                            }
+                                            $kabsNone .= '">';
 															
 											foreach	($kabsInFilial as $keyK => $valueK){
 												$kabsNone .= '
@@ -761,178 +721,8 @@
 			<!-- Подложка только одна -->
 			<div id="overlay"></div>';
 
-				
-				echo '
-				
-					<script>
-					
-						/*$(function() {
-							$("#SelectFilial").change(function(){
-							    
-							    blockWhileWaiting (true);
-							    
-								//var dayW = document.getElementById("SelectDayW").value;
-								document.location.href = "?filial="+$(this).val()+"'.$who.'";
-							});
-							$("#SelectDayW").change(function(){
-							    
-							    blockWhileWaiting (true);
-							
-								var filial = document.getElementById("SelectFilial").value;
-								document.location.href = "?dayw="+$(this).val()+"&filial="+filial+"'.$who.'";
-							});
-						});*/
-					
-					
-						$(function() {
-							/*$(\'#SelectWho\').change(function(){
-								if (document.getElementById("SelectFilial").value != 0)
-									document.location.href = "?filial="+document.getElementById("SelectFilial").value+"&who="+$(this).val();	
-							});
-							$(\'#SelectFilial\').change(function(){
-								document.location.href = "?filial="+$(this).val()+"&who="+document.getElementById("SelectWho").value;
-							});*/
-						});';
-				if (($scheduler['edit'] == 1) || $god_mode){
-					echo '		
-						function ShowSettingsSchedulerFakt(filial, filial_name, kabN, year, month, day, smenaN){
-							$("#ShowSettingsSchedulerFakt").show();
-							$("#overlay").show();
-							//alert(month_date);
-							window.scrollTo(0,0)
-							
-							document.getElementById("filial_value").innerHTML=filial;
-							document.getElementById("filial_name").innerHTML=filial_name;
-							
-							document.getElementById("month_date").innerHTML=day+\'.\'+month+\'.\'+year;
-							document.getElementById("year").innerHTML=year;
-							document.getElementById("month").innerHTML=month;
-							document.getElementById("day").innerHTML=day;
-							
-							document.getElementById("kabN").innerHTML=kabN;
-							document.getElementById("smenaN").innerHTML=smenaN;
-							
-							//Те, кто уже есть
-							$.ajax({
-								// метод отправки 
-								type: "POST",
-								// путь до скрипта-обработчика
-								url: "scheduler_workers_here_fakt.php",
-								// какие данные будут переданы
-								data: {
-									day:day,
-									month:month,
-									year:year,
-									kab:kabN,
-									smena:smenaN,
-									filial:filial,
-									type: '.$type.'
-								},
-								// действие, при ответе с сервера
-								success: function(workers_here){
-									document.getElementById("workersTodayDelete").innerHTML=workers_here;
-								}
-							});
 
-							//Те, кто свободен
-							$.ajax({
-								// метод отправки 
-								type: "POST",
-								// путь до скрипта-обработчика
-								url: "scheduler_workers_free_fakt.php",
-								// какие данные будут переданы
-								data: {
-									day:day,
-									month:month,
-									year:year,
-									smena:smenaN,
-									type:'.$type.',
-								},
-								// действие, при ответе с сервера
-								success: function(workers){
-									document.getElementById("ShowWorkersHere").innerHTML=workers;
-								}
-							});	
-						}
-						
-						function HideSettingsSchedulerFakt(){
-							$("#ShowSettingsSchedulerFakt").hide();
-							$("#overlay").hide();
-							var input = document.getElementsByName("DateForMove");
-							for (var i=0; i<input.length; i++)  {
-								if(input[i].value=="0") input[i].checked="checked";
-							}
-							
-														
-							$(\'.error\').hide();
-							document.getElementById("errror").innerHTML = \'\';
-						}
-						
-						function ShowWorkersSmena(){
-							var smena = 0;
-							if ( $("#smena1").prop("checked")){
-								if ( $("#smena2").prop("checked")){
-									smena = 9;
-								}else{
-									smena = 1;
-								}
-							}else if ( $("#smena2").prop("checked")){
-								smena = 2;
-							}
-							
-							$.ajax({
-								// метод отправки 
-								type: "POST",
-								// путь до скрипта-обработчика
-								url: "show_workers_free.php",
-								// какие данные будут переданы
-								data: {
-									day:$(\'#day\').val(),
-									month:$(\'#month\').val(),
-									year:$(\'#year\').val(),
-									smena:smena,
-									datatable:"'.$datatable.'"
-								},
-								// действие, при ответе с сервера
-								success: function(workers){
-									document.getElementById("ShowWorkersHere").innerHTML=workers;
-								}
-							});	
-						}
-						
-					//Удаляем врача из смены
-					function DeleteWorkersSmenaFakt(worker, filial, day, month, year, smena, kab, type){
-						var rys = confirm("Удалить сотрудника из смены?");
-						if (rys){
-							$.ajax({
-								// метод отправки 
-								type: "POST",
-								// путь до скрипта-обработчика
-								url: "scheduler_worker_delete_fakt.php",
-								// какие данные будут переданы
-								data: {
-									worker:worker,
-									filial:filial,
-									day:day,
-									month:month,
-									year:year,
-									smena:smena,
-									kab:kab,
-									type:type
-								},
-								// действие, при ответе с сервера
-								success: function(request){
-									document.getElementById("workersTodayDelete").innerHTML=request;
-									setTimeout(function () {
-										location.reload()
-									}, 100);
-								}
-							});	
-						}
-					}';
-				}	
 				echo '	
-					</script>
 				
 				
 				
@@ -970,58 +760,6 @@
 								var ShowWorkersSmena1 = ShowWorkersSmena();
 							});
 						});';
-			if (($scheduler['edit'] == 1) || $god_mode){					
-				echo '
-						function ChangeWorkerShedulerFakt() {
-
-							$(".error").hide();
-							document.getElementById("errrror").innerHTML = "";
-						
-							// получение данных из полей
-							var day = document.getElementById("day").innerHTML;
-							var month = document.getElementById("month").innerHTML;
-							var year = document.getElementById("year").innerHTML;
-							var filial = document.getElementById("filial_value").innerHTML;
-							var kab = document.getElementById("kabN").innerHTML;
-							var smena = document.getElementById("smenaN").innerHTML;
-							var type = '.$type.';
-
-							var worker = $("input[name=worker]:checked").val();
-							if(typeof worker == "undefined") worker = 0;
-
-							$.ajax({
-								dataType: "json",
-								//statbox:SettingsScheduler,
-								// метод отправки 
-								type: "POST",
-								// путь до скрипта-обработчика
-								url: "scheduler_worker_edit_fakt_f.php",
-								// какие данные будут переданы
-								data: {
-									day:day,
-									month:month,
-									year:year,
-									filial:filial,
-									kab:kab,
-									smena:smena,
-									type:type,
-									worker:worker,
-								},
-								// действие, при ответе с сервера
-								success: function(data){
-									//document.getElementById("errrror").innerHTML = data;
-									if (data.req == "ok"){
-										// прячем текст ошибок
-										$(".error").hide();
-										document.getElementById("errrror").innerHTML = "";
-										setTimeout(function () {
-											location.reload()
-										}, 100);
-									}
-								}
-							});						
-						};';
-			}
 			echo '					
 			</script>
 					

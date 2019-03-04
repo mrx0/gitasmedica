@@ -25,7 +25,7 @@
 				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
 				mysql_select_db($dbName) or die(mysql_error()); 
 				mysql_query("SET NAMES 'utf8'");
-				$query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$permissions' AND `fired` <> '1' ORDER BY `full_name` ASC";
+				$query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$permissions' AND `status` <> '8' ORDER BY `full_name` ASC";
 				$res = mysql_query($query) or die($query);
 				$number = mysql_num_rows($res);
 				if ($number != 0){

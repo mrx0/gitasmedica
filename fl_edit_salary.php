@@ -33,7 +33,8 @@
 
                         echo '
                                     <div id="data">
-                                        <input type="hidden" id="worker_id" value="'.$worker_j[0]['id'].'">';
+                                        <input type="hidden" id="worker_id" value="'.$worker_j[0]['id'].'">
+                                        <input type="hidden" id="pass" value="fl_add_new_salary_f">';
 
                         $msql_cnnct = ConnectToDB ();
 
@@ -65,7 +66,7 @@
                                                 Текущий оклад:
                                             </li>
                                             <li class="calculateOrder" style="font-size: 110%; font-weight: bold;">
-                                                <div id="currentSalary" style="display: inline; cursor: pointer;" >'.number_format($currentSalary['summ'], 0, '', '').'</div> <div id="textAfterSalary" style="display: inline;">руб. ', !empty($salaries_j) ? '<span style="font-size: 85%; font-weight: normal; color: #333; ">с '.date('d.m.Y', strtotime($currentSalary['date_from'])).'</span>' : '' ,'</div>
+                                                <div id="currentSalary" style="display: inline; cursor: pointer;" >'.number_format($currentSalary['summ'], 2, '.', '').'</div> <div id="textAfterSalary" style="display: inline;">руб. ', !empty($salaries_j) ? '<span style="font-size: 85%; font-weight: normal; color: #333; ">с '.date('d.m.Y', strtotime($currentSalary['date_from'])).'</span>' : '' ,'</div>
                                             </li>
                                             <div id="addSalaryDate" style="display: none;">
                                                 <li id="" style="font-size: 85%; color: #7D7D7D; margin: 10px 0;">
@@ -88,7 +89,7 @@
                         if (!empty($salaries_j)){
                             foreach ($salaries_j as $item){
                                 echo '
-                                    <li style="font-size: 80%;"><i class="fa fa-times" aria-hidden="true" style="cursor: pointer; color: red; font-size: 120%;"   title="Удалить" onclick="deleteThisSalary('.$item['id'].');"></i> <i style="font-size: 120%;">'.$item['summ'].' руб.</i> c '.date('d.m.y', strtotime($item['date_from'])).'  -   добавлено ['.date('d.m.y H:i', strtotime($item['create_time'])).'] <b>'.WriteSearchUser('spr_workers', $item['create_person'], 'user', true).'</b></li>';
+                                    <li style="font-size: 80%;"><i class="fa fa-times" aria-hidden="true" style="cursor: pointer; color: red; font-size: 120%;"   title="Удалить" onclick="deleteThisSalary('.$item['id'].', \'worker\');"></i> <i style="font-size: 120%;">'.$item['summ'].' руб.</i> c '.date('d.m.y', strtotime($item['date_from'])).'  -   добавлено ['.date('d.m.y H:i', strtotime($item['create_time'])).'] <b>'.WriteSearchUser('spr_workers', $item['create_person'], 'user', true).'</b></li>';
                             }
                         }else{
                             echo '<span style="color:red">Ничего не указано</span>';

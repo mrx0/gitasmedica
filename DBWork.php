@@ -920,7 +920,7 @@
 	}
 	
 	//Обновление карточки пользователя из-под Web
-	function WriteWorkerToDB_Update($session_id, $worker_id, $org, $permissions, $specializations, $category, $contacts, $fired){
+	function WriteWorkerToDB_Update($session_id, $worker_id, $org, $permissions, $specializations, $category, $filial_id, $contacts, $status){
 
         $msql_cnnct = ConnectToDB ();
 
@@ -933,12 +933,18 @@
 		$number = mysqli_num_rows($res);
 		if ($number != 0){
 			$arr = mysqli_fetch_assoc($res);
-			$old = 'Контакты: ['.$arr['contacts'].']. Организация: ['.$arr['org'].']. Права: ['.$arr['permissions'].']. Уволен: ['.$arr['fired'].']';
+			$old = 'Контакты: ['.$arr['contacts'].']. Организация: ['.$arr['org'].']. Права: ['.$arr['permissions'].']. Статус: ['.$arr['status'].']';
 		}else{
 			$old = 'Не нашли старую запись.';
 		}
 		$time = time();
-		$query = "UPDATE `spr_workers` SET `org`='{$org}', `permissions`='{$permissions}', `contacts`='{$contacts}', `fired`='{$fired}' WHERE `id`='{$worker_id}'";
+
+        $fired = 0;
+		if ($status == 8){
+            $fired = 1;
+        }
+
+		$query = "UPDATE `spr_workers` SET `org`='{$org}', `permissions`='{$permissions}', `filial_id`='{$filial_id}', `contacts`='{$contacts}', `fired`='{$fired}', `status`='{$status}' WHERE `id`='{$worker_id}'";
 
 		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -965,7 +971,7 @@
         }
 
 		//логирование
-		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован пользователь ['.$worker_id.']. ['.date('d.m.y H:i', $time).']. Контакты: ['.$contacts.']. Организация: ['.$org.']. Права: ['.$permissions.']. Уволен: ['.$fired.']');
+		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован пользователь ['.$worker_id.']. ['.date('d.m.y H:i', $time).']. Контакты: ['.$contacts.']. Организация: ['.$org.']. Права: ['.$permissions.']. Статус: ['.$status.']');
 	}
 	
 	//Обновление ФИО пользователя из-под Web

@@ -59,7 +59,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                     if ($tabel_j != 0){
 
                         //!!! вынести это за цикл
-                        $filials_j = getAllFilials(false, true);
+                        $filials_j = getAllFilials(false, true, false);
 
                         //Смена/график !!! переделать ! нужно только количество
                         $rezultShed = array();

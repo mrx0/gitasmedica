@@ -161,7 +161,7 @@
             $arr = array();
             $rez = array();
 
-            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '{$type}' AND `fired` <> '1'";
+            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '{$type}' AND `status` <> '8'";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
             $number = mysqli_num_rows($res);
@@ -198,10 +198,9 @@
                     <div id="status">
                         <header>
                             <div class="nav">
-                                <a href="fl_percent_cats.php" class="b">Категории процентов</a>
-                                <a href="fl_percent_cats.php" class="b">Персональные</a>
+                                <a href="fl_salaries_category.php" class="b">Оклады по должностям</a>
                             </div>
-                            <h1>Оклады</h1>
+                            <h1>Оклады сотрудников</h1>
                         </header>';
 
 
@@ -300,6 +299,8 @@
                 <!-- Подложка только одна -->
                 <div id="overlay"></div>';
 
+            echo '
+                 <div id="doc_title">Оклады сотрудников - Асмедика</div>';
 
         }else{
             echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

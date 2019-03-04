@@ -31,7 +31,7 @@
 
                 $category = SelDataFromDB('journal_work_cat', $_GET['id'], 'worker_id');
                 //var_dump($category);
-			
+                $filials_j = getAllFilials(false, false, true);
 			
                 if ($user !=0){
                     echo '
@@ -169,9 +169,33 @@
                     }
                     echo '
 									</div>
-								</div>
-								';
+								</div>';
 
+                    echo '
+                                <div class="cellsBlock2">
+                                    <div class="cellLeft">Филиал</div>
+                                    <div class="cellRight">';
+
+                    echo '
+                                        <select name="SelectFilial" id="SelectFilial">
+                                            <option value="0">нет привязки</option>';
+
+                    foreach ($filials_j as $filial_item) {
+
+                        $selected = '';
+
+                        if ($user[0]['filial_id'] == $filial_item['id']) {
+                            $selected = 'selected';
+                        }
+
+                        echo '
+                                <option value="' . $filial_item['id'] . '" ' . $selected . '>' . $filial_item['name'] . '</option>';
+                    }
+
+                    echo '
+                                        </select>
+                                    </div>
+								</div>';
 				    echo '								
 								
 								<div class="cellsBlock2">
@@ -179,18 +203,40 @@
 									<div class="cellRight">
 										<textarea name="contacts" id="contacts" cols="35" rows="5">'.$user[0]['contacts'].'</textarea>
 									</div>
-								</div>	
-								
+								</div>';
+
+                    $selected0 = '';
+                    $selected8 = '';
+                    $selected6 = '';
+
+                    if ($user[0]['status'] == 0){
+                        $selected0 = 'selected';
+                    }
+                    if ($user[0]['status'] == 8){
+                        $selected8 = 'selected';
+                    }
+                    if ($user[0]['status'] == 6){
+                        $selected6 = 'selected';
+                    }
+
+				    echo '
 								<div class="cellsBlock2">
-									<div class="cellLeft">Уволен</div>
-									<div class="cellRight">';
-				if ($user[0]['fired'] == '1'){
-					$chkd = 'checked';
-				}else{
-					$chkd = '';
-				}
+									<div class="cellLeft">Статус</div>
+									<div class="cellRight">
+                                        <select name="w_status" id="w_status">
+                                            <option value="0" '.$selected0.'>Работает</option>
+                                            <option value="8"'.$selected8.'>Уволен</option>
+                                            <option value="6"'.$selected6.'>Декрет</option>
+                                        </select>';
+
+
+//				if ($user[0]['fired'] == '1'){
+//					$chkd = 'checked';
+//				}else{
+//					$chkd = '';
+//				}
 				echo '
-										<input type="checkbox" name="fired" id="fired" value="1" '.$chkd.'>
+										<!--<input type="checkbox" name="fired" id="fired" value="1" $chkd>-->
 									</div>
 								</div>
 											<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">

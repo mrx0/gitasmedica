@@ -43,9 +43,9 @@
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
 										<div style="margin-bottom: 10px;">
 											C <input type="text" id="datastart" name="datastart" class="dateс" value="'.date("01.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off">
 											 &bull;по <input type="text" id="dataend" name="dataend" class="dateс" value="'.date("d.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off">
 										</div>
 										<div style="vertical-align: middle; color: #333;">
 											<input type="checkbox" name="all_time" value="1"> <span style="font-size:80%;">За всё время</span>

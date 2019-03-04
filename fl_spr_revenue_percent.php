@@ -1,6 +1,6 @@
 <?php
 
-//fl_spr_revenue_percent
+//fl_spr_revenue_percent.php
 //Проценты от выручки
 
     require_once 'header.php';
@@ -196,7 +196,7 @@
 
             include_once 'ffun.php';
 
-            $filials_j = getAllFilials(true, false);
+            $filials_j = getAllFilials(true, false, false);
 
             $msql_cnnct = ConnectToDB2 ();
 
