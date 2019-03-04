@@ -271,14 +271,13 @@
 					$('<ul/>').append(res.data)
 				);
 
-
-				
 				if ((mark == 'insure') || (mark == 'insureItem')){
 					menu.css({
 						'height': '300px',
 						'overflow-y': 'scroll',
 					});
 				}
+
                 // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
 				menu.show();
 		
@@ -325,8 +324,8 @@
     //Редактирование сотрудника
     function Ajax_user_edit(worker_id) {
 
-        var fired = $("input[name=fired]:checked").val();
-        if((typeof fired == "undefined") || (fired == "")) fired = 0;
+        // var fired = $("input[name=fired]:checked").val();
+        // if((typeof fired == "undefined") || (fired == "")) fired = 0;
 
         var org = 0;
         var permissions = $('#permissions').val();
@@ -335,6 +334,8 @@
         if((typeof category == "undefined") || (category == "")) category = 0;
         // console.log(category);
         // console.log(checkedItems2());
+
+        var status = $('#w_status').val();
 
         var filial = $('#SelectFilial').val();
 
@@ -348,7 +349,8 @@
                     org: org,
                     permissions: permissions,
                     contacts: contacts,
-                    fired: fired,
+                    //fired: fired,
+                    status: status,
                     specializations: checkedItems2(),
                     category: category,
                     filial: filial
@@ -2116,7 +2118,7 @@
         }
     }
 
-	// !!! правильный пример AJAX
+	//Меняем фактический график по шаблону планового
 	function Ajax_change_shed() {
 
 		var day = $("#SelectDayShedOptions").val();
@@ -2178,51 +2180,54 @@
     }
 
     //Функция пунта управления
-	function manageScheduler(doc_name){
-    	//console.log(doc_name);
+	function manageScheduler(doc_name) {
+        //console.log(doc_name);
 
-		e = $('.manageScheduler');
-		if(!e.is(':visible')) {
-			e.show();
-		}else{
-			e.hide();
-		}
+        e = $('.manageScheduler');
+        if (!e.is(':visible')) {
+            e.show();
+        } else {
+            e.hide();
+        }
 
-		e2 = $('.nightSmena');
-		if(!e2.is(':visible')) {
-			e2.show();
-		}else{
-			e2.hide();
-		}
+        e2 = $('.nightSmena');
+        if (!e2.is(':visible')) {
+            e2.show();
+        } else {
+            e2.hide();
+        }
 
-		e3 = $('.fa-info-circle');
-		if(e3.is(':visible')) {
-			e3.hide();
-		}else{
-			e3.show();
-		}
+        e3 = $('.fa-info-circle');
+        if (e3.is(':visible')) {
+            e3.hide();
+        } else {
+            e3.show();
+        }
 
 
+        e4 = $('.managePriceList');
+        e5 = $('.cellManage');
+        e6 = $('#DIVdelCheckedItems');
 
-		e4 = $('.managePriceList');
-		e5 = $('.cellManage');
-		e6 = $('#DIVdelCheckedItems');
-
-		if((e4.is(':visible')) || (e5.is(':visible')) || (e6.is(':visible'))) {
-			e4.hide();
-			//e5.children().remove();
+        if ((e4.is(':visible')) || (e5.is(':visible')) || (e6.is(':visible'))) {
+            e4.hide();
+            //e5.children().remove();
             e5.hide();
             e6.hide();
-		}else{
-			e4.show();
+        } else {
+            e4.show();
             e5.show();
             e6.show();
             //e5.append('<span style="font-size: 80%; color: #777;"><input type="checkbox" name="propDel[]" value="1"> пометить на удаление</span>');
             //меняет цвет
-			//e5.parent().css({"background-color": "#ffbcbc"});
-		}
+            //e5.parent().css({"background-color": "#ffbcbc"});
+        }
 
-		if (iCanManage) iCanManage = false; else iCanManage = true;
+        if (iCanManage) {
+            iCanManage = false;
+        } else {
+        	iCanManage = true;
+    	}
 
         var link = "ajax_add_some_settings_in_session.php";
 
@@ -2242,12 +2247,12 @@
                 //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             success:function(res){
-            	console.log(res);
+            	console.log(res.data);
 
             	if (res.data == "true"){
-					$("#manageMessage").html("Управление выключить");
+					$("#manageMessage").html("Управление <span style='color: green;'>включено</span>");
 				}else{
-                    $("#manageMessage").html("Управление включить");
+                    $("#manageMessage").html("Управление <span style='color: red;'>выключено</span>");
 				}
             }
         })
@@ -7862,7 +7867,7 @@
         /*$("#spec_koeff").click(function(event) {
         	//console.log(1);
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+		 // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'spec_koeff');
             }
@@ -7871,7 +7876,7 @@
         $("body").on("click", "#spec_koeff", function(event){
             //console.log(1);
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+            // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'spec_koeff');
             }
@@ -7880,7 +7885,7 @@
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
         /*$("#guarantee").click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+		 // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'guarantee');
             }
@@ -7888,7 +7893,7 @@
 
         /*$("body").on("click", "#guarantee", function(){
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+		 // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'guarantee');
             }
@@ -7897,7 +7902,7 @@
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
         /*$("#gift").click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+		 // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'gift');
             }
@@ -7906,7 +7911,7 @@
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
         /*$("#guaranteegift").click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+		 // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'guaranteegift');
             }
@@ -7914,7 +7919,7 @@
 
         $("body").on("click", "#guaranteegift", function(event){
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+            // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'guaranteegift');
             }
@@ -7923,7 +7928,7 @@
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
         /*$("#insure").click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+		 // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(1);
                 contextMenuShow(0, 0, event, 'insure');
@@ -7932,7 +7937,7 @@
 
         $("body").on("click", "#insure", function(event){
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+            // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(1);
                 contextMenuShow(0, 0, event, 'insure');
@@ -7942,7 +7947,7 @@
         // Вешаем слушатель события нажатие кнопок мыши для всего документа:
 /*        $("#insure_approve").click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+ // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(1);
                 contextMenuShow(0, 0, event, 'insure_approve');
@@ -7951,7 +7956,7 @@
 
         $("body").on("click", "#insure_approve", function(event){
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+            // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(1);
                 contextMenuShow(0, 0, event, 'insure_approve');
@@ -7961,7 +7966,7 @@
         //Скидки Вешаем слушатель события нажатие кнопок мыши для всего документа:
         /*$("#discounts").click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+		 // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(71);
                 contextMenuShow(0, 0, event, 'discounts');
@@ -7970,7 +7975,7 @@
 
         $("body").on("click", "#discounts", function(event){
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+            // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(71);
                 contextMenuShow(0, 0, event, 'discounts');
@@ -7980,7 +7985,7 @@
         //для категорий процентов
 		/*$("#percent_cats").click(function(event) {
 
-		 // Проверяем нажата ли именно правая кнопка мыши:
+		 // Проверяем нажата ли именно левая кнопка мыши:
 		 if (event.which === 1)  {
 		 //console.log(71);
 		 contextMenuShow(0, 0, event, 'percent_cats');
@@ -7989,7 +7994,7 @@
         //Для прикрепления к филиалу
         $(".change_filial").click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+            // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(71);
                 contextMenuShow(0, 0, event, 'change_filial');
@@ -7998,7 +8003,7 @@
         //Для отображения списка молочных зубов
         $('#teeth_moloch').click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+            // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(71);
                 contextMenuShow(0, 0, event, 'teeth_moloch');
@@ -8007,7 +8012,7 @@
         //Для отображения меню изменения статуса
         $('#lab_order_status').click(function(event) {
 
-            // Проверяем нажата ли именно правая кнопка мыши:
+            // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 //console.log(71);
 

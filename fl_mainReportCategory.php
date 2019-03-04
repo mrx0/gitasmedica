@@ -43,9 +43,9 @@
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
 										<div style="margin-bottom: 10px;">
 											C <input type="text" id="datastart" name="datastart" class="dateс" value="'.date("01.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off">
 											 &bull;по <input type="text" id="dataend" name="dataend" class="dateс" value="'.date("d.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off">
                                             <!--C <input type="text" id="datastart" name="datastart" class="dateс" value="'.date("01.10.2018").'" onfocus="this.select();_Calendar.lcs(this)"
 												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
 											 &bull;по <input type="text" id="dataend" name="dataend" class="dateс" value="'.date("01.11.2018").'" onfocus="this.select();_Calendar.lcs(this)"

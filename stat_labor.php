@@ -15,7 +15,7 @@
 			include_once 'filter.php';
 			include_once 'filter_f.php';
 
-            $filials_j = getAllFilials(false, false);
+            $filials_j = getAllFilials(false, false, true);
 
 			if ($_POST){
 			}else{

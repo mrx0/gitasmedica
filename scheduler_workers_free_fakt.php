@@ -16,7 +16,7 @@
 			//получаем тех из базы, кто не в графике в эту смену, в этот день
 			//!!!Выбираем врачей (не уволенные)
 			//$query = "SELECT `worker` FROM `sheduler_template` WHERE `filial`='{$_POST['filial']}' AND `day`='{$_POST['dayW']}' AND `smena`='{$_POST['smenaN']}' AND `kab`='{$_POST['kabN']}' AND `type`='{$_POST['type']}'";
-			$query = "SELECT * FROM `spr_workers` WHERE `permissions` = '{$_POST['type']}' AND `fired` <> '1' AND `id`
+			$query = "SELECT * FROM `spr_workers` WHERE `permissions` = '{$_POST['type']}' AND `status` <> '8' AND `id`
 			NOT IN (SELECT `worker` FROM `scheduler` WHERE `day`='{$_POST['day']}' AND `month`='{$_POST['month']}' AND `year`='{$_POST['year']}' AND `smena`='{$_POST['smena']}' AND `type`='{$_POST['type']}')
 			ORDER BY `full_name` ASC";
 			

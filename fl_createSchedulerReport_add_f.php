@@ -10,7 +10,7 @@
 	}else{
 		//var_dump ($_POST);
 		if ($_POST){
-			if (isset($_POST['date']) && isset($_POST['filial_id']) && isset($_POST['wokers_hours_data'])){
+			if (isset($_POST['date']) && isset($_POST['filial_id']) && isset($_POST['workers_hours_data']) && isset($_POST['workers_types_data'])){
 
                 include_once 'DBWork.php';
 
@@ -45,11 +45,13 @@
                     $create_time = date('Y-m-d H:i:s', time());
 
                     //Пройдемся по всем полученным данным с часами сотрудников
-                    foreach ($_POST['wokers_hours_data'] as $worker_id => $hours){
+                    foreach ($_POST['workers_hours_data'] as $worker_id => $hours){
+
+                        $type = $_POST['workers_types_data'][$worker_id];
 
                         $query = "INSERT INTO `fl_journal_scheduler_report`
-                        (`filial_id`, `worker_id`, `day`, `month`, `year`, `hours`, `create_time`, `create_person`)
-                        VALUES ('{$_POST['filial_id']}', '{$worker_id}', '{$d}', '{$m}', '{$y}', '{$hours}', '{$create_time}', '{$_SESSION['id']}');";
+                        (`filial_id`, `worker_id`, `type`, `day`, `month`, `year`, `hours`, `create_time`, `create_person`)
+                        VALUES ('{$_POST['filial_id']}', '{$worker_id}', '{$type}', '{$d}', '{$m}', '{$y}', '{$hours}', '{$create_time}', '{$_SESSION['id']}');";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
                     }
@@ -57,16 +59,19 @@
                     //логирование
                     //AddLog ('0', $_SESSION['id'], '', 'Добавлен долг #'.$mysql_insert_id.'. Пациент ['.$_POST['client'].']. Сумма ['.$_POST['summ'].']. Срок истечения ['.$_POST['date_expires'].']. Тип ['.$_POST['type'].']. Комментарий ['.$_POST['comment'].'].');
 
-                    CloseDB($msql_cnnct);
+
 
                     echo json_encode(array('result' => 'success', 'data' => '<div class="query_ok">Отчёт сформирован и отправлен</div>'));
                 } else {
                     echo json_encode(array('result' => 'success', 'data' => '<div class="query_neok">Отчёт за указаную дату для этого филиала уже был сформирован.</div>'));
                 }
-                //echo json_encode(array('result' => 'success', 'data' => gettype($_POST['wokers_hours_data'])));
+
+                CloseDB($msql_cnnct);
+
+                //echo json_encode(array('result' => 'success', 'data' => gettype($_POST['workers_hours_data'])));
 
 			}else{
-                echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка #19. Что-то пошло не так</div>'));
+                echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка #21. Что-то пошло не так</div>'));
 			}
 		}
 	}

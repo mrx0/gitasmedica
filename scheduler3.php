@@ -14,7 +14,7 @@
 			include_once 'widget_calendar.php';
 			include_once 'variables.php';
 
-            $filials_j = getAllFilials(false, false);
+            $filials_j = getAllFilials(false, false, false);
             //var_dump ($filials_j);
 
             //обнулим сессионные данные для редактирования
@@ -228,7 +228,8 @@
 			$last = ($day_count + $weekday - 1) % 7;
 			//var_dump($last);
 
-            $somat_color = '';
+            //$somat_color = '';
+
 			if ($last == 0){
 				$end = $day_count; 
 			}else{
@@ -256,11 +257,27 @@
 
             $msql_cnnct = ConnectToDB ();
 
+
+            //Получаем нормы смен для этого типа
+            $arr = array();
+            $normaSmen = array();
+
+            $query = "SELECT * FROM `fl_spr_normasmen` WHERE `type` = '$type'";
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    //Раскидываем в массив
+                    $normaSmen[$arr['month']] = $arr['count'];
+                }
+            }
+            //var_dump($normaSmen);
+
             //Получаем сотрудников этого филиала
             $arr = array();
             $filial_workers = array();
 
-            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$type' AND `filial_id` = '{$_GET['filial']}' AND `fired` <> '1' ORDER BY `full_name` ASC";
+            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$type' AND `filial_id` = '{$_GET['filial']}' AND `status` = '0' ORDER BY `full_name` ASC";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -278,7 +295,7 @@
             $arr = array();
             $filial_not_workers = array();
 
-            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$type' AND `filial_id` <> '{$_GET['filial']}' AND `fired` <> '1' ORDER BY `full_name` ASC";
+            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$type' AND `filial_id` <> '{$_GET['filial']}' AND `status` = '0' ORDER BY `full_name` ASC";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -324,10 +341,10 @@
 
             $query = "SELECT `id`, `day`, `worker`, `filial` FROM `scheduler` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year' AND `filial` <> '{$_GET['filial']}'";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-			$number = mysqli_num_rows($res);
-			if ($number != 0){
-				while ($arr = mysqli_fetch_assoc($res)){
-					//Раскидываем в массив
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    //Раскидываем в массив
                     if (!isset($schedulerFaktOther[$arr['worker']])) {
                         $schedulerFaktOther[$arr['worker']] = array();
                     }
@@ -336,8 +353,8 @@
                     }
                     //array_push($schedulerFakt[$arr['worker']][$arr['day']], $arr);
                     $schedulerFaktOther[$arr['worker']][$arr['day']] = $arr['filial'];
-				}
-			}
+                }
+            }
 			//var_dump($query);
 
 			//$schedulerFakt = $rez;
@@ -355,7 +372,7 @@
 
 
                 if (isset($schedulerFakt[$workers_item['id']])){
-                    //!!! Тест перемещение любого элемента ассоциативного массива в начало этого же массива
+                    //!!!Тест перемещение любого элемента ассоциативного массива в начало этого же массива
                     //$filial_not_workers = array($workers_item['id'] => $filial_not_workers[$workers_item['id']]) + $filial_not_workers;
                     $filial_not_workers_temp[$workers_item['id']] = $filial_not_workers[$workers_item['id']];
                 }
@@ -363,6 +380,36 @@
 
             $filial_not_workers = $filial_not_workers_temp + $filial_not_workers;
             //var_dump($filial_not_workers );
+
+
+            //Соберём уже указанные часы
+            $arr = array();
+            $hours_j = array();
+
+            $query = "SELECT * FROM `fl_journal_scheduler_report` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year'";
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    //Раскидываем в массив
+                    if (!isset($hours_j[$arr['worker_id']])) {
+                        $hours_j[$arr['worker_id']] = array();
+                    }
+                    if (!isset($hours_j[$arr['worker_id']][$arr['day']])) {
+                        $hours_j[$arr['worker_id']][$arr['day']] = array();
+                    }
+                    if (!isset($hours_j[$arr['worker_id']][$arr['day']][$arr['filial_id']])) {
+                        $hours_j[$arr['worker_id']][$arr['day']][$arr['filial_id']] = array();
+                    }
+                    //array_push($hours_j, $arr);
+                    $hours_j[$arr['worker_id']][$arr['day']][$arr['filial_id']] = $arr['hours'];
+
+                }
+            }
+            //var_dump($query);
+            //var_dump($hours_j);
 
             //переменная, чтоб вкл/откл редактирование
             $iCanManage = 'false';
@@ -395,7 +442,7 @@
 							<a href="scheduler_template.php" class="b">График план</a>
 							<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>
 						</div>
-						
+						<span style="color: red;">Тестовый режим</span>
 						<h2>График '.$whose.' на ',$monthsName[$month],' ',$year,' филиал '.$filials_j[$_GET['filial']]['name'].'</h2>
 					</header>
 					<!--<a href="own_scheduler.php" class="b">График сотрудника</a>-->';
@@ -411,7 +458,7 @@
 							<div class="no_print"> 
 							<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
 								<div style="cursor: pointer;" onclick="manageScheduler(\'scheduler\')">
-									<span id="manageMessage" style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">', $displayBlock ? 'Управление выключить' : 'Управление включить' ,'</span> <i class="fa fa-cog" title="Настройки"></i>
+									<span id="manageMessage" style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">', $displayBlock ? 'Управление <span style=\'color: green;\'>включено</span>' : 'Управление <span style=\'color: red;\'>выключено</span>' ,'</span> <i class="fa fa-cog" title="Настройки"></i>
 								</div>
 							</li>
 							</div>';
@@ -475,6 +522,12 @@
                     <tr class="<!--sticky f-sticky-->">
                         <td style="width: 260px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>ФИО</b><br><span style="color: rgb(35, 175, 53); font-size: 80%;">прикреплены к филиалу</span></td>';
 
+            //Всего
+            echo '
+                        <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">
+                            -
+                        </td>';
+
             $weekday_temp = $weekday;
 
             //Выведем даты месяца
@@ -505,9 +558,15 @@
                     }
                 }
 
+                if ($i < 10){
+                    $ii = '0'.$i;
+                }else{
+                    $ii = $i;
+                }
+
                 echo '
-                        <td style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; '.$Shtrih.' padding: 5px; text-align: right;">
-                            <b><i style="'.$currentDayColor.'">'.$i.'</i></b>
+                        <td style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; '.$Shtrih.' padding: 5px; text-align: right; cursor: pointer;" onclick="window.location.href = \'fl_createSchedulerReport.php?filial_id='.$_GET['filial'].'&d='.$ii.'&m='.$month.'&y='.$year.'\';">
+                            <b><i style="'.$currentDayColor.'" onclick="window.location.replace(\'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'#tabs-1\');">'.$ii.'</i></b>
                         </td>';
 
                 //Если счетчик дней недели зашел за 7, возвращаем на понедельник
@@ -524,8 +583,15 @@
                 foreach ($filial_workers as $worker_data) {
 
                     echo '
-                    <tr class="cellsBlockHover">
+                    <tr class="cellsBlockHover workerItem" worker_id="'.$worker_data['id'].'">
                         <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>'.$worker_data['full_name'].'</b></td>';
+
+                    //Всего
+                    echo '
+                        <td class="hoverDate schedulerItem" style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;" title="">
+                            <div id="allMonthHours_'.$worker_data['id'].'" class="allMonthHours" style="display: inline;">0</div>/<div id="allMonthNorma_'.$worker_data['id'].'" style="display: inline;">'.($normaSmen[(int)$month]*12).'</div>(<div id="hoursMonthPercent_'.$worker_data['id'].'" style="display: inline;">0</div>%)
+                        </td>';
+
 
                     $weekday_temp = $weekday;
 
@@ -613,9 +679,31 @@
                             }
                         }
 
+                        //Есть ли уже указанные часы сотрудника
+                        $hours = '';
+
+                        if (!empty ($hours_j)){
+                            if ($i < 10){
+                                $ii = '0'.$i;
+                            }else{
+                                $ii = $i;
+                            }
+
+                            //Сумма часов только на этом филиале
+                            /*if (isset($hours_j[$worker_data['id']][$ii][$_GET['filial']])){
+                                $hours = $hours_j[$worker_data['id']][$ii][$_GET['filial']];
+                            }*/
+
+                            //Сумма часов только на всех филиалах
+                            if (isset($hours_j[$worker_data['id']][$ii])) {
+                                $hours = array_sum($hours_j[$worker_data['id']][$ii]);
+                            }
+                        }
+
                         echo '
-                            <td selectedDate="'.$selectedDate.'" class="hoverDate'.$i.'" style="width: 20px; '.$BgColor.' '.$Shtrih.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="SetVisible(this,true); $(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');" onmouseout="SetVisible(this,false); $(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');" title="'.$title.'">
-                                <div style="display: none;"><i style="'.$currentDayColor.'">'.$i.'</i></div>
+                            <td selectedDate="'.$selectedDate.'" class="hoverDate'.$i.' schedulerItem" style="width: 20px; '.$BgColor.' '.$Shtrih.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\''.$ii.'.'.$month.'.'.$year.'\', 0, event, \'showCurDate\');*/ $(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');" title="'.$title.'">
+                                <div id="" class="dayHours_'.$worker_data['id'].'">'.$hours.'</div>
+                                <!--<div style="display: none;"><i style="'.$currentDayColor.'">'.$i.'</i></div>-->
                             </td>';
 
                         //Если счетчик дней недели зашел за 7, возвращаем на понедельник
@@ -632,6 +720,9 @@
             echo '
                     <tr>
                         <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>ФИО</b><br><span style="color: rgb(243, 0, 0); font-size: 80%;">не прикреплены к филиалу</span></td>';
+            echo '
+                        <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">
+                        </td>';
 
             for ($i=1; $i<=$day_count; $i++){
 
@@ -657,10 +748,17 @@
             if (!empty($filial_not_workers)) {
                 foreach ($filial_not_workers as $worker_data) {
                     echo '
-                    <tr class="cellsBlockHover">
+                    <tr class="cellsBlockHover workerItem" worker_id="'.$worker_data['id'].'">
                         <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>'.$worker_data['full_name'].'</b></td>';
 
                     $weekday_temp = $weekday;
+
+                    //Всего
+                    echo '
+                        <td class="hoverDate schedulerItem" style="width: 20px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" title="">
+                            <div id="allMonthHours_'.$worker_data['id'].'" class="allMonthHours" style="display: inline;">0</div>/<div id="allMonthNorma_'.$worker_data['id'].'" style="display: inline;">'.($normaSmen[(int)$month]*12).'</div>(<div id="hoursMonthPercent_'.$worker_data['id'].'" style="display: inline;">0</div>%)
+                        </td>';
+
 
                     //Выведем даты месяца
                     for ($i=1; $i<=$day_count; $i++){
@@ -746,9 +844,31 @@
                             }
                         }
 
+                        //Есть ли уже указанные часы сотрудника
+                        $hours = '';
+
+                        if (!empty ($hours_j)){
+                            if ($i < 10){
+                                $ii = '0'.$i;
+                            }else{
+                                $ii = $i;
+                            }
+
+                            //Сумма часов только на этом филиале
+                            /*if (isset($hours_j[$worker_data['id']][$ii][$_GET['filial']])){
+                                $hours = $hours_j[$worker_data['id']][$ii][$_GET['filial']];
+                            }*/
+
+                            //Сумма часов только на всех филиалах
+                            if (isset($hours_j[$worker_data['id']][$ii])) {
+                                $hours = array_sum($hours_j[$worker_data['id']][$ii]);
+                            }
+                        }
+
                         echo '
-                            <td selectedDate="'.$selectedDate.'" class="hoverDate'.$i.'" style="width: 20px; '.$BgColor.' '.$Shtrih.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="SetVisible(this,true); /*$(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');*/" onmouseout="SetVisible(this,false); /*$(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');*/" title="'.$title.'">
-                                <div style="display: none;"><i style="'.$currentDayColor.'">'.$i.'</i></div>
+                            <td selectedDate="'.$selectedDate.'" worker_id='.$worker_data['id'].' day='.$i.' class="hoverDate'.$i.' schedulerItem" style="width: 20px; '.$BgColor.' '.$Shtrih.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.');" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\''.$ii.'.'.$month.'.'.$year.'\', 0, event, \'showCurDate\'); *//*$(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');*/" onmouseout="/*SetVisible(this,false);*/ /*$(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');*/" title="'.$title.'">
+                                <div id="" class="dayHours_'.$worker_data['id'].'">'.$hours.'</div>
+                                <!--<div style="display: none;"><i style="'.$currentDayColor.'">'.$i.'</i></div>-->
                             </td>';
 
                         //Если счетчик дней недели зашел за 7, возвращаем на понедельник
@@ -790,6 +910,48 @@
 
 			echo '					
 				<script>
+				
+				    //!!!Тест запретили контекстное меню правой кнопкой мышки
+//                    $(".schedulerItem").bind("contextmenu", function(e) {
+//                        return false;
+//                    });
+                    
+//                    if (iCanManage){
+//                        document.oncontextmenu = function() {return false;};
+//                    }
+
+                    //$("body").on("contextmenu", "td", function(e){ return false; });
+
+                    //Клик на дате
+                    $("body").on("mousedown", ".schedulerItem", function(event){
+                        //console.log(event.which);
+                        if (iCanManage){
+//                            console.log(iCanManage);
+
+                            document.oncontextmenu = function() {return false;};
+
+                            //Проверяем нажата ли именно правая кнопка мыши:
+                            if (event.which === 3){
+                                
+                                //Получаем элемент на котором был совершен клик:
+                                var target = $(event.target);
+                                //console.log(target.attr(\'status\'));                            
+                                
+                                contextMenuShow(target.attr(\'worker_id\'), target.attr(\'day\'), event, \'scheduler3\');
+                            }
+                        }else{
+                            document.oncontextmenu = function() {};
+                        }
+                    });
+                                
+                    //Посчитаем кол-во всех часов за месяц для каждого
+                    $(document).ready(function() {
+                        calculateWorkerHours(); 
+                    });
+  
+
+                                
+				
 					 /*<![CDATA[*/
 					 /*!!! проверить надо ли это тут и в других местах*/
 					 var s=[],s_timer=[];
@@ -818,29 +980,24 @@
 						}, 10);
 					 }
 					 /*]]>*/
-				 </script>
-					
-					';	
 
-			echo '
-					<script>
 					
-						$(function() {
-							$("#SelectFilial").change(function(){
-							    
-							    blockWhileWaiting (true);
-							    
-								//var dayW = document.getElementById("SelectDayW").value;
-								document.location.href = "?filial="+$(this).val()+"'.$who.'";
-							});
-							$("#SelectDayW").change(function(){
-							
-							    blockWhileWaiting (true);
-							    
-								var filial = document.getElementById("SelectFilial").value;
-								document.location.href = "?dayw="+$(this).val()+"&filial="+filial+"'.$who.'";
-							});
-						});
+                    $(function() {
+                        $("#SelectFilial").change(function(){
+                            
+                            blockWhileWaiting (true);
+                            
+                            //var dayW = document.getElementById("SelectDayW").value;
+                            document.location.href = "?filial="+$(this).val()+"'.$who.'";
+                        });
+                        $("#SelectDayW").change(function(){
+                        
+                            blockWhileWaiting (true);
+                            
+                            var filial = document.getElementById("SelectFilial").value;
+                            document.location.href = "?dayw="+$(this).val()+"&filial="+filial+"'.$who.'";
+                        });
+                    });
 						
 					</script>';
 		}else{

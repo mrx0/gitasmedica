@@ -14,7 +14,7 @@ if ($enter_ok){
         include_once 'widget_calendar.php';
         include_once 'variables.php';
 
-        $filials_j = getAllFilials(false, false);
+        $filials_j = getAllFilials(false, false, false);
         //var_dump ($filials_j);
 
         //обнулим сессионные данные для редактирования
@@ -228,7 +228,7 @@ if ($enter_ok){
         $last = ($day_count + $weekday - 1) % 7;
         //var_dump($last);
 
-        $somat_color = '';
+        //$somat_color = '';
         if ($last == 0){
             $end = $day_count;
         }else{
@@ -260,7 +260,7 @@ if ($enter_ok){
         $arr = array();
         $filial_workers = array();
 
-        $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$type' AND `filial_id` = '{$_GET['filial']}' AND `fired` <> '1' ORDER BY `full_name` ASC";
+        $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$type' AND `filial_id` = '{$_GET['filial']}' AND `status` <> '8' ORDER BY `full_name` ASC";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -278,7 +278,7 @@ if ($enter_ok){
         $arr = array();
         $filial_not_workers = array();
 
-        $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$type' AND `filial_id` <> '{$_GET['filial']}' AND `fired` <> '1' ORDER BY `full_name` ASC";
+        $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$type' AND `filial_id` <> '{$_GET['filial']}' AND `status` <> '8' ORDER BY `full_name` ASC";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -355,7 +355,7 @@ if ($enter_ok){
 
 
             if (isset($schedulerFakt[$workers_item['id']])){
-                //!!! Тест перемещение любого элемента ассоциативного массива в начало этого же массива
+                //!!!Тест перемещение любого элемента ассоциативного массива в начало этого же массива
                 //$filial_not_workers = array($workers_item['id'] => $filial_not_workers[$workers_item['id']]) + $filial_not_workers;
                 $filial_not_workers_temp[$workers_item['id']] = $filial_not_workers[$workers_item['id']];
             }
@@ -411,7 +411,7 @@ if ($enter_ok){
 							<div class="no_print"> 
 							<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
 								<div style="cursor: pointer;" onclick="manageScheduler(\'scheduler\')">
-									<span id="manageMessage" style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">', $displayBlock ? 'Управление выключить' : 'Управление включить' ,'</span> <i class="fa fa-cog" title="Настройки"></i>
+									<span id="manageMessage" style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">', $displayBlock ? 'Управление <span style=\'color: green;\'>включено</span>' : 'Управление <span style=\'color: red;\'>выключено</span>' ,'</span> <i class="fa fa-cog" title="Настройки"></i>
 								</div>
 							</li>
 							</div>';

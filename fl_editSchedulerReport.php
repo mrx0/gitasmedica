@@ -18,7 +18,7 @@
                     //!!! @@@
                     include_once 'ffun.php';
 
-                    $filials_j = getAllFilials(false, false);
+                    $filials_j = getAllFilials(false, false, false);
                     //var_dump($filials_j);
 
                     //Сегодняшняя дата
@@ -41,14 +41,21 @@
                     $msql_cnnct = ConnectToDB();
 
                     //Соберем строку для запроса
-                    $dop_query = implode(' OR ', $report_ids_arr);
-                    var_dump($dop_query);
+                    $dop_query = implode(' OR sch.id = ', $report_ids_arr);
+
+                    $dop_query = 'sch.id = '.$dop_query;
+                    //var_dump($dop_query);
 
 //                    foreach ($report_ids_arr as $report_id){
 //                        $dop_query .= '';
 //                    }
 
-                    $query = "SELECT * FROM `fl_journal_scheduler_report` WHERE `id`='{$_GET['report_id']}'";
+                    $query = "SELECT sch.*, s_w.full_name AS full_name, s_p.name AS type_name  FROM `fl_journal_scheduler_report` sch
+                    LEFT JOIN `spr_workers` s_w
+                      ON sch.worker_id = s_w.id
+                    LEFT JOIN `spr_permissions` s_p
+                      ON s_w.permissions = s_p.id
+                    WHERE ".$dop_query;
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -62,26 +69,54 @@
                     //var_dump($query);
                     //var_dump($dailyReports_j);
 
-                    CloseDB($msql_cnnct);
-
-                    $report_date = $dailyReports_j[0]['day'].'.'.$dailyReports_j[0]['month'].'.'.$dailyReports_j[0]['year'];
-
-                    $datastart = date('Y-m-d', strtotime($report_date.' 00:00:00'));
-                    $dataend = date('Y-m-d', strtotime($report_date.' 23:59:59'));
-
-                    $filial_id = $dailyReports_j[0]['filial_id'];
-
                     echo '
                         <div id="status">
                             <header>
                                 <div class="nav">
                                     <a href="stat_cashbox.php" class="b">Касса</a>
                                     <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт по филиалу</a>
+                                    <a href="scheduler3.php" class="b">График</a>
                                 </div>
+                                <span style="color: red;">Тестовый режим</span>
                                 <h2>Редактировать рабочие часы</h2>
                             </header>';
 
                     if (!empty($dailyReports_j)){
+
+                        $report_date = $dailyReports_j[0]['day'].'.'.$dailyReports_j[0]['month'].'.'.$dailyReports_j[0]['year'];
+
+//                    $datastart = date('Y-m-d', strtotime($report_date.' 00:00:00'));
+//                    $dataend = date('Y-m-d', strtotime($report_date.' 23:59:59'));
+
+                        $filial_id = $dailyReports_j[0]['filial_id'];
+
+
+
+                        //Все сотрудники, которые есть в графике тут в эту дату
+                        $scheduler_j = array();
+
+                        $dop_query = " AND (sch.type='4' OR sch.type='7' OR sch.type='11') ";
+
+                        $query = "SELECT sch.*, s_w.full_name AS full_name, s_p.name AS type_name FROM `scheduler` sch 
+                          LEFT JOIN `spr_workers` s_w
+                          ON sch.worker = s_w.id
+                          LEFT JOIN `spr_permissions` s_p
+                          ON sch.type = s_p.id
+                          WHERE sch.filial='{$filial_id}' AND sch.day='{$dailyReports_j[0]['day']}' AND  sch.month='{$dailyReports_j[0]['month']}' AND  sch.year='{$dailyReports_j[0]['year']}'".$dop_query." 
+                          ORDER BY sch.type, s_w.full_name ASC";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                        $number = mysqli_num_rows($res);
+
+                        if ($number != 0) {
+                            while ($arr = mysqli_fetch_assoc($res)) {
+                                $scheduler_j[$arr['worker']] = $arr;
+                            }
+                        }
+                        //var_dump($scheduler_j);
+
+
 
                         echo '
                              <div id="data">';
@@ -99,17 +134,17 @@
                         echo '
                                         <div class="cellsBlock400px">
                                             <div class="cellLeft" style="font-size: 90%;">
-                                                Дата отчёта
+                                                <b>Дата отчёта</b>
                                             </div>
                                             <div class="cellRight">
-                                                ' . $report_date . '            
+                                                ' . $report_date . '<input type="hidden" id="iWantThisDate2" name="iWantThisDate2" value="' . $report_date . '">
                                             </div>
                                         </div>';
 
                         echo '				
                                         <div class="cellsBlock400px">
                                             <div class="cellLeft" style="font-size: 90%;">
-                                                Филиал
+                                                <b>Филиал</b>
                                             </div>
                                             <div class="cellRight">';
 
@@ -119,6 +154,50 @@
                                             </div>
                                         </div>';
 
+
+                        foreach ($dailyReports_j as $sch_item){
+
+                            echo '
+                            <div class="cellsBlock400px" style="position: relative;">
+                                <div class="cellLeft" style="font-size: 90%;">
+                                    '.$sch_item['full_name'].'<br>
+                                    <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'.$sch_item['type_name'].'</span>
+                                </div>
+                                <div class="cellRight" style="font-size: 13px;">
+                                    <input type="text" size="1" class="workerHoursValue" worker_id="'.$sch_item['worker_id'].'" worker_type="'.$sch_item['type'].'" value="'.$sch_item['hours'].'" autocomplete="off"> часов
+                                    <label id="hours_'.$sch_item['worker_id'].'_num_error" class="error"></label>
+                                </div>';
+                            if (($finances['see_all'] == 1) || $god_mode) {
+                                echo '
+                                    <i class="fa fa-times" aria-hidden="true" style="position: absolute; top: 10px; right: 10px; cursor: pointer; color:red;" title="Удалить" onclick="fl_deleteSchedulerReportItem(' . $sch_item['id'] . ');"></i>';
+                            }
+                            echo '
+                            </div>';
+
+                            //Удаляем сотрудника из массива тех, кто сегодня тут в графике
+                            unset($scheduler_j[$sch_item['worker_id']]);
+                        }
+                        //var_dump($scheduler_j);
+
+                        //Если остались сотрудники, которые тут работают в эту дату, но их не оказалось в графике
+                        if (!empty($scheduler_j)){
+
+                            foreach ($scheduler_j as $sch_item){
+
+                                echo '
+                                    <div class="cellsBlock400px">
+                                        <div class="cellLeft" style="font-size: 90%;">
+                                            '.$sch_item['full_name'].'<br>
+                                            <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'.$sch_item['type_name'].'</span>
+                                        </div>
+                                        <div class="cellRight" style="font-size: 13px;">
+                                            <input type="text" size="1" class="workerHoursValue" worker_id="'.$sch_item['worker'].'" worker_type="'.$sch_item['type'].'" value="0" autocomplete="off"> часов
+                                            <label id="hours_'.$sch_item['worker'].'_num_error" class="error"></label>
+                                        </div>
+                                    </div>';
+
+                            }
+                        }
 
                         //конец левого блока
                         echo '
@@ -144,7 +223,7 @@
                         </div>';
 
                         echo '
-                            <input type="button" class="b" value="Применить" onclick="fl_editSchedulerReport_add('.$_GET['report_id'].');">';
+                            <input type="button" class="b" value="Применить" onclick="fl_editSchedulerReport_add(\''.$_GET['report_id'].'\');">';
 
                     }else{
                         echo '<span style="color: red;">Ничего не найдено</span>';
@@ -161,7 +240,7 @@
             }
             echo '
                 </div>
-                <div id="doc_title">Ежедневный отчёт - Асмедика</div>';
+                <div id="doc_title">Редактировать рабочие часы - Асмедика</div>';
 
 
             echo '	

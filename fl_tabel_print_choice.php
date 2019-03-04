@@ -77,7 +77,7 @@
 									        <select name="SelectFilialp" id="SelectFilialp" style="margin-right: 5px;">
 									            <option value="0" selected>Все</option>';
 
-            $offices_j = getAllFilials(true, false);
+            $offices_j = getAllFilials(true, false, false);
 
             foreach ($offices_j as $offices_val){
 
@@ -99,7 +99,7 @@
             $arr = array();
             $workers_rez = array();
 
-            $query = "SELECT `id`, `name` FROM `spr_workers` WHERE `permissions` = '5' AND `fired` <> '1'";
+            $query = "SELECT `id`, `name` FROM `spr_workers` WHERE `permissions` = '5' AND `status` <> '8'";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

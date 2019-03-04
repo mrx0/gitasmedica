@@ -18,7 +18,7 @@
 
             $have_target_filial = true;
 
-            $filials_j = getAllFilials(false, false);
+            $filials_j = getAllFilials(false, false, false);
             //var_dump($filials_j);
 
             $d = date('d', time());
@@ -60,6 +60,7 @@
                         <div class="nav">
                             <a href="stat_cashbox.php" class="b">Касса</a>
                             <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт по филиалу</a>
+                            <a href="fl_createSchedulerReport.php" class="b">Добавить рабочие часы</a>
                         </div>
                         <h2>Ежедневный отчёт</h2>
                     </header>';

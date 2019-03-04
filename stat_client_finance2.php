@@ -15,7 +15,7 @@
 			include_once 'filter.php';
 			include_once 'filter_f.php';
 			
-			$offices_j = getAllFilials(true, false);
+			$offices_j = getAllFilials(true, false, true);
 			//var_dump($offices_j );
 
 			if ($_POST) {

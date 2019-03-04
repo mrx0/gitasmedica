@@ -15,8 +15,10 @@
 		//var_dump($_SESSION);
 		//var_dump(date("m"));
 
-        $filials_j = getAllFilials(true, true);
+        $filials_j = getAllFilials(true, true, true);
         //var_dump($filials_j);
+
+
 
         echo '
             <div id="tabs_w">

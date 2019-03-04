@@ -45,7 +45,7 @@
                             echo '		
                                         <div style="font-size: 85%; color: #FF0202; margin: 15px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i>
                                             Внимание!<br>
-                                            Изменение даты добавления может значительно повлиять на все отчёты.<br>
+                                            Изменение даты может значительно повлиять на все расчёты.<br>
                                         </div>';
 
                             echo '

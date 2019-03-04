@@ -17,7 +17,7 @@
 
             $have_target_filial = true;
 
-            $filials_j = getAllFilials(false, false);
+            $filials_j = getAllFilials(false, false, false);
             //var_dump($filials_j);
 
             //$msql_cnnct = ConnectToDB ();
@@ -588,7 +588,7 @@
                         //Клик на дате
                         $("body").on("click", ".reportDate", function(event){
 
-                            // Проверяем нажата ли именно правая кнопка мыши:
+                            // Проверяем нажата ли именно левая кнопка мыши:
                             if (event.which === 1){
                                 
                                 // Получаем элемент на котором был совершен клик:

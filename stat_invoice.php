@@ -18,7 +18,7 @@
 
             $clientInvoices = array();
 
-            $filials_j = getAllFilials(false, true);
+            $filials_j = getAllFilials(false, true, true);
 
 			if ($_POST){
 			}else{

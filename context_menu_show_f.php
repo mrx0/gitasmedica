@@ -159,7 +159,7 @@
 
 						//Выбор филиала для сессии
 						//$offices_j = SelDataFromDB('spr_filials', '', '');
-                        $filials_j = getAllFilials(true, true);
+                        $filials_j = getAllFilials(true, true, true);
 
 						/*if ($filials_j != 0){
 							for ($off = 0; $off < count($filials_j); $off++){
@@ -348,6 +348,28 @@
                             <li><div onclick="choosePervich(4)"><img src="img/vtorich_davno_4.png" title="Посещение для пациента не первое, но был более полугода назад"> Вторичный (полгода)</div></li>
                             <li><div onclick="choosePervich(5)"><img src="img/prodolzhenie.png" title="Продолжение работы"> Продолжение работы</div></li>';
                 }
+
+                //Для отметки первичка или нет
+                if ($_POST['mark'] == 'scheduler3'){
+                    $data .= '
+                            <li><div onclick="">Весь день</div></li>
+                            <li><div onclick="">Утро</li>
+                            <li><div onclick="">Вечер</li>
+                            <li><div onclick="">Ночь</li>
+                            <hr>
+                            <li><div onclick=""><i>Весь день ?</i></div></li>
+                            <li><div onclick=""><i>Утро ?</i></li>
+                            <li><div onclick=""><i>Вечер ?</i></li>
+                            <li><div onclick=""><i>Ночь ?</i></li>
+                            <hr>
+                            <li><div onclick=""><b>Очистить</b></li>';
+                }
+
+                //Для отображения текущей даты
+//                if ($_POST['mark'] == 'showCurDate'){
+//                    $data .= '
+//                            <li>'.$_POST['ind'].'</li>';
+//                }
 
 
 				echo json_encode(array('result' => 'success', 'data' => $data));

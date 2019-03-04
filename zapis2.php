@@ -14,7 +14,7 @@
 			include_once 'functions.php';
             include_once 'variables.php';
 
-			$filials_j = getAllFilials(false, false);
+			$filials_j = getAllFilials(false, false, false);
 			//var_dump($filials_j);
 
 			$post_data = '';

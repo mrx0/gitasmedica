@@ -16,7 +16,7 @@ if ($enter_ok){
 
         require 'variables.php';
 
-        $filials_j = getAllFilials(true, false);
+        $filials_j = getAllFilials(true, false, false);
         //var_dump ($filials_j);
 
         /*$who = '&who=5';

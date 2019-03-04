@@ -45,7 +45,7 @@ if ($enter_ok){
                     //$_SESSION['invoice_data'] = $_GET['client'];
                     //var_dump($calculate_j[0]['closed_time'] == 0);
 
-                    $filials_j = getAllFilials(false, false);
+                    $filials_j = getAllFilials(false, false, false);
 
                     //$sheduler_zapis = array();
                     $tabel_ex_calculates_j = array();
