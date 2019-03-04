@@ -38,7 +38,7 @@
 								<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
 									<span style="color: rgb(125, 125, 125);">
 									    Дата внесения: <input type="text" id="date_in" name="date_in" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date("d").'.'.date("m").'.'.date("Y").'" onfocus="this.select();_Calendar.lcs(this)" 
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off"> 
 									</span>
 								</li>';
 					echo '

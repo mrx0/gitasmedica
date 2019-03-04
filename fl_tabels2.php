@@ -1,7 +1,8 @@
 <?php
 
-//fl_tabels.php
+//fl_tabels2.php
 //Важный отчёт
+//для администраторов и ассистентов
 
 
     //!!!Сортировка - нигде не используется??
@@ -294,6 +295,7 @@
 
                 //Сортируем по имени
                 ksort($workers_j);
+                //var_dump($workers_j);
 
 
                 echo '<div class="no_print">';
@@ -341,6 +343,27 @@
                     }
                 }
 
+                //Получаем оклады по категориям для всех
+                $arr = array();
+                $salariesyCategory = array();
+
+                $query = "SELECT * FROM (SELECT * FROM `fl_spr_salaries_category` WHERE `permission` = '$type' ORDER BY `date_from` DESC) AS sub GROUP BY `category`, `filial_id`";
+                //var_dump($query);
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                $number = mysqli_num_rows($res);
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        //Раскидываем в массив
+                        if (!isset($salariesyCategory[$arr['filial_id']])) {
+                            $salariesyCategory[$arr['filial_id']] = array();
+                        }
+                        //if (!isset($categories[$arr['filial_id']][$arr['category']])) {
+                        $salariesyCategory[$arr['filial_id']][$arr['category']] = $arr['summ'];
+                        //}
+                    }
+                }
+                //var_dump($salariesyCategory);
+
                 //Соберём часы за месяц отовсюду для этого типа
                 $arr = array();
                 $hours_j = array();
@@ -370,13 +393,14 @@
                 echo '
                         <table style="border-bottom: 1px solid #BFBCB5; border-right: 1px solid #BFBCB5; margin:5px; font-size: 80%;">
                             <tr class="<!--sticky f-sticky-->">
-                                <td style="width: 260px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><i>ФИО</i></td>
-                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><i>Категория</i></b></td>
-                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><i>Прикреплён</i></b></td>
-                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><i>Часы</i><br><span style="color: rgb(158, 158, 158); font-size: 80%;">всего/ норма/ %</span></td>
-                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><i>% от выручки</i></td>
-                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><i>Выручка</i></td>
-                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><i>Итого к выплате</i></td>
+                                <td style="width: 260px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>ФИО</i></td>
+                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Категория</i></b></td>
+                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Прикреплён</i></b></td>
+                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Часы</i><br><span style="color: rgb(158, 158, 158); font-size: 80%;">всего/ норма/ %</span></td>
+                                <td style="width: 50px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>% от выручки</i></td>
+                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Закрыто работ на сумму, руб.</i></td>
+                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Оклад, руб.</i></td>
+                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Итого к выплате</i></td>
                                 ';
                 echo '
                             </tr>';
@@ -396,7 +420,9 @@
                         $haveCategory = true;
                         $worker_сategory_id = 0;
                         $worker_filial_id = 0;
-                        $worker_revenue_percent = 0;
+                        $w_percentHours = 0;
+                        $worker_revenue_percent = 0.00;
+                        $oklad = 0.00;
 
                         echo '
                                 <tr class="cellsBlockHover workerItem" worker_id="'.$worker_data['id'].'" style="'.$bgColor.'">
@@ -430,44 +456,72 @@
 
                         //Смены часы
                         if (isset($hours_j[$worker_data['id']])){
+
                             $w_hours = array_sum($hours_j[$worker_data['id']]);
                             $w_normaSmen = $normaSmen[(int)$month]*12;
-                            $w_percentHours = number_format($w_hours * 100 / $w_normaSmen, 2, ',', '');
+                            $w_percentHours = number_format($w_hours * 100 / $w_normaSmen, 2, '.', '');
+
                             echo '
-                                        <div style="margin-bottom: 15px;">'.$w_hours.'/ '.$w_normaSmen.'/ '.$w_percentHours.'</div>';
+                                        <div style="margin-bottom: 15px;">'.$w_hours.'/ '.$w_normaSmen.'/ '.$w_percentHours.'%</div>';
 
                             //Нарисуем табличку со всеми филиалами
-                            echo '<table style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; margin:5px; font-size: 80%;">';
+                            echo '
+                                        <table style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; margin:5px; font-size: 80%;">';
                             foreach ($hours_j[$worker_data['id']] as $filial_id => $hours_data){
-                                echo '<tr><td>'.$filials_j[$filial_id]['name2'].'</td><td style="text-align: right; width: 39px;">'.$hours_data.'</td></tr>';
+
+                                echo '
+                                            <tr>
+                                                <td>
+                                                    '.$filials_j[$filial_id]['name2'].'
+                                                </td>
+                                                <td style="text-align: right; width: 39px;">
+                                                    '.$hours_data.'
+                                                </td>
+                                            </tr>';
                             }
-                            echo '</table>';
+                            echo '
+                                        </table>';
 
                         }else{
-                            echo '<span style="color: rgb(243, 0, 0);">не работал</span>';
+                            echo '
+                                        <span style="color: rgb(243, 0, 0);">нет данных</span>';
                         }
 
                         echo '
                                     </td>
-                                    <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; font-size: 110%;">';
+                                    <td style="width: 50px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">';
 
                         //% от выручки
                         if ($haveCategory && $haveFilial){
-                            echo $revenue_percent_j[$worker_filial_id][$worker_сategory_id]['value'];
                             $worker_revenue_percent = $revenue_percent_j[$worker_filial_id][$worker_сategory_id]['value'];
-                        }else{
-                            echo '<span style="color: rgb(243, 0, 0);">0.00</span>';
                         }
+                        echo number_format($worker_revenue_percent, 2, '.', ' ');
+
+
                         echo '
                                     </td>
-                                    <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">';
-
+                                    <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">';
                         //Выручка
-
+                        echo '
+                                        <div class="filialMoney" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'">                                                            
+                                        </div>';
                         echo '
                                     </td>
-                                    <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">';
+                                    <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; ">';
+                        //Оклад
+                        if (isset($salariesyCategory[$worker_filial_id])){
+                            if (isset($salariesyCategory[$worker_filial_id][$worker_data['cat_id']])) {
+                                $oklad = $salariesyCategory[$worker_filial_id][$worker_data['cat_id']];
+                            }
+                        }
+                        echo number_format($oklad, 2, '.', ' ');
 
+
+                        echo '
+                                    </td>                                    
+                                    <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; font-weight: bold;">
+                                        <div id="w_id_'.$worker_data['id'].'" class="itogZP" oklad="'.$oklad.'" w_percentHours="'.$w_percentHours.'" worker_revenue_percent="'.$worker_revenue_percent.'" filialMoney="0" style="">
+                                        </div>';
                         //Итого
 
                         echo '
@@ -488,8 +542,13 @@
 				<script type="text/javascript">
 
 				$(document).ready(function() {
-				    //console.log(123);
+				    //Соберём выручку филиала
+                    fl_getAllFilialMoney ('.$month.', '.$year.',0);
 				    
+				    
+                    
+                    //!!! из файла fl_tabels.php
+                    //посмотреть по ходу, надо ли это тут будет
 				    var ids = "0_0_0";
 				    var ids_arr = {};
 				    var permission = 0;

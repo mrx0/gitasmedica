@@ -3991,3 +3991,78 @@
 
         });
     }
+
+    //Получение выручек всех филиалов
+    function fl_getAllFilialMoney (month, year, typeW){
+        // console.log(month);
+        // console.log(year);
+        // console.log(w_type);
+
+        var link = "fl_getAllFilialMoney_f.php";
+
+        var reqData = {
+            month: month,
+            year: year,
+            typeW: typeW
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+
+                if (res.result == "success") {
+                    //console.log (res);
+
+                    $(".filialMoney").each(function(){
+                        //console.log($(this).attr("filial_id"));
+
+                        var filial_id = $(this).attr("filial_id");
+                        var worker_id = $(this).attr("w_id");
+
+                        //Если есть прикрепление к филиалу
+                        if (filial_id > 0){
+                            //console.log(filial_id);
+                            //console.log(res.data[filial_id]);
+
+                            $(this).html(number_format(res.data[filial_id], 2, '.', ' '));
+
+                            $("#w_id_"+worker_id).attr("filialMoney", number_format(res.data[filial_id], 2, '.', ''));
+                        }else{
+                            //$(this).html('<span style="color: rgb(243, 0, 0);">не прикреплен</span>');
+                            $(this).html('0.00');
+
+                            $("#w_id_"+worker_id).attr("filialMoney", number_format(res.data[filial_id], 2, '.', ''));
+                        }
+                    });
+
+                    $(".itogZP").each(function(){
+
+                        var oklad = Number($(this).attr("oklad"));
+                        var w_percentHours = Number($(this).attr("w_percentHours"));
+                        var worker_revenue_percent = Number($(this).attr("worker_revenue_percent"));
+                        var filialMoney = Number($(this).attr("filialMoney"));
+
+                        if (w_percentHours > 0){
+                            var itogZP = oklad + ((((filialMoney / 100) * worker_revenue_percent)/ 100) * w_percentHours);
+                            //console.log(itogZP);
+
+                            $(this).html(number_format(itogZP, 2, '.', ''));
+                        }else{
+                            $(this).html(number_format(itogZP, 2, '.', ''));
+                        }
+                    })
+
+                }else{
+                    //--
+                }
+            }
+        })
+    }
