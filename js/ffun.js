@@ -3989,6 +3989,11 @@
 
             $("#hoursMonthPercent_"+worker_id).html(number_format(hoursMonthPercent, 0, '.', ' '));
 
+            $("#schedulerResult_"+worker_id).css({
+                "background-image": "linear-gradient(to right, " + Colorize(Number(hoursMonthPercent.toFixed(0))) + " " + Number(hoursMonthPercent.toFixed(0)) + "%, rgba(255, 255, 255, 0) 0%)"
+            });
+            //console.log("linear-gradient(to right, " + Colorize(hoursMonthPercent.toFixed(0)) + " " + hoursMonthPercent.toFixed(0) + "%, rgba(255, 255, 255, 0) 0%)");
+
         });
     }
 
