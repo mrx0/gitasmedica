@@ -588,7 +588,7 @@
 
                     //Всего
                     echo '
-                        <td class="hoverDate schedulerItem" style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;" title="">
+                        <td id="schedulerResult_'.$worker_data['id'].'" class="hoverDate" style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;" title="">
                             <div id="allMonthHours_'.$worker_data['id'].'" class="allMonthHours" style="display: inline;">0</div>/<div id="allMonthNorma_'.$worker_data['id'].'" style="display: inline;">'.($normaSmen[(int)$month]*12).'</div>(<div id="hoursMonthPercent_'.$worker_data['id'].'" style="display: inline;">0</div>%)
                         </td>';
 
@@ -755,7 +755,7 @@
 
                     //Всего
                     echo '
-                        <td class="hoverDate schedulerItem" style="width: 20px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" title="">
+                        <td id="schedulerResult_'.$worker_data['id'].'" class="hoverDate" style="width: 20px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" title="">
                             <div id="allMonthHours_'.$worker_data['id'].'" class="allMonthHours" style="display: inline;">0</div>/<div id="allMonthNorma_'.$worker_data['id'].'" style="display: inline;">'.($normaSmen[(int)$month]*12).'</div>(<div id="hoursMonthPercent_'.$worker_data['id'].'" style="display: inline;">0</div>%)
                         </td>';
 
