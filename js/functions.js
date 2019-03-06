@@ -8507,6 +8507,13 @@
         return openedWindow;
     }
 
+	//Создание нового табеля - открываем в модальном окне
+    function iOpenNewWindow2(url, name, options){
+
+
+
+    }
+
     //Получаем, показываем направления
     function getRemovesfunc(worker_id){
         //console.log (worker_id);

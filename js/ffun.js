@@ -993,10 +993,132 @@
         });
     }
 
+    //Добавить расчетные листы в новый табель, попутно создать этот новый табель
+    function fl_addNewTabelIN2 (newTabel){
+
+        var link = "fl_getCalcsFromSession_f.php";
+
+        var reqData = {
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+
+                $('#overlay').show();
+
+                var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="fl_addNewTabel2()">';
+
+                // Создаем меню:
+                var menu = $('<div/>', {
+                    class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+                }).css({
+                    "top": "120px",
+                    "height": "fit-content"
+                })
+                    .appendTo('#overlay')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                /*"height": "100%",*/
+                                "border": "1px solid #AAA",
+                                "position": "relative",
+                                "background-color": "rgb(254, 253, 211",
+                                "padding": "10px"
+                            })
+                            //.append('<span style="margin: 5px;"><i>Новый табель</i></span>')
+                            .append(
+                                $('<div/>')
+                                    .css({
+                                        /*"position": "absolute",*/
+                                        "width": "100%",
+                                        "margin": "auto",
+                                        "top": "-10px",
+                                        "left": "0",
+                                        "bottom": "0",
+                                        "right": "0",
+                                        "height": "50%"
+                                    })
+                                .append('<div style="margin: 0px;">'+res+'</div>')
+                            )
+                            .append(
+                                $('<div/>')
+                                    .css({
+                                        /*"position": "absolute",*/
+                                        "bottom": "2px",
+                                        "width": "100%"
+                                    })
+                                    .append(buttonsStr+
+                                        '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                                    )
+                            )
+                    );
+
+                menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+
+
+
+                if (res.result == "success") {
+                    //console.log (res);
+
+
+
+
+                }else{
+                    //--
+                }
+            }
+        })
+    }
+
     //Добавляем в базу табель из сессии
     function fl_addNewTabel(){
 
         var link = "fl_tabel_add_f.php";
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    tabelMonth: $("#tabelMonth").val(),
+                    tabelYear: $("#tabelYear").val(),
+                    summCalcs: $(".summCalcsNPaid").html(),
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res.data);
+
+                if(res.result == "success"){
+                    //document.location.href = "fl_tabels.php";
+                    window.close('newTabelwindow');
+                }else{
+                    $('#errror').html(res.data);
+                }
+            }
+        });
+    }
+
+    //Добавляем в базу новый табель и РЛ в него из сессии
+    function fl_addNewTabel2(){
+
+        var link = "fl_tabel_add2_f.php";
 
         $.ajax({
             url: link,
@@ -2176,6 +2298,51 @@
 
     }
 
+    //Добавление в сессию данных по рассчетным листам, которые надо добавить, (ID)
+    function fl_addCalcsIDsINSessionForTabel(calc_id_arr, add_status, type, worker_id, filial_id){
+        //console.log(calc_id_arr);
+        //console.log(add_status);
+        //console.log(type);
+        //console.log(worker_id);
+        //console.log(filial_id);
+
+        var link = "fl_addCalcsIDsINSessionForTabel2.php";
+
+        var reqData = {
+            calc_id_arr: calc_id_arr,
+            add_status: add_status,
+            type: type,
+            worker_id: worker_id,
+            filial_id: filial_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                console.log (res);
+
+                if (res.result == "success") {
+                    //console.log (res);
+
+                }else{
+                    //--
+                }
+            }
+        })
+
+    }
+
+
+
+
 
     $(document).ready(function() {
         //console.log(123);
@@ -2187,15 +2354,40 @@
             //console.log(checked_status);
             //console.log($(this).parent());
 
+            var add_status = 0;
+            var calc_id_arr = [];
+
+            //Меняем цвет блока
             if (checked_status){
                 $(this).parent().parent().parent().css({"background-color": "#83DB53"});
+                add_status = 1;
             }else{
                 $(this).parent().parent().parent().css({"background-color": "rgb(255, 255, 255);"});
             }
+
+            //Получим ID расчетного листа
+            //console.log($(this).attr("name").split("_"));
+            //!!! Лишнее действие, надо бы посмотреть и переделать потом без split, чтоб данные писались в DOM сразу в виде чистого ID
+            var ids_arr = $(this).attr("name").split("_");
+            //Массив с ID расчетных листов
+            calc_id_arr.push(ids_arr[1]);
+            //console.log(calc_id);
+            //console.log(checked_status);
+
+            //Дополнительные данные
+            var data_arr = $(this).attr("chkBoxData").split("_");
+
+            //Добавим в сессию данные
+            fl_addCalcsIDsINSessionForTabel(calc_id_arr, add_status, data_arr[1], data_arr[2], data_arr[3]);
+
         });
 
 
         $("body").on("click", ".checkAll", function(){
+
+            var add_status = 0;
+            var calc_id_arr = [];
+
             var checked_status = $(this).is(":checked");
             var thisId = $(this).attr("id");
 
@@ -2203,11 +2395,25 @@
                 if (checked_status){
                     $(this).prop("checked", true);
                     $(this).parent().parent().parent().css({"background-color": "#83DB53"});
+                    add_status = 1;
                 }else{
                     $(this).prop("checked", false);
                     $(this).parent().parent().parent().css({"background-color": "rgb(255, 255, 255);"});
                 }
+
+                //Получим ID расчетного листа
+                var ids_arr = $(this).attr("name").split("_");
+                //Массив с ID расчетных листов
+                calc_id_arr.push(ids_arr[1]);
+
             });
+
+            //Дополнительные данные
+            var data_arr = $(this).attr("chkBoxData").split("_");
+
+            //Добавим в сессию данные
+            fl_addCalcsIDsINSessionForTabel(calc_id_arr, add_status, data_arr[1], data_arr[2], data_arr[3]);
+
         });
 
         //Рабочий пример клика на элементе после подгрузки его в DOM
