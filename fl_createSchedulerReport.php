@@ -8,7 +8,7 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 
-        if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
+        if (($scheduler['see_all'] == 1) || ($scheduler['add_own'] == 1) || $god_mode){
 
             include_once 'DBWork.php';
             include_once 'functions.php';
@@ -63,207 +63,213 @@
                             <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт по филиалу</a>
                             <a href="scheduler3.php?filial='.$filial_id.'&who=4" class="b">График</a>
                         </div>
-                        <span style="color: red;">Тестовый режим</span>
+                        <!--<span style="color: red;">Тестовый режим</span>-->
                         <h2>Добавить рабочие часы</h2>
                         <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Проставьте данные и нажмите "Добавить"</span><br>
                     </header>';
 
             echo '
                     <div id="data">';
-            echo '				
-                        <div id="errrror"></div>';
 
-            if ($have_target_filial) {
+            if (($scheduler['see_all'] == 1) || (($scheduler['see_all'] != 1) && ($d == date('d', time())) && ($m == date('m', time())) && ($y == date('Y', time()))) || $god_mode) {
 
-                //Смотрим не было ли уже отчета на этом филиале за этот день
-                $dailyReports_j = array();
+                echo '				
+                            <div id="errrror"></div>';
 
-                $msql_cnnct = ConnectToDB ();
+                if ($have_target_filial) {
 
-                $query = "SELECT * FROM `fl_journal_scheduler_report` WHERE `filial_id`='{$filial_id}' AND `day`='{$d}' AND  `month`='$m' AND  `year`='$y'";
+                    //Смотрим не было ли уже отчета на этом филиале за этот день
+                    $dailyReports_j = array();
 
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                    $msql_cnnct = ConnectToDB();
 
-                $number = mysqli_num_rows($res);
+                    $query = "SELECT * FROM `fl_journal_scheduler_report` WHERE `filial_id`='{$filial_id}' AND `day`='{$d}' AND  `month`='$m' AND  `year`='$y'";
 
-                if ($number != 0) {
-                    while ($arr = mysqli_fetch_assoc($res)) {
-                        array_push($dailyReports_j, $arr);
-                    }
-                }
-                //var_dump($query);
-                //var_dump($dailyReports_j);
-
-                //CloseDB ($msql_cnnct);
-
-                //Если нет отчета в этом филиале за этот день
-                //Или отчёт есть, но мы имеем право смотреть тут
-                //if ((empty($dailyReports_j)) || (!empty($dailyReports_j) && (($finances['add_new'] == 1) || $god_mode))) {
-                if (empty($dailyReports_j)) {
-
-                    /*if (!empty($dailyReports_j)){
-                        echo '
-                            <style="color: red;"><a href="fl_editDailyReport.php?report_id='.$dailyReports_j[0]['id'].'" class="">Отчёт</a> за указаную дату для этого филиала уже был сформирован.</span><br><br>';
-                    }*/
-
-                    echo '
-                        <div style="">';
-
-                    //начало левого блока
-                    echo '
-                            <div style="display: inline-block; vertical-align: top; border: 2px dotted rgb(201, 206, 206);">';
-
-                    echo '
-                                <div class="cellsBlock400px">
-                                    <div class="cellLeft" style="font-size: 90%;">
-                                        <b>Дата отчёта</b>
-                                    </div>
-                                    <div class="cellRight">
-                                        <input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" value="' . $report_date . '" onfocus="this.select();_Calendar.lcs(this)"
-                                                    onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off">
-                                        <span class="button_tiny" style="font-size: 80%; cursor: pointer" onclick="iWantThisDate2(\'fl_createSchedulerReport.php?filial_id=' . $filial_id . '\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>            
-                                    </div>
-                                </div>';
-
-                    echo '				
-                                <div class="cellsBlock400px">
-                                    <div class="cellLeft" style="font-size: 90%;">
-                                        <b>Филиал</b>
-                                    </div>
-                                    <div class="cellRight">';
-
-                    if (($finances['see_all'] == 1) || $god_mode) {
-
-                        echo '
-                                        <select name="SelectFilial" id="SelectFilial">';
-
-                        foreach ($filials_j as $filial_item) {
-
-                            $selected = '';
-
-                            if ($filial_id == $filial_item['id']) {
-                                $selected = 'selected';
-                            }
-
-                            echo '
-                                            <option value="' . $filial_item['id'] . '" ' . $selected . '>' . $filial_item['name'] . '</option>';
-                        }
-
-                        echo '
-                                        </select>';
-                    } else {
-
-                        echo $filials_j[$_SESSION['filial']]['name'] . '<input type="hidden" id="SelectFilial" name="SelectFilial" value="' . $_SESSION['filial'] . '">';
-
-                    }
-
-                    echo '
-                                    </div>
-                                </div>';
-
-//                    if (($finances['see_all'] == 1) || $god_mode) {
-//                        echo '
-//                                <div class="cellsBlock400px">
-//                                    <div class="cellLeft" style="font-size: 90%; border: 1px solid rgb(2, 108, 33);">Итоговая сумма</div>
-//                                    <div class="cellRight calculateOrder" style="border: 1px solid rgb(2, 108, 33);">
-//                                        <span id="itogSummShow">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
-//                                    </div>
-//                                </div>';
-//                    }
-
-                    //Получим сотрудников, кто в графике
-                    $scheduler_j = array();
-
-                    $msql_cnnct = ConnectToDB ();
-
-                    $dop_query = " AND (sch.type='4' OR sch.type='7' OR sch.type='11') ";
-
-                    $query = "SELECT sch.*, s_w.full_name AS full_name, s_p.name AS type_name FROM `scheduler` sch 
-                      LEFT JOIN `spr_workers` s_w
-                      ON sch.worker = s_w.id
-                      LEFT JOIN `spr_permissions` s_p
-                      ON sch.type = s_p.id
-                      WHERE sch.filial='{$filial_id}' AND sch.day='{$d}' AND  sch.month='{$m}' AND  sch.year='{$y}'".$dop_query." 
-                      ORDER BY sch.type, s_w.full_name ASC";
-
-                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                     $number = mysqli_num_rows($res);
 
                     if ($number != 0) {
                         while ($arr = mysqli_fetch_assoc($res)) {
-                            array_push($scheduler_j, $arr);
+                            array_push($dailyReports_j, $arr);
                         }
                     }
-//                    var_dump($query);
-//                    var_dump($scheduler_j);
+                    //var_dump($query);
+                    //var_dump($dailyReports_j);
 
-                    if (!empty($scheduler_j)){
-                        foreach ($scheduler_j as $sch_item){
+                    //CloseDB ($msql_cnnct);
+
+                    //Если нет отчета в этом филиале за этот день
+                    //Или отчёт есть, но мы имеем право смотреть тут
+                    //if ((empty($dailyReports_j)) || (!empty($dailyReports_j) && (($scheduler['add_new'] == 1) || $god_mode))) {
+                    if (empty($dailyReports_j)) {
+
+                        /*if (!empty($dailyReports_j)){
                             echo '
-                                <div class="cellsBlock400px">
-                                    <div class="cellLeft" style="font-size: 90%;">
-                                        '.$sch_item['full_name'].'<br>
-                                        <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'.$sch_item['type_name'].'</span>
-                                    </div>
-                                    <div class="cellRight" style="font-size: 13px;">
-                                        <input type="text" size="1" class="workerHoursValue" worker_id="'.$sch_item['worker'].'" worker_type="'.$sch_item['type'].'" value="12" autocomplete="off"> часов
-                                        <label id="hours_'.$sch_item['worker'].'_num_error" class="error"></label>
-                                    </div>
-                                </div>';
+                                <style="color: red;"><a href="fl_editDailyReport.php?report_id='.$dailyReports_j[0]['id'].'" class="">Отчёт</a> за указаную дату для этого филиала уже был сформирован.</span><br><br>';
+                        }*/
+
+                        echo '
+                            <div style="">';
+
+                        //начало левого блока
+                        echo '
+                                <div style="display: inline-block; vertical-align: top; border: 2px dotted rgb(201, 206, 206);">';
+
+                        echo '
+                                    <div class="cellsBlock400px">
+                                        <div class="cellLeft" style="font-size: 90%;">
+                                            <b>Дата отчёта</b>
+                                        </div>
+                                        <div class="cellRight">
+                                            <input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" value="' . $report_date . '" onfocus="this.select();_Calendar.lcs(this)"
+                                                        onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off">
+                                            <span class="button_tiny" style="font-size: 80%; cursor: pointer" onclick="iWantThisDate2(\'fl_createSchedulerReport.php?filial_id=' . $filial_id . '\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>            
+                                        </div>
+                                    </div>';
+
+                        echo '				
+                                    <div class="cellsBlock400px">
+                                        <div class="cellLeft" style="font-size: 90%;">
+                                            <b>Филиал</b>
+                                        </div>
+                                        <div class="cellRight">';
+
+                        if (($scheduler['see_all'] == 1) || $god_mode) {
+
+                            echo '
+                                            <select name="SelectFilial" id="SelectFilial">';
+
+                            foreach ($filials_j as $filial_item) {
+
+                                $selected = '';
+
+                                if ($filial_id == $filial_item['id']) {
+                                    $selected = 'selected';
+                                }
+
+                                echo '
+                                                <option value="' . $filial_item['id'] . '" ' . $selected . '>' . $filial_item['name'] . '</option>';
+                            }
+
+                            echo '
+                                            </select>';
+                        } else {
+
+                            echo $filials_j[$_SESSION['filial']]['name'] . '<input type="hidden" id="SelectFilial" name="SelectFilial" value="' . $_SESSION['filial'] . '">';
+
                         }
-                    }else{
-                        echo '<span style="color: red;">В этот день на филиале никого нет в графике.</span>';
-                    }
+
+                        echo '
+                                        </div>
+                                    </div>';
+
+                        //                    if (($scheduler['see_all'] == 1) || $god_mode) {
+                        //                        echo '
+                        //                                <div class="cellsBlock400px">
+                        //                                    <div class="cellLeft" style="font-size: 90%; border: 1px solid rgb(2, 108, 33);">Итоговая сумма</div>
+                        //                                    <div class="cellRight calculateOrder" style="border: 1px solid rgb(2, 108, 33);">
+                        //                                        <span id="itogSummShow">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
+                        //                                    </div>
+                        //                                </div>';
+                        //                    }
+
+                        //Получим сотрудников, кто в графике
+                        $scheduler_j = array();
+
+                        $msql_cnnct = ConnectToDB();
+
+                        $dop_query = " AND (sch.type='4' OR sch.type='7' OR sch.type='11') ";
+
+                        $query = "SELECT sch.*, s_w.full_name AS full_name, s_p.name AS type_name FROM `scheduler` sch 
+                          LEFT JOIN `spr_workers` s_w
+                          ON sch.worker = s_w.id
+                          LEFT JOIN `spr_permissions` s_p
+                          ON sch.type = s_p.id
+                          WHERE sch.filial='{$filial_id}' AND sch.day='{$d}' AND  sch.month='{$m}' AND  sch.year='{$y}'" . $dop_query . " 
+                          ORDER BY sch.type, s_w.full_name ASC";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                        $number = mysqli_num_rows($res);
+
+                        if ($number != 0) {
+                            while ($arr = mysqli_fetch_assoc($res)) {
+                                array_push($scheduler_j, $arr);
+                            }
+                        }
+                        //                    var_dump($query);
+                        //                    var_dump($scheduler_j);
+
+                        if (!empty($scheduler_j)) {
+                            foreach ($scheduler_j as $sch_item) {
+                                echo '
+                                    <div class="cellsBlock400px">
+                                        <div class="cellLeft" style="font-size: 90%;">
+                                            ' . $sch_item['full_name'] . '<br>
+                                            <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">' . $sch_item['type_name'] . '</span>
+                                        </div>
+                                        <div class="cellRight" style="font-size: 13px;">
+                                            <input type="text" size="1" class="workerHoursValue" worker_id="' . $sch_item['worker'] . '" worker_type="' . $sch_item['type'] . '" value="12" autocomplete="off"> часов
+                                            <label id="hours_' . $sch_item['worker'] . '_num_error" class="error"></label>
+                                        </div>
+                                    </div>';
+                            }
+                        } else {
+                            echo '<span style="color: red;">В этот день на филиале никого нет в графике.</span>';
+                        }
 
 
-                    //конец левого блока
-                    echo '
+                        //конец левого блока
+                        echo '
+                                </div>';
+
+                        //начало правого блока
+                        //                    echo '
+                        //                            <div style="display: inline-block; vertical-align: top; /*border: 2px dotted rgb(201, 206, 206);*/">';
+                        //
+                        //                    echo '
+                        //                                <div class="cellsBlock400px" style="font-size: 90%; ">
+                        //                                    <div class="cellLeft">
+                        //                                    </div>
+                        //                                    <div class="cellRight" style="">
+                        //                                    </div>
+                        //                                </div>';
+                        //                    echo '
+                        //                            </div>';
+                        //конец правого блока
+
+                        echo '
                             </div>';
 
-                    //начало правого блока
-//                    echo '
-//                            <div style="display: inline-block; vertical-align: top; /*border: 2px dotted rgb(201, 206, 206);*/">';
-//
-//                    echo '
-//                                <div class="cellsBlock400px" style="font-size: 90%; ">
-//                                    <div class="cellLeft">
-//                                    </div>
-//                                    <div class="cellRight" style="">
-//                                    </div>
-//                                </div>';
-//                    echo '
-//                            </div>';
-                    //конец правого блока
-
-                    echo '
-                        </div>';
-
-                    echo '
-                        <input type="button" class="b" value="Добавить" onclick="fl_createSchedulerReport_add();">';
-
-                    echo '
-                    </div>';
-                }else{
-                    //var_dump($dailyReports_j);
-                    $get_str = '';
-
-                    foreach($dailyReports_j as $item){
-                        $get_str .= $item['id'].',';
-                    }
-
-//                    if (($finances['see_all'] == 1) || (($finances['see_all'] != 1) && ($d == date('d', time())) && ($m == date('m', time())) && ($y == date('Y', time()))) || $god_mode){
                         echo '
-                            <span style="color: red;">Отчёт за указаную дату для этого филиала уже был сформирован.</span><br>
-                            <span style="color: red;">Вы можете его <a href="fl_editSchedulerReport.php?report_id='.$get_str.'" class="">отредактировать</a></span>';
-//                    }else{
-//                        echo '
-//                            <span style="color: red;">Отчёт за указаную дату для этого филиала уже был сформирован.</span>';
-//                    }
+                            <input type="button" class="b" value="Добавить" onclick="fl_createSchedulerReport_add();">';
+
+                        echo '
+                        </div>';
+                    } else {
+                        //var_dump($dailyReports_j);
+                        $get_str = '';
+
+                        foreach ($dailyReports_j as $item) {
+                            $get_str .= $item['id'] . ',';
+                        }
+
+                        //                    if (($scheduler['see_all'] == 1) || (($scheduler['see_all'] != 1) && ($d == date('d', time())) && ($m == date('m', time())) && ($y == date('Y', time()))) || $god_mode){
+                        echo '
+                                <span style="color: red;">Отчёт за указаную дату для этого филиала уже был сформирован.</span><br>
+                                <span style="color: red;">Вы можете его <a href="fl_editSchedulerReport.php?report_id=' . $get_str . '" class="">отредактировать</a></span>';
+                        //                    }else{
+                        //                        echo '
+                        //                            <span style="color: red;">Отчёт за указаную дату для этого филиала уже был сформирован.</span>';
+                        //                    }
+                    }
+                } else {
+                    echo '
+                             <span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <i class="ahref change_filial">определить</i></span><br>';
                 }
             }else{
-                echo '
-                         <span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <i class="ahref change_filial">определить</i></span><br>';
+                echo '<h1>Редактировать можно только текущее число</h1>';
             }
             echo '
                 </div>

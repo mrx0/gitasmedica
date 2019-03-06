@@ -8,7 +8,7 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 
-        if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
+        if (($scheduler['see_all'] == 1) || ($scheduler['add_own'] == 1) || $god_mode){
             if ($_GET) {
                 if (isset($_GET['report_id'])){
 
@@ -77,13 +77,14 @@
                                     <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт по филиалу</a>
                                     <a href="scheduler3.php" class="b">График</a>
                                 </div>
-                                <span style="color: red;">Тестовый режим</span>
+                                <!--<span style="color: red;">Тестовый режим</span>-->
                                 <h2>Редактировать рабочие часы</h2>
                             </header>';
 
                     if (!empty($dailyReports_j)){
 
                         $report_date = $dailyReports_j[0]['day'].'.'.$dailyReports_j[0]['month'].'.'.$dailyReports_j[0]['year'];
+                        //var_dump($report_date);
 
 //                    $datastart = date('Y-m-d', strtotime($report_date.' 00:00:00'));
 //                    $dataend = date('Y-m-d', strtotime($report_date.' 23:59:59'));
@@ -120,123 +121,128 @@
 
                         echo '
                              <div id="data">';
-                        echo '				
-                                <div id="errrror"></div>';
 
-                        echo '
-                                <div style="">';
-
-                        //начало левого блока
-                        echo '
-                                    <div style="display: inline-block; vertical-align: top; border: 2px dotted rgb(201, 206, 206);">';
-
-                        
-                        echo '
-                                        <div class="cellsBlock400px">
-                                            <div class="cellLeft" style="font-size: 90%;">
-                                                <b>Дата отчёта</b>
-                                            </div>
-                                            <div class="cellRight">
-                                                ' . $report_date . '<input type="hidden" id="iWantThisDate2" name="iWantThisDate2" value="' . $report_date . '">
-                                            </div>
-                                        </div>';
-
-                        echo '				
-                                        <div class="cellsBlock400px">
-                                            <div class="cellLeft" style="font-size: 90%;">
-                                                <b>Филиал</b>
-                                            </div>
-                                            <div class="cellRight">';
-
-                        echo $filials_j[$dailyReports_j[0]['filial_id']]['name'].'<input type="hidden" id="SelectFilial" name="SelectFilial" value="' . $dailyReports_j[0]['filial_id'] . '">';
-
-                        echo '
-                                            </div>
-                                        </div>';
-
-
-                        foreach ($dailyReports_j as $sch_item){
+                        if (($scheduler['see_all'] == 1) || (($scheduler['see_all'] != 1) && ($report_date == date('d.m.Y', time()))) || $god_mode) {
+                            echo '				
+                                    <div id="errrror"></div>';
 
                             echo '
-                            <div class="cellsBlock400px" style="position: relative;">
-                                <div class="cellLeft" style="font-size: 90%;">
-                                    '.$sch_item['full_name'].'<br>
-                                    <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'.$sch_item['type_name'].'</span>
-                                </div>
-                                <div class="cellRight" style="font-size: 13px;">
-                                    <input type="text" size="1" class="workerHoursValue" worker_id="'.$sch_item['worker_id'].'" worker_type="'.$sch_item['type'].'" value="'.$sch_item['hours'].'" autocomplete="off"> часов
-                                    <label id="hours_'.$sch_item['worker_id'].'_num_error" class="error"></label>
-                                </div>';
-                            if (($finances['see_all'] == 1) || $god_mode) {
+                                    <div style="">';
+
+                            //начало левого блока
+                            echo '
+                                        <div style="display: inline-block; vertical-align: top; border: 2px dotted rgb(201, 206, 206);">';
+
+
+                            echo '
+                                            <div class="cellsBlock400px">
+                                                <div class="cellLeft" style="font-size: 90%;">
+                                                    <b>Дата отчёта</b>
+                                                </div>
+                                                <div class="cellRight">
+                                                    ' . $report_date . '<input type="hidden" id="iWantThisDate2" name="iWantThisDate2" value="' . $report_date . '">
+                                                </div>
+                                            </div>';
+
+                            echo '				
+                                            <div class="cellsBlock400px">
+                                                <div class="cellLeft" style="font-size: 90%;">
+                                                    <b>Филиал</b>
+                                                </div>
+                                                <div class="cellRight">';
+
+                            echo $filials_j[$dailyReports_j[0]['filial_id']]['name'].'<input type="hidden" id="SelectFilial" name="SelectFilial" value="' . $dailyReports_j[0]['filial_id'] . '">';
+
+                            echo '
+                                                </div>
+                                            </div>';
+
+
+                            foreach ($dailyReports_j as $sch_item){
+
                                 echo '
-                                    <i class="fa fa-times" aria-hidden="true" style="position: absolute; top: 10px; right: 10px; cursor: pointer; color:red;" title="Удалить" onclick="fl_deleteSchedulerReportItem(' . $sch_item['id'] . ');"></i>';
+                                <div class="cellsBlock400px" style="position: relative;">
+                                    <div class="cellLeft" style="font-size: 90%;">
+                                        '.$sch_item['full_name'].'<br>
+                                        <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'.$sch_item['type_name'].'</span>
+                                    </div>
+                                    <div class="cellRight" style="font-size: 13px;">
+                                        <input type="text" size="1" class="workerHoursValue" worker_id="'.$sch_item['worker_id'].'" worker_type="'.$sch_item['type'].'" value="'.$sch_item['hours'].'" autocomplete="off"> часов
+                                        <label id="hours_'.$sch_item['worker_id'].'_num_error" class="error"></label>
+                                    </div>';
+                                if (($scheduler['see_all'] == 1) || $god_mode) {
+                                    echo '
+                                        <i class="fa fa-times" aria-hidden="true" style="position: absolute; top: 10px; right: 10px; cursor: pointer; color:red;" title="Удалить" onclick="fl_deleteSchedulerReportItem(' . $sch_item['id'] . ');"></i>';
+                                }
+                                echo '
+                                </div>';
+
+                                //Удаляем сотрудника из массива тех, кто сегодня тут в графике
+                                unset($scheduler_j[$sch_item['worker_id']]);
                             }
+                            //var_dump($scheduler_j);
+
+                            //Если остались сотрудники, которые тут работают в эту дату, но их не оказалось в графике
+                            if (!empty($scheduler_j)){
+
+                                foreach ($scheduler_j as $sch_item){
+
+                                    echo '
+                                        <div class="cellsBlock400px">
+                                            <div class="cellLeft" style="font-size: 90%;">
+                                                '.$sch_item['full_name'].'<br>
+                                                <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'.$sch_item['type_name'].'</span>
+                                            </div>
+                                            <div class="cellRight" style="font-size: 13px;">
+                                                <input type="text" size="1" class="workerHoursValue" worker_id="'.$sch_item['worker'].'" worker_type="'.$sch_item['type'].'" value="0" autocomplete="off"> часов
+                                                <label id="hours_'.$sch_item['worker'].'_num_error" class="error"></label>
+                                            </div>
+                                        </div>';
+
+                                }
+                            }
+
+                            //конец левого блока
+                            echo '
+                                        </div>';
+
+                            //начало правого блока
+    //                        echo '
+    //                                    <div style="display: inline-block; vertical-align: top; /*border: 2px dotted rgb(201, 206, 206);*/">';
+    //
+    //                        echo '
+    //                                        <div class="cellsBlock400px" style="font-size: 90%;">
+    //                                            <div class="cellLeft">
+    //                                            </div>
+    //                                            <div class="cellRight" style="color: red;">
+    //                                            </div>
+    //                                        </div>';
+    //
+    //                        echo '
+    //                                    </div>';
+                            //конец правого блока
+
                             echo '
                             </div>';
 
-                            //Удаляем сотрудника из массива тех, кто сегодня тут в графике
-                            unset($scheduler_j[$sch_item['worker_id']]);
-                        }
-                        //var_dump($scheduler_j);
+                            echo '
+                                <input type="button" class="b" value="Применить" onclick="fl_editSchedulerReport_add(\''.$_GET['report_id'].'\');">';
 
-                        //Если остались сотрудники, которые тут работают в эту дату, но их не оказалось в графике
-                        if (!empty($scheduler_j)){
-
-                            foreach ($scheduler_j as $sch_item){
-
-                                echo '
-                                    <div class="cellsBlock400px">
-                                        <div class="cellLeft" style="font-size: 90%;">
-                                            '.$sch_item['full_name'].'<br>
-                                            <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'.$sch_item['type_name'].'</span>
-                                        </div>
-                                        <div class="cellRight" style="font-size: 13px;">
-                                            <input type="text" size="1" class="workerHoursValue" worker_id="'.$sch_item['worker'].'" worker_type="'.$sch_item['type'].'" value="0" autocomplete="off"> часов
-                                            <label id="hours_'.$sch_item['worker'].'_num_error" class="error"></label>
-                                        </div>
-                                    </div>';
-
-                            }
+                        }else{
+                            echo '<span style="color: red;">Ничего не найдено</span>';
                         }
 
-                        //конец левого блока
                         echo '
-                                    </div>';
-
-                        //начало правого блока
-//                        echo '
-//                                    <div style="display: inline-block; vertical-align: top; /*border: 2px dotted rgb(201, 206, 206);*/">';
-//
-//                        echo '
-//                                        <div class="cellsBlock400px" style="font-size: 90%;">
-//                                            <div class="cellLeft">
-//                                            </div>
-//                                            <div class="cellRight" style="color: red;">
-//                                            </div>
-//                                        </div>';
-//
-//                        echo '
-//                                    </div>';
-                        //конец правого блока
-
-                        echo '
-                        </div>';
-
-                        echo '
-                            <input type="button" class="b" value="Применить" onclick="fl_editSchedulerReport_add(\''.$_GET['report_id'].'\');">';
+                            </div>';
 
                     }else{
-                        echo '<span style="color: red;">Ничего не найдено</span>';
+                        echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
                     }
-
-                    echo '
-                        </div>';
-
                 }else{
                     echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
                 }
             }else{
-                echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+                echo '<h1>Редактировать можно только текущее число</h1>';
             }
             echo '
                 </div>
