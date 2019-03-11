@@ -3502,7 +3502,7 @@
 
             $msql_cnnct = ConnectToDB ();
 
-            $offices_j = getAllFilials(false, false, false);
+            $offices_j = getAllFilials(false, false, true);
             //var_dump($offices_j);
 
             foreach ($data as $items) {

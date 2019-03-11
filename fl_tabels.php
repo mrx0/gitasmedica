@@ -285,7 +285,7 @@
                                             </div>';
 
                                     echo '
-                                            <div style="position: absolute; cursor: pointer; top: 1px; right: 5px; font-size: 180%; color: #0C0C0C;" onclick="refreshOnlyThisTab($(this), '.$type . ',' . $worker['id'] . ',' . $office['id'].');" title="Обновить эту вкладку">
+                                            <div id="refreshID_'.$type.'_'.$worker['id'].'_'.$office['id'].'" style="position: absolute; cursor: pointer; top: 1px; right: 5px; font-size: 180%; color: #0C0C0C;" onclick="refreshOnlyThisTab($(this), '.$type . ',' . $worker['id'] . ',' . $office['id'].'); fl_addCalcsIDsINSessionForTabel([], 0, 0, 0, 0);" title="Обновить эту вкладку">
                                                 <span style="font-size: 50%;">Обновить эту вкладку</span> <i class="fa fa-refresh" aria-hidden="true"></i>
                                             </div>';
 
@@ -328,6 +328,8 @@
 				
 				$(document).ready(function() {
 				    //console.log(123);
+				    
+				    //blockWhileWaiting (true);
 				    
 				    var ids = "0_0_0";
 				    var ids_arr = {};

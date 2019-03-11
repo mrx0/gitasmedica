@@ -142,7 +142,7 @@ if ($enter_ok){
 
                     echo '
                         <div style="margin: 5px 0; padding: 2px; text-align: right;">
-                            Сумма: <span class="summCalcsNPaid calculateOrder">'.$summCalcs.'</span> руб.
+                            Сумма: <span class="summCalcsForTabel calculateOrder">'.$summCalcs.'</span> руб.
                         </div>
                     </div>';
 
