@@ -993,6 +993,117 @@
         });
     }
 
+
+    //
+    function menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel){
+        //console.log(newTabel);
+
+        var buttonsStr = '';
+
+        if (newTabel) {
+            buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="fl_addNewTabel2(' + type_id + ', ' + worker_id + ', ' + filial_id + ')">';
+        }else{
+            buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="fl_addInExistTabel2(' + type_id + ', ' + worker_id + ', ' + filial_id + ')">';
+        }
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        }).css({
+            "top": "120px",
+            "height": "fit-content",
+            "width": "45%",
+            "background-color": "rgb(195, 194, 194)"
+        })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        /*"height": "100%",*/
+                        "border": "1px solid #AAA",
+                        "position": "relative",
+                        "background-color": "rgb(245, 245, 245)",
+                        "padding": "10px"
+                    })
+                    //.append('<span style="margin: 5px;"><i>Новый табель</i></span>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                /*"position": "absolute",*/
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-10px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%"
+                            })
+                            .append('<div style="margin: 0px;">'+res+'</div>')
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                /*"position": "absolute",*/
+                                "bottom": "2px",
+                                "width": "100%"
+                            })
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                            )
+                    )
+            );
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+    }
+
+    //
+    function menuForAddINExistNewTabel(){
+
+    }
+
+
+    //Добавить расчетные листы в новый табель, попутно создать этот новый табель (Пока только диалоговое окно)
+    function fl_addNewTabelIN2 (newTabel, type_id, worker_id, filial_id){
+
+        /*if (newTabel) {
+            var link = "fl_getCalcsFromSession_f.php";
+        }else{
+            var link = "fl_getCalcsFromSessionForExistTabel_f.php";
+        }*/
+
+        var link = "fl_getCalcsFromSession_f.php";
+
+        var reqData = {
+            newTabel: newTabel?1:0
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+
+                $('#overlay').show();
+
+                menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel);
+
+                /*if (newTabel) {
+                    menuForAddINNewTabel(res, type_id, worker_id, filial_id);
+                }else{
+                    menuForAddINExistNewTabel(res, type_id, worker_id, filial_id);
+                }*/
+
+            }
+        })
+    }
+
     //Добавляем в базу табель из сессии
     function fl_addNewTabel(){
 
@@ -1007,7 +1118,7 @@
                 {
                     tabelMonth: $("#tabelMonth").val(),
                     tabelYear: $("#tabelYear").val(),
-                    summCalcs: $(".summCalcsNPaid").html(),
+                    summCalcs: $(".summCalcsNPaid").html()
                 },
             cache: false,
             beforeSend: function() {
@@ -1022,6 +1133,54 @@
                     window.close('newTabelwindow');
                 }else{
                     $('#errror').html(res.data);
+                }
+            }
+        });
+    }
+
+    //Добавляем в базу новый табель и РЛ в него из сессии
+    function fl_addNewTabel2(type_id, worker_id, filial_id){
+        //console.log($(".summCalcsForTabel").html());
+
+        var link = "fl_tabel_add2_f.php";
+
+        var reqData = {
+            tabelMonth: $("#tabelMonth").val(),
+            tabelYear: $("#tabelYear").val(),
+            summCalcs: $(".summCalcsForTabel").html()
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                if(res.result == "success"){
+                    //console.log(res);
+
+                    //document.location.href = "fl_tabels.php";
+                    //window.close('newTabelwindow');
+
+                    $("#overlay").hide();
+                    $(".center_block").remove();
+
+                    setTimeout(function () {
+                        refreshOnlyThisTab($("#refreshID_"+type_id+"_"+worker_id+"_"+filial_id+""), type_id, worker_id, filial_id);
+                    }, 1000);
+
+
+                }else{
+                    $('#errror').html(res.data);
+                    //console.log(res);
                 }
             }
         });
@@ -1058,6 +1217,56 @@
                     window.close('oldTabelwindow');
                 }else{
                     $('#errror').html(res.data);
+                }
+            }
+        });
+    }
+
+//Добавляем в существующий табель РЛ из сессии
+    function fl_addInExistTabel2(type_id, worker_id, filial_id){
+
+        var link = "fl_add_in_tabel2_f.php";
+        //console.log(link);
+
+        var tabelForAdding = $('input[name=tabelForAdding]:checked').val();
+        //console.log(tabelForAdding);
+
+        var reqData = {
+            summCalcs: $(".summCalcsForTabel").html(),
+            tabelForAdding: tabelForAdding
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                console.log(res);
+
+                if(res.result == "success"){
+                    //console.log(res);
+
+                    //document.location.href = "fl_tabels.php";
+                    //window.close('newTabelwindow');
+
+                    $("#overlay").hide();
+                    $(".center_block").remove();
+
+                    setTimeout(function () {
+                        refreshOnlyThisTab($("#refreshID_"+type_id+"_"+worker_id+"_"+filial_id+""), type_id, worker_id, filial_id);
+                    }, 1000);
+
+
+                }else{
+                    $('#errror').html(res.data);
+                    //console.log(res);
                 }
             }
         });
@@ -2176,6 +2385,51 @@
 
     }
 
+    //Добавление в сессию данных по рассчетным листам, которые надо добавить, (ID)
+    function fl_addCalcsIDsINSessionForTabel(calc_id_arr, add_status, type, worker_id, filial_id){
+        //console.log(calc_id_arr);
+        //console.log(add_status);
+        //console.log(type);
+        //console.log(worker_id);
+        //console.log(filial_id);
+
+        var link = "fl_addCalcsIDsINSessionForTabel2.php";
+
+        var reqData = {
+            calc_id_arr: calc_id_arr,
+            add_status: add_status,
+            type: type,
+            worker_id: worker_id,
+            filial_id: filial_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == "success") {
+                    //console.log (res);
+
+                }else{
+                    //--
+                }
+            }
+        })
+
+    }
+
+
+
+
 
     $(document).ready(function() {
         //console.log(123);
@@ -2187,15 +2441,40 @@
             //console.log(checked_status);
             //console.log($(this).parent());
 
+            var add_status = 0;
+            var calc_id_arr = [];
+
+            //Меняем цвет блока
             if (checked_status){
                 $(this).parent().parent().parent().css({"background-color": "#83DB53"});
+                add_status = 1;
             }else{
                 $(this).parent().parent().parent().css({"background-color": "rgb(255, 255, 255);"});
             }
+
+            //Получим ID расчетного листа
+            //console.log($(this).attr("name").split("_"));
+            //!!! Лишнее действие, надо бы посмотреть и переделать потом без split, чтоб данные писались в DOM сразу в виде чистого ID
+            var ids_arr = $(this).attr("name").split("_");
+            //Массив с ID расчетных листов
+            calc_id_arr.push(ids_arr[1]);
+            //console.log(calc_id);
+            //console.log(checked_status);
+
+            //Дополнительные данные
+            var data_arr = $(this).attr("chkBoxData").split("_");
+
+            //Добавим в сессию данные
+            fl_addCalcsIDsINSessionForTabel(calc_id_arr, add_status, data_arr[1], data_arr[2], data_arr[3]);
+
         });
 
 
         $("body").on("click", ".checkAll", function(){
+
+            var add_status = 0;
+            var calc_id_arr = [];
+
             var checked_status = $(this).is(":checked");
             var thisId = $(this).attr("id");
 
@@ -2203,11 +2482,25 @@
                 if (checked_status){
                     $(this).prop("checked", true);
                     $(this).parent().parent().parent().css({"background-color": "#83DB53"});
+                    add_status = 1;
                 }else{
                     $(this).prop("checked", false);
                     $(this).parent().parent().parent().css({"background-color": "rgb(255, 255, 255);"});
                 }
+
+                //Получим ID расчетного листа
+                var ids_arr = $(this).attr("name").split("_");
+                //Массив с ID расчетных листов
+                calc_id_arr.push(ids_arr[1]);
+
             });
+
+            //Дополнительные данные
+            var data_arr = $(this).attr("chkBoxData").split("_");
+
+            //Добавим в сессию данные
+            fl_addCalcsIDsINSessionForTabel(calc_id_arr, add_status, data_arr[1], data_arr[2], data_arr[3]);
+
         });
 
         //Рабочий пример клика на элементе после подгрузки его в DOM
@@ -2346,6 +2639,9 @@
 
 
                 }
+
+                //!!! тест. Разблокируем страницу, когда все загрузилось
+                //blockWhileWaiting (false);
             }
         });
     }
@@ -2444,8 +2740,8 @@
         }
         //console.log(month);
 
-        var needCalcObj = thisObj.parent().find('.tableDataNPaidCalcs')
-        var needTabelObj = thisObj.parent().find('.tableTabels')
+        var needCalcObj = thisObj.parent().find('.tableDataNPaidCalcs');
+        var needTabelObj = thisObj.parent().find('.tableTabels');
 
 
         var reqData = {

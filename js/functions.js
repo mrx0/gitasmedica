@@ -131,6 +131,27 @@
         return ' rgb('+red+', '+green+', 0)';
     }
 
+    //Вывод данных сессии в консоль
+    function fromSessionInConsole(){
+
+        var link = "from_session_in_console.php";
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:{a:1},
+            cache: false,
+            beforeSend: function() {
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                console.log(res);
+            }
+        });
+	}
+
     //Для поиска сертификата из модального окна
     $('#search_cert').bind("change keyup input click", function() {
 
@@ -8505,6 +8526,13 @@
         //WaitForCloseWindow(openedWindow);
 
         return openedWindow;
+    }
+
+	//Создание нового табеля - открываем в модальном окне
+    function iOpenNewWindow2(url, name, options){
+
+
+
     }
 
     //Получаем, показываем направления
