@@ -47,7 +47,12 @@
 //                }
 
                 if (!empty($_SESSION['fl_calcs_tabels2'])) {
-                    echo json_encode(array('result' => 'success', 'isset' => TRUE));
+                    if (!empty($_SESSION['fl_calcs_tabels2']['data'])) {
+                        echo json_encode(array('result' => 'success', 'isset' => TRUE));
+                    }else{
+                        unset($_SESSION['fl_calcs_tabels2']);
+                        echo json_encode(array('result' => 'success', 'isset' => FALSE));
+                    }
                 } else {
                     unset($_SESSION['fl_calcs_tabels2']);
                     echo json_encode(array('result' => 'success', 'isset' => FALSE));
