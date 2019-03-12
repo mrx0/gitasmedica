@@ -13,6 +13,7 @@
 
 
 	require_once 'header.php';
+    require_once 'blocks_dom.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
@@ -389,11 +390,13 @@
                 }
                 //var_dump($hours_j);
 
+                $block_fast_filter = '';
+
                 //Календарная сетка
                 echo '
                         <table style="border-bottom: 1px solid #BFBCB5; border-right: 1px solid #BFBCB5; margin:5px; font-size: 80%;">
                             <tr class="<!--sticky f-sticky-->">
-                                <td style="width: 260px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>ФИО</i></td>
+                                <td style="width: 260px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>ФИО'.$block_fast_filter.'</i></td>
                                 <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Категория</i></b></td>
                                 <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Прикреплён</i></b></td>
                                 <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Часы</i><br><span style="color: rgb(158, 158, 158); font-size: 80%;">всего/ норма/ %</span></td>
@@ -401,6 +404,7 @@
                                 <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Закрыто работ на сумму, руб.</i></td>
                                 <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Оклад, руб.</i></td>
                                 <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Итого к выплате, руб.</i></td>
+                                <td style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">-</td>
                                 ';
                 echo '
                             </tr>';
@@ -525,7 +529,10 @@
                         //Итого
 
                         echo '
-                                    </td>                                    
+                                    </td> 
+                                    <td style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">
+                                        <i class="fa fa-file-text" aria-hidden="true"></i>
+                                    </td>
                                 </tr>';
                     }
                 }

@@ -18,104 +18,105 @@
         $temp_res = array();
         $result = '';
 
-        //var_dump($_SESSION);
+        var_dump($_SESSION);
 
         if (isset($_SESSION['fl_calcs_tabels2'])) {
 
-            if (!empty($_SESSION['fl_calcs_tabels2'])) {
-                //var_dump($_SESSION['fl_calcs_tabels2']);
+            if (isset($_SESSION['fl_calcs_tabels2']['data'])) {
+                if (!empty($_SESSION['fl_calcs_tabels2']['data'])) {
+                    //var_dump($_SESSION['fl_calcs_tabels2']);
 
-                //$calcData_Arr = explode('_', $_SESSION['fl_calcs_tabels']['data']);
-                $typeID = $_SESSION['fl_calcs_tabels2']['type'];
-                $filialID = $_SESSION['fl_calcs_tabels2']['filial_id'];
-                $workerID =$_SESSION['fl_calcs_tabels2']['worker_id'];
+                    //$calcData_Arr = explode('_', $_SESSION['fl_calcs_tabels']['data']);
+                    $typeID = $_SESSION['fl_calcs_tabels2']['type'];
+                    $filialID = $_SESSION['fl_calcs_tabels2']['filial_id'];
+                    $workerID = $_SESSION['fl_calcs_tabels2']['worker_id'];
 
-                $summCalcs = 0;
+                    $summCalcs = 0;
 
-                $filials_j = getAllFilials(false, false, false);
+                    $filials_j = getAllFilials(false, false, false);
 
-                $result .= '
+                    $result .= '
                     <header style="margin-bottom: 10Px;">';
 
-                if ($_POST['newTabel'] == 1) {
-                    $result .= '
+                    if ($_POST['newTabel'] == 1) {
+                        $result .= '
                         <h2>Добавление РЛ в новый табель</h2>';
-                }else{
-                    $result .= '
+                    } else {
+                        $result .= '
                         <h2>Добавление РЛ в существующий табель</h2>';
-                }
+                    }
 
 
-                $result .= '
+                    $result .= '
                         <div style="text-align: left;">
 						    ' . WriteSearchUser('spr_workers', $workerID, 'user', true) . ' / ' . $filials_j[$filialID]['name'] . '<br><br>';
-                if ($_POST['newTabel'] == 1) {
-                    $result .= '
+                    if ($_POST['newTabel'] == 1) {
+                        $result .= '
 						    Месяц:
 				            <select id="tabelMonth">';
 
-                    foreach ($monthsName as $val => $name) {
+                        foreach ($monthsName as $val => $name) {
 
-                        if ($val == date('m')) {
-                            $selected = 'selected';
-                        } else {
-                            $selected = '';
+                            if ($val == date('m')) {
+                                $selected = 'selected';
+                            } else {
+                                $selected = '';
+                            }
+
+                            $result .= '
+                                    <option value="' . $val . '" ' . $selected . '>' . $name . '</option>';
+
                         }
 
                         $result .= '
-                                    <option value="' . $val . '" ' . $selected . '>' . $name . '</option>';
-
-                    }
-
-                    $result .= '
 			                </select>
 			                Год: <input id="tabelYear" type="number" value="' . date('Y') . '" min="2000" max="2030" size="4" style="width: 60px;">
                         </div>';
-                }
-                $result .= '
+                    }
+                    $result .= '
 					</header>';
 
-                $calcArr = $_SESSION['fl_calcs_tabels2']['data'];
-                $queryDop = '';
-                $calcsArrayData = array();
-                $temp_res = '';
+                    $calcArr = $_SESSION['fl_calcs_tabels2']['data'];
+                    $queryDop = '';
+                    $calcsArrayData = array();
+                    $temp_res = '';
 
-                $msql_cnnct = ConnectToDB ();
+                    $msql_cnnct = ConnectToDB();
 
-                foreach ($calcArr as $calcId => $status){
-                    $queryDop .=  "'{$calcId}'  OR `id`=";
-                }
-
-                $queryDop = substr($queryDop, 0, -10);
-
-                $query = "SELECT * FROM `fl_journal_calculate` WHERE `id`=".$queryDop;
-                //var_dump($query);
-
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-                $number = mysqli_num_rows($res);
-
-                if ($number != 0) {
-                    while ($arr = mysqli_fetch_assoc($res)){
-                        array_push($calcsArrayData, $arr);
+                    foreach ($calcArr as $calcId => $status) {
+                        $queryDop .= "'{$calcId}'  OR `id`=";
                     }
-                }
-                //var_dump($calcsArrayData);
 
-                if (!empty($calcsArrayData)){
+                    $queryDop = substr($queryDop, 0, -10);
 
-                    $result .= '
+                    $query = "SELECT * FROM `fl_journal_calculate` WHERE `id`=" . $queryDop;
+                    //var_dump($query);
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                    $number = mysqli_num_rows($res);
+
+                    if ($number != 0) {
+                        while ($arr = mysqli_fetch_assoc($res)) {
+                            array_push($calcsArrayData, $arr);
+                        }
+                    }
+                    //var_dump($calcsArrayData);
+
+                    if (!empty($calcsArrayData)) {
+
+                        $result .= '
                                 <div style="display: block; text-align: center;">
                                     <div class="tableDataNPaidCalcs" style="width: 210px; background-color: rgb(234, 234, 234); text-align: left; height: 280px; overflow-y: scroll;  overflow-x: hidden;">';
 
-                    $result .= '
+                        $result .= '
                                 <div style="padding: 2px; text-align: center; color: #717171; font-size: 80%;">
                                     Расчётные листы, <br>которые хотите добавить
                                 </div>';
 
-                    foreach ($calcsArrayData as $rezData) {
-                        $temp_res .=
-                            '
+                        foreach ($calcsArrayData as $rezData) {
+                            $temp_res .=
+                                '
                                         <div class="cellsBlockHover" style="background-color: white; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
                                             <div style="display: inline-block; width: 190px;">
                                                 <div>
@@ -125,7 +126,7 @@
                                                             <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                         </div>
                                                         <div style="display: inline-block; vertical-align: middle; font-size: 70%;">
-                                                            #'.$rezData['id'].' / ' . date('d.m.y', strtotime($rezData['create_time'])) . '
+                                                            #' . $rezData['id'] . ' / ' . date('d.m.y', strtotime($rezData['create_time'])) . '
                                                         </div>
                                                     </div>
                                                     <div>
@@ -142,83 +143,105 @@
                                             <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
                                         </div>';
 
-                        $summCalcs += $rezData['summ'];
+                            $summCalcs += $rezData['summ'];
 
-                    }
+                        }
 
-                    $result .= $temp_res;
+                        $result .= $temp_res;
 
-                    $result .= '
+                        $result .= '
                                     </div>';
 
 
+                        //Если хотим добавить в существующий уже табель
+                        if ($_POST['newTabel'] != 1) {
 
-                    //Если хотим добавить в существующий уже табель
-                    if ($_POST['newTabel'] != 1) {
-
-                        $result .= '
+                            $result .= '
                                     <div class="tableTabels" style="width: 210px; background-color: rgb(234, 234, 234); text-align: left; height: 280px; overflow-y: scroll;  overflow-x: hidden;">';
 
-                        //$invoice_rez_str = '';
-                        //$summCalc = 0;
+                            //$invoice_rez_str = '';
+                            //$summCalc = 0;
 
-                        //Выберем табели уже существующие для этого работника
-                        //$query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$typeID}' AND `worker_id`='{$workerID}' AND `office_id`='{$filialID}' AND `status` <> '7' AND `status` <> '9';";
-                        $query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$typeID}' AND `worker_id`='{$workerID}' AND `office_id`='{$filialID}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
+                            //Выберем табели уже существующие для этого работника
+                            //$query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$typeID}' AND `worker_id`='{$workerID}' AND `office_id`='{$filialID}' AND `status` <> '7' AND `status` <> '9';";
+                            $query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$typeID}' AND `worker_id`='{$workerID}' AND `office_id`='{$filialID}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
 
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-                        $number = mysqli_num_rows($res);
+                            $number = mysqli_num_rows($res);
 
-                        if ($number != 0) {
-                            while ($arr = mysqli_fetch_assoc($res)) {
-                                //array_push($rez, $arr);
+                            if ($number != 0) {
+                                while ($arr = mysqli_fetch_assoc($res)) {
+                                    //array_push($rez, $arr);
 
-                                if (!isset($rez[$arr['year']])) {
-                                    $rez[$arr['year']] = array();
+                                    if (!isset($rez[$arr['year']])) {
+                                        $rez[$arr['year']] = array();
+                                    }
+                                    if (!isset($rez[$arr['year']][$arr['month']])) {
+                                        $rez[$arr['year']][$arr['month']] = array();
+                                    }
+
+                                    array_push($rez[$arr['year']][$arr['month']], $arr);
+
                                 }
-                                if (!isset($rez[$arr['year']][$arr['month']])) {
-                                    $rez[$arr['year']][$arr['month']] = array();
-                                }
 
-                                array_push($rez[$arr['year']][$arr['month']], $arr);
+                                if (!empty($rez)) {
 
-                            }
+                                    //include_once 'fl_showCalculateRezult.php';
 
-                            if (!empty($rez)) {
+                                    krsort($rez);
 
-                                //include_once 'fl_showCalculateRezult.php';
-
-                                krsort($rez);
-
-                                $result .= '
+                                    $result .= '
                                         <div style="padding: 2px; text-align: center; color: #717171; font-size: 80%;">
                                             Выберите табель, <br>в который хотите добавить РЛ
                                         </div>';
 
-                                foreach ($rez as $year => $yearData) {
+                                    foreach ($rez as $year => $yearData) {
 
-                                    $result .= '
-                                        <div style="margin: 15px 0 -2px; padding: 2px; text-align: left; color: #717171;">
-                                            Год <span style="color: #252525; font-weight: bold;">' . $year . '</span>
-                                        </div>';
+                                        $bgColor = '';
+                                        $display = '';
+                                        $onclick = '';
+                                        $lastYearDescr = '';
 
-                                    ksort($yearData);
-
-                                    //$yearData = array_reverse($yearData);
-
-                                    foreach ($yearData as $month => $monthData) {
+                                        if ($year != date('Y', time())) {
+                                            $display = 'display: none;';
+                                            $onclick = 'onclick="$(\'#data_' . $year . '_' . $workerID . '_' . $filialID . '\').stop(true, true).slideToggle(\'slow\');"';
+                                            $lastYearDescr = ' <span style="font-size: 85%;"> Развернуть/Свернуть</span>';
+                                        }
 
                                         $result .= '
-                                        <div style="margin: 2px 0 2px; padding: 2px; text-align: right; color: #717171;">
-                                            Месяц <span style="color: #252525; font-weight: bold;">' . $monthsName[$month] . '</span>
+                                        <div style="margin: 15px 0 -2px; padding: 2px; text-align: left; color: #717171; cursor: pointer; ' . $bgColor . '" ' . $onclick . '">
+                                            Год <span style="color: #252525; font-weight: bold;">' . $year . '</span>' . $lastYearDescr . '
                                         </div>';
 
-                                        foreach ($monthData as $rezData) {
+                                        $result .= '
+                                        <div id="data_' . $year . '_' . $workerID . '_' . $filialID . '"  style="' . $display . '">';
+
+                                        krsort($yearData);
+
+                                        //$yearData = array_reverse($yearData);
+
+                                        foreach ($yearData as $month => $monthData) {
+
+                                            $bgColor = '';
+
+                                            if ($year == date('Y', time())) {
+                                                if (date('n', time()) == $month) {
+                                                    //$bgColor = 'background-color: rgba(244, 254, 63, 0.54);';
+                                                    $bgColor = 'background-color: rgb(255, 241, 114);';
+                                                }
+                                            }
 
                                             $result .= '
+                                        <div style="margin: 2px 0 2px; padding: 2px; text-align: right; color: #717171;">
+                                            <!--Месяц --><span style="color: #252525; font-weight: bold; ' . $bgColor . '">' . $monthsName[$month] . '</span>
+                                        </div>';
+
+                                            foreach ($monthData as $rezData) {
+
+                                                $result .= '
                                         <!--<div class="cellsBlockHover" style=" border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">-->
-                                        <div class="cellsBlockHover" style="background-color: white; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
+                                        <div class="cellsBlockHover" style="background-color: white; border: 1px solid #BFBCB5; margin-top: 1px; position: relative; ' . $bgColor . '">
                                             <div style="display: inline-block; /*width: 150px;*/">
                                                 <!--<a href="fl_tabel.php?id=' . $rezData['id'] . '" class="ahref">-->
                                                     <div>
@@ -231,7 +254,7 @@
                                                     </div>
                                                     <div>
                                                         <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 13px">
-                                                            Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 14px">' . $rezData['summ'] . '</span> руб.
+                                                            Сумма РЛ: <span class="calculateInvoice calculateCalculateN" style="font-size: 14px">' . $rezData['summ'] . '</span> руб.
                                                         </div>
                                                     </div>
                                                     
@@ -246,47 +269,50 @@
 
                                         </div>';
 
-                                            //$summCalc += $rezData['summ'];
+                                                //$summCalc += $rezData['summ'];
 
+                                            }
                                         }
+
+                                        $result .= '
+                                    </div>';
+
                                     }
 
+                                } else {
+
                                 }
-
-                            } else {
-
                             }
+
+                            $result .= '
+                                    </div>';
                         }
+                        $result .= '
+                                </div>';
 
                         $result .= '
-                                    </div>';
-                    }
-                    $result .= '
-                                </div>';
-
-                    $result .= '
                                 <div class="tableDataNPaidCalcs" style="background-color: white; margin-top: 5px; border: none;">
                                     <div style="background-color: white; margin: 5px 0; padding: 2px; text-align: right;">
-                                        Сумма: <span class="summCalcsForTabel calculateOrder">'.$summCalcs.'</span> руб.
+                                        Сумма: <span class="summCalcsForTabel calculateOrder">' . $summCalcs . '</span> руб.
                                     </div>
                                 </div>';
-                    $result .= '
+                        $result .= '
                             </div>';
 
 
+                    }
+
+                    echo $result;
+
+                    /*echo '
+                        </div>
+                        <div style="margin: 5px 0;">
+
+                            <input type="button" class="b" value="Сохранить" onclick="fl_addNewTabel();">
+                        </div>
+                        <div id="doc_title">Добавление расчётных листов в Новый табель - Асмедика</div>';*/
+
                 }
-
-                echo $result;
-
-                /*echo '
-                    </div>
-                    <div style="margin: 5px 0;">
-
-                        <input type="button" class="b" value="Сохранить" onclick="fl_addNewTabel();">
-                    </div>
-                    <div id="doc_title">Добавление расчётных листов в Новый табель - Асмедика</div>';*/
-
-
             }
         }
     }
