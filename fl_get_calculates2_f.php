@@ -1,6 +1,6 @@
 <?php
 
-//fl_get_calculates_f.php
+//fl_get_calculates2_f.php
 //Функция поиска данных расчётов за период
 
     session_start();
@@ -51,14 +51,27 @@
                             SELECT 
                             jcalc.id, jcalc.create_time, jcalc.summ, jcalc.invoice_id, jcalc.office_id, jcalc.zapis_id, jcalc.type, jcalc.client_id,
                             ji.summ AS invoice_summ, ji.summins AS invoice_summins, ji.create_time  AS invoice_create_time,
-                            sc.name AS client_name, sc.full_name AS client_full_name,
+                            sc.name AS client_name, sc.full_name AS client_full_name,";
+                if (($_POST['permission'] == 5) || ($_POST['permission'] == 6)) {
+                    $query .= "
+                            wm.id AS worker_mark,";
+                }
+                $query .= "
                             GROUP_CONCAT(DISTINCT jcalcex.percent_cats ORDER BY jcalcex.percent_cats ASC SEPARATOR ',') AS percent_cats 
                             FROM `fl_journal_calculate` jcalc
                             LEFT JOIN `fl_journal_calculate_ex` jcalcex ON jcalc.id = jcalcex.calculate_id
                             
                             LEFT JOIN `journal_invoice` ji ON ji.id = jcalc.invoice_id
-                            LEFT JOIN `spr_clients` sc ON sc.id = jcalc.client_id
-                            
+                            LEFT JOIN `spr_clients` sc ON sc.id = jcalc.client_id";
+                if ($_POST['permission'] == 5) {
+                    $query .= "
+                            LEFT JOIN `journal_tooth_status` wm ON wm.zapis_id = jcalc.zapis_id";
+                }
+                if($_POST['permission'] == 6){
+                    $query .= "
+                            LEFT JOIN `journal_cosmet1` wm ON wm.zapis_id = jcalc.zapis_id";
+                }
+                $query .= "
                             WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.status <> '7'
                                             AND jcalc.id NOT IN ( SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id ) 
                             AND jcalc.date_in > '2018-05-31'
@@ -127,23 +140,7 @@
                                 $doctor_mark = '';
                                 $background_color = 'background-color: rgb(255, 255, 255);';
 
-                                if ($invoice_type == 5) {
-                                    $query = "SELECT `id` FROM `journal_tooth_status` WHERE `zapis_id`='$zapis_id' LIMIT 1";
-
-                                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-                                    $number = mysqli_num_rows($res);
-                                }
-
-                                if ($invoice_type == 6) {
-                                    $query = "SELECT `id` FROM `journal_cosmet1` WHERE `zapis_id`='$zapis_id' LIMIT 1";
-
-                                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-                                    $number = mysqli_num_rows($res);
-                                }
-
-                                if ($number == 0) {
+                                if ($rezData['worker_mark'] == NULL) {
                                     $doctor_mark = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет отметки врача"></i>';
                                     $background_color = 'background-color: rgba(255, 141, 141, 0.2);';
                                 }
