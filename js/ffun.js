@@ -2646,6 +2646,96 @@
         });
     }
 
+    //Получаем необработанные расчетные листы v2.0
+    function getCalculatesfunc2 (reqData){
+        //  console.log(reqData);
+
+        $.ajax({
+            url:"fl_get_calculates2_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //thisObj.html("<div style='width: 120px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка<br>расч. листов</span></div>");
+            },
+            success:function(res){
+                //console.log(res);
+                //$("#tabs-"+reqData.permission+"_"+reqData.worker).html(res);
+
+                if(res.result == 'success'){
+                    //$("#tabs-"+reqData.permission+"_"+reqData.worker).html(res);
+
+                    //!!! Размер объекта JS
+                    //console.log(Object.keys(res.data).length);
+
+                    if (Object.keys(res.data).length > 0){
+
+                        var data = res.data;
+
+                        for(var filial_id in data){
+                            //console.log(filial_id);
+                            //console.log(data[filial_id]);
+                            //console.log("#"+reqData.permission+"_"+reqData.worker+"_"+filial_id);
+
+                            $("#"+reqData.permission+"_"+reqData.worker+"_"+filial_id).html(data[filial_id].data);
+
+                            //Показываем оповещения на фио и филиале
+                            $("#tabs_notes_"+reqData.permission+"_"+reqData.worker).css("display", "inline-block");
+                            $("#tabs_notes_"+reqData.permission+"_"+reqData.worker+"_"+filial_id).css("display", "inline-block");
+
+                        }
+                    }
+
+                }
+
+/*                if(res.result == 'success'){
+
+                    ids = thisObj.attr("id");
+                    ids_arr = ids.split("_");
+                    //console.log(ids_arr);
+
+                    permission = ids_arr[0];
+                    worker = ids_arr[1];
+                    office = ids_arr[2];
+
+                    if (res.status == 1){
+                        thisObj.html(res.data);
+
+                        //Показываем оповещения на фио и филиале
+                        $("#tabs_notes_"+permission+"_"+worker).css("display", "inline-block");
+                        $("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display", "inline-block");
+
+                        thisObj.parent().find(".summCalcsNPaid").html(res.summCalc);
+
+                    }else{
+                        $("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display", "none");
+                    }
+
+                    if (res.status == 0){
+                        thisObj.html("Нет данных по необработанным расчетным листам");
+
+                        //Спрячем пустые вкладки, где нет данных
+
+                        //console.log($(".tabs-"+permission+"_"+worker+"_"+office).css("display"));
+
+                        //$(".tabs-"+permission+"_"+worker+"_"+office).hide();
+                    }
+                }
+
+                if(res.result == 'error'){
+                    thisObj.html(res.data);
+
+
+                }*/
+
+                //!!! тест. Разблокируем страницу, когда все загрузилось
+                //blockWhileWaiting (false);
+            }
+        });
+    }
+
     //Получаем необработанные расчетные листы
     function getTabelsfunc (thisObj, reqData){
         //console.log (reqData);
