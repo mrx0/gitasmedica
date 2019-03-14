@@ -398,6 +398,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         $ins_summ = 0;
                         $garantee_summ = 0;
 
+                        $invoice_wo_cat = array();
+
                         foreach ($journal as $item){
                             //var_dump($item);
                             //var_dump($item['id']);
@@ -424,6 +426,11 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                                         } else {
                                             $temp_cat_array[$item['percent_cats']] += $item['itog_price'];
+                                        }
+                                        if ($item['percent_cats'] == 0) {
+                                            if (!in_array($item['invoice_id'], $invoice_wo_cat)) {
+                                                array_push($invoice_wo_cat, $item['invoice_id']);
+                                            }
                                         }
                                     }
                                     //}
@@ -477,6 +484,16 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                     <div style="padding: 10px 4px 2px;">
                                         Сделано по гарантии на сумму: <b style="color: red;">' . number_format($garantee_summ, 0, ',', ' ') . ' руб.</b>
                                     </div>';
+                        }
+
+                        //Наряды без категорий
+                        if (!empty($invoice_wo_cat)){
+                            echo '<div style="padding: 10px 4px 2px;">Наряды без категорий:';
+
+                            for($i=0; $i < count($invoice_wo_cat); $i++){
+                                echo '<a href="invoice.php?id='.$invoice_wo_cat[$i].'" class="ahref button_tiny" style="margin: 0 3px;">'.$invoice_wo_cat[$i].'</a>';
+                            }
+                            echo '</div>';
                         }
                         echo '
                                     <!--<div id="canvas-holder" style="display: inline-block; vertical-align: top; /*border: 1px dotted #CCC;*/ width: 450px;">
