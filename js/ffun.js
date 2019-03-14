@@ -2427,7 +2427,21 @@
 
     }
 
+    //Чистим все отмеченные checkbox и сессионный данные
+    function clearAllChecked(){
 
+        fl_addCalcsIDsINSessionForTabel([], 0, 0, 0, 0);
+
+        $('input:checked').prop('checked', false);
+
+        $('.calculateBlockItem').each(function() {
+            if ($(this).attr("worker_mark") == 1){
+                $(this).css({'background-color': '#FFF'});
+            }else{
+                $(this).css({'background-color': 'rgba(255, 141, 141, 0.2)'});
+            }
+        });
+    }
 
 
 
@@ -2440,6 +2454,7 @@
             var checked_status = $(this).prop("checked");
             //console.log(checked_status);
             //console.log($(this).parent());
+            //console.log($(this).parent().parent().parent().attr("doctor_mark"));
 
             var add_status = 0;
             var calc_id_arr = [];
@@ -2449,7 +2464,13 @@
                 $(this).parent().parent().parent().css({"background-color": "#83DB53"});
                 add_status = 1;
             }else{
-                $(this).parent().parent().parent().css({"background-color": "rgb(255, 255, 255);"});
+                    //console.log($(this).parent().parent().parent().attr("worker_mark"));
+
+                if ($(this).parent().parent().parent().attr("worker_mark") == 1) {
+                    $(this).parent().parent().parent().css({"background-color": "rgb(255, 255, 255);"});
+                }else{
+                    $(this).parent().parent().parent().css({"background-color": "rgba(255, 141, 141, 0.2);"});
+                }
             }
 
             //Получим ID расчетного листа
@@ -2485,7 +2506,11 @@
                     add_status = 1;
                 }else{
                     $(this).prop("checked", false);
-                    $(this).parent().parent().parent().css({"background-color": "rgb(255, 255, 255);"});
+                    if ($(this).parent().parent().parent().attr("worker_mark") == 1) {
+                        $(this).parent().parent().parent().css({"background-color": "rgb(255, 255, 255);"});
+                    }else{
+                        $(this).parent().parent().parent().css({"background-color": "rgba(255, 141, 141, 0.2);"});
+                    }
                 }
 
                 //Получим ID расчетного листа
@@ -2639,6 +2664,96 @@
 
 
                 }
+
+                //!!! тест. Разблокируем страницу, когда все загрузилось
+                //blockWhileWaiting (false);
+            }
+        });
+    }
+
+    //Получаем необработанные расчетные листы v2.0
+    function getCalculatesfunc2 (reqData){
+        //  console.log(reqData);
+
+        $.ajax({
+            url:"fl_get_calculates2_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //thisObj.html("<div style='width: 120px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка<br>расч. листов</span></div>");
+            },
+            success:function(res){
+                //console.log(res);
+                //$("#tabs-"+reqData.permission+"_"+reqData.worker).html(res);
+
+                if(res.result == 'success'){
+                    //$("#tabs-"+reqData.permission+"_"+reqData.worker).html(res);
+
+                    //!!! Размер объекта JS
+                    //console.log(Object.keys(res.data).length);
+
+                    if (Object.keys(res.data).length > 0){
+
+                        var data = res.data;
+
+                        for(var filial_id in data){
+                            //console.log(filial_id);
+                            //console.log(data[filial_id]);
+                            //console.log("#"+reqData.permission+"_"+reqData.worker+"_"+filial_id);
+
+                            $("#"+reqData.permission+"_"+reqData.worker+"_"+filial_id).html(data[filial_id].data);
+
+                            //Показываем оповещения на фио и филиале
+                            $("#tabs_notes_"+reqData.permission+"_"+reqData.worker).css("display", "inline-block");
+                            $("#tabs_notes_"+reqData.permission+"_"+reqData.worker+"_"+filial_id).css("display", "inline-block");
+
+                        }
+                    }
+
+                }
+
+/*                if(res.result == 'success'){
+
+                    ids = thisObj.attr("id");
+                    ids_arr = ids.split("_");
+                    //console.log(ids_arr);
+
+                    permission = ids_arr[0];
+                    worker = ids_arr[1];
+                    office = ids_arr[2];
+
+                    if (res.status == 1){
+                        thisObj.html(res.data);
+
+                        //Показываем оповещения на фио и филиале
+                        $("#tabs_notes_"+permission+"_"+worker).css("display", "inline-block");
+                        $("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display", "inline-block");
+
+                        thisObj.parent().find(".summCalcsNPaid").html(res.summCalc);
+
+                    }else{
+                        $("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display", "none");
+                    }
+
+                    if (res.status == 0){
+                        thisObj.html("Нет данных по необработанным расчетным листам");
+
+                        //Спрячем пустые вкладки, где нет данных
+
+                        //console.log($(".tabs-"+permission+"_"+worker+"_"+office).css("display"));
+
+                        //$(".tabs-"+permission+"_"+worker+"_"+office).hide();
+                    }
+                }
+
+                if(res.result == 'error'){
+                    thisObj.html(res.data);
+
+
+                }*/
 
                 //!!! тест. Разблокируем страницу, когда все загрузилось
                 //blockWhileWaiting (false);
@@ -3286,6 +3401,8 @@
         //убираем ошибки
         hideAllErrors ();
 
+        var errors = false;
+
         //Соберём данные по часам
         var workerHoursValues_arr = {};
         var workerTypesValues_arr = {};
@@ -3294,56 +3411,67 @@
             // console.log($(this).attr('worker_id'));
             // console.log($(this).val());
 
-            workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
-            workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
+            if (isNaN($(this).val())){
+                errors = true;
 
-        });
-        //console.log(workerHoursValues_arr);
-        console.log(workerTypesValues_arr);
+                //console.log("#hours_"+$(this).attr('worker_id')+"_num_error");
 
-        var link = "fl_createSchedulerReport_add_f.php";
-
-        var filial_id = $("#SelectFilial").val();
-
-        var reqData = {
-            date: $("#iWantThisDate2").val(),
-            filial_id: filial_id,
-            workers_hours_data: workerHoursValues_arr,
-            workers_types_data: workerTypesValues_arr
-        };
-        //console.log(reqData);
-
-        $.ajax({
-            url: link,
-            global: false,
-            type: "POST",
-            dataType: "JSON",
-            data: reqData,
-            cache: false,
-            beforeSend: function() {
-                //$('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-            },
-            // действие, при ответе с сервера
-            success: function(res){
-                //console.log(res.data);
-
-                //!!! Переделать тут нормально
-                if(res.result == 'success') {
-                    //console.log('success');
-                    $('#data').html(res.data);
-                    setTimeout(function () {
-                        //window.location.replace('stat_cashbox.php');
-                        //window.location.replace('scheduler3.php?filial_id='+filial_id);
-                        window.location.href = 'scheduler3.php?filial_id='+filial_id;
-                        //console.log('client.php?id='+id);
-                    }, 500);
-                }else{
-                    //console.log('error');
-                    $('#errrror').html(res.data);
-                    //$('#errrror').html('');
-                }
+                $("#hours_"+$(this).attr('worker_id')+"_num_error").html("В этом поле ошибка");
+                $("#hours_"+$(this).attr('worker_id')+"_num_error").show();
+            }else{
+                workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
+                workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
             }
         });
+
+        if (!errors) {
+            //console.log(workerHoursValues_arr);
+            //console.log(workerTypesValues_arr);
+
+            var link = "fl_createSchedulerReport_add_f.php";
+
+            var filial_id = $("#SelectFilial").val();
+
+            var reqData = {
+                date: $("#iWantThisDate2").val(),
+                filial_id: filial_id,
+                workers_hours_data: workerHoursValues_arr,
+                workers_types_data: workerTypesValues_arr
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res.data);
+
+                    //!!! Переделать тут нормально
+                    if (res.result == 'success') {
+                        //console.log('success');
+                        $('#data').html(res.data);
+                        setTimeout(function () {
+                            //window.location.replace('stat_cashbox.php');
+                            //window.location.replace('scheduler3.php?filial_id='+filial_id);
+                            window.location.href = 'scheduler3.php?filial_id=' + filial_id;
+                            //console.log('client.php?id='+id);
+                        }, 500);
+                    } else {
+                        //console.log('error');
+                        $('#errrror').html(res.data);
+                        //$('#errrror').html('');
+                    }
+                }
+            });
+        }
     }
 
     //Редактирование рабочих часов сотрудникам на филиале
@@ -4264,7 +4392,7 @@
             var summHours = 0;
 
             $(".dayHours_"+worker_id).each(function() {
-                summHours += parseInt($(this).html(), 10) || 0;
+                summHours += parseFloat($(this).html(), 10) || 0;
                 //summHours += $(this).html();
                 //console.log($(this).html());
                 //console.log(parseInt($(this).html(), 10));
@@ -4352,12 +4480,12 @@
                         var filialMoney = Number($(this).attr("filialMoney"));
 
                         if (w_percentHours > 0){
-                            var itogZP = oklad + ((((filialMoney / 100) * worker_revenue_percent)/ 100) * w_percentHours);
+                            var itogZP = ((oklad * w_percentHours)/ 100) + ((((filialMoney/ 100) * worker_revenue_percent)/ 100) * w_percentHours);
                             //console.log(itogZP);
 
-                            $(this).html(number_format(itogZP, 2, '.', ''));
+                            $(this).html(number_format(itogZP, 0, '.', ''));
                         }else{
-                            $(this).html(number_format(itogZP, 2, '.', ''));
+                            $(this).html(number_format(itogZP, 0, '.', ''));
                         }
                     })
 
