@@ -399,6 +399,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         $garantee_summ = 0;
 
                         $invoice_wo_cat = array();
+                        $invoice_garantee = array();
 
                         foreach ($journal as $item){
                             //var_dump($item);
@@ -440,6 +441,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                 }
                             }else{
                                 $garantee_summ += $item['itog_price'];
+                                if (!in_array($item['invoice_id'], $invoice_garantee)) {
+                                    array_push($invoice_garantee, $item['invoice_id']);
+                                }
                             }
                         }
                         //var_dump($temp_cat_array);
@@ -484,6 +488,14 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                     <div style="padding: 10px 4px 2px;">
                                         Сделано по гарантии на сумму: <b style="color: red;">' . number_format($garantee_summ, 0, ',', ' ') . ' руб.</b>
                                     </div>';
+                            if (!empty($invoice_garantee)){
+                                echo '<div style="padding: 10px 4px 2px;">Наряды по гарантии:';
+
+                                for($i=0; $i < count($invoice_garantee); $i++){
+                                    echo '<a href="invoice.php?id='.$invoice_garantee[$i].'" class="ahref button_tiny" style="margin: 0 3px;">'.$invoice_garantee[$i].'</a>';
+                                }
+                                echo '</div>';
+                            }
                         }
 
                         //Наряды без категорий
