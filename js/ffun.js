@@ -4411,7 +4411,7 @@
             //var hoursMonthPercent = 0;
             var hoursMonthPercent = summHours*100/normaSmen;
 
-            $("#hoursMonthPercent_"+worker_id).html(number_format(hoursMonthPercent, 0, '.', ' '));
+            $("#hoursMonthPercent_"+worker_id).html(number_format(hoursMonthPercent, 2, '.', ' '));
 
             $("#schedulerResult_"+worker_id).css({
                 "background-image": "linear-gradient(to right, " + Colorize(Number(hoursMonthPercent.toFixed(0))) + " " + Number(hoursMonthPercent.toFixed(0)) + "%, rgba(255, 255, 255, 0) 0%)"
