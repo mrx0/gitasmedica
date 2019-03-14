@@ -525,7 +525,7 @@
             //Всего
             echo '
                         <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">
-                            -
+                            Часы<br><span style="color: rgb(158, 158, 158); font-size: 80%;">всего/ норма/ %</span>
                         </td>';
 
             $weekday_temp = $weekday;
