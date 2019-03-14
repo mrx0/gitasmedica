@@ -556,7 +556,7 @@
                     
                     //!!! из файла fl_tabels.php
                     //посмотреть по ходу, надо ли это тут будет
-				    var ids = "0_0_0";
+				    /*var ids = "0_0_0";
 				    var ids_arr = {};
 				    var permission = 0;
 				    var worker = 0;
@@ -615,7 +615,7 @@
                         
                         
                         getCalculatesfunc (thisObj, certData);
-                    });
+                    });*/
                     
 				});
 				
