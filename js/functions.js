@@ -98,6 +98,60 @@
         return sign + ch_first + ch_rest + ch_last;
     }
 
+	//
+    function Colorize (data){
+		//console.log(data);
+		//console.log(typeof (data));
+
+        var red, green;
+        //var stepSize = 5;
+        //var counter=0;
+
+        //console.log('data < 50: '+(data < 50));
+        if (data < 50){
+            red = 255;
+            green = data * 5 + 5;
+        }
+
+        //console.log('data == 50: '+(data == 50));
+        if (data == 50){
+            red = 255 - (data - 50) * 5;
+            green = 255;
+        }
+
+        //console.log('data > 50: '+(data > 50));
+        if (data > 50){
+            red = 0;
+            green = 255;
+        }
+        // console.log(red);
+        // console.log(green);
+        // console.log('--------');
+
+        return ' rgb('+red+', '+green+', 0)';
+    }
+
+    //Вывод данных сессии в консоль
+    function fromSessionInConsole(){
+
+        var link = "from_session_in_console.php";
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:{a:1},
+            cache: false,
+            beforeSend: function() {
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                console.log(res);
+            }
+        });
+	}
+
     //Для поиска сертификата из модального окна
     $('#search_cert').bind("change keyup input click", function() {
 
@@ -8472,6 +8526,13 @@
         //WaitForCloseWindow(openedWindow);
 
         return openedWindow;
+    }
+
+	//Создание нового табеля - открываем в модальном окне
+    function iOpenNewWindow2(url, name, options){
+
+
+
     }
 
     //Получаем, показываем направления

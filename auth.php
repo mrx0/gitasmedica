@@ -19,6 +19,7 @@
     unset($_SESSION['invoice_data']);
     unset($_SESSION['calculate_data']);
     unset($_SESSION['fl_calcs_tabels']);
+    unset($_SESSION['fl_calcs_tabels2']);
     unset($_SESSION['scheduler3']);
 
 	//вся процедура работает на сессиях. Именно в ней хранятся данные  пользователя, пока он находится на сайте. Очень важно запустить их в  самом начале странички!!!
@@ -55,6 +56,7 @@
     $current_page = 'index.php';
 
 	include_once 'DBWork.php';
+	include_once 'functions.php';
 
 	$rezult = SelDataFromDB('spr_workers', $login, 'login');
 	//извлекаем из базы все данные о пользователе с введенным логином
@@ -104,18 +106,25 @@
 							$_SESSION['filial'] = $_POST['office'];
 							exit (json_encode(array('result' => 'success', 'data' => 'Вы успешно вошли в систему<br>и будете перенаправлены на <a href="index.php">главную</a>')));
 						}else{
-							$offices = SelDataFromDB('spr_filials', '', '');
+
+                            $filials_j = getAllFilials(true, false, false);
 							
-							if ($offices != 0){
+							if (!empty($filials_j)){
 							
 								$rez_data .= '
 								Выберите филиал, на котором вы сегодня работаете.
 								<br><br>
 									<select name="office" id="office">
 										<option value="0" selected>Выберите филиал</option>';
-								for ($i=1;$i<count($offices);$i++){
-									$rez_data .= "<option value='".$offices[$i]['id']."'>".$offices[$i]['name']."</option>";
-								}
+
+//								for ($i=1;$i<count($offices);$i++){
+//									$rez_data .= "<option value='".$offices[$i]['id']."'>".$offices[$i]['name']."</option>";
+//								}
+
+								foreach ($filials_j as $filial){
+                                    $rez_data .= "<option value='".$filial['id']."'>".$filial['name']."</option>";
+                                }
+
 								$rez_data .= '
 									</select>';
 							

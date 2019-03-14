@@ -66,21 +66,40 @@
                         foreach ($rez as $year => $yearData){
 
                             $bgColor = '';
+                            $display = '';
+                            $onclick = '';
+                            $lastYearDescr = '';
 
                             /*if (date('Y', time()) == $year) {
                                 $bgColor = 'background-color: rgba(254, 63, 63, 0.69);';
                             }*/
 
-                            if ($year != date('Y', time())){
-                                $rezult .= date('Y', time());
+                            /*if ($year != date('Y', time())){
+                                //$rezult .= date('Y', time());
+                                ksort($yearData);
+                            }else{
+                                krsort($yearData);
+                            }*/
+
+
+
+                            if ($year != date('Y', time())) {
+                                $display = 'display: none;';
+                                $onclick = 'onclick="$(\'#data_'.$year.'_'.$_POST['worker'].'_'.$_POST['office'].'\').stop(true, true).slideToggle(\'slow\');"';
+                                $lastYearDescr = ' <span style="font-size: 85%;"> Развернуть/Свернуть</span>';
                             }
 
                             $rezult .= '
-                            <div style="margin: 23px 0 -2px; padding: 2px; text-align: left; color: #717171; '.$bgColor.'">
-                                Год <span style="color: #252525; font-weight: bold;">'.$year.'</span>
+                            <div style="margin: 23px 0 -2px; padding: 2px; text-align: left; color: #717171; cursor: pointer; '.$bgColor.'" '.$onclick.'>
+                                Год <span style="color: #252525; font-weight: bold;">'.$year.'</span>'.$lastYearDescr.'
                             </div>';
 
-                            ksort($yearData);
+                            $rezult .= '
+                            <div id="data_'.$year.'_'.$_POST['worker'].'_'.$_POST['office'].'"  style="'.$display.'">';
+
+
+                            //ksort($yearData);
+                            krsort($yearData);
 
                             //$yearData = array_reverse($yearData);
 
@@ -88,14 +107,16 @@
 
                                 $bgColor = '';
 
-                                if (date('n', time()) == $month) {
-                                    //$bgColor = 'background-color: rgba(244, 254, 63, 0.54);';
-                                    $bgColor = 'background-color: rgb(255, 241, 114);';
+                                if ($year == date('Y', time())) {
+                                    if (date('n', time()) == $month) {
+                                        //$bgColor = 'background-color: rgba(244, 254, 63, 0.54);';
+                                        $bgColor = 'background-color: rgb(255, 241, 114);';
+                                    }
                                 }
 
                                 $rezult .= '
                                     <div style="margin: 2px 0 2px; padding: 2px; text-align: right; color: #717171; '.$bgColor.'">
-                                        Месяц <span style="color: #252525; font-weight: bold;">'.$monthsName[$month].'</span>
+                                        <!--Месяц --><span style="color: #252525; font-weight: bold;">'.$monthsName[$month].'</span>
                                     </div>';
 
                                 foreach ($monthData as $rezData) {
@@ -141,6 +162,7 @@
                                 }
                             }
                             $rezult .= '
+                                </div>
                             </div>';
                         }
 

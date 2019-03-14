@@ -48,6 +48,15 @@
                     foreach ($_POST['workers_hours_data'] as $worker_id => $hours){
 
                         $type = $_POST['workers_types_data'][$worker_id];
+                        //округляем любую дробную часть до 0.5
+                        $hours_cel = floor($hours);
+                        $hours_drob = $hours - $hours_cel;
+                        if ($hours_drob >= 0.5){
+                            $hours = $hours_cel + 0.5;
+                        }else{
+                            $hours = $hours_cel;
+                        }
+
 
                         $query = "INSERT INTO `fl_journal_scheduler_report`
                         (`filial_id`, `worker_id`, `type`, `day`, `month`, `year`, `hours`, `create_time`, `create_person`)

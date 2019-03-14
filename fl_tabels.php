@@ -15,7 +15,7 @@
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
-		//var_dump($_SESSION);
+		//var_dump($_SESSION['fl_calcs_tabels']);
 
 		if (($finances['see_all'] == 1) || $god_mode){
 			include_once 'DBWork.php';
@@ -24,6 +24,7 @@
 			include_once 'filter_f.php';
 			include_once 'ffun.php';
 
+            unset($_SESSION['fl_calcs_tabels2']);
 
             //тип (космет/стомат/...)
             if (isset($_GET['who'])){
@@ -209,7 +210,7 @@
 
                             echo '
                                     <li>
-                                        <a href="#tabs-' . $type . '_' . $worker['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'#FFF\'}); ">
+                                        <a href="#tabs-' . $type . '_' . $worker['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'#FFF\'}); fl_addCalcsIDsINSessionForTabel([], 0, 0, 0, 0);">
                                             ' . $worker['name'] . '
                                             <div  class="notes_count_div">
                                                 <div id="tabs_notes2_' . $type . '_' . $worker['id'].'" class="notes_count3" style="display: none;">
@@ -247,7 +248,7 @@
                                 if ($office['id'] != 11) {
 
                                     echo '
-                                            <li class="tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'#FFF\'}); ">
+                                            <li class="tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'#FFF\'});  fl_addCalcsIDsINSessionForTabel([], 0, 0, 0, 0);">
                                                 <a href="#tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '">
                                                     ' . $office['name2'] . '
                                                     <div class="notes_count_div">
@@ -284,7 +285,7 @@
                                             </div>';
 
                                     echo '
-                                            <div style="position: absolute; cursor: pointer; top: 1px; right: 5px; font-size: 180%; color: #0C0C0C;" onclick="refreshOnlyThisTab($(this), '.$type . ',' . $worker['id'] . ',' . $office['id'].');" title="Обновить эту вкладку">
+                                            <div id="refreshID_'.$type.'_'.$worker['id'].'_'.$office['id'].'" style="position: absolute; cursor: pointer; top: 1px; right: 5px; font-size: 180%; color: #0C0C0C;" onclick="refreshOnlyThisTab($(this), '.$type . ',' . $worker['id'] . ',' . $office['id'].'); fl_addCalcsIDsINSessionForTabel([], 0, 0, 0, 0);" title="Обновить эту вкладку">
                                                 <span style="font-size: 50%;">Обновить эту вкладку</span> <i class="fa fa-refresh" aria-hidden="true"></i>
                                             </div>';
 
@@ -307,7 +308,9 @@
                 //}
 
                 echo '
-                    </div>';
+                    </div>
+                    <!-- Подложка только одна -->
+                    <div id="overlay"></div>';
 
                 echo '
 		            <div id="doc_title">Важный отчёт - Асмедика</div>';
@@ -325,6 +328,8 @@
 				
 				$(document).ready(function() {
 				    //console.log(123);
+				    
+				    //blockWhileWaiting (true);
 				    
 				    var ids = "0_0_0";
 				    var ids_arr = {};
