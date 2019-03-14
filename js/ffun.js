@@ -3401,6 +3401,8 @@
         //убираем ошибки
         hideAllErrors ();
 
+        var errors = false;
+
         //Соберём данные по часам
         var workerHoursValues_arr = {};
         var workerTypesValues_arr = {};
@@ -3409,56 +3411,67 @@
             // console.log($(this).attr('worker_id'));
             // console.log($(this).val());
 
-            workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
-            workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
+            if (isNaN($(this).val())){
+                errors = true;
 
-        });
-        //console.log(workerHoursValues_arr);
-        console.log(workerTypesValues_arr);
+                //console.log("#hours_"+$(this).attr('worker_id')+"_num_error");
 
-        var link = "fl_createSchedulerReport_add_f.php";
-
-        var filial_id = $("#SelectFilial").val();
-
-        var reqData = {
-            date: $("#iWantThisDate2").val(),
-            filial_id: filial_id,
-            workers_hours_data: workerHoursValues_arr,
-            workers_types_data: workerTypesValues_arr
-        };
-        //console.log(reqData);
-
-        $.ajax({
-            url: link,
-            global: false,
-            type: "POST",
-            dataType: "JSON",
-            data: reqData,
-            cache: false,
-            beforeSend: function() {
-                //$('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-            },
-            // действие, при ответе с сервера
-            success: function(res){
-                //console.log(res.data);
-
-                //!!! Переделать тут нормально
-                if(res.result == 'success') {
-                    //console.log('success');
-                    $('#data').html(res.data);
-                    setTimeout(function () {
-                        //window.location.replace('stat_cashbox.php');
-                        //window.location.replace('scheduler3.php?filial_id='+filial_id);
-                        window.location.href = 'scheduler3.php?filial_id='+filial_id;
-                        //console.log('client.php?id='+id);
-                    }, 500);
-                }else{
-                    //console.log('error');
-                    $('#errrror').html(res.data);
-                    //$('#errrror').html('');
-                }
+                $("#hours_"+$(this).attr('worker_id')+"_num_error").html("В этом поле ошибка");
+                $("#hours_"+$(this).attr('worker_id')+"_num_error").show();
+            }else{
+                workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
+                workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
             }
         });
+
+        if (!errors) {
+            //console.log(workerHoursValues_arr);
+            //console.log(workerTypesValues_arr);
+
+            var link = "fl_createSchedulerReport_add_f.php";
+
+            var filial_id = $("#SelectFilial").val();
+
+            var reqData = {
+                date: $("#iWantThisDate2").val(),
+                filial_id: filial_id,
+                workers_hours_data: workerHoursValues_arr,
+                workers_types_data: workerTypesValues_arr
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res.data);
+
+                    //!!! Переделать тут нормально
+                    if (res.result == 'success') {
+                        //console.log('success');
+                        $('#data').html(res.data);
+                        setTimeout(function () {
+                            //window.location.replace('stat_cashbox.php');
+                            //window.location.replace('scheduler3.php?filial_id='+filial_id);
+                            window.location.href = 'scheduler3.php?filial_id=' + filial_id;
+                            //console.log('client.php?id='+id);
+                        }, 500);
+                    } else {
+                        //console.log('error');
+                        $('#errrror').html(res.data);
+                        //$('#errrror').html('');
+                    }
+                }
+            });
+        }
     }
 
     //Редактирование рабочих часов сотрудникам на филиале
@@ -4379,7 +4392,7 @@
             var summHours = 0;
 
             $(".dayHours_"+worker_id).each(function() {
-                summHours += parseInt($(this).html(), 10) || 0;
+                summHours += parseFloat($(this).html(), 10) || 0;
                 //summHours += $(this).html();
                 //console.log($(this).html());
                 //console.log(parseInt($(this).html(), 10));
@@ -4467,12 +4480,12 @@
                         var filialMoney = Number($(this).attr("filialMoney"));
 
                         if (w_percentHours > 0){
-                            var itogZP = oklad + ((((filialMoney / 100) * worker_revenue_percent)/ 100) * w_percentHours);
+                            var itogZP = ((oklad * w_percentHours)/ 100) + ((((filialMoney/ 100) * worker_revenue_percent)/ 100) * w_percentHours);
                             //console.log(itogZP);
 
-                            $(this).html(number_format(itogZP, 2, '.', ''));
+                            $(this).html(number_format(itogZP, 0, '.', ''));
                         }else{
-                            $(this).html(number_format(itogZP, 2, '.', ''));
+                            $(this).html(number_format(itogZP, 0, '.', ''));
                         }
                     })
 

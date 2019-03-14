@@ -463,7 +463,7 @@
 
                             $w_hours = array_sum($hours_j[$worker_data['id']]);
                             $w_normaSmen = $normaSmen[(int)$month]*12;
-                            $w_percentHours = number_format($w_hours * 100 / $w_normaSmen, 2, '.', '');
+                            $w_percentHours = number_format($w_hours * 100 / $w_normaSmen, 0, '.', '');
 
                             echo '
                                         <div style="margin-bottom: 15px;">'.$w_hours.'/ '.$w_normaSmen.'/ '.$w_percentHours.'%</div>';

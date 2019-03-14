@@ -283,6 +283,15 @@
             echo '
 					<script>
 					
+					    //Приведем часы в нормальный вид
+                        $(".workerHoursValue").keyup(function(){
+						    //console.log($(this).val());
+                        
+                            $(this).val($(this).val().replace(",", "."));
+
+                            hideAllErrors();
+						});
+					
 						$(function() {
 							$("#SelectFilial").change(function(){
 							    
