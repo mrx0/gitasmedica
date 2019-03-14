@@ -137,17 +137,19 @@
                                 $full_name = $rezData['client_full_name'];
 
                                 //Зубные формулы и запись врача
-                                $doctor_mark = '';
+                                $worker_mark = 1;
+                                $worker_mark_str = '';
                                 $background_color = 'background-color: rgb(255, 255, 255);';
 
                                 if ($rezData['worker_mark'] == NULL) {
-                                    $doctor_mark = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет отметки врача"></i>';
+                                    $worker_mark = 0;
+                                    $worker_mark_str = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет отметки врача"></i>';
                                     $background_color = 'background-color: rgba(255, 141, 141, 0.2);';
                                 }
 
 
                                 $resultFilialStr .= '
-                                    <div class="cellsBlockHover" style="' . $background_color . ' width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
+                                    <div class="cellsBlockHover calculateBlockItem" worker_mark="'.$worker_mark.'" style="' . $background_color . ' width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
                                         <div style="display: inline-block; width: 190px;">
                                             <div>
                                                 <a href="fl_calculate.php?id=' . $rezData['id'] . '" class="ahref">
@@ -190,12 +192,12 @@
                                         </div>
                                         <div style="display: inline-block; vertical-align: top;">
                                             <div style=" padding: 3px; margin: 1px;" title="Выделить">
-                                                <input type="checkbox" class="chkBoxCalcs chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $filial_id . '" name="nPaidCalcs_' . $rezData['id'] . '" chkBoxData="chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $filial_id . '" value="1">
+                                                <input type="checkbox" worker_mark="'.$worker_mark.'" class="chkBoxCalcs chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $filial_id . '" name="nPaidCalcs_' . $rezData['id'] . '" chkBoxData="chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $filial_id . '" value="1">
                                             </div>
                                         </div>
                                         <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
                                         <div style="position: absolute; bottom: 2px; right: 3px;">
-                                            ' . $doctor_mark . '
+                                            ' . $worker_mark_str . '
                                         </div>
                                     </div>';
 

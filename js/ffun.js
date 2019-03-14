@@ -2427,7 +2427,21 @@
 
     }
 
+    //Чистим все отмеченные checkbox и сессионный данные
+    function clearAllChecked(){
 
+        fl_addCalcsIDsINSessionForTabel([], 0, 0, 0, 0);
+
+        $('input:checked').prop('checked', false);
+
+        $('.calculateBlockItem').each(function() {
+            if ($(this).attr("worker_mark") == 1){
+                $(this).css({'background-color': '#FFF'});
+            }else{
+                $(this).css({'background-color': 'rgba(255, 141, 141, 0.2)'});
+            }
+        });
+    }
 
 
 
@@ -2440,6 +2454,7 @@
             var checked_status = $(this).prop("checked");
             //console.log(checked_status);
             //console.log($(this).parent());
+            //console.log($(this).parent().parent().parent().attr("doctor_mark"));
 
             var add_status = 0;
             var calc_id_arr = [];
@@ -2449,7 +2464,13 @@
                 $(this).parent().parent().parent().css({"background-color": "#83DB53"});
                 add_status = 1;
             }else{
-                $(this).parent().parent().parent().css({"background-color": "rgb(255, 255, 255);"});
+                    //console.log($(this).parent().parent().parent().attr("worker_mark"));
+
+                if ($(this).parent().parent().parent().attr("worker_mark") == 1) {
+                    $(this).parent().parent().parent().css({"background-color": "rgb(255, 255, 255);"});
+                }else{
+                    $(this).parent().parent().parent().css({"background-color": "rgba(255, 141, 141, 0.2);"});
+                }
             }
 
             //Получим ID расчетного листа
@@ -2485,7 +2506,11 @@
                     add_status = 1;
                 }else{
                     $(this).prop("checked", false);
-                    $(this).parent().parent().parent().css({"background-color": "rgb(255, 255, 255);"});
+                    if ($(this).parent().parent().parent().attr("worker_mark") == 1) {
+                        $(this).parent().parent().parent().css({"background-color": "rgb(255, 255, 255);"});
+                    }else{
+                        $(this).parent().parent().parent().css({"background-color": "rgba(255, 141, 141, 0.2);"});
+                    }
                 }
 
                 //Получим ID расчетного листа
