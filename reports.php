@@ -177,6 +177,10 @@
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_mainReportCategory.php" class="b3">Отчёт по категориям</a>
 							</li>';
+                echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="fl_mainReportCategory2.php" class="b3">Отчёт по категориям2</a>
+							</li>';
                 echo '
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_mainReportZapis.php" class="b3">Отчёт по записи</a>

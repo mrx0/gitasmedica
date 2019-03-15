@@ -1,6 +1,6 @@
 <?php
 
-//ajax_show_result_main_report_category_f.php
+//ajax_show_result_main_report_category2_f.php
 //
 
 session_start();
@@ -107,16 +107,17 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         if ($creatorExist && $workerExist) {
             if ($clientExist) {
                 //$query .= "SELECT `id`, `year`, `month`, `day`, `office`,`worker`, `create_person`, `patient`, `type`, `pervich`, `insured`, `noch`, `enter` FROM `zapis` z";
-//                $query .= "
-//                    SELECT jcalcex.* FROM `zapis` z
-//                    INNER JOIN `fl_journal_calculate` jcalc ON z.id = jcalc.zapis_id
-//                    LEFT JOIN `fl_journal_calculate_ex` jcalcex ON jcalc.id = jcalcex.calculate_id";
+                $query .= "
+                    SELECT jiex.*, ji.summ AS invoice_summ, ji.summins AS  invoice_summins
+                    FROM `zapis` z
+                    INNER JOIN `journal_invoice` ji ON z.id = ji.zapis_id
+                    LEFT JOIN `journal_invoice_ex` jiex ON ji.id = jiex.invoice_id";
 
-                $query = "
-                            SELECT jiex.*, ji.summ AS invoice_summ, ji.summins AS  invoice_summins
-                            FROM `journal_invoice` ji
-                            LEFT JOIN `journal_invoice_ex` jiex 
-                            ON ji.id = jiex.invoice_id";
+//                $query = "
+//                            SELECT jiex.*, ji.summ AS invoice_summ, ji.summins AS  invoice_summins
+//                            FROM `journal_invoice` ji
+//                            LEFT JOIN `journal_invoice_ex` jiex
+//                            ON ji.id = jiex.invoice_id";
 
 
                 $data_temp_arr = explode(".", $_POST['datastart']);
@@ -129,8 +130,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 if ($_POST['all_time'] != 1) {
                     //$queryDop .= "`create_time` BETWEEN '" . strtotime($_POST['datastart']) . "' AND '" . strtotime($_POST['dataend'] . " 23:59:59") . "'";
 
-                    //$queryDop .= "CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) BETWEEN '{$_POST['datastart']}' AND '{$_POST['dataend']}'";
-                    $queryDop .= "ji.closed_time BETWEEN '{$_POST['datastart']}' AND '{$_POST['dataend']}'";
+                    $queryDop .= "CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) BETWEEN '{$_POST['datastart']}' AND '{$_POST['dataend']}'";
+                    //$queryDop .= "ji.closed_time BETWEEN '{$_POST['datastart']}' AND '{$_POST['dataend']}'";
                     $queryDopExist = true;
                 }
                 //var_dump($queryDop);
@@ -172,7 +173,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 }
 
                 //Все записи
-                /*if ($_POST['zapisAll'] != 0) {
+                if ($_POST['zapisAll'] != 0) {
                     //ничего
                 } else {
                     //Пришёл
@@ -222,7 +223,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         }
                         //$queryDopExExist = true;
                     }
-                }*/
+                }
 
                 //Тип
                 if ($_POST['typeW'] != 0) {
@@ -309,9 +310,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         $query .= "`client` IN (".$queryDopClient.")";
                     }*/
 
-                    //$query = $query . "AND ji.status = '5' ORDER BY CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) ASC";
-                    $query = $query . "AND ji.status = '5'";
-                    //var_dump($query);
+                    $query = $query . "AND ji.status = '5' ORDER BY CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) ASC";
+                    //$query = $query . "AND ji.status = '5'";
+                    var_dump($query);
 
                     $msql_cnnct = ConnectToDB();
 
