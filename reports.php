@@ -173,13 +173,13 @@
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_tabels.php" class="b3">Важный отчёт</a>
 							</li>';
+//                echo '
+//							<li class="cellsBlock" style="margin: 1px;">
+//								<a href="fl_mainReportCategory.php" class="b3">Отчёт по категориям</a>
+//							</li>';
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
-								<a href="fl_mainReportCategory.php" class="b3">Отчёт по категориям</a>
-							</li>';
-                echo '				
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="fl_mainReportCategory2.php" class="b3">Отчёт по категориям2</a>
+								<a href="fl_mainReportCategory2.php" class="b3">Отчёт по категориям</a>
 							</li>';
                 echo '
 							<li class="cellsBlock" style="margin: 1px;">

@@ -24,10 +24,18 @@
 					<header style="margin-bottom: 5px;">
 						<h1>Отчёт по категориям</h1>
 					</header>
+					<ul style="margin-left: 6px; margin-bottom: 2px;">
+						<li style="width: auto; color:#777; font-size: 90%;">
+	                            <ul>
+								<li>Отчёт показывает процентное соотношение категорий работ,</li>
+								<li>а также работы по гарантии и сумму за работы по страховке за указанный период</li>
+							</ul>
+						</li>
+					</ul>
 					</div>';
 
 				echo '
-						<div id="data">';
+						<div id="data" style="margin: 0;">';
 				echo '
                             <div class="no_print"> 
 							<ul style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 20px; width: 420px; font-size: 95%; background-color: rgba(245, 245, 245, 0.9); display: inline-table;">

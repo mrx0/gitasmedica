@@ -311,7 +311,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                     //$query = $query . "AND ji.status = '5' ORDER BY CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) ASC";
                     $query = $query . "AND ji.status = '5'";
-                    //var_dump($query);
+                    //echo($query);
 
                     $msql_cnnct = ConnectToDB();
 
