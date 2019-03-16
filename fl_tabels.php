@@ -210,7 +210,7 @@
 
                             echo '
                                     <li>
-                                        <a href="#tabs-' . $type . '_' . $worker['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'#FFF\'}); fl_addCalcsIDsINSessionForTabel([], 0, 0, 0, 0);">
+                                        <a href="#tabs-' . $type . '_' . $worker['id'] . '" onclick="clearAllChecked();">
                                             ' . $worker['name'] . '
                                             <div  class="notes_count_div">
                                                 <div id="tabs_notes2_' . $type . '_' . $worker['id'].'" class="notes_count3" style="display: none;">
@@ -232,7 +232,7 @@
 
                             echo '
 
-                                <div id="tabs-' . $type . '_' . $worker['id'] . '" style="width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); margin-left: 150px; font-size: 12px;">';
+                                <div id="tabs-' . $type . '_' . $worker['id'] . '" class="workerDataAllFilials" workerData="' . $type . '_' . $worker['id'] . '" style="width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); margin-left: 150px; font-size: 12px;">';
 
                             echo '<h2>' .$permissions_j[$type]['name'].'</h2><h1>'.$worker['name'].'</h2>';
 
@@ -248,7 +248,7 @@
                                 if ($office['id'] != 11) {
 
                                     echo '
-                                            <li class="tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" onclick="$(\'input:checked\').prop(\'checked\', false); $(\'input\').parent().parent().parent().css({\'background-color\': \'#FFF\'});  fl_addCalcsIDsINSessionForTabel([], 0, 0, 0, 0);">
+                                            <li class="tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" onclick="clearAllChecked();">
                                                 <a href="#tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '">
                                                     ' . $office['name2'] . '
                                                     <div class="notes_count_div">
@@ -281,7 +281,8 @@
 
                                     echo '
                                             <div class="tableDataNPaidCalcs" style="width: 444px; background-color: rgba(251, 170, 170, 0.18);" id="'.$type . '_' . $worker['id'] . '_' . $office['id'].'">
-                                                <div style="width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);"><img src="img/wait.gif" style="float:left;"><span style="float: right;  font-size: 90%;"> обработка...</span></div>
+                                                <!--<div style=\'width: 120px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);\'><img src=\'img/wait.gif\' style=\'float:left;\'><span style=\'float: right;  font-size: 90%;\'> обработка...<br>загрузка<br>расч. листов</span></div>-->
+                                                Нет данных по необработанным расчетным листам
                                             </div>';
 
                                     echo '
@@ -366,7 +367,7 @@
                     });
 
 				    //Необработанные расчеты
-				    $(".tableDataNPaidCalcs").each(function() {
+				    /*$(".tableDataNPaidCalcs").each(function() {
                         //console.log($(this).attr("id"));
                         
                         var thisObj = $(this);
@@ -390,6 +391,31 @@
                         
                         
                         getCalculatesfunc (thisObj, certData);
+                    });*/
+                    
+                    $(".workerDataAllFilials").each(function(){
+                        //console.log($(this).attr("id"));
+                    
+                        //var thisObj = $(this);
+
+                        ids = $(this).attr("workerData");
+                        ids_arr = ids.split("_");
+                        //console.log(ids_arr);
+                         
+                        permission = ids_arr[0];
+                        worker = ids_arr[1];
+                        
+                        var certData = {
+                            permission: permission,
+                            worker: worker,
+                            month: "'.date("m").'",
+                            year: "'.date("Y").'",
+                            own_tabel: false
+                        };
+                        
+                        
+                        getCalculatesfunc2 (certData);
+                        
                     });
                     
 				});

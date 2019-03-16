@@ -18,7 +18,7 @@
         $temp_res = array();
         $result = '';
 
-        var_dump($_SESSION);
+        //var_dump($_SESSION);
 
         if (isset($_SESSION['fl_calcs_tabels2'])) {
 
@@ -205,17 +205,17 @@
 
                                         if ($year != date('Y', time())) {
                                             $display = 'display: none;';
-                                            $onclick = 'onclick="$(\'#data_' . $year . '_' . $workerID . '_' . $filialID . '\').stop(true, true).slideToggle(\'slow\');"';
-                                            $lastYearDescr = ' <span style="font-size: 85%;"> Развернуть/Свернуть</span>';
+                                            $onclick = 'onclick="$(\'#data2_' . $year . '_' . $workerID . '_' . $filialID . '\').stop(true, true).slideToggle(\'slow\');"';
+                                            $lastYearDescr = ' <span style="font-size: 75%;"> Развернуть/Свернуть</span>';
                                         }
 
                                         $result .= '
-                                        <div style="margin: 15px 0 -2px; padding: 2px; text-align: left; color: #717171; cursor: pointer; ' . $bgColor . '" ' . $onclick . '">
+                                        <div style="margin: 15px 0 -2px; padding: 2px; text-align: left; color: #717171; font-size: 85%; cursor: pointer; ' . $bgColor . '" ' . $onclick . '">
                                             Год <span style="color: #252525; font-weight: bold;">' . $year . '</span>' . $lastYearDescr . '
                                         </div>';
 
                                         $result .= '
-                                        <div id="data_' . $year . '_' . $workerID . '_' . $filialID . '"  style="' . $display . '">';
+                                        <div id="data2_' . $year . '_' . $workerID . '_' . $filialID . '"  style="' . $display . '">';
 
                                         krsort($yearData);
 

@@ -1,6 +1,6 @@
 <?php
 
-//ajax_show_result_main_report_category_f.php
+//ajax_show_result_main_report_category2_f.php
 //
 
 session_start();
@@ -107,16 +107,17 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         if ($creatorExist && $workerExist) {
             if ($clientExist) {
                 //$query .= "SELECT `id`, `year`, `month`, `day`, `office`,`worker`, `create_person`, `patient`, `type`, `pervich`, `insured`, `noch`, `enter` FROM `zapis` z";
-//                $query .= "
-//                    SELECT jcalcex.* FROM `zapis` z
-//                    INNER JOIN `fl_journal_calculate` jcalc ON z.id = jcalc.zapis_id
-//                    LEFT JOIN `fl_journal_calculate_ex` jcalcex ON jcalc.id = jcalcex.calculate_id";
+                $query .= "
+                    SELECT jiex.*, ji.summ AS invoice_summ, ji.summins AS  invoice_summins, ji.status AS invoice_status
+                    FROM `zapis` z
+                    INNER JOIN `journal_invoice` ji ON z.id = ji.zapis_id
+                    LEFT JOIN `journal_invoice_ex` jiex ON ji.id = jiex.invoice_id";
 
-                $query = "
-                            SELECT jiex.*, ji.summ AS invoice_summ, ji.summins AS  invoice_summins
-                            FROM `journal_invoice` ji
-                            LEFT JOIN `journal_invoice_ex` jiex 
-                            ON ji.id = jiex.invoice_id";
+//                $query = "
+//                            SELECT jiex.*, ji.summ AS invoice_summ, ji.summins AS  invoice_summins
+//                            FROM `journal_invoice` ji
+//                            LEFT JOIN `journal_invoice_ex` jiex
+//                            ON ji.id = jiex.invoice_id";
 
 
                 $data_temp_arr = explode(".", $_POST['datastart']);
@@ -129,8 +130,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 if ($_POST['all_time'] != 1) {
                     //$queryDop .= "`create_time` BETWEEN '" . strtotime($_POST['datastart']) . "' AND '" . strtotime($_POST['dataend'] . " 23:59:59") . "'";
 
-                    //$queryDop .= "CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) BETWEEN '{$_POST['datastart']}' AND '{$_POST['dataend']}'";
-                    $queryDop .= "ji.closed_time BETWEEN '{$_POST['datastart']}' AND '{$_POST['dataend']}'";
+                    $queryDop .= "CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) BETWEEN '{$_POST['datastart']}' AND '{$_POST['dataend']}'";
+                    //$queryDop .= "ji.closed_time BETWEEN '{$_POST['datastart']}' AND '{$_POST['dataend']}'";
                     $queryDopExist = true;
                 }
                 //var_dump($queryDop);
@@ -172,7 +173,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 }
 
                 //Все записи
-                /*if ($_POST['zapisAll'] != 0) {
+                if ($_POST['zapisAll'] != 0) {
                     //ничего
                 } else {
                     //Пришёл
@@ -222,7 +223,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         }
                         //$queryDopExExist = true;
                     }
-                }*/
+                }
 
                 //Тип
                 if ($_POST['typeW'] != 0) {
@@ -309,8 +310,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         $query .= "`client` IN (".$queryDopClient.")";
                     }*/
 
-                    //$query = $query . "AND ji.status = '5' ORDER BY CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) ASC";
-                    $query = $query . "AND ji.status = '5'";
+                    $query = $query . " AND ji.status <> '9' ORDER BY CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) DESC";
+                    //$query = $query . "AND ji.status = '5'";
                     //echo($query);
 
                     $msql_cnnct = ConnectToDB();
@@ -329,42 +330,6 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         }
                     }
                     //var_dump($journal);
-
-//                    $query = "SELECT * FROM `journal_invoice` ji WHERE ji.closed_time BETWEEN '{$_POST['datastart']}' AND '{$_POST['dataend']}' AND ji.office_id = '15' AND ji.type = '5' AND ji.status = '5'";
-//
-//                    $journal2 = array();
-//                    $rez = array();
-//
-//                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-//
-//                    $number = mysqli_num_rows($res);
-//
-//                    if ($number != 0) {
-//                        while ($arr = mysqli_fetch_assoc($res)) {
-//                            //array_push($journal, $arr);
-//                            $journal2[$arr['id']] = $arr;
-//                        }
-//                    }
-//                    //var_dump($journal2);
-//
-//                    $query = "SELECT * FROM `journal_invoice` ji WHERE ji.closed_time BETWEEN '{$_POST['datastart']}' AND '{$_POST['dataend']}' AND ji.office_id = '15' AND ji.type = '6' AND ji.status = '5'";
-//
-//                    $journal3 = array();
-//                    $rez = array();
-//
-//                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-//
-//                    $number = mysqli_num_rows($res);
-//
-//                    if ($number != 0) {
-//                        while ($arr = mysqli_fetch_assoc($res)) {
-//                            //array_push($journal, $arr);
-//                            $journal3[$arr['id']] = $arr;
-//                        }
-//                    }
-//                    //var_dump($journal3);
-
-                    //echo json_encode(array('result' => 'success', 'data' => $journal, 'query' => $query));
 
                     //Выводим результат (нет)
                     //Делаем рассчеты
@@ -388,100 +353,229 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                 //array_push($percent_cats_j_names, $arr['name']);
                             }
                         }
-
-                        //var_dump($temp_cat_array);
-
                         //$temp_inv_array = array();
 
-                        $temp_cat_array = array();
+                        $temp_cat_closed_array = array();
+                        $temp_cat_opened_array = array();
+                        $temp_cat_all_array = array();
+
+                        $opened_summ = 0;
+                        $closed_summ = 0;
                         $all_summ = 0;
+
                         $ins_summ = 0;
                         $garantee_summ = 0;
 
-                        $invoice_wo_cat = array();
+                        $invoice_opened_wo_cat = array();
+                        $invoice_closed_wo_cat = array();
+                        $invoice_all_wo_cat = array();
+
                         $invoice_garantee = array();
 
+                        $invoice_opened = array();
+                        $invoice_closed = array();
+                        $invoice_all = array();
+
                         foreach ($journal as $item){
-                            //var_dump($item);
-                            //var_dump($item['id']);
-                            //var_dump($item['price']);
-                            //echo $item['id'].'<br>';
-
-//                            if (!isset($temp_inv_array[$item['invoice_id']])){
-//                                $temp_inv_array[$item['invoice_id']] = array();
-//                                $temp_inv_array[$item['invoice_id']]['summ'] = $item['invoice_summ'];
-//                                $temp_inv_array[$item['invoice_id']]['summins'] = $item['invoice_summins'];
-//                                $temp_inv_array[$item['invoice_id']]['summ_poss'] = 0;
+//                            var_dump($item['invoice_status']);
+//                            if ($item['invoice_status'] != 5) {
+//                                var_dump($item['invoice_id']);
+//                                var_dump($item['invoice_summ']);
 //                            }
-//                            $temp_inv_array[$item['invoice_id']]['summ_poss'] += $item['itog_price'];
-
-
 
                             if ($item['guarantee'] == 0) {
                                 if ($item['insure'] == 0) {
-                                    if ($item['id'] != NULL) {
-                                        if (!isset($temp_cat_array[$item['percent_cats']])) {
-                                            $temp_cat_array[$item['percent_cats']] = $item['itog_price'];
+                                    //Если сумма не = 0
+                                    if ($item['invoice_summ'] != 0) {
+                                        //Все созданные наряды (откр+закр)
+                                        if (!isset($temp_cat_all_array[$item['percent_cats']])) {
+                                            $temp_cat_all_array[$item['percent_cats']] = $item['itog_price'];
                                             //var_dump($item['percent_cats']);
-                                            //var_dump($temp_cat_array);
+                                            //var_dump($temp_cat_close_array);
 
                                         } else {
-                                            $temp_cat_array[$item['percent_cats']] += $item['itog_price'];
+                                            $temp_cat_all_array[$item['percent_cats']] += $item['itog_price'];
                                         }
+                                        //Без категории
                                         if ($item['percent_cats'] == 0) {
-                                            if (!in_array($item['invoice_id'], $invoice_wo_cat)) {
-                                                array_push($invoice_wo_cat, $item['invoice_id']);
+                                            if (!in_array($item['invoice_id'], $invoice_all_wo_cat)) {
+                                                array_push($invoice_all_wo_cat, $item['invoice_id']);
                                             }
                                         }
+
+                                        if (!in_array($item['invoice_id'], $invoice_all)) {
+                                            $invoice_all[$item['invoice_id']] = $item['invoice_summ'];
+                                        }
+
+                                        $all_summ += $item['itog_price'];
+
+
+                                        //Если закрыты
+                                        if ($item['invoice_status'] == 5) {
+                                            if (!isset($temp_cat_closed_array[$item['percent_cats']])) {
+                                                $temp_cat_closed_array[$item['percent_cats']] = $item['itog_price'];
+                                                //var_dump($item['percent_cats']);
+                                                //var_dump($temp_cat_close_array);
+
+                                            } else {
+                                                $temp_cat_closed_array[$item['percent_cats']] += $item['itog_price'];
+                                            }
+                                            //Без категории
+                                            if ($item['percent_cats'] == 0) {
+                                                if (!in_array($item['invoice_id'], $invoice_closed_wo_cat)) {
+                                                    array_push($invoice_closed_wo_cat, $item['invoice_id']);
+                                                }
+                                            }
+
+                                            if (!in_array($item['invoice_id'], $invoice_closed)) {
+                                                $invoice_closed[$item['invoice_id']] = $item['invoice_summ'];
+                                            }
+
+                                            $closed_summ += $item['itog_price'];
+                                        }else{
+                                            //Если не закрыты
+                                            if (!isset($temp_cat_opened_array[$item['percent_cats']])) {
+                                                $temp_cat_opened_array[$item['percent_cats']] = $item['itog_price'];
+                                                //var_dump($item['percent_cats']);
+                                                //var_dump($temp_cat_close_array);
+
+                                            } else {
+                                                $temp_cat_opened_array[$item['percent_cats']] += $item['itog_price'];
+                                            }
+                                            //Без категории
+                                            if ($item['percent_cats'] == 0) {
+                                                if (!in_array($item['invoice_id'], $invoice_opened_wo_cat)) {
+                                                    array_push($invoice_opened_wo_cat, $item['invoice_id']);
+                                                }
+                                            }
+
+                                            if (!in_array($item['invoice_id'], $invoice_opened)) {
+                                                $invoice_opened[$item['invoice_id']] = $item['invoice_summ'];
+                                            }
+
+                                            $opened_summ += $item['itog_price'];
+                                        }
+
                                     }
-                                    //}
-                                    $all_summ += $item['itog_price'];
+
+
                                 }else{
+                                    //Страховые
                                     $ins_summ += $item['itog_price'];
                                 }
                             }else{
+                                //Гарантийные
                                 $garantee_summ += $item['itog_price'];
                                 if (!in_array($item['invoice_id'], $invoice_garantee)) {
                                     array_push($invoice_garantee, $item['invoice_id']);
                                 }
                             }
                         }
-                        //var_dump($temp_cat_array);
+                        //var_dump($temp_cat_close_array);
                         //var_dump($temp_inv_array);
 
                         //Сортируем по значению
-                        arsort($temp_cat_array);
+                        arsort($temp_cat_closed_array);
+                        arsort($temp_cat_opened_array);
 
                         echo '
-                                <div style="padding: 2px 4px 5px;">
-                                    Общая сумма по выполненным (закрытым) работам: : <b>' . number_format($ins_summ+$all_summ, 0, ',', ' ') . ' руб.</b>
-                                </div>
                                 <div style="padding: 2px 4px;">
-                                    Приход: <b>' . number_format($all_summ, 0, ',', ' ') . ' руб.</b>
+                                    Общая сумма: <b>' . number_format($ins_summ+$all_summ, 0, ',', ' ') . ' руб.</b>
                                 </div>
                                 <div style="padding: 2px 4px;">
                                     Сумма от страховых: <b>' . number_format($ins_summ, 0, ',', ' ') . ' руб.</b>
                                 </div>
+                                <!--<div style="padding: 2px 4px;">
+                                    Сумма по закрытым работам: <b>' . number_format($closed_summ, 0, ',', ' ') . ' руб.</b>
+                                </div>-->
+                                <!--<div style="padding: 2px 4px;">
+                                    Сумма по не закрытым работам: <b>' . number_format($opened_summ, 0, ',', ' ') . ' руб.</b>
+                                </div>-->
+
                                 <div>
                                     <div style="display: inline-block; vertical-align: top;">';
 
-                        if (!empty($temp_cat_array)){
-                            foreach ($temp_cat_array as $item_id => $item_summ) {
+                        //По всем
+                        if (!empty($temp_cat_all_array)){
+                            foreach ($temp_cat_all_array as $item_id => $item_summ) {
 
                                 $percent_from_all_summ = $item_summ * 100 / $all_summ;
                                 $percent_from_all_summ = number_format($percent_from_all_summ, 2, ',', '');
 
                                 if ($item_id != 0) {
-                                    echo '<li><div class="cellOrder">'.$percent_cats_j[$item_id].'</div><div class="cellName" style="text-align: right;">' . number_format($item_summ, 0, ',', ' ') . ' руб.</b></div><div class="cellName categoryItem" percentCat="'.$percent_from_all_summ.'" nameCat="'.$percent_cats_j[$item_id].'"  style="text-align: right;">' . $percent_from_all_summ . ' %</div></li>';
+                                    echo '
+                                        <li>
+                                            <div class="cellOrder">
+                                                '.$percent_cats_j[$item_id].'
+                                            </div>
+                                            <div class="cellName" style="text-align: right;">
+                                                ' . number_format($item_summ, 0, ',', ' ') . ' руб.
+                                            </div>
+                                            <div class="cellName categoryItem" percentCat="'.$percent_from_all_summ.'" nameCat="'.$percent_cats_j[$item_id].'"  style="text-align: right;">
+                                                ' . $percent_from_all_summ . ' %
+                                            </div>
+                                        </li>';
                                 }else{
-                                    echo '<li><div class="cellOrder" style="color: red;">'.'Не указана категория ' . '</div><div class="cellName" style="text-align: right; color: red;">' . number_format($item_summ, 0, ',', ' ')   . ' руб.</b></div><div class="cellName" style="text-align: right; color: red;">' . $percent_from_all_summ . ' %</div></li>';
+                                    echo '
+                                        <li>
+                                            <div class="cellOrder" style="color: red;">
+                                                '.'Не указана категория ' . '
+                                            </div>
+                                            <div class="cellName" style="text-align: right; color: red;">
+                                                ' . number_format($item_summ, 0, ',', ' ')   . ' руб.
+                                            </div>
+                                            <div class="cellName" style="text-align: right; color: red;">
+                                                ' . $percent_from_all_summ . ' %
+                                            </div>
+                                        </li>';
                                 }
 
                             }
                         }
 
+                        echo '<br><br><br><br>';
+
+                        //По закрытым
+//                        if (!empty($temp_cat_closed_array)){
+//                            foreach ($temp_cat_closed_array as $item_id => $item_summ) {
+//
+//                                $percent_from_all_summ = $item_summ * 100 / $closed_summ;
+//                                $percent_from_all_summ = number_format($percent_from_all_summ, 2, ',', '');
+//
+//                                if ($item_id != 0) {
+//                                    echo '
+//                                        <li>
+//                                            <div class="cellOrder">
+//                                                '.$percent_cats_j[$item_id].'
+//                                            </div>
+//                                            <div class="cellName" style="text-align: right;">
+//                                                ' . number_format($item_summ, 0, ',', ' ') . ' руб.
+//                                            </div>
+//                                            <div class="cellName categoryItem" percentCat="'.$percent_from_all_summ.'" nameCat="'.$percent_cats_j[$item_id].'"  style="text-align: right;">
+//                                                ' . $percent_from_all_summ . ' %
+//                                            </div>
+//                                        </li>';
+//                                }else{
+//                                    echo '
+//                                        <li>
+//                                            <div class="cellOrder" style="color: red;">
+//                                                '.'Не указана категория ' . '
+//                                            </div><div class="cellName" style="text-align: right; color: red;">
+//                                                ' . number_format($item_summ, 0, ',', ' ')   . ' руб.
+//                                            </div>
+//                                            <div class="cellName" style="text-align: right; color: red;">
+//                                                ' . $percent_from_all_summ . ' %
+//                                            </div>
+//                                        </li>';
+//                                }
+//
+//                            }
+//                        }
+
                         echo '
                                     </div>';
+
+                        //Сумма сделанного по гарантии
                         if ($garantee_summ > 0){
 
                             echo '
@@ -499,67 +593,41 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         }
 
                         //Наряды без категорий
-                        if (!empty($invoice_wo_cat)){
+                        if (!empty($invoice_opened_wo_cat) || !empty($invoice_closed_wo_cat)){
+
                             echo '<div style="padding: 10px 4px 2px;">Наряды без категорий:';
 
-                            for($i=0; $i < count($invoice_wo_cat); $i++){
-                                echo '<a href="invoice.php?id='.$invoice_wo_cat[$i].'" class="ahref button_tiny" style="margin: 0 3px;">'.$invoice_wo_cat[$i].'</a>';
+                            if (!empty($invoice_opened_wo_cat)) {
+                                for ($i = 0; $i < count($invoice_opened_wo_cat); $i++) {
+                                    echo '<a href="invoice.php?id=' . $invoice_opened_wo_cat[$i] . '" class="ahref button_tiny" style="margin: 0 3px;">' . $invoice_opened_wo_cat[$i] . '</a>';
+                                }
                             }
+                            if (!empty($invoice_closed_wo_cat)){
+                                for($i=0; $i < count($invoice_closed_wo_cat); $i++){
+                                    echo '<a href="invoice.php?id='.$invoice_closed_wo_cat[$i].'" class="ahref button_tiny" style="margin: 0 3px;">'.$invoice_closed_wo_cat[$i].'</a>';
+                                }
+                            }
+
                             echo '</div>';
                         }
+
                         echo '
                                     <!--<div id="canvas-holder" style="display: inline-block; vertical-align: top; /*border: 1px dotted #CCC;*/ width: 450px;">
                                         <canvas id="chart-area"></canvas>
                                     </div>-->
                                 </div>';
 
-
+//                        //var_dump($invoice_all);
+//                        echo '<br><br>';
+//                        //arsort($invoice_all);
+//                        foreach($invoice_all as $invoice_id => $invoice_summ){
+//                            echo '<br><a href="invoice.php?id='.$invoice_id.'" class="ahref button_tiny" style="margin: 0 3px;">#'.$invoice_id.' => '.$invoice_summ.'</a>';
+//                        }
 
                     } else {
                         echo '<span style="color: red;">Ничего не найдено</span>';
                     }
 
-//                    $summ2 = 0;
-//
-//                    if (!empty($journal2)) {
-//                        foreach ($journal2 as $item){
-//                            $summ2 += $item['summ']+$item['summins'];
-//                        }
-//                    }
-//                    var_dump($summ2);
-//
-//                    $summ3 = 0;
-//
-//                    if (!empty($journal3)) {
-//                        foreach ($journal3 as $item){
-//                            $summ3 += $item['summ']+$item['summins'];
-//                        }
-//                    }
-//                    var_dump($summ3);
-//
-//                    var_dump($summ2+$summ3);
-
-//                foreach ($temp_inv_array as $inv_id => $item){
-//                    //var_dump($item);
-//
-//                    if (($item['summ'] != $item['summ_poss']) && ( $item['summins'] != $item['summ_poss'])){
-//                        var_dump($inv_id);
-//                        var_dump($item['summ_poss']);
-//                        var_dump($item['summ']);
-//                        var_dump($item['summins']);
-//                        var_dump("------");
-//                    }
-//                }
-
-                /*} else {
-                    echo '<span style="color: red;">Ожидается слишком большой результат выборки. Уточните запрос.</span>';
-                }*/
-
-                //var_dump($query);
-                //var_dump($queryDopEx);
-                //var_dump($queryDopClient);
-
-                //mysql_close();
             }else {
                 echo json_encode(array('result' => 'error', 'data' => '<span style="color: red;">Не найден пациент.</span>'));
             }

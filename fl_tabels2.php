@@ -6,10 +6,10 @@
 
 
     //!!!Сортировка - нигде не используется??
-    function cmp($a, $b)
-    {
-        return sort($massive, SORT_STRING);
-    }
+//    function cmp($a, $b)
+//    {
+//        return sort($massive, SORT_STRING);
+//    }
 
 
 	require_once 'header.php';
@@ -521,17 +521,18 @@
                         echo number_format($oklad, 2, '.', ' ');
 
 
+                        //Итого
                         echo '
                                     </td>                                    
                                     <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; font-weight: bold;">
                                         <div id="w_id_'.$worker_data['id'].'" class="itogZP" oklad="'.$oklad.'" w_percentHours="'.$w_percentHours.'" worker_revenue_percent="'.$worker_revenue_percent.'" filialMoney="0" style="">
                                         </div>';
-                        //Итого
 
                         echo '
                                     </td> 
-                                    <td style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">
-                                        <i class="fa fa-file-text" aria-hidden="true"></i>
+                                    <td id="worker_'.$worker_data['id'].'" class="workerTabel" f_id="'.$worker_filial_id. '" style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center; font-size: 120%;">
+                                        <i class="fa fa-file-text" aria-hidden="true" style="color: rgba(0, 0, 0, 0.30); font-size: 130%;" title="Нет табеля"></i>
+                                        <i class="fa fa-plus" style="color: green; font-size: 100%; cursor: pointer;" title="Добавить" onclick="addNewTabelForWorkerFromSchedulerReport();"></i>
                                     </td>
                                 </tr>';
                     }
@@ -551,6 +552,9 @@
 				$(document).ready(function() {
 				    //Соберём выручку филиала
                     fl_getAllFilialMoney ('.$month.', '.$year.',0);
+				    
+                    fl_getAllTabels ('.$month.', '.$year.', '.$type.');
+				    
 				    
 				    
                     

@@ -1,7 +1,7 @@
 <?php
 
-//fl_tabel.php
-//Табель
+//fl_tabel2.php
+//Табель для админов и ассистов
 
 	require_once 'header.php';
 	
@@ -228,7 +228,7 @@
                             }
 
                             //Зубные формулы и запись врача
-                            $worker_mark = '';
+                            $doctor_mark = '';
                             $background_color = 'background-color: rgb(255, 255, 255);';
 
                             if ($invoice_type == 5) {
@@ -247,7 +247,7 @@
                             }
 
                             if ($number == 0) {
-                                $worker_mark = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет отметки врача"></i>';
+                                $doctor_mark = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет отметки врача"></i>';
                                 $background_color = 'background-color: rgba(255, 141, 141, 0.2);';
                             }
 
@@ -308,7 +308,7 @@
                             $rezult .= '
                                     <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
                                     <div style="position: absolute; bottom: 2px; right: 3px;">
-                                        '.$worker_mark.'
+                                        '.$doctor_mark.'
                                     </div>
                                 </div>';
 
@@ -721,7 +721,7 @@
                         }*/
 
                         echo '
-                                                <a href="fl_tabel_print.php?tabel_id=' . $tabel_j[0]['id'] . '" class="b" style="font-size: 80%;" >Распечатать</a>';
+                                                <a href="fl_tabel2_print.php?tabel_id=' . $tabel_j[0]['id'] . '" class="b" style="font-size: 80%;" >Распечатать</a>';
 
                         echo '
                                             </div>

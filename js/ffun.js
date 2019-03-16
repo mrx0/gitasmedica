@@ -4495,3 +4495,48 @@
             }
         })
     }
+
+
+    //Получение табелей за этот месяц
+    function fl_getAllTabels (month, year, typeW){
+        // console.log(month);
+        // console.log(year);
+        // console.log(w_type);
+
+        var link = "fl_getAllTabels_f.php";
+
+        var reqData = {
+            month: month,
+            year: year,
+            typeW: typeW
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == "success") {
+                    console.log (res.data);
+
+                    for(var worker_id in res.data){
+                        $("#worker_"+worker_id).html("<a href='fl_tabel2.php?id="+res.data[worker_id]['id']+"' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgb(89, 169, 39); font-size: 130%;' title=''></i></a> "+
+                        "<i class='fa fa-refresh' aria-hidden='true' style='color: rgb(218, 133, 9); font-size: 100%; cursor: pointer;' title='Обновить' onclick=\'refreshTabelForWorkerFromSchedulerReport();\'></i>");
+                    }
+
+                }else{
+                    //--
+                }
+            }
+        })
+    }
+
+
