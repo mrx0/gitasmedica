@@ -4,14 +4,6 @@
 //Важный отчёт
 //для администраторов и ассистентов
 
-
-    //!!!Сортировка - нигде не используется??
-//    function cmp($a, $b)
-//    {
-//        return sort($massive, SORT_STRING);
-//    }
-
-
 	require_once 'header.php';
     require_once 'blocks_dom.php';
 	
@@ -403,7 +395,7 @@
                                 <td style="width: 50px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>% от выручки</i></td>
                                 <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Закрыто работ на сумму, руб.</i></td>
                                 <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Оклад, руб.</i></td>
-                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Итого к выплате, руб.</i></td>
+                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Итого, руб.</i></td>
                                 <td style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">-</td>
                                 ';
                 echo '
@@ -422,7 +414,7 @@
                         //var_dump($worker_data);
                         $haveFilial = true;
                         $haveCategory = true;
-                        $worker_сategory_id = 0;
+                        $worker_category_id = 0;
                         $worker_filial_id = 0;
                         $w_percentHours = 0;
                         $worker_revenue_percent = 0.00;
@@ -436,7 +428,7 @@
                         //Категория
                         if (($worker_data['cat_id'] != NUll) && ($worker_data['cat_name'] != NUll)) {
                             echo $worker_data['cat_name'];
-                            $worker_сategory_id = $worker_data['cat_id'];
+                            $worker_category_id = $worker_data['cat_id'];
                         }else{
                             echo '<span style="color: rgb(243, 0, 0);">не указано</span>';
                             $haveCategory =false;
@@ -497,7 +489,7 @@
 
                         //% от выручки
                         if ($haveCategory && $haveFilial){
-                            $worker_revenue_percent = $revenue_percent_j[$worker_filial_id][$worker_сategory_id]['value'];
+                            $worker_revenue_percent = $revenue_percent_j[$worker_filial_id][$worker_category_id]['value'];
                         }
                         echo number_format($worker_revenue_percent, 2, '.', ' ');
 
@@ -525,7 +517,7 @@
                         echo '
                                     </td>                                    
                                     <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; font-weight: bold;">
-                                        <div id="w_id_'.$worker_data['id'].'" class="itogZP" oklad="'.$oklad.'" w_percentHours="'.$w_percentHours.'" worker_revenue_percent="'.$worker_revenue_percent.'" filialMoney="0" style="">
+                                        <div id="w_id_'.$worker_data['id'].'" class="itogZP" oklad="'.$oklad.'" w_hours="'.$w_hours.','.$w_normaSmen.'" w_percentHours="'.$w_percentHours.'" worker_revenue_percent="'.$worker_revenue_percent.'" filialMoney="0" worker_category_id="'.$worker_category_id.'" style="">
                                         </div>';
 
                         echo '

@@ -41,7 +41,7 @@
                         //var_dump($_SESSION);
                         //unset($_SESSION['invoice_data']);
 			
-                        $filials_j = getAllFilials(false, false, false);
+                        $filials_j = getAllFilials(false, false, true);
                         //var_dump(microtime(true) - $script_start);
                         //var_dump($filials_j);
 
@@ -749,7 +749,7 @@
                             echo '
                                             <div id="allDeductionssIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allDeductionssIsHere\');">показать/скрыть</div>
                                     </div>
-                                    <div id="allDeductionssIsHere" style="display: none;">
+                                    <div id="allDeductionssIsHere" style="">
                                         ' . $rezultD . '
                                     </div>';
                         }else{
@@ -767,7 +767,7 @@
                             echo '
                                         <div id="allSurchargesIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allSurchargesIsHere\');">показать/скрыть</div>
                                     </div>
-                                    <div id="allSurchargesIsHere" style="display: none;">
+                                    <div id="allSurchargesIsHere" style="">
                                         '.$rezultS.'
                                     </div>';
                         }else{
@@ -785,7 +785,7 @@
                             echo '
                                         <div id="allPaidoutsIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allPaidoutsIsHere\');">показать/скрыть</div>
                                     </div>
-                                    <div id="allPaidoutsIsHere" style="display: none;">
+                                    <div id="allPaidoutsIsHere" style="">
                                         '.$rezultP.'
                                     </div>';
                         }else{
