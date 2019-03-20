@@ -250,7 +250,10 @@
 					</div>';
 
 				echo '
-                    <div id="data" style="margin: 10px 0 0;">
+                    <div id="data" style="margin: 10px 0 0;">';
+                echo '
+					    <div id="errrror"></div>';
+                echo '
                         <ul style="margin-left: 6px; margin-bottom: 20px;">
                             <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
                             <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
@@ -389,13 +392,14 @@
                         <table style="border-bottom: 1px solid #BFBCB5; border-right: 1px solid #BFBCB5; margin:5px; font-size: 80%;">
                             <tr class="<!--sticky f-sticky-->">
                                 <td style="width: 260px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>ФИО'.$block_fast_filter.'</i></td>
-                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Категория</i></b></td>
-                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Прикреплён</i></b></td>
+                                <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Категория</i></b></td>
+                                <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Прикреплён</i></b></td>
+                                <td style="width: 80px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Оклад, руб.</i></td>
                                 <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Часы</i><br><span style="color: rgb(158, 158, 158); font-size: 80%;">всего/ норма/ %</span></td>
-                                <td style="width: 50px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>% от выручки</i></td>
-                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Закрыто работ на сумму, руб.</i></td>
-                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Оклад, руб.</i></td>
-                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Итого, руб.</i></td>
+                                <td style="width: 80px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>ZP_temp</i></td>
+                                <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Закрыто работ на сумму, руб.</i></td>
+                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Надбавка от выручки, руб.(%)</i></td>
+                                <td style="width: 70px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Итого, руб.</i></td>
                                 <td style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">-</td>
                                 ';
                 echo '
@@ -423,7 +427,7 @@
                         echo '
                                 <tr class="cellsBlockHover workerItem" worker_id="'.$worker_data['id'].'" style="'.$bgColor.'">
                                     <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>'.$worker_data['full_name'].'</b></td>
-                                    <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">';
+                                    <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">';
 
                         //Категория
                         if (($worker_data['cat_id'] != NUll) && ($worker_data['cat_name'] != NUll)) {
@@ -436,7 +440,7 @@
 
                         echo '
                                     </td>
-                                    <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">';
+                                    <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">';
 
                         //Если есть привязка к филиалу
                         if ($worker_data['filial_id'] != 0){
@@ -448,13 +452,31 @@
                         }
                         echo '
                                     </td>
+                                    
+                                    <td style="width: 80px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; ">';
+                        //Оклад
+                        if (isset($salariesyCategory[$worker_filial_id])){
+                            if (isset($salariesyCategory[$worker_filial_id][$worker_data['cat_id']])) {
+                                $oklad = $salariesyCategory[$worker_filial_id][$worker_data['cat_id']];
+                            }
+                        }
+                        echo number_format($oklad, 2, '.', ' ');
+
+                        //Итого
+                        echo '
+                                    </td>  
+                                    
                                     <td style="width: 120px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">';
+
+                        $w_normaSmen = $normaSmen[(int)$month]*12;
+                        $w_hours = 0;
+                        $w_percentHours = 0;
+
 
                         //Смены часы
                         if (isset($hours_j[$worker_data['id']])){
 
                             $w_hours = array_sum($hours_j[$worker_data['id']]);
-                            $w_normaSmen = $normaSmen[(int)$month]*12;
                             $w_percentHours = number_format($w_hours * 100 / $w_normaSmen, 2, '.', '');
 
                             echo '
@@ -485,46 +507,45 @@
 
                         echo '
                                     </td>
-                                    <td style="width: 50px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">';
-
-                        //% от выручки
-                        if ($haveCategory && $haveFilial){
-                            $worker_revenue_percent = $revenue_percent_j[$worker_filial_id][$worker_category_id]['value'];
-                        }
-                        echo number_format($worker_revenue_percent, 2, '.', ' ');
-
-
-                        echo '
+                                    <td style="width: 80px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">
+                                    <div id="zp_temp_'.$worker_data['id'].'" style="">
+                                    </div>
                                     </td>
-                                    <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">';
+                                    <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">';
                         //Выручка
                         echo '
                                         <div class="filialMoney" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'">                                                            
                                         </div>';
                         echo '
                                     </td>
-                                    <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; ">';
-                        //Оклад
-                        if (isset($salariesyCategory[$worker_filial_id])){
-                            if (isset($salariesyCategory[$worker_filial_id][$worker_data['cat_id']])) {
-                                $oklad = $salariesyCategory[$worker_filial_id][$worker_data['cat_id']];
-                            }
+                                    <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">';
+
+                        //% от выручки
+                        if ($haveCategory && $haveFilial){
+                            echo '
+                                    <div id="w_revenue_summ_'.$worker_data['id'].'" style="display: inline;">
+                                    </div>';
+
+
+                            $worker_revenue_percent = $revenue_percent_j[$worker_filial_id][$worker_category_id]['value'];
+
+                            echo '
+                                    <div style="display: inline;">
+                                        ('.number_format($worker_revenue_percent, 1, '.', ' ').'%)
+                                    </div>';
                         }
-                        echo number_format($oklad, 2, '.', ' ');
-
-
-                        //Итого
                         echo '
-                                    </td>                                    
-                                    <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; font-weight: bold;">
-                                        <div id="w_id_'.$worker_data['id'].'" class="itogZP" oklad="'.$oklad.'" w_hours="'.$w_hours.','.$w_normaSmen.'" w_percentHours="'.$w_percentHours.'" worker_revenue_percent="'.$worker_revenue_percent.'" filialMoney="0" worker_category_id="'.$worker_category_id.'" style="">
+                                        
+                                    </td>
+                                    <td style="width: 70px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; font-weight: bold;">
+                                        <div id="w_id_'.$worker_data['id'].'" class="itogZP" w_id="'.$worker_data['id'].'" f_id="'.$worker_filial_id. '" oklad="'.$oklad.'" w_hours="'.$w_hours.','.$w_normaSmen.'" w_percentHours="'.$w_percentHours.'" worker_revenue_percent="'.$worker_revenue_percent.'" filialMoney="0" worker_category_id="'.$worker_category_id.'" style="">
                                         </div>';
 
                         echo '
                                     </td> 
                                     <td id="worker_'.$worker_data['id'].'" class="workerTabel" f_id="'.$worker_filial_id. '" style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center; font-size: 120%;">
                                         <i class="fa fa-file-text" aria-hidden="true" style="color: rgba(0, 0, 0, 0.30); font-size: 130%;" title="Нет табеля"></i>
-                                        <i class="fa fa-plus" style="color: green; font-size: 100%; cursor: pointer;" title="Добавить" onclick="addNewTabelForWorkerFromSchedulerReport();"></i>
+                                        <i class="fa fa-plus" style="color: green; font-size: 100%; cursor: pointer;" title="Добавить" onclick="addNewTabelForWorkerFromSchedulerReport('.$worker_data['id'].', '.$worker_filial_id.', '.$type.');"></i>
                                     </td>
                                 </tr>';
                     }
@@ -543,12 +564,10 @@
 
 				$(document).ready(function() {
 				    //Соберём выручку филиала
-                    fl_getAllFilialMoney ('.$month.', '.$year.',0);
+                    fl_calculateZP ('.$month.', '.$year.',0);
+				    setTimeout(fl_getAllTabels ('.$month.', '.$year.', '.$type.'), 7000);
 				    
-                    fl_getAllTabels ('.$month.', '.$year.', '.$type.');
-				    
-				    
-				    
+                    //$.when(fl_calculateZP ('.$month.', '.$year.',0)).then(fl_getAllTabels ('.$month.', '.$year.', '.$type.'));  
                     
                     //!!! из файла fl_tabels.php
                     //посмотреть по ходу, надо ли это тут будет

@@ -13,7 +13,7 @@
         if ($_POST){
             if (!isset($_POST['tabel_id']) || !isset($_POST['worker_id']) || !isset($_POST['oklad']) || !isset($_POST['w_percenthours']) ||
                 !isset($_POST['worker_revenue_percent']) || !isset($_POST['filialmoney']) || !isset($_POST['worker_category_id']) ||
-                !isset($_POST['w_hours']) || !isset($_POST['summ'])){
+                !isset($_POST['w_hours']) || !isset($_POST['summ']) || !isset($_POST['per_from_salary'])){
                 //echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
             }else{
 
@@ -29,7 +29,8 @@
                 $percent_summ = ($_POST['filialmoney'] * $_POST['worker_revenue_percent']/ 100) * $_POST['w_percenthours']/ 100;
 
                 $query = "UPDATE `fl_journal_tabels` SET `salary` = '{$_POST['oklad']}', `hours_percent` = '{$_POST['w_percenthours']}', 
-                  `revenue_percent` = '{$_POST['worker_revenue_percent']}', `filial_summ` = '{$_POST['filialmoney']}',
+                  `revenue_percent` = '{$_POST['worker_revenue_percent']}', `per_from_salary` = '{$_POST['per_from_salary']}', 
+                  `filial_summ` = '{$_POST['filialmoney']}',
                    `hours_count` = '{$_POST['w_hours']}', `percent_summ` = '{$percent_summ}',
                    `summ` = '{$_POST['summ']}',
                    `category` = '{$_POST['worker_category_id']}',

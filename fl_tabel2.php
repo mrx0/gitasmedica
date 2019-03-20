@@ -119,7 +119,14 @@
                                         <div style="font-size: 90%; margin-bottom: 20px;">
                                             <div style="color: #252525; font-weight: bold;">'.$monthsName[$tabel_j[0]['month']].' '.$tabel_j[0]['year'].'</div>
                                             <div>Сотрудник <b>'.WriteSearchUser('spr_workers', $tabel_j[0]['worker_id'], 'user_full', true).'</b></div>
-                                            <div>Филиал, к которому прикреплен сотрудник <b>'.$filials_j[$tabel_j[0]['office_id']]['name'].'</b></div>
+                                            <div>Филиал, к которому прикреплен сотрудник ';
+                        if ($tabel_j[0]['office_id'] == 0){
+                            echo '<span style="color: rgb(243, 0, 0);">не прикреплен</span>';
+                        }else {
+                            echo '<b>'.$filials_j[$tabel_j[0]['office_id']]['name'].'</b>';
+                        }
+                        echo '
+                                            </div>
 		        						</div>';
 
 

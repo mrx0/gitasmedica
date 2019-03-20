@@ -4421,13 +4421,13 @@
         });
     }
 
-    //Получение выручек всех филиалов
-    function fl_getAllFilialMoney (month, year, typeW){
+    //Получение выручек всех филиалов и расчет зп
+    function fl_calculateZP (month, year, typeW){
         // console.log(month);
         // console.log(year);
         // console.log(w_type);
 
-        var link = "fl_getAllFilialMoney_f.php";
+        var link = "fl_calculateZP_f.php";
 
         var reqData = {
             month: month,
@@ -4474,16 +4474,24 @@
 
                     $(".itogZP").each(function(){
 
+                        var worker_id = $(this).attr("w_id");
+
                         var oklad = Number($(this).attr("oklad"));
                         var w_percentHours = Number($(this).attr("w_percentHours"));
                         var worker_revenue_percent = Number($(this).attr("worker_revenue_percent"));
                         var filialMoney = Number($(this).attr("filialMoney"));
 
                         if (w_percentHours > 0){
-                            var itogZP = ((oklad * w_percentHours)/ 100) + ((((filialMoney/ 100) * worker_revenue_percent)/ 100) * w_percentHours);
+
+                            var zp_temp = (oklad * w_percentHours)/ 100;
+                            var revenue_summ = (((filialMoney/ 100) * worker_revenue_percent)/ 100) * w_percentHours;
+                            var itogZP = zp_temp + revenue_summ;
                             //console.log((filialMoney * worker_revenue_percent/ 100) * w_percentHours / 100);
                             //console.log(itogZP);
 
+                            $("#zp_temp_"+worker_id).html(number_format(zp_temp, 2, '.', ''));
+                            $("#w_revenue_summ_"+worker_id).html(number_format(revenue_summ, 2, '.', ''));
+                            //console.log("#zp_temp_"+worker_id);
                             $(this).html(number_format(itogZP, 0, '.', ''));
                         }else{
                             $(this).html(number_format(itogZP, 0, '.', ''));
@@ -4502,7 +4510,6 @@
     function fl_getAllTabels (month, year, typeW){
         // console.log(month);
         // console.log(year);
-        // console.log(w_type);
 
         var link = "fl_getAllTabels_f.php";
 
@@ -4523,12 +4530,17 @@
                 //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             success: function (res) {
-                //console.log (res);
+                console.log (res);
 
                 if (res.result == "success") {
                     //console.log (res.data);
 
                     for(var worker_id in res.data){
+                        // console.log (res.data[worker_id]);
+                        // console.log (res.data[worker_id]['summ']);
+                        // console.log (Number($('#w_id_' + worker_id).html()));
+                        // console.log (res.data[worker_id]['summ'] == Number($('#w_id_' + worker_id).html()));
+
 
                         if (res.data[worker_id]['status'] == 7){
                             $("#worker_" + worker_id).html("<a href='fl_tabel2.php?id=" + res.data[worker_id]['id'] + "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(13,236,109,0.98); font-size: 130%;' title='Табель проведён'></i></a> " +
@@ -4551,6 +4563,74 @@
         })
     }
 
+    //Добавление нового табеля админа, ассиста
+    function addNewTabelForWorkerFromSchedulerReport(worker_id, filial_id, type){
+        // console.log(tabel_id);
+        // console.log(worker_id);
+        // console.log($("#w_id_"+worker_id).attr("oklad"));
+        // console.log($("#w_id_"+worker_id).attr("w_percenthours"));
+        // console.log($("#w_id_"+worker_id).attr("worker_revenue_percent"));
+        //  console.log(Number($("#zp_temp_" + worker_id).html()));
+        // console.log($("#w_id_"+worker_id).attr("filialmoney"));
+        // console.log($("#w_id_"+worker_id).attr("worker_category_id"));
+        // console.log($("#w_id_"+worker_id).attr("w_hours"));
+        // console.log(Number($("#w_id_"+worker_id).html()));
+
+        var rys = false;
+
+        rys = confirm("Добавить новый табель?");
+
+        if (rys) {
+
+            var link = "fl_addNewTabelForWorkerFromSchedulerReport_f.php";
+
+            var reqData = {
+                worker_id: worker_id,
+                filial_id: filial_id,
+                type: type,
+                month: $("#iWantThisMonth").val(),
+                year: $("#iWantThisYear").val(),
+                oklad: $("#w_id_" + worker_id).attr("oklad"),
+                w_percenthours: $("#w_id_" + worker_id).attr("w_percenthours"),
+                worker_revenue_percent: $("#w_id_" + worker_id).attr("worker_revenue_percent"),
+                per_from_salary: Number($("#zp_temp_" + worker_id).html()),
+                filialmoney: $("#w_id_" + worker_id).attr("filialmoney"),
+                worker_category_id: $("#w_id_" + worker_id).attr("worker_category_id"),
+                w_hours: $("#w_id_" + worker_id).attr("w_hours"),
+                summ: Number($("#w_id_" + worker_id).html())
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    //console.log (res);
+                    //$("#errrror").html(res);
+
+                    if (res.result == "success") {
+                        //console.log(res.data);
+
+                        location.reload();
+
+                        //fl_getAllTabels ($("#iWantThisMonth").val(), $("#iWantThisYear").val(), type);
+                    } else {
+                        $("#errrror").html(res.data);
+                        $('html, body').scrollTop(0);
+                    }
+                }
+            })
+        }
+
+    }
+
     //Обновление данных табеля
     function refreshTabelForWorkerFromSchedulerReport(tabel_id, worker_id){
         // console.log(tabel_id);
@@ -4558,6 +4638,7 @@
         // console.log($("#w_id_"+worker_id).attr("oklad"));
         // console.log($("#w_id_"+worker_id).attr("w_percenthours"));
         // console.log($("#w_id_"+worker_id).attr("worker_revenue_percent"));
+        //  console.log(Number($("#zp_temp_" + worker_id).html()));
         // console.log($("#w_id_"+worker_id).attr("filialmoney"));
         // console.log($("#w_id_"+worker_id).attr("worker_category_id"));
         // console.log($("#w_id_"+worker_id).attr("w_hours"));
@@ -4577,12 +4658,13 @@
                 oklad: $("#w_id_" + worker_id).attr("oklad"),
                 w_percenthours: $("#w_id_" + worker_id).attr("w_percenthours"),
                 worker_revenue_percent: $("#w_id_" + worker_id).attr("worker_revenue_percent"),
+                per_from_salary: Number($("#zp_temp_" + worker_id).html()),
                 filialmoney: $("#w_id_" + worker_id).attr("filialmoney"),
                 worker_category_id: $("#w_id_" + worker_id).attr("worker_category_id"),
                 w_hours: $("#w_id_" + worker_id).attr("w_hours"),
                 summ: Number($("#w_id_" + worker_id).html())
             };
-            console.log(reqData);
+            //console.log(reqData);
 
             $.ajax({
                 url: link,
@@ -4595,12 +4677,12 @@
                     //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
                 },
                 success: function (res) {
-                    console.log (res);
+                    //console.log (res);
 
                     if (res.result == "success") {
-                        console.log(res.data);
+                        //console.log(res.data);
 
-
+                        location.reload();
                     } else {
                         //--
                     }
