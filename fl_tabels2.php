@@ -564,8 +564,32 @@
 
 				$(document).ready(function() {
 				    //Соберём выручку филиала
-                    fl_calculateZP ('.$month.', '.$year.',0);
-				    setTimeout(fl_getAllTabels ('.$month.', '.$year.', '.$type.'), 7000);
+                    //fl_calculateZP ('.$month.', '.$year.',0);
+				    //setTimeout(fl_getAllTabels ('.$month.', '.$year.', '.$type.'), 7000);
+				    
+				    
+                    wait(function(runNext){
+
+                        setTimeout(function(){
+            
+                            fl_calculateZP ('.$month.', '.$year.',0);
+            
+                            runNext();
+            
+                        }, 100);
+            
+                    }).wait(function(){
+            
+                        setTimeout(function(){
+            
+                            fl_getAllTabels ('.$month.', '.$year.', '.$type.')
+            
+                        }, 1000);
+            
+                       
+            
+                    });
+				    
 				    
                     //$.when(fl_calculateZP ('.$month.', '.$year.',0)).then(fl_getAllTabels ('.$month.', '.$year.', '.$type.'));  
                     

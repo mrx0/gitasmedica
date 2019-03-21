@@ -66,7 +66,7 @@
                                             <a href="fl_my_tabels.php" class="b">Табели</a>';
                         }else {
                             echo '
-                                            <a href="fl_tabels.php" class="b">Важный отчёт</a>';
+                                            <a href="fl_tabels20.php" class="b">Важный отчёт</a>';
                         }
                         echo '
                                         </div>
@@ -611,12 +611,17 @@
                                                 Всего часов в этом месяце: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">' . $w_hours . '</span>
                                             </div>
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1); display: inline;">
-                                                (<span class="allMonthHours" style="font-size: 14px; font-weight: bold; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);">' . $w_percentHours . '</span> от нормы ' . $w_normaSmen . ' часов)
+                                                (<span class="allMonthHours" style="font-size: 12px; /*font-weight: bold; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);*/">' . $w_percentHours . '</span> от нормы ' . $w_normaSmen . ' часов)
                                             </div>
                                         </div>
                                         <div style="margin-bottom: 5px;">
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
-                                                Процент с выручки: <span class="" style="font-size: 16px; color: #555; font-weight: bold;">' . number_format($tabel_j[0]['percent_summ'], 0, '.', '') . ' руб. ('.$tabel_j[0]['revenue_percent'].'%)</span>
+                                               ZP_temp: <span class="" style="font-size: 14px; color: #555;  font-weight: bold;">' . number_format($tabel_j[0]['per_from_salary'], 0, '.', '') . ' руб. </span>
+                                            </div>
+                                        </div>
+                                        <div style="margin-bottom: 5px;">
+                                            <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
+                                                Процент с выручки: <span class="" style="font-size: 14px; color: #555;  font-weight: bold;">' . number_format($tabel_j[0]['percent_summ'], 0, '.', '') . ' руб. <span style="font-weight: normal;">('.$tabel_j[0]['revenue_percent'].'%)</span></span>
                                             </div>
                                         </div>
                                         ';
@@ -688,8 +693,7 @@
 
 
                         echo '
-                                        <div style="background-color: rgba(72, 230, 194, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Всего начислено: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['surcharge'] . '</span> руб.</div>';
+                                        <div style="background-color: rgba(72, 230, 194, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">';
 
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
                             echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2&w_type='.$tabel_j[0]['type'].'" class="b" style = "font-size: 80%;" >Отпускной +</a ></div>';
@@ -698,14 +702,14 @@
                         }
 
                         echo '
+                                                <div>Всего начислено: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['surcharge'] . '</span> руб.</div>
                                             </div>
                                         </div>';
 
 
 
                         echo '
-                                        <div style="background-color: rgba(230, 72, 72, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Всего удержано: <span class="calculateInvoice" style="font-size: 13px">' . $tabel_j[0]['deduction'] . '</span> руб.</div>';
+                                        <div style="background-color: rgba(230, 72, 72, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">';
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
                             //echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style = "font-size: 80%;" >За материалы +</a ></div >';
                             echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2&w_type='.$tabel_j[0]['type'].'" class="b" style = "font-size: 80%;" >Налог +</a ></div >';
@@ -714,11 +718,11 @@
                             echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=5&w_type='.$tabel_j[0]['type'].'" class="b" style = "font-size: 80%;" >Обучение +</a ></div >';
                         }
                         echo '
+                                            <div>Всего удержано: <span class="calculateInvoice" style="font-size: 13px">' . $tabel_j[0]['deduction'] . '</span> руб.</div>
                                         </div>';
 
                         echo '
-                                        <div style="background-color: rgba(1, 94, 255, 0.22); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Всего выплачено: <span class="calculateOrder" style="font-size: 13px; color: rgb(12, 0, 167);">' . $tabel_j[0]['paidout'] . '</span> руб.</div>';
+                                        <div style="background-color: rgba(1, 94, 255, 0.22); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">';
 
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
                             echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1&w_type='.$tabel_j[0]['type'].'" class="b" style = "font-size: 80%;">Аванс +</a ></div>';
@@ -728,6 +732,7 @@
                         }
 
                         echo '
+                                                <div>Всего выплачено: <span class="calculateOrder" style="font-size: 13px; color: rgb(12, 0, 167);">' . $tabel_j[0]['paidout'] . '</span> руб.</div>
                                             </div>
                                         </div>';
 
@@ -842,9 +847,9 @@
                             $(document).ready(function() {
                                 //console.log(Number($(".allMonthHours").html()));
                                 
-                                $(".allMonthHours").css({
-                                    "color": "" + Colorize(Number($(".allMonthHours").html())) + ""
-                                });
+//                                $(".allMonthHours").css({
+//                                    "color": "" + Colorize(Number($(".allMonthHours").html())) + ""
+//                                });
                                 
                                 $(".allMonthHours").html($(".allMonthHours").html()+"%");
 
