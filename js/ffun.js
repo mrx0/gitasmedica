@@ -860,40 +860,13 @@
 
             }, 1500);
 
-            /*$.ajax({
-                url: "fl_addWorkersIDsINSessionForPrint.php",
-                global: false,
-                type: "POST",
-                dataType: "JSON",
-                data: {
-                    workersIDarr: workersIDs_arr
-                },
-                cache: false,
-                beforeSend: function () {
-                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-                },
-                // действие, при ответе с сервера
-                success: function (res) {
-                    console.log(res);
-
-                    /*if (res.result == "success") {
-                        //console.log(res);
-
-                        //document.location.href = "fl_addNewTabel.php";
-                        //window.open("fl_addNewTabel.php", 'newTabelwindow', 'width=800, height=800, scrollbars=yes,resizable=yes,menubar=no,toolbar=yes,status=yes');
-
-                        iOpenNewWindow("fl_addINExistTabel.php", 'oldTabelwindow', 'width=800, height=800, scrollbars=yes,resizable=yes,menubar=no,toolbar=yes,status=yes');
-                    }*/
-            /*    }
-            });*/
-
         }).wait(function(runNext){
             //console.log(1);
 
             setTimeout(function(){
                 var elems = document.getElementsByClassName('rezult_item');
                 //console.log(elems);
-                var arr = jQuery.makeArray(document.getElementsByClassName('rezult_item'));
+                var arr = $.makeArray(document.getElementsByClassName('rezult_item'));
                 //console.log(arr);
 
                 arr.sort(function (a, b) {
@@ -903,9 +876,28 @@
                     //console.log(b);
                     return a.localeCompare(b);
                 });
-                console.log(arr);
+                //console.log(arr);
+
+                for(var i=0; i<arr.length; i++){
+                    //console.log(arr[i]);
+                    //console.log(i);
+                    //console.log((i+1)% 3);
+                    //console.log(typeof (arr[i]));
+                    //console.log(arr.classList.contains("rezult_item"));
+
+                    if ((i+1)% 3 == 0){
+                        //console.log(i);
+                        //console.log(arr[i]);
+                        //console.log(arr[i].classList.contains("rezult_item"));
+
+                        arr[i].classList.add("rezult_item3print");
+
+                    }
+                }
 
                 $(arr).appendTo("#rezult");
+                //console.log(arr.length);
+
 
             }, 1500);
 

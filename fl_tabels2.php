@@ -243,7 +243,7 @@
 						<h1>Важный отчёт</h1>';
                 echo '
                         <div>
-						    <!--<a href="fl_tabel_print_choice.php" class="b4">Печать пачки</a>-->
+						    <a href="fl_tabel_print_choice.php?type='.$type.'" class="b4">Печать пачки</a>
 						</div>';
                 echo '    
 					</header>

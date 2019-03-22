@@ -35,6 +35,8 @@
                         $rezultShed = array();
                         $nightSmena = 0;
 
+                        $dop = array();
+
                         $tabel_deductions_j = array();
                         $tabel_surcharges_j = array();
                         $tabel_surcharges_j = array();
@@ -226,13 +228,39 @@
                             $tabel_paidouts_j4 = $tabel_paidouts_j[4];
                         }
 
+                        //Если админ
+                        if ($tabel_j[0]['type'] == 4) {
+
+                            //Часы работы
+                            $dop['hours_count'] = 0;
+                            $dop['hours_norma'] = 0;
+                            if ($tabel_j[0]['hours_count'] != NULL) {
+                                $hours_count_arr_temp = explode(',', $tabel_j[0]['hours_count']);
+                                //var_dump($hours_count_arr_temp);
+
+                                $dop['hours_count'] = $hours_count_arr_temp[0];
+                                $dop['hours_norma'] = $hours_count_arr_temp[1];
+                            }
+
+                            //Оклад
+                            $dop['salary'] = $tabel_j[0]['salary'];
+
+                            //Процент от оклада
+                            $dop['per_from_salary'] = $tabel_j[0]['per_from_salary'];
+                            $tabel_summ = number_format($dop['per_from_salary'], 0, '.', '');
+
+                            //Процент от выручки
+                            $dop['percent_summ'] = $tabel_j[0]['percent_summ'];
+
+                        }
+
                         //Пробуем вывести расчетный лист по табелю для печати
                         echo tabelPrintTemplate ($_GET['tabel_id'], $monthsName[$tabel_j[0]['month']], $tabel_j[0]['year'], WriteSearchUser('spr_workers', $tabel_j[0]['worker_id'], 'user', false), $filials_j[$tabel_j[0]['office_id']]['name2'], count($rezultShed),
                             $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3,
                             $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1,
                             $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm,
                             $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount,
-                            $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3, 'fl_tabel.php');
+                            $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3, $dop, 'fl_tabel2.php');
 
 
                         echo "
