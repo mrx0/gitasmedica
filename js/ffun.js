@@ -2823,11 +2823,13 @@
                             //console.log($("#filial_"+reqData['office']).css("display"));
 
                             //$("#filial_"+reqData['office']).hide();
-                            $("#filial_"+reqData['office']).css({
-                                "pointer-events": "none",
-                                "cursor": "default",
-                                "background-color": "rgba(140, 137, 137, 0.7)",
-                            })
+
+
+                            // $("#filial_"+reqData['office']).css({
+                            //     "pointer-events": "none",
+                            //     "cursor": "default",
+                            //     "background-color": "rgba(140, 137, 137, 0.7)",
+                            // })
                         }
                     }
                 }
