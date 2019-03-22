@@ -20,6 +20,11 @@ if ($enter_ok){
         if ($_GET){
             if (isset($_GET['tabel_id']) && isset($_GET['type'])){
 
+                $link = 'fl_tabel.php';
+                if (isset($_GET['w_type'])){
+                    $link = 'fl_tabel2.php';
+                }
+
                 $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['tabel_id'], 'id');
 
                 if ($tabel_j != 0){
@@ -44,7 +49,7 @@ if ($enter_ok){
                     }
 
                     echo '
-                                   ] в <a href="fl_tabel.php?id='.$_GET['tabel_id'].'" class="ahref">табель #'.$_GET['tabel_id'].'</a></h2>
+                                   ] в <a href="'.$link.'?id='.$_GET['tabel_id'].'" class="ahref">табель #'.$_GET['tabel_id'].'</a></h2>
                                     Заполните поля
                                 </header>';
 
@@ -71,7 +76,7 @@ if ($enter_ok){
                                         </div>
                                         
                                         <div id="errror"></div>                        
-                                        <input type="button" class="b" value="Добавить" onclick="fl_showPaidoutAdd(0, '.$_GET['tabel_id'].', '.$_GET['type'].', \'add\')">
+                                        <input type="button" class="b" value="Добавить" onclick="fl_showPaidoutAdd(0, '.$_GET['tabel_id'].', '.$_GET['type'].', \''.$link.'\', \'add\')">
                                     </form>';
 
                     echo '

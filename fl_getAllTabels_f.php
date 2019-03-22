@@ -33,7 +33,7 @@
                     $month = $_POST['month'];
                 }
 
-                $query = "SELECT `id`, `worker_id`, `office_id` FROM `fl_journal_tabels` WHERE `type`='{$_POST['typeW']}' AND `month` = '{$month}' AND `year` = '{$_POST['year']}' AND `status` <> '9';";
+                $query = "SELECT `id`, `worker_id`, `office_id`, `summ`, `status` FROM `fl_journal_tabels` WHERE `type`='{$_POST['typeW']}' AND `month` = '{$month}' AND `year` = '{$_POST['year']}' AND `status` <> '9';";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 

@@ -33,6 +33,11 @@
                                 <div id="tabs_notes2_' . $_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'] . '" class="notes_count3" style="display: none;">
                                     <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
                                 </div>
+                                
+                                <div id="tabs_notes_' . $_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'] . '" class="notes_count2" style="display: none;">
+                                    <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
+                                </div>
+                                
                             </div>
                         </a>
                     </li>';

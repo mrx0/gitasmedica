@@ -1155,13 +1155,13 @@
 
 
     //функция для создания шаблона табеля (оасчетного листа) для печати
-    function tabelPrintTemplate ($tabel_id, $month, $year, $worker_fio, $filial, $countSmen, $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3, $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1, $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm, $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount, $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3){
+    function tabelPrintTemplate ($tabel_id, $month, $year, $worker_fio, $filial, $countSmen, $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3, $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1, $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm, $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount, $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3, $link){
 
         $rezult = '
                 <div class="rezult_item" style="font-size: 95%; margin: 15px;" fio="'.$worker_fio.'">				
                     <div class="filterBlock" style="width: 650px; border-bottom: 1px dotted grey;">
                         <div class="filtercellLeft" style="width: 400px; text-align: center; border: none; padding-bottom: 2px;">
-                            <a href="fl_tabel.php?id='.$tabel_id.'" class="ahref">Расчетный листок '.$tabel_id.'</a> за '.$month.' '.$year.'
+                            <a href="'.$link.'?id='.$tabel_id.'" class="ahref">Расчетный листок '.$tabel_id.'</a> за '.$month.' '.$year.'
                         </div>
                     </div>
                     

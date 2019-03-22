@@ -41,7 +41,7 @@
                         //var_dump($_SESSION);
                         //unset($_SESSION['invoice_data']);
 			
-                        $filials_j = getAllFilials(false, false, false);
+                        $filials_j = getAllFilials(false, false, true);
                         //var_dump(microtime(true) - $script_start);
                         //var_dump($filials_j);
 
@@ -655,8 +655,7 @@
 
 
                         echo '
-                                        <div style="background-color: rgba(72, 230, 194, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Всего начислено: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['surcharge'] . '</span> руб.</div>';
+                                        <div style="background-color: rgba(72, 230, 194, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">';
 
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
                             echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style = "font-size: 80%;" >Отпускной +</a ></div>';
@@ -665,14 +664,16 @@
                         }
 
                         echo '
+                                                
+                                                <div>Всего начислено: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['surcharge'] . '</span> руб.</div>
                                             </div>
                                         </div>';
 
 
 
                         echo '
-                                        <div style="background-color: rgba(230, 72, 72, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Всего удержано: <span class="calculateInvoice" style="font-size: 13px">' . $tabel_j[0]['deduction'] . '</span> руб.</div>';
+                                        <div style="background-color: rgba(230, 72, 72, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">';
+
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
                             //echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style = "font-size: 80%;" >За материалы +</a ></div >';
                             echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style = "font-size: 80%;" >Налог +</a ></div >';
@@ -681,11 +682,12 @@
                             echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=5" class="b" style = "font-size: 80%;" >Обучение +</a ></div >';
                         }
                         echo '
+
+                                            <div>Всего удержано: <span class="calculateInvoice" style="font-size: 13px">' . $tabel_j[0]['deduction'] . '</span> руб.</div>
                                         </div>';
 
                         echo '
-                                        <div style="background-color: rgba(1, 94, 255, 0.22); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Всего выплачено: <span class="calculateOrder" style="font-size: 13px; color: rgb(12, 0, 167);">' . $tabel_j[0]['paidout'] . '</span> руб.</div>';
+                                        <div style="background-color: rgba(1, 94, 255, 0.22); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">';
 
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
                             echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style = "font-size: 80%;">Аванс +</a ></div>';
@@ -695,6 +697,7 @@
                         }
 
                         echo '
+                                                <div>Всего выплачено: <span class="calculateOrder" style="font-size: 13px; color: rgb(12, 0, 167);">' . $tabel_j[0]['paidout'] . '</span> руб.</div>
                                             </div>
                                         </div>';
 
@@ -749,7 +752,7 @@
                             echo '
                                             <div id="allDeductionssIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allDeductionssIsHere\');">показать/скрыть</div>
                                     </div>
-                                    <div id="allDeductionssIsHere" style="display: none;">
+                                    <div id="allDeductionssIsHere" style="">
                                         ' . $rezultD . '
                                     </div>';
                         }else{
@@ -767,7 +770,7 @@
                             echo '
                                         <div id="allSurchargesIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allSurchargesIsHere\');">показать/скрыть</div>
                                     </div>
-                                    <div id="allSurchargesIsHere" style="display: none;">
+                                    <div id="allSurchargesIsHere" style="">
                                         '.$rezultS.'
                                     </div>';
                         }else{
@@ -785,7 +788,7 @@
                             echo '
                                         <div id="allPaidoutsIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allPaidoutsIsHere\');">показать/скрыть</div>
                                     </div>
-                                    <div id="allPaidoutsIsHere" style="display: none;">
+                                    <div id="allPaidoutsIsHere" style="">
                                         '.$rezultP.'
                                     </div>';
                         }else{

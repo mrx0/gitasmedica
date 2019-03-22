@@ -15,7 +15,7 @@
                 include_once 'functions.php';
 
                 $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['id'], 'id');
-                //var_dump(microtime(true) - $script_start);
+                //var_dump($tabel_j);
 
                 if ($tabel_j != 0){
                     //var_dump($tabel_j);
@@ -66,7 +66,7 @@
                                             <a href="fl_my_tabels.php" class="b">Табели</a>';
                         }else {
                             echo '
-                                            <a href="fl_tabels.php" class="b">Важный отчёт</a>';
+                                            <a href="fl_tabels20.php" class="b">Важный отчёт</a>';
                         }
                         echo '
                                         </div>
@@ -119,7 +119,14 @@
                                         <div style="font-size: 90%; margin-bottom: 20px;">
                                             <div style="color: #252525; font-weight: bold;">'.$monthsName[$tabel_j[0]['month']].' '.$tabel_j[0]['year'].'</div>
                                             <div>Сотрудник <b>'.WriteSearchUser('spr_workers', $tabel_j[0]['worker_id'], 'user_full', true).'</b></div>
-                                            <div>Филиал <b>'.$filials_j[$tabel_j[0]['office_id']]['name'].'</b></div>
+                                            <div>Филиал, к которому прикреплен сотрудник ';
+                        if ($tabel_j[0]['office_id'] == 0){
+                            echo '<span style="color: rgb(243, 0, 0);">не прикреплен</span>';
+                        }else {
+                            echo '<b>'.$filials_j[$tabel_j[0]['office_id']]['name'].'</b>';
+                        }
+                        echo '
+                                            </div>
 		        						</div>';
 
 
@@ -156,13 +163,6 @@
                             LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '".$tabel_j[0]['id']."'
                             WHERE jtabex.calculate_id = jcalc.id
                             GROUP BY jcalc.id";
-
-                        /*$query = "SELECT jcalc.*
-                            FROM `fl_journal_calculate` jcalc
-                            LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '".$tabel_j[0]['id']."'
-                            WHERE jtabex.calculate_id = jcalc.id";*/
-                        //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
-                        //$query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc WHERE jcalc.id IN (SELECT `calculate_id` FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."');";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -553,92 +553,130 @@
                         //var_dump(microtime(true) - $script_start);
 
                         //Смена/график
-                        $rezultShed = array();
-                        $nightSmena = 0;
-
-                        $query = "SELECT `id`, `day`, `smena`, `kab`, `worker` FROM `scheduler` WHERE `worker` = '{$tabel_j[0]['worker_id']}' AND `month` = '".(int)$tabel_j[0]['month']."' AND `year` = '{$tabel_j[0]['year']}' AND `filial`='{$tabel_j[0]['office_id']}'";
-
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-                        $number = mysqli_num_rows($res);
-
-                        if ($number != 0){
-                            while ($arr = mysqli_fetch_assoc($res)){
-                                //Раскидываем в массив
-                                array_push($rezultShed, $arr);
-                                //Если ночная смена
-                                if ($arr['smena'] == 3){
-                                    $nightSmena++;
-                                }
-                            }
-                        }
+//                        $rezultShed = array();
+//                        $nightSmena = 0;
+//
+//                        $query = "SELECT `id`, `day`, `smena`, `kab`, `worker` FROM `scheduler` WHERE `worker` = '{$tabel_j[0]['worker_id']}' AND `month` = '".(int)$tabel_j[0]['month']."' AND `year` = '{$tabel_j[0]['year']}' AND `filial`='{$tabel_j[0]['office_id']}'";
+//
+//                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//                        $number = mysqli_num_rows($res);
+//
+//                        if ($number != 0){
+//                            while ($arr = mysqli_fetch_assoc($res)){
+//                                //Раскидываем в массив
+//                                array_push($rezultShed, $arr);
+//                                //Если ночная смена
+//                                if ($arr['smena'] == 3){
+//                                    $nightSmena++;
+//                                }
+//                            }
+//                        }
                         /*var_dump($query);
                         var_dump(count($rezultShed));
                         var_dump($rezultShed);*/
                         //var_dump(microtime(true) - $script_start);
 
+                        //Часы работника
+                        $w_hours = 0;
+                        $w_normaSmen = 0;
 
-                        //Смены
+                        if ($tabel_j[0]['hours_count'] != NULL){
+                            $hours_arr = explode(',', $tabel_j[0]['hours_count']);
+                            //var_dump($hours_arr);
+
+                            $w_hours = $hours_arr[0];
+                            $w_normaSmen = $hours_arr[1];
+                        }
+
+                        $w_percentHours = $tabel_j[0]['hours_percent'];
+
+
+                        //Часы
                         echo '
                                 <div style="background-color: rgba(181, 165, 165, 0.16); border: 1px dotted #AAA; margin: 5px 0 10px; padding: 1px 3px; ">
                                     <div>
                                         <div style="margin-bottom: 5px;">
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
-                                                Всего смен в этом месяце в этом филиале: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">' . count($rezultShed) . '</span>
+                                                Оклад: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">' . $tabel_j[0]['salary'] . ' руб.</span>
                                             </div>
-                                        </div>';
-                        if ($nightSmena > 0) {
-                            echo '
-                                        <div>
-                                            <div style="font-size: 85%; color: #555;">
-                                                Из них ночных: <span class="" style="font-size: 14px; font-weight: bold;"><input type="number" value="' . $nightSmena . '" min="0" max="99" size="2" name="nightSmens" id="nightSmens" class="who2" placeholder="0" style="font-size: 13px; text-align: center;"></span>. Надбавка за одну ночную смену: 1000 руб.<br>
-                                            </div>';
-                            if ($tabel_j[0]['night_smena'] == 0) {
-                                if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9)) {
-                                    echo '
-                                            <button class="b" style="font-size: 80%;" onclick="showNightSmenaAddINTabel(' . $_GET['id'] . ', $(\'#nightSmens\').val());">Добавить в табель оплату <b>ночных</b> смен</button>';
-                                }
-                            }else{
-                                echo '<div style="font-size: 80%; color: rgb(7, 199, 41); padding-top: 5px;">В табель уже включена сумма за ночные смены <span style="font-size: 120%; font-weight: bold;">'.$tabel_j[0]['night_smena'].'</span> руб.';
-                                if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9)) {
-                                    echo '<span style="margin-left: 20px; font-size: 90%; color: red; cursor:pointer;" onclick="nightSmenaTabelDelete(' . $_GET['id'] . ');"><i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 150%;"></i> Удалить из табеля ночные смены</span>';
-                                }
-                                echo '</div>';
-                            }
-                            echo '
-                                        </div>';
-                        }else{
-                            echo '
-                                        <div>
-                                            <div style="font-size: 85%; color: #555;">
-                                                Ночных нет.<br>
-                                            </div>';
-                            echo '
-                                        </div>';
-                        }
-                        echo '
-                                        <div style="margin: 10px 0;">
-                                            <div style="font-size: 90%;  color: #555;">
-                                                <span style="color: rgba(10, 10, 10, 1);">Надбавка за "пустые смены".</span> (250 руб. за одну "пустую" смену)
-                                            </div>';
-
-                        if ($tabel_j[0]['empty_smena'] == 0) {
-                            echo '
-                                        <div style="font-size: 90%;  color: #555;">
-                                            Введите количество "пустых" смен: <input type="number" value="" min="0" max="99" size="2" name="emptySmens" id="emptySmens" class="who2" placeholder="0" style="font-size: 13px; text-align: center;">
-                                        </div>';
-                            if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
-                                echo ' 
-                                        <button class="b" style="font-size: 80%;" onclick="showEmptySmenaAddINTabel(' . $_GET['id'] . ');">Добавить в табель оплату <b>пустых</b> смен</button>';
-                            }
-
-                        } else {
-                            echo '<div style="font-size: 80%; color: rgb(7, 199, 41); padding-top: 5px;">В табель уже включена сумма за "пустые" смены <span style="font-size: 120%; font-weight: bold;">' . $tabel_j[0]['empty_smena'] . '</span> руб.';
-                            if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9)) {
-                                echo '<span style="margin-left: 20px; font-size: 90%; color: red; cursor:pointer;" onclick="emptySmenaTabelDelete(' . $_GET['id'] . ');"><i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 150%;"></i> Удалить из табеля "пустые" смены</span>';
-                            }
-                            echo '</div>';
-                        }
+                                        </div>
+                                        <div style="margin-bottom: 5px;">
+                                            <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
+                                                Категория: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">id = ' . $tabel_j[0]['category'] . '</span>
+                                            </div>
+                                        </div>
+                                        <div style="margin-bottom: 7px;">
+                                            <div style="font-size: 90%; color: rgba(10, 10, 10, 1); display: inline;">
+                                                Всего часов в этом месяце: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">' . $w_hours . '</span>
+                                            </div>
+                                            <div style="font-size: 90%; color: rgba(10, 10, 10, 1); display: inline;">
+                                                (<span class="allMonthHours" style="font-size: 12px; /*font-weight: bold; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);*/">' . $w_percentHours . '</span> от нормы ' . $w_normaSmen . ' часов)
+                                            </div>
+                                        </div>
+                                        <div style="margin-bottom: 5px;">
+                                            <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
+                                               ZP_temp: <span class="" style="font-size: 14px; color: #555;  font-weight: bold;">' . number_format($tabel_j[0]['per_from_salary'], 0, '.', '') . ' руб. </span>
+                                            </div>
+                                        </div>
+                                        <div style="margin-bottom: 5px;">
+                                            <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
+                                                Процент с выручки: <span class="" style="font-size: 14px; color: #555;  font-weight: bold;">' . number_format($tabel_j[0]['percent_summ'], 0, '.', '') . ' руб. <span style="font-weight: normal;">('.$tabel_j[0]['revenue_percent'].'%)</span></span>
+                                            </div>
+                                        </div>
+                                        ';
+//                        if ($nightSmena > 0) {
+//                            echo '
+//                                        <div>
+//                                            <div style="font-size: 85%; color: #555;">
+//                                                Из них ночных: <span class="" style="font-size: 14px; font-weight: bold;"><input type="number" value="' . $nightSmena . '" min="0" max="99" size="2" name="nightSmens" id="nightSmens" class="who2" placeholder="0" style="font-size: 13px; text-align: center;"></span>. Надбавка за одну ночную смену: 1000 руб.<br>
+//                                            </div>';
+//                            if ($tabel_j[0]['night_smena'] == 0) {
+//                                if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9)) {
+//                                    echo '
+//                                            <button class="b" style="font-size: 80%;" onclick="showNightSmenaAddINTabel(' . $_GET['id'] . ', $(\'#nightSmens\').val());">Добавить в табель оплату <b>ночных</b> смен</button>';
+//                                }
+//                            }else{
+//                                echo '<div style="font-size: 80%; color: rgb(7, 199, 41); padding-top: 5px;">В табель уже включена сумма за ночные смены <span style="font-size: 120%; font-weight: bold;">'.$tabel_j[0]['night_smena'].'</span> руб.';
+//                                if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9)) {
+//                                    echo '<span style="margin-left: 20px; font-size: 90%; color: red; cursor:pointer;" onclick="nightSmenaTabelDelete(' . $_GET['id'] . ');"><i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 150%;"></i> Удалить из табеля ночные смены</span>';
+//                                }
+//                                echo '</div>';
+//                            }
+//                            echo '
+//                                        </div>';
+//                        }else{
+//                            echo '
+//                                        <div>
+//                                            <div style="font-size: 85%; color: #555;">
+//                                                Ночных нет.<br>
+//                                            </div>';
+//                            echo '
+//                                        </div>';
+//                        }
+//                        echo '
+//                                        <div style="margin: 10px 0;">
+//                                            <div style="font-size: 90%;  color: #555;">
+//                                                <span style="color: rgba(10, 10, 10, 1);">Надбавка за "пустые смены".</span> (250 руб. за одну "пустую" смену)
+//                                            </div>';
+//
+//                        if ($tabel_j[0]['empty_smena'] == 0) {
+//                            echo '
+//                                        <div style="font-size: 90%;  color: #555;">
+//                                            Введите количество "пустых" смен: <input type="number" value="" min="0" max="99" size="2" name="emptySmens" id="emptySmens" class="who2" placeholder="0" style="font-size: 13px; text-align: center;">
+//                                        </div>';
+//                            if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
+//                                echo '
+//                                        <button class="b" style="font-size: 80%;" onclick="showEmptySmenaAddINTabel(' . $_GET['id'] . ');">Добавить в табель оплату <b>пустых</b> смен</button>';
+//                            }
+//
+//                        } else {
+//                            echo '<div style="font-size: 80%; color: rgb(7, 199, 41); padding-top: 5px;">В табель уже включена сумма за "пустые" смены <span style="font-size: 120%; font-weight: bold;">' . $tabel_j[0]['empty_smena'] . '</span> руб.';
+//                            if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9)) {
+//                                echo '<span style="margin-left: 20px; font-size: 90%; color: red; cursor:pointer;" onclick="emptySmenaTabelDelete(' . $_GET['id'] . ');"><i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 150%;"></i> Удалить из табеля "пустые" смены</span>';
+//                            }
+//                            echo '</div>';
+//                        }
 
                         echo '
                                         </div>
@@ -650,51 +688,51 @@
 
                         echo '
                                         <div style="background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ'] . '</span> руб.
+                                            Рассчет: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ'] . '</span> руб.
                                         </div>';
 
 
                         echo '
-                                        <div style="background-color: rgba(72, 230, 194, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Всего начислено: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['surcharge'] . '</span> руб.</div>';
+                                        <div style="background-color: rgba(72, 230, 194, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">';
 
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
-                            echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style = "font-size: 80%;" >Отпускной +</a ></div>';
-                            echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3" class="b" style="font-size: 80%;">Больничный +</a></div>';
-                            echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style="font-size: 80%;">Премия +</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2&w_type='.$tabel_j[0]['type'].'" class="b" style = "font-size: 80%;" >Отпускной +</a ></div>';
+                            echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3&w_type='.$tabel_j[0]['type'].'" class="b" style="font-size: 80%;">Больничный +</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1&w_type='.$tabel_j[0]['type'].'" class="b" style="font-size: 80%;">Премия +</a></div>';
                         }
 
                         echo '
+                                                <div>Всего начислено: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['surcharge'] . '</span> руб.</div>
                                             </div>
                                         </div>';
 
 
 
                         echo '
-                                        <div style="background-color: rgba(230, 72, 72, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Всего удержано: <span class="calculateInvoice" style="font-size: 13px">' . $tabel_j[0]['deduction'] . '</span> руб.</div>';
+                                        <div style="background-color: rgba(230, 72, 72, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">';
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
                             //echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style = "font-size: 80%;" >За материалы +</a ></div >';
-                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style = "font-size: 80%;" >Налог +</a ></div >';
-                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3" class="b" style = "font-size: 80%;" >Штраф +</a ></div >';
-                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=4" class="b" style = "font-size: 80%;" >Ссуда +</a ></div >';
-                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=5" class="b" style = "font-size: 80%;" >Обучение +</a ></div >';
+                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2&w_type='.$tabel_j[0]['type'].'" class="b" style = "font-size: 80%;" >Налог +</a ></div >';
+                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3&w_type='.$tabel_j[0]['type'].'" class="b" style = "font-size: 80%;" >Штраф +</a ></div >';
+                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=4&w_type='.$tabel_j[0]['type'].'" class="b" style = "font-size: 80%;" >Ссуда +</a ></div >';
+                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=5&w_type='.$tabel_j[0]['type'].'" class="b" style = "font-size: 80%;" >Обучение +</a ></div >';
                         }
                         echo '
+                                            <div>Всего удержано: <span class="calculateInvoice" style="font-size: 13px">' . $tabel_j[0]['deduction'] . '</span> руб.</div>
                                         </div>';
 
                         echo '
-                                        <div style="background-color: rgba(1, 94, 255, 0.22); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Всего выплачено: <span class="calculateOrder" style="font-size: 13px; color: rgb(12, 0, 167);">' . $tabel_j[0]['paidout'] . '</span> руб.</div>';
+                                        <div style="background-color: rgba(1, 94, 255, 0.22); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">';
 
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style = "font-size: 80%;">Аванс +</a ></div>';
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style="font-size: 80%;">Отпусные +</a></div>';
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3" class="b" style="font-size: 80%;">Больничный +</a></div>';
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=4" class="b" style="font-size: 80%;">На карту +</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1&w_type='.$tabel_j[0]['type'].'" class="b" style = "font-size: 80%;">Аванс +</a ></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2&w_type='.$tabel_j[0]['type'].'" class="b" style="font-size: 80%;">Отпусные +</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3&w_type='.$tabel_j[0]['type'].'" class="b" style="font-size: 80%;">Больничный +</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=4&w_type='.$tabel_j[0]['type'].'" class="b" style="font-size: 80%;">На карту +</a></div>';
                         }
 
                         echo '
+                                                <div>Всего выплачено: <span class="calculateOrder" style="font-size: 13px; color: rgb(12, 0, 167);">' . $tabel_j[0]['paidout'] . '</span> руб.</div>
                                             </div>
                                         </div>';
 
@@ -706,7 +744,7 @@
 
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
                             echo '
-                                                <button class="b" style="font-size: 80%;" onclick="prikazNomerVosem('.$tabel_j[0]['worker_id'].', '.$_GET['id'].');">Применить приказ №8</button>';
+                                                <!--<button class="b" style="font-size: 80%;" onclick="prikazNomerVosem('.$tabel_j[0]['worker_id'].', '.$_GET['id'].');">Применить приказ №8</button>-->';
                             echo '
                                                 <button class="b" style="font-size: 80%;" onclick="deployTabel(' . $_GET['id'] . ');">Провести табель</button>';
                         }else{
@@ -730,15 +768,15 @@
 
                         //Выводим
                         //Расчетные листы
-                        echo '
-                                <div style="border: 1px dotted #b3c0c8; display: block; font-size: 12px; padding: 2px; margin-right: 10px; margin-bottom: 10px; vertical-align: top;">
-                                    <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
-                                        Расчётные листы <div id="allCalcsIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allCalcsIsHere\');">показать/скрыть</div>
-                                    </div>
-                                    <div id="allCalcsIsHere" style="">
-                                        '.$rezult.'
-                                    </div>
-                                </div>';
+//                        echo '
+//                                <div style="border: 1px dotted #b3c0c8; display: block; font-size: 12px; padding: 2px; margin-right: 10px; margin-bottom: 10px; vertical-align: top;">
+//                                    <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
+//                                        Расчётные листы <div id="allCalcsIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allCalcsIsHere\');">показать/скрыть</div>
+//                                    </div>
+//                                    <div id="allCalcsIsHere" style="">
+//                                        '.$rezult.'
+//                                    </div>
+//                                </div>';
 
                         //Вычеты
                         echo '
@@ -749,7 +787,7 @@
                             echo '
                                             <div id="allDeductionssIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allDeductionssIsHere\');">показать/скрыть</div>
                                     </div>
-                                    <div id="allDeductionssIsHere" style="display: none;">
+                                    <div id="allDeductionssIsHere" style="">
                                         ' . $rezultD . '
                                     </div>';
                         }else{
@@ -767,7 +805,7 @@
                             echo '
                                         <div id="allSurchargesIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allSurchargesIsHere\');">показать/скрыть</div>
                                     </div>
-                                    <div id="allSurchargesIsHere" style="display: none;">
+                                    <div id="allSurchargesIsHere" style="">
                                         '.$rezultS.'
                                     </div>';
                         }else{
@@ -785,7 +823,7 @@
                             echo '
                                         <div id="allPaidoutsIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allPaidoutsIsHere\');">показать/скрыть</div>
                                     </div>
-                                    <div id="allPaidoutsIsHere" style="display: none;">
+                                    <div id="allPaidoutsIsHere" style="">
                                         '.$rezultP.'
                                     </div>';
                         }else{
@@ -802,6 +840,21 @@
 					        </div>
 					        <!-- Подложка только одна -->
 					        <div id="overlay"></div>';
+
+                        echo '
+
+                        <script type="text/javascript">
+                            $(document).ready(function() {
+                                //console.log(Number($(".allMonthHours").html()));
+                                
+//                                $(".allMonthHours").css({
+//                                    "color": "" + Colorize(Number($(".allMonthHours").html())) + ""
+//                                });
+                                
+                                $(".allMonthHours").html($(".allMonthHours").html()+"%");
+
+                            });
+                        </script>';
 
 					}else{
                         echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
