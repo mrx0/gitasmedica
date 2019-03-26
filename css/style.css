@@ -2706,3 +2706,8 @@ input[type="submit"].msg_send:hover{
 .div_up_visible{
 	opacity:1.0;
 }
+
+/*Для блок расчетных листов при печати*/
+.rezult_item3print{
+	page-break-before: always;
+}
