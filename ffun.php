@@ -1155,13 +1155,38 @@
 
 
     //функция для создания шаблона табеля (оасчетного листа) для печати
-    function tabelPrintTemplate ($tabel_id, $month, $year, $worker_fio, $filial, $countSmen, $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3, $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1, $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm, $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount, $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3){
+    function tabelPrintTemplate ($tabel_id, $month, $year, $worker_fio, $filial, $countSmen, $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3, $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1, $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm, $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount, $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3, $dop, $link){
+        //var_dump($dop);
+
+        //Часы работы
+        $hours_count = '';
+        $hours_norma = '';
+        //Оклад
+        $salary = '';
+        //Процент от оклада
+        $per_from_salary = '';
+        //Процент от выручки
+        $percent_summ  = '';
+
+        if (!empty($dop)){
+            $hours_count = $dop['hours_count'];
+            $hours_norma = $dop['hours_norma'];
+
+            $salary = number_format($dop['salary'], 0, '.', '').' р.';
+
+            $per_from_salary = $dop['per_from_salary'];
+
+            $percent_summ = number_format($dop['percent_summ'], 0, '.', '');
+
+            //!!! костыль для админов
+            $countSmen = '';
+        }
 
         $rezult = '
-                <div class="rezult_item" style="font-size: 95%; margin: 15px;" fio="'.$worker_fio.'">				
+                <div class="rezult_item" style="font-size: 95%; margin: 15px; margin-top: -10px" fio="'.$worker_fio.'">				
                     <div class="filterBlock" style="width: 650px; border-bottom: 1px dotted grey;">
                         <div class="filtercellLeft" style="width: 400px; text-align: center; border: none; padding-bottom: 2px;">
-                            <a href="fl_tabel.php?id='.$tabel_id.'" class="ahref">Расчетный листок '.$tabel_id.'</a> за '.$month.' '.$year.'
+                            <a href="'.$link.'?id='.$tabel_id.'" class="ahref">Расчетный листок '.$tabel_id.'</a> за '.$month.' '.$year.'
                         </div>
                     </div>
                     
@@ -1246,13 +1271,13 @@
                                     з/п
                                 </td>
                                 <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
-                                    
+                                    '.$salary.'
                                 </td>
                                 <td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
                                     '.$countSmen.'
                                 </td>
                                 <td  class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
-                                    
+                                    '.$hours_count.'
                                 </td>
                                 <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
                                     <div class="pay_plus_part1_'.$tabel_id.'" style="display: inline;">
@@ -1363,8 +1388,40 @@
                                         '.$tabel_deductions_j5.'
                                     </div> р.
                                 </td>
-                            </tr>
-                             
+                            </tr>';
+
+        if (!empty($dop)) {
+            $rezult .= '            
+                            <tr>
+                                <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+                                    %
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; border-right: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; border-left: 1px solid #BFBCB5; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    <div class="pay_plus_part1_' . $tabel_id . '" style="display: inline;">
+                                        ' . $percent_summ . '
+                                    </div> р.
+                                </td>
+                                <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
+
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+                                    
+                                </td>
+                                <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
+
+                                </td>
+                            </tr>';
+        }
+        $rezult .= '  
                             <tr style="border: 2px solid #525252;">
                                 <td colspan="4" style="text-align: left; border: 1px solid #BFBCB5; padding: 2px 0 1px 3px;">
                                     <b><i>Всего начислено</i></b>

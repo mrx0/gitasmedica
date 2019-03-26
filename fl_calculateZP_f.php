@@ -1,6 +1,6 @@
 <?php
 
-//fl_getAllFilialMoney_f.php
+//fl_calculateZP_f.php
 //получаем выручку со всех филиалов (смотрим только закрытые работы)
 
 session_start();
