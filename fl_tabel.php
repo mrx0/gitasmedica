@@ -239,7 +239,7 @@
                                 $number = mysqli_num_rows($res);
                             }
                             if ($invoice_type == 6) {
-                                $query = "SELECT `id` FROM `journal_cosmet1` WHERE `zapis_id`='$zapis_id' LIMIT 1";
+                                $query = "SELECT `id` FROM `journal_cosmet1` WHERE `zapis_id`='$zapis_id' AND `status` <> '9' LIMIT 1";
 
                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 

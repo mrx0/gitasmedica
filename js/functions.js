@@ -8815,6 +8815,77 @@
 
     }
 
+    //Удаляем отметку косметолога
+    function Ajax_del_task_cosmet(id){
+        //console.log(id);
+
+        var rys = false;
+
+        rys = confirm("Вы хотите удалить отметку косметолога. \nВы уверены?");
+
+        if (rys) {
+
+            var link = "ajax_task_cosmet_del_f.php";
+
+            var certData = {
+                id: id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: certData,
+
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res);
+
+                    if (res.result == "success") {
+                        location.reload();
+                    }
+                }
+            });
+        }
+    }
+
+    //Разблокировка (восстановление) отметки косметолога
+    function Ajax_reopen_task_cosmet(id) {
+
+        var link = "ajax_reopen_task_cosmet_f.php";
+
+        var certData = {
+            id: id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: certData,
+
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function (res) {
+                //console.log(res);
+
+                if (res.result == "success") {
+                    location.reload();
+                }
+            }
+        });
+    }
+
+
     //Получаем, показываем направления
     function getRemovesfunc(worker_id){
         //console.log (worker_id);

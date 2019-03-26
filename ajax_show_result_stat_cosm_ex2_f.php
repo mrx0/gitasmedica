@@ -47,9 +47,9 @@
 			}	
 			
 			if ($workerExist){
-				$query .= "SELECT * FROM `journal_cosmet1`";
-				$query4Effect .= "SELECT `client` FROM `journal_cosmet1`";
-				$query4Effect2 .= "SELECT `id` FROM `journal_cosmet1`";
+				$query .= "SELECT * FROM `journal_cosmet1` WHERE `status` <> '9'";
+				$query4Effect .= "SELECT `client` FROM `journal_cosmet1` WHERE `status` <> '9'";
+				$query4Effect2 .= "SELECT `id` FROM `journal_cosmet1` WHERE `status` <> '9'";
 				
 				require 'config.php';
 				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
@@ -265,7 +265,7 @@
 							//$query .= $queryEffect;
 							//$queryDopExist = true;
 							
-							$query = "SELECT * FROM `journal_cosmet1` WHERE ".$queryEffect." AND `client` IN (".$query4Effect.") AND `id` NOT IN (".$query4Effect2.")";
+							$query = "SELECT * FROM `journal_cosmet1` WHERE ".$queryEffect." AND `client` IN (".$query4Effect.") AND `status` <> '9' AND `id` NOT IN (".$query4Effect2.")";
 						}
 						
 						//var_dump($query);

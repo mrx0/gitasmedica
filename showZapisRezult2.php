@@ -121,7 +121,7 @@
                     //Косметологи
                     if ($ZapisHereQueryToday[$z]['type'] == 6) {
                         //Посещения косметологов
-                        $query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
+                        $query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' AND `status` <> '9' ORDER BY `create_time`";
                         //var_dump($query);
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
                         $number = mysqli_num_rows($res);
