@@ -260,7 +260,7 @@
                             $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1,
                             $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm,
                             $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount,
-                            $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3, $dop, 'fl_tabel2.php');
+                            $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3, $dop, 'fl_tabel.php');
 
 
                         echo "

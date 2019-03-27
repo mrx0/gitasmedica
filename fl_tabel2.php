@@ -1,7 +1,7 @@
 <?php
 
 //fl_tabel2.php
-//Табель для админов и ассистов
+//Табель для админов (и ассистов)
 
 	require_once 'header.php';
 	
@@ -41,7 +41,7 @@
                         //var_dump($_SESSION);
                         //unset($_SESSION['invoice_data']);
 			
-                        $filials_j = getAllFilials(false, false, false);
+                        $filials_j = getAllFilials(false, false, true);
                         //var_dump(microtime(true) - $script_start);
                         //var_dump($filials_j);
 
@@ -66,7 +66,7 @@
                                             <a href="fl_my_tabels.php" class="b">Табели</a>';
                         }else {
                             echo '
-                                            <a href="fl_tabels20.php" class="b">Важный отчёт</a>';
+                                            <a href="fl_tabels2.php" class="b">Важный отчёт</a>';
                         }
                         echo '
                                         </div>

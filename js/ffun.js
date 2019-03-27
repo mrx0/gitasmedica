@@ -1692,6 +1692,45 @@
         }
     }
 
+    //Удаляем надбавку из табеля
+    function fl_deletePaidoutFromTabel(tabel_id, paidout_id){
+
+        var link = "fl_deletePaidoutFromTabel_f.php";
+
+        var rys = false;
+
+        rys = confirm("Вы хотите удалить Выплату из табеля. \n\nВы уверены?");
+        //console.log(885);
+
+        if (rys) {
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    tabel_id: tabel_id,
+                    paidout_id: paidout_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    console.log(res);
+
+                    if (res.result == "success") {
+                        location.reload();
+                    } else {
+                        $('#errror').html(res.data);
+                    }
+                }
+            });
+        }
+    }
+
     //Добавляем/редактируем в базу вычет из табеля
     function  fl_Ajax_deduction_add(deduction_id, tabel_id, mode, deductionData, link_res){
 
@@ -4537,11 +4576,11 @@
 
 
                         if (res.data[worker_id]['status'] == 7){
-                            $("#worker_" + worker_id).html("<a href='fl_tabel2.php?id=" + res.data[worker_id]['id'] + "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(13,236,109,0.98); font-size: 130%;' title='Табель проведён'></i></a> " +
+                            $("#worker_" + worker_id).html("<a href='fl_tabel.php?id=" + res.data[worker_id]['id'] + "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(13,236,109,0.98); font-size: 130%;' title='Табель проведён'></i></a> " +
                                 "");
                         }else {
                             if (res.data[worker_id]['summ'] == Number($('#w_id_' + worker_id).html())) {
-                                $("#worker_" + worker_id).html("<a href='fl_tabel2.php?id=" + res.data[worker_id]['id'] + "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(215, 34, 236, 0.98); font-size: 130%;' title='Табель не проведён'></i></a> " +
+                                $("#worker_" + worker_id).html("<a href='fl_tabel.php?id=" + res.data[worker_id]['id'] + "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(215, 34, 236, 0.98); font-size: 130%;' title='Табель не проведён'></i></a> " +
                                     "");
                             } else {
                                 $("#worker_" + worker_id).html("<a href='fl_tabel2.php?id=" + res.data[worker_id]['id'] + "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(236,31,0,0.98); font-size: 130%;' title='Обновите данные табели'></i></a> " +
