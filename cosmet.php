@@ -92,10 +92,10 @@
 
 				$sw = $filter_rez[1];
 				if ($cosm['see_own'] == 1){
-					$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`='".$_SESSION['id']."' ORDER BY `create_time` DESC";
+					$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`='".$_SESSION['id']."' AND `status` <> '9' ORDER BY `create_time` DESC";
 				}
 				if (($cosm['see_all'] == 1) || $god_mode){
-					$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} ORDER BY `create_time` DESC";
+					$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `status` <> '9' ORDER BY `create_time` DESC";
 				}
 				//var_dump($query);
 

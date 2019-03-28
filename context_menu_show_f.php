@@ -286,6 +286,12 @@
                             <li><div onclick="fl_deleteSurchargeFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить из табеля</div></li>';
 				}
 
+				//Для Выплат в табеле
+                if ($_POST['mark'] == 'tabel_paidout_options'){
+                    $data .= '
+                            <li><div onclick="fl_deletePaidoutFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить из табеля</div></li>';
+				}
+
 				//Настройка для записи
 				if ($_POST['mark'] == 'zapis_options'){
 				}

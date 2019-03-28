@@ -21,9 +21,9 @@ if ($enter_ok){
             if (isset($_GET['tabel_id']) && isset($_GET['type'])){
 
                 $link = 'fl_tabel.php';
-                if (isset($_GET['w_type'])){
-                    $link = 'fl_tabel2.php';
-                }
+//                if (isset($_GET['w_type'])){
+//                    $link = 'fl_tabel2.php';
+//                }
 
                 $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['tabel_id'], 'id');
 
@@ -46,6 +46,8 @@ if ($enter_ok){
                         echo ' больничный ';
                     }elseif ($_GET['type'] == 4){
                         echo ' на карту ';
+                    }elseif ($_GET['type'] == 7){
+                        echo ' зп ';
                     }
 
                     echo '

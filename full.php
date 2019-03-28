@@ -167,7 +167,7 @@
 				
 				$sw = $filter_rez[1];
 				if (($cosm['see_all'] == 1) || $god_mode){
-					$query = "SELECT `worker`,`office` FROM `journal_cosmet1` WHERE {$filter_rez[1]} ORDER BY `create_time` DESC";
+					$query = "SELECT `worker`,`office` FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `status` <> '9' ORDER BY `create_time` DESC";
 					$res = mysql_query($query) or die($query);
 					$number = mysql_num_rows($res);
 					if ($number != 0){
@@ -231,7 +231,7 @@
 					$tabs_workers .= '<li><a href="#tabs-'.$value.'">'.WriteSearchUser('spr_workers', $value, 'user', false).'</a></li>';
 					$itog[$value]['name'] = WriteSearchUser('spr_workers', $value, 'user', false);
 					
-					$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$value} ORDER BY `create_time` DESC";
+					$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$value} AND `status` <> '9' ORDER BY `create_time` DESC";
 					$res = mysql_query($query) or die($query);
 					$number = mysql_num_rows($res);
 					if ($number != 0){
@@ -260,7 +260,7 @@
 						//var_dump ($actions_cosmet);
 						$office = $offices[0]['name'];
 						$f_journal = array();
-						$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$value} AND `office`={$value1} ORDER BY `create_time` DESC";
+						$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$value} AND `office`={$value1} AND `status` <> '9' ORDER BY `create_time` DESC";
 						$res = mysql_query($query) or die($query);
 						$number = mysql_num_rows($res);
 						if ($number != 0){
@@ -279,7 +279,7 @@
 							$itog[$value]['office'][$value1]['f_vsego'] = $f_vsego;
 							
 							//первичные все по филиалам
-							$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$value} AND `office`={$value1} AND `c13`='1' ORDER BY `create_time` DESC";
+							$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$value} AND `office`={$value1} AND `c13`='1' AND `status` <> '9' ORDER BY `create_time` DESC";
 							$res = mysql_query($query) or die($query);
 							$number = mysql_num_rows($res);
 							if ($number != 0){
@@ -303,7 +303,7 @@
 								if ($actions_cosmet[$k]['active'] != 0){
 									//echo '<div class="cellCosmAct tooltip " style="text-align: center" title="'.$actions_cosmet[$k]['full_name'].'">'.$actions_cosmet[$i]['name'].'</div>';
 							
-									$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$value} AND `office`={$value1} AND `c{$actions_cosmet[$k]['id']}`='1' ORDER BY `create_time` DESC";
+									$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$value} AND `office`={$value1} AND `c{$actions_cosmet[$k]['id']}`='1' AND `status` <> '9' ORDER BY `create_time` DESC";
 									$res = mysql_query($query) or die($query);
 									$number = mysql_num_rows($res);
 									if ($number != 0){
@@ -368,7 +368,7 @@
 
 									//'SELECT * FROM tab2 WHERE title NOT IN(SELECT title FROM tab1)'
 									if ($actions_cosmet[$k]['id'] == 13){
-										$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$value} AND `office`={$value1} AND `c13`='1' AND 
+										$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$value} AND `office`={$value1} AND `status` <> '9' AND `c13`='1' AND 
 										`c1` <> '1' AND `c2` <> '1' AND `c3` <> '1' AND `c4` <> '1' AND `c5` <> '1' AND `c6` <> '1' AND `c7` <> '1' AND `c8` <> '1' AND `c9` <> '1' AND `c10` <> '1' AND 
 										`c11` <> '1' AND `c12` <> '1' AND `c14` <> '1' AND `c15` <> '1' AND `c16` <> '1' AND `c17` <> '1' AND `c18` <> '1' AND `c19` <> '1' AND `c20` <> '1' AND `c21` <> '1' AND 
 										`c22` <> '1' 
@@ -397,7 +397,7 @@
 
 									//'SELECT * FROM tab2 WHERE title NOT IN(SELECT title FROM tab1)'
 									if ($actions_cosmet[$k]['id'] == 12){
-										$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$value} AND `office`={$value1} AND `c13` <> '1' AND `c12` = '1' ORDER BY `create_time` DESC";
+										$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$value} AND `office`={$value1} AND `status` <> '9' AND `c13` <> '1' AND `c12` = '1' ORDER BY `create_time` DESC";
 										//var_dump ($query);
 										$res = mysql_query($query) or die($query);
 										$number = mysql_num_rows($res);

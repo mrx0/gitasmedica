@@ -466,7 +466,7 @@
         $msql_cnnct = ConnectToDB ();
 
 		//Для лога соберем сначала то, что было в записи.
-		$query = "SELECT * FROM `journal_cosmet1` WHERE `id`=$id";
+		$query = "SELECT * FROM `journal_cosmet1` WHERE `id`='$id' AND `status` <> '9'";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

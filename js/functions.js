@@ -2453,51 +2453,52 @@
             patientUnic = 0;
         }
 
+        var reqData = {
+            all_time:all_time,
+            datastart:  $("#datastart").val(),
+            dataend:  $("#dataend").val(),
+
+            //Кто создал запись
+            creator:$("#search_worker").val(),
+            //Пациент
+            client:$("#search_client").val(),
+            //К кому запись
+            worker:$("#search_client4").val(),
+            filial:$("#filial").val(),
+
+            typeW:typeW,
+
+            zapisAll: zapisAll,
+            zapisArrive: zapisArrive,
+            zapisNotArrive: zapisNotArrive,
+            zapisError: zapisError,
+            zapisNull: zapisNull,
+
+            fullAll: fullAll,
+            fullWOInvoice: fullWOInvoice,
+            fullWOTask: fullWOTask,
+            fullOk: fullOk,
+
+            statusAll: statusAll,
+            statusPervich: statusPervich,
+            statusInsure: statusInsure,
+            statusNight: statusNight,
+            statusAnother: statusAnother,
+
+            invoiceAll: invoiceAll,
+            invoicePaid: invoicePaid,
+            invoiceNotPaid: invoiceNotPaid,
+            invoiceInsure: invoiceInsure,
+
+            patientUnic: patientUnic
+        };
+        console.log(reqData);
+
         $.ajax({
             url:"ajax_show_result_stat_zapis_f.php",
             global: false,
             type: "POST",
-            data:
-                {
-                    all_time:all_time,
-                    datastart:  $("#datastart").val(),
-                    dataend:  $("#dataend").val(),
-
-                    //Кто создал запись
-                    creator:$("#search_worker").val(),
-                    //Пациент
-                    client:$("#search_client").val(),
-                    //К кому запись
-                    worker:$("#search_client4").val(),
-                    filial:$("#filial").val(),
-
-                    typeW:typeW,
-
-                    zapisAll: zapisAll,
-                    zapisArrive: zapisArrive,
-                    zapisNotArrive: zapisNotArrive,
-                    zapisError: zapisError,
-                    zapisNull: zapisNull,
-
-                    fullAll: fullAll,
-                    fullWOInvoice: fullWOInvoice,
-                    fullWOTask: fullWOTask,
-                    fullOk: fullOk,
-
-                    statusAll: statusAll,
-                    statusPervich: statusPervich,
-                    statusInsure: statusInsure,
-                    statusNight: statusNight,
-                    statusAnother: statusAnother,
-
-                    invoiceAll: invoiceAll,
-                    invoicePaid: invoicePaid,
-                    invoiceNotPaid: invoiceNotPaid,
-                    invoiceInsure: invoiceInsure,
-
-                    patientUnic: patientUnic
-
-                },
+            data: reqData,
             cache: false,
             beforeSend: function() {
                 $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
@@ -8814,6 +8815,77 @@
 
 
     }
+
+    //Удаляем отметку косметолога
+    function Ajax_del_task_cosmet(id){
+        //console.log(id);
+
+        var rys = false;
+
+        rys = confirm("Вы хотите удалить отметку косметолога. \nВы уверены?");
+
+        if (rys) {
+
+            var link = "ajax_task_cosmet_del_f.php";
+
+            var certData = {
+                id: id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: certData,
+
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res);
+
+                    if (res.result == "success") {
+                        location.reload();
+                    }
+                }
+            });
+        }
+    }
+
+    //Разблокировка (восстановление) отметки косметолога
+    function Ajax_reopen_task_cosmet(id) {
+
+        var link = "ajax_reopen_task_cosmet_f.php";
+
+        var certData = {
+            id: id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: certData,
+
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function (res) {
+                //console.log(res);
+
+                if (res.result == "success") {
+                    location.reload();
+                }
+            }
+        });
+    }
+
 
     //Получаем, показываем направления
     function getRemovesfunc(worker_id){

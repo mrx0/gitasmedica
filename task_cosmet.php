@@ -17,7 +17,7 @@
 				$task = SelDataFromDB('journal_cosmet1', $_GET['id'], 'task_cosmet');
 				//var_dump($task);
 				
-				$closed = FALSE;
+				//$closed = FALSE;
 				
 				if ($task !=0){
 					if ($task[0]['office'] == 99){
@@ -34,14 +34,28 @@
 						<div id="status">
 							<header>
 								<h2>Посещение #'.$task[0]['id'].'';
-					if (!$closed){
+					if ($task[0]['status'] != 9){
 						if (($cosm['edit'] == 1) || $god_mode){
 							echo '
 									<a href="edit_task_cosmet.php?id='.$_GET['id'].'" class="info" style="font-size: 80%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
 						}
-					}
+                        if (($cosm['close'] == 1) || $god_mode) {
+                            echo '
+									<a href="#" onclick="Ajax_del_task_cosmet(' . $_GET['id'] . ')" class="info" style="font-size: 100%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+                        }
+                    }else{
+                        if (($cosm['close'] == 1) || $god_mode) {
+                            echo '
+							        <a href="#" onclick="Ajax_reopen_task_cosmet(' . $_GET['id'] . ')" title="Разблокировать" class="info" style="font-size: 100%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
+                        }
+                    }
 					echo '			
-								</h2>
+								</h2>';
+
+                    if ($task[0]['status'] == 9){
+                        echo '<i style="color:red;">Удалено (заблокировано).</i><br>';
+                    }
+                    echo '
 							</header>';
 
 					echo '

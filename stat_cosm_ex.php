@@ -163,10 +163,10 @@
 				
 				//Запрос к БД
 				if (!empty ($arr_actions)){
-					$query = 'SELECT * FROM `journal_cosmet1` WHERE '.implode(' AND ', $arr_actions).' ORDER BY `client` DESC';
+					$query = "SELECT * FROM `journal_cosmet1` WHERE ".implode(' AND ', $arr_actions)." AND `status` <> '9' ORDER BY `client` DESC";
 					//echo $query;
 				}else{
-					$query = 'SELECT * FROM `journal_cosmet1` ORDER BY `client` DESC';
+					$query = "SELECT * FROM `journal_cosmet1` ORDER BY `client` DESC";
 				}
 				
 				//Если нет ошибок
