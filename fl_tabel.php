@@ -391,10 +391,14 @@
                                                 </div>
                                                 
                                             </a>
-                                            </div>
+                                            </div>';
+                                if (mb_strlen($rezData['descr']) > 0){
+                                    $rezultD .= '
                                             <div style="margin: 5px 0 0 3px; font-size: 80%;">
                                                 <b>Комментарий:</b> '.$rezData['descr'].'                                                
-                                            </div>
+                                            </div>';
+                                }
+                                $rezultD .= '
                                         </div>';
                                 if ($tabel_j[0]['status'] != 7) {
                                     $rezultD .= '
@@ -467,10 +471,14 @@
                                                 </div>
                                                 
                                             </a>
-                                            </div>
+                                            </div>';
+                                if (mb_strlen($rezData['descr']) > 0){
+                                    $rezultS .= '
                                             <div style="margin: 5px 0 0 3px; font-size: 80%;">
                                                 <b>Комментарий:</b> '.$rezData['descr'].'                                                
-                                            </div>
+                                            </div>';
+                                }
+                                $rezultS .= '
                                         </div>';
                                 if ($tabel_j[0]['status'] != 7) {
                                     $rezultS .= '
@@ -548,16 +556,21 @@
                                                 </div>
                                                 
                                             </a>
-                                            </div>
+                                            </div>';
+                                if (mb_strlen($rezData['descr']) > 0){
+                                    $rezultP .= '
                                             <div style="margin: 5px 0 0 3px; font-size: 80%;">
                                                 <b>Комментарий:</b> '.$rezData['descr'].'                                                
-                                            </div>
+                                            </div>';
+                                }
+                                $rezultP .= '
                                         </div>';
+
 
                                 if ($tabel_j[0]['status'] != 7) {
                                     $rezultP .= '
                                         <div style="display: inline-block; vertical-align: top;">
-                                            <div class="settings_text" style="border: 1px solid #CCC; padding: 3px; margin: 1px; width: 12px; text-align: center;"  onclick="contextMenuShow(' . $tabel_j[0]['id'] . ', ' . $rezData['id'] . ', event, \'tabel_surcharge_options\');">
+                                            <div class="settings_text" style="border: 1px solid #CCC; padding: 3px; margin: 1px; width: 12px; text-align: center;"  onclick="contextMenuShow(' . $tabel_j[0]['id'] . ', ' . $rezData['id'] . ', event, \'tabel_paidout_options\');">
                                                 <i class="fa fa-caret-down"></i>
                                             </div>
                                         </div>';
@@ -766,7 +779,7 @@
                                         <!--Начислено--> ';
 
                             echo '
-                                        <div id="allSurchargesIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allSurchargesIsHere\');">показать/скрыть</div>
+                                        <div id="allSurchargesIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allSurchargesIsHere\');">подробно:</div>
                                     </div>
                                     <div id="allSurchargesIsHere" style="">
                                         '.$rezultS.'
@@ -808,7 +821,7 @@
                                         <!--Удержано--> ';
 
                             echo '
-                                            <div id="allDeductionssIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allDeductionssIsHere\');">показать/скрыть</div>
+                                            <div id="allDeductionssIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allDeductionssIsHere\');">подробно:</div>
                                     </div>
                                     <div id="allDeductionssIsHere" style="">
                                         ' . $rezultD . '
@@ -844,7 +857,7 @@
                                     <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
                                         <!--Выплачено--> ';
                             echo '
-                                        <div id="allPaidoutsIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allPaidoutsIsHere\');">показать/скрыть</div>
+                                        <div id="allPaidoutsIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allPaidoutsIsHere\');">подробно:</div>
                                     </div>
                                     <div id="allPaidoutsIsHere" style="">
                                         '.$rezultP.'
