@@ -339,6 +339,9 @@
                     }
                 }
 
+                //Норма смен (часов)
+                $w_normaSmen = $normaSmen[(int)$month]*12;
+
                 //Получаем оклады по категориям для всех
                 $arr = array();
                 $salariesyCategory = array();
@@ -457,9 +460,16 @@
                         //Оклад
                         if (isset($salariesyCategory[$worker_filial_id])){
                             if (isset($salariesyCategory[$worker_filial_id][$worker_data['cat_id']])) {
+                                //Администраторы
                                 $oklad = $salariesyCategory[$worker_filial_id][$worker_data['cat_id']];
                             }
                         }
+
+                        //Ассистенты
+                        if ($type == 7) {
+                            $oklad = $oklad * $w_normaSmen;
+                        }
+
                         echo number_format($oklad, 2, '.', ' ');
 
                         //Итого
@@ -468,7 +478,6 @@
                                     
                                     <td style="width: 120px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">';
 
-                        $w_normaSmen = $normaSmen[(int)$month]*12;
                         $w_hours = 0;
                         $w_percentHours = 0;
 
@@ -480,7 +489,7 @@
                             $w_percentHours = number_format($w_hours * 100 / $w_normaSmen, 2, '.', '');
 
                             echo '
-                                        <div style="margin-bottom: 15px;">'.$w_hours.'/ '.$w_normaSmen.'/ '.$w_percentHours.'%</div>';
+                                        <div id="w_hours_'.$worker_data['id'].'" style="margin-bottom: 15px; box-shadow: 0 0 3px 1px rgb(197, 197, 197); text-align: center;">'.$w_hours.'/ <span id="w_norma_'.$worker_data['id'].'">'.$w_normaSmen.'</span>/ '.$w_percentHours.'%</div>';
 
                             //Нарисуем табличку со всеми филиалами
                             echo '
@@ -572,7 +581,7 @@
 
                         setTimeout(function(){
             
-                            fl_calculateZP ('.$month.', '.$year.',0);
+                            fl_calculateZP ('.$month.', '.$year.', '.$type.');
             
                             runNext();
             

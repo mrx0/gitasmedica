@@ -99,7 +99,7 @@
     }
 
 	//
-    function Colorize (data){
+    function Colorize (data, alpha){
 		//console.log(data);
 		//console.log(typeof (data));
 
@@ -128,7 +128,7 @@
         // console.log(green);
         // console.log('--------');
 
-        return ' rgb('+red+', '+green+', 0)';
+        return ' rgba('+red+', '+green+', 0, '+alpha+')';
     }
 
     //Вывод данных сессии в консоль

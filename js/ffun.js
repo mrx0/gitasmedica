@@ -4447,7 +4447,7 @@
             $("#hoursMonthPercent_"+worker_id).html(number_format(hoursMonthPercent, 2, '.', ' '));
 
             $("#schedulerResult_"+worker_id).css({
-                "background-image": "linear-gradient(to right, " + Colorize(Number(hoursMonthPercent.toFixed(0))) + " " + Number(hoursMonthPercent.toFixed(0)) + "%, rgba(255, 255, 255, 0) 0%)"
+                "background-image": "linear-gradient(to right, " + Colorize(Number(hoursMonthPercent.toFixed(0)), 1) + " " + Number(hoursMonthPercent.toFixed(0)) + "%, rgba(255, 255, 255, 0) 0%)"
             });
             //console.log("linear-gradient(to right, " + Colorize(hoursMonthPercent.toFixed(0)) + " " + hoursMonthPercent.toFixed(0) + "%, rgba(255, 255, 255, 0) 0%)");
 
@@ -4458,7 +4458,7 @@
     function fl_calculateZP (month, year, typeW){
         // console.log(month);
         // console.log(year);
-        // console.log(w_type);
+        // console.log(typeW);
 
         var link = "fl_calculateZP_f.php";
 
@@ -4513,13 +4513,29 @@
                         var w_percentHours = Number($(this).attr("w_percentHours"));
                         var worker_revenue_percent = Number($(this).attr("worker_revenue_percent"));
                         var filialMoney = Number($(this).attr("filialMoney"));
+                        //console.log(w_percentHours);
 
                         if (w_percentHours > 0){
 
-                            var zp_temp = (oklad * w_percentHours)/ 100;
-                            var revenue_summ = (((filialMoney/ 100) * worker_revenue_percent)/ 100) * w_percentHours;
+                            var zp_temp = 0;
+                            var revenue_summ = 0;
+
+                            //Администраторы
+                            // if (typeW == 4) {
+                            //     zp_temp = (oklad * w_percentHours) / 100;
+                            // }
+                            //Ассистенты
+                            // if (typeW == 7) {
+                            //     var norma_smen = Number($("#w_norma_"+worker_id).html());
+                            //     //console.log(norma_smen);
+                            //     zp_temp = (oklad * norma_smen * w_percentHours) / 100;
+                            // }
+
+                            zp_temp = (oklad * w_percentHours) / 100;
+
+                            revenue_summ = (((filialMoney / 100) * worker_revenue_percent) / 100) * w_percentHours;
+
                             var itogZP = zp_temp + revenue_summ;
-                            //console.log((filialMoney * worker_revenue_percent/ 100) * w_percentHours / 100);
                             //console.log(itogZP);
 
                             $("#zp_temp_"+worker_id).html(number_format(zp_temp, 2, '.', ''));
@@ -4529,6 +4545,11 @@
                         }else{
                             $(this).html(number_format(itogZP, 0, '.', ''));
                         }
+
+                        //Раскрасим часы рабочие
+                        $("#w_hours_"+worker_id).css({
+                            "background-image": "linear-gradient(to right, " + Colorize(Number(w_percentHours.toFixed(0)), .5) + " " + Number(w_percentHours.toFixed(0)) + "%, rgba(255, 255, 255, 0) 0%)"
+                        });
                     })
 
                 }else{
