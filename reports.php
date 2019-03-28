@@ -43,10 +43,10 @@
 								<a href="stat_stomat4.php" class="b3">Отсутствующие зубы</a>
 							</li>';
 
-            echo '				
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="stat_labor.php" class="b3">Заказы в лабораторию</a>
-							</li>';
+//            echo '
+//							<li class="cellsBlock" style="margin: 1px;">
+//								<a href="stat_labor.php" class="b3">Заказы в лабораторию</a>
+//							</li>';
 
 			/*echo '				
 							<li class="cellsBlock" style="margin: 1px;">

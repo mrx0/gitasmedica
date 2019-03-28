@@ -111,7 +111,7 @@ if ($enter_ok){
 											</span>
 										</div>';
 
-
+                        //var_dump(SelDataFromDB('spr_workers', '', 'full_name'));
 
                         echo '
 									</header>';
@@ -123,6 +123,11 @@ if ($enter_ok){
 
                         $summ_inv = 0;
                         $summins_inv = 0;
+
+                        echo '
+                                    <div id="data">';
+                        echo '				
+                                        <div id="errrror"></div>';
 
                         if ($invoice_j[0]['type'] != 88) {
 
@@ -642,6 +647,7 @@ if ($enter_ok){
                             <input type="hidden" id="worker" name="worker" value="'.$invoice_j[0]['worker_id'].'">';
                         }
                         echo '
+                                    </div>
 								</div>
 								<!-- Подложка только одна -->
                                 <div id="overlay"></div>

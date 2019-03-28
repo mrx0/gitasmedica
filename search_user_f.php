@@ -14,13 +14,17 @@
 		include_once 'DBWork.php';
 		if ($_POST){
 
-            $rezult = SelDataFromDB('spr_workers', $_POST['workerFIO'], 'full_name');
+		    if (mb_strlen($_POST['workerFIO']) > 0) {
+                $rezult = SelDataFromDB('spr_workers', $_POST['workerFIO'], 'full_name');
 
-            if ($rezult != 0) {
-                echo json_encode(array('result' => 'success', 'data' => $rezult[0]));
-            }/*else {
-                echo json_encode(array('result' => 'error', 'data' => 'Ошибка #12'));
-            }*/
+                if ($rezult != 0) {
+                    echo json_encode(array('result' => 'success', 'data' => $rezult[0], 'msg' => '<div class="query_ok">Исполнитель изменён успешно.</div>'));
+                } else {
+                    echo json_encode(array('result' => 'error', 'data' => '', 'msg' => '<div class="query_neok">Ошибка #26. В базе нет такого сотрудника.</div>'));
+                }
+            }else{
+                echo json_encode(array('result' => 'error', 'data' => '', 'msg' => '<div class="query_neok">Ошибка #26. В базе нет такого сотрудника.</div>'));
+            }
 
 		}
 
