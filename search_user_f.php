@@ -23,7 +23,7 @@
                     echo json_encode(array('result' => 'error', 'data' => '', 'msg' => '<div class="query_neok">Ошибка #26. В базе нет такого сотрудника.</div>'));
                 }
             }else{
-                echo json_encode(array('result' => 'error', 'data' => '', 'msg' => '<div class="query_neok">Ошибка #26. В базе нет такого сотрудника.</div>'));
+                echo json_encode(array('result' => 'error', 'data' => '', 'msg' => '<div class="query_neok">Ошибка #27. В базе нет такого сотрудника.</div>'));
             }
 
 		}

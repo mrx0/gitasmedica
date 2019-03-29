@@ -5261,10 +5261,10 @@
                 if(res.result == "success") {
                     $("#worker").val(res.data.id);
 
-                    console.log(res.msg);
+                    //console.log(res.msg);
                     $('#errrror').html(res.msg);
                 }else{
-                    console.log(res.msg);
+                    //console.log(res.msg);
                     $('#errrror').html(res.msg);
 				}
             }
