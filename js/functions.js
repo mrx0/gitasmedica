@@ -5241,7 +5241,7 @@
         var link = "search_user_f.php";
 
         var reqData = {
-            workerFIO: $("#search_client2").val(),
+            workerFIO: $("#search_client2").val()
         };
 
         $.ajax({
@@ -5258,7 +5258,15 @@
             success: function (res) {
                 //console.log(res);
 
-               $("#worker").val(res.data.id);
+                if(res.result == "success") {
+                    $("#worker").val(res.data.id);
+
+                    //console.log(res.msg);
+                    $('#errrror').html(res.msg);
+                }else{
+                    //console.log(res.msg);
+                    $('#errrror').html(res.msg);
+				}
             }
         });
 	}
