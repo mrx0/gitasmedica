@@ -24,45 +24,60 @@
 			
 			if ($_GET){
 				if (isset($_GET['client']) && isset($_GET['id']) && isset($_GET['filial']) && isset($_GET['worker'])){
-			
-					//if (($finances['add_new'] == 1) || $god_mode){
-						//array_push($_SESSION['invoice_data'], $_GET['client']);
-						//$_SESSION['invoice_data'] = $_GET['client'];
-						
-						$sheduler_zapis = array();
-						$invoice_j = array();
 
-						$client_j = SelDataFromDB('spr_clients', $_GET['client'], 'user');
-						//var_dump($client_j);
+                    $sheduler_zapis = array();
+                    $invoice_j = array();
 
-                        if (
-                            (($client_j[0]['card'] == NULL) ||
-                            ($client_j[0]['birthday2'] == '0000-00-00') ||
-                            ($client_j[0]['sex'] == 0) ||
-                            ($client_j[0]['address'] == NULL)) &&
-                            ($_GET['type'] != 88)
-                        ){
-                            echo '<div class="query_neok">В <a href="client.php?id='.$_GET['client'].'">карточке пациента</a> не заполнены все необходимые графы.</div>';
+                    $haveFilial = true;
+
+                    $client_j = SelDataFromDB('spr_clients', $_GET['client'], 'user');
+
+                    $filials_j = getAllFilials(false, false, false);
+					//var_dump($filials_j);
+
+                    if (
+                        (($client_j[0]['card'] == NULL) ||
+                        ($client_j[0]['birthday2'] == '0000-00-00') ||
+                        ($client_j[0]['sex'] == 0) ||
+                        ($client_j[0]['address'] == NULL)) &&
+                        ($_GET['type'] != 88)
+                    ){
+                        echo '<div class="query_neok">В <a href="client.php?id='.$_GET['client'].'">карточке пациента</a> не заполнены все необходимые графы.</div>';
+                    }else{
+
+                        $msql_cnnct = ConnectToDB ();
+
+                        $query = "SELECT * FROM `zapis` WHERE `id`='".$_GET['id']."'";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0){
+                            while ($arr = mysqli_fetch_assoc($res)){
+                                array_push($sheduler_zapis, $arr);
+                            }
+                        }else
+                            $sheduler_zapis = 0;
+                        //var_dump ($sheduler_zapis);
+
+                        //Если частное лицо, филиал будем определять по сессии или вручную
+                        if (($_GET['filial'] == 0) &&  ($_GET['type'] == 88)){
+                            $haveFilial = true;
+
+                            if (isset($_SESSION['filial'])){
+                                $haveFilial = true;
+
+                                $_GET['filial'] = $_SESSION['filial'];
+                            }else{
+                                $haveFilial = false;
+
+                            }
                         }else{
+                            $haveFilial = true;
+                        }
 
-
-                            $msql_cnnct = ConnectToDB ();
-
-                            $query = "SELECT * FROM `zapis` WHERE `id`='".$_GET['id']."'";
-
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-                            $number = mysqli_num_rows($res);
-                            if ($number != 0){
-                                while ($arr = mysqli_fetch_assoc($res)){
-                                    array_push($sheduler_zapis, $arr);
-                                }
-                            }else
-                                $sheduler_zapis = 0;
-                            //var_dump ($sheduler_zapis);
-
-                            //if ($client !=0){
-                            if (($sheduler_zapis != 0) || ($_GET['type'] == 88)){
+                        if ($haveFilial) {
+                            if (($sheduler_zapis != 0) || ($_GET['type'] == 88)) {
 
                                 if (!isset($_SESSION['invoice_data'][$_GET['client']][$_GET['id']])) {
                                     $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['filial'] = (int)$_GET['filial'];
@@ -78,6 +93,7 @@
                                 ksort($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
 
                                 //var_dump($_SESSION);
+                                var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]);
                                 //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
                                 //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['mkb']);
 
@@ -90,13 +106,11 @@
                                         <div class="nav">
                                             <a href="zapis_full.php?filial=' . $_GET['filial'] . '&who=stom&d=' . $sheduler_zapis[0]['day'] . '&m=' . $month . '&y=' . $sheduler_zapis[0]['year'] . '&kab=' . $sheduler_zapis[0]['kab'] . '" class="">Запись подробно</a>
                                         </div>
-                                        
-                                        <!--<span style="color: red;">Тестовый режим. Уже сохраняется и даже как-то работает</span>-->
                                         <h2>Новый наряд</h2>';
 
-                                if ($_GET['type'] == 88){
+                                if ($_GET['type'] == 88) {
                                     echo '
-                                        <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Для <b>Частное лицо</b></span>';
+                                        <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Для <b>Частное лицо</b>. Филиал: <b>'.$filials_j[$_GET['filial']]['name2'].'</b></span>';
                                 }
 
                                 echo '		
@@ -133,10 +147,6 @@
                                         if ($sheduler_zapis[0]['insured'] == 1) {
                                             $dop_img .= '<img src="img/insured.png" title="Страховое"> ';
                                         }
-
-                                        /*if ($sheduler_zapis[0]['pervich'] == 1) {
-                                            $dop_img .= '<img src="img/pervich.png" title="Первичное"> ';
-                                        }*/
 
                                         if ($sheduler_zapis[0]['pervich'] == 1) {
                                             $dop_img .= '<img src="img/pervich.png" title="Посещение для пациента первое без работы"> ';
@@ -184,11 +194,11 @@
                                         echo '
                                                 <div class="cellName">';
 
-                                        $offices = SelDataFromDB('spr_filials', $sheduler_zapis[0]['office'], 'offices');
+                                        //$offices = SelDataFromDB('spr_filials', $sheduler_zapis[0]['office'], 'offices');
 
                                         echo '
                                                     Филиал:<br>' .
-                                            $offices[0]['name'];
+                                            $filials_j[$sheduler_zapis[0]['office']]['name'];
                                         echo '
                                                 </div>';
                                         echo '
@@ -287,17 +297,17 @@
                                     var_dump(date("Y-m-d H:m"));*/
                                     //var_dump($sheduler_zapis[0]['year'].'-'.$month.'-'.$sheduler_zapis[0]['day'].' '.$start_time_h.':'.$start_time_m);
                                     $datetime1 = new DateTime(date("Y-m-d H:i"));
-                                    $datetime2 = new DateTime($sheduler_zapis[0]['year'].'-'.$month.'-'.$sheduler_zapis[0]['day'].' '.$start_time_h.':'.$start_time_m);
+                                    $datetime2 = new DateTime($sheduler_zapis[0]['year'] . '-' . $month . '-' . $sheduler_zapis[0]['day'] . ' ' . $start_time_h . ':' . $start_time_m);
                                     $interval = $datetime2->diff($datetime1);
                                     $diff_hours = $interval->h;
-                                    $diff_hours = $diff_hours + ($interval->days*24);
+                                    $diff_hours = $diff_hours + ($interval->days * 24);
 
-                                }else{
+                                } else {
                                     $datetime1 = $datetime2 = new DateTime(date("Y-m-d H:i"));
                                     //$datetime2 = new DateTime($sheduler_zapis[0]['year'].'-'.$month.'-'.$sheduler_zapis[0]['day'].' '.$start_time_h.':'.$start_time_m);
                                     $interval = $datetime2->diff($datetime1);
                                     $diff_hours = $interval->h;
-                                    $diff_hours = $diff_hours + ($interval->days*24);
+                                    $diff_hours = $diff_hours + ($interval->days * 24);
                                 }
 
                                 /*var_dump ($datetime1);
@@ -317,8 +327,8 @@
 
                                 if (
                                     (($sheduler_zapis[0]['year'] < date("Y")) ||
-                                    (($sheduler_zapis[0]['year'] == date("Y")) && ($month < date("m"))) ||
-                                    (($month == date("m")) && ($sheduler_zapis[0]['day'] < date("d")))) &&
+                                        (($sheduler_zapis[0]['year'] == date("Y")) && ($month < date("m"))) ||
+                                        (($month == date("m")) && ($sheduler_zapis[0]['day'] < date("d")))) &&
                                     !(($finances['see_all'] == 1) || $god_mode) &&
                                     !(($sheduler_zapis[0]['noch'] == '1') && ($diff_hours <= 14))
                                 ) {
@@ -332,7 +342,7 @@
                                     var_dump(date("Y"));*/
 
                                     echo '<h1>Нельзя добавлять наряды задним числом</h1>';
-                                }else{
+                                } else {
                                     if ($sheduler_zapis[0]['type'] == 5) {
                                         //Зубки
                                         echo '		
@@ -764,10 +774,14 @@
                                             
                                         </script>';
                                 }
-                            }else{
+                            } else {
                                 echo '<h1>Что-то пошло не так. Ошибка #28</h1><a href="index.php">Вернуться на главную</a>';
                             }
+                        }else{
+                            echo '
+                                 <span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <i class="ahref change_filial">определить</i></span><br>';
                         }
+                    }
 					/*}else{
 						echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 					}*/

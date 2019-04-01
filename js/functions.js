@@ -5293,14 +5293,15 @@
 	function fillInvoiseRez(changeItogPrice){
 
 		var invoice_type =  $("#invoice_type").val();
-		//console.log(invoice_type);
+		console.log(invoice_type);
 
 		var link = "fill_invoice_stom_from_session_f.php";
 		if ((invoice_type == 6) || (invoice_type == 10)){
 			link = "fill_invoice_cosm_from_session_f.php";
 		}
 		if (invoice_type == 88){
-			link = "fill_invoice_free_from_session_f.php";
+			//link = "fill_invoice_free_from_session_f.php";
+			link = "fill_invoice_cosm_from_session_f.php";
 		}
 
 		$.ajax({
@@ -5555,9 +5556,9 @@
 
         var link = "delete_invoice_item_from_session_f.php";
 
-        if (invoice_type == 88){
-            link = "delete_invoice_free_item_from_session_f.php";
-        }
+        // if (invoice_type == 88){
+        //     link = "delete_invoice_free_item_from_session_f.php";
+        // }
 
 		//номер позиции
 		var itemId = dataObj.getAttribute("invoiceitemid");
@@ -6416,9 +6417,9 @@
         var invoice_type = $("#invoice_type").val();
 
         var link = "add_invoice_in_session_f.php";
-        if (invoice_type == 88){
-            link = "add_invoice_free_in_session_f.php";
-        }
+        // if (invoice_type == 88){
+        //     link = "add_invoice_free_in_session_f.php";
+        // }
 
 		//console.log (t_number);
 		$.ajax({
@@ -6465,7 +6466,8 @@
 			link = "add_price_id_cosm_in_invoice_f.php";
 		}
 		if (type == 88){
-			link = "add_price_id_free_in_invoice_f.php";
+			//link = "add_price_id_free_in_invoice_f.php";
+            link = "add_price_id_cosm_in_invoice_f.php";
 		}
 		//console.log(link);
 
