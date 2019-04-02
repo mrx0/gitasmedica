@@ -57,7 +57,7 @@
 
 								}
 							}
-							if (($_POST['invoice_type'] == 6) || ($_POST['invoice_type'] == 10) || ($_POST['invoice_type'] == 88)){
+							if (($_POST['invoice_type'] == 6) || ($_POST['invoice_type'] == 10)){
                                 $item =  $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['id'];
                                 $insure = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['insure'];
 
