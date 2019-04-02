@@ -23,7 +23,7 @@
 					
 					$invoice_j = SelDataFromDB('journal_invoice', $_GET['id'], 'id');
 					//var_dump($invoice_j);
-					
+
 					if ($invoice_j != 0){
 
                         //Если заднее число
@@ -57,7 +57,7 @@
 							//var_dump ($sheduler_zapis);
 
 							//if ($client !=0){
-							if (!empty($sheduler_zapis)){
+							if ((!empty($sheduler_zapis)) || ($invoice_j[0]['type'] == 88)){
 
 								if (!isset($_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']])){
 									$_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['filial'] = $invoice_j[0]['office_id'];
@@ -187,7 +187,7 @@
 											    array_push($temp_arr[$ind], $temp_arr2);
                                             }
 
-                                            if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10)){
+                                            if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10) || ($invoice_j[0]['type'] == 88)){
                                                 array_push($temp_arr, $temp_arr2);
                                             }
 										}
@@ -199,7 +199,7 @@
                                         $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
                                     }
                                     //Костыль для сессионых данных косметологов и специалистов
-	                                if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10)) {
+	                                if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10) || ($invoice_j[0]['type'] == 88)) {
                                         $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
                                     }
                                     //скидку тут добавлю в сесиию
@@ -215,14 +215,41 @@
 								//var_dump($_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data']);
 								//var_dump($_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['mkb']);
 
-								if ($sheduler_zapis[0]['month'] < 10) $month = '0'.$sheduler_zapis[0]['month'];
-								else $month = $sheduler_zapis[0]['month'];
+//								if ($sheduler_zapis[0]['month'] < 10) $month = '0'.$sheduler_zapis[0]['month'];
+//								else $month = $sheduler_zapis[0]['month'];
+
+                                if (($invoice_j[0]['type'] != 88)) {
+                                    $day = $sheduler_zapis[0]['day'];
+
+                                    if ($sheduler_zapis[0]['month'] < 10) $month = '0' . $sheduler_zapis[0]['month'];
+                                    else $month = $sheduler_zapis[0]['month'];
+
+                                    $year = $sheduler_zapis[0]['year'];
+
+                                    $kab = $sheduler_zapis[0]['kab'];
+                                    $insured = $sheduler_zapis[0]['insured'];
+
+                                    $type = $sheduler_zapis[0]['type'];
+                                }else{
+//                                    var_dump(date('d', time()));
+//                                    var_dump(date('m', time()));
+//                                    var_dump(date('Y', time()));
+
+                                    $day = date('d', time());
+                                    $month = date('m', time());
+                                    $year = date('Y', time());
+
+                                    $kab = 0;
+                                    $insured = 0;
+
+                                    $type = 88;
+                                }
 
 								echo '
 								<div id="status">
 									<header>
 										<!--<div class="nav">
-											<a href="zapis_full.php?filial='.$invoice_j[0]['office_id'].'&who=stom&d='.$sheduler_zapis[0]['day'].'&m='.$month.'&y='.$sheduler_zapis[0]['year'].'&kab='.$sheduler_zapis[0]['kab'].'" class="">Запись подробно</a>
+											<a href="zapis_full.php?filial='.$invoice_j[0]['office_id'].'&who=stom&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$kab.'" class="">Запись подробно</a>
 										</div>-->
 										
 										<!--<span style="color: red;">Тестовый режим. Уже сохраняется и даже как-то работает</span>-->
@@ -270,108 +297,109 @@
                                                     <div style="display: inline-block; color: red;">Наряд оплачен или работа закрыта. Редактировать нельзя</div>
                                                 </div>';
                                 }else{
-                                //if ((($invoice_j[0]['summ'] != $invoice_j[0]['paid']) && ($invoice_j[0]['closed_time'] == 0)) || ($invoice_j[0]['summins'] != 0) || (($invoice_j[0]['summins'] == 0) && ($invoice_j[0]['summ'] == 0) && ($invoice_j[0]['paid'] == 0))) {
-                                    echo '
-                                        <ul style="margin-left: 6px; margin-bottom: 10px;">	
-                                            <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Посещение</li>';
+                                    if ($invoice_j[0]['type'] != 88) {
+                                        echo '
+                                            <ul style="margin-left: 6px; margin-bottom: 10px;">	
+                                                <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Посещение</li>';
 
-                                    $t_f_data_db = array();
-                                    $cosmet_data_db = array();
+                                        $t_f_data_db = array();
+                                        $cosmet_data_db = array();
 
-                                    $back_color = '';
+                                        $back_color = '';
 
-                                    if (($sheduler_zapis[0]['enter'] != 8) || ($scheduler['see_all'] == 1) || $god_mode) {
-                                        if ($sheduler_zapis[0]['enter'] == 1) {
-                                            $back_color = 'background-color: rgba(119, 255, 135, 1);';
-                                        } elseif ($sheduler_zapis[0]['enter'] == 9) {
-                                            $back_color = 'background-color: rgba(239,47,55, .7);';
-                                        } elseif ($sheduler_zapis[0]['enter'] == 8) {
-                                            $back_color = 'background-color: rgba(137,0,81, .7);';
-                                        } else {
-                                            //Если оформлено не на этом филиале
-                                            if ($sheduler_zapis[0]['office'] != $sheduler_zapis[0]['add_from']) {
-                                                $back_color = 'background-color: rgb(119, 255, 250);';
+                                        if (($sheduler_zapis[0]['enter'] != 8) || ($scheduler['see_all'] == 1) || $god_mode) {
+                                            if ($sheduler_zapis[0]['enter'] == 1) {
+                                                $back_color = 'background-color: rgba(119, 255, 135, 1);';
+                                            } elseif ($sheduler_zapis[0]['enter'] == 9) {
+                                                $back_color = 'background-color: rgba(239,47,55, .7);';
+                                            } elseif ($sheduler_zapis[0]['enter'] == 8) {
+                                                $back_color = 'background-color: rgba(137,0,81, .7);';
                                             } else {
-                                                $back_color = 'background-color: rgba(255,255,0, .5);';
+                                                //Если оформлено не на этом филиале
+                                                if ($sheduler_zapis[0]['office'] != $sheduler_zapis[0]['add_from']) {
+                                                    $back_color = 'background-color: rgb(119, 255, 250);';
+                                                } else {
+                                                    $back_color = 'background-color: rgba(255,255,0, .5);';
+                                                }
                                             }
+
+                                            $dop_img = '';
+
+                                            if ($sheduler_zapis[0]['insured'] == 1) {
+                                                $dop_img .= '<img src="img/insured.png" title="Страховое"> ';
+                                            }
+
+                                            //var_dump($sheduler_zapis[0]['pervich']);
+
+                                            if ($sheduler_zapis[0]['pervich'] == 1) {
+                                                $dop_img .= '<img src="img/pervich.png" title="Посещение для пациента первое без работы"> ';
+                                            } elseif ($sheduler_zapis[0]['pervich'] == 2) {
+                                                $dop_img .= '<img src="img/pervich_ostav_2.png" title="Посещение для пациента первое с работой"> ';
+                                            } elseif ($sheduler_zapis[0]['pervich'] == 3) {
+                                                $dop_img .= '<img src="img/vtorich_3.png" title="Посещение для пациента не первое"> ';
+                                            } elseif ($sheduler_zapis[0]['pervich'] == 4) {
+                                                $dop_img .= '<img src="img/vtorich_davno_4.png" title="Посещение для пациента не первое, но был более полугода назад"> ';
+                                            } elseif ($sheduler_zapis[0]['pervich'] == 5) {
+                                                $dop_img .= '<img src="img/prodolzhenie.png" title="Продолжение работы"> ';
+                                            }
+
+                                            if ($sheduler_zapis[0]['noch'] == 1) {
+                                                $dop_img .= '<img src="img/night.png" title="Ночное"> ';
+                                            }
+
+                                            echo '
+                                                    <li class="cellsBlock" style="width: auto;">';
+
+                                            echo '
+                                                        <div class="cellName" style="position: relative; ' . $back_color . '">';
+                                            $start_time_h = floor($sheduler_zapis[0]['start_time'] / 60);
+                                            $start_time_m = $sheduler_zapis[0]['start_time'] % 60;
+                                            if ($start_time_m < 10) $start_time_m = '0' . $start_time_m;
+                                            $end_time_h = floor(($sheduler_zapis[0]['start_time'] + $sheduler_zapis[0]['wt']) / 60);
+                                            if ($end_time_h > 23) $end_time_h = $end_time_h - 24;
+                                            $end_time_m = ($sheduler_zapis[0]['start_time'] + $sheduler_zapis[0]['wt']) % 60;
+                                            if ($end_time_m < 10) $end_time_m = '0' . $end_time_m;
+
+                                            echo
+                                                '<b>' . $day . ' ' . $monthsName[$month] . ' ' . $year . '</b><br>' .
+                                                $start_time_h . ':' . $start_time_m . ' - ' . $end_time_h . ':' . $end_time_m;
+
+                                            echo '
+                                                            <div style="position: absolute; top: 1px; right: 1px;">' . $dop_img . '</div>';
+                                            echo '
+                                                        </div>';
+                                            echo '
+                                                        <div class="cellName">';
+                                            echo
+                                                'Пациент <br /><b>' . WriteSearchUser('spr_clients', $sheduler_zapis[0]['patient'], 'user', true) . '</b>';
+                                            echo '
+                                                        </div>';
+                                            echo '
+                                                        <div class="cellName">';
+
+                                            $offices = SelDataFromDB('spr_filials', $sheduler_zapis[0]['office'], 'offices');
+                                            echo '
+                                                            Филиал:<br>' .
+                                                $offices[0]['name'];
+                                            echo '
+                                                        </div>';
+                                            echo '
+                                                        <div class="cellName">';
+                                            echo
+                                                $sheduler_zapis[0]['kab'] . ' кабинет<br>' . 'Врач: <br><b>' . WriteSearchUser('spr_workers', $sheduler_zapis[0]['worker'], 'user', true) . '</b>';
+                                            echo '
+                                                        </div>';
+                                            echo '
+                                                        <div class="cellName">';
+                                            echo '
+                                                            <b><i>Описание:</i></b><br><div style="text-overflow: ellipsis; overflow: hidden; white-space: inherit; display: block; width: 120px;" title="' . $sheduler_zapis[0]['description'] . '">' . $sheduler_zapis[0]['description'] . '</div>';
+                                            echo '
+                                                        </div>
+                                                    </li>';
+
+                                            echo '
+                                                </ul>';
                                         }
-
-                                        $dop_img = '';
-
-                                        if ($sheduler_zapis[0]['insured'] == 1) {
-                                            $dop_img .= '<img src="img/insured.png" title="Страховое"> ';
-                                        }
-
-                                        //var_dump($sheduler_zapis[0]['pervich']);
-
-                                        if ($sheduler_zapis[0]['pervich'] == 1) {
-                                            $dop_img .= '<img src="img/pervich.png" title="Посещение для пациента первое без работы"> ';
-                                        }elseif ($sheduler_zapis[0]['pervich'] == 2) {
-                                            $dop_img .= '<img src="img/pervich_ostav_2.png" title="Посещение для пациента первое с работой"> ';
-                                        }elseif ($sheduler_zapis[0]['pervich'] == 3) {
-                                            $dop_img .= '<img src="img/vtorich_3.png" title="Посещение для пациента не первое"> ';
-                                        }elseif ($sheduler_zapis[0]['pervich'] == 4) {
-                                            $dop_img .= '<img src="img/vtorich_davno_4.png" title="Посещение для пациента не первое, но был более полугода назад"> ';
-                                        }elseif ($sheduler_zapis[0]['pervich'] == 5) {
-                                            $dop_img .= '<img src="img/prodolzhenie.png" title="Продолжение работы"> ';
-                                        }
-
-                                        if ($sheduler_zapis[0]['noch'] == 1) {
-                                            $dop_img .= '<img src="img/night.png" title="Ночное"> ';
-                                        }
-
-                                        echo '
-                                                <li class="cellsBlock" style="width: auto;">';
-
-                                        echo '
-                                                    <div class="cellName" style="position: relative; ' . $back_color . '">';
-                                        $start_time_h = floor($sheduler_zapis[0]['start_time'] / 60);
-                                        $start_time_m = $sheduler_zapis[0]['start_time'] % 60;
-                                        if ($start_time_m < 10) $start_time_m = '0' . $start_time_m;
-                                        $end_time_h = floor(($sheduler_zapis[0]['start_time'] + $sheduler_zapis[0]['wt']) / 60);
-                                        if ($end_time_h > 23) $end_time_h = $end_time_h - 24;
-                                        $end_time_m = ($sheduler_zapis[0]['start_time'] + $sheduler_zapis[0]['wt']) % 60;
-                                        if ($end_time_m < 10) $end_time_m = '0' . $end_time_m;
-
-                                        echo
-                                            '<b>' . $sheduler_zapis[0]['day'] . ' ' . $monthsName[$month] . ' ' . $sheduler_zapis[0]['year'] . '</b><br>' .
-                                            $start_time_h . ':' . $start_time_m . ' - ' . $end_time_h . ':' . $end_time_m;
-
-                                        echo '
-                                                        <div style="position: absolute; top: 1px; right: 1px;">' . $dop_img . '</div>';
-                                        echo '
-                                                    </div>';
-                                        echo '
-                                                    <div class="cellName">';
-                                        echo
-                                            'Пациент <br /><b>' . WriteSearchUser('spr_clients', $sheduler_zapis[0]['patient'], 'user', true) . '</b>';
-                                        echo '
-                                                    </div>';
-                                        echo '
-                                                    <div class="cellName">';
-
-                                        $offices = SelDataFromDB('spr_filials', $sheduler_zapis[0]['office'], 'offices');
-                                        echo '
-                                                        Филиал:<br>' .
-                                            $offices[0]['name'];
-                                        echo '
-                                                    </div>';
-                                        echo '
-                                                    <div class="cellName">';
-                                        echo
-                                            $sheduler_zapis[0]['kab'] . ' кабинет<br>' . 'Врач: <br><b>' . WriteSearchUser('spr_workers', $sheduler_zapis[0]['worker'], 'user', true) . '</b>';
-                                        echo '
-                                                    </div>';
-                                        echo '
-                                                    <div class="cellName">';
-                                        echo '
-                                                        <b><i>Описание:</i></b><br><div style="text-overflow: ellipsis; overflow: hidden; white-space: inherit; display: block; width: 120px;" title="' . $sheduler_zapis[0]['description'] . '">' . $sheduler_zapis[0]['description'] . '</div>';
-                                        echo '
-                                                    </div>
-                                                </li>';
-
-                                        echo '
-                                            </ul>';
                                     }
 
                                     //Наряды
@@ -388,13 +416,13 @@
                                             <input type="hidden" id="client" name="client" value="' . $invoice_j[0]['client_id'] . '">
                                             <input type="hidden" id="client_insure" name="client_insure" value="' . $client_j[0]['insure'] . '">
                                             <input type="hidden" id="zapis_id" name="zapis_id" value="' . $invoice_j[0]['zapis_id'] . '">
-                                            <input type="hidden" id="zapis_insure" name="zapis_insure" value="' . $sheduler_zapis[0]['insured'] . '">
+                                            <input type="hidden" id="zapis_insure" name="zapis_insure" value="' . $insured . '">
                                             <input type="hidden" id="filial" name="filial" value="' . $invoice_j[0]['office_id'] . '">
                                             <input type="hidden" id="worker" name="worker" value="' . $invoice_j[0]['worker_id'] . '">
                                             <input type="hidden" id="t_number_active" name="t_number_active" value="' . $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['t_number_active'] . '">
                                             <input type="hidden" id="invoice_type" name="invoice_type" value="' . $invoice_j[0]['type'] . '">';
 
-                                    if ($sheduler_zapis[0]['type'] == 5) {
+                                    if ($type == 5) {
                                         //Зубки
                                         echo '		
                                             <div style="font-size: 80%; color: #AAA; margin-bottom: 2px;">
@@ -645,7 +673,7 @@
                                                 <div id="tabs_w" style="font-family: Verdana, Calibri, Arial, sans-serif; font-size: 100%">
                                                     <ul>
                                                         <li><a href="#price">Прайс</a></li>';
-                                    if ($sheduler_zapis[0]['type'] == 5) {
+                                    if ($type == 5) {
                                         echo '
                                                         <li><a href="#mkb">Диагноз (МКБ)</a></li>';
                                     }
@@ -676,7 +704,7 @@
                                                         </div>';
                                     echo '		
                                                     </div>';
-                                    if ($sheduler_zapis[0]['type'] == 5) {
+                                    if ($type == 5) {
                                         echo '
                                                     <div id="mkb">';
 
@@ -717,13 +745,13 @@
                                                 <div id="errror" class="invoceHeader" style="position: relative;">
                                                     <div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
                                                         <div>	
-                                                            <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\')">
+                                                            <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $type . ', \'edit\')">
                                                         </div>
                                                     </div>
                                                     <div>
                                                         <div style="">К оплате: <div id="calculateInvoice" style="">0</div> руб.</div>
                                                     </div>';
-                                    if ($sheduler_zapis[0]['type'] == 5) {
+                                    if ($type == 5) {
                                         echo '
                                                     <div>
                                                         <div style="">Страховка: <div id="calculateInsInvoice" style="">0</div> руб.</div>
@@ -753,7 +781,7 @@
                                                                     <div style="display: inline-block; vertical-align: top;">
                                                                          <div class="settings_text" onclick="clearInvoice();">Очистить всё</div>
                                                                     </div><!-- / -->';
-                                    if ($sheduler_zapis[0]['type'] == 5) {
+                                    if ($type == 5) {
                                         echo '
                                                                     <div style="display: inline-block; vertical-align: top;">
                                                                         
@@ -782,7 +810,7 @@
 
                                     echo '
                                         <div>	
-                                            <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\')">
+                                            <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $type . ', \'edit\')">
                                         </div>
                                     </div>
                 
@@ -834,7 +862,7 @@
 
 
 							}else{
-								echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+								echo '<h1>Что-то пошло не так. Ошибка #29</h1><a href="index.php">Вернуться на главную</a>';
 							}
 						}
 					}else{

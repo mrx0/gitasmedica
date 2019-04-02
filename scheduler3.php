@@ -442,7 +442,7 @@
 							<a href="scheduler_template.php" class="b">График план</a>
 							<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>
 						</div>
-						<span style="color: red;">Тестовый режим</span>
+						<!--<span style="color: red;">Тестовый режим</span>-->
 						<h2>График '.$whose.' на ',$monthsName[$month],' ',$year,' филиал '.$filials_j[$_GET['filial']]['name'].'</h2>
 					</header>
 					<!--<a href="own_scheduler.php" class="b">График сотрудника</a>-->';
