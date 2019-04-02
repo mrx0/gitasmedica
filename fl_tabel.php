@@ -728,7 +728,7 @@
                                         </div>
                                         <div style="margin-bottom: 5px;">
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
-                                               ZP_temp: <span class="" style="font-size: 14px; color: #555;  font-weight: bold;">' . number_format($tabel_j[0]['per_from_salary'], 0, '.', '') . ' руб. </span>
+                                               Начислено за время: <span class="" style="font-size: 14px; color: #555;  font-weight: bold;">' . number_format($tabel_j[0]['per_from_salary'], 0, '.', '') . ' руб. </span>
                                             </div>
                                         </div>
                                         <div style="margin-bottom: 5px;">
