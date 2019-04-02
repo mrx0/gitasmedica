@@ -56,8 +56,9 @@
                                 while ($arr = mysqli_fetch_assoc($res)){
                                     array_push($sheduler_zapis, $arr);
                                 }
-                            }else
+                            }else {
                                 $sheduler_zapis = 0;
+                            }
                             //var_dump ($sheduler_zapis);
 
                             //if ($client !=0){
