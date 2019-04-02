@@ -15,8 +15,6 @@
 			if (($_POST['etap'] == '') || !isset($_POST['etap']) || !isset($_POST['imgs']) || ($_POST['imgs'] == '') || ($_POST['imgs'] == '[]')){
 				echo 'Ошибка. Обновите страницу [Ctrl+F5]<br /><br />';
 			}else{
-
-                $path = '';
 				
 				$img_arr = explode(',', $_POST['imgs']);
 				
@@ -48,7 +46,7 @@ if (file_exists($filename)) {
 	*/				
 					$extension = pathinfo('uploads_etap/'.$value, PATHINFO_EXTENSION);
 					
-					rename('uploads_etap/'.$value, $path.'etaps/'.$mysql_insert_id.'.'.$extension);
+					rename('uploads_etap/'.$value, 'etaps/'.$mysql_insert_id.'.'.$extension);										
 				}
 
 				mysql_close();

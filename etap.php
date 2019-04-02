@@ -14,9 +14,6 @@
 			
 			$post_data = '';
 			$js_data = '';
-
-			$path = '';
-			//var_dump($path);
 			
 			//Если у нас по GET передали ID
 			if (isset($_GET['id']) && ($_GET['id'] != '')){
@@ -56,14 +53,12 @@
 									<div style="display: inline-block; border: 1px solid #ccc; vertical-align: top;">
 										<div style=" border: 1px solid #eee;">'.date('d.m.y H:i', $etap_items[$i]['uptime']).'</div>
 									';
-
-								//var_dump($path.'etaps/'.$etap_items[$i]['id'].'.jpg');
 								echo '									
 										<div>';		
-								if (file_exists ($path.'etaps/'.$etap_items[$i]['id'].'.jpg')){
-									echo '<img src="'.$path.'etaps/'.$etap_items[$i]['id'].'.jpg" width="400" class="jLoupe" />';
-								}elseif (file_exists ($path.'etaps/'.$etap_items[$i]['id'].'.png')){
-									echo '<img src="'.$path.'etaps/'.$etap_items[$i]['id'].'.png" width="400" class="jLoupe" />';
+								if (file_exists ('etaps/'.$etap_items[$i]['id'].'.jpg')){
+									echo '<img src="etaps/'.$etap_items[$i]['id'].'.jpg" width="400" class="jLoupe" />';
+								}elseif (file_exists ('etaps/'.$etap_items[$i]['id'].'.png')){
+									echo '<img src="etaps/'.$etap_items[$i]['id'].'.png" width="400" class="jLoupe" />';								
 								}else{
 									echo 'Ошибка изображения '.$etap_items[$i]['id'];
 								}

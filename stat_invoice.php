@@ -20,15 +20,13 @@
 
             $filials_j = getAllFilials(false, true, true);
 
-            //var_dump(time());
-
 			if ($_POST){
 			}else{
 				echo '
 					<header style="margin-bottom: 5px;">
 						<h1>Наряды</h1>
 						
-						<a href="invoice_add.php?client=1&filial=0&date='.time().'&id=0&worker=0&type=88" class="b">Добавить новый (без записи)</a>
+						<a href="invoice_add_free.php" class="b">Добавить новый (без записи)</a>
 						
 					</header>';
 

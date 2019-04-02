@@ -35,7 +35,7 @@
                             }
 						}
 					}
-					if (($_POST['invoice_type'] == 6) || ($_POST['invoice_type'] == 10) || ($_POST['invoice_type'] == 88)){
+					if (($_POST['invoice_type'] == 6) || ($_POST['invoice_type'] == 10)){
 						if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']])){
 							//$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']]['guarantee'] = (int)$_POST['guarantee'];
 
