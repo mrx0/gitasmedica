@@ -70,7 +70,11 @@
                             //часть прайса
 
                             //Категории процентов
-                            $percent_cats_j = SelDataFromDB('fl_spr_percents', $_POST['invoice_type'], 'type');
+                            if ($_POST['invoice_type'] != 88) {
+                                $percent_cats_j = SelDataFromDB('fl_spr_percents', $_POST['invoice_type'], 'type');
+                            }else{
+                                $percent_cats_j = SelDataFromDB('fl_spr_percents', '', '');
+                            }
                             //var_dump( $percent_cats_j);
 
                             //Надо отсортировать по названию
@@ -88,19 +92,29 @@
 
                             if ($items['guarantee'] == 0) {
 
-                                $percent_cat = $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind]['percent_cats'];
+                                if ($_POST['invoice_type'] != 88) {
+                                    $percent_cat = $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind]['percent_cats'];
 
-                                $percents_j = getPercents($_POST['worker'], $percent_cat);
+                                    $percents_j = getPercents($_POST['worker'], $percent_cat);
 
-                                $percent_cat_name = $percents_j[$percent_cat]['name'];
-                                $work_percent = (int)$percents_j[$percent_cat]['work_percent'];
-                                $material_percent = (int)$percents_j[$percent_cat]['material_percent'];
-                                //Спец. цена
-                                $summ_special = (int)$percents_j[$percent_cat]['summ_special'];
+                                    $percent_cat_name = $percents_j[$percent_cat]['name'];
+                                    $work_percent = (int)$percents_j[$percent_cat]['work_percent'];
+                                    $material_percent = (int)$percents_j[$percent_cat]['material_percent'];
+                                    //Спец. цена
+                                    $summ_special = (int)$percents_j[$percent_cat]['summ_special'];
 
-                                $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind]['work_percent'] = $work_percent;
-                                $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind]['material_percent'] = $material_percent;
-                                $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind]['summ_special'] = $summ_special;
+                                    $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind]['work_percent'] = $work_percent;
+                                    $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind]['material_percent'] = $material_percent;
+                                    $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind]['summ_special'] = $summ_special;
+                                }else{
+                                    //$percent_cat = 0;
+
+                                    $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind]['work_percent'] = 0;
+                                    $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind]['material_percent'] = 0;
+                                    $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind]['summ_special'] = 0;
+
+                                    $percent_cat_name = '-';
+                                }
 
                                 $request .= '
                                         <div class="cellsBlock" style="font-size: 100%;" >
