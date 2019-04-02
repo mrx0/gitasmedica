@@ -5016,9 +5016,9 @@
 
 		var link = 'add_price_price_id_in_item_invoice_f.php';
 
-		if (invoice_type == 88){
-            link = 'add_price_price_id_in_item_invoice_free_f.php';
-		}
+		// if (invoice_type == 88){
+         //    link = 'add_price_price_id_in_item_invoice_free_f.php';
+		// }
         //console.log(link);
 
         $("#calculateInvoice").html(Summ);
@@ -5146,9 +5146,9 @@
 
                 var link2 = "add_manual_itog_price_id_in_item_invoice_f.php";
 
-                if (invoice_type == 88){
-                    link2 = 'add_manual_itog_price_id_in_item_invoice_free_f.php';
-                }
+                // if (invoice_type == 88){
+                //     link2 = 'add_manual_itog_price_id_in_item_invoice_free_f.php';
+                // }
 
                 $.ajax({
                     url: link2,
@@ -5293,7 +5293,7 @@
 	function fillInvoiseRez(changeItogPrice){
 
 		var invoice_type =  $("#invoice_type").val();
-		console.log(invoice_type);
+		//console.log(invoice_type);
 
 		var link = "fill_invoice_stom_from_session_f.php";
 		if ((invoice_type == 6) || (invoice_type == 10)){
@@ -5354,7 +5354,8 @@
 			link = "fill_calculate_cosm_from_session_f.php";
 		}
 		if (invoice_type == 88){
-			link = "fill_calculate_free_from_session_f.php";
+			//link = "fill_calculate_free_from_session_f.php";
+            link = "fill_calculate_cosm_from_session_f.php";
 		}
         //console.log(link);
 
@@ -5448,9 +5449,9 @@
 
 		var link = "add_quantity_price_id_in_invoice_f.php";
 
-		if (invoice_type == 88){
-            link = "add_quantity_price_id_in_invoice_free_f.php";
-		}
+		// if (invoice_type == 88){
+         //    link = "add_quantity_price_id_in_invoice_free_f.php";
+		// }
         //console.log(invoice_type);
 
 		//количество
@@ -5498,9 +5499,9 @@
 
 		var link = 'add_price_up_down_one_price_id_in_invoice_f.php';
 
-		if (invoice_type == 88){
-            link = 'add_price_up_down_one_price_id_in_invoice_free_f.php';
-		}
+		// if (invoice_type == 88){
+         //    link = 'add_price_up_down_one_price_id_in_invoice_free_f.php';
+		// }
 
         if (up_down == 'up'){
             price = Number(price) + 1;
@@ -5729,9 +5730,10 @@
 		var invoice_type = $("#invoice_type").val();
 
         var link = "add_spec_koeff_price_id_in_invoice_f.php";
-        if (invoice_type == 88){
-            link = "add_spec_koeff_price_id_in_invoice_free_f.php";
-        }
+
+        // if (invoice_type == 88){
+        //     link = "add_spec_koeff_price_id_in_invoice_free_f.php";
+        // }
 
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
@@ -5886,9 +5888,10 @@
         var invoice_type = $("#invoice_type").val();
 
         var link = "add_discount_price_id_in_invoice_f.php";
-        if (invoice_type == 88){
-            link = "add_discount_price_id_in_invoice_free_f.php";
-        }
+
+        // if (invoice_type == 88){
+        //     link = "add_discount_price_id_in_invoice_free_f.php";
+        // }
 
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
@@ -6120,9 +6123,9 @@
 
         var link = "add_percent_cat_id_in_invoice_f.php";
 
-        if (invoice_type == 88){
-            link = "add_percent_cats_id_in_invoice_free_f.php";
-        }
+        // if (invoice_type == 88){
+        //     link = "add_percent_cats_id_in_invoice_free_f.php";
+        // }
         //console.log(invoice_type);
 
         //категория
@@ -6213,9 +6216,9 @@
 
 		var link = "add_spec_koeff_price_id_in_item_invoice_f.php";
 
-		if (invoice_type == 88){
-            link = "add_spec_koeff_price_id_in_item_invoice_free_f.php";
-		}
+		// if (invoice_type == 88){
+         //    link = "add_spec_koeff_price_id_in_item_invoice_free_f.php";
+		// }
 		//console.log(link);
 
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
@@ -6261,9 +6264,9 @@
 
 		var link = 'add_discount_price_id_in_item_invoice_f.php';
 
-		if (invoice_type == 88){
-            link = "add_discount_price_id_in_item_invoice_free_f.php";
-		}
+		// if (invoice_type == 88){
+         //    link = "add_discount_price_id_in_item_invoice_free_f.php";
+		// }
 
 		//console.log(discount);
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
@@ -6356,9 +6359,9 @@
 
 		var link = "add_manual_itog_price_id_in_item_invoice_f.php";
 
-		if (invoice_type == 88){
-            link = "add_manual_itog_price_id_in_item_invoice_free_f.php";
-		}
+		// if (invoice_type == 88){
+         //    link = "add_manual_itog_price_id_in_item_invoice_free_f.php";
+		// }
 
 		/*console.log(ind);
 		console.log(key);*/
@@ -6648,9 +6651,9 @@
 
 		var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'add\')">';
 
-		if (invoice_type == 88){
-            buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_free_add(\'add\')">';
-		}
+		// if (invoice_type == 88){
+         //    buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_free_add(\'add\')">';
+		// }
 
 		if (mode == 'edit'){
 			buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'edit\')">';
@@ -7607,7 +7610,7 @@
         var office_id = $("#filial").val();
 
 		var client_id = $("#client_id").val();
-		//var order_id =  $("#order_id").val();
+        var invoice_id = $("#invoice_id").val();
 		//console.log(invoice_id);
 		var date_in = $("#date_in").val();
 		//console.log(date_in);
@@ -7621,9 +7624,9 @@
             org_pay = 0;
         }
 
-        if (order_id != 0){
+        if ( invoice_id != 0){
             paymentStr = '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-                '<a href= "payment_add.php?invoice_id='+order_id+'" class="b">Оплатить наряд #'+order_id+'</a>'+
+                '<a href= "payment_add.php?invoice_id='+ invoice_id+'" class="b">Оплатить наряд #'+invoice_id+'</a>'+
                 '</li>';
 		}
 

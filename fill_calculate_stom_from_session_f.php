@@ -68,7 +68,7 @@
                                 } else {
                                     $request .= $ind;
                                 }
-                            }elseif (($_POST['invoice_type'] == 6) || ($_POST['invoice_type'] == 10)){
+                            }elseif (($_POST['invoice_type'] == 6) || ($_POST['invoice_type'] == 10) || ($_POST['invoice_type'] == 88)){
                                 $request .= $ind + 1;
                             }
 
