@@ -56,8 +56,8 @@
                             while ($arr = mysqli_fetch_assoc($res)){
                                 array_push($sheduler_zapis, $arr);
                             }
-                        }//else
-//                            $sheduler_zapis = 0;
+                        }else
+                            $sheduler_zapis = 0;
                         //var_dump ($sheduler_zapis);
 
                         //Если частное лицо, филиал будем определять по сессии или вручную
@@ -70,13 +70,14 @@
                                 $_GET['filial'] = $_SESSION['filial'];
                             }else{
                                 $haveFilial = false;
+
                             }
                         }else{
                             $haveFilial = true;
                         }
 
                         if ($haveFilial) {
-                            if ((!empty($sheduler_zapis)) || ($_GET['type'] == 88)) {
+                            if (($sheduler_zapis != 0) || ($_GET['type'] == 88)) {
 
                                 if (!isset($_SESSION['invoice_data'][$_GET['client']][$_GET['id']])) {
                                     $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['filial'] = (int)$_GET['filial'];
@@ -92,38 +93,18 @@
                                 ksort($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
 
                                 //var_dump($_SESSION);
-                                //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]);
+                                var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]);
                                 //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
                                 //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['mkb']);
 
-                                if (($_GET['type'] != 88)) {
-                                    $day = $sheduler_zapis[0]['day'];
-
-                                    if ($sheduler_zapis[0]['month'] < 10) $month = '0' . $sheduler_zapis[0]['month'];
-                                    else $month = $sheduler_zapis[0]['month'];
-
-                                    $year = $sheduler_zapis[0]['year'];
-
-                                    $kab = $sheduler_zapis[0]['kab'];
-                                    $insured = $sheduler_zapis[0]['insured'];
-                                }else{
-//                                    var_dump(date('d', time()));
-//                                    var_dump(date('m', time()));
-//                                    var_dump(date('Y', time()));
-
-                                    $day = date('d', time());
-                                    $month = date('m', time());
-                                    $year = date('Y', time());
-
-                                    $kab = 0;
-                                    $insured = 0;
-                                }
+                                if ($sheduler_zapis[0]['month'] < 10) $month = '0' . $sheduler_zapis[0]['month'];
+                                else $month = $sheduler_zapis[0]['month'];
 
                                 echo '
                                 <div id="status">
                                     <header>
                                         <div class="nav">
-                                            <a href="zapis_full.php?filial=' . $_GET['filial'] . '&who=stom&d=' . $day . '&m=' . $month . '&y=' . $year . '&kab=' . $kab . '" class="">Запись подробно</a>
+                                            <a href="zapis_full.php?filial=' . $_GET['filial'] . '&who=stom&d=' . $sheduler_zapis[0]['day'] . '&m=' . $month . '&y=' . $sheduler_zapis[0]['year'] . '&kab=' . $sheduler_zapis[0]['kab'] . '" class="">Запись подробно</a>
                                         </div>
                                         <h2>Новый наряд</h2>';
 
@@ -163,7 +144,7 @@
 
                                         $dop_img = '';
 
-                                        if ($insured == 1) {
+                                        if ($sheduler_zapis[0]['insured'] == 1) {
                                             $dop_img .= '<img src="img/insured.png" title="Страховое"> ';
                                         }
 
@@ -197,7 +178,7 @@
                                         if ($end_time_m < 10) $end_time_m = '0' . $end_time_m;
 
                                         echo
-                                            '<b>' . $day . ' ' . $monthsName[$month] . ' ' . $year . '</b><br>' .
+                                            '<b>' . $sheduler_zapis[0]['day'] . ' ' . $monthsName[$month] . ' ' . $sheduler_zapis[0]['year'] . '</b><br>' .
                                             $start_time_h . ':' . $start_time_m . ' - ' . $end_time_h . ':' . $end_time_m;
 
                                         echo '
@@ -223,7 +204,7 @@
                                         echo '
                                                 <div class="cellName">';
                                         echo
-                                            $kab . ' кабинет<br>' . 'Врач: <br><b>' . WriteSearchUser('spr_workers', $sheduler_zapis[0]['worker'], 'user', true) . '</b>';
+                                            $sheduler_zapis[0]['kab'] . ' кабинет<br>' . 'Врач: <br><b>' . WriteSearchUser('spr_workers', $sheduler_zapis[0]['worker'], 'user', true) . '</b>';
                                         echo '
                                                 </div>';
                                         echo '
@@ -239,17 +220,11 @@
                                     }
                                 }
 
-                                //if ($_GET['type'] != 88) {
+                                if ($_GET['type'] != 88) {
                                     //Наряды
                                     echo '
-                                        <ul id="invoices" style="margin-left: 6px; margin-bottom: 10px;">';
-                                    if ($_GET['type'] != 88) {
-                                        echo '
+                                        <ul id="invoices" style="margin-left: 6px; margin-bottom: 10px;">					
                                             <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Последний выписанный наряд для этой записи</li>';
-                                    }else{
-                                        echo '
-                                            <li style="font-size: 85%; color: #7D7D7D; margin: 5px 0;">Последний выписанный наряд для Частного лица</li>';
-                                    }
 
                                     $query = "SELECT * FROM `journal_invoice` WHERE `zapis_id`='" . $_GET['id'] . "' AND `status` <> '1' AND `status` <> '9' ORDER BY `create_time` DESC LIMIT 1";
 
@@ -298,7 +273,7 @@
 
                                     echo '
                                         </ul>';
-                                //}
+                                }
 
                                 $discount = $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['discount'];
 
@@ -309,7 +284,7 @@
                                         <input type="hidden" id="client" name="client" value="' . $_GET['client'] . '">
                                         <input type="hidden" id="client_insure" name="client_insure" value="' . $client_j[0]['insure'] . '">
                                         <input type="hidden" id="zapis_id" name="zapis_id" value="' . $_GET['id'] . '">
-                                        <input type="hidden" id="zapis_insure" name="zapis_insure" value="' . $insured . '">
+                                        <input type="hidden" id="zapis_insure" name="zapis_insure" value="' . $sheduler_zapis[0]['insured'] . '">
                                         <input type="hidden" id="filial" name="filial" value="' . $_GET['filial'] . '">
                                         <input type="hidden" id="worker" name="worker" value="' . $_GET['worker'] . '">
                                         <input type="hidden" id="t_number_active" name="t_number_active" value="' . $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['t_number_active'] . '">
@@ -320,59 +295,55 @@
                                     //var_dump(time());
                                     /*var_dump(date("Y-m-d H:m", time()));
                                     var_dump(date("Y-m-d H:m"));*/
-                                    //var_dump($year.'-'.$month.'-'.$day.' '.$start_time_h.':'.$start_time_m);
+                                    //var_dump($sheduler_zapis[0]['year'].'-'.$month.'-'.$sheduler_zapis[0]['day'].' '.$start_time_h.':'.$start_time_m);
                                     $datetime1 = new DateTime(date("Y-m-d H:i"));
-                                    $datetime2 = new DateTime($year . '-' . $month . '-' . $day . ' ' . $start_time_h . ':' . $start_time_m);
+                                    $datetime2 = new DateTime($sheduler_zapis[0]['year'] . '-' . $month . '-' . $sheduler_zapis[0]['day'] . ' ' . $start_time_h . ':' . $start_time_m);
                                     $interval = $datetime2->diff($datetime1);
                                     $diff_hours = $interval->h;
                                     $diff_hours = $diff_hours + ($interval->days * 24);
-
-                                    $type = $sheduler_zapis[0]['type'];
 
                                 } else {
                                     $datetime1 = $datetime2 = new DateTime(date("Y-m-d H:i"));
-                                    //$datetime2 = new DateTime($year.'-'.$month.'-'.$day.' '.$start_time_h.':'.$start_time_m);
+                                    //$datetime2 = new DateTime($sheduler_zapis[0]['year'].'-'.$month.'-'.$sheduler_zapis[0]['day'].' '.$start_time_h.':'.$start_time_m);
                                     $interval = $datetime2->diff($datetime1);
                                     $diff_hours = $interval->h;
                                     $diff_hours = $diff_hours + ($interval->days * 24);
-
-                                    $type = 88;
                                 }
 
                                 /*var_dump ($datetime1);
                                 var_dump ($datetime2);*/
                                 //var_dump ($diff_hours);
 
-                                //var_dump($day.'.'.$month.'.'.$year.' '.$start_time_h.':'.$start_time_m);
+                                //var_dump($sheduler_zapis[0]['day'].'.'.$month.'.'.$sheduler_zapis[0]['year'].' '.$start_time_h.':'.$start_time_m);
 
-                                /*var_dump($day);
+                                /*var_dump($sheduler_zapis[0]['day']);
                                 var_dump($month);
-                                var_dump($year);
+                                var_dump($sheduler_zapis[0]['year']);
                                 var_dump(date("m") == $month);
-                                var_dump(date("d") == $day);
+                                var_dump(date("d") == $sheduler_zapis[0]['day']);
                                 var_dump(date("d"));
                                 var_dump(date("m"));
                                 var_dump(date("Y"));*/
 
                                 if (
-                                    (($year < date("Y")) ||
-                                        (($year == date("Y")) && ($month < date("m"))) ||
-                                        (($month == date("m")) && ($day < date("d")))) &&
+                                    (($sheduler_zapis[0]['year'] < date("Y")) ||
+                                        (($sheduler_zapis[0]['year'] == date("Y")) && ($month < date("m"))) ||
+                                        (($month == date("m")) && ($sheduler_zapis[0]['day'] < date("d")))) &&
                                     !(($finances['see_all'] == 1) || $god_mode) &&
                                     !(($sheduler_zapis[0]['noch'] == '1') && ($diff_hours <= 14))
                                 ) {
-                                    /*var_dump($day);
+                                    /*var_dump($sheduler_zapis[0]['day']);
                                     var_dump($month);
-                                    var_dump($year);
+                                    var_dump($sheduler_zapis[0]['year']);
                                     var_dump(date("m") == $month);
-                                    var_dump(date("d") == $day);
+                                    var_dump(date("d") == $sheduler_zapis[0]['day']);
                                     var_dump(date("d"));
                                     var_dump(date("m"));
                                     var_dump(date("Y"));*/
 
                                     echo '<h1>Нельзя добавлять наряды задним числом</h1>';
                                 } else {
-                                    if ($type == 5) {
+                                    if ($sheduler_zapis[0]['type'] == 5) {
                                         //Зубки
                                         echo '		
                                                 <div style="font-size: 80%; color: #AAA; margin-bottom: 2px;">
@@ -623,7 +594,7 @@
                                                     <div id="tabs_w" style="font-family: Verdana, Calibri, Arial, sans-serif; font-size: 100%">
                                                         <ul>
                                                             <li><a href="#price">Прайс</a></li>';
-                                    if ($type == 5) {
+                                    if ($sheduler_zapis[0]['type'] == 5) {
                                         echo '
                                                             <li><a href="#mkb">Диагноз (МКБ)</a></li>';
                                     }
@@ -655,7 +626,7 @@
                                                             </div>';
                                     echo '		
                                                         </div>';
-                                    if ($type == 5) {
+                                    if ($sheduler_zapis[0]['type'] == 5) {
                                         echo '
                                                         <div id="mkb">';
 
@@ -696,13 +667,13 @@
                                                 <div id="errror" class="invoceHeader" style="position: relative;">
                                                     <div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
                                                         <div>	
-                                                            <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $type . ', \'add\')">
+                                                            <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\')">
                                                         </div>
                                                     </div>
                                                     <div>
                                                         <div style="">К оплате: <div id="calculateInvoice" style="">0</div> руб.</div>
                                                     </div>';
-                                    if ($type == 5) {
+                                    if ($sheduler_zapis[0]['type'] == 5) {
                                         echo '
                                                     <div>
                                                         <div style="">Страховка: <div id="calculateInsInvoice" style="">0</div> руб.</div>
@@ -732,7 +703,7 @@
                                                                     <div style="display: inline-block; vertical-align: top;">
                                                                          <div class="settings_text" onclick="clearInvoice();">Очистить всё</div>
                                                                     </div><!-- / -->';
-                                    if ($type == 5) {
+                                    if ($sheduler_zapis[0]['type'] == 5) {
                                         echo '
                                                                     <div style="display: inline-block; vertical-align: top;">
                                                                         
@@ -761,7 +732,7 @@
 
                                     echo '
                                             <div>	
-                                                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $type . ', \'add\')">
+                                                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\')">
                                             </div>
                                         </div>
                     
