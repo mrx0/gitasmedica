@@ -74,7 +74,7 @@
                             //var_dump ($sheduler_zapis);
                         }
 						//if ($client !=0){
-						if ((!empty($sheduler_zapis)) || ($invoice_j[0]['type'] == 88)){
+						if (!empty($sheduler_zapis)){
                             if (!empty($invoice_j)){
                                 //var_dump($invoice_j);
 						
@@ -908,10 +908,10 @@
                                 echo '
 		                            <div id="doc_title">РЛ #'.$_GET['id'].' - Асмедика</div>';
                             }else{
-                                echo '<h1>Что-то пошло не так. Ошибка #32</h1><a href="index.php">Вернуться на главную</a>';
+                                echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
                             }
 						}else{
-							echo '<h1>Что-то пошло не так. Ошибка #33</h1><a href="index.php">Вернуться на главную</a>';
+							echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 						}
                     }else{
                         echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

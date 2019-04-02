@@ -363,17 +363,17 @@ if ($enter_ok){
                                                 array_push($temp_arr[$ind], $temp_arr2);
                                             }
 
-                                            if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10) || ($invoice_j[0]['type'] == 88)) {
+                                            if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10)) {
                                                 array_push($temp_arr, $temp_arr2);
                                             }
 
-//                                            if ($invoice_j[0]['type'] == 88) {
-//                                                if (!isset($temp_arr[$ind])) {
-//                                                    $temp_arr[$ind] = array();
-//                                                }
-//
-//                                                array_push($temp_arr[$ind], $temp_arr2);
-//                                            }
+                                            if ($invoice_j[0]['type'] == 88) {
+                                                if (!isset($temp_arr[$ind])) {
+                                                    $temp_arr[$ind] = array();
+                                                }
+
+                                                array_push($temp_arr[$ind], $temp_arr2);
+                                            }
                                         }
                                     }
                                 }

@@ -49,7 +49,7 @@
 		
 		if ($_POST){
 			if (!isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['filial']) || !isset($_POST['worker'])){
-				echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так. Ошибка #30</div>'));
+				echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 				include_once 'DBWork.php';
 
@@ -67,7 +67,7 @@
                 $price['start_price'] = 0;
 				
 				if (!isset($_SESSION['invoice_data'][$client][$zapis_id]['data'])){
-					echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так. Ошибка #31</div>'));
+					echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 				}else{
 					$_SESSION['invoice_data'][$client][$zapis_id]['data'] = array_values($_SESSION['invoice_data'][$client][$zapis_id]['data']);
 					//берем из сесии данные
