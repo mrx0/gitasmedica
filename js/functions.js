@@ -5304,19 +5304,21 @@
 			link = "fill_invoice_cosm_from_session_f.php";
 		}
 
+		var reqData = {
+            client: $("#client").val(),
+            zapis_id: $("#zapis_id").val(),
+            filial: $("#filial2").val(),
+            worker: $("#worker").val(),
+            invoice_type: invoice_type
+		};
+		console.log(reqData);
+
 		$.ajax({
 			url: link,
 			global: false,
 			type: "POST",
 			dataType: "JSON",
-			data:
-			{
-				client: $("#client").val(),
-				zapis_id: $("#zapis_id").val(),
-				filial: $("#filial").val(),
-				worker: $("#worker").val(),
-                invoice_type: invoice_type
-			},
+			data: reqData,
 			cache: false,
 			beforeSend: function() {
 				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
