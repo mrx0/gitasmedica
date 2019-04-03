@@ -861,6 +861,16 @@
                             }
                         }
 
+                        $invoiceFreeAddStr = '';
+
+                        //Для ассистентов
+                        if ($type == 7) {
+                            //Добавление нарядов "с улицы" если ассист на этом филиале
+                            if (($selectedDate == 1) || ($selectedDate == 3)) {
+                                $invoiceFreeAddStr .= 'else contextMenuShow(\''.$worker_data['id'].','.$type.','.$_GET['filial'].'\', \''.$i.'.'.$month.'.'.$year.'\', event, \'invoice_add_free\');';
+                            }
+                        }
+
                         //Есть ли уже указанные часы сотрудника
                         $hours = '';
 

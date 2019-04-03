@@ -461,7 +461,8 @@ if ($enter_ok){
                                         <input type="hidden" id="filial2" name="filial2" value="' . $invoice_j[0]['office_id'] . '">
                                         <input type="hidden" id="worker" name="worker" value="' . $invoice_j[0]['worker_id'] . '">
                                         <input type="hidden" id="t_number_active" name="t_number_active" value="' . $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['t_number_active'] . '">
-                                        <input type="hidden" id="invoice_type" name="invoice_type" value="' . $invoice_j[0]['type'] . '">';
+                                        <input type="hidden" id="invoice_type" name="invoice_type" value="' . $invoice_j[0]['type'] . '">
+                                        <input type="hidden" id="calculate_type" name="calculate_type" value="'.$invoice_j[0]['type'].'">';
 
                             echo '			
                                         <div class="invoice_rezult" style="display: inline-block; border: 1px solid #c5c5c5; border-radius: 3px; position: relative;">';
@@ -644,6 +645,8 @@ if ($enter_ok){
                         }else{
                             echo '<span style="color: red; font-weight: bold;">Вся сумма уже распределена.</span>
                             <input type="hidden" id="invoice_type" name="invoice_type" value="'.$invoice_j[0]['type'].'">
+                            <input type="hidden" id="calculate_type" name="calculate_type" value="'.$invoice_j[0]['type'].'">
+                            <input type="hidden" id="calculate_type" name="calculate_type" value="'.$invoice_j[0]['type'].'">
                             <input type="hidden" id="zapis_insure" name="zapis_insure" value="0">
                             <input type="hidden" id="filial2" name="filial2" value="'.$invoice_j[0]['office_id'].'">
                             <input type="hidden" id="worker" name="worker" value="'.$invoice_j[0]['worker_id'].'">';
