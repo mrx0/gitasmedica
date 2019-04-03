@@ -26,7 +26,7 @@
 						$data = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'];
 
                         $msql_cnnct = ConnectToDB ();
-						
+
 						$time = date('Y-m-d H:i:s', time());
 
                         //if ($_POST['invoice_type'] == 5) {
@@ -35,13 +35,22 @@
                         //if ($_POST['invoice_type'] == 6){
                             $discount = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['discount'];
                         //}
+
+                        $zapis_id =  $_POST['zapis_id'];
+
+                        if (isset($_POST['zapis_id_new'])){
+                            if ($_POST['zapis_id_new'] > 0) {
+                                $zapis_id = $_POST['zapis_id_new'];
+                            }
+                        }
+
 						//Добавляем в базу
 						$query = "INSERT INTO `journal_invoice` (`zapis_id`, `office_id`, `client_id`, `worker_id`, `type`, `summ`, `discount`, `summins`, `create_person`, `create_time`) 
 						VALUES (
-						'{$_POST['zapis_id']}', '{$_POST['filial']}', '{$_POST['client']}', '{$_POST['worker']}', '{$_POST['invoice_type']}', '{$_POST['summ']}', '{$discount}', '{$_POST['summins']}', '{$_SESSION['id']}', '{$time}')";
+						'{$zapis_id}', '{$_POST['filial']}', '{$_POST['client']}', '{$_POST['worker']}', '{$_POST['invoice_type']}', '{$_POST['summ']}', '{$discount}', '{$_POST['summins']}', '{$_SESSION['id']}', '{$time}')";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-						
+
 						//ID новой позиции
                         $mysql_insert_id = mysqli_insert_id($msql_cnnct);
 
@@ -50,7 +59,7 @@
 							if (!empty($invoice_data)){
 								if ($_POST['invoice_type'] == 5){
 									foreach ($invoice_data as $key => $items){
-										
+
 										$price_id = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['id'];
 										$quantity = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['quantity'];
 										$insure = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['insure'];
@@ -83,11 +92,11 @@
                                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 										}
 									}
-									
+
 								}
-								
-								if (($_POST['invoice_type'] == 6) || ($_POST['invoice_type'] == 10)){
-									
+
+								if (($_POST['invoice_type'] == 6) || ($_POST['invoice_type'] == 10) || ($_POST['invoice_type'] == 7)){
+
 									$price_id = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['id'];
 									$quantity = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['quantity'];
 									$insure = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['insure'];
@@ -107,7 +116,7 @@
 									'{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$gift}', '{$spec_koeff}', '{$discount}', '{$percent_cat}', '{$manual_price}', '{$itog_price}')";
 
                                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-									
+
 								}
 								//unset($_SESSION['invoice_data']);
 							}

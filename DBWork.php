@@ -143,24 +143,28 @@
 	}
 
 	//Вставка записей во временную запись
-	function WriteToDB_EditZapis ($datatable, $year, $month, $day, $office, $add_from, $kab, $worker, $create_person, $patient, $contacts, $description, $start_time, $wt, $type, $pervich, $insured, $noch){
+	function WriteToDB_EditZapis ($datatable, $year, $month, $day, $office, $add_from, $kab, $worker, $create_person, $patient, $contacts, $description, $start_time, $wt, $type, $pervich, $insured, $noch, $enter){
 
         $msql_cnnct = ConnectToDB ();
 
 		$time = time();
 
 		$query = "INSERT INTO `zapis` (
-			`year`, `month`, `day`, `office`, `add_from`, `kab`, `worker`, `create_time`, `create_person`, `patient`, `contacts`, `description`, `start_time`, `wt`, `type`, `pervich`, `insured`, `noch`) 
+			`year`, `month`, `day`, `office`, `add_from`, `kab`, `worker`, `create_time`, `create_person`, `patient`, `contacts`, `description`, `start_time`, `wt`, `type`, `pervich`, `insured`, `noch`, `enter`) 
 			VALUES (
-			'{$year}', '{$month}', '{$day}', '{$office}', '{$add_from}', '{$kab}', '{$worker}', '$time', '{$create_person}', '{$patient}', '{$contacts}', '{$description}', '{$start_time}', '{$wt}', '{$type}', '{$pervich}', '{$insured}', '{$noch}') ";
+			'{$year}', '{$month}', '{$day}', '{$office}', '{$add_from}', '{$kab}', '{$worker}', '$time', '{$create_person}', '{$patient}', '{$contacts}', '{$description}', '{$start_time}', '{$wt}', '{$type}', '{$pervich}', '{$insured}', '{$noch}', '{$enter}') ";
 		//echo $query;
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
+        $mysql_insert_id = mysqli_insert_id($msql_cnnct);
+
         CloseDB ($msql_cnnct);
-		
+
 		//логирование
 		//!!!AddLog (GetRealIp(), $create_person, '', 'Изменение в расписании. ['.date('d.m.y H:i', $time).']. ОФис: ['.$office.']. Пациент: ['.$client.']. Описание: ['.$for_log.']. Комментарий: '.$comment);
+
+        return $mysql_insert_id;
 	}
 	
 	//Редактирование записей во временную запись

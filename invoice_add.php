@@ -15,14 +15,41 @@
 			include_once 'functions.php';
 		
 			require 'variables.php';
-		
-			//require 'config.php';
+
+            //var_dump($_GET);
+
+            //require 'config.php';
 
 			//var_dump($_SESSION);
 			//var_dump($_SESSION['invoice_data'][12403][72358]['data']);
 			//unset($_SESSION['invoice_data']);
 			
 			if ($_GET){
+                $invoice_free = false;
+
+			    //Если наряд "с улицы"
+			    if (isset($_GET['free'])){
+			        if ($_GET['free'] == 1){
+                        $invoice_free = true;
+
+                        $_GET['client'] = 1;
+
+                        $ids_arr = explode(',', $_GET['worker_filial_ids']);
+                        $_GET['worker'] = $ids_arr[0];
+                        $_GET['type'] = $ids_arr[1];
+                        $_GET['filial'] = $ids_arr[2];
+
+                        $_GET['id'] = 0;
+
+                        $date_arr = explode('.', $_GET['date']);
+                        //var_dump($date_arr);
+                        $day = $date_arr[0];
+                        $month = $date_arr[1];
+                        $year = $date_arr[2];
+                    }
+                }
+                //var_dump($_GET);
+
 				if (isset($_GET['client']) && isset($_GET['id']) && isset($_GET['filial']) && isset($_GET['worker'])){
 			
 					//if (($finances['add_new'] == 1) || $god_mode){
@@ -36,32 +63,60 @@
 						//var_dump($client_j);
 
                         if (
-                            ($client_j[0]['card'] == NULL) ||
+                            (($client_j[0]['card'] == NULL) ||
                             ($client_j[0]['birthday2'] == '0000-00-00') ||
                             ($client_j[0]['sex'] == 0) ||
-                            ($client_j[0]['address'] == NULL)
+                            ($client_j[0]['address'] == NULL)) &&
+                            ($_GET['client'] != 1)
                         ){
                             echo '<div class="query_neok">В <a href="client.php?id='.$_GET['client'].'">карточке пациента</a> не заполнены все необходимые графы.</div>';
                         }else{
 
+                            $scheduler_json_str = '';
 
                             $msql_cnnct = ConnectToDB ();
 
-                            $query = "SELECT * FROM `zapis` WHERE `id`='".$_GET['id']."'";
+                            //Если наряд "с улицы"
+                            if (!$invoice_free) {
+                                $query = "SELECT * FROM `zapis` WHERE `id`='" . $_GET['id'] . "'";
 
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-                            $number = mysqli_num_rows($res);
-                            if ($number != 0){
-                                while ($arr = mysqli_fetch_assoc($res)){
-                                    array_push($sheduler_zapis, $arr);
+                                $number = mysqli_num_rows($res);
+                                if ($number != 0) {
+                                    while ($arr = mysqli_fetch_assoc($res)) {
+                                        array_push($sheduler_zapis, $arr);
+                                    }
                                 }
-                            }else
-                                $sheduler_zapis = 0;
-                            //var_dump ($sheduler_zapis);
+
+                            }else{
+
+                                $sheduler_zapis[0]['day'] = $day;
+                                $sheduler_zapis[0]['month'] = $month;
+                                $sheduler_zapis[0]['year'] = $year;
+                                $sheduler_zapis[0]['kab'] = 0;
+                                $sheduler_zapis[0]['enter'] = 1;
+                                $sheduler_zapis[0]['office'] = $_GET['filial'];
+                                $sheduler_zapis[0]['add_from'] = $_GET['filial'];
+                                $sheduler_zapis[0]['insured'] = 0;
+                                $sheduler_zapis[0]['pervich'] = 0;
+                                $sheduler_zapis[0]['noch'] = 0;
+                                $sheduler_zapis[0]['start_time'] = 900;
+                                $sheduler_zapis[0]['wt'] = 5;
+                                $sheduler_zapis[0]['patient'] = 1;
+                                $sheduler_zapis[0]['worker'] = $_GET['worker'];
+                                $sheduler_zapis[0]['description'] = 'Без записи';
+                                $sheduler_zapis[0]['type'] = $_GET['type'];
+
+                                $scheduler_json_str = json_encode($sheduler_zapis[0]);
+                                //$scheduler_json_str = str_replace('"','\\"',$scheduler_json_str);
+                            }
+//                            var_dump($sheduler_zapis[0]);
+//                            var_dump($scheduler_json_str);
+                            //echo ($scheduler_json_str);
 
                             //if ($client !=0){
-                            if ($sheduler_zapis != 0) {
+                            if (!empty($sheduler_zapis) || (($_GET['client'] == 1) && ($_GET['id'] == 0))) {
 
                                 if (!isset($_SESSION['invoice_data'][$_GET['client']][$_GET['id']])) {
                                     $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['filial'] = (int)$_GET['filial'];
@@ -80,7 +135,10 @@
                                 //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['data']);
                                 //var_dump($_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['mkb']);
 
-                                if ($sheduler_zapis[0]['month'] < 10) $month = '0' . $sheduler_zapis[0]['month'];
+//                                var_dump($sheduler_zapis[0]['month']);
+//                                var_dump($sheduler_zapis[0]['month'] < 10);
+
+                                if ($sheduler_zapis[0]['month'] < 10) $month = '0' . (int)$sheduler_zapis[0]['month'];
                                 else $month = $sheduler_zapis[0]['month'];
 
                                 echo '
@@ -112,6 +170,8 @@
                                         $back_color = 'background-color: rgba(239,47,55, .7);';
                                     } elseif ($sheduler_zapis[0]['enter'] == 8) {
                                         $back_color = 'background-color: rgba(137,0,81, .7);';
+                                    } elseif ($sheduler_zapis[0]['enter'] == 6) {
+                                        $back_color = 'background-color: rgba(160, 160, 160, 0.5);';
                                     } else {
                                         //Если оформлено не на этом филиале
                                         if ($sheduler_zapis[0]['office'] != $sheduler_zapis[0]['add_from']) {
@@ -260,15 +320,16 @@
                                 echo '
                                     <div id="data">';
 
-                                echo '	
-                                        <input type="hidden" id="client" name="client" value="' . $_GET['client'] . '">
-                                        <input type="hidden" id="client_insure" name="client_insure" value="' . $client_j[0]['insure'] . '">
-                                        <input type="hidden" id="zapis_id" name="zapis_id" value="' . $_GET['id'] . '">
-                                        <input type="hidden" id="zapis_insure" name="zapis_insure" value="' . $sheduler_zapis[0]['insured'] . '">
-                                        <input type="hidden" id="filial" name="filial" value="' . $_GET['filial'] . '">
-                                        <input type="hidden" id="worker" name="worker" value="' . $_GET['worker'] . '">
-                                        <input type="hidden" id="t_number_active" name="t_number_active" value="' . $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['t_number_active'] . '">
-                                        <input type="hidden" id="invoice_type" name="invoice_type" value="' . $_GET['type'] . '">';
+                                echo "	
+                                        <input type='hidden' id='client' name='client' value='" . $_GET['client'] . "'>
+                                        <input type='hidden' id='client_insure' name='client_insure' value='" . $client_j[0]['insure'] . "'>
+                                        <input type='hidden' id='zapis_id' name='zapis_id' value='" . $_GET['id'] . "'>
+                                        <input type='hidden' id='zapis_insure' name='zapis_insure' value='" . $sheduler_zapis[0]['insured'] . "'>
+                                        <input type='hidden' id='filial' name='filial' value='" . $_GET['filial'] . "'>
+                                        <input type='hidden' id='worker' name='worker' value='" . $_GET['worker'] . "'>
+                                        <input type='hidden' id='t_number_active' name='t_number_active' value='" . $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['t_number_active'] . "'>
+                                        <input type='hidden' id='invoice_type' name='invoice_type' value='" . $_GET['type'] . "'>
+                                        <input type='hidden' id='scheduler_json' name='scheduler_json' value='".$scheduler_json_str."'>";
 
                                 //Если заднее число записи
 
@@ -746,17 +807,17 @@
                                         </script>';
                                 }
                             }else{
-                                echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+                                echo '<h1>Что-то пошло не так. Ошибка #29</h1><a href="index.php">Вернуться на главную</a>';
                             }
                         }
 					/*}else{
 						echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 					}*/
 				}else{
-					echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+					echo '<h1>Что-то пошло не так. Ошибка #30</h1><a href="index.php">Вернуться на главную</a>';
 				}
 			}else{
-				echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+				echo '<h1>Что-то пошло не так. Ошибка #31</h1><a href="index.php">Вернуться на главную</a>';
 			}
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

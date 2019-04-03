@@ -499,7 +499,7 @@
                                                     <i><b>Зуб</b></i>';
                                 }
 
-                                if (($sheduler_zapis[0]['type'] == 6) || ($sheduler_zapis[0]['type'] == 10)) {
+                                if (($sheduler_zapis[0]['type'] == 6) || ($sheduler_zapis[0]['type'] == 10) || ($sheduler_zapis[0]['type'] == 7)) {
                                     echo '
                                                     <i><b>№</b></i>';
                                 }

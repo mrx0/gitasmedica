@@ -5293,10 +5293,10 @@
 	function fillInvoiseRez(changeItogPrice){
 
 		var invoice_type =  $("#invoice_type").val();
-		console.log(invoice_type);
+		//console.log(invoice_type);
 
 		var link = "fill_invoice_stom_from_session_f.php";
-		if ((invoice_type == 6) || (invoice_type == 10)){
+		if ((invoice_type == 6) || (invoice_type == 10) || (invoice_type == 7)){
 			link = "fill_invoice_cosm_from_session_f.php";
 		}
 		if (invoice_type == 88){
@@ -5350,7 +5350,7 @@
         //console.log(invoice_type);
 
 		var link = "fill_calculate_stom_from_session_f.php";
-		if ((invoice_type == 6) || (invoice_type == 10)){
+		if ((invoice_type == 6) || (invoice_type == 10) || (invoice_type == 7)){
 			link = "fill_calculate_cosm_from_session_f.php";
 		}
 		if (invoice_type == 88){
@@ -6462,7 +6462,7 @@
 
 		var link = "add_price_id_stom_in_invoice_f.php";
 
-		if ((type == 6) || (type == 10)){
+		if ((type == 6) || (type == 10) || (type == 7)){
 			link = "add_price_id_cosm_in_invoice_f.php";
 		}
 		if (type == 88){
@@ -6648,9 +6648,13 @@
 
 		var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'add\')">';
 
-		if (invoice_type == 88){
-            buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_free_add(\'add\')">';
-		}
+		// if (invoice_type == 88){
+         //    buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_free_add(\'add\')">';
+		// }
+        //
+		// if (invoice_type == 7){
+         //    buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'add\')">';
+		// }
 
 		if (mode == 'edit'){
 			buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'edit\')">';
@@ -7169,97 +7173,147 @@
         })
     }
 
+    //Добавляем/редактируем в базу наряд из сессии (сама функция)
+    function Ajax_invoice_add_f(invoice_type, mode, zapis_id){
+
+        var invoice_id = 0;
+
+        var link = "invoice_add_f.php";
+
+        if (mode == 'edit'){
+            link = "invoice_edit_f.php";
+            invoice_id = $("#invoice_id").val();
+        }
+
+        var Summ = $("#calculateInvoice").html();
+        var SummIns = 0;
+
+        var SummInsStr = '';
+
+        if (invoice_type == 5){
+            SummIns = $("#calculateInsInvoice").html();
+            SummInsStr = '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
+                'Страховка:<br>'+
+                '<span class="calculateInsInvoice" style="font-size: 13px">'+SummIns+'</span> руб.'+
+                '</div>';
+        }
+
+        var client = $("#client").val();
+
+        var reqData = {
+            client: $("#client").val(),
+            filial: $("#filial").val(),
+            worker: $("#worker").val(),
+
+            zapis_id: $("#zapis_id").val(),
+
+            summ: Summ,
+            summins: SummIns,
+
+            invoice_type: invoice_type,
+            invoice_id: invoice_id
+		};
+
+        if (zapis_id != 0) {
+            reqData.zapis_id_new = zapis_id;
+        }
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                $('.center_block').remove();
+                $('#overlay').hide();
+
+                if(res.result == "success"){
+                    $('#data').hide();
+                    $('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+                        '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован наряд</li>'+
+                        '<li class="cellsBlock" style="width: auto;">'+
+                        '<a href="invoice.php?id='+res.data+'" class="cellName ahref">'+
+                        '<b>Наряд #'+res.data+'</b><br>'+
+                        '</a>'+
+                        '<div class="cellName">'+
+                        '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
+                        'Сумма:<br>'+
+                        '<span class="calculateInvoice" style="font-size: 13px">'+Summ+'</span> руб.'+
+                        '</div>'+
+                        SummInsStr+
+                        '</div>'+
+                        '</li>'+
+                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+                        '<a href="payment_add.php?invoice_id='+res.data+'" class="b">Оплатить</a>'+
+                        '</li>'+
+                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+                        '<a href="add_order.php?client_id='+client+'&invoice_id='+res.data+'" class="b">Добавить приходный ордер</a>'+
+                        '</li>'+
+                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+                        '<a href="finance_account.php?client_id='+client+'" class="b">Управление счётом</a>'+
+                        '</li>'+
+                        '</ul>');
+                }else{
+                    $('#errror').html(res.data);
+                }
+            }
+        });
+	}
 
 	//Добавляем/редактируем в базу наряд из сессии
 	function Ajax_invoice_add(mode){
 		//console.log(mode);
 
-		var invoice_id = 0;
+        var invoice_type = $("#invoice_type").val();
 
-		var link = "invoice_add_f.php";
+        if ((invoice_type == 7) && (mode != 'edit')){
+        	//console.log("Добавляем запись");
+            //console.log($("#scheduler_json").val());
+            //console.log(JSON.parse($("#scheduler_json").val()));
 
-		if (mode == 'edit'){
-			link = "invoice_edit_f.php";
-			invoice_id = $("#invoice_id").val();
-		}
+			var link = "zapis_free_add_f.php";
 
-		var invoice_type = $("#invoice_type").val();
+			var reqData = JSON.parse($("#scheduler_json").val());
+            //console.log(reqData);
 
-		var Summ = $("#calculateInvoice").html();
-		var SummIns = 0;
+			//Добавим запись для пациента "с улицы"
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function(res){
+                    //console.log(res);
 
-		var SummInsStr = '';
+                    if(res.result == "success"){
 
-		if (invoice_type == 5){
-			SummIns = $("#calculateInsInvoice").html();
-			SummInsStr = '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
-							'Страховка:<br>'+
-							'<span class="calculateInsInvoice" style="font-size: 13px">'+SummIns+'</span> руб.'+
-						'</div>';
-		}
+                        Ajax_invoice_add_f(invoice_type, mode, res.data)
 
-		var client = $("#client").val();
+                    }else{
+                        $('#errror').html(res.data);
+                    }
+                }
+            });
 
-		$.ajax({
-			url: link,
-			global: false,
-			type: "POST",
-			dataType: "JSON",
-			data:
-			{
-				client: client,
-				zapis_id: $("#zapis_id").val(),
-				filial: $("#filial").val(),
-				worker: $("#worker").val(),
 
-				summ: Summ,
-				summins: SummIns,
-
-				invoice_type: invoice_type,
-				invoice_id: invoice_id
-			},
-			cache: false,
-			beforeSend: function() {
-				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-			},
-			// действие, при ответе с сервера
-			success: function(res){
-				//console.log(res);
-
-				$('.center_block').remove();
-				$('#overlay').hide();
-
-				if(res.result == "success"){
-					$('#data').hide();
-					$('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
-											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован наряд</li>'+
-											'<li class="cellsBlock" style="width: auto;">'+
-												'<a href="invoice.php?id='+res.data+'" class="cellName ahref">'+
-													'<b>Наряд #'+res.data+'</b><br>'+
-												'</a>'+
-												'<div class="cellName">'+
-													'<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
-														'Сумма:<br>'+
-														'<span class="calculateInvoice" style="font-size: 13px">'+Summ+'</span> руб.'+
-													'</div>'+
-													SummInsStr+
-												'</div>'+
-											'</li>'+
-											'<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-												'<a href="payment_add.php?invoice_id='+res.data+'" class="b">Оплатить</a>'+
-											'</li>'+
-											'<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-												'<a href="add_order.php?client_id='+client+'&invoice_id='+res.data+'" class="b">Добавить приходный ордер</a>'+
-											'</li>'+
-											'<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-												'<a href="finance_account.php?client_id='+client+'" class="b">Управление счётом</a>'+
-											'</li>'+
-										'</ul>');
-				}else{
-					$('#errror').html(res.data);
-				}
-			}
-		});
+		}else {
+            Ajax_invoice_add_f(invoice_type, mode, 0)
+        }
 	}
 
 	//Добавляем/редактируем в базу наряд из сессии "пустой"
@@ -7607,7 +7661,7 @@
         var office_id = $("#filial").val();
 
 		var client_id = $("#client_id").val();
-		//var order_id =  $("#order_id").val();
+		var invoice_id =  $("#invoice_id").val();
 		//console.log(invoice_id);
 		var date_in = $("#date_in").val();
 		//console.log(date_in);
@@ -7621,9 +7675,9 @@
             org_pay = 0;
         }
 
-        if (order_id != 0){
+        if (invoice_id != 0){
             paymentStr = '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-                '<a href= "payment_add.php?invoice_id='+order_id+'" class="b">Оплатить наряд #'+order_id+'</a>'+
+                '<a href= "payment_add.php?invoice_id='+invoice_id+'" class="b">Оплатить наряд #'+invoice_id+'</a>'+
                 '</li>';
 		}
 
