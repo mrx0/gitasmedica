@@ -81,6 +81,13 @@
                             $percent_cats_j = SelDataFromDB('fl_spr_percents', $_POST['invoice_type'], 'type');
                             //var_dump( $percent_cats_j);
 
+                            //Если стоматологи, то учтем и ассистентов
+//                            if ($_POST['invoice_type'] == 5) {
+//                                $percent_cats_j2 = SelDataFromDB('fl_spr_percents', 7, 'type');
+//                                $percent_cats_j = array_merge($percent_cats_j, $percent_cats_j2);
+//                                //$percents_j = $percents_j + $percents_j2;
+//                            }
+
                             //Надо отсортировать по названию
                             $percent_cats_j_names = array();
 

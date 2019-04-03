@@ -14,7 +14,7 @@
 
 
 
-			if (!isset($_POST['invoice_type']) || !isset($_POST['summ']) || !isset($_POST['summins']) || !isset($_POST['client_id']) || !isset($_POST['zapis_id']) || !isset($_POST['invoice_id']) || !isset($_POST['filial_id']) || !isset($_POST['worker_id'])){
+			if (!isset($_POST['invoice_type']) || !isset($_POST['calculate_type']) || !isset($_POST['summ']) || !isset($_POST['summins']) || !isset($_POST['client_id']) || !isset($_POST['zapis_id']) || !isset($_POST['invoice_id']) || !isset($_POST['filial_id']) || !isset($_POST['worker_id'])){
 				//echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 				//var_dump($_SESSION['calculate_data'][$_POST['client_id']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']]);
@@ -28,7 +28,7 @@
                         //!!! @@@
                         include_once 'ffun.php';
 
-                        $calculateSaveResult = calculateCalculateSave ($data, $_POST['zapis_id'], $_POST['invoice_id'], $_POST['filial_id'], $_POST['client_id'], $_POST['worker_id'], $_POST['invoice_type'], $_POST['summ'], $discount, $_SESSION['id']);
+                        $calculateSaveResult = calculateCalculateSave ($data, $_POST['zapis_id'], $_POST['invoice_id'], $_POST['filial_id'], $_POST['client_id'], $_POST['worker_id'], $_POST['invoice_type'], $_POST['calculate_type'], $_POST['summ'], $discount, $_SESSION['id']);
 
 						echo json_encode(array('result' => $calculateSaveResult['result'], 'data' => $calculateSaveResult['data']));
 					}

@@ -5260,9 +5260,12 @@
 
                 if(res.result == "success") {
                     $("#worker").val(res.data.id);
+                    $("#calculate_type").val(res.data.permissions);
 
                     //console.log(res.msg);
                     $('#errrror').html(res.msg);
+
+                    fillCalculateRez();
                 }else{
                     //console.log(res.msg);
                     $('#errrror').html(res.msg);
@@ -5296,13 +5299,14 @@
 		//console.log(invoice_type);
 
 		var link = "fill_invoice_stom_from_session_f.php";
+
 		if ((invoice_type == 6) || (invoice_type == 10) || (invoice_type == 7)){
 			link = "fill_invoice_cosm_from_session_f.php";
 		}
-		if (invoice_type == 88){
-			//link = "fill_invoice_free_from_session_f.php";
-			link = "fill_invoice_cosm_from_session_f.php";
-		}
+		// if (invoice_type == 88){
+		// 	//link = "fill_invoice_free_from_session_f.php";
+		// 	link = "fill_invoice_cosm_from_session_f.php";
+		// }
 
 		$.ajax({
 			url: link,
@@ -5350,12 +5354,13 @@
         //console.log(invoice_type);
 
 		var link = "fill_calculate_stom_from_session_f.php";
+
 		if ((invoice_type == 6) || (invoice_type == 10) || (invoice_type == 7)){
 			link = "fill_calculate_cosm_from_session_f.php";
 		}
-		if (invoice_type == 88){
-			link = "fill_calculate_free_from_session_f.php";
-		}
+		// if (invoice_type == 88){
+		// 	link = "fill_calculate_free_from_session_f.php";
+		// }
         //console.log(link);
 
 		$.ajax({
@@ -7409,12 +7414,12 @@
 
 		if (mode == 'edit'){
 			link = "fl_calculate_edit_f.php";
-            calculate_id = $("#invoice_id").val();
+            //calculate_id = $("#invoice_id").val();
 		}
 
 		if (mode == 'reset'){
 			link = "fl_calculate_reset_f.php";
-            calculate_id = $("#invoice_id").val();
+            //calculate_id = $("#invoice_id").val();
 		}
 
 		var invoice_type = $("#invoice_type").val();
@@ -7439,6 +7444,7 @@
 
 		var client = $("#client").val();
 		var invoice_id = $("#invoice_id").val();
+		var calculate_type = $("#calculate_type").val();
 
 		$.ajax({
 			url: link,
@@ -7457,6 +7463,8 @@
 				summins: SummIns,
 
 				invoice_type: invoice_type,
+                calculate_type: calculate_type,
+
                 calculate_id: calculate_id
 			},
 			cache: false,

@@ -692,7 +692,7 @@
                         if ($type == 7) {
                             //Добавление нарядов "с улицы" если ассист на этом филиале
                             if (($selectedDate == 1) || ($selectedDate == 3)) {
-                                $invoiceFreeAddStr .= 'else contextMenuShow(\''.$worker_data['id'].','.$type.','.$_GET['filial'].'\', \''.$ii.'.'.$month.'.'.$year.'\', event, \'invoice_add_free\');';
+                                $invoiceFreeAddStr .= 'else contextMenuShow(\''.$worker_data['id'].','.$type.','.$_GET['filial'].'\', \''.$i.'.'.$month.'.'.$year.'\', event, \'invoice_add_free\');';
                             }
                         }
 
@@ -858,6 +858,16 @@
                                         $BgColor = ' background-color: rgba(236, 107, 107, 0.52) !important;';
                                     }
                                 }
+                            }
+                        }
+
+                        $invoiceFreeAddStr = '';
+
+                        //Для ассистентов
+                        if ($type == 7) {
+                            //Добавление нарядов "с улицы" если ассист на этом филиале
+                            if (($selectedDate == 1) || ($selectedDate == 3)) {
+                                $invoiceFreeAddStr .= 'else contextMenuShow(\''.$worker_data['id'].','.$type.','.$_GET['filial'].'\', \''.$i.'.'.$month.'.'.$year.'\', event, \'invoice_add_free\');';
                             }
                         }
 
