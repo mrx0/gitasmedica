@@ -213,6 +213,13 @@
 				    //Категории процентов
                     $percents_j = SelDataFromDB('fl_spr_percents', $_POST['key'], 'type');
 
+                    //Если стоматологи, то учтем и ассистентов
+                    if ($_POST['key'] == 5) {
+                        $percents_j2 = SelDataFromDB('fl_spr_percents', 7, 'type');
+                        $percents_j = array_merge($percents_j, $percents_j2);
+                        //$percents_j = $percents_j + $percents_j2;
+                    }
+
                     //Надо отсортировать по названию
                     $percent_cats_j_names = array();
 
@@ -286,6 +293,12 @@
                             <li><div onclick="fl_deleteSurchargeFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить из табеля</div></li>';
 				}
 
+				//Для Выплат в табеле
+                if ($_POST['mark'] == 'tabel_paidout_options'){
+                    $data .= '
+                            <li><div onclick="fl_deletePaidoutFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить из табеля</div></li>';
+				}
+
 				//Настройка для записи
 				if ($_POST['mark'] == 'zapis_options'){
 				}
@@ -349,7 +362,7 @@
                             <li><div onclick="choosePervich(5)"><img src="img/prodolzhenie.png" title="Продолжение работы"> Продолжение работы</div></li>';
                 }
 
-                //Для отметки первичка или нет
+                //!!!Для графика ассистентов... ???
                 if ($_POST['mark'] == 'scheduler3'){
                     $data .= '
                             <li><div onclick="">Весь день</div></li>
@@ -363,6 +376,14 @@
                             <li><div onclick=""><i>Ночь ?</i></li>
                             <hr>
                             <li><div onclick=""><b>Очистить</b></li>';
+                }
+
+                //Для добавления наряда "с улицы"
+                if ($_POST['mark'] == 'invoice_add_free'){
+                    $data .= '
+                            <li>
+                                <a href="invoice_add.php?worker_filial_ids='.$_POST['ind'].'&date='.$_POST['key'].'&free=1" class="ahref"><div>Добавить наряд</div></a>
+                            </li>';
                 }
 
                 //Для отображения текущей даты

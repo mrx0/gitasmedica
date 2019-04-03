@@ -90,7 +90,7 @@
 
 
                                 //Категории процентов
-                                $percent_cats_j = getAllPercentCats($invoice_j[0]['type']);
+                                $percent_cats_j = getAllPercentCats($calculate_j[0]['type']);
 
                                 echo '
                                 <div id="status">
@@ -183,6 +183,8 @@
                                         $back_color = 'background-color: rgba(239,47,55, .7);';
                                     }elseif($sheduler_zapis[0]['enter'] == 8){
                                         $back_color = 'background-color: rgba(137,0,81, .7);';
+                                    }elseif($sheduler_zapis[0]['enter'] == 6){
+                                        $back_color = 'background-color: rgba(160, 160, 160, 0.5);';
                                     }else{
                                         //Если оформлено не на этом филиале
                                         if($sheduler_zapis[0]['office'] != $sheduler_zapis[0]['add_from']){
@@ -777,7 +779,11 @@
                                                         <div>';
 
                                             if ($item['percent_cats'] > 0) {
-                                                echo '<i>' . $percent_cats_j[$item['percent_cats']]['name'] . '</i>';
+                                                if (isset($percent_cats_j[$item['percent_cats']])) {
+                                                    echo '<i>' . $percent_cats_j[$item['percent_cats']]['name'] . '</i>';
+                                                }else{
+                                                    echo '<i style="color: red; font-size: 100%;">Ошибка #32</i><br>';
+                                                }
                                             }else{
                                                 echo '<i style="color: red; font-size: 100%;">Ошибка #16</i><br>';
                                             }

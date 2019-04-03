@@ -49,6 +49,9 @@
                     } elseif ($ZapisHereQueryToday[$z]['enter'] == 8) {
                         $back_color = 'background-color: rgba(137,0,81, .7);';
                         $mark_enter = 'удалено';
+                    } elseif ($ZapisHereQueryToday[$z]['enter'] == 6) {
+                        $back_color = 'background-color: rgba(160, 160, 160, 0.5);';
+                        $mark_enter = 'без записи';
                     } else {
                         //Если оформлено не на этом филиале
                         if ($ZapisHereQueryToday[$z]['office'] != $ZapisHereQueryToday[$z]['add_from']) {
@@ -127,7 +130,7 @@
 
                     if ($ZapisHereQueryToday[$z]['type'] == 6) {
                         //Посещения косметологов
-                        $query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
+                        $query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' AND `status` <> '9' ORDER BY `create_time`";
                         //var_dump($query);
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
                         $number = mysqli_num_rows($res);
@@ -311,7 +314,7 @@
                                     }
                                 }
                                 if ($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']) {
-                                    if ($ZapisHereQueryToday[$z]['enter'] != 8) {
+                                    if (($ZapisHereQueryToday[$z]['enter'] != 8) && ($ZapisHereQueryToday[$z]['enter'] != 6)) {
                                         $rezult .=
                                             '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $ZapisHereQueryToday[$z]['id'] . ', 1)">Пришёл</div></li>';
                                         $rezult .=

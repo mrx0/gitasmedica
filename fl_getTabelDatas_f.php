@@ -1,7 +1,7 @@
 <?php
 
-//fl_get_calculates_f.php
-//Функция поиска данных расчётов за период
+//fl_getTabelDatas_f.php
+//Соберём данные по табелю
 
     session_start();
 
@@ -25,12 +25,11 @@
 
             $invoice_rez_str = '';
 
-            if (!isset($_POST['permission']) || !isset($_POST['worker']) || !isset($_POST['office']) || !isset($_POST['month'])){
+            if (!isset($_POST['tabel_id'])){
                 echo json_encode(array('result' => 'error', 'status' => '0', 'data' => '<div class="query_neok">Что-то пошло не так</div>', 'summCalc' => 0));
             }else {
 
                 $msql_cnnct = ConnectToDB();
-
 
                 //Категории процентов
                 $percent_cats_j = array();

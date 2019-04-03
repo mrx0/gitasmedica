@@ -22,7 +22,7 @@ if ($enter_ok){
 
                 $link = 'fl_tabel.php';
                 if (isset($_GET['w_type'])){
-                    $link = 'fl_tabel2.php';
+                    $link = 'fl_tabel.php';
                 }
 
                 $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['tabel_id'], 'id');

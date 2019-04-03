@@ -5,6 +5,7 @@
 
     function showZapisRezult2($ZapisHereQueryToday, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $type, $format, $menu, $dop){
         //var_dump($ZapisHereQueryToday);
+        //var_dump($dop);
 
         if ($ZapisHereQueryToday != 0) {
 
@@ -58,6 +59,9 @@
                     } elseif ($ZapisHereQueryToday[$z]['enter'] == 8) {
                         $back_color = 'background-color: rgba(137,0,81, .7);';
                         $mark_enter = 'удалено';
+                    } elseif ($ZapisHereQueryToday[$z]['enter'] == 6) {
+                        $back_color = 'background-color: rgba(160, 160, 160, 0.5);';
+                        $mark_enter = 'без записи';
                     } else {
                         //Если оформлено не на этом филиале
                         if ($ZapisHereQueryToday[$z]['office'] != $ZapisHereQueryToday[$z]['add_from']) {
@@ -121,7 +125,7 @@
                     //Косметологи
                     if ($ZapisHereQueryToday[$z]['type'] == 6) {
                         //Посещения косметологов
-                        $query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
+                        $query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' AND `status` <> '9' ORDER BY `create_time`";
                         //var_dump($query);
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
                         $number = mysqli_num_rows($res);
@@ -174,62 +178,12 @@
                     if (!empty($invoice_data_db)) {
                         //var_dump($invoice_data_db);
 
-                        $rezultInvoices = showInvoiceDivRezult($invoice_data_db, true, false, false, false, false);
+                        $rezultInvoices = showInvoiceDivRezult($invoice_data_db, true, true, false, false, false);
                         //$data, $minimal, $show_categories, $show_absent, $show_deleted
 
                         $rezultInvoice .= $rezultInvoices['data'];
 
-                        /*foreach ($invoice_data_db as $ids) {
-                            //var_dump($ids['id']);
-
-                            //Отметка об объеме оплат
-                            $paid_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;"></i>';
-
-                            $invoicePaid = false;
-                            $invoiceNotPaid = false;
-                            $invoiceInsure = false;
-
-                            if ($ids['summ'] == $ids['paid']) {
-                                $paid_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i>';
-                                $invoicePaid = true;
-                            }else{
-                                $invoiceNotPaid = true;
-                                //var_dump($ids['summ'].' - '.$ids['paid']);
-                            }
-
-                            $rezultInvoice .= '
-                                                        <div class="cellsBlockHover" style="border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
-                                                            <a href="invoice.php?id=' . $ids['id'] . '" class="ahref">
-                                                                <div>
-                                                                    <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
-                                                                        <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
-                                                                    </div>
-                                                                    <div style="display: inline-block; vertical-align: middle;">
-                                                                        ' . date('d.m.y', strtotime($ids['create_time'])) . '
-                                                                    </div>
-                                                                </div>
-                                                                <div>
-                                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
-                                                                        <span class="calculateInvoice" style="font-size: 11px">' . $ids['summ'] . '</span> руб.
-                                                                    </div>';
-                            if ($ids['summins'] != 0) {
-                                $rezultInvoice .= '
-                                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
-                                                                        Страховка:<br>
-                                                                        <span class="calculateInsInvoice" style="font-size: 11px">' . $ids['summins'] . '</span> руб.
-                                                                    </div>';
-                                $invoiceInsure = true;
-                            }
-                            $rezultInvoice .= '
-                                                                </div>
-
-                                                            </a>
-                                                            <span style="position: absolute; top: 2px; right: 3px;">' . $paid_mark . '</span>
-                                                        </div>';
-                        }*/
                     }
-
-
 
 
                     if (!empty($dop)){
@@ -427,47 +381,7 @@
 
                                 $rezult .= $rezultInvoice;
 
-                                /*if (!empty($invoice_data_db)) {
-                                    //var_dump($invoice_data_db);
-                                    foreach ($invoice_data_db as $ids) {
 
-                                        //Отметка об объеме оплат
-                                        $paid_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;"></i>';
-
-                                        if ($ids['summ'] == $ids['paid']) {
-                                            $paid_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i>';
-                                        }
-
-                                        $rezult .= '
-                                                            <div class="cellsBlockHover" style="border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
-                                                                <a href="invoice.php?id=' . $ids['id'] . '" class="ahref">
-                                                                    <div>
-                                                                        <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
-                                                                            <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
-                                                                        </div>
-                                                                        <div style="display: inline-block; vertical-align: middle;">
-                                                                            ' . date('d.m.y', strtotime($ids['create_time'])) . '
-                                                                        </div>
-                                                                    </div>
-                                                                    <div>
-                                                                        <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
-                                                                            <span class="calculateInvoice" style="font-size: 11px">' . $ids['summ'] . '</span> руб.
-                                                                        </div>';
-                                        if ($ids['summins'] != 0) {
-                                            $rezult .= '
-                                                                        <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
-                                                                            Страховка:<br>
-                                                                            <span class="calculateInsInvoice" style="font-size: 11px">' . $ids['summins'] . '</span> руб.
-                                                                        </div>';
-                                        }
-                                        $rezult .= '
-                                                                    </div>
-
-                                                                </a>
-                                                                <span style="position: absolute; top: 2px; right: 3px;">' . $paid_mark . '</span>
-                                                            </div>';
-                                    }
-                                }*/
                                 //<-- Формулы посещения наряды
 
                                 $rezult .= '
@@ -493,7 +407,7 @@
                                             }
                                         }
                                         if ($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']) {
-                                            if ($ZapisHereQueryToday[$z]['enter'] != 8) {
+                                            if (($ZapisHereQueryToday[$z]['enter'] != 8) && ($ZapisHereQueryToday[$z]['enter'] != 6)) {
                                                 $rezult .=
                                                     '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $ZapisHereQueryToday[$z]['id'] . ', 1)">Пришёл</div></li>';
                                                 $rezult .=

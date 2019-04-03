@@ -111,7 +111,7 @@ if ($enter_ok){
 											</span>
 										</div>';
 
-
+                        //var_dump(SelDataFromDB('spr_workers', '', 'full_name'));
 
                         echo '
 									</header>';
@@ -123,6 +123,11 @@ if ($enter_ok){
 
                         $summ_inv = 0;
                         $summins_inv = 0;
+
+                        echo '
+                                    <div id="data">';
+                        echo '				
+                                        <div id="errrror"></div>';
 
                         if ($invoice_j[0]['type'] != 88) {
 
@@ -137,6 +142,8 @@ if ($enter_ok){
                                 $back_color = 'background-color: rgba(239,47,55, .7);';
                             } elseif ($sheduler_zapis[0]['enter'] == 8) {
                                 $back_color = 'background-color: rgba(137,0,81, .7);';
+                            } elseif ($sheduler_zapis[0]['enter'] == 6) {
+                                $back_color = 'background-color: rgba(160, 160, 160, 0.5);';
                             } else {
                                 //Если оформлено не на этом филиале
                                 if ($sheduler_zapis[0]['office'] != $sheduler_zapis[0]['add_from']) {
@@ -358,7 +365,7 @@ if ($enter_ok){
                                                 array_push($temp_arr[$ind], $temp_arr2);
                                             }
 
-                                            if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10)) {
+                                            if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10) || ($invoice_j[0]['type'] == 7)) {
                                                 array_push($temp_arr, $temp_arr2);
                                             }
 
@@ -382,7 +389,7 @@ if ($enter_ok){
                                         $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
                                     }
                                     //Костыль для сессионых данных косметологов
-                                    if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10)) {
+                                    if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10) || ($invoice_j[0]['type'] == 7)) {
                                         $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
                                     }
                                     //Костыль для пустого пациента
@@ -454,7 +461,8 @@ if ($enter_ok){
                                         <input type="hidden" id="filial2" name="filial2" value="' . $invoice_j[0]['office_id'] . '">
                                         <input type="hidden" id="worker" name="worker" value="' . $invoice_j[0]['worker_id'] . '">
                                         <input type="hidden" id="t_number_active" name="t_number_active" value="' . $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['t_number_active'] . '">
-                                        <input type="hidden" id="invoice_type" name="invoice_type" value="' . $invoice_j[0]['type'] . '">';
+                                        <input type="hidden" id="invoice_type" name="invoice_type" value="' . $invoice_j[0]['type'] . '">
+                                        <input type="hidden" id="calculate_type" name="calculate_type" value="'.$invoice_j[0]['type'].'">';
 
                             echo '			
                                         <div class="invoice_rezult" style="display: inline-block; border: 1px solid #c5c5c5; border-radius: 3px; position: relative;">';
@@ -637,11 +645,14 @@ if ($enter_ok){
                         }else{
                             echo '<span style="color: red; font-weight: bold;">Вся сумма уже распределена.</span>
                             <input type="hidden" id="invoice_type" name="invoice_type" value="'.$invoice_j[0]['type'].'">
+                            <input type="hidden" id="calculate_type" name="calculate_type" value="'.$invoice_j[0]['type'].'">
+                            <input type="hidden" id="calculate_type" name="calculate_type" value="'.$invoice_j[0]['type'].'">
                             <input type="hidden" id="zapis_insure" name="zapis_insure" value="0">
                             <input type="hidden" id="filial2" name="filial2" value="'.$invoice_j[0]['office_id'].'">
                             <input type="hidden" id="worker" name="worker" value="'.$invoice_j[0]['worker_id'].'">';
                         }
                         echo '
+                                    </div>
 								</div>
 								<!-- Подложка только одна -->
                                 <div id="overlay"></div>

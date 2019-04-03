@@ -99,7 +99,7 @@
     }
 
 	//
-    function Colorize (data){
+    function Colorize (data, alpha){
 		//console.log(data);
 		//console.log(typeof (data));
 
@@ -128,7 +128,7 @@
         // console.log(green);
         // console.log('--------');
 
-        return ' rgb('+red+', '+green+', 0)';
+        return ' rgba('+red+', '+green+', 0, '+alpha+')';
     }
 
     //Вывод данных сессии в консоль
@@ -2453,51 +2453,52 @@
             patientUnic = 0;
         }
 
+        var reqData = {
+            all_time:all_time,
+            datastart:  $("#datastart").val(),
+            dataend:  $("#dataend").val(),
+
+            //Кто создал запись
+            creator:$("#search_worker").val(),
+            //Пациент
+            client:$("#search_client").val(),
+            //К кому запись
+            worker:$("#search_client4").val(),
+            filial:$("#filial").val(),
+
+            typeW:typeW,
+
+            zapisAll: zapisAll,
+            zapisArrive: zapisArrive,
+            zapisNotArrive: zapisNotArrive,
+            zapisError: zapisError,
+            zapisNull: zapisNull,
+
+            fullAll: fullAll,
+            fullWOInvoice: fullWOInvoice,
+            fullWOTask: fullWOTask,
+            fullOk: fullOk,
+
+            statusAll: statusAll,
+            statusPervich: statusPervich,
+            statusInsure: statusInsure,
+            statusNight: statusNight,
+            statusAnother: statusAnother,
+
+            invoiceAll: invoiceAll,
+            invoicePaid: invoicePaid,
+            invoiceNotPaid: invoiceNotPaid,
+            invoiceInsure: invoiceInsure,
+
+            patientUnic: patientUnic
+        };
+        console.log(reqData);
+
         $.ajax({
             url:"ajax_show_result_stat_zapis_f.php",
             global: false,
             type: "POST",
-            data:
-                {
-                    all_time:all_time,
-                    datastart:  $("#datastart").val(),
-                    dataend:  $("#dataend").val(),
-
-                    //Кто создал запись
-                    creator:$("#search_worker").val(),
-                    //Пациент
-                    client:$("#search_client").val(),
-                    //К кому запись
-                    worker:$("#search_client4").val(),
-                    filial:$("#filial").val(),
-
-                    typeW:typeW,
-
-                    zapisAll: zapisAll,
-                    zapisArrive: zapisArrive,
-                    zapisNotArrive: zapisNotArrive,
-                    zapisError: zapisError,
-                    zapisNull: zapisNull,
-
-                    fullAll: fullAll,
-                    fullWOInvoice: fullWOInvoice,
-                    fullWOTask: fullWOTask,
-                    fullOk: fullOk,
-
-                    statusAll: statusAll,
-                    statusPervich: statusPervich,
-                    statusInsure: statusInsure,
-                    statusNight: statusNight,
-                    statusAnother: statusAnother,
-
-                    invoiceAll: invoiceAll,
-                    invoicePaid: invoicePaid,
-                    invoiceNotPaid: invoiceNotPaid,
-                    invoiceInsure: invoiceInsure,
-
-                    patientUnic: patientUnic
-
-                },
+            data: reqData,
             cache: false,
             beforeSend: function() {
                 $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
@@ -5240,7 +5241,7 @@
         var link = "search_user_f.php";
 
         var reqData = {
-            workerFIO: $("#search_client2").val(),
+            workerFIO: $("#search_client2").val()
         };
 
         $.ajax({
@@ -5257,7 +5258,18 @@
             success: function (res) {
                 //console.log(res);
 
-               $("#worker").val(res.data.id);
+                if(res.result == "success") {
+                    $("#worker").val(res.data.id);
+                    $("#calculate_type").val(res.data.permissions);
+
+                    //console.log(res.msg);
+                    $('#errrror').html(res.msg);
+
+                    fillCalculateRez();
+                }else{
+                    //console.log(res.msg);
+                    $('#errrror').html(res.msg);
+				}
             }
         });
 	}
@@ -5287,12 +5299,14 @@
 		//console.log(invoice_type);
 
 		var link = "fill_invoice_stom_from_session_f.php";
-		if ((invoice_type == 6) || (invoice_type == 10)){
+
+		if ((invoice_type == 6) || (invoice_type == 10) || (invoice_type == 7)){
 			link = "fill_invoice_cosm_from_session_f.php";
 		}
-		if (invoice_type == 88){
-			link = "fill_invoice_free_from_session_f.php";
-		}
+		// if (invoice_type == 88){
+		// 	//link = "fill_invoice_free_from_session_f.php";
+		// 	link = "fill_invoice_cosm_from_session_f.php";
+		// }
 
 		$.ajax({
 			url: link,
@@ -5340,12 +5354,13 @@
         //console.log(invoice_type);
 
 		var link = "fill_calculate_stom_from_session_f.php";
-		if ((invoice_type == 6) || (invoice_type == 10)){
+
+		if ((invoice_type == 6) || (invoice_type == 10) || (invoice_type == 7)){
 			link = "fill_calculate_cosm_from_session_f.php";
 		}
-		if (invoice_type == 88){
-			link = "fill_calculate_free_from_session_f.php";
-		}
+		// if (invoice_type == 88){
+		// 	link = "fill_calculate_free_from_session_f.php";
+		// }
         //console.log(link);
 
 		$.ajax({
@@ -5546,9 +5561,9 @@
 
         var link = "delete_invoice_item_from_session_f.php";
 
-        if (invoice_type == 88){
-            link = "delete_invoice_free_item_from_session_f.php";
-        }
+        // if (invoice_type == 88){
+        //     link = "delete_invoice_free_item_from_session_f.php";
+        // }
 
 		//номер позиции
 		var itemId = dataObj.getAttribute("invoiceitemid");
@@ -6407,9 +6422,9 @@
         var invoice_type = $("#invoice_type").val();
 
         var link = "add_invoice_in_session_f.php";
-        if (invoice_type == 88){
-            link = "add_invoice_free_in_session_f.php";
-        }
+        // if (invoice_type == 88){
+        //     link = "add_invoice_free_in_session_f.php";
+        // }
 
 		//console.log (t_number);
 		$.ajax({
@@ -6452,11 +6467,12 @@
 
 		var link = "add_price_id_stom_in_invoice_f.php";
 
-		if ((type == 6) || (type == 10)){
+		if ((type == 6) || (type == 10) || (type == 7)){
 			link = "add_price_id_cosm_in_invoice_f.php";
 		}
 		if (type == 88){
-			link = "add_price_id_free_in_invoice_f.php";
+			//link = "add_price_id_free_in_invoice_f.php";
+            link = "add_price_id_cosm_in_invoice_f.php";
 		}
 		//console.log(link);
 
@@ -6637,9 +6653,13 @@
 
 		var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'add\')">';
 
-		if (invoice_type == 88){
-            buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_free_add(\'add\')">';
-		}
+		// if (invoice_type == 88){
+         //    buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_free_add(\'add\')">';
+		// }
+        //
+		// if (invoice_type == 7){
+         //    buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'add\')">';
+		// }
 
 		if (mode == 'edit'){
 			buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'edit\')">';
@@ -7158,97 +7178,147 @@
         })
     }
 
+    //Добавляем/редактируем в базу наряд из сессии (сама функция)
+    function Ajax_invoice_add_f(invoice_type, mode, zapis_id){
+
+        var invoice_id = 0;
+
+        var link = "invoice_add_f.php";
+
+        if (mode == 'edit'){
+            link = "invoice_edit_f.php";
+            invoice_id = $("#invoice_id").val();
+        }
+
+        var Summ = $("#calculateInvoice").html();
+        var SummIns = 0;
+
+        var SummInsStr = '';
+
+        if (invoice_type == 5){
+            SummIns = $("#calculateInsInvoice").html();
+            SummInsStr = '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
+                'Страховка:<br>'+
+                '<span class="calculateInsInvoice" style="font-size: 13px">'+SummIns+'</span> руб.'+
+                '</div>';
+        }
+
+        var client = $("#client").val();
+
+        var reqData = {
+            client: $("#client").val(),
+            filial: $("#filial").val(),
+            worker: $("#worker").val(),
+
+            zapis_id: $("#zapis_id").val(),
+
+            summ: Summ,
+            summins: SummIns,
+
+            invoice_type: invoice_type,
+            invoice_id: invoice_id
+		};
+
+        if (zapis_id != 0) {
+            reqData.zapis_id_new = zapis_id;
+        }
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                $('.center_block').remove();
+                $('#overlay').hide();
+
+                if(res.result == "success"){
+                    $('#data').hide();
+                    $('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+                        '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован наряд</li>'+
+                        '<li class="cellsBlock" style="width: auto;">'+
+                        '<a href="invoice.php?id='+res.data+'" class="cellName ahref">'+
+                        '<b>Наряд #'+res.data+'</b><br>'+
+                        '</a>'+
+                        '<div class="cellName">'+
+                        '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
+                        'Сумма:<br>'+
+                        '<span class="calculateInvoice" style="font-size: 13px">'+Summ+'</span> руб.'+
+                        '</div>'+
+                        SummInsStr+
+                        '</div>'+
+                        '</li>'+
+                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+                        '<a href="payment_add.php?invoice_id='+res.data+'" class="b">Оплатить</a>'+
+                        '</li>'+
+                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+                        '<a href="add_order.php?client_id='+client+'&invoice_id='+res.data+'" class="b">Добавить приходный ордер</a>'+
+                        '</li>'+
+                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+                        '<a href="finance_account.php?client_id='+client+'" class="b">Управление счётом</a>'+
+                        '</li>'+
+                        '</ul>');
+                }else{
+                    $('#errror').html(res.data);
+                }
+            }
+        });
+	}
 
 	//Добавляем/редактируем в базу наряд из сессии
 	function Ajax_invoice_add(mode){
 		//console.log(mode);
 
-		var invoice_id = 0;
+        var invoice_type = $("#invoice_type").val();
 
-		var link = "invoice_add_f.php";
+        if ((invoice_type == 7) && (mode != 'edit')){
+        	//console.log("Добавляем запись");
+            //console.log($("#scheduler_json").val());
+            //console.log(JSON.parse($("#scheduler_json").val()));
 
-		if (mode == 'edit'){
-			link = "invoice_edit_f.php";
-			invoice_id = $("#invoice_id").val();
-		}
+			var link = "zapis_free_add_f.php";
 
-		var invoice_type = $("#invoice_type").val();
+			var reqData = JSON.parse($("#scheduler_json").val());
+            //console.log(reqData);
 
-		var Summ = $("#calculateInvoice").html();
-		var SummIns = 0;
+			//Добавим запись для пациента "с улицы"
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function(res){
+                    //console.log(res);
 
-		var SummInsStr = '';
+                    if(res.result == "success"){
 
-		if (invoice_type == 5){
-			SummIns = $("#calculateInsInvoice").html();
-			SummInsStr = '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
-							'Страховка:<br>'+
-							'<span class="calculateInsInvoice" style="font-size: 13px">'+SummIns+'</span> руб.'+
-						'</div>';
-		}
+                        Ajax_invoice_add_f(invoice_type, mode, res.data)
 
-		var client = $("#client").val();
+                    }else{
+                        $('#errror').html(res.data);
+                    }
+                }
+            });
 
-		$.ajax({
-			url: link,
-			global: false,
-			type: "POST",
-			dataType: "JSON",
-			data:
-			{
-				client: client,
-				zapis_id: $("#zapis_id").val(),
-				filial: $("#filial").val(),
-				worker: $("#worker").val(),
 
-				summ: Summ,
-				summins: SummIns,
-
-				invoice_type: invoice_type,
-				invoice_id: invoice_id
-			},
-			cache: false,
-			beforeSend: function() {
-				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-			},
-			// действие, при ответе с сервера
-			success: function(res){
-				//console.log(res);
-
-				$('.center_block').remove();
-				$('#overlay').hide();
-
-				if(res.result == "success"){
-					$('#data').hide();
-					$('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
-											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован наряд</li>'+
-											'<li class="cellsBlock" style="width: auto;">'+
-												'<a href="invoice.php?id='+res.data+'" class="cellName ahref">'+
-													'<b>Наряд #'+res.data+'</b><br>'+
-												'</a>'+
-												'<div class="cellName">'+
-													'<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
-														'Сумма:<br>'+
-														'<span class="calculateInvoice" style="font-size: 13px">'+Summ+'</span> руб.'+
-													'</div>'+
-													SummInsStr+
-												'</div>'+
-											'</li>'+
-											'<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-												'<a href="payment_add.php?invoice_id='+res.data+'" class="b">Оплатить</a>'+
-											'</li>'+
-											'<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-												'<a href="add_order.php?client_id='+client+'&invoice_id='+res.data+'" class="b">Добавить приходный ордер</a>'+
-											'</li>'+
-											'<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-												'<a href="finance_account.php?client_id='+client+'" class="b">Управление счётом</a>'+
-											'</li>'+
-										'</ul>');
-				}else{
-					$('#errror').html(res.data);
-				}
-			}
-		});
+		}else {
+            Ajax_invoice_add_f(invoice_type, mode, 0)
+        }
 	}
 
 	//Добавляем/редактируем в базу наряд из сессии "пустой"
@@ -7344,12 +7414,12 @@
 
 		if (mode == 'edit'){
 			link = "fl_calculate_edit_f.php";
-            calculate_id = $("#invoice_id").val();
+            //calculate_id = $("#invoice_id").val();
 		}
 
 		if (mode == 'reset'){
 			link = "fl_calculate_reset_f.php";
-            calculate_id = $("#invoice_id").val();
+            //calculate_id = $("#invoice_id").val();
 		}
 
 		var invoice_type = $("#invoice_type").val();
@@ -7374,6 +7444,7 @@
 
 		var client = $("#client").val();
 		var invoice_id = $("#invoice_id").val();
+		var calculate_type = $("#calculate_type").val();
 
 		$.ajax({
 			url: link,
@@ -7392,6 +7463,8 @@
 				summins: SummIns,
 
 				invoice_type: invoice_type,
+                calculate_type: calculate_type,
+
                 calculate_id: calculate_id
 			},
 			cache: false,
@@ -7596,7 +7669,7 @@
         var office_id = $("#filial").val();
 
 		var client_id = $("#client_id").val();
-		//var order_id =  $("#order_id").val();
+		var invoice_id =  $("#invoice_id").val();
 		//console.log(invoice_id);
 		var date_in = $("#date_in").val();
 		//console.log(date_in);
@@ -7610,9 +7683,9 @@
             org_pay = 0;
         }
 
-        if (order_id != 0){
+        if (invoice_id != 0){
             paymentStr = '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-                '<a href= "payment_add.php?invoice_id='+order_id+'" class="b">Оплатить наряд #'+order_id+'</a>'+
+                '<a href= "payment_add.php?invoice_id='+invoice_id+'" class="b">Оплатить наряд #'+invoice_id+'</a>'+
                 '</li>';
 		}
 
@@ -8814,6 +8887,77 @@
 
 
     }
+
+    //Удаляем отметку косметолога
+    function Ajax_del_task_cosmet(id){
+        //console.log(id);
+
+        var rys = false;
+
+        rys = confirm("Вы хотите удалить отметку косметолога. \nВы уверены?");
+
+        if (rys) {
+
+            var link = "ajax_task_cosmet_del_f.php";
+
+            var certData = {
+                id: id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: certData,
+
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res);
+
+                    if (res.result == "success") {
+                        location.reload();
+                    }
+                }
+            });
+        }
+    }
+
+    //Разблокировка (восстановление) отметки косметолога
+    function Ajax_reopen_task_cosmet(id) {
+
+        var link = "ajax_reopen_task_cosmet_f.php";
+
+        var certData = {
+            id: id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: certData,
+
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function (res) {
+                //console.log(res);
+
+                if (res.result == "success") {
+                    location.reload();
+                }
+            }
+        });
+    }
+
 
     //Получаем, показываем направления
     function getRemovesfunc(worker_id){

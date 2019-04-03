@@ -47,7 +47,7 @@
 		
 		if ($_POST){
 			if (!isset($_POST['filial'])){
-				echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
+				echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так_1</div>'));
 			}else{
 				include_once 'DBWork.php';
 
@@ -63,7 +63,7 @@
                 $price['start_price'] = 0;
 				
 				if (!isset($_SESSION['invoice_data']['free_invoice']['data'])){
-                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
+                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так_2</div>'));
 				}else{
                     $_SESSION['invoice_data']['free_invoice']['data'] = array_values($_SESSION['invoice_data']['free_invoice']['data']);
 					//берем из сесии данные

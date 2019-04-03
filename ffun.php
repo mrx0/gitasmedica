@@ -1622,7 +1622,7 @@
 
     //Рассчет РЛ и сохранение в БД
     function calculateCalculateSave (
-        $data, $zapis_id, $invoice_id, $filial_id, $client_id, $worker_id, $invoice_type, $summ, $discount, $author
+        $data, $zapis_id, $invoice_id, $filial_id, $client_id, $worker_id, $invoice_type, $calculate_type, $summ, $discount, $author
     ){
 
         $calculateInvSumm = 0;
@@ -1637,7 +1637,7 @@
         //Добавляем в базу
         $query = "INSERT INTO `fl_journal_calculate` (`zapis_id`, `invoice_id`, `office_id`, `client_id`, `worker_id`, `type`, `summ_inv`, `discount`, `summ`, `date_in`, `create_person`, `create_time`) 
                             VALUES (
-                            '{$zapis_id}', '{$invoice_id}', '{$filial_id}', '{$client_id}', '{$worker_id}', '{$invoice_type}', '{$summ}', '{$discount}', '{$summ}', '{$time}', '{$author}', '{$time}')";
+                            '{$zapis_id}', '{$invoice_id}', '{$filial_id}', '{$client_id}', '{$worker_id}', '{$calculate_type}', '{$summ}', '{$discount}', '{$summ}', '{$time}', '{$author}', '{$time}')";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -1784,7 +1784,7 @@
 
                 }
 
-                if (($invoice_type == 6) || ($invoice_type == 10)) {
+                if (($invoice_type == 6) || ($invoice_type == 10) || ($invoice_type == 7)) {
 
                     $pos_id = $calculate_data['id'];
                     $price_id = $calculate_data['price_id'];

@@ -70,7 +70,7 @@
 											}
 											
 											//запись в базу
-											WriteToDB_EditZapis ('zapis', $_POST['year'], $_POST['month'], $_POST['day'], $_POST['filial'], $_SESSION['filial'], $_POST['kab'], $worker, $_POST['author'], $client, $_POST['contacts'], $_POST['description'], $_POST['start_time'], $_POST['wt'], $_POST['type'], $pervich, $insured, $noch);
+											WriteToDB_EditZapis ('zapis', $_POST['year'], $_POST['month'], $_POST['day'], $_POST['filial'], $_SESSION['filial'], $_POST['kab'], $worker, $_POST['author'], $client, $_POST['contacts'], $_POST['description'], $_POST['start_time'], $_POST['wt'], $_POST['type'], $pervich, $insured, $noch, 0);
 											
 											$data = '
 												<div class="query_ok">

@@ -29,7 +29,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         //$_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$t_number_active]
                     }
                 }
-                if (($_POST['invoice_type'] == 6) || ($_POST['invoice_type'] == 10)){
+                if (($_POST['invoice_type'] == 6) || ($_POST['invoice_type'] == 10) || ($_POST['invoice_type'] == 7)){
                     if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']])){
                         $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['manual_price'] = true;
                         $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['price'] = (int)$_POST['price'];

@@ -30,9 +30,14 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         //$data_temp_arr = explode(".", $_POST['dataend']);
         $dataend = $d->format('Y-m-t');
 
-        //!!! Доделать тут, если несколько типов и т.д.
+        //Смотрим наряды, закрытые за период
         //$query = "SELECT `summ`,`summins`, `office_id`, (SUM(`summ`)+ SUM(`summins`)) AS all_summ FROM `journal_invoice` WHERE `status`='5' AND `closed_time` BETWEEN '{$datastart}' AND '{$dataend}'";
         $query = "SELECT `summ`,`summins`, `office_id` FROM `journal_invoice` WHERE `status`='5' AND `closed_time` BETWEEN '{$datastart}' AND '{$dataend}'";
+
+        if ($_POST['typeW'] == 7){
+            $query = "SELECT `summ`,`summins`, `office_id` FROM `journal_invoice` WHERE `type` ='5' AND `status`='5' AND `closed_time` BETWEEN '{$datastart}' AND '{$dataend}'";
+        }
+
         //var_dump($query);
 
         $journal = array();
