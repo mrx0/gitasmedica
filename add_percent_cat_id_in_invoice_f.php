@@ -25,7 +25,7 @@
                             $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']][$_POST['key']]['percent_cats'] = (int)$_POST['percent_cats'];
                         }
                     }
-                    if (($_POST['invoice_type'] == 6) || ($_POST['invoice_type'] == 10)){
+                    if (($_POST['invoice_type'] == 6) || ($_POST['invoice_type'] == 10) || ($_POST['invoice_type'] == 7)){
                         if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']])){
                             $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']]['percent_cats'] = (int)$_POST['percent_cats'];
                         }

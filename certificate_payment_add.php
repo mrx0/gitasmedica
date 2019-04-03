@@ -113,6 +113,8 @@
 									$back_color = 'background-color: rgba(239,47,55, .7);';
 								}elseif($sheduler_zapis[0]['enter'] == 8){
 									$back_color = 'background-color: rgba(137,0,81, .7);';
+								}elseif($sheduler_zapis[0]['enter'] == 6){
+									$back_color = 'background-color: rgba(160, 160, 160, 0.5);';
 								}else{
 									//Если оформлено не на этом филиале
 									if($sheduler_zapis[0]['office'] != $sheduler_zapis[0]['add_from']){

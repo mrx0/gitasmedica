@@ -59,6 +59,9 @@
                     } elseif ($ZapisHereQueryToday[$z]['enter'] == 8) {
                         $back_color = 'background-color: rgba(137,0,81, .7);';
                         $mark_enter = 'удалено';
+                    } elseif ($ZapisHereQueryToday[$z]['enter'] == 6) {
+                        $back_color = 'background-color: rgba(160, 160, 160, 0.5);';
+                        $mark_enter = 'без записи';
                     } else {
                         //Если оформлено не на этом филиале
                         if ($ZapisHereQueryToday[$z]['office'] != $ZapisHereQueryToday[$z]['add_from']) {
@@ -404,7 +407,7 @@
                                             }
                                         }
                                         if ($ZapisHereQueryToday[$z]['office'] == $ZapisHereQueryToday[$z]['add_from']) {
-                                            if ($ZapisHereQueryToday[$z]['enter'] != 8) {
+                                            if (($ZapisHereQueryToday[$z]['enter'] != 8) && ($ZapisHereQueryToday[$z]['enter'] != 6)) {
                                                 $rezult .=
                                                     '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $ZapisHereQueryToday[$z]['id'] . ', 1)">Пришёл</div></li>';
                                                 $rezult .=

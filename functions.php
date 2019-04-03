@@ -2661,7 +2661,7 @@
                     }
                 }
                 if ($zapisData['office'] == $zapisData['add_from']) {
-                    if (($zapisData['enter'] != 8) && ($zapisData['enter'] != 9)) {
+                    if (($zapisData['enter'] != 8) && ($zapisData['enter'] != 9) && ($zapisData['enter'] != 6)) {
                         $rezult .=
                             '<li><div onclick="Ajax_TempZapis_edit_Enter(' . $zapisData['id'] . ', 1)">Пришёл</div></li>';
                         $rezult .=
@@ -2738,7 +2738,7 @@
                 $rezult .= "&nbsp";
             }
             if ($upr_edit) {
-                if (($zapisData['enter'] != 8) && ($zapisData['enter'] != 9) && $main_zapis){
+                if (($zapisData['enter'] != 8) && ($zapisData['enter'] != 9) && ($zapisData['enter'] != 6) && $main_zapis){
                     $rezult .= '
                                                         <li>
                                                             <div>

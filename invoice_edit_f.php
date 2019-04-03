@@ -95,7 +95,7 @@
 
                                     }
 
-                                    if (($_POST['invoice_type'] == 6) || ($_POST['invoice_type'] == 10)){
+                                    if (($_POST['invoice_type'] == 6) || ($_POST['invoice_type'] == 10) || ($_POST['invoice_type'] == 7)){
 
                                         $price_id = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['id'];
                                         $quantity = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['quantity'];

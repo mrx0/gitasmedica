@@ -1784,7 +1784,7 @@
 
                 }
 
-                if (($invoice_type == 6) || ($invoice_type == 10)) {
+                if (($invoice_type == 6) || ($invoice_type == 10) || ($invoice_type == 7)) {
 
                     $pos_id = $calculate_data['id'];
                     $price_id = $calculate_data['price_id'];
