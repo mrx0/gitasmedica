@@ -364,14 +364,14 @@
                                     !(($finances['see_all'] == 1) || $god_mode) &&
                                     !(($sheduler_zapis[0]['noch'] == '1') && ($diff_hours <= 14))
                                 ) {
-                                    /*var_dump($sheduler_zapis[0]['day']);
-                                    var_dump($month);
-                                    var_dump($sheduler_zapis[0]['year']);
-                                    var_dump(date("m") == $month);
-                                    var_dump(date("d") == $sheduler_zapis[0]['day']);
-                                    var_dump(date("d"));
-                                    var_dump(date("m"));
-                                    var_dump(date("Y"));*/
+//                                    var_dump($sheduler_zapis[0]['day']);
+//                                    var_dump($month);
+//                                    var_dump($sheduler_zapis[0]['year']);
+//                                    var_dump(date("m") == $month);
+//                                    var_dump(date("d") == $sheduler_zapis[0]['day']);
+//                                    var_dump(date("d"));
+//                                    var_dump(date("m"));
+//                                    var_dump(date("Y"));
 
                                     echo '<h1>Нельзя добавлять наряды задним числом</h1>';
                                 }else{
