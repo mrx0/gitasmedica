@@ -157,7 +157,7 @@
                         if ($_POST['newTabel'] != 1) {
 
                             $result .= '
-                                    <div class="tableTabels" style="width: 210px; background-color: rgb(234, 234, 234); text-align: left; height: 280px; overflow-y: scroll;  overflow-x: hidden;">';
+                                    <div class="tableTabels" style="width: 240px; background-color: rgb(234, 234, 234); text-align: left; height: 280px; overflow-y: scroll;  overflow-x: hidden;">';
 
                             //$invoice_rez_str = '';
                             //$summCalc = 0;
