@@ -124,7 +124,7 @@
                                     $rezult .=
                                         '
                                         <div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); border: 1px solid #BFBCB5; margin-top: 1px; position: relative; '.$bgColor.'">
-                                            <div style="display: inline-block; width: 150px;">
+                                            <div style="display: inline-block; width: 180px;">
                                                 <a href="fl_tabel.php?id=' . $rezData['id'] . '" class="ahref">
                                                     <div>
                                                         <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
@@ -135,9 +135,48 @@
                                                         </div>
                                                     </div>
                                                     <div>
-                                                        <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 13px">
-                                                            Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 14px">' . ($rezData['summ']-$rezData['deduction']+$rezData['surcharge']+$rezData['night_smena']+$rezData['empty_smena']) . '</span> руб.
-                                                        </div>
+                                                        <table style="width: 180px; border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 11px">
+                                                            <tr>
+                                                                <td style="text-align: left; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
+                                                                    Начислено:
+                                                                </td>
+                                                                <td style="text-align: right; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
+                                                                    <span class="calculateOrder calculateCalculateN" style="font-size: 13px;">
+                                                                        ' . intval($rezData['summ']+$rezData['surcharge']+$rezData['night_smena']+$rezData['empty_smena']) . '
+                                                                    </span> руб.
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="text-align: left; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
+                                                                    Удержано: 
+                                                                </td>
+                                                                <td style="text-align: right; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
+                                                                    <span class="calculateInvoice calculateCalculateN" style="font-size: 13px">
+                                                                        ' . $rezData['deduction'] . '
+                                                                    </span> руб.
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="text-align: left; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
+                                                                    Выплачено:
+                                                                </td>
+                                                                <td style="text-align: right; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
+                                                                    <span class="calculateInvoice calculateCalculateN" style="font-size: 13px; color: rgb(12, 0, 167);">
+                                                                        ' . $rezData['paidout'] . '
+                                                                    </span> руб.
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="text-align: left; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
+                                                                    Осталось: 
+                                                                </td>
+                                                                <td style="text-align: right; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
+                                                                    <span class="calculateInvoice calculateCalculateN" style="font-size: 13px">
+                                                                        ' . intval($rezData['summ']-$rezData['paidout']-$rezData['deduction']+$rezData['surcharge']+$rezData['night_smena']+$rezData['empty_smena']) . '
+                                                                    </span> руб.
+                                                                </td>
+                                                            </tr>
+                                                        </table>
                                                     </div>
                                                     
                                                 </a>
