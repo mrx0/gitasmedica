@@ -443,13 +443,14 @@
             if ($number != 0){
                 $boolean = true;
             }else{
-                $query = "SELECT `id`, `work_percent`, `material_percent`, `summ_special`, `name` FROM `fl_spr_percents` WHERE `type`='" . $type . "' LIMIT 1";
+                //Если вроде бы и категория есть, но она другого типа (пример: расчетный лист для ассистента из наряда стоматологического)
+                $query = "SELECT `id`, `work_percent`, `material_percent`, `summ_special`, `name` FROM `fl_spr_percents` WHERE `id`='" . $percent_cat . "' LIMIT 1";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                 $number = mysqli_num_rows($res);
                 if ($number != 0){
-                    $boolean = true;
+                    $boolean = false;
                 }
             }
 
@@ -483,6 +484,14 @@
                     }
                 }else{
 
+                }
+            }else{
+                while ($arr = mysqli_fetch_assoc($res)){
+                    $percents[$percent_cat]['category'] = $arr['id'];
+                    $percents[$percent_cat]['name'] = $arr['name'].'/ <span style="color: red;">Ошибка #33. Измените исполнителя.</span>';
+                    $percents[$percent_cat]['work_percent'] = $arr['work_percent'];
+                    $percents[$percent_cat]['material_percent'] =  $arr['material_percent'];
+                    $percents[$percent_cat]['summ_special'] =  $arr['summ_special'];
                 }
             }
 
@@ -1857,7 +1866,7 @@
         }
 
         //Обновим сумму в расчете
-        if ($calculateInvSumm > 0) {
+        if ($calculateInvSumm >= 0) {
             $query = "UPDATE `fl_journal_calculate` SET `summ_inv`='{$calculateInvSumm}', `summ`='{$calculateCalcSumm}' WHERE `id`='{$mysql_insert_id}'";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
         }
