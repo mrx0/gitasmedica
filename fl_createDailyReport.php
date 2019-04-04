@@ -290,7 +290,7 @@
                                 <input type="hidden" id="arendaNal" value="0">';
 
                     echo '
-                                <div class="cellsBlock400px" style="font-size: 90%;">
+                                <div class="cellsBlock400px" style="font-size: 90%; display: none;">
                                     <div class="cellLeft">
                                         Ортопантомограмма + КТ
                                         <span style="font-size:80%; color: #999; "></span>
@@ -315,6 +315,9 @@
 
                     echo '<input type="hidden" id="specialistSummNal" value="0">';
                     echo '<input type="hidden" id="specialistSummNal" value="0">';
+
+                    echo '<input type="hidden" id="ortoSummNal" value="0">';
+                    echo '<input type="hidden" id="ortoSummBeznal" value="0">';
 
                     echo '
                                 <div class="cellsBlock400px" style="font-size: 90%;">
