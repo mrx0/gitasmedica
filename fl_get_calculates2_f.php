@@ -141,12 +141,13 @@
                                 $worker_mark_str = '';
                                 $background_color = 'background-color: rgb(255, 255, 255);';
 
-                                if ($rezData['worker_mark'] == NULL) {
-                                    $worker_mark = 0;
-                                    $worker_mark_str = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет отметки врача"></i>';
-                                    $background_color = 'background-color: rgba(255, 141, 141, 0.2);';
+                                if (($_POST['permission'] == 5) || ($_POST['permission'] == 6)){
+                                    if ($rezData['worker_mark'] == NULL) {
+                                        $worker_mark = 0;
+                                        $worker_mark_str = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет отметки врача"></i>';
+                                        $background_color = 'background-color: rgba(255, 141, 141, 0.2);';
+                                    }
                                 }
-
 
                                 $resultFilialStr .= '
                                     <div class="cellsBlockHover calculateBlockItem" worker_mark="'.$worker_mark.'" style="' . $background_color . ' width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
