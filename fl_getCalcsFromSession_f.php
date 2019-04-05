@@ -228,7 +228,8 @@
                                             if ($year == date('Y', time())) {
                                                 if (date('n', time()) == $month) {
                                                     //$bgColor = 'background-color: rgba(244, 254, 63, 0.54);';
-                                                    $bgColor = 'background-color: rgb(255, 241, 114);';
+                                                    //$bgColor = 'background-color: rgb(255, 241, 114);';
+                                                    $bgColor = 'box-shadow: 2px 4px 7px rgb(0, 216, 255); border-top: 1px dotted rgb(0, 216, 255);';
                                                 }
                                             }
 
