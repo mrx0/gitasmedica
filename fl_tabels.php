@@ -131,6 +131,7 @@
 						</div>';
                 echo '    
 					</header>
+					<div id="errror"></div>
 					</div>';
 
 				echo '
@@ -210,7 +211,7 @@
 
                             echo '
                                     <li>
-                                        <a href="#tabs-' . $type . '_' . $worker['id'] . '" onclick="clearAllChecked();">
+                                        <a href="#tabs-' . $type . '_' . $worker['id'] . '" onclick="clearAllChecked(); hideAllErrors();">
                                             ' . $worker['name'] . '
                                             <div  class="notes_count_div">
                                                 <div id="tabs_notes2_' . $type . '_' . $worker['id'].'" class="notes_count3" style="display: none;">
@@ -248,7 +249,7 @@
                                 if ($office['id'] != 11) {
 
                                     echo '
-                                            <li class="tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" onclick="clearAllChecked();">
+                                            <li class="tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" onclick="clearAllChecked(); hideAllErrors();">
                                                 <a href="#tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '">
                                                     ' . $office['name2'] . '
                                                     <div class="notes_count_div">

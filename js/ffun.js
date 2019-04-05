@@ -471,6 +471,9 @@
                      }*/
                     //console.log(data.data);
                     //location.reload();
+
+                    //!!! переадресация на вкладку, может когда-нибудь организую
+                    //http://localhost/gitasmedica/fl_tabels.php#tabs-5_324
                     window.location.href = "fl_tabels.php";
                 }
             });
@@ -1081,17 +1084,15 @@
             },
             success: function (res) {
                 //console.log (res);
+                //console.log (res.length);
 
-                $('#overlay').show();
+                if (res.length > 0) {
+                    $('#overlay').show();
 
-                menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel);
-
-                /*if (newTabel) {
-                    menuForAddINNewTabel(res, type_id, worker_id, filial_id);
+                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel);
                 }else{
-                    menuForAddINExistNewTabel(res, type_id, worker_id, filial_id);
-                }*/
-
+                    $('#errrror').html('<div class="query_neok">Ошибка #34. Ничего не выбрано. Обновите выбор РЛ</div>');
+                }
             }
         })
     }
@@ -1171,8 +1172,11 @@
 
 
                 }else{
-                    $('#errror').html(res.data);
                     //console.log(res);
+
+                    $('#errror').html(res.data);
+                    $("#overlay").hide();
+                    $(".center_block").remove();
                 }
             }
         });
@@ -2878,6 +2882,8 @@
     function refreshOnlyThisTab(thisObj, permission_id, worker_id, office_id){
         //console.log(permission_id+' _ '+worker_id+' _ '+office_id);
         //console.log(thisObj.parent());
+
+        hideAllErrors ();
 
         var now = new Date();
         var year = now.getFullYear();
