@@ -452,10 +452,12 @@
                                                     <div style="display: inline-block;"><a href="fl_materials_consumption_add.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Внести расходы на материалы</a></div>';
                                 }
                             }
-                            //Возврат средств
-                            if ((($finances['see_all'] == 1) || $god_mode) && ($invoice_j[0]['status'] == 5)){
-                                echo '
+                            if ($invoice_j[0]['summ'] > 0) {
+                                //Возврат средств
+                                if ((($finances['see_all'] == 1) || $god_mode) && ($invoice_j[0]['status'] == 5)) {
+                                    echo '
                                                         <div style="display: inline-block;"><a href="refund_add.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Возврат средств</a></div>';
+                                }
                             }
                             //Корректировка даты закрытия
                             if ((($finances['see_all'] == 1) || $god_mode) && ($invoice_j[0]['status'] == 5)){
@@ -687,7 +689,7 @@
 
                                             if ($sheduler_zapis[0]['type'] == 5) {
                                                 echo '
-                                                    <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic;">
+                                                    <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic; overflow: hidden;">
                                                         ' . $insure_name . '
                                                     </div>';
 

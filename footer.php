@@ -119,6 +119,6 @@
 	</html>';
 
     //var_dump(microtime(true) - $script_start);
-    echo 'Страница загружена за: '.(number_format((microtime(true) - $script_start), 2, '.', '')).' сек.';
+    echo '<span style="font-size: 80%;">Страница загружена за: '.(number_format((microtime(true) - $script_start), 2, '.', '')).' сек.</span>';
 
 ?>
