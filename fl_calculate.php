@@ -765,6 +765,7 @@
                                                         <div class="cellCosmAct invoiceItemPriceItog" style="font-size: 105%; text-align: center; width: 120px; min-width: 120px; max-width: 120px;">
                                                         <b>';
 
+                                                //Рассчет цены за позицию
                                                 echo calculateResult($stoim_item, $item['work_percent'], $item['material_percent'], $item['summ_special']);
 
                                                 $summ += calculateResult($stoim_item, $item['work_percent'], $item['material_percent'], $item['summ_special']);

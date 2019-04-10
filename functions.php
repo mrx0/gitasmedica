@@ -3170,6 +3170,7 @@
 
     //функция формирует и показывает наряды визуализация
     function showInvoiceDivRezult($data, $minimal, $show_categories, $show_absent, $show_deleted, $only_debt){
+    	//var_dump($data);
 
         $rezult = '';
 
@@ -3226,6 +3227,9 @@
                 $status_mark = '<i class="fa fa-ban" aria-hidden="true" style="color: red; font-size: 110%;" title="Работа не закрыта"></i>';
                 $calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: red; font-size: 100%;" title="Нет расчётного листа"></i>';
 
+                //Сумма рассчетных листов
+				$calcSumm = 0;
+
                 //Маркеры для статусов
                 $paid_debt = false;
                 $status_debt = false;
@@ -3246,7 +3250,7 @@
 				}
 
                 //Расчетный лист
-                $query = "SELECT * FROM `fl_journal_calculate` WHERE `invoice_id`='{$items['id']}' LIMIT 1";
+                $query = "SELECT SUM(`summ_inv`) AS `summCalcs` FROM `fl_journal_calculate` WHERE `invoice_id`='{$items['id']}'";
                 //var_dump($query);
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -3254,20 +3258,29 @@
                 $number = mysqli_num_rows($res);
 
                 if ($number != 0) {
-                    //
+                    $arr = mysqli_fetch_assoc($res);
+                    if ($arr['summCalcs'] != NULL) {
+                        $calcSumm = round($arr['summCalcs'], 2);
+                        //var_dump($arr);
+                    }else{
+                        $calculate_debt = true;
+					}
                 }else{
+                	//Отсутствуют РЛ
                     $calculate_debt = true;
 				}
 
 				//Если "нулевой наряд", то будем считать, что РЛ ему не нужен и статус закрыт у него автоматически должен быть
 				if (($items['summ'] == $items['paid']) && ($items['summ'] == 0) && ($items['paid'] == 0) && ($items['summins'] == 0)){
-                    if ($only_debt) {
+                    //var_dump($items['summ']);
+                    //if ($only_debt) {
+                        //var_dump($items['summ']);
                         $status_debt = false;
                         $calculate_debt = false;
-                    }
+                    //}
 				}
 
-
+				//Отметки
                 if (!$paid_debt){
                     $paid_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Оплачено"></i>';
 				}
@@ -3275,13 +3288,17 @@
                     $status_mark = '<i class="fa fa-check-circle-o" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Работа закрыта"></i>';
                 }
                 if (!$calculate_debt) {
-                    $calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: darkgreen; font-size: 100%;" title="РЛ сделан"></i>';
+                    if ($calcSumm == $items['summ']){
+                        $calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: darkgreen; font-size: 100%;" title="РЛ сделан '.$calcSumm.' < '.$items['summ'].'"></i>';
+                    }
+                    if ($calcSumm < $items['summ']){
+                        $calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: rgba(255, 152, 0, 1); font-size: 110%;" title="Не вся сумма распределена по РЛ '.$calcSumm.' < '.$items['summ'].'"></i>';
+                    }
                 }
-
 
                 $itemPercentCats_str = '';
 
-                if (($only_debt && ($paid_debt || $status_debt || $calculate_debt)) || (!$only_debt)) {
+                if (($only_debt && ($paid_debt || $status_debt || $calculate_debt || ($calcSumm < $items['summ']))) || (!$only_debt)) {
 
                     //Покажем категории работ
                     if ($show_categories) {

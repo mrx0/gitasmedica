@@ -147,7 +147,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                console.log(res);
+                //console.log(res);
             }
         });
 	}
@@ -156,111 +156,95 @@
 	function calculateRefundSumm(){
 
         var Summ = 0;
+        var salaryDeductionSumm = 0;
         var msg = '';
 
-        $(".position_check").each(function() {
+        //Отметка отмечены ли все
+        var all_checked = true;
+        var some_checked = false;
+
+        $(".position_check").each(function(){
         	
             var checked_status = $(this).is(":checked");
 
             if (checked_status){
-                //console.log(Number($(this).parent().parent().find(".invoiceItemPriceItog").html()));
                 Summ += Number($(this).parent().parent().find(".invoiceItemPriceItog").html());
-            }
+                salaryDeductionSumm += Number($(this).parent().parent().find(".salaryDeductionItemPriceItog").html());
+                some_checked = true;
+            }else{
+                all_checked = false;
+			}
 		});
-        //console.log(Summ);
 
 		if (Summ > Number($("#calculateInvoice").html())){
             Summ = Number($("#calculateInvoice").html());
-            msg = '<span class="query_neok" style="padding-top: 0">Ошибка #35. Нельзя вернуть сумму больше чем было оплачено.</span>';
+            msg += '<span class="query_neok" style="padding-top: 0">Ошибка #35. Нельзя вернуть сумму больше чем было оплачено.</span>';
         }
 
-        $("#refundSumm").html(Summ);
+        //Выводим сумму возврата
+        if (Summ > 0) {
+            $("#refundSumm").html(Summ);
+        }else{
+            $("#refundSumm").html(0);
+            if (some_checked) {
+                msg += '<span class="query_neok" style="padding-top: 0">Ошибка #36. Некорректная сумма на возврат.</span>';
+            }
+		}
+
+		//Выводим сумму вычета из ЗП
+        if (salaryDeductionSumm > 0) {
+            $("#salaryDeductionSumm").html(number_format(salaryDeductionSumm, 0, '.', ''));
+        }else{
+            $("#salaryDeductionSumm").html(0);
+            if (some_checked) {
+                msg += '<span class="query_neok" style="padding-top: 0">Ошибка #37. Некорректная сумма вычета.</span>';
+            }
+		}
+
         $("#errror").html(msg);
+
+		if (!all_checked){
+            $(".all_position_check").prop("checked", false);
+		}else{
+            $(".all_position_check").prop("checked", true);
+		}
 	}
 
 	//Выбор checkbox в возврате средств
     $("body").on("click", ".all_position_check", function(){
     	//console.log('all_position_check');
 
-        //var add_status = 0;
-        //var calc_id_arr = [];
-
         var checked_status = $(this).is(":checked");
-        //var thisId = $(this).attr("id");
 
         $(".position_check").each(function() {
             if (checked_status){
                 $(this).prop("checked", true);
                 $(this).parent().parent().css({"background-color": "rgba(131, 219, 83, 0.5)"});
-                //add_status = 1;
             }else{
                 $(this).prop("checked", false);
-                //if ($(this).parent().parent().parent().attr("worker_mark") == 1) {
-                    $(this).parent().parent().css({"background-color": "rgb(255, 255, 255);"});
-                // }else{
-                //     $(this).parent().parent().parent().css({"background-color": "rgba(255, 141, 141, 0.2);"});
-                // }
+                $(this).parent().parent().css({"background-color": "rgb(255, 255, 255);"});
             }
-
-            //Получим ID расчетного листа
-            //var ids_arr = $(this).attr("name").split("_");
-            //Массив с ID расчетных листов
-            //calc_id_arr.push(ids_arr[1]);
-
-
         });
 
-        //Дополнительные данные
-        //var data_arr = $(this).attr("chkBoxData").split("_");
-
-        //Добавим в сессию данные
-        //fl_addCalcsIDsINSessionForTabel(calc_id_arr, add_status, data_arr[1], data_arr[2], data_arr[3]);
-
         calculateRefundSumm();
-
     });
 
     //Рабочий пример клика на элементе после подгрузки загрузки его в DOM
     $("body").on("click", ".position_check", function(){
+
         var checked_status = $(this).prop("checked");
         //console.log(checked_status);
-        //console.log($(this).parent());
-        //console.log($(this).parent().parent().parent().attr("doctor_mark"));
 
         var add_status = 0;
-        //var calc_id_arr = [];
 
         //Меняем цвет блока
         if (checked_status){
             $(this).parent().parent().css({"background-color": "rgba(131, 219, 83, 0.5)"});
-            //add_status = 1;
         }else{
-            //console.log($(this).parent().parent().parent().attr("worker_mark"));
-
-            //if ($(this).parent().parent().parent().attr("worker_mark") == 1) {
-                $(this).parent().parent().css({"background-color": "rgb(255, 255, 255);"});
-            // }else{
-            //     $(this).parent().parent().parent().css({"background-color": "rgba(255, 141, 141, 0.2);"});
-            // }
+            $(this).parent().parent().css({"background-color": "rgb(255, 255, 255);"});
         }
 
-        //Получим ID расчетного листа
-        //console.log($(this).attr("name").split("_"));
-        //!!! Лишнее действие, надо бы посмотреть и переделать потом без split, чтоб данные писались в DOM сразу в виде чистого ID
-        //var ids_arr = $(this).attr("name").split("_");
-        //Массив с ID расчетных листов
-        //calc_id_arr.push(ids_arr[1]);
-        //console.log(calc_id);
-        //console.log(checked_status);
-
-        //Дополнительные данные
-        //var data_arr = $(this).attr("chkBoxData").split("_");
-
-        //Добавим в сессию данные
-        //fl_addCalcsIDsINSessionForTabel(calc_id_arr, add_status, data_arr[1], data_arr[2], data_arr[3]);
-
         calculateRefundSumm();
-
     });
 
     //Для поиска сертификата из модального окна

@@ -12,6 +12,7 @@
 	
 			include_once 'DBWork.php';
 			include_once 'functions.php';
+            include_once 'ffun.php';
 
             require 'variables.php';
 			
@@ -271,9 +272,16 @@
                         if (!empty($fl_tabel_j)){
                             echo '
                                             <div style="margin-top: 10px;">
-                                                <div style="font-size: 90%; color: red;">Расчетный лист был создан, и работа полностью или частично включена в табели для расчёта ЗП.<br>Если заплату уже выдали и необходимо будет сделать вычет, поставьте галочку: <input type="checkbox" class="salary_deduction" name="salary_deduction" value="1"></div>
+                                                <div style="font-size: 90%; color: red;">Расчетный лист был создан, и работа полностью или частично включена в табели для расчёта ЗП.<br>Если заплату уже выдали и необходимо будет сделать вычет, поставьте галочку: <input type="checkbox" class="salary_deduction_checkbox" name="salary_deduction" value="1"></div>
                                             </div>
-                                            <div style="font-size: 90%; color: red;">Если зарплату по работе не выдавали, галочку ставить не надо, удалите расчётный лист.</div>';
+                                            <div style="font-size: 90%; color: red;">
+                                                Если зарплату по работе не выдавали, галочку ставить не надо, удалите расчётный лист.
+                                            </div>
+                                            <div style="margin-top: 5px;">
+                                                <div style="">
+                                                    Будет вычтено из зарплаты: <div id="salaryDeductionSumm" class="calculateInvoice" style="">0</div> руб. Выберите табель, в который включить вычет: !!!
+                                                </div>
+                                            </div>';
                         }
 
                         echo '
@@ -335,7 +343,7 @@
                                                 <i><b>Категория</b></i>
                                             </div>-->
                                             <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
-                                                <i><b>ZP</b></i>
+                                                <i><b>Выплачено зп, руб.</b></i>
                                             </div>
                                             <div class="cellCosmAct" style="font-size: 80%; text-align: center;">
                                                 <input type="checkbox" class="all_position_check" name="all_position_check" value="1">
@@ -582,10 +590,24 @@
 //                                                    <i>'.$percent_cat.'</i>
 //                                                </div>';
                                     echo '
-                                                <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">';
+                                                <div class="cellCosmAct salaryDeductionItemPriceItog" style="font-size: 90%; font-style: italic; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">';
 
                                     if (isset($fl_calculate_j[$item['id']])){
-                                        echo $fl_calculate_j[$item['id']]['price'];
+                                        //echo $fl_calculate_j[$item['id']]['price'];
+                                        //var_dump($fl_calculate_j[$item['id']]);
+
+                                        if (!empty($mat_cons_j_ex['data'])) {
+                                            //var_dump($mat_cons_j_ex['data']);
+
+                                            if (isset($mat_cons_j_ex['data'][$item['id']])) {
+
+                                                $stoim_item = $stoim_item - $mat_cons_j_ex['data'][$item['id']];
+
+                                            }
+                                        }
+
+                                        //Рассчет цены за позицию
+                                        echo calculateResult($stoim_item, $fl_calculate_j[$item['id']]['work_percent'], $fl_calculate_j[$item['id']]['material_percent'], $fl_calculate_j[$item['id']]['summ_special']);
                                     }else{
                                         echo 0;
                                     }

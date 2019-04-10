@@ -1325,7 +1325,7 @@
                                     </div> р.
                                 </td>
                                 <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-                                    штраф
+                                    штраф/вычет
                                 </td>
                                 <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
                                     
