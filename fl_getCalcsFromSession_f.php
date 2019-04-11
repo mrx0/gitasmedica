@@ -250,7 +250,7 @@
                                                             <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                         </div>
                                                         <div style="display: inline-block; vertical-align: middle;">
-                                                            Табель #' . $rezData['id'] . '
+                                                            Табель #' . $rezData['id'] . ' ['.$rezData['office_id'].']
                                                         </div>
                                                     </div>
                                                     <div>

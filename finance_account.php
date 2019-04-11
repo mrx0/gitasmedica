@@ -50,6 +50,7 @@
 
                             }
                         }
+                        //var_dump("1 - ".(microtime(true) - $script_start));
 
                         echo '
                             <div id="status">
@@ -73,25 +74,44 @@
                             //Баланс контрагента
                             include_once 'ffun.php';
                             $client_balance = json_decode(calculateBalance ($client_j[0]['id']), true);
+                            //var_dump("2 - ".(microtime(true) - $script_start));
                             //Долг контрагента
                             $client_debt = json_decode(calculateDebt ($client_j[0]['id']), true);
+                            //var_dump("3 - ".(microtime(true) - $script_start));
+                            //Выдачи контрагенту
+                            //$client_refund = json_decode(calculateRefund ($client_j[0]['id']), true);
 
-                            //var_dump(json_decode($client_balance, true));
+                            //var_dump($client_balance);
+
                             echo '
-                                    <ul id="balance" style="padding: 0 5px; margin: 0 5px 10px; display: block; vertical-align: top; /*border: 1px outset #AAA;*/">
-                                        <li style="font-size: 85%; color: #7D7D7D; margin-top: 10px;">
+                                    <ul id="balance" style="padding: 0 5px; margin: 0 5px 10px; display: inline-block; vertical-align: top; /*border: 1px outset #AAA;*/">
+                                        <li style="font-size: 85%; color: #7D7D7D; /*margin-top: 10px;*/">
                                             Всего внесено:
                                         </li>
                                         <li style="margin-bottom: 5px; font-size: 90%; font-weight: bold;">
                                             '.$client_balance['summ'].' руб.
                                         </li>
                                     </ul>
+
+                                    <ul id="balance" style="padding: 0 5px; margin: 0 5px 10px; display: inline-block; vertical-align: top; /*border: 1px outset #AAA;*/">
+                                        <li style="font-size: 85%; color: #7D7D7D; /*margin-top: 10px;*/">
+                                            Всего возвращено пациенту:
+                                        </li>
+                                        <li style="margin-bottom: 5px; font-size: 90%; font-weight: bold; color: red;">
+                                            '.$client_balance['withdraw'].' руб.
+                                        </li>
+                                    </ul>';
+                        echo '
+                                </div>';
+                        echo '
+                                <div>';
+                        echo '
                                     <ul id="balance" style="padding: 5px; margin: 0 5px 10px; display: inline-block; vertical-align: top; /*border: 1px outset #AAA;*/">
                                         <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
                                             Доступный остаток средств:
                                         </li>
                                         <li class="calculateOrder" style="font-size: 110%; font-weight: bold;">
-                                            <div class="availableBalance" id="availableBalance"  draggable="true" ondragstart="return dragStart(event)" style="display: inline;">'.($client_balance['summ'] - $client_balance['debited']).'</div><div style="display: inline;"> руб.</div>
+                                            <div class="availableBalance" id="availableBalance"  draggable="true" ondragstart="return dragStart(event)" style="display: inline;">'.($client_balance['summ'] - $client_balance['debited'] - $client_balance['withdraw']).'</div><div style="display: inline;"> руб.</div>
                                         </li>
                                     </ul>
                         
@@ -114,7 +134,7 @@
                         //Выписанные наряды
                         $arr = array();
                         $invoice_j = array();
-
+                        //var_dump("3.5 - ".(microtime(true) - $script_start));
                         $msql_cnnct = ConnectToDB ();
 
                         echo '
@@ -130,6 +150,7 @@
                                 array_push($invoice_j, $arr);
                             }
                         }
+                        //var_dump("3.6 - ".(microtime(true) - $script_start));
                         //var_dump ($invoice_j);
 
                         if (($finances['see_all'] != 0) || $god_mode){
@@ -140,7 +161,7 @@
                         //$data, $minimal, $show_categories, $show_absent, $show_deleted
 
                         echo $rezultInvoices['data'];
-
+                        //var_dump("4 - ".(microtime(true) - $script_start));
                         echo '
 								</ul>';
 
@@ -185,17 +206,23 @@
 
 
 
-                        //Выписанные возвраты денег
+                        //Выписанные выдачи денег
                         $arr = array();
                         $refund_j = array();
-
+                        //var_dump("5 - ".(microtime(true) - $script_start));
                         echo '
 								<ul id="refunds" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px;">
-									    Возвраты <!--<a href="add_order.php?client_id='.$client_j[0]['id'].'" class="b">Добавить новый</a>-->
+									    Выдачи ';
+                        if (($finances['see_all'] == 1) || $god_mode){
+                            echo '
+                            <a href="withdraw_add.php?client_id='.$client_j[0]['id'].'" class="b">Добавить новую</a>';
+                        }
+                        echo '
 									</li>';
 
-                        $query = "SELECT * FROM `journal_refund` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC ";
+
+                        $query = "SELECT * FROM `journal_withdraw` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC ";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                         $number = mysqli_num_rows($res);
@@ -208,15 +235,15 @@
 
 
                         if (($finances['see_all'] != 0) || $god_mode){
-                            $rezultRefunds = showRefundDivRezult($refund_j, false, true, true);
+                            $rezultWithdraw = showWithdrawDivRezult($refund_j, false, true, true);
                         }else{
-                            $rezultRefunds = showRefundDivRezult($refund_j, false, true, false);
+                            $rezultRefunds = showWithdrawDivRezult($refund_j, false, true, false);
                         }
                         //$data, $minimal, $show_absent, $show_deleted
 
-                        echo $rezultRefunds['data'];
+                        echo $rezultWithdraw['data'];
 
-
+                        //var_dump("6 - ".(microtime(true) - $script_start));
                         echo '
 								</ul>';
 

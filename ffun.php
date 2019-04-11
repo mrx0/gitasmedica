@@ -59,13 +59,14 @@
     }
 
     //Обновим баланс контрагента
-    function updateBalance ($id, $client_id, $Summ, $debited){
+    function updateBalance ($id, $client_id, $Summ, $debited, $withdraw){
 
         $msql_cnnct = ConnectToDB2 ();
 
-        $query = "UPDATE `journal_balance` SET `summ`='$Summ', `debited`='$debited'  WHERE `id`='$id'";
+        $query = "UPDATE `journal_balance` SET `summ`='$Summ', `debited`='$debited', `withdraw`='$withdraw'  WHERE `id`='$id'";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
     }
 
     //Обновим долг контрагента
@@ -77,6 +78,16 @@
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
     }
+
+    //Обновим возвраты контрагента
+//    function updateRefund ($id, $client_id, $Summ){
+//
+//        $msql_cnnct = ConnectToDB2 ();
+//
+//        $query = "UPDATE `journal_debt` SET `summ`='$Summ'  WHERE `id`='$id'";
+//
+//        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//    }
 
     //Смотрим баланс
     function watchBalance ($client_id, $Summ){
@@ -169,12 +180,14 @@
         if (!empty($clientBalance)){
             $rezult['summ'] = $Summ;
             $rezult['debited'] = calculatePayment($client_id);
+            $rezult['withdraw'] = calculateWithdraw($client_id);
 
             //Обновим баланс контрагента
-            updateBalance ($clientBalance[0]['id'], $client_id, $Summ, $rezult['debited']);
+            updateBalance ($clientBalance[0]['id'], $client_id, $Summ, $rezult['debited'], $rezult['withdraw']);
         }else {
             $rezult['summ'] = $Summ;
             $rezult['debited'] = 0;
+            $rezult['withdraw'] = 0;
         }
 
         return (json_encode($rezult, true));
@@ -182,6 +195,51 @@
         //return ($Summ);
     }
 	
+    //считаем по возвратам, сколько вернули
+    function calculateWithdraw ($client_id){
+
+        $rezult = array();
+
+        $msql_cnnct = ConnectToDB2 ();
+
+        $clientWithdraws = array();
+        $arr = array();
+
+        //Соберем все возвраты
+        $query = "SELECT * FROM `journal_withdraw` WHERE `client_id`='$client_id'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                array_push($clientWithdraws, $arr);
+            }
+        }else{
+            $clientWithdraws = 0;
+        }
+        //return ($clientWithdraws);
+
+        //Переменная для суммы
+        $Summ = 0;
+
+        //Если были там какие-то оплаты
+        if ($clientWithdraws != 0) {
+            //Посчитаем сумму
+            foreach ($clientWithdraws as $withdraws) {
+                //if ($withdraw['type'] != 1) {
+                    $Summ += $withdraws['summ'];
+                //}
+            }
+        }
+
+        //$rezult['summ'] = $Summ;
+        //return (json_encode($rezult, true));
+
+        return ($Summ);
+    }
+
     //считаем по нарядам, сколько выставлено и обновляем
     function calculateDebt ($client_id){
 

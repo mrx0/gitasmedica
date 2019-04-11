@@ -247,6 +247,16 @@
         calculateRefundSumm();
     });
 
+    //Рабочий пример клика на элементе после подгрузки загрузки его в DOM
+    $("body").on("click", "#selectTabelForSalaryDeduction", function(){
+    	//console.log($(this).attr("worker_id"));
+
+		if ($(this).attr("worker_id") > 0) {
+            selectTabelForSalaryDeduction($(this).attr("worker_id"));
+        }
+
+    });
+
     //Для поиска сертификата из модального окна
     $('#search_cert').bind("change keyup input click", function() {
 
@@ -7010,6 +7020,96 @@
         })
     }
 
+    //Показываем блок с суммами и кнопками для возврата
+    function showRefundAdd(mode){
+        //console.log(mode);
+
+		//Сумма к возврату
+        var refundSumm = Number($("#refundSumm").html());
+        console.log(refundSumm);
+        //Сумма на которую оплатили наряд
+        var payedSumm = Number($("#calculateInvoice").html());
+        console.log(payedSumm);
+        var comment = $("#comment").val();
+        console.log(comment);
+
+        if (refundSumm > 0) {
+            if (comment.length > 0) {
+
+                $('#overlay').show();
+
+                if (mode == 'add') {
+                    //Ajax_refund_add('add');
+                }
+
+                if (mode == 'edit') {
+                    //Ajax_refund_add('edit');
+                }
+            } else {
+                $("#errror").html('<span class="query_neok" style="padding-top: 0">Ошибка #39. Заполните комментарий.</span>');
+            }
+        }else{
+            $("#errror").html('<span class="query_neok" style="padding-top: 0">Ошибка #40.  Некорректная сумма на возврат.</span>');
+        }
+    }
+
+    //Показываем блок с суммами и кнопками для добавления возврата денег
+    function showWithdrawAdd (mode){
+        //console.log(mode);
+
+		hideAllErrors();
+
+        var Summ = $("#summ").val();
+        var SummType = $("#summ_type").val();
+        var filial = $("#filial").val();
+        var comment = $("#comment").val();
+
+        //проверка данных на валидность
+        $.ajax({
+            url:"ajax_test.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    summ: Summ,
+                    summ_type: SummType,
+                    filial: filial,
+                    comment: comment
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                if(data.result == 'success'){
+                    //$('#overlay').show();
+
+                    if (mode == 'add'){
+                        Ajax_withdraw_add('add');
+                    }
+
+                    // if (mode == 'edit'){
+                    //     Ajax_order_add('edit');
+                    // }
+
+                // в случае ошибок в форме
+                }else{
+                    // перебираем массив с ошибками
+                    for(var errorField in data.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(data.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    $("#errror").html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                }
+            }
+        })
+    }
+
     //Показываем блок с суммами и кнопками Для РАСХОДНОГО ордера
     function showGiveOutCashAdd(mode){
         //console.log(mode);
@@ -7837,6 +7937,218 @@
 			}
 		});
 	}
+
+	//Добавляем/редактируем в базу выдачу
+	function Ajax_withdraw_add(mode){
+		//console.log(mode);
+
+        var withdraw_id = 0;
+
+		var link = "withdraw_add_f.php";
+
+		var paymentStr = '';
+
+		if (mode == 'edit'){
+			link = "edit_withdraw_f.php";
+            withdraw_id = $("#withdraw_id").val();
+		}
+
+        var Summ = Number($("#summ").val());
+        var availableBalance = Number($("#availableBalance").html());
+
+        if (Summ > availableBalance){
+			$("#errror").html('<span class="query_neok" style="padding-top: 0">Ошибка #38. Нельзя вернуть сумму больше чем доступно на балансе.</span>');
+		}else {
+            //console.log(availableBalance);
+            //var SummType =  $("#summ_type").val();
+            var SummType = document.querySelector('input[name="summ_type"]:checked').value;
+            var office_id = $("#filial").val();
+
+            var client_id = $("#client_id").val();
+            //var invoice_id =  $("#invoice_id").val();
+            //console.log(invoice_id);
+            var date_in = $("#date_in").val();
+            //console.log(date_in);
+
+            var comment = $("#comment").val();
+            //console.log(comment);
+
+            var org_pay = $("input[name=org_pay]:checked").val();
+
+            if (org_pay === undefined) {
+                org_pay = 0;
+            }
+
+            // if (invoice_id != 0){
+            //    paymentStr = '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+            //        '<a href= "payment_add.php?invoice_id='+invoice_id+'" class="b">Оплатить наряд #'+invoice_id+'</a>'+
+            //        '</li>';
+            // }
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    client_id: client_id,
+                    office_id: office_id,
+                    summ: Summ,
+                    summtype: SummType,
+                    date_in: date_in,
+                    comment: comment,
+                    org_pay: org_pay,
+
+                    withdraw_id: withdraw_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res);
+                    $('.center_block').remove();
+                    $('#overlay').hide();
+
+                    if (res.result == "success") {
+                        //$('#data').hide();
+                        $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
+                            '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлена выдача</li>' +
+                            '<li class="cellsBlock" style="width: auto;">' +
+                            '<a href="withdraw.php?id=' + res.data + '" class="cellName ahref">' +
+                            '<b>Выдача #' + res.data + '</b><br>' +
+                            '</a>' +
+                            '<div class="cellName">' +
+                            '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">' +
+                            'Сумма:<br>' +
+                            '<span class="calculateInvoice" style="font-size: 13px">' + Summ + '</span> руб.' +
+                            '</div>' +
+                            '</div>' +
+                            '</li>' +
+                            paymentStr +
+                            '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">' +
+                            '<a href="finance_account.php?client_id=' + client_id + '" class="b">Управление счётом</a>' +
+                            '</li>' +
+                            '</ul>');
+                    } else {
+                        $('#errror').html(res.data);
+                    }
+                }
+            });
+        }
+	}
+
+	function selectThisTabelForSalaryDeduction(worker_id){
+		//console.log(worker_id);
+
+        var tabelForAdding = $('input[name=tabelForAdding]:checked').val();
+        //console.log(tabelForAdding);
+
+        if (tabelForAdding != undefined){
+
+            $("#selectedTabelForSalaryDeduction").html("<b>Табель #"+tabelForAdding+"</b> ");
+            $("#selectedTabelID").val(tabelForAdding);
+
+            blockWhileWaiting(false);
+		}/*else{
+            console.log(tabelForAdding);
+		}*/
+
+
+	}
+
+	//Показываем меню с табелями для тогор, чтобы из них выбрать
+    function menuForAddSalaryDeductionINTabel(res, worker_id){
+        //console.log(res);
+
+        //var buttonsStr = '';
+        var buttonsStr = '<input type="button" class="b" value="OK" onclick="selectThisTabelForSalaryDeduction(' + worker_id + ')">';
+
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        }).css({
+            "top": "120px",
+            "height": "fit-content",
+            "width": "45%",
+            "background-color": "rgb(195, 194, 194)"
+        })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+						/*"height": "100%",*/
+                        "border": "1px solid #AAA",
+                        "position": "relative",
+                        "background-color": "rgb(245, 245, 245)",
+                        "padding": "10px"
+                    })
+                    //.append('<span style="margin: 5px;"><i>Новый табель</i></span>')
+                    .append(
+                        $('<div/>')
+                            .css({
+								/*"position": "absolute",*/
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-10px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%"
+                            })
+                            .append('<div style="margin: 0px;">'+res+'</div>')
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+								/*"position": "absolute",*/
+                                "bottom": "2px",
+                                "width": "100%"
+                            })
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                            )
+                    )
+            );
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+    }
+
+    //Выбираем табель, куда добавим вычет
+    function selectTabelForSalaryDeduction (worker_id){
+
+        var link = "fl_getTabels_f.php";
+
+        var reqData = {
+            worker_id: worker_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+                //console.log (res.length);
+
+                if (res.length > 0) {
+                    $('#overlay').show();
+
+                    menuForAddSalaryDeductionINTabel(res, worker_id);
+                }else{
+                    //$('#errrror').html('<div class="query_neok">Ошибка #34. Ничего не выбрано. Обновите выбор РЛ</div>');
+                }
+            }
+        })
+    }
 
 	//Добавляем/редактируем в базу расходный ордер
 	function Ajax_GiveOutCash_add(mode){

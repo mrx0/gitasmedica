@@ -279,7 +279,7 @@
                                             </div>
                                             <div style="margin-top: 5px;">
                                                 <div style="">
-                                                    Будет вычтено из зарплаты: <div id="salaryDeductionSumm" class="calculateInvoice" style="">0</div> руб. Выберите табель, в который включить вычет: !!!
+                                                    Будет вычтено из зарплаты: <div id="salaryDeductionSumm" class="calculateInvoice" style="">0</div> руб. Выберите табель, в который включить вычет: <span id="selectedTabelForSalaryDeduction"></span><input type="hidden" id="selectedTabelID" value="0"><span id="selectTabelForSalaryDeduction" worker_id="'.$invoice_j[0]['worker_id'].'" class="button_tiny" style="color: rgb(125, 125, 125); font-size: 11px; cursor: pointer;">Выбрать</span> 
                                                 </div>
                                             </div>';
                         }
@@ -626,11 +626,27 @@
                                         </div>';
                             }
                         }
-					
-                        echo '	
+                        echo '
+                                    <div class="cellsBlock">
+                                            <div class="cellRight">
+                                                <ul style="margin-left: 6px; margin-bottom: 10px;">
+                                                    <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
+                                        Комментарий
+                                                    </li>
+                                                    <li style="font-size: 100%; margin-bottom: 5px;">
+                                                        <textarea name="comment" id="comment" cols="45" rows="3"></textarea>
+                                                        <label id="comment_error" class="error"></label>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                        	
 										<div class="cellsBlock" style="font-size: 90%;" >
-											<div class="cellText2" style="padding: 2px 4px;">
-											</div>
+	
+											    <div>	
+                                                    <input type="button" class="b" value="Сохранить" onclick="showRefundAdd(\'add\')">
+                                                </div>
+
 											<!--<div class="cellName" style="font-size: 90%; font-weight: bold;">
 												Итого:-->';
                         if (($summ != $invoice_j[0]['summ']) || ($summins != $invoice_j[0]['summins'])){
@@ -657,18 +673,18 @@
                                         </div>';
 
                         //Документы закрытия/оплаты нарядов списком
-                        $payment_j = array();
-
-                        $query = "SELECT * FROM `journal_payment` WHERE `invoice_id`='".$_GET['invoice_id']."' ORDER BY `date_in` DESC";
-                        //var_dump($query);
-
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                        $number = mysqli_num_rows($res);
-                        if ($number != 0){
-                            while ($arr = mysqli_fetch_assoc($res)){
-                                array_push($payment_j, $arr);
-                            }
-                        }
+//                        $payment_j = array();
+//
+//                        $query = "SELECT * FROM `journal_payment` WHERE `invoice_id`='".$_GET['invoice_id']."' ORDER BY `date_in` DESC";
+//                        //var_dump($query);
+//
+//                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//                        $number = mysqli_num_rows($res);
+//                        if ($number != 0){
+//                            while ($arr = mysqli_fetch_assoc($res)){
+//                                array_push($payment_j, $arr);
+//                            }
+//                        }
 
 //                            if (!empty($payment_j)) {
 //                                echo '
@@ -742,14 +758,14 @@
 
 
 
-                        if (!empty($fl_calculate_j)) {
+//                        if (!empty($fl_calculate_j)) {
 //                                echo '
 //                                            <div class="invoceHeader" style="">
 //                                                <ul style="margin-left: 6px; margin-bottom: 10px;">
 //                                                    <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
 //                                                        Расчётные листы по наряду:
 //                                                    </li>';
-                            foreach ($fl_calculate_j as $calculate_item) {
+//                            foreach ($fl_calculate_j as $calculate_item) {
 //
 //                                    echo '
 //                                                    <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
@@ -789,16 +805,16 @@
 //                                                        ';
 //                                    echo '
 //                                                    </li>';
-                            }
+//                            }
 
-                            echo '
-                                                </ul>
-                                            </div>';
-                        }
+//                            echo '
+//                                                </ul>
+//                                            </div>';
+//                        }
 
 
-                        if (!empty($mat_cons_j_ex)) {
-                            if (!empty($mat_cons_j_ex['data'])) {
+//                        if (!empty($mat_cons_j_ex)) {
+//                            if (!empty($mat_cons_j_ex['data'])) {
 //                                    echo '
 //                                                <div class="invoceHeader" style="">
 //                                                    <ul style="margin-left: 6px; margin-bottom: 10px;">
@@ -814,13 +830,13 @@
 //                                                                <b>Расход #' . $mat_cons_j_ex['id'] . '</b> от ' . date('d.m.y', strtotime($mat_cons_j_ex['create_time'])) . '<br>
 //                                                                <span style="font-size:80%;  color: #555;">';
 
-                                if (($mat_cons_j_ex['create_time'] != 0) || ($mat_cons_j_ex['create_person'] != 0)) {
+//                                if (($mat_cons_j_ex['create_time'] != 0) || ($mat_cons_j_ex['create_person'] != 0)) {
 //                                            echo '
 //                                                                    Добавлен: ' . date('d.m.y H:i', strtotime($mat_cons_j_ex['create_time'])) . '<br>
 //                                                                    <!--Автор: ' . WriteSearchUser('spr_workers', $mat_cons_j_ex['create_person'], 'user', true) . '<br>-->';
-                                } else {
+//                                } else {
 //                                            echo 'Добавлен: не указано<br>';
-                                }
+//                                }
                                         /*if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
                                             echo'
                                                                     Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
@@ -850,8 +866,8 @@
 //                                    echo '
 //                                                    </ul>
 //                                                </div>';
-                            }
-                        }
+//                            }
+//                        }
 
 
                         echo '
@@ -860,6 +876,10 @@
 										</div>';
                         echo '
 									</div>';
+
+                        echo '	
+                                    <!-- Подложка только одна -->
+                                    <div id="overlay"></div>';
 
 
                         echo '

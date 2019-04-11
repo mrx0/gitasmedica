@@ -1,6 +1,6 @@
 <?php
 
-//
+//footer.php
 //
 
 	echo '

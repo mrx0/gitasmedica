@@ -1218,7 +1218,7 @@
         });
     }
 
-//Добавляем в существующий табель РЛ из сессии
+    //Добавляем в существующий табель РЛ из сессии
     function fl_addInExistTabel2(type_id, worker_id, filial_id){
 
         var link = "fl_add_in_tabel2_f.php";

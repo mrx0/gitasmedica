@@ -3630,7 +3630,7 @@
 
 
     //функция формирует и показывает возвраты визуализация
-    function showRefundDivRezult($data, $minimal, $show_absent, $show_deleted){
+    function showWithdrawDivRezult($data, $minimal, $show_absent, $show_deleted){
 
         $rezult = '';
 
@@ -3642,74 +3642,74 @@
 
         if (!empty($data)) {
 
-//            include_once 'DBWork.php';
-//            include_once 'functions.php';
-//
-//            require 'variables.php';
-//
-//            $msql_cnnct = ConnectToDB ();
-//
-//            $offices_j = getAllFilials(false, false, true);
-//            //var_dump($offices_j);
-//
-//            foreach ($data as $items) {
-//                //var_dump($items);
-//
-//                $order_type_mark = '';
-//
-//                if ($items['summ_type'] == 1){
-//                    $order_type_mark = '<i class="fa fa-money" aria-hidden="true" title="Нал"></i>';
-//                }
-//
-//                if ($items['summ_type'] == 2){
-//                    $order_type_mark = '<i class="fa fa-credit-card" aria-hidden="true" title="Безнал"></i>';
-//                }
-//
-//                $itemTemp_str = '';
-//
-//                $itemTemp_str .= '
-//                                            <li class="cellsBlock" style="width: auto; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(225, 255, 67, 0.69);">';
-//                $itemTemp_str .= '
-//                                                <a href="order.php?id='.$items['id'].'" class="cellOrder ahref" style="position: relative;">
-//                                                    <div style="font-weight: bold;">Ордер #'.$items['id'].'<span style="font-weight: normal;"> от '.date('d.m.y' ,strtotime($items['date_in'])).'</span></div>
-//                                                    <div style="margin: 3px;">';
-//
-//                $itemTemp_str .= 'Филиал: '.$offices_j[$items['office_id']]['name'];
-//
-//                $itemTemp_str .= '
-//                                                    </div>
-//                                                    <div style="font-size:80%;  color: #555;">';
-//
-//                if (($items['last_edit_time'] != 0) || ($items['last_edit_person'] != 0)){
-//                    $itemTemp_str .= '
-//                                                            Последний раз редактировался: '.date('d.m.y H:i',strtotime($items['last_edit_time'])).'<br>
-//                                                            <!--Кем: '.WriteSearchUser('spr_workers', $items['last_edit_person'], 'user', true).'-->';
-//                }
-//                $itemTemp_str .= '
-//                                                    </div>
-//                                                    <span style="position: absolute; top: 2px; right: 3px;">'. $order_type_mark.'</span>
-//                                                </a>
-//                                                <div class="cellName">
-//                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-//                                                        Сумма:<br>
-//                                                        <span class="calculateOrder" style="font-size: 13px">'.$items['summ'].'</span> руб.
-//                                                    </div>';
-//
-//                $itemTemp_str .= '
-//                                                </div>';
-//                $itemTemp_str .= '
-//                                            </li>';
-//
-//                if ($items['status'] != 9) {
-//                    $itemAll_str .= $itemTemp_str;
-//                } else {
-//                    $itemClose_str .= $itemTemp_str;
-//                }
-//
-//            }
-//
-//            $rezult .= $itemAll_str;
-//
+            include_once 'DBWork.php';
+            include_once 'functions.php';
+
+            require 'variables.php';
+
+            $msql_cnnct = ConnectToDB ();
+
+            $offices_j = getAllFilials(false, false, true);
+            //var_dump($offices_j);
+
+            foreach ($data as $items) {
+                //var_dump($items);
+
+                $order_type_mark = '';
+
+                if ($items['summ_type'] == 1){
+                    $order_type_mark = '<i class="fa fa-money" aria-hidden="true" title="Нал"></i>';
+                }
+
+                if ($items['summ_type'] == 2){
+                    $order_type_mark = '<i class="fa fa-credit-card" aria-hidden="true" title="Безнал"></i>';
+                }
+
+                $itemTemp_str = '';
+
+                $itemTemp_str .= '
+                                            <li class="cellsBlock" style="width: auto; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(255, 94, 67, 0.5);">';
+                $itemTemp_str .= '
+                                                <a href="withdraw.php?id='.$items['id'].'" class="cellOrder ahref" style="position: relative;">
+                                                    <div style="font-weight: bold;">Выдача #'.$items['id'].'<span style="font-weight: normal;"> от '.date('d.m.y' ,strtotime($items['date_in'])).'</span></div>
+                                                    <div style="margin: 3px;">';
+
+                $itemTemp_str .= 'Филиал: '.$offices_j[$items['office_id']]['name'];
+
+                $itemTemp_str .= '
+                                                    </div>
+                                                    <div style="font-size:80%;  color: #555;">';
+
+                if (($items['last_edit_time'] != 0) || ($items['last_edit_person'] != 0)){
+                    $itemTemp_str .= '
+                                                            Последний раз редактировался: '.date('d.m.y H:i',strtotime($items['last_edit_time'])).'<br>
+                                                            <!--Кем: '.WriteSearchUser('spr_workers', $items['last_edit_person'], 'user', true).'-->';
+                }
+                $itemTemp_str .= '
+                                                    </div>
+                                                    <span style="position: absolute; top: 2px; right: 3px;">'. $order_type_mark.'</span>
+                                                </a>
+                                                <div class="cellName">
+                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+                                                        Сумма:<br>
+                                                        <span class="calculateInvoice" style="font-size: 13px">'.$items['summ'].'</span> руб.
+                                                    </div>';
+
+                $itemTemp_str .= '
+                                                </div>';
+                $itemTemp_str .= '
+                                            </li>';
+
+                if ($items['status'] != 9) {
+                    $itemAll_str .= $itemTemp_str;
+                } else {
+                    $itemClose_str .= $itemTemp_str;
+                }
+
+            }
+
+            $rezult .= $itemAll_str;
+
 //            if ($show_deleted && !$minimal){
 //                //if ((strlen($itemClose_str) > 1) && (($finances['see_all'] != 0) || $god_mode)) {
 //                    $rezult .= '<div style="background-color: rgba(255, 214, 240, 0.5); padding: 5px; margin-top: 5px;">';

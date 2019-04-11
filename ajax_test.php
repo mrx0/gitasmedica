@@ -30,6 +30,8 @@ if (isset($_POST['lab']))
     $arrayFields['lab'] = $_POST['lab'];
 if (isset($_POST['descr']))
     $arrayFields['descr'] = $_POST['descr'];
+if (isset($_POST['comment']))
+    $arrayFields['comment'] = $_POST['comment'];
 
 //
 if (isset($_POST['cat_name']))
