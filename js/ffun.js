@@ -4655,6 +4655,7 @@
                 worker_revenue_percent: $("#w_id_" + worker_id).attr("worker_revenue_percent"),
                 per_from_salary: Number($("#zp_temp_" + worker_id).html()),
                 filialmoney: $("#w_id_" + worker_id).attr("filialmoney"),
+                w_revenue_summ: Number($("#w_revenue_summ_"+worker_id).html()),
                 worker_category_id: $("#w_id_" + worker_id).attr("worker_category_id"),
                 w_hours: $("#w_id_" + worker_id).attr("w_hours"),
                 summ: Number($("#w_id_" + worker_id).html())
