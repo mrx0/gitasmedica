@@ -7024,27 +7024,95 @@
     function showRefundAdd(mode){
         //console.log(mode);
 
+		hideAllErrors();
+
 		//Сумма к возврату
         var refundSumm = Number($("#refundSumm").html());
-        console.log(refundSumm);
+        //console.log(refundSumm);
+
         //Сумма на которую оплатили наряд
         var payedSumm = Number($("#calculateInvoice").html());
-        console.log(payedSumm);
+        //console.log(payedSumm);
+
+        //Комментарий
         var comment = $("#comment").val();
-        console.log(comment);
+        //console.log(comment);
+
+		//Ссумма, к вычету из ЗП
+        var salaryDeductionSumm = Number($("#salaryDeductionSumm").html());
+        //console.log(salaryDeductionSumm);
+
+        //Отметка, будет ли вычет из ЗП
+        var salaryDeductionCheck = $("input[name=salary_deduction_checkbox]:checked").val();
+        if(typeof salaryDeductionCheck == "undefined") salaryDeductionCheck = 0;
+        //console.log(salaryDeductionCheck);
+
+        //Табель в который надо будет добавить вычет
+        var tabel = $("#selectedTabelID").val();
+        //console.log(tabel);
 
         if (refundSumm > 0) {
             if (comment.length > 0) {
+            	 if ((salaryDeductionCheck == 1) && (tabel == 0)){
+                     $("#errror").html('<span class="query_neok" style="padding-top: 0">Ошибка #41. Не выбран табель, куда добавить вычет.</span>');
+				 }else{
+                     if ((salaryDeductionCheck == 1) && (salaryDeductionSumm <= 0)){
+                         $("#errror").html('<span class="query_neok" style="padding-top: 0">Ошибка #42. Выбран вычет из ЗП, Сумма при этом некорректна.</span>');
+					 }else {
+                         var salaryDeductionStr = 'Вычета из ЗП <b>не отмечено</b>';
 
-                $('#overlay').show();
+                         if ((salaryDeductionCheck == 1) && (tabel != 0) && (salaryDeductionSumm > 0)) {
+                             salaryDeductionStr = '<div style="margin: 5px 10px;">Будет оформлен вычет из ЗП<br> на сумму: <span class="calculateInvoice">' + salaryDeductionSumm + '</span> руб.</div><div style="margin: 5px 10px;">Вычет будет добавлен в <b>Табель #'+tabel+'</b></div>';
+                         }
 
-                if (mode == 'add') {
-                    //Ajax_refund_add('add');
-                }
+                         $('#overlay').show();
 
-                if (mode == 'edit') {
-                    //Ajax_refund_add('edit');
-                }
+                         var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_refund_add(' + refundSumm + ', ' + payedSumm + ', ' + comment + ', ' + salaryDeductionCheck + ', ' + tabel + ', ' + salaryDeductionSumm + ')">';
+
+                         // Создаем меню:
+                         var menu = $('<div/>', {
+                             class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+                         }).css({"height": "221px"})
+                             .appendTo('#overlay')
+                             .append(
+                                 $('<div/>')
+                                     .css({
+                                         "height": "100%",
+                                         "border": "1px solid #AAA",
+                                         "position": "relative"
+                                     })
+                                     .append('<span style="margin: 5px;"><i>Проверьте и нажмите сохранить</i></span>')
+                                     .append(
+                                         $('<div/>')
+                                             .css({
+                                                 "position": "absolute",
+                                                 "width": "100%",
+                                                 "margin": "auto",
+                                                 "top": "-50px",
+                                                 "left": "0",
+                                                 "bottom": "0",
+                                                 "right": "0",
+                                                 "height": "50%"
+                                             })
+                                             .append('<div style="margin: 10px;">Сумма к возврату: <span class="calculateInvoice">' + refundSumm + '</span> руб.</div>')
+                                             .append(salaryDeductionStr)
+                                     )
+                                     .append(
+                                         $('<div/>')
+                                             .css({
+                                                 "position": "absolute",
+                                                 "bottom": "2px",
+                                                 "width": "100%",
+                                             })
+                                             .append(buttonsStr +
+                                                 '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                                             )
+                                     )
+                             );
+
+                         menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+                     }
+                 }
             } else {
                 $("#errror").html('<span class="query_neok" style="padding-top: 0">Ошибка #39. Заполните комментарий.</span>');
             }

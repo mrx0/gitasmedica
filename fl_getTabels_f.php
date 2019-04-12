@@ -21,7 +21,7 @@
         if ($_POST) {
             if (isset($_POST['worker_id'])) {
 
-                $filials_j = getAllFilials(false, false, false);
+                $filials_j = getAllFilials(false, true, true);
 
                 $workerID = $_POST['worker_id'];
 
@@ -130,7 +130,7 @@
                                                         <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                     </div>
                                                     <div style="display: inline-block; vertical-align: middle;">
-                                                        Табель #' . $rezData['id'] . ' ['.$rezData['office_id'].']
+                                                        Табель #' . $rezData['id'] . ' <span style="font-size: 80%;">['.$filials_j[$rezData['office_id']]['name2'].']</span>
                                                     </div>
                                                 </div>
                                                 <div>
@@ -142,7 +142,7 @@
                                             <!--</a>-->
                                         </div>
                        
-                                        <div style="display: inline-block; vertical-align: top; float: right;">
+                                        <div style="position: absolute; top: -4px; right: -4px;">
                                             <div style="border: none; padding: 3px; margin: 1px;">
                                                 <input type="radio" class="radioBtnCalcs" name="tabelForAdding" value="' . $rezData['id'] . '">
                                             </div>
