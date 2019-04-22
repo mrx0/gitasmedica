@@ -1,7 +1,7 @@
 <?php
 
-//invoice.php
-//Наряд заказ
+//refund_add.php
+//Возврат средсвт на счет за наряд
 
 	require_once 'header.php';
 	
@@ -179,6 +179,20 @@
                         }
                         //var_dump($fl_calculate_j);
                         //var_dump($fl_tabel_j);
+
+                        //Уже существующие возвраты по этому наряду
+                        $fl_refund_j = array();
+
+                        $query = "SELECT `inv_pos_id`, `summ` FROM `fl_journal_refund_ex` WHERE `refund_id` IN (SELECT `id` FROM `fl_journal_refund` WHERE `invoice_id` = '".$_GET['invoice_id']."')";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0){
+                            while ($arr = mysqli_fetch_assoc($res)){
+                                $fl_refund_j[$arr['inv_pos_id']] = (float)$arr['summ'];
+                            }
+                        }
+                        //var_dump($fl_refund_j);
 
                         echo '
 								<div id="data">';
@@ -375,12 +389,23 @@
                                 foreach ($invoice_data as $item) {
                                     //var_dump($item);
 
+                                    //Если уже был возврат по этой позиции, то блокируем checkbox
+                                    //var_dump(array_key_exists ($item['id'], $fl_refund_j));
+                                    $disabled = '';
+                                    $bgColor = '';
+
+                                    if (array_key_exists ($item['id'], $fl_refund_j)) {
+                                        $disabled = 'disabled';
+                                        $bgColor = 'background-color: #CCC;';
+                                    }
+
+
                                     //часть прайса
                                     //if (!empty($invoice_data)){
 
                                     //foreach ($invoice_data as $key => $items){
                                     echo '
-                                        <div class="cellsBlock" style="font-size: 100%;" >
+                                        <div class="cellsBlock" style="font-size: 100%; '.$bgColor.'" >
                                         <!--<div class="cellCosmAct" style="">
                                             -
                                         </div>-->
@@ -566,7 +591,7 @@
                                     echo '
                                             <!--</div>-->
                                                 <div class="cellCosmAct" style="font-size: 80%; text-align: center;">
-                                                    <input type="checkbox" item_id="'.$item['id'].'" class="position_check" name="position_check" value="1">
+                                                    <input type="checkbox" item_id="'.$item['id'].'" class="position_check" name="position_check" value="1"  '.$disabled.'>
                                                 </div>
                                             </div>';
                                 }
@@ -592,6 +617,10 @@
 										<div class="cellsBlock" style="font-size: 90%;" >
 	
 											    <div>	
+											        <input type="hidden" id="zapis_id" value="'.$invoice_j[0]['zapis_id'].'">
+											        <input type="hidden" id="invoice_id" value="'.$_GET['invoice_id'].'">
+											        <input type="hidden" id="client_id" value="'.$invoice_j[0]['client_id'].'">
+											        <input type="hidden" id="worker_id" value="'.$invoice_j[0]['worker_id'].'">
                                                     <input type="button" class="b" value="Сохранить" onclick="showRefundAdd(\'add\')">
                                                 </div>
 

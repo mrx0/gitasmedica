@@ -379,7 +379,7 @@
                          
                         permission = ids_arr[0];
                         worker = ids_arr[1];
-                        office = ids_arr[2];
+                        office = ids_arr[2];showRefundAdd
                         
                         var certData = {
                             permission: permission,

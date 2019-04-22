@@ -218,9 +218,13 @@
 
         $(".position_check").each(function() {
             if (checked_status){
-                $(this).prop("checked", true);
-                $(this).parent().parent().css({"background-color": "rgba(131, 219, 83, 0.5)"});
+            	//console.log($(this).is(':disabled'));
+				if (!$(this).is(':disabled')) {
+                    $(this).prop("checked", true);
+                    $(this).parent().parent().css({"background-color": "rgba(131, 219, 83, 0.5)"});
+                }
             }else{
+                //console.log($(this).is(':disabled'));
                 $(this).prop("checked", false);
                 $(this).parent().parent().css({"background-color": "rgb(255, 255, 255);"});
             }
@@ -7038,7 +7042,7 @@
         var comment = $("#comment").val();
         //console.log(comment);
 
-		//Ссумма, к вычету из ЗП
+		//Сумма, к вычету из ЗП
         var salaryDeductionSumm = Number($("#salaryDeductionSumm").html());
         //console.log(salaryDeductionSumm);
 
@@ -7067,7 +7071,7 @@
 
                          $('#overlay').show();
 
-                         var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_refund_add(' + refundSumm + ', ' + payedSumm + ', ' + comment + ', ' + salaryDeductionCheck + ', ' + tabel + ', ' + salaryDeductionSumm + ')">';
+                         var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_refund_add(' + refundSumm + ', ' + payedSumm + ', \'' + comment + '\', ' + salaryDeductionCheck + ', ' + tabel + ', ' + salaryDeductionSumm + ')">';
 
                          // Создаем меню:
                          var menu = $('<div/>', {
@@ -7754,6 +7758,82 @@
 			}
 		});
 	}
+
+    //Добавляем/редактируем в базу возврат средств на счет
+    function Ajax_refund_add(refundSumm, payedSumm, comment, salaryDeductionCheck, tabel, salaryDeductionSumm){
+		//Сумма к возврату на счет
+        //console.log(refundSumm);
+        //Сумма на которую оплатили наряд
+        //console.log(payedSumm);
+        //Комментарий
+        //console.log(comment);
+        //Отметка, будет ли вычет из ЗП
+        //console.log(salaryDeductionCheck);
+		//ID табеля
+        //console.log(tabel);
+        //Сумма, к вычету из ЗП
+        //console.log(salaryDeductionSumm);
+
+		//Соберём все отмеченные позиции, за которые вернули деньги
+		var checkedItems = {};
+
+        $(".position_check").each(function(){
+
+            var checked_status = $(this).is(":checked");
+
+            if (checked_status){
+                var salaryDeductionItemSumm = Number($(this).parent().parent().find(".salaryDeductionItemPriceItog").html());
+                //console.log(salaryDeductionItemSumm);
+
+                //checkedItems.push($(this).attr("item_id"));
+                checkedItems[$(this).attr("item_id")] = salaryDeductionItemSumm;
+            }
+        });
+        //console.log(checkedItems);
+
+        var link = "fl_refund_add_f.php";
+
+        var reqData = {
+            invoice_id: $("#invoice_id").val(),
+            zapis_id: $("#zapis_id").val(),
+            client_id: $("#client_id").val(),
+			worker_id: $("#worker_id").val(),
+            refundSumm: refundSumm,
+			payedSumm: payedSumm,
+			comment: comment,
+			salaryDeductionCheck: salaryDeductionCheck,
+			tabel_id: tabel,
+			salaryDeductionSumm: salaryDeductionSumm,
+            checkedItems: checkedItems
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                console.log(res);
+                // $('#errror').html(res);
+
+                $('.center_block').remove();
+                $('#overlay').hide();
+
+                if(res.result == "success"){
+                    $('#data').html(res.data);
+                }else{
+                    $('#errror').html(res.data);
+                }
+            }
+        });
+    }
 
 	//Продаём сертификат по базе
 	function Ajax_cert_cell(id, cell_price, office_id){
