@@ -7827,7 +7827,13 @@
                 $('#overlay').hide();
 
                 if(res.result == "success"){
-                    $('#data').html(res.data);
+                    $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+                        '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Возврат средств на счёт выполнен</li>'+
+                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+                        '<a href="finance_account.php?client_id='+client+'" class="b">Управление счётом</a>'+
+                        '</li>'+
+                        '</ul>');
                 }else{
                     $('#errror').html(res.data);
                 }
