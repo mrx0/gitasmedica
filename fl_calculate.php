@@ -647,6 +647,8 @@
                                         } else {
                                             if ($sheduler_zapis[0]['type'] != 5) {
                                                 echo $ind + 1;
+                                            }else{
+                                                echo $ind;
                                             }
                                         }
                                         echo '
