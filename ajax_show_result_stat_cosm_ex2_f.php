@@ -48,7 +48,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         }
 
         if ($workerExist){
-//				$query .= "SELECT * FROM `journal_cosmet1` WHERE `status` <> '9'";
+//				$query .= "SELECT * FROM `journal_cosmet1` WHERE `status` <> '9'"; 
 //				$query4Effect .= "SELECT `client` FROM `journal_cosmet1` WHERE `status` <> '9'";
 //				$query4Effect2 .= "SELECT `id` FROM `journal_cosmet1` WHERE `status` <> '9'";
             $query .= "SELECT * FROM `journal_cosmet1`";
