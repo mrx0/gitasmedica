@@ -59,11 +59,11 @@
     }
 
     //Обновим баланс контрагента
-    function updateBalance ($id, $client_id, $Summ, $debited, $withdraw){
+    function updateBalance ($id, $client_id, $Summ, $debited, $refund, $withdraw){
 
         $msql_cnnct = ConnectToDB2 ();
 
-        $query = "UPDATE `journal_balance` SET `summ`='$Summ', `debited`='$debited', `withdraw`='$withdraw'  WHERE `id`='$id'";
+        $query = "UPDATE `journal_balance` SET `summ`='$Summ', `debited`='$debited', `refund`='$refund' , `withdraw`='$withdraw'  WHERE `id`='$id'";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -180,13 +180,15 @@
         if (!empty($clientBalance)){
             $rezult['summ'] = $Summ;
             $rezult['debited'] = calculatePayment($client_id);
+            $rezult['refund'] = calculateRefund($client_id);
             $rezult['withdraw'] = calculateWithdraw($client_id);
 
             //Обновим баланс контрагента
-            updateBalance ($clientBalance[0]['id'], $client_id, $Summ, $rezult['debited'], $rezult['withdraw']);
+            updateBalance ($clientBalance[0]['id'], $client_id, $Summ, $rezult['debited'], $rezult['refund'], $rezult['withdraw']);
         }else {
             $rezult['summ'] = $Summ;
             $rezult['debited'] = 0;
+            $rezult['refund'] = 0;
             $rezult['withdraw'] = 0;
         }
 
@@ -196,6 +198,51 @@
     }
 	
     //считаем по возвратам, сколько вернули
+    function calculateRefund ($client_id){
+
+        $rezult = array();
+
+        $msql_cnnct = ConnectToDB2 ();
+
+        $clientRefunds = array();
+        $arr = array();
+
+        //Соберем все возвраты
+        $query = "SELECT * FROM `fl_journal_refund` WHERE `client_id`='$client_id'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                array_push($clientRefunds, $arr);
+            }
+        }else{
+            $clientRefunds = 0;
+        }
+        //return ($clientWithdraws);
+
+        //Переменная для суммы
+        $Summ = 0;
+
+        //Если были там какие-то оплаты
+        if ($clientRefunds != 0) {
+            //Посчитаем сумму
+            foreach ($clientRefunds as $refunds) {
+                //if ($withdraw['type'] != 1) {
+                    $Summ += $refunds['summ'];
+                //}
+            }
+        }
+
+        //$rezult['summ'] = $Summ;
+        //return (json_encode($rezult, true));
+
+        return ($Summ);
+    }
+
+    //считаем по выдачам, сколько выдали
     function calculateWithdraw ($client_id){
 
         $rezult = array();

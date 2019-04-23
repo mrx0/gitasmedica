@@ -111,7 +111,7 @@
                                             Доступный остаток средств:
                                         </li>
                                         <li class="calculateOrder" style="font-size: 110%; font-weight: bold;">
-                                            <div class="availableBalance" id="availableBalance"  draggable="true" ondragstart="return dragStart(event)" style="display: inline;">'.($client_balance['summ'] - $client_balance['debited'] - $client_balance['withdraw']).'</div><div style="display: inline;"> руб.</div>
+                                            <div class="availableBalance" id="availableBalance"  draggable="true" ondragstart="return dragStart(event)" style="display: inline;">'.($client_balance['summ'] - $client_balance['debited'] - $client_balance['withdraw'] + $client_balance['refund']).'</div><div style="display: inline;"> руб.</div>
                                         </li>
                                     </ul>
                         

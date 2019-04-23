@@ -43,7 +43,7 @@
 						if (($finances['close'] == 1) || $god_mode){
                             if ($refund_j[0]['status'] != 9){
                                 echo '
-                                        <a href="refund_del.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+                                        <a href="withdraw_del.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
                             }
                         }
 					

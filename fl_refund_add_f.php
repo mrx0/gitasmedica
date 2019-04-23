@@ -65,6 +65,9 @@
                         }else{
                             $tabelError = TRUE;
                         }
+                    }else{
+                        //Если не надо удерживать из ЗП, то огбнулим эту сумму
+                        $_POST['salaryDeductionSumm'] = 0;
                     }
 
                     //Переходим к созданию непосредственно возврата средств
@@ -91,7 +94,11 @@
 
                         }
 
-                        echo json_encode(array('result' => 'success', 'data' => 'Ok'));
+                        //!!! @@@ Пересчет баланса
+                        //include_once 'ffun.php';
+                        calculateBalance($_POST['client_id']);
+
+                        echo json_encode(array('result' => 'success', 'data' => calculateBalance($_POST['client_id'])));
 
                     }else{
                         echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка #44. Указанного табеля нет или он закрыт</div>'));

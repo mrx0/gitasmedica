@@ -3229,11 +3229,13 @@
 
                 //Сумма рассчетных листов
 				$calcSumm = 0;
+				$refundSumm = 0;
 
                 //Маркеры для статусов
                 $paid_debt = false;
                 $status_debt = false;
                 $calculate_debt = false;
+                $refund_exist = false;
 
                 //Не оплачен
                 if ($items['summ'] == $items['paid']) {
@@ -3270,6 +3272,23 @@
                     $calculate_debt = true;
 				}
 
+				//Возвраты
+                $query = "SELECT SUM(`summ`) AS `summRefund` FROM `fl_journal_refund` WHERE `invoice_id`='{$items['id']}'";
+                //var_dump($query);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0) {
+                    $arr = mysqli_fetch_assoc($res);
+                    if ($arr['summRefund'] != NULL) {
+                        $refundSumm = round($arr['summRefund'], 2);
+                        $refund_exist = true;
+                        //var_dump($arr);
+                    }
+                }
+
 				//Если "нулевой наряд", то будем считать, что РЛ ему не нужен и статус закрыт у него автоматически должен быть
 				if (($items['summ'] == $items['paid']) && ($items['summ'] == 0) && ($items['paid'] == 0) && ($items['summins'] == 0)){
                     //var_dump($items['summ']);
@@ -3289,10 +3308,10 @@
                 }
                 if (!$calculate_debt) {
                     if ($calcSumm == $items['summ']){
-                        $calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: darkgreen; font-size: 100%;" title="РЛ сделан '.$calcSumm.' < '.$items['summ'].'"></i>';
+                        $calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: darkgreen; font-size: 100%;" title="РЛ сделан"></i>';
                     }
                     if ($calcSumm < $items['summ']){
-                        $calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: rgba(255, 152, 0, 1); font-size: 110%;" title="Не вся сумма распределена по РЛ '.$calcSumm.' < '.$items['summ'].'"></i>';
+                        $calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: rgba(255, 152, 0, 1); font-size: 110%;" title="Не вся сумма распределена по РЛ"></i>';
                     }
                 }
 
@@ -3412,6 +3431,14 @@
 														</div>';
                         }
 
+                        if ($refund_exist){
+                            $itemTemp_str .= '
+														<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+															Возврат:<br>
+															<span class="calculateInvoice" style="font-size: 13px">' . $refundSumm . '</span> руб.
+														</div>';
+						}
+
                         $itemTemp_str .= '
 													</div>
 												</li>';
@@ -3423,6 +3450,12 @@
                         }
                     }
 
+                    if ($refund_exist){
+                    	$colorItem = 'background-color: rgba(255, 121, 121, 0.81);';
+					}else{
+                        $colorItem = 'background-color: #FFF;';
+					}
+
                     if ($minimal) {
 
                         $rezult_count++;
@@ -3432,7 +3465,7 @@
 															<a href="invoice.php?id=' . $items['id'] . '" class="ahref">
 																<div>
 																	<div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
-																		<i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+																		<i class="fa fa-file-o" aria-hidden="true" style="'.$colorItem.' text-shadow: none;"></i>
 																	</div>
 																	<div style="display: inline-block; vertical-align: middle;">
 																		<i>#' . $items['id'] . '</i> <span style="font-size: 80%;"><!--от ' . date('d.m.y', strtotime($items['create_time'])) . '--></span>
@@ -3454,6 +3487,15 @@
 																		Страховка:<br>
 																		<span class="calculateInsInvoice" style="font-size: 11px">' . $items['summins'] . '</span> руб.
 																	</div>';
+                        }
+
+
+                        if ($refund_exist) {
+                            $rezult .= '
+														<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+															Возврат:<br>
+															<span class="calculateInvoice" style="font-size: 13px">' . $refundSumm . '</span> руб.
+														</div>';
                         }
                         $rezult .= '
 																</div>
@@ -3724,7 +3766,7 @@
 
         }else{
             if ($show_absent) {
-                $rezult .= '<i style="font-size: 80%; color: #7D7D7D; margin-bottom: 5px; color: red;">Не было возвратов</i>';
+                $rezult .= '<i style="font-size: 80%; color: #7D7D7D; margin-bottom: 5px; color: red;">Не было выдач</i>';
             }
 
             return array('data' => $rezult, 'count' => 1);

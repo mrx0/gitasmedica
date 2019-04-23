@@ -273,7 +273,7 @@
                                                     <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
                                                         Доступный остаток средств:
                                                     </li>';
-                            if (($client_balance['summ'] <= 0) || ($client_balance['summ'] - $client_balance['debited'] <= 0)){
+                            if (($client_balance['summ'] <= 0) || ($client_balance['summ'] - $client_balance['debited'] - $client_balance['withdraw'] + $client_balance['refund'] <= 0)){
                                 $have_no_money_style = 'display: none;';
 
                                 echo '
@@ -293,7 +293,7 @@
 
                                 echo '
                                                     <li class="calculateOrder" style="font-size: 110%; font-weight: bold;">
-                                                        <div class="availableBalance" id="addSummInPayment" style="display: inline; cursor:pointer;">' . ($client_balance['summ'] - $client_balance['debited']) . '</div><div style="display: inline;"> руб.</div>
+                                                        <div class="availableBalance" id="addSummInPayment" style="display: inline; cursor:pointer;">' . ($client_balance['summ'] - $client_balance['debited'] - $client_balance['withdraw'] + $client_balance['refund']) . '</div><div style="display: inline;"> руб.</div>
                                                     </li>';
                                 //Календарик
                                 echo '

@@ -1129,6 +1129,29 @@
         }
 	};
 
+    //Удаление выдачи
+    function Ajax_del_withdraw(id, client_id) {
+
+        ajax({
+            url:"withdraw_del_f.php",
+            statbox:"errrror",
+            method:"POST",
+            data:
+                {
+                    id: id,
+                    client_id: client_id
+                },
+            success:function(data){
+                $("#errrror").html(data);
+                /*setTimeout(function () {
+                    window.location.replace('order.php?id='+id);
+                    //console.log('client.php?id='+id);
+                }, 4000);*/
+            }
+        })
+    };
+
+
 	function Ajax_reopen_client(session_id, id) {
 
 		ajax({
@@ -5403,6 +5426,7 @@
 
 	//Функция заполняет результат счета из сессии
 	function fillInvoiseRez(changeItogPrice){
+        //console.log('Ok');
 
 		var invoice_type =  $("#invoice_type").val();
 		//console.log(invoice_type);
@@ -6572,7 +6596,7 @@
 
 	//Добавить позицию из прайса в счет
 	function checkPriceItem(price_id, type){
-		//console.log(100);
+		//console.log('Ok');
 
 		var link = "add_price_id_stom_in_invoice_f.php";
 
@@ -7831,7 +7855,7 @@
                         '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Возврат средств на счёт выполнен</li>'+
                         '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
                         '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-                        '<a href="finance_account.php?client_id='+client+'" class="b">Управление счётом</a>'+
+                        '<a href="finance_account.php?client_id='+$("#client_id").val()+'" class="b">Управление счётом</a>'+
                         '</li>'+
                         '</ul>');
                 }else{

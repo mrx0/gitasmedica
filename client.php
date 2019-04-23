@@ -436,7 +436,7 @@ ORDER BY `name`;
 
 
                             //Если доступный остаток ОТРИЦАТЕЛЕН
-                            $dostOstatok = $client_balance['summ'] - $client_balance['debited'];
+                            $dostOstatok = $client_balance['summ'] - $client_balance['debited'] - $client_balance['withdraw'] + $client_balance['refund'];
 
                             //var_dump(json_decode($client_balance, true));
                             echo '
