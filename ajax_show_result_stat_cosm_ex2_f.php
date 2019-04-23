@@ -10,6 +10,8 @@
 	}else{
 		//var_dump ($_POST);
 		if ($_POST){
+            include_once 'DBWork.php';
+
 			$workerExist = false;
 			$queryDopExist = false;
 			$queryDopExExist = false;
@@ -32,7 +34,6 @@
 			$journal_count_clients_effect = 0;
 			
 			if ($_POST['worker'] != ''){
-				include_once 'DBWork.php';
 				$workerSearch = SelDataFromDB ('spr_workers', $_POST['worker'], 'worker_full_name');
 				
 				if ($workerSearch == 0){
@@ -47,9 +48,12 @@
 			}	
 			
 			if ($workerExist){
-				$query .= "SELECT * FROM `journal_cosmet1` WHERE `status` <> '9'";
-				$query4Effect .= "SELECT `client` FROM `journal_cosmet1` WHERE `status` <> '9'";
-				$query4Effect2 .= "SELECT `id` FROM `journal_cosmet1` WHERE `status` <> '9'";
+//				$query .= "SELECT * FROM `journal_cosmet1` WHERE `status` <> '9'";
+//				$query4Effect .= "SELECT `client` FROM `journal_cosmet1` WHERE `status` <> '9'";
+//				$query4Effect2 .= "SELECT `id` FROM `journal_cosmet1` WHERE `status` <> '9'";
+                $query .= "SELECT * FROM `journal_cosmet1`";
+                $query4Effect .= "SELECT `client` FROM `journal_cosmet1`";
+                $query4Effect2 .= "SELECT `id` FROM `journal_cosmet1`";
 
                 $msql_cnnct = ConnectToDB();
 
@@ -225,7 +229,7 @@
 						$query4Effect2 .= "`client` IN (".$queryDopClient.")";
 					}
 					
-					$query = $query." ORDER BY `create_time`, `client`";
+					$query = $query."AND `status` <> '9' ORDER BY `create_time`, `client`";
 					//$query4Effect = $query4Effect." ORDER BY `create_time`, `client`";
 					//$query4Effect2 = $query4Effect2." ORDER BY `create_time`, `client`";
 					//var_dump($query);
