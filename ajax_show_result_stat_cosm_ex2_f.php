@@ -229,7 +229,7 @@
 						$query4Effect2 .= "`client` IN (".$queryDopClient.")";
 					}
 					
-					$query = $query."AND `status` <> '9' ORDER BY `create_time`, `client`";
+                $query = $query." AND `status` <> '9' ORDER BY `create_time`, `client`";
 					//$query4Effect = $query4Effect." ORDER BY `create_time`, `client`";
 					//$query4Effect2 = $query4Effect2." ORDER BY `create_time`, `client`";
 					//var_dump($query);
