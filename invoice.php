@@ -940,7 +940,6 @@
                                     array_push($fl_calculate_j, $arr);
                                 }
                             }else{
-
                             }
 
 
