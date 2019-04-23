@@ -645,7 +645,11 @@
                                         if ($ind == 99) {
                                             echo 'П';
                                         } else {
-                                            echo $ind+1;
+                                            if ($sheduler_zapis[0]['type'] != 5) {
+                                                echo $ind + 1;
+                                            }else{
+                                                echo $ind;
+                                            }
                                         }
                                         echo '
                                                 </div>';
