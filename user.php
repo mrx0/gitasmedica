@@ -82,7 +82,7 @@
                             <div class="cellLeft">Специализация</div>
                             <div class="cellRight">';
 
-            if ($specializations != 0){
+            if (!empty($specializations)){
                 //var_dump($specializations_j);
                 foreach ($specializations as $data){
                     $specializations_str_rez .= '<span class="tag">'.$data['name'].'</span>';

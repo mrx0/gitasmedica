@@ -300,7 +300,7 @@
 									   
 									<div class="cellFullName"  style="text-align: right; '.$bgColor.'">';
 
-                            if ($specializations != 0){
+                            if (!empty($specializations)){
                                 //var_dump($specializations_j);
                                 foreach ($specializations as $data){
                                     $specializations_str_rez .= ''.$data['name'].' ';

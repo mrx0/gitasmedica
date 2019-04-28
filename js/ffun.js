@@ -4565,6 +4565,26 @@
         })
     }
 
+    //Рассчет зп для fl_tabels3.php
+    function fl_calculateZP2 (month, year, typeW){
+        // console.log(month);
+        // console.log(year);
+        // console.log(typeW);
+
+        $(".itogZP").each(function(){
+
+            //var worker_id = $(this).attr("w_id");
+
+            var oklad = Number($(this).attr("oklad"));
+            //console.log(oklad);
+
+            var itogZP = oklad;
+            //console.log(itogZP);
+
+            $(this).html(number_format(itogZP, 0, '.', ''));
+        })
+    }
+
 
     //Получение табелей за этот месяц
     function fl_getAllTabels (month, year, typeW){

@@ -136,11 +136,15 @@
         $arr = array();
         $specializations_j = array();
 
-        $query = "SELECT ss.name, ss.id
-        FROM `journal_work_spec` jws 
-        INNER JOIN `spr_specialization` ss ON ss.id = jws.specialization_id 
-        WHERE `worker_id` = '$worker_id'";
-
+        if ($worker_id != 0) {
+            $query = "SELECT ss.name, ss.id
+        	FROM `journal_work_spec` jws 
+        	INNER JOIN `spr_specialization` ss ON ss.id = jws.specialization_id 
+        	WHERE `worker_id` = '$worker_id'";
+        }else{
+        	$query = "SELECT `name`, `id` FROM `spr_specialization`";
+		}
+		
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
         $number = mysqli_num_rows($res);
         //var_dump($res);
@@ -148,10 +152,13 @@
         if ($number != 0){
             //var_dump(mysqli_fetch_assoc($res));
             while ($arr = mysqli_fetch_assoc($res)){
-                array_push($specializations_j, $arr);
+                if ($worker_id != 0) {
+                    array_push($specializations_j, $arr);
+                }else{
+                    $specializations_j[$arr['id']] = $arr['name'];
+				}
             }
-        }else
-            $specializations_j = 0;
+        }
 
         return $specializations_j;
 	}
