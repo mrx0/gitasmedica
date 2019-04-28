@@ -2373,7 +2373,7 @@ ul.ul-drop div.drop {
 .tag {
 	color: #000000;
 	background: rgba(30, 115, 190, 0.14);
-	font-size: 13px !important;
+	font-size: 13px /*!important*/;
 	/*font-weight: bold;*/
 	display: inline-block;
 	padding: 2px 10px;

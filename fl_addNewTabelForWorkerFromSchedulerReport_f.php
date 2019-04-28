@@ -22,7 +22,7 @@
             ) {
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
             } else {
-                if (($_POST['filial_id'] != 0) && ($_POST['w_hours'] != 0)) {
+                if ((($_POST['filial_id'] != 0) && ($_POST['w_hours'] != 0)) || ($_POST['type'] == 11)) {
                     //Смотрим, нет ли у этого сотрудника уже табеля за этот месяц
                     $msql_cnnct = ConnectToDB();
 
@@ -59,6 +59,8 @@
                     } else {
                         echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Табель сотрудника за этот месяц уже создан.</div>'));
                     }
+                }else{
+                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
                 }
             }
         }

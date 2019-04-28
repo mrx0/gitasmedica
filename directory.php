@@ -23,7 +23,7 @@
             echo '<a href="laboratories.php" class="b3" title="Лаборатории">Лаборатории</a>';
 
             if (($finances['see_all'] == 1) || $god_mode) {
-                //echo '<a href="fl_salaries.php" class="b3" title="Оклады сотрудников">Оклады сотрудников</a>';
+                echo '<a href="fl_salaries.php" class="b3" title="Оклады сотрудников">Оклады сотрудников</a>';
 
                 echo '<a href="fl_salaries_category.php" class="b3" title="Оклады по должностям">Оклады по должностям</a>';
 

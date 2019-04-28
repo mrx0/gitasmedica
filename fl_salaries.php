@@ -18,11 +18,11 @@
 
             require 'variables.php';
 
-            $who = '&who=5';
-            $whose = 'Стоматологов ';
-            $selected_stom = ' selected';
+            $who = '&who=10';
+            $whose = 'Специалисты ';
+            $selected_stom = ' ';
             $selected_cosm = ' ';
-            $datatable = 'scheduler_stom';
+            $datatable = 'scheduler_somat';
 
             //тип (космет/стомат/...)
             if (isset($_GET['who'])){
@@ -134,17 +134,17 @@
                     $other_color = '';
                 }
             }else{
-                $who = '&who=5';
-                $whose = 'Стоматологи ';
-                $selected_stom = ' selected';
+                $who = '&who=10';
+                $whose = 'Специалисты ';
+                $selected_stom = ' ';
                 $selected_cosm = ' ';
-                $datatable = 'scheduler_stom';
-                $kabsForDoctor = 'stom';
-                $type = 5;
+                $datatable = 'scheduler_somat';
+                $kabsForDoctor = 'somat';
+                $type = 10;
 
-                $stom_color = 'background-color: #fff261;';
+                $stom_color = '';
                 $cosm_color = '';
-                $somat_color = '';
+                $somat_color = 'background-color: #fff261;';
                 $admin_color = '';
                 $assist_color = '';
                 $other_color = '';
@@ -171,6 +171,10 @@
                 }
                 $workers_j = $rez;
             }
+
+            //Специализации
+            //$specializations_j = workerSpecialization(0);
+            //var_dump($specializations_j);
 
             /*//Оклады
             $arr = array();
@@ -213,11 +217,11 @@
             echo '		
                             <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
                             <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-                                <a href="?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
-                                <a href="?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>
+                                <!--<a href="?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>-->
+                                <!--<a href="?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>-->
                                 <a href="?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
-                                <a href="?who=4" class="b" style="'.$admin_color.'">Администраторы</a>
-                                <a href="?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
+                                <!--<a href="?who=4" class="b" style="'.$admin_color.'">Администраторы</a>-->
+                                <!--<a href="?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>-->
                                 <a href="?who=11" class="b" style="'.$other_color.'">Прочие</a>
                             </li>';
 
@@ -247,10 +251,25 @@
                                 </li>';
 
                 foreach ($workers_j as $worker){
+                    //var_dump($worker);
+
+                    //Специализации
+                    $specializations = workerSpecialization($worker['id']);
+
                     echo '
                                 <li class="cellsBlock2 cellsBlockHover" style="font-weight: normal; font-size: 11px; margin-bottom: -1px;">
                                     <a href="user.php?id='.$worker['id'].'" class="cellFullName ahref 4filter" id="4filter" style="text-align: left;">
-                                        '.$worker['full_name'].'
+                                        '.$worker['full_name'];
+
+                    //var_dump($specializations);
+
+                    if (!empty($specializations)){
+                        foreach ($specializations as $specialization_item){
+                            echo ' <span class="tag" style="float: right; font-size: 90%;">'.$specialization_item['name'].'</span>';
+                        }
+                    }
+
+                    echo '
                                     </a>';
 
                     //Оклад этого сотрудника, который действует сейчас

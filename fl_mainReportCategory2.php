@@ -20,7 +20,7 @@
 			if ($_POST){
 			}else{
 				echo '
-                    <div class="no_print"> 
+                    <div`> 
 					<header style="margin-bottom: 5px;">
 						<h1>Отчёт по категориям</h1>
 					</header>
