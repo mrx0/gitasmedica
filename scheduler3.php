@@ -453,7 +453,7 @@
 					<div id="data" style="margin-top: 5px;">
 					    <input type="hidden" id="type" value="'.$type.'">
 						<ul style="margin-left: 6px; margin-bottom: 20px;">';
-			if (($scheduler['edit'] == 1) || $god_mode){
+			if (($scheduler['edit'] == 1) || ($scheduler['add_worker'] == 1) || $god_mode){
 				echo '
 							<div class="no_print"> 
 							<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
@@ -717,11 +717,30 @@
                             }
                         }
 
-                        echo '
-                            <td selectedDate="'.$selectedDate.'" class="hoverDate'.$i.' schedulerItem" style="width: 20px; '.$BgColor.' '.$Shtrih.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.'); '.$invoiceFreeAddStr.'" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\''.$ii.'.'.$month.'.'.$year.'\', 0, event, \'showCurDate\');*/ $(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');" title="'.$title.'">
-                                <div id="" class="dayHours_'.$worker_data['id'].'">'.$hours.'</div>
-                                <!--<div style="display: none;"><i style="'.$currentDayColor.'">'.$i.'</i></div>-->
+                        if (($scheduler['edit'] == 1) || $god_mode) {
+                            echo '
+                            <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, ' . $worker_data['id'] . ', ' . $_GET['filial'] . ', ' . $i . ', ' . $month . ', ' . $year . ', ' . $weekday_temp . '); ' . $invoiceFreeAddStr . '" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
+                                <div id="" class="dayHours_' . $worker_data['id'] . '">' . $hours . '</div>
                             </td>';
+                        }elseif ($scheduler['add_worker'] == 1){
+                            if (($i == $day) && ($cur_month == $month) && ($cur_year == $year)) {
+                                echo '
+                                <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, ' . $worker_data['id'] . ', ' . $_GET['filial'] . ', ' . $i . ', ' . $month . ', ' . $year . ', ' . $weekday_temp . '); ' . $invoiceFreeAddStr . '" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
+                                    <div id="" class="dayHours_' . $worker_data['id'] . '">' . $hours . '</div>
+                                </td>';
+                            }else{
+                                echo '
+                                <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
+                                    <div id="" class="dayHours_' . $worker_data['id'] . '">' . $hours . '</div>
+                                </td>';
+                            }
+                        }else{
+                            echo '
+                            <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
+                                <div id="" class="dayHours_' . $worker_data['id'] . '">' . $hours . '</div>
+                            </td>';
+                        }
+
 
                         //Если счетчик дней недели зашел за 7, возвращаем на понедельник
                         $weekday_temp++;
@@ -892,11 +911,36 @@
                             }
                         }
 
-                        echo '
-                            <td selectedDate="'.$selectedDate.'" worker_id='.$worker_data['id'].' day='.$i.' class="hoverDate'.$i.' schedulerItem" style="width: 20px; '.$BgColor.' '.$Shtrih.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.'); '.$invoiceFreeAddStr.'" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\''.$ii.'.'.$month.'.'.$year.'\', 0, event, \'showCurDate\'); *//*$(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');*/" onmouseout="/*SetVisible(this,false);*/ /*$(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');*/" title="'.$title.'">
-                                <div id="" class="dayHours_'.$worker_data['id'].'">'.$hours.'</div>
-                                <!--<div style="display: none;"><i style="'.$currentDayColor.'">'.$i.'</i></div>-->
+//                        echo '
+//                            <td selectedDate="'.$selectedDate.'" worker_id='.$worker_data['id'].' day='.$i.' class="hoverDate'.$i.' schedulerItem" style="width: 20px; '.$BgColor.' '.$Shtrih.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.'); '.$invoiceFreeAddStr.'" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\''.$ii.'.'.$month.'.'.$year.'\', 0, event, \'showCurDate\'); *//*$(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');*/" onmouseout="/*SetVisible(this,false);*/ /*$(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');*/" title="'.$title.'">
+//                                <div id="" class="dayHours_'.$worker_data['id'].'">'.$hours.'</div>
+//                                <!--<div style="display: none;"><i style="'.$currentDayColor.'">'.$i.'</i></div>-->
+//                            </td>';
+
+                        if (($scheduler['edit'] == 1) || $god_mode) {
+                            echo '
+                            <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, ' . $worker_data['id'] . ', ' . $_GET['filial'] . ', ' . $i . ', ' . $month . ', ' . $year . ', ' . $weekday_temp . '); ' . $invoiceFreeAddStr . '" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
+                                <div id="" class="dayHours_' . $worker_data['id'] . '">' . $hours . '</div>
                             </td>';
+                        }elseif ($scheduler['add_worker'] == 1){
+                            if (($i == $day) && ($cur_month == $month) && ($cur_year == $year)) {
+                                echo '
+                                <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, ' . $worker_data['id'] . ', ' . $_GET['filial'] . ', ' . $i . ', ' . $month . ', ' . $year . ', ' . $weekday_temp . '); ' . $invoiceFreeAddStr . '" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
+                                    <div id="" class="dayHours_' . $worker_data['id'] . '">' . $hours . '</div>
+                                </td>';
+                            }else{
+                                echo '
+                                <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
+                                    <div id="" class="dayHours_' . $worker_data['id'] . '">' . $hours . '</div>
+                                </td>';
+                            }
+                        }else{
+                            echo '
+                            <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
+                                <div id="" class="dayHours_' . $worker_data['id'] . '">' . $hours . '</div>
+                            </td>';
+                        }
+
 
                         //Если счетчик дней недели зашел за 7, возвращаем на понедельник
                         $weekday_temp++;
@@ -916,7 +960,7 @@
 						</div>
 					</div>';
 
-			if (($scheduler['edit'] == 1) || $god_mode) {
+			if (($scheduler['edit'] == 1) || ($scheduler['add_worker'] == 1) ||  $god_mode) {
                 echo '
 					<div id="ShowSettingsSchedulerFakt" style="position: fixed; z-index: 105; right: 100px; top: 70px; background: rgb(224, 226, 226) none repeat scroll 0% 0%; display: none; padding: 10px; border: 1px rgba(146, 128, 128, 0.16) solid;">
 					    <ul>
