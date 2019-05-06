@@ -1746,6 +1746,8 @@
 
         $time = date('Y-m-d H:i:s', time());
 
+        $mysql_insert_id = 0;
+
         //$discount = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['discount'];
 
         //Добавляем в базу

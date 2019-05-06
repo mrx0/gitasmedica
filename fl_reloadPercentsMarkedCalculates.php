@@ -156,36 +156,38 @@
                                             $data = $calculate_ex_j;
 
                                             //Отправляем на перерасчет, заодно там создасться новый РЛ с этими данными
-                                            $calculateSaveResult = calculateCalculateSave($data, $zapis_id, $invoice_id, $filial_id, $client_id, $worker_id, $invoice_type, $summ, $discount, $_SESSION['id']);
+                                            $calculateSaveResult = calculateCalculateSave($data, $zapis_id, $invoice_id, $filial_id, $client_id, $worker_id, $invoice_type, $calculate_j[0]['type'], $summ, $discount, $_SESSION['id']);
                                             //ID нового РЛ
                                             $newCalcID = $calculateSaveResult['data'];
 
-                                            //Удаляем старый РЛ
-                                            //Удаляем из БД
-                                            $query = "DELETE FROM `fl_journal_calculate` WHERE `id`='{$calc_id}'";
-                                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                                            if ($newCalcID > 0) {
 
-                                            $query = "DELETE FROM `fl_journal_calculate_ex` WHERE `calculate_id`='{$calc_id}'";
-                                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                                                //Удаляем старый РЛ
+                                                //Удаляем из БД
+                                                $query = "DELETE FROM `fl_journal_calculate` WHERE `id`='{$calc_id}'";
+                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-                                            //А если у нас вдруг сюда был передан tabel_id
-                                            //То мы предполагаем, что РЛ были в каком-то табеле
-                                            //И надо 1. удалить привязку 2. добавить новые РЛ туда же 3. Пересчитать табель с этим ID
-                                            if ($tabel_id > 0){
+                                                $query = "DELETE FROM `fl_journal_calculate_ex` WHERE `calculate_id`='{$calc_id}'";
+                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-                                                //1. Удаляем привязку
-                                                $query = "DELETE FROM `fl_journal_tabels_ex` WHERE `tabel_id` = '{$tabel_id}' AND `calculate_id` = '{$calc_id}' ;";
-                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                                //А если у нас вдруг сюда был передан tabel_id
+                                                //То мы предполагаем, что РЛ были в каком-то табеле
+                                                //И надо 1. удалить привязку 2. добавить новые РЛ туда же 3. Пересчитать табель с этим ID
+                                                if ($tabel_id > 0) {
 
-                                                //2. добавить новый РЛ туда же
-                                                $query = "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`) VALUES ('{$tabel_id}', '{$newCalcID}');";
-                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                                    //1. Удаляем привязку
+                                                    $query = "DELETE FROM `fl_journal_tabels_ex` WHERE `tabel_id` = '{$tabel_id}' AND `calculate_id` = '{$calc_id}' ;";
+                                                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-                                                //3. Пересчитать табель с этим ID
-                                                //Это мы вынесем за этот цикл и выполним после всех этих "волшебных преобразований"
+                                                    //2. добавить новый РЛ туда же
+                                                    $query = "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`) VALUES ('{$tabel_id}', '{$newCalcID}');";
+                                                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
+                                                    //3. Пересчитать табель с этим ID
+                                                    //Это мы вынесем за этот цикл и выполним после всех этих "волшебных преобразований"
+
+                                                }
                                             }
-
                                         }
                                     }
                                 }
