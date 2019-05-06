@@ -237,7 +237,8 @@
                         if (($finances['see_all'] != 0) || $god_mode){
                             $rezultWithdraw = showWithdrawDivRezult($refund_j, false, true, true);
                         }else{
-                            $rezultRefunds = showWithdrawDivRezult($refund_j, false, true, false);
+                            //$rezultRefunds = showWithdrawDivRezult($refund_j, false, true, false);
+                            $rezultWithdraw = showWithdrawDivRezult($refund_j, false, true, false);
                         }
                         //$data, $minimal, $show_absent, $show_deleted
 
