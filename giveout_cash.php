@@ -15,7 +15,8 @@
 			include_once 'ffun.php';
             require 'variables.php';
 
-            $have_target_filial = true;
+            $have_target_filial = false;
+            $href_str = '';
 
             $filials_j = getAllFilials(false, false, false);
             //var_dump($filials_j);
@@ -36,15 +37,23 @@
             }
 
             //Филиал
-            if (isset($_GET['filial_id'])) {
-                $filial_id = $_GET['filial_id'];
-            }else{
-                if (isset($_SESSION['filial'])) {
-                    $filial_id = $_SESSION['filial'];
-                }else{
-                    $have_target_filial = false;
-                    $filial_id = 0;
+            if (isset($_SESSION['filial'])) {
+                $filial_id = $_SESSION['filial'];
+                $have_target_filial = true;
+            } else {
+                $filial_id = 0;
+            }
+
+            if (($finances['see_all'] == 1) || $god_mode) {
+                if (isset($_GET['filial_id'])) {
+                    $filial_id = $_GET['filial_id'];
+                    $have_target_filial = true;
                 }
+            }
+
+            if ($have_target_filial) {
+                $href_str = '?filial_id=' . $filial_id . '&d=' . $day . '&m=' . $month . '&y=' . $year;
+                //var_dump($href_str);
             }
 
             echo '
@@ -55,7 +64,7 @@
                         </div>
                         <h2 style="">Расходные ордеры</h2>
                         <div>
-						    <a href="fl_give_out_cash_add.php" class="b4">Добавить расход</a>
+						    <a href="fl_give_out_cash_add.php'.$href_str.'" class="b4">Добавить расход</a>
 						</div>
                     </header>';
 

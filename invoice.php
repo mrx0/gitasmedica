@@ -1052,7 +1052,7 @@
                                             <div class="invoceHeader" style="">
                                                 <ul style="margin-left: 6px; margin-bottom: 10px;">
                                                     <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
-                                                        Возвраты средств по наряду:
+                                                        Возвраты средств на счёт по наряду:
                                                     </li>';
                                 foreach ($fl_refund_j as $refund_item) {
 
