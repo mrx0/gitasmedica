@@ -230,7 +230,7 @@ if ($enter_ok){
                     <div id="status">
                         <header>
                             <div class="nav">
-                                <!--<a href="fl_salaries.php" class="b">Оклады сотрудников</a>-->
+                                <a href="fl_salaries.php" class="b">Оклады сотрудников</a>
                             </div>
                             <h1>Оклады по должностям</h1>
                         </header>';

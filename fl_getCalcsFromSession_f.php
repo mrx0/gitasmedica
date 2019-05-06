@@ -33,7 +33,7 @@
 
                     $summCalcs = 0;
 
-                    $filials_j = getAllFilials(false, false, false);
+                    $filials_j = getAllFilials(false, true, true);
 
                     $result .= '
                     <header style="margin-bottom: 10Px;">';
@@ -157,7 +157,7 @@
                         if ($_POST['newTabel'] != 1) {
 
                             $result .= '
-                                    <div class="tableTabels" style="width: 210px; background-color: rgb(234, 234, 234); text-align: left; height: 280px; overflow-y: scroll;  overflow-x: hidden;">';
+                                    <div class="tableTabels" style="width: 240px; background-color: rgb(234, 234, 234); text-align: left; height: 280px; overflow-y: scroll;  overflow-x: hidden;">';
 
                             //$invoice_rez_str = '';
                             //$summCalc = 0;
@@ -228,7 +228,8 @@
                                             if ($year == date('Y', time())) {
                                                 if (date('n', time()) == $month) {
                                                     //$bgColor = 'background-color: rgba(244, 254, 63, 0.54);';
-                                                    $bgColor = 'background-color: rgb(255, 241, 114);';
+                                                    //$bgColor = 'background-color: rgb(255, 241, 114);';
+                                                    $bgColor = 'box-shadow: 2px 4px 7px rgb(0, 216, 255); border-top: 1px dotted rgb(0, 216, 255);';
                                                 }
                                             }
 
@@ -249,7 +250,7 @@
                                                             <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                         </div>
                                                         <div style="display: inline-block; vertical-align: middle;">
-                                                            Табель #' . $rezData['id'] . '
+                                                            Табель #' . $rezData['id'] . ' <span style="font-size: 80%;">['.$filials_j[$rezData['office_id']]['name2'].']</span>
                                                         </div>
                                                     </div>
                                                     <div>
@@ -261,7 +262,7 @@
                                                 <!--</a>-->
                                             </div>
                            
-                                            <div style="display: inline-block; vertical-align: top; float: right;">
+                                            <div style="position: absolute; top: -4px; right: -4px;">
                                                 <div style="border: none; padding: 3px; margin: 1px;">
                                                     <input type="radio" class="radioBtnCalcs" name="tabelForAdding" value="' . $rezData['id'] . '">
                                                 </div>

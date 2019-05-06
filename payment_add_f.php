@@ -133,7 +133,7 @@
                                                     $client_debt = json_decode(calculateDebt($client_j[0]['id']), true);
 
                                                     //Нет доступных средств на счету
-                                                    if (($client_balance['summ'] <= 0) || ($client_balance['summ'] - $client_balance['debited'] <= 0)) {
+                                                    if (($client_balance['summ'] <= 0) || ($client_balance['summ'] - $client_balance['debited'] - $client_balance['withdraw'] + $client_balance['refund'] <= 0)) {
                                                         echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Нет доступных средств на счету</div>'));
                                                     } else {
 

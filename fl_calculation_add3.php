@@ -28,6 +28,7 @@ if ($enter_ok){
         $temp_arr = array();
 
         //var_dump($_SESSION);
+        //var_dump($_SESSION['calculate_data']['28237']['104737']['data']);
         //unset($_SESSION['invoice_data']);
 
         if ($_GET){
@@ -71,14 +72,16 @@ if ($enter_ok){
                     //if ($client !=0){
                     //if (!empty($sheduler_zapis)){
 
-                        if (!isset($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']])){
+                    //!!! 2019.04.04 патч. Сброс сессии к Расчетному листу, чтобы избавится потом от кнопки сброса изменений
+                        unset($_SESSION['calculate_data']);
+                        //if (!isset($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']])){
                             $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['filial'] = $invoice_j[0]['office_id'];
                             $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['worker'] = $invoice_j[0]['worker_id'];
                             $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['t_number_active'] = 0;
                             $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['discount'] = 0;
                             $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = array();
                             //$_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['mkb'] = array();
-                        }
+                        //}
 
                         //Категории процентов
                         //$percents_j = SelDataFromDB('fl_spr_percents', $sheduler_zapis[0]['type'], 'type');
@@ -600,7 +603,7 @@ if ($enter_ok){
                                                 <div class="cellText2" style="padding: 2px 4px;">
                                                     <div style="vertical-align: middle; font-size: 11px;">
                                                         <div style="text-align: left; float: left;">	
-                                                            <input type="button" class="b" value="Сбросить изменения" onclick="showCalculateAdd(' . $invoice_j[0]['type'] . ', \'reset\')">
+                                                            <!--<input type="button" class="b" value="Сбросить изменения" onclick="showCalculateAdd(' . $invoice_j[0]['type'] . ', \'reset\')">-->
                                                         </div>
                                                         <div style="text-align: right;">';
                             if ($god_mode || ($finances['see_all'] == 1) || (($invoice_j[0]['summ'] == $invoice_j[0]['paid']) && ($invoice_j[0]['status'] == 5))) {

@@ -113,7 +113,7 @@
 
                         $specialization_j = SelDataFromDB('spr_specialization', $user[0]['permissions'], 'permission');
 
-                        if ($specialization_j != 0) {
+                        if (!empty($specializations)){
                             $specializations_temp = array();
 
                             //Преобразуем массив чтоб id стали ключами

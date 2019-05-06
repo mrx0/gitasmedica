@@ -377,9 +377,9 @@
                                 -
                             </div>';
                     echo '
-                            <div class="cellTime cellsTimereport summMinusNal" style="text-align: center; font-weight: normal; '. $today_border .'">
+                            <a href="giveout_cash.php?filial_id='.$filial_id.'&d='.dateTransformation($d).'&m='.dateTransformation($month).'&y='.$year.'" class="ahref cellTime cellsTimereport summMinusNal" style="text-align: center; font-weight: normal; cursor: pointer; '. $today_border .'">
                                 -
-                            </div>';
+                            </a>';
                     echo '
                             <div class="cellText" style="text-align: center; font-weight: normal; '. $today_border .'">
                             </div>';

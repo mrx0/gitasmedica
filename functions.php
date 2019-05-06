@@ -136,11 +136,15 @@
         $arr = array();
         $specializations_j = array();
 
-        $query = "SELECT ss.name, ss.id
-        FROM `journal_work_spec` jws 
-        INNER JOIN `spr_specialization` ss ON ss.id = jws.specialization_id 
-        WHERE `worker_id` = '$worker_id'";
-
+        if ($worker_id != 0) {
+            $query = "SELECT ss.name, ss.id
+        	FROM `journal_work_spec` jws 
+        	INNER JOIN `spr_specialization` ss ON ss.id = jws.specialization_id 
+        	WHERE `worker_id` = '$worker_id'";
+        }else{
+        	$query = "SELECT `name`, `id` FROM `spr_specialization`";
+		}
+		
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
         $number = mysqli_num_rows($res);
         //var_dump($res);
@@ -148,10 +152,13 @@
         if ($number != 0){
             //var_dump(mysqli_fetch_assoc($res));
             while ($arr = mysqli_fetch_assoc($res)){
-                array_push($specializations_j, $arr);
+                if ($worker_id != 0) {
+                    array_push($specializations_j, $arr);
+                }else{
+                    $specializations_j[$arr['id']] = $arr['name'];
+				}
             }
-        }else
-            $specializations_j = 0;
+        }
 
         return $specializations_j;
 	}
@@ -3170,6 +3177,7 @@
 
     //функция формирует и показывает наряды визуализация
     function showInvoiceDivRezult($data, $minimal, $show_categories, $show_absent, $show_deleted, $only_debt){
+    	//var_dump($data);
 
         $rezult = '';
 
@@ -3226,10 +3234,15 @@
                 $status_mark = '<i class="fa fa-ban" aria-hidden="true" style="color: red; font-size: 110%;" title="Работа не закрыта"></i>';
                 $calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: red; font-size: 100%;" title="Нет расчётного листа"></i>';
 
+                //Сумма рассчетных листов
+				$calcSumm = 0;
+				$refundSumm = 0;
+
                 //Маркеры для статусов
                 $paid_debt = false;
                 $status_debt = false;
                 $calculate_debt = false;
+                $refund_exist = false;
 
                 //Не оплачен
                 if ($items['summ'] == $items['paid']) {
@@ -3246,7 +3259,7 @@
 				}
 
                 //Расчетный лист
-                $query = "SELECT * FROM `fl_journal_calculate` WHERE `invoice_id`='{$items['id']}' LIMIT 1";
+                $query = "SELECT SUM(`summ_inv`) AS `summCalcs` FROM `fl_journal_calculate` WHERE `invoice_id`='{$items['id']}'";
                 //var_dump($query);
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -3254,20 +3267,46 @@
                 $number = mysqli_num_rows($res);
 
                 if ($number != 0) {
-                    //
+                    $arr = mysqli_fetch_assoc($res);
+                    if ($arr['summCalcs'] != NULL) {
+                        $calcSumm = round($arr['summCalcs'], 2);
+                        //var_dump($arr);
+                    }else{
+                        $calculate_debt = true;
+					}
                 }else{
+                	//Отсутствуют РЛ
                     $calculate_debt = true;
 				}
 
+				//Возвраты
+                $query = "SELECT SUM(`summ`) AS `summRefund` FROM `fl_journal_refund` WHERE `invoice_id`='{$items['id']}'";
+                //var_dump($query);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0) {
+                    $arr = mysqli_fetch_assoc($res);
+                    if ($arr['summRefund'] != NULL) {
+                        $refundSumm = round($arr['summRefund'], 2);
+                        $refund_exist = true;
+                        //var_dump($arr);
+                    }
+                }
+
 				//Если "нулевой наряд", то будем считать, что РЛ ему не нужен и статус закрыт у него автоматически должен быть
 				if (($items['summ'] == $items['paid']) && ($items['summ'] == 0) && ($items['paid'] == 0) && ($items['summins'] == 0)){
-                    if ($only_debt) {
+                    //var_dump($items['summ']);
+                    //if ($only_debt) {
+                        //var_dump($items['summ']);
                         $status_debt = false;
                         $calculate_debt = false;
-                    }
+                    //}
 				}
 
-
+				//Отметки
                 if (!$paid_debt){
                     $paid_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Оплачено"></i>';
 				}
@@ -3275,13 +3314,17 @@
                     $status_mark = '<i class="fa fa-check-circle-o" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Работа закрыта"></i>';
                 }
                 if (!$calculate_debt) {
-                    $calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: darkgreen; font-size: 100%;" title="РЛ сделан"></i>';
+                    if ($calcSumm >= $items['summ']){
+                        $calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: darkgreen; font-size: 100%;" title="РЛ сделан"></i>';
+                    }
+                    if ($calcSumm < $items['summ']){
+                        $calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: rgba(255, 152, 0, 1); font-size: 110%;" title="Не вся сумма распределена по РЛ"></i>';
+                    }
                 }
-
 
                 $itemPercentCats_str = '';
 
-                if (($only_debt && ($paid_debt || $status_debt || $calculate_debt)) || (!$only_debt)) {
+                if (($only_debt && ($paid_debt || $status_debt || $calculate_debt || ($calcSumm < $items['summ']))) || (!$only_debt)) {
 
                     //Покажем категории работ
                     if ($show_categories) {
@@ -3395,6 +3438,14 @@
 														</div>';
                         }
 
+                        if ($refund_exist){
+                            $itemTemp_str .= '
+														<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+															Возврат:<br>
+															<span class="calculateInvoice" style="font-size: 13px">' . $refundSumm . '</span> руб.
+														</div>';
+						}
+
                         $itemTemp_str .= '
 													</div>
 												</li>';
@@ -3406,6 +3457,12 @@
                         }
                     }
 
+                    if ($refund_exist){
+                    	$colorItem = 'background-color: rgba(255, 121, 121, 0.81);';
+					}else{
+                        $colorItem = 'background-color: #FFF;';
+					}
+
                     if ($minimal) {
 
                         $rezult_count++;
@@ -3415,7 +3472,7 @@
 															<a href="invoice.php?id=' . $items['id'] . '" class="ahref">
 																<div>
 																	<div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
-																		<i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+																		<i class="fa fa-file-o" aria-hidden="true" style="'.$colorItem.' text-shadow: none;"></i>
 																	</div>
 																	<div style="display: inline-block; vertical-align: middle;">
 																		<i>#' . $items['id'] . '</i> <span style="font-size: 80%;"><!--от ' . date('d.m.y', strtotime($items['create_time'])) . '--></span>
@@ -3438,6 +3495,15 @@
 																		<span class="calculateInsInvoice" style="font-size: 11px">' . $items['summins'] . '</span> руб.
 																	</div>';
                         }
+
+
+                        if ($refund_exist) {
+                            $rezult .= '
+														<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+															Возврат:<br>
+															<span class="calculateInvoice" style="font-size: 13px">' . $refundSumm . '</span> руб.
+														</div>';
+                        }
                         $rezult .= '
 																</div>
 		
@@ -3455,7 +3521,7 @@
             if ($show_deleted && !$minimal){
                 //if ((strlen($itemClose_str) > 1) && (($finances['see_all'] != 0) || $god_mode)) {
                     $rezult .= '<div style="background-color: rgba(255, 214, 240, 0.5); padding: 5px; margin-top: 5px;">';
-                    $rezult .= '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Удалённые из программы ордеры</li>';
+                    $rezult .= '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Удалённые из программы наряды</li>';
                     $rezult .= $itemClose_str;
                     $rezult .= '</div>';
                 //}
@@ -3609,9 +3675,109 @@
 
             return array('data' => $rezult, 'count' => 1);
         }
+    }
 
 
+    //функция формирует и показывает возвраты визуализация
+    function showWithdrawDivRezult($data, $minimal, $show_absent, $show_deleted){
 
+        $rezult = '';
+
+        $itemAll_str = '';
+        $itemClose_str = '';
+
+        //Количество
+        $rezult_count = 0;
+
+        if (!empty($data)) {
+
+            include_once 'DBWork.php';
+            include_once 'functions.php';
+
+            require 'variables.php';
+
+            $msql_cnnct = ConnectToDB ();
+
+            $offices_j = getAllFilials(false, false, true);
+            //var_dump($offices_j);
+
+            foreach ($data as $items) {
+                //var_dump($items);
+
+                $order_type_mark = '';
+
+                if ($items['summ_type'] == 1){
+                    $order_type_mark = '<i class="fa fa-money" aria-hidden="true" title="Нал"></i>';
+                }
+
+                if ($items['summ_type'] == 2){
+                    $order_type_mark = '<i class="fa fa-credit-card" aria-hidden="true" title="Безнал"></i>';
+                }
+
+                $itemTemp_str = '';
+
+                $itemTemp_str .= '
+                                            <li class="cellsBlock" style="width: auto; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(255, 94, 67, 0.5);">';
+                $itemTemp_str .= '
+                                                <a href="withdraw.php?id='.$items['id'].'" class="cellOrder ahref" style="position: relative;">
+                                                    <div style="font-weight: bold;">Выдача #'.$items['id'].'<span style="font-weight: normal;"> от '.date('d.m.y' ,strtotime($items['date_in'])).'</span></div>
+                                                    <div style="margin: 3px;">';
+
+                $itemTemp_str .= 'Филиал: '.$offices_j[$items['office_id']]['name'];
+
+                $itemTemp_str .= '
+                                                    </div>
+                                                    <div style="font-size:80%;  color: #555;">';
+
+                if (($items['last_edit_time'] != 0) || ($items['last_edit_person'] != 0)){
+                    $itemTemp_str .= '
+                                                            Последний раз редактировался: '.date('d.m.y H:i',strtotime($items['last_edit_time'])).'<br>
+                                                            <!--Кем: '.WriteSearchUser('spr_workers', $items['last_edit_person'], 'user', true).'-->';
+                }
+                $itemTemp_str .= '
+                                                    </div>
+                                                    <span style="position: absolute; top: 2px; right: 3px;">'. $order_type_mark.'</span>
+                                                </a>
+                                                <div class="cellName">
+                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+                                                        Сумма:<br>
+                                                        <span class="calculateInvoice" style="font-size: 13px">'.$items['summ'].'</span> руб.
+                                                    </div>';
+
+                $itemTemp_str .= '
+                                                </div>';
+                $itemTemp_str .= '
+                                            </li>';
+
+                if ($items['status'] != 9) {
+                    $itemAll_str .= $itemTemp_str;
+                } else {
+                    $itemClose_str .= $itemTemp_str;
+                }
+
+            }
+
+            $rezult .= $itemAll_str;
+
+//            if ($show_deleted && !$minimal){
+//                //if ((strlen($itemClose_str) > 1) && (($finances['see_all'] != 0) || $god_mode)) {
+//                    $rezult .= '<div style="background-color: rgba(255, 214, 240, 0.5); padding: 5px; margin-top: 5px;">';
+//                    $rezult .= '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Удалённые из программы ордеры</li>';
+//                    $rezult .= $itemClose_str;
+//                    $rezult .= '</div>';
+//                //}
+//                //$rezult .= $itemClose_str;
+//            }
+
+            return array('data' => $rezult, 'count' => $rezult_count);
+
+        }else{
+            if ($show_absent) {
+                $rezult .= '<i style="font-size: 80%; color: #7D7D7D; margin-bottom: 5px; color: red;">Не было выдач</i>';
+            }
+
+            return array('data' => $rezult, 'count' => 1);
+        }
     }
 
 
@@ -3910,9 +4076,6 @@
 
             return array('data' => $rezult, 'count' => 1);
         }
-
-
-
     }*/
 
 	function prepareDrawZapisDay($zapis, $start, $end, $worker_id, $filials_j, $filial_id, $kab, $year, $month, $day, $type, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit){

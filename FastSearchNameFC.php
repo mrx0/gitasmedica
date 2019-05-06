@@ -58,7 +58,7 @@
                         </a>
                         </div>';
                     echo '
-                        <div style="padding: 10px;">
+                        <div style="padding: 10px; display: block;">
                             <a href="finance_account.php?client_id='.$fast_search[$i]["id"].'" class="b" style="display: inline; font-size: 70%; padding: 2px 5px;">Управление счётом</a>
                             <a href="zapis.php?client_id='.$fast_search[$i]["id"].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Записать пациента</a>
                         </div>';

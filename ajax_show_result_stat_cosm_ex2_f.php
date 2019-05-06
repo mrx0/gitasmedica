@@ -10,6 +10,8 @@
 	}else{
 		//var_dump ($_POST);
 		if ($_POST){
+            include_once 'DBWork.php';
+
 			$workerExist = false;
 			$queryDopExist = false;
 			$queryDopExExist = false;
@@ -32,7 +34,6 @@
 			$journal_count_clients_effect = 0;
 			
 			if ($_POST['worker'] != ''){
-				include_once 'DBWork.php';
 				$workerSearch = SelDataFromDB ('spr_workers', $_POST['worker'], 'worker_full_name');
 				
 				if ($workerSearch == 0){
@@ -47,14 +48,15 @@
 			}	
 			
 			if ($workerExist){
-				$query .= "SELECT * FROM `journal_cosmet1` WHERE `status` <> '9'";
-				$query4Effect .= "SELECT `client` FROM `journal_cosmet1` WHERE `status` <> '9'";
-				$query4Effect2 .= "SELECT `id` FROM `journal_cosmet1` WHERE `status` <> '9'";
-				
-				require 'config.php';
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
+//				$query .= "SELECT * FROM `journal_cosmet1` WHERE `status` <> '9'";
+//				$query4Effect .= "SELECT `client` FROM `journal_cosmet1` WHERE `status` <> '9'";
+//				$query4Effect2 .= "SELECT `id` FROM `journal_cosmet1` WHERE `status` <> '9'";
+                $query .= "SELECT * FROM `journal_cosmet1`";
+                $query4Effect .= "SELECT `client` FROM `journal_cosmet1`";
+                $query4Effect2 .= "SELECT `id` FROM `journal_cosmet1`";
+
+                $msql_cnnct = ConnectToDB();
+
 				//$time = time();
 				
 				//Дата/время
@@ -227,7 +229,7 @@
 						$query4Effect2 .= "`client` IN (".$queryDopClient.")";
 					}
 					
-					$query = $query." ORDER BY `create_time`, `client`";
+                $query = $query." AND `status` <> '9' ORDER BY `create_time`, `client`";
 					//$query4Effect = $query4Effect." ORDER BY `create_time`, `client`";
 					//$query4Effect2 = $query4Effect2." ORDER BY `create_time`, `client`";
 					//var_dump($query);
@@ -237,18 +239,20 @@
 					
 					if ($queryConditionExist){
 					
-						require 'config.php';
-						mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-						mysql_select_db($dbName) or die('1: '.mysql_error()); 
-						mysql_query("SET NAMES 'utf8'");
+//						require 'config.php';
+//						mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+//						mysql_select_db($dbName) or die('1: '.mysql_error());
+//						mysql_query("SET NAMES 'utf8'");
 						
 						$arr = array();
 						$rez = array();
-						
-						$res = mysql_query($query) or die('2: '.$query);
-						$number = mysql_num_rows($res);
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                        $number = mysqli_num_rows($res);
+
 						if ($number != 0){
-							while ($arr = mysql_fetch_assoc($res)){
+							while ($arr = mysqli_fetch_assoc($res)){
 								array_push($rez, $arr);
 							}
 							$journal = $rez;
@@ -272,11 +276,13 @@
 						
 						$arr = array();
 						$rez = array();
-						
-						$res = mysql_query($query) or die('3: '.$query);
-						$number = mysql_num_rows($res);
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                        $number = mysqli_num_rows($res);
+
 						if ($number != 0){
-							while ($arr = mysql_fetch_assoc($res)){
+							while ($arr = mysqli_fetch_assoc($res)){
 								if (isset($rez[$arr['client']])){
 									array_push($rez[$arr['client']], $arr);
 								}else{
@@ -464,7 +470,7 @@
 				//var_dump($queryDopEx);
 				//var_dump($queryDopClient);
 				
-				mysql_close();
+				//mysql_close();
 			}else{
 				echo '<span style="color: red;">Не найден сотрудник. Проверьте, что полностью введены ФИО.</span>';
 			}

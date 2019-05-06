@@ -64,9 +64,9 @@
             AND jticket_rm.status <> '1'";*/
 
             $query = "SELECT COUNT(j_ticket.id) as total FROM `journal_tickets` j_ticket
-            WHERE (j_ticket.status <> '9'
+            WHERE (TRUE 
             {$query_dop}
-            OR j_ticket.create_person = '{$_SESSION['id']}')
+            OR j_ticket.create_person = '{$_SESSION['id']}') AND j_ticket.status <> '9' AND j_ticket.status <> '1'
             AND j_ticket.id NOT IN (SELECT jticket_rm.ticket_id  FROM `journal_tickets_readmark` jticket_rm WHERE j_ticket.id = jticket_rm.ticket_id AND jticket_rm.create_person = '{$_SESSION['id']}' AND jticket_rm.status = '1')";
 
             

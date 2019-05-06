@@ -28,22 +28,11 @@
                         $workerID =$_SESSION['fl_calcs_tabels2']['worker_id'];
 
                         $thisCalcIsInAnotherTabel = FALSE;
+                        $CalcIsInAnotherTabelID = 0;
 
                         $summCalcs = 0;
 
                         $msql_cnnct = ConnectToDB2();
-
-                        //Вставим новый табель
-                        $query = "INSERT INTO `fl_journal_tabels` (`office_id`, `worker_id`, `type`, `month`, `year`, `summ`)
-                          VALUES (
-                          '{$filialID}', '{$workerID}', '{$typeID}', '{$_POST['tabelMonth']}', '{$_POST['tabelYear']}', '{$_POST['summCalcs']}')";
-
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-                        //ID новой позиции
-                        $mysqli_insert_id = mysqli_insert_id($msql_cnnct);
-
-                        $query = '';
 
                         $calcArr = $_SESSION['fl_calcs_tabels2']['data'];
 
@@ -52,7 +41,7 @@
 
                             $arr = array();
 
-                            $query = "SELECT `id` FROM `fl_journal_tabels_ex` WHERE `id` = '$calcID';";
+                            $query = "SELECT `calculate_id` FROM `fl_journal_tabels_ex` WHERE `calculate_id` = '$calcID' LIMIT 1;";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -61,12 +50,28 @@
                             if ($number != 0) {
 
                                 $thisCalcIsInAnotherTabel = TRUE;
+                                while ($arr = mysqli_fetch_assoc($res)) {
+                                    $CalcIsInAnotherTabelID = $arr['calculate_id'];
+                                }
                                 break;
 
                             }
                         }
 
                         if (!$thisCalcIsInAnotherTabel){
+
+                            //Вставим новый табель
+                            $query = "INSERT INTO `fl_journal_tabels` (`office_id`, `worker_id`, `type`, `month`, `year`, `summ`)
+                            VALUES (
+                            '{$filialID}', '{$workerID}', '{$typeID}', '{$_POST['tabelMonth']}', '{$_POST['tabelYear']}', '{$_POST['summCalcs']}')";
+
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                            //ID новой позиции
+                            $mysqli_insert_id = mysqli_insert_id($msql_cnnct);
+
+
+                            $query = '';
 
                             foreach ($calcArr as $calcID => $status) {
 
@@ -88,7 +93,7 @@
                             echo json_encode(array('result' => 'success'));
                         }else{
 
-                            echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка #22. РЛ уже в другом табеле.</div>'));
+                            echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка #22. РЛ #'.$CalcIsInAnotherTabelID.' уже в другом табеле.</div>'));
                         }
                     } else {
                         echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));

@@ -131,6 +131,7 @@
 						</div>';
                 echo '    
 					</header>
+					<div id="errror"></div>
 					</div>';
 
 				echo '
@@ -143,6 +144,7 @@
                                     <a href="?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
                                     <a href="fl_tabels2.php?who=4" class="b" style="">Администраторы</a>
 								    <a href="fl_tabels2.php?who=7" class="b" style="">Ассистенты</a>
+								    <a href="fl_tabels3.php?who=11" class="b" style="">Прочие</a>
                                 </li>
 						    </ul>';
 
@@ -210,7 +212,7 @@
 
                             echo '
                                     <li>
-                                        <a href="#tabs-' . $type . '_' . $worker['id'] . '" onclick="clearAllChecked();">
+                                        <a href="#tabs-' . $type . '_' . $worker['id'] . '" onclick="clearAllChecked(); hideAllErrors();">
                                             ' . $worker['name'] . '
                                             <div  class="notes_count_div">
                                                 <div id="tabs_notes2_' . $type . '_' . $worker['id'].'" class="notes_count3" style="display: none;">
@@ -248,7 +250,7 @@
                                 if ($office['id'] != 11) {
 
                                     echo '
-                                            <li class="tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" onclick="clearAllChecked();">
+                                            <li class="tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" onclick="clearAllChecked(); hideAllErrors();">
                                                 <a href="#tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '">
                                                     ' . $office['name2'] . '
                                                     <div class="notes_count_div">
@@ -378,7 +380,7 @@
                          
                         permission = ids_arr[0];
                         worker = ids_arr[1];
-                        office = ids_arr[2];
+                        office = ids_arr[2];showRefundAdd
                         
                         var certData = {
                             permission: permission,

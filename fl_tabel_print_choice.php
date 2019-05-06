@@ -20,6 +20,9 @@
 
 			echo '
 				<header class="never_print_it">
+                    <div class="nav">
+                        <a href="fl_tabels.php" class="b">Выжный отчёт</a>
+                    </div>
 					<h1>
     				    Печать
 					</h1>

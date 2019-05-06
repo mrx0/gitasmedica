@@ -41,7 +41,7 @@ if ($enter_ok){
                     if ($_GET['type'] == 2){
                         echo ' налог ';
                     }elseif ($_GET['type'] == 3){
-                        echo ' штраф ';
+                        echo ' штраф/вычет ';
                     }elseif ($_GET['type'] == 4){
                         echo ' ссуда ';
                     }elseif ($_GET['type'] == 5){

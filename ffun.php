@@ -59,13 +59,14 @@
     }
 
     //Обновим баланс контрагента
-    function updateBalance ($id, $client_id, $Summ, $debited){
+    function updateBalance ($id, $client_id, $Summ, $debited, $refund, $withdraw){
 
         $msql_cnnct = ConnectToDB2 ();
 
-        $query = "UPDATE `journal_balance` SET `summ`='$Summ', `debited`='$debited'  WHERE `id`='$id'";
+        $query = "UPDATE `journal_balance` SET `summ`='$Summ', `debited`='$debited', `refund`='$refund' , `withdraw`='$withdraw'  WHERE `id`='$id'";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
     }
 
     //Обновим долг контрагента
@@ -77,6 +78,16 @@
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
     }
+
+    //Обновим возвраты контрагента
+//    function updateRefund ($id, $client_id, $Summ){
+//
+//        $msql_cnnct = ConnectToDB2 ();
+//
+//        $query = "UPDATE `journal_debt` SET `summ`='$Summ'  WHERE `id`='$id'";
+//
+//        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//    }
 
     //Смотрим баланс
     function watchBalance ($client_id, $Summ){
@@ -169,12 +180,16 @@
         if (!empty($clientBalance)){
             $rezult['summ'] = $Summ;
             $rezult['debited'] = calculatePayment($client_id);
+            $rezult['refund'] = calculateRefund($client_id);
+            $rezult['withdraw'] = calculateWithdraw($client_id);
 
             //Обновим баланс контрагента
-            updateBalance ($clientBalance[0]['id'], $client_id, $Summ, $rezult['debited']);
+            updateBalance ($clientBalance[0]['id'], $client_id, $Summ, $rezult['debited'], $rezult['refund'], $rezult['withdraw']);
         }else {
             $rezult['summ'] = $Summ;
             $rezult['debited'] = 0;
+            $rezult['refund'] = 0;
+            $rezult['withdraw'] = 0;
         }
 
         return (json_encode($rezult, true));
@@ -182,6 +197,96 @@
         //return ($Summ);
     }
 	
+    //считаем по возвратам, сколько вернули
+    function calculateRefund ($client_id){
+
+        $rezult = array();
+
+        $msql_cnnct = ConnectToDB2 ();
+
+        $clientRefunds = array();
+        $arr = array();
+
+        //Соберем все возвраты
+        $query = "SELECT * FROM `fl_journal_refund` WHERE `client_id`='$client_id'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                array_push($clientRefunds, $arr);
+            }
+        }else{
+            $clientRefunds = 0;
+        }
+        //return ($clientWithdraws);
+
+        //Переменная для суммы
+        $Summ = 0;
+
+        //Если были там какие-то оплаты
+        if ($clientRefunds != 0) {
+            //Посчитаем сумму
+            foreach ($clientRefunds as $refunds) {
+                //if ($withdraw['type'] != 1) {
+                    $Summ += $refunds['summ'];
+                //}
+            }
+        }
+
+        //$rezult['summ'] = $Summ;
+        //return (json_encode($rezult, true));
+
+        return ($Summ);
+    }
+
+    //считаем по выдачам, сколько выдали
+    function calculateWithdraw ($client_id){
+
+        $rezult = array();
+
+        $msql_cnnct = ConnectToDB2 ();
+
+        $clientWithdraws = array();
+        $arr = array();
+
+        //Соберем все возвраты
+        $query = "SELECT * FROM `journal_withdraw` WHERE `client_id`='$client_id'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                array_push($clientWithdraws, $arr);
+            }
+        }else{
+            $clientWithdraws = 0;
+        }
+        //return ($clientWithdraws);
+
+        //Переменная для суммы
+        $Summ = 0;
+
+        //Если были там какие-то оплаты
+        if ($clientWithdraws != 0) {
+            //Посчитаем сумму
+            foreach ($clientWithdraws as $withdraws) {
+                //if ($withdraw['type'] != 1) {
+                    $Summ += $withdraws['summ'];
+                //}
+            }
+        }
+
+        //$rezult['summ'] = $Summ;
+        //return (json_encode($rezult, true));
+
+        return ($Summ);
+    }
+
     //считаем по нарядам, сколько выставлено и обновляем
     function calculateDebt ($client_id){
 
@@ -443,13 +548,14 @@
             if ($number != 0){
                 $boolean = true;
             }else{
-                $query = "SELECT `id`, `work_percent`, `material_percent`, `summ_special`, `name` FROM `fl_spr_percents` WHERE `type`='" . $type . "' LIMIT 1";
+                //Если вроде бы и категория есть, но она другого типа (пример: расчетный лист для ассистента из наряда стоматологического)
+                $query = "SELECT `id`, `work_percent`, `material_percent`, `summ_special`, `name` FROM `fl_spr_percents` WHERE `id`='" . $percent_cat . "' LIMIT 1";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                 $number = mysqli_num_rows($res);
                 if ($number != 0){
-                    $boolean = true;
+                    $boolean = false;
                 }
             }
 
@@ -483,6 +589,14 @@
                     }
                 }else{
 
+                }
+            }else{
+                while ($arr = mysqli_fetch_assoc($res)){
+                    $percents[$percent_cat]['category'] = $arr['id'];
+                    $percents[$percent_cat]['name'] = $arr['name'].'/ <span style="color: red;">Ошибка #33. Измените исполнителя.</span>';
+                    $percents[$percent_cat]['work_percent'] = $arr['work_percent'];
+                    $percents[$percent_cat]['material_percent'] =  $arr['material_percent'];
+                    $percents[$percent_cat]['summ_special'] =  $arr['summ_special'];
                 }
             }
 
@@ -1316,7 +1430,7 @@
                                     </div> р.
                                 </td>
                                 <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-                                    штраф
+                                    штраф/вычет
                                 </td>
                                 <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
                                     
@@ -1632,6 +1746,8 @@
 
         $time = date('Y-m-d H:i:s', time());
 
+        $mysql_insert_id = 0;
+
         //$discount = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['discount'];
 
         //Добавляем в базу
@@ -1857,7 +1973,7 @@
         }
 
         //Обновим сумму в расчете
-        if ($calculateInvSumm > 0) {
+        if ($calculateInvSumm >= 0) {
             $query = "UPDATE `fl_journal_calculate` SET `summ_inv`='{$calculateInvSumm}', `summ`='{$calculateCalcSumm}' WHERE `id`='{$mysql_insert_id}'";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
         }

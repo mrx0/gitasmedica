@@ -77,6 +77,8 @@
                             AND jcalc.date_in > '2018-05-31'
                             GROUP BY jcalc.id";
 
+                //GROUP BY jcalc.id ORDER BY jcalc.id DESC";
+
 /*                $query = "SELECT jcalc.*,
                             GROUP_CONCAT(DISTINCT jcalcex.percent_cats ORDER BY jcalcex.percent_cats ASC SEPARATOR ',') AS percent_cats
                             FROM `fl_journal_calculate` jcalc
@@ -141,12 +143,13 @@
                                 $worker_mark_str = '';
                                 $background_color = 'background-color: rgb(255, 255, 255);';
 
-                                if ($rezData['worker_mark'] == NULL) {
-                                    $worker_mark = 0;
-                                    $worker_mark_str = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет отметки врача"></i>';
-                                    $background_color = 'background-color: rgba(255, 141, 141, 0.2);';
+                                if (($_POST['permission'] == 5) || ($_POST['permission'] == 6)){
+                                    if ($rezData['worker_mark'] == NULL) {
+                                        $worker_mark = 0;
+                                        $worker_mark_str = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет отметки врача"></i>';
+                                        $background_color = 'background-color: rgba(255, 141, 141, 0.2);';
+                                    }
                                 }
-
 
                                 $resultFilialStr .= '
                                     <div class="cellsBlockHover calculateBlockItem" worker_mark="'.$worker_mark.'" style="' . $background_color . ' width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
@@ -214,6 +217,7 @@
 
                                 $resultFilialStr .= '
                                 <div style="margin: 5px 0; padding: 2px; text-align: right;">
+                                    <div id="errrror"></div>
                                     <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick="fl_addNewTabelIN2(true, '.$invoice_type.', '.$_POST['worker'].', '.$filial_id.');"><br>
                                     <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Добавить в существующий табель" onclick="fl_addNewTabelIN2(false, '.$invoice_type.', '.$_POST['worker'].', '.$filial_id.');"><br><br>
                                     <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Удалить выделенные" onclick="fl_deleteMarkedCalculates($(this).parent().parent());"><br>

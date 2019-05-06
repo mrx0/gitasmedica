@@ -471,6 +471,9 @@
                      }*/
                     //console.log(data.data);
                     //location.reload();
+
+                    //!!! переадресация на вкладку, может когда-нибудь организую
+                    //http://localhost/gitasmedica/fl_tabels.php#tabs-5_324
                     window.location.href = "fl_tabels.php";
                 }
             });
@@ -1081,17 +1084,15 @@
             },
             success: function (res) {
                 //console.log (res);
+                //console.log (res.length);
 
-                $('#overlay').show();
+                if (res.length > 0) {
+                    $('#overlay').show();
 
-                menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel);
-
-                /*if (newTabel) {
-                    menuForAddINNewTabel(res, type_id, worker_id, filial_id);
+                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel);
                 }else{
-                    menuForAddINExistNewTabel(res, type_id, worker_id, filial_id);
-                }*/
-
+                    $('#errrror').html('<div class="query_neok">Ошибка #34. Ничего не выбрано. Обновите выбор РЛ</div>');
+                }
             }
         })
     }
@@ -1171,8 +1172,11 @@
 
 
                 }else{
-                    $('#errror').html(res.data);
                     //console.log(res);
+
+                    $('#errror').html(res.data);
+                    $("#overlay").hide();
+                    $(".center_block").remove();
                 }
             }
         });
@@ -1214,7 +1218,7 @@
         });
     }
 
-//Добавляем в существующий табель РЛ из сессии
+    //Добавляем в существующий табель РЛ из сессии
     function fl_addInExistTabel2(type_id, worker_id, filial_id){
 
         var link = "fl_add_in_tabel2_f.php";
@@ -2878,6 +2882,8 @@
     function refreshOnlyThisTab(thisObj, permission_id, worker_id, office_id){
         //console.log(permission_id+' _ '+worker_id+' _ '+office_id);
         //console.log(thisObj.parent());
+
+        hideAllErrors ();
 
         var now = new Date();
         var year = now.getFullYear();
@@ -4559,6 +4565,26 @@
         })
     }
 
+    //Рассчет зп для fl_tabels3.php
+    function fl_calculateZP2 (month, year, typeW){
+        // console.log(month);
+        // console.log(year);
+        // console.log(typeW);
+
+        $(".itogZP").each(function(){
+
+            //var worker_id = $(this).attr("w_id");
+
+            var oklad = Number($(this).attr("oklad"));
+            //console.log(oklad);
+
+            var itogZP = oklad;
+            //console.log(itogZP);
+
+            $(this).html(number_format(itogZP, 0, '.', ''));
+        })
+    }
+
 
     //Получение табелей за этот месяц
     function fl_getAllTabels (month, year, typeW){
@@ -4649,6 +4675,7 @@
                 worker_revenue_percent: $("#w_id_" + worker_id).attr("worker_revenue_percent"),
                 per_from_salary: Number($("#zp_temp_" + worker_id).html()),
                 filialmoney: $("#w_id_" + worker_id).attr("filialmoney"),
+                w_revenue_summ: Number($("#w_revenue_summ_"+worker_id).html()),
                 worker_category_id: $("#w_id_" + worker_id).attr("worker_category_id"),
                 w_hours: $("#w_id_" + worker_id).attr("w_hours"),
                 summ: Number($("#w_id_" + worker_id).html())

@@ -352,7 +352,6 @@ ORDER BY `name`;
 									</span>
 								</div>';
 
-								
 				//Смотрим счёт (авансы/долги)
 				//if (($finances['see_all'] != 0) || ($finances['see_own'] != 0) || $god_mode){
 
@@ -437,7 +436,7 @@ ORDER BY `name`;
 
 
                             //Если доступный остаток ОТРИЦАТЕЛЕН
-                            $dostOstatok = $client_balance['summ'] - $client_balance['debited'];
+                            $dostOstatok = $client_balance['summ'] - $client_balance['debited'] - $client_balance['withdraw'] + $client_balance['refund'];
 
                             //var_dump(json_decode($client_balance, true));
                             echo '
@@ -555,8 +554,7 @@ ORDER BY `name`;
 							}
 						}else
 							$t_f_data_db = 0;
-						
-						
+
 						if ($t_f_data_db != 0){
 							//var_dump ($t_f_data_db);
 
@@ -566,8 +564,8 @@ ORDER BY `name`;
 							
 							for ($z = 0; $z < count ($t_f_data_db); $z++){
 								$dop = array();
-								
-								
+
+
 								//ЗО и тд
 								$query = "SELECT * FROM `journal_tooth_status_temp` WHERE `id` = '{$t_f_data_db[$z]['id']}'";
 
@@ -578,9 +576,9 @@ ORDER BY `name`;
 									while ($arr = mysqli_fetch_assoc($res)){
 										array_push($dop, $arr);
 									}
-									
+
 								}
-								
+
 								echo '
 								<div class="cellsBlock3">';
 								echo '
@@ -588,7 +586,7 @@ ORDER BY `name`;
 										<a href="task_stomat_inspection.php?id='.$t_f_data_db[$z]['id'].'" class="ahref">'.date('d.m.y H:i', $t_f_data_db[$z]['create_time']).'</a>
 									</div>
 									<div class="cellRight">';
-										
+
 								include_once 'teeth_map_db.php';
 								include_once 't_surface_name.php';
 								include_once 't_surface_status.php';
@@ -596,24 +594,24 @@ ORDER BY `name`;
 								include_once 'root_status.php';
 								include_once 'surface_status.php';
 								include_once 't_context_menu.php';
-											
+
 								$t_f_data = array();
-								
+
 								if ($z == 0){
 									$n = '';
 								}else{
 									$n = $z;
 								}
-								
+
 								$sw = 0;
 								$stat_id = $t_f_data_db[$z]['id'];
-								
+
 								unset($t_f_data_db[$z]['id']);
 								unset($t_f_data_db[$z]['create_time']);
 								//echo "echo$sw";
 								//var_dump ($surfaces);
 								$t_f_data_temp_refresh = '';
-								
+
 								unset($t_f_data_db[$z]['id']);
 								unset($t_f_data_db[$z]['office']);
 								unset($t_f_data_db[$z]['client']);
@@ -625,11 +623,11 @@ ORDER BY `name`;
 								unset($t_f_data_db[$z]['comment']);
 								unset($t_f_data_db[$z]['zapis_date']);
 								unset($t_f_data_db[$z]['zapis_id']);
-								
+
 								foreach ($t_f_data_db[$z] as $key => $value){
 									//$t_f_data_temp_refresh .= $key.'+'.$value.':';
-									
-									
+
+
 									//var_dump(json_decode($value, true));
 									$surfaces_temp = explode(',', $value);
 									//var_dump ($surfaces_temp);
@@ -699,14 +697,14 @@ ORDER BY `name`;
 											<div class="text_in_map" style="left: 539px">7</div>
 											<div class="text_in_map" style="left: 576px">8</div>';
 
-								
 
-								//var_dump ($teeth_map_temp);	
-								
+
+								//var_dump ($teeth_map_temp);
+
 								//!!!ТЕСТ ИНКЛУДА ОТРИСОВКИ ЗФ
 								//require_once 'for32_teeth_map_svg.php';
-								
-								
+
+
 								//$teeth_map_temp = SelDataFromDB('teeth_map', '', '');
 								$teeth_map_temp = $teeth_map_db;
 								foreach ($teeth_map_temp as $value){
@@ -722,11 +720,11 @@ ORDER BY `name`;
 								foreach ($teeth_map_pin_temp as $value){
 									$teeth_map_pin[$value['tooth']]=$value['coord'];
 								}
-								
+
 								for ($i=1; $i <= 4; $i++){
 									for($j=1; $j <= 8; $j++){
-										
-										$DrawRoots = TRUE;				
+
+										$DrawRoots = TRUE;
 										$menu = 't_menu';
 										if (isset($sw)){
 											if ($sw == '1'){
@@ -747,9 +745,9 @@ ORDER BY `name`;
 											$color_stroke = '#F7273F';
 											$stroke_width = 3;
 										}
-										
+
 										foreach($teeth_map[$n_zuba] as $surface => $coordinates){
-											
+
 											$color = "#fff";
 											//!!!! попытка с молочным зубом
 											if ($t_f_data[$i.$j]['status'] == '19'){
@@ -761,7 +759,7 @@ ORDER BY `name`;
 											}
 											//!!! надо как-то получать статус в строку, чтоб писать в описании
 											//t_surface_name($n_zuba.$surface, 1).'<br />'.t_surface_status($t_f_data[$i.$j]['status'], $s_stat);
-											
+
 											if ($t_f_data[$i.$j]['status'] == '3'){
 												//штифт
 												$surface = 'NONE';
@@ -769,7 +767,7 @@ ORDER BY `name`;
 												$color_stroke = '#5353FF';
 												$coordinates = $teeth_map_pin[$n_zuba];
 												$stroke_width = 1;
-																	
+
 												echo '
 													<div id="'.$n_zuba.$surface.'"
 														status-path=\'
@@ -784,34 +782,35 @@ ORDER BY `name`;
 																<div class=\'cellsBlock4\'>
 																	<div class=\'cellLeft\'>
 																		'.t_surface_name($n_zuba.$surface, 2).'<br />';
-														
-												DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');	
-												
+
+												DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');
+
+
 												echo '
 																	</div>
 																</div>';
-												echo					
+												echo
 														'"
 														t_menuA'.$n.' = "
 																'.t_surface_name($n_zuba.$surface, 1).'<br />'.t_surface_status($t_f_data[$i.$j]['status'], $s_stat);
-														
-												//DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');	
-														
-												echo					
+
+												//DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');
+
+												echo
 														'"
 													>
 													</div>
 												';
 											}else{
-											
-											
+
+
 												//Если надо рисовать корень, но в бд написано, что тут имплант
 												if (($t_f_data[$i.$j]['pin'] == '1') && (mb_strstr($surface, 'root') != FALSE)){
 													$DrawRoots = FALSE;
 												}else{
-													if  ((mb_strstr($surface, 'root') == TRUE) && 
-														(($t_f_data[$i.$j]['status'] == '1') || ($t_f_data[$i.$j]['status'] == '2') || 
-														($t_f_data[$i.$j]['status'] == '18') || ($t_f_data[$i.$j]['status'] == '19') || 
+													if  ((mb_strstr($surface, 'root') == TRUE) &&
+														(($t_f_data[$i.$j]['status'] == '1') || ($t_f_data[$i.$j]['status'] == '2') ||
+														($t_f_data[$i.$j]['status'] == '18') || ($t_f_data[$i.$j]['status'] == '19') ||
 														($t_f_data[$i.$j]['status'] == '9'))){
 														$DrawRoots = FALSE;
 													}else{
@@ -835,7 +834,7 @@ ORDER BY `name`;
 														//без корней + коронки и всякая херня
 														$surface = 'NONE';
 														$color = $tooth_status[$t_f_data[$i.$j]['status']]['color'];
-														$coordinates = $teeth_map_d[$n_zuba];								
+														$coordinates = $teeth_map_d[$n_zuba];
 													}
 												}else{
 													//Если у какой-то из областей зуба есть статус в бд.
@@ -851,7 +850,7 @@ ORDER BY `name`;
 													}
 													}
 												}
-												
+
                                                 //!Костыль для радикса(корень)/статус 34
                                                 if ((($t_f_data[$i.$j]['root1'] == '34') || ($t_f_data[$i.$j]['root2'] == '34') || ($t_f_data[$i.$j]['root3'] == '34')) &&
                                                         (($t_f_data[$i.$j]['status'] != '1') && ($t_f_data[$i.$j]['status'] != '2') &&
@@ -860,10 +859,10 @@ ORDER BY `name`;
                                                 {
 													$surface = 'NONE';
 													$color = '#FF0000';
-													$coordinates = $teeth_map_d[$n_zuba];								
+													$coordinates = $teeth_map_d[$n_zuba];
 												}
-												
-												
+
+
 												if (mb_strstr($surface, 'root') != FALSE){
 													$menu = 'r_menu';
 												}elseif((mb_strstr($surface, 'surface') != FALSE) || (mb_strstr($surface, 'top') != FALSE)){
@@ -871,7 +870,7 @@ ORDER BY `name`;
 												}else{
 													$DrawMenu = FALSE;
 												}
-												
+
 												if ($DrawRoots){
 													echo '
 														<div id="'.$n_zuba.$surface.'"
@@ -887,24 +886,25 @@ ORDER BY `name`;
 																<div class=\'cellsBlock4\'>
 																	<div class=\'cellLeft\'>
 																		'.t_surface_name($n_zuba.'NONE', 1).'<br />';
-																
-													DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');	
+
+													//DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');
+;
 															echo '
 																	</div>
 																	<div class=\'cellRight\'>
 																		'.t_surface_name($n_zuba.$surface, 0).'<br />';
-													if ($DrawMenu){ DrawTeethMapMenu($key, $n_zuba, $surface, $menu);}	
+													if ($DrawMenu){ /*DrawTeethMapMenu($key, $n_zuba, $surface, $menu)*/;}
 													echo '
 																	</div>
-																</div>';	
+																</div>';
 													echo
 															'"
 															t_menuA'.$n.' = "
 																'.t_surface_name($n_zuba.$surface, 1).'<br />'.t_surface_status($t_f_data[$i.$j]['status'], $s_stat);
-															
-													//DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');	
-													
-													echo					
+
+													//DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');
+
+													echo
 															'"
 															>
 															</div>
@@ -912,7 +912,7 @@ ORDER BY `name`;
 												}
 											}
 										}
-										
+
 										if ($t_f_data[$i.$j]['pin'] == '1'){
 											//штифт
 											$surface = 'NONE';
@@ -923,7 +923,7 @@ ORDER BY `name`;
 											if ($t_f_data[$i.$j]['alien'] == '1'){
 												$color_stroke = '#F7273F';
 												$stroke_width = 3;
-											}				
+											}
 											echo '
 												<div id="'.$n_zuba.$surface.'"
 													status-path=\'
@@ -938,26 +938,26 @@ ORDER BY `name`;
 														<div class=\'cellsBlock4\'>
 															<div class=\'cellLeft\'>
 																'.t_surface_name($n_zuba.$surface, 2).'<br />';
-													
-											DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');	
+
+											//DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');
 											echo '
 															</div>
 														</div>';
-											echo					
+											echo
 													'"
 													t_menuA'.$n.' = "
 																'.t_surface_name($n_zuba.$surface, 1).'<br />'.t_surface_status($t_f_data[$i.$j]['status'], $s_stat);
-													
-											//DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');	
-											
-											echo					
+
+											//DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');
+
+											echo
 													'"
 													>
 													</div>
 													';
 										}
-										
-										
+
+
 										//Для ЗО и дополнительно
 										if (isset($t_f_data[$i.$j]['zo'])){
 											$surface = 'NONE';
@@ -969,7 +969,7 @@ ORDER BY `name`;
 											$color_stroke = '#5353FF';
 											$coordinates = $teeth_map_zo_db[$i.$j];
 											$stroke_width = 1;
-										
+
 											echo '
 												<div id="'.$n_zuba.$surface.'"
 													status-path=\'
@@ -981,24 +981,24 @@ ORDER BY `name`;
 													data-path="'.$coordinates.'"
 													fill-color=\'"fill": "'.$color.'"\'
 													t_menu = "'.$n_zuba.', '.$surface.', t_menu, true, '.$surface.', 2, false, \'\', \'\', false, \'\', \'\'"';
-											echo					
+											echo
 														'
 													t_menuA = "
 																'.t_surface_name($n_zuba.$surface, 1).'<br />'.t_surface_status($t_f_data[$i.$j]['status'], $s_stat);
-										
-											echo					
+
+											echo
 													'"
 													>
 													</div>
 													';
 										}
-										
+
 										$text_status_div = '';
 										$text_status_div_shinir = '';
 										$text_status_div_podvizh = '';
 										$text_status_div_retein = '';
 										$text_status_div_skomplect = '';
-																		
+
 										//Для Шинирования и дополнительно
 										if (isset($t_f_data[$i.$j]['shinir'])){
 											$text_status_div_shinir = 'ш';
@@ -1088,17 +1088,17 @@ ORDER BY `name`;
 										if ((isset($t_f_data[$i.$j]['shinir'])) || (isset($t_f_data[$i.$j]['podvizh'])) || (isset($t_f_data[$i.$j]['retein'])) || (isset($t_f_data[$i.$j]['skomplect']))){
 											echo '<div class="text_in_map_dop" style="left: '.$left_tts.'px; top: '.$top_tts.'px">'.$text_status_div_shinir.''.$text_status_div_podvizh.''.$text_status_div_retein.''.$text_status_div_skomplect.'</div>';
 										}
-										
+
 									}
 								}
-								
 
-								
+
+
 								echo '
 										</div>
 									</div>
 								</div>';
-								
+
 							}
 
 
@@ -1421,7 +1421,6 @@ ORDER BY `name`;
                             </ul>';
                         }
 
-					
 						//mysql_close();
 						
 						echo '
@@ -1535,7 +1534,7 @@ ORDER BY `name`;
 					echo '
 						</div>
 					</div>';
-						
+
 			}
 				
 			echo '					

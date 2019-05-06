@@ -38,7 +38,7 @@
 
                 $time = time();
 
-                $query = "SELECT `summ`, `debited` FROM `journal_balance` WHERE `client_id`='{$_POST['client_id']}' LIMIT 1";
+                $query = "SELECT `summ`, `debited`, `withdraw`, `refund` FROM `journal_balance` WHERE `client_id`='{$_POST['client_id']}' LIMIT 1";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -48,7 +48,7 @@
 
                     $arr = mysqli_fetch_assoc($res);
 
-                    if ($arr['summ'] - $arr['debited'] < $order_j[0]['summ']){
+                    if ($arr['summ'] - $arr['debited'] - $arr['withdraw'] + $arr['refund'] < $order_j[0]['summ']){
                         $data = '
                             <div class="query_neok" style="padding-bottom: 10px;">
                                 <h3>Нельзя удалить ордер, если на счету не хватает средств для списания.</h3>
