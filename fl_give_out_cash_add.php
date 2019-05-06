@@ -20,12 +20,49 @@
                 $invoice_id = $_GET['invoice_id'];
             }
 
+            //Дата
+            //операции со временем
+            $day = date('d');
+            $month = date('m');
+            $year = date('Y');
+
+            //Или если мы смотрим другой месяц
+            if (isset($_GET['m']) && isset($_GET['y']) && isset($_GET['d'])) {
+                $day = $_GET['d'];
+                $month = $_GET['m'];
+                $year = $_GET['y'];
+            }
+
+            //Филиал
+            //Филиал
+            if (isset($_SESSION['filial'])) {
+                $current_filial = $_SESSION['filial'];
+            } else {
+                $current_filial = 15;
+            }
+
+            if (($finances['see_all'] == 1) || $god_mode) {
+                if (isset($_GET['filial_id'])) {
+                    $current_filial = $_GET['filial_id'];
+                }
+            }
+
+//            if (isset($_GET['filial_id'])) {
+//                $current_filial  = $_GET['filial_id'];
+//            }else{
+//                if (isset($_SESSION['filial'])) {
+//                    $current_filial  = $_SESSION['filial'];
+//                }else{
+//                    $current_filial = 15;
+//                }
+//            }
+
             echo '
             <div id="status">
                 <header>
                     <div class="nav">
                         <a href="stat_cashbox.php" class="b">Касса</a>
-                        <a href="giveout_cash.php" class="b">Расходные ордеры</a>
+                        <a href="giveout_cash.php?filial_id=' . $current_filial . '&d=' . $day . '&m=' . $month . '&y=' . $year.'" class="b">Расходные ордеры</a>
                     </div>
                     <h2>Новый расходный ордер</h2>
                     <ul style="margin-left: 6px; margin-bottom: 10px;">
@@ -36,7 +73,7 @@
             echo '
                         <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
                             <span style="color: rgb(125, 125, 125);">
-                                Дата внесения: <input type="text" id="date_in" name="date_in" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date("d").'.'.date("m").'.'.date("Y").'" onfocus="this.select();_Calendar.lcs(this)" 
+                                Дата внесения: <input type="text" id="date_in" name="date_in" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.$day.'.'.$month.'.'.$year.'" onfocus="this.select();_Calendar.lcs(this)" 
                                         onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
                             </span>
                         </li>';
@@ -97,7 +134,7 @@
                         <div id="additional_info_block" class="cellRight">
                             <ul style="margin-left: 6px; margin-bottom: 10px;">
                                 <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
-                                    Описание если выбрано "Прочее"
+                                    Описание <!--если выбрано "Прочее"-->
                                 </li>
                                 <li style="font-size: 90%; margin-bottom: 5px;">
                                     <textarea name="additional_info" id="additional_info" cols="35" rows="2"></textarea>
@@ -117,11 +154,11 @@
 
             if (($finances['see_all'] == 1) || $god_mode){
 
-                if (!isset($_SESSION['filial'])){
-                    $current_filial = 15;
-                }else{
-                    $current_filial = $_SESSION['filial'];
-                }
+//                if (!isset($_SESSION['filial'])){
+//                    $current_filial = 15;
+//                }else{
+//                    $current_filial = $_SESSION['filial'];
+//                }
 
                 $offices_j = SelDataFromDB('spr_filials', '', '');
 
@@ -181,7 +218,7 @@
                 <script>
                     $(document).ready(function() {
                         $(\'#type\').change(function(){
-                            console.log($(\'#type\').val());
+                            //console.log($(\'#type\').val());
                             
                             if ($(\'#type\').val() != 0){
                                 $(\'#additional_info_block\').hide();
