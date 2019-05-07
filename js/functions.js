@@ -346,22 +346,28 @@
             //console.log(dopReq);
         }
 
+        if ((mark == 'insure') || (mark == 'insureItem')){
+            dopReq.client_insure = $("#client_insure").val();
+        }
+
 		// Добавляем класс selected-html-element что бы наглядно показать на чем именно мы кликнули (исключительно для тестирования):
 		target.addClass('selected-html-element');
-		
+
+        var reqData = {
+            mark: mark,
+            ind: ind,
+            key: key,
+
+            dop: dopReq
+        };
+        //console.log(reqData);
+
 		$.ajax({
 			url:"context_menu_show_f.php",
 			global: false, 
 			type: "POST", 
 			dataType: "JSON",
-			data:
-			{
-				mark: mark,
-				ind: ind,
-				key: key,
-
-				dop: dopReq
-			},
+			data: reqData,
 			cache: false,
 			beforeSend: function() {
 				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
@@ -5452,7 +5458,8 @@
 				zapis_id: $("#zapis_id").val(),
 				filial: $("#filial").val(),
 				worker: $("#worker").val(),
-                invoice_type: invoice_type
+                invoice_type: invoice_type,
+                client_insure: $("#client_insure").val()
 			},
 			cache: false,
 			beforeSend: function() {

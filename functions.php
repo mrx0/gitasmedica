@@ -2028,7 +2028,16 @@
                             }
                             echo '
 												<div class="priceitemDivname">
-													<a href="'.$link.'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter"><span style="font-size: 75%; font-weight: bold;">[#'.$items_j[$i]['id'].']</span> <i>'.$items_j[$i]['code'].'</i> '.$items_j[$i]['name'].'</a>
+													<a href="'.$link.'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter">
+														<span style="font-size: 75%; font-weight: bold;">[#'.$items_j[$i]['id'].']</span> 
+														<i>'.$items_j[$i]['code'].'</i> 
+														'.$items_j[$i]['name'].' ';
+
+                            //Категория процентов
+                            echo '['.$items_j[$i]['category'].']';
+
+                            echo '							
+													</a>
 												</div>
 												<div class="priceitemDiv">
 													<div class="priceitemDivcost"><b>'.$price.'</b> руб.</div>';
@@ -2065,14 +2074,10 @@
 				if ($number != 0){
 					//echo '_'.$value['name'].'<br>';
 					$space2 = $space. '&nbsp;&nbsp;&nbsp;';
-					$last_level2 = $last_level+1;
+					$last_level2 = $last_level + 1;
 					showTree4($value['id'], $space2, $type, $sel_id, $first, $last_level2, $deleted, $dbtable, $insure_id, $dtype);
 				}else{
 					//---
-					
-					
-
-					
 				}
 				
 					echo '

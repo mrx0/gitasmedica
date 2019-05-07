@@ -50,8 +50,16 @@
                 $query = "
                             SELECT 
                             jcalc.id, jcalc.create_time, jcalc.summ, jcalc.invoice_id, jcalc.office_id, jcalc.zapis_id, jcalc.type, jcalc.client_id,
-                            ji.summ AS invoice_summ, ji.summins AS invoice_summins, ji.create_time  AS invoice_create_time,
+                            ji.summ AS invoice_summ, ji.summins AS invoice_summins, ji.create_time  AS invoice_create_time, ji.zapis_id AS invoice_zapis_id, ji.create_time AS invoice_create_time, 
+                            zapis.noch AS noch,
                             sc.name AS client_name, sc.full_name AS client_full_name,";
+
+//                $query = "
+//                            SELECT
+//                            jcalc.id, jcalc.create_time, jcalc.summ, jcalc.invoice_id, jcalc.office_id, jcalc.zapis_id, jcalc.type, jcalc.client_id,
+//                            ji.summ AS invoice_summ, ji.summins AS invoice_summins, ji.create_time  AS invoice_create_time,
+//                            sc.name AS client_name, sc.full_name AS client_full_name,";
+
                 if (($_POST['permission'] == 5) || ($_POST['permission'] == 6)) {
                     $query .= "
                             wm.id AS worker_mark,";
@@ -59,18 +67,22 @@
                 $query .= "
                             GROUP_CONCAT(DISTINCT jcalcex.percent_cats ORDER BY jcalcex.percent_cats ASC SEPARATOR ',') AS percent_cats 
                             FROM `fl_journal_calculate` jcalc
-                            LEFT JOIN `fl_journal_calculate_ex` jcalcex ON jcalc.id = jcalcex.calculate_id
                             
+                            LEFT JOIN `fl_journal_calculate_ex` jcalcex ON jcalc.id = jcalcex.calculate_id
                             LEFT JOIN `journal_invoice` ji ON ji.id = jcalc.invoice_id
+                            LEFT JOIN `zapis` zapis ON ji.zapis_id = zapis.id
                             LEFT JOIN `spr_clients` sc ON sc.id = jcalc.client_id";
+
                 if ($_POST['permission'] == 5) {
                     $query .= "
                             LEFT JOIN `journal_tooth_status` wm ON wm.zapis_id = jcalc.zapis_id";
                 }
+
                 if($_POST['permission'] == 6){
                     $query .= "
                             LEFT JOIN `journal_cosmet1` wm ON wm.zapis_id = jcalc.zapis_id";
                 }
+
                 $query .= "
                             WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.status <> '7'
                                             AND jcalc.id NOT IN ( SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id ) 
@@ -138,6 +150,8 @@
                                 $name = $rezData['client_name'];
                                 $full_name = $rezData['client_full_name'];
 
+                                $noch = $rezData['noch'];
+
                                 //Зубные формулы и запись врача
                                 $worker_mark = 1;
                                 $worker_mark_str = '';
@@ -149,6 +163,12 @@
                                         $worker_mark_str = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет отметки врача"></i>';
                                         $background_color = 'background-color: rgba(255, 141, 141, 0.2);';
                                     }
+                                }
+
+                                if ($noch == 1){
+                                    $noch_str = '<img src="img/night.png" style="width: 11px;" title="Ночное">';
+                                }else{
+                                    $noch_str = '';
                                 }
 
                                 $resultFilialStr .= '
@@ -173,7 +193,7 @@
                                                 </a>
                                             </div>
                                             <div style="margin: 5px 0 5px 3px; font-size: 80%;">
-                                                <b>Наряд: <a href="invoice.php?id=' . $rezData['invoice_id'] . '" class="ahref">#' . $rezData['invoice_id'] . '</a> от ' . $invoice_create_time . '<br>пац.: <a href="client.php?id=' . $rezData['client_id'] . '" class="ahref">' . $name . '</a><br>
+                                                <b>Наряд: <a href="invoice.php?id=' . $rezData['invoice_id'] . '" class="ahref">#' . $rezData['invoice_id'] . '</a> от ' . $invoice_create_time . ' '.$noch_str.'<br>пац.: <a href="client.php?id=' . $rezData['client_id'] . '" class="ahref">' . $name . '</a><br>
                                                 Сумма: ' . $invoice_summ . ' р. Страх.: ' . $invoice_summins . ' р.</b> <br>
                                                 
                                             </div>
