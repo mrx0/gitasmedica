@@ -1,8 +1,7 @@
 <?php
 
-//fl_tabels2.php
-//Важный отчёт
-//для администраторов и ассистентов
+//fl_tabels_noch.php
+//Важный отчёт ночь
 
 	require_once 'header.php';
     require_once 'blocks_dom.php';
@@ -31,156 +30,157 @@
             $selected_stom = ' selected';
             $selected_cosm = ' ';
             $datatable = 'scheduler_admin';
+            $type = 0;
 
-            //тип (космет/стомат/...)
-            if (isset($_GET['who'])){
-                if ($_GET['who'] == 5){
-                    $who = '&who=5';
-                    $whose = 'Стоматологи ';
-                    $selected_stom = ' selected';
-                    $selected_cosm = ' ';
-                    $datatable = 'scheduler_stom';
-                    $kabsForDoctor = 'stom';
-                    $type = 5;
-
-                    $stom_color = 'background-color: #fff261;';
-                    $cosm_color = '';
-                    $somat_color = '';
-                    $admin_color = '';
-                    $assist_color = '';
-                    $other_color = '';
-                    $all_color = '';
-                }elseif($_GET['who'] == 6){
-                    $who = '&who=6';
-                    $whose = 'Косметологи ';
-                    $selected_stom = ' ';
-                    $selected_cosm = ' selected';
-                    $datatable = 'scheduler_cosm';
-                    $kabsForDoctor = 'cosm';
-                    $type = 6;
-
-                    $stom_color = '';
-                    $cosm_color = 'background-color: #fff261;';
-                    $somat_color = '';
-                    $admin_color = '';
-                    $assist_color = '';
-                    $other_color = '';
-                    $all_color = '';
-                }elseif($_GET['who'] == 10){
-                    $who = '&who=10';
-                    $whose = 'Специалистов ';
-                    $selected_stom = ' ';
-                    $selected_cosm = ' selected';
-                    $datatable = 'scheduler_somat';
-                    $kabsForDoctor = 'somat';
-                    $type = 10;
-
-
-                    $stom_color = '';
-                    $cosm_color = '';
-                    $somat_color = 'background-color: #fff261;';
-                    $admin_color = '';
-                    $assist_color = '';
-                    $other_color = '';
-                    $all_color = '';
-                }elseif($_GET['who'] == 4){
-                    $who = '&who=4';
-                    $whose = 'Администраторов ';
-                    $selected_stom = ' ';
-                    $selected_cosm = ' selected';
-                    /*$datatable = 'scheduler_somat';
-                    $kabsForDoctor = 'somat';*/
-                    $type = 4;
-
-                    $stom_color = '';
-                    $cosm_color = '';
-                    $somat_color = '';
-                    $admin_color = 'background-color: #fff261;';
-                    $assist_color = '';
-                    $other_color = '';
-                    $all_color = '';
-                }elseif($_GET['who'] == 7){
-                    $who = '&who=7';
-                    $whose = 'Ассистенты ';
-                    $selected_stom = ' ';
-                    $selected_cosm = ' selected';
-                    /*$datatable = 'scheduler_somat';
-                    $kabsForDoctor = 'somat';*/
-                    $type = 7;
-
-                    $stom_color = '';
-                    $cosm_color = '';
-                    $somat_color = '';
-                    $admin_color = '';
-                    $assist_color = 'background-color: #fff261;';
-                    $other_color = '';
-                    $all_color = '';
-                }elseif($_GET['who'] == 11){
-                    $who = '&who=11';
-                    $whose = 'Прочее ';
-                    $selected_stom = ' ';
-                    $selected_cosm = ' selected';
-                    /*$datatable = 'scheduler_somat';
-                    $kabsForDoctor = 'somat';*/
-                    $type = 11;
-
-                    $stom_color = '';
-                    $cosm_color = '';
-                    $somat_color = '';
-                    $admin_color = '';
-                    $assist_color = '';
-                    $other_color = 'background-color: #fff261;';
-                    $all_color = '';
-                }else{
-                    $who = '&who=4';
-                    $whose = 'Администраторов ';
-                    $selected_stom = ' selected';
-                    $selected_cosm = ' ';
-                    $datatable = 'scheduler_admin';
-                    $kabsForDoctor = 'admin';
-                    $type = 4;
-
-                    $stom_color = '';
-                    $cosm_color = '';
-                    $somat_color = '';
-                    $admin_color = 'background-color: #fff261;';
-                    $assist_color = '';
-                    $other_color = '';
-                    $all_color = '';
-                }
-            }else{
-//                $who = '';
-//                $whose = 'Все ';
+//            //тип (космет/стомат/...)
+//            if (isset($_GET['who'])){
+//                if ($_GET['who'] == 5){
+//                    $who = '&who=5';
+//                    $whose = 'Стоматологи ';
+//                    $selected_stom = ' selected';
+//                    $selected_cosm = ' ';
+//                    $datatable = 'scheduler_stom';
+//                    $kabsForDoctor = 'stom';
+//                    $type = 5;
+//
+//                    $stom_color = 'background-color: #fff261;';
+//                    $cosm_color = '';
+//                    $somat_color = '';
+//                    $admin_color = '';
+//                    $assist_color = '';
+//                    $other_color = '';
+//                    $all_color = '';
+//                }elseif($_GET['who'] == 6){
+//                    $who = '&who=6';
+//                    $whose = 'Косметологи ';
+//                    $selected_stom = ' ';
+//                    $selected_cosm = ' selected';
+//                    $datatable = 'scheduler_cosm';
+//                    $kabsForDoctor = 'cosm';
+//                    $type = 6;
+//
+//                    $stom_color = '';
+//                    $cosm_color = 'background-color: #fff261;';
+//                    $somat_color = '';
+//                    $admin_color = '';
+//                    $assist_color = '';
+//                    $other_color = '';
+//                    $all_color = '';
+//                }elseif($_GET['who'] == 10){
+//                    $who = '&who=10';
+//                    $whose = 'Специалистов ';
+//                    $selected_stom = ' ';
+//                    $selected_cosm = ' selected';
+//                    $datatable = 'scheduler_somat';
+//                    $kabsForDoctor = 'somat';
+//                    $type = 10;
+//
+//
+//                    $stom_color = '';
+//                    $cosm_color = '';
+//                    $somat_color = 'background-color: #fff261;';
+//                    $admin_color = '';
+//                    $assist_color = '';
+//                    $other_color = '';
+//                    $all_color = '';
+//                }elseif($_GET['who'] == 4){
+//                    $who = '&who=4';
+//                    $whose = 'Администраторов ';
+//                    $selected_stom = ' ';
+//                    $selected_cosm = ' selected';
+//                    /*$datatable = 'scheduler_somat';
+//                    $kabsForDoctor = 'somat';*/
+//                    $type = 4;
+//
+//                    $stom_color = '';
+//                    $cosm_color = '';
+//                    $somat_color = '';
+//                    $admin_color = 'background-color: #fff261;';
+//                    $assist_color = '';
+//                    $other_color = '';
+//                    $all_color = '';
+//                }elseif($_GET['who'] == 7){
+//                    $who = '&who=7';
+//                    $whose = 'Ассистенты ';
+//                    $selected_stom = ' ';
+//                    $selected_cosm = ' selected';
+//                    /*$datatable = 'scheduler_somat';
+//                    $kabsForDoctor = 'somat';*/
+//                    $type = 7;
+//
+//                    $stom_color = '';
+//                    $cosm_color = '';
+//                    $somat_color = '';
+//                    $admin_color = '';
+//                    $assist_color = 'background-color: #fff261;';
+//                    $other_color = '';
+//                    $all_color = '';
+//                }elseif($_GET['who'] == 11){
+//                    $who = '&who=11';
+//                    $whose = 'Прочее ';
+//                    $selected_stom = ' ';
+//                    $selected_cosm = ' selected';
+//                    /*$datatable = 'scheduler_somat';
+//                    $kabsForDoctor = 'somat';*/
+//                    $type = 11;
+//
+//                    $stom_color = '';
+//                    $cosm_color = '';
+//                    $somat_color = '';
+//                    $admin_color = '';
+//                    $assist_color = '';
+//                    $other_color = 'background-color: #fff261;';
+//                    $all_color = '';
+//                }else{
+//                    $who = '&who=4';
+//                    $whose = 'Администраторов ';
+//                    $selected_stom = ' selected';
+//                    $selected_cosm = ' ';
+//                    $datatable = 'scheduler_admin';
+//                    $kabsForDoctor = 'admin';
+//                    $type = 4;
+//
+//                    $stom_color = '';
+//                    $cosm_color = '';
+//                    $somat_color = '';
+//                    $admin_color = 'background-color: #fff261;';
+//                    $assist_color = '';
+//                    $other_color = '';
+//                    $all_color = '';
+//                }
+//            }else{
+////                $who = '';
+////                $whose = 'Все ';
+////                $selected_stom = ' selected';
+////                $selected_cosm = ' ';
+////                $datatable = 'scheduler_stom';
+////                $kabsForDoctor = 'stom';
+////                $type = 0;
+////
+////                $stom_color = '';
+////                $cosm_color = '';
+////                $somat_color = '';
+////                $admin_color = '';
+////                $assist_color = '';
+////                $other_color = '';
+////                $all_color = 'background-color: #fff261;';
+//
+//                $who = '&who=4';
+//                $whose = 'Администраторов ';
 //                $selected_stom = ' selected';
 //                $selected_cosm = ' ';
-//                $datatable = 'scheduler_stom';
-//                $kabsForDoctor = 'stom';
-//                $type = 0;
+//                $datatable = 'scheduler_admin';
+//                $kabsForDoctor = 'admin';
+//                $type = 4;
 //
 //                $stom_color = '';
 //                $cosm_color = '';
 //                $somat_color = '';
-//                $admin_color = '';
+//                $admin_color = 'background-color: #fff261;';
 //                $assist_color = '';
 //                $other_color = '';
-//                $all_color = 'background-color: #fff261;';
-
-                $who = '&who=4';
-                $whose = 'Администраторов ';
-                $selected_stom = ' selected';
-                $selected_cosm = ' ';
-                $datatable = 'scheduler_admin';
-                $kabsForDoctor = 'admin';
-                $type = 4;
-
-                $stom_color = '';
-                $cosm_color = '';
-                $somat_color = '';
-                $admin_color = 'background-color: #fff261;';
-                $assist_color = '';
-                $other_color = '';
-                $all_color = '';
-            }
+//                $all_color = '';
+//            }
 
             if (isset($_GET['m']) && isset($_GET['y'])){
                 //операции со временем
@@ -191,6 +191,7 @@
                 $month = date('m');
                 $year = date('Y');
             }
+            //var_dump($month);
 
             //Сегодняшняя дата
             $day = date("d");
@@ -211,10 +212,6 @@
             }
 
             $today = date("Y-m-d");
-
-
-
-
 
 			$workers_j = array();
 
@@ -260,48 +257,142 @@
                                 <a href="fl_tabels.php?who=5" class="b" style="">Стоматологи</a>
                                 <a href="fl_tabels.php?who=6" class="b" style="">Косметологи</a>
                                 <a href="fl_tabels.php?who=10" class="b" style="">Специалисты</a>
-                                <a href="fl_tabels2.php?who=4" class="b" style="'.$admin_color.'">Администраторы</a>
-                                <a href="fl_tabels2.php?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
+                                <a href="fl_tabels2.php?who=4" class="b" style="">Администраторы</a>
+                                <a href="fl_tabels2.php?who=7" class="b" style="">Ассистенты</a>
                                 <a href="fl_tabels3.php?who=11" class="b" style="">Прочие</a>
-                                <a href="fl_tabels_noch.php" class="b" style="">Ночь</a>
+                                <a href="fl_tabels_noch.php" class="b" style="background-color: #fff261;">Ночь</a>
                             </li>';
 
 
-
+//                            <li class="cellsBlock" style="width: auto; margin-bottom: 20px;">
+//                                <div style="display: inline-block; margin-right: 20px;">
+//                                    <div style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
+//                                        Выберите филиал
+//                                    </div>
+//									<div>
+//										<select name="SelectFilial" id="SelectFilial">
+//                    ';
+//				if (!empty($filials_j)){
+//					//for ($i=0;$i<count($offices_j);$i++){
+//                    foreach ($filials_j as $f_id => $filial_item){
+//						$selected = '';
+//						if (isset($_GET['filial'])){
+//							if ($f_id == $_GET['filial']){
+//								$selected = 'selected';
+//							}
+//						}
+//						echo "<option value='".$f_id."' $selected>".$filial_item['name']."</option>";
+//					}
+//				}
+//				echo '
+//                                        </select>
+//									</div>
+//								</div>
+//								<div style="display: inline-block; margin-right: 20px;">
+//
+//									<div style="display: inline-block; margin-right: 20px;">
+//										<a href="?'.$who.$dopClient.'" class="dotyel" style="font-size: 80%;">Сбросить</a>
+//									</div>
+//								</div>
+//							</li>';
 
                 //Соберем массив сотрудников
-                $workers_j = array();
+                //$workers_j = array();
 
-                //Выберем всех сотрудников с такой должностью
-                //$query = "SELECT * FROM `spr_workers` WHERE `permissions`='{$type}' AND `status` <> '8'";
 
-                $query = "SELECT sw.*, sc.name AS cat_name, sc.id AS cat_id
-                FROM `spr_workers` sw  
-                LEFT JOIN `journal_work_cat` jwcat ON sw.id = jwcat.worker_id
-                LEFT JOIN `spr_categories` sc ON jwcat.category = sc.id
-                WHERE sw.permissions = '".$type."'  AND sw.status <> '8'
-                ORDER BY sw.full_name ASC";
+
+//                $query = "SELECT sw.*, sc.name AS cat_name, sc.id AS cat_id
+//                FROM `spr_workers` sw
+//                LEFT JOIN `journal_work_cat` jwcat ON sw.id = jwcat.worker_id
+//                LEFT JOIN `spr_categories` sc ON jwcat.category = sc.id
+//                WHERE sw.permissions = '".$type."'  AND sw.status <> '8'
+//                ORDER BY sw.full_name ASC";
+
+
+                //Сортируем по имени
+                //ksort($workers_j);
+                //var_dump($workers_j);
+
+
+                echo '<div class="no_print">';
+                echo widget_calendar ($month, $year, 'fl_tabels_noch.php', $dop);
+                echo '</div>';
+
+                echo '
+                        </ul>';
+
+
+
+
+                //Выберем данные по записи в ночные смены
+                $zapis_j = array();
+
+                //$query = "SELECT * FROM `zapis` WHERE `noch`='1' AND `month`='$month' AND `year`='$year'";
+
+                $query = "SELECT z.id AS zapis_id, z.worker AS worker_id, z.day, z.month, z.year, ji.id AS invoice_id, ji.summ AS summ, ji.summins AS summins, ji.status AS inv_status 
+                            FROM `zapis` z
+                            LEFT JOIN `journal_invoice` ji ON ji.zapis_id = z.id
+                            WHERE z.noch='1' AND z.enter='1' AND z.month='$month' AND z.year='$year';";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                 $number = mysqli_num_rows($res);
                 if ($number != 0){
                     while ($arr = mysqli_fetch_assoc($res)){
-                        $workers_j[$arr['name']] = $arr;
+
+                        if (!isset($zapis_j[$arr['year']])) {
+                            $zapis_j[$arr['year']] = array();
+                        }
+                        if (!isset($zapis_j[$arr['year']][$arr['month']])) {
+                            $zapis_j[$arr['year']][$arr['month']] = array();
+                        }
+                        if (!isset($zapis_j[$arr['year']][$arr['month']][$arr['day']])) {
+                            $zapis_j[$arr['year']][$arr['month']][$arr['day']] = array();
+                        }
+                        if (!isset($zapis_j[$arr['year']][$arr['month']][$arr['day']][$arr['worker_id']])) {
+                            $zapis_j[$arr['year']][$arr['month']][$arr['day']][$arr['worker_id']] = array();
+                        }
+
+                        array_push($zapis_j[$arr['year']][$arr['month']][$arr['day']][$arr['worker_id']], $arr);
+                    }
+                }
+                //var_dump($zapis_j[2019]);
+
+                if (!empty($zapis_j)){
+                    foreach ($zapis_j as $year => $year_data){
+                        foreach ($year_data as $month => $month_data){
+                            foreach ($month_data as $day => $day_data){
+
+                                //if ($day < 10) $day = '0'.$day;
+                                //var_dump($day < 10);
+                                //if ($month < 10) $month = '0'.$month;
+
+                                echo $day.'.'.$month.'.'.$year.'<br>';
+
+                                foreach ($day_data as $worker_id => $worker_data){
+
+                                    $summ = 0;
+
+                                    echo WriteSearchUser('spr_workers', $worker_id, 'user_full', false).'<br>';
+
+                                    foreach ($worker_data as $data) {
+                                        //Сумма нарядов
+                                        $summ += $data['summ'] + $data['summins'];
+
+                                        var_dump($data);
+                                    }
+                                    echo 'Сумма: ' . $summ . ' руб.<br>';
+
+                                    echo '<br>';
+                                }
+                            }
+                        }
                     }
                 }
 
-                //Сортируем по имени
-                ksort($workers_j);
-                //var_dump($workers_j);
 
 
-                echo '<div class="no_print">';
-                echo widget_calendar ($month, $year, 'fl_tabels2.php', $dop);
-                echo '</div>';
 
-                echo '
-                        </ul>';
 
 
                 //Процент с выручки для этого типа
