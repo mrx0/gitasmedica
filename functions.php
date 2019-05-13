@@ -3181,7 +3181,9 @@
     }
 
     //функция формирует и показывает наряды визуализация
-    function showInvoiceDivRezult($data, $minimal, $show_categories, $show_absent, $show_deleted, $only_debt){
+    function showInvoiceDivRezult($data, $minimal, $minimal_inline, $show_categories, $show_absent, $show_deleted, $only_debt){
+        //$show_absent - сообщение если ничего нет
+		//$only_debt - если полностью оплачены или оплата не требуется
     	//var_dump($data);
 
         $rezult = '';
@@ -3472,8 +3474,13 @@
 
                         $rezult_count++;
 
+                        if ($minimal_inline){
+                            $rezult .= '<div class="cellsBlockHover" style="display: inline-block; width: 140px; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
+						}else{
+                            $rezult .= '<div class="cellsBlockHover" style=" border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
+						}
+
                         $rezult .= '
-														<div class="cellsBlockHover" style=" border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">
 															<a href="invoice.php?id=' . $items['id'] . '" class="ahref">
 																<div>
 																	<div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
