@@ -120,6 +120,24 @@
                 echo '
                         </ul>';
 
+
+                $rezultShed = array();
+
+                $query = "SELECT `id`, `day`, `worker` FROM `scheduler` WHERE `smena`='3' AND `month` = '$month' AND `year` = '$year'";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0) {
+                    while ($arr = mysqli_fetch_assoc($res)) {
+                        //Раскидываем в массив
+                        array_push($rezultShed, $arr);
+                    }
+                }
+                var_dump($rezultShed);
+
+
                 //Выберем данные по записи в ночные смены
                 $zapis_j = array();
                 //$invoice_j = array();
@@ -196,7 +214,7 @@
 
                                 echo '
                                     <!--<tr class="cellsBlockHover workerItem" worker_id="$worker_data[id]" style="$bgColor">-->
-                                    <tr class="cellsBlockHover workerItem" worker_id="" style="">
+                                    <tr class="workerItem" worker_id="" style="">
                                         <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;" colspan="8">
                                             '.$day.'.'.$month.'.'.$year.'
                                         </td>
@@ -242,7 +260,7 @@
 
                                         //Выручка
                                         echo '
-                                            <tr class="cellsBlockHover workerItem" worker_id="" style="">
+                                            <tr class="workerItem" worker_id="" style="">
                                                 <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">
                                                 </td>
                                                 <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">
@@ -310,7 +328,7 @@
                                            </tr>';
 
                                         echo '
-                                                        <tr class="cellsBlockHover workerItem" worker_id="" style="">   
+                                                        <tr class="workerItem" worker_id="" style="">   
                                                             <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;" colspan="8">
                                                                 '.$rezultInvoices['data'].'
                                                             </td>
