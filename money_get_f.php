@@ -41,7 +41,7 @@
                     }
                 }
 
-                $rezultInvoices = showInvoiceDivRezult($invoice_j, false, false, true, false, true);
+                $rezultInvoices = showInvoiceDivRezult($invoice_j, false,  false, false, true, false, true);
                 //$data, $minimal, $show_categories, $show_absent, $show_deleted
                 //var_dump (count($rezultInvoices));
 

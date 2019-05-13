@@ -154,9 +154,9 @@
                         //var_dump ($invoice_j);
 
                         if (($finances['see_all'] != 0) || $god_mode){
-                            $rezultInvoices = showInvoiceDivRezult($invoice_j, false, true, true, true, false);
+                            $rezultInvoices = showInvoiceDivRezult($invoice_j, false, false, true, true, true, false);
                         }else{
-                            $rezultInvoices = showInvoiceDivRezult($invoice_j, false, true, true, false, false);
+                            $rezultInvoices = showInvoiceDivRezult($invoice_j, false, false, true, true, false, false);
                         }
                         //$data, $minimal, $show_categories, $show_absent, $show_deleted
 

@@ -2028,7 +2028,16 @@
                             }
                             echo '
 												<div class="priceitemDivname">
-													<a href="'.$link.'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter"><span style="font-size: 75%; font-weight: bold;">[#'.$items_j[$i]['id'].']</span> <i>'.$items_j[$i]['code'].'</i> '.$items_j[$i]['name'].'</a>
+													<a href="'.$link.'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter">
+														<span style="font-size: 75%; font-weight: bold;">[#'.$items_j[$i]['id'].']</span> 
+														<i>'.$items_j[$i]['code'].'</i> 
+														'.$items_j[$i]['name'].' ';
+
+                            //Категория процентов
+                            echo '['.$items_j[$i]['category'].']';
+
+                            echo '							
+													</a>
 												</div>
 												<div class="priceitemDiv">
 													<div class="priceitemDivcost"><b>'.$price.'</b> руб.</div>';
@@ -2065,14 +2074,10 @@
 				if ($number != 0){
 					//echo '_'.$value['name'].'<br>';
 					$space2 = $space. '&nbsp;&nbsp;&nbsp;';
-					$last_level2 = $last_level+1;
+					$last_level2 = $last_level + 1;
 					showTree4($value['id'], $space2, $type, $sel_id, $first, $last_level2, $deleted, $dbtable, $insure_id, $dtype);
 				}else{
 					//---
-					
-					
-
-					
 				}
 				
 					echo '
@@ -3176,7 +3181,9 @@
     }
 
     //функция формирует и показывает наряды визуализация
-    function showInvoiceDivRezult($data, $minimal, $show_categories, $show_absent, $show_deleted, $only_debt){
+    function showInvoiceDivRezult($data, $minimal, $minimal_inline, $show_categories, $show_absent, $show_deleted, $only_debt){
+        //$show_absent - сообщение если ничего нет
+		//$only_debt - если полностью оплачены или оплата не требуется
     	//var_dump($data);
 
         $rezult = '';
@@ -3467,8 +3474,13 @@
 
                         $rezult_count++;
 
+                        if ($minimal_inline){
+                            $rezult .= '<div class="cellsBlockHover" style="display: inline-block; width: 140px; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
+						}else{
+                            $rezult .= '<div class="cellsBlockHover" style=" border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
+						}
+
                         $rezult .= '
-														<div class="cellsBlockHover" style=" border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">
 															<a href="invoice.php?id=' . $items['id'] . '" class="ahref">
 																<div>
 																	<div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">

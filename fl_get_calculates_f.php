@@ -51,10 +51,14 @@
                 }
 
                 //Основные данные
-                $query = "SELECT jcalc.*, 
+                $query = "SELECT jcalc.*, ji.summ AS in_summ, ji.summins AS in_summins, ji.zapis_id AS in_zapis_id, ji.type AS in_type, ji.create_time AS in_create_time, zapis.noch AS noch,
                             GROUP_CONCAT(DISTINCT jcalcex.percent_cats ORDER BY jcalcex.percent_cats ASC SEPARATOR ',') AS percent_cats 
                             FROM `fl_journal_calculate` jcalc
+
                             LEFT JOIN `fl_journal_calculate_ex` jcalcex ON jcalc.id = jcalcex.calculate_id
+                            LEFT JOIN `journal_invoice` ji ON jcalc.invoice_id = ji.id
+                            LEFT JOIN `zapis` zapis ON ji.zapis_id = zapis.id
+
                             WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.office_id='{$_POST['office']}' AND jcalc.status <> '7'
                                             AND jcalc.id NOT IN ( SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id ) 
                             AND jcalc.date_in > '2018-05-31'
@@ -107,29 +111,38 @@
                         foreach ($rez as $rezData){
 
                             //Наряды
-                            $query = "SELECT `summ`, `summins`, `zapis_id`, `type`, `create_time` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}' LIMIT 1";
+                            //$query = "SELECT `summ`, `summins`, `zapis_id`, `type`, `create_time` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}' LIMIT 1";
 
                             /*$query2 = "SELECT `summ` AS `summ`, `summins` AS `summins` FROM `journal_invoice` WHERE `id`='{$rezData['invoice_id']}'
                             UNION ALL (
                               SELECT `name` AS `name`, `full_name` AS `full_name` FROM `spr_clients` WHERE `id`='{$rezData['client_id']}'
                             )";*/
 
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+//                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+//
+//                            $number = mysqli_num_rows($res);
+//
+//                            if ($number != 0) {
+//                                /*while ($arr = mysqli_fetch_assoc($res)) {
+//                                    array_push($rez, $arr);
+//                                }*/
+//
+//                                $arr = mysqli_fetch_assoc($res);
+//                                $summ = $arr['summ'];
+//                                $summins = $arr['summins'];
+//                                $invoice_create_time = date('d.m.y', strtotime($arr['create_time']));
+//                                $zapis_id = $arr['zapis_id'];
+//                                $invoice_type = $arr['type'];
+//                            }
 
-                            $number = mysqli_num_rows($res);
+                            //ji.summ AS in_summ, ji.summins AS in_summins, ji.zapis_id AS in_zapis_id, ji.type AS in_type, ji.create_time AS in_create_time,
+                            $summ = $rezData['in_summ'];
+                            $summins = $rezData['in_summins'];
+                            $invoice_create_time = date('d.m.y', strtotime($rezData['in_create_time']));
+                            $zapis_id = $rezData['in_zapis_id'];
+                            $invoice_type = $rezData['in_type'];
+                            $noch = $rezData['noch'];
 
-                            if ($number != 0) {
-                                /*while ($arr = mysqli_fetch_assoc($res)) {
-                                    array_push($rez, $arr);
-                                }*/
-
-                                $arr = mysqli_fetch_assoc($res);
-                                $summ = $arr['summ'];
-                                $summins = $arr['summins'];
-                                $invoice_create_time = date('d.m.y', strtotime($arr['create_time']));
-                                $zapis_id = $arr['zapis_id'];
-                                $invoice_type = $arr['type'];
-                            }
 
                             //Клиент
                             $query = "SELECT `name`, `full_name` FROM `spr_clients` WHERE `id`='{$rezData['client_id']}' LIMIT 1";
@@ -149,6 +162,7 @@
                             }
 
                             //Зубные формулы и запись врача
+                            $worker_mark = 1;
                             $doctor_mark = '';
                             $background_color = 'background-color: rgb(255, 255, 255);';
 
@@ -169,12 +183,19 @@
                             }
 
                             if ($number == 0){
+                                $worker_mark = 0;
                                 $doctor_mark = '<i class="fa fa-thumbs-down" aria-hidden="true" style="color: red; font-size: 110%;" title="Нет отметки врача"></i>';
                                 $background_color = 'background-color: rgba(255, 141, 141, 0.2);';
                             }
 
+                            if ($noch == 1){
+                                $noch_str = '<img src="img/night.png" style="width: 11px;" title="Ночное" >';
+                            }else{
+                                $noch_str = '';
+                            }
+
                             $rezult .= '
-                                <div class="cellsBlockHover" style="'.$background_color.' width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
+                                <div class="cellsBlockHover" worker_mark="'.$worker_mark.'" style="'.$background_color.' width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
                                     <div style="display: inline-block; width: 190px;">
                                         <div>
                                             <a href="fl_calculate.php?id='.$rezData['id'].'" class="ahref">
@@ -183,7 +204,7 @@
                                                         <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                     </div>
                                                     <div style="display: inline-block; vertical-align: middle;">
-                                                        <b>#'.$rezData['id'].'</b> <span style="font-size: 70%; color: rgb(115, 112, 112);">'.date('d.m.y H:i', strtotime($rezData['create_time'])).'</span>
+                                                        <b>#'.$rezData['id'].'</b> <span style="font-size: 75%; color: rgb(115, 112, 112);">'.date('d.m.y H:i', strtotime($rezData['create_time'])).'</span>
                                                     </div>
                                                 </div>
                                                 <div>
@@ -195,7 +216,7 @@
                                             </a>
                                         </div>
                                         <div style="margin: 5px 0 5px 3px; font-size: 80%;">
-                                            <b>Наряд: <a href="invoice.php?id='.$rezData['invoice_id'].'" class="ahref">#'.$rezData['invoice_id'].'</a> от '.$invoice_create_time.'<br>пац.: <a href="client.php?id='.$rezData['client_id'].'" class="ahref">'.$name.'</a><br>
+                                            <b>Наряд: <a href="invoice.php?id='.$rezData['invoice_id'].'" class="ahref">#'.$rezData['invoice_id'].'</a> от '.$invoice_create_time.' '.$noch_str.'<br>пац.: <a href="client.php?id='.$rezData['client_id'].'" class="ahref">'.$name.'</a><br>
                                             Сумма: '.$summ.' р. Страх.: '.$summins.' р.</b> <br>
                                             
                                         </div>
@@ -243,6 +264,7 @@
                             <div style="margin: 5px 0; padding: 2px; text-align: right;">
                                 <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick="fl_addNewTabelIN2(true, '.$invoice_type.', '.$_POST['worker'].', '.$_POST['office'].');"><br>
                                 <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Добавить в существующий табель" onclick="fl_addNewTabelIN2(false, '.$invoice_type.', '.$_POST['worker'].', '.$_POST['office'].');"><br><br>
+                                <!--<input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать рассчет за ночь" onclick="fl_addNoch(true, '.$invoice_type.', '.$_POST['worker'].', '.$_POST['office'].');"><br><br>-->
                                 <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Удалить выделенные" onclick="fl_deleteMarkedCalculates($(this).parent().parent());"><br>
                                 <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Перерасчитать (не более 10 РЛ за раз)" onclick="fl_reloadPercentsMarkedCalculates($(this).parent().parent());">
                             </div>';
