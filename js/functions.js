@@ -7394,7 +7394,11 @@
                             .append(
 								'<div id="search_cert_input_target">'+
 								'</div>'
-							)
+							).css({
+                            "position": "absolute",
+                            "width": "405px",
+                            "z-index": "1"
+                        })
                     )
                     .append(
                         $('<div/>')
