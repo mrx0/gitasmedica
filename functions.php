@@ -3475,9 +3475,9 @@
                         $rezult_count++;
 
                         if ($minimal_inline){
-                            $rezult .= '<div class="cellsBlockHover" style="display: inline-block; width: 140px; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
+                            $rezult .= '<div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); display: inline-block; width: 140px; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
 						}else{
-                            $rezult .= '<div class="cellsBlockHover" style=" border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
+                            $rezult .= '<div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
 						}
 
                         $rezult .= '
@@ -3553,7 +3553,7 @@
                 $rezult .= '<i style="font-size: 80%; color: #7D7D7D; margin-bottom: 5px; color: red;">Нет нарядов</i>';
             }
 
-            return array('data' => $rezult, 'count' => 1);
+            return array('data' => $rezult, 'count' => 0);
         }
 
 

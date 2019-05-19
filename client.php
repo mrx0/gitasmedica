@@ -453,9 +453,6 @@ ORDER BY `name`;
                                         <li style="margin-bottom: 5px; font-size: 90%; font-weight: bold;">
                                             '.$client_balance['summ'].' руб.
                                         </li>-->
-                                        <li style="font-size: 85%; color: #7D7D7D; margin-top: 10px;">
-                                             <a href="finance_account.php?client_id='.$client_j[0]['id'].'" class="b">Управление счётом</a>
-                                        </li>                                        
                                     </ul>
                             
                                     <ul id="balance" style="padding: 5px; margin: 0 5px 10px; display: inline-block; vertical-align: top; /*border: 1px outset #AAA;*/">
@@ -472,6 +469,15 @@ ORDER BY `name`;
                                 </div>';
 
                             echo '
+                                <ul style=" margin-bottom: 5px;">
+                                    <li style="font-size: 85%; color: #7D7D7D;">
+                                        Ниже отображена <span style="color: red;">частичная</span> финансовая информация.<br>
+                                        Подробная информация находится в разделе:
+                                    </li>
+                                    <li style="font-size: 85%; color: #7D7D7D;">
+                                         <a href="finance_account.php?client_id='.$client_j[0]['id'].'" class="b">Управление счётом</a>
+                                    </li>
+                                </ul>
                                 <div id="giveMeYourMoney"></div>';
 
 
