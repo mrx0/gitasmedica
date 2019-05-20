@@ -1,6 +1,6 @@
 <?php 
 
-//
+//fin_upload_etap.php
 //
 
 	session_start();
@@ -10,20 +10,21 @@
 	}else{
 		//var_dump ($_POST);
 
-		
+
 		if ($_POST){
+            include_once 'DBWork.php';
+
 			if (($_POST['etap'] == '') || !isset($_POST['etap']) || !isset($_POST['imgs']) || ($_POST['imgs'] == '') || ($_POST['imgs'] == '[]')){
 				echo 'Ошибка. Обновите страницу [Ctrl+F5]<br /><br />';
 			}else{
 
+
                 $path = '';
 				
 				$img_arr = explode(',', $_POST['imgs']);
-				
-				require 'config.php';
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
+
+                $msql_cnnct = ConnectToDB ();
+
 				$time = time();
 				
 				foreach($img_arr as $value){
@@ -33,10 +34,11 @@
 					VALUES (
 						'{$_POST['etap']}', '{$time}'
 					)";
-					
-					mysql_query($query) or die(mysql_error());
-					
-					$mysql_insert_id = mysql_insert_id();
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                    //ID новой позиции
+                    $mysqli_insert_id = mysqli_insert_id($msql_cnnct);
 					
 /*$filename = 'uploads_etap/'.$value;
 
@@ -48,10 +50,10 @@ if (file_exists($filename)) {
 	*/				
 					$extension = pathinfo('uploads_etap/'.$value, PATHINFO_EXTENSION);
 					
-					rename('uploads_etap/'.$value, $path.'etaps/'.$mysql_insert_id.'.'.$extension);
+					rename('uploads_etap/'.$value, $path.'etaps/'.$mysqli_insert_id.'.'.$extension);
 				}
 
-				mysql_close();
+				//mysql_close();
 				
 					echo '
 						Изображения добавлены<br /><br />
