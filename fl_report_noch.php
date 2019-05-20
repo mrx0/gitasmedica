@@ -312,9 +312,16 @@
 //                                               </td>';
 
                                 //Итого
+                                //ЗП врача
+                                $docZP = $summ/100 * 30;
+
+                                if ($docZP < 1000){
+                                    $docZP = 1000;
+                                }
+
                                 echo '
-                                               <td style="/*border-top: 1px solid #BFBCB5;*/ border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">
-                                                    <b>17771</b>
+                                               <td style="/*border-top: 1px solid #BFBCB5;*/ border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; font-weight: bold;">
+                                                    '.number_format($docZP, 0, '.', '').'
                                                </td>';
 
                                 //Ассистент
@@ -336,9 +343,12 @@
 //                                                            </td>';
 
                                         //Итого
+                                        //ЗП ассистента
+                                        $assistZP = ($summ - $summ/100 * 6)/100 * 12 + 500;
+
                                         echo '
-                                                            <td style="width: 70px; border-bottom: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">
-                                                                <b>7070</b>
+                                                            <td style="width: 70px; border-bottom: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; font-weight: bold;">
+                                                                '.number_format($assistZP, 0, '.', '').'
                                                             </td>';
                                         echo '
                                                         </tr>';
@@ -363,17 +373,21 @@
                                 echo '
                                             </tr>';
 
+                                echo '
+                                            <tr class="workerItem" worker_id="" style="' . $bgColor . ' box-shadow: 2px 1px 4px rgba(125, 125, 125, 0.27);">   
+                                                <td style="/*border-top: 1px solid #BFBCB5;*/ border-left: 1px solid #BFBCB5; padding: 5px;" colspan="8">';
                                 if ($rezultInvoices['count'] > 0) {
                                     echo '
-                                            <tr class="workerItem" worker_id="" style="' . $bgColor . ' box-shadow: 2px 1px 4px rgba(125, 125, 125, 0.27);">   
-                                                <td style="/*border-top: 1px solid #BFBCB5;*/ border-left: 1px solid #BFBCB5; padding: 5px;" colspan="8">
                                                     <div id="allINvoicesIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allINvoicesIsHere_'.$markerInd.'\');">показать/скрыть наряды</div>
                                                     <div id="allINvoicesIsHere_'.$markerInd.'" style="display: none;">
                                                     ' . $rezultInvoices['data'] . '
-                                                    </div>
+                                                    </div>';
+                                }else{
+                                    echo '<span style="color: red;">нет нарядов</span>';
+                                }
+                                echo '
                                                 </td>
                                             </tr>';
-                                }
 
                                 $markerInd++;
                             }
@@ -388,42 +402,13 @@
                 echo '
                         </table>';
 
-
-                //!!! Дальше доделывать надо и то, что ниже - либо переделывать либо выкидывать
-
-                //Процент с выручки для этого типа
-                $revenue_percent_j = array();
-
-                $arr = array();
-                $rez = array();
-
-                $query = "SELECT * FROM `fl_spr_revenue_percent` WHERE `permission` = '{$type}'";
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-                $number = mysqli_num_rows($res);
-                if ($number != 0){
-                    while ($arr = mysqli_fetch_assoc($res)){
-                        if (!isset($revenue_percent_j[$arr['filial_id']])){
-                            $revenue_percent_j[$arr['filial_id']] = array();
-                        }
-                        if (!isset($revenue_percent_j[$arr['filial_id']][$arr['category']])){
-                            $revenue_percent_j[$arr['filial_id']][$arr['category']] = array();
-                        }
-                        $revenue_percent_j[$arr['filial_id']][$arr['category']] = $arr;
-                    }
-                }
-                //var_dump($revenue_percent_j);
-
-
-                echo '
-                        </table>';
                 echo '
                     </div>';
 
                 echo '
 		            <div id="doc_title">Важный отчёт ночь - Асмедика</div>';
 
-				echo '
+				/*echo '
 
 				<script type="text/javascript">
 
@@ -524,7 +509,7 @@
 				});
 				
                 
-				</script>';
+				</script>';*/
 			}
 			//mysql_close();
 		}else{
