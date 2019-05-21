@@ -161,20 +161,62 @@
                 //$zapis_j = array();
                 //$invoice_j = array();
 
+                // + наряды
+//                $query = "SELECT
+//                    z.office AS filial_id, z.worker AS worker_id, z.day,
+//                    ji.id, ji.summ, ji.summins, ji.paid, ji.status, ji.create_time, ji.create_person, ji.last_edit_time, ji.last_edit_person
+//                            FROM `zapis` z
+//                            LEFT JOIN `journal_invoice` ji ON ji.zapis_id = z.id
+//                            WHERE z.noch='1' AND z.enter='1' AND z.month='$month' AND z.year='$year';";
+//                //var_dump($query);
+//
+//                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//                $number = mysqli_num_rows($res);
+//                if ($number != 0){
+//                    while ($arr = mysqli_fetch_assoc($res)){
+//
+//                        //Сравниваем полученные данные по записи с тем, что у нас есть по графику
+//                        //Дополняем данные, если есть соответствие
+//                        //Вставляем новые данные, если соответствия нет
+//
+//                        //Метка, были ли эти данные в графике
+//                        $arr['in_shed'] = TRUE;
+//
+//                        if (!isset($rezultShed[$arr['day']])){
+//                            $rezultShed[$arr['day']] = array();
+//                            $arr['in_shed'] = FALSE;
+//                        }
+//                        if (!isset($rezultShed[$arr['day']][$arr['filial_id']])) {
+//                            $rezultShed[$arr['day']][$arr['filial_id']] = array();
+//                            $arr['in_shed'] = FALSE;
+//                        }
+//                        if (!isset($rezultShed[$arr['day']][$arr['filial_id']][$arr['worker_id']])) {
+//                            $rezultShed[$arr['day']][$arr['filial_id']][$arr['worker_id']] = array();
+//                            $arr['in_shed'] = FALSE;
+//                        }
+//
+//                        array_push($rezultShed[$arr['day']][$arr['filial_id']][$arr['worker_id']], $arr);
+//                        //array_push($invoice_j, $arr);
+//                    }
+//                }
+                //var_dump($rezultShed[2][15]);
+
+                // + РЛ
+                $calculate_j = array();
                 $query = "SELECT
                     z.office AS filial_id, z.worker AS worker_id, z.day,
-                    ji.id, ji.summ, ji.summins, ji.paid, ji.status, ji.create_time, ji.create_person, ji.last_edit_time, ji.last_edit_person
-                            FROM `zapis` z
-                            LEFT JOIN `journal_invoice` ji ON ji.zapis_id = z.id
-                            WHERE z.noch='1' AND z.enter='1' AND z.month='$month' AND z.year='$year';";
-
+                    jc.id AS calculate_id, jc.summ_inv, jc.worker_id AS calc_worker_id
+                        FROM `zapis` z
+                        LEFT JOIN `fl_journal_calculate` jc ON jc.zapis_id = z.id
+                        WHERE z.noch='1' AND z.enter='1' AND z.month='$month' AND z.year='$year';";
                 //var_dump($query);
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                 $number = mysqli_num_rows($res);
-                if ($number != 0){
-                    while ($arr = mysqli_fetch_assoc($res)){
+                if ($number != 0) {
+                    while ($arr = mysqli_fetch_assoc($res)) {
 
                         //Сравниваем полученные данные по записи с тем, что у нас есть по графику
                         //Дополняем данные, если есть соответствие
@@ -197,7 +239,7 @@
                         }
 
                         array_push($rezultShed[$arr['day']][$arr['filial_id']][$arr['worker_id']], $arr);
-                        //array_push($invoice_j, $arr);
+                        //array_push($calculate_j, $arr);
                     }
                 }
                 //var_dump($rezultShed[2][15]);
@@ -265,21 +307,28 @@
                             foreach ($filial_data as $worker_id => $worker_data) {
                                 //var_dump($worker_data);
 
-                                $rezultInvoices = showInvoiceDivRezult($worker_data, true, true, true, false, false, false);
+                                //!!! такой функции по сути нет, она закоменчена потому что не доделана//$rezultCalculate = showCalculateDivRezult($worker_data, true, true, true, false, false, false);
+                                //$rezultInvoices = showInvoiceDivRezult($worker_data, true, true, true, false, false, false);
                                 //var_dump($rezultInvoices);
 
                                 $summ = 0;
                                 $bgColor = '';
                                 $notInShedStr = '';
 
-                                $invoice_ids_arr = array();
+                                $calculate_ids_arr = array();
+                                //$invoice_ids_arr = array();
 
                                 foreach ($worker_data as $data) {
                                     //var_dump($data);
                                     //var_dump($data['in_shed']);
 
+                                    //Сумма рассчетников, сумму которых мы берем в рассчет
+                                    //Если исполнитель в расчетнике соответствует врачу $worker_id
+                                    if ($worker_id == $data['calc_worker_id']) {
+                                        $summ += $data['summ_inv'];
+                                    }
                                     //Сумма нарядов
-                                    $summ += $data['summ'] + $data['summins'];
+                                    //$summ += $data['summ'] + $data['summins'];
 
                                     //var_dump($data['in_shed']);
                                     if (!$data['in_shed']){
@@ -287,10 +336,15 @@
                                         $notInShedStr = '<span style="color: red; font-size: 85%;">Ошибка #47. Нет в графике</span>';
                                     }
 
+                                    //ID РЛов
+                                    if ($worker_id == $data['calc_worker_id']) {
+                                        array_push($calculate_ids_arr, $data['calculate_id']);
+                                    }
                                     //ID нарядов
-                                    array_push($invoice_ids_arr, $data['id']);
+                                    //array_push($invoice_ids_arr, $data['id']);
 
                                 }
+                                //var_dump($calculate_ids_arr);
                                 //var_dump($invoice_ids_arr);
 
                                 //ЗП врача
@@ -320,7 +374,7 @@
                                                         <div style='font-weight: bold; display: inline-block; /*border: 1px solid #CCC;*/'>
                                                             " . WriteSearchUser('spr_workers', $worker_id, 'user_full', false) . "
                                                         </div>
-                                                        <div style='display: inline-block; float: right; cursor: pointer; /*border: 1px solid #CCC;*/' onclick='fl_addReportNoch({$day}, {$month}, {$year}, 5, {$worker_id}, {$filial_id}, {$summ}, {$docZP}, ".json_encode($invoice_ids_arr).");'>
+                                                        <div style='display: inline-block; float: right; cursor: pointer; /*border: 1px solid #CCC;*/' onclick='fl_addReportNoch({$day}, {$month}, {$year}, 5, {$worker_id}, {$filial_id}, {$summ}, {$docZP}, ".json_encode($calculate_ids_arr).");'>
                                                             <i class='fa fa-times'' aria-hidden='true' style='color: red; font-size: 130%;'></i>
                                                         </div>
                                                     </div>
@@ -361,7 +415,7 @@
                                                                 <div style='font-weight: bold; display: inline-block; /*border: 1px solid #CCC;*/'>
                                                                     " . $full_name . "
                                                                 </div>
-                                                                <div style='display: inline-block; float: right; cursor: pointer; /*border: 1px solid #CCC;*/' onclick='fl_addReportNoch({$day}, {$month}, {$year}, 7, {$assist_id}, {$filial_id}, {$summ}, {$assistZP}, ".json_encode($invoice_ids_arr).");'>
+                                                                <div style='display: inline-block; float: right; cursor: pointer; /*border: 1px solid #CCC;*/' onclick='fl_addReportNoch({$day}, {$month}, {$year}, 7, {$assist_id}, {$filial_id}, {$summ}, {$assistZP}, ".json_encode($calculate_ids_arr).");'>
                                                                     <i class='fa fa-times'' aria-hidden='true' style='color: rgb(187, 185, 185); font-size: 130%;'></i>
                                                                 </div>
                                                             </td>";
@@ -403,7 +457,35 @@
                                 echo '
                                             <tr class="workerItem" worker_id="" style="' . $bgColor . ' box-shadow: 2px 1px 4px rgba(125, 125, 125, 0.27);">   
                                                 <td style="/*border-top: 1px solid #BFBCB5;*/ border-left: 1px solid #BFBCB5; padding: 5px;" colspan="8">';
-                                if ($rezultInvoices['count'] > 0) {
+
+                                if (!empty($calculate_ids_arr)){
+                                    echo '
+                                                    <div id="allCalculatesIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allCalculatesIsHere_'.$markerInd.'\');">показать/скрыть РЛ</div>
+                                                    <div id="allCalculatesIsHere_'.$markerInd.'" style="display: none;">';
+                                    foreach ($calculate_ids_arr as $calculate_id) {
+                                        echo '
+                                                        <div class="cellsBlockHover calculateBlockItem" style="width: 217px; display: inline; background-color: #FFF; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
+                                                            <div style="display: inline-block; width: 190px;">
+                                                                <div>
+                                                                    <a href="fl_calculate.php?id=' . $calculate_id . '" class="ahref">
+                                                                    <div>
+                                                                    <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+                                                                        <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+                                                                    </div>
+                                                                    <div style="display: inline-block; vertical-align: middle;">
+                                                                        <b>#' . $calculate_id . '</b> <span style="font-size: 70%; color: rgb(115, 112, 112);"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>';
+                                    }
+
+                                    echo '
+                                                    </div>';
+                                }else{
+                                    echo '<span style="color: red;">нет закрытых работ</span>';
+                                }
+                                /*if ($rezultInvoices['count'] > 0) {
                                     echo '
                                                     <div id="allINvoicesIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allINvoicesIsHere_'.$markerInd.'\');">показать/скрыть наряды</div>
                                                     <div id="allINvoicesIsHere_'.$markerInd.'" style="display: none;">
@@ -411,7 +493,7 @@
                                                     </div>';
                                 }else{
                                     echo '<span style="color: red;">нет нарядов</span>';
-                                }
+                                }*/
                                 echo '
                                                 </td>
                                             </tr>';
