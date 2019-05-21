@@ -1143,6 +1143,51 @@
         })
     }
 
+    //Рассчет ночи 2.0
+    function fl_addReportNoch (day, month, year, type_id, worker_id, filial_id, filial_summ, zp_summ, invoice_ids){
+        console.log(day);
+        console.log(month);
+        console.log(year);
+        console.log(type_id);
+        console.log(worker_id);
+        console.log(filial_id);
+        console.log(filial_summ);
+        console.log(zp_summ);
+        console.log(invoice_ids);
+
+        blockWhileWaiting (true);
+
+        // var link = "fl_getCalcsFromSession_f.php";
+        //
+        // var reqData = {
+        //     newTabel: 0
+        // };
+        //
+        // $.ajax({
+        //     url: link,
+        //     global: false,
+        //     type: "POST",
+        //     //dataType: "JSON",
+        //     data: reqData,
+        //     cache: false,
+        //     beforeSend: function () {
+        //         //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+        //     },
+        //     success: function (res) {
+        //         // console.log (res);
+        //         // console.log (res.length);
+        //
+        //         if (res.length > 0) {
+        //             $('#overlay').show();
+        //
+        //             menuForAddINNewTabel(res, type_id, worker_id, filial_id, 0, noch);
+        //         }else{
+        //             $('#errrror').html('<div class="query_neok">Ошибка #34. Ничего не выбрано. Обновите выбор РЛ</div>');
+        //         }
+        //     }
+        // })
+    }
+
     //Добавляем в базу табель из сессии
     function fl_addNewTabel(){
 

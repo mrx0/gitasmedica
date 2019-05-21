@@ -1,7 +1,7 @@
 <?php
 
-//fl_tabels_noch.php
-//Важный отчёт ночь
+//fl_report_noch.php
+//Отчёт ночь
 
 	require_once 'header.php';
     require_once 'blocks_dom.php';
@@ -87,11 +87,11 @@
 				echo '
                     <div class="no_print"> 
 					<header style="margin-bottom: 5px;">
-						<h1>Важный отчёт ночь</h1>';
-                echo '
-                        <div>
-						    <a href="fl_tabel_print_choice.php?type='.$type.'" class="b4">Печать пачки</a>
-						</div>';
+						<h1>Отчёт ночь</h1>';
+//                echo '
+//                        <div>
+//						    <a href="fl_tabel_print_choice.php?type='.$type.'" class="b4">Печать пачки</a>
+//						</div>';
                 echo '    
 					</header>
 					</div>';
@@ -102,7 +102,7 @@
 					    <div id="errrror"></div>';
                 echo '
                         <ul style="margin-left: 6px; margin-bottom: 20px;">
-                            <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
+                            <!--<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
                             <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
                                 <a href="fl_tabels.php?who=5" class="b" style="">Стоматологи</a>
                                 <a href="fl_tabels.php?who=6" class="b" style="">Косметологи</a>
@@ -111,10 +111,10 @@
                                 <a href="fl_tabels2.php?who=7" class="b" style="">Ассистенты</a>
                                 <a href="fl_tabels3.php?who=11" class="b" style="">Прочие</a>
                                 <a href="fl_tabels_noch.php" class="b" style="background-color: #fff261;">Ночь</a>
-                            </li>';
+                            </li>-->';
 
                 echo '<div class="no_print">';
-                echo widget_calendar ($month, $year, 'fl_tabels_noch.php', $dop);
+                echo widget_calendar ($month, $year, 'fl_report_noch.php', $dop);
                 echo '</div>';
 
                 echo '
@@ -272,11 +272,13 @@
                                 $bgColor = '';
                                 $notInShedStr = '';
 
+                                $invoice_ids_arr = array();
+
                                 foreach ($worker_data as $data) {
                                     //var_dump($data);
                                     //var_dump($data['in_shed']);
 
-                                    //fl_tabels_noch.phpСумма нарядов
+                                    //Сумма нарядов
                                     $summ += $data['summ'] + $data['summins'];
 
                                     //var_dump($data['in_shed']);
@@ -285,7 +287,20 @@
                                         $notInShedStr = '<span style="color: red; font-size: 85%;">Ошибка #47. Нет в графике</span>';
                                     }
 
+                                    //ID нарядов
+                                    array_push($invoice_ids_arr, $data['id']);
+
                                 }
+                                //var_dump($invoice_ids_arr);
+
+                                //ЗП врача
+                                $docZP = $summ/100 * 30;
+
+                                if ($docZP < 1000){
+                                    $docZP = 1000;
+                                }
+
+                                $docZP = number_format($docZP, 0, '.', '');
 
                                 echo '
                                             <tr class="workerItem" worker_id="" style="box-shadow: 3px -2px 2px rgba(125, 125, 125, 0.27); '.$bgColor.'">
@@ -299,11 +314,20 @@
                                                     ' . $summ . '
                                                 </td>';
 
-                                echo '
-                                                <td style="/*border-top: 1px solid #BFBCB5;*/ border-left: 1px solid #BFBCB5; padding: 5px;">
-                                                    <b>' . WriteSearchUser('spr_workers', $worker_id, 'user_full', false) . '</b><br><br>
-                                                    <span style=""><a href="zapis.php?filial='.$filial_id.'&who=stom&d='.$day.'&m='.$month.'&y='.$year.'#tabs-3" class="ahref button_tiny">К записи</a></span>
-                                                </td>';
+                                echo "
+                                                <td style='/*border-top: 1px solid #BFBCB5;*/ border-left: 1px solid #BFBCB5; padding: 5px;'>
+                                                    <div style='margin-bottom: 10px;'>
+                                                        <div style='font-weight: bold; display: inline-block; /*border: 1px solid #CCC;*/'>
+                                                            " . WriteSearchUser('spr_workers', $worker_id, 'user_full', false) . "
+                                                        </div>
+                                                        <div style='display: inline-block; float: right; cursor: pointer; /*border: 1px solid #CCC;*/' onclick='fl_addReportNoch({$day}, {$month}, {$year}, 5, {$worker_id}, {$filial_id}, {$summ}, {$docZP}, ".json_encode($invoice_ids_arr).");'>
+                                                            <i class='fa fa-times'' aria-hidden='true' style='color: red; font-size: 130%;'></i>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <span style=''><a href='zapis.php?filial=".$filial_id."&who=stom&d=".$day."&m=".$month."&y=".$year."#tabs-3' class='ahref button_tiny'>К записи</a></span>
+                                                    </div>
+                                                </td>";
 
                                 //% от выручки
 //                                echo '
@@ -313,15 +337,9 @@
 
                                 //Итого
                                 //ЗП врача
-                                $docZP = $summ/100 * 30;
-
-                                if ($docZP < 1000){
-                                    $docZP = 1000;
-                                }
-
                                 echo '
                                                <td style="/*border-top: 1px solid #BFBCB5;*/ border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; font-weight: bold;">
-                                                    '.number_format($docZP, 0, '.', '').'
+                                                    '.$docZP.'
                                                </td>';
 
                                 //Ассистент
@@ -331,11 +349,22 @@
                                     echo '
                                                     <table style="">';
                                     foreach ($assist_j as $assist_id => $full_name) {
-                                        echo '
-                                                        <tr class="">
-                                                            <td style="width: 276px; border-bottom: 1px solid #BFBCB5; padding-left: 5px; text-align: left;">
-                                                                <b>' . $full_name . '</b>
-                                                            </td>';
+                                        //Итого
+                                        //ЗП ассистента
+                                        $assistZP = ($summ - $summ/100 * 6)/100 * 12 + 500;
+
+                                        $assistZP = number_format($assistZP, 0, '.', '');
+
+                                        echo "
+                                                        <tr class=''>
+                                                            <td style='width: 276px; border-bottom: 1px solid #BFBCB5; padding-left: 5px; text-align: left; font-weight: bold;'>
+                                                                <div style='font-weight: bold; display: inline-block; /*border: 1px solid #CCC;*/'>
+                                                                    " . $full_name . "
+                                                                </div>
+                                                                <div style='display: inline-block; float: right; cursor: pointer; /*border: 1px solid #CCC;*/' onclick='fl_addReportNoch({$day}, {$month}, {$year}, 7, {$assist_id}, {$filial_id}, {$summ}, {$assistZP}, ".json_encode($invoice_ids_arr).");'>
+                                                                    <i class='fa fa-times'' aria-hidden='true' style='color: rgb(187, 185, 185); font-size: 130%;'></i>
+                                                                </div>
+                                                            </td>";
 //                                        //% от выручки
 //                                        echo '
 //                                                            <td style="width: 70px; border-bottom: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">
@@ -344,11 +373,9 @@
 
                                         //Итого
                                         //ЗП ассистента
-                                        $assistZP = ($summ - $summ/100 * 6)/100 * 12 + 500;
-
                                         echo '
                                                             <td style="width: 70px; border-bottom: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; font-weight: bold;">
-                                                                '.number_format($assistZP, 0, '.', '').'
+                                                                '.$assistZP.'
                                                             </td>';
                                         echo '
                                                         </tr>';
@@ -405,8 +432,14 @@
                 echo '
                     </div>';
 
+                echo '	
+                    <!-- Подложка только одна -->
+                    <div id="overlay"></div>';
+
                 echo '
 		            <div id="doc_title">Важный отчёт ночь - Асмедика</div>';
+
+
 
 				/*echo '
 
