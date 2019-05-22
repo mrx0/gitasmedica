@@ -2088,5 +2088,46 @@
 
     }
 
+    //Функция собирает табели
+    function fl_getTabels($type_id, $worker_id, $filial_id){
+
+        $rezult = array();
+
+        $msql_cnnct = ConnectToDB2 ();
+
+        //Выберем табели уже существующие для этого работника
+        if (($type_id == 0) && ($filial_id == 0)) {
+
+            $query = "SELECT * FROM `fl_journal_tabels` WHERE `worker_id`='{$worker_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
+        }else {
+
+            //$query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$typeID}' AND `worker_id`='{$workerID}' AND `office_id`='{$filialID}' AND `status` <> '7' AND `status` <> '9';";
+            $query = "SELECT * FROM `fl_journal_tabels` WHERE `worker_id`='{$worker_id}' AND `type`='{$type_id}' AND `office_id`='{$filial_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
+        }
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0) {
+            while ($arr = mysqli_fetch_assoc($res)) {
+                //array_push($rez, $arr);
+
+                if (!isset($rezult[$arr['year']])) {
+                    $rezult[$arr['year']] = array();
+                }
+                if (!isset($rezult[$arr['year']][$arr['month']])) {
+                    $rezult[$arr['year']][$arr['month']] = array();
+                }
+
+                array_push($rezult[$arr['year']][$arr['month']], $arr);
+            }
+
+            krsort($rezult);
+        }
+
+        return $rezult;
+    }
+
 
 ?>
