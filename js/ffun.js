@@ -1147,7 +1147,7 @@
 
     //Рассчет ночи 2.0
     function fl_addReportNoch (day, month, year, type_id, worker_id, filial_id, filial_summ, zp_summ, invoice_ids){
-         console.log(day);
+        // console.log(day);
         // console.log(month);
         // console.log(year);
         // console.log(type_id);
@@ -1191,7 +1191,7 @@
 
                     menuForAddINNewTabel(res, type_id, worker_id, filial_id, 0, true, dopData);
                 }else{
-                    //$('#errrror').html('<div class="query_neok">Ошибка #49. Ничего не выбрано. Обновите выбор РЛ</div>');
+                    $('#errrror').html('<div class="query_neok">Ошибка #49. Нет табелей.</div>');
                 }
             }
         })

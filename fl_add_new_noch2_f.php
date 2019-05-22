@@ -44,6 +44,17 @@
                 //ID новой позиции
                 //$mysqli_insert_id = mysqli_insert_id($msql_cnnct);
 
+                //Рассчитаем и обновим ночной баланс табеля
+                $query = "SELECT SUM(`summ`) AS `summ` FROM `fl_journal_tabels_noch` WHERE `tabel_id`='{$_POST['tabelForAdding']}'";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                $arr = mysqli_fetch_assoc($res);
+
+                $query = "UPDATE `fl_journal_tabels` SET `night_smena` = '".round($arr['summ'], 2)."' WHERE `id`='{$_POST['tabelForAdding']}';";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
                 //Обновим баланс табеля
                 //updateTabelBalance($mysqli_insert_id);
 
