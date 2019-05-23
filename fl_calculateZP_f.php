@@ -32,10 +32,27 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         //Смотрим наряды, закрытые за период
         //$query = "SELECT `summ`,`summins`, `office_id`, (SUM(`summ`)+ SUM(`summins`)) AS all_summ FROM `journal_invoice` WHERE `status`='5' AND `closed_time` BETWEEN '{$datastart}' AND '{$dataend}'";
-        $query = "SELECT `summ`,`summins`, `office_id` FROM `journal_invoice` WHERE `status`='5' AND `closed_time` BETWEEN '{$datastart}' AND '{$dataend}'";
+        $query = "
+        SELECT ji.summ, ji.summins, ji.office_id, z.noch
+        FROM `journal_invoice` ji
+        LEFT JOIN `zapis` z ON ji.zapis_id = z.id
+        WHERE ji.status='5' AND ji.closed_time BETWEEN '{$datastart}' AND '{$dataend}'
+        ";
 
+        //Если ассистент, то только стоматология
         if ($_POST['typeW'] == 7){
-            $query = "SELECT `summ`,`summins`, `office_id` FROM `journal_invoice` WHERE `type` ='5' AND `status`='5' AND `closed_time` BETWEEN '{$datastart}' AND '{$dataend}'";
+//            $query = "
+//            SELECT `summ`,`summins`, `office_id`
+//            FROM `journal_invoice`
+//            WHERE `type` ='5' AND `status`='5' AND `closed_time` BETWEEN '{$datastart}' AND '{$dataend}'
+//            ";
+
+            $query = "
+            SELECT ji.summ, ji.summins, ji.office_id, z.noch
+            FROM `journal_invoice` ji
+            LEFT JOIN `zapis` z ON ji.zapis_id = z.id
+            WHERE ji.status='5' AND ji.type ='5' AND ji.closed_time BETWEEN '{$datastart}' AND '{$dataend}'
+            ";
         }
 
         //var_dump($query);
@@ -52,11 +69,13 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         if ($number != 0) {
             while ($arr = mysqli_fetch_assoc($res)) {
-
-                if (!isset($journal[$arr['office_id']])){
-                    $journal[$arr['office_id']] = array();
+                //Исключаем ночные
+                if ($arr['noch'] != 1) {
+                    if (!isset($journal[$arr['office_id']])){
+                        $journal[$arr['office_id']] = array();
+                    }
+                    array_push($journal[$arr['office_id']], $arr);
                 }
-                array_push($journal[$arr['office_id']], $arr);
             }
         }
         //var_dump($journal);

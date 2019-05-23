@@ -3794,7 +3794,7 @@
 
 
 /*    //функция формирует и показывает расчетные листы визуализация
-    function showCalculateDivRezult($data, $minimal, $show_categories, $show_absent){
+    function showCalculateDivRezult($data){
 
         $rezult = '';
 

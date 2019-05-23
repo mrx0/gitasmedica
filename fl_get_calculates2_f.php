@@ -171,8 +171,9 @@
                                     $noch_str = '';
                                 }
 
-                                $resultFilialStr .= '
-                                    <div class="cellsBlockHover calculateBlockItem" worker_mark="'.$worker_mark.'" style="' . $background_color . ' width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
+                                if ($noch != 1) {
+                                    $resultFilialStr .= '
+                                    <div class="cellsBlockHover calculateBlockItem" worker_mark="' . $worker_mark . '" style="' . $background_color . ' width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
                                         <div style="display: inline-block; width: 190px;">
                                             <div>
                                                 <a href="fl_calculate.php?id=' . $rezData['id'] . '" class="ahref">
@@ -193,29 +194,29 @@
                                                 </a>
                                             </div>
                                             <div style="margin: 5px 0 5px 3px; font-size: 80%;">
-                                                <b>Наряд: <a href="invoice.php?id=' . $rezData['invoice_id'] . '" class="ahref">#' . $rezData['invoice_id'] . '</a> от ' . $invoice_create_time . ' '.$noch_str.'<br>пац.: <a href="client.php?id=' . $rezData['client_id'] . '" class="ahref">' . $name . '</a><br>
+                                                <b>Наряд: <a href="invoice.php?id=' . $rezData['invoice_id'] . '" class="ahref">#' . $rezData['invoice_id'] . '</a> от ' . $invoice_create_time . ' ' . $noch_str . '<br>пац.: <a href="client.php?id=' . $rezData['client_id'] . '" class="ahref">' . $name . '</a><br>
                                                 Сумма: ' . $invoice_summ . ' р. Страх.: ' . $invoice_summins . ' р.</b> <br>
                                                 
                                             </div>
                                             <div style="margin: 5px 0 5px 3px; font-size: 80%;">';
 
-                                //Категории процентов(работ)
-                                $percent_cats_arr = explode(',', $rezData['percent_cats']);
+                                    //Категории процентов(работ)
+                                    $percent_cats_arr = explode(',', $rezData['percent_cats']);
 
-                                foreach ($percent_cats_arr as $percent_cat) {
-                                    if ($percent_cat > 0) {
-                                        $resultFilialStr .= '<i style="color: rgb(15, 6, 142); font-size: 110%;">' . $percent_cats_j[$percent_cat] . '</i><br>';
-                                    } else {
-                                        $resultFilialStr .= '<i style="color: red; font-size: 100%;">Ошибка #17</i><br>';
+                                    foreach ($percent_cats_arr as $percent_cat) {
+                                        if ($percent_cat > 0) {
+                                            $resultFilialStr .= '<i style="color: rgb(15, 6, 142); font-size: 110%;">' . $percent_cats_j[$percent_cat] . '</i><br>';
+                                        } else {
+                                            $resultFilialStr .= '<i style="color: red; font-size: 100%;">Ошибка #17</i><br>';
+                                        }
                                     }
-                                }
 
-                                $resultFilialStr .= '                                            
+                                    $resultFilialStr .= '                                            
                                             </div>
                                         </div>
                                         <div style="display: inline-block; vertical-align: top;">
                                             <div style=" padding: 3px; margin: 1px;" title="Выделить">
-                                                <input type="checkbox" worker_mark="'.$worker_mark.'" class="chkBoxCalcs chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $filial_id . '" name="nPaidCalcs_' . $rezData['id'] . '" chkBoxData="chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $filial_id . '" value="1">
+                                                <input type="checkbox" worker_mark="' . $worker_mark . '" class="chkBoxCalcs chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $filial_id . '" name="nPaidCalcs_' . $rezData['id'] . '" chkBoxData="chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $filial_id . '" value="1">
                                             </div>
                                         </div>
                                         <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
@@ -224,8 +225,9 @@
                                         </div>
                                     </div>';
 
-                                $summCalc += $rezData['summ'];
-                                $allCalcSumm += $summCalc;
+                                    $summCalc += $rezData['summ'];
+                                    $allCalcSumm += $summCalc;
+                                }
                             }
                             $resultFilialStr .= '
                                 </div>

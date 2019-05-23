@@ -19,65 +19,53 @@
 
         //var_dump($_SESSION);
         if ($_POST) {
-            if (isset($_POST['worker_id'])) {
+            if (isset($_POST['type_id']) && isset($_POST['worker_id']) && isset($_POST['filial_id'])) {
 
                 $filials_j = getAllFilials(false, true, true);
 
                 $workerID = $_POST['worker_id'];
 
-                $result .= '
-                    <header style="margin-bottom: 10Px;">
-                        <h2>Выберите табель</h2>';
+                $tabels_j = fl_getTabels($_POST['type_id'], $workerID, $_POST['filial_id']);
 
-                $result .= '
-                        <div style="text-align: left;">
-                            '.WriteSearchUser('spr_workers', $workerID, 'user', true).' / Все филиалы<br><br>
-                        </div>';
+                    if (!empty($tabels_j)) {
 
-                $result .= '
-                    </header>';
+//                        $result .= '
+//                            <div style="padding: 2px; text-align: center; color: #717171; font-size: 80%;">
+//                                Выберите табель, <br>в который хотите добавить вычет
+//                            </div>';
 
-                $msql_cnnct = ConnectToDB();
-
-                //Если хотим добавить в существующий уже табель
-
-                $result .= '
-                    <div class="tableTabels" style="width: 240px; background-color: rgb(234, 234, 234); text-align: left; height: 280px; overflow-y: scroll;  overflow-x: hidden;">';
-
-                //Выберем табели уже существующие для этого работника
-                $query = "SELECT * FROM `fl_journal_tabels` WHERE `worker_id`='{$workerID}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
-
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-                $number = mysqli_num_rows($res);
-
-                if ($number != 0) {
-                    while ($arr = mysqli_fetch_assoc($res)) {
-                    //array_push($rez, $arr);
-
-                        if (!isset($rez[$arr['year']])) {
-                            $rez[$arr['year']] = array();
-                        }
-                        if (!isset($rez[$arr['year']][$arr['month']])) {
-                            $rez[$arr['year']][$arr['month']] = array();
-                        }
-
-                        array_push($rez[$arr['year']][$arr['month']], $arr);
-
-                    }
-
-                    if (!empty($rez)) {
-
-                        //include_once 'fl_showCalculateRezult.php';
-
-                        krsort($rez);
 
                         $result .= '
-                            <div style="padding: 2px; text-align: center; color: #717171; font-size: 80%;">
-                                Выберите табель, <br>в который хотите добавить вычет
-                            </div>';
+                            <header style="margin-bottom: 10Px;">
+                                <h2>Выберите табель</h2>';
 
-                        foreach ($rez as $year => $yearData) {
+                        $result .= '
+                                <div style="text-align: left;">
+                                    '.WriteSearchUser('spr_workers', $workerID, 'user', true).' / ';
+
+                        if ($_POST['filial_id'] == 0){
+                            $result .= 'Все филиалы';
+                        }else{
+                            $result .= '['.$filials_j[$_POST['filial_id']]['name2'].']';
+                        }
+
+                        $result .= '
+                                    <br><br>
+                                </div>';
+
+                        $result .= '
+                            </header>';
+
+                        //Хотим добавить в существующий уже табель
+                        $result .= '
+                            <div class="tableTabels" style="width: 240px; background-color: rgb(234, 234, 234); text-align: left; height: 280px; overflow-y: scroll;  overflow-x: hidden;">';
+
+                        $result .= '
+                                <div style="padding: 2px; text-align: center; color: #717171; font-size: 80%;">
+                                    Выберите табель, <br>в который хотите добавить
+                                </div>';
+
+                        foreach ($tabels_j as $year => $yearData) {
 
                             $bgColor = '';
                             $display = '';
@@ -91,12 +79,12 @@
                             }
 
                             $result .= '
-                            <div style="margin: 15px 0 -2px; padding: 2px; text-align: left; color: #717171; font-size: 85%; cursor: pointer; ' . $bgColor . '" ' . $onclick . '">
-                                Год <span style="color: #252525; font-weight: bold;">' . $year . '</span>' . $lastYearDescr . '
-                            </div>';
+                                <div style="margin: 15px 0 -2px; padding: 2px; text-align: left; color: #717171; font-size: 85%; cursor: pointer; ' . $bgColor . '" ' . $onclick . '">
+                                    Год <span style="color: #252525; font-weight: bold;">' . $year . '</span>' . $lastYearDescr . '
+                                </div>';
 
                             $result .= '
-                            <div id="data2_' . $year . '_' . $workerID . '"  style="' . $display . '">';
+                                <div id="data2_' . $year . '_' . $workerID . '"  style="' . $display . '">';
 
                             krsort($yearData);
                             //$yearData = array_reverse($yearData);
@@ -114,9 +102,9 @@
                                 }
 
                                 $result .= '
-                                <div style="margin: 2px 0 2px; padding: 2px; text-align: right; color: #717171;">
-                                    <!--Месяц --><span style="color: #252525; font-weight: bold; ' . $bgColor . '">' . $monthsName[$month] . '</span>
-                                </div>';
+                                    <div style="margin: 2px 0 2px; padding: 2px; text-align: right; color: #717171;">
+                                        <!--Месяц --><span style="color: #252525; font-weight: bold; ' . $bgColor . '">' . $monthsName[$month] . '</span>
+                                    </div>';
 
                                 foreach ($monthData as $rezData) {
 
@@ -156,19 +144,18 @@
                             }
 
                             $result .= '
-                            </div>';
+                                </div>';
 
                         }
+                        $result .= '
+                            </div>';
 
                     } else {
 
                     }
-                }
-
-                $result .= '
-                    </div>';
 
                 echo $result;
+
             }
         }
     }

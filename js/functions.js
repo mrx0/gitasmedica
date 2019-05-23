@@ -8311,7 +8311,9 @@
         var link = "fl_getTabels_f.php";
 
         var reqData = {
-            worker_id: worker_id
+            type_id: 0,
+            worker_id: worker_id,
+            filial_id: 0
         };
 
         $.ajax({

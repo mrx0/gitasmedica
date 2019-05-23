@@ -2,6 +2,7 @@
 
 //fl_getCalcsFromSession_f.php
 //Соберём все расчетные листы из сессии и покажем их перед добавлением в табель
+//А также, если нужно, то еще и выберем и покажем табели, куда надо добавить
 //!!! не уверен, что это рационально, туда сюда запросы к сессии каждый раз
 
     session_start();
@@ -163,127 +164,129 @@
                             //$summCalc = 0;
 
                             //Выберем табели уже существующие для этого работника
-                            //$query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$typeID}' AND `worker_id`='{$workerID}' AND `office_id`='{$filialID}' AND `status` <> '7' AND `status` <> '9';";
-                            $query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$typeID}' AND `worker_id`='{$workerID}' AND `office_id`='{$filialID}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
+                            $tabels_j = fl_getTabels($typeID, $workerID, $filialID);
 
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+//                            //$query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$typeID}' AND `worker_id`='{$workerID}' AND `office_id`='{$filialID}' AND `status` <> '7' AND `status` <> '9';";
+//                            $query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$typeID}' AND `worker_id`='{$workerID}' AND `office_id`='{$filialID}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
+//
+//                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+//
+//                            $number = mysqli_num_rows($res);
+//
+//                            if ($number != 0) {
+//                                while ($arr = mysqli_fetch_assoc($res)) {
+//                                    //array_push($rez, $arr);
+//
+//                                    if (!isset($rez[$arr['year']])) {
+//                                        $rez[$arr['year']] = array();
+//                                    }
+//                                    if (!isset($rez[$arr['year']][$arr['month']])) {
+//                                        $rez[$arr['year']][$arr['month']] = array();
+//                                    }
+//
+//                                    array_push($rez[$arr['year']][$arr['month']], $arr);
+//
+//                                }
 
-                            $number = mysqli_num_rows($res);
+                            if (!empty($tabels_j)) {
 
-                            if ($number != 0) {
-                                while ($arr = mysqli_fetch_assoc($res)) {
-                                    //array_push($rez, $arr);
+                                //include_once 'fl_showCalculateRezult.php';
 
-                                    if (!isset($rez[$arr['year']])) {
-                                        $rez[$arr['year']] = array();
-                                    }
-                                    if (!isset($rez[$arr['year']][$arr['month']])) {
-                                        $rez[$arr['year']][$arr['month']] = array();
-                                    }
+                                //krsort($rez);
 
-                                    array_push($rez[$arr['year']][$arr['month']], $arr);
-
-                                }
-
-                                if (!empty($rez)) {
-
-                                    //include_once 'fl_showCalculateRezult.php';
-
-                                    krsort($rez);
-
-                                    $result .= '
-                                        <div style="padding: 2px; text-align: center; color: #717171; font-size: 80%;">
-                                            Выберите табель, <br>в который хотите добавить РЛ
-                                        </div>';
-
-                                    foreach ($rez as $year => $yearData) {
-
-                                        $bgColor = '';
-                                        $display = '';
-                                        $onclick = '';
-                                        $lastYearDescr = '';
-
-                                        if ($year != date('Y', time())) {
-                                            $display = 'display: none;';
-                                            $onclick = 'onclick="$(\'#data2_' . $year . '_' . $workerID . '_' . $filialID . '\').stop(true, true).slideToggle(\'slow\');"';
-                                            $lastYearDescr = ' <span style="font-size: 75%;"> Развернуть/Свернуть</span>';
-                                        }
-
-                                        $result .= '
-                                        <div style="margin: 15px 0 -2px; padding: 2px; text-align: left; color: #717171; font-size: 85%; cursor: pointer; ' . $bgColor . '" ' . $onclick . '">
-                                            Год <span style="color: #252525; font-weight: bold;">' . $year . '</span>' . $lastYearDescr . '
-                                        </div>';
-
-                                        $result .= '
-                                        <div id="data2_' . $year . '_' . $workerID . '_' . $filialID . '"  style="' . $display . '">';
-
-                                        krsort($yearData);
-
-                                        //$yearData = array_reverse($yearData);
-
-                                        foreach ($yearData as $month => $monthData) {
-
-                                            $bgColor = '';
-
-                                            if ($year == date('Y', time())) {
-                                                if (date('n', time()) == $month) {
-                                                    //$bgColor = 'background-color: rgba(244, 254, 63, 0.54);';
-                                                    //$bgColor = 'background-color: rgb(255, 241, 114);';
-                                                    $bgColor = 'box-shadow: 2px 4px 7px rgb(0, 216, 255); border-top: 1px dotted rgb(0, 216, 255);';
-                                                }
-                                            }
-
-                                            $result .= '
-                                        <div style="margin: 2px 0 2px; padding: 2px; text-align: right; color: #717171;">
-                                            <!--Месяц --><span style="color: #252525; font-weight: bold; ' . $bgColor . '">' . $monthsName[$month] . '</span>
-                                        </div>';
-
-                                            foreach ($monthData as $rezData) {
-
-                                                $result .= '
-                                        <!--<div class="cellsBlockHover" style=" border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">-->
-                                        <div class="cellsBlockHover" style="background-color: white; border: 1px solid #BFBCB5; margin-top: 1px; position: relative; ' . $bgColor . '">
-                                            <div style="display: inline-block; /*width: 150px;*/">
-                                                <!--<a href="fl_tabel.php?id=' . $rezData['id'] . '" class="ahref">-->
-                                                    <div>
-                                                        <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
-                                                            <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
-                                                        </div>
-                                                        <div style="display: inline-block; vertical-align: middle;">
-                                                            Табель #' . $rezData['id'] . ' <span style="font-size: 80%;">['.$filials_j[$rezData['office_id']]['name2'].']</span>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 13px">
-                                                            Сумма РЛ: <span class="calculateInvoice calculateCalculateN" style="font-size: 14px">' . $rezData['summ'] . '</span> руб.
-                                                        </div>
-                                                    </div>
-                                                    
-                                                <!--</a>-->
-                                            </div>
-                           
-                                            <div style="position: absolute; top: -4px; right: -4px;">
-                                                <div style="border: none; padding: 3px; margin: 1px;">
-                                                    <input type="radio" class="radioBtnCalcs" name="tabelForAdding" value="' . $rezData['id'] . '">
-                                                </div>
-                                            </div>
-
-                                        </div>';
-
-                                                //$summCalc += $rezData['summ'];
-
-                                            }
-                                        }
-
-                                        $result .= '
+                                $result .= '
+                                    <div style="padding: 2px; text-align: center; color: #717171; font-size: 80%;">
+                                        Выберите табель, <br>в который хотите добавить РЛ
                                     </div>';
 
+                                foreach ($tabels_j as $year => $yearData) {
+
+                                    $bgColor = '';
+                                    $display = '';
+                                    $onclick = '';
+                                    $lastYearDescr = '';
+
+                                    if ($year != date('Y', time())) {
+                                        $display = 'display: none;';
+                                        $onclick = 'onclick="$(\'#data2_' . $year . '_' . $workerID . '_' . $filialID . '\').stop(true, true).slideToggle(\'slow\');"';
+                                        $lastYearDescr = ' <span style="font-size: 75%;"> Развернуть/Свернуть</span>';
                                     }
 
-                                } else {
+                                    $result .= '
+                                    <div style="margin: 15px 0 -2px; padding: 2px; text-align: left; color: #717171; font-size: 85%; cursor: pointer; ' . $bgColor . '" ' . $onclick . '">
+                                        Год <span style="color: #252525; font-weight: bold;">' . $year . '</span>' . $lastYearDescr . '
+                                    </div>';
+
+                                    $result .= '
+                                    <div id="data2_' . $year . '_' . $workerID . '_' . $filialID . '"  style="' . $display . '">';
+
+                                    krsort($yearData);
+
+                                    //$yearData = array_reverse($yearData);
+
+                                    foreach ($yearData as $month => $monthData) {
+
+                                        $bgColor = '';
+
+                                        if ($year == date('Y', time())) {
+                                            if (date('n', time()) == $month) {
+                                                //$bgColor = 'background-color: rgba(244, 254, 63, 0.54);';
+                                                //$bgColor = 'background-color: rgb(255, 241, 114);';
+                                                $bgColor = 'box-shadow: 2px 4px 7px rgb(0, 216, 255); border-top: 1px dotted rgb(0, 216, 255);';
+                                            }
+                                        }
+
+                                        $result .= '
+                                    <div style="margin: 2px 0 2px; padding: 2px; text-align: right; color: #717171;">
+                                        <!--Месяц --><span style="color: #252525; font-weight: bold; ' . $bgColor . '">' . $monthsName[$month] . '</span>
+                                    </div>';
+
+                                        foreach ($monthData as $rezData) {
+
+                                            $result .= '
+                                    <!--<div class="cellsBlockHover" style=" border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">-->
+                                    <div class="cellsBlockHover" style="background-color: white; border: 1px solid #BFBCB5; margin-top: 1px; position: relative; ' . $bgColor . '">
+                                        <div style="display: inline-block; /*width: 150px;*/">
+                                            <!--<a href="fl_tabel.php?id=' . $rezData['id'] . '" class="ahref">-->
+                                                <div>
+                                                    <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+                                                        <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+                                                    </div>
+                                                    <div style="display: inline-block; vertical-align: middle;">
+                                                        Табель #' . $rezData['id'] . ' <span style="font-size: 80%;">['.$filials_j[$rezData['office_id']]['name2'].']</span>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 13px">
+                                                        Сумма РЛ: <span class="calculateInvoice calculateCalculateN" style="font-size: 14px">' . $rezData['summ'] . '</span> руб.
+                                                    </div>
+                                                </div>
+                                                
+                                            <!--</a>-->
+                                        </div>
+                       
+                                        <div style="position: absolute; top: -4px; right: -4px;">
+                                            <div style="border: none; padding: 3px; margin: 1px;">
+                                                <input type="radio" class="radioBtnCalcs" name="tabelForAdding" value="' . $rezData['id'] . '">
+                                            </div>
+                                        </div>
+
+                                    </div>';
+
+                                            //$summCalc += $rezData['summ'];
+
+                                        }
+                                    }
+
+                                    $result .= '
+                                </div>';
 
                                 }
+
+                            } else {
+
                             }
+                            //}
 
                             $result .= '
                                     </div>';

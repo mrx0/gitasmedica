@@ -311,6 +311,12 @@
                             <li><div onclick="fl_deletePaidoutFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить из табеля</div></li>';
 				}
 
+				//Для ночных отчетов в табеле
+                if ($_POST['mark'] == 'tabel_night_options'){
+                    $data .= '
+                            <li><div onclick="fl_deleteNightFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить из табеля</div></li>';
+				}
+
 				//Настройка для записи
 				if ($_POST['mark'] == 'zapis_options'){
 				}

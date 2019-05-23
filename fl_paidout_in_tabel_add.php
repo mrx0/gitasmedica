@@ -48,6 +48,8 @@ if ($enter_ok){
                         echo ' на карту ';
                     }elseif ($_GET['type'] == 7){
                         echo ' зп ';
+                    }elseif ($_GET['type'] == 5){
+                        echo ' ночь ';
                     }
 
                     echo '
