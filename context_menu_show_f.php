@@ -314,7 +314,7 @@
 				//Для ночных отчетов в табеле
                 if ($_POST['mark'] == 'tabel_night_options'){
                     $data .= '
-                            <li><div onclick="fl_deleteNightFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить из табеля</div></li>';
+                            <li><div onclick="fl_deleteNightFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить рассчёт</div></li>';
 				}
 
 				//Настройка для записи
