@@ -610,6 +610,8 @@
 
     //Обновить сумму баланса Табеля
     function updateTabelBalance($tabel_id){
+        $summCalcs = 0;
+        $summNight = 0;
 
         $msql_cnnct = ConnectToDB2();
 
@@ -619,7 +621,18 @@
 
         $arr = mysqli_fetch_assoc($res);
 
-        $query = "UPDATE `fl_journal_tabels` SET `summ` = '".round($arr['summCalcs'], 2)."' WHERE `id`='{$tabel_id}';";
+        $summCalcs = $arr['summCalcs'];
+
+        //Рассчитаем и обновим ночной баланс табеля
+        $query = "SELECT SUM(`summ`) AS `summ` FROM `fl_journal_tabels_noch` WHERE `tabel_id`='{$tabel_id}'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        $arr = mysqli_fetch_assoc($res);
+
+        $summNight = $arr['summ'];
+
+        $query = "UPDATE `fl_journal_tabels` SET `summ` = '".round($summCalcs, 2)."', `night_smena` = '".round($summNight, 2)."' WHERE `id`='{$tabel_id}';";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 

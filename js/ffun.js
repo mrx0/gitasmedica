@@ -1758,7 +1758,46 @@
                 },
                 // действие, при ответе с сервера
                 success: function (res) {
-                    console.log(res);
+                    //console.log(res);
+
+                    if (res.result == "success") {
+                        location.reload();
+                    } else {
+                        $('#errror').html(res.data);
+                    }
+                }
+            });
+        }
+    }
+
+    //Удаляем ночной отчет из табеля
+    function fl_deleteNightFromTabel(tabel_id, tabel_night_id){
+
+        var link = "fl_deleteNightFromTabel_f.php";
+
+        var rys = false;
+
+        rys = confirm("Вы хотите удалить отчёт по ночи из табеля. \n\nВы уверены?");
+        //console.log(885);
+
+        if (rys) {
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    tabel_id: tabel_id,
+                    tabel_night_id: tabel_night_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res);
 
                     if (res.result == "success") {
                         location.reload();
@@ -1848,7 +1887,7 @@
         }
     }
 
-    //Удаляем надбавку из табеля
+    //Удаляем выплату из табеля
     function fl_deletePaidoutFromTabel(tabel_id, paidout_id){
 
         var link = "fl_deletePaidoutFromTabel_f.php";
@@ -4639,7 +4678,7 @@
             success: function (res) {
 
                 if (res.result == "success") {
-                    //console.log (res);
+                    console.log (res);
 
                     $(".filialMoney").each(function(){
                         //console.log($(this).attr("filial_id"));

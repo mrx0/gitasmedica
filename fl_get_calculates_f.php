@@ -189,66 +189,67 @@
                             }
 
                             if ($noch == 1){
-                                $noch_str = '<img src="img/night.png" style="width: 11px;" title="Ночное" >';
+                                $noch_str = '<img src="img/night.png" style="width: 11px;" title="Ночное">';
                             }else{
                                 $noch_str = '';
                             }
 
-                            $rezult .= '
-                                <div class="cellsBlockHover" worker_mark="'.$worker_mark.'" style="'.$background_color.' width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
+                            if ($noch != 1) {
+                                $rezult .= '
+                                <div class="cellsBlockHover" worker_mark="' . $worker_mark . '" style="' . $background_color . ' width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
                                     <div style="display: inline-block; width: 190px;">
                                         <div>
-                                            <a href="fl_calculate.php?id='.$rezData['id'].'" class="ahref">
+                                            <a href="fl_calculate.php?id=' . $rezData['id'] . '" class="ahref">
                                                 <div>
                                                     <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
                                                         <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                     </div>
                                                     <div style="display: inline-block; vertical-align: middle;">
-                                                        <b>#'.$rezData['id'].'</b> <span style="font-size: 75%; color: rgb(115, 112, 112);">'.date('d.m.y H:i', strtotime($rezData['create_time'])).'</span>
+                                                        <b>#' . $rezData['id'] . '</b> <span style="font-size: 75%; color: rgb(115, 112, 112);">' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>
                                                     </div>
                                                 </div>
                                                 <div>
                                                     <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
-                                                        Сумма расчёта: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">'.$rezData['summ'].'</span> руб.
+                                                        Сумма расчёта: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">' . $rezData['summ'] . '</span> руб.
                                                     </div>
                                                 </div>
                                                 
                                             </a>
                                         </div>
                                         <div style="margin: 5px 0 5px 3px; font-size: 80%;">
-                                            <b>Наряд: <a href="invoice.php?id='.$rezData['invoice_id'].'" class="ahref">#'.$rezData['invoice_id'].'</a> от '.$invoice_create_time.' '.$noch_str.'<br>пац.: <a href="client.php?id='.$rezData['client_id'].'" class="ahref">'.$name.'</a><br>
-                                            Сумма: '.$summ.' р. Страх.: '.$summins.' р.</b> <br>
+                                            <b>Наряд: <a href="invoice.php?id=' . $rezData['invoice_id'] . '" class="ahref">#' . $rezData['invoice_id'] . '</a> от ' . $invoice_create_time . ' ' . $noch_str . '<br>пац.: <a href="client.php?id=' . $rezData['client_id'] . '" class="ahref">' . $name . '</a><br>
+                                            Сумма: ' . $summ . ' р. Страх.: ' . $summins . ' р.</b> <br>
                                             
                                         </div>
                                         <div style="margin: 5px 0 5px 3px; font-size: 80%;">';
 
-                            //Категории процентов(работ)
-                            $percent_cats_arr = explode(',', $rezData['percent_cats']);
+                                //Категории процентов(работ)
+                                $percent_cats_arr = explode(',', $rezData['percent_cats']);
 
-                            foreach ($percent_cats_arr as $percent_cat){
-                                if ($percent_cat > 0) {
-                                    $rezult .= '<i style="color: rgb(15, 6, 142); font-size: 110%;">' . $percent_cats_j[$percent_cat] . '</i><br>';
-                                }else{
-                                    $rezult .= '<i style="color: red; font-size: 100%;">Ошибка #17</i><br>';
+                                foreach ($percent_cats_arr as $percent_cat) {
+                                    if ($percent_cat > 0) {
+                                        $rezult .= '<i style="color: rgb(15, 6, 142); font-size: 110%;">' . $percent_cats_j[$percent_cat] . '</i><br>';
+                                    } else {
+                                        $rezult .= '<i style="color: red; font-size: 100%;">Ошибка #17</i><br>';
+                                    }
                                 }
-                            }
 
-                            $rezult .= '                                            
+                                $rezult .= '                                            
                                         </div>
                                     </div>
                                     <div style="display: inline-block; vertical-align: top;">
                                         <div style="/*border: 1px solid #CCC;*/ padding: 3px; margin: 1px;" title="Выделить">
-                                            <input type="checkbox" class="chkBoxCalcs chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$_POST['office'].'" name="nPaidCalcs_'.$rezData['id'].'" chkBoxData="chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$_POST['office'].'" value="1">
+                                            <input type="checkbox" class="chkBoxCalcs chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $_POST['office'] . '" name="nPaidCalcs_' . $rezData['id'] . '" chkBoxData="chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $_POST['office'] . '" value="1">
                                         </div>
                                     </div>
                                     <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
                                     <div style="position: absolute; bottom: 2px; right: 3px;">
-                                        '.$doctor_mark.'
+                                        ' . $doctor_mark . '
                                     </div>
                                 </div>';
 
-                            $summCalc += $rezData['summ'];
-
+                                $summCalc += $rezData['summ'];
+                            }
                         }
 
 
