@@ -40,6 +40,7 @@
                     $stom_color = 'background-color: #fff261;';
                     $cosm_color = '';
                     $somat_color = '';
+                    $assist_color = '';
                 }elseif($_GET['who'] == '6'){
                     $who = '&who=6';
                     $whose = 'Косметологи ';
@@ -52,6 +53,7 @@
                     $stom_color = '';
                     $cosm_color = 'background-color: #fff261;';
                     $somat_color = '';
+                    $assist_color = '';
                 }elseif($_GET['who'] == '10'){
                     $who = '&who=10';
                     $whose = 'Специалисты ';
@@ -64,6 +66,21 @@
                     $stom_color = '';
                     $cosm_color = '';
                     $somat_color = 'background-color: #fff261;';
+                    $assist_color = '';
+                }elseif($_GET['who'] == 7){
+                    $who = '&who=7';
+                    $whose = 'Ассистенты ';
+                    $selected_stom = ' ';
+                    $selected_cosm = ' selected';
+                    /*$datatable = 'scheduler_somat';
+                    $kabsForDoctor = 'somat';*/
+                    $type = 7;
+
+                    $stom_color = '';
+                    $cosm_color = '';
+                    $somat_color = '';
+                    $admin_color = '';
+                    $assist_color = 'background-color: #fff261;';
                 }else{
                     $who = '&who=stom';
                     $whose = 'Стоматологи ';
@@ -77,6 +94,7 @@
                     $stom_color = 'background-color: #fff261;';
                     $cosm_color = '';
                     $somat_color = '';
+                    $assist_color = '';
                 }
             }else{
                 $who = '&who=stom';
@@ -91,6 +109,7 @@
                 $stom_color = 'background-color: #fff261;';
                 $cosm_color = '';
                 $somat_color = '';
+                $assist_color = '';
             }
 
 
@@ -144,6 +163,7 @@
                                     <a href="?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
                                     <a href="fl_tabels2.php?who=4" class="b" style="">Администраторы</a>
 								    <a href="fl_tabels2.php?who=7" class="b" style="">Ассистенты</a>
+                                    <a href="?who=7" class="b" style="'.$assist_color.'">Ассистенты2</a>
 								    <a href="fl_tabels3.php?who=11" class="b" style="">Прочие</a>
 								    <!--<a href="fl_tabels_noch.php" class="b" style="">Ночь</a>-->
                                 </li>
@@ -283,7 +303,7 @@
                                             </div>';
 
                                     echo '
-                                            <div class="tableDataNPaidCalcs" style="width: 444px; background-color: rgba(251, 170, 170, 0.18);" id="'.$type . '_' . $worker['id'] . '_' . $office['id'].'">
+                                            <div class="tableDataNPaidCalcs" style="width: 665px; background-color: rgba(251, 170, 170, 0.18);" id="'.$type . '_' . $worker['id'] . '_' . $office['id'].'">
                                                 <!--<div style=\'width: 120px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);\'><img src=\'img/wait.gif\' style=\'float:left;\'><span style=\'float: right;  font-size: 90%;\'> обработка...<br>загрузка<br>расч. листов</span></div>-->
                                                 Нет данных по необработанным расчетным листам
                                             </div>';

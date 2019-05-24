@@ -471,22 +471,31 @@
 		
 		return $sheduler_zapis;
 	}
-	
-	function FilialKabSmenaZapisToday($table, $y, $m, $d, $office, $kab, $type){
-		//require 'config.php';
-		if ($table == 'scheduler_stom'){
-			$datatable = 'zapis_stom';
-		}elseif ($table == 'scheduler_cosm'){
-			$datatable = 'zapis_cosm';
-		}else{
-			$datatable = 'zapis_stom';
-		}
-		$sheduler_zapis = array();
 
-        $msql_cnnct = ConnectToDB ();
+	//Получение записи в кабинете
+	function FilialKabSmenaZapisToday($table, $y, $m, $d, $filial_id, $kab, $type, $enter)
+    {
+        //$table - Таблица (сейчас не используется), год, месяц, день, филиал, кабинет, тип (стом, косм, спец...)
 
-		$query = "SELECT * FROM `zapis` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$office}' AND `kab` = '{$kab}' AND `type` = '{$type}' ORDER BY `start_time` ASC";
+        //require 'config.php';
+//		if ($table == 'scheduler_stom'){
+//			$datatable = 'zapis_stom';
+//		}elseif ($table == 'scheduler_cosm'){
+//			$datatable = 'zapis_cosm';
+//		}else{
+//			$datatable = 'zapis_stom';
+//		}
+        $sheduler_zapis = array();
 
+        $msql_cnnct = ConnectToDB();
+
+        //Все без ограничений
+        //без записи
+        if ($enter == 6){
+            $query = "SELECT * FROM `zapis` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$filial_id}' AND `enter` = 6 ORDER BY `start_time` ASC";
+		}else {
+    	    $query = "SELECT * FROM `zapis` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$filial_id}' AND `kab` = '{$kab}' AND `type` = '{$type}' ORDER BY `start_time` ASC";
+	    }
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
 		$number = mysqli_num_rows($res);
@@ -503,22 +512,25 @@
 	}
 	
 	//Получение записи в кабинете за дату
-	function FilialKabSmenaZapisToday2($table, $y, $m, $d, $office, $kab, $wt, $type){
+	function FilialKabSmenaZapisToday2($table, $y, $m, $d, $filial_id, $kab, $wt, $type){
+        //$table - Таблица (сейчас не используется), год, месяц, день, филиал, кабинет, время записи, тип (стом, косм, спец...)
+
 		//require 'config.php';
-		if ($table == 'scheduler_stom'){
-			$datatable = 'zapis_stom';
-		}elseif ($table == 'scheduler_cosm'){
-			$datatable = 'zapis_cosm';
-		}else{
-			$datatable = 'zapis_stom';
-		}
+//		if ($table == 'scheduler_stom'){
+//			$datatable = 'zapis_stom';
+//		}elseif ($table == 'scheduler_cosm'){
+//			$datatable = 'zapis_cosm';
+//		}else{
+//			$datatable = 'zapis_stom';
+//		}
 		$sheduler_zapis = array();
 
         $msql_cnnct = ConnectToDB ();
 
 		$wt2 = $wt+30;
 
-		$query = "SELECT * FROM `zapis` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$office}' AND `kab` = '{$kab}' AND `type` = '{$type}' AND `start_time` >= '{$wt}' AND `start_time` < '{$wt2}' AND `enter` <> 9 AND `enter` <> 8 ORDER BY `start_time` ASC";
+		//Кроме тех, которые удалены или не пришли
+		$query = "SELECT * FROM `zapis` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$filial_id}' AND `kab` = '{$kab}' AND `type` = '{$type}' AND `start_time` >= '{$wt}' AND `start_time` < '{$wt2}' AND `enter` <> 9 AND `enter` <> 8 ORDER BY `start_time` ASC";
 
 		//echo $query;
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -535,29 +547,36 @@
 		
 		return $sheduler_zapis;
 	}
-	
-	function FilialKabSmenaZapisToday3($table, $y, $m, $d, $office, $type){
+
+	//Получение записи на филиале, результат раскидывается по кабинетам и времени записи
+	function FilialKabSmenaZapisToday3($table, $y, $m, $d, $filial_id, $type, $enter){
+        //$table - Таблица (сейчас не используется), год, месяц, день, филиал, тип (стом, косм, спец...)
+
 		//require 'config.php';
-		if ($table == 'scheduler_stom'){
-			$datatable = 'zapis_stom';
-		}elseif ($table == 'scheduler_cosm'){
-			$datatable = 'zapis_cosm';
-		}else{
-			$datatable = 'zapis_stom';
-		}
+//		if ($table == 'scheduler_stom'){
+//			$datatable = 'zapis_stom';
+//		}elseif ($table == 'scheduler_cosm'){
+//			$datatable = 'zapis_cosm';
+//		}else{
+//			$datatable = 'zapis_stom';
+//		}
 		$sheduler_zapis = array();
 
         $msql_cnnct = ConnectToDB ();
 
-		//$wt2 = $wt+30;
-
-		$query = "SELECT * FROM `zapis` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$office}' AND `type` = '{$type}' AND `enter` <> 9 AND `enter` <> 8 ORDER BY `kab`, `start_time` ASC";
-
+        //Кроме тех, которые удалены или не пришли
+		//без записи
+//        if ($enter == 6){
+//            $query = "SELECT * FROM `zapis` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$filial_id}' AND `enter` = 6 ORDER BY `start_time` ASC";
+//		}else {
+	        $query = "SELECT * FROM `zapis` WHERE `year` = '{$y}' AND `month` = '{$m}'  AND `day` = '{$d}' AND `office` = '{$filial_id}' AND `type` = '{$type}' AND `enter` <> 9 AND `enter` <> 8 ORDER BY `kab`, `start_time` ASC";
+//        }
 		//echo $query;
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
 		$number = mysqli_num_rows($res);
 		if ($number != 0){
+			//Раскидываем в массив по кабинетам и времени записи
 			while ($arr = mysqli_fetch_assoc($res)){
 				//array_push($sheduler_zapis, $arr);
 				if (!isset($sheduler_zapis[$arr['kab']])){

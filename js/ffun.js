@@ -2913,6 +2913,10 @@
             },
             success:function(res){
                 //console.log(res);
+                //console.log(reqData.worker);
+                // if (reqData.worker == 492) {
+                //     console.log(res.query);
+                // }
                 //$("#tabs-"+reqData.permission+"_"+reqData.worker).html(res);
 
                 if(res.result == 'success'){
