@@ -1,6 +1,6 @@
 <?php
 
-//fl_my_tabels.php
+//  fl_my_tabels.php
 //Табели сотрудников
 
 	require_once 'header.php';
