@@ -1,7 +1,7 @@
 <?php
 
 //fl_tabels3.php
-//Важный отчёт
+//Отчёт по часам
 //для прочее
 
 	require_once 'header.php';
@@ -237,14 +237,20 @@
 
 			if ($_POST){
 			}else{
-				echo '
+                echo '
                     <div class="no_print"> 
 					<header style="margin-bottom: 5px;">
-						<h1>Важный отчёт</h1>';
+                        <div class="nav">';
+//                if ($tabel_j[0]['worker_id'] == $_SESSION['id']){
+//                    echo '
+//                            <a href="fl_my_tabels.php" class="b">Табели</a>';
+//                }else {
+                    echo '
+                            <a href="fl_tabels.php?'.$who.'" class="b">Важный отчёт</a>';
+//                }
                 echo '
-                        <div>
-						    <a href="fl_tabel_print_choice.php?type='.$type.'" class="b4">Печать пачки</a>
-						</div>';
+                        </div>
+						<h1>Отчёт по часам</h1>';
                 echo '    
 					</header>
 					</div>';
@@ -257,12 +263,12 @@
                         <ul style="margin-left: 6px; margin-bottom: 20px;">
                             <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
                             <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-                                <a href="fl_tabels.php?who=5" class="b" style="">Стоматологи</a>
-                                <a href="fl_tabels.php?who=6" class="b" style="">Косметологи</a>
-                                <a href="fl_tabels.php?who=10" class="b" style="">Специалисты</a>
+                                <!--<a href="fl_tabels.php?who=5" class="b" style="">Стоматологи</a>-->
+                                <!--<a href="fl_tabels.php?who=6" class="b" style="">Косметологи</a>-->
+                                <!--<a href="fl_tabels.php?who=10" class="b" style="">Специалисты</a>-->
                                 <a href="fl_tabels2.php?who=4" class="b" style="">Администраторы</a>
                                 <a href="fl_tabels2.php?who=7" class="b" style="">Ассистенты</a>
-                                <a href="fl_tabels.php?who=7" class="b" style="">Ассистенты2</a>
+                                <!--<a href="fl_tabels.php?who=7" class="b" style="">Ассистенты2</a>-->
                                 <a href="fl_tabels3.php?who=11" class="b" style="'.$other_color.'">Прочее</a>
                                 <!--<a href="fl_tabels_noch.php" class="b" style="">Ночь</a>-->
                             </li>';
@@ -618,7 +624,7 @@
                     </div>';
 
                 echo '
-		            <div id="doc_title">Важный отчёт - Асмедика</div>';
+		            <div id="doc_title">Отчёт по часам - Асмедика</div>';
 
 				echo '
 

@@ -48,7 +48,7 @@
 
                 //Основные данные
                 //!!! 2019.05.24 отметки врачей не всегда верно отображаются, не понимаю пока почему
-                //Если в условие добавить одие филиал, то будет норм
+                //Если в условие добавить один филиал, то будет норм
                 //
 //                SELECT
 //                            jcalc.id, jcalc.create_time, jcalc.summ, jcalc.invoice_id, jcalc.office_id, jcalc.zapis_id, jcalc.type, jcalc.client_id,
@@ -262,8 +262,12 @@
 
                                 $resultFilialStr .= '
                                 <div style="margin: 5px 0; padding: 2px; text-align: right;">
-                                    <div id="errrror"></div>
-                                    <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick="fl_addNewTabelIN2(true, '.$invoice_type.', '.$_POST['worker'].', '.$filial_id.');"><br>
+                                    <div id="errrror"></div>';
+                                if ($_POST['permission'] != 7) {
+                                    $resultFilialStr .= '
+                                    <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick="fl_addNewTabelIN2(true, ' . $invoice_type . ', ' . $_POST['worker'] . ', ' . $filial_id . ');"><br>';
+                                }
+                                $resultFilialStr .= '
                                     <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Добавить в существующий табель" onclick="fl_addNewTabelIN2(false, '.$invoice_type.', '.$_POST['worker'].', '.$filial_id.');"><br><br>
                                     <!--<input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать рассчет за ночь" onclick="fl_addNoch(true, '.$invoice_type.', '.$_POST['worker'].', '.$filial_id.');"><br><br>-->
                                     <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Удалить выделенные" onclick="fl_deleteMarkedCalculates($(this).parent().parent());"><br>

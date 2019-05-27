@@ -994,7 +994,7 @@
         //console.log(newTabel);
         //console.log(noch);
         //console.log(dopData);
-        console.log(JSON.stringify(dopData));
+        //console.log(JSON.stringify(dopData));
 
         var buttonsStr = '';
 
