@@ -615,6 +615,16 @@
 
         $msql_cnnct = ConnectToDB2();
 
+        //Тип табеля (стом, косм, ассист, ... и т.д.)
+        $query = "SELECT `type` FROM `fl_journal_tabels` WHERE `id`='{$tabel_id}' LIMIT 1";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        $arr = mysqli_fetch_assoc($res);
+
+        $type = $arr['type'];
+
+        //Сумма рассчетных листов в табеле
         $query = "SELECT SUM(`summ`) AS `summCalcs`  FROM `fl_journal_calculate` WHERE `id` IN (SELECT `calculate_id` FROM `fl_journal_tabels_ex` WHERE `tabel_id`='{$tabel_id}');";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -632,7 +642,14 @@
 
         $summNight = $arr['summ'];
 
-        $query = "UPDATE `fl_journal_tabels` SET `summ` = '".round($summCalcs, 2)."', `night_smena` = '".round($summNight, 2)."' WHERE `id`='{$tabel_id}';";
+        //Если ассистенты, то считается чуть иначе
+        //!!! Поэтому тут мы обновим только сумму РЛ, не затранивая общую (за смены и выручку).
+        //Потом надо будет и тут доделать перерасчет по всей сумме
+        if ($type == 7){
+            $query = "UPDATE `fl_journal_tabels` SET `summ_calc` = '" . round($summCalcs, 2) . "', `night_smena` = '" . round($summNight, 2) . "' WHERE `id`='{$tabel_id}';";
+        }else {
+            $query = "UPDATE `fl_journal_tabels` SET `summ` = '" . round($summCalcs, 2) . "', `summ_calc` = '" . round($summCalcs, 2) . "', `night_smena` = '" . round($summNight, 2) . "' WHERE `id`='{$tabel_id}';";
+        }
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 

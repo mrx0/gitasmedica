@@ -47,6 +47,29 @@
                 }
 
                 //Основные данные
+                //!!! 2019.05.24 отметки врачей не всегда верно отображаются, не понимаю пока почему
+                //Если в условие добавить один филиал, то будет норм
+                //
+//                SELECT
+//                            jcalc.id, jcalc.create_time, jcalc.summ, jcalc.invoice_id, jcalc.office_id, jcalc.zapis_id, jcalc.type, jcalc.client_id,
+//                            ji.summ AS invoice_summ, ji.summins AS invoice_summins, ji.create_time  AS invoice_create_time, ji.zapis_id AS invoice_zapis_id, ji.create_time AS 		                    invoice_create_time,
+//                            zapis.noch AS noch,
+//                            sc.name AS client_name, sc.full_name AS client_full_name,
+//                            wm.id AS worker_mark,
+//                            GROUP_CONCAT(DISTINCT jcalcex.percent_cats ORDER BY jcalcex.percent_cats ASC SEPARATOR ',') AS percent_cats
+//                            FROM `fl_journal_calculate` jcalc
+//
+//                            LEFT JOIN `fl_journal_calculate_ex` jcalcex ON jcalc.id = jcalcex.calculate_id
+//                            LEFT JOIN `journal_invoice` ji ON ji.id = jcalc.invoice_id
+//                            LEFT JOIN `zapis` zapis ON ji.zapis_id = zapis.id
+//                            LEFT JOIN `spr_clients` sc ON sc.id = jcalc.client_id
+//                            LEFT JOIN `journal_tooth_status` wm ON jcalc.zapis_id = wm.zapis_id
+//                            WHERE jcalc.type='5' AND jcalc.worker_id='492' AND jcalc.status <> '7'
+//                AND jcalc.id NOT IN ( SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id )
+//                            AND jcalc.date_in > '2018-05-31'
+//
+//                            GROUP BY jcalc.id
+
                 $query = "
                             SELECT 
                             jcalc.id, jcalc.create_time, jcalc.summ, jcalc.invoice_id, jcalc.office_id, jcalc.zapis_id, jcalc.type, jcalc.client_id,
@@ -85,7 +108,7 @@
 
                 $query .= "
                             WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.status <> '7'
-                                            AND jcalc.id NOT IN ( SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id ) 
+                            AND jcalc.id NOT IN ( SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id ) 
                             AND jcalc.date_in > '2018-05-31'
                             GROUP BY jcalc.id";
 
@@ -239,8 +262,12 @@
 
                                 $resultFilialStr .= '
                                 <div style="margin: 5px 0; padding: 2px; text-align: right;">
-                                    <div id="errrror"></div>
-                                    <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick="fl_addNewTabelIN2(true, '.$invoice_type.', '.$_POST['worker'].', '.$filial_id.');"><br>
+                                    <div id="errrror"></div>';
+                                if ($_POST['permission'] != 7) {
+                                    $resultFilialStr .= '
+                                    <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick="fl_addNewTabelIN2(true, ' . $invoice_type . ', ' . $_POST['worker'] . ', ' . $filial_id . ');"><br>';
+                                }
+                                $resultFilialStr .= '
                                     <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Добавить в существующий табель" onclick="fl_addNewTabelIN2(false, '.$invoice_type.', '.$_POST['worker'].', '.$filial_id.');"><br><br>
                                     <!--<input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать рассчет за ночь" onclick="fl_addNoch(true, '.$invoice_type.', '.$_POST['worker'].', '.$filial_id.');"><br><br>-->
                                     <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Удалить выделенные" onclick="fl_deleteMarkedCalculates($(this).parent().parent());"><br>

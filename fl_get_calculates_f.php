@@ -262,8 +262,12 @@
                         if (($finances['see_all']) || $god_mode) {
 
                             $rezult .= '
-                            <div style="margin: 5px 0; padding: 2px; text-align: right;">
-                                <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick="fl_addNewTabelIN2(true, '.$invoice_type.', '.$_POST['worker'].', '.$_POST['office'].');"><br>
+                            <div style="margin: 5px 0; padding: 2px; text-align: right;">';
+                            if ($_POST['permission'] != 7) {
+                                $rezult .= '
+                                <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick="fl_addNewTabelIN2(true, ' . $invoice_type . ', ' . $_POST['worker'] . ', ' . $_POST['office'] . ');"><br>';
+                            }
+                            $rezult .= '
                                 <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Добавить в существующий табель" onclick="fl_addNewTabelIN2(false, '.$invoice_type.', '.$_POST['worker'].', '.$_POST['office'].');"><br><br>
                                 <!--<input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать рассчет за ночь" onclick="fl_addNoch(true, '.$invoice_type.', '.$_POST['worker'].', '.$_POST['office'].');"><br><br>-->
                                 <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Удалить выделенные" onclick="fl_deleteMarkedCalculates($(this).parent().parent());"><br>

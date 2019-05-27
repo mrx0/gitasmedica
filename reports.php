@@ -169,6 +169,12 @@
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_tabels.php" class="b3">Важный отчёт</a>
 							</li>';
+
+                echo '
+                            <li class="cellsBlock" style="margin: 1px;">
+                                <a href="fl_tabels2.php" class="b3">Отчёт по часам</a>
+                            </li>';
+
 //                echo '
 //							<li class="cellsBlock" style="margin: 1px;">
 //								<a href="fl_mainReportCategory.php" class="b3">Отчёт по категориям</a>
@@ -186,12 +192,14 @@
 								<a href="absents.php" class="b3">Отпуск/больничный</a>
 							</li>';*/
 
-                if (($finances['see_all'] == 1) || $god_mode) {
-                    echo '
+                //if (($finances['see_all'] == 1) || $god_mode) {
+                echo '
                             <li class="cellsBlock" style="margin: 1px;">
                                 <a href="fl_report_noch.php" class="b3">Ночь</a>
                             </li>';
-                }
+
+
+                //}
                 echo '
 						</ul>';
             }
