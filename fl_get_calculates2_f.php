@@ -156,7 +156,7 @@
                                 <div style="margin: 5px 0; padding: 2px; text-align: center; color: #0C0C0C;">
                                     Выделить всё <input type="checkbox" id="chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$filial_id.'" name="checkAll" class="checkAll" chkBoxData="chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$filial_id.'" value="1">
                                 </div>
-                                <div>';
+                                <div id="calcs_list_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$filial_id.'">';
 
                             //Сумма всех РЛ филиала
                             $summCalc = 0;
@@ -165,7 +165,8 @@
 
                                 $invoice_summ = $rezData['invoice_summ'];
                                 $invoice_summins = $rezData['invoice_summins'];
-                                $invoice_create_time = date('d.m.y', strtotime($rezData['create_time']));
+                                $invoice_create_time = date('d.m.y', strtotime($rezData['invoice_create_time']));
+                                $invoice_create_time2 = date('y.m.d', strtotime($rezData['invoice_create_time']));
 
                                 $zapis_id = $rezData['zapis_id'];
                                 $invoice_type = $rezData['type'];
@@ -196,7 +197,7 @@
 
                                 if ($noch != 1) {
                                     $resultFilialStr .= '
-                                    <div class="cellsBlockHover calculateBlockItem" worker_mark="' . $worker_mark . '" style="' . $background_color . ' width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
+                                    <div class="cellsBlockHover calculateBlockItem" data-sort="'.$invoice_create_time2.'" worker_mark="' . $worker_mark . '" style="' . $background_color . ' width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
                                         <div style="display: inline-block; width: 190px;">
                                             <div>
                                                 <a href="fl_calculate.php?id=' . $rezData['id'] . '" class="ahref">

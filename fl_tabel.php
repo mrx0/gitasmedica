@@ -701,7 +701,7 @@
                                     <div>
                                         <div style="margin-bottom: 5px;">
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
-                                                Всего ночных смен по графику: <b>'.$nightSmena.'</b>. Оформлено: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">' . count($tabels_noch_j) . '</span> смен
+                                                Всего ночных смен по графику: <b>'.$nightSmena.'</b>. Оформлено: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">' . count($tabels_noch_j) . '</span> смен <a href="fl_report_noch.php" class="ahref button_tiny">Отчёт ночь</a>
                                             </div>
                                             <div style="border: 1px dotted #b3c0c8; display: block; font-size: 12px; padding: 2px; margin-right: 10px; margin-bottom: 10px; margin-top: 10px; vertical-align: top;">
                                                 <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
