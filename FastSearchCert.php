@@ -17,8 +17,10 @@
 		}else{
 			include_once 'DBWork.php';	
 			$fast_search = SelForFastSearchCert ($table, $searchdata);
+
             if (!empty($fast_search)){
                 //var_dump ($fast_search);
+
                 $rez .= '<table width="100%" border="0" class="tableInsStat">';
 				for ($i = 0; $i < count($fast_search); $i++){
 
