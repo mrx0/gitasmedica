@@ -1,6 +1,6 @@
 <?php
 
-//payment_add.php
+//certificate_payment_add.php
 //Оплатить наряд заказ с баланса/счета
 
 	require_once 'header.php';
