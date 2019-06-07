@@ -37,6 +37,7 @@
             if (isset($_GET['y'])) {
                 $y = $_GET['y'];
             }
+
             if (isset($_GET['filial_id'])) {
                 $filial_id = $_GET['filial_id'];
             }else{
@@ -60,8 +61,15 @@
                     <header>
                         <div class="nav">
                             <a href="stat_cashbox.php" class="b">Касса</a>
-                            <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт по филиалу</a>
-                            <a href="scheduler3.php?filial='.$filial_id.'&who=4" class="b">График</a>
+                            <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт по филиалу</a>';
+            if ($have_target_filial) {
+                echo '
+                            <a href="scheduler3.php?filial=' . $filial_id . '&who=4" class="b">График</a>';
+            }else{
+                echo '
+                            <a href="scheduler3.php?who=4" class="b">График</a>';
+            }
+            echo '
                         </div>
                         <!--<span style="color: red;">Тестовый режим</span>-->
                         <h2>Добавить рабочие часы</h2>

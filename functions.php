@@ -3206,9 +3206,10 @@
     	//var_dump($data);
 
         $rezult = '';
+        $rezult_deleted = '';
 
         $itemAll_str = '';
-        $itemClose_str = '';
+        $itemDelete_str = '';
 
         //Количество
         $rezult_count = 0;
@@ -3388,6 +3389,7 @@
                         }
                     }
 
+                    //Если отображение не минималичтичное
                     if (!$minimal) {
 
                         $rezult_count++;
@@ -3479,7 +3481,7 @@
                         if ($items['status'] != 9) {
                             $itemAll_str .= $itemTemp_str;
                         } else {
-                            $itemClose_str .= $itemTemp_str;
+                            $itemDelete_str .= $itemTemp_str;
                         }
                     }
 
@@ -3489,17 +3491,19 @@
                         $colorItem = 'background-color: #FFF;';
 					}
 
+					//Если минималистичное отображение
                     if ($minimal) {
 
                         $rezult_count++;
 
+                        //Если минималистичное отображение и хотим отобразить всё в строку
                         if ($minimal_inline){
-                            $rezult .= '<div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); display: inline-block; width: 140px; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
+                            $itemDelete_str .= '<div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); display: inline-block; width: 140px; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
 						}else{
-                            $rezult .= '<div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
+                            $itemDelete_str .= '<div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
 						}
 
-                        $rezult .= '
+                        $itemDelete_str .= '
 															<a href="invoice.php?id=' . $items['id'] . '" class="ahref">
 																<div>
 																	<div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
@@ -3511,16 +3515,16 @@
 																</div>
 																<div style="margin: 3px;">';
 
-                        $rezult .= $itemPercentCats_str;
+                        $itemDelete_str .= $itemPercentCats_str;
 
-                        $rezult .= '
+                        $itemDelete_str .= '
 																</div>
 																<div>
 																	<div style="border: 1px dotted #AAA; margin: 2px 2px; padding: 1px 3px; font-size: 10px">
 																		<span class="calculateInvoice" style="font-size: 11px">' . $items['summ'] . '</span> руб.
 																	</div>';
                         if ($items['summins'] != 0) {
-                            $rezult .= '
+                            $itemDelete_str .= '
 																	<div style="border: 1px dotted #AAA; margin: 2px 2px; padding: 1px 3px; font-size: 10px">
 																		Страховка:<br>
 																		<span class="calculateInsInvoice" style="font-size: 11px">' . $items['summins'] . '</span> руб.
@@ -3529,13 +3533,13 @@
 
 
                         if ($refund_exist) {
-                            $rezult .= '
+                            $itemDelete_str .= '
 														<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
 															Возврат:<br>
 															<span class="calculateInvoice" style="font-size: 13px">' . $refundSumm . '</span> руб.
 														</div>';
                         }
-                        $rezult .= '
+                        $itemDelete_str .= '
 																</div>
 		
 															</a>
@@ -3546,33 +3550,34 @@
             }
 
 
-            //Удалённые
+
             $rezult .= $itemAll_str;
 
+            //Удалённые (если минималистичное, то не отображаем)
             if ($show_deleted && !$minimal){
-                //if ((strlen($itemClose_str) > 1) && (($finances['see_all'] != 0) || $god_mode)) {
-                    $rezult .= '<div style="background-color: rgba(255, 214, 240, 0.5); padding: 5px; margin-top: 5px;">';
-                    $rezult .= '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Удалённые из программы наряды</li>';
-                    $rezult .= $itemClose_str;
-                    $rezult .= '</div>';
+                //if ((strlen($itemDelete_str) > 1) && (($finances['see_all'] != 0) || $god_mode)) {
+                $rezult_deleted .= '<div id="invoices_deleted" style="background-color: rgba(255, 214, 240, 0.5); padding: 5px; margin-top: 5px;">';
+                $rezult_deleted .= '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Удалённые из программы наряды</li>';
+                $rezult_deleted .= $itemDelete_str;
+                $rezult_deleted .= '</div>';
                 //}
-                //$rezult .= $itemClose_str;
+                //$rezult .= $itemDelete_str;
             }
 
 
 /*            $rezult .= $itemAll_str;
             if ($show_deleted && !$minimal){
-                $rezult .= $itemClose_str;
+                $rezult .= $itemDelete_str;
             }*/
 
-            return array('data' => $rezult, 'count' => $rezult_count);
+            return array('data' => $rezult, 'data_deleted' => $rezult_deleted, 'count' => $rezult_count);
 
         }else{
         	if ($show_absent) {
                 $rezult .= '<i style="font-size: 80%; color: #7D7D7D; margin-bottom: 5px; color: red;">Нет нарядов</i>';
             }
 
-            return array('data' => $rezult, 'count' => 0);
+            return array('data' => $rezult, 'data_deleted' => $rezult_deleted, 'count' => 0);
         }
 
 
@@ -4239,13 +4244,231 @@
 												<div class="cellZapisFreeSpace" style="top: '.$cellZapisFreeSpace_TopSdvig.'px; height: '.$cellZapisFreeSpace_Height.'px; '.$bg_color.'" onclick="ShowSettingsAddTempZapis('.$filial_id.', \''.$filial_id.'\', '.$kab.', '.$year.', '.$month.','.$day.', 1, '.$wt_start_FreeSpace.', '.$wt_FreeSpace.', '.$worker_id.', \''.WriteSearchUser('spr_workers', $worker_id, 'user_full', false).'\', \'\', \'\', 0, 0, 0, 0, '.$type.', \'add\')">';
             $rezult .= '
 												</div>';
-
-
-
-
         }
 
 		return $rezult;
 	}
+
+	//Тестовая функция для определения типа сотрудников по GET-запросу
+	function returnGetWho ($who, $who_default, $need_arr){
+
+		$result  = array(
+			0 => array(
+                'who' => '',
+                'whose' => 'Все ',
+                'selected_stom' => ' selected',
+                'selected_cosm' => ' ',
+                'datatable' => 'scheduler_stom',
+                'kabsForDoctor' => 'stom',
+                'type' => 0,
+
+                'stom_color' => '',
+                'cosm_color' => '',
+                'somat_color' => '',
+                'admin_color' => '',
+                'assist_color' => '',
+                'sanit_color' => '',
+                'ubor_color' => '',
+                'dvornik_color' => '',
+                'other_color' => '',
+                'all_color' => 'background-color: #fff261;'
+			),
+            5 => array(
+            	'who' => '&who=5',
+                'whose' => 'Стоматологи ',
+                'selected_stom' => ' selected',
+                'selected_cosm' => ' ',
+                'datatable' => 'scheduler_stom',
+                'kabsForDoctor' => 'stom',
+                'type' => 5,
+
+                'stom_color' => 'background-color: #fff261;',
+                'cosm_color' => '',
+                'somat_color' => '',
+                'admin_color' => '',
+                'assist_color' => '',
+                'sanit_color' => '',
+                'ubor_color' => '',
+                'dvornik_color' => '',
+                'other_color' => '',
+                'all_color' => ''
+			),
+            6 => array(
+                'who' => '&who=6',
+                'whose' => 'Косметологи ',
+                'selected_stom' => ' ',
+                'selected_cosm' => ' selected',
+                'datatable' => 'scheduler_cosm',
+                'kabsForDoctor' => 'cosm',
+                'type' => 6,
+
+                'stom_color' => '',
+                'cosm_color' => 'background-color: #fff261;',
+                'somat_color' => '',
+                'admin_color' => '',
+                'assist_color' => '',
+                'sanit_color' => '',
+                'ubor_color' => '',
+                'dvornik_color' => '',
+                'other_color' => '',
+                'all_color' => ''
+			),
+            10 => array(
+                'who' => '&who=10',
+                'whose' => 'Специалистов ',
+                'selected_stom' => ' ',
+                'selected_cosm' => ' selected',
+                'datatable' => 'scheduler_somat',
+                'kabsForDoctor' => 'somat',
+                'type' => 10,
+
+                'stom_color' => '',
+                'cosm_color' => '',
+                'somat_color' => 'background-color: #fff261;',
+                'admin_color' => '',
+                'assist_color' => '',
+                'sanit_color' => '',
+                'ubor_color' => '',
+                'dvornik_color' => '',
+                'other_color' => '',
+                'all_color' => ''
+			),
+            4 => array(
+                'who' => '&who=4',
+                'whose' => 'Администраторов ',
+                'selected_stom' => ' ',
+                'selected_cosm' => ' selected',
+                'datatable' => 'scheduler_somat',
+                'kabsForDoctor' => 'somat',
+                'type' => 4,
+
+                'stom_color' => '',
+                'cosm_color' => '',
+                'somat_color' => '',
+                'admin_color' => 'background-color: #fff261;',
+                'assist_color' => '',
+                'sanit_color' => '',
+                'ubor_color' => '',
+                'dvornik_color' => '',
+                'other_color' => '',
+                'all_color' => ''
+			),
+            7 => array(
+                'who' => '&who=7',
+                'whose' => 'Ассистенты ',
+                'selected_stom' => ' ',
+                'selected_cosm' => ' selected',
+                'datatable' => 'scheduler_somat',
+                'kabsForDoctor' => 'somat',
+                'type' => 7,
+
+                'stom_color' => '',
+                'cosm_color' => '',
+                'somat_color' => '',
+                'admin_color' => '',
+                'assist_color' => 'background-color: #fff261;',
+                'sanit_color' => '',
+                'ubor_color' => '',
+                'dvornik_color' => '',
+                'other_color' => '',
+                'all_color' => ''
+			),
+            13 => array(
+                'who' => '&who=13',
+                'whose' => 'Санитарки ',
+                'selected_stom' => ' ',
+                'selected_cosm' => ' selected',
+                'datatable' => 'scheduler_somat',
+                'kabsForDoctor' => 'somat',
+                'type' => 13,
+
+                'stom_color' => '',
+                'cosm_color' => '',
+                'somat_color' => '',
+                'admin_color' => '',
+                'assist_color' => '',
+                'sanit_color' => 'background-color: #fff261;',
+                'ubor_color' => '',
+                'dvornik_color' => '',
+                'other_color' => '',
+                'all_color' => ''
+			),
+            14 => array(
+                'who' => '&who=14',
+                'whose' => 'Уборщицы ',
+                'selected_stom' => ' ',
+                'selected_cosm' => ' selected',
+                'datatable' => 'scheduler_somat',
+                'kabsForDoctor' => 'somat',
+                'type' => 14,
+
+                'stom_color' => '',
+                'cosm_color' => '',
+                'somat_color' => '',
+                'admin_color' => '',
+                'assist_color' => '',
+                'sanit_color' => '',
+                'ubor_color' => 'background-color: #fff261;',
+                'dvornik_color' => '',
+                'other_color' => '',
+                'all_color' => ''
+			),
+            15 => array(
+                'who' => '&who=15',
+                'whose' => 'Дворники ',
+                'selected_stom' => ' ',
+                'selected_cosm' => ' selected',
+                'datatable' => 'scheduler_somat',
+                'kabsForDoctor' => 'somat',
+                'type' => 15,
+
+                'stom_color' => '',
+                'cosm_color' => '',
+                'somat_color' => '',
+                'admin_color' => '',
+                'assist_color' => '',
+                'sanit_color' => '',
+                'ubor_color' => '',
+                'dvornik_color' => 'background-color: #fff261;',
+                'other_color' => '',
+                'all_color' => ''
+			),
+            11 => array(
+                'who' => '&who=11',
+                'whose' => 'Прочее ',
+                'selected_stom' => ' ',
+                'selected_cosm' => ' selected',
+                'datatable' => 'scheduler_somat',
+                'kabsForDoctor' => 'somat',
+                'type' => 11,
+
+                'stom_color' => '',
+                'cosm_color' => '',
+                'somat_color' => '',
+                'admin_color' => '',
+                'assist_color' => '',
+                'sanit_color' => '',
+                'ubor_color' => '',
+                'dvornik_color' => '',
+                'other_color' => 'background-color: #fff261;',
+                'all_color' => ''
+			)
+		);
+
+		if (isset($result[$who])) {
+//			var_dump($who);
+//			var_dump($need_arr);
+//			var_dump(in_array($who, $need_arr));
+
+			if (in_array($who, $need_arr)) {
+                return $result[$who];
+            }else{
+                return $result[$who_default];
+			}
+        }else{
+            return $result[$who_default];
+		}
+	}
+
 
 ?>
