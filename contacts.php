@@ -22,145 +22,32 @@
 
             $contacts = array();
 
-            $who = '&who=5';
-            $whose = 'Стоматологов ';
-            $selected_stom = ' selected';
-            $selected_cosm = ' ';
-            $datatable = 'scheduler_stom';
-
             //тип (космет/стомат/...)
-            if (isset($_GET['who'])){
-                if ($_GET['who'] == 5){
-                    $who = '&who=5';
-                    $whose = 'Стоматологи ';
-                    $selected_stom = ' selected';
-                    $selected_cosm = ' ';
-                    $datatable = 'scheduler_stom';
-                    $kabsForDoctor = 'stom';
-                    $type = 5;
-
-                    $stom_color = 'background-color: #fff261;';
-                    $cosm_color = '';
-                    $somat_color = '';
-                    $admin_color = '';
-                    $assist_color = '';
-                    $other_color = '';
-                    $all_color = '';
-                }elseif($_GET['who'] == 6){
-                    $who = '&who=6';
-                    $whose = 'Косметологи ';
-                    $selected_stom = ' ';
-                    $selected_cosm = ' selected';
-                    $datatable = 'scheduler_cosm';
-                    $kabsForDoctor = 'cosm';
-                    $type = 6;
-
-                    $stom_color = '';
-                    $cosm_color = 'background-color: #fff261;';
-                    $somat_color = '';
-                    $admin_color = '';
-                    $assist_color = '';
-                    $other_color = '';
-                    $all_color = '';
-                }elseif($_GET['who'] == 10){
-                    $who = '&who=10';
-                    $whose = 'Специалисты ';
-                    $selected_stom = ' ';
-                    $selected_cosm = ' selected';
-                    $datatable = 'scheduler_somat';
-                    $kabsForDoctor = 'somat';
-                    $type = 10;
-
-
-                    $stom_color = '';
-                    $cosm_color = '';
-                    $somat_color = 'background-color: #fff261;';
-                    $admin_color = '';
-                    $assist_color = '';
-                    $other_color = '';
-                    $all_color = '';
-                }elseif($_GET['who'] == 4){
-                    $who = '&who=4';
-                    $whose = 'Администраторы ';
-                    $selected_stom = ' ';
-                    $selected_cosm = ' selected';
-                    /*$datatable = 'scheduler_somat';
-                    $kabsForDoctor = 'somat';*/
-                    $type = 4;
-
-                    $stom_color = '';
-                    $cosm_color = '';
-                    $somat_color = '';
-                    $admin_color = 'background-color: #fff261;';
-                    $assist_color = '';
-                    $other_color = '';
-                    $all_color = '';
-                }elseif($_GET['who'] == 7){
-                    $who = '&who=7';
-                    $whose = 'Ассистенты ';
-                    $selected_stom = ' ';
-                    $selected_cosm = ' selected';
-                    /*$datatable = 'scheduler_somat';
-                    $kabsForDoctor = 'somat';*/
-                    $type = 7;
-
-                    $stom_color = '';
-                    $cosm_color = '';
-                    $somat_color = '';
-                    $admin_color = '';
-                    $assist_color = 'background-color: #fff261;';
-                    $other_color = '';
-                    $all_color = '';
-                }elseif($_GET['who'] == 11){
-                    $who = '&who=11';
-                    $whose = 'Ассистенты ';
-                    $selected_stom = ' ';
-                    $selected_cosm = ' selected';
-                    /*$datatable = 'scheduler_somat';
-                    $kabsForDoctor = 'somat';*/
-                    $type = 11;
-
-                    $stom_color = '';
-                    $cosm_color = '';
-                    $somat_color = '';
-                    $admin_color = '';
-                    $assist_color = '';
-                    $other_color = 'background-color: #fff261;';
-                    $all_color = '';
-                }else{
-                    $who = '&who=5';
-                    $whose = 'Стоматологи ';
-                    $selected_stom = ' selected';
-                    $selected_cosm = ' ';
-                    $datatable = 'scheduler_stom';
-                    $kabsForDoctor = 'stom';
-                    $type = 5;
-
-                    $stom_color = 'background-color: #fff261;';
-                    $cosm_color = '';
-                    $somat_color = '';
-                    $admin_color = '';
-                    $assist_color = '';
-                    $other_color = '';
-                    $all_color = '';
-                }
+            if (isset($_GET['who'])) {
+                $getWho = returnGetWho($_GET['who'], 0, array(0,4,7,13,14,15,11,5,6,10));
             }else{
-                $who = '';
-                $whose = 'Все ';
-                $selected_stom = ' selected';
-                $selected_cosm = ' ';
-                $datatable = 'scheduler_stom';
-                $kabsForDoctor = 'stom';
-                $type = 0;
-
-                $stom_color = '';
-                $cosm_color = '';
-                $somat_color = '';
-                $admin_color = '';
-                $assist_color = '';
-                $other_color = '';
-                $all_color = 'background-color: #fff261;';
+                $getWho = returnGetWho(0, 0, array(0,4,7,13,14,15,11,5,6,10));
             }
+            //var_dump($getWho);
+
+            $who = $getWho['who'];
+            $whose = $getWho['whose'];
+            $selected_stom = $getWho['selected_stom'];
+            $selected_cosm = $getWho['selected_cosm'];
+            $datatable = $getWho['datatable'];
+            $kabsForDoctor = $getWho['kabsForDoctor'];
+            $type = $getWho['type'];
+
+            $stom_color = $getWho['stom_color'];
+            $cosm_color = $getWho['cosm_color'];
+            $somat_color = $getWho['somat_color'];
+            $admin_color = $getWho['admin_color'];
+            $assist_color = $getWho['assist_color'];
+            $sanit_color = $getWho['sanit_color'];
+            $ubor_color = $getWho['ubor_color'];
+            $dvornik_color = $getWho['dvornik_color'];
+            $other_color = $getWho['other_color'];
+            $all_color = $getWho['all_color'];
 
             if ($_GET){
 
@@ -232,6 +119,9 @@
                     <a href="?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
                     <a href="?who=4" class="b" style="'.$admin_color.'">Администраторы</a>
                     <a href="?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
+                    <a href="?who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
+                    <a href="?&who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
+                    <a href="?who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
                     <a href="?who=11" class="b" style="'.$other_color.'">Прочие</a>
                 </li>';
 
@@ -303,7 +193,7 @@
                             if (!empty($specializations)){
                                 //var_dump($specializations_j);
                                 foreach ($specializations as $data){
-                                    $specializations_str_rez .= ''.$data['name'].' ';
+                                    $specializations_str_rez .= '<span class="tag" style="float: right; font-size: 90%; margin: 0;">'.$data['name'].'</span> ';
                                 }
                             }else{
                                 $specializations_str_rez = '-';

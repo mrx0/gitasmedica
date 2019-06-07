@@ -699,7 +699,7 @@
 
                                         if ($rezult2 != 0) {
 
-                                            echo '<i>'.$rezult2[0]['code'].'</i>'.$rezult2[0]['name'].' <span style="font-size: 90%; background: rgba(197, 197, 197, 0.41);">[#'.$rezult2[0]['id'].']</span>';
+                                            echo '<i>'.$rezult2[0]['code'].'</i> '.$rezult2[0]['name'].' <a href="pricelistitem.php?id='.$rezult2[0]['id'].'" class="ahref" target="_blank" rel="nofollow noopener"><span style="font-size: 90%; background: rgba(197, 197, 197, 0.41);">[#'.$rezult2[0]['id'].']</span></a>';
 
 
                                         } else {

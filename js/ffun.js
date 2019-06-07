@@ -3653,8 +3653,13 @@
                 $("#hours_"+$(this).attr('worker_id')+"_num_error").html("В этом поле ошибка");
                 $("#hours_"+$(this).attr('worker_id')+"_num_error").show();
             }else{
-                workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
-                workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
+                //Часов должно быть хоть сколько-нибудь
+                if ($(this).val() > 0) {
+                    workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
+                    workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
+                }else{
+                    errors = true;
+                }
             }
         });
 
@@ -3705,6 +3710,8 @@
                     }
                 }
             });
+        }else{
+            $("#errrror").html('<div class="query_neok">Ошибка, что-то заполнено не так. Часов должно быть большо 0.</div>')
         }
     }
 
@@ -4768,16 +4775,64 @@
 
         $(".itogZP").each(function(){
 
-            //var worker_id = $(this).attr("w_id");
+            var worker_id = $(this).attr("w_id");
 
             var oklad = Number($(this).attr("oklad"));
-            //console.log(oklad);
+            var w_percentHours = Number($(this).attr("w_percentHours"));
+            var worker_revenue_percent = Number($(this).attr("worker_revenue_percent"));
+            var filialMoney = Number($(this).attr("filialMoney"));
+            //console.log(w_percentHours);
 
-            var itogZP = oklad;
-            //console.log(itogZP);
+            if (w_percentHours > 0){
 
-            $(this).html(number_format(itogZP, 0, '.', ''));
+                var zp_temp = 0;
+                var revenue_summ = 0;
+
+                //Администраторы
+                // if (typeW == 4) {
+                //     zp_temp = (oklad * w_percentHours) / 100;
+                // }
+                //Ассистенты
+                // if (typeW == 7) {
+                //     var norma_smen = Number($("#w_norma_"+worker_id).html());
+                //     //console.log(norma_smen);
+                //     zp_temp = (oklad * norma_smen * w_percentHours) / 100;
+                // }
+
+                zp_temp = (oklad * w_percentHours) / 100;
+
+                revenue_summ = (((filialMoney / 100) * worker_revenue_percent) / 100) * w_percentHours;
+
+                var itogZP = zp_temp + revenue_summ;
+                //console.log(itogZP);
+
+                $("#zp_temp_"+worker_id).html(number_format(zp_temp, 2, '.', ''));
+                $("#w_revenue_summ_"+worker_id).html(number_format(revenue_summ, 2, '.', ''));
+                //console.log("#zp_temp_"+worker_id);
+                $(this).html(number_format(itogZP, 0, '.', ''));
+            }else{
+                $(this).html(number_format(itogZP, 0, '.', ''));
+            }
+
+            //Раскрасим часы рабочие
+            $("#w_hours_"+worker_id).css({
+                "background-image": "linear-gradient(to right, " + Colorize(Number(w_percentHours.toFixed(0)), .5) + " " + Number(w_percentHours.toFixed(0)) + "%, rgba(255, 255, 255, 0) 0%)"
+            });
         })
+
+
+        // $(".itogZP").each(function(){
+        //
+        //     //var worker_id = $(this).attr("w_id");
+        //
+        //     var oklad = Number($(this).attr("oklad"));
+        //     //console.log(oklad);
+        //
+        //     var itogZP = oklad;
+        //     //console.log(itogZP);
+        //
+        //     $(this).html(number_format(itogZP, 0, '.', ''));
+        // })
     }
 
 
