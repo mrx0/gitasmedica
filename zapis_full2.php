@@ -59,71 +59,33 @@
 			
 			if ($_GET){
 				//var_dump ($_GET);
-				
-				//тип график (космет/стомат/...)
-				if (isset($_GET['who'])){
-					if (($_GET['who'] == 'stom') || ($_GET['who'] == 5)){
-						$who = '&who=stom';
-						$whose = 'Стоматологи ';
-						$selected_stom = ' selected';
-						$selected_cosm = ' ';
-						$datatable = 'scheduler_stom';
-						$kabsForDoctor = 'stom';
-						$type = 5;
-						
-						$stom_color = '';
-						$cosm_color = '';
-                        $somat_color = '';
-					}elseif(($_GET['who'] == 'cosm') || ($_GET['who'] == 6)){
-						$who = '&who=cosm';
-						$whose = 'Косметологи ';
-						$selected_stom = ' ';
-						$selected_cosm = ' selected';
-						$datatable = 'scheduler_cosm';
-						$kabsForDoctor = 'cosm';
-						$type = 6;
-						
-						$stom_color = '';
-						$cosm_color = '';
-                        $somat_color = '';
-                    }elseif(($_GET['who'] == 'somat') || ($_GET['who'] == 10)){
-                        $who = '&who=somat';
-                        $whose = 'Специалисты ';
-                        $selected_stom = ' ';
-                        $selected_cosm = ' selected';
-                        $datatable = 'scheduler_somat';
-                        $kabsForDoctor = 'somat';
-                        $type = 10;
 
-                        $stom_color = '';
-                        $cosm_color = '';
-                        $somat_color = 'background-color: #fff261;';
-					}else{
-						$who = '&who=stom';
-						$whose = 'Стоматологи ';
-						$selected_stom = ' selected';
-						$selected_cosm = ' ';
-						$datatable = 'scheduler_stom';
-						$kabsForDoctor = 'stom';
-						$type = 5;
-						
-						$stom_color = '';
-						$cosm_color = '';
-                        $somat_color = '';
-					}
-				}else{
-					$who = '&who=stom';
-					$whose = 'Стоматологи ';
-					$selected_stom = ' selected';
-					$selected_cosm = ' ';
-					$datatable = 'scheduler_stom';
-					$kabsForDoctor = 'stom';
-					$type = 5;
+                //тип (космет/стомат/...)
+                if (isset($_GET['who'])) {
+                    $getWho = returnGetWho($_GET['who'], 5, array(5,6,10));
+                }else{
+                    $getWho = returnGetWho(5, 5, array(5,6,10));
+                }
+                //var_dump($getWho);
 
-					$stom_color = '';
-					$cosm_color = '';
-                    $somat_color = '';
-				}
+                $who = $getWho['who'];
+                $whose = $getWho['whose'];
+                $selected_stom = $getWho['selected_stom'];
+                $selected_cosm = $getWho['selected_cosm'];
+                $datatable = $getWho['datatable'];
+                $kabsForDoctor = $getWho['kabsForDoctor'];
+                $type = $getWho['type'];
+
+                $stom_color = '';
+                $cosm_color = $getWho['cosm_color'];
+                $somat_color = $getWho['somat_color'];
+                $admin_color = $getWho['admin_color'];
+                $assist_color = $getWho['assist_color'];
+                $sanit_color = $getWho['sanit_color'];
+                $ubor_color = $getWho['ubor_color'];
+                $dvornik_color = $getWho['dvornik_color'];
+                $other_color = $getWho['other_color'];
+                $all_color = $getWho['all_color'];
 				
 				if (isset($_GET['d']) && isset($_GET['m']) && isset($_GET['y'])){
 					//операции со временем						
@@ -222,9 +184,9 @@
 					echo '		
 							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-								<a href="zapis_full.php?'.$dopFilial.$dopDate.'&who=stom&kab=1" class="b" style="'.$stom_color.'">Стоматологи</a>
-								<a href="zapis_full.php?'.$dopFilial.$dopDate.'&who=cosm&kab=1" class="b" style="'.$cosm_color.'">Косметологи</a>
-								<a href="zapis_full.php?'.$dopFilial.$dopDate.'&who=somat&kab=1" class="b" style="'.$somat_color.'">Специалисты</a>
+								<a href="zapis_full.php?'.$dopFilial.$dopDate.'&who=5&kab=1" class="b" style="'.$stom_color.'">Стоматологи</a>
+								<a href="zapis_full.php?'.$dopFilial.$dopDate.'&who=6&kab=1" class="b" style="'.$cosm_color.'">Косметологи</a>
+								<a href="zapis_full.php?'.$dopFilial.$dopDate.'&who=10&kab=1" class="b" style="'.$somat_color.'">Специалисты</a>
 								<a href="zapis_full2.php" class="b" style="background-color: #fff261;">Без записи</a>
 							</li>
 							<li class="cellsBlock" style="width: auto; margin-bottom: 20px;">

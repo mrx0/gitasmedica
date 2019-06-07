@@ -349,7 +349,8 @@
                                 //var_dump($worker_data);
 
                                 $rezultInvoices = showInvoiceDivRezult($worker_data, true, true, true, false, false, false);
-                                //var_dump($rezultInvoices);
+//                                var_dump($worker_data);
+//                                var_dump($rezultInvoices);
 
                                 $summ = 0;
                                 $bgColor = '';
@@ -399,7 +400,9 @@
 //                                        array_push($calculate_ids_arr, $data['calculate_id']);
 //                                    }
                                     //ID нарядов
-                                    array_push($invoice_ids_arr, $data['id']);
+                                    if ($data['in_shed']) {
+                                        array_push($invoice_ids_arr, $data['id']);
+                                    }
 
                                 }
                                 //var_dump($calculate_ids_arr);
