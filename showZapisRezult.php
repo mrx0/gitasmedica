@@ -249,7 +249,9 @@
                     }
                     if ($format) {
 
+                        //var_dump($invoice_data_db);
                         $rezultInvoices = showInvoiceDivRezult($invoice_data_db, true, false, false, false, false, false);
+                        //var_dump($rezultInvoices );
                         //$data, $minimal, $show_categories, $show_absent, $show_deleted
 
                         $rezult .= $rezultInvoices['data'];
