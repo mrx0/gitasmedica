@@ -3215,6 +3215,7 @@
         $rezult_count = 0;
 
         if (!empty($data)) {
+        	//var_dump($data);
 
             include_once 'DBWork.php';
             include_once 'functions.php';
@@ -3483,27 +3484,31 @@
                         } else {
                             $itemDelete_str .= $itemTemp_str;
                         }
+//                        var_dump($itemTemp_str);
+//                        var_dump($itemDelete_str);
                     }
-
-                    if ($refund_exist){
-                    	$colorItem = 'background-color: rgba(255, 121, 121, 0.81);';
-					}else{
-                        $colorItem = 'background-color: #FFF;';
-					}
 
 					//Если минималистичное отображение
                     if ($minimal) {
 
+                        if ($refund_exist){
+                            $colorItem = 'background-color: rgba(255, 121, 121, 0.81);';
+                        }else{
+                            $colorItem = 'background-color: #FFF;';
+                        }
+
                         $rezult_count++;
+
+                        $itemTemp_str = '';
 
                         //Если минималистичное отображение и хотим отобразить всё в строку
                         if ($minimal_inline){
-                            $itemDelete_str .= '<div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); display: inline-block; width: 140px; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
+                            $itemTemp_str .= '<div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); display: inline-block; width: 140px; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
 						}else{
-                            $itemDelete_str .= '<div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
+                            $itemTemp_str .= '<div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
 						}
 
-                        $itemDelete_str .= '
+                        $itemTemp_str .= '
 															<a href="invoice.php?id=' . $items['id'] . '" class="ahref">
 																<div>
 																	<div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
@@ -3515,16 +3520,16 @@
 																</div>
 																<div style="margin: 3px;">';
 
-                        $itemDelete_str .= $itemPercentCats_str;
+                        $itemTemp_str .= $itemPercentCats_str;
 
-                        $itemDelete_str .= '
+                        $itemTemp_str .= '
 																</div>
 																<div>
 																	<div style="border: 1px dotted #AAA; margin: 2px 2px; padding: 1px 3px; font-size: 10px">
 																		<span class="calculateInvoice" style="font-size: 11px">' . $items['summ'] . '</span> руб.
 																	</div>';
                         if ($items['summins'] != 0) {
-                            $itemDelete_str .= '
+                            $itemTemp_str .= '
 																	<div style="border: 1px dotted #AAA; margin: 2px 2px; padding: 1px 3px; font-size: 10px">
 																		Страховка:<br>
 																		<span class="calculateInsInvoice" style="font-size: 11px">' . $items['summins'] . '</span> руб.
@@ -3533,18 +3538,26 @@
 
 
                         if ($refund_exist) {
-                            $itemDelete_str .= '
+                            $itemTemp_str .= '
 														<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
 															Возврат:<br>
 															<span class="calculateInvoice" style="font-size: 13px">' . $refundSumm . '</span> руб.
 														</div>';
                         }
-                        $itemDelete_str .= '
+                        $itemTemp_str .= '
 																</div>
 		
 															</a>
 															<span style="position: absolute; top: 2px; right: 3px;">' . $paid_mark . ' ' . $status_mark . ' ' . $calculate_mark . '</span>
 														</div>';
+
+                        if ($items['status'] != 9) {
+                            $itemAll_str .= $itemTemp_str;
+                        } else {
+                            $itemDelete_str .= $itemTemp_str;
+                        }
+                        //var_dump($itemTemp_str);
+
                     }
                 }
             }
@@ -3552,6 +3565,7 @@
 
 
             $rezult .= $itemAll_str;
+            //var_dump($rezult);
 
             //Удалённые (если минималистичное, то не отображаем)
             if ($show_deleted && !$minimal){
