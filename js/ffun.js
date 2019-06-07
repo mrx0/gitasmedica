@@ -990,8 +990,11 @@
 
 
     //
-    function menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel){
+    function menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel, noch, dopData){
         //console.log(newTabel);
+        //console.log(noch);
+        //console.log(dopData);
+        //console.log(JSON.stringify(dopData));
 
         var buttonsStr = '';
 
@@ -999,6 +1002,11 @@
             buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="fl_addNewTabel2(' + type_id + ', ' + worker_id + ', ' + filial_id + ')">';
         }else{
             buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="fl_addInExistTabel2(' + type_id + ', ' + worker_id + ', ' + filial_id + ')">';
+        }
+
+        //Если оформляем ночь
+        if (noch){
+            buttonsStr = "<input type='button' class='b' value='Далее' onclick='fl_addNewNoch(" + type_id + ", " + worker_id + ", " + filial_id + ", " + (JSON.stringify(dopData)) + ")'>";
         }
 
         // Создаем меню:
@@ -1089,9 +1097,101 @@
                 if (res.length > 0) {
                     $('#overlay').show();
 
-                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel);
+                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel, false, {});
                 }else{
                     $('#errrror').html('<div class="query_neok">Ошибка #34. Ничего не выбрано. Обновите выбор РЛ</div>');
+                }
+            }
+        })
+    }
+
+    //Рассчет ночи
+    function fl_addNoch (noch, type_id, worker_id, filial_id){
+
+        /*if (newTabel) {
+            var link = "fl_getCalcsFromSession_f.php";
+        }else{
+            var link = "fl_getCalcsFromSessionForExistTabel_f.php";
+        }*/
+
+        var link = "fl_getCalcsFromSession_f.php";
+
+        var reqData = {
+            newTabel: 0
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                // console.log (res);
+                // console.log (res.length);
+
+                if (res.length > 0) {
+                    $('#overlay').show();
+
+                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, 0, noch, {});
+                }else{
+                    $('#errrror').html('<div class="query_neok">Ошибка #48. Ничего не выбрано. Обновите выбор РЛ</div>');
+                }
+            }
+        })
+    }
+
+    //Рассчет ночи 2.0
+    function fl_addReportNoch (day, month, year, type_id, worker_id, filial_id, filial_summ, zp_summ, invoice_ids){
+        // console.log(day);
+        // console.log(month);
+        // console.log(year);
+        // console.log(type_id);
+        // console.log(worker_id);
+        // console.log(filial_id);
+        // console.log(filial_summ);
+        // console.log(zp_summ);
+        // console.log(invoice_ids);
+
+        var link = "fl_getTabels_f.php";
+
+        var dopData = {
+            day: day,
+            month: month,
+            year: year,
+            summ: zp_summ
+        };
+
+        var reqData = {
+            type_id: type_id,
+            worker_id: worker_id,
+            filial_id: filial_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                // console.log (res);
+                // console.log (res.length);
+
+                if (res.length > 0) {
+                    $('#overlay').show();
+
+                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, 0, true, dopData);
+                }else{
+                    $('#errrror').html('<div class="query_neok">Ошибка #49. Нет табелей.</div>');
                 }
             }
         })
@@ -1244,7 +1344,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                console.log(res);
+                //console.log(res);
 
                 if(res.result == "success"){
                     //console.log(res);
@@ -1267,6 +1367,58 @@
             }
         });
     }
+
+    //Добавляем в базу рассчет ночи
+    function fl_addNewNoch(type_id, worker_id, filial_id, dopData){
+        //console.log($(".summCalcsForTabel").html());
+        //console.log(dopData);
+
+        var link = "fl_add_new_noch2_f.php";
+
+        var tabelForAdding = $('input[name=tabelForAdding]:checked').val();
+
+        var reqData = {
+            type_id: type_id,
+            worker_id: worker_id,
+            filial_id: filial_id,
+            dopData: dopData,
+            tabelForAdding: tabelForAdding
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                if(res.result == "success"){
+                    //console.log(res);
+
+                    setTimeout(function () {
+                        location.reload()
+                    }, 100);
+
+                }else{
+                    //console.log(res);
+
+                    $('#errror').html(res.data);
+                    $("#overlay").hide();
+                    $(".center_block").remove();
+                }
+            }
+        });
+    }
+
+
 
     //Удаляем все выделенные РЛ из программы в разделе Важный отчет
     function fl_deleteMarkedCalculates (thisObj){
@@ -1606,7 +1758,46 @@
                 },
                 // действие, при ответе с сервера
                 success: function (res) {
-                    console.log(res);
+                    //console.log(res);
+
+                    if (res.result == "success") {
+                        location.reload();
+                    } else {
+                        $('#errror').html(res.data);
+                    }
+                }
+            });
+        }
+    }
+
+    //Удаляем ночной отчет из табеля
+    function fl_deleteNightFromTabel(tabel_id, tabel_night_id){
+
+        var link = "fl_deleteNightFromTabel_f.php";
+
+        var rys = false;
+
+        rys = confirm("Вы хотите удалить отчёт по ночи из табеля. \n\nВы уверены?");
+        //console.log(885);
+
+        if (rys) {
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    tabel_id: tabel_id,
+                    tabel_night_id: tabel_night_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res);
 
                     if (res.result == "success") {
                         location.reload();
@@ -1696,7 +1887,7 @@
         }
     }
 
-    //Удаляем надбавку из табеля
+    //Удаляем выплату из табеля
     function fl_deletePaidoutFromTabel(tabel_id, paidout_id){
 
         var link = "fl_deletePaidoutFromTabel_f.php";
@@ -2722,6 +2913,10 @@
             },
             success:function(res){
                 //console.log(res);
+                //console.log(reqData.worker);
+                // if (reqData.worker == 492) {
+                //     console.log(res.query);
+                // }
                 //$("#tabs-"+reqData.permission+"_"+reqData.worker).html(res);
 
                 if(res.result == 'success'){
@@ -3458,8 +3653,13 @@
                 $("#hours_"+$(this).attr('worker_id')+"_num_error").html("В этом поле ошибка");
                 $("#hours_"+$(this).attr('worker_id')+"_num_error").show();
             }else{
-                workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
-                workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
+                //Часов должно быть хоть сколько-нибудь
+                if ($(this).val() > 0) {
+                    workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
+                    workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
+                }else{
+                    errors = true;
+                }
             }
         });
 
@@ -3510,6 +3710,8 @@
                     }
                 }
             });
+        }else{
+            $("#errrror").html('<div class="query_neok">Ошибка, что-то заполнено не так. Часов должно быть большо 0.</div>')
         }
     }
 
@@ -4487,7 +4689,7 @@
             success: function (res) {
 
                 if (res.result == "success") {
-                    //console.log (res);
+                    console.log (res);
 
                     $(".filialMoney").each(function(){
                         //console.log($(this).attr("filial_id"));
@@ -4573,16 +4775,64 @@
 
         $(".itogZP").each(function(){
 
-            //var worker_id = $(this).attr("w_id");
+            var worker_id = $(this).attr("w_id");
 
             var oklad = Number($(this).attr("oklad"));
-            //console.log(oklad);
+            var w_percentHours = Number($(this).attr("w_percentHours"));
+            var worker_revenue_percent = Number($(this).attr("worker_revenue_percent"));
+            var filialMoney = Number($(this).attr("filialMoney"));
+            //console.log(w_percentHours);
 
-            var itogZP = oklad;
-            //console.log(itogZP);
+            if (w_percentHours > 0){
 
-            $(this).html(number_format(itogZP, 0, '.', ''));
+                var zp_temp = 0;
+                var revenue_summ = 0;
+
+                //Администраторы
+                // if (typeW == 4) {
+                //     zp_temp = (oklad * w_percentHours) / 100;
+                // }
+                //Ассистенты
+                // if (typeW == 7) {
+                //     var norma_smen = Number($("#w_norma_"+worker_id).html());
+                //     //console.log(norma_smen);
+                //     zp_temp = (oklad * norma_smen * w_percentHours) / 100;
+                // }
+
+                zp_temp = (oklad * w_percentHours) / 100;
+
+                revenue_summ = (((filialMoney / 100) * worker_revenue_percent) / 100) * w_percentHours;
+
+                var itogZP = zp_temp + revenue_summ;
+                //console.log(itogZP);
+
+                $("#zp_temp_"+worker_id).html(number_format(zp_temp, 2, '.', ''));
+                $("#w_revenue_summ_"+worker_id).html(number_format(revenue_summ, 2, '.', ''));
+                //console.log("#zp_temp_"+worker_id);
+                $(this).html(number_format(itogZP, 0, '.', ''));
+            }else{
+                $(this).html(number_format(itogZP, 0, '.', ''));
+            }
+
+            //Раскрасим часы рабочие
+            $("#w_hours_"+worker_id).css({
+                "background-image": "linear-gradient(to right, " + Colorize(Number(w_percentHours.toFixed(0)), .5) + " " + Number(w_percentHours.toFixed(0)) + "%, rgba(255, 255, 255, 0) 0%)"
+            });
         })
+
+
+        // $(".itogZP").each(function(){
+        //
+        //     //var worker_id = $(this).attr("w_id");
+        //
+        //     var oklad = Number($(this).attr("oklad"));
+        //     //console.log(oklad);
+        //
+        //     var itogZP = oklad;
+        //     //console.log(itogZP);
+        //
+        //     $(this).html(number_format(itogZP, 0, '.', ''));
+        // })
     }
 
 

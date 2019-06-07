@@ -126,10 +126,6 @@
 								<a href="stat_invoice.php" class="b3">Наряды</a>
 							</li>';
 
-                /*echo '
-                                <li class="cellsBlock" style="margin: 1px;">
-                                    <a href="stat_client_finance.php" class="b3">Долги/авансы (старое)</a>
-                                </li>';*/
                 echo '
 						</ul>';
             }
@@ -137,7 +133,7 @@
             if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode) {
                 echo '
 						<ul class="reportBlock" style="">
-								<h1>Страховые</h1>';
+                            <h1>Страховые</h1>';
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_insure.php" class="b3">Страховые</a>
@@ -173,6 +169,12 @@
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_tabels.php" class="b3">Важный отчёт</a>
 							</li>';
+
+                echo '
+                            <li class="cellsBlock" style="margin: 1px;">
+                                <a href="fl_tabels2.php" class="b3">Отчёт по часам</a>
+                            </li>';
+
 //                echo '
 //							<li class="cellsBlock" style="margin: 1px;">
 //								<a href="fl_mainReportCategory.php" class="b3">Отчёт по категориям</a>
@@ -189,6 +191,15 @@
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="absents.php" class="b3">Отпуск/больничный</a>
 							</li>';*/
+
+                //if (($finances['see_all'] == 1) || $god_mode) {
+                echo '
+                            <li class="cellsBlock" style="margin: 1px;">
+                                <a href="fl_report_noch.php" class="b3">Ночь</a>
+                            </li>';
+
+
+                //}
                 echo '
 						</ul>';
             }

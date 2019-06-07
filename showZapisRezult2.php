@@ -178,7 +178,7 @@
                     if (!empty($invoice_data_db)) {
                         //var_dump($invoice_data_db);
 
-                        $rezultInvoices = showInvoiceDivRezult($invoice_data_db, true, true, false, false, false);
+                        $rezultInvoices = showInvoiceDivRezult($invoice_data_db, true, false, true, false, false, false);
                         //$data, $minimal, $show_categories, $show_absent, $show_deleted
 
                         $rezultInvoice .= $rezultInvoices['data'];

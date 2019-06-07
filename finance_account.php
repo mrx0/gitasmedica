@@ -134,6 +134,10 @@
                         //Выписанные наряды
                         $arr = array();
                         $invoice_j = array();
+
+                        $invoice_j_start = 0;
+                        $invoice_j_count = 30;
+
                         //var_dump("3.5 - ".(microtime(true) - $script_start));
                         $msql_cnnct = ConnectToDB ();
 
@@ -141,7 +145,8 @@
 								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Выписанные наряды</li>';
 
-                        $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC ";
+                        $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC";
+                        //$query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC LIMIT $invoice_j_start, $invoice_j_count";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                         $number = mysqli_num_rows($res);
@@ -154,14 +159,18 @@
                         //var_dump ($invoice_j);
 
                         if (($finances['see_all'] != 0) || $god_mode){
-                            $rezultInvoices = showInvoiceDivRezult($invoice_j, false, true, true, true, false);
+                            $rezultInvoices = showInvoiceDivRezult($invoice_j, false, false, true, true, true, false);
                         }else{
-                            $rezultInvoices = showInvoiceDivRezult($invoice_j, false, true, true, false, false);
+                            $rezultInvoices = showInvoiceDivRezult($invoice_j, false, false, true, true, false, false);
                         }
                         //$data, $minimal, $show_categories, $show_absent, $show_deleted
 
                         echo $rezultInvoices['data'];
+                        echo $rezultInvoices['data_deleted'];
                         //var_dump("4 - ".(microtime(true) - $script_start));
+
+                        //echo 'Загрузить еще';
+
                         echo '
 								</ul>';
 
@@ -171,7 +180,8 @@
                         $arr = array();
                         $order_j = array();
 
-
+                        $order_j_start = 0;
+                        $order_j_count = 30;
 
                         echo '
 								<ul id="orders" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
@@ -179,7 +189,8 @@
 									    Внесенные оплаты/ордеры	<a href="add_order.php?client_id='.$client_j[0]['id'].'" class="b">Добавить новый</a>
 									</li>';
 
-                        $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC ";
+                        //$query = "SELECT * FROM `journal_order` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC LIMIT $order_j_start, $order_j_count";
+                        $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                         $number = mysqli_num_rows($res);
@@ -200,8 +211,9 @@
 
                         echo $rezultOrders['data'];
 
+                        //echo 'Загрузить еще';
 
-                            echo '
+                        echo '
 								</ul>';
 
 

@@ -58,11 +58,17 @@
 						<li><div onclick="insureInvoice(0)">не страховой</div></li>';
 					
 					$insures_j = SelDataFromDB('spr_insure', '', '');
-					
+
 					if ($insures_j != 0){
 						for ($i=0;$i<count($insures_j);$i++){
+                            $bgColor = '';
+
+						    if ($insures_j[$i]['id'] == $_POST['dop']['client_insure']) {
+                                $bgColor = 'background-color: yellow;';
+                            }
+
 							$data .= '
-								<li><div onclick="insureInvoice('.$insures_j[$i]['id'].')">'.$insures_j[$i]['name'].'</div></li>';
+								<li style="'.$bgColor.'"><div onclick="insureInvoice('.$insures_j[$i]['id'].')">'.$insures_j[$i]['name'].'</div></li>';
 						}
 					}
 				}
@@ -136,16 +142,22 @@
 				}
 				//Страховка позиция
 				if ($_POST['mark'] == 'insureItem'){
-					
+
 					$data .= '
 						<li><div onclick="insureItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 0)">не страховой</div></li>';
-					
+
 					$insures_j = SelDataFromDB('spr_insure', '', '');
-					
+
 					if ($insures_j != 0){
 						for ($i=0;$i<count($insures_j);$i++){
+                            $bgColor = '';
+
+                            if ($insures_j[$i]['id'] == $_POST['dop']['client_insure']) {
+                                $bgColor = 'background-color: yellow;';
+                            }
+
 							$data .= '
-								<li><div onclick="insureItemInvoice('.$_POST['ind'].', '.$_POST['key'].', '.$insures_j[$i]['id'].')">'.$insures_j[$i]['name'].'</div></li>';
+								<li style="'.$bgColor.'"><div onclick="insureItemInvoice('.$_POST['ind'].', '.$_POST['key'].', '.$insures_j[$i]['id'].')">'.$insures_j[$i]['name'].'</div></li>';
 						}
 					}
 				}
@@ -297,6 +309,12 @@
                 if ($_POST['mark'] == 'tabel_paidout_options'){
                     $data .= '
                             <li><div onclick="fl_deletePaidoutFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить из табеля</div></li>';
+				}
+
+				//Для ночных отчетов в табеле
+                if ($_POST['mark'] == 'tabel_night_options'){
+                    $data .= '
+                            <li><div onclick="fl_deleteNightFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить рассчёт</div></li>';
 				}
 
 				//Настройка для записи

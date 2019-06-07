@@ -34,75 +34,33 @@
 				}
 			}
 
-			//тип график (космет/стомат/...)
-			if (isset($_GET['who'])){
-                //var_dump($_GET['who']);
+			//тип (космет/стомат/...)
+            if (isset($_GET['who'])) {
+                $getWho = returnGetWho($_GET['who'], 5, array(5,6,10));
+            }else{
+                $getWho = returnGetWho(5, 5, array(5,6,10));
+            }
+            //var_dump($getWho);
 
-				if ($_GET['who'] == 'stom'){
-					$who = '&who=stom';
-					$whose = 'Стоматологов ';
-					$selected_stom = ' selected';
-					$selected_cosm = ' ';
-					$datatable = 'scheduler_stom';
-					$kabsForDoctor = 'stom';
-					$type = 5;
-					
-					$stom_color = 'background-color: #fff261;';
-					$cosm_color = '';
-					$somat_color = '';
-				}elseif($_GET['who'] == 'cosm'){
-					$who = '&who=cosm';
-					$whose = 'Косметологов ';
-					$selected_stom = ' ';
-					$selected_cosm = ' selected';
-					$datatable = 'scheduler_cosm';
-					$kabsForDoctor = 'cosm';
-					$type = 6;
-					
-					$stom_color = '';
-					$cosm_color = 'background-color: #fff261;';
-					$somat_color = '';
-				}elseif($_GET['who'] == 'somat'){
-					$who = '&who=somat';
-					$whose = 'Специалистов ';
-					$selected_stom = ' ';
-					$selected_cosm = ' selected';
-					$datatable = 'scheduler_somat';
-					$kabsForDoctor = 'somat';
-					$type = 10;
+            $who = $getWho['who'];
+            $whose = $getWho['whose'];
+            $selected_stom = $getWho['selected_stom'];
+            $selected_cosm = $getWho['selected_cosm'];
+            $datatable = $getWho['datatable'];
+            $kabsForDoctor = $getWho['kabsForDoctor'];
+            $type = $getWho['type'];
 
-					$stom_color = '';
-					$cosm_color = '';
-					$somat_color = 'background-color: #fff261;';
-				}else{
-					$who = '&who=stom';
-					$whose = 'Стоматологов ';
-					$selected_stom = ' selected';
-					$selected_cosm = ' ';
-					$datatable = 'scheduler_stom';
-					$kabsForDoctor = 'stom';
-					$type = 5;
-					$_GET['who'] = 'stom';
-					
-					$stom_color = 'background-color: #fff261;';
-					$cosm_color = '';
-					$somat_color = '';
-				}
-			}else{
-				$who = '&who=stom';
-				$whose = 'Стоматологов ';
-				$selected_stom = ' selected';
-				$selected_cosm = ' ';
-				$datatable = 'scheduler_stom';
-				$kabsForDoctor = 'stom';
-				$type = 5;
-				$_GET['who'] = 'stom';
-				
-				$stom_color = 'background-color: #fff261;';
-				$cosm_color = '';
-				$somat_color = '';
-			}
-			
+            $stom_color = $getWho['stom_color'];
+            $cosm_color = $getWho['cosm_color'];
+            $somat_color = $getWho['somat_color'];
+            $admin_color = $getWho['admin_color'];
+            $assist_color = $getWho['assist_color'];
+            $sanit_color = $getWho['sanit_color'];
+            $ubor_color = $getWho['ubor_color'];
+            $dvornik_color = $getWho['dvornik_color'];
+            $other_color = $getWho['other_color'];
+            $all_color = $getWho['all_color'];
+
 			if (isset($_GET['m']) && isset($_GET['y'])){
 				//операции со временем						
 				$month = $_GET['m'];
@@ -231,7 +189,7 @@
 					</header>
 					<!--<a href="own_scheduler.php" class="b">График сотрудника</a>-->';
 			echo '
-					<ul style="margin-left: 6px; margin-bottom: 10px;">
+					<ul style="margin-left: 6px; margin-bottom: 10px; position: absolute; top: 10px; right: 50px;">
 						<li style="width: auto; color:#777; font-size: 70%;">
 							Примечание к графику:
 							<ul>
@@ -244,7 +202,7 @@
 					</ul>
 					</div>';
 			echo '
-					<div id="data">
+					<div id="data" style="margin-top: 5px;">
 					    <input type="hidden" id="type" value="'.$type.'">
 						<ul style="margin-left: 6px; margin-bottom: 20px;">';
 			if (($scheduler['edit'] == 1) || $god_mode){
@@ -261,11 +219,15 @@
 							<div class="no_print"> 
 							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-								<a href="?'.$dopFilial.$dopDate.'&who=stom" class="b" style="'.$stom_color.'">Стоматологи</a>
-								<a href="?'.$dopFilial.$dopDate.'&who=cosm" class="b" style="'.$cosm_color.'">Косметологи</a>
-								<a href="?'.$dopFilial.$dopDate.'&who=somat" class="b" style="'.$somat_color.'">Специалисты</a>
-								<a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=4" class="b" style="">Администраторы</a>
-								<a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=7" class="b" style="">Ассистенты</a>
+                                    <a href="scheduler.php?'.$dopFilial.$dopDate.'&who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
+                                    <a href="scheduler.php?'.$dopFilial.$dopDate.'&who=6" class="b" style="'.$cosm_color.'">Косметологи</a>
+                                    <a href="scheduler.php?'.$dopFilial.$dopDate.'&who=10" class="b" style="'.$somat_color.'">Специалисты</a>
+                                    <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=4" class="b" style="'.$admin_color.'">Администраторы</a>
+                                    <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
+                                    <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
+                                    <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
+                                    <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
+                                    <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=11" class="b" style="'.$other_color.'">Прочие</a>
 							</li>
 							<li style="width: auto; margin-bottom: 20px;">
 								<div style="display: inline-block; margin-right: 20px;">

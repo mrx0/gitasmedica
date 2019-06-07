@@ -47,11 +47,42 @@
                 }
 
                 //Основные данные
+                //!!! 2019.05.24 отметки врачей не всегда верно отображаются, не понимаю пока почему
+                //Если в условие добавить один филиал, то будет норм
+                //
+//                SELECT
+//                            jcalc.id, jcalc.create_time, jcalc.summ, jcalc.invoice_id, jcalc.office_id, jcalc.zapis_id, jcalc.type, jcalc.client_id,
+//                            ji.summ AS invoice_summ, ji.summins AS invoice_summins, ji.create_time  AS invoice_create_time, ji.zapis_id AS invoice_zapis_id, ji.create_time AS 		                    invoice_create_time,
+//                            zapis.noch AS noch,
+//                            sc.name AS client_name, sc.full_name AS client_full_name,
+//                            wm.id AS worker_mark,
+//                            GROUP_CONCAT(DISTINCT jcalcex.percent_cats ORDER BY jcalcex.percent_cats ASC SEPARATOR ',') AS percent_cats
+//                            FROM `fl_journal_calculate` jcalc
+//
+//                            LEFT JOIN `fl_journal_calculate_ex` jcalcex ON jcalc.id = jcalcex.calculate_id
+//                            LEFT JOIN `journal_invoice` ji ON ji.id = jcalc.invoice_id
+//                            LEFT JOIN `zapis` zapis ON ji.zapis_id = zapis.id
+//                            LEFT JOIN `spr_clients` sc ON sc.id = jcalc.client_id
+//                            LEFT JOIN `journal_tooth_status` wm ON jcalc.zapis_id = wm.zapis_id
+//                            WHERE jcalc.type='5' AND jcalc.worker_id='492' AND jcalc.status <> '7'
+//                AND jcalc.id NOT IN ( SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id )
+//                            AND jcalc.date_in > '2018-05-31'
+//
+//                            GROUP BY jcalc.id
+
                 $query = "
                             SELECT 
                             jcalc.id, jcalc.create_time, jcalc.summ, jcalc.invoice_id, jcalc.office_id, jcalc.zapis_id, jcalc.type, jcalc.client_id,
-                            ji.summ AS invoice_summ, ji.summins AS invoice_summins, ji.create_time  AS invoice_create_time,
+                            ji.summ AS invoice_summ, ji.summins AS invoice_summins, ji.create_time  AS invoice_create_time, ji.zapis_id AS invoice_zapis_id, ji.create_time AS invoice_create_time, 
+                            zapis.noch AS noch,
                             sc.name AS client_name, sc.full_name AS client_full_name,";
+
+//                $query = "
+//                            SELECT
+//                            jcalc.id, jcalc.create_time, jcalc.summ, jcalc.invoice_id, jcalc.office_id, jcalc.zapis_id, jcalc.type, jcalc.client_id,
+//                            ji.summ AS invoice_summ, ji.summins AS invoice_summins, ji.create_time  AS invoice_create_time,
+//                            sc.name AS client_name, sc.full_name AS client_full_name,";
+
                 if (($_POST['permission'] == 5) || ($_POST['permission'] == 6)) {
                     $query .= "
                             wm.id AS worker_mark,";
@@ -59,21 +90,25 @@
                 $query .= "
                             GROUP_CONCAT(DISTINCT jcalcex.percent_cats ORDER BY jcalcex.percent_cats ASC SEPARATOR ',') AS percent_cats 
                             FROM `fl_journal_calculate` jcalc
-                            LEFT JOIN `fl_journal_calculate_ex` jcalcex ON jcalc.id = jcalcex.calculate_id
                             
+                            LEFT JOIN `fl_journal_calculate_ex` jcalcex ON jcalc.id = jcalcex.calculate_id
                             LEFT JOIN `journal_invoice` ji ON ji.id = jcalc.invoice_id
+                            LEFT JOIN `zapis` zapis ON ji.zapis_id = zapis.id
                             LEFT JOIN `spr_clients` sc ON sc.id = jcalc.client_id";
+
                 if ($_POST['permission'] == 5) {
                     $query .= "
                             LEFT JOIN `journal_tooth_status` wm ON wm.zapis_id = jcalc.zapis_id";
                 }
+
                 if($_POST['permission'] == 6){
                     $query .= "
                             LEFT JOIN `journal_cosmet1` wm ON wm.zapis_id = jcalc.zapis_id";
                 }
+
                 $query .= "
                             WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.status <> '7'
-                                            AND jcalc.id NOT IN ( SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id ) 
+                            AND jcalc.id NOT IN ( SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id ) 
                             AND jcalc.date_in > '2018-05-31'
                             GROUP BY jcalc.id";
 
@@ -121,7 +156,7 @@
                                 <div style="margin: 5px 0; padding: 2px; text-align: center; color: #0C0C0C;">
                                     Выделить всё <input type="checkbox" id="chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$filial_id.'" name="checkAll" class="checkAll" chkBoxData="chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$filial_id.'" value="1">
                                 </div>
-                                <div>';
+                                <div id="calcs_list_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$filial_id.'">';
 
                             //Сумма всех РЛ филиала
                             $summCalc = 0;
@@ -130,13 +165,16 @@
 
                                 $invoice_summ = $rezData['invoice_summ'];
                                 $invoice_summins = $rezData['invoice_summins'];
-                                $invoice_create_time = date('d.m.y', strtotime($rezData['create_time']));
+                                $invoice_create_time = date('d.m.y', strtotime($rezData['invoice_create_time']));
+                                $invoice_create_time2 = date('y.m.d', strtotime($rezData['invoice_create_time']));
 
                                 $zapis_id = $rezData['zapis_id'];
                                 $invoice_type = $rezData['type'];
 
                                 $name = $rezData['client_name'];
                                 $full_name = $rezData['client_full_name'];
+
+                                $noch = $rezData['noch'];
 
                                 //Зубные формулы и запись врача
                                 $worker_mark = 1;
@@ -151,8 +189,15 @@
                                     }
                                 }
 
-                                $resultFilialStr .= '
-                                    <div class="cellsBlockHover calculateBlockItem" worker_mark="'.$worker_mark.'" style="' . $background_color . ' width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
+                                if ($noch == 1){
+                                    $noch_str = '<img src="img/night.png" style="width: 11px;" title="Ночное">';
+                                }else{
+                                    $noch_str = '';
+                                }
+
+                                if ($noch != 1) {
+                                    $resultFilialStr .= '
+                                    <div class="cellsBlockHover calculateBlockItem" data-sort="'.$invoice_create_time2.'" worker_mark="' . $worker_mark . '" style="' . $background_color . ' width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
                                         <div style="display: inline-block; width: 190px;">
                                             <div>
                                                 <a href="fl_calculate.php?id=' . $rezData['id'] . '" class="ahref">
@@ -173,29 +218,29 @@
                                                 </a>
                                             </div>
                                             <div style="margin: 5px 0 5px 3px; font-size: 80%;">
-                                                <b>Наряд: <a href="invoice.php?id=' . $rezData['invoice_id'] . '" class="ahref">#' . $rezData['invoice_id'] . '</a> от ' . $invoice_create_time . '<br>пац.: <a href="client.php?id=' . $rezData['client_id'] . '" class="ahref">' . $name . '</a><br>
+                                                <b>Наряд: <a href="invoice.php?id=' . $rezData['invoice_id'] . '" class="ahref">#' . $rezData['invoice_id'] . '</a> от ' . $invoice_create_time . ' ' . $noch_str . '<br>пац.: <a href="client.php?id=' . $rezData['client_id'] . '" class="ahref">' . $name . '</a><br>
                                                 Сумма: ' . $invoice_summ . ' р. Страх.: ' . $invoice_summins . ' р.</b> <br>
                                                 
                                             </div>
                                             <div style="margin: 5px 0 5px 3px; font-size: 80%;">';
 
-                                //Категории процентов(работ)
-                                $percent_cats_arr = explode(',', $rezData['percent_cats']);
+                                    //Категории процентов(работ)
+                                    $percent_cats_arr = explode(',', $rezData['percent_cats']);
 
-                                foreach ($percent_cats_arr as $percent_cat) {
-                                    if ($percent_cat > 0) {
-                                        $resultFilialStr .= '<i style="color: rgb(15, 6, 142); font-size: 110%;">' . $percent_cats_j[$percent_cat] . '</i><br>';
-                                    } else {
-                                        $resultFilialStr .= '<i style="color: red; font-size: 100%;">Ошибка #17</i><br>';
+                                    foreach ($percent_cats_arr as $percent_cat) {
+                                        if ($percent_cat > 0) {
+                                            $resultFilialStr .= '<i style="color: rgb(15, 6, 142); font-size: 110%;">' . $percent_cats_j[$percent_cat] . '</i><br>';
+                                        } else {
+                                            $resultFilialStr .= '<i style="color: red; font-size: 100%;">Ошибка #17</i><br>';
+                                        }
                                     }
-                                }
 
-                                $resultFilialStr .= '                                            
+                                    $resultFilialStr .= '                                            
                                             </div>
                                         </div>
                                         <div style="display: inline-block; vertical-align: top;">
                                             <div style=" padding: 3px; margin: 1px;" title="Выделить">
-                                                <input type="checkbox" worker_mark="'.$worker_mark.'" class="chkBoxCalcs chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $filial_id . '" name="nPaidCalcs_' . $rezData['id'] . '" chkBoxData="chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $filial_id . '" value="1">
+                                                <input type="checkbox" worker_mark="' . $worker_mark . '" class="chkBoxCalcs chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $filial_id . '" name="nPaidCalcs_' . $rezData['id'] . '" chkBoxData="chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $filial_id . '" value="1">
                                             </div>
                                         </div>
                                         <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
@@ -204,8 +249,9 @@
                                         </div>
                                     </div>';
 
-                                $summCalc += $rezData['summ'];
-                                $allCalcSumm += $summCalc;
+                                    $summCalc += $rezData['summ'];
+                                    $allCalcSumm += $summCalc;
+                                }
                             }
                             $resultFilialStr .= '
                                 </div>
@@ -217,9 +263,14 @@
 
                                 $resultFilialStr .= '
                                 <div style="margin: 5px 0; padding: 2px; text-align: right;">
-                                    <div id="errrror"></div>
-                                    <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick="fl_addNewTabelIN2(true, '.$invoice_type.', '.$_POST['worker'].', '.$filial_id.');"><br>
+                                    <div id="errrror"></div>';
+                                if ($_POST['permission'] != 7) {
+                                    $resultFilialStr .= '
+                                    <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick="fl_addNewTabelIN2(true, ' . $invoice_type . ', ' . $_POST['worker'] . ', ' . $filial_id . ');"><br>';
+                                }
+                                $resultFilialStr .= '
                                     <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Добавить в существующий табель" onclick="fl_addNewTabelIN2(false, '.$invoice_type.', '.$_POST['worker'].', '.$filial_id.');"><br><br>
+                                    <!--<input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать рассчет за ночь" onclick="fl_addNoch(true, '.$invoice_type.', '.$_POST['worker'].', '.$filial_id.');"><br><br>-->
                                     <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Удалить выделенные" onclick="fl_deleteMarkedCalculates($(this).parent().parent());"><br>
                                     <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Перерасчитать (не более 10 РЛ за раз)" onclick="fl_reloadPercentsMarkedCalculates($(this).parent().parent());">
                                 </div>';

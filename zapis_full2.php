@@ -1,7 +1,7 @@
 <?php
 
-//zapis_full.php
-//Вся запись на день
+//zapis_full2.php
+//Вся запись на день отдельно для частных лиц
 
 	require_once 'header.php';
     require_once 'blocks_dom.php';
@@ -71,7 +71,7 @@
 						$kabsForDoctor = 'stom';
 						$type = 5;
 						
-						$stom_color = 'background-color: #fff261;';
+						$stom_color = '';
 						$cosm_color = '';
                         $somat_color = '';
 					}elseif(($_GET['who'] == 'cosm') || ($_GET['who'] == 6)){
@@ -84,7 +84,7 @@
 						$type = 6;
 						
 						$stom_color = '';
-						$cosm_color = 'background-color: #fff261;';
+						$cosm_color = '';
                         $somat_color = '';
                     }elseif(($_GET['who'] == 'somat') || ($_GET['who'] == 10)){
                         $who = '&who=somat';
@@ -107,7 +107,7 @@
 						$kabsForDoctor = 'stom';
 						$type = 5;
 						
-						$stom_color = 'background-color: #fff261;';
+						$stom_color = '';
 						$cosm_color = '';
                         $somat_color = '';
 					}
@@ -119,8 +119,8 @@
 					$datatable = 'scheduler_stom';
 					$kabsForDoctor = 'stom';
 					$type = 5;
-						
-					$stom_color = 'background-color: #fff261;';
+
+					$stom_color = '';
 					$cosm_color = '';
                     $somat_color = '';
 				}
@@ -222,10 +222,10 @@
 					echo '		
 							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-								<a href="?'.$dopFilial.$dopDate.'&who=stom&kab=1" class="b" style="'.$stom_color.'">Стоматологи</a>
-								<a href="?'.$dopFilial.$dopDate.'&who=cosm&kab=1" class="b" style="'.$cosm_color.'">Косметологи</a>
-								<a href="?'.$dopFilial.$dopDate.'&who=somat&kab=1" class="b" style="'.$somat_color.'">Специалисты</a>
-								<a href="zapis_full2.php" class="b" style="">Без записи</a>
+								<a href="zapis_full.php?'.$dopFilial.$dopDate.'&who=stom&kab=1" class="b" style="'.$stom_color.'">Стоматологи</a>
+								<a href="zapis_full.php?'.$dopFilial.$dopDate.'&who=cosm&kab=1" class="b" style="'.$cosm_color.'">Косметологи</a>
+								<a href="zapis_full.php?'.$dopFilial.$dopDate.'&who=somat&kab=1" class="b" style="'.$somat_color.'">Специалисты</a>
+								<a href="zapis_full2.php" class="b" style="background-color: #fff261;">Без записи</a>
 							</li>
 							<li class="cellsBlock" style="width: auto; margin-bottom: 20px;">
 								<div style="display: inline-block; margin-right: 20px;">
@@ -259,7 +259,7 @@
 							</li>';
 
 							
-					$ZapisHereQueryToday = FilialKabSmenaZapisToday($datatable, $year, $month, $day, $_GET['filial'], $kab, $type, 0);
+					$ZapisHereQueryToday = FilialKabSmenaZapisToday($datatable, $year, $month, $day, $_GET['filial'], 0, 0, 6);
 					//var_dump($ZapisHereQueryToday);
 					
 					
@@ -273,7 +273,7 @@
 											Изменить дату:
 											<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
 												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off"> 
-											<span class="button_tiny" style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'zapis_full.php?&kab='.$kab.$dopFilial.$dopWho.'\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
+											<span class="button_tiny" style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'zapis_full2.php?&kab='.$kab.$dopFilial.$dopWho.'\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
 										</span>
 									</div>
 								</li>';
@@ -321,33 +321,33 @@
                         }
                         //var_dump($Work_Today_arr);
 
-						echo '		
-							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите кабинет</span><br>
-							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">';
+//						echo '
+//							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите кабинет</span><br>
+//							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">';
 
-						for ($k = 1; $k <= count($kabsInFilial); $k++){
-							$kab_color = '';
-							if ($k == $kab){
-								$kab_color = ' background-color: #fff261;';
-							}
-
-                            if (isset($Work_Today_arr[$k][1])){
-                                //var_dump($Kab_work_today_smena1);
-                                $worker = '<i>1 см: '.WriteSearchUser('spr_workers', $Work_Today_arr[$k][1]['worker'], 'user', false).'</i><br>';
-                            }else{
-                                $worker = '1 см: <span style="font-weight: normal;">никого</span><br>';
-                            }
-                            if (isset($Work_Today_arr[$k][2])){
-                                //var_dump($Kab_work_today_smena1);
-                                $worker .= '<i>2 см: '.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'</i>';
-                            }else{
-                                $worker .= '2 см: <span style="font-weight: normal;">никого</span>';
-                            }
-
-							echo '		
-								<a href="?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="b" style="'.$kab_color.' text-align: center;"><span style="font-size: 120%">каб '.$k.'</span><br>'.$worker.'</a>';
-						}
-						echo '</li>';
+//						for ($k = 1; $k <= count($kabsInFilial); $k++){
+//							$kab_color = '';
+//							if ($k == $kab){
+//								$kab_color = ' background-color: #fff261;';
+//							}
+//
+//                            if (isset($Work_Today_arr[$k][1])){
+//                                //var_dump($Kab_work_today_smena1);
+//                                $worker = '<i>1 см: '.WriteSearchUser('spr_workers', $Work_Today_arr[$k][1]['worker'], 'user', false).'</i><br>';
+//                            }else{
+//                                $worker = '1 см: <span style="font-weight: normal;">никого</span><br>';
+//                            }
+//                            if (isset($Work_Today_arr[$k][2])){
+//                                //var_dump($Kab_work_today_smena1);
+//                                $worker .= '<i>2 см: '.WriteSearchUser('spr_workers', $Work_Today_arr[$k][2]['worker'], 'user', false).'</i>';
+//                            }else{
+//                                $worker .= '2 см: <span style="font-weight: normal;">никого</span>';
+//                            }
+//
+//							echo '
+//								<a href="?filial='.$_GET['filial'].''.$who.'&d='.$day.'&m='.$month.'&y='.$year.'&kab='.$k.'" class="b" style="'.$kab_color.' text-align: center;"><span style="font-size: 120%">каб '.$k.'</span><br>'.$worker.'</a>';
+//						}
+//						echo '</li>';
 					}
 					
 					if ($ZapisHereQueryToday != 0){
@@ -379,10 +379,9 @@
                             $edit_options = true;
                         }
 
-                        //var_dump($ZapisHereQueryToday);
                         echo showZapisRezult($ZapisHereQueryToday, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $type, true, true);
 					}else{
-						echo 'В этом кабинете нет записи<br>Смотрите остальные';
+						echo 'Нет записи<br>';
 					}
 
 				}
@@ -421,8 +420,8 @@
                                 var day = date_arr[0];
                                 var month = date_arr[1];
                                 var year = date_arr[2];
-
-								document.location.href = "?filial="+$(this).val()+"'.$who.'&d="+day+"&m="+month+"&y="+year+"";
+							    
+								document.location.href = "?filial="+$(this).val()+  "&d="+day+"&m="+month+"&y="+year+"";
 							});
 						});
 						

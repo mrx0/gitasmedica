@@ -59,32 +59,48 @@
 
                             $msql_cnnct = ConnectToDB ();
 
-                            //выбрать первую из категорий указанного типа
-                            $query = "SELECT `id` FROM `fl_spr_percents` WHERE `type`='5' LIMIT 1;";
-                            //var_dump($query);
+                            $temp_arr['percent_cats'] = 0;
+
+                            //выбрать категорию, указанную в прайсе
+                            $query = "SELECT `category` FROM `spr_pricelist_template` WHERE `id`='".(int)$_POST['price_id']."';";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                             $number = mysqli_num_rows($res);
 
                             if ($number != 0) {
+
                                 $arr = mysqli_fetch_assoc($res);
-                                /*$temp_arr2['percent_cats'] = (int)$arr['id'];
-                                $temp_arr2['work_percent'] = (int)$arr['work_percent'];
-                                $temp_arr2['material_percent'] = (int)$arr['material_percent'];*/
 
-                                //$percents_j = getPercents( $invoice_j[0]['worker_id'], (int)$arr['id']);
-                                //var_dump($percents_j);
-
-                                $temp_arr['percent_cats'] = (int)$arr['id'];
-                                //$temp_arr2['work_percent'] = (int)$percents_j[(int)$arr['id']]['work_percent'];
-                                //$temp_arr2['material_percent'] = (int)$percents_j[(int)$arr['id']]['material_percent'];
-
-                            } else {
-                                $temp_arr['percent_cats'] = 0;
-                                //$invoice_ex_j = 0;
+                                $temp_arr['percent_cats'] = (int)$arr['category'];
                             }
 
+                            if ($temp_arr['percent_cats'] == 0){
+
+                                //выбрать первую из категорий указанного типа
+                                $query = "SELECT `id` FROM `fl_spr_percents` WHERE `type`='5' LIMIT 1;";
+                                //var_dump($query);
+
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                                $number = mysqli_num_rows($res);
+
+                                if ($number != 0) {
+                                    $arr = mysqli_fetch_assoc($res);
+                                    /*$temp_arr2['percent_cats'] = (int)$arr['id'];
+                                    $temp_arr2['work_percent'] = (int)$arr['work_percent'];
+                                    $temp_arr2['material_percent'] = (int)$arr['material_percent'];*/
+
+                                    //$percents_j = getPercents( $invoice_j[0]['worker_id'], (int)$arr['id']);
+                                    //var_dump($percents_j);
+
+                                    $temp_arr['percent_cats'] = (int)$arr['id'];
+                                    //$temp_arr2['work_percent'] = (int)$percents_j[(int)$arr['id']]['work_percent'];
+                                    //$temp_arr2['material_percent'] = (int)$percents_j[(int)$arr['id']]['material_percent'];
+
+                                }
+
+                            }
                             CloseDB ($msql_cnnct);
 
 

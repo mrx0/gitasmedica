@@ -122,6 +122,14 @@
 
                                 foreach ($monthData as $rezData) {
 
+
+                                    //Общая сумма, которую начислили
+                                    $summItog = $rezData['summ'] + $rezData['surcharge'] + $rezData['night_smena'] + $rezData['empty_smena'];
+                                    //Если ассистент, то плюсуем сумму за РЛ
+                                    if ($_POST['permission'] == 7){
+                                        $summItog += $rezData['summ_calc'];
+                                    }
+
                                     $rezult .=
                                         '
                                         <div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); border: 1px solid #BFBCB5; margin-top: 1px; position: relative; '.$bgColor.'">
@@ -143,7 +151,7 @@
                                                                 </td>
                                                                 <td style="text-align: right; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
                                                                     <span class="calculateOrder calculateCalculateN" style="font-size: 13px;">
-                                                                        ' . intval($rezData['summ']+$rezData['surcharge']+$rezData['night_smena']+$rezData['empty_smena']) . '
+                                                                        ' . intval($summItog) . '
                                                                     </span> руб.
                                                                 </td>
                                                             </tr>
@@ -173,7 +181,7 @@
                                                                 </td>
                                                                 <td style="text-align: right; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
                                                                     <span class="calculateInvoice calculateCalculateN" style="font-size: 13px">
-                                                                        ' . intval($rezData['summ']-$rezData['paidout']-$rezData['deduction']+$rezData['surcharge']+$rezData['night_smena']+$rezData['empty_smena']) . '
+                                                                        ' . intval($summItog - $rezData['paidout'] - $rezData['deduction']) . '
                                                                     </span> руб.
                                                                 </td>
                                                             </tr>

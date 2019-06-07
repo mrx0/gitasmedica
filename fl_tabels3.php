@@ -1,7 +1,7 @@
 <?php
 
 //fl_tabels3.php
-//Важный отчёт
+//Отчёт по часам
 //для прочее
 
 	require_once 'header.php';
@@ -237,14 +237,20 @@
 
 			if ($_POST){
 			}else{
-				echo '
+                echo '
                     <div class="no_print"> 
 					<header style="margin-bottom: 5px;">
-						<h1>Важный отчёт</h1>';
+                        <div class="nav">';
+//                if ($tabel_j[0]['worker_id'] == $_SESSION['id']){
+//                    echo '
+//                            <a href="fl_my_tabels.php" class="b">Табели</a>';
+//                }else {
+                    echo '
+                            <a href="fl_tabels.php?'.$who.'" class="b">Важный отчёт</a>';
+//                }
                 echo '
-                        <div>
-						    <a href="fl_tabel_print_choice.php?type='.$type.'" class="b4">Печать пачки</a>
-						</div>';
+                        </div>
+						<h1>Отчёт по часам</h1>';
                 echo '    
 					</header>
 					</div>';
@@ -257,12 +263,14 @@
                         <ul style="margin-left: 6px; margin-bottom: 20px;">
                             <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
                             <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-                                <a href="fl_tabels.php?who=5" class="b" style="">Стоматологи</a>
-                                <a href="fl_tabels.php?who=6" class="b" style="">Косметологи</a>
-                                <a href="fl_tabels.php?who=10" class="b" style="">Специалисты</a>
+                                <!--<a href="fl_tabels.php?who=5" class="b" style="">Стоматологи</a>-->
+                                <!--<a href="fl_tabels.php?who=6" class="b" style="">Косметологи</a>-->
+                                <!--<a href="fl_tabels.php?who=10" class="b" style="">Специалисты</a>-->
                                 <a href="fl_tabels2.php?who=4" class="b" style="">Администраторы</a>
                                 <a href="fl_tabels2.php?who=7" class="b" style="">Ассистенты</a>
+                                <!--<a href="fl_tabels.php?who=7" class="b" style="">Ассистенты2</a>-->
                                 <a href="fl_tabels3.php?who=11" class="b" style="'.$other_color.'">Прочее</a>
+                                <!--<a href="fl_tabels_noch.php" class="b" style="">Ночь</a>-->
                             </li>';
 
 
@@ -327,18 +335,19 @@
                 //var_dump($revenue_percent_j);
 
                 //Получаем нормы смен для этого типа
-//                $arr = array();
-//                $normaSmen = array();
-//
-//                $query = "SELECT * FROM `fl_spr_normasmen` WHERE `type` = '$type'";
-//                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-//                $number = mysqli_num_rows($res);
-//                if ($number != 0){
-//                    while ($arr = mysqli_fetch_assoc($res)){
-//                        //Раскидываем в массив
-//                        $normaSmen[$arr['month']] = $arr['count'];
-//                    }
-//                }
+                $arr = array();
+                $normaSmen = array();
+
+                $query = "SELECT * FROM `fl_spr_normasmen` WHERE `type` = '$type'";
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                $number = mysqli_num_rows($res);
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        //Раскидываем в массив
+                        $normaSmen[$arr['specializ_id']][$arr['month']] = $arr['count'];
+                    }
+                }
+                //var_dump($normaSmen);
 
                 //Норма смен (часов)
 //                $w_normaSmen = $normaSmen[(int)$month]*12;
@@ -366,29 +375,29 @@
 
 
                 //Соберём часы за месяц отовсюду для этого типа
-//                $arr = array();
-//                $hours_j = array();
-//
-//                $query = "SELECT * FROM `fl_journal_scheduler_report` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year'";
-//                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-//
-//                $number = mysqli_num_rows($res);
-//
-//                if ($number != 0){
-//                    while ($arr = mysqli_fetch_assoc($res)){
-//                        //Раскидываем в массив
-//                        if (!isset($hours_j[$arr['worker_id']])) {
-//                            $hours_j[$arr['worker_id']] = array();
-//                        }
-//                        if (!isset($hours_j[$arr['worker_id']][$arr['filial_id']])) {
-//                            $hours_j[$arr['worker_id']][$arr['filial_id']] = 0;
-//                        }
-//                        //array_push($hours_j, $arr);
-//                        $hours_j[$arr['worker_id']][$arr['filial_id']] += $arr['hours'];
-//
-//                    }
-//                }
-                //var_dump($hours_j);
+                $arr = array();
+                $hours_j = array();
+
+                $query = "SELECT * FROM `fl_journal_scheduler_report` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year'";
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        //Раскидываем в массив
+                        if (!isset($hours_j[$arr['worker_id']])) {
+                            $hours_j[$arr['worker_id']] = array();
+                        }
+                        if (!isset($hours_j[$arr['worker_id']][$arr['filial_id']])) {
+                            $hours_j[$arr['worker_id']][$arr['filial_id']] = 0;
+                        }
+                        //array_push($hours_j, $arr);
+                        $hours_j[$arr['worker_id']][$arr['filial_id']] += $arr['hours'];
+
+                    }
+                }
+//                var_dump($hours_j);
 
                 $block_fast_filter = '';
 
@@ -400,8 +409,8 @@
                                 <!--<td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Категория</i></b></td>-->
                                 <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Прикреплён</i></b></td>
                                 <td style="width: 80px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Оклад, руб.</i></td>
-                                <!--<td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Часы</i><br><span style="color: rgb(158, 158, 158); font-size: 80%;">всего/ норма/ %</span></td>-->
-                                <!--td style="width: 80px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Начислено за время</i></td>-->
+                                <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Часы</i><br><span style="color: rgb(158, 158, 158); font-size: 80%;">всего/ норма/ %</span></td>
+                                <td style="width: 80px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Начислено за время</i></td>
                                 <!--<td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Закрыто работ на сумму, руб.</i></td>-->
                                 <!--<td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Надбавка от выручки, руб.(%)</i></td>-->
                                 <td style="width: 70px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Итого, руб.</i></td>
@@ -434,180 +443,189 @@
 
                         //Специализации
                         $specializations = workerSpecialization($worker_data['id']);
-
-
-                        echo '
-                                <tr class="cellsBlockHover workerItem" worker_id="'.$worker_data['id'].'" style="'.$bgColor.'">
-                                    <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">
-                                        <b>'.$worker_data['full_name'].'</b> ';
-
-
                         //var_dump($specializations);
 
-                        if (!empty($specializations)){
-                            foreach ($specializations as $specialization_item){
-                                echo ' <span class="tag" style="float: right; font-size: 90%;">'.$specialization_item['name'].'</span>';
+                        if (!empty($specializations)) {
+                            foreach ($specializations as $worker_specializ_data) {
+
+                                echo '
+                                    <tr class="cellsBlockHover workerItem" worker_id="' . $worker_data['id'] . '" style="' . $bgColor . '">
+                                        <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">
+                                            <b>' . $worker_data['full_name'] . '</b> ';
+
+
+                                //var_dump($specializations);
+
+                                //if (!empty($specializations)){
+                                //foreach ($specializations as $specialization_item){
+                                echo ' <span class="tag" style="float: right; font-size: 90%;">' . $worker_specializ_data['name'] . '</span>';
+                                //}
+                                //}
+
+
+                                //                        echo '
+                                //                                    </td>
+                                //                                    <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">';
+                                //
+                                //                        //Категория
+                                //                        if (($worker_data['cat_id'] != NUll) && ($worker_data['cat_name'] != NUll)) {
+                                //                            echo $worker_data['cat_name'];
+                                //                            $worker_category_id = $worker_data['cat_id'];
+                                //                        }else{
+                                //                            echo '<span style="color: rgb(243, 0, 0);">не указано</span>';
+                                //                            $haveCategory =false;
+                                //                        }
+
+                                echo '
+                                        </td>
+                                        <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">';
+
+                                //Если есть привязка к филиалу
+                                if ($worker_data['filial_id'] != 0) {
+                                    echo $filials_j[$worker_data['filial_id']]['name2'];
+                                    $worker_filial_id = $worker_data['filial_id'];
+                                } else {
+                                    echo '<span style="color: rgb(243, 0, 0);">не прикреплен</span>';
+                                    $haveFilial = false;
+                                }
+                                echo '
+                                        </td>
+                                        
+                                        <td style="width: 80px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; ">';
+
+
+                                //Получаем оклад конкретного сотрудника
+                                $arr = array();
+                                $salary = 0;
+
+                                $query = "SELECT * FROM `fl_spr_salaries` WHERE `worker_id` = '{$worker_data['id']}' ORDER BY `date_from` DESC LIMIT 1";
+                                //var_dump($query);
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                                $number = mysqli_num_rows($res);
+                                if ($number != 0) {
+                                    //                    while ($arr = mysqli_fetch_assoc($res)){
+                                    //                        //Раскидываем в массив
+                                    //                        if (!isset($salariesyCategory[$arr['filial_id']])) {
+                                    //                            $salariesyCategory[$arr['filial_id']] = array();
+                                    //                        }
+                                    //                        //if (!isset($categories[$arr['filial_id']][$arr['category']])) {
+                                    //                        $salariesyCategory[$arr['filial_id']][$arr['category']] = $arr['summ'];
+                                    //                        //}
+                                    //                    }
+                                    $arr = mysqli_fetch_assoc($res);
+                                    $salary = $arr['summ'];
+                                }
+                                //var_dump($salary);
+
+                                $oklad = $salary;
+
+
+                                //Оклад
+                                //                        if (isset($salariesyCategory[$worker_filial_id])){
+                                //                            if (isset($salariesyCategory[$worker_filial_id][$worker_data['cat_id']])) {
+                                //                                //Администраторы
+                                //                                $oklad = $salariesyCategory[$worker_filial_id][$worker_data['cat_id']];
+                                //                            }
+                                //                        }
+
+                                //                        //Ассистенты
+                                //                        if ($type == 7) {
+                                //                            $oklad = $oklad * $w_normaSmen;
+                                //                        }
+
+                                echo number_format($salary, 2, '.', ' ');
+
+                                //Итого
+                                                        echo '
+                                                                    </td>
+                                
+                                                                    <td style="width: 120px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">';
+
+                                $w_hours = 0;
+                                $w_percentHours = 0;
+
+
+                                //Смены часы
+                                if (isset($hours_j[$worker_data['id']])) {
+
+                                    //Норма смен (часов) по специализациям
+                                    $w_normaSmen = $normaSmen[$worker_specializ_data['id']][(int)$month]*12;
+
+                                    $w_hours = array_sum($hours_j[$worker_data['id']]);
+                                    $w_percentHours = number_format($w_hours * 100 / $w_normaSmen, 2, '.', '');
+
+                                    echo '
+                                                <div id="w_hours_' . $worker_data['id'] . '" style="margin-bottom: 15px; box-shadow: 0 0 3px 1px rgb(197, 197, 197); text-align: center;">' . $w_hours . '/ <span id="w_norma_' . $worker_data['id'] . '">' . $w_normaSmen . '</span>/ ' . $w_percentHours . '%</div>';
+
+                                    //Нарисуем табличку со всеми филиалами
+                                    echo '
+                                                <table style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; margin:5px; font-size: 80%;">';
+                                    foreach ($hours_j[$worker_data['id']] as $filial_id => $hours_data) {
+
+                                        echo '
+                                                    <tr>
+                                                        <td>
+                                                            ' . $filials_j[$filial_id]['name2'] . '
+                                                        </td>
+                                                        <td style="text-align: right; width: 39px;">
+                                                            ' . $hours_data . '
+                                                        </td>
+                                                    </tr>';
+                                    }
+
+                                    echo '
+                                                </table>';
+
+                                } else {
+                                    echo '
+                                                <span style="color: rgb(243, 0, 0);">нет данных</span>';
+                                }
+
+                                                        echo '
+                                                                    </td>
+                                                                    <td style="width: 80px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">
+                                                                    <div id="zp_temp_'.$worker_data['id'].'" style="">
+                                                                    </div>
+                                                                    </td>';
+                                //                                    <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">';
+                                //                        //Выручка
+                                //                        echo '
+                                //                                        <div class="filialMoney" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'">
+                                //                                        </div>';
+                                //                        echo '
+                                //                                    </td>
+                                //                                    <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">';
+                                //
+                                //                        //% от выручки
+                                //                        if ($haveCategory && $haveFilial){
+                                //                            echo '
+                                //                                    <div id="w_revenue_summ_'.$worker_data['id'].'" style="display: inline;">
+                                //                                    </div>';
+                                //
+                                //
+                                //                            $worker_revenue_percent = $revenue_percent_j[$worker_filial_id][$worker_category_id]['value'];
+                                //
+                                //                            echo '
+                                //                                    <div style="display: inline;">
+                                //                                        ('.number_format($worker_revenue_percent, 1, '.', ' ').'%)
+                                //                                    </div>';
+                                //                        }
+                                echo '
+                                            
+                                        </td>
+                                        <td style="width: 70px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; font-weight: bold;">
+                                            <div id="w_id_' . $worker_data['id'] . '" class="itogZP" w_id="' . $worker_data['id'] . '" f_id="' . $worker_filial_id . '" oklad="' . $oklad . '" w_hours="' . $w_hours . ',' . $w_normaSmen . '" w_percentHours="' . $w_percentHours . '" worker_revenue_percent="' . $worker_revenue_percent . '" filialMoney="0" worker_category_id="' . $worker_category_id . '" style="">
+                                            </div>';
+
+                                echo '
+                                        </td> 
+                                        <td id="worker_' . $worker_data['id'] . '" class="workerTabel" f_id="' . $worker_filial_id . '" style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center; font-size: 120%;">
+                                            <i class="fa fa-file-text" aria-hidden="true" style="color: rgba(0, 0, 0, 0.30); font-size: 130%;" title="Нет табеля"></i>
+                                            <i class="fa fa-plus" style="color: green; font-size: 100%; cursor: pointer;" title="Добавить" onclick="addNewTabelForWorkerFromSchedulerReport(' . $worker_data['id'] . ', ' . $worker_filial_id . ', ' . $type . ');"></i>
+                                        </td>
+                                    </tr>';
                             }
                         }
-
-
-//                        echo '
-//                                    </td>
-//                                    <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">';
-//
-//                        //Категория
-//                        if (($worker_data['cat_id'] != NUll) && ($worker_data['cat_name'] != NUll)) {
-//                            echo $worker_data['cat_name'];
-//                            $worker_category_id = $worker_data['cat_id'];
-//                        }else{
-//                            echo '<span style="color: rgb(243, 0, 0);">не указано</span>';
-//                            $haveCategory =false;
-//                        }
-
-                        echo '
-                                    </td>
-                                    <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">';
-
-                        //Если есть привязка к филиалу
-                        if ($worker_data['filial_id'] != 0){
-                            echo $filials_j[$worker_data['filial_id']]['name2'];
-                            $worker_filial_id = $worker_data['filial_id'];
-                        }else{
-                            echo '<span style="color: rgb(243, 0, 0);">не прикреплен</span>';
-                            $haveFilial =false;
-                        }
-                        echo '
-                                    </td>
-                                    
-                                    <td style="width: 80px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; ">';
-
-
-                        //Получаем оклад конкретного сотрудника
-                        $arr = array();
-                        $salary = 0;
-
-                        $query = "SELECT * FROM `fl_spr_salaries` WHERE `worker_id` = '{$worker_data['id']}' ORDER BY `date_from` DESC LIMIT 1";
-                        //var_dump($query);
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                        $number = mysqli_num_rows($res);
-                        if ($number != 0){
-//                    while ($arr = mysqli_fetch_assoc($res)){
-//                        //Раскидываем в массив
-//                        if (!isset($salariesyCategory[$arr['filial_id']])) {
-//                            $salariesyCategory[$arr['filial_id']] = array();
-//                        }
-//                        //if (!isset($categories[$arr['filial_id']][$arr['category']])) {
-//                        $salariesyCategory[$arr['filial_id']][$arr['category']] = $arr['summ'];
-//                        //}
-//                    }
-                            $arr = mysqli_fetch_assoc($res);
-                            $salary = $arr['summ'];
-                        }
-                        //var_dump($salary);
-
-                        $oklad = $salary;
-
-
-                        //Оклад
-//                        if (isset($salariesyCategory[$worker_filial_id])){
-//                            if (isset($salariesyCategory[$worker_filial_id][$worker_data['cat_id']])) {
-//                                //Администраторы
-//                                $oklad = $salariesyCategory[$worker_filial_id][$worker_data['cat_id']];
-//                            }
-//                        }
-
-//                        //Ассистенты
-//                        if ($type == 7) {
-//                            $oklad = $oklad * $w_normaSmen;
-//                        }
-
-                        echo number_format($salary, 2, '.', ' ');
-
-                        //Итого
-//                        echo '
-//                                    </td>
-//
-//                                    <td style="width: 120px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">';
-
-                        $w_hours = 0;
-                        $w_percentHours = 0;
-
-
-                        //Смены часы
-//                        if (isset($hours_j[$worker_data['id']])){
-//
-//                            $w_hours = array_sum($hours_j[$worker_data['id']]);
-//                            $w_percentHours = number_format($w_hours * 100 / $w_normaSmen, 2, '.', '');
-//
-//                            echo '
-//                                        <div id="w_hours_'.$worker_data['id'].'" style="margin-bottom: 15px; box-shadow: 0 0 3px 1px rgb(197, 197, 197); text-align: center;">'.$w_hours.'/ <span id="w_norma_'.$worker_data['id'].'">'.$w_normaSmen.'</span>/ '.$w_percentHours.'%</div>';
-//
-//                            //Нарисуем табличку со всеми филиалами
-//                            echo '
-//                                        <table style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; margin:5px; font-size: 80%;">';
-//                            foreach ($hours_j[$worker_data['id']] as $filial_id => $hours_data){
-//
-//                                echo '
-//                                            <tr>
-//                                                <td>
-//                                                    '.$filials_j[$filial_id]['name2'].'
-//                                                </td>
-//                                                <td style="text-align: right; width: 39px;">
-//                                                    '.$hours_data.'
-//                                                </td>
-//                                            </tr>';
-//                            }
-//                            echo '
-//                                        </table>';
-//
-//                        }else{
-//                            echo '
-//                                        <span style="color: rgb(243, 0, 0);">нет данных</span>';
-//                        }
-//
-//                        echo '
-//                                    </td>
-//                                    <td style="width: 80px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">
-//                                    <div id="zp_temp_'.$worker_data['id'].'" style="">
-//                                    </div>
-//                                    </td>
-//                                    <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">';
-//                        //Выручка
-//                        echo '
-//                                        <div class="filialMoney" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'">
-//                                        </div>';
-//                        echo '
-//                                    </td>
-//                                    <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">';
-//
-//                        //% от выручки
-//                        if ($haveCategory && $haveFilial){
-//                            echo '
-//                                    <div id="w_revenue_summ_'.$worker_data['id'].'" style="display: inline;">
-//                                    </div>';
-//
-//
-//                            $worker_revenue_percent = $revenue_percent_j[$worker_filial_id][$worker_category_id]['value'];
-//
-//                            echo '
-//                                    <div style="display: inline;">
-//                                        ('.number_format($worker_revenue_percent, 1, '.', ' ').'%)
-//                                    </div>';
-//                        }
-                        echo '
-                                        
-                                    </td>
-                                    <td style="width: 70px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; font-weight: bold;">
-                                        <div id="w_id_'.$worker_data['id'].'" class="itogZP" w_id="'.$worker_data['id'].'" f_id="'.$worker_filial_id. '" oklad="'.$oklad.'" w_hours="'.$w_hours.','.$w_normaSmen.'" w_percentHours="'.$w_percentHours.'" worker_revenue_percent="'.$worker_revenue_percent.'" filialMoney="0" worker_category_id="'.$worker_category_id.'" style="">
-                                        </div>';
-
-                        echo '
-                                    </td> 
-                                    <td id="worker_'.$worker_data['id'].'" class="workerTabel" f_id="'.$worker_filial_id. '" style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center; font-size: 120%;">
-                                        <i class="fa fa-file-text" aria-hidden="true" style="color: rgba(0, 0, 0, 0.30); font-size: 130%;" title="Нет табеля"></i>
-                                        <i class="fa fa-plus" style="color: green; font-size: 100%; cursor: pointer;" title="Добавить" onclick="addNewTabelForWorkerFromSchedulerReport('.$worker_data['id'].', '.$worker_filial_id.', '.$type.');"></i>
-                                    </td>
-                                </tr>';
                     }
                 }
                 echo '
@@ -616,7 +634,7 @@
                     </div>';
 
                 echo '
-		            <div id="doc_title">Важный отчёт - Асмедика</div>';
+		            <div id="doc_title">Отчёт по часам - Асмедика</div>';
 
 				echo '
 
