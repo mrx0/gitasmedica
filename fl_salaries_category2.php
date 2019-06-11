@@ -1,7 +1,7 @@
 <?php
 
-//fl_salaries_category.php
-//Оклады по должностям (с категориями)
+//fl_salaries_category2.php
+//Оклады по должностям (без категорий)
 
 require_once 'header.php';
 require_once 'blocks_dom.php';
@@ -50,23 +50,23 @@ if ($enter_ok){
 
         $msql_cnnct = ConnectToDB2 ();
 
-        $categories_j = array();
+        //$categories_j = array();
         //$spr_salaries_j = array();
 
         //Сотрудники этого типа
-        $arr = array();
-        $rez = array();
-
-        $query = "SELECT * FROM `spr_categories` WHERE `permission` = '{$type}'";
-        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-        $number = mysqli_num_rows($res);
-        if ($number != 0){
-            while ($arr = mysqli_fetch_assoc($res)){
-                array_push($rez, $arr);
-            }
-            $categories_j = $rez;
-        }
+//        $arr = array();
+//        $rez = array();
+//
+//        $query = "SELECT * FROM `spr_categories` WHERE `permission` = '{$type}'";
+//        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//        $number = mysqli_num_rows($res);
+//        if ($number != 0){
+//            while ($arr = mysqli_fetch_assoc($res)){
+//                array_push($rez, $arr);
+//            }
+//            $categories_j = $rez;
+//        }
         //var_dump($categories_j);
 
         //переменная, чтоб вкл/откл редактирование
@@ -94,15 +94,15 @@ if ($enter_ok){
         echo '		
                             <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
                             <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-                                <a href="?who=4" class="b" style="'.$admin_color.'">Администраторы</a>
-                                <a href="?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
-                                <a href="fl_salaries_category2.php?who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
-                                <a href="fl_salaries_category2.php?who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
-                                <a href="fl_salaries_category2.php?who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
+                                <a href="fl_salaries_category.php?who=4" class="b" style="'.$admin_color.'">Администраторы</a>
+                                <a href="fl_salaries_category.php?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
+                                <a href="?who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
+                                <a href="?who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
+                                <a href="?who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
                                 <!--<a href="?who=11" class="b" style="'.$other_color.'">Прочие</a>-->
                             </li>';
 
-        if (!empty($categories_j)){
+        //if (!empty($categories_j)){
             //var_dump($rezult2);
             echo '
                             <ul style="margin-left:6px;">
@@ -111,13 +111,13 @@ if ($enter_ok){
                                         Филиал                                        
                                     </div>';
 
-            foreach ($categories_j as $category) {
+//            foreach ($categories_j as $category) {
                 echo '
-                                
+
                                     <div class="cellName" style="text-align: center;">
-                                        '.$category['name'].'
+                                        -
                                     </div>';
-            }
+//            }
 
             echo '
                                 </li>';
@@ -130,7 +130,7 @@ if ($enter_ok){
                                         '.$filial_item['name'].'                                      
                                     </div>';
 
-                foreach ($categories_j as $category) {
+//                foreach ($categories_j as $category) {
 
                     //Оклад этого сотрудника, который действует сейчас
                     $arr = array();
@@ -138,7 +138,7 @@ if ($enter_ok){
 
                     $salary = 0;
 
-                    $query = "SELECT * FROM `fl_spr_salaries_category` WHERE `category` = '{$category['id']}' AND `filial_id` = '{$filial_item['id']}' ORDER BY `date_from` DESC LIMIT 1";
+                    $query = "SELECT * FROM `fl_spr_salaries_category` WHERE `permission` = '{$type}' AND `filial_id` = '{$filial_item['id']}' ORDER BY `date_from` DESC LIMIT 1";
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                     $number = mysqli_num_rows($res);
@@ -152,7 +152,7 @@ if ($enter_ok){
 
                     echo '
                                         <div class="cellName" style="text-align: center;">
-                                            <a href="fl_edit_salary_category.php?type_id='.$type.'&category_id=' . $category['id'] . '&filial_id='.$filial_item['id'].'" class="ahref">' . $salary . '</a>
+                                            <a href="fl_edit_salary_category.php?type_id='.$type.'&category_id=' . $type . '&filial_id='.$filial_item['id'].'" class="ahref">' . $salary . '</a>
                                         </div>
                                         <!--<div class="cellName" style="text-align: center; padding: 4px 0 0;">
                                             С какого числа
@@ -161,15 +161,15 @@ if ($enter_ok){
 
 
 
-                }
+//                }
                 echo '
                                 </li>';
             }
 
             echo '</ul>';
-        }else{
-            echo 'Ничего нет...';
-        }
+//        }else{
+//            echo 'Ничего нет...';
+//        }
 
 
         echo '

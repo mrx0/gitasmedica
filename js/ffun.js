@@ -990,11 +990,12 @@
 
 
     //
-    function menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel, noch, dopData){
-        //console.log(newTabel);
-        //console.log(noch);
-        //console.log(dopData);
-        //console.log(JSON.stringify(dopData));
+    function menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel, noch, clear, dopData){
+        // console.log(res);
+        // console.log(newTabel);
+        // console.log(noch);
+        // console.log(dopData);
+        // console.log(JSON.stringify(dopData));
 
         var buttonsStr = '';
 
@@ -1002,6 +1003,10 @@
             buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="fl_addNewTabel2(' + type_id + ', ' + worker_id + ', ' + filial_id + ')">';
         }else{
             buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="fl_addInExistTabel2(' + type_id + ', ' + worker_id + ', ' + filial_id + ')">';
+        }
+        //Если создаём пустой табель
+        if (clear){
+            buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="fl_addNewTabelClear(' + type_id + ', ' + worker_id + ', ' + filial_id + ')">';
         }
 
         //Если оформляем ночь
@@ -1097,9 +1102,45 @@
                 if (res.length > 0) {
                     $('#overlay').show();
 
-                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel, false, {});
+                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel, false, false, {});
                 }else{
                     $('#errrror').html('<div class="query_neok">Ошибка #34. Ничего не выбрано. Обновите выбор РЛ</div>');
+                }
+            }
+        })
+    }
+
+    //Функция создания пустого табеля
+    function fl_addNewClearTabelIN (newTabel, type_id, worker_id, filial_id){
+
+        var link = "fl_menuForClearTabel_f.php";
+
+        var reqData = {
+            type_id: type_id,
+            worker_id: worker_id,
+            filial_id: filial_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+                //console.log (res.length);
+
+                if (res.length > 0) {
+                    $('#overlay').show();
+
+                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel, false, true, {});
+                }else{
+                    $('#errrror').html('<div class="query_neok">Ошибка #52. Что-то пошло не так.</div>');
                 }
             }
         })
@@ -1137,7 +1178,7 @@
                 if (res.length > 0) {
                     $('#overlay').show();
 
-                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, 0, noch, {});
+                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, 0, noch, false, {});
                 }else{
                     $('#errrror').html('<div class="query_neok">Ошибка #48. Ничего не выбрано. Обновите выбор РЛ</div>');
                 }
@@ -1157,7 +1198,7 @@
         // console.log(zp_summ);
         // console.log(invoice_ids);
 
-        var link = "fl_getTabels_f.php";
+        var link = "fl_getTabels_noch_f.php";
 
         var dopData = {
             day: day,
@@ -1169,7 +1210,8 @@
         var reqData = {
             type_id: type_id,
             worker_id: worker_id,
-            filial_id: filial_id
+            filial_id: filial_id,
+            dopData: dopData
         };
 
         $.ajax({
@@ -1189,9 +1231,9 @@
                 if (res.length > 0) {
                     $('#overlay').show();
 
-                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, 0, true, dopData);
+                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, 0, true, false, dopData);
                 }else{
-                    $('#errrror').html('<div class="query_neok">Ошибка #49. Нет табелей.</div>');
+                    $('#errrror').html('<div class="query_neok">Ошибка #49. Нет табелей. Табель ассистенту можно добавить в <a href="fl_tabels2.php" class="ahref">Отчёте по часам</a></div>');
                 }
             }
         })
@@ -1242,6 +1284,60 @@
             tabelYear: $("#tabelYear").val(),
             summCalcs: $(".summCalcsForTabel").html()
         };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                if(res.result == "success"){
+                    //console.log(res);
+
+                    //document.location.href = "fl_tabels.php";
+                    //window.close('newTabelwindow');
+
+                    $("#overlay").hide();
+                    $(".center_block").remove();
+
+                    setTimeout(function () {
+                        refreshOnlyThisTab($("#refreshID_"+type_id+"_"+worker_id+"_"+filial_id+""), type_id, worker_id, filial_id);
+                    }, 1000);
+
+
+                }else{
+                    //console.log(res);
+
+                    $('#errror').html(res.data);
+                    $("#overlay").hide();
+                    $(".center_block").remove();
+                }
+            }
+        });
+    }
+
+    //Добавляем в базу новый ПУСТОЙ табель без РЛ
+    function fl_addNewTabelClear(type_id, worker_id, filial_id){
+        //console.log($(".summCalcsForTabel").html());
+
+        var link = "fl_tabel_add3_f.php";
+
+        var reqData = {
+            type_id: type_id,
+            worker_id:  worker_id,
+            filial_id: filial_id,
+            tabelMonth: $("#tabelMonth").val(),
+            tabelYear: $("#tabelYear").val()
+        };
+        console.log(reqData);
 
         $.ajax({
             url: link,
@@ -1383,6 +1479,57 @@
             filial_id: filial_id,
             dopData: dopData,
             tabelForAdding: tabelForAdding
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                if(res.result == "success"){
+                    //console.log(res);
+
+                    setTimeout(function () {
+                        location.reload()
+                    }, 100);
+
+                }else{
+                    //console.log(res);
+
+                    $('#errror').html(res.data);
+                    $("#overlay").hide();
+                    $(".center_block").remove();
+                }
+            }
+        });
+    }
+
+    //Добавляем в базу новый ночной табель и сразу же добавляем туда отчёт за указанную дату
+    function fl_addNewNochTabel(type_id, worker_id, filial_id, dopData){
+        // console.log(type_id);
+        // console.log(worker_id);
+        // console.log(filial_id);
+        // console.log(dopData);
+
+        var link = "fl_add_new_noch_tabel_f.php";
+
+        //var tabelForAdding = $('input[name=tabelForAdding]:checked').val();
+
+        var reqData = {
+            type_id: type_id,
+            worker_id: worker_id,
+            filial_id: filial_id,
+            dopData: dopData
         };
         //console.log(reqData);
 

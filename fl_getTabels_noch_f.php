@@ -1,7 +1,7 @@
 <?php
 
-//fl_getTabels_f.php
-//Выборка табелей по исполнителю
+//fl_getTabels_noch_f.php
+//Выборка табелей (ночных) по исполнителю
 
     session_start();
 
@@ -25,45 +25,78 @@
 
                 $workerID = $_POST['worker_id'];
 
-                $tabels_j = fl_getTabels($_POST['type_id'], $workerID, $_POST['filial_id'], false);
-
-                    if (!empty($tabels_j)) {
-
-//                        $result .= '
-//                            <div style="padding: 2px; text-align: center; color: #717171; font-size: 80%;">
-//                                Выберите табель, <br>в который хотите добавить вычет
-//                            </div>';
+                $tabels_j = fl_getTabels($_POST['type_id'], $workerID, $_POST['filial_id'], true);
 
 
-                        $result .= '
-                            <header style="margin-bottom: 10Px;">
-                                <h2>Выберите табель</h2>';
 
-                        $result .= '
-                                <div style="text-align: left;">
-                                    '.WriteSearchUser('spr_workers', $workerID, 'user', true).' / ';
+//                $result .= '
+//                    <div style="padding: 2px; text-align: center; color: #717171; font-size: 80%;">
+//                        Выберите табель, <br>в который хотите добавить вычет
+//                    </div>';
 
-                        if ($_POST['filial_id'] == 0){
-                            $result .= 'Все филиалы';
-                        }else{
-                            $result .= '['.$filials_j[$_POST['filial_id']]['name2'].']';
-                        }
 
-                        $result .= '
-                                    <br><br>
-                                </div>';
+                $result .= '
+                    <header style="margin-bottom: 10Px;">
+                        <h2>Выберите табель</h2>';
 
-                        $result .= '
-                            </header>';
+                $result .= '
+                        Или создайте новый<br>';
 
-                        //Хотим добавить в существующий уже табель
-                        $result .= '
-                            <div class="tableTabels" style="width: 240px; background-color: rgb(234, 234, 234); text-align: left; height: 280px; overflow-y: scroll;  overflow-x: hidden;">';
+                $result .= '
+						    Месяц:
+				            <select id="tabelMonth">';
 
-                        $result .= '
-                                <div style="padding: 2px; text-align: center; color: #717171; font-size: 80%;">
-                                    Выберите табель, <br>в который хотите добавить
-                                </div>';
+                foreach ($monthsName as $val => $name) {
+
+                    if ($val == date('m')) {
+                        $selected = 'selected';
+                    } else {
+                        $selected = '';
+                    }
+
+                    $result .= '
+                                    <option value="' . $val . '" ' . $selected . '>' . $name . '</option>';
+
+                }
+
+                $result .= '
+			                </select>
+			                Год: <input id="tabelYear" type="number" value="' . date('Y') . '" min="2000" max="2030" size="4" style="width: 60px;">';
+                $result .= "
+			                <input type='button' class='b4' value='Создать' onclick='fl_addNewNochTabel(".$_POST['type_id'].", ".$_POST['worker_id'].", ".$_POST['filial_id'].", ".json_encode($_POST['dopData']).");'>";
+                $result .= '
+                        </div>';
+
+//                $result .= '<input type="button" class="b" value="Создать" onclick="fl_addNewNochTabel();">';
+
+
+                $result .= '
+                        <div style="text-align: left;">
+                            '.WriteSearchUser('spr_workers', $workerID, 'user', true).' / ';
+
+                if ($_POST['filial_id'] == 0){
+                    $result .= 'Все филиалы';
+                }else{
+                    $result .= '['.$filials_j[$_POST['filial_id']]['name2'].']';
+                }
+
+                $result .= '
+                            <br><br>
+                        </div>';
+
+                $result .= '
+                    </header>';
+
+                //Хотим добавить в существующий уже табель
+                $result .= '
+                    <div class="tableTabels" style="width: 240px; background-color: rgb(234, 234, 234); text-align: left; height: 280px; overflow-y: scroll;  overflow-x: hidden;">';
+
+                $result .= '
+                        <div style="padding: 2px; text-align: center; color: #717171; font-size: 80%;">
+                            Выберите табель<!--, <br>в который хотите добавить-->
+                        </div>';
+
+                if (!empty($tabels_j)) {
 
                         foreach ($tabels_j as $year => $yearData) {
 

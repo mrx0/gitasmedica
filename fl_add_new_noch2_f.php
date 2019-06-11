@@ -35,7 +35,7 @@
                 $time = date('Y-m-d H:i:s', time());
 
                 //Вставим новый ночной табель
-                $query = "INSERT INTO `fl_journal_tabels_noch` (`day`, `month`, `year`, `filial_id`, `worker_id`, `type`, `tabel_id`, `summ`, `create_time`, `create_person`)
+                $query = "INSERT INTO `fl_journal_reports_noch` (`day`, `month`, `year`, `filial_id`, `worker_id`, `type`, `tabel_id`, `summ`, `create_time`, `create_person`)
                 VALUES (
                 '{$day}', '{$month}', '{$year}', '{$filialID}', '{$workerID}', '{$typeID}', '{$_POST['tabelForAdding']}', '{$summ}', '{$time}', '{$_SESSION['id']}')";
 
