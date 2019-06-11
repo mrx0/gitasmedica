@@ -96,7 +96,7 @@
                         //Все сотрудники, которые есть в графике тут в эту дату
                         $scheduler_j = array();
 
-                        $dop_query = " AND (sch.type='4' OR sch.type='7' OR sch.type='11') ";
+                        $dop_query = " AND (sch.type='4' OR sch.type='7' OR sch.type='11' OR sch.type='13' OR sch.type='14' OR sch.type='15') ";
 
                         $query = "SELECT sch.*, s_w.full_name AS full_name, s_p.name AS type_name FROM `scheduler` sch 
                           LEFT JOIN `spr_workers` s_w
@@ -115,7 +115,7 @@
                                 $scheduler_j[$arr['worker']] = $arr;
                             }
                         }
-                        //var_dump($scheduler_j);
+                        var_dump($scheduler_j);
 
 
 
