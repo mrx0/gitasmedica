@@ -159,14 +159,16 @@
 
             echo '
 				<script>';
-            if (isset($_SESSION['options'])){
-                if (isset($_SESSION['options']['scheduler'])) {
-                    $iCanManage = $_SESSION['options']['scheduler']['manage'];
-                    if ($_SESSION['options']['scheduler']['manage'] == 'true') {
-                        $displayBlock = true;
+            if (($scheduler['edit'] == 1) || $god_mode) {
+                if (isset($_SESSION['options'])) {
+                    if (isset($_SESSION['options']['scheduler'])) {
+                        $iCanManage = $_SESSION['options']['scheduler']['manage'];
+                        if ($_SESSION['options']['scheduler']['manage'] == 'true') {
+                            $displayBlock = true;
+                        }
                     }
+                } else {
                 }
-            }else{
             }
 
             echo '
