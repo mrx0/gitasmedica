@@ -191,15 +191,15 @@
 						    <ul style="margin-left: 6px; margin-bottom: 20px;">
 						        <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
                                 <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-                                    <a href="?who=5" class="b" style="">Стоматологи</a>
-                                    <a href="?who=6" class="b" style="">Косметологи</a>
-                                    <a href="?who=10" class="b" style="">Специалисты</a>
-                                    <a href="?who=4" class="b" style="">Администраторы</a>
-                                    <!--<a href="fl_tabels2.php?who=4" class="b" style="">Администраторы</a>-->
-								    <!--<a href="fl_tabels2.php?who=7" class="b" style="">Ассистенты</a>-->
-                                    <a href="?who=7" class="b" style="">Ассистенты</a>
-								    <!--<a href="fl_tabels3.php?who=11" class="b" style="">Прочие</a>-->
-								    <a href="fl_tabels_noch.php" class="b" style="background-color: #fff261;">Ночь</a>
+                                    <a href="fl_tabels.php?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
+                                    <a href="fl_tabels.php?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>
+                                    <a href="fl_tabels.php?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
+                                    <a href="fl_tabels.php?who=4" class="b" style="'.$admin_color.'">Администраторы</a>
+                                    <a href="fl_tabels.php?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
+								    <a href="fl_tabels.php?who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
+                                    <a href="fl_tabels.php?who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
+                                    <a href="fl_tabels.php?who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
+								    <a href="fl_tabels_noch.php" class="b" style="">Ночь</a>
                                 </li>
 						    </ul>';
 
