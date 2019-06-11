@@ -1430,7 +1430,7 @@
 
 		//$res = mysql_query($query) or die(mysql_error().' -> '.$query);
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-		
+
 		$number = mysqli_num_rows($res);
 
 		if ($number != 0){

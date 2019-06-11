@@ -24,7 +24,7 @@
 
                 //Удаляем
                 //$query = "DELETE FROM `fl_journal_tabels_noch` WHERE `id` = '{$_POST['tabel_night_id']}' AND `tabel_id` = '{$_POST['tabel_id']}' ;";
-                $query = "DELETE FROM `fl_journal_tabels_noch` WHERE `id` = '{$_POST['tabel_night_id']}';";
+                $query = "DELETE FROM `fl_journal_reports_noch` WHERE `id` = '{$_POST['tabel_night_id']}';";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

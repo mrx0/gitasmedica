@@ -3257,185 +3257,186 @@
             foreach ($data as $items) {
                 //var_dump($items);
 
-                //Отметка об объеме оплат
-                $paid_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;" title="Не оплачено"></i>';
-                $status_mark = '<i class="fa fa-ban" aria-hidden="true" style="color: red; font-size: 110%;" title="Работа не закрыта"></i>';
-                $calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: red; font-size: 100%;" title="Нет расчётного листа"></i>';
+				if ($items['id'] != null) {
+					//Отметка об объеме оплат
+					$paid_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;" title="Не оплачено"></i>';
+					$status_mark = '<i class="fa fa-ban" aria-hidden="true" style="color: red; font-size: 110%;" title="Работа не закрыта"></i>';
+					$calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: red; font-size: 100%;" title="Нет расчётного листа"></i>';
 
-                //Сумма рассчетных листов
-				$calcSumm = 0;
-				$refundSumm = 0;
+					//Сумма рассчетных листов
+					$calcSumm = 0;
+					$refundSumm = 0;
 
-                //Маркеры для статусов
-                $paid_debt = false;
-                $status_debt = false;
-                $calculate_debt = false;
-                $refund_exist = false;
+					//Маркеры для статусов
+					$paid_debt = false;
+					$status_debt = false;
+					$calculate_debt = false;
+					$refund_exist = false;
 
-                //Не оплачен
-                if ($items['summ'] == $items['paid']) {
-                    //
-                }else{
-                    $paid_debt = true;
-				}
-
-                //Работа закрыта
-                if ($items['status'] == 5) {
-                    //
-                }else{
-                    $status_debt = true;
-				}
-
-                //Расчетный лист
-                $query = "SELECT SUM(`summ_inv`) AS `summCalcs` FROM `fl_journal_calculate` WHERE `invoice_id`='{$items['id']}'";
-                //var_dump($query);
-
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-                $number = mysqli_num_rows($res);
-
-                if ($number != 0) {
-                    $arr = mysqli_fetch_assoc($res);
-                    if ($arr['summCalcs'] != NULL) {
-                        $calcSumm = round($arr['summCalcs'], 2);
-                        //var_dump($arr);
-                    }else{
-                        $calculate_debt = true;
+					//Не оплачен
+					if ($items['summ'] == $items['paid']) {
+						//
+					} else {
+						$paid_debt = true;
 					}
-                }else{
-                	//Отсутствуют РЛ
-                    $calculate_debt = true;
-				}
 
-				//Возвраты
-                $query = "SELECT SUM(`summ`) AS `summRefund` FROM `fl_journal_refund` WHERE `invoice_id`='{$items['id']}'";
-                //var_dump($query);
+					//Работа закрыта
+					if ($items['status'] == 5) {
+						//
+					} else {
+						$status_debt = true;
+					}
 
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+					//Расчетный лист
+					$query = "SELECT SUM(`summ_inv`) AS `summCalcs` FROM `fl_journal_calculate` WHERE `invoice_id`='{$items['id']}'";
+					//var_dump($query);
 
-                $number = mysqli_num_rows($res);
+					$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-                if ($number != 0) {
-                    $arr = mysqli_fetch_assoc($res);
-                    if ($arr['summRefund'] != NULL) {
-                        $refundSumm = round($arr['summRefund'], 2);
-                        $refund_exist = true;
-                        //var_dump($arr);
-                    }
-                }
+					$number = mysqli_num_rows($res);
 
-				//Если "нулевой наряд", то будем считать, что РЛ ему не нужен и статус закрыт у него автоматически должен быть
-				if (($items['summ'] == $items['paid']) && ($items['summ'] == 0) && ($items['paid'] == 0) && ($items['summins'] == 0)){
-                    //var_dump($items['summ']);
-                    //if ($only_debt) {
-                        //var_dump($items['summ']);
-                        $status_debt = false;
-                        $calculate_debt = false;
-                    //}
-				}
+					if ($number != 0) {
+						$arr = mysqli_fetch_assoc($res);
+						if ($arr['summCalcs'] != NULL) {
+							$calcSumm = round($arr['summCalcs'], 2);
+							//var_dump($arr);
+						} else {
+							$calculate_debt = true;
+						}
+					} else {
+						//Отсутствуют РЛ
+						$calculate_debt = true;
+					}
 
-				//Отметки
-                if (!$paid_debt){
-                    $paid_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Оплачено"></i>';
-				}
-                if (!$status_debt) {
-                    $status_mark = '<i class="fa fa-check-circle-o" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Работа закрыта"></i>';
-                }
-                if (!$calculate_debt) {
-                    if ($calcSumm >= $items['summ']){
-                        $calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: darkgreen; font-size: 100%;" title="РЛ сделан"></i>';
-                    }
-                    if ($calcSumm < $items['summ']){
-                        $calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: rgba(255, 152, 0, 1); font-size: 110%;" title="Не вся сумма распределена по РЛ"></i>';
-                    }
-                }
+					//Возвраты
+					$query = "SELECT SUM(`summ`) AS `summRefund` FROM `fl_journal_refund` WHERE `invoice_id`='{$items['id']}'";
+					//var_dump($query);
 
-                $itemPercentCats_str = '';
+					$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-                if (($only_debt && ($paid_debt || $status_debt || $calculate_debt || ($calcSumm < $items['summ']))) || (!$only_debt)) {
+					$number = mysqli_num_rows($res);
 
-                    //Покажем категории работ
-                    if ($show_categories) {
-                        $invoice_ex_j = array();
-                        $invoice_ex_j_temp = array();
+					if ($number != 0) {
+						$arr = mysqli_fetch_assoc($res);
+						if ($arr['summRefund'] != NULL) {
+							$refundSumm = round($arr['summRefund'], 2);
+							$refund_exist = true;
+							//var_dump($arr);
+						}
+					}
 
-                        $query = "SELECT `percent_cats` FROM `journal_invoice_ex` WHERE `invoice_id`='{$items['id']}'";
+					//Если "нулевой наряд", то будем считать, что РЛ ему не нужен и статус закрыт у него автоматически должен быть
+					if (($items['summ'] == $items['paid']) && ($items['summ'] == 0) && ($items['paid'] == 0) && ($items['summins'] == 0)) {
+						//var_dump($items['summ']);
+						//if ($only_debt) {
+						//var_dump($items['summ']);
+						$status_debt = false;
+						$calculate_debt = false;
+						//}
+					}
 
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+					//Отметки
+					if (!$paid_debt) {
+						$paid_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Оплачено"></i>';
+					}
+					if (!$status_debt) {
+						$status_mark = '<i class="fa fa-check-circle-o" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Работа закрыта"></i>';
+					}
+					if (!$calculate_debt) {
+						if ($calcSumm >= $items['summ']) {
+							$calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: darkgreen; font-size: 100%;" title="РЛ сделан"></i>';
+						}
+						if ($calcSumm < $items['summ']) {
+							$calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: rgba(255, 152, 0, 1); font-size: 110%;" title="Не вся сумма распределена по РЛ"></i>';
+						}
+					}
 
-                        $number = mysqli_num_rows($res);
+					$itemPercentCats_str = '';
 
-                        if ($number != 0) {
-                            while ($arr = mysqli_fetch_assoc($res)) {
-                                array_push($invoice_ex_j, $arr);
-                            }
-                        }
-                        //var_dump($invoice_ex_j);
+					if (($only_debt && ($paid_debt || $status_debt || $calculate_debt || ($calcSumm < $items['summ']))) || (!$only_debt)) {
 
-                        if (!empty($invoice_ex_j)) {
-                            //var_dump($invoice_ex_j);
+						//Покажем категории работ
+						if ($show_categories) {
+							$invoice_ex_j = array();
+							$invoice_ex_j_temp = array();
 
-                            foreach ($invoice_ex_j as $invoice_ex_item) {
-                                //var_dump($invoice_ex_item['percent_cats']);
+							$query = "SELECT `percent_cats` FROM `journal_invoice_ex` WHERE `invoice_id`='{$items['id']}'";
 
-                                if ($invoice_ex_item['percent_cats'] == 0) {
-                                    //--
-                                } else {
-                                    if (!in_array($invoice_ex_item['percent_cats'], $invoice_ex_j_temp)) {
-                                        $itemPercentCats_str .= '<i style="color: #041E35; font-size: 100%;">' . $percent_cats_j[$invoice_ex_item['percent_cats']] . '</i><br>';
-                                        array_push($invoice_ex_j_temp, $invoice_ex_item['percent_cats']);
-                                    }
-                                }
-                            }
-                        }
-                    }
+							$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-                    //Если отображение не минималичтичное
-                    if (!$minimal) {
+							$number = mysqli_num_rows($res);
 
-                        $rezult_count++;
+							if ($number != 0) {
+								while ($arr = mysqli_fetch_assoc($res)) {
+									array_push($invoice_ex_j, $arr);
+								}
+							}
+							//var_dump($invoice_ex_j);
 
-                        $itemTemp_str = '';
+							if (!empty($invoice_ex_j)) {
+								//var_dump($invoice_ex_j);
 
-                        $itemTemp_str .= '
+								foreach ($invoice_ex_j as $invoice_ex_item) {
+									//var_dump($invoice_ex_item['percent_cats']);
+
+									if ($invoice_ex_item['percent_cats'] == 0) {
+										//--
+									} else {
+										if (!in_array($invoice_ex_item['percent_cats'], $invoice_ex_j_temp)) {
+											$itemPercentCats_str .= '<i style="color: #041E35; font-size: 100%;">' . $percent_cats_j[$invoice_ex_item['percent_cats']] . '</i><br>';
+											array_push($invoice_ex_j_temp, $invoice_ex_item['percent_cats']);
+										}
+									}
+								}
+							}
+						}
+
+						//Если отображение не минималичтичное
+						if (!$minimal) {
+
+							$rezult_count++;
+
+							$itemTemp_str = '';
+
+							$itemTemp_str .= '
 												<li class="cellsBlock" style="width: auto; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36);">';
-                        $itemTemp_str .= '
+							$itemTemp_str .= '
 													<a href="invoice.php?id=' . $items['id'] . '" class="cellOrder ahref" style="position: relative;">
 														<div style="font-weight: bold;">Наряд #' . $items['id'] . '</div>
 														<div style="margin: 3px;">';
 
 
-                        $itemTemp_str .= $itemPercentCats_str;
+							$itemTemp_str .= $itemPercentCats_str;
 
 
-                        $itemTemp_str .= '
+							$itemTemp_str .= '
 														</div>
 														<div style="font-size:80%; color: #555; border-top: 1px dashed rgb(179, 179, 179); margin-top: 5px;">';
 
-                        if (($items['create_time'] != 0) || ($items['create_person'] != 0)) {
-                            $itemTemp_str .= '
+							if (($items['create_time'] != 0) || ($items['create_person'] != 0)) {
+								$itemTemp_str .= '
 																Добавлен: ' . date('d.m.y H:i', strtotime($items['create_time'])) . '<br>
 																<!--Автор: ' . WriteSearchUser('spr_workers', $items['create_person'], 'user', true) . '<br>-->';
-                        } else {
-                            $itemTemp_str .= 'Добавлен: не указано<br>';
-                        }
-                        if (($items['last_edit_time'] != 0) || ($items['last_edit_person'] != 0)) {
-                            $itemTemp_str .= '
+							} else {
+								$itemTemp_str .= 'Добавлен: не указано<br>';
+							}
+							if (($items['last_edit_time'] != 0) || ($items['last_edit_person'] != 0)) {
+								$itemTemp_str .= '
 																Редактировался: ' . date('d.m.y H:i', strtotime($items['last_edit_time'])) . '<br>
 																<!--Кем: ' . WriteSearchUser('spr_workers', $items['last_edit_person'], 'user', true) . '-->';
-                        }
+							}
 
-                        $itemTemp_str .= '
+							$itemTemp_str .= '
 														</div>';
 
 
-                        //Цвет если оплачено или нет
-                        $paycolor = "color: red;";
-                        if ($items['summ'] == $items['paid']) {
-                            $paycolor = 'color: #333333;';
-                        }
+							//Цвет если оплачено или нет
+							$paycolor = "color: red;";
+							if ($items['summ'] == $items['paid']) {
+								$paycolor = 'color: #333333;';
+							}
 
-                        $itemTemp_str .= '
+							$itemTemp_str .= '
 														<span style="position: absolute; top: 2px; right: 3px;">' . $paid_mark . ' ' . $status_mark . ' ' . $calculate_mark . '</span>
 													</a>
 													<div class="cellName">
@@ -3443,76 +3444,76 @@
 															Сумма:<br>
 															<span class="calculateInvoice" style="font-size: 13px; ' . $paycolor . '">' . $items['summ'] . '</span> руб.
 														</div>';
-                        if ($items['summins'] != 0) {
-                            $itemTemp_str .= '
+							if ($items['summins'] != 0) {
+								$itemTemp_str .= '
 														<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
 															Страховка:<br>
 															<span class="calculateInsInvoice" style="font-size: 13px">' . $items['summins'] . '</span> руб.
 														</div>';
-                        }
-                        $itemTemp_str .= '
+							}
+							$itemTemp_str .= '
 													</div>';
 
-                        $itemTemp_str .= '
+							$itemTemp_str .= '
 													<div class="cellName">
 														<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
 															Оплачено:<br>
 															<span class="calculateInvoice" style="font-weight: normal; font-size: 13px; color: #333;">' . $items['paid'] . '</span> руб.
 														</div>';
-                        if ($items['summ'] != $items['paid']) {
-                            $itemTemp_str .= '
+							if ($items['summ'] != $items['paid']) {
+								$itemTemp_str .= '
 														<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
 															Осталось <a href="payment_add.php?invoice_id=' . $items['id'] . '" class="ahref">внести <i class="fa fa-thumb-tack" aria-hidden="true"></i></a><br>
 															<span class="calculateInvoice" style="font-size: 13px">' . ($items['summ'] - $items['paid']) . '</span> руб.
 														</div>';
-                        }
+							}
 
-                        if ($refund_exist){
-                            $itemTemp_str .= '
+							if ($refund_exist) {
+								$itemTemp_str .= '
 														<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
 															Возврат:<br>
 															<span class="calculateInvoice" style="font-size: 13px">' . $refundSumm . '</span> руб.
 														</div>';
-						}
+							}
 
-                        $itemTemp_str .= '
+							$itemTemp_str .= '
 													</div>
 												</li>';
 
-                        if ($items['status'] != 9) {
-                            $itemAll_str .= $itemTemp_str;
-                        } else {
-                            $itemDelete_str .= $itemTemp_str;
-                        }
-//                        var_dump($itemTemp_str);
-//                        var_dump($itemDelete_str);
-                    }
-
-					//Если минималистичное отображение
-                    if ($minimal) {
-
-                        if ($refund_exist){
-                            $colorItem = 'background-color: rgba(255, 121, 121, 0.81);';
-                        }else{
-                            $colorItem = 'background-color: #FFF;';
-                        }
-
-                        $rezult_count++;
-
-                        $itemTemp_str = '';
-
-                        //Если минималистичное отображение и хотим отобразить всё в строку
-                        if ($minimal_inline){
-                            $itemTemp_str .= '<div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); display: inline-block; width: 140px; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
-						}else{
-                            $itemTemp_str .= '<div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
+							if ($items['status'] != 9) {
+								$itemAll_str .= $itemTemp_str;
+							} else {
+								$itemDelete_str .= $itemTemp_str;
+							}
+							//                        var_dump($itemTemp_str);
+							//                        var_dump($itemDelete_str);
 						}
 
-                        $itemTemp_str .= '
+						//Если минималистичное отображение
+						if ($minimal) {
+
+							if ($refund_exist) {
+								$colorItem = 'background-color: rgba(255, 121, 121, 0.81);';
+							} else {
+								$colorItem = 'background-color: #FFF;';
+							}
+
+							$rezult_count++;
+
+							$itemTemp_str = '';
+
+							//Если минималистичное отображение и хотим отобразить всё в строку
+							if ($minimal_inline) {
+								$itemTemp_str .= '<div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); display: inline-block; width: 140px; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
+							} else {
+								$itemTemp_str .= '<div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">';
+							}
+
+							$itemTemp_str .= '
 															<a href="invoice.php?id=' . $items['id'] . '" class="ahref">
 																<div>
 																	<div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
-																		<i class="fa fa-file-o" aria-hidden="true" style="'.$colorItem.' text-shadow: none;"></i>
+																		<i class="fa fa-file-o" aria-hidden="true" style="' . $colorItem . ' text-shadow: none;"></i>
 																	</div>
 																	<div style="display: inline-block; vertical-align: middle;">
 																		<i>#' . $items['id'] . '</i> <span style="font-size: 80%;"><!--от ' . date('d.m.y', strtotime($items['create_time'])) . '--></span>
@@ -3520,46 +3521,47 @@
 																</div>
 																<div style="margin: 3px;">';
 
-                        $itemTemp_str .= $itemPercentCats_str;
+							$itemTemp_str .= $itemPercentCats_str;
 
-                        $itemTemp_str .= '
+							$itemTemp_str .= '
 																</div>
 																<div>
 																	<div style="border: 1px dotted #AAA; margin: 2px 2px; padding: 1px 3px; font-size: 10px">
 																		<span class="calculateInvoice" style="font-size: 11px">' . $items['summ'] . '</span> руб.
 																	</div>';
-                        if ($items['summins'] != 0) {
-                            $itemTemp_str .= '
+							if ($items['summins'] != 0) {
+								$itemTemp_str .= '
 																	<div style="border: 1px dotted #AAA; margin: 2px 2px; padding: 1px 3px; font-size: 10px">
 																		Страховка:<br>
 																		<span class="calculateInsInvoice" style="font-size: 11px">' . $items['summins'] . '</span> руб.
 																	</div>';
-                        }
+							}
 
 
-                        if ($refund_exist) {
-                            $itemTemp_str .= '
+							if ($refund_exist) {
+								$itemTemp_str .= '
 														<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
 															Возврат:<br>
 															<span class="calculateInvoice" style="font-size: 13px">' . $refundSumm . '</span> руб.
 														</div>';
-                        }
-                        $itemTemp_str .= '
+							}
+							$itemTemp_str .= '
 																</div>
 		
 															</a>
 															<span style="position: absolute; top: 2px; right: 3px;">' . $paid_mark . ' ' . $status_mark . ' ' . $calculate_mark . '</span>
 														</div>';
 
-                        if ($items['status'] != 9) {
-                            $itemAll_str .= $itemTemp_str;
-                        } else {
-                            $itemDelete_str .= $itemTemp_str;
-                        }
-                        //var_dump($itemTemp_str);
+							if ($items['status'] != 9) {
+								$itemAll_str .= $itemTemp_str;
+							} else {
+								$itemDelete_str .= $itemTemp_str;
+							}
+							//var_dump($itemTemp_str);
 
-                    }
-                }
+						}
+					}
+				}
             }
 
 

@@ -1,9 +1,7 @@
 <?php
 
-//fl_getCalcsFromSession_f.php
-//Соберём все расчетные листы из сессии и покажем их перед добавлением в табель
-//А также, если нужно, то еще и выберем и покажем табели, куда надо добавить
-//!!! не уверен, что это рационально, туда сюда запросы к сессии каждый раз
+//fl_menuForClearTabel_f.php
+//Меню с выбором месяца и года при создании пустого табеля
 
     session_start();
 
@@ -21,10 +19,10 @@
 
         //var_dump($_SESSION);
 
-        if (isset($_SESSION['fl_calcs_tabels2'])) {
+        //if (isset($_SESSION['fl_calcs_tabels2'])) {
 
-            if (isset($_SESSION['fl_calcs_tabels2']['data'])) {
-                if (!empty($_SESSION['fl_calcs_tabels2']['data'])) {
+//            if (isset($_SESSION['fl_calcs_tabels2']['data'])) {
+//                if (!empty($_SESSION['fl_calcs_tabels2']['data'])) {
                     //var_dump($_SESSION['fl_calcs_tabels2']);
 
                     //$calcData_Arr = explode('_', $_SESSION['fl_calcs_tabels']['data']);
@@ -39,13 +37,13 @@
                     $result .= '
                     <header style="margin-bottom: 10Px;">';
 
-                    if ($_POST['newTabel'] == 1) {
+                    //if ($_POST['newTabel'] == 1) {
                         $result .= '
-                        <h2>Добавление РЛ</h2>';
-                    } else {
-                        $result .= '
-                        <h2>Добавление РЛ</h2>';
-                    }
+                        <h2>Создать новый пустой табель?</h2>';
+                    //} else {
+//                        $result .= '
+//                        <h2>Добавление РЛ</h2>';
+                    //}
 
 
                     $result .= '
@@ -316,9 +314,9 @@
                         </div>
                         <div id="doc_title">Добавление расчётных листов в Новый табель - Асмедика</div>';*/
 
-                }
-            }
-        }
+//                }
+//            }
+        //}
     }
 
 ?>

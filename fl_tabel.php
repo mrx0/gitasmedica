@@ -615,7 +615,7 @@
 
                             $tabels_noch_j = array();
 
-                            $query = "SELECT * FROM `fl_journal_tabels_noch` WHERE `tabel_id` = '{$tabel_j[0]['id']}'";
+                            $query = "SELECT * FROM `fl_journal_reports_noch` WHERE `tabel_id` = '{$tabel_j[0]['id']}'";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
