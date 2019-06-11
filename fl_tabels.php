@@ -107,7 +107,7 @@
 								    <a href="?who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
                                     <a href="?who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
                                     <a href="?who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
-								    <a href="fl_tabels_noch.php" class="b" style="">Ночь</a>
+								    <!--<a href="fl_tabels_noch.php" class="b" style="">Ночь</a>-->
                                 </li>
 						    </ul>';
 
