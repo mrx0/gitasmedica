@@ -115,7 +115,7 @@
                                 $scheduler_j[$arr['worker']] = $arr;
                             }
                         }
-                        var_dump($scheduler_j);
+                        //var_dump($scheduler_j);
 
 
 
