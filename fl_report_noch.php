@@ -24,14 +24,6 @@
             $dopFilial = '';
             //$di = 0;
 
-            //тип график (космет/стомат/...)
-//            $who = '&who=4';
-//            $whose = 'Администраторов ';
-//            $selected_stom = ' selected';
-//            $selected_cosm = ' ';
-//            $datatable = 'scheduler_admin';
-//            $type = 0;
-
             if (isset($_GET['m']) && isset($_GET['y'])){
                 //операции со временем
                 $month = $_GET['m'];
@@ -247,10 +239,10 @@
 //                }
                 //var_dump($rezultShed[2][15]);
 
-                //Соберём уже оформленные табели за месяц
+                //Соберём уже оформленные табели (за каждый день) за месяц
                 $tabels_j = array();
 
-                $query = "SELECT * FROM `fl_journal_reports_noch` WHERE `month`='$month' AND `year` = '$year' ORDER BY `day`";
+                $query = "SELECT * FROM `fl_journal_tabels_noch_ex` WHERE  `month`='$month' AND `year` = '$year' ORDER BY `day`";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -427,7 +419,7 @@
 
                                     $tabel_mark = "
                                         <div style='display: inline-block; float: right; cursor: pointer;'>
-                                            <a href='fl_tabel.php?id=" . $tabels_j[$day][$filial_id][$worker_id]['tabel_id'] . "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(215, 34, 236, 0.98); font-size: 130%;' title='Табель #".$tabels_j[$day][$filial_id][$worker_id]['tabel_id']." не проведён'></i></a>
+                                            <a href='fl_tabel.php?id=" . $tabels_j[$day][$filial_id][$worker_id]['tabel_id'] . "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(215, 34, 236, 0.98); font-size: 130%;' title='Добавлено в Табель #".$tabels_j[$day][$filial_id][$worker_id]['tabel_id']." (не проведён)'></i></a>
                                         </div>";
                                 }else{
                                     $tabel_mark = "

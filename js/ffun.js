@@ -1206,6 +1206,7 @@
             year: year,
             summ: zp_summ
         };
+        //console.log(dopData);
 
         var reqData = {
             type_id: type_id,
@@ -3213,7 +3214,6 @@
 
                 if(res.result == "error"){
                     thisObj.html(res.data);
-
                 }
             }
         });

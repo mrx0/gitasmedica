@@ -2143,7 +2143,7 @@
             } else {
 
                 //$query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$typeID}' AND `worker_id`='{$workerID}' AND `office_id`='{$filialID}' AND `status` <> '7' AND `status` <> '9';";
-                $query = "SELECT * FROM `fl_journal_tabels_noch` WHERE `worker_id`='{$worker_id}' AND `type`='{$type_id}' AND `office_id`='{$filial_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
+                $query = "SELECT * FROM `fl_journal_tabels_noch` WHERE `worker_id`='{$worker_id}' AND `type`='{$type_id}' AND `filial_id`='{$filial_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
             }
         }
 
