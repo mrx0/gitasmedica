@@ -48,8 +48,7 @@
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                 //Обновим баланс табеля
-                //updateTabelBalance($_POST['tabelForAdding']);
-
+                updateTabelBalanceNoch($_POST['tabelForAdding']);
 
                 echo json_encode(array('result' => 'success', 'data' => 'Ok'));
             }

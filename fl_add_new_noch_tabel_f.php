@@ -53,7 +53,7 @@
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                 //Обновим баланс ночного табеля
-                //updateTabelBalance($mysqli_insert_id);
+                updateTabelBalanceNoch($mysqli_insert_id);
 
                 //echo json_encode(array('result' => 'error', 'data' => $date_in));
                 echo json_encode(array('result' => 'success', 'data' => 'Ok'));

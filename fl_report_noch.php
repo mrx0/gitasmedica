@@ -419,7 +419,7 @@
 
                                     $tabel_mark = "
                                         <div style='display: inline-block; float: right; cursor: pointer;'>
-                                            <a href='fl_tabel.php?id=" . $tabels_j[$day][$filial_id][$worker_id]['tabel_id'] . "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(215, 34, 236, 0.98); font-size: 130%;' title='Добавлено в Табель #".$tabels_j[$day][$filial_id][$worker_id]['tabel_id']." (не проведён)'></i></a>
+                                            <a href='fl_tabel_noch.php?id=" . $tabels_j[$day][$filial_id][$worker_id]['tabel_id'] . "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(215, 34, 236, 0.98); font-size: 130%;' title='Добавлено в Табель #".$tabels_j[$day][$filial_id][$worker_id]['tabel_id']." (не проведён)'></i></a>
                                         </div>";
                                 }else{
                                     $tabel_mark = "
@@ -492,7 +492,7 @@
 
                                             $tabel_mark = "
                                                 <div style='display: inline-block; float: right; cursor: pointer;'>
-                                                    <a href='fl_tabel.php?id=" . $tabels_j[$day][$filial_id][$assist_id]['tabel_id'] . "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(215, 34, 236, 0.98); font-size: 130%;' title='Табель не проведён'></i></a>
+                                                    <a href='fl_tabel_noch.php?id=" . $tabels_j[$day][$filial_id][$assist_id]['tabel_id'] . "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(215, 34, 236, 0.98); font-size: 130%;' title='Добавлено в Табель #".$tabels_j[$day][$filial_id][$assist_id]['tabel_id']." (не проведён)'></i></a>
                                                 </div>";
                                         }else{
                                             $tabel_mark = "
