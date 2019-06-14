@@ -31,9 +31,9 @@
                     $tabel_noch_id = 0;
                 }
 
-                $query = "INSERT INTO `fl_journal_paidouts` (`tabel_id`, `tabel_noch_id`, `type`, `summ`, `noch`, `descr`, `create_time`, `create_person`)
+                $query = "INSERT INTO `fl_journal_paidouts` (`tabel_id`, `tabel_noch_id`, `filial_id`, `type`, `summ`, `noch`, `descr`, `create_time`, `create_person`)
                             VALUES (
-                            '{$tabel_id}', '{$tabel_noch_id}', '{$_POST['type']}', '".round($_POST['paidout_summ'], 2)."', '{$_POST['noch']}', '{$_POST['descr']}', '{$time}', '{$_SESSION['id']}');";
+                            '{$tabel_id}', '{$tabel_noch_id}', '{$_POST['filial_id']}', '{$_POST['type']}', '".round($_POST['paidout_summ'], 2)."', '{$_POST['noch']}', '{$_POST['descr']}', '{$time}', '{$_SESSION['id']}');";
                             
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
