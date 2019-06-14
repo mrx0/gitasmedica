@@ -45,14 +45,14 @@
 
                 //if (!empty($percents_personal_j)){
                 if ($tax_j_id != 0){
-                    $query = "UPDATE `fl_spr_percents_personal` SET `percent`='{$_POST['val']}', `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}' WHERE `id`='{$percents_personal_j_id}'";
+                    $query = "UPDATE `fl_journal_taxes` SET `summ`='{$_POST['val']}', `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}' WHERE `id`='{$tax_j_id}'";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                 }else{
-                    $query = "INSERT INTO `fl_spr_percents_personal` (
-                    `percent_cats`, `worker_id`, `type`, `percent`, `create_time`, `create_person`)
+                    $query = "INSERT INTO `fl_journal_taxes` (
+                    `summ`, `worker_id`, `create_time`, `create_person`)
                     VALUES (
-                    '{$_POST['cat_id']}', '{$_POST['worker_id']}', '{$_POST['type']}', '{$_POST['val']}', '{$time}', '{$_SESSION['id']}'
+                    '{$_POST['val']}', '{$_POST['worker_id']}', '{$time}', '{$_SESSION['id']}'
                     );";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
