@@ -181,7 +181,7 @@
                                     </div>-->
                                     
                                     <div class="cellName" style="text-align: center; padding: 4px 0 0;">
-                                        <div class="changeCurrentTax" worker_id="'.$worker['id'].'" style="display: inline; cursor: pointer;" >'.number_format($tax['summ'], 2, '.', '').'</div> <div id="textAfterTax" style="display: inline;">руб. </div>
+                                        <div class="changeCurrentTax" worker_id="'.$worker['id'].'" style="display: inline; cursor: pointer;" >'.number_format($tax, 2, '.', '').'</div> <div id="textAfterTax" style="display: inline;">руб. </div>
 
                                     </div>';
 

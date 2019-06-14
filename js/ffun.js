@@ -4709,7 +4709,7 @@
                         //console.log(thisVal == newVal);
 
                         if (Number(thisVal) != Number(newVal)) {
-                            console.log(newVal);
+                            //console.log(newVal);
 
                             $.ajax({
                                 url: "fl_change_personal_tax_f.php",
@@ -4718,8 +4718,8 @@
                                 dataType: "JSON",
                                 data: {
                                     worker_id: workerID,
-                                    cat_id: catID,
-                                    type: typeID,
+                                    //cat_id: catID,
+                                    //type: typeID,
                                     val: newVal
                                 },
                                 cache: false,
@@ -4729,7 +4729,8 @@
                                 // действие, при ответе с сервера
                                 success: function (res) {
                                     if (res.result == "success") {
-                                        //console.log(data);
+                                        //console.log(res);
+
                                         $('#infoDiv').html(res.data);
                                         $('#infoDiv').show();
                                         setTimeout(function () {
