@@ -1084,6 +1084,7 @@
         var reqData = {
             newTabel: newTabel?1:0
         };
+        //console.log(reqData);
 
         $.ajax({
             url: link,
@@ -2047,6 +2048,8 @@
 
         if (rys) {
 
+            var noch = $('#noch').val();
+
             $.ajax({
                 url: link,
                 global: false,
@@ -2054,7 +2057,9 @@
                 dataType: "JSON",
                 data: {
                     tabel_id: tabel_id,
-                    paidout_id: paidout_id
+                    paidout_id: paidout_id,
+
+                    noch: noch
                 },
                 cache: false,
                 beforeSend: function () {
@@ -2170,6 +2175,7 @@
         }
 
         paidoutData['paidout_id'] = paidout_id;
+        console.log(paidoutData);
 
         $.ajax({
             url: link,
@@ -2177,7 +2183,7 @@
             type: "POST",
             dataType: "JSON",
 
-            data:paidoutData,
+            data: paidoutData,
 
             cache: false,
             beforeSend: function() {
@@ -2499,11 +2505,13 @@
 
         var paidout_summ = $('#paidout_summ').val();
         var descr = $('#descr').val();
+        var noch = $('#noch').val();
 
         var paidoutData = {
-            tabel_id:tabel_id,
-            type:type,
-            paidout_summ:paidout_summ,
+            tabel_id: tabel_id,
+            type: type,
+            paidout_summ: paidout_summ,
+            noch: noch,
             descr:descr
         };
 

@@ -164,8 +164,11 @@
                             //$summCalc = 0;
 
                             //Выберем табели уже существующие для этого работника
-                            $tabels_j = fl_getTabels($typeID, $workerID, $filialID, false);
-
+                            if ($typeID == 7){
+                                $tabels_j = fl_getTabels(0, $workerID, 0, false);
+                            }else {
+                                $tabels_j = fl_getTabels($typeID, $workerID, $filialID, false);
+                            }
 //                            //$query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$typeID}' AND `worker_id`='{$workerID}' AND `office_id`='{$filialID}' AND `status` <> '7' AND `status` <> '9';";
 //                            $query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$typeID}' AND `worker_id`='{$workerID}' AND `office_id`='{$filialID}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
 //

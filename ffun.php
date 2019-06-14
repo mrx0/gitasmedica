@@ -764,6 +764,25 @@
 
     }
 
+    //Обновить сумму баланса Выплат табеля Ночного
+    function updateTabelNochPaidoutSumm($tabel_id){
+
+        $msql_cnnct = ConnectToDB2();
+
+        $query = "SELECT SUM(`summ`) AS `summCalcs`  FROM `fl_journal_paidouts` WHERE `tabel_noch_id`='{$tabel_id}';";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        $arr = mysqli_fetch_assoc($res);
+
+        $query = "UPDATE `fl_journal_tabels_noch` SET `paidout` = '".round($arr['summCalcs'], 2)."' WHERE `id`='{$tabel_id}';";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        CloseDB ($msql_cnnct);
+
+    }
+
     //Обновить сумму баланса Надбавок по ночным сменам табеля
     function updateTabelNightSmensSumm($tabel_id){
 
@@ -2178,6 +2197,8 @@
         //Если не ночные
         if (!$noch) {
             //Выберем табели уже существующие для этого работника
+
+            //Если для всех филиалов
             if (($type_id == 0) && ($filial_id == 0)) {
 
                 $query = "SELECT * FROM `fl_journal_tabels` WHERE `worker_id`='{$worker_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
