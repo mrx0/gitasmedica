@@ -1,7 +1,7 @@
 <?php
 
-//fl_salaries.php
-//Оклады
+//fl_taxes.php
+//Налоги
 
     require_once 'header.php';
     require_once 'blocks_dom.php';
@@ -10,7 +10,7 @@
         require_once 'header_tags.php';
         //var_dump($stom);
 
-        if (($finances['see_all'] == 1) || $god_mode){
+        if (($_SESSION['id'] == 270) || $god_mode){
             include_once 'DBWork.php';
             include_once 'functions.php';
             //$offices = SelDataFromDB('spr_filials', '', '');
@@ -20,9 +20,9 @@
 
             //тип (космет/стомат/...)
             if (isset($_GET['who'])) {
-                $getWho = returnGetWho($_GET['who'], 10, array(11,10));
+                $getWho = returnGetWho($_GET['who'], 5, array(0,4,7,13,14,15,11,5,6,10));
             }else{
-                $getWho = returnGetWho(10, 10, array(11,10));
+                $getWho = returnGetWho(5, 5, array(0,4,7,13,14,15,11,5,6,10));
             }
             //var_dump($getWho);
 
@@ -50,7 +50,6 @@
             $msql_cnnct = ConnectToDB2 ();
 
             $workers_j = array();
-            //$spr_salaries_j = array();
 
             //Сотрудники этого типа
             $arr = array();
@@ -67,39 +66,21 @@
                 $workers_j = $rez;
             }
 
-            //Специализации
-            //$specializations_j = workerSpecialization(0);
-            //var_dump($specializations_j);
 
-            /*//Оклады
-            $arr = array();
-            $rez = array();
-
-            $query = "SELECT * FROM `fl_salaries` WHERE `type` = '{$type}'";
-            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-            $number = mysqli_num_rows($res);
-            if ($number != 0){
-                while ($arr = mysqli_fetch_assoc($res)){
-                    $rez[$arr['id']] = $arr;
-                }
-                $spr_percents_j = $rez;
-            }*/
-            //var_dump($spr_percents_j);
 
             //переменная, чтоб вкл/откл редактирование
-            echo '
-                    <script>
-                        var iCanManage = true;
-                    </script>';
+//            echo '
+//                    <script>
+//                        var iCanManage = true;
+//                    </script>';
 
             echo '
                     <div id="status">
                         <header>
                             <div class="nav">
-                                <a href="fl_salaries_category.php" class="b">Оклады по должностям</a>
+                                <!--<a href="fl_salaries_category.php" class="b">Оклады по должностям</a>-->
                             </div>
-                            <h1>Оклады сотрудников</h1>
+                            <h1>Налоги сотрудников</h1>
                         </header>';
 
 
@@ -112,11 +93,15 @@
             echo '		
                             <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
                             <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-                                <!--<a href="?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>-->
-                                <!--<a href="?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>-->
+                                <!--<a href="contacts.php" class="b" style="'.$all_color.'">Все</a>-->
+                                <a href="?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
+                                <a href="?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>
                                 <a href="?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
-                                <!--<a href="?who=4" class="b" style="'.$admin_color.'">Администраторы</a>-->
-                                <!--<a href="?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>-->
+                                <a href="?who=4" class="b" style="'.$admin_color.'">Администраторы</a>
+                                <a href="?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
+                                <a href="?who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
+                                <a href="?&who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
+                                <a href="?who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
                                 <a href="?who=11" class="b" style="'.$other_color.'">Прочие</a>
                             </li>';
 
@@ -126,7 +111,7 @@
                             <ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
                                 <li class="cellsBlock2" style="font-weight: bold; font-size: 11px; background: #FFF;">	
                                     <div class="cellFullName" style="text-align: center">
-                                        Полное имя';
+                                        ФИО';
                 echo $block_fast_filter;
                 echo '
                                         
@@ -158,11 +143,11 @@
 
                     //var_dump($specializations);
 
-                    if (!empty($specializations)){
-                        foreach ($specializations as $specialization_item){
-                            echo ' <span class="tag" style="float: right; font-size: 90%;">'.$specialization_item['name'].'</span>';
-                        }
-                    }
+//                    if (!empty($specializations)){
+//                        foreach ($specializations as $specialization_item){
+//                            echo ' <span class="tag" style="float: right; font-size: 90%;">'.$specialization_item['name'].'</span>';
+//                        }
+//                    }
 
                     echo '
                                     </a>';
@@ -171,29 +156,34 @@
                     $arr = array();
                     $rez = array();
 
-                    $salary = 0;
+                    $tax = 0;
 
-                    $query = "SELECT * FROM `fl_spr_salaries` WHERE `worker_id` = '{$worker['id']}' ORDER BY `date_from` DESC LIMIT 1";
+                    //$query = "SELECT * FROM `fl_journal_taxes` WHERE `worker_id` = '{$worker['id']}' ORDER BY `date_from` DESC LIMIT 1";
+                    $query = "SELECT * FROM `fl_journal_taxes` WHERE `worker_id` = '{$worker['id']}' LIMIT 1";
+
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                     $number = mysqli_num_rows($res);
                     if ($number != 0){
                         while ($arr = mysqli_fetch_assoc($res)){
-                            $salary = $arr['summ'];
+                            $tax = $arr['summ'];
                         }
                     }else{
-                        $salary = '<span style="color: red;">Не указано</span>';
+                        $tax = 0;
                     }
 
                     echo '
-                                    <div class="cellName" style="text-align: center; padding: 4px 0 0;">
-                                        <a href="fl_edit_salary.php?worker_id='.$worker['id'].'" class="ahref">'.$salary.'</a>
-                                    </div>
+                                    <!--<div class="cellName" style="text-align: center; padding: 4px 0 0;">
+                                        <a href="fl_edit_salary.php?worker_id='.$worker['id'].'" class="ahref">'.$tax.'</a>
+                                    </div>-->
                                     <!--<div class="cellName" style="text-align: center; padding: 4px 0 0;">
                                         С какого числа
                                     </div>-->
-                                    ';
+                                    
+                                    <div class="cellName" style="text-align: center; padding: 4px 0 0;">
+                                        <div class="changeCurrentTax" worker_id="'.$worker['id'].'" style="display: inline; cursor: pointer;" >'.number_format($tax['summ'], 2, '.', '').'</div> <div id="textAfterTax" style="display: inline;">руб. </div>
 
+                                    </div>';
 
                     echo '
                                 </li>';
@@ -214,7 +204,7 @@
                 <div id="overlay"></div>';
 
             echo '
-                 <div id="doc_title">Оклады сотрудников - Асмедика</div>';
+                 <div id="doc_title">Налоги сотрудников - Асмедика</div>';
 
         }else{
             echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

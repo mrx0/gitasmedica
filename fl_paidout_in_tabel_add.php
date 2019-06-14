@@ -18,7 +18,7 @@ if ($enter_ok){
         require 'variables.php';
 
         if ($_GET){
-            if (isset($_GET['tabel_id']) && isset($_GET['type'])){
+            if (isset($_GET['tabel_id']) && isset($_GET['type']) && isset($_GET['filial_id'])){
 
                 $link = 'fl_tabel.php';
 //                if (isset($_GET['w_type'])){
@@ -28,6 +28,9 @@ if ($enter_ok){
                 $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['tabel_id'], 'id');
 
                 if ($tabel_j != 0){
+
+                    $filials_j = getAllFilials(false, false, false);
+                    //var_dump($filials_j);
 
                     echo '
                             <div id="status">
@@ -83,6 +86,26 @@ if ($enter_ok){
                                             </div>
                                         </div>
                                         
+                                        <div class="cellsBlock2">
+                                            <div class="cellLeft">
+                                                <select name="SelectFilial" id="SelectFilial">';
+
+                    if (!empty($filials_j)) {
+                        foreach ($filials_j as $f_id => $filials_j_data) {
+                            $selected = '';
+                            //if (isset($_GET['filial'])){
+                                if ($f_id == $_GET['filial_id']){
+                                    $selected = 'selected';
+                                }
+                            //}
+                            echo "<option value='".$f_id."' $selected>".$filials_j_data['name']."</option>";
+                        }
+                    }
+
+                    echo '
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div class="cellsBlock2">
                                             <div class="cellLeft">
                                                 <span style="font-size:80%;  color: #555;">Комментарий</span><br>
