@@ -50,6 +50,17 @@ if ($enter_ok){
                         echo ' зп ';
                     }elseif ($_GET['type'] == 5){
                         echo ' ночь ';
+
+                        $link = 'fl_tabel_noch.php';
+                    }
+
+                    $noch = 0;
+
+                    //Если за ночь
+                    if (isset($_GET['noch'])){
+                        if ($_GET['noch'] == 1){
+                            $noch = 1;
+                        }
                     }
 
                     echo '
@@ -78,6 +89,8 @@ if ($enter_ok){
                                                 <textarea name="descr" id="descr" cols="60" rows="8"></textarea>
                                             </div>
                                         </div>
+                                        
+                                        <input type="hidden" name="noch" id="noch" value="'.$noch.'">
                                         
                                         <div id="errror"></div>                        
                                         <input type="button" class="b" value="Добавить" onclick="fl_showPaidoutAdd(0, '.$_GET['tabel_id'].', '.$_GET['type'].', \''.$link.'\', \'add\')">

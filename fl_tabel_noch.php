@@ -497,7 +497,7 @@
                         //var_dump(microtime(true) - $script_start);
 
                         //Выплаты
-                        $query = "SELECT * FROM `fl_journal_paidouts` WHERE `tabel_id`='".$tabel_j[0]['id']."';";
+                        $query = "SELECT * FROM `fl_journal_paidouts` WHERE `tabel_noch_id`='".$tabel_j[0]['id']."';";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -931,7 +931,7 @@
 //                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style="font-size: 80%;">Отпусные +</a></div>';
 //                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3" class="b" style="font-size: 80%;">Больничный +</a></div>';
 //                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=4" class="b" style="font-size: 80%;">На карту +</a></div>';
-                                echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=5" class="b" style="font-size: 80%;">За ночь +</a></div>';
+                                echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=5&noch=1" class="b" style="font-size: 80%;">За ночь +</a></div>';
                         }
 
                         //Выплачено
@@ -1016,7 +1016,7 @@
 //                        }
 
                         echo '	
-						
+			                    <input type="hidden" name="noch" id="noch" value="1">
 					        </div>
 					        
 					        <div id="doc_title">Табель ночь #'.$_GET['id'].' - Асмедика</div>

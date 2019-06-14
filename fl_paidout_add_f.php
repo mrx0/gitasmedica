@@ -23,16 +23,29 @@
 
                 $time = date('Y-m-d H:i:s', time());
 
-                $query = "INSERT INTO `fl_journal_paidouts` (`tabel_id`, `type`, `summ`, `descr`, `create_time`, `create_person`)
+                if ($_POST['noch'] == 1){
+                    $tabel_id = 0;
+                    $tabel_noch_id = $_POST['tabel_id'];
+                }else{
+                    $tabel_id = $_POST['tabel_id'];
+                    $tabel_noch_id = 0;
+                }
+
+                $query = "INSERT INTO `fl_journal_paidouts` (`tabel_id`, `tabel_noch_id`, `type`, `summ`, `noch`, `descr`, `create_time`, `create_person`)
                             VALUES (
-                            '{$_POST['tabel_id']}', '{$_POST['type']}', '".round($_POST['paidout_summ'], 2)."', '{$_POST['descr']}', '{$time}', '{$_SESSION['id']}');";
+                            '{$tabel_id}', '{$tabel_noch_id}', '{$_POST['type']}', '".round($_POST['paidout_summ'], 2)."', '{$_POST['noch']}', '{$_POST['descr']}', '{$time}', '{$_SESSION['id']}');";
                             
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                 //логирование
                 //AddLog (GetRealIp(), $session_id, '', 'Добавлен вычет. Номер: ['.$num.']. Номинал: ['.$nominal.'] руб.');
 
-                updateTabelPaidoutSumm ($_POST['tabel_id']);
+                if ($_POST['noch'] == 1){
+                    updateTabelNochPaidoutSumm ($_POST['tabel_id']);
+                }else{
+                    updateTabelPaidoutSumm ($_POST['tabel_id']);
+                }
+
 
                 echo json_encode(array('result' => 'success', 'data' => $query));
 
