@@ -112,8 +112,9 @@
                     if ($user[0]['permissions'] != 0) {
 
                         $specialization_j = SelDataFromDB('spr_specialization', $user[0]['permissions'], 'permission');
+                        //var_dump($specialization_j);
 
-                        if (!empty($specializations)){
+                        //if (!empty($specializations)){
                             $specializations_temp = array();
 
                             //Преобразуем массив чтоб id стали ключами
@@ -133,7 +134,7 @@
 
                                 echo '<input type="checkbox" name="specializations[]" value="' . $data['id'] . '" ' . $chckd . '> ' . $data['name'] . '<br>';
                             }
-                        }
+                        //}
                     }
 
 										echo '

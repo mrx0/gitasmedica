@@ -17,6 +17,9 @@
 			
 			require 'config.php';
 
+            $filials_j = getAllFilials(false, false, false);
+            //var_dump($filials_j);
+
 			//var_dump($_SESSION);
 			//unset($_SESSION['invoice_data']);
 			
@@ -218,92 +221,102 @@
 					
 							echo '			
 									<div class="invoice_rezult" style="display: inline-block; border: 1px solid #c5c5c5; border-radius: 3px; position: relative;">';
-									
-							echo '	
+
+                            if (isset($_SESSION['filial'])) {
+                                echo '	
 										<div class="invoceHeader" style="">
                                              <div style="display: inline-block; width: 300px; vertical-align: top;">
                                                 <div>
-                                                    <div style="margin-bottom: 10px;">Сумма: <div id="calculateInvoice" style="">'.$invoice_j[0]['summ'].'</div> руб.</div>
+                                                    <div style="margin-bottom: 10px;">Сумма: <div id="calculateInvoice" style="">' . $invoice_j[0]['summ'] . '</div> руб.</div>
                                                 </div>';
-							/*if ($sheduler_zapis[0]['type'] == 5) {
-                                echo '
+                                /*if ($sheduler_zapis[0]['type'] == 5) {
+                                    echo '
                                                 <div>
                                                     <div style="">Страховка: <div id="calculateInsInvoice" style="">' . $invoice_j[0]['summins'] . '</div> руб.</div>
                                                 </div>';
-                            }*/
-                            echo '
+                                }*/
+                                echo '
                                                 <div>
-                                                    <div style="">Оплачено: <div class="calculateInvoice" style="color: #333;">'.$invoice_j[0]['paid'].'</div> руб.</div>
+                                                    <div style="">Оплачено: <div class="calculateInvoice" style="color: #333;">' . $invoice_j[0]['paid'] . '</div> руб.</div>
                                                 </div>';
                                 if ($invoice_j[0]['summ'] != $invoice_j[0]['paid']) {
                                     echo '
                                                     <div>
-                                                        <div style="">Осталось внести: <div id="leftToPay" class="calculateInvoice" style="">'.($invoice_j[0]['summ'] - $invoice_j[0]['paid']).'</div> руб.</div>
+                                                        <div style="">Осталось внести: <div id="leftToPay" class="calculateInvoice" style="">' . ($invoice_j[0]['summ'] - $invoice_j[0]['paid']) . '</div> руб.</div>
                                                     </div>
                                                 </div>';
-                                }else{
+                                } else {
                                     echo '
                                         </div>';
                                 }
-                            echo '
+                                echo '
                                         <div>
-                                            <a href="certificate_payment_add.php?invoice_id='.$_GET['invoice_id'].'" class="b">Оплатить сертификатом</a>
+                                            <a href="certificate_payment_add.php?invoice_id=' . $_GET['invoice_id'] . '" class="b">Оплатить сертификатом</a>
                                         </div>';
-							echo '
+                                echo '
 										</div>';
 
 
+                                //работаем с балансом и доступными средствами
+                                //!!! @@@
+                                //Баланс контрагента
+                                include_once 'ffun.php';
+                                $client_balance = json_decode(calculateBalance($client_j[0]['id']), true);
+                                //Долг контрагента
+                                //$client_debt = json_decode(calculateDebt ($client_j[0]['id']), true);
 
+                                $have_no_money_style = '';
 
-                            //работаем с балансом и доступными средствами
-                            //!!! @@@
-                            //Баланс контрагента
-                            include_once 'ffun.php';
-                            $client_balance = json_decode(calculateBalance ($client_j[0]['id']), true);
-                            //Долг контрагента
-                            //$client_debt = json_decode(calculateDebt ($client_j[0]['id']), true);
-
-                            $have_no_money_style = '';
-
-							echo '	
+                                echo '	
 										<div id="paymentAddRezult" class="cellsBlock" style="font-size: 90%;" >
 											<div class="cellText2" style="padding: 2px 4px;">
                                                 <ul id="balance" style="padding: 5px; margin: 0 5px 10px; display: inline-block; vertical-align: top; /*border: 1px outset #AAA;*/">';
-                            echo '
+
+                                echo '
                                                     <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
                                                         Доступный остаток средств:
                                                     </li>';
-                            if (($client_balance['summ'] <= 0) || ($client_balance['summ'] - $client_balance['debited'] - $client_balance['withdraw'] + $client_balance['refund'] <= 0)){
-                                $have_no_money_style = 'display: none;';
+                                if (($client_balance['summ'] <= 0) || ($client_balance['summ'] - $client_balance['debited'] - $client_balance['withdraw'] + $client_balance['refund'] <= 0)) {
+                                    $have_no_money_style = 'display: none;';
 
-                                echo '
+                                    echo '
                                                      <li style="font-size: 110%; color: red; margin-bottom: 5px;">
                                                         <div class="availableBalance" id="availableBalance" style="display: inline;">Нет доступных средств на счету</div>
                                                     </li>
                                                     
                                                     <li style="font-size: 100%; color: #7D7D7D; margin-bottom: 5px;">
-                                                        <a href="add_order.php?client_id='.$client_j[0]['id'].'" class="b">Добавить приходный ордер</a>
+                                                        <a href="add_order.php?client_id=' . $client_j[0]['id'] . '" class="b">Добавить приходный ордер</a>
                                                     </li>
                                                     <li style="font-size: 100%; color: #7D7D7D; margin-bottom: 5px;">
-												        <a href="finance_account.php?client_id='.$client_j[0]['id'].'" class="b">Управление счётом</a>
+												        <a href="finance_account.php?client_id=' . $client_j[0]['id'] . '" class="b">Управление счётом</a>
 											        </li>';
 
-                            }else{
-                                $have_no_money_style = '';
+                                } else {
+                                    $have_no_money_style = '';
 
-                                echo '
+                                    echo '
                                                     <li class="calculateOrder" style="font-size: 110%; font-weight: bold;">
                                                         <div class="availableBalance" id="addSummInPayment" style="display: inline; cursor:pointer;">' . ($client_balance['summ'] - $client_balance['debited'] - $client_balance['withdraw'] + $client_balance['refund']) . '</div><div style="display: inline;"> руб.</div>
                                                     </li>';
-                                //Календарик
-                                echo '
-                                                    <li style="font-size: 85%; color: #7D7D7D; margin-top: 20px; margin-bottom: 5px;">
+
+                                    //Филиал
+                                    echo '
+                                                    <li style="font-size: 85%; color: #7D7D7D; margin-top: 10px; margin-bottom: 5px;">
+                                                        Филиал, на котором произведена оплата: <span style="color: #333;">';
+                                                            echo $filials_j[$_SESSION['filial']]['name'].'<input type="hidden" id="filial_id" value="'.$_SESSION['filial'].'">';
+                                    echo '
+                                                        </span>
+                                                    </li>';
+
+                                    //Календарик
+                                    echo '
+                                                    <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
                                                         <span style="color: rgb(125, 125, 125);">
-                                                            Дата закрытия наряда: <input type="text" id="date_in" name="date_in" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date("d").'.'.date("m").'.'.date("Y").'" onfocus="this.select();_Calendar.lcs(this)" 
+                                                            Дата закрытия наряда: <input type="text" id="date_in" name="date_in" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="' . date("d") . '.' . date("m") . '.' . date("Y") . '" onfocus="this.select();_Calendar.lcs(this)" 
                                                                     onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
                                                         </span>
                                                     </li>';
-                                echo '
+                                    echo '
                                                     <li style="">
                                                         <div class="cellsBlock2">
                                                             <div class="cellRight">
@@ -332,8 +345,8 @@
                                                         </div>
                                                        
                                                     </li>';
-                            }
-                            /*echo '
+                                }
+                                /*echo '
                                                      <li style="font-size: 85%; color: #7D7D7D; margin-top: 10px; margin-bottom: 5px;">
                                                         <div class="cellsBlock2">
                                                             <div class="cellRight">
@@ -358,26 +371,26 @@
                                                         </div>
                                                      </li>';*/
 
-                            echo '
-                                                        <div id="have_money_or_not" style="'.$have_no_money_style.'">
+                                echo '
+                                                        <div id="have_money_or_not" style="' . $have_no_money_style . '">
                                                             <div id="errror"></div>
-                                                            <input type="hidden" id="client_id" name="client_id" value="'.$invoice_j[0]['client_id'].'">
-                                                            <input type="hidden" id="invoice_id" name="invoice_id" value="'.$_GET['invoice_id'].'">
+                                                            <input type="hidden" id="client_id" name="client_id" value="' . $invoice_j[0]['client_id'] . '">
+                                                            <input type="hidden" id="invoice_id" name="invoice_id" value="' . $_GET['invoice_id'] . '">
                                                             <input type="button" class="b" value="Сохранить" onclick="showPaymentAdd(\'add\')">
                                                         </div>';
 
 
-
-                            echo '
+                                echo '
                                                 </ul>
 											</div>';
-
-							echo '
+                                echo '
 										</div>';
-
-
-							echo '			
-										</div>';
+                                echo '			
+                                    </div>';
+                            }else{
+                                echo '
+								<span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <i class="ahref change_filial">определить</i></span><br>';
+                            }
 							echo '
 									</div>';
 							echo '
