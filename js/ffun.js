@@ -176,6 +176,8 @@
         var invoice_id = $("#invoice_id").val();
         //console.log(invoice_id);
 
+        var filial_id = $("#filial_id").val();
+
         var client_id = $("#client_id").val();
         //console.log(client_id);
         var date_in = $("#date_in").val();
@@ -197,10 +199,11 @@
                 {
                     client_id: client_id,
                     invoice_id: invoice_id,
+                    filial_id: filial_id,
                     cert_id: cert_id,
                     summ: Summ,
                     date_in: date_in,
-                    comment: comment,
+                    comment: comment
                 },
             cache: false,
             beforeSend: function() {
@@ -293,17 +296,18 @@
 
         if (mode == 'edit'){
             link = "payment_edit_f.php";
-            payment_id = document.getElementById("payment_id").value;
+            payment_id = $("#payment_id").val();
         }
 
-        var Summ = document.getElementById("summ").value;
-        var invoice_id = document.getElementById("invoice_id").value;
+        var Summ = $("#summ").val();
+        var invoice_id = $("#invoice_id").val();
+        var filial_id = $("#filial_id").val();
 
-        var client_id = document.getElementById("client_id").value;
-        var date_in = document.getElementById("date_in").value;
+        var client_id = $("#client_id").val();
+        var date_in = $("#date_in").val();
         //console.log(date_in);
 
-        var comment = document.getElementById("comment").value;
+        var comment = $("#comment").val();
         //console.log(comment);
 
         $.ajax({
@@ -315,9 +319,10 @@
                 {
                     client_id: client_id,
                     invoice_id: invoice_id,
+                    filial_id: filial_id,
                     summ: Summ,
                     date_in: date_in,
-                    comment: comment,
+                    comment: comment
                 },
             cache: false,
             beforeSend: function() {
