@@ -17,13 +17,17 @@
             $filials_j = getAllFilials(false, false, false);
 
             if ($_GET){
-                if ((isset($_GET['category_id'])) && (isset($_GET['filial_id']))){
+                if ((isset($_GET['type_id'])) && (isset($_GET['filial_id']))){
 
-                    $category_j = SelDataFromDB('spr_categories', $_GET['category_id'], 'id');
-                    //var_dump($category_j);
+                    //Если ассистенты или админы
+                    if (($_GET['type_id'] == 4) || ($_GET['type_id'] == 4)) {
+                        $category_j = SelDataFromDB('spr_categories', $_GET['category_id'], 'id');
+                        //var_dump($category_j);
+                    }
 
-                    if ($category_j != 0){
-                        $permissions_j = SelDataFromDB('spr_permissions', $category_j[0]['permission'], 'id');
+                    //Если получили категории
+                    //if ($category_j != 0){
+                        $permissions_j = SelDataFromDB('spr_permissions', $_GET['type_id'], 'id');
                         //var_dump($permissions);
 
                         if ($permissions_j != 0){
@@ -35,13 +39,26 @@
                                             <a href="fl_salaries_category.php" class="b">Оклады по должностям</a>
                                         </div>
                                         <h1>Оклад для должности "'.$permissions_j[0]['name'].'"</h1>
-                                        Филиал: '.$filials_j[$_GET['filial_id']]['name'].'<br>  
-                                        Категория: '.$category_j[0]['name'].'
+                                        Филиал: '.$filials_j[$_GET['filial_id']]['name'].'<br>';
+                            //Если ассистенты или админы
+                            if (($_GET['type_id'] == 4) || ($_GET['type_id'] == 4)) {
+                                echo '
+                                        Категория: ' . $category_j[0]['name'] . '';
+                            }
+                            echo '
                                     </header>';
 
                             echo '
-                                    <div id="data">
-                                        <input type="hidden" id="category_id" value="'.$category_j[0]['id'].'">
+                                    <div id="data">';
+                            //Если ассистенты или админы
+                            if (($_GET['type_id'] == 4) || ($_GET['type_id'] == 4)) {
+                                echo '
+                                        <input type="hidden" id="category_id" value="' . $_GET['type_id'] . '">';
+                            }else{
+                                echo '
+                                        <input type="hidden" id="category_id" value="0">';
+                            }
+                            echo '
                                         <input type="hidden" id="filial_id" value="'.$_GET['filial_id'].'">
                                         <input type="hidden" id="permission_id" value="'.$permissions_j[0]['id'].'">
                                         <input type="hidden" id="pass" value="fl_add_new_salary_category_f">';
@@ -50,8 +67,13 @@
 
                             $salaries_j = array();
 
-                            //$query = "SELECT * FROM `fl_spr_percents` ORDER BY `type`";
-                            $query = "SELECT * FROM `fl_spr_salaries_category` WHERE `permission`='{$permissions_j[0]['id']}' AND `category`='{$category_j[0]['id']}' AND `filial_id`='{$_GET['filial_id']}'  ORDER BY `date_from` DESC";
+                            //Если ассистенты или админы
+                            if (($_GET['type_id'] == 4) || ($_GET['type_id'] == 4)) {
+                                //$query = "SELECT * FROM `fl_spr_percents` ORDER BY `type`";
+                                $query = "SELECT * FROM `fl_spr_salaries_category` WHERE `permission`='{$_GET['type_id']}' AND `category`='{$category_j[0]['id']}' AND `filial_id`='{$_GET['filial_id']}'  ORDER BY `date_from` DESC";
+                            }else{
+                                $query = "SELECT * FROM `fl_spr_salaries_category` WHERE `permission`='{$_GET['type_id']}' AND `category`='0' AND `filial_id`='{$_GET['filial_id']}'  ORDER BY `date_from` DESC";
+                            }
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -119,18 +141,18 @@
 
 
                             echo '
-                                        <div id="doc_title">Оклад для должности "'.$permissions_j[0]['name'].'" Категория: '.$category_j[0]['name'].' - Асмедика</div>';
+                                        <div id="doc_title">Оклад для должности "'.$permissions_j[0]['name'].'" - Асмедика</div>';
                         }else{
-                            echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+                            echo '<h1>Что-то пошло не так 1</h1><a href="index.php">Вернуться на главную</a>';
                         }
-                    }else{
-                        echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
-                    }
+//                    }else{
+//                        echo '<h1>Что-то пошло не так 2</h1><a href="index.php">Вернуться на главную</a>';
+//                    }
                 }else{
-                    echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+                    echo '<h1>Что-то пошло не так 3</h1><a href="index.php">Вернуться на главную</a>';
                 }
             }else{
-                echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+                echo '<h1>Что-то пошло не так 4</h1><a href="index.php">Вернуться на главную</a>';
             }
         }else{
             echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

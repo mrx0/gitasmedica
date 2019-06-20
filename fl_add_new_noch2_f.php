@@ -34,30 +34,21 @@
 
                 $time = date('Y-m-d H:i:s', time());
 
-                //Вставим новый ночной табель
-                $query = "INSERT INTO `fl_journal_tabels_noch` (`day`, `month`, `year`, `filial_id`, `worker_id`, `type`, `tabel_id`, `summ`, `create_time`, `create_person`)
+                $date_in = date('Y-m-d', strtotime($day.'.'.$month.'.'.$year.""));
+
+                //Вставим новый ночной отчет + его в табель
+//                $query = "INSERT INTO `fl_journal_reports_noch` (`day`, `month`, `year`, `filial_id`, `worker_id`, `type`, `tabel_id`, `summ`, `create_time`, `create_person`)
+//                VALUES (
+//                '{$day}', '{$month}', '{$year}', '{$filialID}', '{$workerID}', '{$typeID}', '{$_POST['tabelForAdding']}', '{$summ}', '{$time}', '{$_SESSION['id']}')";
+
+                $query = "INSERT INTO `fl_journal_tabels_noch_ex` (`tabel_id`, `filial_id`, `worker_id`, `type`, `date_in`, `day`, `month`, `year`, `summ`, `create_time`, `create_person`)
                 VALUES (
-                '{$day}', '{$month}', '{$year}', '{$filialID}', '{$workerID}', '{$typeID}', '{$_POST['tabelForAdding']}', '{$summ}', '{$time}', '{$_SESSION['id']}')";
+                '{$_POST['tabelForAdding']}', '{$filialID}', '{$workerID}', '{$typeID}', '{$date_in}', '{$day}', '{$month}', '{$year}', '{$summ}', '{$time}', '{$_SESSION['id']}')";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-                //ID новой позиции
-                //$mysqli_insert_id = mysqli_insert_id($msql_cnnct);
-
-                //Рассчитаем и обновим ночной баланс табеля
-//                $query = "SELECT SUM(`summ`) AS `summ` FROM `fl_journal_tabels_noch` WHERE `tabel_id`='{$_POST['tabelForAdding']}'";
-//
-//                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-//
-//                $arr = mysqli_fetch_assoc($res);
-//
-//                $query = "UPDATE `fl_journal_tabels` SET `night_smena` = '".round($arr['summ'], 2)."' WHERE `id`='{$_POST['tabelForAdding']}';";
-//
-//                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
                 //Обновим баланс табеля
-                updateTabelBalance($_POST['tabelForAdding']);
-
+                updateTabelBalanceNoch($_POST['tabelForAdding']);
 
                 echo json_encode(array('result' => 'success', 'data' => 'Ok'));
             }

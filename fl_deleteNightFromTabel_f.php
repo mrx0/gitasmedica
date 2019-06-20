@@ -24,14 +24,14 @@
 
                 //Удаляем
                 //$query = "DELETE FROM `fl_journal_tabels_noch` WHERE `id` = '{$_POST['tabel_night_id']}' AND `tabel_id` = '{$_POST['tabel_id']}' ;";
-                $query = "DELETE FROM `fl_journal_tabels_noch` WHERE `id` = '{$_POST['tabel_night_id']}';";
+                $query = "DELETE FROM `fl_journal_tabels_noch_ex` WHERE `id` = '{$_POST['tabel_night_id']}';";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                 CloseDB ($msql_cnnct);
 
                 //Обновим баланс табеля
-                updateTabelBalance($_POST['tabel_id']);
+                updateTabelBalanceNoch($_POST['tabel_id']);
                 //Рассчитаем и обновим ночной баланс табеля
 //                $query = "SELECT SUM(`summ`) AS `summ` FROM `fl_journal_tabels_noch` WHERE `tabel_id`='{$_POST['tabel_id']}'";
 //

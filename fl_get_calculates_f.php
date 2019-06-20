@@ -263,17 +263,25 @@
                         if (($finances['see_all']) || $god_mode) {
 
                             $rezult .= '
-                            <div style="margin: 5px 0; padding: 2px; text-align: right;">';
+                                <div style="margin: 5px 0; padding: 2px; text-align: right;">
+                                    <div id="errrror"></div>';
                             if ($_POST['permission'] != 7) {
                                 $rezult .= '
-                                <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick="fl_addNewTabelIN2(true, ' . $invoice_type . ', ' . $_POST['worker'] . ', ' . $_POST['office'] . ');"><br>';
+                                    <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать новый табель" onclick="fl_addNewTabelIN2(true, ' . $invoice_type . ', ' . $_POST['worker'] . ', ' . $_POST['office'] . ');"><br>';
                             }
                             $rezult .= '
-                                <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Добавить в существующий табель" onclick="fl_addNewTabelIN2(false, '.$invoice_type.', '.$_POST['worker'].', '.$_POST['office'].');"><br><br>
-                                <!--<input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать рассчет за ночь" onclick="fl_addNoch(true, '.$invoice_type.', '.$_POST['worker'].', '.$_POST['office'].');"><br><br>-->
-                                <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Удалить выделенные" onclick="fl_deleteMarkedCalculates($(this).parent().parent());"><br>
-                                <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Перерасчитать (не более 10 РЛ за раз)" onclick="fl_reloadPercentsMarkedCalculates($(this).parent().parent());">
-                            </div>';
+                                    <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Добавить в существующий табель" onclick="fl_addNewTabelIN2(false, '.$invoice_type.', '.$_POST['worker'].', '.$_POST['office'].');"><br>';
+
+                            if ($_POST['permission'] != 7) {
+//                                $rezult .= '
+//                                    <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Создать пустой табель" onclick="fl_addNewClearTabelIN(true, ' . $invoice_type . ', ' . $_POST['worker'] . ', ' . $_POST['office'] . ');"><br>';
+                            }
+                            $rezult .= '
+                                    <br>
+                                    <!--<input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Сформировать рассчет за ночь" onclick="fl_addNoch(true, '.$invoice_type.', '.$_POST['worker'].', '.$_POST['office'].');"><br><br>-->
+                                    <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Удалить выделенные" onclick="fl_deleteMarkedCalculates($(this).parent().parent());"><br>
+                                    <input type="button" class="b" style="font-size: 80%; padding: 4px 8px;" value="Перерасчитать (не более 10 РЛ за раз)" onclick="fl_reloadPercentsMarkedCalculates($(this).parent().parent());">
+                                </div>';
                         }
 
                         echo json_encode(array('result' => 'success', 'status' => '1', 'data' => $rezult, 'summCalc' => $summCalc));
