@@ -7,48 +7,20 @@
 	require_once 'header_tags.php';
 
 	include_once 'DBWork.php';
+    include_once 'functions.php';
+
+    require 'variables.php';
+
+    $filials_j = getAllFilials(false, false, false);
+    //var_dump($filials_j);
 
     $msql_cnnct = ConnectToDB ();
-
-//    $payments_j = array();
-//
-//    //Проведенные оплаты
-//    $query = "
-//            SELECT jp.filial_id, jp.summ, jcalc.invoice_id/*,
-//            GROUP_CONCAT(DISTINCT jcalcex.percent_cats ORDER BY jcalcex.percent_cats ASC SEPARATOR ',') AS percent_cats*/
-//            FROM `fl_journal_calculate` jcalc
-//            /*LEFT JOIN `fl_journal_calculate_ex` jcalcex ON jcalc.id = jcalcex.calculate_id*/
-//            LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '988'
-//            LEFT JOIN `journal_payment` jp ON jp.invoice_id = jcalc.invoice_id
-//            LEFT JOIN `journal_payment` jp ON jp.invoice_id = jcalc.invoice_id
-//            WHERE jtabex.calculate_id = jcalc.id
-//            GROUP BY jcalc.invoice_id";
-//
-////    $query = "
-////    SELECT jp.*
-////    FROM `journal_payment` jp
-////    INNER JOIN `journal_invoice` ji ON ji.id = jcalc.invoice_id
-////    INNER JOIN `journal_invoice` ji ON ji.id = jcalc.invoice_id
-////    INNER JOIN `journal_invoice` ji ON ji.id = jcalc.invoice_id
-////    WHERE jp.invoice_id = ji.id";
-//
-//    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-//
-//    $number = mysqli_num_rows($res);
-//
-//    if ($number != 0){
-//        while ($arr = mysqli_fetch_assoc($res)){
-//            array_push($payments_j, $arr);
-//        }
-//    }
-//
-//    var_dump($payments_j);
 
     $invoices_j = array();
 
     //Наряды
     $query = "
-            SELECT jcalc.invoice_id, ji.office_id AS filial_id
+            SELECT jcalc.invoice_id, ji.office_id AS filial_id, ji.status AS status
             FROM `fl_journal_calculate` jcalc
             LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '988'
             LEFT JOIN `journal_invoice` ji ON ji.id = jcalc.invoice_id
@@ -61,15 +33,99 @@
 
     if ($number != 0){
         while ($arr = mysqli_fetch_assoc($res)){
-            $invoices_j[$arr['invoice_id']] = $arr['filial_id'];
+            $invoices_j[$arr['invoice_id']]['filial_id'] = $arr['filial_id'];
+            $invoices_j[$arr['invoice_id']]['status'] = $arr['status'];
         }
     }
 
-    echo 'Наряды';
-    var_dump($invoices_j);
+    echo '
 
-    //Оплаты
-    $payments_j = array();
+<div id="fact"></div>
+
+
+<span style="font-size: 85%;">Наряды (Филиал / статус)</span><br>';
+    //var_dump($invoices_j);
+
+    foreach ($invoices_j as $invoice_id => $invoice_item){
+        //$invoice_j[0]['status'] == 5)  - работа закрыта
+
+        echo '<div style="width: 190px; margin-bottom: 5px; border: 1px solid rgba(191, 188, 181, 0.53);">';
+
+        //Рисуем кнопку-ссылку на наряд
+        echo '<div style="margin: 2px 0;"><a href="invoice.php?id='.$invoice_id.'" class="ahref button_tiny" style="margin: 0 3px; font-size: 90%;">'.$invoice_id.' ('.$filials_j[$invoice_item['filial_id']]['name2'].' / '.$invoice_item['status'].')</a></div>';
+
+        //Оплаты
+        $payments_j = array();
+
+        //Получаем все оплаты по текущему наряду
+        $query = "
+            SELECT *
+            FROM `journal_payment`
+            WHERE `invoice_id` = '{$invoice_id}'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                //array_push($payments_j, $arr);
+                //Раскидаем суммы оплат сразу по филиалам
+                if (!isset($payments_j[$arr['filial_id']])){
+                    $payments_j[$arr['filial_id']]['summ'] = 0;
+                }
+                $payments_j[$arr['filial_id']]['summ'] +=$arr['summ'];
+            }
+        }
+
+        //echo '<span style="font-size: 85%;">Оплаты: Филиал -> Сумма</span><br>';
+        //var_dump($payments_j);
+        //Если оплаты оп наряду есть
+        if (!empty($payments_j)) {
+            //Нарисуем полученные оплаты
+            foreach ($payments_j as $filial_id => $payment_item) {
+                echo '<div style="margin: 2px 0;"><i><span class="button_tiny" style="margin: 0 3px; font-size: 80%; background-color: rgba(0, 220, 14, 0.2);">' . $filials_j[$filial_id]['name2'] . ' ->  <b style="font-size: 105%;">' . $payment_item['summ'] . '</b></span></i></div>';
+            }
+        }else{
+            //Посмотрим, а не страховой ли наряд (сделать мы это можем только пройдясь по всем позициям из наряда)
+            //Если да, возьмём всю сумму и привяжем её к филиалу, где был сделан наряд
+
+            $filial_insure_invoice_ex = array();
+
+            $query = "
+            SELECT *
+            FROM `journal_invoice_ex`
+            WHERE `invoice_id` = '{$invoice_id}'
+            AND `insure` <> '0' AND `insure_approve` = '1'";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            //Если что-то нашли страхового
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    if (!isset($filial_insure_invoice_ex[$invoice_item['filial_id']])){
+                        $filial_insure_invoice_ex[$invoice_item['filial_id']]['summ'] = 0;
+                    }
+                    $filial_insure_invoice_ex[$invoice_item['filial_id']]['summ'] += $arr['itog_price'];
+                }
+
+                echo '<div style="margin: 2px 0;"><i><span class="button_tiny" style="margin: 0 3px; font-size: 80%; background-color: rgba(0, 175, 220, 0.2);">' . $filials_j[$invoice_item['filial_id']]['name2'] . ' ->  <b style="font-size: 105%;">' . $filial_insure_invoice_ex[$invoice_item['filial_id']]['summ'] . '</b></span></i></div>';
+
+            }else{
+                //А если уж и не страховой наряд
+                echo '<i><span style="color: red; font-size: 80%;">нет оплат (наряд скорее всего "нулевой", РЛ к нему можно было бы и не создавать)</span></i>';
+            }
+        }
+
+
+
+
+        echo '</div>';
+    }
+
+
     //Все рассчетные листы
     $calculates_j = array();
     //Позиции, которые прошли по страховой (денег в кассе нет, а зп выдать надо с этого филиала)
@@ -84,21 +140,7 @@
     //Пройдем по всем нарядам
     foreach ($invoices_j as $invoice_id => $filial_id){
 
-        //Получаем все оплаты
-        $query = "
-            SELECT *
-            FROM `journal_payment`
-            WHERE `invoice_id` = '{$invoice_id}'";
 
-        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-        $number = mysqli_num_rows($res);
-
-        if ($number != 0){
-            while ($arr = mysqli_fetch_assoc($res)){
-                array_push($payments_j, $arr);
-            }
-        }
 
         //Получаем все рассчетные листы
         $query = "
@@ -147,8 +189,6 @@
     echo 'Суммы позиций, которые прошли по страховой (по филиалам)';
     var_dump($gift_invoice_summ);
 
-    echo 'Оплаты';
-    var_dump($payments_j);
 
     //На каких филиалах какие оплаты были произведены
     $filial_payments = array();
@@ -206,7 +246,6 @@
 
     echo 'Суммы в рассчетных листах, которые прошли по страховой (по филиалам)';
     var_dump($filial_insure_calculate_summ);
-
 
 
 require_once 'footer.php';
