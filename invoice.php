@@ -45,6 +45,9 @@
 						$client_j = SelDataFromDB('spr_clients', $invoice_j[0]['client_id'], 'user');
 						//var_dump($client_j);
 
+                        $filials_j = getAllFilials(false, false, false);
+                        //var_dump($filials_j);
+
                         $msql_cnnct = ConnectToDB ();
 
 						$query = "SELECT * FROM `zapis` WHERE `id`='".$invoice_j[0]['zapis_id']."'";
@@ -933,12 +936,21 @@
                                         }
                                     }
 
+                                    //var_dump($payment_item['filial_id']);
+
                                     echo '
                                                     <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
                                     echo '
                                                         <a href="" class="cellOrder ahref" style="position: relative;">
                                                             <b>Оплата #' . $payment_item['id'] . '</b> от ' . date('d.m.y', strtotime($payment_item['date_in'])) . ' '.$cert_num.'<br>
-                                                            <span style="font-size:90%;  color: #555;">';
+                                                            <span style="font-size:90%;  color: #555;">
+                                                                Филиал: ';
+                                    if ($payment_item['filial_id'] > 0){
+                                         echo $filials_j[$payment_item['filial_id']]['name'].'<br>';
+                                    }else{
+                                        echo '<span style="color: red;">не указан</span><br>';
+                                    }
+
 
                                     if (($payment_item['create_time'] != 0) || ($payment_item['create_person'] != 0)) {
                                         echo '

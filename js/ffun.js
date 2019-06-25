@@ -3890,9 +3890,9 @@
 
         $(".workerHoursValue").each(function(){
             // console.log($(this).attr('worker_id'));
-            // console.log($(this).val());
+            // console.log(Number($(this).val().replace(',', '.')));
 
-            workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
+            workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val().replace(',', '.');
             workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
 
         });

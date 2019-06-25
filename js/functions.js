@@ -5474,7 +5474,7 @@
                 //console.log(res);
 
 				if(res.result == "success"){
-					//console.log(res.data);
+					//console.log(res.data2);
 					$('#invoice_rezult').html(res.data);
 
 					// !!!
