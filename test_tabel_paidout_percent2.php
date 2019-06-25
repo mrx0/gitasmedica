@@ -11,9 +11,10 @@
 
     require 'variables.php';
 
-
+    //ID табеля
     $tabel_id = 988;
-    $worker_id = 288;
+
+    $tabel_j = array();
 
     $filials_j = getAllFilials(false, false, false);
     //var_dump($filials_j);
@@ -27,6 +28,28 @@
     //Итоговый массив, куда соберем суммы по филиалам по тем работам,
     // которые мы хотим и должны оплатить другому человеку
     $itog_filials_summ_not4tou = array();
+    //Массив с процентами по филиалам
+    $itog_filials_percents = array();
+    //Массив с процентами по филиалам TEMP
+    $itog_filials_percents_temp = array();
+    //Массив остатков денег после выдачи
+    $itog_filials_summ_ostatok = array();
+
+    //Табель
+    $query = "SELECT * FROM `fl_journal_tabels` WHERE `id` = '{$tabel_id}' LIMIT 1";
+
+    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+    $number = mysqli_num_rows($res);
+
+    if ($number != 0){
+        $arr = mysqli_fetch_assoc($res);
+
+        $tabel_j = $arr;
+    }
+    var_dump($tabel_j);
+
+    $worker_id = $tabel_j['worker_id'];
 
     //Наряды
     $query = "
@@ -237,17 +260,35 @@
             }
         }
 
-
         echo '</div>';
     }
 
     //Сумма на всех филиалах
     $itog_all_filial_summ = 0;
 
-    //Итог сумм, с которых надо выдать ЗП, по филиалам
+    //Итог сумм, с которых надо выдать ЗП, по филиалам до вычета сумм других сотрудников
+    echo '<span style="font-size: 85%;">Итог сумм, с которых надо выдать ЗП, по филиалам до вычета сумм других сотрудников</span>';
+    //Сортируем, чтоб меньше денег было внизу
     arsort($itog_filials_summ);
     var_dump($itog_filials_summ);
 
+    //Итоговый массив по филиалам по тем работам,
+    //которые мы хотим и должны оплатить другому человеку
+    echo '<span style="font-size: 85%;">Итоговый массив по филиалам по тем работам, которые мы хотим и должны оплатить ДРУГОМУ человеку</span>';
+    var_dump($itog_filials_summ_not4tou);
+
+    //Вычтем с филиалов суммы, которые уйдут в зп другому человеку
+    foreach ($itog_filials_summ_not4tou as $filial_id => $summ){
+        if (isset($itog_filials_summ[$filial_id])){
+            $itog_filials_summ[$filial_id] -= $summ;
+        }
+    }
+    //Итог сумм, с которых надо выдать ЗП, по филиалам с вычетом лишнего
+    echo '<span style="font-size: 85%;">Итог сумм, с которых надо выдать ЗП, по филиалам с вычетом лишнего</span>';
+    var_dump($itog_filials_summ);
+
+    //Общая сумма со всех филиалов, с которой надо выдать зп (с учетом всех нюансов)
+    echo '<span style="font-size: 85%;">Общая сумма со всех филиалов, с которой надо выдать зп (с учетом всех нюансов)</span>';
     $itog_all_filial_summ = array_sum($itog_filials_summ);
     var_dump($itog_all_filial_summ);
 
@@ -256,9 +297,6 @@
 //    end($itog_filials_summ);
 //    $last_key = key($itog_filials_summ);
 //    var_dump($last_key);
-
-    //Массив с процентами по филиалам
-    $itog_filials_percents = array();
 
     //Вычислим процентное соотношение
     foreach ($itog_filials_summ as $filial_id => $summ){
@@ -275,9 +313,364 @@
 
         $itog_filials_percents[$filial_id] = $percent_value;
     }
+    echo '<span style="font-size: 85%;">Процентное соотношение денег по филиалам в общей сумме</span>';
     var_dump($itog_filials_percents);
+    //Просто для самоконтроля, что получается 100%, так как отказался от округлений при расчете %-в (так точнее)
     var_dump(array_sum($itog_filials_percents));
 
+    echo '<hr>';
+
+
+    echo '<h3 style="font-size: 100%;">1. Мы хотим выдать сразу всю сумму зп. У нас все работы закрыты и оплачены:</h3>';
+
+    //Массив где ключ - это ID филиала, а значение - это сколько всего надо выдать с этого филиала из общего объема денег
+    $summ4ZP = array();
+
+    //Сумма ЗП к выдаче
+    //сейчас тут только сумма за РЛ и так по логике верно
+    echo '<span style="font-size: 85%;">Сумма ЗП ВСЯ к выдаче (сейчас тут только сумма за РЛ)</span>';
+    $iWantMyMoney1 = $tabel_j['summ_calc'];
+    var_dump($iWantMyMoney1);
+
+
+    //Посчитаем по сколько надо выдать с каждого филиала
+    //пропорционально полученным деньгам
+    foreach ($itog_filials_percents as $filial_id => $percent){
+        $summ4ZP[$filial_id] = intval($iWantMyMoney1 / 100 * $percent);
+    }
+
+    echo '<span style="font-size: 85%;">Сколько ВСЕГО надо БУДЕТ в итоге выдать с каждого филиала из общего объема денег</span>';
+    var_dump($summ4ZP);
+    //Просто для самоконтроля, что получается 100%, так как отказался от округлений при расчете %-в (так точнее)
+    var_dump(array_sum($summ4ZP));
+
+
+    //Вычислим остаток денег по филиалам после выдачи
+    foreach ($itog_filials_summ as $filial_id => $summ){
+        if (!isset($itog_filials_summ_ostatok[$filial_id])){
+            $itog_filials_summ_ostatok[$filial_id] = 0;
+        }
+        if (isset($summ4ZP[$filial_id])){
+            $itog_filials_summ_ostatok[$filial_id] = $summ - $summ4ZP[$filial_id];
+        }
+    }
+
+    echo '<span style="font-size: 85%;">Остаток денег по филиалам после выдачи</span>';
+    var_dump($itog_filials_summ_ostatok);
+
+    echo '<hr>';
+
+    echo '<h3 style="font-size: 100%;">2a. Мы хотим выдать только часть денег (аванс). У нас все работы закрыты и оплачены:</h3>';
+
+    //Массив где ключ - это ID филиала, а значение - это сколько всего надо выдать с этого филиала из общего объема денег
+    $summ4ZP = array();
+    //Части по филиалам, которые хотим выдать, исходя из суммы аванса
+    $summ4ZPNow = array();
+
+    //Сумма ЗП к выдаче
+    //сейчас тут только сумма за РЛ и так по логике верно
+    echo '<span style="font-size: 85%;">Сумма ЗП ВСЯ к выдаче (сейчас тут только сумма за РЛ)</span>';
+    $iWantMyMoney1 = $tabel_j['summ_calc'];
+    var_dump($iWantMyMoney1);
+
+    //Часть, которую хотим выдать
+    echo '<span style="font-size: 85%;">Сумма ЗП ЧАСТЬ к выдаче, которую, мы хотим выдать сейчас.</span>';
+    $iWantMyMoney2 = 12000;
+    var_dump($iWantMyMoney2);
+
+    //Посчитаем по сколько надо выдать с каждого филиала
+    //пропорционально полученным деньгам
+    foreach ($itog_filials_percents as $filial_id => $percent){
+        $summ4ZP[$filial_id] = intval($iWantMyMoney1 / 100 * $percent);
+    }
+
+    echo '<span style="font-size: 85%;">Сколько ВСЕГО надо БУДЕТ в итоге выдать с каждого филиала из общего объема денег</span>';
+    var_dump($summ4ZP);
+    //Просто для самоконтроля, что получается 100%, так как отказался от округлений при расчете %-в (так точнее)
+    var_dump(array_sum($summ4ZP));
+
+
+    //Если выдаем часть !!! Потом можно будет расширить это понятие и на всю сумма. Сумма как часть самой себя
+    //Посчитаем по сколько надо выдать с каждого филиала
+    //пропорционально полученным деньгам
+    foreach ($itog_filials_percents as $filial_id => $percent){
+        $summ4ZPNow[$filial_id] = intval($iWantMyMoney2 / 100 * $percent);
+    }
+
+    echo '<span style="font-size: 85%;">Сколько СЕЙЧАС надо выдать с каждого филиала из общего объема денег</span>';
+    var_dump($summ4ZPNow);
+    //Просто для самоконтроля, что получается 100%, так как отказался от округлений при расчете %-в (так точнее)
+    var_dump(array_sum($summ4ZPNow));
+
+
+    //Вычислим остаток денег еще останется выдать
+    $summ4ZP_ostatok = array();
+
+    foreach ($summ4ZP as $filial_id => $summ){
+        if (!isset($summ4ZP_ostatok[$filial_id])){
+            $summ4ZP_ostatok[$filial_id] = 0;
+        }
+        $summ4ZP_ostatok[$filial_id] = $summ - $summ4ZPNow[$filial_id];
+    }
+
+    echo '<span style="font-size: 85%;">Сколько останется выдать потом с каждого филиала из общего объема денег</span>';
+    var_dump($summ4ZP_ostatok);
+
+    //Вычислим остаток денег по филиалам после выдачи
+    foreach ($itog_filials_summ as $filial_id => $summ){
+        if (!isset($itog_filials_summ_ostatok[$filial_id])){
+            $itog_filials_summ_ostatok[$filial_id] = 0;
+        }
+        if (isset($summ4ZPNow[$filial_id])){
+            $itog_filials_summ_ostatok[$filial_id] = $summ - $summ4ZPNow[$filial_id];
+        }
+
+    }
+
+    echo '<span style="font-size: 85%;">Остаток денег по филиалам после ЭТОЙ ЧАСТИЧНОЙ выдачи</span>';
+    var_dump($itog_filials_summ_ostatok);
+
+
+    echo '<hr>';
+
+    echo '<h3 style="font-size: 100%;">2б. Мы уже выдали часть денег (аванс), а к концу месяца в табель еще накидали РЛ + были оплаты. У нас все работы закрыты и оплачены:</h3>';
+
+    echo '<h2>Тут у нас все рассчеты до аванса, включая сам факт выдачи</h2>';
+
+    //Массив где ключ - это ID филиала, а значение - это сколько всего надо выдать с этого филиала из общего объема денег
+    $summ4ZP = array();
+    //Части по филиалам, которые хотим выдать, исходя из суммы аванса
+    $summ4ZPNow = array();
+
+    //Сумма ЗП к выдаче
+    //сейчас тут только сумма за РЛ и так по логике верно
+    echo '<span style="font-size: 85%;">Сумма ЗП ВСЯ к выдаче (сейчас тут только сумма за РЛ)</span>';
+    $iWantMyMoney1 = $tabel_j['summ_calc'];
+    var_dump($iWantMyMoney1);
+
+    //Часть, которую хотим выдать
+    echo '<span style="font-size: 85%;">Сумма ЗП ЧАСТЬ к выдаче, которую, мы хотим выдать сейчас.</span>';
+    $iWantMyMoney2 = 12000;
+    var_dump($iWantMyMoney2);
+
+    //Посчитаем по сколько надо выдать с каждого филиала
+    //пропорционально полученным деньгам
+    foreach ($itog_filials_percents as $filial_id => $percent){
+        $summ4ZP[$filial_id] = intval($iWantMyMoney1 / 100 * $percent);
+    }
+
+    echo '<span style="font-size: 85%;">Сколько ВСЕГО надо БУДЕТ в итоге выдать с каждого филиала из общего объема денег</span>';
+    var_dump($summ4ZP);
+    //Просто для самоконтроля, что получается 100%, так как отказался от округлений при расчете %-в (так точнее)
+    var_dump(array_sum($summ4ZP));
+
+
+    //Если выдаем часть !!! Потом можно будет расширить это понятие и на всю сумма. Сумма как часть самой себя
+    //Посчитаем по сколько надо выдать с каждого филиала
+    //пропорционально полученным деньгам
+    foreach ($itog_filials_percents as $filial_id => $percent){
+        $summ4ZPNow[$filial_id] = intval($iWantMyMoney2 / 100 * $percent);
+    }
+
+    echo '<span style="font-size: 85%;">Сколько СЕЙЧАС надо выдать с каждого филиала из общего объема денег</span>';
+    var_dump($summ4ZPNow);
+    //Просто для самоконтроля, что получается 100%, так как отказался от округлений при расчете %-в (так точнее)
+    var_dump(array_sum($summ4ZPNow));
+
+
+    //Вычислим остаток денег еще останется выдать
+    $summ4ZP_ostatok = array();
+
+    foreach ($summ4ZP as $filial_id => $summ){
+        if (!isset($summ4ZP_ostatok[$filial_id])){
+            $summ4ZP_ostatok[$filial_id] = 0;
+        }
+        $summ4ZP_ostatok[$filial_id] = $summ - $summ4ZPNow[$filial_id];
+    }
+
+    echo '<span style="font-size: 85%;">Сколько останется выдать потом с каждого филиала из общего объема денег</span>';
+    var_dump($summ4ZP_ostatok);
+
+    //Вычислим остаток денег по филиалам после выдачи
+    foreach ($itog_filials_summ as $filial_id => $summ){
+        if (!isset($itog_filials_summ_ostatok[$filial_id])){
+            $itog_filials_summ_ostatok[$filial_id] = 0;
+        }
+        if (isset($summ4ZPNow[$filial_id])){
+            $itog_filials_summ_ostatok[$filial_id] = $summ - $summ4ZPNow[$filial_id];
+        }
+
+    }
+
+    echo '<span style="font-size: 85%;">Остаток денег по филиалам после ЭТОЙ ЧАСТИЧНОЙ выдачи</span>';
+    var_dump($itog_filials_summ_ostatok);
+
+
+    echo '<br><h2>Тут изменения в деньгах после выдачи аванса (данные именно в данном исследовании вводились вручную...)</h2>';
+
+    //Массив где ключ - это ID филиала, а значение - это сколько всего надо выдать с этого филиала из общего объема денег
+    $summ4ZP_temp = array();
+    //Части по филиалам, которые хотим выдать, исходя из суммы аванса
+    $summ4ZPNow_temp = array();
+
+    echo '<span style="font-size: 85%;">Сумма ЗП ВСЯ к выдаче (только сумма за РЛ)</span>';
+    $iWantMyMoney1 = 400381;
+    var_dump($iWantMyMoney1);
+
+    //Часть, которую хотим выдать
+    echo '<span style="font-size: 85%;">Сумма ЗП ЧАСТЬ к выдаче, которую, мы хотим выдать сейчас (в данном случае это финальная выплата, выдаем всё, что осталось после аванса).</span>';
+    $iWantMyMoney2 = $iWantMyMoney1 - $iWantMyMoney2;
+    var_dump($iWantMyMoney2);
+
+echo '<br>-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-><br>';
+
+//Изменились исходные данные (ставим вручную)
+//Итог сумм, с которых надо выдать ЗП, по филиалам до вычета сумм других сотрудников
+$itog_filials_summ_temp =  array(14 => 135180, 15 => 29560, 13 => 500000);
+
+echo '<span style="font-size: 85%;">Итог сумм, с которых надо выдать ЗП, по филиалам до вычета сумм других сотрудников (тут мы тоже и далее задали вручную, задав + еще 1 филиал)</span>';
+//Сортируем, чтоб меньше денег было внизу
+arsort($itog_filials_summ_temp);
+var_dump($itog_filials_summ_temp);
+
+//Итоговый массив по филиалам по тем работам,
+//которые мы хотим и должны оплатить другому человеку
+$itog_filials_summ_not4tou_temp =  $itog_filials_summ_not4tou;
+
+echo '<span style="font-size: 85%;">Итоговый массив по филиалам по тем работам, которые мы хотим и должны оплатить ДРУГОМУ человеку</span>';
+var_dump($itog_filials_summ_not4tou_temp);
+
+//Вычтем с филиалов суммы, которые уйдут в зп другому человеку
+foreach ($itog_filials_summ_not4tou_temp as $filial_id => $summ){
+    if (isset($itog_filials_summ_temp[$filial_id])){
+        $itog_filials_summ_temp[$filial_id] -= $summ;
+    }
+}
+//Итог сумм, с которых надо выдать ЗП, по филиалам с вычетом лишнего
+echo '<span style="font-size: 85%;">Итог сумм, с которых надо выдать ЗП, по филиалам с вычетом лишнего</span>';
+var_dump($itog_filials_summ_temp);
+
+//Общая сумма со всех филиалов, с которой надо выдать зп (с учетом всех нюансов)
+echo '<span style="font-size: 85%;">Общая сумма со всех филиалов, с которой надо выдать зп (с учетом всех нюансов)</span>';
+$itog_all_filial_summ_temp = array_sum($itog_filials_summ_temp);
+var_dump($itog_all_filial_summ_temp);
+
+//Вычислим ИТОГОВОЕ процентное соотношение
+foreach ($itog_filials_summ_temp as $filial_id => $summ){
+
+    $percent_value = 0;
+
+    //предварительно добавляем в массив элемент с ID филиала, если его не было
+    //!!! потом сделать это выше, когда суммы собираем
+    if (!isset($itog_filials_percents_temp[$filial_id])){
+        $itog_filials_percents_temp[$filial_id] = 0;
+    }
+
+    $percent_value = (100* $summ) / $itog_all_filial_summ_temp;
+
+    $itog_filials_percents_temp[$filial_id] = $percent_value;
+}
+echo '<span style="font-size: 85%;">Процентное ИТОГОВОЕ соотношение денег по филиалам в общей сумме</span>';
+var_dump($itog_filials_percents_temp);
+//Просто для самоконтроля, что получается 100%, так как отказался от округлений при расчете %-в (так точнее)
+var_dump(array_sum($itog_filials_percents_temp));
+
+echo '<br><-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-<br>';
+
+    //Массив где ключ - это ID филиала, а значение - это сколько всего надо выдать с этого филиала из общего объема денег
+    $summ4ZP_temp = array();
+    //Части по филиалам, которые хотим выдать, исходя из суммы аванса
+    $summ4ZPNow_temp = array();
+
+    /*//Сумма ЗП к выдаче
+    //сейчас тут только сумма за РЛ и так по логике верно
+    echo '<span style="font-size: 85%;">Сумма ЗП ВСЯ к выдаче (сейчас тут только сумма за РЛ)</span>';
+    $iWantMyMoney1 = $tabel_j['summ_calc'];
+    var_dump($iWantMyMoney1);*/
+
+    /*//Часть, которую хотим выдать
+    echo '<span style="font-size: 85%;">Сумма ЗП ЧАСТЬ к выдаче, которую, мы хотим выдать сейчас.</span>';
+    $iWantMyMoney2 = 12000;
+    var_dump($iWantMyMoney2);*/
+
+    //Посчитаем по сколько надо выдать с каждого филиала
+    //пропорционально полученным деньгам
+    foreach ($itog_filials_percents_temp as $filial_id => $percent){
+        $summ4ZP_temp[$filial_id] = intval($iWantMyMoney1 / 100 * $percent);
+    }
+
+    echo '<span style="font-size: 85%;">Сколько ВСЕГО надо БУДЕТ в итоге выдать с каждого филиала из общего объема денег НЕ учитывая то, что уже выдали</span>';
+    var_dump($summ4ZP_temp);
+    //Просто для самоконтроля, что получается 100%, так как отказался от округлений при расчете %-в (так точнее)
+    var_dump(array_sum($summ4ZP_temp));
+
+
+    //Если выдаем последнее, но уже выдавали аванс
+    //Посчитаем по сколько надо выдать с каждого филиала
+    //пропорционально полученным деньгам
+
+    foreach ($summ4ZP_temp as $filial_id => $summ){
+        $summ4ZPNow_temp[$filial_id] = $summ;
+
+        if (isset($summ4ZPNow[$filial_id])) {
+            $summ4ZPNow_temp[$filial_id] -= $summ4ZPNow[$filial_id];
+        }
+    }
+
+    echo '<span style="font-size: 85%;">Сколько СЕЙЧАС надо выдать с каждого филиала из общего объема денег, УЧИТЫВАЯ уже выданное в аванс</span>';
+    var_dump($summ4ZPNow_temp);
+    //Просто для самоконтроля, что получается 100%, так как отказался от округлений при расчете %-в (так точнее)
+    var_dump(array_sum($summ4ZPNow_temp));
+
+    echo '<span style="font-size: 85%;">Столько будет выдано ВСЕГО</span>';
+    var_dump(array_sum($summ4ZPNow_temp) + array_sum($summ4ZPNow));
+
+    //Вычислим остаток денег еще останется выдать
+    $summ4ZP_ostatok_temp = array();
+
+    foreach ($summ4ZP_temp as $filial_id => $summ){
+        if (!isset($summ4ZP_ostatok_temp[$filial_id])){
+            $summ4ZP_ostatok_temp[$filial_id] = 0;
+        }
+        //!!!сюда потом тоже добавить if как и ниже для универсальности
+        $summ4ZP_ostatok_temp[$filial_id] = $summ - $summ4ZPNow_temp[$filial_id];
+
+        if (isset($summ4ZPNow[$filial_id])){
+            $summ4ZP_ostatok_temp[$filial_id] -= $summ4ZPNow[$filial_id];
+        }
+    }
+
+    echo '<span style="font-size: 85%;">Сколько останется выдать потом с каждого филиала из общего объема денег (если не будет доплат и увеличения ЗП)</span>';
+    var_dump($summ4ZP_ostatok_temp);
+
+    //Вычислим остаток денег по филиалам после выдачи
+    foreach ($itog_filials_summ_temp as $filial_id => $summ){
+        if (!isset($itog_filials_summ_ostatok_temp[$filial_id])){
+            $itog_filials_summ_ostatok_temp[$filial_id] = 0;
+        }
+        if (isset($summ4ZPNow_temp[$filial_id])){
+            $itog_filials_summ_ostatok_temp[$filial_id] = $summ - $summ4ZPNow_temp[$filial_id];
+        }
+
+    }
+
+    echo '<span style="font-size: 85%;">Остаток денег по филиалам после ЭТОЙ ЧАСТИЧНОЙ выдачи</span>';
+    var_dump($itog_filials_summ_ostatok_temp);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+echo '<hr>';
 
 
 

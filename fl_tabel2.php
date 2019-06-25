@@ -726,7 +726,7 @@
 
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
                             echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1&w_type='.$tabel_j[0]['type'].'" class="b" style = "font-size: 80%;">Аванс +</a ></div>';
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2&w_type='.$tabel_j[0]['type'].'" class="b" style="font-size: 80%;">Отпусные +</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2&w_type='.$tabel_j[0]['type'].'" class="b" style="font-size: 80%;">Отпускные +</a></div>';
                             echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3&w_type='.$tabel_j[0]['type'].'" class="b" style="font-size: 80%;">Больничный +</a></div>';
                             echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=4&w_type='.$tabel_j[0]['type'].'" class="b" style="font-size: 80%;">На карту +</a></div>';
                         }

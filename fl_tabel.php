@@ -928,7 +928,7 @@
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
                             echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1&filial_id='.$tabel_j[0]['office_id'].'" class="b" style = "font-size: 80%;">Аванс +</a ></div>';
                             echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=7&filial_id='.$tabel_j[0]['office_id'].'" class="b" style = "font-size: 80%;">ЗП +</a ></div>';
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">Отпусные +</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">Отпускные +</a></div>';
                             echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">Больничный +</a></div>';
                             echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=4&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">На карту +</a></div>';
                             //echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=5&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">За ночь +</a></div>';
@@ -978,7 +978,7 @@
 
                         echo '
                                         <div style="background-color: rgba(56, 245, 70, 0.36); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Итого осталось выплатить: <span class="calculateOrder" style="font-size: 16px; ', ($summItog) <= 0 ? 'color: red;' : '' ,'">' . intval($summItog) . '</span> руб.<br>
+                                            <div>Итого осталось выплатить: <span class="calculateOrder" style="font-size: 16px; ', ($summItog) <= 0 ? 'color: red;' : '' ,'">' . ``$summItog) . '</span> руб.<br>
                                             <span style="font-size: 80%; color: #8C8C8C;">сумма округляется до целого для удобства расчетов</span></div>
                                             <div>';
 
