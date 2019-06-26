@@ -12,7 +12,7 @@
     require 'variables.php';
 
     //ID табеля
-    $tabel_id = 988;
+    $tabel_id = 1101;
 
     $tabel_j = array();
 
@@ -34,6 +34,8 @@
     $itog_filials_percents_temp = array();
     //Массив остатков денег после выдачи
     $itog_filials_summ_ostatok = array();
+    //Наряды, которые на момент выдачи были не закрыты, но мы по ним делали РЛ и выдавали ЗП
+    $opened_invoices = array();
 
     //Табель
     $query = "SELECT * FROM `fl_journal_tabels` WHERE `id` = '{$tabel_id}' LIMIT 1";
@@ -92,6 +94,10 @@
                 </a>';
         if ($invoice_item['status'] == 5){
             echo '<i class="fa fa-plus" style="color: green; font-size: 120%;"></i>';
+        }else{
+            echo '<i class="fa fa-minus" style="color: red; font-size: 120%;"></i>';
+            //Добавим наряды, которые не закрыты
+            array_push($opened_invoices, $invoice_item);
         }
         echo '
             </div>';
@@ -526,7 +532,7 @@ echo '<br>-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-><br>';
 
 //Изменились исходные данные (ставим вручную)
 //Итог сумм, с которых надо выдать ЗП, по филиалам до вычета сумм других сотрудников
-$itog_filials_summ_temp =  array(14 => 135180, 15 => 29560, 13 => 500000);
+$itog_filials_summ_temp =  array(19 => 135180, 15 => 29560, 13 => 500000);
 
 echo '<span style="font-size: 85%;">Итог сумм, с которых надо выдать ЗП, по филиалам до вычета сумм других сотрудников (тут мы тоже и далее задали вручную, задав + еще 1 филиал)</span>';
 //Сортируем, чтоб меньше денег было внизу

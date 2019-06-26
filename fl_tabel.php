@@ -978,7 +978,7 @@
 
                         echo '
                                         <div style="background-color: rgba(56, 245, 70, 0.36); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Итого осталось выплатить: <span class="calculateOrder" style="font-size: 16px; ', ($summItog) <= 0 ? 'color: red;' : '' ,'">' . ``$summItog) . '</span> руб.<br>
+                                            <div>Итого осталось выплатить: <span class="calculateOrder" style="font-size: 16px; ', ($summItog) <= 0 ? 'color: red;' : '' ,'">' . ($summItog) . '</span> руб.<br>
                                             <span style="font-size: 80%; color: #8C8C8C;">сумма округляется до целого для удобства расчетов</span></div>
                                             <div>';
 
