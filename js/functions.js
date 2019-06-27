@@ -6728,7 +6728,26 @@
 			method:"POST",
 			data:
 			{
-				data: filial,
+				data: filial
+			},
+			success:function(data){
+				// $("#status_notes").html(data);
+				//console.log("Ok");
+				location.reload();
+			}
+		});
+	}
+
+	//Сменить филиал в оплате
+	function changePaymentFilial(payment_id, filial_id){
+		ajax({
+			url:"change_payment_filial.php",
+			//statbox:"status_notes",
+			method:"POST",
+			data:
+			{
+                payment_id: payment_id,
+                filial_id: filial_id
 			},
 			success:function(data){
 				// $("#status_notes").html(data);
@@ -9003,7 +9022,7 @@
 		 contextMenuShow(0, 0, event, 'percent_cats');
 		 }
 		 });*/
-        //Для прикрепления к филиалу
+        //Для прикрепления к филиалу в текущей сессии
         $(".change_filial").click(function(event) {
 
             // Проверяем нажата ли именно левая кнопка мыши:
@@ -9012,6 +9031,15 @@
                 contextMenuShow(0, 0, event, 'change_filial');
             }
         });
+        $(".change_payment_filial").click(function(event) {
+
+            // Проверяем нажата ли именно левая кнопка мыши:
+            if (event.which === 1)  {
+                //console.log($(this).attr("filial_id"));
+                contextMenuShow($(this).attr("payment_id"), $(this).attr("filial_id"), event, 'change_payment_filial');
+            }
+        });
+
         //Для отображения списка молочных зубов
         $('#teeth_moloch').click(function(event) {
 
@@ -10346,3 +10374,46 @@
 
         });
     }
+
+
+    //Для функции, которая возвращает, сколько денег с какого филиала надо будет снять при выплате ЗП - для fl_paidout_in_tabel_add.php
+    $('.paidout_summ2').bind("change keyup input click", function() {
+
+        var val = $(this).val(),
+        tabel_id = $(this).attr("tabel_id");
+        //console.log(val);
+
+
+		if (val.length > 2){
+
+            var link = "tabel_paidout_percent2.php";
+
+            var reqData = {
+                tabel_id: tabel_id,
+                summ: val
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                //dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function() {
+                    $("#tabelFilialPaidouts").html("<div style='width: 120px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка</span></div>");
+                },
+                success:function(res){
+                    //console.log (res);
+                    $("#tabelFilialPaidouts").html(res);
+                    //
+                    // if(res.result == "success") {
+                    //     $("#tabelFilialPaidouts").html(res);
+                    // }else{
+                    //     //Показываем ошибку в консоли
+                    //     console.log (res);
+                    // }
+                }
+            })
+		}
+    });
