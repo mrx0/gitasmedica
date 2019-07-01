@@ -31,15 +31,15 @@
                 $date_in = date('Y-m-d H:i:s', strtotime($_POST['date_in']." 09:00:00"));
 
                 //Если заднее число записи
-//                if (
-//                    ((date("Y", strtotime($_POST['date_in']." 09:00:00")) < date("Y")) ||
-//                        ((date("Y", strtotime($_POST['date_in']." 09:00:00")) == date("Y")) && (date("m", strtotime($_POST['date_in']." 09:00:00")) < date("m"))) ||
-//                        ((date("m", strtotime($_POST['date_in']." 09:00:00")) == date("m")) && (date("d", strtotime($_POST['date_in']." 09:00:00")) < date("d")))) &&
-//                    !(($finances['see_all'] == 1) || $god_mode)
-//                ) {
-//
-//                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Нельзя добавлять ордеры задним числом</div>'));
-//                }else{
+                if (
+                    ((date("Y", strtotime($_POST['date_in']." 09:00:00")) < date("Y")) ||
+                        ((date("Y", strtotime($_POST['date_in']." 09:00:00")) == date("Y")) && (date("m", strtotime($_POST['date_in']." 09:00:00")) < date("m"))) ||
+                        ((date("m", strtotime($_POST['date_in']." 09:00:00")) == date("m")) && (date("d", strtotime($_POST['date_in']." 09:00:00")) < date("d")))) &&
+                    !(($finances['see_all'] == 1) || $god_mode)
+                ) {
+
+                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Нельзя добавлять ордеры задним числом</div>'));
+                }else{
 
 
                     $comment = addslashes($_POST['comment']);
@@ -59,7 +59,7 @@
                     calculateBalance ($_POST['client_id']);
 
                     echo json_encode(array('result' => 'success', 'data' => $mysql_insert_id));
-//                }
+                }
 			}
 		}
 	}
