@@ -79,7 +79,7 @@
             echo '
                     <div id="data">';
 
-//            if (($scheduler['see_all'] == 1) || (($scheduler['see_all'] != 1) && ($d == date('d', time())) && ($m == date('m', time())) && ($y == date('Y', time()))) || $god_mode) {
+            if (($scheduler['see_all'] == 1) || (($scheduler['see_all'] != 1) && ($d == date('d', time())) && ($m == date('m', time())) && ($y == date('Y', time()))) || $god_mode) {
 
                 echo '				
                             <div id="errrror"></div>';
@@ -276,9 +276,9 @@
                     echo '
                              <span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <i class="ahref change_filial">определить</i></span><br>';
                 }
-//            }else{
-//                echo '<h1>Редактировать можно только текущее число</h1>';
-//            }
+            }else{
+                echo '<h1>Редактировать можно только текущее число</h1>';
+            }
             echo '
                 </div>
                 <div id="doc_title">Добавить рабочие часы - Асмедика</div>';
