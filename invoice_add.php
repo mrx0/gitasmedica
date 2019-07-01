@@ -357,13 +357,13 @@
                                 var_dump(date("m"));
                                 var_dump(date("Y"));*/
 
-                                if (
-                                    (($sheduler_zapis[0]['year'] < date("Y")) ||
-                                    (($sheduler_zapis[0]['year'] == date("Y")) && ($month < date("m"))) ||
-                                    (($month == date("m")) && ($sheduler_zapis[0]['day'] < date("d")))) &&
-                                    !(($finances['see_all'] == 1) || $god_mode) &&
-                                    !(($sheduler_zapis[0]['noch'] == '1') && ($diff_hours <= 14))
-                                ) {
+//                                if (
+//                                    (($sheduler_zapis[0]['year'] < date("Y")) ||
+//                                    (($sheduler_zapis[0]['year'] == date("Y")) && ($month < date("m"))) ||
+//                                    (($month == date("m")) && ($sheduler_zapis[0]['day'] < date("d")))) &&
+//                                    !(($finances['see_all'] == 1) || $god_mode) &&
+//                                    !(($sheduler_zapis[0]['noch'] == '1') && ($diff_hours <= 14))
+//                                ) {
 //                                    var_dump($sheduler_zapis[0]['day']);
 //                                    var_dump($month);
 //                                    var_dump($sheduler_zapis[0]['year']);
@@ -373,8 +373,8 @@
 //                                    var_dump(date("m"));
 //                                    var_dump(date("Y"));
 
-                                    echo '<h1>Нельзя добавлять наряды задним числом</h1>';
-                                }else{
+//                                    echo '<h1>Нельзя добавлять наряды задним числом</h1>';
+//                                }else{
                                     if ($sheduler_zapis[0]['type'] == 5) {
                                         //Зубки
                                         echo '		
@@ -805,7 +805,7 @@
                                             });
                                             
                                         </script>';
-                                }
+                                //}
                             }else{
                                 echo '<h1>Что-то пошло не так. Ошибка #29</h1><a href="index.php">Вернуться на главную</a>';
                             }
