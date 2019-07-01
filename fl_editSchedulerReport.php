@@ -9,7 +9,7 @@
 		require_once 'header_tags.php';
 
         if (($scheduler['see_all'] == 1) || ($scheduler['add_own'] == 1) || $god_mode){
-            //if ($_GET) {
+            if ($_GET) {
                 if (isset($_GET['report_id'])){
 
                     include_once 'DBWork.php';
@@ -241,9 +241,9 @@
                 }else{
                     echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
                 }
-//            }else{
-//                echo '<h1>Редактировать можно только текущее число</h1>';
-//            }
+            }else{
+                echo '<h1>Редактировать можно только текущее число</h1>';
+            }
             echo '
                 </div>
                 <div id="doc_title">Редактировать рабочие часы - Асмедика</div>';
