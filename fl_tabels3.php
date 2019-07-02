@@ -172,7 +172,7 @@
 
 
                 echo '<div class="no_print">';
-                echo widget_calendar ($month, $year, 'fl_tabels2.php', $dop);
+                echo widget_calendar ($month, $year, 'fl_tabels3.php', $dop);
                 echo '</div>';
 
                 echo '

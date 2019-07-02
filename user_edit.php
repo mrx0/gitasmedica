@@ -124,15 +124,17 @@
                                 }
                             }
 
-                            foreach ($specialization_j as $data) {
-                                $chckd = '';
-                                if (!empty($specializations_temp)) {
-                                    if (isset($specializations_temp[$data['id']])) {
-                                        $chckd = 'checked';
+                            if (!empty($specialization_j)) {
+                                foreach ($specialization_j as $data) {
+                                    $chckd = '';
+                                    if (!empty($specializations_temp)) {
+                                        if (isset($specializations_temp[$data['id']])) {
+                                            $chckd = 'checked';
+                                        }
                                     }
-                                }
 
-                                echo '<input type="checkbox" name="specializations[]" value="' . $data['id'] . '" ' . $chckd . '> ' . $data['name'] . '<br>';
+                                    echo '<input type="checkbox" name="specializations[]" value="' . $data['id'] . '" ' . $chckd . '> ' . $data['name'] . '<br>';
+                                }
                             }
                         //}
                     }
