@@ -192,6 +192,11 @@
 								<a href="absents.php" class="b3">Отпуск/больничный</a>
 							</li>';*/
 
+                echo '
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="stat_invoice2.php" class="b3">Отчёт по оплатам (выручка)</a>
+							</li>';
+
                 //if (($finances['see_all'] == 1) || $god_mode) {
                 echo '
                             <li class="cellsBlock" style="margin: 1px;">

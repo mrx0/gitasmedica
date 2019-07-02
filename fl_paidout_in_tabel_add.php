@@ -81,7 +81,7 @@ if ($enter_ok){
                                         <div class="cellsBlock2">
                                             <div class="cellLeft">
                                             <span style="font-size:80%;  color: #555;">Сумма (руб.)</span><br>
-                                                <input type="text" name="paidout_summ" id="paidout_summ" value="">
+                                                <input type="text" name="paidout_summ" id="paidout_summ" value="" class="paidout_summ2" tabel_id="'.$_GET['tabel_id'].'" autocomplete="off">
                                                 <label id="paidout_summ_error" class="error"></label>
                                             </div>
                                         </div>
@@ -111,8 +111,18 @@ if ($enter_ok){
                                                 <span style="font-size:80%;  color: #555;">Комментарий</span><br>
                                                 <textarea name="descr" id="descr" cols="60" rows="8"></textarea>
                                             </div>
-                                        </div>
-                                        
+                                        </div>';
+
+                    echo '
+                                        <div id="tabelFilialPaidouts">
+                                        </div>';
+
+                    //Сколько денег с какого филиала надо будет снять при выплате ЗП
+                    //returnTabelFilialPaidouts ($_GET['tabel_id']);
+
+
+
+                    echo '                    
                                         <input type="hidden" name="noch" id="noch" value="'.$noch.'">
                                         
                                         <div id="errror"></div>                        
