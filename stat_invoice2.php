@@ -555,7 +555,7 @@ if ($enter_ok){
         echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
     }
     echo '
-		    <div id="doc_title">График '.$whose.'/',$monthsName[$month],' ',$year,'/'.$filial[0]['name'].' - Асмедика</div>';
+		    <div id="doc_title">График '.$whose.'/',$monthsName[$month],' ',$year,'/Филиал ... - Асмедика</div>';
 }else{
     header("location: enter.php");
 }

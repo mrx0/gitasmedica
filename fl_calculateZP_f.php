@@ -44,7 +44,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         FROM `journal_payment` jp
         LEFT JOIN `journal_invoice` ji ON ji.id = jp.invoice_id
         LEFT JOIN `zapis` z ON ji.zapis_id = z.id
-        WHERE jp.date_in BETWEEN '{$datastart}' AND '{$dataend}'";
+        WHERE MONTH(jp.date_in) = '{$month}' AND YEAR(jp.date_in) = '{$_POST['year']}'";
 
         //Если ассистент, то только стоматология
         if ($_POST['typeW'] == 7){
@@ -65,7 +65,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
             FROM `journal_payment` jp
             INNER JOIN `journal_invoice` ji ON ji.id = jp.invoice_id AND ji.type = '5'
             LEFT JOIN `zapis` z ON ji.zapis_id = z.id
-            WHERE jp.date_in BETWEEN '{$datastart}' AND '{$dataend}'";
+            WHERE MONTH(jp.date_in) = '{$month}' AND YEAR(jp.date_in) = '{$_POST['year']}'";
         }
 
         //var_dump($query);
@@ -89,9 +89,11 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 //                    }
 //                    array_push($journal[$arr['office_id']], $arr);
                     if (!isset($journal[$arr['filial_id']])){
-                        $journal[$arr['filial_id']] = array();
+                        //$journal[$arr['filial_id']] = array();
+                        $journal[$arr['filial_id']] = 0;
                     }
-                    array_push($journal[$arr['filial_id']], $arr);
+                    //array_push($journal[$arr['filial_id']], $arr);
+                    $journal[$arr['filial_id']] += $arr['summ'];
                 }
             }
         }
@@ -106,7 +108,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
             SELECT ji.office_id, ji.summins, z.noch
             FROM `journal_invoice` ji
             LEFT JOIN `zapis` z ON ji.zapis_id = z.id
-            WHERE ji.type='5' AND ji.closed_time BETWEEN '{$datastart}' AND '{$dataend}'
+            WHERE ji.type='5' AND MONTH(ji.closed_time) = '{$month}' AND YEAR(ji.closed_time) = '{$_POST['year']}'
             AND ji.summins <> '0' AND ji.status = '5'";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -120,37 +122,34 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 if ($arr['noch'] != 1) {
                     //array_push($invoices_ins_j, $arr);
                     if (!isset($journal[$arr['office_id']])){
-                        $journal[$arr['office_id']] = array();
+                        $journal[$arr['office_id']] = 0;
                     }
-
-
-                    $invoices_ins_summ += $arr['summins'];
-                    //$invoices_ins_j[$arr['id']] = $arr ;
+                    $journal[$arr['office_id']] += $arr['summins'];
                 }
             }
         }
 
-
+        $summ_arr = $journal;
 
 
         //Делаем рассчеты
         //Выводим результат
         if (!empty($journal)) {
 
-            $summ_arr = array();
-            $all_summ = 0;
-
-            foreach ($journal as $filial_id => $filial_journal){
-                //var_dump($item);
-                if (!isset($summ_arr[$filial_id])){
-                    $summ_arr[$filial_id] = 0;
-                }
-
-                foreach ($filial_journal as $item){
-                    //$summ_arr[$filial_id] += $item['summ'] + $item['summins'];
-                    $summ_arr[$filial_id] += $item['summ'];
-                }
-            }
+//            $summ_arr = array();
+//            $all_summ = 0;
+//
+//            foreach ($journal as $filial_id => $filial_journal){
+//                //var_dump($item);
+//                if (!isset($summ_arr[$filial_id])){
+//                    $summ_arr[$filial_id] = 0;
+//                }
+//
+//                foreach ($filial_journal as $item){
+//                    //$summ_arr[$filial_id] += $item['summ'] + $item['summins'];
+//                    $summ_arr[$filial_id] += $item['summ'];
+//                }
+//            }
 
             echo json_encode(array('result' => 'success', 'data' => $summ_arr, 'msg' => '', 'q' => $query));
 
