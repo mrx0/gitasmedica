@@ -195,7 +195,7 @@
                                     $noch_str = '';
                                 }
 
-                                if (($noch != 1) || ($_POST['permission'])) {
+                                if (($noch != 1) || ($_POST['permission'] == 7)) {
                                     $resultFilialStr .= '
                                     <div class="cellsBlockHover calculateBlockItem" data-sort="'.$invoice_create_time2.'" worker_mark="' . $worker_mark . '" style="' . $background_color . ' width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
                                         <div style="display: inline-block; width: 190px;">
