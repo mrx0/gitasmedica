@@ -1,7 +1,7 @@
 <?php
 
-//fl_tabels.php
-//Важный отчёт
+//fl_tabels_noch.php
+//Важный отчёт по ночи  v2.0
 
 
     //!!!Сортировка - нигде не используется??
@@ -24,13 +24,13 @@
 			include_once 'filter_f.php';
 			include_once 'ffun.php';
 
-            unset($_SESSION['fl_calcs_tabels2']);
+            //unset($_SESSION['fl_calcs_tabels2']);
 
             //тип (космет/стомат/...)
             if (isset($_GET['who'])) {
-                $getWho = returnGetWho($_GET['who'], 5, array(5,6,10,4,7,13,14,15,11));
+                $getWho = returnGetWho($_GET['who'], 5, array(5, 7));
             }else{
-                $getWho = returnGetWho(5, 5, array(5,6,10,4,7,13,14,15,11));
+                $getWho = returnGetWho(5, 5, array(5, 7));
             }
             //var_dump($getWho);
 
@@ -52,7 +52,6 @@
             $dvornik_color = $getWho['dvornik_color'];
             $other_color = $getWho['other_color'];
             $all_color = $getWho['all_color'];
-
 
 			$workers_j = array();
 
@@ -87,7 +86,7 @@
 						<h1>Важный отчёт</h1>';
                 echo '
                         <div>
-						    <a href="fl_tabel_print_choice.php?type='.$type.'" class="b4">Печать пачки</a>
+						    <!--<a href="fl_tabel_print_choice.php?type=" class="b4">Печать пачки</a>-->
 						</div>';
                 echo '    
 					</header>
@@ -99,16 +98,16 @@
 						    <ul style="margin-left: 6px; margin-bottom: 20px;">
 						        <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
                                 <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-                                    <a href="?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
-                                    <a href="?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>
-                                    <a href="?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
-                                    <a href="?who=4" class="b" style="'.$admin_color.'">Администраторы</a>
-                                    <a href="?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
-								    <a href="?who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
-                                    <a href="?who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
-                                    <a href="?who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
-								    <a href="fl_tabels_noch.php?who=5" class="b" style="">Ночь стом.</a>
-								    <a href="fl_tabels_noch.php?who=7" class="b" style="">Ночь ассист.</a>
+                                    <a href="fl_tabels.php?who=5" class="b" style="">Стоматологи</a>
+                                    <a href="fl_tabels.php?who=6" class="b" style="">Косметологи</a>
+                                    <a href="fl_tabels.php?who=10" class="b" style="">Специалисты</a>
+                                    <a href="fl_tabels.php?who=4" class="b" style="">Администраторы</a>
+                                    <a href="fl_tabels.php?who=7" class="b" style="">Ассистенты</a>
+								    <a href="fl_tabels.php?who=13" class="b" style="">Санитарки</a>
+                                    <a href="fl_tabels.php?who=14" class="b" style="">Уборщицы</a>
+                                    <a href="fl_tabels.php?who=15" class="b" style="">Дворники</a>
+								    <a href="fl_tabels_noch.php?who=5" class="b" style="'.$stom_color.'">Ночь стом.</a>
+								    <a href="fl_tabels_noch.php?who=7" class="b" style="'.$assist_color.'">Ночь ассист.</a>
                                 </li>
 						    </ul>';
 
@@ -327,7 +326,6 @@
                             year: "'.date("Y").'",
                             own_tabel: false
                         };
-                        
                         
                         getTabelsfunc (thisObj, certData);
                     });

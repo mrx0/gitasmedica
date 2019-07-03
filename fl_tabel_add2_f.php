@@ -25,7 +25,7 @@
                         //$calcData_Arr = explode('_', $_SESSION['fl_calcs_tabels']['data']);
                         $typeID = $_SESSION['fl_calcs_tabels2']['type'];
                         $filialID = $_SESSION['fl_calcs_tabels2']['filial_id'];
-                        $workerID =$_SESSION['fl_calcs_tabels2']['worker_id'];
+                        $workerID = $_SESSION['fl_calcs_tabels2']['worker_id'];
 
                         $thisCalcIsInAnotherTabel = FALSE;
                         $CalcIsInAnotherTabelID = 0;

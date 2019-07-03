@@ -176,6 +176,8 @@
         var invoice_id = $("#invoice_id").val();
         //console.log(invoice_id);
 
+        var filial_id = $("#filial_id").val();
+
         var client_id = $("#client_id").val();
         //console.log(client_id);
         var date_in = $("#date_in").val();
@@ -197,10 +199,11 @@
                 {
                     client_id: client_id,
                     invoice_id: invoice_id,
+                    filial_id: filial_id,
                     cert_id: cert_id,
                     summ: Summ,
                     date_in: date_in,
-                    comment: comment,
+                    comment: comment
                 },
             cache: false,
             beforeSend: function() {
@@ -293,17 +296,18 @@
 
         if (mode == 'edit'){
             link = "payment_edit_f.php";
-            payment_id = document.getElementById("payment_id").value;
+            payment_id = $("#payment_id").val();
         }
 
-        var Summ = document.getElementById("summ").value;
-        var invoice_id = document.getElementById("invoice_id").value;
+        var Summ = $("#summ").val();
+        var invoice_id = $("#invoice_id").val();
+        var filial_id = $("#filial_id").val();
 
-        var client_id = document.getElementById("client_id").value;
-        var date_in = document.getElementById("date_in").value;
+        var client_id = $("#client_id").val();
+        var date_in = $("#date_in").val();
         //console.log(date_in);
 
-        var comment = document.getElementById("comment").value;
+        var comment = $("#comment").val();
         //console.log(comment);
 
         $.ajax({
@@ -315,9 +319,10 @@
                 {
                     client_id: client_id,
                     invoice_id: invoice_id,
+                    filial_id: filial_id,
                     summ: Summ,
                     date_in: date_in,
-                    comment: comment,
+                    comment: comment
                 },
             cache: false,
             beforeSend: function() {
@@ -990,11 +995,12 @@
 
 
     //
-    function menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel, noch, dopData){
-        //console.log(newTabel);
-        //console.log(noch);
-        //console.log(dopData);
-        //console.log(JSON.stringify(dopData));
+    function menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel, noch, clear, dopData){
+        // console.log(res);
+        // console.log(newTabel);
+        // console.log(noch);
+        // console.log(dopData);
+        // console.log(JSON.stringify(dopData));
 
         var buttonsStr = '';
 
@@ -1002,6 +1008,10 @@
             buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="fl_addNewTabel2(' + type_id + ', ' + worker_id + ', ' + filial_id + ')">';
         }else{
             buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="fl_addInExistTabel2(' + type_id + ', ' + worker_id + ', ' + filial_id + ')">';
+        }
+        //Если создаём пустой табель
+        if (clear){
+            buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="fl_addNewTabelClear(' + type_id + ', ' + worker_id + ', ' + filial_id + ')">';
         }
 
         //Если оформляем ночь
@@ -1079,6 +1089,7 @@
         var reqData = {
             newTabel: newTabel?1:0
         };
+        //console.log(reqData);
 
         $.ajax({
             url: link,
@@ -1097,9 +1108,45 @@
                 if (res.length > 0) {
                     $('#overlay').show();
 
-                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel, false, {});
+                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel, false, false, {});
                 }else{
                     $('#errrror').html('<div class="query_neok">Ошибка #34. Ничего не выбрано. Обновите выбор РЛ</div>');
+                }
+            }
+        })
+    }
+
+    //Функция создания пустого табеля
+    function fl_addNewClearTabelIN (newTabel, type_id, worker_id, filial_id){
+
+        var link = "fl_menuForClearTabel_f.php";
+
+        var reqData = {
+            type_id: type_id,
+            worker_id: worker_id,
+            filial_id: filial_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+                //console.log (res.length);
+
+                if (res.length > 0) {
+                    $('#overlay').show();
+
+                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, newTabel, false, true, {});
+                }else{
+                    $('#errrror').html('<div class="query_neok">Ошибка #52. Что-то пошло не так.</div>');
                 }
             }
         })
@@ -1137,7 +1184,7 @@
                 if (res.length > 0) {
                     $('#overlay').show();
 
-                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, 0, noch, {});
+                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, 0, noch, false, {});
                 }else{
                     $('#errrror').html('<div class="query_neok">Ошибка #48. Ничего не выбрано. Обновите выбор РЛ</div>');
                 }
@@ -1157,7 +1204,7 @@
         // console.log(zp_summ);
         // console.log(invoice_ids);
 
-        var link = "fl_getTabels_f.php";
+        var link = "fl_getTabels_noch_f.php";
 
         var dopData = {
             day: day,
@@ -1165,11 +1212,13 @@
             year: year,
             summ: zp_summ
         };
+        //console.log(dopData);
 
         var reqData = {
             type_id: type_id,
             worker_id: worker_id,
-            filial_id: filial_id
+            filial_id: filial_id,
+            dopData: dopData
         };
 
         $.ajax({
@@ -1189,9 +1238,9 @@
                 if (res.length > 0) {
                     $('#overlay').show();
 
-                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, 0, true, dopData);
+                    menuForAddINNewTabel(res, type_id, worker_id, filial_id, 0, true, false, dopData);
                 }else{
-                    $('#errrror').html('<div class="query_neok">Ошибка #49. Нет табелей.</div>');
+                    $('#errrror').html('<div class="query_neok">Ошибка #49. Нет табелей. Табель ассистенту можно добавить в <a href="fl_tabels2.php" class="ahref">Отчёте по часам</a></div>');
                 }
             }
         })
@@ -1242,6 +1291,60 @@
             tabelYear: $("#tabelYear").val(),
             summCalcs: $(".summCalcsForTabel").html()
         };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                if(res.result == "success"){
+                    //console.log(res);
+
+                    //document.location.href = "fl_tabels.php";
+                    //window.close('newTabelwindow');
+
+                    $("#overlay").hide();
+                    $(".center_block").remove();
+
+                    setTimeout(function () {
+                        refreshOnlyThisTab($("#refreshID_"+type_id+"_"+worker_id+"_"+filial_id+""), type_id, worker_id, filial_id);
+                    }, 1000);
+
+
+                }else{
+                    //console.log(res);
+
+                    $('#errror').html(res.data);
+                    $("#overlay").hide();
+                    $(".center_block").remove();
+                }
+            }
+        });
+    }
+
+    //Добавляем в базу новый ПУСТОЙ табель без РЛ
+    function fl_addNewTabelClear(type_id, worker_id, filial_id){
+        //console.log($(".summCalcsForTabel").html());
+
+        var link = "fl_tabel_add3_f.php";
+
+        var reqData = {
+            type_id: type_id,
+            worker_id:  worker_id,
+            filial_id: filial_id,
+            tabelMonth: $("#tabelMonth").val(),
+            tabelYear: $("#tabelYear").val()
+        };
+        console.log(reqData);
 
         $.ajax({
             url: link,
@@ -1383,6 +1486,57 @@
             filial_id: filial_id,
             dopData: dopData,
             tabelForAdding: tabelForAdding
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                if(res.result == "success"){
+                    //console.log(res);
+
+                    setTimeout(function () {
+                        location.reload()
+                    }, 100);
+
+                }else{
+                    //console.log(res);
+
+                    $('#errror').html(res.data);
+                    $("#overlay").hide();
+                    $(".center_block").remove();
+                }
+            }
+        });
+    }
+
+    //Добавляем в базу новый ночной табель и сразу же добавляем туда отчёт за указанную дату
+    function fl_addNewNochTabel(type_id, worker_id, filial_id, dopData){
+        // console.log(type_id);
+        // console.log(worker_id);
+        // console.log(filial_id);
+        // console.log(dopData);
+
+        var link = "fl_add_new_noch_tabel_f.php";
+
+        //var tabelForAdding = $('input[name=tabelForAdding]:checked').val();
+
+        var reqData = {
+            type_id: type_id,
+            worker_id: worker_id,
+            filial_id: filial_id,
+            dopData: dopData
         };
         //console.log(reqData);
 
@@ -1899,6 +2053,8 @@
 
         if (rys) {
 
+            var noch = $('#noch').val();
+
             $.ajax({
                 url: link,
                 global: false,
@@ -1906,7 +2062,9 @@
                 dataType: "JSON",
                 data: {
                     tabel_id: tabel_id,
-                    paidout_id: paidout_id
+                    paidout_id: paidout_id,
+
+                    noch: noch
                 },
                 cache: false,
                 beforeSend: function () {
@@ -2022,6 +2180,7 @@
         }
 
         paidoutData['paidout_id'] = paidout_id;
+        //console.log(paidoutData);
 
         $.ajax({
             url: link,
@@ -2029,7 +2188,7 @@
             type: "POST",
             dataType: "JSON",
 
-            data:paidoutData,
+            data: paidoutData,
 
             cache: false,
             beforeSend: function() {
@@ -2351,12 +2510,16 @@
 
         var paidout_summ = $('#paidout_summ').val();
         var descr = $('#descr').val();
+        var noch = $('#noch').val();
+        var filial_id = $('#SelectFilial').val();
 
         var paidoutData = {
-            tabel_id:tabel_id,
-            type:type,
-            paidout_summ:paidout_summ,
-            descr:descr
+            tabel_id: tabel_id,
+            type: type,
+            paidout_summ: paidout_summ,
+            noch: noch,
+            descr:descr,
+            filial_id: filial_id
         };
 
         //проверка данных на валидность
@@ -3066,7 +3229,6 @@
 
                 if(res.result == "error"){
                     thisObj.html(res.data);
-
                 }
             }
         });
@@ -3728,9 +3890,9 @@
 
         $(".workerHoursValue").each(function(){
             // console.log($(this).attr('worker_id'));
-            // console.log($(this).val());
+            // console.log(Number($(this).val().replace(',', '.')));
 
-            workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
+            workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val().replace(',', '.');
             workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
 
         });
@@ -4472,6 +4634,134 @@
             newInput.select();
 
         }.bind(el), false);
+    }
+
+    //Редактирование налога / добавление новой строчки
+    //Для изменений в процентах персональных
+    var changeTax_elems = document.getElementsByClassName("changeCurrentTax"), newInput;
+    //console.log(elems);
+
+    if (changeTax_elems.length > 0) {
+        for (var i = 0; i < changeTax_elems.length; i++) {
+            var el = changeTax_elems[i];
+            el.addEventListener("click", function () {
+                //var thisID = this.id;
+                var workerID = this.getAttribute("worker_id");
+                //console.log(this.getAttribute("worker_id"));
+                //var catID = this.getAttribute("cat_id");
+                //console.log(this.getAttribute("cat_id"));
+                //var typeID = this.getAttribute("type_id");
+                //console.log(this.getAttribute("type_id"));
+
+                var thisVal = this.innerHTML;
+                var newVal = thisVal;
+                //console.log(this);
+                //console.log(workerID);
+                //console.log(catID);
+                //console.log(typeID);
+                //console.log(thisVal);
+                //console.log(isNaN(thisVal));
+
+                var inputs = this.getElementsByTagName("input");
+                if (inputs.length > 0) return;
+                if (!newInput) {
+
+                    /*buttonDiv = document.createElement("div");
+                     //buttonDiv.innerHTML = '<i class="fa fa-check" aria-hidden="true" title="Применить" style="margin-right: 4px;"></i> <i class="fa fa-refresh" aria-hidden="true" title="По умолчанию" style="color: red;"></i>';
+                     buttonDiv.innerHTML = '<i class="fa fa-refresh" aria-hidden="true" title="По умолчанию" style="color: red;"></i>';
+                     buttonDiv.style.position = "absolute";
+                     buttonDiv.style.right = "-9px";
+                     buttonDiv.style.top = "1px";
+                     buttonDiv.style.fontSize = "12px";
+                     buttonDiv.style.color = "green";
+                     buttonDiv.style.border = "1px solid #BFBCB5";
+                     buttonDiv.style.backgroundColor = "#FFF";
+                     buttonDiv.style.padding = "0 6px";
+
+                     buttonDiv.id = "changePersonalPercentCatdefault";*/
+
+                    newInput = document.createElement("input");
+                    newInput.type = "text";
+                    newInput.maxLength = 8;
+                    newInput.setAttribute("size", 20);
+                    newInput.style.width = "50px";
+                    newInput.addEventListener("blur", function () {
+                        //console.log(newInput.parentNode.getAttribute("worker_id"));
+
+                        workerID = newInput.parentNode.getAttribute("worker_id");
+                        //catID = newInput.parentNode.getAttribute("cat_id");
+                        //typeID = newInput.parentNode.getAttribute("type_id");
+
+                        //Попытка обработать клика на кнопке для сброса на значения по умолчанию - провалилась, всегда сбрасывается на по умолчанию
+                        //var changePersonalPercentCatdefault = document.getElementById("changePersonalPercentCatdefault");
+                        //console.log(changePersonalPercentCatdefault.innerHTML);
+
+                        //changePersonalPercentCatdefault.addEventListener("click", fl_changePersonalPercentCatdefault(workerID, catID, typeID), false);
+
+                        //Новые данные
+                        //if ((newInput.value == "") || (isNaN(newInput.value)) || (newInput.value < 0) || (newInput.value > 100) || (isNaN(parseInt(newInput.value, 10)))) {
+                        if ((newInput.value == "") || (isNaN(newInput.value)) || (newInput.value < 0) || (isNaN(parseInt(newInput.value, 10)))) {
+                            //newInput.parentNode.innerHTML = 0;
+                            newInput.parentNode.innerHTML = thisVal;
+                            newVal = thisVal;
+                        } else {
+                            newInput.parentNode.innerHTML = number_format(parseFloat(newInput.value, 10), 2, '.', '');
+                            newVal = number_format(parseFloat(newInput.value, 10), 2, '.', '');
+                        }
+                        //console.log(this);
+                        //console.log(workerID);
+
+                        //console.log(thisVal == newVal);
+
+                        if (Number(thisVal) != Number(newVal)) {
+                            //console.log(newVal);
+
+                            $.ajax({
+                                url: "fl_change_personal_tax_f.php",
+                                global: false,
+                                type: "POST",
+                                dataType: "JSON",
+                                data: {
+                                    worker_id: workerID,
+                                    //cat_id: catID,
+                                    //type: typeID,
+                                    val: newVal
+                                },
+                                cache: false,
+                                beforeSend: function () {
+                                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                                },
+                                // действие, при ответе с сервера
+                                success: function (res) {
+                                    if (res.result == "success") {
+                                        //console.log(res);
+
+                                        $('#infoDiv').html(res.data);
+                                        $('#infoDiv').show();
+                                        setTimeout(function () {
+                                            $('#infoDiv').hide('slow');
+                                            $('#infoDiv').html();
+                                        }, 1000);
+
+                                        //location.reload();
+                                    }
+
+                                }
+                            });
+                        }
+                    }, false);
+                }
+
+                //newInput.value = this.firstChild.innerHTML;
+                newInput.value = thisVal;
+                this.innerHTML = "";
+                //this.appendChild(buttonDiv);
+                this.appendChild(newInput);
+                //newInput.innerHTML = ('<i class="fa fa-check" aria-hidden="true"></i>');
+                newInput.focus();
+                newInput.select();
+            }.bind(el), false);
+        }
     }
 
     /*$("body").on("click", "#click_id", function(){

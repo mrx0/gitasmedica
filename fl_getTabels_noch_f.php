@@ -1,7 +1,7 @@
 <?php
 
-//fl_getTabels_f.php
-//Выборка табелей по исполнителю
+//fl_getTabels_noch_f.php
+//Выборка табелей (ночных) по исполнителю
 
     session_start();
 
@@ -25,45 +25,77 @@
 
                 $workerID = $_POST['worker_id'];
 
-                $tabels_j = fl_getTabels($_POST['type_id'], $workerID, $_POST['filial_id'], false);
+                $tabels_j = fl_getTabels($_POST['type_id'], $workerID, $_POST['filial_id'], true);
+//                var_dump($tabels_j);
 
-                    if (!empty($tabels_j)) {
-
-//                        $result .= '
-//                            <div style="padding: 2px; text-align: center; color: #717171; font-size: 80%;">
-//                                Выберите табель, <br>в который хотите добавить вычет
-//                            </div>';
+//                $result .= '
+//                    <div style="padding: 2px; text-align: center; color: #717171; font-size: 80%;">
+//                        Выберите табель, <br>в который хотите добавить вычет
+//                    </div>';
 
 
-                        $result .= '
-                            <header style="margin-bottom: 10Px;">
-                                <h2>Выберите табель</h2>';
+                $result .= '
+                    <header style="margin-bottom: 10Px;">
+                        <h2>Выберите табель</h2>';
 
-                        $result .= '
-                                <div style="text-align: left;">
-                                    '.WriteSearchUser('spr_workers', $workerID, 'user', true).' / ';
+                $result .= '
+                        Или создайте новый ';
 
-                        if ($_POST['filial_id'] == 0){
-                            $result .= 'Все филиалы';
-                        }else{
-                            $result .= '['.$filials_j[$_POST['filial_id']]['name2'].']';
-                        }
+//                $result .= '
+//						    Месяц:
+//				            <select id="tabelMonth">';
+//
+//                foreach ($monthsName as $val => $name) {
+//
+//                    if ($val == date('m')) {
+//                        $selected = 'selected';
+//                    } else {
+//                        $selected = '';
+//                    }
+//
+//                    $result .= '
+//                                    <option value="' . $val . '" ' . $selected . '>' . $name . '</option>';
+//
+//                }
+//
+//                $result .= '
+//			                </select>
+//			                Год: <input id="tabelYear" type="number" value="' . date('Y') . '" min="2000" max="2030" size="4" style="width: 60px;">';
+                $result .= "
+			                <input type='button' class='b4' value='Создать' onclick='fl_addNewNochTabel(".$_POST['type_id'].", ".$_POST['worker_id'].", ".$_POST['filial_id'].", ".json_encode($_POST['dopData']).");'>";
+                $result .= '
+                        </div>';
 
-                        $result .= '
-                                    <br><br>
-                                </div>';
+//                $result .= '<input type="button" class="b" value="Создать" onclick="fl_addNewNochTabel();">';
 
-                        $result .= '
-                            </header>';
 
-                        //Хотим добавить в существующий уже табель
-                        $result .= '
-                            <div class="tableTabels" style="width: 240px; background-color: rgb(234, 234, 234); text-align: left; height: 280px; overflow-y: scroll;  overflow-x: hidden;">';
+                $result .= '
+                        <div style="text-align: left;">
+                            '.WriteSearchUser('spr_workers', $workerID, 'user', true).' / ';
 
-                        $result .= '
-                                <div style="padding: 2px; text-align: center; color: #717171; font-size: 80%;">
-                                    Выберите табель, <br>в который хотите добавить
-                                </div>';
+                if ($_POST['filial_id'] == 0){
+                    $result .= 'Все филиалы';
+                }else{
+                    $result .= '['.$filials_j[$_POST['filial_id']]['name2'].']';
+                }
+
+                $result .= '
+                            <br><br>
+                        </div>';
+
+                $result .= '
+                    </header>';
+
+                //Хотим добавить в существующий уже табель
+                $result .= '
+                    <div class="tableTabels" style="width: 240px; background-color: rgb(234, 234, 234); text-align: left; height: 280px; overflow-y: scroll;  overflow-x: hidden;">';
+
+                $result .= '
+                        <div style="padding: 2px; text-align: center; color: #717171; font-size: 80%;">
+                            Выберите табель<!--, <br>в который хотите добавить-->
+                        </div>';
+
+                if (!empty($tabels_j)) {
 
                         foreach ($tabels_j as $year => $yearData) {
 
@@ -100,6 +132,7 @@
                                         $bgColor = 'box-shadow: 2px 4px 7px rgb(0, 216, 255); border-top: 1px dotted rgb(0, 216, 255);';
                                     }
                                 }
+                                //var_dump($month);
 
                                 $result .= '
                                     <div style="margin: 2px 0 2px; padding: 2px; text-align: right; color: #717171;">
@@ -118,7 +151,7 @@
                                                         <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                     </div>
                                                     <div style="display: inline-block; vertical-align: middle;">
-                                                        Табель #' . $rezData['id'] . ' <span style="font-size: 80%;">['.$filials_j[$rezData['office_id']]['name2'].']</span>
+                                                        Табель #' . $rezData['id'] . ' <span style="font-size: 80%;">['.$filials_j[$rezData['filial_id']]['name2'].']</span>
                                                     </div>
                                                 </div>
                                                 <div>

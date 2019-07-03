@@ -12,25 +12,32 @@
 
         if ($_POST){
 
-            if (!isset($_POST['tabel_id']) || !isset($_POST['paidout_id'])){
+            if (!isset($_POST['tabel_id']) || !isset($_POST['paidout_id']) || !isset($_POST['noch'])){
                 //echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
             }else{
 
                 include_once 'DBWork.php';
                 include_once 'ffun.php';
 
-                //Подключаемся к другой базе специально созданной для тикетов
+                //Подключаемся к другой базе
                 $msql_cnnct = ConnectToDB2 ();
 
-                //Добавляем категории сотрудников
-                $query = "DELETE FROM `fl_journal_paidouts` WHERE `tabel_id` = '{$_POST['tabel_id']}' AND `id` = '{$_POST['paidout_id']}' ;";
-
+                //
+                if ($_POST['noch'] == 0) {
+                    $query = "DELETE FROM `fl_journal_paidouts` WHERE `tabel_id` = '{$_POST['tabel_id']}' AND `id` = '{$_POST['paidout_id']}' ;";
+                }else{
+                    $query = "DELETE FROM `fl_journal_paidouts` WHERE `tabel_noch_id` = '{$_POST['tabel_id']}' AND `id` = '{$_POST['paidout_id']}' ;";
+                }
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                 CloseDB ($msql_cnnct);
 
                 //Обновим баланс табеля
-                updateTabelPaidoutSumm($_POST['tabel_id']);
+                if ($_POST['noch'] == 1){
+                    updateTabelNochPaidoutSumm ($_POST['tabel_id']);
+                }else{
+                    updateTabelPaidoutSumm ($_POST['tabel_id']);
+                }
 
                 echo json_encode(array('result' => 'success', 'data' => ''));
 

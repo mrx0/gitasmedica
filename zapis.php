@@ -134,91 +134,51 @@
 				}
 			}
 
-				//тип график (космет/стомат/...)
-				if (isset($_GET['who'])){
-					if ($_GET['who'] == 'stom'){
-						$who = '&who=stom';
-						$whose = 'Стоматологи ';
-						$selected_stom = ' selected';
-						$selected_cosm = ' ';
-						$datatable = 'scheduler_stom';
-						$kabsForDoctor = 'stom';
-						$type = 5;
-						
-						$stom_color = 'background-color: #fff261;';
-						$cosm_color = '';
-                        $somat_color = '';
-					}elseif($_GET['who'] == 'cosm'){
-						$who = '&who=cosm';
-						$whose = 'Косметологи ';
-						$selected_stom = ' ';
-						$selected_cosm = ' selected';
-						$datatable = 'scheduler_cosm';
-						$kabsForDoctor = 'cosm';
-						$type = 6;
-						
-						$stom_color = '';
-						$cosm_color = 'background-color: #fff261;';
-                        $somat_color = '';
-                    }elseif($_GET['who'] == 'somat'){
-                        $who = '&who=somat';
-                        $whose = 'Специалисты ';
-                        $selected_stom = ' ';
-                        $selected_cosm = ' selected';
-                        $datatable = 'scheduler_somat';
-                        $kabsForDoctor = 'somat';
-                        $type = 10;
+            //тип (космет/стомат/...)
+            if (isset($_GET['who'])) {
+                $getWho = returnGetWho($_GET['who'], 5, array(5,6,10));
+            }else{
+                $getWho = returnGetWho(5, 5, array(5,6,10));
+            }
+            //var_dump($getWho);
 
-                        $stom_color = '';
-                        $cosm_color = '';
-                        $somat_color = 'background-color: #fff261;';
-					}else{
-						$who = '&who=stom';
-						$whose = 'Стоматологи ';
-						$selected_stom = ' selected';
-						$selected_cosm = ' ';
-						$datatable = 'scheduler_stom';
-						$kabsForDoctor = 'stom';
-						$type = 5;
-						$_GET['who'] = 'stom';
-						
-						$stom_color = 'background-color: #fff261;';
-						$cosm_color = '';
-                        $somat_color = '';
-					}
-				}else{
-					$who = '&who=stom';
-					$whose = 'Стоматологи ';
-					$selected_stom = ' selected';
-					$selected_cosm = ' ';
-					$datatable = 'scheduler_stom';
-					$kabsForDoctor = 'stom';
-					$type = 5;
-					$_GET['who'] = 'stom';
-						
-					$stom_color = 'background-color: #fff261;';
-					$cosm_color = '';
-                    $somat_color = '';
-				}
-				
-				if (isset($_GET['d']) && isset($_GET['m']) && isset($_GET['y'])){
-					//операции со временем						
-					$day = $_GET['d'];
-					$month = $_GET['m'];
-					$year = $_GET['y'];
-				}else{
-					//операции со временем						
-					$day = date('d');		
-					$month = date('m');		
-					$year = date('Y');
-				}
+            $who = $getWho['who'];
+            $whose = $getWho['whose'];
+            $selected_stom = $getWho['selected_stom'];
+            $selected_cosm = $getWho['selected_cosm'];
+            $datatable = $getWho['datatable'];
+            $kabsForDoctor = $getWho['kabsForDoctor'];
+            $type = $getWho['type'];
 
-				if (!isset($day) || $day < 1 || $day > 31)
-					$day = date("d");				
-				if (!isset($month) || $month < 1 || $month > 12)
-					$month = date("m");
-				if (!isset($year) || $year < 2010 || $year > 2037)
-					$year = date("Y");
+            $stom_color = $getWho['stom_color'];
+            $cosm_color = $getWho['cosm_color'];
+            $somat_color = $getWho['somat_color'];
+            $admin_color = $getWho['admin_color'];
+            $assist_color = $getWho['assist_color'];
+            $sanit_color = $getWho['sanit_color'];
+            $ubor_color = $getWho['ubor_color'];
+            $dvornik_color = $getWho['dvornik_color'];
+            $other_color = $getWho['other_color'];
+            $all_color = $getWho['all_color'];
+
+            if (isset($_GET['d']) && isset($_GET['m']) && isset($_GET['y'])){
+                //операции со временем
+                $day = $_GET['d'];
+                $month = $_GET['m'];
+                $year = $_GET['y'];
+            }else{
+                //операции со временем
+                $day = date('d');
+                $month = date('m');
+                $year = date('Y');
+            }
+
+            if (!isset($day) || $day < 1 || $day > 31)
+                $day = date("d");
+            if (!isset($month) || $month < 1 || $month > 12)
+                $month = date("m");
+            if (!isset($year) || $year < 2010 || $year > 2037)
+                $year = date("Y");
 
 
 			foreach ($_GET as $key => $value){
@@ -403,9 +363,9 @@
 			echo '			
 							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
 							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-								<a href="?'.$dopFilial.$dopDate.$dopClient.'&who=stom" class="b" style="'.$stom_color.'">Стоматологи</a>
-								<a href="?'.$dopFilial.$dopDate.$dopClient.'&who=cosm" class="b" style="'.$cosm_color.'">Косметологи</a>
-								<a href="?'.$dopFilial.$dopDate.$dopClient.'&who=somat" class="b" style="'.$somat_color.'">Специалисты</a>
+								<a href="?'.$dopFilial.$dopDate.$dopClient.'&who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
+								<a href="?'.$dopFilial.$dopDate.$dopClient.'&who=6" class="b" style="'.$cosm_color.'">Косметологи</a>
+								<a href="?'.$dopFilial.$dopDate.$dopClient.'&who=10" class="b" style="'.$somat_color.'">Специалисты</a>
 							</li>
 							<li class="cellsBlock" style="width: auto; margin-bottom: 20px;">
 								<div style="display: inline-block; margin-right: 20px;">

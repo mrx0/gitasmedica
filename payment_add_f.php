@@ -25,7 +25,7 @@
 			//переменная для дополнительного текста в запросе при обновлении наряда
             $query_invoice_dop = '';
 
-			if (!isset($_POST['client_id']) || !isset($_POST['summ']) || !isset($_POST['invoice_id']) || !isset($_POST['date_in'])){
+			if (!isset($_POST['client_id']) || !isset($_POST['summ']) || !isset($_POST['invoice_id']) || !isset($_POST['filial_id']) || !isset($_POST['date_in'])){
 				//echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 
@@ -98,7 +98,9 @@
                                                 $query = "SELECT * FROM `journal_payment` WHERE `invoice_id`='$invoice_id'  ORDER BY `create_time` DESC, `id` DESC LIMIT 1";
 
                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
                                                 $number = mysqli_num_rows($res);
+
                                                 if ($number != 0) {
                                                     while ($arr = mysqli_fetch_assoc($res)) {
                                                         array_push($payments_j, $arr);
@@ -153,9 +155,9 @@
 
                                                                 //Вставим новую запись оплаты по наряду
                                                                 $query = "INSERT INTO `journal_payment` (
-                                                                  `client_id`, `invoice_id`, `summ`, `date_in`, `comment`, `create_time`, `create_person`)
+                                                                  `client_id`, `invoice_id`, `filial_id`, `summ`, `date_in`, `comment`, `create_time`, `create_person`)
                                                                 VALUES (
-                                                                  '{$client_id}', '{$invoice_id}', '{$_POST['summ']}', '{$date_in}', '{$_POST['comment']}', '{$time}', '{$_SESSION['id']}')";
+                                                                  '{$client_id}', '{$invoice_id}', '{$_POST['filial_id']}', '{$_POST['summ']}', '{$date_in}', '{$_POST['comment']}', '{$time}', '{$_SESSION['id']}')";
                                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                                                                 //ID новой позиции

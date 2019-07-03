@@ -27,7 +27,7 @@
             //...и сертификата
             $query_cert_dop = '';
 
-			if (!isset($_POST['client_id']) || !isset($_POST['summ']) || !isset($_POST['cert_id']) || !isset($_POST['invoice_id']) || !isset($_POST['date_in'])){
+			if (!isset($_POST['client_id']) || !isset($_POST['summ']) || !isset($_POST['cert_id']) || !isset($_POST['invoice_id']) || !isset($_POST['filial_id']) || !isset($_POST['date_in'])){
 				//echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 
@@ -160,9 +160,9 @@
 
                                                                 //Вставим новую запись оплаты по наряду
                                                                 $query = "INSERT INTO `journal_payment` (
-                                                                  `client_id`, `invoice_id`, `summ`, `type`, `cert_id`, `date_in`, `comment`, `create_time`, `create_person`)
+                                                                  `client_id`, `invoice_id`, `filial_id`, `summ`, `type`, `cert_id`, `date_in`, `comment`, `create_time`, `create_person`)
                                                                 VALUES (
-                                                                  '{$client_id}', '{$invoice_id}', '{$_POST['summ']}', '1', '{$cert_id}', '{$date_in}', '{$_POST['comment']}', '{$time}', '{$_SESSION['id']}')";
+                                                                  '{$client_id}', '{$invoice_id}', '{$_POST['filial_id']}', '{$_POST['summ']}', '1', '{$cert_id}', '{$date_in}', '{$_POST['comment']}', '{$time}', '{$_SESSION['id']}')";
                                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                                                                 //ID новой позиции

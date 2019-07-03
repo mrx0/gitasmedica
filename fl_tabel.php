@@ -613,20 +613,20 @@
                             var_dump($rezultShed);*/
                             //var_dump(microtime(true) - $script_start);
 
-                            $tabels_noch_j = array();
-
-                            $query = "SELECT * FROM `fl_journal_tabels_noch` WHERE `tabel_id` = '{$tabel_j[0]['id']}'";
-
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-                            $number = mysqli_num_rows($res);
-
-                            if ($number != 0) {
-                                while ($arr = mysqli_fetch_assoc($res)) {
-                                    //Раскидываем в массив
-                                    array_push($tabels_noch_j, $arr);
-                                }
-                            }
+//                            $tabels_noch_j = array();
+//
+//                            $query = "SELECT * FROM `fl_journal_reports_noch` WHERE `tabel_id` = '{$tabel_j[0]['id']}'";
+//
+//                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+//
+//                            $number = mysqli_num_rows($res);
+//
+//                            if ($number != 0) {
+//                                while ($arr = mysqli_fetch_assoc($res)) {
+//                                    //Раскидываем в массив
+//                                    array_push($tabels_noch_j, $arr);
+//                                }
+//                            }
                             //var_dump($tabels_noch_j);
 
                         }
@@ -694,86 +694,86 @@
                             }
 
                             //Ночные
-                            if (!empty($tabels_noch_j)) {
-
-                                echo '
-                                <div style="background-color: rgba(181, 165, 165, 0.16); border: 1px dotted #AAA; margin: 2px 0 10px; padding: 1px 3px; ">
-                                    <div>
-                                        <div style="margin-bottom: 5px;">
-                                            <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
-                                                Всего ночных смен по графику: <b>'.$nightSmena.'</b>. Оформлено: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">' . count($tabels_noch_j) . '</span> смен <a href="fl_report_noch.php" class="ahref button_tiny">Отчёт ночь</a>
-                                            </div>
-                                            <div style="border: 1px dotted #b3c0c8; display: block; font-size: 12px; padding: 2px; margin-right: 10px; margin-bottom: 10px; margin-top: 10px; vertical-align: top;">
-                                                <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
-                                                <!--Ночные--> ';
-
-                            echo '
-                                                    <div id="allNightTabelsIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allNightTabelsIsHere\');">подробно:</div>
-                                                    </div >
-                                                    <div id = "allNightTabelsIsHere" style = "" >';
-
-                            $noch_summ = 0;
-
-                            //Выведем все рассчеты по ночам
-                            foreach ($tabels_noch_j as $tabels_noch_item){
-                                //var_dump($tabels_noch_item);
-
-                                $noch_summ += $tabels_noch_item['summ'];
-
-                                echo '
-                                                        <div class="cellsBlockHover" style="background-color: #ffffff; border: 1px solid #BFBCB5; margin: 1px 7px 7px;; position: relative; display: inline-block; vertical-align: top;">
-                                                            <div style="display: inline-block; width: 200px;">
-                                                                <div>
-                                                                <!--<a href="#" class="ahref">-->
-                                                                    <div>
-                                                                        <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
-                                                                            <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
-                                                                        </div>
-                                                                        <div style="display: inline-block; vertical-align: middle; font-size: 95%;">
-                                                                            <b>#' . $tabels_noch_item['id'] . ' за ночн. смену</b> <br>
-                                                                            от '.$tabels_noch_item['day'].'.'.$tabels_noch_item['month'].'.'.$tabels_noch_item['year'].'<br>
-                                                                            <span style="font-size: 85%; color: rgb(115, 112, 112);">создано: ' . date('d.m.y H:i', strtotime($tabels_noch_item['create_time'])) . '</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div>
-                                                                        <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
-                                                                            Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">' . $tabels_noch_item['summ'] . '</span> руб.
-                                                                        </div>
-                                                                    </div>
-                                                                    
-                                                                <!--</a>-->
-                                                                </div>';
-
-                                echo '
-                                                            </div>';
-
-
-                                if ($tabel_j[0]['status'] != 7) {
-                                    echo '
-                                                            <div style="display: inline-block; vertical-align: top;">
-                                                                <div class="settings_text" style="border: 1px solid #CCC; padding: 3px; margin: 1px; width: 12px; text-align: center;"  onclick="contextMenuShow(' . $tabel_j[0]['id'] . ', ' . $tabels_noch_item['id'] . ', event, \'tabel_night_options\');">
-                                                                    <i class="fa fa-caret-down"></i>
-                                                                </div>
-                                                            </div>';
-                                }
-                                echo '
-                                                        </div>';
-                            }
-
-                            echo '       
-                                                    </div>';
-                            echo '
-                                                </div>
-                                            </div>';
-
-                                echo '
-                                            <div>Всего начислено за ночь: <span class="calculateOrder" style="font-size: 13px;">' . $noch_summ . '</span> руб.</div>';
-                                echo '
-                                        </div>
-                                    </div>
-                                </div>';
-
-                            }
+//                            if (!empty($tabels_noch_j)) {
+//
+//                                echo '
+//                                <div style="background-color: rgba(181, 165, 165, 0.16); border: 1px dotted #AAA; margin: 2px 0 10px; padding: 1px 3px; ">
+//                                    <div>
+//                                        <div style="margin-bottom: 5px;">
+//                                            <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
+//                                                Всего ночных смен по графику: <b>'.$nightSmena.'</b>. Оформлено: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">' . count($tabels_noch_j) . '</span> смен <a href="fl_report_noch.php" class="ahref button_tiny">Отчёт ночь</a>
+//                                            </div>
+//                                            <div style="border: 1px dotted #b3c0c8; display: block; font-size: 12px; padding: 2px; margin-right: 10px; margin-bottom: 10px; margin-top: 10px; vertical-align: top;">
+//                                                <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
+//                                                <!--Ночные--> ';
+//
+//                                echo '
+//                                                    <div id="allNightTabelsIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allNightTabelsIsHere\');">подробно:</div>
+//                                                    </div >
+//                                                    <div id = "allNightTabelsIsHere" style = "" >';
+//
+//                                $noch_summ = 0;
+//
+//                                //Выведем все рассчеты по ночам
+//                                foreach ($tabels_noch_j as $tabels_noch_item){
+//                                    //var_dump($tabels_noch_item);
+//
+//                                    $noch_summ += $tabels_noch_item['summ'];
+//
+//                                    echo '
+//                                                        <div class="cellsBlockHover" style="background-color: #ffffff; border: 1px solid #BFBCB5; margin: 1px 7px 7px;; position: relative; display: inline-block; vertical-align: top;">
+//                                                            <div style="display: inline-block; width: 200px;">
+//                                                                <div>
+//                                                                <!--<a href="#" class="ahref">-->
+//                                                                    <div>
+//                                                                        <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+//                                                                            <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+//                                                                        </div>
+//                                                                        <div style="display: inline-block; vertical-align: middle; font-size: 95%;">
+//                                                                            <b>#' . $tabels_noch_item['id'] . ' за ночн. смену</b> <br>
+//                                                                            от '.$tabels_noch_item['day'].'.'.$tabels_noch_item['month'].'.'.$tabels_noch_item['year'].'<br>
+//                                                                            <span style="font-size: 85%; color: rgb(115, 112, 112);">создано: ' . date('d.m.y H:i', strtotime($tabels_noch_item['create_time'])) . '</span>
+//                                                                        </div>
+//                                                                    </div>
+//                                                                    <div>
+//                                                                        <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
+//                                                                            Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">' . $tabels_noch_item['summ'] . '</span> руб.
+//                                                                        </div>
+//                                                                    </div>
+//
+//                                                                <!--</a>-->
+//                                                                </div>';
+//
+//                                    echo '
+//                                                            </div>';
+//
+//
+//                                    if ($tabel_j[0]['status'] != 7) {
+//                                        echo '
+//                                                            <div style="display: inline-block; vertical-align: top;">
+//                                                                <div class="settings_text" style="border: 1px solid #CCC; padding: 3px; margin: 1px; width: 12px; text-align: center;"  onclick="contextMenuShow(' . $tabel_j[0]['id'] . ', ' . $tabels_noch_item['id'] . ', event, \'tabel_night_options\');">
+//                                                                    <i class="fa fa-caret-down"></i>
+//                                                                </div>
+//                                                            </div>';
+//                                    }
+//                                    echo '
+//                                                        </div>';
+//                                }
+//
+//                                echo '
+//                                                    </div>';
+//                                echo '
+//                                                </div>
+//                                            </div>';
+//
+//                                echo '
+//                                            <div>Всего начислено за ночь: <span class="calculateOrder" style="font-size: 13px;">' . $noch_summ . '</span> руб.</div>';
+//                                echo '
+//                                        </div>
+//                                    </div>
+//                                </div>';
+//
+//                            }
 
 
                         }
@@ -926,12 +926,12 @@
                                         <div style="background-color: rgba(1, 94, 255, 0.22); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">';
 
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style = "font-size: 80%;">Аванс +</a ></div>';
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=7" class="b" style = "font-size: 80%;">ЗП +</a ></div>';
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style="font-size: 80%;">Отпусные +</a></div>';
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3" class="b" style="font-size: 80%;">Больничный +</a></div>';
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=4" class="b" style="font-size: 80%;">На карту +</a></div>';
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=5" class="b" style="font-size: 80%;">За ночь +</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1&filial_id='.$tabel_j[0]['office_id'].'" class="b" style = "font-size: 80%;">Аванс +</a ></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=7&filial_id='.$tabel_j[0]['office_id'].'" class="b" style = "font-size: 80%;">ЗП +</a ></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">Отпускные +</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">Больничный +</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=4&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">На карту +</a></div>';
+                            //echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=5&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">За ночь +</a></div>';
                         }
 
                         //Выплачено
@@ -959,6 +959,14 @@
                                             </div>
                                         </div>';
 
+//                        var_dump($tabel_j[0]['summ']);
+//                        var_dump($tabel_j[0]['surcharge']);
+//                        var_dump($tabel_j[0]['night_smena']);
+//                        var_dump($tabel_j[0]['empty_smena']);
+//                        var_dump($tabel_j[0]['paid']);
+//                        var_dump($tabel_j[0]['paidout']);
+
+
 //                        //Общая сумма, которую осталось выплатить = сумма (РЛ) + % с оклада + % с выручки + надбавки + за ночь + пустые смены - вычеты - оплачено - выплачено
 //                        $summItog = $tabel_j[0]['summ'] + $tabel_j[0]['per_from_salary'] + $tabel_j[0]['percent_summ'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena'] - $tabel_j[0]['deduction'] - $tabel_j[0]['paid'] - $tabel_j[0]['paidout'];
                         //Общая сумма, которую осталось выплатить = сумма (РЛ) + надбавки + за ночь + пустые смены - вычеты - оплачено - выплачено
@@ -970,7 +978,7 @@
 
                         echo '
                                         <div style="background-color: rgba(56, 245, 70, 0.36); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Итого осталось выплатить: <span class="calculateOrder" style="font-size: 16px; ', ($summItog) <= 0 ? 'color: red;' : '' ,'">' . intval($summItog) . '</span> руб.<br>
+                                            <div>Итого осталось выплатить: <span class="calculateOrder" style="font-size: 16px; ', ($summItog) <= 0 ? 'color: red;' : '' ,'">' . ($summItog) . '</span> руб.<br>
                                             <span style="font-size: 80%; color: #8C8C8C;">сумма округляется до целого для удобства расчетов</span></div>
                                             <div>';
 
@@ -1016,7 +1024,7 @@
                         }
 
                         echo '	
-						
+						        <input type="hidden" name="noch" id="noch" value="0">
 					        </div>
 					        
 					        <div id="doc_title">Табель #'.$_GET['id'].' - Асмедика</div>
