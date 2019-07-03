@@ -1,6 +1,6 @@
 <?php
 	
-//test_tabel_paidout_percent.php
+//test_tabel_paidout_percent2.php
 //
 
     require_once 'header.php';
