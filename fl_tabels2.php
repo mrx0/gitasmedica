@@ -79,6 +79,10 @@
                     $dop .= '&'.$key.'='.$value;
                 }
             }
+//            var_dump($dop);
+//            var_dump($dopWho);
+//            var_dump($dopDate);
+//            var_dump($dopFilial);
 
             $today = date("Y-m-d");
 
@@ -137,11 +141,11 @@
                         <ul style="margin-left: 6px; margin-bottom: 20px;">
                             <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
                             <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-                                <a href="?who=4" class="b" style="'.$admin_color.'">Администраторы</a>
-                                <a href="?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
-                                <a href="fl_tabels3.php?who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
-                                <a href="fl_tabels3.php?who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
-                                <a href="fl_tabels3.php?who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
+                                <a href="?who=4'.$dopDate.'" class="b" style="'.$admin_color.'">Администраторы</a>
+                                <a href="?who=7'.$dopDate.'" class="b" style="'.$assist_color.'">Ассистенты</a>
+                                <a href="fl_tabels3.php?who=13'.$dopDate.'" class="b" style="'.$sanit_color.'">Санитарки</a>
+                                <a href="fl_tabels3.php?who=14'.$dopDate.'" class="b" style="'.$ubor_color.'">Уборщицы</a>
+                                <a href="fl_tabels3.php?who=15'.$dopDate.'" class="b" style="'.$dvornik_color.'">Дворники</a>
                                 <!--<a href="fl_tabels3.php?who=11" class="b" style="'.$other_color.'">Прочие</a>-->
                             </li>';
 
