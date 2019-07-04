@@ -180,7 +180,7 @@
                                                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                                                     //2. добавить новый РЛ туда же
-                                                    $query = "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`) VALUES ('{$tabel_id}', '{$newCalcID}');";
+                                                    $query = "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`, `noch`) VALUES ('{$tabel_id}', '{$newCalcID}', '0');";
                                                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                                                     //3. Пересчитать табель с этим ID

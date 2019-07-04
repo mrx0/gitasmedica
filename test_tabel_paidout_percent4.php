@@ -13,6 +13,8 @@
 
     //ID табеля
     $tabel_id = 1101;
+    //Сумма, которую хотим выдать сейчас (аванс, зп... не важно)
+    $iWantMyMoney = 19273;
 
     $tabel_j = array();
 
@@ -46,7 +48,14 @@
     //Итоговый массив, куда соберем суммы по филиалам по тем работам,
     // которые мы хотим и должны оплатить другому человеку
     $itog_filials_summ_not4tou = array();
-
+    //Сумма со всех филиалов
+    $itog_all_filial_summ = 0;
+    //Массив с процентами по филиалам
+    $itog_filials_percents = array();
+    //Массив, где ключ - это ID филиала, а значение - это сколько всего надо выдать с этого филиала из общего объема денег
+    $summ4ZP = array();
+    //Массив, где ключ - это ID филиала, а значение - это сколько всего УЖЕ было выдано денег с каких филиалов
+    $summ4ZP_prev = array();
 
     //Получаем табель
     //!!!по сути нам это надо только для того, чтоб получить id worker'a
@@ -71,9 +80,9 @@
     $query = "
             SELECT ji_ex.*, ji.office_id AS filial_id, ji.status AS status
             FROM `fl_journal_calculate` jcalc
-            LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '{$tabel_id }'
+            LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '{$tabel_id }' AND jtabex.noch = '0'
             LEFT JOIN `journal_invoice` ji ON ji.id = jcalc.invoice_id
-            RIGHT JOIn `journal_invoice_ex` ji_ex ON ji_ex.invoice_id = ji.id  
+            RIGHT JOIN `journal_invoice_ex` ji_ex ON ji_ex.invoice_id = ji.id  
             WHERE jtabex.calculate_id = jcalc.id
             ORDER BY `ji_ex`.`invoice_id` ASC";
 
@@ -220,13 +229,64 @@
     }
     var_dump($itog_filials_summ_not4tou);
 
-    //Вычтем с филиалов суммы, которые уйдут в зп другому человеку
-    //!!!перенести это потом
+    //Вычтем с филиалов суммы, которые уйдут в зп другому человеку (ассистент например)
+    //!!!перенести это потом в цикл выше, ибо зачем лишнее вот это вот всё
     foreach ($itog_filials_summ_not4tou as $filial_id => $summ){
         if (isset($itog_filials_summ[$filial_id])){
             $itog_filials_summ[$filial_id] -= $summ;
         }
     }
+    var_dump($itog_filials_summ);
+
+    //Общая сумма со всех филиалов, с которой надо выдать зп (с учетом всех нюансов)
+    $itog_all_filial_summ = array_sum($itog_filials_summ);
+    //var_dump($itog_all_filial_summ);
+
+
+    //Вычислим процентное соотношение
+    foreach ($itog_filials_summ as $filial_id => $summ){
+
+        $percent_value = 0;
+
+        //предварительно добавляем в массив элемент с ID филиала, если его не было
+        //!!! потом сделать это выше, когда суммы собираем
+        if (!isset($itog_filials_percents[$filial_id])){
+            $itog_filials_percents[$filial_id] = 0;
+        }
+
+        $percent_value = (100* $summ) / $itog_all_filial_summ;
+
+        $itog_filials_percents[$filial_id] = $percent_value;
+    }
+    var_dump($itog_filials_percents);
+    //Просто для самоконтроля, что получается 100%, так как отказался от округлений при расчете %-в (так точнее)
+    //var_dump(array_sum($itog_filials_percents));
+
+    //Посчитаем по сколько надо выдать с каждого филиала на текущий момент
+    //пропорционально полученным деньгам
+    //если всего хотим выдать сумму из $iWantMyMoney
+    foreach ($itog_filials_percents as $filial_id => $percent){
+        $summ4ZP[$filial_id] = intval($iWantMyMoney / 100 * $percent);
+    }
+    echo '<span style="font-size: 85%;"><b>Ключевое1 !</b> Сколько ВСЕГО надо БУДЕТ в итоге выдать с каждого филиала из общего объема денег</span>';
+    var_dump($summ4ZP);
+
+    //!!!Временно введём данные, будто мы уже выдавали аванс
+    //Потом тут надо будет сделать получение этих данных из БД
+    $summ4ZP_prev = array(19 => 9091, 16 => 908);
+    var_dump($summ4ZP_prev);
+
+    //Если ранее были выплаты по этому табелю, то вычтем эти суммы из итоговых остатков,
+    //доступных к выдаче денег
+    if (!empty($summ4ZP_prev)){
+        foreach ($summ4ZP_prev as $filial_id => $summ) {
+            if (isset($summ4ZP[$filial_id])){
+                $summ4ZP[$filial_id] -= $summ;
+            }
+         }
+    }
+    echo '<span style="font-size: 85%;"><b>Ключевое2 !</b> Сколько ВСЕГО надо БУДЕТ в итоге выдать с каждого филиала из общего объема денег. ПОСЛЕ вычета того, что уже с этих филиалов вычли</span>';
+    var_dump($summ4ZP);
 
 
 require_once 'footer.php';

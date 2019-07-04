@@ -19,8 +19,11 @@
                 include_once 'DBWork.php';
                 include_once 'ffun.php';
 
-                //Подключаемся к другой базе специально созданной для тикетов
+                //Подключаемся к базе
                 $msql_cnnct = ConnectToDB ();
+
+                //Сначала выясним табель с РЛ ночные или нет
+                $query = "всфыапкапр FROM `fl_journal_tabels_ex` WHERE `tabel_id` = '{$_POST['tabel_id']}' AND `calculate_id` = '{$_POST['calculate_id']}' ;";
 
                 //
                 $query = "DELETE FROM `fl_journal_tabels_ex` WHERE `tabel_id` = '{$_POST['tabel_id']}' AND `calculate_id` = '{$_POST['calculate_id']}' ;";

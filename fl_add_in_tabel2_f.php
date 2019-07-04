@@ -1,7 +1,7 @@
 <?php
 
 //fl_add_in_tabel2_f.php
-//Новый табель добавляем в БД
+//Новый рассчетные листы в табель
 
     session_start();
 
@@ -17,6 +17,14 @@
             if (!isset($_POST['tabelForAdding'])) {
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
             } else {
+
+                $tabel_noch = false;
+                if (isset($_POST['tabel_noch_mark'])){
+                    if ($_POST['tabel_noch_mark'] == 1){
+                        $tabel_noch = true;
+                    }
+                }
+
 
                 if (isset($_SESSION['fl_calcs_tabels2'])) {
 
@@ -40,7 +48,11 @@
 
                             $arr = array();
 
-                            $query = "SELECT `id` FROM `fl_journal_tabels_ex` WHERE `id` = '$calcID';";
+                            if (!$tabel_noch) {
+                                $query = "SELECT `id` FROM `fl_journal_tabels_ex` WHERE `id` = '$calcID' AND `noch`='0';";
+                            }else{
+                                $query = "SELECT `id` FROM `fl_journal_tabels_ex` WHERE `id` = '$calcID' AND `noch`='1';";
+                            }
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -59,8 +71,11 @@
                         if (!$thisCalcIsInAnotherTabel) {
 
                             foreach ($calcArr as $calcID => $status) {
-                                $query .= "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`) VALUES ('{$_POST['tabelForAdding']}', '{$calcID}');";
-
+                                if (!$tabel_noch) {
+                                    $query .= "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`, `noch`) VALUES ('{$_POST['tabelForAdding']}', '{$calcID}', '0');";
+                                }else{
+                                    $query .= "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`, `noch`) VALUES ('{$_POST['tabelForAdding']}', '{$calcID}', '1');";
+                                }
                                 //$summCalcs += $rezData['summ'];
 
                             }
@@ -84,7 +99,11 @@
                             CloseDB($msql_cnnct);
 
                             //Обновим баланс табеля
-                            updateTabelBalance($_POST['tabelForAdding']);
+                            if (!$tabel_noch) {
+                                updateTabelBalance($_POST['tabelForAdding']);
+                            }else{
+                                updateTabelBalanceNoch($_POST['tabelForAdding']);
+                            }
 
                             echo json_encode(array('result' => 'success', 'data' => ''));
                             //var_dump($arr);
