@@ -180,6 +180,11 @@
                             </div>';
 
                         $tabel_summ = intval($tabel_j[0]['summ']);
+                        //Если ассистент
+                        if ($tabel_j[0]['type'] == 7){
+                            $tabel_summ = intval($tabel_j[0]['summ'] + $tabel_j[0]['summ_calc']);
+                        }
+
                         if (isset($tabel_deductions_j[1])){
                             $tabel_summ = intval($tabel_j[0]['summ'] - $tabel_deductions_j[1]);
                         }
