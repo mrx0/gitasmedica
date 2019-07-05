@@ -119,6 +119,7 @@
                                             </h2>
                                             <div id="tabel_info">';
 
+                                //!!!Сделать тут разделение на ночь и не ночь
                                 $query = "SELECT `tabel_id` AS total FROM `fl_journal_tabels_ex` WHERE `calculate_id` = '{$_GET['id']}' LIMIT 1";
 
                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);

@@ -160,7 +160,7 @@
                             GROUP_CONCAT(DISTINCT jcalcex.percent_cats ORDER BY jcalcex.percent_cats ASC SEPARATOR ',') AS percent_cats 
                             FROM `fl_journal_calculate` jcalc
                             LEFT JOIN `fl_journal_calculate_ex` jcalcex ON jcalc.id = jcalcex.calculate_id
-                            LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '".$tabel_j[0]['id']."'
+                            LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '".$tabel_j[0]['id']."' AND jtabex.noch = '0'
                             WHERE jtabex.calculate_id = jcalc.id
                             GROUP BY jcalc.id";
 
@@ -759,7 +759,7 @@
                         }*/
 
                         echo '
-                                                <a href="fl_tabel_print.php?tabel_id=' . $tabel_j[0]['id'] . '" class="b" style="font-size: 80%;" >Распечатать</a>';
+                                                <a href="fl_tabel_print.php?tabel_id=' . $tabel_j[0]['id'] . '&noch=0" class="b" style="font-size: 80%;" >Распечатать</a>';
 
                         echo '
                                             </div>

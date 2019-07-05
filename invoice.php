@@ -45,7 +45,7 @@
 						$client_j = SelDataFromDB('spr_clients', $invoice_j[0]['client_id'], 'user');
 						//var_dump($client_j);
 
-                        $filials_j = getAllFilials(false, false, false);
+                        $filials_j = getAllFilials(false, false, true);
                         //var_dump($filials_j);
 
                         $msql_cnnct = ConnectToDB ();
@@ -941,16 +941,23 @@
                                     echo '
                                                     <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
                                     echo '
-                                                        <a href="" class="cellOrder ahref" style="position: relative;">
+                                                        <div class="cellOrder" style="position: relative;">
                                                             <b>Оплата #' . $payment_item['id'] . '</b> от ' . date('d.m.y', strtotime($payment_item['date_in'])) . ' '.$cert_num.'<br>
                                                             <span style="font-size:90%;  color: #555;">
                                                                 Филиал: ';
+                                    if (($finances['see_all'] == 1) || $god_mode) {
+                                        echo '
+                                                                <div id="change_payment_filial" class="ahref change_payment_filial" payment_id="'.$payment_item['id'].'" filial_id="'.$payment_item['filial_id'].'" style="display: inline;">';
+                                    }
                                     if ($payment_item['filial_id'] > 0){
                                          echo $filials_j[$payment_item['filial_id']]['name'].'<br>';
                                     }else{
                                         echo '<span style="color: red;">не указан</span><br>';
                                     }
-
+                                    if (($finances['see_all'] == 1) || $god_mode) {
+                                        echo '
+                                                                        </div>';
+                                    }
 
                                     if (($payment_item['create_time'] != 0) || ($payment_item['create_person'] != 0)) {
                                         echo '
@@ -967,7 +974,7 @@
                                     echo '
                                                             </span>
                                                             <span style="position: absolute; top: 2px; right: 3px;">'. $pay_type_mark .'</span>
-                                                        </a>
+                                                        </div>
                                                         <div class="cellName">
                                                             <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
                                                                 Сумма:<br>

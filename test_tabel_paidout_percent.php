@@ -52,7 +52,7 @@
             FROM `fl_journal_calculate` jcalc
             LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '988'
             LEFT JOIN `journal_invoice` ji ON ji.id = jcalc.invoice_id
-            WHERE jtabex.calculate_id = jcalc.id
+            WHERE jtabex.calculate_id = jcalc.id AND jtabex.noch = '0'
             GROUP BY jcalc.invoice_id";
 
     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);

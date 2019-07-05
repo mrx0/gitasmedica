@@ -211,7 +211,11 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                //console.log(res);
+                //!!! перенести вывод ошибки нормально, а то
+                //$('#errror').html(res.data); не работает, которое ниже
+                //Приходится смотреть через консоль
+                console.log(res);
+                
                 $('.center_block').remove();
                 $('#overlay').hide();
 
@@ -245,7 +249,7 @@
             dataType: "JSON",
             data:
                 {
-                    summ:Summ,
+                    summ:Summ
                 },
             cache: false,
             beforeSend: function() {
@@ -1428,12 +1432,17 @@
         //console.log(link);
 
         var tabelForAdding = $('input[name=tabelForAdding]:checked').val();
+        var tabel_noch_mark = $('input[name=tabelForAdding]:checked').attr("tabel_noch_mark");
+
         //console.log(tabelForAdding);
+        //console.log($('input[name=tabelForAdding]:checked').attr("tabel_noch_mark"));
 
         var reqData = {
             summCalcs: $(".summCalcsForTabel").html(),
+            tabel_noch_mark: tabel_noch_mark,
             tabelForAdding: tabelForAdding
         };
+        //console.log(reqData);
 
         $.ajax({
             url: link,
@@ -3154,7 +3163,7 @@
         });
     }
 
-    //Получаем необработанные расчетные листы
+    //Получаем табели
     function getTabelsfunc (thisObj, reqData){
         //console.log (reqData);
 
@@ -4977,9 +4986,10 @@
                 //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             success: function (res) {
+                console.log (res);
 
                 if (res.result == "success") {
-                    console.log (res);
+                    //console.log (res);
 
                     $(".filialMoney").each(function(){
                         //console.log($(this).attr("filial_id"));

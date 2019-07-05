@@ -162,7 +162,7 @@
                             jcalcex.*, jcalc.id, jtabelex.tabel_id
                             FROM `fl_journal_calculate` jcalc
                             LEFT JOIN `fl_journal_calculate_ex` jcalcex ON jcalc.id = jcalcex.calculate_id
-                            LEFT JOIN `fl_journal_tabels_ex` jtabelex ON jcalc.id = jtabelex.calculate_id
+                            LEFT JOIN `fl_journal_tabels_ex` jtabelex ON jcalc.id = jtabelex.calculate_id AND jtabelex.noch = '0'
                             WHERE jcalc.invoice_id='{$_GET['invoice_id']}'";
 
                         //var_dump($query);
