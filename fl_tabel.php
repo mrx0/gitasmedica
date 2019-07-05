@@ -1001,7 +1001,7 @@
                         }*/
 
                         echo '
-                                                <a href="fl_tabel_print.php?tabel_id=' . $tabel_j[0]['id'] . '" class="b" style="font-size: 80%;" >Распечатать</a>';
+                                                <a href="fl_tabel_print.php?tabel_id=' . $tabel_j[0]['id'] . '&noch=0" class="b" style="font-size: 80%;" >Распечатать</a>';
 
                         echo '
                                             </div>

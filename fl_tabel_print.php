@@ -21,13 +21,52 @@
 
             if (isset($_GET['tabel_id'])){
 
-                $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['tabel_id'], 'id');
+                $link = 'fl_tabel.php';
+
+                //метка ночного табеля
+                $tabel_noch = false;
+
+                if (isset($_GET['noch'])){
+                    if ($_GET['noch'] == 1){
+                        $tabel_noch = true;
+                        $link = 'fl_tabel_noch.php';
+                    }
+                }
+
+                //$tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['tabel_id'], 'id');
                 //var_dump($tabel_j[0]);
 
-                if ($tabel_j != 0){
+                $tabel_j = array();
+
+                if (!$tabel_noch) {
+                    $query = "SELECT * FROM `fl_journal_tabels` WHERE `id`='{$_GET['tabel_id']}' LIMIT 1;";
+                }else{
+                    $query = "SELECT * FROM `fl_journal_tabels_noch` WHERE `id`='{$_GET['tabel_id']}' LIMIT 1;";
+                }
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)) {
+
+                        //array_push($tabel_j, $arr);
+                        $tabel_j = $arr;
+                    }
+                }
+                //var_dump($tabel_j);
+
+                if (!empty($tabel_j)){
+
+                    if (!$tabel_noch) {
+                        $filial_id = $tabel_j['office_id'];
+                    }else {
+                        $filial_id = $tabel_j['filial_id'];
+                    }
 
                     //var_dump($permissions);
-                    if (($report['see_all'] == 1) || $god_mode || ($tabel_j[0]['worker_id'] == $_SESSION['id'])){
+                    if (($report['see_all'] == 1) || $god_mode || ($tabel_j['worker_id'] == $_SESSION['id'])){
 
                         $filials_j = getAllFilials(false, true, true);
 
@@ -42,7 +81,7 @@
                         $tabel_surcharges_j = array();
                         $tabel_paidouts_j = array();
 
-                        $query = "SELECT `id`, `day`, `smena`, `kab`, `worker` FROM `scheduler` WHERE `worker` = '{$tabel_j[0]['worker_id']}' AND `month` = '".(int)$tabel_j[0]['month']."' AND `year` = '{$tabel_j[0]['year']}' AND `filial`='{$tabel_j[0]['office_id']}'";
+                        $query = "SELECT `id`, `day`, `smena`, `kab`, `worker` FROM `scheduler` WHERE `worker` = '{$tabel_j['worker_id']}' AND `month` = '" . (int)$tabel_j['month'] . "' AND `year` = '{$tabel_j['year']}' AND `filial`='{$filial_id}'";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -67,7 +106,7 @@
                         $nightSmenaPrice = 0;
                         $nightSmenaSumm = 0;
 
-                        $query = "SELECT `price`, `count`, `summ` FROM `fl_journal_tabel_nightsmens` WHERE `tabel_id` = '{$tabel_j[0]['id']}'";
+                        $query = "SELECT `price`, `count`, `summ` FROM `fl_journal_tabel_nightsmens` WHERE `tabel_id` = '{$tabel_j['id']}'";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -91,7 +130,7 @@
                         $emptySmenaPrice = 0;
                         $emptySmenaSumm = 0;
 
-                        $query = "SELECT `price`, `count`, `summ` FROM `fl_journal_tabel_emptysmens` WHERE `tabel_id` = '{$tabel_j[0]['id']}'";
+                        $query = "SELECT `price`, `count`, `summ` FROM `fl_journal_tabel_emptysmens` WHERE `tabel_id` = '{$tabel_j['id']}'";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -111,8 +150,8 @@
                         }
 
                         //Надбавки
-                        //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
-                        $query = "SELECT * FROM `fl_journal_surcharges` WHERE `tabel_id`='".$tabel_j[0]['id']."';";
+                        //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j['id']."'";
+                        $query = "SELECT * FROM `fl_journal_surcharges` WHERE `tabel_id`='".$tabel_j['id']."';";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -130,8 +169,8 @@
                         }
 
                         //Вычеты
-                        //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
-                        $query = "SELECT * FROM `fl_journal_deductions` WHERE `tabel_id`='".$tabel_j[0]['id']."';";
+                        //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j['id']."'";
+                        $query = "SELECT * FROM `fl_journal_deductions` WHERE `tabel_id`='".$tabel_j['id']."';";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -149,8 +188,8 @@
                         }
 
                         //Выплаты
-                        //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
-                        $query = "SELECT * FROM `fl_journal_paidouts` WHERE `tabel_id`='".$tabel_j[0]['id']."';";
+                        //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j['id']."'";
+                        $query = "SELECT * FROM `fl_journal_paidouts` WHERE `tabel_id`='".$tabel_j['id']."';";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -179,14 +218,14 @@
                                 </header>
                             </div>';
 
-                        $tabel_summ = intval($tabel_j[0]['summ']);
+                        $tabel_summ = intval($tabel_j['summ']);
                         //Если ассистент
-                        if ($tabel_j[0]['type'] == 7){
-                            $tabel_summ = intval($tabel_j[0]['summ'] + $tabel_j[0]['summ_calc']);
+                        if ($tabel_j['type'] == 7){
+                            $tabel_summ = intval($tabel_j['summ'] + $tabel_j['summ_calc']);
                         }
 
                         if (isset($tabel_deductions_j[1])){
-                            $tabel_summ = intval($tabel_j[0]['summ'] - $tabel_deductions_j[1]);
+                            $tabel_summ = intval($tabel_j['summ'] - $tabel_deductions_j[1]);
                         }
                         $tabel_deductions_j2 = 0;
                         if (isset($tabel_deductions_j[2])){
@@ -234,13 +273,13 @@
                         }
 
                         //Если админ
-                        if ($tabel_j[0]['type'] == 4) {
+                        if ($tabel_j['type'] == 4) {
 
                             //Часы работы
                             $dop['hours_count'] = 0;
                             $dop['hours_norma'] = 0;
-                            if ($tabel_j[0]['hours_count'] != NULL) {
-                                $hours_count_arr_temp = explode(',', $tabel_j[0]['hours_count']);
+                            if ($tabel_j['hours_count'] != NULL) {
+                                $hours_count_arr_temp = explode(',', $tabel_j['hours_count']);
                                 //var_dump($hours_count_arr_temp);
 
                                 $dop['hours_count'] = $hours_count_arr_temp[0];
@@ -248,24 +287,24 @@
                             }
 
                             //Оклад
-                            $dop['salary'] = $tabel_j[0]['salary'];
+                            $dop['salary'] = $tabel_j['salary'];
 
                             //Процент от оклада
-                            $dop['per_from_salary'] = $tabel_j[0]['per_from_salary'];
+                            $dop['per_from_salary'] = $tabel_j['per_from_salary'];
                             $tabel_summ = number_format($dop['per_from_salary'], 0, '.', '');
 
                             //Процент от выручки
-                            $dop['percent_summ'] = $tabel_j[0]['percent_summ'];
+                            $dop['percent_summ'] = $tabel_j['percent_summ'];
 
                         }
 
                         //Пробуем вывести расчетный лист по табелю для печати
-                        echo tabelPrintTemplate ($_GET['tabel_id'], $monthsName[$tabel_j[0]['month']], $tabel_j[0]['year'], WriteSearchUser('spr_workers', $tabel_j[0]['worker_id'], 'user', false), $filials_j[$tabel_j[0]['office_id']]['name2'], count($rezultShed),
+                        echo tabelPrintTemplate ($_GET['tabel_id'], $monthsName[$tabel_j['month']], $tabel_j['year'], WriteSearchUser('spr_workers', $tabel_j['worker_id'], 'user', false), $filials_j[$filial_id]['name2'], count($rezultShed),
                             $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3,
                             $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1,
                             $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm,
                             $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount,
-                            $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3, $dop, 'fl_tabel.php');
+                            $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3, $dop, $link);
 
 
                         echo "
