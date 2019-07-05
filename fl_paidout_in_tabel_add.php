@@ -114,7 +114,7 @@ if ($enter_ok){
                                         </div>';
 
                     echo '
-                                        <div id="tabelFilialPaidouts">
+                                        <div id="tabelFilialSubtraction">
                                         </div>';
 
                     //Сколько денег с какого филиала надо будет снять при выплате ЗП
