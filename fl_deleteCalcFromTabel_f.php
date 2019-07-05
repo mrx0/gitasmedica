@@ -19,18 +19,31 @@
                 include_once 'DBWork.php';
                 include_once 'ffun.php';
 
-                //Подключаемся к другой базе специально созданной для тикетов
+                //Подключаемся к базе
                 $msql_cnnct = ConnectToDB ();
 
+                //Сначала выясним табель с РЛ ночной или нет
+                $query = "SELECT `noch` FROM `fl_journal_tabels_ex` WHERE `tabel_id` = '{$_POST['tabel_id']}' AND `calculate_id` = '{$_POST['calculate_id']}' ;";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $arr = mysqli_fetch_assoc($res);
+
+                $noch = $arr['noch'];
+
                 //
-                $query = "DELETE FROM `fl_journal_tabels_ex` WHERE `tabel_id` = '{$_POST['tabel_id']}' AND `calculate_id` = '{$_POST['calculate_id']}' ;";
+                $query = "DELETE FROM `fl_journal_tabels_ex` WHERE `tabel_id` = '{$_POST['tabel_id']}' AND `calculate_id` = '{$_POST['calculate_id']}' AND `noch`='{$noch}';";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                 CloseDB ($msql_cnnct);
 
                 //Обновим баланс табеля
-                updateTabelBalance($_POST['tabel_id']);
+                if ($noch == 1){
+                    updateTabelBalanceNoch($_POST['tabel_id']);
+                }else {
+                    updateTabelBalance($_POST['tabel_id']);
+                }
 
                 echo json_encode(array('result' => 'success', 'data' => ''));
 

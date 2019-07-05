@@ -69,7 +69,7 @@
     $query = "
             SELECT ji_ex.*, ji.office_id AS filial_id, ji.status AS status
             FROM `fl_journal_calculate` jcalc
-            LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '{$tabel_id }'
+            LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '{$tabel_id }' AND jtabex.noch = '0'
             LEFT JOIN `journal_invoice` ji ON ji.id = jcalc.invoice_id
             RIGHT JOIn `journal_invoice_ex` ji_ex ON ji_ex.invoice_id = ji.id  
             WHERE jtabex.calculate_id = jcalc.id

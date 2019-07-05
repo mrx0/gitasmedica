@@ -164,38 +164,15 @@
                             //$summCalc = 0;
 
                             //Выберем табели уже существующие для этого работника
+                            //Если ассистент
                             if ($typeID == 7){
-                                $tabels_j = fl_getTabels(0, $workerID, 0, false);
+                                $tabels_j = fl_getTabels(0, $workerID, 0, false, true);
                             }else {
-                                $tabels_j = fl_getTabels($typeID, $workerID, $filialID, false);
+                                $tabels_j = fl_getTabels($typeID, $workerID, $filialID, false, false);
                             }
-//                            //$query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$typeID}' AND `worker_id`='{$workerID}' AND `office_id`='{$filialID}' AND `status` <> '7' AND `status` <> '9';";
-//                            $query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$typeID}' AND `worker_id`='{$workerID}' AND `office_id`='{$filialID}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
-//
-//                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-//
-//                            $number = mysqli_num_rows($res);
-//
-//                            if ($number != 0) {
-//                                while ($arr = mysqli_fetch_assoc($res)) {
-//                                    //array_push($rez, $arr);
-//
-//                                    if (!isset($rez[$arr['year']])) {
-//                                        $rez[$arr['year']] = array();
-//                                    }
-//                                    if (!isset($rez[$arr['year']][$arr['month']])) {
-//                                        $rez[$arr['year']][$arr['month']] = array();
-//                                    }
-//
-//                                    array_push($rez[$arr['year']][$arr['month']], $arr);
-//
-//                                }
+
 
                             if (!empty($tabels_j)) {
-
-                                //include_once 'fl_showCalculateRezult.php';
-
-                                //krsort($rez);
 
                                 $result .= '
                                     <div style="padding: 2px; text-align: center; color: #717171; font-size: 80%;">
@@ -246,6 +223,19 @@
 
                                         foreach ($monthData as $rezData) {
 
+                                            //Выявляем метку ночи (по умолчанию false)
+                                            $tabel_noch = false;
+
+                                            $tabel_noch_mark = 0;
+
+                                            if (isset($rezData['noch'])){
+                                                if ($rezData['noch'] == 1){
+                                                    $tabel_noch = true;
+
+                                                    $tabel_noch_mark = 1;
+                                                }
+                                            }
+
                                             $result .= '
                                     <!--<div class="cellsBlockHover" style=" border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">-->
                                     <div class="cellsBlockHover" style="background-color: white; border: 1px solid #BFBCB5; margin-top: 1px; position: relative; ' . $bgColor . '">
@@ -255,8 +245,17 @@
                                                     <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
                                                         <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                     </div>
-                                                    <div style="display: inline-block; vertical-align: middle;">
-                                                        Табель #' . $rezData['id'] . ' <span style="font-size: 80%;">['.$filials_j[$rezData['office_id']]['name2'].']</span>
+                                                    <div style="display: inline-block; vertical-align: middle;">';
+
+                                            if (!$tabel_noch) {
+                                                $result .= '
+                                                        Табель #' . $rezData['id'] . ' <span style="font-size: 80%;">[' . $filials_j[$rezData['office_id']]['name2'] . ']</span>';
+                                            }else{
+                                                $result .= '
+                                                        Табель <img src="img/night.png" style="width: 11px;" title="Ночное"> #' . $rezData['id'] . ' <span style="font-size: 80%;">[' . $filials_j[$rezData['filial_id']]['name2'] . ']</span>';
+                                            }
+
+                                            $result .= '
                                                     </div>
                                                 </div>
                                                 <div>
@@ -270,7 +269,7 @@
                        
                                         <div style="position: absolute; top: -4px; right: -4px;">
                                             <div style="border: none; padding: 3px; margin: 1px;">
-                                                <input type="radio" class="radioBtnCalcs" name="tabelForAdding" value="' . $rezData['id'] . '">
+                                                <input type="radio" class="radioBtnCalcs" name="tabelForAdding" value="' . $rezData['id'] . '" tabel_noch_mark="'.$tabel_noch_mark.'">
                                             </div>
                                         </div>
 

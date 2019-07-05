@@ -46,7 +46,7 @@
                         $calcArr = $_SESSION['fl_calcs_tabels']['main_data'];
 
                         foreach ($calcArr as $calcID) {
-                            $query .= "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`) VALUES ('{$_POST['tabelForAdding']}', '{$calcID}');";
+                            $query .= "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`, `noch`) VALUES ('{$_POST['tabelForAdding']}', '{$calcID}', '0');";
 
                             //$summCalcs += $rezData['summ'];
 
