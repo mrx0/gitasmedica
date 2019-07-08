@@ -1,6 +1,6 @@
 <?php
 	
-//tabel_subtraction_percent2.php
+//tabel_subtraction_percent2_f.php
 //
 
 session_start();
@@ -325,7 +325,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 }
                 $filial_subtraction[$filial_id] = $summ4ZP[$filial_id] / 100 * ( $iWantMyMoney * 100 / array_sum($summ4ZP) );
             }
-            echo '<span style="font-size: 85%;"><b>Ключевое3 !</b> Сколько ПРЕДЛАГАЕТСЯ ВСЕГО выдать с какого филиала в ЭТОТ раз</span>';
+            //echo '<span style="font-size: 85%;"><b>Ключевое3 !</b> Сколько ПРЕДЛАГАЕТСЯ ВСЕГО выдать с какого филиала в ЭТОТ раз</span>';
             //var_dump($filial_subtraction);
 
             //Просто для самоконтроля, должна получиться общая сумма выдаче
@@ -333,29 +333,54 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
             //var_dump(array_sum($filial_subtraction) + array_sum($summ4ZP_prev));
 
 
-            echo '<table>';
+            echo '
+                <table>';
 
+            echo '
+                    <tr>
+                        <td colspan="2">
+                            <span style="font-size: 95%;">Будет вычтено с филиалов:</span>
+                        </td>
+                    </tr>';
 
-            foreach ($filials_j as $f_id => $filials_j_data) {
-                echo '<tr>';
-                //Значение, сколько с какого филиала будем выдавать
-                $value = 0;
-                //Если мы посчитали, что с этого филиала будем выдавать столько, то пожалуйста
-                if (isset($filial_subtraction[$f_id])){
-                    $value = intval($filial_subtraction[$f_id]);
+            if (!empty($filials_j)) {
+                foreach ($filials_j as $f_id => $filials_j_data) {
+                    echo '<tr>';
+                    //Значение, сколько с какого филиала будем выдавать
+                    $value = '';
+                    $fontcolor_str = '';
+
+                    //Если мы посчитали, что с этого филиала будем выдавать столько, то пожалуйста
+                    if (isset($filial_subtraction[$f_id])) {
+                        $value = round($filial_subtraction[$f_id]);
+                        $fontcolor_str = 'font-weight: bold; color: rgba(3, 14, 79, 0.96);';
+                        $placeholder = '';
+                    }
+                    echo '<td><div class="button_tiny" style="width: 100px; font-size: 75%; cursor: pointer; '.$fontcolor_str.'" onclick="allSubtractionInHere('.$f_id.', '.array_sum($filial_subtraction).');">' . $filials_j_data['name2'] . '<i class="fa fa-chevron-right" style="color: green; float: right;" aria-hidden="true"></i></div></td>';
+                    echo '<td><input type="text" size="10" class="filial_subtraction fil_sub_'.$f_id.'" filial_id="'.$f_id.'" name="" placeholder="0" autocomplete="off" value="' . $value . '"></td>';
+                    echo '<tr>';
                 }
-                echo '<td>'.$filials_j_data['name2'].'</td>';
-                echo '<td><input type="text" size="20" name="" placeholder="" autocomplete="off" value="'.$value.'"></td>';
-                echo '<tr>';
+            }else{
+                echo '
+                    <tr>
+                        <td>
+                            <span style="font-size: 85%; color: red;">Ошибка #55. Невозможно рассчитать.</span>
+                        </td>
+                    </tr>';
             }
 
 
-            echo '</table>';
-
+            echo '
+                </table>
+                <div class="button_tiny" style="width: 100px; font-size: 75%; cursor: pointer;" onclick="tabelSubtractionPercent('.$tabel_id.', '.$iWantMyMoney.');">По умолчанию</div>
+                <div style="width: 250px; background-color: #EEE; border: 1px dotted #CCC; margin: 10px; padding: 5px; font-size: 85%;">
+                    Всего: <span id="fil_sub_sum" style="font-weight: bold;">'.array_sum($filial_subtraction).'</span>
+                    <span id="fil_sub_msg"></span>
+                </div>
+                <input type="hidden" id="iWantMyMoney" value="'.$iWantMyMoney.'">';
 
         }
     }
-
 }
 
 ?>

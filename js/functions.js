@@ -10531,45 +10531,132 @@
         });
     }
 
+    //Функция возвращает, сколько денег с какого филиала надо будет снять при выплате ЗП - для fl_paidout_in_tabel_add.php
+    function tabelSubtractionPercent(tabel_id, summ){
 
-    //Для функции, которая возвращает, сколько денег с какого филиала надо будет снять при выплате ЗП - для fl_paidout_in_tabel_add.php
-    $('.paidout_summ2').bind("change keyup input click", function() {
+        var link = "tabel_subtraction_percent2_f.php";
 
-        var val = $(this).val(),
-        tabel_id = $(this).attr("tabel_id");
-        //console.log(val);
+        var reqData = {
+            tabel_id: tabel_id,
+            summ: summ
+        };
 
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                $("#tabelFilialSubtraction").html("<div style='width: 120px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка</span></div>");
+            },
+            success:function(res){
+                //console.log (res);
+                $("#tabelFilialSubtraction").html(res);
 
-		if (val.length > 2){
+                //$("#tabelFilialSubtraction").append("");
 
-            var link = "tabel_subtraction_percent2_f.php";
+                //
+                // if(res.result == "success") {
+                //     $("#tabelFilialSubtraction").html(res);
+                // }else{
+                //     //Показываем ошибку в консоли
+                //     console.log (res);
+                // }
+            }
+        })
+	}
 
-            var reqData = {
-                tabel_id: tabel_id,
-                summ: val
-            };
+	//!!! пример работы пауза между нажатиями
+    //$('.paidout_summ2'). on("keyup", function() {
+    $("body").on("keyup", ".paidout_summ2", function (e) {
+    	console.log(e.keyCode);
 
-            $.ajax({
-                url: link,
-                global: false,
-                type: "POST",
-                //dataType: "JSON",
-                data: reqData,
-                cache: false,
-                beforeSend: function() {
-                    $("#tabelFilialSubtraction").html("<div style='width: 120px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка</span></div>");
-                },
-                success:function(res){
-                    //console.log (res);
-                    $("#tabelFilialSubtraction").html(res);
-                    //
-                    // if(res.result == "success") {
-                    //     $("#tabelFilialSubtraction").html(res);
-                    // }else{
-                    //     //Показываем ошибку в консоли
-                    //     console.log (res);
-                    // }
-                }
-            })
-		}
+		//Если только цифры, delete, backspase
+        if (((e.keyCode >= 48) && (e.keyCode <= 57)) || ((e.keyCode >= 96) && (e.keyCode <= 105)) || ((e.keyCode == 8) || (e.keyCode == 46))) {
+            //$this - хранит ссылку на объект нашего <input>
+            var $this = $(this);
+            //пауза между нажатиями, чтобы срабатывал обработчик только если пауза между нажатиями
+            //больше указанного
+            var $delay = 450;
+
+            clearTimeout($this.data('timer'));
+
+            var
+                summ = $(this).val(),
+                tabel_id = $(this).attr("tabel_id");
+
+            if (summ.length > 2) {
+
+                $this.data('timer', setTimeout(function () {
+                    $this.removeData('timer');
+
+                    tabelSubtractionPercent(tabel_id, summ);
+
+                }, $delay));
+            }
+        }
     });
+
+    //Изменение цифр в филиалах
+    $("body").on("keyup", ".filial_subtraction", function (e) {
+        //console.log(e.keyCode);
+
+        //Если только цифры, delete, backspase
+        if (((e.keyCode >= 48) && (e.keyCode <= 57)) || ((e.keyCode >= 96) && (e.keyCode <= 105)) || ((e.keyCode == 8) || (e.keyCode == 46))) {
+            //$this - хранит ссылку на объект нашего <input>
+            // var $this = $(this);
+            // //пауза между нажатиями, чтобы срабатывал обработчик только если пауза между нажатиями
+            // //больше указанного
+            // var $delay = 450;
+            //
+            // clearTimeout($this.data('timer'));
+            //
+            // var
+            //     summ = $(this).val(),
+            //     tabel_id = $(this).attr("tabel_id");
+            //
+            // if (summ.length > 2) {
+            //
+            //     $this.data('timer', setTimeout(function () {
+            //         $this.removeData('timer');
+            //
+            //         tabelSubtractionPercent(tabel_id, summ);
+            //
+            //     }, $delay));
+            // }
+
+			//Сумма со всех филиалов - Факт
+			var summ = 0;
+			//Сумма со всех филиалов -план
+			var iWantMyMoney = Number($("#iWantMyMoney").val());
+
+            $(".filial_subtraction").each(function (){
+                summ += Number($(this).val());
+			})
+			//console.log(summ);
+			//console.log(fil_sub_sum);
+
+			if (summ < iWantMyMoney){
+				$("#fil_sub_msg").html("<");
+			}else {
+                if (summ > iWantMyMoney){
+                    $("#fil_sub_msg").html(">");
+				}else{
+                    $("#fil_sub_msg").html("!");
+				}
+			}
+        }
+    });
+
+    //Функция применят суммы вычета с филиала в указанный филиал
+    function allSubtractionInHere(filial_id, summ){
+    	$(".filial_subtraction").each(function() {
+    		if ($(this).attr("filial_id") == filial_id){
+                $(this).val(summ);
+			}else{
+                $(this).val(0);
+			}
+		})
+	}
