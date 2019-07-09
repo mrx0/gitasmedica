@@ -78,7 +78,7 @@
 
                 }
 
-                echo json_encode(array('result' => $status, 'data' => $data, 'arr' => ($arr['summ'] - $arr['debited'] - $arr['withdraw'] + $arr['refund']), 'arr' => $order_j[0]['summ']));
+                echo json_encode(array('result' => $status, 'data' => $data, 'arr' => ($arr['summ'] - $arr['debited'] - $arr['withdraw'] + $arr['refund']), 'arr2' => $order_j[0]['summ']));
 
             }
 		}
