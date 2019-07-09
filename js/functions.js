@@ -2314,6 +2314,7 @@
     }
 
 	//Меняем фактический график по шаблону планового
+	//!!!пример массив checkbox
 	function Ajax_change_shed() {
 
 		var day = $("#SelectDayShedOptions").val();
@@ -2322,8 +2323,20 @@
 
 		var ignoreshed = $("input[name=ignoreshed]:checked").val();
 		if (typeof (ignoreshed) == 'undefined') ignoreshed = 0;
+        //console.log (ignoreshed);
 
-		//console.log (ignoreshed);
+		var all_fililas_chckd = $("input[name=fullAll]:checked").val();
+        if (typeof (all_fililas_chckd) == 'undefined') all_fililas_chckd = 0;
+        //console.log (all_fililas_chckd);
+
+        var filials_chckd_arr = [];
+
+        if (all_fililas_chckd == 0) {
+            $("input[name='filials_chckd[]']:checked").each(function () {
+                filials_chckd_arr.push(parseInt($(this).val()));
+            });
+        }
+        //console.log (filials_chckd_arr);
 
 		$.ajax({
 			url:"sheduler_change_f.php",
@@ -2334,7 +2347,9 @@
 				day: day,
 				month: month,
 				year: year,
-				ignoreshed: ignoreshed
+				ignoreshed: ignoreshed,
+                all_fililas_chckd: all_fililas_chckd,
+                filials_arr: filials_chckd_arr
 			},
 			cache: false,
 			beforeSend: function() {
