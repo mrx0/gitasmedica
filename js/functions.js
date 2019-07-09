@@ -2331,10 +2331,10 @@
 			type: "POST",
 			data:
 			{
-				day:day,
-				month:month,
-				year:year,
-				ignoreshed:ignoreshed
+				day: day,
+				month: month,
+				year: year,
+				ignoreshed: ignoreshed
 			},
 			cache: false,
 			beforeSend: function() {
@@ -2346,6 +2346,7 @@
 		})
 	};
 
+	//
 	function iWantThisDate(path){
 
         blockWhileWaiting (true);
@@ -2356,6 +2357,7 @@
 		window.location.replace(path+'&m='+iWantThisMonth+'&y='+iWantThisYear);
 	}
 
+	//
 	function iWantThisDate2(path){
 
         blockWhileWaiting (true);
