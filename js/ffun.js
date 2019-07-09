@@ -1072,7 +1072,7 @@
 
         menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
     }
-
+    Ajax_change_shed
     //
     function menuForAddINExistNewTabel(){
 
