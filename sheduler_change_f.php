@@ -29,14 +29,14 @@
 			
 			//var_dump ($day);
 			$canUpdate = TRUE;
-			
+
+            $msql_cnnct = ConnectToDB ();
+
 			//получаем шаблон графика из базы
 			$query = "SELECT `filial`, `day`, `smena`, `kab`, `worker`, `type` FROM `sheduler_template`";
 			
 			$shedTemplate = 0;
 
-            $msql_cnnct = ConnectToDB ();
-			
 			$arr = array();
 			$rez = array();
 
@@ -83,7 +83,7 @@
 										
 										if ($workerHere){
 											if ($_POST['ignoreshed'] == 1){
-												$query = "DELETE FROM `scheduler` WHERE `month`='{$month}' AND `day`>='{$day}'";
+												$query = "DELETE FROM `scheduler` WHERE `day`>='{$day}' AND `month`='{$month}' AND `year`='{$year}' AND (`type`='5' OR `type`='6' OR `type`='10')";
 
                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 												
