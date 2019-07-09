@@ -47,7 +47,7 @@
                 if ($number != 0) {
 
                     $arr = mysqli_fetch_assoc($res);
-                    var_dump($arr);
+                    //var_dump($arr);
 
                     if ($arr['summ'] - $arr['debited'] - $arr['withdraw'] + $arr['refund'] < $order_j[0]['summ']){
                         $data = '
@@ -78,7 +78,7 @@
 
                 }
 
-                echo json_encode(array('result' => $status, 'data' => $data));
+                echo json_encode(array('result' => $status, 'data' => $data, 'arr' => ($arr['summ'] - $arr['debited'] - $arr['withdraw'] + $arr['refund']), 'arr2' => $order_j[0]['summ']));
 
             }
 		}
