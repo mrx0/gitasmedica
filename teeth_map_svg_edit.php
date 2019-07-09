@@ -831,7 +831,7 @@
                                     retein:retein,
                                     skomplect:skomplect,
                                     
-                                    client: client,
+                                    client: client
                                 },
                             success: function(html){  
                                 $("#teeth_map").html(html);  

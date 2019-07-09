@@ -197,21 +197,20 @@
 									Начиная с <input id="SelectDayShedOptions" type="number" value="1" min="1" max="31" size="2" style="width: 40px;"> числа
 								</div>
 								<div s  tyle="margin-bottom: 18px;">
-                                    <span style="color: red;">Выбор филиалов временнно не работает</span><br>';
+                                    <span style="color: rgba(82, 81, 81, 0.93);">Выберите филиалы, которые хотите изменить</span><br><br>';
 
-                echo '<input type="checkbox" id="fullAll" name="fullAll" class="fullType" value="1" checked> Все<br>';
+                echo '<input type="checkbox" id="fullAll" name="fullAll" class="fullType" value="1"> Все<br>';
 
                 if (!empty($filials_j)){
                     foreach ($filials_j as $filials_j_data) {
-                        echo '<input type="checkbox" id="filial_'.$filials_j_data['id'].'" name="filial_'.$filials_j_data['id'].'" class="fullType filialItem" value="1" checked> '.$filials_j_data['name'].'<br>';
-
+                        echo '<input type="checkbox" id="filial_'.$filials_j_data['id'].'" name="filials_chckd[]" filial_id="'.$filials_j_data['id'].'" class="fullType filialItem" value="'.$filials_j_data['id'].'"> '.$filials_j_data['name'].'<br>';
                     }
                 }
 
 
                 echo '
 				                </div>
-								<div style="margin-bottom: 18px;">
+								<div style="margin-top: 10px; margin-bottom: 18px;">
 									Игнорировать существующий график <input type="checkbox" name="ignoreshed" id="ignoreshed" value="1">
 								</div>
 								<input type="button" class="b" value="Применить" onclick="if (iCanManage) Ajax_change_shed()">
