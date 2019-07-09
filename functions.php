@@ -3222,6 +3222,8 @@
 
             require 'variables.php';
 
+            $filials_j = getAllFilials(false, true, true);
+
             $msql_cnnct = ConnectToDB ();
 
             if ($show_categories){
@@ -3402,7 +3404,9 @@
 												<li class="cellsBlock" style="width: auto; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36);">';
 							$itemTemp_str .= '
 													<a href="invoice.php?id=' . $items['id'] . '" class="cellOrder ahref" style="position: relative;">
-														<div style="font-weight: bold;">Наряд #' . $items['id'] . '</div>
+														<div style="font-weight: bold;">
+															Наряд #' . $items['id'] . '
+														</div>
 														<div style="margin: 3px;">';
 
 
@@ -3411,7 +3415,10 @@
 
 							$itemTemp_str .= '
 														</div>
-														<div style="font-size:80%; color: #555; border-top: 1px dashed rgb(179, 179, 179); margin-top: 5px;">';
+														<div style="font-size:80%; color: #555; border-top: 1px dashed rgb(179, 179, 179); margin-top: 5px;">
+														<div style="font-size: 90%; color: #171919;">
+															' .$filials_j[$items['office_id']]['name2'].'
+														</div>';
 
 							if (($items['create_time'] != 0) || ($items['create_person'] != 0)) {
 								$itemTemp_str .= '

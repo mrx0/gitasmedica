@@ -2332,11 +2332,11 @@
 
         var filials_chckd_arr = [];
 
-        if (all_fililas_chckd == 0) {
+        //if (all_fililas_chckd == 0) {
             $("input[name='filials_chckd[]']:checked").each(function () {
                 filials_chckd_arr.push(parseInt($(this).val()));
             });
-        }
+        //}
         //console.log (filials_chckd_arr);
 
 		$.ajax({
