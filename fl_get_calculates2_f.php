@@ -108,7 +108,7 @@
 
                 $query .= "
                             WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.status <> '7'
-                            AND jcalc.id NOT IN ( SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id ) 
+                            AND jcalc.id NOT IN ( SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id) 
                             AND jcalc.date_in > '2018-05-31'
                             GROUP BY jcalc.id";
 
@@ -195,7 +195,7 @@
                                     $noch_str = '';
                                 }
 
-                                if ($noch != 1) {
+                                if (($noch != 1) || ($_POST['permission'] == 7)) {
                                     $resultFilialStr .= '
                                     <div class="cellsBlockHover calculateBlockItem" data-sort="'.$invoice_create_time2.'" worker_mark="' . $worker_mark . '" style="' . $background_color . ' width: 217px; display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
                                         <div style="display: inline-block; width: 190px;">

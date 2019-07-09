@@ -162,7 +162,7 @@
 					}
 				}
 
-				//Изменить прикреплённый филиал
+				//Изменить прикреплённый филиал в текущей сессии
 				if ($_POST['mark'] == 'change_filial'){
 					
 					if (($stom['add_own'] == 1) || ($cosm['add_own'] == 1) || $god_mode || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9)){
@@ -197,6 +197,41 @@
 
 					}
 				}
+
+                if ($_POST['mark'] == 'change_payment_filial'){
+
+                    if ($god_mode || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9)){
+//                        $data .= '
+//							<li><div onclick="changeUserFilial(0)">открепиться</div></li>';
+
+                        //Выбор филиала
+                        //$offices_j = SelDataFromDB('spr_filials', '', '');
+                        $filials_j = getAllFilials(true, true, true);
+
+                        /*if ($filials_j != 0){
+                            for ($off = 0; $off < count($filials_j); $off++){
+                                if (isset($_SESSION['filial']) && !empty($_SESSION['filial']) && ($_SESSION['filial'] == $filials_j[$off]['id'])){
+                                    $bg_col = 'background: rgba(83, 219, 185, 0.5) none repeat scroll 0% 0%;';
+                                }else{
+                                    $bg_col = '';
+                                }
+                                $data .= '
+                                    <li><div onclick="changeUserFilial('.$filials_j[$off]['id'].')" style="'.$bg_col.'">'.$filials_j[$off]['name'].'</div></li>';
+                            }
+                        }*/
+
+                        foreach ($filials_j as $f_id => $filials_j_data) {
+                            if ($_POST['key'] == $filials_j_data['id']){
+                                $bg_col = 'background: rgba(83, 219, 185, 0.5) none repeat scroll 0% 0%;';
+                            }else{
+                                $bg_col = '';
+                            }
+                            $data .= '
+									<li><div onclick="changePaymentFilial('.$_POST['ind'].', '.$filials_j_data['id'].')" style="'.$bg_col.'">'.$filials_j_data['name'].'</div></li>';
+                        }
+
+                    }
+                }
 
 				//Изменить статус онлайн записи
 				if ($_POST['mark'] == 'zapisOnlineStatusChange'){

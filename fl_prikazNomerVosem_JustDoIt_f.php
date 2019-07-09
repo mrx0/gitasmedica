@@ -41,7 +41,7 @@
                     //Получение данных (id в которых надо обновить %) расширенных таблиц РЛ только по указанному табелю
                     $query = "SELECT jcalcex.id, jcalcex.calculate_id FROM `fl_journal_calculate_ex` jcalcex WHERE jcalcex.calculate_id IN (
                       SELECT jcalc.id FROM `fl_journal_calculate` jcalc
-                      LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '".$_POST['tabel_id']."'
+                      LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '".$_POST['tabel_id']."' AND jtabex.noch = '0'
                       WHERE jtabex.calculate_id = jcalc.id AND ({$conditionStr}))";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);

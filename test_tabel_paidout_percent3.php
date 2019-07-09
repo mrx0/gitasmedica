@@ -1,6 +1,6 @@
 <?php
 	
-//test_tabel_paidout_percent2.php
+//test_tabel_paidout_percent3.php
 //
 
     require_once 'header.php';
@@ -21,7 +21,10 @@
 
     $msql_cnnct = ConnectToDB ();
 
+    //Наряды
     $invoices_j = array();
+    //Позиции
+    $invoices_j_ex = array();
 
     //Итоговый массив, куда соберем общие суммы по филиалам
     $itog_filials_summ = array();
@@ -49,18 +52,30 @@
 
         $tabel_j = $arr;
     }
-    var_dump($tabel_j);
+    //var_dump($tabel_j);
 
     $worker_id = $tabel_j['worker_id'];
 
     //Наряды
+//    $query = "
+//            SELECT jcalc.invoice_id, ji.office_id AS filial_id, ji.status AS status
+//            FROM `fl_journal_calculate` jcalc
+//            LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '{$tabel_id }'
+//            LEFT JOIN `journal_invoice` ji ON ji.id = jcalc.invoice_id
+//            WHERE jtabex.calculate_id = jcalc.id
+//            GROUP BY jcalc.invoice_id";
+
+    //Наряды с позициями в нарядах + статус (открыт/закрыт) наряда, + филиал
     $query = "
-            SELECT jcalc.invoice_id, ji.office_id AS filial_id, ji.status AS status
+            SELECT ji_ex.*, ji.office_id AS filial_id, ji.status AS status
             FROM `fl_journal_calculate` jcalc
             LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '{$tabel_id }' AND jtabex.noch = '0'
             LEFT JOIN `journal_invoice` ji ON ji.id = jcalc.invoice_id
+            RIGHT JOIn `journal_invoice_ex` ji_ex ON ji_ex.invoice_id = ji.id  
             WHERE jtabex.calculate_id = jcalc.id
-            GROUP BY jcalc.invoice_id";
+            ORDER BY `ji_ex`.`invoice_id` ASC";
+
+    //var_dump($query);
 
     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -70,8 +85,16 @@
         while ($arr = mysqli_fetch_assoc($res)){
             $invoices_j[$arr['invoice_id']]['filial_id'] = $arr['filial_id'];
             $invoices_j[$arr['invoice_id']]['status'] = $arr['status'];
+
+            $invoices_j_ex[$arr['id']] = $arr;
+
+            //Собираем массив по нарядам, чтоб потом сформировать строку запроса
+
+
+
         }
     }
+    //var_dump($invoices_j_ex);
 
     echo '
 
@@ -96,7 +119,7 @@
             echo '<i class="fa fa-plus" style="color: green; font-size: 120%;"></i>';
         }else{
             echo '<i class="fa fa-minus" style="color: red; font-size: 120%;"></i>';
-            //Добавим наряды, которые не закрыты
+            //Добавим наряды, которые не закрыты в отдельный массив
             array_push($opened_invoices, $invoice_item);
         }
         echo '

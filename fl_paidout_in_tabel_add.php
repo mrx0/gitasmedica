@@ -26,6 +26,7 @@ if ($enter_ok){
 //                }
 
                 $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['tabel_id'], 'id');
+                //var_dump($tabel_j);
 
                 if ($tabel_j != 0){
 
@@ -68,6 +69,7 @@ if ($enter_ok){
 
                     echo '
                                    ] в <a href="'.$link.'?id='.$_GET['tabel_id'].'" class="ahref">табель #'.$_GET['tabel_id'].'</a></h2>
+                                   <div style="font-size: 87%; padding-bottom: 10px; font-weight: bold;"><i>'.WriteSearchUser('spr_workers', $tabel_j[0]['worker_id'], 'user', false).'  ['.$filials_j[$tabel_j[0]['office_id']]['name2'].']  '.$monthsName[$tabel_j[0]['month']].' '.$tabel_j[0]['year'].'</i></div>
                                     Заполните поля
                                 </header>';
 
@@ -81,14 +83,14 @@ if ($enter_ok){
                                         <div class="cellsBlock2">
                                             <div class="cellLeft">
                                             <span style="font-size:80%;  color: #555;">Сумма (руб.)</span><br>
-                                                <input type="text" name="paidout_summ" id="paidout_summ" value="">
+                                                <input type="text" name="paidout_summ" id="paidout_summ" value="" class="paidout_summ2" tabel_id="'.$_GET['tabel_id'].'" autocomplete="off">
                                                 <label id="paidout_summ_error" class="error"></label>
                                             </div>
                                         </div>
                                         
                                         <div class="cellsBlock2">
                                             <div class="cellLeft">
-                                                <select name="SelectFilial" id="SelectFilial">';
+                                                <select name="SelectFilial" id="SelectFilial" disabled>';
 
                     if (!empty($filials_j)) {
                         foreach ($filials_j as $f_id => $filials_j_data) {
@@ -111,8 +113,18 @@ if ($enter_ok){
                                                 <span style="font-size:80%;  color: #555;">Комментарий</span><br>
                                                 <textarea name="descr" id="descr" cols="60" rows="8"></textarea>
                                             </div>
-                                        </div>
-                                        
+                                        </div>';
+
+                    echo '
+                                        <div id="tabelFilialSubtraction">
+                                        </div>';
+
+                    //Сколько денег с какого филиала надо будет снять при выплате ЗП
+                    //returnTabelFilialPaidouts ($_GET['tabel_id']);
+
+
+
+                    echo '                    
                                         <input type="hidden" name="noch" id="noch" value="'.$noch.'">
                                         
                                         <div id="errror"></div>                        

@@ -75,7 +75,7 @@
 
                             foreach ($calcArr as $calcID => $status) {
 
-                                $query .= "INSERT INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`) VALUES ('{$mysqli_insert_id}', '{$calcID}');";
+                                $query .= "INSERT INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`, `noch`) VALUES ('{$mysqli_insert_id}', '{$calcID}', '0');";
 
                                 //$summCalcs += $rezData['summ'];
 

@@ -25,7 +25,7 @@
 
                 $workerID = $_POST['worker_id'];
 
-                $tabels_j = fl_getTabels($_POST['type_id'], $workerID, $_POST['filial_id'], false);
+                $tabels_j = fl_getTabels($_POST['type_id'], $workerID, $_POST['filial_id'], false, false);
 
                     if (!empty($tabels_j)) {
 

@@ -625,7 +625,7 @@
         $type = $arr['type'];
 
         //Сумма рассчетных листов в табеле
-        $query = "SELECT SUM(`summ`) AS `summCalcs`  FROM `fl_journal_calculate` WHERE `id` IN (SELECT `calculate_id` FROM `fl_journal_tabels_ex` WHERE `tabel_id`='{$tabel_id}');";
+        $query = "SELECT SUM(`summ`) AS `summCalcs`  FROM `fl_journal_calculate` WHERE `id` IN (SELECT `calculate_id` FROM `fl_journal_tabels_ex` WHERE `tabel_id`='{$tabel_id}' AND `noch` = '0');";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -674,13 +674,13 @@
 //        $type = $arr['type'];
 
         //Сумма рассчетных листов в табеле
-//        $query = "SELECT SUM(`summ`) AS `summCalcs`  FROM `fl_journal_calculate` WHERE `id` IN (SELECT `calculate_id` FROM `fl_journal_tabels_ex` WHERE `tabel_id`='{$tabel_id}');";
-//
-//        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-//
-//        $arr = mysqli_fetch_assoc($res);
-//
-//        $summCalcs = $arr['summCalcs'];
+        $query = "SELECT SUM(`summ`) AS `summCalcs`  FROM `fl_journal_calculate` WHERE `id` IN (SELECT `calculate_id` FROM `fl_journal_tabels_ex` WHERE `tabel_id`='{$tabel_id}' AND `noch`='1');";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        $arr = mysqli_fetch_assoc($res);
+
+        $summCalcs = $arr['summCalcs'];
 
         //Рассчитаем и обновим ночной баланс табеля
         $query = "SELECT SUM(`summ`) AS `summNoch` FROM `fl_journal_tabels_noch_ex` WHERE `tabel_id`='{$tabel_id}'";
@@ -697,7 +697,7 @@
 //        if ($type == 7){
 //            $query = "UPDATE `fl_journal_tabels` SET `summ_calc` = '" . round($summCalcs, 2) . "', `night_smena` = '" . round($summNight, 2) . "' WHERE `id`='{$tabel_id}';";
 //        }else {
-            $query = "UPDATE `fl_journal_tabels_noch` SET `summ` = '" . round($summNoch, 2) . "' WHERE `id`='{$tabel_id}';";
+            $query = "UPDATE `fl_journal_tabels_noch` SET `summ` = '" . round($summNoch, 2) . "', `summ_calc`='" . round($summCalcs, 2) . "' WHERE `id`='{$tabel_id}';";
 //        }
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -2188,14 +2188,14 @@
     }
 
     //Функция собирает табели
-    function fl_getTabels($type_id, $worker_id, $filial_id, $noch){
+    function fl_getTabels($type_id, $worker_id, $filial_id, $onlynoch, $plus_noch){
 
         $rezult = array();
 
         $msql_cnnct = ConnectToDB2 ();
 
         //Если не ночные
-        if (!$noch) {
+        if (!$onlynoch) {
             //Выберем табели уже существующие для этого работника
 
             //Если для всех филиалов
@@ -2208,6 +2208,9 @@
                 $query = "SELECT * FROM `fl_journal_tabels` WHERE `worker_id`='{$worker_id}' AND `type`='{$type_id}' AND `office_id`='{$filial_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
             }
         }else{
+            //Выберем табели уже существующие для этого работника
+
+            //Если для всех филиалов
             if (($type_id == 0) && ($filial_id == 0)) {
 
                 $query = "SELECT * FROM `fl_journal_tabels_noch` WHERE `worker_id`='{$worker_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
@@ -2217,7 +2220,6 @@
                 $query = "SELECT * FROM `fl_journal_tabels_noch` WHERE `worker_id`='{$worker_id}' AND `type`='{$type_id}' AND `filial_id`='{$filial_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
             }
         }
-
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -2236,9 +2238,34 @@
 
                 array_push($rezult[$arr['year']][$arr['month']], $arr);
             }
-
-            krsort($rezult);
         }
+
+        //Если вместе с ночными
+        if ($plus_noch){
+
+            $query = "SELECT * FROM `fl_journal_tabels_noch` WHERE `worker_id`='{$worker_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0) {
+                while ($arr = mysqli_fetch_assoc($res)) {
+                    //array_push($rez, $arr);
+
+                    if (!isset($rezult[$arr['year']])) {
+                        $rezult[$arr['year']] = array();
+                    }
+                    if (!isset($rezult[$arr['year']][$arr['month']])) {
+                        $rezult[$arr['year']][$arr['month']] = array();
+                    }
+
+                    array_push($rezult[$arr['year']][$arr['month']], $arr);
+                }
+            }
+        }
+
+        krsort($rezult);
 
         return $rezult;
     }

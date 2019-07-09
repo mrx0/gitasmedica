@@ -30,82 +30,32 @@
 
 			$dopQuery = '';
 
-			//Массив с днями недели
-			/*$dayWarr = array(
-				1 => 'ПН',
-				2 => 'ВТ',
-				3 => 'СР',
-				4 => 'ЧТ',
-				5 => 'ПТ',
-				6 => 'СБ',
-				7 => 'ВС',
-			);*/
-			
+            //тип (космет/стомат/...)
+            if (isset($_GET['who'])) {
+                $getWho = returnGetWho($_GET['who'], 5, array(5,6,10));
+            }else{
+                $getWho = returnGetWho(5, 5, array(5,6,10));
+            }
+            //var_dump($getWho);
 
-			//тип график (космет/стомат/...)
-			if (isset($_GET['who'])){
-				if ($_GET['who'] == 'stom'){
-					$who = '&who=stom';
-					$whose = 'Стоматологов ';
-					$selected_stom = ' selected';
-					$selected_cosm = ' ';
-					$datatable = 'scheduler_stom';
-					$kabsForDoctor = 'stom';
-					$type = 5;
-					
-					$stom_color = 'background-color: #fff261;';
-					$cosm_color = '';
-                    $somat_color = '';
-				}elseif($_GET['who'] == 'cosm'){
-					$who = '&who=cosm';
-					$whose = 'Косметологов ';
-					$selected_stom = ' ';
-					$selected_cosm = ' selected';
-					$datatable = 'scheduler_cosm';
-					$kabsForDoctor = 'cosm';
-					$type = 6;
-					
-					$stom_color = '';
-					$cosm_color = 'background-color: #fff261;';
-                    $somat_color = '';
-                }elseif($_GET['who'] == 'somat'){
-                    $who = '&who=somat';
-                    $whose = 'Специалистов ';
-                    $selected_stom = ' ';
-                    $selected_cosm = ' selected';
-                    $datatable = 'scheduler_somat';
-                    $kabsForDoctor = 'somat';
-                    $type = 10;
+            $who = $getWho['who'];
+            $whose = $getWho['whose'];
+            $selected_stom = $getWho['selected_stom'];
+            $selected_cosm = $getWho['selected_cosm'];
+            $datatable = $getWho['datatable'];
+            $kabsForDoctor = $getWho['kabsForDoctor'];
+            $type = $getWho['type'];
 
-                    $stom_color = '';
-                    $cosm_color = '';
-                    $somat_color = 'background-color: #fff261;';
-				}else{
-					$who = '&who=stom';
-					$whose = 'Стоматологов ';
-					$selected_stom = ' selected';
-					$selected_cosm = ' ';
-					$datatable = 'scheduler_stom';
-					$kabsForDoctor = 'stom';
-					$type = 5;
-					
-					$stom_color = 'background-color: #fff261;';
-					$cosm_color = '';
-                    $somat_color = '';
-				}
-			}else{
-				$who = '&who=stom';
-				$whose = 'Стоматологов ';
-				$selected_stom = ' selected';
-				$selected_cosm = ' ';
-				$datatable = 'scheduler_stom';
-				$kabsForDoctor = 'stom';
-				$type = 5;
-				
-				$stom_color = 'background-color: #fff261;';
-				$cosm_color = '';
-                $somat_color = '';
-			}
+            $stom_color = $getWho['stom_color'];
+            $cosm_color = $getWho['cosm_color'];
+            $somat_color = $getWho['somat_color'];
+            $admin_color = $getWho['admin_color'];
+            $assist_color = $getWho['assist_color'];
+            $sanit_color = $getWho['sanit_color'];
+            $ubor_color = $getWho['ubor_color'];
+            $dvornik_color = $getWho['dvornik_color'];
+            $other_color = $getWho['other_color'];
+            $all_color = $getWho['all_color'];
 			
 			//Филиал
 
@@ -247,21 +197,20 @@
 									Начиная с <input id="SelectDayShedOptions" type="number" value="1" min="1" max="31" size="2" style="width: 40px;"> числа
 								</div>
 								<div s  tyle="margin-bottom: 18px;">
-                                    <span style="color: red;">Выбор филиалов временнно не работает</span><br>';
+                                    <span style="color: rgba(82, 81, 81, 0.93);">Выберите филиалы, которые хотите изменить</span><br><br>';
 
-                echo '<input type="checkbox" id="fullAll" name="fullAll" class="fullType" value="1" checked> Все<br>';
+                echo '<input type="checkbox" id="fullAll" name="fullAll" class="fullType" value="1"> Все<br>';
 
                 if (!empty($filials_j)){
                     foreach ($filials_j as $filials_j_data) {
-                        echo '<input type="checkbox" id="filial_'.$filials_j_data['id'].'" name="filial_'.$filials_j_data['id'].'" class="fullType filialItem" value="1" checked> '.$filials_j_data['name'].'<br>';
-
+                        echo '<input type="checkbox" id="filial_'.$filials_j_data['id'].'" name="filials_chckd[]" filial_id="'.$filials_j_data['id'].'" class="fullType filialItem" value="'.$filials_j_data['id'].'"> '.$filials_j_data['name'].'<br>';
                     }
                 }
 
 
                 echo '
 				                </div>
-								<div style="margin-bottom: 18px;">
+								<div style="margin-top: 10px; margin-bottom: 18px;">
 									Игнорировать существующий график <input type="checkbox" name="ignoreshed" id="ignoreshed" value="1">
 								</div>
 								<input type="button" class="b" value="Применить" onclick="if (iCanManage) Ajax_change_shed()">
@@ -271,9 +220,9 @@
 			echo '
 						<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
 						<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-							<a href="?who=stom" class="b" style="'.$stom_color.'">Стоматологи</a>
-							<a href="?who=cosm" class="b" style="'.$cosm_color.'">Косметологи</a>
-							<a href="?who=somat" class="b" style="'.$somat_color.'">Специалисты</a>
+							<a href="?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
+							<a href="?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>
+							<a href="?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
 						</li>	
 						<li>
 							<div style="display: inline-block; margin-right: 20px;">

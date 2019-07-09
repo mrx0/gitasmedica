@@ -175,7 +175,7 @@
                             GROUP_CONCAT(DISTINCT jcalcex.percent_cats ORDER BY jcalcex.percent_cats ASC SEPARATOR ',') AS percent_cats 
                             FROM `fl_journal_calculate` jcalc
                             LEFT JOIN `fl_journal_calculate_ex` jcalcex ON jcalc.id = jcalcex.calculate_id
-                            LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '".$tabel_j[0]['id']."'
+                            LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '".$tabel_j[0]['id']."' AND jtabex.noch = '1'
                             WHERE jtabex.calculate_id = jcalc.id
                             GROUP BY jcalc.id";
 
@@ -831,18 +831,18 @@
 //                                        </div>';
 //                        }
 //                        //Админы, ассистенты
-//                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7)) {
-//                            if ($tabel_j[0]['type'] == 7){
-//                                echo '
-//                                        <div style="font-size: 90%; background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-//                                            Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ_calc'] . '</span> руб.
-//                                        </div>';
-//                            }
-//                            echo '
-//                                        <div style="background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-//                                            Рассчёт: <span class="calculateOrder" style="font-size: 13px">' . ($tabel_j[0]['summ'] + $tabel_j[0]['summ_calc']) . '</span> руб.
-//                                        </div>';
-//                        }
+                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7)) {
+                            if ($tabel_j[0]['type'] == 7){
+                                echo '
+                                        <div style="font-size: 90%; background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
+                                            Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ_calc'] . '</span> руб.
+                                        </div>';
+                            }
+                            echo '
+                                        <div style="background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
+                                            Рассчёт: <span class="calculateOrder" style="font-size: 13px">' . ($tabel_j[0]['summ'] + $tabel_j[0]['summ_calc']) . '</span> руб.
+                                        </div>';
+                        }
 
 
 //                        echo '
@@ -964,9 +964,9 @@
                         //Общая сумма, которую осталось выплатить = сумма (РЛ) + надбавки + за ночь + пустые смены - вычеты - оплачено - выплачено
                         $summItog = $tabel_j[0]['summ'] - $tabel_j[0]['paidout'];
                         //Если ассистент, то плюсуем сумму за РЛ
-//                        if ($tabel_j[0]['type'] == 7){
-//                            $summItog += $tabel_j[0]['summ_calc'];
-//                        }
+                        if ($tabel_j[0]['type'] == 7){
+                            $summItog += $tabel_j[0]['summ_calc'];
+                        }
 
                         echo '
                                         <div style="background-color: rgba(56, 245, 70, 0.36); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
@@ -993,7 +993,7 @@
                         }*/
 
                         echo '
-                                                <a href="fl_tabel_print.php?tabel_id=' . $tabel_j[0]['id'] . '" class="b" style="font-size: 80%;" >Распечатать</a>';
+                                                <a href="fl_tabel_print.php?tabel_id=' . $tabel_j[0]['id'] . '&noch=1" class="b" style="font-size: 80%;" >Распечатать</a>';
 
                         echo '
                                             </div>
@@ -1001,19 +1001,19 @@
 
 
 //                        //Врачи
-//                        if (($tabel_j[0]['type'] == 5) || ($tabel_j[0]['type'] == 6) || ($tabel_j[0]['type'] == 10) || ($tabel_j[0]['type'] == 7)) {
-//                            //Выводим
-//                            //Расчетные листы
-//                            echo '
-//                                <div style="border: 1px dotted #b3c0c8; display: block; font-size: 12px; padding: 2px; margin-right: 10px; margin-bottom: 10px; vertical-align: top;">
-//                                    <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
-//                                        Расчётные листы <div id="allCalcsIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allCalcsIsHere\');">показать/скрыть</div>
-//                                    </div>
-//                                    <div id="allCalcsIsHere" style="">
-//                                        ' . $rezult . '
-//                                    </div>
-//                                </div>';
-//                        }
+                        if (($tabel_j[0]['type'] == 5) || ($tabel_j[0]['type'] == 6) || ($tabel_j[0]['type'] == 10) || ($tabel_j[0]['type'] == 7)) {
+                            //Выводим
+                            //Расчетные листы
+                            echo '
+                                <div style="border: 1px dotted #b3c0c8; display: block; font-size: 12px; padding: 2px; margin-right: 10px; margin-bottom: 10px; vertical-align: top;">
+                                    <div style="font-size: 90%;  color: #555; margin-bottom: 10px; margin-left: 2px;">
+                                        Расчётные листы <div id="allCalcsIsHere_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allCalcsIsHere\');">показать/скрыть</div>
+                                    </div>
+                                    <div id="allCalcsIsHere" style="">
+                                        ' . $rezult . '
+                                    </div>
+                                </div>';
+                        }
 
                         echo '	
 			                    <input type="hidden" name="noch" id="noch" value="1">

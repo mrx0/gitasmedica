@@ -770,13 +770,65 @@
 					<script>
 					
 						$(function() {
-							$("#SelectFilial").change(function(){
+//							$("#SelectFilial").change(function(){
+//							    
+//							    blockWhileWaiting (true);
+//							    
+//								//var dayW = document.getElementById("SelectDayW").value;
+//								document.location.href = "?filial="+$(this).val()+"'.$who.'";
+//							});
+
+                            $("#SelectFilial").change(function(){
 							    
 							    blockWhileWaiting (true);
 							    
-								//var dayW = document.getElementById("SelectDayW").value;
-								document.location.href = "?filial="+$(this).val()+"'.$who.'";
+							    var get_data_str = "";
+							    
+                                //!!!Получение данных из GET тест
+                                /*var params = window
+                                    .location
+                                    .search
+                                    .replace("?","")
+                                    .split("&")
+                                    .reduce(
+                                        function(p,e){
+                                            var a = e.split(\'=\');
+                                            p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+                                            return p;
+                                        },
+                                        {}
+                                    );*/
+                                
+                                //console.log(params["data"]);
+                                //выведет в консоль значение  GET-параметра data
+                                //console.log(params);
+                                
+                                var params = window
+                                    .location
+                                    .search
+                                    .replace("?","")
+                                    .split("&")
+                                    .reduce(
+                                        function(p,e){
+                                            var a = e.split(\'=\');
+                                            p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+                                            return p;
+                                        },
+                                        {}
+                                    );
+                                //console.log(params);
+                                                                
+                                for (key in params) {
+                                    if (key.indexOf("filial") == -1){
+                                        get_data_str = get_data_str + "&" + key + "=" + params[key];
+                                    }
+                                }
+                                //console.log(get_data_str);
+							    
+								document.location.href = "?filial="+$(this).val() + get_data_str;
+								
 							});
+							
 							$("#SelectDayW").change(function(){
 							
 							    blockWhileWaiting (true);

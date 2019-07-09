@@ -114,7 +114,7 @@ if ($enter_ok){
                     $msql_cnnct = ConnectToDB2 ();
 
                     //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
-                    $query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc WHERE jcalc.id IN (SELECT `calculate_id` FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."');";
+                    $query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc WHERE jcalc.id IN (SELECT `calculate_id` FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."' AND `noch` = '0');";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
