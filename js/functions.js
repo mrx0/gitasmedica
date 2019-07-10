@@ -1125,7 +1125,7 @@
                     //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
                 },
                 success: function (res) {
-                	console.log(res);
+                	//console.log(res);
 
                     $("#errrror").html(res.data);
                     if (res.result == 'success') {
@@ -10588,7 +10588,7 @@
 
 	//!!! пример работы пауза между нажатиями
     //$('.paidout_summ2'). on("keyup", function() {
-    $("body").on("keyup", ".paidout_summ2", function (e) {
+    $("body").on("keyup change", ".paidout_summ2", function (e) {
     	console.log(e.keyCode);
 
 		//Если только цифры, delete, backspase
