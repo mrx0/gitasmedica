@@ -90,7 +90,7 @@
                                 echo '
                                                     <span class="info" style="font-size: 100%; cursor: pointer;" title="Удалить" onclick="fl_deleteTabelItem('.$_GET['id'].');" ><i class="fa fa-trash-o" aria-hidden="true"></i></span>';
                             }else{
-                                if ($finances['close'] == 1) {
+                                if ($tabel_j[0]['status'] == 9){
                                     echo '<br><i style="color:red;">Удалён (заблокирован).</i><br>';
                                 }
                             }
@@ -100,7 +100,9 @@
                             if ($tabel_j[0]['status'] == 7) {
                                 echo ' <span style="color: green">Проведён <i class="fa fa-check" aria-hidden="true" style="color: green;"></i></span>';
 
-                                echo '<span style="margin-left: 20px; font-size: 60%; color: red; cursor:pointer;" onclick="deployTabelDelete(' . $_GET['id'] . ');">Снять отметку о проведении <i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 150%;"></i></span>';
+                                if (($finances['reopen'] == 1) || ($god_mode)){
+                                    echo '<span style="margin-left: 20px; font-size: 60%; color: red; cursor:pointer;" onclick="deployTabelDelete(' . $_GET['id'] . ');">   Снять отметку о проведении <i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 150%;"></i></span>';
+                                }
 
                             } else {
                                 echo '<span style="margin-left: 20px; font-size: 60%; color: red;">Не проведён </span>';
