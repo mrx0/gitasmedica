@@ -2206,6 +2206,7 @@
             // действие, при ответе с сервера
             success:function(res){
                 //console.log(res.data);
+                //$('#data').html(res)
 
                 if(res.result == 'success') {
                     //console.log('success');
@@ -2213,7 +2214,12 @@
 
                     blockWhileWaiting (true);
 
-                    document.location.href = link_res+"?id="+tabel_id;
+                    if (paidoutData['deploy']) {
+                        deployTabel(tabel_id);
+                        document.location.href = link_res+"?id="+tabel_id;
+                    }else {
+                        document.location.href = link_res + "?id=" + tabel_id;
+                    }
                 }else{
                     //console.log('error');
                     $('#errror').html(res.data);
@@ -2511,11 +2517,21 @@
     }
 
     //Промежуточная функция для выплаты
-    function fl_showPaidoutAdd (paidout_id, tabel_id, type, link, mode){
+    function fl_showPaidoutAdd (paidout_id, tabel_id, type, worker_id, month, year, link, mode, deploy){
         //console.log(mode);
 
         //убираем ошибки
         hideAllErrors ();
+
+        var filials_subtractions = {};
+        //Соберём суммы для вычетов со всех филиалов
+        $('.filial_subtraction').each(function(){
+            if ($(this).val() > 0) {
+                filials_subtractions[$(this).attr('filial_id')] = Number($(this).val());
+            }
+        });
+        // console.log(filials_subtractions);
+        // console.log(JSON.stringify(filials_subtractions));
 
         var paidout_summ = $('#paidout_summ').val();
         var descr = $('#descr').val();
@@ -2525,11 +2541,17 @@
         var paidoutData = {
             tabel_id: tabel_id,
             type: type,
+            worker_id: worker_id,
+            month: month,
+            year: year,
             paidout_summ: paidout_summ,
             noch: noch,
             descr:descr,
-            filial_id: filial_id
+            filial_id: filial_id,
+            deploy: deploy,
+            subtractions: filials_subtractions
         };
+        //console.log(paidoutData);
 
         //проверка данных на валидность
         $.ajax({

@@ -20,6 +20,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         $tabel_id = $_POST['tabel_id'];
         //Сумма, которую хотим выдать сейчас (аванс, зп... не важно)
         $iWantMyMoney = $_POST['summ'];
+        //Сумма которая в табеле
+        $paidout_summ_tabel = $_POST['paidout_summ_tabel'];
 
         $tabel_j = array();
 
@@ -126,9 +128,15 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 $invoices_ids_str = implode(' OR ', $invoices_ids_arr);
 
                 //Получаем все оплаты по всем нарядам
+                //С ограничениями по датам внесения
+//                $query = "
+//                    SELECT jp.*
+//                    FROM `journal_payment` jp
+//                    WHERE MONTH(jp.date_in) = '{$tabel_j['month']}' AND YEAR(jp.date_in) = '{$tabel_j['year']}' AND ({$invoices_ids_str})";
+                //Без ограничений
                 $query = "
-                    SELECT *
-                    FROM `journal_payment`
+                    SELECT jp.*
+                    FROM `journal_payment` jp
                     WHERE ({$invoices_ids_str})";
                 //var_dump($query);
 
@@ -293,8 +301,10 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 //var_dump(array_sum($summ4ZP));
 
 
-                //!!!Временно введём данные, будто мы уже выдавали аванс
-                //Потом тут надо будет сделать получение этих данных из БД
+                //Получаем данные из БД о выдачах по этим нарядам, будто мы уже выдавали аванс
+                //!!!!! НЕ ПРАВИЛЬНО !!! РАСЧЕТ ТОЛЬКО В ПРЕДЕЛАХ ОДНОГО ТАБЕЛЯ!!!
+
+                //fl_journal_filial_subtractions
                 //        $summ4ZP_prev = array(
                 //            19 => 9091,
                 //            16 => 909
@@ -353,7 +363,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         //Если мы посчитали, что с этого филиала будем выдавать столько, то пожалуйста
                         if (isset($filial_subtraction[$f_id])) {
                             $value = round($filial_subtraction[$f_id]);
-                            $fontcolor_str = 'font-weight: bold; color: rgba(3, 14, 79, 0.96);';
+                            $fontcolor_str = ' background: #FFF; color: rgba(3, 14, 79, 0.96); font-weight: bold;';
                             $placeholder = '';
                         }
                         echo '<td><div class="button_tiny" style="width: 100px; font-size: 75%; cursor: pointer; ' . $fontcolor_str . '" onclick="allSubtractionInHere(' . $f_id . ', ' . array_sum($filial_subtraction) . ');">' . $filials_j_data['name2'] . '<i class="fa fa-chevron-right" style="color: green; float: right;" aria-hidden="true"></i></div></td>';
@@ -372,10 +382,10 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                 echo '
                     </table>
-                    <div class="button_tiny" style="width: 100px; font-size: 75%; cursor: pointer;" onclick="tabelSubtractionPercent(' . $tabel_id . ', ' . $iWantMyMoney . ');">По умолчанию</div>
+                    <div class="button_tiny" style="width: 100px; font-size: 75%; cursor: pointer;" onclick="tabelSubtractionPercent(' . $tabel_id . ', ' . $iWantMyMoney . ', '.$paidout_summ_tabel.');">По умолчанию</div>
                     <div style="width: 250px; background-color: #EEE; border: 1px dotted #CCC; margin: 10px; padding: 5px; font-size: 85%;">
-                        Всего: <span id="fil_sub_sum" style="font-weight: bold;">' . array_sum($filial_subtraction) . '</span>
-                        <span id="fil_sub_msg"></span>
+                        <div>Всего: <span id="fil_sub_sum" style="font-weight: bold;">' . array_sum($filial_subtraction) . '</span></div>
+                        <div><span id="fil_sub_msg"></span></div>
                     </div>
                     <input type="hidden" id="iWantMyMoney" value="' . $iWantMyMoney . '">';
             }
