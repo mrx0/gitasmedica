@@ -10559,7 +10559,7 @@
             $("#paidout_summ_error").show();
 		}else {
 
-            var link = "tabel_subtraction_percent2_f.php";
+            var link = "tabel_subtraction_percent3_f.php";
 
             var reqData = {
                 tabel_id: tabel_id,

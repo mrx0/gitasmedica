@@ -984,9 +984,17 @@
                                                 if ($itog_price < 0) $itog_price = 0;
 
                                                 //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
-                                                $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent, $summ_special);
-                                            }
+                                                $pos_summ = calculateResult($itog_price, $work_percent, $material_percent, $summ_special);
 
+                                                //Сумма одной позиции
+                                                $calculateCalcSumm += $pos_summ;
+
+                                                //Добавляем в базу
+                                                $query = "UPDATE `fl_journal_calculate_ex` SET  `summ` = '{$pos_summ}' WHERE `id`='{$items['id']}'";
+
+                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                                            }
                                             /*if (isset($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind])){
                                                 $mkb_data = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind];
                                                 foreach ($mkb_data as $mkb_id){
@@ -1068,7 +1076,9 @@
 
                         //Обновим сумму в расчете
                         if ($calculateInvSumm > 0) {
+
                             $query = "UPDATE `fl_journal_calculate` SET `summ_inv`='{$calculateInvSumm}', `summ`='{$calculateCalcSumm}' WHERE `id`='{$data['calculate_id']}'";
+
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
                         }
 
@@ -1947,13 +1957,6 @@
 
                         if ($guarantee == 0) {
 
-                            //Добавляем в базу
-                            $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`, `summ_special`) 
-                                                VALUES (
-                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}', '{$summ_special}')";
-
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
                             $price = $price * $quantity;
 
                             $price = ($price - ($price * $discount / 100));
@@ -1981,7 +1984,20 @@
                             if ($itog_price < 0) $itog_price = 0;
 
                             //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
-                            $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent, $summ_special);
+
+                            //Сумма одной позиции
+                            $pos_summ = calculateResult($itog_price, $work_percent, $material_percent, $summ_special);
+
+                            $calculateCalcSumm += $pos_summ;
+
+                            //Добавляем в базу
+                            $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`, `summ`, `summ_special`) 
+                                                VALUES (
+                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}', '{$pos_summ}', '{$summ_special}')";
+
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+
                         }
                     }
 
@@ -2028,13 +2044,6 @@
 
                     if ($guarantee == 0) {
 
-                        //Добавляем в базу
-                        $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`, `summ_special`) 
-                                                VALUES (
-                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}', '{$summ_special}')";
-
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
                         $price = $price * $quantity;
 
                         $price = ($price - ($price * $discount / 100));
@@ -2061,8 +2070,19 @@
 
                         if ($itog_price < 0) $itog_price = 0;
 
+                        //Сумма одной позиции
+                        $pos_summ = calculateResult($itog_price, $work_percent, $material_percent, $summ_special);
+
                         //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
-                        $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent, $summ_special);
+                        $calculateCalcSumm += $pos_summ;
+
+                        //Добавляем в базу
+                        $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`, `summ`, `summ_special`) 
+                                                VALUES (
+                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}', '{$pos_summ}', '{$summ_special}')";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
                     }
 
 

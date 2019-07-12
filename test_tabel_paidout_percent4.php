@@ -63,8 +63,6 @@
 
 
     //Получаем табель
-    //!!!по сути нам это надо только для того, чтоб получить id worker'a
-    //!!!в будущем надо убрать и получать id через POST, как и id табеля
     $query = "SELECT * FROM `fl_journal_tabels` WHERE `id` = '{$tabel_id}' LIMIT 1";
 
     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
