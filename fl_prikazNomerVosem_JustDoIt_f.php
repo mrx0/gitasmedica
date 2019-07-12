@@ -68,6 +68,10 @@
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
+                        //!!! 2019.07.2019 хотел сюда добавить пересчет РЛ, но не стал. Там далее оно пересчитывается вроде как
+                        //fl_updateCalculatesData ($invoice_id, $mat_cons_j_ex, $deleteMark)
+
+
                         //Ф-ция для получения кол-ва Update'нутых строк, тут не используется сейчас,
                         //но мало ли надо будет потом
                         //affected_rows

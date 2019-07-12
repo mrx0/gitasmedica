@@ -414,35 +414,6 @@ if ($enter_ok){
                             }
                         }
 
-                        //var_dump($_SESSION);
-                        //var_dump($_SESSION['test']);
-                        //var_dump($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data']);
-                        //var_dump($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['worker']);
-                        //var_dump($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['mkb']);
-                        //var_dump($query);
-
-                        //Для МКБ
-                        //$query = "SELECT * FROM `journal_invoice_ex_mkb` WHERE `invoice_id`='".$_GET['invoice_id']."';";
-                        //var_dump ($query);
-
-                        /*$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                        $number = mysqli_num_rows($res);
-                        if ($number != 0){
-                            while ($arr = mysqli_fetch_assoc($res)){
-                                if (!isset($invoice_ex_j_mkb[$arr['ind']])){
-                                    $invoice_ex_j_mkb[$arr['ind']] = array();
-                                    array_push($invoice_ex_j_mkb[$arr['ind']], $arr);
-                                }else{
-                                    array_push($invoice_ex_j_mkb[$arr['ind']], $arr);
-                                }
-                            }
-                        }else
-                            $invoice_ex_j_mkb = 0;*/
-                        //var_dump ($invoice_ex_j_mkb);
-                        //var_dump ($temp_arr);
-                        //var_dump ($invoice_j[0]['summ']);
-                        //var_dump ($invoice_j[0]['summins']);
-                        //var_dump ($calculate_summ_inv);
 
                         echo '
 								<div id="data">';
