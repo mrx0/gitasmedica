@@ -32,6 +32,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         //Наряды с данными
         $invoices_j = array();
+        //Позиции из РЛов, которые в табеле
+        $calculates_j_ex = array();
         //Позиции в нарядах
         $invoices_j_ex = array();
         //ID нарядов
@@ -72,7 +74,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         //Получаем табель
         //!!!по сути нам это надо только для того, чтоб получить id worker'a
         //!!!в будущем надо убрать и получать id через POST, как и id табеля
-        $query = "SELECT * FROM `fl_journal_tabels` WHERE `id` = '{$tabel_id}' LIMIT 1";
+        $query = "SELECT `type`, `month`, `year`, `worker_id`, `summ_calc`, `surcharge` FROM `fl_journal_tabels` WHERE `id` = '{$tabel_id}' LIMIT 1";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -93,12 +95,48 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         //var_dump($tabel_j);
         //var_dump($summ4ZP_All);
 
+        //!!! временно, сумма позиций всех РЛ, которые во всех нарядах
+//        $r = 0;
 
         if (!empty($tabel_j)) {
             //if ($tabel_j['type'] == 5) {
-                //Наряды с позициями в нарядах + статус (открыт/закрыт) наряда, + филиал
+
+                //Все позиции в РЛах, которые в табеле на данный момент
                 $query = "
-                    SELECT ji_ex.*, ji.office_id AS filial_id, ji.status AS status, jcalc_ex.
+                    SELECT `inv_pos_id`, `summ`
+                    FROM `fl_journal_calculate_ex` 
+                    WHERE `calculate_id` IN (
+                      SELECT `calculate_id` 
+                      FROM `fl_journal_tabels_ex` 
+                      WHERE `tabel_id` = '{$tabel_id}'
+                    )";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0) {
+                    while ($arr = mysqli_fetch_assoc($res)) {
+                        array_push($calculates_j_ex, $arr);
+                        //array_push($invoices_ids_arr, "`invoice_id`='" . $arr['invoice_id'] . "'");
+                    }
+                }
+//                var_dump($query);
+//                var_dump($calculates_j_ex);
+
+                //Наряды с позициями в нарядах + статус (открыт/закрыт) наряда, + филиал + цены за каждую позицию в зп
+//                $query = "
+//                    SELECT ji_ex.invoice_id, ji.office_id AS filial_id, ji.status AS status, jcalc_ex.summ AS pos_sum
+//                    FROM `fl_journal_calculate` jcalc
+//                    LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '{$tabel_id }' AND jtabex.noch = '0'
+//                    LEFT JOIN `journal_invoice` ji ON ji.id = jcalc.invoice_id
+//                    RIGHT JOIN `journal_invoice_ex` ji_ex ON ji_ex.invoice_id = ji.id
+//                    LEFT JOIN `fl_journal_calculate_ex` jcalc_ex ON jcalc_ex.inv_pos_id = ji_ex.id
+//                    WHERE jtabex.calculate_id = jcalc.id
+//                    ORDER BY `ji_ex`.`invoice_id` ASC";
+
+                $query = "
+                    SELECT ji_ex.invoice_id, ji.office_id AS filial_id, ji.status AS status, jcalc_ex.summ AS pos_sum
                     FROM `fl_journal_calculate` jcalc
                     LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '{$tabel_id }' AND jtabex.noch = '0'
                     LEFT JOIN `journal_invoice` ji ON ji.id = jcalc.invoice_id
@@ -114,14 +152,16 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 if ($number != 0) {
                     while ($arr = mysqli_fetch_assoc($res)) {
                         array_push($invoices_j_ex, $arr);
-
+//                        $r += $arr['pos_sum'];
                         array_push($invoices_ids_arr, "`invoice_id`='" . $arr['invoice_id'] . "'");
                     }
                 }
-                //var_dump($invoices_j_ex);
+
+//                var_dump($r);
+                var_dump($invoices_j_ex);
                 //var_dump($invoices_ids_arr);
 
-                //Оставим только уникальные ID
+                //Оставим только уникальные ID нарядов
                 $invoices_ids_arr = array_unique($invoices_ids_arr);
                 //var_dump($invoices_ids_arr);
 

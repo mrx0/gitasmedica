@@ -334,7 +334,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                //console.log(res);
+                console.log(res);
                 $('.center_block').remove();
                 $('#overlay').hide();
 
