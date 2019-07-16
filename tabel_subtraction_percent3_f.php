@@ -158,7 +158,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 }
 
 //                var_dump($r);
-                var_dump($invoices_j_ex);
+                //var_dump($invoices_j_ex);
                 //var_dump($invoices_ids_arr);
 
                 //Оставим только уникальные ID нарядов
