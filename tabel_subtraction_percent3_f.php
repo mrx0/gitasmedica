@@ -20,6 +20,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         $tabel_id = $_POST['tabel_id'];
         //Сумма, которую хотим выдать сейчас (аванс, зп... не важно)
         $iWantMyMoney = $_POST['summ'];
+        //Переменная для "отсыпания" денег по филиалам и позициям
+        $iWantMyMoney_temp = $iWantMyMoney;
         //Сумма которая в табеле
         $paidout_summ_tabel = $_POST['paidout_summ_tabel'];
 
@@ -73,6 +75,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         $pos_subtraction = array();
         //Общие суммы по филиалам, которые будем выдавать, опираясь на суммы позиций РЛ
         $pos_subtraction_summ_filials = array();
+        //Временный массив, содержащий суммы, которые можно и нужно будет вычесть
+        //после того, как распределим желаемую сумму $iWantMyMoney (если она отличается от фактической)
+        $pos_subtraction_temp = array();
 
 
         //Получаем табель
@@ -351,35 +356,6 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 //Просто для самоконтроля
                 //var_dump(array_sum($summ4ZP));
 
-
-                //Получаем данные из БД о выдачах по этим нарядам, будто мы уже выдавали аванс
-                //!!!!! НЕ ПРАВИЛЬНО !!! РАСЧЕТ ТОЛЬКО В ПРЕДЕЛАХ ОДНОГО ТАБЕЛЯ!!!
-
-                //fl_journal_filial_subtractions
-                //        $summ4ZP_prev = array(
-                //            19 => 9091,
-                //            16 => 909
-                //        );
-
-                //var_dump($summ4ZP_prev);
-
-                //Если ранее были выплаты по этому табелю, то вычтем эти суммы из итоговых остатков,
-                //доступных к выдаче денег
-                //!!!!! НЕ ПРАВИЛЬНО !!! РАСЧЕТ ТОЛЬКО В ПРЕДЕЛАХ ОДНОГО ТАБЕЛЯ!!!
-                //2019.07.15 выключено, так как переходим на расчет по позициям РЛ
-//                if (!empty($summ4ZP_prev)) {
-//                    foreach ($summ4ZP_prev as $filial_id => $summ) {
-//                        if (isset($summ4ZP[$filial_id])) {
-//                            $summ4ZP[$filial_id] -= $summ;
-//                        }
-//                    }
-//                }
-                //echo '<span style="font-size: 85%;"><b>Ключевое2 !</b> Сколько ВСЕГО надо БУДЕТ в итоге выдать с каждого филиала из общего объема денег. ПОСЛЕ вычета того, что уже с этих филиалов вычли</span>';
-                //var_dump($summ4ZP);
-                //Просто для самоконтроля
-                //var_dump(array_sum($summ4ZP));
-
-
                 //Посчитаем, сколько откуда реально выдадим с учетом суммы,
                 //которую реально хотим выдать $iWantMyMoney
                 //!!!!! НЕ ПРАВИЛЬНО !!! РАСЧЕТ ТОЛЬКО В ПРЕДЕЛАХ ОДНОГО ТАБЕЛЯ!!!
@@ -409,31 +385,75 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         if (!isset($pos_subtraction[$inv_pos_id][$filial_id])) {
                             $pos_subtraction[$inv_pos_id][$filial_id] = 0;
                         }
-                        $pos_subtraction[$inv_pos_id][$filial_id] = $summ / 100 * $percent;
+                        $pos_subtraction[$inv_pos_id][$filial_id] = round(($summ / 100 * $percent), 7);
                     }
                 }
-                //var_dump($pos_subtraction);
+//                var_dump('$pos_subtraction_1');
+//                var_dump($pos_subtraction);
+
+
+                //Получаем данные из БД о выдачах по этим нарядам, будто мы уже выдавали аванс
+                $summ4ZP_prev = array(
+                    277464 => array(
+                        19 => 269.3865815,
+                        16 => 11.6734185
+                    ),
+                    277465 => array(
+                        19 => 4144.4089457,
+                        16 => 179.5910543
+                    ),
+                    277466 => array(
+                        19 => 394.94,
+                        16 => 0
+                    ),
+                    277468 => array(
+                        19 => 0,
+                        16 => 0
+                    ),
+                    277469 => array(
+                        19 => 0,
+                        16 => 0
+                    ),
+                    277467 => array(
+                        19 => 0,
+                        16 => 0
+                    )
+                );
+//                var_dump('$summ4ZP_prev');
+//                var_dump($summ4ZP_prev);
+
+                //Если ранее были выплаты по этому табелю, то вычтем эти суммы из итоговых остатков,
+                //доступных к выдаче денег
+                if (!empty($summ4ZP_prev)) {
+                    foreach ($pos_subtraction as $inv_pos_id => $filials) {
+                        foreach ($filials as $filial_id => $summ){
+                            if (isset($summ4ZP_prev[$inv_pos_id])){
+                                if (isset($summ4ZP_prev[$inv_pos_id][$filial_id])){
+                                    if ($summ4ZP_prev[$inv_pos_id][$filial_id] > 0){
+//                                        var_dump($inv_pos_id);
+//                                        var_dump($filial_id);
+//                                        var_dump(number_format($pos_subtraction[$inv_pos_id][$filial_id], 7));
+//                                        var_dump(number_format($summ4ZP_prev[$inv_pos_id][$filial_id], 7));
+//                                        var_dump(number_format(number_format($pos_subtraction[$inv_pos_id][$filial_id], 7) - number_format($summ4ZP_prev[$inv_pos_id][$filial_id], 7));
+                                        $pos_subtraction[$inv_pos_id][$filial_id] = $pos_subtraction[$inv_pos_id][$filial_id] - $summ4ZP_prev[$inv_pos_id][$filial_id];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                //echo '<span style="font-size: 85%;"><b>Ключевое2 !</b> Сколько ВСЕГО надо БУДЕТ в итоге выдать с каждого филиала из общего объема денег. ПОСЛЕ вычета того, что уже с этих филиалов вычли</span>';
+                var_dump('$pos_subtraction_2');
+                var_dump($pos_subtraction);
+                //Просто для самоконтроля
+                var_dump(array_sum($pos_subtraction));
+
+
+
 
                 //!! ПО КАЖДОЙ ПОЗИЦИИ КАЖДОГО РЛ
                 //Посчитаем, сколько откуда можем выдать с учетом суммы,
                 //которую реально хотим выдать $iWantMyMoney
-                //Переменная для "отсыпания" денег по филиалам и позициям
-                $iWantMyMoney_temp = $iWantMyMoney;
-                //Временный массив, содержащий суммы, которые можно и нужно будет вычесть
-                //после того, как распределим желаемую сумму $iWantMyMoney (если она отличается от фактической)
-                $pos_subtraction_temp = array();
-
-//                foreach ($pos_subtraction as $inv_pos_id => $filials){
-//                    foreach ($filials as $filial_id => $summ){
-//                        //var_dump($summ);
-//                        if ($iWantMyMoney_temp > 0){
-//                            if (!isset($pos_subtraction_summ_filials_temp[$filial_id])) {
-//                                $pos_subtraction_summ_filials_temp[$filial_id] = 0;
-//                            }
-//                        }
-//                    }
-//                }
-
                 foreach ($pos_subtraction as $inv_pos_id => $filials) {
                     foreach ($filials as $filial_id => $summ){
                         if (!isset($pos_subtraction_temp[$inv_pos_id])) {
@@ -452,12 +472,12 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                                 $iWantMyMoney_temp = 0;
 
-                                break;
+                                //break;
                             }
                         }
                     }
                 }
-                var_dump($pos_subtraction_temp);
+                //var_dump($pos_subtraction_temp);
 
 
                 //Посчитаем общие суммы по филиалам, откуда сколько будем выдавать
@@ -470,6 +490,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                     }
                 }
                 var_dump($pos_subtraction_summ_filials);
+                //!! проверка самого себя сумма общая, которую выдадим со всех филиалов
+                var_dump(intval(array_sum($pos_subtraction_summ_filials)));
 
                 echo '
                     <table>';

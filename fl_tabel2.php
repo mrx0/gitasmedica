@@ -23,6 +23,10 @@
                     //$_SESSION['invoice_data'] = $_GET['client'];
                     //var_dump($calculate_j[0]['closed_time'] == 0);
 
+                    //Получим сразу название категории
+                    $category_j = SelDataFromDB('spr_categories', $tabel_j[0]['category'], 'id');
+                    //var_dump($category_j);
+
 
                     if (($finances['see_all'] == 1) || $god_mode || ($tabel_j[0]['worker_id'] == $_SESSION['id'])) {
                         include_once 'ffun.php';
@@ -603,7 +607,7 @@
                                         </div>
                                         <div style="margin-bottom: 5px;">
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
-                                                Категория: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">id = ' . $tabel_j[0]['category'] . '</span>
+                                                Категория: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">' . $category_j[0]['name'] . '</span>
                                             </div>
                                         </div>
                                         <div style="margin-bottom: 7px;">
