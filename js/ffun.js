@@ -2207,7 +2207,7 @@
             },
             // действие, при ответе с сервера
             success:function(res){
-                //console.log(res.data);
+                console.log(res.data);
                 //$('#data').html(res)
 
                 if(res.result == 'success') {
@@ -2521,6 +2521,7 @@
     //Промежуточная функция для выплаты
     function fl_showPaidoutAdd (paidout_id, tabel_id, type, worker_id, month, year, link, mode, deploy){
         //console.log(mode);
+        //deploy - провести или нет
 
         //убираем ошибки
         hideAllErrors ();
@@ -2562,7 +2563,7 @@
             type: "POST",
             dataType: "JSON",
 
-            data: {paidout_summ:paidout_summ},
+            data: {paidout_summ: paidout_summ},
 
             cache: false,
             beforeSend: function() {

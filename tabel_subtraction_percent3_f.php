@@ -22,6 +22,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         $iWantMyMoney = $_POST['summ'];
         //Переменная для "отсыпания" денег по филиалам и позициям
         $iWantMyMoney_temp = $iWantMyMoney;
+        //Массив, чтоб размазать по филиалам желаемую сумму
+        $iWantMyMoneyPercentFilials = array();
         //Сумма которая в табеле
         $paidout_summ_tabel = $_POST['paidout_summ_tabel'];
 
@@ -40,6 +42,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         $invoices_j_ex = array();
         //ID нарядов
         $invoices_ids_arr = array();
+        //ID позиций в нарядах
+        $pos_ids_arr = array();
         //Оплаты
         $payments_j = array();
         //Итоговый массив, куда соберем общие суммы по филиалам
@@ -66,7 +70,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         //Массив, где ключ - это ID филиала, а значение - это сколько всего надо выдать с этого филиала из общего объема денег
         $summ4ZP = array();
         //Массив, где ключ - это ID филиала, а значение - это сколько всего УЖЕ было выдано денег с каких филиалов
-        $summ4ZP_prev = array();
+        $pos_substraction_prev = array();
         //Сумма ЗП, которую мы могли бы выдать сейчас всю, как будто еще ничего не выплачивали
         $summ4ZP_All = 0;
         //Массив, где ключ - это ID филиала, а значение - это сколько с какого филиала ПРЕДЛАГАЕТСЯ вычесть сумму на выдачу ЗП
@@ -130,11 +134,12 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             $calculates_j_ex[$arr['inv_pos_id']] = 0;
                         }
                         $calculates_j_ex[$arr['inv_pos_id']] = $arr['summ'];
-                        //array_push($invoices_ids_arr, "`invoice_id`='" . $arr['invoice_id'] . "'");
+                        array_push($pos_ids_arr, "`inv_pos_id`='" . $arr['inv_pos_id'] . "'");
                     }
                 }
 //                var_dump($query);
 //                var_dump($calculates_j_ex);
+//                var_dump($pos_ids_arr);
 
                 //Наряды с позициями в нарядах + статус (открыт/закрыт) наряда, + филиал + цены за каждую позицию в зп
 //                $query = "
@@ -338,9 +343,15 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                     $itog_filials_percents[$filial_id] = $percent_value;
                 }
-                //var_dump($itog_filials_percents);
+//                var_dump($itog_filials_percents);
                 //Просто для самоконтроля, что получается 100%, так как отказался от округлений при расчете %-в (так точнее)
                 //var_dump(array_sum($itog_filials_percents));
+
+                //"Размажем" желаеммую сумму по филиалам сначала (и позициям сразу?)
+                //2019-07-16 начал и тут же отказался от затеи этой
+//                foreach ($itog_filials_percents as $filial_id => $percent) {
+//                    //$iWantMyMoneyPercentFilials
+//                }
 
 
 
@@ -371,7 +382,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                 //Просто для самоконтроля, должна получиться общая сумма выдаче
                 //var_dump(array_sum($filial_subtraction));
-                //var_dump(array_sum($filial_subtraction) + array_sum($summ4ZP_prev));
+                //var_dump(array_sum($filial_subtraction) + array_sum($pos_substraction_prev));
 
 
                 //!! ПО КАЖДОЙ ПОЗИЦИИ КАЖДОГО РЛ
@@ -393,49 +404,90 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
 
                 //Получаем данные из БД о выдачах по этим нарядам, будто мы уже выдавали аванс
-                $summ4ZP_prev = array(
-                    277464 => array(
-                        19 => 269.3865815,
-                        16 => 11.6734185
-                    ),
-                    277465 => array(
-                        19 => 4144.4089457,
-                        16 => 179.5910543
-                    ),
-                    277466 => array(
-                        19 => 394.94,
-                        16 => 0
-                    ),
-                    277468 => array(
-                        19 => 0,
-                        16 => 0
-                    ),
-                    277469 => array(
-                        19 => 0,
-                        16 => 0
-                    ),
-                    277467 => array(
-                        19 => 0,
-                        16 => 0
-                    )
-                );
-//                var_dump('$summ4ZP_prev');
-//                var_dump($summ4ZP_prev);
+                //Строчка для следующего запроса
+                $pos_ids_str = implode(' OR ', $pos_ids_arr);
+
+                //Полные суммы по филиалам и позициям, которые уже выдали
+                $pos_substraction_filials_prev = array();
+
+                $query = "
+                      SELECT `inv_pos_id`, `filial_id`, `summ`
+                      FROM `fl_journal_pos_filials_subtractions` 
+                      WHERE ({$pos_ids_str})";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0) {
+                    while ($arr = mysqli_fetch_assoc($res)) {
+                        //Формируем массив
+                        if (!isset($pos_substraction_prev[$arr['inv_pos_id']])) {
+                            $pos_substraction_prev[$arr['inv_pos_id']] = array();
+                        }
+                        if (!isset($pos_substraction_prev[$arr['inv_pos_id']][$arr['filial_id']])) {
+                            $pos_substraction_prev[$arr['inv_pos_id']][$arr['filial_id']] = 0;
+                        }
+                        $pos_substraction_prev[$arr['inv_pos_id']][$arr['filial_id']] += $arr['summ'];
+                        //array_push($pos_substraction_prev_test, $arr);
+
+                        //Суммы по филиалам
+                        //if (!isset($pos_substraction_filials_prev[$arr['inv_pos_id']][$arr['filial_id']])) {
+                        //}
+
+
+
+                    }
+                }
+//                var_dump($query);
+//                var_dump('$pos_substraction_prev');
+//                var_dump($pos_substraction_prev);
+
+
+
+                //!!! Временное значение, для теста
+//                $pos_substraction_prev = array(
+//                    277464 => array(
+//                        19 => 269.3865815,
+//                        16 => 11.6734185
+//                    ),
+//                    277465 => array(
+//                        19 => 4144.4089457,
+//                        16 => 179.5910543
+//                    ),
+//                    277466 => array(
+//                        19 => 394.94,
+//                        16 => 0
+//                    ),
+//                    277468 => array(
+//                        19 => 0,
+//                        16 => 0
+//                    ),
+//                    277469 => array(
+//                        19 => 0,
+//                        16 => 0
+//                    ),
+//                    277467 => array(
+//                        19 => 0,
+//                        16 => 0
+//                    )
+//                );
+
 
                 //Если ранее были выплаты по этому табелю, то вычтем эти суммы из итоговых остатков,
                 //доступных к выдаче денег
-                if (!empty($summ4ZP_prev)) {
+                if (!empty($pos_substraction_prev)) {
                     foreach ($pos_subtraction as $inv_pos_id => $filials) {
                         foreach ($filials as $filial_id => $summ){
-                            if (isset($summ4ZP_prev[$inv_pos_id])){
-                                if (isset($summ4ZP_prev[$inv_pos_id][$filial_id])){
-                                    if ($summ4ZP_prev[$inv_pos_id][$filial_id] > 0){
+                            if (isset($pos_substraction_prev[$inv_pos_id])){
+                                if (isset($pos_substraction_prev[$inv_pos_id][$filial_id])){
+                                    if ($pos_substraction_prev[$inv_pos_id][$filial_id] > 0){
 //                                        var_dump($inv_pos_id);
 //                                        var_dump($filial_id);
 //                                        var_dump(number_format($pos_subtraction[$inv_pos_id][$filial_id], 7));
-//                                        var_dump(number_format($summ4ZP_prev[$inv_pos_id][$filial_id], 7));
-//                                        var_dump(number_format(number_format($pos_subtraction[$inv_pos_id][$filial_id], 7) - number_format($summ4ZP_prev[$inv_pos_id][$filial_id], 7));
-                                        $pos_subtraction[$inv_pos_id][$filial_id] = $pos_subtraction[$inv_pos_id][$filial_id] - $summ4ZP_prev[$inv_pos_id][$filial_id];
+//                                        var_dump(number_format($pos_substraction_prev[$inv_pos_id][$filial_id], 7));
+//                                        var_dump(number_format(number_format($pos_subtraction[$inv_pos_id][$filial_id], 7) - number_format($pos_substraction_prev[$inv_pos_id][$filial_id], 7));
+                                        $pos_subtraction[$inv_pos_id][$filial_id] = $pos_subtraction[$inv_pos_id][$filial_id] - $pos_substraction_prev[$inv_pos_id][$filial_id];
                                     }
                                 }
                             }
@@ -445,17 +497,33 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 //echo '<span style="font-size: 85%;"><b>Ключевое2 !</b> Сколько ВСЕГО надо БУДЕТ в итоге выдать с каждого филиала из общего объема денег. ПОСЛЕ вычета того, что уже с этих филиалов вычли</span>';
                 var_dump('$pos_subtraction_2');
                 var_dump($pos_subtraction);
-                //Просто для самоконтроля
-                var_dump(array_sum($pos_subtraction));
 
+                //!!! Временная переменная
+                //$sss = 0;
 
-
-
-                //!! ПО КАЖДОЙ ПОЗИЦИИ КАЖДОГО РЛ
                 //Посчитаем, сколько откуда можем выдать с учетом суммы,
                 //которую реально хотим выдать $iWantMyMoney
                 foreach ($pos_subtraction as $inv_pos_id => $filials) {
                     foreach ($filials as $filial_id => $summ){
+//                        if (!isset($pos_subtraction_temp[$inv_pos_id])) {
+//                            $pos_subtraction_temp[$inv_pos_id] = array();
+//                        }
+//                        if (!isset($pos_subtraction_temp[$inv_pos_id][$filial_id])) {
+//                            $pos_subtraction_temp[$inv_pos_id][$filial_id] = 0;
+//                        }
+//                        //Тут мы вычисляем какой процент на данный момент составляет
+//                        //вот эта вот цена позиции в филиале
+//                        //и по этому проценту берем часть от той суммы, которую хотим выдать $iWantMyMoney
+//                        //...
+//                        //var_dump(round(($iWantMyMoney / 100 * ($summ * 100 / $summ4ZP_All)), 7));
+//                        $pos_subtraction_temp[$inv_pos_id][$filial_id] = round(($iWantMyMoney / 100 * ($summ * 100 / $summ4ZP_All)), 7);
+
+                        //!!! Просто для проверки
+                        //$sss += round($iWantMyMoney / 100 * ($summ * 100 / $summ4ZP_All), 7);
+
+                        //2019-07-16 было решение в лоб, оно ниже, решил сделать плавно, оно выше
+                        //будем "сразу" размазывать всю сумму по всем позициям и всем филиалам... наверное
+                        //2019-07-19 вернул как было, буду тестить дальше
                         if (!isset($pos_subtraction_temp[$inv_pos_id])) {
                             $pos_subtraction_temp[$inv_pos_id] = array();
                         }
@@ -477,10 +545,15 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         }
                     }
                 }
-                //var_dump($pos_subtraction_temp);
+                var_dump('$pos_subtraction_temp');
+                var_dump($pos_subtraction_temp);
+
+//                //!!! Просто для проверки
+//                var_dump('$sss');
+//                var_dump($sss);
 
 
-                //Посчитаем общие суммы по филиалам, откуда сколько будем выдавать
+                //Посчитаем общие суммы по филиалам, откуда сколько будем выдавать в итоге
                 foreach ($pos_subtraction_temp as $inv_pos_id => $filials){
                     foreach ($filials as $filial_id => $summ){
                         if (!isset($pos_subtraction_summ_filials[$filial_id])) {
@@ -489,9 +562,24 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         $pos_subtraction_summ_filials[$filial_id] += $summ;
                     }
                 }
+                var_dump('$pos_subtraction_summ_filials');
                 var_dump($pos_subtraction_summ_filials);
                 //!! проверка самого себя сумма общая, которую выдадим со всех филиалов
                 var_dump(intval(array_sum($pos_subtraction_summ_filials)));
+
+
+                //Сохраним данные в сессии для дальнейшего использования
+                if (!isset($_SESSION['subtraction_data'])){
+                    $_SESSION['subtraction_data'] = array();
+                }
+
+                //Сколько всего надо вычесть по каждой позиции со всех филиалов
+                //$_SESSION['subtraction_data'][$tabel_id]['pos_subtraction'] = $pos_subtraction;
+                //Сколько надо вычесть сейчас по каждой позиции с каждого филиала
+                $_SESSION['subtraction_data'][$tabel_id]['pos_subtraction_temp'] = $pos_subtraction_temp;
+                //Всего вычтем с филиалов
+                //$_SESSION['subtraction_data'][$tabel_id]['pos_subtraction_summ_filials'] = $pos_subtraction_summ_filials;
+                //var_dump($_SESSION['subtraction_data']);
 
                 echo '
                     <table>';
@@ -517,7 +605,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             $placeholder = '';
                         }
                         echo '<td><div class="button_tiny" style="width: 100px; font-size: 75%; cursor: pointer; ' . $fontcolor_str . '" onclick="allSubtractionInHere(' . $f_id . ', ' . intval(array_sum($pos_subtraction_summ_filials)) . ');">' . $filials_j_data['name2'] . '<i class="fa fa-chevron-right" style="color: green; float: right;" aria-hidden="true"></i></div></td>';
-                        echo '<td><input type="text" size="10" class="filial_subtraction fil_sub_' . $f_id . '" filial_id="' . $f_id . '" name="" placeholder="0" autocomplete="off" value="' . $value . '"></td>';
+                        echo '<td><input type="text" size="10" class="filial_subtraction fil_sub_' . $f_id . '" filial_id="' . $f_id . '" name="" placeholder="0" autocomplete="off" value="' . $value . '" disabled></td>';
                         echo '<tr>';
                     }
                 } else {
