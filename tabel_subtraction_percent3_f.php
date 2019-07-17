@@ -487,7 +487,13 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 //                                        var_dump(number_format($pos_subtraction[$inv_pos_id][$filial_id], 7));
 //                                        var_dump(number_format($pos_substraction_prev[$inv_pos_id][$filial_id], 7));
 //                                        var_dump(number_format(number_format($pos_subtraction[$inv_pos_id][$filial_id], 7) - number_format($pos_substraction_prev[$inv_pos_id][$filial_id], 7));
-                                        $pos_subtraction[$inv_pos_id][$filial_id] = $pos_subtraction[$inv_pos_id][$filial_id] - $pos_substraction_prev[$inv_pos_id][$filial_id];
+
+                                        if (($pos_subtraction[$inv_pos_id][$filial_id] - $pos_substraction_prev[$inv_pos_id][$filial_id]) < 0){
+                                            var_dump($inv_pos_id);
+                                            var_dump($pos_subtraction[$inv_pos_id][$filial_id] - $pos_substraction_prev[$inv_pos_id][$filial_id]);
+                                        }else {
+                                            $pos_subtraction[$inv_pos_id][$filial_id] = $pos_subtraction[$inv_pos_id][$filial_id] - $pos_substraction_prev[$inv_pos_id][$filial_id];
+                                        }
                                     }
                                 }
                             }
@@ -495,8 +501,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                     }
                 }
                 //echo '<span style="font-size: 85%;"><b>Ключевое2 !</b> Сколько ВСЕГО надо БУДЕТ в итоге выдать с каждого филиала из общего объема денег. ПОСЛЕ вычета того, что уже с этих филиалов вычли</span>';
-                var_dump('$pos_subtraction_2');
-                var_dump($pos_subtraction);
+//                var_dump('$pos_subtraction_2');
+//                var_dump($pos_subtraction);
 
                 //!!! Временная переменная
                 //$sss = 0;
@@ -545,8 +551,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         }
                     }
                 }
-                var_dump('$pos_subtraction_temp');
-                var_dump($pos_subtraction_temp);
+//                var_dump('$pos_subtraction_temp');
+//                var_dump($pos_subtraction_temp);
 
 //                //!!! Просто для проверки
 //                var_dump('$sss');
@@ -562,10 +568,10 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         $pos_subtraction_summ_filials[$filial_id] += $summ;
                     }
                 }
-                var_dump('$pos_subtraction_summ_filials');
-                var_dump($pos_subtraction_summ_filials);
-                //!! проверка самого себя сумма общая, которую выдадим со всех филиалов
-                var_dump(intval(array_sum($pos_subtraction_summ_filials)));
+//                var_dump('$pos_subtraction_summ_filials');
+//                var_dump($pos_subtraction_summ_filials);
+//                //!! проверка самого себя сумма общая, которую выдадим со всех филиалов
+//                var_dump(intval(array_sum($pos_subtraction_summ_filials)));
 
 
                 //Сохраним данные в сессии для дальнейшего использования
