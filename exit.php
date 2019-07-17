@@ -26,6 +26,7 @@
     unset($_SESSION['fl_calcs_tabels']);
     unset($_SESSION['fl_calcs_tabels2']);
     unset($_SESSION['scheduler3']);
+    unset($_SESSION['subtraction_data']);
 
 	//Переадресовываем на главную
 	//header("location: index.php");

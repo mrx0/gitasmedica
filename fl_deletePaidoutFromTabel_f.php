@@ -22,13 +22,22 @@
                 //Подключаемся к другой базе
                 $msql_cnnct = ConnectToDB2 ();
 
-                //
+                //Удаляем выплаты
                 if ($_POST['noch'] == 0) {
                     $query = "DELETE FROM `fl_journal_paidouts` WHERE `tabel_id` = '{$_POST['tabel_id']}' AND `id` = '{$_POST['paidout_id']}' ;";
                 }else{
                     $query = "DELETE FROM `fl_journal_paidouts` WHERE `tabel_noch_id` = '{$_POST['tabel_id']}' AND `id` = '{$_POST['paidout_id']}' ;";
                 }
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                //Надо удалить вычеты по филиалам, связанные с этой выплатой
+                if ($_POST['noch'] == 0) {
+                    $query = "DELETE FROM `fl_journal_pos_filials_subtractions` WHERE `tabel_id` = '{$_POST['tabel_id']}' AND `paidout_id` = '{$_POST['paidout_id']}' ;";
+                }else{
+                    $query = "DELETE FROM `fl_journal_pos_filials_subtractions` WHERE `tabel_noch_id` = '{$_POST['tabel_id']}' AND `paidout_id` = '{$_POST['paidout_id']}' ;";
+                }
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
 
                 CloseDB ($msql_cnnct);
 

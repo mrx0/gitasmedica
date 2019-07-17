@@ -10639,8 +10639,8 @@
         $(".filial_subtraction").each(function (){
             summ += Number($(this).val());
         })
-        //console.log(summ);
-        //console.log(fil_sub_sum);
+        console.log(summ);
+        console.log(iWantMyMoney);
 
         if (summ < iWantMyMoney){
             $("#fil_sub_msg").html("Осталось распределить: <span style='font-size: 110%; font-weight: bold; color: red;'>" + (iWantMyMoney - summ) + "</span> руб.");
