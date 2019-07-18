@@ -106,8 +106,8 @@
 								    <a href="fl_tabels.php?who=13" class="b" style="">Санитарки</a>
                                     <a href="fl_tabels.php?who=14" class="b" style="">Уборщицы</a>
                                     <a href="fl_tabels.php?who=15" class="b" style="">Дворники</a>
-								    <a href="fl_tabels_noch.php?who=5" class="b" style="'.$stom_color.'">Ночь стом.</a>
-								    <a href="fl_tabels_noch.php?who=7" class="b" style="'.$assist_color.'">Ночь ассист.</a>
+								    <!--<a href="fl_tabels_noch.php?who=5" class="b" style="'.$stom_color.'">Ночь стом.</a>
+								    <a href="fl_tabels_noch.php?who=7" class="b" style="'.$assist_color.'">Ночь ассист.</a>-->
                                 </li>
 						    </ul>';
 
