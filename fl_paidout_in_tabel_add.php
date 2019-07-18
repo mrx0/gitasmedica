@@ -58,6 +58,12 @@ if ($enter_ok){
                         $link = 'fl_tabel_noch.php';
                     }
 
+                    echo '
+                                   ] в <a href="'.$link.'?id='.$_GET['tabel_id'].'" class="ahref">табель #'.$_GET['tabel_id'].'</a></h2>
+                                   <div style="font-size: 87%; padding-bottom: 10px; font-weight: bold;"><i>'.WriteSearchUser('spr_workers', $tabel_j[0]['worker_id'], 'user', false).'  ['.$filials_j[$tabel_j[0]['office_id']]['name2'].']  '.$monthsName[$tabel_j[0]['month']].' '.$tabel_j[0]['year'].'</i></div>
+                                    <!--Заполните поля-->
+                                </header>';
+
                     $noch = 0;
 
                     //Если за ночь
@@ -67,10 +73,12 @@ if ($enter_ok){
                         }
                     }
 
+
                     //Сумма, которую предлагаем выплатить
                     $paidout_summ_value = 0;
 
-                    if (($_GET['type'] == 1) || ($_GET['type'] == 7)){
+                    //Если 1 - аванс, 7 - ЗП, 4 - на карту
+                    if (($_GET['type'] == 1) || ($_GET['type'] == 7) || ($_GET['type'] == 4)){
                         //Общая сумма, которую осталось выплатить = сумма (РЛ) + надбавки + за ночь + пустые смены - вычеты - оплачено - выплачено
                         $paidout_summ_value = $tabel_j[0]['summ'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena'] - $tabel_j[0]['deduction'] - $tabel_j[0]['paid'] - $tabel_j[0]['paidout'];
                         //Если ассистент, то плюсуем сумму за РЛ
@@ -79,16 +87,139 @@ if ($enter_ok){
                         }
                     }
 
-                    echo '
-                                   ] в <a href="'.$link.'?id='.$_GET['tabel_id'].'" class="ahref">табель #'.$_GET['tabel_id'].'</a></h2>
-                                   <div style="font-size: 87%; padding-bottom: 10px; font-weight: bold;"><i>'.WriteSearchUser('spr_workers', $tabel_j[0]['worker_id'], 'user', false).'  ['.$filials_j[$tabel_j[0]['office_id']]['name2'].']  '.$monthsName[$tabel_j[0]['month']].' '.$tabel_j[0]['year'].'</i></div>
-                                    Заполните поля
-                                </header>';
+                    $msql_cnnct = ConnectToDB ();
+
+                    //Тип начисления
+                    $surcharge_type = 0;
+                    //Для отображения начислений (а надо ли?)
+                    $rezultS = '';
+                    //Массив для начислений
+                    $tabel_surcharges_j = array();
+
+//                    //Если отпускной
+//                    if ($_GET['type'] == 2){
+//                        $surcharge_type = 2;
+//                    }
+//
+//                    //Если больничный
+//                    if ($_GET['type'] == 3){
+//                        $surcharge_type = 3;
+//                    }
+//
+//                    //Если на карту
+//                    if ($_GET['type'] == 4){
+//                        $surcharge_type = 4;
+//                    }
+
+                    //Если выплачиваем 2 - отпускной, 3 - больничный, 4 - на карту
+                    if (($_GET['type'] == 2) || ($_GET['type'] == 3)) {
+
+                        //Надбавки
+                        //$query = "SELECT * FROM `fl_journal_surcharges` WHERE `tabel_id`='{$tabel_j[0]['id']}' AND `type` = '{$_GET['type']}';";
+                        $query = "
+                              SELECT fl_js.* FROM 
+                              `fl_journal_tabels` fl_jt
+                              RIGHT JOIN `fl_journal_surcharges` fl_js ON fl_jt.id = fl_js.tabel_id  AND fl_js.type = '{$_GET['type']}' 
+                              WHERE fl_jt.worker_id = '{$tabel_j[0]['worker_id']}' AND fl_jt.month = '{$tabel_j[0]['month']}' AND fl_jt.year = '{$tabel_j[0]['year']}';";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0) {
+                            while ($arr = mysqli_fetch_assoc($res)) {
+                                array_push($tabel_surcharges_j, $arr);
+                            }
+                        }
+//                        var_dump($query);
+//                        var_dump($tabel_surcharges_j);
+
+                        if (!empty($tabel_surcharges_j)) {
+
+                            foreach ($tabel_surcharges_j as $rezData) {
+
+                                $rezultS .=
+                                    '
+                                        <div class="cellsBlockHover" style="background-color: #ffffff; border: 1px solid #BFBCB5; margin: 1px 7px 7px;; position: relative; display: inline-block; vertical-align: top;">
+                                            <div style="display: inline-block; width: 200px;">
+                                                <div>
+                                                <div>
+                                                    <div>
+                                                        <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+                                                            <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+                                                        </div>
+                                                        <div style="display: inline-block; vertical-align: middle; font-size: 90%;">
+                                                            <b>';
+                                if ($rezData['type'] == 2) {
+                                    $rezultS .= ' отпускной ';
+                                } elseif ($rezData['type'] == 3) {
+                                    $rezultS .= ' больничный ';
+                                } else {
+                                    $rezultS .= ' премия ';
+                                }
+                                $rezultS .=
+                                    '#' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);"><br>создано: ' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>
+                                                        </div>
+                                                        <div style="font-size: 80%; text-align: right;">
+                                                            В <a href="fl_tabel.php?id='.$rezData['tabel_id'].'" class="ahref">табеле '.$rezData['tabel_id'].'</a>
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
+                                                            Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">' . $rezData['summ'] . '</span> руб.
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                                </div>';
+                                if (mb_strlen($rezData['descr']) > 0) {
+                                    $rezultS .= '
+                                                <div style="margin: 5px 0 0 3px; font-size: 80%;">
+                                                    <b>Комментарий:</b> ' . $rezData['descr'] . '                                                
+                                                </div>';
+                                }
+                                $rezultS .= '
+                                            </div>';
+                                if ($tabel_j[0]['status'] != 7) {
+//                                    $rezultS .= '
+//                                            <div style="display: inline-block; vertical-align: top;">
+//                                                <div class="settings_text" style="border: 1px solid #CCC; padding: 3px; margin: 1px; width: 12px; text-align: center;"  onclick="contextMenuShow(' . $tabel_j[0]['id'] . ', ' . $rezData['id'] . ', event, \'tabel_surcharge_options\');">
+//                                                    <i class="fa fa-caret-down"></i>
+//                                                </div>
+//                                            </div>';
+                                }
+                                $rezultS .= '
+                                            <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
+                                        </div>';
+
+                                if ($rezData['tabel_id'] == $_GET['tabel_id']){
+                                    $paidout_summ_value += $rezData['summ'];
+                                }
+
+                            }
+                        }
+                    }
+                    //var_dump($paidout_summ_value);
+                    //var_dump($rezultS);
+
 
                     echo '
                                 <div id="data">';
                     echo '
                                     <div id="errrror"></div>';
+
+
+                    if (!empty($tabel_surcharges_j)){
+                        echo '
+                                    <div class="cellsBlock2">
+                                        <div class="cellLeft">
+                                        <span style="font-size:80%;  color: #555;">Документы, выписанные данному сотруднику в этом месяце:</span><br>';
+                        echo $rezultS;
+                        echo '
+                                        </div>
+                                    </div>';
+                    }
+
                     echo '
                                     <form>
                                 
@@ -104,7 +235,7 @@ if ($enter_ok){
                                             <div class="cellLeft">
                                                 <select name="SelectFilial" id="SelectFilial" disabled>';
 
-                        if (!empty($filials_j)) {
+                    if (!empty($filials_j)) {
                         foreach ($filials_j as $f_id => $filials_j_data) {
                             $selected = '';
                             //if (isset($_GET['filial'])){
@@ -138,6 +269,7 @@ if ($enter_ok){
 
                     echo '                    
                                         <input type="hidden" name="noch" id="noch" value="'.$noch.'">
+                                        <input type="hidden" name="tabel_type" id="tabel_type" value="'.$tabel_j[0]['type'].'">
                                         
                                         <div id="errror"></div>
                                         <div id="showPaidoutAddbutton" style="display: none;">
@@ -155,10 +287,12 @@ if ($enter_ok){
                                     var
                                         summ = $("#paidout_summ").val(),
                                         tabel_id = $("#paidout_summ").attr("tabel_id"),
-                                        paidout_summ_tabel = $("#paidout_summ").attr("paidout_summ_tabel");
-
+                                        paidout_summ_tabel = $("#paidout_summ").attr("paidout_summ_tabel"),
+                                        tabel_type = $("#tabel_type").val();
+                                    //console.log(tabel_type);
+                                    
                                     if (summ.length > 2) {
-                                        tabelSubtractionPercent(tabel_id, summ, paidout_summ_tabel);
+                                        tabelSubtractionPercent(tabel_id, tabel_type, summ, paidout_summ_tabel);
                                     }
                                 });
                             </script>

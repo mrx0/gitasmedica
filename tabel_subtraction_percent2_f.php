@@ -382,7 +382,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                 echo '
                     </table>
-                    <div class="button_tiny" style="width: 100px; font-size: 75%; cursor: pointer;" onclick="tabelSubtractionPercent(' . $tabel_id . ', ' . $iWantMyMoney . ', '.$paidout_summ_tabel.');">По умолчанию</div>
+                    <div class="button_tiny" style="width: 100px; font-size: 75%; cursor: pointer;" onclick="tabelSubtractionPercent(' . $tabel_id . ', ' . $tabel_j['type'] . ', ' . $iWantMyMoney . ', '.$paidout_summ_tabel.');">По умолчанию</div>
                     <div style="width: 250px; background-color: #EEE; border: 1px dotted #CCC; margin: 10px; padding: 5px; font-size: 85%;">
                         <div>Всего: <span id="fil_sub_sum" style="font-weight: bold;">' . array_sum($filial_subtraction) . '</span></div>
                         <div><span id="fil_sub_msg"></span></div>
