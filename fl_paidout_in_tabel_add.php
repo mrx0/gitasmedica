@@ -77,8 +77,8 @@ if ($enter_ok){
                     //Сумма, которую предлагаем выплатить
                     $paidout_summ_value = 0;
 
-                    //Если аванс или ЗП
-                    if (($_GET['type'] == 1) || ($_GET['type'] == 7)){
+                    //Если 1 - аванс, 7 - ЗП, 4 - на карту
+                    if (($_GET['type'] == 1) || ($_GET['type'] == 7) || ($_GET['type'] == 4)){
                         //Общая сумма, которую осталось выплатить = сумма (РЛ) + надбавки + за ночь + пустые смены - вычеты - оплачено - выплачено
                         $paidout_summ_value = $tabel_j[0]['summ'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena'] - $tabel_j[0]['deduction'] - $tabel_j[0]['paid'] - $tabel_j[0]['paidout'];
                         //Если ассистент, то плюсуем сумму за РЛ
@@ -96,22 +96,23 @@ if ($enter_ok){
                     //Массив для начислений
                     $tabel_surcharges_j = array();
 
-                    //Если отпускной
-                    if ($_GET['type'] == 2){
-                        $surcharge_type = 2;
-                    }
+//                    //Если отпускной
+//                    if ($_GET['type'] == 2){
+//                        $surcharge_type = 2;
+//                    }
+//
+//                    //Если больничный
+//                    if ($_GET['type'] == 3){
+//                        $surcharge_type = 3;
+//                    }
+//
+//                    //Если на карту
+//                    if ($_GET['type'] == 4){
+//                        $surcharge_type = 4;
+//                    }
 
-                    //Если больничный
-                    if ($_GET['type'] == 3){
-                        $surcharge_type = 3;
-                    }
-
-                    //Если на карту
-                    if ($_GET['type'] == 4){
-                        $surcharge_type = 4;
-                    }
-
-                    if (($_GET['type'] == 2) || ($_GET['type'] == 3) || ($_GET['type'] == 4)) {
+                    //Если выплачиваем 2 - отпускной, 3 - больничный, 4 - на карту
+                    if (($_GET['type'] == 2) || ($_GET['type'] == 3)) {
 
                         //Надбавки
                         //$query = "SELECT * FROM `fl_journal_surcharges` WHERE `tabel_id`='{$tabel_j[0]['id']}' AND `type` = '{$_GET['type']}';";
@@ -141,7 +142,7 @@ if ($enter_ok){
                                         <div class="cellsBlockHover" style="background-color: #ffffff; border: 1px solid #BFBCB5; margin: 1px 7px 7px;; position: relative; display: inline-block; vertical-align: top;">
                                             <div style="display: inline-block; width: 200px;">
                                                 <div>
-                                                <a href="fl_tabel.php?id='.$_GET['tabel_id'].'" class="ahref">
+                                                <div>
                                                     <div>
                                                         <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
                                                             <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
@@ -158,14 +159,18 @@ if ($enter_ok){
                                 $rezultS .=
                                     '#' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);"><br>создано: ' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>
                                                         </div>
+                                                        <div style="font-size: 80%; text-align: right;">
+                                                            В <a href="fl_tabel.php?id='.$rezData['tabel_id'].'" class="ahref">табеле '.$rezData['tabel_id'].'</a>
+                                                        </div>
                                                     </div>
+
                                                     <div>
                                                         <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
                                                             Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">' . $rezData['summ'] . '</span> руб.
                                                         </div>
                                                     </div>
                                                     
-                                                </a>
+                                                </div>
                                                 </div>';
                                 if (mb_strlen($rezData['descr']) > 0) {
                                     $rezultS .= '
@@ -208,7 +213,7 @@ if ($enter_ok){
                         echo '
                                     <div class="cellsBlock2">
                                         <div class="cellLeft">
-                                        <span style="font-size:80%;  color: #555;">Документы, выписанные в этом месяце:</span><br>';
+                                        <span style="font-size:80%;  color: #555;">Документы, выписанные данному сотруднику в этом месяце:</span><br>';
                         echo $rezultS;
                         echo '
                                         </div>
@@ -230,7 +235,7 @@ if ($enter_ok){
                                             <div class="cellLeft">
                                                 <select name="SelectFilial" id="SelectFilial" disabled>';
 
-                        if (!empty($filials_j)) {
+                    if (!empty($filials_j)) {
                         foreach ($filials_j as $f_id => $filials_j_data) {
                             $selected = '';
                             //if (isset($_GET['filial'])){
@@ -264,6 +269,7 @@ if ($enter_ok){
 
                     echo '                    
                                         <input type="hidden" name="noch" id="noch" value="'.$noch.'">
+                                        <input type="hidden" name="tabel_type" id="tabel_type" value="'.$tabel_j[0]['type'].'">
                                         
                                         <div id="errror"></div>
                                         <div id="showPaidoutAddbutton" style="display: none;">
@@ -281,10 +287,12 @@ if ($enter_ok){
                                     var
                                         summ = $("#paidout_summ").val(),
                                         tabel_id = $("#paidout_summ").attr("tabel_id"),
-                                        paidout_summ_tabel = $("#paidout_summ").attr("paidout_summ_tabel");
-
+                                        paidout_summ_tabel = $("#paidout_summ").attr("paidout_summ_tabel"),
+                                        tabel_type = $("#tabel_type").val();
+                                    //console.log(tabel_type);
+                                    
                                     if (summ.length > 2) {
-                                        tabelSubtractionPercent(tabel_id, summ, paidout_summ_tabel);
+                                        tabelSubtractionPercent(tabel_id, tabel_type, summ, paidout_summ_tabel);
                                     }
                                 });
                             </script>

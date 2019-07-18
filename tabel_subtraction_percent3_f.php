@@ -98,7 +98,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
             $worker_id = $tabel_j['worker_id'];
             //Обозначим общую сумму к выплате. Собираем её из всех начислений (сумма РЛ, отпуск, больничный, премия...)
-            //Если доктор (стом, косм,...)
+            //Если доктор (стом)
             //if ($tabel_j['type'] == 5) {
                 //$summ4ZP_All = intval($tabel_j['summ_calc'] + $tabel_j['surcharge']);
                 $summ4ZP_All = $tabel_j['summ_calc'] + $tabel_j['surcharge'];
@@ -626,9 +626,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                 echo '
                     </table>
-                    <div class="button_tiny" style="width: 100px; font-size: 75%; cursor: pointer;" onclick="tabelSubtractionPercent(' . $tabel_id . ', ' . $iWantMyMoney . ', '.$paidout_summ_tabel.');">По умолчанию</div>
+                    <div class="button_tiny" style="width: 100px; font-size: 75%; cursor: pointer;" onclick="tabelSubtractionPercent(' . $tabel_id . ', ' . $tabel_j['type'] . ', ' . $iWantMyMoney . ', '.$paidout_summ_tabel.');">По умолчанию</div>
                     <div style="width: 250px; background-color: #EEE; border: 1px dotted #CCC; margin: 10px; padding: 5px; font-size: 85%;">
-                        <div>Всего: <span id="fil_sub_sum" style="font-weight: bold;">' . intval(array_sum($pos_subtraction_summ_filials)) . '</span></div>
+                        <div>Всего: <span id="fil_sub_sum" style="font-weight: bold;">' . array_sum($pos_subtraction_summ_filials) . '</span></div>
                         <div><span id="fil_sub_msg"></span></div>
                     </div>
                     <input type="hidden" id="iWantMyMoney" value="' . $iWantMyMoney . '">';

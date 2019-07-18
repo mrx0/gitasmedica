@@ -10550,7 +10550,9 @@
     }
 
     //Функция возвращает, сколько денег с какого филиала надо будет снять при выплате ЗП - для fl_paidout_in_tabel_add.php
-    function tabelSubtractionPercent(tabel_id, summ, paidout_summ_tabel){
+    function tabelSubtractionPercent(tabel_id, type, summ, paidout_summ_tabel){
+		console.log(summ);
+		console.log(paidout_summ_tabel);
 
 		hideAllErrors();
 
@@ -10614,14 +10616,15 @@
             var
                 summ = $(this).val(),
                 tabel_id = $(this).attr("tabel_id"),
-            	paidout_summ_tabel = $(this).attr("paidout_summ_tabel");
+            	paidout_summ_tabel = $(this).attr("paidout_summ_tabel"),
+                tabel_type = $("#tabel_type").val();;
 
             if (summ.length > 2) {
 
                 $this.data('timer', setTimeout(function () {
                     $this.removeData('timer');
 
-                    tabelSubtractionPercent(tabel_id, summ, paidout_summ_tabel);
+                    tabelSubtractionPercent(tabel_id, tabel_type, summ, paidout_summ_tabel);
 
                 }, $delay));
             }
