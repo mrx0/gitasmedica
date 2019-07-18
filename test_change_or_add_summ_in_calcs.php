@@ -15,7 +15,7 @@
 
     $msql_cnnct = ConnectToDB ();
 
-    $query = "SELECT * FROM `fl_journal_calculate_ex` WHERE `summ`='0' AND `guarantee`='0' AND `price`<>'0' AND `percent_cats`<>'60' ORDER BY `id` DESC LIMIT 5000";
+    $query = "SELECT * FROM `fl_journal_calculate_ex` WHERE `summ`='0' AND `guarantee`='0' AND `price`<>'0' AND `percent_cats`<>'60' ORDER BY `id` DESC LIMIT 900";
     //$query = "SELECT * FROM `fl_journal_calculate_ex` WHERE `id`='167337'";
 
     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
