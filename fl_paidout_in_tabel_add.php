@@ -270,6 +270,7 @@ if ($enter_ok){
                     echo '                    
                                         <input type="hidden" name="noch" id="noch" value="'.$noch.'">
                                         <input type="hidden" name="tabel_type" id="tabel_type" value="'.$tabel_j[0]['type'].'">
+                                        <input type="hidden" name="paidout_type" id="paidout_type" value="'.$_GET['type'].'">
                                         
                                         <div id="errror"></div>
                                         <div id="showPaidoutAddbutton" style="display: none;">
@@ -289,10 +290,11 @@ if ($enter_ok){
                                         tabel_id = $("#paidout_summ").attr("tabel_id"),
                                         paidout_summ_tabel = $("#paidout_summ").attr("paidout_summ_tabel"),
                                         tabel_type = $("#tabel_type").val();
+                                        paidout_type = $("#paidout_type").val();
                                     //console.log(tabel_type);
                                     
                                     if (summ.length > 2) {
-                                        tabelSubtractionPercent(tabel_id, tabel_type, summ, paidout_summ_tabel);
+                                        tabelSubtractionPercent(tabel_id, tabel_type, paidout_type, summ, paidout_summ_tabel);
                                     }
                                 });
                             </script>

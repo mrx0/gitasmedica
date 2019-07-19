@@ -18,6 +18,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         //ID табеля
         $tabel_id = $_POST['tabel_id'];
+        //Тип оплаты
+        $paidout_type = $_POST['paidout_type'];
         //Сумма, которую хотим выдать сейчас (аванс, зп... не важно)
         $iWantMyMoney = $_POST['summ'];
         //Переменная для "отсыпания" денег по филиалам и позициям
@@ -626,7 +628,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                 echo '
                     </table>
-                    <div class="button_tiny" style="width: 100px; font-size: 75%; cursor: pointer;" onclick="tabelSubtractionPercent(' . $tabel_id . ', ' . $tabel_j['type'] . ', ' . $iWantMyMoney . ', '.$paidout_summ_tabel.');">По умолчанию</div>
+                    <div class="button_tiny" style="width: 100px; font-size: 75%; cursor: pointer;" onclick="tabelSubtractionPercent(' . $tabel_id . ', ' . $tabel_j['type'] . ', '.$paidout_type.', ' . $iWantMyMoney . ', '.$paidout_summ_tabel.');">По умолчанию</div>
                     <div style="width: 250px; background-color: #EEE; border: 1px dotted #CCC; margin: 10px; padding: 5px; font-size: 85%;">
                         <div>Всего: <span id="fil_sub_sum" style="font-weight: bold;">' . array_sum($pos_subtraction_summ_filials) . '</span></div>
                         <div><span id="fil_sub_msg"></span></div>

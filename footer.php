@@ -119,6 +119,7 @@
 	</html>';
 
     //var_dump(microtime(true) - $script_start);
-    echo '<div class="no_print" style="font-size: 80%;">Страница загружена за: '.(number_format((microtime(true) - $script_start), 2, '.', '')).' сек.</div>';
+    echo '<div class="no_print" style=" margin-left: 20px; font-size: 80%;">Страница загружена за: '.(number_format((microtime(true) - $script_start), 2, '.', '')).' сек.</div>';
+    echo '<div class="no_print" style="float: right; margin-right: 20px; font-size: 80%;">В любой непонятной ситуации жми Ctrl+F5 &#169;</div>';
 
 ?>
