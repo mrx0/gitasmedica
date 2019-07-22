@@ -2182,12 +2182,20 @@
     }
 
     //Добавляем/редактируем в базу выплату в табель
-    function  fl_Ajax_paidout_add(paidout_id, tabel_id, mode, paidoutData, link_res){
+    function  fl_Ajax_paidout_add(paidout_id, tabel_id, mode, paidoutData, link_res, variant){
 
-        var link = "fl_paidout_add_f.php";
+        if (variant == 1) {
+            var link = "fl_paidout_add_f.php";
+            if (mode == 'edit') {
+                link = "fl_paidout_edit_f.php";
+            }
+        }
 
-        if (mode == 'edit'){
-            link = "fl_paidout_edit_f.php";
+        if (variant == 2) {
+            var link = "fl_paidout_add2_f.php";
+            if (mode == 'edit') {
+                link = "fl_paidout_edit2_f.php";
+            }
         }
 
         paidoutData['paidout_id'] = paidout_id;
@@ -2519,9 +2527,10 @@
     }
 
     //Промежуточная функция для выплаты
-    function fl_showPaidoutAdd (paidout_id, tabel_id, type, worker_id, month, year, link, mode, deploy){
+    function fl_showPaidoutAdd (paidout_id, tabel_id, type, worker_id, month, year, link, mode, deploy, variant){
         //console.log(mode);
         //deploy - провести или нет
+        //variant - какой вариант использовать. либо где по позициям или по всем суммам
 
         //убираем ошибки
         hideAllErrors ();
@@ -2572,7 +2581,7 @@
             success:function(res){
                 if(res.result == 'success'){
 
-                    fl_Ajax_paidout_add(paidout_id, tabel_id, mode, paidoutData, link);
+                        fl_Ajax_paidout_add(paidout_id, tabel_id, mode, paidoutData, link, variant);
 
                     // в случае ошибок в форме
                 }else{

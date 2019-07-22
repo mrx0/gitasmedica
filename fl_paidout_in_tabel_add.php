@@ -33,6 +33,25 @@ if ($enter_ok){
                     $filials_j = getAllFilials(false, false, false);
                     //var_dump($filials_j);
 
+                    $msql_cnnct = ConnectToDB ();
+
+                    //Сумма премии
+                    $surchargesSumm = 0;
+
+                    //Получим премии отдельно, !!! потом надо будет переделать, а то лишний запрос какой-то
+                    $query = "SELECT SUM(`summ`) AS `surchargesSumm`
+                    FROM  `fl_journal_surcharges` 
+                    WHERE `tabel_id` = '{$_GET['tabel_id']}' AND `type`='1';";
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                    $number = mysqli_num_rows($res);
+                    if ($number != 0) {
+                        $arr = mysqli_fetch_assoc($res);
+                            $surchargesSumm = $arr['surchargesSumm'];
+                    }
+                    //var_dump($surchargesSumm);
+
                     echo '
                             <div id="status">
                                 <header>
@@ -80,14 +99,13 @@ if ($enter_ok){
                     //Если 1 - аванс, 7 - ЗП, 4 - на карту
                     if (($_GET['type'] == 1) || ($_GET['type'] == 7) || ($_GET['type'] == 4)){
                         //Общая сумма, которую осталось выплатить = сумма (РЛ) + надбавки + за ночь + пустые смены - вычеты - оплачено - выплачено
-                        $paidout_summ_value = $tabel_j[0]['summ'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena'] - $tabel_j[0]['deduction'] - $tabel_j[0]['paid'] - $tabel_j[0]['paidout'];
+                        //$paidout_summ_value = $tabel_j[0]['summ'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena'] - $tabel_j[0]['deduction'] - $tabel_j[0]['paid'] - $tabel_j[0]['paidout'];
+                        $paidout_summ_value = $tabel_j[0]['summ'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena'] - $tabel_j[0]['deduction'] - $tabel_j[0]['paidout'] + $surchargesSumm;
                         //Если ассистент, то плюсуем сумму за РЛ
                         if ($tabel_j[0]['type'] == 7){
                             $paidout_summ_value += $tabel_j[0]['summ_calc'];
                         }
                     }
-
-                    $msql_cnnct = ConnectToDB ();
 
                     //Тип начисления
                     $surcharge_type = 0;
@@ -226,7 +244,7 @@ if ($enter_ok){
                                         <div class="cellsBlock2">
                                             <div class="cellLeft">
                                             <span style="font-size:80%;  color: #555;">Сумма (руб.)</span><br>
-                                                <input type="text" name="paidout_summ" id="paidout_summ" value="'.intval($paidout_summ_value).'" class="paidout_summ2" tabel_id="'.$_GET['tabel_id'].'" paidout_summ_tabel="'.intval($paidout_summ_value).'" autocomplete="off" autofocus><!--<span class="button_tiny" style="font-size: 90%; cursor: pointer" onclick=""><i class="fa fa-check-square" style=" color: green;"></i> Применить</span>-->
+                                                <input type="text" name="paidout_summ" id="paidout_summ" value="'.intval($paidout_summ_value).'" class="paidout_summ2" tabel_id="'.$_GET['tabel_id'].'" paidout_summ_tabel="'.intval($paidout_summ_value).'" autocomplete="off" autofocus><!--<span class="button_tiny" style="font-size: 90%; cursor: pointer" onclick=""><i class="fa fa-check-square" style=" color: green;"></i> Применить</span>--><br>
                                                 <label id="paidout_summ_error" class="error"></label>
                                             </div>
                                         </div>
@@ -274,8 +292,8 @@ if ($enter_ok){
                                         
                                         <div id="errror"></div>
                                         <div id="showPaidoutAddbutton" style="display: none;">
-                                            <input type="button" class="b" value="Добавить" onclick="fl_showPaidoutAdd(0, '.$_GET['tabel_id'].', '.$_GET['type'].', '.$tabel_j[0]['worker_id'].', '.$tabel_j[0]['month'].', '.$tabel_j[0]['year'].', \''.$link.'\', \'add\', false)">
-                                            <!--<input type="button" class="b" value="Добавить и провести" onclick="fl_showPaidoutAdd(0, '.$_GET['tabel_id'].', '.$_GET['type'].', \''.$link.'\', \'add\', true)">-->
+                                            <input type="button" class="b" value="Добавить" onclick="fl_showPaidoutAdd(0, '.$_GET['tabel_id'].', '.$_GET['type'].', '.$tabel_j[0]['worker_id'].', '.$tabel_j[0]['month'].', '.$tabel_j[0]['year'].', \''.$link.'\', \'add\', false, 2)">
+                                            <!--<input type="button" class="b" value="Добавить и провести" onclick="fl_showPaidoutAdd(0, '.$_GET['tabel_id'].', '.$_GET['type'].', \''.$link.'\', \'add\', true, 2)">-->
                                         </div>
                                     </form>';
 

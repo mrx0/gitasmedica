@@ -47,7 +47,7 @@ if ($enter_ok){
                     }
 
                     echo '
-                                   ] в <a href="'.$link.'id='.$_GET['tabel_id'].'" class="ahref">табель #'.$_GET['tabel_id'].'</a></h2>
+                                   ] в <a href="'.$link.'?id='.$_GET['tabel_id'].'" class="ahref">табель #'.$_GET['tabel_id'].'</a></h2>
                                     <!--Заполните поля-->
                                 </header>';
 
