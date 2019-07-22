@@ -60,9 +60,9 @@
 											<select id="filial" class="wrapper-dropdown-2 b2" tabindex="2" name="filial">
 												<ul class="dropdown">
 													<li><option value="99" selected>Все</option></li>';
-														if ($offices_j !=0){
-															for ($i=0;$i<count($offices_j);$i++){
-																echo '<li><option value="'.$offices_j[$i]['id'].'" class="icon-twitter icon-large">'.$offices_j[$i]['name'].'</option></li>';
+														if (!empty($offices_j)){
+															foreach ($offices_j as $filial_id => $filial_data){
+																echo '<li><option value="'.$filial_id.'" class="icon-twitter icon-large">'.$filial_data['name'].'</option></li>';
 															}
 														}
 											

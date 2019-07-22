@@ -207,6 +207,7 @@
 
 	//Собираем все филиалы
 	function getAllFilials($sort, $short_name, $closed){
+
 		$filials_j = array();
 
         $msql_cnnct = ConnectToDB ();
@@ -220,26 +221,40 @@
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
         $number = mysqli_num_rows($res);
+
         if ($number != 0){
             while ($arr = mysqli_fetch_assoc($res)){
-                $filials_j[$arr['id']] = $arr;
+                $filials_j[(string)$arr['id']] = $arr;
+                //var_dump((string)$arr['id']);
             }
         }
+        //var_dump($filials_j);
 
         if ($sort){
             if (!empty($filials_j)) {
-                $filials_j_names = array();
-
-                //Определяющий массив из названий для сортировки
-                foreach ($filials_j as $key => $arr) {
-                    if ($short_name){
-                        array_push($filials_j_names, $arr['name2']);
-                    }else {
-                        array_push($filials_j_names, $arr['name']);
+            	//Сортировка по имени с сохранением ключей
+                uasort($filials_j, function($a, $b){
+                    $a = $a['name'];
+                    $b = $b['name'];
+                    if ($a == $b) {
+                        return 0;
                     }
-                }
+                    return ($a < $b) ? -1 : 1;
+                });
+                //var_dump($filials_j);
 
-                array_multisort($filials_j_names, SORT_LOCALE_STRING, $filials_j);
+//                $filials_j_names = array();
+//
+//                //Определяющий массив из названий для сортировки
+//                foreach ($filials_j as $key => $arr) {
+//                    if ($short_name){
+//                        array_push($filials_j_names, $arr['name2']);
+//                    }else {
+//                        array_push($filials_j_names, $arr['name']);
+//                    }
+//                }
+//
+//                array_multisort($filials_j_names, SORT_LOCALE_STRING, $filials_j);
             }
         }
 

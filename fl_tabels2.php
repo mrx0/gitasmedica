@@ -183,6 +183,29 @@
                 echo widget_calendar ($month, $year, 'fl_tabels2.php', $dop);
                 echo '</div>';
 
+
+                //Фильтр по филиалам
+                echo '
+                            <div style="margin-top: 5px; font-size: 80%;">
+                                Показывать только филиал: 
+
+                                <select name="filterFilial" id="filterFilial" style="font-size: 93%;">
+                                    <option value="-1">Все</option>';
+
+				if (!empty($filials_j)){
+                    foreach ($filials_j as $f_id => $filial_item){
+						echo "<option value='".$f_id."'>".$filial_item['name']."</option>";
+					}
+				}
+				echo '
+                                    <option value="0">Без филиала</option>
+                                </select>';
+                //var_dump($filials_j);
+
+                echo '
+                            </div>';
+
+
                 echo '
                         </ul>';
 
@@ -281,7 +304,7 @@
 
                 $block_fast_filter = '';
 
-                //Календарная сетка
+                //
                 echo '
                         <table style="border-bottom: 1px solid #BFBCB5; border-right: 1px solid #BFBCB5; margin:5px; font-size: 80%;">
                             <tr class="<!--sticky f-sticky-->">
@@ -319,7 +342,7 @@
                         $oklad = 0.00;
 
                         echo '
-                                <tr class="cellsBlockHover workerItem" worker_id="'.$worker_data['id'].'" style="'.$bgColor.'">
+                                <tr class="cellsBlockHover workerItem" worker_id="'.$worker_data['id'].'" filial_id="'.$worker_data['filial_id'].'" style="'.$bgColor.'">
                                     <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>'.$worker_data['full_name'].'</b></td>
                                     <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">';
 
@@ -377,10 +400,10 @@
                         if (isset($hours_j[$worker_data['id']])){
 
                             $w_hours = array_sum($hours_j[$worker_data['id']]);
-                            $w_percentHours = number_format($w_hours * 100 / $w_normaSmen, 2, '.', '');
+                            $w_percentHours = number_format($w_hours * 100 / $w_normaSmen, 5, '.', '');
 
                             echo '
-                                        <div id="w_hours_'.$worker_data['id'].'" style="margin-bottom: 15px; box-shadow: 0 0 3px 1px rgb(197, 197, 197); text-align: center;">'.$w_hours.'/ <span id="w_norma_'.$worker_data['id'].'">'.$w_normaSmen.'</span>/ '.$w_percentHours.'%</div>';
+                                        <div id="w_hours_'.$worker_data['id'].'" style="margin-bottom: 15px; box-shadow: 0 0 3px 1px rgb(197, 197, 197); text-align: center;">'.$w_hours.'/ <span id="w_norma_'.$worker_data['id'].'">'.$w_normaSmen.'</span>/ '.number_format($w_percentHours, 2, '.', '').'%</div>';
 
                             //Нарисуем табличку со всеми филиалами
                             echo '
@@ -558,7 +581,28 @@
                     
 				});
 				
-                
+                //Если хотим видеть только один филиал
+                $(function() {
+                    $("#filterFilial").change(function(){
+                        
+                        blockWhileWaiting (true);
+                        
+                        var filter_filial_id = $(this).val();
+
+                        $(".cellsBlockHover").each(function(){
+                            if (filter_filial_id == -1){
+                                $(this).show();
+                            }else{
+                                if ($(this).attr("filial_id") == filter_filial_id){
+                                    $(this).show();
+                                }else{
+                                    $(this).hide();
+                                }
+                            }
+                        });
+                    });
+                });
+
 				</script>';
 			}
 			//mysql_close();

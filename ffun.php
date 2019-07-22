@@ -1441,9 +1441,29 @@
                                 <div style="display: inline;">Подразделение</div>
                                 <div style="float: right; display: inline; text-align: right;"><b>'.$filial.'</b></div>
                             </div>
-                            <div style="border-bottom: 1px dotted grey;">
+                            <div style="border-bottom: 1px dotted grey;">';
+
+        if ($hours_norma > 0) {
+            $rezult .= '
+                                <div style="display: inline;">Норма часов</div>
+                                <div style="float: right; display: inline; text-align: right;">';
+
+            $rezult .= $hours_norma;
+
+            $rezult .= '
+                                </div>';
+        }else{
+            $rezult .= '
                                 <div style="display: inline;">Норма смен/дней</div>
-                                <div style="float: right; display: inline; text-align: right;">-</div>
+                                <div style="float: right; display: inline; text-align: right;">';
+
+            $rezult .= '-';
+
+            $rezult .= '
+                                </div>';
+        }
+
+        $rezult .= '
                             </div>
                             <div style="border-bottom: 1px dotted grey;">
                                 <div style="display: inline;">Часов в смене</div>

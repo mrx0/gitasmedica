@@ -10550,23 +10550,26 @@
     }
 
     //Функция возвращает, сколько денег с какого филиала надо будет снять при выплате ЗП - для fl_paidout_in_tabel_add.php
-    function tabelSubtractionPercent(tabel_id, type, summ, paidout_summ_tabel){
-		console.log(summ);
-		console.log(paidout_summ_tabel);
+    function tabelSubtractionPercent(tabel_id, tabel_type, paidout_type, summ, paidout_summ_tabel){
+		//console.log(summ);
+		//console.log(paidout_summ_tabel);
 
 		hideAllErrors();
 
-		if (summ > paidout_summ_tabel){
-            $("#paidout_summ_error").html('Вы собираетесь выдать больше, чем указано в табеле.');
+		if (Number(summ) > Number(paidout_summ_tabel)){
+            $("#paidout_summ_error").html('Вы собираетесь выдать больше, чем указано в табеле ('+paidout_summ_tabel+' руб.).');
             $("#paidout_summ_error").show();
+            $("#showPaidoutAddbutton").hide();
 		}else {
 
-            var link = "tabel_subtraction_percent3_f.php";
+            var link = "tabel_subtraction_percent2_f.php";
 
             var reqData = {
                 tabel_id: tabel_id,
                 summ: summ,
-                paidout_summ_tabel: paidout_summ_tabel
+                paidout_summ_tabel: paidout_summ_tabel,
+                tabel_type: tabel_type,
+                paidout_type: paidout_type
             };
             //console.log(reqData);
 
@@ -10618,13 +10621,14 @@
                 tabel_id = $(this).attr("tabel_id"),
             	paidout_summ_tabel = $(this).attr("paidout_summ_tabel"),
                 tabel_type = $("#tabel_type").val();;
+            	paidout_type = $("#paidout_type").val();;
 
             if (summ.length > 2) {
 
                 $this.data('timer', setTimeout(function () {
                     $this.removeData('timer');
 
-                    tabelSubtractionPercent(tabel_id, tabel_type, summ, paidout_summ_tabel);
+                    tabelSubtractionPercent(tabel_id, tabel_type, paidout_type, summ, paidout_summ_tabel);
 
                 }, $delay));
             }
@@ -10642,8 +10646,8 @@
         $(".filial_subtraction").each(function (){
             summ += Number($(this).val());
         })
-        console.log(summ);
-        console.log(iWantMyMoney);
+        //console.log(summ);
+        //console.log(iWantMyMoney);
 
         if (summ < iWantMyMoney){
             $("#fil_sub_msg").html("Осталось распределить: <span style='font-size: 110%; font-weight: bold; color: red;'>" + (iWantMyMoney - summ) + "</span> руб.");

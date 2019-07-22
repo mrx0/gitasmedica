@@ -28,7 +28,9 @@
                     //Получим сразу название категории
                     $category_j = SelDataFromDB('spr_categories', $tabel_j[0]['category'], 'id');
                     //var_dump($category_j);
-
+                    //...и должность
+                    $permission_j = SelDataFromDB('spr_permissions', $tabel_j[0]['type'], 'id');
+                    //var_dump($permission_j);
 
                     if (($finances['see_all'] == 1) || $god_mode || ($tabel_j[0]['worker_id'] == $_SESSION['id'])) {
                         include_once 'ffun.php';
@@ -72,7 +74,7 @@
                                             <a href="fl_my_tabels.php" class="b">Табели</a>';
                         }else {
                             echo '
-                                            <a href="fl_tabels.php" class="b">Важный отчёт</a>';
+                                            <a href="fl_tabels.php?who='.$tabel_j[0]['type'].'" class="b">Важный отчёт</a>';
                         }
                         echo '
                                         </div>
@@ -126,7 +128,13 @@
                                     
                                         <div style="font-size: 90%; margin-bottom: 20px;">
                                             <div style="color: #252525; font-weight: bold;">'.$monthsName[$tabel_j[0]['month']].' '.$tabel_j[0]['year'].'</div>
-                                            <div>Сотрудник <b>'.WriteSearchUser('spr_workers', $tabel_j[0]['worker_id'], 'user_full', true).'</b></div>';
+                                            <div>
+                                                Сотрудник <b>'.WriteSearchUser('spr_workers', $tabel_j[0]['worker_id'], 'user_full', true).'</b> ';
+                        if ($permission_j != 0){
+                            echo '/ <i style="font-size: 95%;">'.$permission_j[0]['name'].'</i>';
+                        }
+                        echo '
+                                             </div>';
 
                         //Врачи
                         if (($tabel_j[0]['type'] == 5) || ($tabel_j[0]['type'] == 6) || ($tabel_j[0]['type'] == 10)) {
@@ -135,7 +143,7 @@
                         }
 
                         //Админы, ассистенты
-                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7)) {
+                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7) || ($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15)) {
                             echo '
                                             <div>Филиал, к которому прикреплен сотрудник ';
 
