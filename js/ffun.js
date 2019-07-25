@@ -3731,8 +3731,9 @@
             analizSummBeznal: $("#analizSummBeznal").val(),
             solarSummNal: $("#solarSummNal").val(),
             solarSummBeznal: $("#solarSummBeznal").val(),
-            //summMinusNal: $("#summMinusNal").val()
-            summMinusNal: $("#summMinusNal").html()
+            summMinusNal: $("#summMinusNal").html()/*,
+            bankSummNal: $("#bankSummNal").html(),
+            directorSummNal: $("#directorSummNal").html()*/
         };
         //console.log(reqData);
 
@@ -4048,6 +4049,9 @@
         $("#solarSummBeznalAllMonth").html(0);
         $("#summMinusNalAllMonth").html(0);
 
+        $("#summGiveoutInBank").html(0);
+        $("#summGiveoutDirector").html(0);
+
         //- Итог общий
         $(".itogSumm").each(function(){
             //console.log($(this).html().replace(/\s{1,}/g, ''));
@@ -4243,12 +4247,42 @@
         //- расход
         $(".summMinusNal").each(function(){
             //console.log($(this).html().replace(/\s{1,}/g, ''));
+            //console.log(Number($(this).html()));
+            //console.log(Number($(this).html().replace(/\s{1,}/g, '')));
 
             if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
                 var summMinusNalAllMonth = Number($("#summMinusNalAllMonth").html().replace(/\s{1,}/g, ''));
                 var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
 
                 $("#summMinusNalAllMonth").html(number_format((summMinusNalAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- Выдачи в банк
+        $(".giveout_inBank").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+            //console.log(Number($(this).html()));
+            //console.log(Number($(this).html().replace(/\s{1,}/g, '')));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var summMinusNalAllMonth = Number($("#summGiveoutInBank").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#summGiveoutInBank").html(number_format((summMinusNalAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- Выдачи АНу
+        $(".giveout_director").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+            //console.log(Number($(this).html()));
+            //console.log(Number($(this).html().replace(/\s{1,}/g, '')));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var summMinusNalAllMonth = Number($("#summGiveoutDirector").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#summGiveoutDirector").html(number_format((summMinusNalAllMonth + thisSumm), 2, '.', ' '));
 
             }
         });
@@ -4303,6 +4337,11 @@
         //- расход
         var summMinusNal = (thisObj.find(".summMinusNal"));
 
+        //- Выдачи в банк
+        var giveout_inBank = (thisObj.find(".giveout_inBank"));
+        //- Выдачи АНу
+        var giveout_director = (thisObj.find(".giveout_director"));
+
         //убираем ошибки
         hideAllErrors ();
 
@@ -4332,55 +4371,68 @@
                 if(res.result == 'success') {
                     //console.log('success');
                     //$('#data').html(res.data);
+                    //console.log(res.count);
+                    // console.log(res.data);
+                    // console.log(res.giveout_bank);
 
                     if (res.count > 0){
                         //console.log(res.data);
+                        //console.log(Object.size(res.data));
                         //console.log(Object.size(res.data));
 
                         thisObj.css({
                             "color": "#333"
                         });
 
-                        //Если массив не пустой
-                        //if (date == getTodayDate()){
-                        if (Object.size(res.data) > 0){
+                        //Закрываю, потому что буду отслеживать по count
+                        //if (Object.size(res.data) > 0){}
 
-                            itogSumm.html               (number_format(res.data.itogSumm, 2, '.', ' ')).css({"text-align": "right"});
-                            arenda.html                 (number_format(res.data.arenda, 0, '.', ' ')).css({"text-align": "right"});
-                            zReport.html                (number_format(res.data.zreport, 2, '.', ' ')).css({"text-align": "right", "color": "rgb(18, 0, 255)"});
-                            allSumm.html                (number_format(res.data.summ, 2, '.', ' ')).css({"text-align": "right"});
-                            SummNal.html                (number_format(res.data.nal, 0, '.', ' ')).css({"text-align": "right"});
-                            SummBeznal.html             (number_format(res.data.beznal, 0, '.', ' ')).css({"text-align": "right"});
-                            SummNalStomCosm.html        (number_format(res.data.cashbox_nal, 0, '.', ' ')).css({"text-align": "right"});
-                            SummBeznalStomCosm.html     (number_format(res.data.cashbox_beznal, 0, '.', ' ')).css({"text-align": "right"});
-                            SummCertNal.html            (number_format(res.data.cashbox_cert_nal, 0, '.', ' ')).css({"text-align": "right"});
-                            SummCertBeznal.html         (number_format(res.data.cashbox_cert_beznal, 0, '.', ' ')).css({"text-align": "right"});
-                            ortoSummNal.html            (number_format(res.data.temp_orto_nal, 0, '.', ' ')).css({"text-align": "right"});
-                            ortoSummBeznal.html         (number_format(res.data.temp_orto_beznal, 0, '.', ' ')).css({"text-align": "right"});
-                            specialistSummNal.html      (number_format(res.data.temp_specialist_nal, 0, '.', ' ')).css({"text-align": "right"});
-                            specialistSummBeznal.html   (number_format(res.data.temp_specialist_beznal, 0, '.', ' ')).css({"text-align": "right"});
-                            analizSummNal.html          (number_format(res.data.temp_analiz_nal, 0, '.', ' ')).css({"text-align": "right"});
-                            analizSummBeznal.html       (number_format(res.data.temp_analiz_beznal, 0, '.', ' ')).css({"text-align": "right"});
-                            solarSummNal.html           (number_format(res.data.temp_solar_nal, 0, '.', ' ')).css({"text-align": "right"});
-                            solarSummBeznal.html        (number_format(res.data.temp_solar_beznal, 0, '.', ' ')).css({"text-align": "right"});
-                            summMinusNal.html           (number_format(res.data.temp_giveoutcash, 2, '.', ' ')).css({"text-align": "right"});
+                        var data = res.data[0];
+
+                        //Если массив отчета не пустой
+                        //if (date == getTodayDate()){
+                        if (Object.size(data) > 0){
+
+
+
+                            itogSumm.html               (number_format(data.itogSumm, 2, '.', ' ')).css({"text-align": "right"});
+                            arenda.html                 (number_format(data.arenda, 0, '.', ' ')).css({"text-align": "right"});
+                            zReport.html                (number_format(data.zreport, 2, '.', ' ')).css({"text-align": "right", "color": "rgb(18, 0, 255)"});
+                            allSumm.html                (number_format(data.summ, 2, '.', ' ')).css({"text-align": "right"});
+                            SummNal.html                (number_format(data.nal, 0, '.', ' ')).css({"text-align": "right"});
+                            SummBeznal.html             (number_format(data.beznal, 0, '.', ' ')).css({"text-align": "right"});
+                            SummNalStomCosm.html        (number_format(data.cashbox_nal, 0, '.', ' ')).css({"text-align": "right"});
+                            SummBeznalStomCosm.html     (number_format(data.cashbox_beznal, 0, '.', ' ')).css({"text-align": "right"});
+                            SummCertNal.html            (number_format(data.cashbox_cert_nal, 0, '.', ' ')).css({"text-align": "right"});
+                            SummCertBeznal.html         (number_format(data.cashbox_cert_beznal, 0, '.', ' ')).css({"text-align": "right"});
+                            ortoSummNal.html            (number_format(data.temp_orto_nal, 0, '.', ' ')).css({"text-align": "right"});
+                            ortoSummBeznal.html         (number_format(data.temp_orto_beznal, 0, '.', ' ')).css({"text-align": "right"});
+                            specialistSummNal.html      (number_format(data.temp_specialist_nal, 0, '.', ' ')).css({"text-align": "right"});
+                            specialistSummBeznal.html   (number_format(data.temp_specialist_beznal, 0, '.', ' ')).css({"text-align": "right"});
+                            analizSummNal.html          (number_format(data.temp_analiz_nal, 0, '.', ' ')).css({"text-align": "right"});
+                            analizSummBeznal.html       (number_format(data.temp_analiz_beznal, 0, '.', ' ')).css({"text-align": "right"});
+                            solarSummNal.html           (number_format(data.temp_solar_nal, 0, '.', ' ')).css({"text-align": "right"});
+                            solarSummBeznal.html        (number_format(data.temp_solar_beznal, 0, '.', ' ')).css({"text-align": "right"});
+                            summMinusNal.html           (number_format(data.temp_giveoutcash, 2, '.', ' ')).css({"text-align": "right"});
 
                             //Прописываем статус отчета
-                            $(thisObj).find(".reportDate").attr('status', res.data.status);
+                            $(thisObj).find(".reportDate").attr('status', data.status);
                             //И id
-                            $(thisObj).find(".reportDate").attr('report_id', res.data.id);
+                            $(thisObj).find(".reportDate").attr('report_id', data.id);
 
 
                         }else{
 
                             thisObj.html('<div class="cellTime cellsTimereport reportDate" status="0" report_id="0" style="text-align: center; cursor: pointer; color: #333;">'+date+'</div>' +
-                            '<div class="cellText" style="color: rgb(48, 185, 91); font-weight: normal; padding-left: 35px;"><i>Отчёт был заполнен и добавлен в архив</i></div>');
+                            '<div class="cellText" style="color: rgb(48, 185, 91); font-weight: normal; padding-left: 35px;"><i>Отчёт был заполнен и добавлен в архив, для изменений обратитесь к руководителю.</i></div>');
 
                         }
 
                         //Меняем цвет, если проверено
-                        if (res.data.status == 7) {
+                        if (data.status == 7) {
                             $(thisObj).css({"background-color": "rgba(216, 255, 196, 0.98)"});
+                            //блокируем ссылки
+                            summMinusNal.css("pointer-events", "none");
                         }
 
                     }else{
@@ -4404,6 +4456,39 @@
                         solarSummBeznal.html('-');
                         summMinusNal.html('-');
                     }
+
+                    //Выдачи
+                    if (res.giveout_bank > 0) {
+                        giveout_inBank.html(number_format(res.giveout_bank, 0, '.', ' ')).css({"text-align": "right"});
+                    }else{
+                        giveout_inBank.html('-');
+                    }
+                    if (res.giveout_director > 0) {
+                        giveout_director.html(number_format(res.giveout_director, 0, '.', ' ')).css({"text-align": "right"});
+                    }else{
+                        giveout_director.html('-');
+                    }
+
+                    //console.log(data);
+                    //Если есть объект
+                    if (data !== undefined) {
+                        //Если в объекте есть ключ
+                        //if ('status' in data) {
+                            //Если ключ равен значению
+                            if (data.status == 7) {
+                                //блокируем ссылки
+
+                                // console.log(giveout_inBank);
+                                // console.log(giveout_director);
+                                //console.log(giveout_inBank.html());
+                                //console.log(giveout_director.html());
+
+                                giveout_inBank.css("pointer-events", "none");
+                                giveout_director.css("pointer-events", "none");
+                            }
+                        //}
+                    }
+
                 }else{
                     //console.log('error');
                     $('#errrror').html(res.data);
@@ -5357,7 +5442,190 @@
                 }
             })
         }
+    }
 
+    //Добавляем/редактируем в базу выплату в банку
+    function  fl_Ajax_add_in_bank(mode, reqData){
+
+        var link = "fl_addInBank_f.php";
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data: reqData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(res){
+                //console.log(res.data);
+                //$('#data').html(res)
+
+                if(res.result == 'success') {
+                    //console.log('success');
+                    //$('#data').html(res.data);
+
+                    blockWhileWaiting (true);
+                    document.location.href = "fl_consolidated_report_admin.php?filial_id=" + reqData.filial_id;
+
+                }else{
+                    //console.log('error');
+                    $('#errror').html(res.data);
+                    //$('#errrror').html('');
+                }
+            }
+        });
+    }
+
+    //Добавляем/редактируем в базу выплату динектору
+    function  fl_Ajax_add_to_director(mode, reqData){
+
+        var link = "fl_addToDirector_f.php";
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data: reqData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(res){
+                //console.log(res.data);
+                //$('#data').html(res)
+
+                if(res.result == 'success') {
+                    //console.log('success');
+                    //$('#data').html(res.data);
+
+                    blockWhileWaiting (true);
+                    document.location.href = "fl_consolidated_report_admin.php?filial_id=" + reqData.filial_id;
+
+                }else{
+                    //console.log('error');
+                    $('#errror').html(res.data);
+                    //$('#errrror').html('');
+                }
+            }
+        });
+    }
+
+    //Промежуточная функция для выплаты в банк
+    function fl_showAjaxAddInBank (mode){
+        //console.log(mode);
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        var filial_id = $('#SelectFilial').val();
+        var date = $("#iWantThisDate2").val();
+        var comment = $('#comment').val();
+        var summ = $('#summ').val();
+
+        var reqData = {
+            filial_id: filial_id,
+            date: date,
+            summ: summ,
+            comment: comment
+        };
+
+        //проверка данных на валидность
+        $.ajax({
+            url:"ajax_test.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data: {summ: summ},
+
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                if(res.result == 'success'){
+
+                    fl_Ajax_add_in_bank(mode, reqData);
+
+                    // в случае ошибок в форме
+                }else{
+                    // перебираем массив с ошибками
+                    for(var errorField in res.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(res.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                }
+            }
+        })
+    }
+
+    //Промежуточная функция для выплаты директору
+    function fl_showAjaxAddToDirector (mode){
+        //console.log(mode);
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        var filial_id = $('#SelectFilial').val();
+        var date = $("#iWantThisDate2").val();
+        var comment = $('#comment').val();
+        var summ = $('#summ').val();
+
+        var reqData = {
+            filial_id: filial_id,
+            date: date,
+            summ: summ,
+            comment: comment
+        };
+
+        //проверка данных на валидность
+        $.ajax({
+            url:"ajax_test.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data: {summ: summ},
+
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                if(res.result == 'success'){
+
+                    fl_Ajax_add_to_director(mode, reqData);
+
+                    // в случае ошибок в форме
+                }else{
+                    // перебираем массив с ошибками
+                    for(var errorField in res.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(res.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                }
+            }
+        })
     }
 
 

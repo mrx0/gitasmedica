@@ -200,14 +200,14 @@
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Серт-ты безнал
                             </div>';
-                $report_header .= '
+                /*$report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 ОРТО<br>нал
-                            </div>';
-                $report_header .= '
+                            </div>';*/
+                /*$report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center;  background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 ОРТО<br>безнал
-                            </div>';
+                            </div>';*/
                 /*$report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center">
                                 ? ОРТО<br>кол-во
@@ -220,14 +220,14 @@
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Спец-ты безнал
                             </div>';*/
-                $report_header .= '
+                /*$report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Анализы нал
-                            </div>';
-                $report_header .= '
+                            </div>';*/
+                /*$report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Анализы безнал
-                            </div>';
+                            </div>';*/
                 $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Солярий<br>нал
@@ -240,6 +240,16 @@
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Расход
                             </div>';
+                if (($finances['see_all'] == 1) || $god_mode) {
+                    $report_header .= '
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+                                Банк
+                            </div>';
+                    $report_header .= '
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+                                АН
+                            </div>';
+                }
                 $report_header .= '
                             <div class="cellText">
                             </div>';
@@ -282,7 +292,7 @@
                     //Цвет текущего дня
                     if ($data === date('d') . '.' . date('m') . '.' . date('Y')) {
                         //$today_color = 'background-color: green;';
-                        $today_outline = ' outline: 1px solid red; background-color: rgb(169, 255, 153);';
+                        $today_outline = ' outline: 1px solid red; background-color: rgba(255, 243, 77, 0.47);';
                     }
                     //var_dump($data);
                     //var_dump(date('d') . '.' . date('m') . '.' . date('Y'));
@@ -340,14 +350,14 @@
                             <div class="cellTime cellsTimereport SummCertBeznal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
-                    echo '
+                    /*echo '
                             <div class="cellTime cellsTimereport ortoSummNal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
                             <div class="cellTime cellsTimereport ortoSummBeznal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
-                            </div>';
+                            </div>';*/
                     /*echo '
                             <div class="cellTime cellsTimereport " style="text-align: center; font-weight: normal;">
                                 
@@ -360,14 +370,14 @@
                             <div class="cellTime cellsTimereport specialistSummBeznal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';*/
-                    echo '
+                    /*echo '
                             <div class="cellTime cellsTimereport analizSummNal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
                     echo '
                             <div class="cellTime cellsTimereport analizSummBeznal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
-                            </div>';
+                            </div>';*/
                     echo '
                             <div class="cellTime cellsTimereport solarSummNal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
@@ -380,6 +390,17 @@
                             <a href="giveout_cash.php?filial_id='.$filial_id.'&d='.dateTransformation($d).'&m='.dateTransformation($month).'&y='.$year.'" class="ahref cellTime cellsTimereport summMinusNal" style="text-align: center; font-weight: normal; cursor: pointer; '. $today_border .'">
                                 -
                             </a>';
+                    if (($finances['see_all'] == 1) || $god_mode) {
+                        echo '
+                            <a href="fl_in_bank_add.php?filial_id='.$filial_id.'&d='.dateTransformation($d).'&m='.dateTransformation($month).'&y='.$year.'" class="ahref cellTime cellsTimereport giveout_inBank" style="text-align: center; font-weight: normal; ' . $today_border . '">
+                                -
+                            </a>';
+                        echo '
+                            <a href="fl_to_director_add.php?filial_id='.$filial_id.'&d='.dateTransformation($d).'&m='.dateTransformation($month).'&y='.$year.'" class="ahref cellTime cellsTimereport giveout_director" style="text-align: center; font-weight: normal; ' . $today_border . '">
+                                -
+                            </a>';
+                    }
+
                     echo '
                             <div class="cellText" style="text-align: center; font-weight: normal; '. $today_border .'">
                             </div>';
@@ -440,14 +461,14 @@
                             <div id="SummCertBeznalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
                             </div>';
-                    echo '
+                    /*echo '
                             <div id="ortoSummNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
                             </div>';
                     echo '
                             <div id="ortoSummBeznalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
-                            </div>';
+                            </div>';*/
                     /*echo '
                             <div class="cellTime cellsTimereport " style="text-align: right; font-weight: bold;">
 
@@ -460,14 +481,14 @@
                             <div id="specialistSummBeznalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
                             </div>';*/
-                    echo '
+                    /*echo '
                             <div id="analizSummNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
                             </div>';
                     echo '
                             <div id="analizSummBeznalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
-                            </div>';
+                            </div>';*/
                     echo '
                             <div id="solarSummNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
@@ -478,6 +499,14 @@
                             </div>';
                     echo '
                             <div id="summMinusNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="summGiveoutInBank" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="summGiveoutDirector" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
                             </div>';
                     echo '
@@ -554,12 +583,13 @@
 
                         var elems = $(".blockControl"), count = elems.length;
 
+                        //Проходимся по дням
                         elems.each( function() {
                             
                             fl_getDailyReports($(this));
                             
                             if (!--count){
-                                console.log(count);
+                                //console.log(count);
                                 
                                 //fl_getDailyReportsSummAllMonth ();
                             }

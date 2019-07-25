@@ -126,6 +126,12 @@
 								<a href="stat_invoice.php" class="b3">Наряды</a>
 							</li>';
 
+//                if (($finances['see_all'] == 1) || $god_mode) {
+//                    echo '
+//							<li class="cellsBlock" style="margin: 1px;">
+//								<a href="fl_in_bank_add.php" class="b3">В банк</a>
+//							</li>';
+//                }
                 echo '
 						</ul>';
             }
