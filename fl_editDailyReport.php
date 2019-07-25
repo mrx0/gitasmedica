@@ -60,8 +60,8 @@
                             <header>
                                 <div class="nav">
                                     <a href="stat_cashbox.php" class="b">Касса</a>
-                                    <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт по филиалу</a>
-                                    <a href="fl_createSchedulerReport.php" class="b">Добавить рабочие часы</a>
+                                    <a href="fl_consolidated_report_admin.php?filial_id='.$filial_id.'" class="b">Сводный отчёт по филиалу</a>
+                                    <a href="fl_createSchedulerReport.php?filial_id='.$filial_id.'" class="b">Добавить рабочие часы</a>
                                 </div>
                                 <h2>Редактировать ежедневный отчёт</h2>
                             </header>';
@@ -98,7 +98,7 @@
                                             </div>
                                             <div class="cellRight">';
 
-                        echo $filials_j[$dailyReports_j[0]['filial_id']]['name'].'<input type="hidden" id="SelectFilial" name="SelectFilial" value="' . $dailyReports_j[0]['filial_id'] . '">';
+                        echo $filials_j[$filial_id]['name'].'<input type="hidden" id="SelectFilial" name="SelectFilial" value="' . $filial_id . '">';
 
                         echo '
                                             </div>
@@ -235,7 +235,7 @@
                         }
 
                         echo '
-                                <div class="cellsBlock400px" style="font-size: 90%;">
+                                <div class="cellsBlock400px" style="font-size: 90%; display: none;">
                                     <div class="cellLeft">
                                         Ортопантомограмма + КТ
                                         <span style="font-size:80%; color: #999; "></span>
@@ -247,7 +247,7 @@
                                 </div>';
 
                         echo '
-                                <div class="cellsBlock400px" style="font-size: 90%; /*display: none;*/">
+                                <div class="cellsBlock400px" style="font-size: 90%; display: none;">
                                     <div class="cellLeft">
                                         Специалисты<br>
                                         <span style="font-size:80%; color: #999; ">для ПР72</span>
@@ -296,15 +296,47 @@
                         echo '
                                 <div class="cellsBlock400px" style="font-size: 90%;">
                                     <div class="cellLeft">
-                                        Расход<br>
+                                        Расход <!--<a href="giveout_cash.php?filial_id='.$filial_id.'&d=01&m='.$dailyReports_j[0]['month'].'&y='.$dailyReports_j[0]['year'].'"><i class="fa fa-sign-in" aria-hidden="true" title="Перейти к расходам"></i></a>--><br>
                                         <span style="font-size:80%; color: #999; ">Выдано из кассы</span>
                                     </div>
                                     <div class="cellRight" style="color: red;">
                                         <!--<input type="text" id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; " value="'.$dailyReports_j[0]['temp_giveoutcash'].'"><span  style="font-size: 90%;"> руб.</span>-->
                                         <!--<input type="text" id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; " value="$SummGiveOutCashNal"><span  style="font-size: 90%;"> руб.</span>-->
                                         <span id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; ">'.$SummGiveOutCash.'</span><span  style="font-size: 90%;"> руб.</span>
+                                        <a href="giveout_cash.php?filial_id='.$filial_id.'&d='.$dailyReports_j[0]['day'].'&m='.$dailyReports_j[0]['month'].'&y='.$dailyReports_j[0]['year'].'" class="ahref button_tiny" style="font-size: 80%; cursor: pointer; float: right;">Подробно</a>
                                     </div>
                                 </div>';
+
+//                        if (($finances['see_all'] == 1) || $god_mode) {
+//                            echo '
+//                                <div class="cellsBlock400px" style="font-size: 90%;">
+//                                    <div class="cellLeft">
+//                                        Банк<br>
+//                                        <span style="font-size:80%; color: #999; "></span>
+//                                    </div>
+//                                    <div class="cellRight">
+//                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="bankSummNal" class="summMinus" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
+//                                        <!--<span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="solarSummBeznal" class="allSummInputBeznal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>-->
+//                                    </div>
+//                                </div>';
+//
+//                            echo '
+//                                <div class="cellsBlock400px" style="font-size: 90%;">
+//                                    <div class="cellLeft">
+//                                        АН<br>
+//                                        <span style="font-size:80%; color: #999; "></span>
+//                                    </div>
+//                                    <div class="cellRight">
+//                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="directorSummNal" class="summMinus" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
+//                                        <!--<span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="solarSummBeznal" class="allSummInputBeznal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>-->
+//                                    </div>
+//                                </div>';
+//                        }else {
+//                            echo '
+//                                <input type="hidden" id="bankSummNal" value="' . $dailyReports_j[0]['bank_summ_nal'] . '">';
+//                            echo '
+//                                <input type="hidden" id="directorSummNal" value="' . $dailyReports_j[0]['director_summ_nal'] . '">';
+//                        }
 
                         echo '
                             </div>';
