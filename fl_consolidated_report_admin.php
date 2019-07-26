@@ -172,7 +172,7 @@
 
                 $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
-                                Всего по кассе
+                                Всего в кассе
                             </div>';
 
                 $report_header .= '
@@ -186,11 +186,11 @@
                             </div>';
                 $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
-                                Наличные из нарядов
+                                Наличные ордеры
                             </div>';
                 $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
-                                Безнал. из нарядов
+                                Безнал. ордеры
                             </div>';
                 $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
@@ -514,9 +514,57 @@
                             </div>';
                     echo '
                         </li>';
+
                 }
 
                 echo $report_header;
+
+                if (($finances['see_all'] == 1) || $god_mode) {
+                    echo '
+                        <li id="interimReport" class="" style="margin: 10px; font-size: 12px; width: 300px; /*border-right: 1px solid #BFBCB5;*/ display: none;"">';
+                    echo '
+                            <div class="cellsBlock">
+                                <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">ИТОГИ</div>
+                            <div class="cellsBlock" style="font-size: 14px;">
+                                <div class="cellLeft">наличные касса</div>
+                                <div class="cellRight" style="text-align: right;">-</div>   
+                            </div>
+                            <div class="cellsBlock" style="font-size: 14px;">
+                                <div class="cellLeft">аренда</div>
+                                <div class="cellRight" style="text-align: right;">-</div>    
+                            </div>
+                            <div class="cellsBlock" style="font-size: 14px;">
+                                <div class="cellLeft">безнал + сертиф</div>
+                                <div class="cellRight" style="text-align: right;">-</div>    
+                            </div>
+                            <div class="cellsBlock" style="font-size: 14px;">
+                                <div class="cellLeft" style="font-weight: bold;">выручка вся:</div>
+                                <div class="cellRight" style="text-align: right;">-</div>
+                            </div>
+                            
+	                        <div class="cellsBlock">
+                                <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">НАЛИЧНЫЕ</div>    
+                            </div>
+                            <div class="cellsBlock" style="font-size: 14px;">
+                                <div class="cellLeft">наличные касса</div>
+                                <div class="cellRight" style="text-align: right;">-</div>
+                            </div>
+                            <div class="cellsBlock" style="font-size: 14px;">
+                                <div class="cellLeft">аренда</div>
+                                <div class="cellRight" style="text-align: right;">-</div>
+                            </div>
+                            <div class="cellsBlock" style="font-size: 14px;">
+                                <div class="cellLeft">расход</div>
+                                <div class="cellRight" style="text-align: right;">-</div>   
+                            </div>
+                            <div class="cellsBlock" style="font-size: 14px;">
+                                <div class="cellLeft" style="font-weight: bold;">остаток</div>
+                                <div class="cellRight" style="text-align: right;">-</div>  
+                            </div>';
+                    echo '
+                        </li>';
+
+                }
 
                 echo '
                     </ul>
