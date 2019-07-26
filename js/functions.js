@@ -10556,11 +10556,11 @@
 
 		hideAllErrors();
 
-		if (Number(summ) > Number(paidout_summ_tabel)){
-            $("#paidout_summ_error").html('Вы собираетесь выдать больше, чем указано в табеле ('+paidout_summ_tabel+' руб.).');
+		if (Number(summ) > Number(paidout_summ_tabel)) {
+            $("#paidout_summ_error").html('Вы собираетесь выдать больше, чем указано в табеле (' + paidout_summ_tabel + ' руб.).');
             $("#paidout_summ_error").show();
-            $("#showPaidoutAddbutton").hide();
-		}else {
+            // $("#showPaidoutAddbutton").hide();
+		}//else {
 
             var link = "tabel_subtraction_percent2_f.php";
 
@@ -10598,7 +10598,7 @@
                     // }
                 }
             })
-        }
+        // }
 	}
 
 	//!!! пример работы пауза между нажатиями
