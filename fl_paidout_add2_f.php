@@ -1,7 +1,8 @@
 <?php
 
-//fl_paidout_add_f.php
+//fl_paidout_add2_f.php
 //Функция добавления выплаты в табель непосредственно в БД
+//!!! отличается по сути от fl_paidout_add_f.php только insert'ами в 60+ строках, потом бы объеденить их
 
     session_start();
 
@@ -49,24 +50,26 @@
                     updateTabelPaidoutSumm ($_POST['tabel_id']);
                 }
 
-                //Пробуем добавить в БД вычеты, че кому сколько выдали с какого филиала
-                if (isset($_SESSION['subtraction_data'])){
-                    if (isset($_SESSION['subtraction_data'][$_POST['tabel_id']])){
-                        foreach ($_SESSION['subtraction_data'][$_POST['tabel_id']]['pos_subtraction_temp'] as $pos_id => $filial_data) {
-                            foreach ($filial_data as $filial_id => $summ) {
+                if ($_POST['type'] != 4) {
+                    //Пробуем добавить в БД вычеты, че кому сколько выдали с какого филиала
+                    if (isset($_SESSION['subtraction_data'])) {
+                        if (isset($_SESSION['subtraction_data'][$_POST['tabel_id']])) {
+                            foreach ($_SESSION['subtraction_data'][$_POST['tabel_id']]['subtraction_temp'] as $filial_id => $summ) {
+                                //foreach ($filial_data as $filial_id => $summ) {
                                 if ($summ != 0) {
                                     $query = "
-                                    INSERT INTO `fl_journal_pos_filials_subtractions` (`tabel_id`, `tabel_noch_id`, `month`, `year`, `inv_pos_id`, `filial_id`, `worker_id`, `paidout_id`, `type`, `summ`, `noch`, `create_time`, `create_person`)
+                                    INSERT INTO `fl_journal_filial_subtractions` (`tabel_id`, `tabel_noch_id`, `month`, `year`, `filial_id`, `worker_id`, `paidout_id`, `type`, `summ`, `noch`, `create_time`, `create_person`)
                                     VALUES (
-                                    '{$tabel_id}', '{$tabel_noch_id}', '{$_POST['month']}', '{$_POST['year']}', '{$pos_id}', '{$filial_id}', '{$_POST['worker_id']}', '{$mysql_insert_id}', '{$_POST['type']}', '{$summ}', '{$_POST['noch']}', '{$time}', '{$_SESSION['id']}');";
+                                    '{$tabel_id}', '{$tabel_noch_id}', '{$_POST['month']}', '{$_POST['year']}', '{$filial_id}', '{$_POST['worker_id']}', '{$mysql_insert_id}', '{$_POST['type']}', '{$summ}', '{$_POST['noch']}', '{$time}', '{$_SESSION['id']}');";
 
                                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
                                 }
+                                //}
                             }
+                            unset($_SESSION['subtraction_data'][$_POST['tabel_id']]);
                         }
-                        unset($_SESSION['subtraction_data'][$_POST['tabel_id']]);
+                        unset($_SESSION['subtraction_data']);
                     }
-                    unset($_SESSION['subtraction_data']);
                 }
 
 

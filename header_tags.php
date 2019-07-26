@@ -347,7 +347,7 @@
 			echo '<li><a href="admin.php" style="font-size: 110%;"><i class="fa fa-cogs"></i></a></li>';
 		}
 
-        echo '<li title="Обновить" style="cursor: pointer;"><a onclick="document.location.reload(true);" style="color: rgb(175, 115, 230); font-size: 110%; /*text-shadow: 1px 1px rgba(52, 152, 219, 0.8);*/"><i class="fa fa-retweet" aria-hidden="true"></i></a></li>';
+        //echo '<li title="Обновить" style="cursor: pointer;"><a onclick="document.location.reload(true);" style="color: rgb(175, 115, 230); font-size: 110%; /*text-shadow: 1px 1px rgba(52, 152, 219, 0.8);*/"><i class="fa fa-retweet" aria-hidden="true"></i></a></li>';
 	}
 	
 	//echo '<li><a href="/other/Fortest/asm_journal/" style="background: rgba(0,255,255,0.7); color: #ff0000;">В ТЕСТ</a></li>';

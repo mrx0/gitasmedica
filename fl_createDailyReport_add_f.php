@@ -20,6 +20,8 @@
                 && isset($_POST['analizSummNal']) && isset($_POST['analizSummBeznal'])
                 && isset($_POST['solarSummNal']) && isset($_POST['solarSummBeznal'])
                 && isset($_POST['summMinusNal'])
+//                && isset($_POST['bankSummNal'])
+//                && isset($_POST['directorSummNal'])
             ){
 
                 if ($_POST['zreport'] == "") {
@@ -27,6 +29,10 @@
                 }else{
 
                     include_once 'DBWork.php';
+
+                    //!!!Костыль
+                    $_POST['bankSummNal'] = 0;
+                    $_POST['directorSummNal'] = 0;
 
                     $time = time();
 
@@ -58,8 +64,8 @@
                         $create_time = date('Y-m-d H:i:s', time());
 
                         $query = "INSERT INTO `fl_journal_daily_report` 
-                        (`filial_id`, `day`, `month`, `year`, `itogSumm`, `arenda`, `zreport`, `summ`,`nal`, `beznal`, `cashbox_nal`, `cashbox_beznal`, `cashbox_cert_count`, `cashbox_cert_nal`, `cashbox_cert_beznal`, `temp_orto_nal`, `temp_orto_beznal`, `temp_specialist_nal`, `temp_specialist_beznal`, `temp_analiz_nal`, `temp_analiz_beznal`, `temp_solar_nal`, `temp_solar_beznal`, `temp_giveoutcash`, `create_time`, `create_person`) 
-                        VALUES ('{$_POST['filial_id']}', '{$d}', '{$m}', '{$y}', '" . str_replace(' ', '', $_POST['itogSumm']) . "', '{$_POST['arenda']}', '{$_POST['zreport']}', '" . str_replace(' ', '', $_POST['allsumm']) . "', '" . str_replace(' ', '', $_POST['SummNal']) . "', '" . str_replace(' ', '', $_POST['SummBeznal']) . "', '{$_POST['SummNalStomCosm']}', '{$_POST['SummBeznalStomCosm']}', '{$_POST['CertCount']}', '{$_POST['SummCertNal']}', '{$_POST['SummCertBeznal']}', '{$_POST['ortoSummNal']}', '{$_POST['ortoSummBeznal']}', '{$_POST['specialistSummNal']}', '{$_POST['specialistSummBeznal']}', '{$_POST['analizSummNal']}', '{$_POST['analizSummBeznal']}', '{$_POST['solarSummNal']}', '{$_POST['solarSummBeznal']}', '{$_POST['summMinusNal']}', '{$create_time}', '{$_SESSION['id']}');";
+                        (`filial_id`, `day`, `month`, `year`, `itogSumm`, `arenda`, `zreport`, `summ`,`nal`, `beznal`, `cashbox_nal`, `cashbox_beznal`, `cashbox_cert_count`, `cashbox_cert_nal`, `cashbox_cert_beznal`, `temp_orto_nal`, `temp_orto_beznal`, `temp_specialist_nal`, `temp_specialist_beznal`, `temp_analiz_nal`, `temp_analiz_beznal`, `temp_solar_nal`, `temp_solar_beznal`, `temp_giveoutcash`, `bank_summ_nal`, `director_summ_nal`, `create_time`, `create_person`) 
+                        VALUES ('{$_POST['filial_id']}', '{$d}', '{$m}', '{$y}', '" . str_replace(' ', '', $_POST['itogSumm']) . "', '{$_POST['arenda']}', '{$_POST['zreport']}', '" . str_replace(' ', '', $_POST['allsumm']) . "', '" . str_replace(' ', '', $_POST['SummNal']) . "', '" . str_replace(' ', '', $_POST['SummBeznal']) . "', '{$_POST['SummNalStomCosm']}', '{$_POST['SummBeznalStomCosm']}', '{$_POST['CertCount']}', '{$_POST['SummCertNal']}', '{$_POST['SummCertBeznal']}', '{$_POST['ortoSummNal']}', '{$_POST['ortoSummBeznal']}', '{$_POST['specialistSummNal']}', '{$_POST['specialistSummBeznal']}', '{$_POST['analizSummNal']}', '{$_POST['analizSummBeznal']}', '{$_POST['solarSummNal']}', '{$_POST['solarSummBeznal']}', '{$_POST['summMinusNal']}', '{$_POST['bankSummNal']}', '{$_POST['directorSummNal']}', '{$create_time}', '{$_SESSION['id']}');";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -68,12 +74,13 @@
                         //логирование
                         //AddLog ('0', $_SESSION['id'], '', 'Добавлен долг #'.$mysql_insert_id.'. Пациент ['.$_POST['client'].']. Сумма ['.$_POST['summ'].']. Срок истечения ['.$_POST['date_expires'].']. Тип ['.$_POST['type'].']. Комментарий ['.$_POST['comment'].'].');
 
-                        CloseDB($msql_cnnct);
 
                         echo json_encode(array('result' => 'success', 'data' => '<div class="query_ok">Отчёт сформирован и отправлен</div>'));
                     } else {
                         echo json_encode(array('result' => 'success', 'data' => '<div class="query_neok">Отчёт за указаную дату для этого филиала уже был сформирован.</div>'));
                     }
+
+                    CloseDB($msql_cnnct);
                 }
 			}else{
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка #20. Что-то пошло не так</div>'));

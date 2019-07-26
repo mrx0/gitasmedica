@@ -1125,7 +1125,8 @@
                     //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
                 },
                 success: function (res) {
-                	//console.log(data);
+                	//console.log(res);
+
                     $("#errrror").html(res.data);
                     if (res.result == 'success') {
                         setTimeout(function () {
@@ -2331,11 +2332,11 @@
 
         var filials_chckd_arr = [];
 
-        if (all_fililas_chckd == 0) {
+        //if (all_fililas_chckd == 0) {
             $("input[name='filials_chckd[]']:checked").each(function () {
                 filials_chckd_arr.push(parseInt($(this).val()));
             });
-        }
+        //}
         //console.log (filials_chckd_arr);
 
 		$.ajax({
@@ -10549,46 +10550,61 @@
     }
 
     //Функция возвращает, сколько денег с какого филиала надо будет снять при выплате ЗП - для fl_paidout_in_tabel_add.php
-    function tabelSubtractionPercent(tabel_id, summ){
+    function tabelSubtractionPercent(tabel_id, tabel_type, paidout_type, summ, paidout_summ_tabel){
+		//console.log(summ);
+		//console.log(paidout_summ_tabel);
 
-        var link = "tabel_subtraction_percent2_f.php";
+		hideAllErrors();
 
-        var reqData = {
-            tabel_id: tabel_id,
-            summ: summ
-        };
+		if (Number(summ) > Number(paidout_summ_tabel)) {
+            $("#paidout_summ_error").html('Вы собираетесь выдать больше, чем указано в табеле (' + paidout_summ_tabel + ' руб.).');
+            $("#paidout_summ_error").show();
+            // $("#showPaidoutAddbutton").hide();
+		}//else {
 
-        $.ajax({
-            url: link,
-            global: false,
-            type: "POST",
-            //dataType: "JSON",
-            data: reqData,
-            cache: false,
-            beforeSend: function() {
-                $("#tabelFilialSubtraction").html("<div style='width: 120px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка</span></div>");
-            },
-            success:function(res){
-                //console.log (res);
-                $("#tabelFilialSubtraction").html(res);
+            var link = "tabel_subtraction_percent2_f.php";
 
-                //$("#tabelFilialSubtraction").append("");
+            var reqData = {
+                tabel_id: tabel_id,
+                summ: summ,
+                paidout_summ_tabel: paidout_summ_tabel,
+                tabel_type: tabel_type,
+                paidout_type: paidout_type
+            };
+            //console.log(reqData);
 
-                //
-                // if(res.result == "success") {
-                //     $("#tabelFilialSubtraction").html(res);
-                // }else{
-                //     //Показываем ошибку в консоли
-                //     console.log (res);
-                // }
-            }
-        })
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                //dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    $("#tabelFilialSubtraction").html("<div style='width: 120px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка</span></div>");
+                },
+                success: function (res) {
+                    //console.log (res);
+                    $("#tabelFilialSubtraction").html(res);
+
+                    $("#showPaidoutAddbutton").show();
+
+                    //
+                    // if(res.result == "success") {
+                    //     $("#tabelFilialSubtraction").html(res);
+                    // }else{
+                    //     //Показываем ошибку в консоли
+                    //     console.log (res);
+                    // }
+                }
+            })
+        // }
 	}
 
 	//!!! пример работы пауза между нажатиями
     //$('.paidout_summ2'). on("keyup", function() {
-    $("body").on("keyup", ".paidout_summ2", function (e) {
-    	console.log(e.keyCode);
+    $("body").on("keyup change", ".paidout_summ2", function (e) {
+    	//console.log(e.keyCode);
 
 		//Если только цифры, delete, backspase
         if (((e.keyCode >= 48) && (e.keyCode <= 57)) || ((e.keyCode >= 96) && (e.keyCode <= 105)) || ((e.keyCode == 8) || (e.keyCode == 46))) {
@@ -10602,19 +10618,50 @@
 
             var
                 summ = $(this).val(),
-                tabel_id = $(this).attr("tabel_id");
+                tabel_id = $(this).attr("tabel_id"),
+            	paidout_summ_tabel = $(this).attr("paidout_summ_tabel"),
+                tabel_type = $("#tabel_type").val();;
+            	paidout_type = $("#paidout_type").val();;
 
             if (summ.length > 2) {
 
                 $this.data('timer', setTimeout(function () {
                     $this.removeData('timer');
 
-                    tabelSubtractionPercent(tabel_id, summ);
+                    tabelSubtractionPercent(tabel_id, tabel_type, paidout_type, summ, paidout_summ_tabel);
 
                 }, $delay));
             }
         }
     });
+
+    //Функция отслеживает, если меняют цифры в филиалах
+	function filialsSubtractionsChange (){
+
+        //Сумма со всех филиалов - Факт
+        var summ = 0;
+        //Сумма со всех филиалов -план
+        var iWantMyMoney = Number($("#iWantMyMoney").val());
+
+        $(".filial_subtraction").each(function (){
+            summ += Number($(this).val());
+        })
+        //console.log(summ);
+        //console.log(iWantMyMoney);
+
+        if (summ < iWantMyMoney){
+            $("#fil_sub_msg").html("Осталось распределить: <span style='font-size: 110%; font-weight: bold; color: red;'>" + (iWantMyMoney - summ) + "</span> руб.");
+            $("#showPaidoutAddbutton").hide();
+        }else {
+            if (summ > iWantMyMoney){
+                $("#fil_sub_msg").html("Распределили больше на: <span style='font-size: 110%; font-weight: bold; color: red;'>" + (summ - iWantMyMoney) + "</span> руб.");
+                $("#showPaidoutAddbutton").hide();
+            }else{
+                $("#fil_sub_msg").html("");
+                $("#showPaidoutAddbutton").show();
+            }
+        }
+	}
 
     //Изменение цифр в филиалах
     $("body").on("keyup", ".filial_subtraction", function (e) {
@@ -10644,26 +10691,7 @@
             //     }, $delay));
             // }
 
-			//Сумма со всех филиалов - Факт
-			var summ = 0;
-			//Сумма со всех филиалов -план
-			var iWantMyMoney = Number($("#iWantMyMoney").val());
-
-            $(".filial_subtraction").each(function (){
-                summ += Number($(this).val());
-			})
-			//console.log(summ);
-			//console.log(fil_sub_sum);
-
-			if (summ < iWantMyMoney){
-				$("#fil_sub_msg").html("<");
-			}else {
-                if (summ > iWantMyMoney){
-                    $("#fil_sub_msg").html(">");
-				}else{
-                    $("#fil_sub_msg").html("!");
-				}
-			}
+            filialsSubtractionsChange();
         }
     });
 
@@ -10676,4 +10704,6 @@
                 $(this).val(0);
 			}
 		})
+
+        filialsSubtractionsChange();
 	}

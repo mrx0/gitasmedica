@@ -984,9 +984,17 @@
                                                 if ($itog_price < 0) $itog_price = 0;
 
                                                 //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
-                                                $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent, $summ_special);
-                                            }
+                                                $pos_summ = calculateResult($itog_price, $work_percent, $material_percent, $summ_special);
 
+                                                //Сумма одной позиции
+                                                $calculateCalcSumm += $pos_summ;
+
+                                                //Добавляем в базу
+                                                $query = "UPDATE `fl_journal_calculate_ex` SET  `summ` = '{$pos_summ}' WHERE `id`='{$items['id']}'";
+
+                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                                            }
                                             /*if (isset($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind])){
                                                 $mkb_data = $_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind];
                                                 foreach ($mkb_data as $mkb_id){
@@ -1068,7 +1076,9 @@
 
                         //Обновим сумму в расчете
                         if ($calculateInvSumm > 0) {
+
                             $query = "UPDATE `fl_journal_calculate` SET `summ_inv`='{$calculateInvSumm}', `summ`='{$calculateCalcSumm}' WHERE `id`='{$data['calculate_id']}'";
+
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
                         }
 
@@ -1368,7 +1378,7 @@
 
 
     //функция для создания шаблона табеля (оасчетного листа) для печати
-    function tabelPrintTemplate ($tabel_id, $month, $year, $worker_fio, $filial, $countSmen, $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3, $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1, $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm, $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount, $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3, $dop, $link){
+    function tabelPrintTemplate ($tabel_id, $month, $year, $worker_j, $filial, $countSmen, $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3, $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1, $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm, $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount, $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3, $dop, $tabel_noch, $link){
         //var_dump($dop);
 
         //Часы работы
@@ -1385,28 +1395,40 @@
             $hours_count = $dop['hours_count'];
             $hours_norma = $dop['hours_norma'];
 
-            $salary = number_format($dop['salary'], 0, '.', '').' р.';
+            if (isset($dop['salary'])) {
+                $salary = number_format($dop['salary'], 0, '.', '') . ' р.';
+            }
 
-            $per_from_salary = $dop['per_from_salary'];
+            if (isset($dop['per_from_salary'])) {
+                $per_from_salary = $dop['per_from_salary'];
+            }
 
-            $percent_summ = number_format($dop['percent_summ'], 0, '.', '');
+            if (isset($dop['percent_summ'])) {
+                $percent_summ = number_format($dop['percent_summ'] + $dop['summ_calc'], 0, '.', '');
+            }
 
             //!!! костыль для админов
             $countSmen = '';
         }
 
         $rezult = '
-                <div class="rezult_item" style="font-size: 95%; margin: 15px; margin-top: -10px" fio="'.$worker_fio.'">				
+                <div class="rezult_item" style="font-size: 95%; margin: 15px; margin-top: -10px" fio="'.$worker_j['name'].'">				
                     <div class="filterBlock" style="width: 650px; border-bottom: 1px dotted grey;">
                         <div class="filtercellLeft" style="width: 400px; text-align: center; border: none; padding-bottom: 2px;">
-                            <a href="'.$link.'?id='.$tabel_id.'" class="ahref">Расчетный листок '.$tabel_id.'</a> за '.$month.' '.$year.'
+                            <a href="'.$link.'?id='.$tabel_id.'" class="ahref">Расчетный листок '.$tabel_id.'</a> за '.$month.' '.$year.' ';
+
+        if ($tabel_noch) {
+            $rezult .= '(ночь)';
+        }
+
+        $rezult .= '
                         </div>
                     </div>
                     
                     <div class="filterBlock" style="width: 650px; ">
                         <div class="filtercellLeft" style="border: none; width: auto; min-width: auto; max-width: auto; padding: 2px 2px 1px;">
-                            <div style="padding: 2px 0 3px; font-size: 115%; font-weight: bold;">
-                                <i>'.$worker_fio.'</i>
+                            <div style="padding: 2px 0 3px; font-size: 115%;">
+                                <i style="font-weight: bold;">'.$worker_j['name'].'</i> / <span style="font-size: 85%;">'.$worker_j['type_name'].'</span> / <span style="font-size: 85%;">'.$worker_j['cat_name'].'</span>
                             </div>
                             <div style="background-color: rgba(144,247,95, 0.4); font-size: 130%; padding: 5px 5px 2px;">
                                 <div style="display: inline;">К выплате:</div>
@@ -1419,9 +1441,29 @@
                                 <div style="display: inline;">Подразделение</div>
                                 <div style="float: right; display: inline; text-align: right;"><b>'.$filial.'</b></div>
                             </div>
-                            <div style="border-bottom: 1px dotted grey;">
+                            <div style="border-bottom: 1px dotted grey;">';
+
+        if ($hours_norma > 0) {
+            $rezult .= '
+                                <div style="display: inline;">Норма часов</div>
+                                <div style="float: right; display: inline; text-align: right;">';
+
+            $rezult .= $hours_norma;
+
+            $rezult .= '
+                                </div>';
+        }else{
+            $rezult .= '
                                 <div style="display: inline;">Норма смен/дней</div>
-                                <div style="float: right; display: inline; text-align: right;">-</div>
+                                <div style="float: right; display: inline; text-align: right;">';
+
+            $rezult .= '-';
+
+            $rezult .= '
+                                </div>';
+        }
+
+        $rezult .= '
                             </div>
                             <div style="border-bottom: 1px dotted grey;">
                                 <div style="display: inline;">Часов в смене</div>
@@ -1603,7 +1645,7 @@
                                 </td>
                             </tr>';
 
-        if (!empty($dop)) {
+        if (!empty($dop) && (($worker_j['type'] == 4) || ($worker_j['type'] == 7))){
             $rezult .= '            
                             <tr>
                                 <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
@@ -1947,13 +1989,6 @@
 
                         if ($guarantee == 0) {
 
-                            //Добавляем в базу
-                            $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`, `summ_special`) 
-                                                VALUES (
-                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}', '{$summ_special}')";
-
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
                             $price = $price * $quantity;
 
                             $price = ($price - ($price * $discount / 100));
@@ -1981,7 +2016,20 @@
                             if ($itog_price < 0) $itog_price = 0;
 
                             //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
-                            $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent, $summ_special);
+
+                            //Сумма одной позиции
+                            $pos_summ = calculateResult($itog_price, $work_percent, $material_percent, $summ_special);
+
+                            $calculateCalcSumm += $pos_summ;
+
+                            //Добавляем в базу
+                            $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`, `summ`, `summ_special`) 
+                                                VALUES (
+                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}', '{$pos_summ}', '{$summ_special}')";
+
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+
                         }
                     }
 
@@ -2028,13 +2076,6 @@
 
                     if ($guarantee == 0) {
 
-                        //Добавляем в базу
-                        $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`, `summ_special`) 
-                                                VALUES (
-                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}', '{$summ_special}')";
-
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
                         $price = $price * $quantity;
 
                         $price = ($price - ($price * $discount / 100));
@@ -2061,8 +2102,19 @@
 
                         if ($itog_price < 0) $itog_price = 0;
 
+                        //Сумма одной позиции
+                        $pos_summ = calculateResult($itog_price, $work_percent, $material_percent, $summ_special);
+
                         //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
-                        $calculateCalcSumm += calculateResult($itog_price, $work_percent, $material_percent, $summ_special);
+                        $calculateCalcSumm += $pos_summ;
+
+                        //Добавляем в базу
+                        $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`, `summ`, `summ_special`) 
+                                                VALUES (
+                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}', '{$pos_summ}', '{$summ_special}')";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
                     }
 
 

@@ -151,7 +151,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 //                }
 //            }
 
-            echo json_encode(array('result' => 'success', 'data' => $summ_arr, 'msg' => '', 'q' => $query));
+            echo json_encode(array('result' => 'success', 'data' => $summ_arr, 'msg' => ''));
 
         } else {
             echo json_encode(array('result' => 'empty', 'data' => array(), 'msg' => '<div class="query_neok">Ничего не найдено</div>'));

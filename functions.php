@@ -207,6 +207,7 @@
 
 	//Собираем все филиалы
 	function getAllFilials($sort, $short_name, $closed){
+
 		$filials_j = array();
 
         $msql_cnnct = ConnectToDB ();
@@ -220,26 +221,40 @@
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
         $number = mysqli_num_rows($res);
+
         if ($number != 0){
             while ($arr = mysqli_fetch_assoc($res)){
-                $filials_j[$arr['id']] = $arr;
+                $filials_j[(string)$arr['id']] = $arr;
+                //var_dump((string)$arr['id']);
             }
         }
+        //var_dump($filials_j);
 
         if ($sort){
             if (!empty($filials_j)) {
-                $filials_j_names = array();
-
-                //Определяющий массив из названий для сортировки
-                foreach ($filials_j as $key => $arr) {
-                    if ($short_name){
-                        array_push($filials_j_names, $arr['name2']);
-                    }else {
-                        array_push($filials_j_names, $arr['name']);
+            	//Сортировка по имени с сохранением ключей
+                uasort($filials_j, function($a, $b){
+                    $a = $a['name'];
+                    $b = $b['name'];
+                    if ($a == $b) {
+                        return 0;
                     }
-                }
+                    return ($a < $b) ? -1 : 1;
+                });
+                //var_dump($filials_j);
 
-                array_multisort($filials_j_names, SORT_LOCALE_STRING, $filials_j);
+//                $filials_j_names = array();
+//
+//                //Определяющий массив из названий для сортировки
+//                foreach ($filials_j as $key => $arr) {
+//                    if ($short_name){
+//                        array_push($filials_j_names, $arr['name2']);
+//                    }else {
+//                        array_push($filials_j_names, $arr['name']);
+//                    }
+//                }
+//
+//                array_multisort($filials_j_names, SORT_LOCALE_STRING, $filials_j);
             }
         }
 
@@ -3222,6 +3237,8 @@
 
             require 'variables.php';
 
+            $filials_j = getAllFilials(false, true, true);
+
             $msql_cnnct = ConnectToDB ();
 
             if ($show_categories){
@@ -3402,7 +3419,9 @@
 												<li class="cellsBlock" style="width: auto; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36);">';
 							$itemTemp_str .= '
 													<a href="invoice.php?id=' . $items['id'] . '" class="cellOrder ahref" style="position: relative;">
-														<div style="font-weight: bold;">Наряд #' . $items['id'] . '</div>
+														<div style="font-weight: bold;">
+															Наряд #' . $items['id'] . '
+														</div>
 														<div style="margin: 3px;">';
 
 
@@ -3411,7 +3430,10 @@
 
 							$itemTemp_str .= '
 														</div>
-														<div style="font-size:80%; color: #555; border-top: 1px dashed rgb(179, 179, 179); margin-top: 5px;">';
+														<div style="font-size:80%; color: #555; border-top: 1px dashed rgb(179, 179, 179); margin-top: 5px;">
+														<div style="font-size: 90%; color: #171919;">
+															' .$filials_j[$items['office_id']]['name2'].'
+														</div>';
 
 							if (($items['create_time'] != 0) || ($items['create_person'] != 0)) {
 								$itemTemp_str .= '

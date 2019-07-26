@@ -53,7 +53,7 @@
                             //Если ассистенты или админы
                             if (($_GET['type_id'] == 4) || ($_GET['type_id'] == 4)) {
                                 echo '
-                                        <input type="hidden" id="category_id" value="' . $_GET['type_id'] . '">';
+                                        <input type="hidden" id="category_id" value="' . $_GET['category_id'] . '">';
                             }else{
                                 echo '
                                         <input type="hidden" id="category_id" value="0">';
