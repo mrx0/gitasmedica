@@ -156,6 +156,11 @@
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Итог
                             </div>';
+
+                    $report_header .= '
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+                                Итог нал
+                            </div>';
                 }
 
                 if (($finances['see_all'] == 1) || $god_mode) {
@@ -171,9 +176,14 @@
                             </div>';
 
                 $report_header .= '
-                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
-                                Всего по кассе
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5; /*display: none !important;*/">
+                                Всего в кассе
                             </div>';
+
+//                $report_header .= '
+//                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+//                                Наличных в кассе
+//                            </div>';
 
                 $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
@@ -186,11 +196,11 @@
                             </div>';
                 $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
-                                Наличные из нарядов
+                                Наличные ордеры
                             </div>';
                 $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
-                                Безнал. из нарядов
+                                Безнал. ордеры
                             </div>';
                 $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
@@ -309,6 +319,10 @@
                             <div class="cellTime cellsTimereport itogSumm" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
+                        echo '
+                            <div class="cellTime cellsTimereport itogSummNal" style="text-align: center; font-weight: normal; '. $today_border .'">
+                                -
+                            </div>';
                     }
 
                     if (($finances['see_all'] == 1) || $god_mode) {
@@ -323,9 +337,15 @@
                                 -
                             </div>';
                     echo '
-                            <div class="cellTime cellsTimereport allSumm" style="text-align: center; font-weight: normal; '. $today_border .'">
+                            <div class="cellTime cellsTimereport allSumm" style="text-align: center; font-weight: normal; '. $today_border .' /*display: none !important;*/">
                                 -
                             </div>';
+
+//                    echo '
+//                            <div class="cellTime cellsTimereport SummNalOstatok" style="text-align: center; font-weight: normal; '. $today_border .'">
+//                                -
+//                            </div>';
+
                     echo '
                             <div class="cellTime cellsTimereport SummNal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
@@ -425,6 +445,11 @@
                             </div>';
 
                     echo '
+                            <div id="itogSummNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+
+                    echo '
                             <div id="arendaAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
                             </div>';
@@ -437,6 +462,12 @@
                             <div id="allSummAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
                             </div>';
+
+//                    echo '
+//                            <div class="cellTime cellsTimereport SummNalOstatokAllMonth" style="text-align: center; font-weight: normal; '. $today_border .'">
+//                                -
+//                            </div>';
+
                     echo '
                             <div id="SummNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
@@ -514,9 +545,59 @@
                             </div>';
                     echo '
                         </li>';
+
                 }
 
                 echo $report_header;
+
+                if (($finances['see_all'] == 1) || $god_mode) {
+                    echo '
+                        <li id="interimReport" class="" style="margin: 10px; font-size: 12px; width: 300px; /*border-right: 1px solid #BFBCB5;*/ display: none;"">';
+                    echo '
+                            <div class="cellsBlock">
+                                <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Предварительные итоги</div>
+                                <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Выручка</div>
+                            </div>
+                            <div class="cellsBlock" style="font-size: 14px;">
+                                <div class="cellLeft">наличные касса</div>
+                                <div id="SummNalAllMonthItog" class="cellRight" style="text-align: right;">-</div>   
+                            </div>
+                            <div class="cellsBlock" style="font-size: 14px;">
+                                <div class="cellLeft">аренда</div>
+                                <div id="arendaAllMonthItog" class="cellRight" style="text-align: right;">-</div>    
+                            </div>
+                            <div class="cellsBlock" style="font-size: 14px;">
+                                <div class="cellLeft">безнал</div>
+                                <div id="SummBeznalAllMonthItog" class="cellRight" style="text-align: right;">-</div>    
+                            </div>
+                            <div class="cellsBlock" style="font-size: 14px;">
+                                <div class="cellLeft" style="font-weight: bold; background-color: rgba(255, 0, 0, 0.37);">выручка вся:</div>
+                                <div id="summAllMonth" class="cellRight" style="font-weight: bold; text-align: right; background-color: rgba(255, 0, 0, 0.37);">-</div>
+                            </div>
+                            
+                            <div class="cellsBlock">
+                                <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Наличные</div>    
+                            </div>
+                            <div class="cellsBlock" style="font-size: 14px;">
+                                <div class="cellLeft">наличные касса</div>
+                                <div id="SummNalAllMonthItog2" class="cellRight" style="text-align: right;">-</div>
+                            </div>
+                            <div class="cellsBlock" style="font-size: 14px;">
+                                <div class="cellLeft">аренда</div>
+                                <div id="arendaAllMonthItog2" class="cellRight" style="text-align: right;">-</div>
+                            </div>
+                            <div class="cellsBlock" style="font-size: 14px;">
+                                <div class="cellLeft">расход</div>
+                                <div id="summMinusAllMonth" class="cellRight" style="text-align: right;">-</div>   
+                            </div>
+                            <div class="cellsBlock" style="font-size: 14px;">
+                                <div class="cellLeft" style="font-weight: bold; background-color: rgba(255, 0, 0, 0.37);">остаток в кассе</div>
+                                <div id="ostatokNalAllMonth" class="cellRight" style="font-weight: bold; text-align: right; background-color: rgba(255, 0, 0, 0.37);">-</div>  
+                            </div>';
+                    echo '
+                        </li>';
+
+                }
 
                 echo '
                     </ul>
