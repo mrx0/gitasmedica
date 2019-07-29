@@ -109,9 +109,13 @@
                         if (($finances['see_all'] == 1) || $god_mode) {
                             echo '
                                         <div class="cellsBlock400px">
-                                            <div class="cellLeft" style="font-size: 90%; border: 1px solid rgb(2, 108, 33);">Итоговая сумма</div>
+                                            <div class="cellLeft" style="font-size: 90%; border: 1px solid rgb(2, 108, 33);">
+                                                Итоговая сумма<br>
+                                                <i style="color: rgb(127, 17, 3);">наличные</i>
+                                            </div>
                                             <div class="cellRight calculateOrder" style="border: 1px solid rgb(2, 108, 33);">
-                                                <span id="itogSummShow">'.$dailyReports_j[0]['itogSumm'].'</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
+                                                <span id="itogSummShow">'.$dailyReports_j[0]['itogSumm'].'</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>--><br>
+                                                <span id="itogSummNalShow" style="color: rgb(127, 17, 3);">0</span> руб.
                                             </div>
                                         </div>';
                         }
@@ -130,11 +134,23 @@
                                             </div>
                                         </div>';
 
+//                        echo '
+//                                        <div class="cellsBlock400px">
+//                                            <div class="cellLeft" style="font-size: 90%;">Общая сумма</div>
+//                                            <div class="cellRight calculateOrder" style="font-size: 13px;">
+//                                                <span id="allsumm">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
+//                                            </div>
+//                                        </div>';
+
                         echo '
                                         <div class="cellsBlock400px">
-                                            <div class="cellLeft" style="font-size: 90%;">Общая сумма</div>
+                                            <div class="cellLeft" style="font-size: 90%;">
+                                                Общая сумма<br>
+                                                <i style="color: rgb(127, 17, 3);">по кассе <span style="font-size: 80%">(Z-отчет)</span></i>
+                                            </div>
                                             <div class="cellRight calculateOrder" style="font-size: 13px;">
-                                                <span id="allsumm">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
+                                                <span id="allsumm">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>--><br>
+                                                <span id="allsummKassa" style="font-weight: normal; color: rgb(127, 17, 3);">0</span> <span style="font-weight: normal; color: rgb(127, 17, 3);">руб.</span>
                                             </div>
                                         </div>';
 
@@ -144,9 +160,13 @@
 
                         echo '
                                 <div class="cellsBlock400px">
-                                    <div class="cellLeft" style="font-size: 90%;">Наличные</div>
+                                    <div class="cellLeft" style="font-size: 90%;">
+                                        Наличные<br>
+                                        <i style="color: rgb(127, 17, 3);">остаток</i>
+                                    </div>
                                     <div class="cellRight calculateOrder" style="font-size: 13px; font-weight: normal;">
-                                        <span id="SummNal">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
+                                        <span id="SummNal">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>--><br>
+                                        <span id="SummNalOstatok" style="color: rgb(127, 17, 3);">0</span> руб.
                                     </div>
                                 </div>';
 
