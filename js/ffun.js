@@ -3675,12 +3675,18 @@
             summ += Number($(this).val());
         });
 
+        //Общая сумма по кассе до вычета расходов, должно совпасть с Z-отчетом
+        $("#allsummKassa").html(number_format(summ, 2, '.', ' '));
+
         //summ = summ - $(".summMinus").val();
         summ = summ - $(".summMinus").html();
-        summNal = summNal - Number($(".summMinus").val());
 
         $("#SummNal").html(number_format(summNal, 2, '.', ' '));
         $("#SummBeznal").html(number_format(summBeznal, 2, '.', ' '));
+
+        //Остаток наличных по кассе минус расходы
+        summNal = summNal - Number($(".summMinus").html());
+        $("#SummNalOstatok").html(number_format(summNal, 2, '.', ' '));
 
         //Общая сумма без аренды
         $("#allsumm").html(number_format(summ, 2, '.', ' '));
@@ -3694,6 +3700,9 @@
 
         $("#itogSummShow").html(number_format(summ, 2, '.', ' '));
         $("#itogSumm").val(number_format(summ, 2, '.', ' '));
+
+        //Остаток наличных по кассе минус расходы + аренда
+        $("#itogSummNalShow").html(number_format(summ-summBeznal, 2, '.', ' '));
 
     }
 
@@ -4030,11 +4039,11 @@
     function fl_getDailyReportsSummAllMonth(){
 
         $("#itogSummAllMonth").html(0);
-        $("#arendaAllMonth").html(0);
+        $("#arendaAllMonth").html(0);               $("#arendaAllMonthItog").html(0);       $("#arendaAllMonthItog2").html(0);
         $("#zReportAllMonth").html(0);
         $("#allSummAllMonth").html(0);
-        $("#SummNalAllMonth").html(0);
-        $("#SummBeznalAllMonth").html(0);
+        $("#SummNalAllMonth").html(0);              $("#SummNalAllMonthItog").html(0);      $("#SummNalAllMonthItog2").html(0);
+        $("#SummBeznalAllMonth").html(0);           $("#SummBeznalAllMonthItog").html(0);
         $("#SummNalStomCosmMonth").html(0);
         $("#SummBeznalStomCosmAllMonth").html(0);
         $("#SummCertNalAllMonth").html(0);
@@ -4064,6 +4073,18 @@
 
             }
         });
+        //- Итог общий нал
+        $(".itogSummNal").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var itogSummNalAllMonth = Number($("#itogSummNalAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#itogSummNalAllMonth").html(number_format((itogSummNalAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
         //- Аренда
         $(".arenda").each(function(){
             //console.log($(this).html().replace(/\s{1,}/g, ''));
@@ -4073,6 +4094,9 @@
                 var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
 
                 $("#arendaAllMonth").html(number_format((arendaAllMonth + thisSumm), 2, '.', ' '));
+
+                $("#arendaAllMonthItog").html(number_format((arendaAllMonth + thisSumm), 2, '.', ' '));
+                $("#arendaAllMonthItog2").html(number_format((arendaAllMonth + thisSumm), 2, '.', ' '));
 
             }
         });
@@ -4110,6 +4134,9 @@
 
                 $("#SummNalAllMonth").html(number_format((SummNalAllMonth + thisSumm), 2, '.', ' '));
 
+                $("#SummNalAllMonthItog").html(number_format((SummNalAllMonth + thisSumm), 2, '.', ' '));
+                $("#SummNalAllMonthItog2").html(number_format((SummNalAllMonth + thisSumm), 2, '.', ' '));
+
             }
         });
         //- сумма безнал
@@ -4121,6 +4148,32 @@
                 var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
 
                 $("#SummBeznalAllMonth").html(number_format((SummBeznalAllMonth + thisSumm), 2, '.', ' '));
+
+                $("#SummBeznalAllMonthItog").html(number_format((SummBeznalAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- ордеры нал
+        $(".SummNalStomCosm").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var SummNalStomCosmAllMonth = Number($("#SummNalStomCosmAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#SummNalStomCosmAllMonth").html(number_format((SummNalStomCosmAllMonth + thisSumm), 2, '.', ' '));
+
+            }
+        });
+        //- ордеры безнал
+        $(".SummBeznalStomCosm").each(function(){
+            //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                var SummBeznalStomCosmAllMonth = Number($("#SummBeznalStomCosmAllMonth").html().replace(/\s{1,}/g, ''));
+                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                $("#SummBeznalStomCosmAllMonth").html(number_format((SummBeznalStomCosmAllMonth + thisSumm), 2, '.', ' '));
 
             }
         });
@@ -4287,7 +4340,56 @@
             }
         });
 
-        //Промежуточные (примерные) итоги
+        //- Вся выручка
+        $("#summAllMonth").html(number_format(
+            (Number(
+                $("#SummNalAllMonthItog").html().replace(/\s{1,}/g, '')
+                )
+            +
+            Number(
+                $("#arendaAllMonthItog").html().replace(/\s{1,}/g, '')
+            )
+            +
+            Number(
+                $("#SummBeznalAllMonthItog").html().replace(/\s{1,}/g, '')
+            )
+            )
+            , 2, '.', ' ')
+        );
+        //- Все расходы
+        $("#summMinusAllMonth").html(number_format(
+            (Number(
+                    $("#summMinusNalAllMonth").html().replace(/\s{1,}/g, '')
+                )
+                +
+                Number(
+                    $("#summGiveoutInBank").html().replace(/\s{1,}/g, '')
+                )
+                +
+                Number(
+                    $("#summGiveoutDirector").html().replace(/\s{1,}/g, '')
+                )
+            )
+            , 2, '.', ' ')
+        );
+        //- Итог наличка
+        $("#ostatokNalAllMonth").html(number_format(
+            (Number(
+                    $("#SummNalAllMonthItog2").html().replace(/\s{1,}/g, '')
+                )
+                +
+                Number(
+                    $("#arendaAllMonthItog2").html().replace(/\s{1,}/g, '')
+                )
+                -
+                Number(
+                    $("#summMinusAllMonth").html().replace(/\s{1,}/g, '')
+                )
+            )
+            , 2, '.', ' ')
+        );
+
+        //Промежуточные (примерные) итоги показываем
         //$("#interimReport").html();
         $("#interimReport").show();
 
@@ -4304,6 +4406,8 @@
         //Блоки, где будут:
         //- Итог общий
         var itogSumm = (thisObj.find(".itogSumm"));
+        //- Итог общий нал
+        var itogSummNal = (thisObj.find(".itogSummNal"));
         //- Аренда
         var arenda = (thisObj.find(".arenda"));
         //- z-отчет
@@ -4419,6 +4523,14 @@
                             solarSummBeznal.html        (number_format(data.temp_solar_beznal, 0, '.', ' ')).css({"text-align": "right"});
                             summMinusNal.html           (number_format(data.temp_giveoutcash, 2, '.', ' ')).css({"text-align": "right"});
 
+                            //Итог наличные
+                            var itog_summ_nal = Number(data.nal) + Number(data.arenda) - Number(data.temp_giveoutcash);
+                            console.log(data.nal);
+                            console.log(data.arenda);
+                            console.log(data.temp_giveoutcash);
+
+                            itogSummNal.html            (number_format(itog_summ_nal, 0, '.', ' ')).css({"text-align": "right"});
+
                             //Прописываем статус отчета
                             $(thisObj).find(".reportDate").attr('status', data.status);
                             //И id
@@ -4443,6 +4555,7 @@
                         //console.log(res.count);
 
                         itogSumm.html('-');
+                        itogSummNal.html('-');
                         arenda.html('-');
                         zReport.html('-');
                         allSumm.html('-');
