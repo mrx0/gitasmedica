@@ -127,7 +127,7 @@
 
                     if ($zapis_online_j[$i]['status'] != 7) {
                         if (isset($offices_j[$zapis_online_j[$i]['place']])){
-                            $filial_name = $offices_j[$zapis_online_j[$i]['place']]['name']
+                            $filial_name = $offices_j[$zapis_online_j[$i]['place']]['name'];
                         }else{
                             $filial_name = 'не указан';
                         }
