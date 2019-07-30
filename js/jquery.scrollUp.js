@@ -20,7 +20,7 @@ Twitter: @markgdyr
 		var defaults = {
 			scrollName: 'scrollUp', // Element ID
 			topDistance: 300, // Distance from top before showing element (px)
-			topSpeed: 300, // Speed back to top (ms)
+			topSpeed: 200, // Speed back to top (ms)
 			animation: 'fade', // Fade, slide, none
 			animationInSpeed: 200, // Animation in speed (ms)
 			animationOutSpeed: 200, // Animation out speed (ms)
