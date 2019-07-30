@@ -145,7 +145,7 @@
 								    ' . $zapis_online_j[$i]['time'] . '
 								</div>-->
 								<div class="cellOffice" style="text-align: center;">
-								    ' . $offices_j[$zapis_online_j[$i]['place']]['name'] . '<br>
+								    ' , ($offices_j[$zapis_online_j[$i]['place']] > 0) ? $offices_j[$zapis_online_j[$i]['place']]['name'] : 'не указан' , '<br>
 								    <b>' . $permissions_j[$zapis_online_j[$i]['type']]['name'] . '</b>
 								</div>
 								<div class="cellTime ahref" style="text-align: center" onclick="contextMenuShow('.$zapis_online_j[$i]['id'].', '.$zapis_online_j[$i]['status'].', event, \'zapisOnlineStatusChange\');">
