@@ -4036,363 +4036,479 @@
 
 
     //Подсчет итогов за месяц
-    function fl_getDailyReportsSummAllMonth(){
+    function fl_getDailyReportsSummAllMonth(filial_id, month, year){
 
-        $("#itogSummAllMonth").html(0);
-        $("#arendaAllMonth").html(0);               $("#arendaAllMonthItog").html(0);       $("#arendaAllMonthItog2").html(0);
-        $("#zReportAllMonth").html(0);
-        $("#allSummAllMonth").html(0);
-        $("#SummNalAllMonth").html(0);              $("#SummNalAllMonthItog").html(0);      $("#SummNalAllMonthItog2").html(0);
-        $("#SummBeznalAllMonth").html(0);           $("#SummBeznalAllMonthItog").html(0);
-        $("#SummNalStomCosmMonth").html(0);
-        $("#SummBeznalStomCosmAllMonth").html(0);
-        $("#SummCertNalAllMonth").html(0);
-        $("#SummCertBeznalAllMonth").html(0);
-        $("#ortoSummNalAllMonth").html(0);
-        $("#ortoSummBeznalAllMonth").html(0);
-        $("#specialistSummNalAllMonth").html(0);
-        $("#specialistSummBeznalAllMonth").html(0);
-        $("#analizSummNalAllMonth").html(0);
-        $("#analizSummBeznalAllMonth").html(0);
-        $("#solarSummNalAllMonth").html(0);
-        $("#solarSummBeznalAllMonth").html(0);
-        $("#summMinusNalAllMonth").html(0);
+        //Памятка
+        // 1 - аванс
+        // 2 - отпускной
+        // 3 - больничный
+        // 4 - на карту
+        // 7 - зп
+        // 5 - ночь
 
-        $("#summGiveoutInBank").html(0);
-        $("#summGiveoutDirector").html(0);
+        //Все выплаты ЗП и тп
+        var link = "fl_get_giveouts_f.php";
 
-        //- Итог общий
-        $(".itogSumm").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
+        var reqData = {
+            filial_id: filial_id,
+            month: month,
+            year: year
+        };
+        //console.log(reqData);
 
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var itogSummAllMonth = Number($("#itogSummAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+                //$('#errrror').html(res.subtractions_j);
+                //console.log(res.subtractions_j);
+                //console.log(res.subtractions_j.length);
 
-                $("#itogSummAllMonth").html(number_format((itogSummAllMonth + thisSumm), 2, '.', ' '));
+                if(res.result == 'success') {
+                    //console.log('success');
+                    //$('#errrror').html(res.data);
 
+                    //var subtractionsSumm_arr = [];
+
+                    var subtractions = res.subtractions_j;
+
+                    var SummPrepayment = 0, SummHolidayPay = 0, SummHospitalPay = 0, SummSalary = 0;
+
+                    if (subtractions.length > 0){
+                        for(var i = 0; i < subtractions.length; i++){
+                            // console.log(subtractions[i].type);
+                            // if (subtractionsSumm_arr.indexOf(subtractions[i].type) == -1) {
+                            //     //console.log(subtractions[i].type);
+                            //     subtractionsSumm_arr[subtractions[i].type] = 0;
+                            // }
+                            // //Плюсуем
+                            // if (subtractions[i].type == 1) {
+                            //     console.log(parseFloat(subtractionsSumm_arr[subtractions[i].type]));
+                            //     console.log(parseFloat(subtractions[i].summ));
+                            //     console.log(subtractionsSumm_arr[subtractions[i].type] + parseFloat(subtractions[i].summ));
+                            //     console.log('//////////////////////////');
+                            //
+                            //     subtractionsSumm_arr[subtractions[i].type] = parseFloat(subtractionsSumm_arr[subtractions[i].type]) + parseFloat(subtractions[i].summ);
+                            //     console.log(subtractionsSumm_arr[subtractions[i].type]);
+                            //     console.log('---------------');
+                            //     console.log(subtractionsSumm_arr);
+                            // }
+
+                            if (subtractions[i].type == 1){
+                                SummPrepayment += parseFloat(subtractions[i].summ)
+                            }
+                            if (subtractions[i].type == 2){
+                                SummHolidayPay += parseFloat(subtractions[i].summ)
+                            }
+                            if (subtractions[i].type == 3){
+                                SummHospitalPay += parseFloat(subtractions[i].summ)
+                            }
+                            if (subtractions[i].type == 7){
+                                SummSalary += parseFloat(subtractions[i].summ)
+                            }
+                        }
+                    }
+                    // console.log(SummPrepayment);
+                    // console.log(SummHolidayPay);
+                    // console.log(SummHospitalPay);
+                    // console.log(SummSalary);
+
+                    //
+                    $("#itogSummAllMonth").html(0);
+                    $("#arendaAllMonth").html(0);               $("#arendaAllMonthItog").html(0);       $("#arendaAllMonthItog2").html(0);
+                    $("#zReportAllMonth").html(0);
+                    $("#allSummAllMonth").html(0);
+                    $("#SummNalAllMonth").html(0);              $("#SummNalAllMonthItog").html(0);      $("#SummNalAllMonthItog2").html(0);
+                    $("#SummBeznalAllMonth").html(0);           $("#SummBeznalAllMonthItog").html(0);
+                    $("#SummNalStomCosmMonth").html(0);
+                    $("#SummBeznalStomCosmAllMonth").html(0);
+                    $("#SummCertNalAllMonth").html(0);
+                    $("#SummCertBeznalAllMonth").html(0);
+                    $("#ortoSummNalAllMonth").html(0);
+                    $("#ortoSummBeznalAllMonth").html(0);
+                    $("#specialistSummNalAllMonth").html(0);
+                    $("#specialistSummBeznalAllMonth").html(0);
+                    $("#analizSummNalAllMonth").html(0);
+                    $("#analizSummBeznalAllMonth").html(0);
+                    $("#solarSummNalAllMonth").html(0);
+                    $("#solarSummBeznalAllMonth").html(0);
+                    $("#summMinusNalAllMonth").html(0);
+
+                    $("#summGiveoutInBank").html(0);
+                    $("#summGiveoutDirector").html(0);
+
+                    $("#itogSummNalAllMonth").html(0);
+                    $("#SummNalStomCosmAllMonth").html(0);
+
+
+                    //- Итог общий
+                    $(".itogSumm").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var itogSummAllMonth = Number($("#itogSummAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#itogSummAllMonth").html(number_format((itogSummAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- Итог общий нал
+                    $(".itogSummNal").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var itogSummNalAllMonth = Number($("#itogSummNalAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#itogSummNalAllMonth").html(number_format((itogSummNalAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- Аренда
+                    $(".arenda").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var arendaAllMonth = Number($("#arendaAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#arendaAllMonth").html(number_format((arendaAllMonth + thisSumm), 2, '.', ' '));
+
+                            $("#arendaAllMonthItog").html(number_format((arendaAllMonth + thisSumm), 2, '.', ' '));
+                            $("#arendaAllMonthItog2").html(number_format((arendaAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- z-отчет
+                    $(".zReport").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var zReportAllMonth = Number($("#zReportAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#zReportAllMonth").html(number_format((zReportAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- общая сумма
+                    $(".allSumm").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var allSummAllMonth = Number($("#allSummAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#allSummAllMonth").html(number_format((allSummAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- сумма нал
+                    $(".SummNal").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var SummNalAllMonth = Number($("#SummNalAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#SummNalAllMonth").html(number_format((SummNalAllMonth + thisSumm), 2, '.', ' '));
+
+                            $("#SummNalAllMonthItog").html(number_format((SummNalAllMonth + thisSumm), 2, '.', ' '));
+                            $("#SummNalAllMonthItog2").html(number_format((SummNalAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- сумма безнал
+                    $(".SummBeznal").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var SummBeznalAllMonth = Number($("#SummBeznalAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#SummBeznalAllMonth").html(number_format((SummBeznalAllMonth + thisSumm), 2, '.', ' '));
+
+                            $("#SummBeznalAllMonthItog").html(number_format((SummBeznalAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- ордеры нал
+                    $(".SummNalStomCosm").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var SummNalStomCosmAllMonth = Number($("#SummNalStomCosmAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#SummNalStomCosmAllMonth").html(number_format((SummNalStomCosmAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- ордеры безнал
+                    $(".SummBeznalStomCosm").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var SummBeznalStomCosmAllMonth = Number($("#SummBeznalStomCosmAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#SummBeznalStomCosmAllMonth").html(number_format((SummBeznalStomCosmAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- сертификаты нал
+                    $(".SummCertNal").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var SummCertNalAllMonth = Number($("#SummCertNalAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#SummCertNalAllMonth").html(number_format((SummCertNalAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- сертификаты безнал
+                    $(".SummCertBeznal").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var SummCertBeznalAllMonth = Number($("#SummCertBeznalAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#SummCertBeznalAllMonth").html(number_format((SummCertBeznalAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- орто нал
+                    $(".ortoSummNal").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var ortoSummNalAllMonth = Number($("#ortoSummNalAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#ortoSummNalAllMonth").html(number_format((ortoSummNalAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- орто безнал
+                    $(".ortoSummBeznal").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var ortoSummBeznalAllMonth = Number($("#ortoSummBeznalAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#ortoSummBeznalAllMonth").html(number_format((ortoSummBeznalAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- специалисты нал
+                    $(".specialistSummNal").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var specialistSummNalAllMonth = Number($("#specialistSummNalAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#specialistSummNalAllMonth").html(number_format((specialistSummNalAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- специалисты безнал
+                    $(".specialistSummBeznal").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var specialistSummBeznalAllMonth = Number($("#specialistSummBeznalAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#specialistSummBeznalAllMonth").html(number_format((specialistSummBeznalAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- анализы нал
+                    $(".analizSummNal").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var analizSummNalAllMonth = Number($("#analizSummNalAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#analizSummNalAllMonth").html(number_format((analizSummNalAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- анализы безнал
+                    $(".analizSummBeznal").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var analizSummBeznalAllMonth = Number($("#analizSummBeznalAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#analizSummBeznalAllMonth").html(number_format((analizSummBeznalAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- солярий нал
+                    $(".solarSummNal").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var solarSummNalAllMonth = Number($("#solarSummNalAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#solarSummNalAllMonth").html(number_format((solarSummNalAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- солярий безнал
+                    $(".solarSummBeznal").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var solarSummBeznalAllMonth = Number($("#solarSummBeznalAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#solarSummBeznalAllMonth").html(number_format((solarSummBeznalAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- расход
+                    $(".summMinusNal").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+                        //console.log(Number($(this).html()));
+                        //console.log(Number($(this).html().replace(/\s{1,}/g, '')));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var summMinusNalAllMonth = Number($("#summMinusNalAllMonth").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#summMinusNalAllMonth").html(number_format((summMinusNalAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- Выдачи в банк
+                    $(".giveout_inBank").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+                        //console.log(Number($(this).html()));
+                        //console.log(Number($(this).html().replace(/\s{1,}/g, '')));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var summMinusNalAllMonth = Number($("#summGiveoutInBank").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#summGiveoutInBank").html(number_format((summMinusNalAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+                    //- Выдачи АНу
+                    $(".giveout_director").each(function(){
+                        //console.log($(this).html().replace(/\s{1,}/g, ''));
+                        //console.log(Number($(this).html()));
+                        //console.log(Number($(this).html().replace(/\s{1,}/g, '')));
+
+                        if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
+                            var summMinusNalAllMonth = Number($("#summGiveoutDirector").html().replace(/\s{1,}/g, ''));
+                            var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
+
+                            $("#summGiveoutDirector").html(number_format((summMinusNalAllMonth + thisSumm), 2, '.', ' '));
+
+                        }
+                    });
+
+                    //- Вся выручка
+                    $("#summAllMonth").html(number_format(
+                        (Number(
+                                $("#SummNalAllMonthItog").html().replace(/\s{1,}/g, '')
+                            )
+                            +
+                            Number(
+                                $("#arendaAllMonthItog").html().replace(/\s{1,}/g, '')
+                            )
+                            +
+                            Number(
+                                $("#SummBeznalAllMonthItog").html().replace(/\s{1,}/g, '')
+                            )
+                        )
+                        , 2, '.', ' ')
+                    );
+                    //- Все расходы
+                    $("#summMinusAllMonth").html(number_format(
+                        (Number(
+                                $("#summMinusNalAllMonth").html().replace(/\s{1,}/g, '')
+                            )
+                            +
+                            Number(
+                                $("#summGiveoutInBank").html().replace(/\s{1,}/g, '')
+                            )
+                            +
+                            Number(
+                                $("#summGiveoutDirector").html().replace(/\s{1,}/g, '')
+                            )
+                        )
+                        , 2, '.', ' ')
+                    );
+                    //- Итог наличка
+                    $("#ostatokNalAllMonth").html(number_format(
+                        (Number(
+                                $("#SummNalAllMonthItog2").html().replace(/\s{1,}/g, '')
+                            )
+                            +
+                            Number(
+                                $("#arendaAllMonthItog2").html().replace(/\s{1,}/g, '')
+                            )
+                            -
+                            Number(
+                                $("#summMinusAllMonth").html().replace(/\s{1,}/g, '')
+                            )
+                        )
+                        , 2, '.', ' ')
+                    );
+
+                    //Выводим выдачи
+                    $("#SummPrepaymentGiveout").html(number_format((SummPrepayment), 2, '.', ' '));
+                    $("#SummHolidayPayGiveout").html(number_format((SummHolidayPay), 2, '.', ' '));
+                    $("#SummHospitalPayGiveout").html(number_format((SummHospitalPay), 2, '.', ' '));
+                    $("#SummSalaryGiveout").html(number_format((SummSalary), 2, '.', ' '));
+
+                    $("#SummGiveoutMonth").html(number_format((SummPrepayment + SummHolidayPay + SummHospitalPay + SummSalary), 2, '.', ' '));
+
+                    $("#ostatokFinalNalAllMonth").html(number_format(
+                        (Number(
+                                $("#ostatokNalAllMonth").html().replace(/\s{1,}/g, '')
+                            )
+                            -
+                            Number(
+                                $("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')
+                            )
+                        )
+                        , 2, '.', ' ')
+                    );
+
+                    //Промежуточные (примерные) итоги показываем
+                    //$("#interimReport").html();
+                    $("#interimReport").show();
+
+                }else{
+                    //console.log('error');
+                    $('#errrror').html(res.data);
+                    //$('#errrror').html('');
+                }
             }
         });
-        //- Итог общий нал
-        $(".itogSummNal").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var itogSummNalAllMonth = Number($("#itogSummNalAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#itogSummNalAllMonth").html(number_format((itogSummNalAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- Аренда
-        $(".arenda").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var arendaAllMonth = Number($("#arendaAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#arendaAllMonth").html(number_format((arendaAllMonth + thisSumm), 2, '.', ' '));
-
-                $("#arendaAllMonthItog").html(number_format((arendaAllMonth + thisSumm), 2, '.', ' '));
-                $("#arendaAllMonthItog2").html(number_format((arendaAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- z-отчет
-        $(".zReport").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var zReportAllMonth = Number($("#zReportAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#zReportAllMonth").html(number_format((zReportAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- общая сумма
-        $(".allSumm").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var allSummAllMonth = Number($("#allSummAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#allSummAllMonth").html(number_format((allSummAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- сумма нал
-        $(".SummNal").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var SummNalAllMonth = Number($("#SummNalAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#SummNalAllMonth").html(number_format((SummNalAllMonth + thisSumm), 2, '.', ' '));
-
-                $("#SummNalAllMonthItog").html(number_format((SummNalAllMonth + thisSumm), 2, '.', ' '));
-                $("#SummNalAllMonthItog2").html(number_format((SummNalAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- сумма безнал
-        $(".SummBeznal").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var SummBeznalAllMonth = Number($("#SummBeznalAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#SummBeznalAllMonth").html(number_format((SummBeznalAllMonth + thisSumm), 2, '.', ' '));
-
-                $("#SummBeznalAllMonthItog").html(number_format((SummBeznalAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- ордеры нал
-        $(".SummNalStomCosm").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var SummNalStomCosmAllMonth = Number($("#SummNalStomCosmAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#SummNalStomCosmAllMonth").html(number_format((SummNalStomCosmAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- ордеры безнал
-        $(".SummBeznalStomCosm").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var SummBeznalStomCosmAllMonth = Number($("#SummBeznalStomCosmAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#SummBeznalStomCosmAllMonth").html(number_format((SummBeznalStomCosmAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- сертификаты нал
-        $(".SummCertNal").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var SummCertNalAllMonth = Number($("#SummCertNalAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#SummCertNalAllMonth").html(number_format((SummCertNalAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- сертификаты безнал
-        $(".SummCertBeznal").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var SummCertBeznalAllMonth = Number($("#SummCertBeznalAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#SummCertBeznalAllMonth").html(number_format((SummCertBeznalAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- орто нал
-        $(".ortoSummNal").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var ortoSummNalAllMonth = Number($("#ortoSummNalAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#ortoSummNalAllMonth").html(number_format((ortoSummNalAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- орто безнал
-        $(".ortoSummBeznal").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var ortoSummBeznalAllMonth = Number($("#ortoSummBeznalAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#ortoSummBeznalAllMonth").html(number_format((ortoSummBeznalAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- специалисты нал
-        $(".specialistSummNal").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var specialistSummNalAllMonth = Number($("#specialistSummNalAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#specialistSummNalAllMonth").html(number_format((specialistSummNalAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- специалисты безнал
-        $(".specialistSummBeznal").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var specialistSummBeznalAllMonth = Number($("#specialistSummBeznalAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#specialistSummBeznalAllMonth").html(number_format((specialistSummBeznalAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- анализы нал
-        $(".analizSummNal").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var analizSummNalAllMonth = Number($("#analizSummNalAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#analizSummNalAllMonth").html(number_format((analizSummNalAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- анализы безнал
-        $(".analizSummBeznal").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var analizSummBeznalAllMonth = Number($("#analizSummBeznalAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#analizSummBeznalAllMonth").html(number_format((analizSummBeznalAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- солярий нал
-        $(".solarSummNal").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var solarSummNalAllMonth = Number($("#solarSummNalAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#solarSummNalAllMonth").html(number_format((solarSummNalAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- солярий безнал
-        $(".solarSummBeznal").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var solarSummBeznalAllMonth = Number($("#solarSummBeznalAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#solarSummBeznalAllMonth").html(number_format((solarSummBeznalAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- расход
-        $(".summMinusNal").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-            //console.log(Number($(this).html()));
-            //console.log(Number($(this).html().replace(/\s{1,}/g, '')));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var summMinusNalAllMonth = Number($("#summMinusNalAllMonth").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#summMinusNalAllMonth").html(number_format((summMinusNalAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- Выдачи в банк
-        $(".giveout_inBank").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-            //console.log(Number($(this).html()));
-            //console.log(Number($(this).html().replace(/\s{1,}/g, '')));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var summMinusNalAllMonth = Number($("#summGiveoutInBank").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#summGiveoutInBank").html(number_format((summMinusNalAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-        //- Выдачи АНу
-        $(".giveout_director").each(function(){
-            //console.log($(this).html().replace(/\s{1,}/g, ''));
-            //console.log(Number($(this).html()));
-            //console.log(Number($(this).html().replace(/\s{1,}/g, '')));
-
-            if (!isNaN(Number($(this).html().replace(/\s{1,}/g, '')))) {
-                var summMinusNalAllMonth = Number($("#summGiveoutDirector").html().replace(/\s{1,}/g, ''));
-                var thisSumm = Number($(this).html().replace(/\s{1,}/g, ''));
-
-                $("#summGiveoutDirector").html(number_format((summMinusNalAllMonth + thisSumm), 2, '.', ' '));
-
-            }
-        });
-
-        //- Вся выручка
-        $("#summAllMonth").html(number_format(
-            (Number(
-                $("#SummNalAllMonthItog").html().replace(/\s{1,}/g, '')
-                )
-            +
-            Number(
-                $("#arendaAllMonthItog").html().replace(/\s{1,}/g, '')
-            )
-            +
-            Number(
-                $("#SummBeznalAllMonthItog").html().replace(/\s{1,}/g, '')
-            )
-            )
-            , 2, '.', ' ')
-        );
-        //- Все расходы
-        $("#summMinusAllMonth").html(number_format(
-            (Number(
-                    $("#summMinusNalAllMonth").html().replace(/\s{1,}/g, '')
-                )
-                +
-                Number(
-                    $("#summGiveoutInBank").html().replace(/\s{1,}/g, '')
-                )
-                +
-                Number(
-                    $("#summGiveoutDirector").html().replace(/\s{1,}/g, '')
-                )
-            )
-            , 2, '.', ' ')
-        );
-        //- Итог наличка
-        $("#ostatokNalAllMonth").html(number_format(
-            (Number(
-                    $("#SummNalAllMonthItog2").html().replace(/\s{1,}/g, '')
-                )
-                +
-                Number(
-                    $("#arendaAllMonthItog2").html().replace(/\s{1,}/g, '')
-                )
-                -
-                Number(
-                    $("#summMinusAllMonth").html().replace(/\s{1,}/g, '')
-                )
-            )
-            , 2, '.', ' ')
-        );
-
-        //Промежуточные (примерные) итоги показываем
-        //$("#interimReport").html();
-        $("#interimReport").show();
-
     }
 
     //Получение отчёта по какому-то дню из филиала и заполнение отчета
@@ -4525,9 +4641,9 @@
 
                             //Итог наличные
                             var itog_summ_nal = Number(data.nal) + Number(data.arenda) - Number(data.temp_giveoutcash);
-                            console.log(data.nal);
-                            console.log(data.arenda);
-                            console.log(data.temp_giveoutcash);
+                            // console.log(data.nal);
+                            // console.log(data.arenda);
+                            // console.log(data.temp_giveoutcash);
 
                             itogSummNal.html            (number_format(itog_summ_nal, 0, '.', ' ')).css({"text-align": "right"});
 
