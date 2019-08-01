@@ -4,7 +4,7 @@
 //Финальный отчет v2.0
 
 	require_once 'header.php';
-	
+
 	if ($enter_ok){
 		require_once 'header_tags.php';
 		//var_dump($_SESSION);
@@ -143,9 +143,11 @@
             $zapis_j_noch = array();
             //Не пришло
             $zapis_not_enter = 0;
+            //ID записей
+            $zapis_ids = array();
 
             //Кроме тех, которые удалены или не пришли
-            $query = "SELECT `id`, `type`, `pervich`, `insured`, `noch`, `enter`  FROM `zapis` WHERE `office` = '{$filial_id}' AND `year` = '{$year}' AND `month` = '{$month}' AND `enter` <> 9 AND `enter` <> 8 ORDER BY `day` ASC";
+            $query = "SELECT `id`, `type`, `patient`, `pervich`, `insured`, `noch`, `enter`  FROM `zapis` WHERE `office` = '{$filial_id}' AND `year` = '{$year}' AND `month` = '{$month}' AND `enter` <> 9 AND `enter` <> 8 ORDER BY `day` ASC";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -173,8 +175,11 @@
                             //первичка/нет
                             if (($arr['enter'] == 1) || ($arr['enter'] == 6)) {
                                 $zapis_j[$arr['type']]['insured']++;
+
+                                array_push($zapis_ids, $arr['id']);
                             } else {
                             }
+
                         //Не страховой
                         }else{
                             //Если пришёл
@@ -182,6 +187,8 @@
                             //первичка/нет
                             if (($arr['enter'] == 1) || ($arr['enter'] == 6)) {
                                 $zapis_j[$arr['type']]['pervich_summ_arr'][$arr['pervich']]++;
+
+                                array_push($zapis_ids, $arr['id']);
                             } else {
                                 if ($arr['enter'] == 0) {
                                     $zapis_not_enter++;
@@ -197,6 +204,118 @@
             //var_dump($zapis_j);
             //Не пришли
             //var_dump($zapis_not_enter);
+            //var_dump($zapis_ids);
+
+            //Преобразуем массив ID записей для запросов
+            $zapis_ids_str = implode("','", $zapis_ids);
+            //var_dump($zapis_ids_str);
+            //$query=mysqli_query($conn, "SELECT name FROM users WHERE id IN ('".zapis_ids_str."')");
+
+            //Выберем наряды по записям
+            $invoices_j = array();
+            $invoices_j2 = array();
+            $invoices_notinsure_ids = array();
+
+            $query = "
+                    SELECT jiex.*, ji.summ AS invoice_summ, ji.summins AS invoice_summins, ji.status AS invoice_status, ji.type AS type, z.enter AS enter, z.pervich AS pervich 
+                    FROM `zapis` z
+                    INNER JOIN `journal_invoice` ji ON z.id = ji.zapis_id AND 
+                    z.office = '{$filial_id}' AND z.year = '{$year}' AND z.month = '{$month}' AND (z.enter = '1' OR z.enter = '6')
+                    LEFT JOIN `journal_invoice_ex` jiex ON ji.id = jiex.invoice_id ";
+            //var_dump($query);
+            //echo ($query);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($invoices_j2, $arr);
+
+                    //Пришел/не пришел/с улицы
+                    if (!isset($invoices_j[$arr['enter']])){
+                        $invoices_j[$arr['enter']] = array();
+                    }
+                    //тип стом, косм, ...
+                    if (!isset($invoices_j[$arr['enter']][$arr['type']])){
+                        $invoices_j[$arr['enter']][$arr['type']] = array();
+                        $invoices_j[$arr['enter']][$arr['type']]['data'] = array();
+                        $invoices_j[$arr['enter']][$arr['type']]['insure_data'] = array();
+                    }
+                    //Если страховой
+                    if ($arr['insure'] == 1){
+                        if (!isset($invoices_j[$arr['enter']][$arr['type']]['insure_data'][$arr['invoice_id']])) {
+                            $invoices_j[$arr['enter']][$arr['type']]['insure_data'][$arr['invoice_id']] = array();
+                        }
+                        array_push($invoices_j[$arr['enter']][$arr['type']]['insure_data'][$arr['invoice_id']], $arr);
+
+                    }else{
+                        if (!isset($invoices_j[$arr['enter']][$arr['type']]['data'][$arr['invoice_id']])){
+                            $invoices_j[$arr['enter']][$arr['type']]['data'][$arr['invoice_id']] = array();
+                        }
+                        array_push($invoices_j[$arr['enter']][$arr['type']]['data'][$arr['invoice_id']], $arr);
+
+                    }
+//категории работ
+                }
+            }
+            //сортируем по основным ключам
+            ksort($invoices_j);
+
+            foreach ($invoices_j as $id => $data){
+                //сортируем по ключам, которые тип стом, косм,...
+                ksort($invoices_j[$id]);
+            }
+            //var_dump($invoices_j);
+            //var_dump($invoices_j[1][5]['data']);
+            //var_dump($invoices_j2);
+
+            foreach ($invoices_j as $enter => $enter_data){
+                //Если пришел к врачу
+                if ($enter == 1){
+                    foreach ($enter_data as $type => $type_data){
+                        //Если стоматолог
+                        if ($type == 5){
+                            //не страховые
+                            foreach ($type_data['data'] as $invoice_id => $invoice_data){
+                                var_dump('-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-');
+                                var_dump($invoice_id);
+
+                                $invoice_summ = 0;
+                                $invoice_summins = 0;
+
+                                $invoice_summ_pos = 0;
+
+                                $pervich_status = 0;
+
+                                foreach ($invoice_data as $data){
+                                    $invoice_summ = $data['invoice_summ'];
+                                    $invoice_summins = $data['invoice_summins'];
+                                    var_dump($data['itog_price']);
+
+                                    $invoice_summ_pos += $data['itog_price'];
+
+                                    $pervich_status = $data['pervich'];
+                                }
+
+
+
+                                var_dump('_____________________________');
+                                if ($pervich_status  == 5){
+                                    var_dump('***___***___***___***');
+                                }
+                                var_dump($invoice_summ_pos);
+                                var_dump($invoice_summ);
+                                var_dump($invoice_summ == $invoice_summ_pos);
+                                var_dump($invoice_summins);
+                                var_dump($invoice_summins == $invoice_summ_pos);
+
+                            }
+                        }
+                    }
+                }
+            }
 
 
             //Сертификаты проданные
