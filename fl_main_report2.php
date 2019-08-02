@@ -277,10 +277,11 @@
                     foreach ($enter_data as $type => $type_data){
                         //Если стоматолог
                         if ($type == 5){
+                            //Проход по нарядам
                             //не страховые
                             foreach ($type_data['data'] as $invoice_id => $invoice_data){
-                                var_dump('-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-');
-                                var_dump($invoice_id);
+//                                var_dump('-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-');
+//                                var_dump($invoice_id);
 
                                 $invoice_summ = 0;
                                 $invoice_summins = 0;
@@ -289,18 +290,50 @@
 
                                 $pervich_status = 0;
 
+                                //Пороход по данным наряда (позиции)
                                 foreach ($invoice_data as $data){
                                     $invoice_summ = $data['invoice_summ'];
                                     $invoice_summins = $data['invoice_summins'];
-                                    var_dump($data['itog_price']);
+                                    //var_dump($data['itog_price']);
 
                                     $invoice_summ_pos += $data['itog_price'];
 
                                     $pervich_status = $data['pervich'];
                                 }
+//                                var_dump('_____________________________');
+//                                if ($pervich_status  == 5){
+//                                    var_dump('***___***___***___***');
+//                                }
+//                                var_dump($invoice_summ_pos);
+//                                var_dump($invoice_summ);
+//                                var_dump($invoice_summ == $invoice_summ_pos);
+//                                var_dump($invoice_summins);
+//                                var_dump($invoice_summins == $invoice_summ_pos);
 
+                            }
 
+                            //страховые
+                            foreach ($type_data['insure_data'] as $invoice_id => $invoice_data){
+//                                var_dump('-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-');
+//                                var_dump($invoice_id);
 
+                                $invoice_summ = 0;
+                                $invoice_summins = 0;
+
+                                $invoice_summ_pos = 0;
+
+                                $pervich_status = 0;
+
+                                //Проход по данным наряда (позиции)
+                                foreach ($invoice_data as $data){
+                                    $invoice_summ = $data['invoice_summ'];
+                                    $invoice_summins = $data['invoice_summins'];
+                                    //var_dump($data['itog_price']);
+
+                                    $invoice_summ_pos += $data['itog_price'];
+
+                                    $pervich_status = $data['pervich'];
+                                }
                                 var_dump('_____________________________');
                                 if ($pervich_status  == 5){
                                     var_dump('***___***___***___***');
@@ -312,6 +345,7 @@
                                 var_dump($invoice_summins == $invoice_summ_pos);
 
                             }
+
                         }
                     }
                 }

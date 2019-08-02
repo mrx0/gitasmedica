@@ -2239,6 +2239,45 @@
         });
     }
 
+    //Добавляем/редактируем в базу временную тестовую выплату в бд
+    function  fl_Ajax_paidout_another_add(paidoutData){
+        //console.log(paidoutData);
+
+        var link = "fl_paidout_another_add_f.php";
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data: paidoutData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(res){
+//                console.log(res.data);
+                //$('#data').html(res)
+
+                blockWhileWaiting (true);
+
+                if(res.result == 'success') {
+                    //console.log('success');
+                    //$('#data').html(res.data);
+
+                    location.reload();
+                }else{
+                    //console.log('error');
+                    $('#errror').html(res.data);
+                    //$('#errrror').html('');
+                }
+            }
+        });
+    }
+
     //Добавляем/редактируем в базу расход материалов для наряда
     function fl_Ajax_MaterialsConsumptionAdd(invoice_id, mode){
 
@@ -2582,6 +2621,58 @@
                 if(res.result == 'success'){
 
                         fl_Ajax_paidout_add(paidout_id, tabel_id, mode, paidoutData, link, variant);
+
+                    // в случае ошибок в форме
+                }else{
+                    // перебираем массив с ошибками
+                    for(var errorField in res.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(res.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                }
+            }
+        })
+    }
+
+    //Промежуточная функция для тестовой выплаты
+    function fl_showPaidoutAnotherAdd(){
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        var paidoutData = {
+            month: $('#iWantThisMonth').val(),
+            year: $('#iWantThisYear').val(),
+            worker: $('#search_client2').val(),
+            paidout_summ: $('#paidout_summ').val(),
+            paidout_id: $('#SelectType').val(),
+            filial_id: $('#SelectFilial').val(),
+            descr: $('#descr').val()
+        };
+        //console.log(paidoutData);
+
+        //проверка данных на валидность
+        $.ajax({
+            url:"ajax_test.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data: {paidout_summ: $('#paidout_summ').val()},
+
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                if(res.result == 'success'){
+
+                    fl_Ajax_paidout_another_add(paidoutData);
 
                     // в случае ошибок в форме
                 }else{
