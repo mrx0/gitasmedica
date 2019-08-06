@@ -129,6 +129,25 @@
 
             $msql_cnnct = ConnectToDB ();
 
+            //Соберём все категории процентов (справочник)
+            $percents_j = array();
+
+            $query = "SELECT `id`, `name`, `type` FROM  `fl_spr_percents`";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0) {
+                while ($arr = mysqli_fetch_assoc($res)) {
+                    if (!isset($percents_j[$arr['type']])){
+                        $percents_j[$arr['type']] = array();
+                    }
+                    $percents_j[$arr['type']][$arr['id']]['name'] = $arr['name'];
+                }
+            }
+            //var_dump($percents_j);
+
             //Типы посещений - первичка/нет (количество)
             //Памятка
             //1 - Посещение для пациента первое без работы
@@ -257,7 +276,7 @@
                         array_push($invoices_j[$arr['enter']][$arr['type']]['data'][$arr['invoice_id']], $arr);
 
                     }
-//категории работ
+            //категории работ
                 }
             }
             //сортируем по основным ключам
@@ -271,15 +290,38 @@
             //var_dump($invoices_j[1][5]['data']);
             //var_dump($invoices_j2);
 
+            //Итоговый массив для хранения по типам стом/косм/...
+            $rezult_arr = array();
+            //для хранения страховые и нет
+            //$rezult_arr['data'] = array();
+            //$rezult_arr['insure_data'] = array();
+            //суммы по категориям
+            //$rezult_arr['data'][ID категории]['category_summ'] = 0;
+
+            //Костыль для типа 7
+            $rezult_arr[7]['data'] = array();
+
             foreach ($invoices_j as $enter => $enter_data){
                 //Если пришел к врачу
                 if ($enter == 1){
                     foreach ($enter_data as $type => $type_data){
+
+                        if (!isset($rezult_arr[$type])){
+                            $rezult_arr[$type] = array();
+                        }
+
                         //Если стоматолог
-                        if ($type == 5){
+                        //if ($type == 5){
                             //Проход по нарядам
                             //не страховые
                             foreach ($type_data['data'] as $invoice_id => $invoice_data){
+//                                var_dump('-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-');
+//                                var_dump($invoice_id);
+
+                                if (!isset($rezult_arr[$type]['data'])){
+                                    $rezult_arr[$type]['data'] = array();
+                                }
+
 //                                var_dump('-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-');
 //                                var_dump($invoice_id);
 
@@ -292,14 +334,87 @@
 
                                 //Пороход по данным наряда (позиции)
                                 foreach ($invoice_data as $data){
+                                    //var_dump($data);
+
                                     $invoice_summ = $data['invoice_summ'];
                                     $invoice_summins = $data['invoice_summins'];
                                     //var_dump($data['itog_price']);
 
                                     $invoice_summ_pos += $data['itog_price'];
 
-                                    $pervich_status = $data['pervich'];
+                                    //$pervich_status = $data['pervich'];
+
+                                    //Если не продолжениении работы
+                                    if ($data['pervich'] != 5) {
+//                                        var_dump($data['percent_cats']);
+
+                                        //Костыль для категории 7
+                                        if (!in_array($data['percent_cats'], [58,59,61,62])) {
+                                            if (!isset($rezult_arr[$type]['data'][$data['percent_cats']])) {
+                                                $rezult_arr[$type]['data'][$data['percent_cats']] = 0;
+                                            }
+                                            $rezult_arr[$type]['data'][$data['percent_cats']] += $data['itog_price'];
+                                        }else{
+                                            if (!isset($rezult_arr[7]['data'][$data['percent_cats']])) {
+                                                $rezult_arr[7]['data'][$data['percent_cats']] = 0;
+                                            }
+                                            $rezult_arr[7]['data'][$data['percent_cats']] += $data['itog_price'];
+                                        }
+                                    }
+
                                 }
+
+//                                var_dump('_____________________________');
+//                                if ($pervich_status  == 5){
+//                                    var_dump('***___***___***___***');
+//                                }
+//                                var_dump('$pervich_status');
+//                                var_dump($pervich_status);
+//                                var_dump($invoice_summ_pos);
+//                                var_dump($invoice_summ);
+//                                var_dump($invoice_summ == $invoice_summ_pos);
+//                                var_dump($invoice_summins);
+//                                var_dump($invoice_summins == $invoice_summ_pos);
+
+                            }
+
+                            if (!empty($type_data['insure_data'])) {
+                                //страховые
+                                foreach ($type_data['insure_data'] as $invoice_id => $invoice_data) {
+
+                                    if (!isset($rezult_arr[$type]['insure_data'])) {
+                                        $rezult_arr[$type]['insure_data'] = array();
+                                    }
+
+//                                var_dump('-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-');
+//                                var_dump($invoice_id);
+
+                                    $invoice_summ = 0;
+                                    $invoice_summins = 0;
+
+                                    $invoice_summ_pos = 0;
+
+                                    $pervich_status = 0;
+
+                                    //Проход по данным наряда (позиции)
+                                    foreach ($invoice_data as $data) {
+                                        $invoice_summ = $data['invoice_summ'];
+                                        $invoice_summins = $data['invoice_summins'];
+                                        //var_dump($data['itog_price']);
+
+                                        $invoice_summ_pos += $data['itog_price'];
+
+                                        //$pervich_status = $data['pervich'];
+
+                                        //Если не продолжениении работы
+                                        if ($data['pervich'] != 5) {
+                                            if (!isset($rezult_arr[$type]['insure_data'][$data['percent_cats']])) {
+                                                $rezult_arr[$type]['insure_data'][$data['percent_cats']] = 0;
+                                            }
+                                            $rezult_arr[$type]['insure_data'][$data['percent_cats']] += $data['itog_price'];
+                                        }
+                                    }
+
 //                                var_dump('_____________________________');
 //                                if ($pervich_status  == 5){
 //                                    var_dump('***___***___***___***');
@@ -310,46 +425,15 @@
 //                                var_dump($invoice_summins);
 //                                var_dump($invoice_summins == $invoice_summ_pos);
 
+                                }
                             }
 
-                            //страховые
-                            foreach ($type_data['insure_data'] as $invoice_id => $invoice_data){
-//                                var_dump('-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-');
-//                                var_dump($invoice_id);
-
-                                $invoice_summ = 0;
-                                $invoice_summins = 0;
-
-                                $invoice_summ_pos = 0;
-
-                                $pervich_status = 0;
-
-                                //Проход по данным наряда (позиции)
-                                foreach ($invoice_data as $data){
-                                    $invoice_summ = $data['invoice_summ'];
-                                    $invoice_summins = $data['invoice_summins'];
-                                    //var_dump($data['itog_price']);
-
-                                    $invoice_summ_pos += $data['itog_price'];
-
-                                    $pervich_status = $data['pervich'];
-                                }
-                                var_dump('_____________________________');
-                                if ($pervich_status  == 5){
-                                    var_dump('***___***___***___***');
-                                }
-                                var_dump($invoice_summ_pos);
-                                var_dump($invoice_summ);
-                                var_dump($invoice_summ == $invoice_summ_pos);
-                                var_dump($invoice_summins);
-                                var_dump($invoice_summins == $invoice_summ_pos);
-
-                            }
-
-                        }
+                        //}
                     }
                 }
             }
+//            var_dump($rezult_arr);
+
 
 
             //Сертификаты проданные
@@ -441,6 +525,398 @@
                 var_dump($rashod);
                 var_dump('Остаток');
                 var_dump(number_format($cashbox_nal + $arenda - $rashod, 0, '.', ' '));
+
+//            4 =>
+//        array (size=1)
+//          'name' => string 'Пародонтология' (length=28)
+//
+//            7 =>
+//        array (size=1)
+//          'name' => string 'Дополнительно' (length=26)
+
+
+/*            echo '
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                       <b>Стоматология</b>
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        Страховые
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        терапия
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+                        1
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        хирургия
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+                        3
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        имплантация
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+                        45,46,47,49,50
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        ортопедия
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+                        5
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        детство
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        ортодонтия
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+                        6
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        чистки
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        остальное
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        орто-грамма  нал
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        орто-грамма  безнал
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        Лечение сотрудников
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        наличные
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        безнал
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        сертификат
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        Статистика приема:
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                ';
+                
+                
+            echo '
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                       <b>Косметология</b>
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        хирургия
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        терапия
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+                        
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        космет
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        RF
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+                        45,46,47,49,50
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        ортопедия
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+                        5
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        детство
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        ортодонтия
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+                        6
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        чистки
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        остальное
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        орто-грамма  нал
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        орто-грамма  безнал
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        Лечение сотрудников
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        наличные
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        безнал
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        сертификат
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                        Статистика приема:
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+
+                    </div>
+                </li>
+
+                
+                ';*/
+
+
+            //Пробуем вывести то, что получили
+            echo '
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: rgb(199, 234, 234);">
+                       <b>Стоматология</b>
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px; background-color: rgb(199, 234, 234);">';
+
+            if (isset($rezult_arr[5])){
+                if (!empty($rezult_arr[5])){
+                    if (!empty($rezult_arr[5]['data'])){
+                        //arsort($rezult_arr[5]['data']);
+                        echo number_format(array_sum($rezult_arr[5]['data']), 0, '.', ' ');
+                    }else{
+                        echo 'нет данных';
+                    }
+                }else{
+                    echo 'нет данных';
+                }
+            }else{
+                echo 'нет данных';
+            }
+
+            echo '
+                    </div>
+                </li>';
+
+            if (isset($rezult_arr[5])){
+                if (!empty($rezult_arr[5])){
+                    if (!empty($rezult_arr[5]['data'])){
+                        arsort($rezult_arr[5]['data']);
+
+                        foreach($rezult_arr[5]['data'] as $percent_cat_id => $value) {
+
+                            //$pervent_value = ;
+
+                            echo '
+                            <li class="filterBlock">
+                                <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                                   <b>'.$percents_j[5][$percent_cat_id]['name'].'</b>
+                                </div>
+                                <div class="cellRight" style="width: 245px; min-width: 245px;">
+                                    <div style="float:left;">'.number_format($value, 0, '.', ' ').'</div> <div style="float:right;">['.number_format((($value * 100)/ array_sum($rezult_arr[5]['data'])), 2, '.', '').'%]</div>
+                                </div>
+                            </li>';
+                        }
+                    }
+                }
+            }
+
+            echo '
+                <li class="filterBlock">
+                    <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: rgb(199, 234, 234);">
+                       <b>Косметология</b>
+                    </div>
+                    <div class="cellRight" style="width: 245px; min-width: 245px; background-color: rgb(199, 234, 234);">';
+
+            if (isset($rezult_arr[6])){
+                if (!empty($rezult_arr[6])){
+                    if (!empty($rezult_arr[6]['data'])){
+                        //arsort($rezult_arr[5]['data']);
+                        echo number_format(array_sum($rezult_arr[6]['data']), 0, '.', ' ');
+                    }else{
+                        echo 'нет данных';
+                    }
+                }else{
+                    echo 'нет данных';
+                }
+            }else{
+                echo 'нет данных';
+            }
+
+            echo '
+                    </div>
+                </li>';
+
+            if (isset($rezult_arr[6])){
+                if (!empty($rezult_arr[6])){
+                    if (!empty($rezult_arr[6]['data'])){
+                        arsort($rezult_arr[6]['data']);
+
+                        foreach($rezult_arr[6]['data'] as $percent_cat_id => $value) {
+
+                            //$pervent_value = ;
+
+
+                            echo '
+                            <li class="filterBlock">
+                                <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                                   <b>'.$percents_j[6][$percent_cat_id]['name'].'</b>
+                                </div>
+                                <div class="cellRight" style="width: 245px; min-width: 245px;">
+                                    <div style="float:left;">'.number_format($value, 0, '.', ' ').'</div> <div style="float:right;">['.number_format((($value * 100)/ array_sum($rezult_arr[6]['data'])), 2, '.', '').'%]</div>
+                                </div>
+                            </li>';
+                        }
+                    }
+                }
+            }
+
 
 
                 echo '
