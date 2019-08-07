@@ -40,7 +40,6 @@
                 //var_dump($subtractions_j);
 
                 //Выплаты !!! не доделал, переделать всё, если понадобится вообще.
-                //!!!! в базе не хранится filial_id
                 $fl_refunds_j = array();
 
 //                $query = "SELECT * FROM  `fl_journal_refund` WHERE `filial_id`='{$_POST['filial_id']}' AND `month`='{$_POST['month']}' AND `year`='{$_POST['year']}'";

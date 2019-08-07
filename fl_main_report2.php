@@ -130,7 +130,10 @@
             $msql_cnnct = ConnectToDB ();
 
             //Соберём все категории процентов (справочник)
+            // по типу
             $percents_j = array();
+            // по id
+            $percents_j2 = array();
 
             $query = "SELECT `id`, `name`, `type` FROM  `fl_spr_percents`";
 
@@ -144,9 +147,18 @@
                         $percents_j[$arr['type']] = array();
                     }
                     $percents_j[$arr['type']][$arr['id']]['name'] = $arr['name'];
+
+                    if (!isset($percents_j2[$arr['id']])){
+                        $percents_j2[$arr['id']] = array();
+                    }
+
+                    $percents_j2[$arr['id']]['name'] = $arr['name'];
+
+
                 }
             }
             //var_dump($percents_j);
+            //var_dump($percents_j2);
 
             //Типы посещений - первичка/нет (количество)
             //Памятка
@@ -221,12 +233,13 @@
             //var_dump($zapis_j_noch);
             //День
             //var_dump($zapis_j);
+            //var_dump($zapis_j[7]);
             //Не пришли
             //var_dump($zapis_not_enter);
             //var_dump($zapis_ids);
 
-            //Преобразуем массив ID записей для запросов
-            $zapis_ids_str = implode("','", $zapis_ids);
+            //Преобразуем массив ID записей для запросов - !!! не используем
+            //$zapis_ids_str = implode("','", $zapis_ids);
             //var_dump($zapis_ids_str);
             //$query=mysqli_query($conn, "SELECT name FROM users WHERE id IN ('".zapis_ids_str."')");
 
@@ -305,7 +318,7 @@
 
             foreach ($invoices_j as $enter => $enter_data){
                 //Если пришел к врачу
-                if ($enter == 1){
+                if (($enter == 1) || ($enter == 6)){
                     foreach ($enter_data as $type => $type_data){
 
                         if (!isset($rezult_arr[$type])){
@@ -521,33 +534,75 @@
                     $temp_solar_beznal += $report['temp_solar_beznal'];
                 }
 
-                var_dump('Итоги');
-                var_dump('---------------------------------');
+//                var_dump('Итоги');
+//                var_dump('---------------------------------');
+//
+//                var_dump('Нал');
+//                var_dump($cashbox_nal);
+//                var_dump('Безнал');
+//                var_dump($beznal);
+//                var_dump('Аренда');
+//                var_dump($arenda);
+//
+//                var_dump('Выручка вся');
+//                var_dump(number_format($cashbox_nal + $beznal + $arenda, 0, '.', ' '));
+//
+//                var_dump('/////////////////////////////////////////////');
+//
+//                var_dump('Наличные');
+//                var_dump('---------------------------------');
+//
+//                var_dump('Нал');
+//                var_dump($cashbox_nal);
+//                var_dump('Аренда');
+//                var_dump($arenda);
+//                var_dump('Расход');
+//                var_dump($rashod);
+//                var_dump('Остаток');
+//                var_dump(number_format($cashbox_nal + $arenda - $rashod, 0, '.', ' '));
 
-                var_dump('Нал');
-                var_dump($cashbox_nal);
-                var_dump('Безнал');
-                var_dump($beznal);
-                var_dump('Аренда');
-                var_dump($arenda);
 
-                var_dump('Выручка вся');
-                var_dump(number_format($cashbox_nal + $beznal + $arenda, 0, '.', ' '));
+            echo '<div style="display: inline-block; vertical-align: top;">';
+//
+//            echo '
+//                    <li class="filterBlock">
+//                        <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
+//                           наличные касса
+//                        </div>
+//                        <div class="cellRight" style="width: 245px; min-width: 245px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+//
+//            echo number_format($cashbox_nal, 0, '.', ' ');
+//
+//                echo '
+//                        </div>
+//                    </li>';
 
-                var_dump('/////////////////////////////////////////////');
 
-                var_dump('Наличные');
-                var_dump('---------------------------------');
+            echo '
+                    <li class="filterBlock">
+                        <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                           <b>наличные касса</b>
+                        </div>
+                        <div class="cellRight" style="width: 245px; min-width: 245px;">
+                            <div style="float:left;">'.number_format($cashbox_nal, 0, '.', ' ').'</div>
+                        </div>
+                    </li>';
 
-                var_dump('Нал');
-                var_dump($cashbox_nal);
-                var_dump('Аренда');
-                var_dump($arenda);
-                var_dump('Расход');
-                var_dump($rashod);
-                var_dump('Остаток');
-                var_dump(number_format($cashbox_nal + $arenda - $rashod, 0, '.', ' '));
+            echo '
+                    <li class="filterBlock">
+                        <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                           <b>аренда</b>
+                        </div>
+                        <div class="cellRight" style="width: 245px; min-width: 245px;">
+                            <div style="float:left;">'.number_format($arenda, 0, '.', ' ').'</div>
+                        </div>
+                    </li>';
 
+
+            echo '</div>';
+
+
+                //не понял, что это и для чего, сравнивая с флешкой
 //            4 =>
 //        array (size=1)
 //          'name' => string 'Пародонтология' (length=28)
@@ -558,6 +613,8 @@
 
 
             //Пробуем вывести то, что получили
+
+            echo '<div style="display: inline-block; vertical-align: top;">';
             //Стоматология
             if (isset($rezult_arr[5])){
                 echo '
@@ -635,6 +692,63 @@
                     }
                 }
             }
+
+            //Ассистенты
+            if (isset($rezult_arr[7])){
+                echo '
+                    <li class="filterBlock">
+                        <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
+                           Ассистенты
+                        </div>
+                        <div class="cellRight" style="width: 245px; min-width: 245px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+
+
+                if (!empty($rezult_arr[7])){
+                    if (!empty($rezult_arr[7]['data'])){
+                        //arsort($rezult_arr[10]['data']);
+                        echo number_format(array_sum($rezult_arr[7]['data']), 0, '.', ' ');
+                    }else{
+                        echo 'нет данных';
+                    }
+                }else{
+                    echo 'нет данных';
+                }
+                echo '
+                        </div>
+                    </li>';
+            }
+
+
+
+
+            if (isset($rezult_arr[7])){
+                if (!empty($rezult_arr[7])){
+                    if (!empty($rezult_arr[7]['data'])){
+                        arsort($rezult_arr[7]['data']);
+
+                        foreach($rezult_arr[7]['data'] as $percent_cat_id => $value) {
+
+                            if (isset($percents_j[7][$percent_cat_id])){
+                                $percent_cat_name = $percents_j[7][$percent_cat_id]['name'];
+                            }else{
+                                $percent_cat_name = $percents_j2[$percent_cat_id]['name'].'<i class="fa fa-warning" aria-hidden="true"></i>';
+                            }
+
+                            echo '
+                            <li class="filterBlock">
+                                <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                                   <b>'.$percent_cat_name.'</b>
+                                </div>
+                                <div class="cellRight" style="width: 245px; min-width: 245px;">
+                                    <div style="float:left;">'.number_format($value, 0, '.', ' ').'</div> <div style="float:right;">'.number_format((($value * 100)/ array_sum($rezult_arr[7]['data'])), 2, '.', '').'%</div>
+                                </div>
+                            </li>';
+                        }
+                    }
+                }
+            }
+
+
 
             //Косметология
             if (isset($rezult_arr[6])){
@@ -756,7 +870,7 @@
 
 
                 echo '
-                    </ul>
+                    <!--</ul>-->
 			    </div>';
 
             echo '
