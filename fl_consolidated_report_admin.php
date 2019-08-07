@@ -58,7 +58,13 @@
                 <div id="status">
                     <header id="header">
                         <div class="nav">
-                            <a href="stat_cashbox.php" class="b">Касса</a>
+                            <a href="stat_cashbox.php" class="b">Касса</a>';
+            if (($_SESSION['id'] == 270) || ($god_mode)){
+                echo '
+                <a href="fl_paidout_another_test_in_tabel_add.php" class="b">Добавить расход вручную</a>';
+            }
+
+            echo '
                         </div>
                         <h2 style="padding: 0;">Сводный отчёт по филиалу</h2>
                     </header>';
