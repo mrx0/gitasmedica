@@ -52,6 +52,23 @@ if ($enter_ok){
                     }
                     //var_dump($surchargesSumm);
 
+                    //Сумма выплат
+                    $paidoutssSumm = 0;
+
+                    //Получим премии отдельно, !!! потом надо будет переделать, а то лишний запрос какой-то
+                    $query = "SELECT SUM(`summ`) AS `paidoutssSumm`
+                    FROM  `fl_journal_paidouts` 
+                    WHERE `tabel_id` = '{$_GET['tabel_id']}' AND (`type`='1' OR `type`='4' OR `type`='7');";
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                    $number = mysqli_num_rows($res);
+                    if ($number != 0) {
+                        $arr = mysqli_fetch_assoc($res);
+                        $paidoutssSumm = $arr['paidoutssSumm'];
+                    }
+                    //var_dump($paidoutssSumm);
+
                     echo '
                             <div id="status">
                                 <header>
@@ -100,7 +117,7 @@ if ($enter_ok){
                     if (($_GET['type'] == 1) || ($_GET['type'] == 7) || ($_GET['type'] == 4)){
                         //Общая сумма, которую осталось выплатить = сумма (РЛ) + надбавки + за ночь + пустые смены - вычеты - оплачено - выплачено
                         //$paidout_summ_value = $tabel_j[0]['summ'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena'] - $tabel_j[0]['deduction'] - $tabel_j[0]['paid'] - $tabel_j[0]['paidout'];
-                        $paidout_summ_value = $tabel_j[0]['summ'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena'] - $tabel_j[0]['deduction'] - $tabel_j[0]['paidout'] + $surchargesSumm;
+                        $paidout_summ_value = $tabel_j[0]['summ'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena'] - $tabel_j[0]['deduction'] - $paidoutssSumm + $surchargesSumm;
                         //Если ассистент, то плюсуем сумму за РЛ
                         if ($tabel_j[0]['type'] == 7){
                             $paidout_summ_value += $tabel_j[0]['summ_calc'];
