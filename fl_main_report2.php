@@ -33,12 +33,12 @@
             $day = date("d");
 
             //Или если мы смотрим другой месяц
-            if (isset($_GET['m'])) {
-                $m = $_GET['m'];
-            }
-            if (isset($_GET['y'])) {
-                $y = $_GET['y'];
-            }
+//            if (isset($_GET['m'])) {
+//                $m = $_GET['m'];
+//            }
+//            if (isset($_GET['y'])) {
+//                $y = $_GET['y'];
+//            }
 
             //Филиал
             if (isset($_GET['filial_id'])) {
@@ -53,7 +53,7 @@
                         <div class="nav">
                             <!--<a href="stat_cashbox.php" class="b">Касса</a>-->
                         </div>
-                        <h2 style="padding: 0;">Отчёт</h2>
+                        <h2 style="padding: 0;">Отчёт '.$filials_j[$filial_id]['name2'].' / '.$monthsName[$month].' '.$year.'</h2>
                     </header>';
 
             echo '
@@ -63,7 +63,7 @@
 
             //Выбор филиала
             echo '
-                        <div style="font-size: 90%; ">
+                        <div class="no_print" style="font-size: 90%; ">
                             Филиал: ';
 
             //if (($finances['see_all'] == 1) || $god_mode) {
@@ -254,7 +254,8 @@
                     INNER JOIN `journal_invoice` ji ON z.id = ji.zapis_id AND 
                     z.office = '{$filial_id}' AND z.year = '{$year}' AND z.month = '{$month}' AND (z.enter = '1' OR z.enter = '6')
                     LEFT JOIN `journal_invoice_ex` jiex ON ji.id = jiex.invoice_id
-                    LEFT JOIN `spr_clients` sc ON ji.client_id = sc.id ";
+                    LEFT JOIN `spr_clients` sc ON ji.client_id = sc.id 
+                    WHERE ji.status <> '9'";
             //var_dump($query);
             //echo ($query);
 
@@ -356,6 +357,16 @@
                                     //var_dump($data);
                                     //var_dump($data['percent_cats']);
 
+                                    //debug
+//                                    var_dump(strlen($data['percent_cats']));
+//                                    if (strlen($data['percent_cats']) == 0){
+//                                        var_dump($invoice_id);
+//                                    }
+                                    if (!isset($percents_j[$type][$data['percent_cats']])){
+                                        var_dump($invoice_id.' ['.$type.'] => '.$data['percent_cats']);
+                                    }
+
+
                                     $invoice_summ = $data['invoice_summ'];
                                     $invoice_summins = $data['invoice_summins'];
                                     //var_dump($data['itog_price']);
@@ -427,9 +438,10 @@
 
                                     //Проход по данным наряда (позиции)
                                     foreach ($invoice_data as $data) {
+                                        //var_dump($data['itog_price']);
+
                                         $invoice_summ = $data['invoice_summ'];
                                         $invoice_summins = $data['invoice_summins'];
-                                        //var_dump($data['itog_price']);
 
                                         $invoice_summ_pos += $data['itog_price'];
 
