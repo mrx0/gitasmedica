@@ -317,6 +317,9 @@
             //Костыль для типа 7
             $rezult_arr[7]['data'] = array();
 
+            //переменная для строки, где будут ссылки на наряды, если с ними что-то не так
+            $warn_str_percent_cats = '';
+
             foreach ($invoices_j as $enter => $enter_data){
                 //Если пришел к врачу
                 if (($enter == 1) || ($enter == 6)){
@@ -362,10 +365,13 @@
 //                                    if (strlen($data['percent_cats']) == 0){
 //                                        var_dump($invoice_id);
 //                                    }
-                                    if (!isset($percents_j[$type][$data['percent_cats']])){
-                                        var_dump($invoice_id.' ['.$type.'] => '.$data['percent_cats']);
-                                    }
 
+                                    if (!isset($percents_j[$type][$data['percent_cats']])){
+                                        if (strlen($data['percent_cats']) > 0) {
+                                            //var_dump($invoice_id.' ['.$type.'] => '.$data['percent_cats']);
+                                            $warn_str_percent_cats .= '<a href="invoice_id.php?id=' . $invoice_id . '" class="ahref button_tiny" style="margin: 0 2px; font-size: 80%;">#' . $invoice_id . '</a>';
+                                        }
+                                    }
 
                                     $invoice_summ = $data['invoice_summ'];
                                     $invoice_summins = $data['invoice_summins'];
@@ -475,7 +481,14 @@
             }
 //            var_dump($rezult_arr);
 
+            echo '<div class="no_print" style="font-size: 110%;">';
 
+            if (strlen($warn_str_percent_cats) > 0) {
+                echo '<li class="filterBlock" style="color: red;">Наряды, требуют дополнительной проверки указанных категорий</li>';
+                echo '<li class="filterBlock">'.$warn_str_percent_cats.'</li>';
+            }
+
+            echo '</div>';
 
             //Сертификаты проданные
             $certificates_j = array();
