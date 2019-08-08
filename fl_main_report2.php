@@ -369,7 +369,7 @@
                                     if (!isset($percents_j[$type][$data['percent_cats']])){
                                         if (strlen($data['percent_cats']) > 0) {
                                             //var_dump($invoice_id.' ['.$type.'] => '.$data['percent_cats']);
-                                            $warn_str_percent_cats .= '<a href="invoice_id.php?id=' . $invoice_id . '" class="ahref button_tiny" style="margin: 0 2px; font-size: 80%;">#' . $invoice_id . '</a>';
+                                            $warn_str_percent_cats .= '<a href="invoice.php?id=' . $invoice_id . '" class="ahref button_tiny" style="margin: 0 2px; font-size: 80%;">#' . $invoice_id . '</a>';
                                         }
                                     }
 
