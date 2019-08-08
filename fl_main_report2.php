@@ -160,6 +160,23 @@
             //var_dump($percents_j);
             //var_dump($percents_j2);
 
+            //Типы расходов
+            $give_out_cash_types_j = array();
+
+            $query = "SELECT `id`,`name` FROM `spr_cashout_types`";
+            //var_dump($query);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    $give_out_cash_types_j[$arr['id']] = $arr['name'];
+                }
+            }
+
+
+
             //Типы посещений - первичка/нет (количество)
             //Памятка
             //1 - Посещение для пациента первое без работы
@@ -481,14 +498,42 @@
             }
 //            var_dump($rezult_arr);
 
-            echo '<div class="no_print" style="font-size: 110%;">';
+            //Если какие-то косяки с категориями процентов
+//            echo '<div class="no_print" style="font-size: 110%;">';
+//
+//            if (strlen($warn_str_percent_cats) > 0) {
+//                echo '<li class="filterBlock" style="color: red;">Наряды, требуют дополнительной проверки указанных категорий</li>';
+//                echo '<li class="filterBlock">'.$warn_str_percent_cats.'</li>';
+//            }
+//
+//            echo '</div>';
 
-            if (strlen($warn_str_percent_cats) > 0) {
-                echo '<li class="filterBlock" style="color: red;">Наряды, требуют дополнительной проверки указанных категорий</li>';
-                echo '<li class="filterBlock">'.$warn_str_percent_cats.'</li>';
+
+            //Расходы, выдано из кассы
+            $giveoutcash_j = array();
+
+            //Даты от и до
+            $datastart = $year.'-'.$month.'-'.$day.' 00:00:00';
+            $dataend = $year.'-'.$month.'-'.$day.' 23:59:59';
+
+            //Поехали собирать расходные ордера
+            $query = "SELECT * FROM `journal_giveoutcash` WHERE
+                    MONTH(`date_in`) = '".dateTransformation ($month)."' AND YEAR(`date_in`) = '{$year}' 
+                    AND `office_id`='{$filial_id}' AND `status` <> '9' 
+                    ORDER BY `type` DESC";
+            //var_dump($query);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($giveoutcash_j, $arr);
+                }
             }
+            //var_dump($giveoutcash_j);
 
-            echo '</div>';
+
 
             //Сертификаты проданные
             $certificates_j = array();
