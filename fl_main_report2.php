@@ -598,7 +598,7 @@
                 $beznal = 0;
                 $arenda = 0;
                 $rashod = 0;
-                //$ostatok = 0;
+                $ostatok = 0;
 
                 $temp_solar_beznal = 0;
                 $temp_solar_nal = 0;
@@ -677,10 +677,54 @@
             //var_dump($subtractions_j);
             //var_dump($subtractions_j[5][1]);
 
+
+            //Банк
+            $bank_j = array();
+            $bank_summ = 0;
+
+            $query = "SELECT SUM(`summ`) AS summ FROM `fl_journal_in_bank` WHERE `filial_id`='{$filial_id}' AND `year`='$year' AND (`month`='$month' OR `month`='".(int)$month."')";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0){
+                //while ($arr = mysqli_fetch_assoc($res)){
+                $arr = mysqli_fetch_assoc($res);
+
+                $bank_summ = $arr['summ'];
+                //}
+            }
+//          var_dump($query);
+//          var_dump($bank_summ);
+
+            //АН
+            $director_j = array();
+            $director_summ = 0;
+
+            $query = "SELECT SUM(`summ`) AS summ FROM `fl_journal_to_director` WHERE `filial_id`='{$filial_id}' AND `year`='$year' AND `month`='$month'";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0){
+                //while ($arr = mysqli_fetch_assoc($res)){
+                $arr = mysqli_fetch_assoc($res);
+
+                $director_summ = $arr['summ'];
+                //}
+            }
+//          var_dump($director_summ);
+
+
+
+
             //Получаем данные по выданным деньгам сверх того, что у есть в программе.
             //Например зп сотрудников, которых нет в программе
             //Вносится вручную
             $paidouts_temp_j = array();
+            $paidouts_temp_summ = 0;
 
             $query = "SELECT * FROM `fl_journal_paidouts_temp` WHERE `filial_id`='{$filial_id}' AND `year`='$year' AND `month`='$month'";
 
@@ -691,6 +735,8 @@
             if ($number != 0){
                 while ($arr = mysqli_fetch_assoc($res)){
                     array_push($paidouts_temp_j, $arr);
+
+                    $paidouts_temp_summ += $arr['summ'];
                 }
             }
 //            var_dump($paidouts_temp_j);
@@ -928,16 +974,127 @@
                     </div>';
 
 
+            echo '
+                    <div style="border: 1px solid #CCC;">
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
+                               <b>Прочие выдачи</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
+
+                            </div>
+                        </li>';
+
+            echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
+                                
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
+                                '.$paidouts_temp_summ.'
+                            </div>
+                        </li>';
+
+            echo '
+                    </div>';
+
+            echo '
+                    <div style="border: 1px solid #CCC;">
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
+                               <b>Банк</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
+
+                            </div>
+                        </li>';
+
+            echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
+                                
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
+                                '.$bank_summ.'
+                            </div>
+                        </li>';
+
+            echo '
+                    </div>';
+
+            echo '
+                    <div style="border: 1px solid #CCC;">
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
+                               <b>АН</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
+
+                            </div>
+                        </li>';
+
+            echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
+                                
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
+                                '.$director_summ.'
+                            </div>
+                        </li>';
+
+            echo '
+                    </div>';
 
 
-            //$paidouts_temp_j
+//            //Выручна без страховых
+//            var_dump($cashbox_nal+$beznal+$arenda);
+//            //Расходы
+//            var_dump($giveoutcash_summ);
+//            //Выплаты персоналу
+//            var_dump($subtractions_summ);
+//            //Выплаты персоналу, которые не обрабатываются пока в программе
+//            var_dump($paidouts_temp_summ);
+//            //Банк
+//            var_dump($bank_summ);
+//            //АН
+//            var_dump($director_summ);
 
-            //Выручна без страховых
-            var_dump($cashbox_nal+$beznal+$arenda);
-            //Расходы
-            var_dump($giveoutcash_summ);
-            //Выплаты персоналу
-            var_dump($subtractions_summ);
+
+            //Остаток
+            //var_dump($cashbox_nal + $beznal + $arenda - $giveoutcash_summ - $subtractions_summ - $bank_summ - $director_summ);
+
+            $ostatok = $cashbox_nal + $beznal + $arenda - $giveoutcash_summ - $subtractions_summ - $bank_summ - $director_summ;
+
+            $ostatok = number_format($ostatok, 0, '.', ' ');
+
+
+
+            echo '
+                    <div style="border: 1px solid #CCC;">
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
+                               <b>Остаток</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
+
+                            </div>
+                        </li>';
+
+            echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
+                                
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
+                                <b>'.$ostatok.'</b>
+                            </div>
+                        </li>';
+
+            echo '
+                    </div>';
+
+
 
 
             echo '
