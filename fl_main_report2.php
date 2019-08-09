@@ -18,6 +18,11 @@
             $filials_j = getAllFilials(false, false, false);
             //var_dump($filials_j);
 
+            //Получили список прав
+            $permissions_j = getAllPermissions(false, true);
+            //var_dump($permissions_j);
+
+
             //$msql_cnnct = ConnectToDB ();
 
             //Дата
@@ -511,6 +516,7 @@
 
             //Расходы, выдано из кассы
             $giveoutcash_j = array();
+            $giveoutcash_summ = 0;
 
             //Даты от и до
             $datastart = $year.'-'.$month.'-'.$day.' 00:00:00';
@@ -528,7 +534,14 @@
             $number = mysqli_num_rows($res);
             if ($number != 0){
                 while ($arr = mysqli_fetch_assoc($res)){
-                    array_push($giveoutcash_j, $arr);
+//                    array_push($giveoutcash_j, $arr);
+
+                    if (!isset($giveoutcash_j[$arr['type']])){
+                        $giveoutcash_j[$arr['type']] = 0;
+                    }
+                    $giveoutcash_j[$arr['type']] += $arr['summ'];
+
+                    $giveoutcash_summ += $arr['summ'];
                 }
             }
             //var_dump($giveoutcash_j);
@@ -557,32 +570,28 @@
             //var_dump($certificates_summSell);
 
 
-
-
-
-
-
-
             //Получаем данные из сводного отчета за месяц
-                $reports_j = array();
+            $reports_j = array();
 
-                $query = "SELECT * FROM `fl_journal_daily_report` WHERE `filial_id`='{$filial_id}' AND `year`='$year' AND `month`='$month' AND `status` = '7'";
+            $query = "SELECT * FROM `fl_journal_daily_report` WHERE `filial_id`='{$filial_id}' AND `year`='$year' AND `month`='$month' AND `status` = '7'";
 
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
-                $number = mysqli_num_rows($res);
+            $number = mysqli_num_rows($res);
 
-                if ($number != 0){
-                    while ($arr = mysqli_fetch_assoc($res)){
-                        array_push($reports_j, $arr);
-                    }
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($reports_j, $arr);
                 }
-                //var_dump($reports_j);
+            }
+            //var_dump($reports_j);
 
 
-                //$report_header = '';
+            //$report_header = '';
 
-                echo '
+            //Пробуем вывести то, что получили
+
+            echo '
 			        <div id="report" class="report" style="margin-top: 10px;">';
 
                 $cashbox_nal = 0;
@@ -631,6 +640,61 @@
 //                var_dump('Остаток');
 //                var_dump(number_format($cashbox_nal + $arenda - $rashod, 0, '.', ' '));
 
+            //Получаем данные по выданным деньгам на филилале (зп, авансы и тд.)
+            $subtractions_j = array();
+            $subtractions_summ = 0;
+
+            $query = "SELECT flj_sub.*, sw.	permissions, sw.name
+                      FROM `fl_journal_filial_subtractions` flj_sub
+                      LEFT JOIN spr_workers sw ON sw.id = flj_sub.worker_id
+                      WHERE flj_sub.filial_id='{$filial_id}' AND flj_sub.year='$year' AND (flj_sub.month='$month' OR flj_sub.month='".(int)$month."')";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    //array_push($subtractions_j, $arr);
+                    if ($arr['noch'] != 1) {
+                        if (!isset($subtractions_j[$arr['permissions']])) {
+                            $subtractions_j[$arr['permissions']] = array();
+                        }
+                        if (!isset($subtractions_j[$arr['permissions']][$arr['type']])) {
+                            $subtractions_j[$arr['permissions']][$arr['type']] = array();
+                        }
+                        if (!isset($subtractions_j[$arr['permissions']][$arr['type']][$arr['worker_id']])) {
+                            $subtractions_j[$arr['permissions']][$arr['type']][$arr['worker_id']] = array();
+                        }
+                        array_push($subtractions_j[$arr['permissions']][$arr['type']][$arr['worker_id']], $arr);
+
+                        $subtractions_summ += $arr['summ'];
+                    }
+
+                }
+            }
+            //var_dump($query);
+            //var_dump($subtractions_j);
+            //var_dump($subtractions_j[5][1]);
+
+            //Получаем данные по выданным деньгам сверх того, что у есть в программе.
+            //Например зп сотрудников, которых нет в программе
+            //Вносится вручную
+            $paidouts_temp_j = array();
+
+            $query = "SELECT * FROM `fl_journal_paidouts_temp` WHERE `filial_id`='{$filial_id}' AND `year`='$year' AND `month`='$month'";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($paidouts_temp_j, $arr);
+                }
+            }
+//            var_dump($paidouts_temp_j);
+
 
             echo '<div style="display: inline-block; vertical-align: top;">';
 //
@@ -649,40 +713,241 @@
 
 
             echo '
-                    <li class="filterBlock">
-                        <div class="cellLeft" style="width: 120px; min-width: 120px;">
-                           <b>наличные касса</b>
-                        </div>
-                        <div class="cellRight" style="width: 245px; min-width: 245px;">
-                            <div style="float:left;">'.number_format($cashbox_nal, 0, '.', ' ').'</div>
-                        </div>
-                    </li>';
+                    <div style="border: 1px solid #CCC;">
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(236, 247, 95, 0.52);">
+                               <b>Приход</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(236, 247, 95, 0.52);">
+
+                            </div>
+                        </li>';
 
             echo '
-                    <li class="filterBlock">
-                        <div class="cellLeft" style="width: 120px; min-width: 120px;">
-                           <b>аренда</b>
-                        </div>
-                        <div class="cellRight" style="width: 245px; min-width: 245px;">
-                            <div style="float:left;">'.number_format($arenda, 0, '.', ' ').'</div>
-                        </div>
-                    </li>';
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: rgba(236, 247, 95, 0.52);">
+                               <b>Безнал</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(236, 247, 95, 0.52);">
+                                <div style="float:left;">'.number_format($beznal, 0, '.', ' ').'</div>
+                            </div>
+                        </li>';
+
+            if (isset($rezult_arr[5])) {
+                if (isset($rezult_arr[5]['insure_data'])) {
+                    echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: rgba(236, 247, 95, 0.52);">
+                               <b>Страховые</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(236, 247, 95, 0.52);">
+                                <div style="float:left;">' . number_format(array_sum($rezult_arr[5]['insure_data']), 0, '.', ' ') . '</div>
+                            </div>
+                        </li>';
+                }
+            }
+            //border: 1px solid rgba(255, 107, 0, 0.52);
+            echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: rgba(236, 247, 95, 0.52);">
+                               <b>Нал касса</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(236, 247, 95, 0.52);">
+                                <div style="float:left;">'.number_format($cashbox_nal, 0, '.', ' ').'</div>
+                            </div>
+                        </li>';
+
+            echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: rgba(236, 247, 95, 0.52);">
+                               <b>Аренда</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(236, 247, 95, 0.52);">
+                                <div style="float:left;">'.number_format($arenda, 0, '.', ' ').'</div>
+                            </div>
+                        </li>
+                    </div>';
+
+//            echo '
+//                    <li class="filterBlock">
+//                        <div class="cellLeft" style="width: 120px; min-width: 120px;">
+//                           <b>Продано сертификатов</b>
+//                        </div>
+//                        <div class="cellRight" style="width: 180px; min-width: 180px;">
+//                            <div style="float:left;">'.count($certificates_j).' шт. на сумму '.number_format($certificates_summSell, 0, '.', ' ').'</div>
+//                        </div>
+//                    </li>';
+
+            //Расходы
+            //var_dump($giveoutcash_j);
+            //var_dump($give_out_cash_types_j);
+            echo '
+                    <div style="border: 1px solid #CCC;">
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(191, 191, 191, 0.38);">
+                               <b>Расходы</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(191, 191, 191, 0.38);">
+
+                            </div>
+                        </li>';
+
+            $giveout_wo_type_summ = 0;
+            $giveout_all_summ = 0;
+
+            if (!empty($giveoutcash_j)){
+                foreach ($giveoutcash_j as $type => $summ){
+
+                    $giveout_all_summ += $summ;
+
+                    if ($type != 0){
+                        echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: rgba(191, 191, 191, 0.38);">
+                               <b>' . $give_out_cash_types_j[$type] . '</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(191, 191, 191, 0.38);">
+                                <div style="float:left;">' . number_format($summ, 2, '.', ' ') . '</div>
+                            </div>
+                        </li>';
+                    }else{
+                        $giveout_wo_type_summ += $summ;
+                    }
+                }
+                echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: rgba(191, 191, 191, 0.38);">
+                               <b>Прочее</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(191, 191, 191, 0.38);">
+                                <div style="float:left;">' . number_format($giveout_wo_type_summ, 2, '.', ' ') . '</div>
+                            </div>
+                        </li>';
+
+                //Всего
+                //var_dump($giveout_all_summ);
+            }
+
+            echo '
+                    </div>';
 
 
-            echo '</div>';
+            //ЗП выданные
+
+            //Для создания разных цветов полей
+            $bg_color = 'rgba(219, 214, 214, 0.25)';
+
+            echo '
+                    <div style="border: 1px solid #CCC;">
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
+                               <b>Выдано</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
+
+                            </div>
+                        </li>';
+
+            //Пошли по типам/должностям
+            foreach ($subtractions_j as $permissions => $subtractions_data){
+                //var_dump($subtractions_data);
+
+                //Для создания разных цветов полей
+                //var_dump($bg_color);
+
+                if ($bg_color == 'rgba(219, 214, 214, 0.25)'){
+                    $bg_color = 'rgba(219, 215, 214, 0.44)';
+                }else {
+                    $bg_color = 'rgba(219, 214, 214, 0.25)';
+                }
+
+                echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
+                               <!--<b style="color: orangered;">' . $permissions_j[$permissions]['name'] . '</b>-->
+                               <b style="color: rgb(0, 36, 255);">' . $permissions_j[$permissions]['name'] . '</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
+
+                            </div>
+                        </li>';
+
+                foreach ($subtractions_data as $type => $type_data){
+                    //var_dump($type_data);
+
+                    if ($type == 1){
+                        $type_name = ' аванс ';
+                    }elseif ($type == 2){
+                        $type_name = ' отпускной ';
+                    }elseif ($type == 3){
+                        $type_name = ' больничный ';
+                    }elseif ($type == 4){
+                        $type_name = ' на карту ';
+                    }elseif ($type == 7){
+                        $type_name = ' зп ';
+                    }elseif ($type == 5){
+                        $type_name = ' ночь ';
+                    }else{
+                        $type_name = ' !!!ошибка данных ';
+                    }
+
+                    echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
+                               <i style="color: orangered;">' . $type_name . '</i>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
+
+                            </div>
+                        </li>';
+
+                    foreach ($type_data as $worker_id => $worker_data) {
+
+                        $w_name = '';
+                        $fin_summ = 0;
+
+                        foreach($worker_data as $data){
+                            $w_name = $data['name'];
+                            $fin_summ +=  $data['summ'];
+                        }
+
+                        echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
+                               <b>' . $w_name . '</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
+                                <div style="float:left;">' . number_format($fin_summ, 0, '.', ' ') . '</div>
+                            </div>
+                        </li>';
+                    }
+                }
+            }
+
+            echo '
+                    </div>';
 
 
-                //не понял, что это и для чего, сравнивая с флешкой
-//            4 =>
-//        array (size=1)
-//          'name' => string 'Пародонтология' (length=28)
-//
-//            7 =>
-//        array (size=1)
-//          'name' => string 'Дополнительно' (length=26)
 
 
-            //Пробуем вывести то, что получили
+            //$paidouts_temp_j
+
+            //Выручна без страховых
+            var_dump($cashbox_nal+$beznal+$arenda);
+            //Расходы
+            var_dump($giveoutcash_summ);
+            //Выплаты персоналу
+            var_dump($subtractions_summ);
+
+
+            echo '
+                </div>';
+
+
+
+
+
+            //Процентное соотнощение работ начатых в текущем месяце, опираясь на запись
 
             echo '<div style="display: inline-block; vertical-align: top;">';
             //Стоматология
