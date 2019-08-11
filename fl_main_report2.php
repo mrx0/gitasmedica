@@ -165,7 +165,7 @@
             //var_dump($percents_j);
             //var_dump($percents_j2);
 
-            //Типы расходов
+            //Типы расходов (справочник)
             $give_out_cash_types_j = array();
 
             $query = "SELECT `id`,`name` FROM `spr_cashout_types`";
@@ -749,7 +749,7 @@
 //                        <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
 //                           наличные касса
 //                        </div>
-//                        <div class="cellRight" style="width: 245px; min-width: 245px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+//                        <div class="cellRight" style="width: 200px; min-width: 200px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 //
 //            echo number_format($cashbox_nal, 0, '.', ' ');
 //
@@ -1107,6 +1107,7 @@
             //Процентное соотнощение работ начатых в текущем месяце, опираясь на запись
 
             echo '<div style="display: inline-block; vertical-align: top;">';
+
             //Стоматология
             if (isset($rezult_arr[5])){
                 echo '
@@ -1114,7 +1115,7 @@
                         <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
                            Стоматология
                         </div>
-                        <div class="cellRight" style="width: 245px; min-width: 245px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+                        <div class="cellRight" style="width: 200px; min-width: 200px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
 
                 if (!empty($rezult_arr[5])){
@@ -1163,7 +1164,7 @@
                                     <div class="cellLeft" style="width: 120px; min-width: 120px;">
                                        <b>' . $percents_j[5][$percent_cat_id]['name'] . '</b>
                                     </div>
-                                    <div class="cellRight" style="width: 245px; min-width: 245px;">
+                                    <div class="cellRight" style="width: 200px; min-width: 200px;">
                                         <div style="float:left;">' . number_format($value, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format((($value * 100) / (array_sum($rezult_arr[5]['data']) - $child_stom_summ)), 2, '.', '') . '%</div>
                                     </div>
                                 </li>';
@@ -1177,9 +1178,59 @@
                                 <div class="cellLeft" style="width: 120px; min-width: 120px;">
                                    <b>Детство</b>
                                 </div>
-                                <div class="cellRight" style="width: 245px; min-width: 245px;">
+                                <div class="cellRight" style="width: 200px; min-width: 200px;">
                                     <div style="float:left;">'.number_format($child_stom_summ, 0, '.', ' ').'</div> <div style="float:right;">'.number_format((($child_stom_summ * 100)/ (array_sum($rezult_arr[5]['data']) - $child_stom_summ)), 2, '.', '').'%</div>
                                 </div>
+                            </li>';
+                    }
+                }
+                if (isset($zapis_j[5])){
+                    if (!empty($zapis_j[5])){
+                        //var_dump($zapis_j[5]);
+                        echo '
+                            <li class="filterBlock" style="text-align: center;">
+                                <table style="width: 250px;">
+                                    <tr>
+                                        <td>
+                                            I
+                                        </td>
+                                        <td>
+                                            I(ост)
+                                        </td>
+                                        <td>
+                                            II(6)
+                                        </td>
+                                        <td>
+                                            II
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            '.$zapis_j[5]['pervich_summ_arr'][1].'
+                                        </td>
+                                        <td>
+                                            '.$zapis_j[5]['pervich_summ_arr'][2].'
+                                        </td>
+                                        <td>
+                                            '.$zapis_j[5]['pervich_summ_arr'][3].'
+                                        </td>
+                                        <td>
+                                            '.$zapis_j[5]['pervich_summ_arr'][4].'
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                    </tr>
+                                </table>
                             </li>';
                     }
                 }
@@ -1192,7 +1243,7 @@
                         <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
                            Ассистенты
                         </div>
-                        <div class="cellRight" style="width: 245px; min-width: 245px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+                        <div class="cellRight" style="width: 200px; min-width: 200px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
 
                 if (!empty($rezult_arr[7])){
@@ -1231,7 +1282,7 @@
                                 <div class="cellLeft" style="width: 120px; min-width: 120px;">
                                    <b>'.$percent_cat_name.'</b>
                                 </div>
-                                <div class="cellRight" style="width: 245px; min-width: 245px;">
+                                <div class="cellRight" style="width: 200px; min-width: 200px;">
                                     <div style="float:left;">'.number_format($value, 0, '.', ' ').'</div> <div style="float:right;">'.number_format((($value * 100)/ array_sum($rezult_arr[7]['data'])), 2, '.', '').'%</div>
                                 </div>
                             </li>';
@@ -1249,7 +1300,7 @@
                         <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
                            Косметология
                         </div>
-                        <div class="cellRight" style="width: 245px; min-width: 245px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+                        <div class="cellRight" style="width: 200px; min-width: 200px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
                 if (!empty($rezult_arr[6])){
                     if (!empty($rezult_arr[6]['data'])){
@@ -1282,11 +1333,61 @@
                                 <div class="cellLeft" style="width: 120px; min-width: 120px;">
                                    <b>'.$percents_j[6][$percent_cat_id]['name'].'</b>
                                 </div>
-                                <div class="cellRight" style="width: 245px; min-width: 245px;">
+                                <div class="cellRight" style="width: 200px; min-width: 200px;">
                                     <div style="float:left;">'.number_format($value, 0, '.', ' ').'</div> <div style="float:right;">'.number_format((($value * 100)/ array_sum($rezult_arr[6]['data'])), 2, '.', '').'%</div>
                                 </div>
                             </li>';
                         }
+                    }
+                }
+                if (isset($zapis_j[6])){
+                    if (!empty($zapis_j[6])){
+                        //var_dump($zapis_j[6]);
+                        echo '
+                            <li class="filterBlock" style="text-align: center;">
+                                <table style="width: 250px;">
+                                    <tr>
+                                        <td>
+                                            I
+                                        </td>
+                                        <td>
+                                            I(ост)
+                                        </td>
+                                        <td>
+                                            II(6)
+                                        </td>
+                                        <td>
+                                            II
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            '.$zapis_j[6]['pervich_summ_arr'][1].'
+                                        </td>
+                                        <td>
+                                            '.$zapis_j[6]['pervich_summ_arr'][2].'
+                                        </td>
+                                        <td>
+                                            '.$zapis_j[6]['pervich_summ_arr'][3].'
+                                        </td>
+                                        <td>
+                                            '.$zapis_j[6]['pervich_summ_arr'][4].'
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                    </tr>
+                                </table>
+                            </li>';
                     }
                 }
             }
@@ -1298,7 +1399,7 @@
                         <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
                            Солярий
                         </div>
-                        <div class="cellRight" style="width: 245px; min-width: 245px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+                        <div class="cellRight" style="width: 200px; min-width: 200px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
                 echo
                             number_format(($temp_solar_nal + $temp_solar_beznal), 0, '.', ' ');
@@ -1314,7 +1415,7 @@
                         <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
                            Специалисты
                         </div>
-                        <div class="cellRight" style="width: 245px; min-width: 245px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+                        <div class="cellRight" style="width: 200px; min-width: 200px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
 
                 if (!empty($rezult_arr[10])){
@@ -1333,8 +1434,6 @@
             }
 
 
-
-
             if (isset($rezult_arr[10])){
                 if (!empty($rezult_arr[10])){
                     if (!empty($rezult_arr[10]['data'])){
@@ -1350,11 +1449,61 @@
                                 <div class="cellLeft" style="width: 120px; min-width: 120px;">
                                    <b>'.$percents_j[10][$percent_cat_id]['name'].'</b>
                                 </div>
-                                <div class="cellRight" style="width: 245px; min-width: 245px;">
+                                <div class="cellRight" style="width: 200px; min-width: 200px;">
                                     <div style="float:left;">'.number_format($value, 0, '.', ' ').'</div> <div style="float:right;">'.number_format((($value * 100)/ array_sum($rezult_arr[10]['data'])), 2, '.', '').'%</div>
                                 </div>
                             </li>';
                         }
+                    }
+                }
+                if (isset($zapis_j[10])){
+                    if (!empty($zapis_j[10])){
+                        //var_dump($zapis_j[10]);
+                        echo '
+                            <li class="filterBlock" style="text-align: center;">
+                                <table style="width: 250px;">
+                                    <tr>
+                                        <td>
+                                            I
+                                        </td>
+                                        <td>
+                                            I(ост)
+                                        </td>
+                                        <td>
+                                            II(6)
+                                        </td>
+                                        <td>
+                                            II
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            '.$zapis_j[10]['pervich_summ_arr'][1].'
+                                        </td>
+                                        <td>
+                                            '.$zapis_j[10]['pervich_summ_arr'][2].'
+                                        </td>
+                                        <td>
+                                            '.$zapis_j[10]['pervich_summ_arr'][3].'
+                                        </td>
+                                        <td>
+                                            '.$zapis_j[10]['pervich_summ_arr'][4].'
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                    </tr>
+                                </table>
+                            </li>';
                     }
                 }
             }
