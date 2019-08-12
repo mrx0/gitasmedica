@@ -111,12 +111,6 @@
 								<a href="fl_consolidated_report_admin.php" class="b3">Сводный отчёт по филиалу</a>
 							</li>';
 
-                if (($_SESSION['id'] == 270) || $god_mode) {
-                    echo '				
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="fl_main_report2.php" class="b3">Отчёт</a>
-							</li>';
-                }
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_client_finance2.php" class="b3">Открытые наряды</a>
@@ -181,6 +175,13 @@
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_tabels.php" class="b3">Важный отчёт</a>
 							</li>';
+
+                if (($_SESSION['id'] == 270) || $god_mode) {
+                    echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="fl_main_report2.php" class="b3">Финальный отчёт</a>
+							</li>';
+                }
 
                 echo '
                             <li class="cellsBlock" style="margin: 1px;">
