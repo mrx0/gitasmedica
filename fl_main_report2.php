@@ -918,7 +918,8 @@
                                <b>Всего:</b>
                             </div>
                             <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: rgba(191, 191, 191, 0.38); text-align: right;">
-                                <b>'.number_format($giveout_all_summ, 0, '.', ' ').'</b>                                
+                                <!--<b>'.number_format($giveout_all_summ, 0, '.', ' ').'</b>-->                                
+                                <b>'.number_format($giveoutcash_summ, 0, '.', ' ').'</b>                                
                             </div>
                         </li>';
 
@@ -1201,7 +1202,7 @@
             //Остаток
             //var_dump($cashbox_nal + $beznal + $arenda - $giveoutcash_summ - $subtractions_summ - $bank_summ - $director_summ);
 
-            $ostatok = $cashbox_nal + $beznal + $arenda - $giveoutcash_summ - $subtractions_summ - $bank_summ - $director_summ + $prev_month_filial_summ;
+            $ostatok = $cashbox_nal + $beznal + $arenda - $giveoutcash_summ - $subtractions_summ - $paidouts_temp_summ - $bank_summ - $director_summ + $prev_month_filial_summ;
 
             $ostatok = number_format($ostatok, 0, '.', ' ');
 
