@@ -789,7 +789,7 @@
                                <b>Приход</b>
                             </div>
                             <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: rgba(236, 247, 95, 0.52);">
-                                <b>'.number_format($beznal + $insure_summ + $cashbox_nal + $arenda, 0, '.', ' ').'</b>
+                                
                             </div>
                         </li>';
 
@@ -835,8 +835,23 @@
                             <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(236, 247, 95, 0.52);">
                                 <div style="float:left;">'.number_format($arenda, 0, '.', ' ').'</div>
                             </div>
-                        </li>
+                        </li>';
+
+            echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 110%; font-weight: bold; background-color: rgba(236, 247, 95, 0.52);">
+                               <b>Всего:</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: rgba(236, 247, 95, 0.52); text-align: right;">
+                                <b>'.number_format($beznal + $insure_summ + $cashbox_nal + $arenda, 0, '.', ' ').'</b>                                
+                            </div>
+                        </li>';
+
+
+            echo '
                     </div>';
+
+
 
 //            echo '
 //                    <li class="filterBlock">
@@ -893,10 +908,19 @@
                                 <div style="float:left;">' . number_format($giveout_wo_type_summ, 2, '.', ' ') . '</div>
                             </div>
                         </li>';
-
-                //Всего
-                //var_dump($giveout_all_summ);
             }
+
+            //Всего
+            //var_dump($giveout_all_summ);
+            echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 110%; font-weight: bold; background-color: rgba(191, 191, 191, 0.38);">
+                               <b>Всего:</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: rgba(191, 191, 191, 0.38); text-align: right;">
+                                <b>'.number_format($giveout_all_summ, 0, '.', ' ').'</b>                                
+                            </div>
+                        </li>';
 
             echo '
                     </div>';
@@ -1001,7 +1025,7 @@
                 echo '
                         <li class="filterBlock">
                             <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
-                               <b>всего:</b>
+                               <!--<b>всего:</b>-->
                             </div>
                             <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
                                 <div style="float:left;">' . number_format($permission_summ, 0, '.', ' ') . '</div>
@@ -1009,6 +1033,16 @@
                         </li>';
                 //var_dump($permission_summ);
             }
+            echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 110%; font-weight: bold; background-color: rgba(219, 214, 214, 0.25);">
+                               <b>Всего:</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: rgba(219, 214, 214, 0.25); text-align: right;">
+                                <b>'.number_format($subtractions_summ, 0, '.', ' ').'</b>                                
+                            </div>
+                        </li>';
+
             //var_dump($subtractions_summ);
 
             echo '
@@ -1031,8 +1065,8 @@
                             <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
                                 
                             </div>
-                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
-                                '.number_format($paidouts_temp_summ, 0, '.', ' ').'
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.'; text-align: right;">
+                                <b>'.number_format($paidouts_temp_summ, 0, '.', ' ').'</b>
                             </div>
                         </li>';
 
@@ -1045,7 +1079,7 @@
                             <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 100%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
                                <b>Банк</b>
                             </div>
-                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44); text-align: right;">
 
                             </div>
                         </li>';
@@ -1055,8 +1089,8 @@
                             <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
                                 
                             </div>
-                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
-                                '.number_format($bank_summ, 0, '.', ' ').'
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.'; text-align: right;">
+                                <b>'.number_format($bank_summ, 0, '.', ' ').'</b>
                             </div>
                         </li>';
 
@@ -1079,8 +1113,8 @@
                             <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
                                 
                             </div>
-                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
-                                '.number_format($director_summ, 0, '.', ' ').'
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.'; text-align: right;">
+                                <b>'.number_format($director_summ, 0, '.', ' ').'</b>
                             </div>
                         </li>';
 
