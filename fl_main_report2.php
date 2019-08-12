@@ -644,10 +644,24 @@
             $subtractions_j = array();
             $subtractions_summ = 0;
 
+            //По филиально в зависимости от оплат
             $query = "SELECT flj_sub.*, sw.	permissions, sw.name
                       FROM `fl_journal_filial_subtractions` flj_sub
                       LEFT JOIN spr_workers sw ON sw.id = flj_sub.worker_id
                       WHERE flj_sub.filial_id='{$filial_id}' AND flj_sub.year='$year' AND (flj_sub.month='$month' OR flj_sub.month='".(int)$month."')";
+
+//            $query = "SELECT fl_jp.*, sw.permissions, sw.name
+//                FROM `fl_journal_paidouts` fl_jp
+//                LEFT JOIN `fl_journal_tabels` fl_tj ON fl_tj.id = fl_jp.tabel_id
+//                LEFT JOIN spr_workers sw ON sw.id = fl_jp.worker_id
+//                WHERE fl_tj.office_id='{$filial_id}' AND (fl_tj.month='{$month}' OR fl_tj.month='".(int)$month."') AND fl_tj.year='{$year}'";
+
+            //По филиалам конкретно по табелям (не зависит от оплат, только от того, где открыта была работа)
+//            $query = "SELECT fl_jp.*, sw.permissions, sw.name, fl_tj.worker_id
+//                FROM `fl_journal_tabels` fl_tj
+//                INNER JOIN `fl_journal_paidouts` fl_jp ON fl_tj.id = fl_jp.tabel_id
+//                LEFT JOIN spr_workers sw ON sw.id = fl_tj.worker_id
+//                WHERE fl_tj.office_id='{$filial_id}' AND (fl_tj.month='{$month}' OR fl_tj.month='".(int)$month."') AND fl_tj.year='{$year}'";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -655,6 +669,7 @@
 
             if ($number != 0){
                 while ($arr = mysqli_fetch_assoc($res)){
+                    //var_dump($arr);
                     //array_push($subtractions_j, $arr);
                     if ($arr['noch'] != 1) {
                         if (!isset($subtractions_j[$arr['permissions']])) {
@@ -919,6 +934,7 @@
                         </li>';
 
                 foreach ($subtractions_data as $type => $type_data){
+                    //var_dump($typ);
                     //var_dump($type_data);
 
                     if ($type == 1){
@@ -1060,6 +1076,7 @@
 //                19 => Просвещения 72,
 //                20 => Литейный 59,
 //                21 => Бассейная 45
+
             $prev_month_filial_summ_arr = array(
                 11 => 0,
                 12 => 0,
