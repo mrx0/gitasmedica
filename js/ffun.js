@@ -4589,6 +4589,12 @@
                         , 2, '.', ' ')
                     );
 
+                    //Выдачи из кассы (подробно за месяц)
+                    var giveouts_j = res.giveouts_j
+
+                    $("#giveout_cash").html(giveouts_j);
+
+
                     //Промежуточные (примерные) итоги показываем
                     //$("#interimReport").html();
                     $("#interimReport").show();
@@ -4807,8 +4813,9 @@
                                 //console.log(giveout_inBank.html());
                                 //console.log(giveout_director.html());
 
-                                giveout_inBank.css("pointer-events", "none");
-                                giveout_director.css("pointer-events", "none");
+                                //!!! 2019-08-12 открыл ссылки на банк и АН
+                                //giveout_inBank.css("pointer-events", "none");
+                                //giveout_director.css("pointer-events", "none");
                             }
                         //}
                     }
