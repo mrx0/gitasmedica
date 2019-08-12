@@ -815,8 +815,8 @@
                             <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(236, 247, 95, 0.52);">
                                <b>Приход</b>
                             </div>
-                            <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 140%; background-color: rgba(236, 247, 95, 0.52);">
-                                '.number_format($cashbox_nal + $arenda + $beznal + $insure_summ, 0, '.', ' ').'
+                            <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 140%; background-color: rgba(236, 247, 95, 0.52); text-align: right;">
+                                <b>'.number_format($cashbox_nal + $arenda + $beznal + $insure_summ, 0, '.', ' ').'</b>
                             </div>
                         </li>';
 
