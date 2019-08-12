@@ -829,10 +829,10 @@
 
             echo '
                         <li class="filterBlock">
-                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: rgba(236, 247, 95, 0.52);">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: rgba(95, 247, 145, 0.3);">
                                <b>Аренда</b>
                             </div>
-                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(236, 247, 95, 0.52);">
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(95, 247, 145, 0.3);">
                                 <div style="float:left;">'.number_format($arenda, 0, '.', ' ').'</div>
                             </div>
                         </li>';
