@@ -981,7 +981,7 @@
                                <b>Прочие выдачи</b>
                             </div>
                             <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
-
+                                <a href="fl_paidout_another_test_in_tabel_add.php" class="ahref b2 no_print">Добавить</a>
                             </div>
                         </li>';
 

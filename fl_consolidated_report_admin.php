@@ -568,7 +568,12 @@
                     echo '
                             <div style="width: 320px; display: inline-block; box-shadow: rgb(139, 139, 139) 2px 2px 6px; margin-right: 10px;">
                                 <div class="cellsBlock">
-                                    <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Предварительные итоги</div>
+                                    <div class="" style="font-size: 15px; margin: 5px;">
+                                        <a href="fl_main_report2.php?filial_id='.$filial_id.'&m='.$month.'&y='.$year.'" class="ahref button_tiny">Перейти в фин. отчёт</a>
+                                    </div>
+                                    <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">
+                                        Предварительные итоги:
+                                    </div>
                                     <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Выручка</div>
                                 </div>
                                 <div class="cellsBlock" style="font-size: 14px;">
