@@ -977,8 +977,8 @@
             echo '
                     <div style="border: 1px solid #CCC;">
                         <li class="filterBlock">
-                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
-                               <b>Прочие выдачи</b>
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 100%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
+                               <b>Прочие выдачи/расходы</b>
                             </div>
                             <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
                                 <a href="fl_paidout_another_test_in_tabel_add.php" class="ahref b2 no_print">Добавить</a>
@@ -991,7 +991,7 @@
                                 
                             </div>
                             <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
-                                '.$paidouts_temp_summ.'
+                                '.number_format($paidouts_temp_summ, 0, '.', ' ').'
                             </div>
                         </li>';
 
@@ -1001,7 +1001,7 @@
             echo '
                     <div style="border: 1px solid #CCC;">
                         <li class="filterBlock">
-                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 100%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
                                <b>Банк</b>
                             </div>
                             <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
@@ -1015,7 +1015,7 @@
                                 
                             </div>
                             <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
-                                '.$bank_summ.'
+                                '.number_format($bank_summ, 0, '.', ' ').'
                             </div>
                         </li>';
 
@@ -1025,7 +1025,7 @@
             echo '
                     <div style="border: 1px solid #CCC;">
                         <li class="filterBlock">
-                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 100%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
                                <b>АН</b>
                             </div>
                             <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
@@ -1039,7 +1039,7 @@
                                 
                             </div>
                             <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
-                                '.$director_summ.'
+                                '.number_format($director_summ, 0, '.', ' ').'
                             </div>
                         </li>';
 
@@ -1047,7 +1047,65 @@
                     </div>';
 
 
-//            //Выручна без страховых
+            //!!! Суммы долгов/авансов за прошлые месяцы (пока ручной ввод)
+//                11 => ЦО,
+//                12 => Авиаконструкторов 10,
+//                13 => Просвещения 54,
+//                14 => Комендантский 17,
+//                15 => Энгельса 139,
+//                16 => Гражданский 114,
+//                17 => Чернышевского 17,
+//                18 => Некрасова 58,
+//                19 => Просвещения 72,
+//                20 => Литейный 59,
+//                21 => Бассейная 45
+            $prev_month_filial_summ_arr = array(
+                11 => 0,
+                12 => 0,
+                13 => 0,
+                14 => 0,
+                15 => 0,
+                16 => 0,
+                17 => 0,
+                18 => 0,
+                19 => 0,
+                20 => 0,
+                21 => 0
+            );
+
+            $prev_month_filial_summ = 0;
+
+            if (isset($prev_month_filial_summ_arr[$filial_id])){
+                $prev_month_filial_summ = $prev_month_filial_summ_arr[$filial_id];
+            }
+            //var_dump($prev_month_filial_summ_arr[$filial_id]);
+
+            echo '
+                    <div style="border: 1px solid #CCC;">
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 100%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
+                               <b>Остаток предыдущего м-ца</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
+
+                            </div>
+                        </li>';
+
+            echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
+                                
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
+                                '.number_format($prev_month_filial_summ, 0, '.', ' ').'
+                            </div>
+                        </li>';
+
+            echo '
+                    </div>';
+
+
+//            //Выручка без страховых
 //            var_dump($cashbox_nal+$beznal+$arenda);
 //            //Расходы
 //            var_dump($giveoutcash_summ);
@@ -1064,7 +1122,7 @@
             //Остаток
             //var_dump($cashbox_nal + $beznal + $arenda - $giveoutcash_summ - $subtractions_summ - $bank_summ - $director_summ);
 
-            $ostatok = $cashbox_nal + $beznal + $arenda - $giveoutcash_summ - $subtractions_summ - $bank_summ - $director_summ;
+            $ostatok = $cashbox_nal + $beznal + $arenda - $giveoutcash_summ - $subtractions_summ - $bank_summ - $director_summ + $prev_month_filial_summ;
 
             $ostatok = number_format($ostatok, 0, '.', ' ');
 
@@ -1086,7 +1144,7 @@
                             <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
                                 
                             </div>
-                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
+                            <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: '.$bg_color.';">
                                 <b>'.$ostatok.'</b>
                             </div>
                         </li>';

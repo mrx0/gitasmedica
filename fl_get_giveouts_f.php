@@ -27,7 +27,14 @@
                 //Выплаты
                 $subtractions_j = array();
 
+                //По филиально в зависимости от оплат
                 $query = "SELECT * FROM  `fl_journal_filial_subtractions` WHERE `filial_id`='{$_POST['filial_id']}' AND `month`='{$_POST['month']}' AND `year`='{$_POST['year']}'";
+
+                //По филиалам конкретно по табелям (не зависит от оплат, только от того, где открыта была работа)
+//                $query = "SELECT fl_jp.*
+//                FROM `fl_journal_paidouts` fl_jp
+//                LEFT JOIN `fl_journal_tabels` fl_tj ON fl_tj.id = fl_jp.tabel_id
+//                WHERE fl_tj.filial_id='{$_POST['filial_id']}' AND fl_tj.month='{$_POST['month']}' AND fl_tj.year='{$_POST['year']}'";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -93,7 +100,7 @@
                 $giveouts_j = array();
                 $giveouts_result_str = '';
 
-                $query = "SELECT * FROM  `fl_journal_filial_subtractions` WHERE `filial_id`='{$_POST['filial_id']}' AND `month`='{$_POST['month']}' AND `year`='{$_POST['year']}'";
+                //$query = "SELECT * FROM  `fl_journal_filial_subtractions` WHERE `filial_id`='{$_POST['filial_id']}' AND `month`='{$_POST['month']}' AND `year`='{$_POST['year']}'";
 
                 $query = "SELECT * FROM `journal_giveoutcash` WHERE
                     MONTH(`date_in`) = '{$_POST['month']}' AND YEAR(`date_in`) = '{$_POST['year']}'
