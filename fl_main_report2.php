@@ -657,11 +657,11 @@
 //                WHERE fl_tj.office_id='{$filial_id}' AND (fl_tj.month='{$month}' OR fl_tj.month='".(int)$month."') AND fl_tj.year='{$year}'";
 
             //По филиалам конкретно по табелям (не зависит от оплат, только от того, где открыта была работа)
-//            $query = "SELECT fl_jp.*, sw.permissions, sw.name, fl_tj.worker_id
-//                FROM `fl_journal_tabels` fl_tj
-//                INNER JOIN `fl_journal_paidouts` fl_jp ON fl_tj.id = fl_jp.tabel_id
-//                LEFT JOIN spr_workers sw ON sw.id = fl_tj.worker_id
-//                WHERE fl_tj.office_id='{$filial_id}' AND (fl_tj.month='{$month}' OR fl_tj.month='".(int)$month."') AND fl_tj.year='{$year}'";
+            $query = "SELECT fl_jp.*, sw.permissions, sw.name, fl_tj.worker_id
+                FROM `fl_journal_tabels` fl_tj
+                INNER JOIN `fl_journal_paidouts` fl_jp ON fl_tj.id = fl_jp.tabel_id
+                LEFT JOIN spr_workers sw ON sw.id = fl_tj.worker_id
+                WHERE fl_tj.office_id='{$filial_id}' AND (fl_tj.month='{$month}' OR fl_tj.month='".(int)$month."') AND fl_tj.year='{$year}'";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -772,6 +772,15 @@
 //                        </div>
 //                    </li>';
 
+            //Сумма по страховым
+            $insure_summ = 0;
+
+            if (isset($rezult_arr[5])) {
+                $insure_summ = array_sum($rezult_arr[5]['insure_data']);
+            }else{
+
+            }
+
 
             echo '
                     <div style="border: 1px solid #CCC;">
@@ -779,8 +788,8 @@
                             <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(236, 247, 95, 0.52);">
                                <b>Приход</b>
                             </div>
-                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(236, 247, 95, 0.52);">
-
+                            <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: rgba(236, 247, 95, 0.52);">
+                                <b>'.number_format($beznal + $insure_summ + $cashbox_nal + $arenda, 0, '.', ' ').'</b>
                             </div>
                         </li>';
 
@@ -902,7 +911,7 @@
                     <div style="border: 1px solid #CCC;">
                         <li class="filterBlock">
                             <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
-                               <b>Выдано</b>
+                               <b>Заработная плата</b>
                             </div>
                             <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
 
@@ -921,6 +930,9 @@
                 }else {
                     $bg_color = 'rgba(219, 214, 214, 0.25)';
                 }
+
+                //Сумма выданных денег по должностям
+                $permission_summ = 0;
 
                 echo '
                         <li class="filterBlock">
@@ -953,37 +965,49 @@
                         $type_name = ' !!!ошибка данных ';
                     }
 
-                    echo '
-                        <li class="filterBlock">
-                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
-                               <i style="color: orangered;">' . $type_name . '</i>
-                            </div>
-                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
-
-                            </div>
-                        </li>';
+//                    echo '
+//                        <li class="filterBlock">
+//                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
+//                               <i style="color: orangered;">' . $type_name . '</i>
+//                            </div>
+//                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
+//
+//                            </div>
+//                        </li>';
 
                     foreach ($type_data as $worker_id => $worker_data) {
 
                         $w_name = '';
+                        //Выдано всего сотруднику
                         $fin_summ = 0;
 
                         foreach($worker_data as $data){
                             $w_name = $data['name'];
                             $fin_summ +=  $data['summ'];
+                            $permission_summ +=  $data['summ'];
                         }
 
-                        echo '
-                        <li class="filterBlock">
-                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
-                               <b>' . $w_name . '</b>
-                            </div>
-                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
-                                <div style="float:left;">' . number_format($fin_summ, 0, '.', ' ') . '</div>
-                            </div>
-                        </li>';
+//                        echo '
+//                        <li class="filterBlock">
+//                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
+//                               <b>' . $w_name . '</b>
+//                            </div>
+//                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
+//                                <div style="float:left;">' . number_format($fin_summ, 0, '.', ' ') . '</div>
+//                            </div>
+//                        </li>';
                     }
                 }
+                echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
+                               <b>всего:</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
+                                <div style="float:left;">' . number_format($permission_summ, 0, '.', ' ') . '</div>
+                            </div>
+                        </li>';
+                //var_dump($permission_summ);
             }
             //var_dump($subtractions_summ);
 
