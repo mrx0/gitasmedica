@@ -388,42 +388,46 @@
 //                                        var_dump($invoice_id);
 //                                    }
 
-                                    if (!isset($percents_j[$type][$data['percent_cats']])){
-                                        if (strlen($data['percent_cats']) > 0) {
-                                            //var_dump($invoice_id.' ['.$type.'] => '.$data['percent_cats']);
-                                            $warn_str_percent_cats .= '<a href="invoice.php?id=' . $invoice_id . '" class="ahref button_tiny" style="margin: 0 2px; font-size: 80%;">#' . $invoice_id . '</a>';
+                                    //Если не гарантия/не подарок
+                                    if (($data['guarantee'] != 1) && ($data['gift'] != 1)) {
+
+                                        if (!isset($percents_j[$type][$data['percent_cats']])) {
+                                            if (strlen($data['percent_cats']) > 0) {
+                                                //var_dump($invoice_id.' ['.$type.'] => '.$data['percent_cats']);
+                                                $warn_str_percent_cats .= '<a href="invoice.php?id=' . $invoice_id . '" class="ahref button_tiny" style="margin: 0 2px; font-size: 80%;">#' . $invoice_id . '</a>';
+                                            }
                                         }
-                                    }
 
-                                    $invoice_summ = $data['invoice_summ'];
-                                    $invoice_summins = $data['invoice_summins'];
-                                    //var_dump($data['itog_price']);
+                                        $invoice_summ = $data['invoice_summ'];
+                                        $invoice_summins = $data['invoice_summins'];
+                                        //var_dump($data['itog_price']);
 
-                                    $invoice_summ_pos += $data['itog_price'];
+                                        $invoice_summ_pos += $data['itog_price'];
 
-                                    //$pervich_status = $data['pervich'];
+                                        //$pervich_status = $data['pervich'];
 
-                                    //Если не продолжение работы
-                                    if ($data['pervich'] != 5) {
-//                                        var_dump($data['percent_cats']);
+                                        //Если не продолжение работы
+                                        if ($data['pervich'] != 5) {
+                                            //                                        var_dump($data['percent_cats']);
 
-                                        //Дети стоматология
-                                        //var_dump(getyeardiff(strtotime($data['birthday']), 0));
-                                        if (($type == 5) && (getyeardiff(strtotime($data['birthday']), 0) <= 14)) {
-                                            $child_stom_summ += $data['itog_price'];
-                                            //var_dump($invoice_id);
-                                        }else {
-                                           //Костыль для категории 7 (ассистенты)
-                                            if (!in_array($data['percent_cats'], [58, 59, 61, 62])) {
-                                                if (!isset($rezult_arr[$type]['data'][$data['percent_cats']])) {
-                                                    $rezult_arr[$type]['data'][$data['percent_cats']] = 0;
-                                                }
-                                                $rezult_arr[$type]['data'][$data['percent_cats']] += $data['itog_price'];
+                                            //Дети стоматология
+                                            //var_dump(getyeardiff(strtotime($data['birthday']), 0));
+                                            if (($type == 5) && (getyeardiff(strtotime($data['birthday']), 0) <= 14)) {
+                                                $child_stom_summ += $data['itog_price'];
+                                                //var_dump($invoice_id);
                                             } else {
-                                                if (!isset($rezult_arr[7]['data'][$data['percent_cats']])) {
-                                                    $rezult_arr[7]['data'][$data['percent_cats']] = 0;
+                                                //Костыль для категории 7 (ассистенты)
+                                                if (!in_array($data['percent_cats'], [58, 59, 61, 62])) {
+                                                    if (!isset($rezult_arr[$type]['data'][$data['percent_cats']])) {
+                                                        $rezult_arr[$type]['data'][$data['percent_cats']] = 0;
+                                                    }
+                                                    $rezult_arr[$type]['data'][$data['percent_cats']] += $data['itog_price'];
+                                                } else {
+                                                    if (!isset($rezult_arr[7]['data'][$data['percent_cats']])) {
+                                                        $rezult_arr[7]['data'][$data['percent_cats']] = 0;
+                                                    }
+                                                    $rezult_arr[7]['data'][$data['percent_cats']] += $data['itog_price'];
                                                 }
-                                                $rezult_arr[7]['data'][$data['percent_cats']] += $data['itog_price'];
                                             }
                                         }
                                     }
@@ -466,6 +470,7 @@
 
                                     //Проход по данным наряда (позиции)
                                     foreach ($invoice_data as $data) {
+                                        //var_dump($data);
                                         //var_dump($data['itog_price']);
 
                                         $invoice_summ = $data['invoice_summ'];
@@ -482,6 +487,7 @@
                                             }
                                             $rezult_arr[$type]['insure_data'][$data['percent_cats']] += $data['itog_price'];
                                         }
+
                                     }
 
 //                                var_dump('_____________________________');
@@ -776,11 +782,10 @@
             $insure_summ = 0;
 
             if (isset($rezult_arr[5])) {
-                $insure_summ = array_sum($rezult_arr[5]['insure_data']);
-            }else{
-
+                if (isset($rezult_arr[5]['insure_data'])) {
+                    $insure_summ = array_sum($rezult_arr[5]['insure_data']);
+                }
             }
-
 
             echo '
                     <div style="border: 1px solid #CCC;">
