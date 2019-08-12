@@ -1050,6 +1050,7 @@
                             </div>
                             <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
                                 <div style="float:left;">' . number_format($permission_summ, 0, '.', ' ') . '</div>
+                                <div style="float:right;">' . number_format(($permission_summ * 100 / ($cashbox_nal + $beznal + $insure_summ)), 2, '.', ' ') . '%</div>
                             </div>
                         </li>';
                 //var_dump($permission_summ);
