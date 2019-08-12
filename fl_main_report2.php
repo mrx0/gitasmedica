@@ -969,6 +969,7 @@
                     }
                 }
             }
+            //var_dump($subtractions_summ);
 
             echo '
                     </div>';
