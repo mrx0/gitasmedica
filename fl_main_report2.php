@@ -973,7 +973,7 @@
                     //var_dump($typ);
                     //var_dump($type_data);
 
-                    if (($type != 4) && ($type != 5)) {
+                    //if (($type != 4) && ($type != 5)) {
 
                         if ($type == 1) {
                             $type_name = ' аванс ';
@@ -1023,7 +1023,7 @@
                             //                            </div>
                             //                        </li>';
                         }
-                    }
+                    //}
                 }
                 echo '
                         <li class="filterBlock">
