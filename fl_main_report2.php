@@ -576,6 +576,28 @@
             //var_dump($certificates_summSell);
 
 
+            //Сертификаты использованные при оплате из ранее проданных
+            $certificate_payments_j = array();
+            //Сумма общая, на котору. расплатились сертификатами
+            $certificate_payments_summ = 0;
+
+            $query = "SELECT `summ` FROM  `journal_payment` WHERE `filial_id` = '{$filial_id}' AND `cert_id`<>'0' AND `status`='0' AND MONTH(`date_in`) = '".dateTransformation ($month)."' AND YEAR(`date_in`) = '{$year}' ";
+            //var_dump($query);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($certificate_payments_j, $arr);
+                    $certificate_payments_summ += $arr['summ'];
+                }
+            }
+            //var_dump($certificate_payments_j);
+            //var_dump($certificate_payments_summ);
+
+
             //Получаем данные из сводного отчета за месяц
             $reports_j = array();
 
@@ -857,16 +879,6 @@
                     </div>';
 
 
-
-//            echo '
-//                    <li class="filterBlock">
-//                        <div class="cellLeft" style="width: 120px; min-width: 120px;">
-//                           <b>Продано сертификатов</b>
-//                        </div>
-//                        <div class="cellRight" style="width: 180px; min-width: 180px;">
-//                            <div style="float:left;">'.count($certificates_j).' шт. на сумму '.number_format($certificates_summSell, 0, '.', ' ').'</div>
-//                        </div>
-//                    </li>';
 
             //Расходы
             //var_dump($giveoutcash_j);
@@ -1650,6 +1662,27 @@
                     }
                 }
             }
+
+
+            echo '
+                    <li class="filterBlock">
+                        <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                           <b>Продано сертификатов</b>
+                        </div>
+                        <div class="cellRight" style="width: 180px; min-width: 180px;">
+                            <div style="float:left;">'.count($certificates_j).' шт. на сумму: '.number_format($certificates_summSell, 0, '.', ' ').'</div>
+                        </div>
+                    </li>';
+
+            echo '
+                    <li class="filterBlock">
+                        <div class="cellLeft" style="width: 120px; min-width: 120px;">
+                           <b>Оплаченно ранее проданными сертификатами</b>
+                        </div>
+                        <div class="cellRight" style="width: 180px; min-width: 180px;">
+                            <div style="float:left;">на сумму: '.number_format($certificate_payments_summ, 0, '.', ' ').'</div>
+                        </div>
+                    </li>';
 
 
 
