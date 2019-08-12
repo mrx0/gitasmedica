@@ -815,8 +815,8 @@
                             <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(236, 247, 95, 0.52);">
                                <b>Приход</b>
                             </div>
-                            <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: rgba(236, 247, 95, 0.52);">
-                                
+                            <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 140%; background-color: rgba(236, 247, 95, 0.52);">
+                                '.number_format($cashbox_nal + $arenda + $beznal + $insure_summ, 0, '.', ' ').'
                             </div>
                         </li>';
 
@@ -867,10 +867,10 @@
             echo '
                         <li class="filterBlock">
                             <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 110%; font-weight: bold; background-color: rgba(236, 247, 95, 0.52);">
-                               <b>Всего:</b>
+                               <b>Всего нал:</b>
                             </div>
                             <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: rgba(236, 247, 95, 0.52); text-align: right;">
-                                <b>'.number_format($beznal + $insure_summ + $cashbox_nal, 0, '.', ' ').'</b>                                
+                                <b>'.number_format($cashbox_nal + $arenda, 0, '.', ' ').'</b>                                
                             </div>
                         </li>';
 
@@ -1219,7 +1219,7 @@
             //Остаток
             //var_dump($cashbox_nal + $beznal + $arenda - $giveoutcash_summ - $subtractions_summ - $bank_summ - $director_summ);
 
-            $ostatok = $cashbox_nal + $beznal + $insure_summ - $giveoutcash_summ - $subtractions_summ - $paidouts_temp_summ - $bank_summ - $director_summ + $prev_month_filial_summ;
+            $ostatok = $cashbox_nal + $arenda - $giveoutcash_summ - $subtractions_summ - $paidouts_temp_summ - $bank_summ - $director_summ + $prev_month_filial_summ;
 
             $ostatok = number_format($ostatok, 0, '.', ' ');
 
@@ -1664,25 +1664,25 @@
             }
 
 
-            echo '
-                    <li class="filterBlock">
-                        <div class="cellLeft" style="width: 120px; min-width: 120px;">
-                           <b>Продано сертификатов</b>
-                        </div>
-                        <div class="cellRight" style="width: 180px; min-width: 180px;">
-                            <div style="float:left;">'.count($certificates_j).' шт. на сумму: '.number_format($certificates_summSell, 0, '.', ' ').'</div>
-                        </div>
-                    </li>';
-
-            echo '
-                    <li class="filterBlock">
-                        <div class="cellLeft" style="width: 120px; min-width: 120px;">
-                           <b>Оплаченно ранее проданными сертификатами</b>
-                        </div>
-                        <div class="cellRight" style="width: 180px; min-width: 180px;">
-                            <div style="float:left;">на сумму: '.number_format($certificate_payments_summ, 0, '.', ' ').'</div>
-                        </div>
-                    </li>';
+//            echo '
+//                    <li class="filterBlock">
+//                        <div class="cellLeft" style="width: 120px; min-width: 120px;">
+//                           <b>Продано сертификатов</b>
+//                        </div>
+//                        <div class="cellRight" style="width: 180px; min-width: 180px;">
+//                            <div style="float:left;">'.count($certificates_j).' шт. на сумму: '.number_format($certificates_summSell, 0, '.', ' ').'</div>
+//                        </div>
+//                    </li>';
+//
+//            echo '
+//                    <li class="filterBlock">
+//                        <div class="cellLeft" style="width: 120px; min-width: 120px;">
+//                           <b>Оплаченно ранее проданными сертификатами</b>
+//                        </div>
+//                        <div class="cellRight" style="width: 180px; min-width: 180px;">
+//                            <div style="float:left;">на сумму: '.number_format($certificate_payments_summ, 0, '.', ' ').'</div>
+//                        </div>
+//                    </li>';
 
 
 
