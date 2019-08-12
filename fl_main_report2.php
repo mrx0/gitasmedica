@@ -973,53 +973,56 @@
                     //var_dump($typ);
                     //var_dump($type_data);
 
-                    if ($type == 1){
-                        $type_name = ' аванс ';
-                    }elseif ($type == 2){
-                        $type_name = ' отпускной ';
-                    }elseif ($type == 3){
-                        $type_name = ' больничный ';
-                    }elseif ($type == 4){
-                        $type_name = ' на карту ';
-                    }elseif ($type == 7){
-                        $type_name = ' зп ';
-                    }elseif ($type == 5){
-                        $type_name = ' ночь ';
-                    }else{
-                        $type_name = ' !!!ошибка данных ';
-                    }
+                    if (($type != 4) && ($type != 5)) {
 
-//                    echo '
-//                        <li class="filterBlock">
-//                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
-//                               <i style="color: orangered;">' . $type_name . '</i>
-//                            </div>
-//                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
-//
-//                            </div>
-//                        </li>';
-
-                    foreach ($type_data as $worker_id => $worker_data) {
-
-                        $w_name = '';
-                        //Выдано всего сотруднику
-                        $fin_summ = 0;
-
-                        foreach($worker_data as $data){
-                            $w_name = $data['name'];
-                            $fin_summ +=  $data['summ'];
-                            $permission_summ +=  $data['summ'];
+                        if ($type == 1) {
+                            $type_name = ' аванс ';
+                        } elseif ($type == 2) {
+                            $type_name = ' отпускной ';
+                        } elseif ($type == 3) {
+                            $type_name = ' больничный ';
+                        } elseif ($type == 4) {
+                            $type_name = ' на карту ';
+                        } elseif ($type == 7) {
+                            $type_name = ' зп ';
+                        } elseif ($type == 5) {
+                            $type_name = ' ночь ';
+                        } else {
+                            $type_name = ' !!!ошибка данных ';
                         }
 
-//                        echo '
-//                        <li class="filterBlock">
-//                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
-//                               <b>' . $w_name . '</b>
-//                            </div>
-//                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
-//                                <div style="float:left;">' . number_format($fin_summ, 0, '.', ' ') . '</div>
-//                            </div>
-//                        </li>';
+                        //                    echo '
+                        //                        <li class="filterBlock">
+                        //                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
+                        //                               <i style="color: orangered;">' . $type_name . '</i>
+                        //                            </div>
+                        //                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
+                        //
+                        //                            </div>
+                        //                        </li>';
+
+                        foreach ($type_data as $worker_id => $worker_data) {
+
+                            $w_name = '';
+                            //Выдано всего сотруднику
+                            $fin_summ = 0;
+
+                            foreach ($worker_data as $data) {
+                                $w_name = $data['name'];
+                                $fin_summ += $data['summ'];
+                                $permission_summ += $data['summ'];
+                            }
+
+                            //                        echo '
+                            //                        <li class="filterBlock">
+                            //                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
+                            //                               <b>' . $w_name . '</b>
+                            //                            </div>
+                            //                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
+                            //                                <div style="float:left;">' . number_format($fin_summ, 0, '.', ' ') . '</div>
+                            //                            </div>
+                            //                        </li>';
+                        }
                     }
                 }
                 echo '
