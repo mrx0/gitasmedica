@@ -4168,6 +4168,8 @@
                     //console.log('success');
                     //$('#errrror').html(res.data);
 
+                    var prev_month_filial_summ = number_format((res.prev_month_filial_summ), 2, '.', ' ');
+
                     //var subtractionsSumm_arr = [];
 
                     var subtractions = res.subtractions_j;
@@ -4239,6 +4241,10 @@
 
                     $("#itogSummNalAllMonth").html(0);
                     $("#SummNalStomCosmAllMonth").html(0);
+
+
+
+                    $("#prev_month_filial_summ").html(prev_month_filial_summ);
 
 
                     //- Итог общий
@@ -4585,6 +4591,8 @@
                             Number(
                                 $("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')
                             )
+                            +
+                            prev_month_filial_summ
                         )
                         , 2, '.', ' ')
                     );
