@@ -208,7 +208,43 @@
 //                    //var_dump($giveouts_j);
 //                }
 
-                echo json_encode(array('result' => 'success', 'subtractions_j' => $subtractions_j, 'fl_refunds_j' => $fl_refunds_j, 'material_consumption_j' => $material_consumption_j, 'giveouts_j' => $giveouts_result_str));
+                //!!! Суммы долгов/авансов за прошлые месяцы (пока ручной ввод)
+//                11 => ЦО,
+//                12 => Авиаконструкторов 10,
+//                13 => Просвещения 54,
+//                14 => Комендантский 17,
+//                15 => Энгельса 139,
+//                16 => Гражданский 114,
+//                17 => Чернышевского 17,
+//                18 => Некрасова 58,
+//                19 => Просвещения 72,
+//                20 => Литейный 59,
+//                21 => Бассейная 45
+
+                $prev_month_filial_summ_arr = array(
+                    11 => 0,
+                    12 => 0,
+                    13 => -169961,
+                    14 => 0,
+                    15 => -411380,
+                    16 => -684164,
+                    17 => 0,
+                    18 => 0,
+                    19 => -218297,
+                    20 => 0,
+                    21 => 0
+                );
+
+                $prev_month_filial_summ = 0;
+
+                if (((int)$_POST['month'] == 7) && ($_POST['year'] == 2019)){
+                    if (isset($prev_month_filial_summ_arr[$_POST['filial_id']])){
+                        $prev_month_filial_summ = $prev_month_filial_summ_arr[$_POST['filial_id']];
+                    }
+                }
+
+
+                echo json_encode(array('result' => 'success', 'subtractions_j' => $subtractions_j, 'fl_refunds_j' => $fl_refunds_j, 'material_consumption_j' => $material_consumption_j, 'giveouts_j' => $giveouts_result_str, 'prev_month_filial_summ' => $prev_month_filial_summ));
 
             }
         }else{
