@@ -49,9 +49,9 @@
                             $arr = array();
 
                             if (!$tabel_noch) {
-                                $query = "SELECT `id` FROM `fl_journal_tabels_ex` WHERE `id` = '$calcID' AND `noch`='0';";
+                                $query = "SELECT `id` FROM `fl_journal_tabels_ex` WHERE `calcualate_id` = '$calcID' AND `noch`='0';";
                             }else{
-                                $query = "SELECT `id` FROM `fl_journal_tabels_ex` WHERE `id` = '$calcID' AND `noch`='1';";
+                                $query = "SELECT `id` FROM `fl_journal_tabels_ex` WHERE `calcualate_id` = '$calcID' AND `noch`='1';";
                             }
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
