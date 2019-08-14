@@ -1064,7 +1064,7 @@
                     //var_dump($temp_summ_arr);
 
                     foreach ($temp_summ_arr as $temp_summ){
-                        
+
                         $personal_zp_str .= '
                             <td style="outline: 1px solid rgb(233, 233, 233); text-align: right;">
                                 '.$temp_summ.'
