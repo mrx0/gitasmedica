@@ -56,7 +56,7 @@
                 <div id="status">
                     <header id="header">
                         <div class="nav">
-                            <!--<a href="stat_cashbox.php" class="b">Касса</a>-->
+                            <a href="fl_consolidated_report_admin.php?filial_id='.$filial_id.'&m='.$month.'&y='.$year.'" class="b">Сводный отчёт по филиалу</a>
                         </div>
                         <h2 style="padding: 0;">Отчёт '.$filials_j[$filial_id]['name2'].' / '.$monthsName[$month].' '.$year.'</h2>
                     </header>';
@@ -673,10 +673,10 @@
             $subtractions_summ = 0;
 
             //По филиально в зависимости от оплат
-            $query = "SELECT flj_sub.*, sw.	permissions, sw.name
-                      FROM `fl_journal_filial_subtractions` flj_sub
-                      LEFT JOIN spr_workers sw ON sw.id = flj_sub.worker_id
-                      WHERE flj_sub.filial_id='{$filial_id}' AND flj_sub.year='$year' AND (flj_sub.month='$month' OR flj_sub.month='".(int)$month."')";
+//            $query = "SELECT flj_sub.*, sw.	permissions, sw.name
+//                      FROM `fl_journal_filial_subtractions` flj_sub
+//                      LEFT JOIN spr_workers sw ON sw.id = flj_sub.worker_id
+//                      WHERE flj_sub.filial_id='{$filial_id}' AND flj_sub.year='$year' AND (flj_sub.month='$month' OR flj_sub.month='".(int)$month."')";
 
 //            $query = "SELECT fl_jp.*, sw.permissions, sw.name
 //                FROM `fl_journal_paidouts` fl_jp
@@ -687,7 +687,7 @@
             //По филиалам конкретно по табелям (не зависит от оплат, только от того, где открыта была работа)
             $query = "SELECT fl_jp.*, sw.permissions, sw.name, fl_tj.worker_id
                 FROM `fl_journal_tabels` fl_tj
-                INNER JOIN `fl_journal_paidouts` fl_jp ON fl_tj.id = fl_jp.tabel_id AND fl_jp.noch <> '1'
+                INNER JOIN `fl_journal_paidouts` fl_jp ON fl_tj.id = fl_jp.tabel_id
                 LEFT JOIN spr_workers sw ON sw.id = fl_tj.worker_id
                 WHERE fl_tj.office_id='{$filial_id}' AND (fl_tj.month='{$month}' OR fl_tj.month='".(int)$month."') AND fl_tj.year='{$year}'";
 
@@ -703,13 +703,16 @@
                         if (!isset($subtractions_j[$arr['permissions']])) {
                             $subtractions_j[$arr['permissions']] = array();
                         }
-                        if (!isset($subtractions_j[$arr['permissions']][$arr['type']])) {
-                            $subtractions_j[$arr['permissions']][$arr['type']] = array();
+                        if (!isset($subtractions_j[$arr['permissions']][$arr['worker_id']])) {
+                            $subtractions_j[$arr['permissions']][$arr['worker_id']] = array();
+
+                            $subtractions_j[$arr['permissions']][$arr['worker_id']]['data'] = array();
+                            $subtractions_j[$arr['permissions']][$arr['worker_id']]['name'] = $arr['name'];
                         }
-                        if (!isset($subtractions_j[$arr['permissions']][$arr['type']][$arr['worker_id']])) {
-                            $subtractions_j[$arr['permissions']][$arr['type']][$arr['worker_id']] = array();
+                        if (!isset($subtractions_j[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']])) {
+                            $subtractions_j[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']] = array();
                         }
-                        array_push($subtractions_j[$arr['permissions']][$arr['type']][$arr['worker_id']], $arr);
+                        array_push($subtractions_j[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']], $arr);
 
                         $subtractions_summ += $arr['summ'];
                     }
@@ -718,7 +721,7 @@
             }
             //var_dump($query);
             //var_dump($subtractions_j);
-            //var_dump($subtractions_j[5][1]);
+            //var_dump($subtractions_j[5]);
 
 
             //Банк
@@ -960,6 +963,21 @@
                             </div>
                         </li>';
 
+            //таблица с ЗП по каждому сотруднику
+            $personal_zp_str = '
+                    <table width="" style="border: 1px solid #CCC;">';
+
+            //Загловок
+            $personal_zp_str .= '
+                        <tr style="background-color: rgba(252, 237, 199, 0.77);">
+                            <td style="width: 149px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
+                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">аванс</i></td>
+                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">зп</i></td>
+                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">отпускной</i></td>
+                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">больничный</i></td>
+                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">на карту</i></td>
+                        </tr>';
+
             //Пошли по типам/должностям
             foreach ($subtractions_j as $permissions => $subtractions_data){
                 //var_dump($subtractions_data);
@@ -987,61 +1005,75 @@
                             </div>
                         </li>';
 
-                foreach ($subtractions_data as $type => $type_data){
+                $personal_zp_str .= '
+                        <tr style="background-color: rgba(225, 248, 220, 0.77);">
+                            <td style="width: 149px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><b style="color: rgb(0, 36, 255);">'.$permissions_j[$permissions]['name'].'</b></td>
+                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
+                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
+                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
+                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
+                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
+                        </tr>';
+
+                //foreach ($subtractions_data as $type => $type_data){
                     //var_dump($typ);
                     //var_dump($type_data);
+                foreach ($subtractions_data as $worker_id => $worker_data) {
+                    //var_dump($worker_data);
 
-                    //if (($type != 4) && ($type != 5)) {
+                    $w_name = $worker_data['name'];
+                    //var_dump($w_name);
+                    //Выдано всего сотруднику
+                    $fin_summ_w = 0;
 
-                        if ($type == 1) {
-                            $type_name = ' аванс ';
-                        } elseif ($type == 2) {
-                            $type_name = ' отпускной ';
-                        } elseif ($type == 3) {
-                            $type_name = ' больничный ';
-                        } elseif ($type == 4) {
-                            $type_name = ' на карту ';
-                        } elseif ($type == 7) {
-                            $type_name = ' зп ';
-                        } elseif ($type == 5) {
-                            $type_name = ' ночь ';
-                        } else {
-                            $type_name = ' !!!ошибка данных ';
+                    $personal_zp_str .= '
+                        <tr>
+                            <td style="outline: 1px solid rgb(233, 233, 233); text-align: left;">' . $w_name . '</td>';
+
+                    $temp_summ_arr = array(1=>0,2=>0,7=>0,3=>0,4=>0);
+
+                    foreach ($worker_data['data'] as $type => $type_data){
+//                        var_dump($type);
+
+//                        if ($type == 1) {
+//                            $type_name = ' аванс ';
+//                        } elseif ($type == 2) {
+//                            $type_name = ' отпускной ';
+//                        } elseif ($type == 3) {
+//                            $type_name = ' больничный ';
+//                        } elseif ($type == 4) {
+//                            $type_name = ' на карту ';
+//                        } elseif ($type == 7) {
+//                            $type_name = ' зп ';
+//                        } elseif ($type == 5) {
+//                            $type_name = ' ночь ';
+//                        } else {
+//                            $type_name = ' !!!ошибка данных ';
+//                        }
+
+                        foreach ($type_data as $data) {
+                            //var_dump($data);
+                            //$w_name = $data['name'];
+                            $fin_summ_w += $data['summ'];
+                            $permission_summ += $data['summ'];
+
+                            //
+                            $temp_summ_arr[$type] += $data['summ'];
                         }
+                    }
+                    //var_dump($temp_summ_arr);
 
-                        //                    echo '
-                        //                        <li class="filterBlock">
-                        //                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
-                        //                               <i style="color: orangered;">' . $type_name . '</i>
-                        //                            </div>
-                        //                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
-                        //
-                        //                            </div>
-                        //                        </li>';
+                    foreach ($temp_summ_arr as $temp_summ){
+                        $personal_zp_str .= '
+                            <td style="outline: 1px solid rgb(233, 233, 233); text-align: right;">
+                                '.$temp_summ.'
+                            </td>
+                            ';
+                    }
 
-                        foreach ($type_data as $worker_id => $worker_data) {
 
-                            $w_name = '';
-                            //Выдано всего сотруднику
-                            $fin_summ = 0;
-
-                            foreach ($worker_data as $data) {
-                                $w_name = $data['name'];
-                                $fin_summ += $data['summ'];
-                                $permission_summ += $data['summ'];
-                            }
-
-                            //                        echo '
-                            //                        <li class="filterBlock">
-                            //                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
-                            //                               <b>' . $w_name . '</b>
-                            //                            </div>
-                            //                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
-                            //                                <div style="float:left;">' . number_format($fin_summ, 0, '.', ' ') . '</div>
-                            //                            </div>
-                            //                        </li>';
-                        }
-                    //}
+                    $personal_zp_str .= '
+                        </tr>';
                 }
                 echo '
                         <li class="filterBlock">
@@ -1053,8 +1085,9 @@
                                 <div style="float:right;">' . number_format(($permission_summ * 100 / ($cashbox_nal + $beznal + $insure_summ)), 2, '.', ' ') . '%</div>
                             </div>
                         </li>';
-                //var_dump($permission_summ);
             }
+            //var_dump($permission_summ);
+
             echo '
                         <li class="filterBlock">
                             <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 110%; font-weight: bold; background-color: rgba(219, 214, 214, 0.25);">
@@ -1065,7 +1098,6 @@
                             </div>
                         </li>';
 
-            //var_dump($subtractions_summ);
 
             echo '
                     </div>';
@@ -1271,7 +1303,7 @@
                         <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
                            Стоматология
                         </div>
-                        <div class="cellRight" style="width: 200px; min-width: 200px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+                        <div class="cellRight" style="width: 150px; min-width: 150px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
 
                 if (!empty($rezult_arr[5])){
@@ -1320,7 +1352,7 @@
                                     <div class="cellLeft" style="width: 120px; min-width: 120px;">
                                        <b>' . $percents_j[5][$percent_cat_id]['name'] . '</b>
                                     </div>
-                                    <div class="cellRight" style="width: 200px; min-width: 200px;">
+                                    <div class="cellRight" style="width: 150px; min-width: 150px;">
                                         <div style="float:left;">' . number_format($value, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format((($value * 100) / (array_sum($rezult_arr[5]['data']) - $child_stom_summ)), 2, '.', '') . '%</div>
                                     </div>
                                 </li>';
@@ -1334,7 +1366,7 @@
                                 <div class="cellLeft" style="width: 120px; min-width: 120px;">
                                    <b>Детство</b>
                                 </div>
-                                <div class="cellRight" style="width: 200px; min-width: 200px;">
+                                <div class="cellRight" style="width: 150px; min-width: 150px;">
                                     <div style="float:left;">'.number_format($child_stom_summ, 0, '.', ' ').'</div> <div style="float:right;">'.number_format((($child_stom_summ * 100)/ (array_sum($rezult_arr[5]['data']) - $child_stom_summ)), 2, '.', '').'%</div>
                                 </div>
                             </li>';
@@ -1399,7 +1431,7 @@
                         <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
                            Ассистенты
                         </div>
-                        <div class="cellRight" style="width: 200px; min-width: 200px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+                        <div class="cellRight" style="width: 150px; min-width: 150px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
 
                 if (!empty($rezult_arr[7])){
@@ -1438,7 +1470,7 @@
                                 <div class="cellLeft" style="width: 120px; min-width: 120px;">
                                    <b>'.$percent_cat_name.'</b>
                                 </div>
-                                <div class="cellRight" style="width: 200px; min-width: 200px;">
+                                <div class="cellRight" style="width: 150px; min-width: 150px;">
                                     <div style="float:left;">'.number_format($value, 0, '.', ' ').'</div> <div style="float:right;">'.number_format((($value * 100)/ array_sum($rezult_arr[7]['data'])), 2, '.', '').'%</div>
                                 </div>
                             </li>';
@@ -1456,7 +1488,7 @@
                         <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
                            Косметология
                         </div>
-                        <div class="cellRight" style="width: 200px; min-width: 200px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+                        <div class="cellRight" style="width: 150px; min-width: 150px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
                 if (!empty($rezult_arr[6])){
                     if (!empty($rezult_arr[6]['data'])){
@@ -1489,7 +1521,7 @@
                                 <div class="cellLeft" style="width: 120px; min-width: 120px;">
                                    <b>'.$percents_j[6][$percent_cat_id]['name'].'</b>
                                 </div>
-                                <div class="cellRight" style="width: 200px; min-width: 200px;">
+                                <div class="cellRight" style="width: 150px; min-width: 150px;">
                                     <div style="float:left;">'.number_format($value, 0, '.', ' ').'</div> <div style="float:right;">'.number_format((($value * 100)/ array_sum($rezult_arr[6]['data'])), 2, '.', '').'%</div>
                                 </div>
                             </li>';
@@ -1555,7 +1587,7 @@
                         <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
                            Солярий
                         </div>
-                        <div class="cellRight" style="width: 200px; min-width: 200px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+                        <div class="cellRight" style="width: 150px; min-width: 150px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
                 echo
                             number_format(($temp_solar_nal + $temp_solar_beznal), 0, '.', ' ');
@@ -1571,7 +1603,7 @@
                         <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
                            Специалисты
                         </div>
-                        <div class="cellRight" style="width: 200px; min-width: 200px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+                        <div class="cellRight" style="width: 150px; min-width: 150px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
 
                 if (!empty($rezult_arr[10])){
@@ -1605,7 +1637,7 @@
                                 <div class="cellLeft" style="width: 120px; min-width: 120px;">
                                    <b>'.$percents_j[10][$percent_cat_id]['name'].'</b>
                                 </div>
-                                <div class="cellRight" style="width: 200px; min-width: 200px;">
+                                <div class="cellRight" style="width: 150px; min-width: 150px;">
                                     <div style="float:left;">'.number_format($value, 0, '.', ' ').'</div> <div style="float:right;">'.number_format((($value * 100)/ array_sum($rezult_arr[10]['data'])), 2, '.', '').'%</div>
                                 </div>
                             </li>';
@@ -1664,6 +1696,8 @@
                 }
             }
 
+            $personal_zp_str .= '</table>';
+
 
 //            echo '
 //                    <li class="filterBlock">
@@ -1689,6 +1723,15 @@
 
                 echo '
                     <!--</ul>-->
+			    </div>';
+
+            //ЗП по каждому сотрдунику
+            echo '<div style="display: inline-block; vertical-align: top;">';
+
+            echo $personal_zp_str;
+
+            echo '
+
 			    </div>';
 
             echo '

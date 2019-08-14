@@ -4592,10 +4592,26 @@
                                 $("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')
                             )
                             +
-                            prev_month_filial_summ
+                            Number(prev_month_filial_summ)
                         )
                         , 2, '.', ' ')
                     );
+
+                    $("#ostatokFinalNalAllMonth2").html(number_format(
+                        (Number(
+                                $("#ostatokNalAllMonth").html().replace(/\s{1,}/g, '')
+                            )
+                            -
+                            Number(
+                                $("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')
+                            )
+                            +
+                            Number(prev_month_filial_summ)
+                        )
+                        , 2, '.', ' ')
+                    );
+
+
 
                     //Выдачи из кассы (подробно за месяц)
                     var giveouts_j = res.giveouts_j

@@ -35,7 +35,7 @@
                 $msql_cnnct = ConnectToDB();
 
                 //Выбираем обычные табели
-                $query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$_POST['permission']}' AND `worker_id`='{$_POST['worker']}' AND `office_id`='{$_POST['office']}' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
+                $query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$_POST['permission']}' AND `worker_id`='{$_POST['worker']}' AND `office_id`='{$_POST['office']}' AND `status` <> '9' AND (`year` > '2019' OR (`year` = '2019' AND `month` > '05'));";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -58,7 +58,7 @@
                 }
 
                 //Выбираем ночные табели
-                $query = "SELECT * FROM `fl_journal_tabels_noch` WHERE `type`='{$_POST['permission']}' AND `worker_id`='{$_POST['worker']}' AND `filial_id`='{$_POST['office']}' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
+                $query = "SELECT * FROM `fl_journal_tabels_noch` WHERE `type`='{$_POST['permission']}' AND `worker_id`='{$_POST['worker']}' AND `filial_id`='{$_POST['office']}' AND `status` <> '9' AND (`year` > '2019' OR (`year` = '2019' AND `month` > '05'));";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 

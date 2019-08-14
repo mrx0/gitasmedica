@@ -272,6 +272,12 @@
                                 АН
                             </div>';
                 }
+
+                $report_header .= ' 
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+                                Дата
+                            </div>';
+
                 $report_header .= '
                             <div class="cellText">
                             </div>';
@@ -434,6 +440,11 @@
                     }
 
                     echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center; cursor: pointer; ' . $today_color . ' '. $today_border .''. $today_border_l .'">
+                                ' . $data . '
+                            </div>';
+
+                    echo '
                             <div class="cellText" style="text-align: center; font-weight: normal; '. $today_border .'">
                             </div>';
                     echo '
@@ -550,6 +561,10 @@
                             </div>';
                     echo '
                             <div id="summGiveoutDirector" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="ostatokFinalNalAllMonth2" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
                             </div>';
                     echo '

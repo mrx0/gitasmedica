@@ -121,7 +121,7 @@
 
                         $giveouts_result_str .= '
                                 <li class="cellsBlock cellsBlockHover" style="width: auto; ">
-                                    <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Расходы из кассы подробно:</div>
+                                    <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Все расходы из кассы за месяц подробно:</div>
                                     <!--<div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">giveout_cash.php?filial_id=15&d=31&m=07&y=2019</div>-->
                                 </li>';
 
