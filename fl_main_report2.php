@@ -1030,7 +1030,7 @@
                         <tr>
                             <td style="outline: 1px solid rgb(233, 233, 233); text-align: left;">' . $w_name . '</td>';
 
-                    $temp_summ_arr = array(1=>0,2=>0,7=>0,3=>0,4=>0);
+                    $temp_summ_arr = array(1=>0,7=>0,2=>0,3=>0,4=>0);
 
                     foreach ($worker_data['data'] as $type => $type_data){
 //                        var_dump($type);
@@ -1064,6 +1064,7 @@
                     //var_dump($temp_summ_arr);
 
                     foreach ($temp_summ_arr as $temp_summ){
+                        
                         $personal_zp_str .= '
                             <td style="outline: 1px solid rgb(233, 233, 233); text-align: right;">
                                 '.$temp_summ.'
