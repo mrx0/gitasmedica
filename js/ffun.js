@@ -4161,7 +4161,7 @@
             success: function(res){
                 //console.log(res);
                 //$('#errrror').html(res.subtractions_j);
-                //console.log(res.subtractions_j);
+                console.log(res.subtractions_j);
                 //console.log(res.subtractions_j.length);
 
                 if(res.result == 'success') {
