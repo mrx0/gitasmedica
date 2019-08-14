@@ -687,7 +687,7 @@
             //По филиалам конкретно по табелям (не зависит от оплат, только от того, где открыта была работа)
             $query = "SELECT fl_jp.*, sw.permissions, sw.name, fl_tj.worker_id
                 FROM `fl_journal_tabels` fl_tj
-                INNER JOIN `fl_journal_paidouts` fl_jp ON fl_tj.id = fl_jp.tabel_id
+                INNER JOIN `fl_journal_paidouts` fl_jp ON fl_tj.id = fl_jp.tabel_id AND fl_jp.noch <> '1'
                 LEFT JOIN spr_workers sw ON sw.id = fl_tj.worker_id
                 WHERE fl_tj.office_id='{$filial_id}' AND (fl_tj.month='{$month}' OR fl_tj.month='".(int)$month."') AND fl_tj.year='{$year}'";
 
