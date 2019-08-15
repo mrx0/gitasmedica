@@ -1767,76 +1767,100 @@
 
                 echo '
                         <!--</ul>-->
-                    </div>
-                    </div>
-                    </div>';
+                                </div>
+                            </div>
+                        </div>';
 
 
             //ЗП по каждому сотруднику
             echo '
                         <div class="rezult_item3print" style="display: block; vertical-align: top; margin: 10px;">';
 
+            echo '
+                            <div style="vertical-align: top;">';
+
             echo $personal_zp_str;
 
             echo '
-
-			            </div>';
+			                </div>
+			                <div style="vertical-align: top; margin-top: 10px;">';
 
             //Прочие расходы подробно
             if (!empty($paidouts_temp_j)){
                 //var_dump($paidouts_temp_j);
 
                 echo '
-                        <div class="" style="">
-                            <ul style="margin-left: 6px; margin-bottom: 10px; font-size: 14px;">
-                                <li class="cellsBlock" style="width: auto; font-size: 80%;">
-                                    <div class="cellOrder" style="width: 590px; text-align: left;">
-                                        <b>Прочие выдачи/расходы подробно:</b>
-                                    </div>
-                                </li>';
+                                <div class="" style="">
+                                    <ul style="/*margin-left: 6px;*/ margin-bottom: 10px; font-size: 14px;">
+                                        <li class="cellsBlock" style="width: auto; font-size: 80%;">
+                                            <div class="cellOrder" style="width: 590px; text-align: left;">
+                                                <b>Прочие выдачи/расходы подробно:</b>
+                                            </div>
+                                        </li>';
                 echo '
-                                <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
+                                        <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
                 echo '
-                                    <div class="cellOrder" style="text-align: center; border-right: none;">
-                                        <b>Описание</b>
-                                    </div>
-                                    <div class="cellName" style="text-align: center; border-right: none;">
-                                        <b>Тип</b>           
-                                    </div>
-                                    <div class="cellName" style="text-align: center; border-right: none;">
-                                        <b>Сумма</b>
-                                     </div>
-                                    <div class="cellName" style="text-align: center;">
-                                        <b>Комментарий</b>
-                                    </div>';
+                                            <div class="cellOrder" style="text-align: center; border-right: none;">
+                                                <b>Кому</b>
+                                            </div>
+                                            <div class="cellName" style="text-align: center; border-right: none;">
+                                                <b>Тип</b>           
+                                            </div>
+                                            <div class="cellName" style="text-align: center; border-right: none;">
+                                                <b>Сумма</b>
+                                             </div>
+                                            <div class="cellName" style="text-align: center;">
+                                                <b>Описание</b>
+                                            </div>';
                 echo '
-                                </li>';
+                                        </li>';
 
                 foreach($paidouts_temp_j as $paidouts_item){
+
+                        if ($paidouts_item['type'] == 1) {
+                            $type_name = ' аванс ';
+                        } elseif ($paidouts_item['type'] == 2) {
+                            $type_name = ' отпускной ';
+                        } elseif ($paidouts_item['type'] == 3) {
+                            $type_name = ' больничный ';
+                        } elseif ($paidouts_item['type'] == 4) {
+                            $type_name = ' на карту ';
+                        } elseif ($paidouts_item['type'] == 7) {
+                            $type_name = ' зп ';
+                        } elseif ($paidouts_item['type'] == 5) {
+                            $type_name = ' ночь ';
+                        } else {
+                            $type_name = ' !!!ошибка данных ';
+                        }
+
                     echo '
-                                <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
+                                        <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
                     echo '
-                                    <div class="cellOrder" style="text-align: center; border-right: none;">
-                                        '.$paidouts_item['descr'].'
-                                    </div>
-                                    <div class="cellName" style="text-align: center; border-right: none;">
-                                              
-                                    </div>
-                                    <div class="cellName" style="text-align: center; border-right: none;">
-                                        '.$paidouts_item['descr'].'
-                                     </div>
-                                    <div class="cellName" style="text-align: center;">
-  4
-                                    </div>';
+                                            <div class="cellOrder" style="text-align: left; border-right: none;">
+                                                '.WriteSearchUser('spr_workers', $paidouts_item['worker_id'], 'user', false).'
+                                            </div>
+                                            <div class="cellName" style="text-align: center; border-right: none;">
+                                                  '.$type_name.'
+                                            </div>
+                                            <div class="cellName" style="text-align: right; border-right: none;">
+                                                '.$paidouts_item['summ'].'
+                                             </div>
+                                            <div class="cellName" style="text-align: center;">
+                                                '.$paidouts_item['descr'].'
+                                            </div>';
                     echo '
-                                </li>';
+                                        </li>';
                 }
 
                 echo '
-                            </ul>
-                        </div>';
-
+                                    </ul>
+                                </div>';
             }
+
+            echo '
+			                </div>';
+            echo '
+                        </div>';
 
 
             echo '
