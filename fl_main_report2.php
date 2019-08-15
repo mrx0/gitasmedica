@@ -9,7 +9,8 @@
 		require_once 'header_tags.php';
 		//var_dump($_SESSION);
 
-		if (($finances['see_all'] == 1) || $god_mode){
+		//if (($finances['see_all'] == 1) || $god_mode){
+        if (($_SESSION['id'] == 270) || ($god_mode)){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			include_once 'ffun.php';
@@ -1847,7 +1848,7 @@
 	}else{
 		header("location: enter.php");
 	}
-	
+
 	require_once 'footer.php';
 
 ?>
