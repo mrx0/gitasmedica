@@ -1024,7 +1024,6 @@
             echo '
                     </div>';
 
-
             //ЗП выданные
 
             //Для создания разных цветов полей
@@ -1281,21 +1280,42 @@
             echo '
                     <div style="border: 1px solid #CCC;">
                         <li class="filterBlock">
-                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
-                               <b>Остаток</b>
+                            <div class="cellLeft" style="width: 310px; min-width: 310px; font-size: 120%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
+                               <b>Дефицит текущего месяца</b>
                             </div>
-                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
+                        </li>';
+
+            echo '
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: rgba(219, 215, 214, 0.44);;">
+                                
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: rgba(219, 215, 214, 0.44);; text-align: right;">
+                                <b>'.$ostatok.'</b>
+                            </div>
+                        </li>';
+            echo '
+                    </div>';
+
+
+            echo '
+                    <div style="border: 1px solid #CCC;">
+                        <li class="filterBlock">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 140%; font-weight: bold; background-color: rgba(219, 214, 214, 0.25);">
+                               <b>Итог</b>
+                            </div>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 214, 214, 0.25);">
 
                             </div>
                         </li>';
 
             echo '
                         <li class="filterBlock">
-                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
+                            <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: rgba(219, 214, 214, 0.25);">
                                 
                             </div>
-                            <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: '.$bg_color.'; text-align: right;">
-                                <b>'.$ostatok.'</b>
+                            <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 140%; background-color: rgba(219, 214, 214, 0.25); text-align: right;">
+                                <b>0</b>
                             </div>
                         </li>';
 
@@ -1745,8 +1765,8 @@
                     <!--</ul>-->
 			    </div>';
 
-            //ЗП по каждому сотрдунику
-            echo '<div style="display: inline-block; vertical-align: top;">';
+            //ЗП по каждому сотруднику
+            echo '<div class="page-break-before" style="display: inline-block; vertical-align: top;">';
 
             echo $personal_zp_str;
 
