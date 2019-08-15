@@ -15,7 +15,11 @@
 			include_once 'widget_calendar.php';
 			
 			$filter = FALSE;
-			$dop = '';			
+			$dop = '';
+
+            //Опция доступа к филиалам конкретных сотрудников
+            $optionsWF = getOptionsWorkerFilial($_SESSION['id']);
+            //var_dump($optionsWF);
 			
 			echo '
 				<header style="margin-bottom: 5px;">
@@ -175,6 +179,13 @@
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_tabels.php" class="b3">Важный отчёт</a>
 							</li>';
+
+                if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
+                    echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="fl_main_report2.php" class="b3">Финальный отчёт</a>
+							</li>';
+                }
 
                 echo '
                             <li class="cellsBlock" style="margin: 1px;">

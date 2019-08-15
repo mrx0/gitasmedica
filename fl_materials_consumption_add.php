@@ -275,8 +275,16 @@ if ($enter_ok){
                                 echo '
                                                     </div>';
 
-
                                 echo '
+                                                    <div style="display: inline-block; width: 300px; vertical-align: top;">
+                                                        <div>
+                                                            <div style="">Оплачено: <div id="calculateInvoice" class="calculateInvoicePaid" style="color: #333;">'.$invoice_j[0]['paid'].'</div> руб.</div>
+                                                        </div>
+                                                    </div>';
+
+
+
+                                        echo '
                                                 </div>';
 
 
@@ -482,7 +490,7 @@ if ($enter_ok){
                                         </div>';
                                 echo '
                                         <div id="errrror"></div>
-                                        <input type="button" class="b" value="Применить" onclick="fl_showMaterialsConsumptionAdd(' . $_GET['invoice_id'] . ', \'add\')">';
+                                        <input type="button" id="matConsAccept" class="b" value="Применить" onclick="fl_showMaterialsConsumptionAdd(' . $_GET['invoice_id'] . ', \'add\')">';
 
 
                                 echo '

@@ -15,6 +15,10 @@
 			include_once 'ffun.php';
             require 'variables.php';
 
+            //Опция доступа к филиалам конкретных сотрудников
+            $optionsWF = getOptionsWorkerFilial($_SESSION['id']);
+            //var_dump($optionsWF);
+
             $have_target_filial = true;
 
             $filials_j = getAllFilials(false, false, false);
@@ -35,12 +39,12 @@
             $day = date("d");
 
             //Или если мы смотрим другой месяц
-            if (isset($_GET['m'])) {
-                $m = $_GET['m'];
-            }
-            if (isset($_GET['y'])) {
-                $y = $_GET['y'];
-            }
+//            if (isset($_GET['m'])) {
+//                $m = $_GET['m'];
+//            }
+//            if (isset($_GET['y'])) {
+//                $y = $_GET['y'];
+//            }
 
             //Филиал
             if (isset($_GET['filial_id'])) {
@@ -49,16 +53,28 @@
                 if (isset($_SESSION['filial'])) {
                     $filial_id = $_SESSION['filial'];
                 }else{
-                    $have_target_filial = false;
-                    $filial_id = 0;
+                    if (($finances['see_all'] == 1) || $god_mode){
+                        $have_target_filial = true;
+                        $filial_id = 15;
+                    }else {
+                        $have_target_filial = false;
+                        $filial_id = 0;
+                    }
                 }
             }
+
 
             echo '
                 <div id="status">
                     <header id="header">
                         <div class="nav">
-                            <a href="stat_cashbox.php" class="b">Касса</a>
+                            <a href="stat_cashbox.php" class="b">Касса</a>';
+            if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
+                echo '
+                <a href="fl_paidout_another_test_in_tabel_add.php" class="b">Добавить расход вручную</a>';
+            }
+
+            echo '
                         </div>
                         <h2 style="padding: 0;">Сводный отчёт по филиалу</h2>
                     </header>';
@@ -260,6 +276,12 @@
                                 АН
                             </div>';
                 }
+
+                $report_header .= ' 
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+                                Дата
+                            </div>';
+
                 $report_header .= '
                             <div class="cellText">
                             </div>';
@@ -422,6 +444,11 @@
                     }
 
                     echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center; cursor: pointer; ' . $today_color . ' '. $today_border .''. $today_border_l .'">
+                                ' . $data . '
+                            </div>';
+
+                    echo '
                             <div class="cellText" style="text-align: center; font-weight: normal; '. $today_border .'">
                             </div>';
                     echo '
@@ -434,7 +461,7 @@
                         <li class="' . $weekend_block . ' cellsBlockHover" style="font-weight: bold; font-size: 12px; background-color: rgb(255, 193, 7);">';
                     echo '
                             <div class="cellTime cellsTimereport" style="text-align: right; cursor: pointer; ' . $today_color .'"
-                             onclick="fl_getDailyReportsSummAllMonth();">
+                             onclick="fl_getDailyReportsSummAllMonth('.$filial_id.', '.$month.', '.$year.');">
                                 Всего
                                 <span style="font-size: 50%;"></span> <i class="fa fa-refresh" aria-hidden="true" style=" color: red;"></i>
                             </div>';
@@ -541,6 +568,10 @@
                                 0
                             </div>';
                     echo '
+                            <div id="ostatokFinalNalAllMonth2" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
                             <div class="cellText" style="text-align: center; font-weight: normal;">
                             </div>';
                     echo '
@@ -552,47 +583,148 @@
 
                 if (($finances['see_all'] == 1) || $god_mode) {
                     echo '
-                        <li id="interimReport" class="" style="margin: 10px; font-size: 12px; width: 300px; /*border-right: 1px solid #BFBCB5;*/ display: none;"">';
+                        <li id="interimReport" class="" style="margin: 10px; font-size: 12px;/*border-right: 1px solid #BFBCB5;*/ display: none; "">';
                     echo '
-                            <div class="cellsBlock">
-                                <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Предварительные итоги</div>
-                                <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Выручка</div>
-                            </div>
-                            <div class="cellsBlock" style="font-size: 14px;">
-                                <div class="cellLeft">наличные касса</div>
-                                <div id="SummNalAllMonthItog" class="cellRight" style="text-align: right;">-</div>   
-                            </div>
-                            <div class="cellsBlock" style="font-size: 14px;">
-                                <div class="cellLeft">аренда</div>
-                                <div id="arendaAllMonthItog" class="cellRight" style="text-align: right;">-</div>    
-                            </div>
-                            <div class="cellsBlock" style="font-size: 14px;">
-                                <div class="cellLeft">безнал</div>
-                                <div id="SummBeznalAllMonthItog" class="cellRight" style="text-align: right;">-</div>    
-                            </div>
-                            <div class="cellsBlock" style="font-size: 14px;">
-                                <div class="cellLeft" style="font-weight: bold; background-color: rgba(255, 0, 0, 0.37);">выручка вся:</div>
-                                <div id="summAllMonth" class="cellRight" style="font-weight: bold; text-align: right; background-color: rgba(255, 0, 0, 0.37);">-</div>
-                            </div>
-                            
-                            <div class="cellsBlock">
-                                <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Наличные</div>    
-                            </div>
-                            <div class="cellsBlock" style="font-size: 14px;">
-                                <div class="cellLeft">наличные касса</div>
-                                <div id="SummNalAllMonthItog2" class="cellRight" style="text-align: right;">-</div>
-                            </div>
-                            <div class="cellsBlock" style="font-size: 14px;">
-                                <div class="cellLeft">аренда</div>
-                                <div id="arendaAllMonthItog2" class="cellRight" style="text-align: right;">-</div>
-                            </div>
-                            <div class="cellsBlock" style="font-size: 14px;">
-                                <div class="cellLeft">расход</div>
-                                <div id="summMinusAllMonth" class="cellRight" style="text-align: right;">-</div>   
-                            </div>
-                            <div class="cellsBlock" style="font-size: 14px;">
-                                <div class="cellLeft" style="font-weight: bold; background-color: rgba(255, 0, 0, 0.37);">остаток в кассе</div>
-                                <div id="ostatokNalAllMonth" class="cellRight" style="font-weight: bold; text-align: right; background-color: rgba(255, 0, 0, 0.37);">-</div>  
+                            <div style="width: 320px; display: inline-block; box-shadow: rgb(139, 139, 139) 2px 2px 6px; margin-right: 10px;">
+                                <div class="cellsBlock">
+                                    <div class="" style="font-size: 15px; margin: 5px;">
+                                        <a href="fl_main_report2.php?filial_id='.$filial_id.'&m='.$month.'&y='.$year.'" class="ahref button_tiny">Перейти в фин. отчёт</a>
+                                    </div>
+                                    <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">
+                                        Предварительные итоги:
+                                    </div>
+                                    <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Выручка</div>
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">наличные касса</div>
+                                    <div id="SummNalAllMonthItog" class="cellRight" style="text-align: right;">-</div>   
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">аренда</div>
+                                    <div id="arendaAllMonthItog" class="cellRight" style="text-align: right;">-</div>    
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">безнал</div>
+                                    <div id="SummBeznalAllMonthItog" class="cellRight" style="text-align: right;">-</div>    
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft" style="font-weight: bold; background-color: rgba(255, 0, 0, 0.37);">выручка вся:</div>
+                                    <div id="summAllMonth" class="cellRight" style="font-weight: bold; text-align: right; background-color: rgba(255, 0, 0, 0.37);">-</div>
+                                </div>
+                                
+                                <div class="cellsBlock">
+                                    <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Наличные</div>    
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">наличные касса</div>
+                                    <div id="SummNalAllMonthItog2" class="cellRight" style="text-align: right;">-</div>
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">аренда</div>
+                                    <div id="arendaAllMonthItog2" class="cellRight" style="text-align: right;">-</div>
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">расход</div>
+                                    <div id="summMinusAllMonth" class="cellRight" style="text-align: right;">-</div>   
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft" style="font-weight: bold; background-color: rgba(255, 0, 0, 0.37);">остаток в кассе</div>
+                                    <div id="ostatokNalAllMonth" class="cellRight" style="font-weight: bold; text-align: right; background-color: rgba(255, 0, 0, 0.37);">-</div>  
+                                </div>
+                            </div>';
+
+                    //Выдачи денег в ЗП и тп
+                    echo '
+                            <div style="width: 320px; display: inline-block; margin-right: 10px; box-shadow: rgb(139, 139, 139) 2px 2px 6px;  vertical-align: top;">
+                                <div class="cellsBlock">
+                                    <!--<div class="" style="font-size: 15px; margin: 5px; font-weight: bold;"></div>-->
+                                    <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Выдано</div>
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">авансы</div>
+                                    <div id="SummPrepaymentGiveout" class="cellRight" style="text-align: right;">-</div>   
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">зп</div>
+                                    <div id="SummSalaryGiveout" class="cellRight" style="text-align: right;">-</div>    
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">отпускные</div>
+                                    <div id="SummHolidayPayGiveout" class="cellRight" style="text-align: right;">-</div>    
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">больничные</div>
+                                    <div id="SummHospitalPayGiveout" class="cellRight" style="text-align: right;">-</div>
+                                </div>
+                                
+                                <!--<div class="cellsBlock">
+                                    <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;"></div>    
+                                </div>-->
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">возвраты</div>
+                                    <div id="SummRefundGiveout" class="cellRight" style="text-align: right;">-</div>
+                                </div>
+                                <!--<div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">материалы</div>
+                                    <div id="SummMaterialGiveout" class="cellRight" style="text-align: right;">-</div>
+                                </div>-->
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">остаток за прошлый месяц</div>
+                                    <div id="prev_month_filial_summ" class="cellRight" style="text-align: right;">-</div>
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft" style="font-weight: bold;">итого</div>
+                                    <div id="SummGiveoutMonth" class="cellRight" style="font-weight: bold; text-align: right;">-</div>   
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft" style="font-weight: bold; background-color: rgba(255, 0, 0, 0.37);">остаток в кассе</div>
+                                    <div id="ostatokFinalNalAllMonth" class="cellRight" style="font-weight: bold; text-align: right; background-color: rgba(255, 0, 0, 0.37);">-</div>  
+                                </div>
+                            </div>';
+
+                    //Расходы
+                    echo '
+                            <div id="giveout_cash" style="width: 520px; display: inline-block; box-shadow: rgb(139, 139, 139) 2px 2px 6px;  vertical-align: top;">
+                                <!--<div class="cellsBlock">
+                                    &lt;!&ndash;<div class="" style="font-size: 15px; margin: 5px; font-weight: bold;"></div>&ndash;&gt;
+                                    <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Выдано</div>
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">авансы</div>
+                                    <div id="SummPrepaymentGiveout" class="cellRight" style="text-align: right;">-</div>   
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">зп</div>
+                                    <div id="SummSalaryGiveout" class="cellRight" style="text-align: right;">-</div>    
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">отпускные</div>
+                                    <div id="SummHolidayPayGiveout" class="cellRight" style="text-align: right;">-</div>    
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">больничные</div>
+                                    <div id="SummHospitalPayGiveout" class="cellRight" style="text-align: right;">-</div>
+                                </div>
+                                
+                                &lt;!&ndash;<div class="cellsBlock">
+                                    <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;"></div>    
+                                </div>&ndash;&gt;
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">возвраты</div>
+                                    <div id="SummRefundGiveout" class="cellRight" style="text-align: right;">-</div>
+                                </div>
+                                &lt;!&ndash;<div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">материалы</div>
+                                    <div id="SummMaterialGiveout" class="cellRight" style="text-align: right;">-</div>
+                                </div>&ndash;&gt;
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft" style="font-weight: bold;">итого</div>
+                                    <div id="SummGiveoutMonth" class="cellRight" style="font-weight: bold; text-align: right;">-</div>   
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft" style="font-weight: bold; background-color: rgba(255, 0, 0, 0.37);">остаток в кассе</div>
+                                    <div id="ostatokFinalNalAllMonth" class="cellRight" style="font-weight: bold; text-align: right; background-color: rgba(255, 0, 0, 0.37);">-</div>  
+                                </div>-->
                             </div>';
                     echo '
                         </li>';

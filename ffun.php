@@ -2253,11 +2253,11 @@
             //Если для всех филиалов
             if (($type_id == 0) && ($filial_id == 0)) {
 
-                $query = "SELECT * FROM `fl_journal_tabels` WHERE `worker_id`='{$worker_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
+                $query = "SELECT * FROM `fl_journal_tabels` WHERE `worker_id`='{$worker_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2019' OR (`year` = '2019' AND `month` > '05'));";
             } else {
 
                 //$query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$typeID}' AND `worker_id`='{$workerID}' AND `office_id`='{$filialID}' AND `status` <> '7' AND `status` <> '9';";
-                $query = "SELECT * FROM `fl_journal_tabels` WHERE `worker_id`='{$worker_id}' AND `type`='{$type_id}' AND `office_id`='{$filial_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
+                $query = "SELECT * FROM `fl_journal_tabels` WHERE `worker_id`='{$worker_id}' AND `type`='{$type_id}' AND `office_id`='{$filial_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2019' OR (`year` = '2019' AND `month` > '05'));";
             }
         }else{
             //Выберем табели уже существующие для этого работника
@@ -2265,11 +2265,11 @@
             //Если для всех филиалов
             if (($type_id == 0) && ($filial_id == 0)) {
 
-                $query = "SELECT * FROM `fl_journal_tabels_noch` WHERE `worker_id`='{$worker_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
+                $query = "SELECT * FROM `fl_journal_tabels_noch` WHERE `worker_id`='{$worker_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2019' OR (`year` = '2019' AND `month` > '05'));";
             } else {
 
                 //$query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$typeID}' AND `worker_id`='{$workerID}' AND `office_id`='{$filialID}' AND `status` <> '7' AND `status` <> '9';";
-                $query = "SELECT * FROM `fl_journal_tabels_noch` WHERE `worker_id`='{$worker_id}' AND `type`='{$type_id}' AND `filial_id`='{$filial_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
+                $query = "SELECT * FROM `fl_journal_tabels_noch` WHERE `worker_id`='{$worker_id}' AND `type`='{$type_id}' AND `filial_id`='{$filial_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2019' OR (`year` = '2019' AND `month` > '05'));";
             }
         }
 
@@ -2295,7 +2295,7 @@
         //Если вместе с ночными
         if ($plus_noch){
 
-            $query = "SELECT * FROM `fl_journal_tabels_noch` WHERE `worker_id`='{$worker_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2018' OR (`year` = '2018' AND `month` > '05'));";
+            $query = "SELECT * FROM `fl_journal_tabels_noch` WHERE `worker_id`='{$worker_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2019' OR (`year` = '2019' AND `month` > '05'));";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
