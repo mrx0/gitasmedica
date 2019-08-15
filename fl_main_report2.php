@@ -538,6 +538,9 @@
 
             //Расходы, выдано из кассы
             $giveoutcash_j = array();
+            //Расходы, выдано из кассы подробно
+            $giveoutcash_ex_j = array();
+            //Сумма расходов
             $giveoutcash_summ = 0;
 
             //Даты от и до
@@ -556,7 +559,7 @@
             $number = mysqli_num_rows($res);
             if ($number != 0){
                 while ($arr = mysqli_fetch_assoc($res)){
-//                    array_push($giveoutcash_j, $arr);
+                    array_push($giveoutcash_ex_j, $arr);
 
                     if (!isset($giveoutcash_j[$arr['type']])){
                         $giveoutcash_j[$arr['type']] = 0;
@@ -567,6 +570,7 @@
                 }
             }
             //var_dump($giveoutcash_j);
+//            var_dump($giveoutcash_ex_j);
 
 
 
@@ -1861,6 +1865,75 @@
 			                </div>';
             echo '
                         </div>';
+
+            //Расходы из кассы подробно
+            if (!empty($giveoutcash_ex_j)){
+
+                echo '
+                        <div class="rezult_item3print" style="display: block; vertical-align: top; margin: 10px;">';
+
+                echo '
+                                <li class="cellsBlock" style="width: auto; ">
+                                    <div class="cellOrder" style="width: 510px; text-align: left;">
+                                        <b>Все расходы из кассы за месяц подробно:</b>
+                                    </div>
+                                </li>';
+
+
+                foreach ($giveoutcash_ex_j as $item){
+
+                    $bgColor = '';
+
+                    echo '
+                                <li class="cellsBlock" style="width: auto; '.$bgColor.'">';
+                    echo '
+                                    <div class="cellOrder" style="width: 120px; min-width: 120px; position: relative; border-right: none; border-top: none;">
+                                        <b>Расходный ордер #' . $item['id'] . '</b><br>от ' . date('d.m.y', strtotime($item['date_in'])) . '<br>
+                                        <span style="font-size: 90%;  color: #555;">';
+
+
+                    echo '
+                                        </span>
+                                                        
+                                    </div>
+                                    <div class="cellName" style="border-right: none; border-top: none;">';
+                    if ($item['type'] != 0) {
+                        echo $give_out_cash_types_j[$item['type']];
+                    }else{
+                        echo 'Прочее';
+
+                        if ($item['additional_info'] != '') {
+                            echo ':<br><i>' . $item['additional_info'] . '</i>';
+                        }
+                        //var_dump($item);
+                    }
+
+                    echo '                              
+                                    </div>
+                                    <div class="cellName" style="width: 90px; min-width: 90px; border-right: none; border-top: none;">
+                                        <div style="text-align: right;">
+                                            <span class="calculateInvoice" style="font-size: 13px">' . $item['summ'] . '</span> руб.
+                                        </div>
+                                    </div>
+                                    <div class="cellName" style="border-right: none; border-top: none;">
+                                        <div style="margin: 1px 0; padding: 1px 3px;">
+                                            <span class="" style="font-size: 11px">' . $item['comment'] . '</span>
+                                        </div>
+                                    </div>';
+
+                    echo '
+                                    <div class="cellCosmAct info" style="font-size: 100%; text-align: center; border-top: none;">
+                                        
+                                    </div>';
+
+
+                    echo '
+                                </li>';
+
+                }
+                echo '
+                    </div>';
+            }
 
 
             echo '
