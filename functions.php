@@ -298,7 +298,31 @@
         return $permissions_j;
 	}
 
-	//Сложение двух массивов
+	//Собираем филиалы, доступные сотруднику (опции)
+	function getOptionsWorkerFilial($worker_id){
+
+		$rezult = array($worker_id => array());
+
+		$msql_cnnct = ConnectToDB ();
+
+
+		$query = "SELECT `filial_id` FROM `options_worker_filial` WHERE `worker_id`='{$worker_id}'";
+
+		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
+		if ($number != 0){
+			while ($arr = mysqli_fetch_assoc($res)){
+                array_push($rezult[$worker_id], $arr['filial_id']);
+			}
+		}
+
+		return $rezult;
+	}
+
+
+
+//Сложение двух массивов
 	function ArraySum($array1, $array2){
 		if (count($array1) > count($array2)){
 			$temp_arr1 = $array1;

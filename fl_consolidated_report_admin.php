@@ -15,6 +15,10 @@
 			include_once 'ffun.php';
             require 'variables.php';
 
+            //Опция доступа к филиалам конкретных сотрудников
+            $optionsWF = getOptionsWorkerFilial($_SESSION['id']);
+            //var_dump($optionsWF);
+
             $have_target_filial = true;
 
             $filials_j = getAllFilials(false, false, false);
@@ -65,7 +69,7 @@
                     <header id="header">
                         <div class="nav">
                             <a href="stat_cashbox.php" class="b">Касса</a>';
-            if (($_SESSION['id'] == 270) || ($god_mode)){
+            if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
                 echo '
                 <a href="fl_paidout_another_test_in_tabel_add.php" class="b">Добавить расход вручную</a>';
             }

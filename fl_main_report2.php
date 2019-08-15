@@ -10,11 +10,17 @@
 		//var_dump($_SESSION);
 
 		//if (($finances['see_all'] == 1) || $god_mode){
-        if (($_SESSION['id'] == 270) || ($god_mode)){
-			include_once 'DBWork.php';
-			include_once 'functions.php';
-			include_once 'ffun.php';
-            require 'variables.php';
+        //if (($_SESSION['id'] == 270) || ($god_mode)){
+        include_once 'DBWork.php';
+        include_once 'functions.php';
+        include_once 'ffun.php';
+        require 'variables.php';
+
+        //Опция доступа к филиалам конкретных сотрудников
+        $optionsWF = getOptionsWorkerFilial($_SESSION['id']);
+        //var_dump($optionsWF);
+
+        if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
 
             $filials_j = getAllFilials(false, false, false);
             //var_dump($filials_j);
@@ -53,6 +59,12 @@
                 $filial_id = 15;
             }
 
+            if (!$god_mode) {
+                if (!in_array($filial_id, $optionsWF[$_SESSION['id']])) {
+                    $filial_id = $optionsWF[$_SESSION['id']][0];
+                }
+            }
+
             echo '
                 <div id="status">
                     <header id="header">
@@ -81,12 +93,15 @@
 
                     $selected = '';
 
-                    if ($filial_id == $filial_item['id']) {
-                        $selected = 'selected';
-                    }
+                    if (in_array($filial_item['id'], $optionsWF[$_SESSION['id']]) || $god_mode) {
+                        if ($filial_id == $filial_item['id']) {
+                            $selected = 'selected';
+                        }
 
-                    echo '
+
+                        echo '
                                 <option value="' . $filial_item['id'] . '" ' . $selected . '>' . $filial_item['name'] . '</option>';
+                    }
                 }
 
                 echo '
