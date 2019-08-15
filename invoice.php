@@ -478,7 +478,9 @@
                                                 <div style="margin-top: 5px; margin-left: -2px;">';
 
                             //Если всё оплачено, вносим расход материалов
-                            if ($invoice_j[0]['summ'] == $invoice_j[0]['paid']) {
+                            //if ($invoice_j[0]['summ'] == $invoice_j[0]['paid']) {
+                            //Если хоть что-то заплатили
+                            if ($invoice_j[0]['paid'] > 0) {
 
                                 //Расход материалов
                                 if (($finances['see_all'] == 1) || $god_mode) {

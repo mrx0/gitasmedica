@@ -2885,6 +2885,10 @@
 
         var materials_consumption_pos_all_summ = 0;
 
+        //Сумма оплачено
+        var mat_paid_summ = Number($(".calculateInvoicePaid").html());
+        //console.log(mat_paid_summ);
+
         $(".materials_consumption_pos").each(function() {
 
             var checked_status = $(this).parent().find('.chkMatCons').prop("checked");
@@ -2895,6 +2899,16 @@
                     if (Number($(this).val()) > 0) {
                         $(this).val(Number($(this).val()));
                         materials_consumption_pos_all_summ += Number($(this).val());
+
+                        if (materials_consumption_pos_all_summ > mat_paid_summ){
+                            alert("Сумма расходов не может превышать суммы оплаты.");
+                            materials_consumption_pos_all_summ = mat_paid_summ;
+                            $(".materials_consumption_pos_all").val(materials_consumption_pos_all_summ);
+                            $("#matConsAccept").prop("disabled", true);
+                        }else{
+                            $("#matConsAccept").prop("disabled", false);
+                        }
+
                     } else {
                         $(this).val(0);
                     }
@@ -3069,14 +3083,14 @@
         });
 
         //Для расчета затрат на материалы
-        $("body").on("change", ".materials_consumption_pos", function () {
+        $("body").on("keyup change", ".materials_consumption_pos", function () {
             //console.log($(this).val());
 
             changeAllMaterials_consumption_pos ();
 
         });
 
-        $("body").on("change", ".materials_consumption_pos_all", function () {
+        $("body").on("keyup change", ".materials_consumption_pos_all", function () {
             //console.log($(this).val());
 
             if (!isNaN(Number($(this).val()))) {
@@ -3084,7 +3098,18 @@
 
                 $(this).val(Number($(this).val()));
 
+                //Сумма оплачено
+                var mat_paid_summ = Number($(".calculateInvoicePaid").html());
+                //console.log(mat_paid_summ);
+
                 var mat_cons_pos_summ_all = Number($(this).val());
+
+                if (mat_cons_pos_summ_all > mat_paid_summ){
+                    alert("Сумма расходов не может превышать суммы оплаты.");
+                    mat_cons_pos_summ_all = mat_paid_summ;
+                    $(this).val(mat_cons_pos_summ_all);
+                }
+
                 var chkBoxsCount = $('input[type=checkbox]:checked').length;
 
                 var ostatok = mat_cons_pos_summ_all % chkBoxsCount;
