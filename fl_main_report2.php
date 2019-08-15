@@ -1763,11 +1763,14 @@
 
                 echo '
                         <!--</ul>-->
+                    </div>
+                    </div>
                     </div>';
+
 
             //ЗП по каждому сотруднику
             echo '
-                        <div style="display: inline-block; vertical-align: top;">';
+                        <div class="rezult_item3print" style="display: block; vertical-align: top;">';
 
             echo $personal_zp_str;
 
