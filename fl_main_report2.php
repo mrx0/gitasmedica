@@ -1342,7 +1342,7 @@
 
             //Процентное соотношение работ начатых в текущем месяце, опираясь на запись
 
-            echo '<div style="display: inline-block; vertical-align: top;">';
+            echo '<div style="display: inline-block; vertical-align: top; margin-left: 10px;">';
 
             //Стоматология
             if (isset($rezult_arr[5])){
@@ -1912,7 +1912,7 @@
                                     </div>
                                     <div class="cellName" style="width: 90px; min-width: 90px; border-right: none; border-top: none;">
                                         <div style="text-align: right;">
-                                            <span class="calculateInvoice" style="font-size: 13px">' . $item['summ'] . '</span> руб.
+                                            <span class="calculateInvoice" style="font-size: 13px">' . $item['summ'] . '</span>
                                         </div>
                                     </div>
                                     <div class="cellName" style="border-right: none; border-top: none;">
