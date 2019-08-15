@@ -1042,10 +1042,14 @@
 
             //таблица с ЗП по каждому сотруднику
             $personal_zp_str = '
+                    
                     <table width="" style="border: 1px solid #CCC;">';
 
             //Загловок
             $personal_zp_str .= '
+                        <tr>
+                            <td colspan="6" style="font-size:80%;"><b>Выдачи сотрудникам подробно:</b></td>
+                        </tr>
                         <tr style="background-color: rgba(252, 237, 199, 0.77);">
                             <td style="width: 149px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
                             <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">аванс</i></td>
@@ -1770,13 +1774,70 @@
 
             //ЗП по каждому сотруднику
             echo '
-                        <div class="rezult_item3print" style="display: block; vertical-align: top;">';
+                        <div class="rezult_item3print" style="display: block; vertical-align: top; margin: 10px;">';
 
             echo $personal_zp_str;
 
             echo '
 
 			            </div>';
+
+            //Прочие расходы подробно
+            if (!empty($paidouts_temp_j)){
+                //var_dump($paidouts_temp_j);
+
+                echo '
+                        <div class="" style="">
+                            <ul style="margin-left: 6px; margin-bottom: 10px; font-size: 14px;">
+                                <li class="cellsBlock" style="width: auto; font-size: 80%;">
+                                    <div class="cellOrder" style="width: 590px; text-align: left;">
+                                        <b>Прочие выдачи/расходы подробно:</b>
+                                    </div>
+                                </li>';
+                echo '
+                                <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
+                echo '
+                                    <div class="cellOrder" style="text-align: center; border-right: none;">
+                                        <b>Описание</b>
+                                    </div>
+                                    <div class="cellName" style="text-align: center; border-right: none;">
+                                        <b>Тип</b>           
+                                    </div>
+                                    <div class="cellName" style="text-align: center; border-right: none;">
+                                        <b>Сумма</b>
+                                     </div>
+                                    <div class="cellName" style="text-align: center;">
+                                        <b>Комментарий</b>
+                                    </div>';
+                echo '
+                                </li>';
+
+                foreach($paidouts_temp_j as $paidouts_item){
+                    echo '
+                                <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
+                    echo '
+                                    <div class="cellOrder" style="text-align: center; border-right: none;">
+                                        '.$paidouts_item['descr'].'
+                                    </div>
+                                    <div class="cellName" style="text-align: center; border-right: none;">
+                                              
+                                    </div>
+                                    <div class="cellName" style="text-align: center; border-right: none;">
+                                        '.$paidouts_item['descr'].'
+                                     </div>
+                                    <div class="cellName" style="text-align: center;">
+  4
+                                    </div>';
+                    echo '
+                                </li>';
+                }
+
+                echo '
+                            </ul>
+                        </div>';
+
+            }
+
 
             echo '
                     </div>
