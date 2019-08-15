@@ -28,13 +28,19 @@
                 $subtractions_j = array();
 
                 //По филиально в зависимости от оплат
-                $query = "SELECT * FROM  `fl_journal_filial_subtractions` WHERE `filial_id`='{$_POST['filial_id']}' AND `month`='{$_POST['month']}' AND `year`='{$_POST['year']}'";
+                //$query = "SELECT * FROM  `fl_journal_filial_subtractions` WHERE `filial_id`='{$_POST['filial_id']}' AND `month`='{$_POST['month']}' AND `year`='{$_POST['year']}'";
 
                 //По филиалам конкретно по табелям (не зависит от оплат, только от того, где открыта была работа)
 //                $query = "SELECT fl_jp.*
 //                FROM `fl_journal_paidouts` fl_jp
 //                LEFT JOIN `fl_journal_tabels` fl_tj ON fl_tj.id = fl_jp.tabel_id
 //                WHERE fl_tj.filial_id='{$_POST['filial_id']}' AND fl_tj.month='{$_POST['month']}' AND fl_tj.year='{$_POST['year']}'";
+
+                $query = "SELECT fl_jp.*, sw.permissions, sw.name, fl_tj.worker_id
+                FROM `fl_journal_tabels` fl_tj
+                INNER JOIN `fl_journal_paidouts` fl_jp ON fl_tj.id = fl_jp.tabel_id
+                LEFT JOIN spr_workers sw ON sw.id = fl_tj.worker_id
+                WHERE fl_tj.office_id='{$_POST['filial_id']}' AND (fl_tj.month='0{$_POST['month']}' OR fl_tj.month='".(int)$_POST['month']."') AND fl_tj.year='{$_POST['year']}'";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -121,7 +127,7 @@
 
                         $giveouts_result_str .= '
                                 <li class="cellsBlock cellsBlockHover" style="width: auto; ">
-                                    <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Расходы из кассы подробно:</div>
+                                    <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Все расходы из кассы за месяц подробно:</div>
                                     <!--<div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">giveout_cash.php?filial_id=15&d=31&m=07&y=2019</div>-->
                                 </li>';
 
@@ -223,15 +229,15 @@
 
                 $prev_month_filial_summ_arr = array(
                     11 => 0,
-                    12 => 0,
+                    12 => -151929,
                     13 => -169961,
-                    14 => 0,
+                    14 => -232,
                     15 => -411380,
                     16 => -684164,
-                    17 => 0,
-                    18 => 0,
+                    17 => -533,
+                    18 => -16780,
                     19 => -218297,
-                    20 => 0,
+                    20 => -323,
                     21 => 0
                 );
 

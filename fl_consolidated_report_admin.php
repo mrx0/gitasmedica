@@ -15,6 +15,10 @@
 			include_once 'ffun.php';
             require 'variables.php';
 
+            //Опция доступа к филиалам конкретных сотрудников
+            $optionsWF = getOptionsWorkerFilial($_SESSION['id']);
+            //var_dump($optionsWF);
+
             $have_target_filial = true;
 
             $filials_j = getAllFilials(false, false, false);
@@ -65,7 +69,7 @@
                     <header id="header">
                         <div class="nav">
                             <a href="stat_cashbox.php" class="b">Касса</a>';
-            if (($_SESSION['id'] == 270) || ($god_mode)){
+            if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
                 echo '
                 <a href="fl_paidout_another_test_in_tabel_add.php" class="b">Добавить расход вручную</a>';
             }
@@ -272,6 +276,12 @@
                                 АН
                             </div>';
                 }
+
+                $report_header .= ' 
+                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+                                Дата
+                            </div>';
+
                 $report_header .= '
                             <div class="cellText">
                             </div>';
@@ -434,6 +444,11 @@
                     }
 
                     echo '
+                            <div class="cellTime cellsTimereport" style="text-align: center; cursor: pointer; ' . $today_color . ' '. $today_border .''. $today_border_l .'">
+                                ' . $data . '
+                            </div>';
+
+                    echo '
                             <div class="cellText" style="text-align: center; font-weight: normal; '. $today_border .'">
                             </div>';
                     echo '
@@ -550,6 +565,10 @@
                             </div>';
                     echo '
                             <div id="summGiveoutDirector" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+                                0
+                            </div>';
+                    echo '
+                            <div id="ostatokFinalNalAllMonth2" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
                             </div>';
                     echo '

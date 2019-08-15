@@ -27,7 +27,7 @@
                     //Смотрим, нет ли у этого сотрудника уже табеля за этот месяц
                     $msql_cnnct = ConnectToDB();
 
-                    $query = "SELECT * FROM `fl_journal_tabels` WHERE `worker_id`='{$_POST['worker_id']}' AND `month`='{$_POST['month']}' AND  `year`='{$_POST['year']}'";
+                    $query = "SELECT * FROM `fl_journal_tabels` WHERE `worker_id`='{$_POST['worker_id']}' AND `month`='{$_POST['month']}' AND  `year`='{$_POST['year']}' AND `status`<>'9'";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -39,19 +39,19 @@
                         $time = date('Y-m-d H:i:s', time());
 
                         $query = "
-                    INSERT INTO `fl_journal_tabels` (`worker_id`, `office_id`, `type`, 
-                    `month`, `year`,
-                    `salary`, `hours_percent`, `revenue_percent`,
-                    `per_from_salary`, `percent_summ`, `filial_summ`, `category`,
-                    `hours_count`, `summ`, `create_time`, `create_person`
-                    )
-                    VALUES (
-                    '{$_POST['worker_id']}', '{$_POST['filial_id']}', '{$_POST['type']}',
-                    '{$_POST['month']}', '{$_POST['year']}',
-                    '{$_POST['oklad']}', '{$_POST['w_percenthours']}', '{$_POST['worker_revenue_percent']}', 
-                    '{$_POST['per_from_salary']}', '{$_POST['w_revenue_summ']}', '{$_POST['filialmoney']}','{$_POST['worker_category_id']}', 
-                    '{$_POST['w_hours']}', '{$_POST['summ']}', '{$time}', '{$_SESSION['id']}'
-                    )";
+                        INSERT INTO `fl_journal_tabels` (`worker_id`, `office_id`, `type`, 
+                        `month`, `year`,
+                        `salary`, `hours_percent`, `revenue_percent`,
+                        `per_from_salary`, `percent_summ`, `filial_summ`, `category`,
+                        `hours_count`, `summ`, `create_time`, `create_person`
+                        )
+                        VALUES (
+                        '{$_POST['worker_id']}', '{$_POST['filial_id']}', '{$_POST['type']}',
+                        '{$_POST['month']}', '{$_POST['year']}',
+                        '{$_POST['oklad']}', '{$_POST['w_percenthours']}', '{$_POST['worker_revenue_percent']}', 
+                        '{$_POST['per_from_salary']}', '{$_POST['w_revenue_summ']}', '{$_POST['filialmoney']}','{$_POST['worker_category_id']}', 
+                        '{$_POST['w_hours']}', '{$_POST['summ']}', '{$time}', '{$_SESSION['id']}'
+                        )";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
