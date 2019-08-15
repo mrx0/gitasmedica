@@ -804,7 +804,7 @@
 //            var_dump($paidouts_temp_j);
 
 
-            echo '<div class="rezult_item3print" style="display: inline-block; vertical-align: top;">';
+            echo '<div style="display: inline-block; vertical-align: top;">';
 //
 //            echo '
 //                    <li class="filterBlock">
@@ -1332,9 +1332,9 @@
 
 
 
-            //Процентное соотнощение работ начатых в текущем месяце, опираясь на запись
+            //Процентное соотношение работ начатых в текущем месяце, опираясь на запись
 
-            echo '<div class="rezult_item3print" style="display: inline-block; vertical-align: top;">';
+            echo '<div style="display: inline-block; vertical-align: top;">';
 
             //Стоматология
             if (isset($rezult_arr[5])){
@@ -1762,17 +1762,18 @@
 
 
                 echo '
-                    <!--</ul>-->
-			    </div>';
+                        <!--</ul>-->
+                    </div>';
 
             //ЗП по каждому сотруднику
-            echo '<div class="rezult_item3print" style="display: inline-block; vertical-align: top;">';
+            echo '
+                        <div style="display: inline-block; vertical-align: top;">';
 
             echo $personal_zp_str;
 
             echo '
 
-			    </div>';
+			            </div>';
 
             echo '
                     </div>
