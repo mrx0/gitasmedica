@@ -149,16 +149,66 @@
                         array_push($zapis_j[$arr['type']][$arr['worker']], $arr);
                     }
                 }
+                //var_dump($zapis_j);
                 //var_dump($zapis_j[10]);
 
 
-                if (!empty($zapis_j)){
-                    foreach ($zapis_j as $type => $type_data){
+                echo '<table border="1">';
 
+                if (!empty($zapis_j)){
+
+                    // !!! **** тест с записью
+                    include_once 'showZapisRezult.php';
+
+                    foreach ($zapis_j as $type => $type_data){
+                        //var_dump($type_data);
+
+                        echo '
+                            <tr>
+                                <td>'.$permissions_j[$type]['name'].'</td>
+                            </tr>';
+                        foreach ($type_data as $worker_id => $worker_zapis_data) {
+                            //var_dump($worker_zapis_data);
+
+                            echo '
+                            <tr>
+                                <td>'.WriteSearchUser('spr_workers', $worker_id, 'user', false).'</td>
+                            </tr>';
+
+                            foreach ($worker_zapis_data as $item) {
+                                //Время начала - конца приема
+                                $start_time_h = floor($item['start_time'] / 60);
+                                $start_time_m = $item['start_time'] % 60;
+                                if ($start_time_m < 10) $start_time_m = '0' . $start_time_m;
+                                $end_time_h = floor(($item['start_time'] + $item['wt']) / 60);
+                                if ($end_time_h > 23) $end_time_h = $end_time_h - 24;
+                                $end_time_m = ($item['start_time'] + $item['wt']) % 60;
+                                if ($end_time_m < 10) $end_time_m = '0' . $end_time_m;
+
+                                echo '
+                                <tr>
+                                    <td>'.$start_time_h . ':' . $start_time_m . ' - ' . $end_time_h . ':' . $end_time_m.'</td>
+                                    <td>'.WriteSearchUser('spr_clients', $item['patient'], 'user', false).'</td>
+                                </tr>';
+                            }
+
+                            echo '
+                            <tr>
+                                <td>';
+
+                            echo showZapisRezult($worker_zapis_data, false, false, false, false, false, false, 0, true, false);
+
+                            echo '
+                                </td>
+                            </tr>';
+                        }
                     }
                 }else{
                     echo '<span style="color: red;">В записи ничего не найдено</span>';
                 }
+
+
+                echo '</table>';
 
             }
 
