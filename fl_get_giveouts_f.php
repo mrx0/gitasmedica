@@ -261,11 +261,11 @@
 
                 $prev_month_filial_summ = 0;
 
-                if (((int)$_POST['month'] == 7) && ($_POST['year'] == 2019)){
+                //if (((int)$_POST['month'] == 7) && ($_POST['year'] == 2019)){
                     if (isset($prev_month_filial_summ_arr[$_POST['filial_id']])){
                         $prev_month_filial_summ = $prev_month_filial_summ_arr[$_POST['filial_id']];
                     }
-                }
+                //}
 
 
                 echo json_encode(array('result' => 'success', 'subtractions_j' => $subtractions_j, 'fl_refunds_j' => $fl_refunds_j, 'material_consumption_j' => $material_consumption_j, 'giveouts_j' => $giveouts_result_str, 'prev_month_filial_summ' => $prev_month_filial_summ));
