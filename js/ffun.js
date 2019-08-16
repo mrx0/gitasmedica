@@ -4711,9 +4711,9 @@
 
                     $("#SummGiveoutMonth").html(number_format((SummPrepayment + SummHolidayPay + SummHospitalPay + SummSalary + Number(prev_month_filial_summ)), 2, '.', ' '));
 
-                    // console.log(Number($("#ostatokNalAllMonth").html().replace(/\s{1,}/g, '')));
-                    // console.log(Number($("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')));
-                    // console.log(Number(prev_month_filial_summ));
+                    console.log(Number($("#ostatokNalAllMonth").html().replace(/\s{1,}/g, '')));
+                    console.log(Number($("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')));
+                    console.log(Number(prev_month_filial_summ));
 
                     $("#ostatokFinalNalAllMonth").html(number_format(
                         (Number(
