@@ -107,9 +107,9 @@
                             if ($tabel_j[0]['status'] == 7) {
                                 echo ' <span style="color: green">Проведён <i class="fa fa-check" aria-hidden="true" style="color: green;"></i></span>';
 
-                                if (($finances['reopen'] == 1) || ($god_mode)){
+                                //if (($finances['reopen'] == 1) || ($god_mode)){
                                     echo '<span style="margin-left: 20px; font-size: 60%; color: red; cursor:pointer;" onclick="deployTabelDelete(' . $_GET['id'] . ');">   Снять отметку о проведении <i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 150%;"></i></span>';
-                                }
+                                //}
 
                             } else {
                                 echo '<span style="margin-left: 20px; font-size: 60%; color: red;">Не проведён </span>';
