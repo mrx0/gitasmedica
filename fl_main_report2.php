@@ -115,28 +115,30 @@
             //Выбор месяц и год
             echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Дата: ';
             echo '
-			                <select name="iWantThisMonth" id="iWantThisMonth" style="margin-right: 5px;">';
+                            <span id="getThisCalendar">
+			                    <select name="iWantThisMonth" id="iWantThisMonth" style="margin-right: 5px;">';
             foreach ($monthsName as $mNumber => $mName){
                 $selected = '';
                 if ((int)$mNumber == (int)$month){
                     $selected = 'selected';
                 }
                 echo '
-				                <option value="'.$mNumber.'" '.$selected.'>'.$mName.'</option>';
+				                    <option value="'.$mNumber.'" '.$selected.'>'.$mName.'</option>';
             }
             echo '
-			                </select>
-			                <select name="iWantThisYear" id="iWantThisYear">';
+			                    </select>
+                                <select name="iWantThisYear" id="iWantThisYear">';
             for ($i = 2017; $i <= (int)date('Y')+2; $i++){
                 $selected = '';
                 if ($i == (int)date('Y')){
                     $selected = 'selected';
                 }
                 echo '
-				                <option value="'.$i.'" '.$selected.'>'.$i.'</option>';
+				                    <option value="'.$i.'" '.$selected.'>'.$i.'</option>';
             }
             echo '
-			                </select>
+			                    </select>
+                            </span>
 			                <span class="button_tiny" style="font-size: 90%; cursor: pointer" onclick="iWantThisDate(\'fl_main_report2.php?filial_id='. $filial_id . '\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
 			                <div style="font-size: 90%; color: rgb(125, 125, 125); float: right;">Сегодня: <a href="fl_main_report2.php" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></div>
 			            </div>';
@@ -784,6 +786,24 @@
 //          var_dump($director_summ);
 
 
+            //Получаем дефициты предыдущих месяцев
+            $prev_month_filial_summ_arr = array();
+
+            $query = "SELECT `filial_id`, `summ` FROM `fl_journal_prev_month_filial_deficit` WHERE `filial_id`='{$filial_id}' AND `year`='$year' AND `month`='$month'";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    //array_push($paidouts_temp_j, $arr);
+
+                    $prev_month_filial_summ_arr[$arr['filial_id']] = $arr['summ'];
+                }
+            }
+//            var_dump($prev_month_filial_summ_arr);
+
 
 
             //Получаем данные по выданным деньгам сверх того, что у есть в программе.
@@ -916,19 +936,19 @@
 //                20 => Литейный 59,
 //                21 => Бассейная 45
 
-            $prev_month_filial_summ_arr = array(
-                11 => 0,
-                12 => -151929,
-                13 => -169961,
-                14 => -232,
-                15 => -411380,
-                16 => -684164,
-                17 => -533,
-                18 => -16780,
-                19 => -218297,
-                20 => -323,
-                21 => 0
-            );
+//            $prev_month_filial_summ_arr = array(
+//                11 => 0,
+//                12 => -151929,
+//                13 => -169961,
+//                14 => -232,
+//                15 => -411380,
+//                16 => -684164,
+//                17 => -533,
+//                18 => -16780,
+//                19 => -218297,
+//                20 => -323,
+//                21 => 0
+//            );
 
             $prev_month_filial_summ = 0;
 
@@ -1092,7 +1112,7 @@
 
                 $personal_zp_str .= '
                         <tr style="background-color: rgba(225, 248, 220, 0.77);">
-                            <td style="width: 149px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><b style="color: rgb(0, 36, 255);">'.$permissions_j[$permissions]['name'].'</b></td>
+                            <td style="width: 149px; outline: 1px solid rgb(233, 233, 233); text-align: left;"><b style="color: rgb(0, 36, 255); font-size: 90%;">'.$permissions_j[$permissions]['name'].'</b></td>
                             <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
                             <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
                             <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
@@ -1289,17 +1309,17 @@
                     <div style="border: 1px solid #CCC;">
                         <li class="filterBlock">
                             <div class="cellLeft" style="width: 310px; min-width: 310px; font-size: 120%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
-                               <b>Дефицит текущего месяца</b>
+                               <b>Дефицит текущего месяца</b> 
                             </div>
                         </li>';
 
             echo '
                         <li class="filterBlock">
                             <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: rgba(219, 215, 214, 0.44);;">
-                                
+                                <button class="ahref b2 no_print" onclick="showPrevMonthDeficitAdd('.$filial_id.');">Сохранить</button>
                             </div>
                             <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: rgba(219, 215, 214, 0.44);; text-align: right;">
-                                <b>'.$ostatok.'</b>
+                                <div id="ostatokDeficit" style="font-weight: bold;">'.$ostatok.'</div>
                             </div>
                         </li>';
             echo '
@@ -1887,8 +1907,8 @@
                     echo '
                                 <li class="cellsBlock" style="width: auto; '.$bgColor.'">';
                     echo '
-                                    <div class="cellOrder" style="width: 120px; min-width: 120px; position: relative; border-right: none; border-top: none;">
-                                        <b>Расходный ордер #' . $item['id'] . '</b><br>от ' . date('d.m.y', strtotime($item['date_in'])) . '<br>
+                                    <div class="cellOrder" style="width: 120px; min-width: 120px; position: relative; border-right: none; border-top: none; font-size: 90%;">
+                                        <b>Расх. ордер #' . $item['id'] . '</b><!--<br>от ' . date('d.m.y', strtotime($item['date_in'])) . '<br>-->
                                         <span style="font-size: 90%;  color: #555;">';
 
 
@@ -1912,7 +1932,7 @@
                                     </div>
                                     <div class="cellName" style="width: 90px; min-width: 90px; border-right: none; border-top: none;">
                                         <div style="text-align: right;">
-                                            <span class="calculateInvoice" style="font-size: 13px">' . $item['summ'] . '</span>
+                                            <span class="calculateInvoice" style="font-size: 90%; font-style: normal; color: #333;">' . $item['summ'] . '</span>
                                         </div>
                                     </div>
                                     <div class="cellName" style="border-right: none; border-top: none;">

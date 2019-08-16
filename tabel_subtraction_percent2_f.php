@@ -97,7 +97,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         }
         //var_dump($tabel_j);
-        var_dump($summ4ZP_All);
+        //var_dump($summ4ZP_All);
 
 
         if (!empty($tabel_j)) {

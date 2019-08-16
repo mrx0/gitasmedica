@@ -1732,6 +1732,46 @@
         });
     }
 
+    //Сохраняем дефицитную сумму в указанный месяц
+    function Ajax_PrevMonthDeficitAdd (filial_id){
+        //console.log();
+
+        var link = "fl_add_prev_month_filial_deficit_f.php";
+        //console.log(link);
+
+        var Data = {
+            filial_id: filial_id,
+            summ: Number($("#ostatokDeficit").html().replace(/\s{1,}/g, '')),
+            month:  $("#iWantThisMonthh_prevdef").val(),
+            year:  $("#iWantThisYearh_prevdef").val()
+        };
+        //console.log(Data);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: Data,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                if(res.result == "success"){
+                    location.reload();
+                }else{
+                    alert(res.data);
+                    //$("#overlay").hide();
+                    $('#errrror').html('<div class="query_neok">'+res.data+'</div>');
+                }
+            }
+        });
+    }
+
     //Показываем блок с ночными сменами
     function Ajax_emptySmenaAddINTabel (tabel_id, emptySmens){
         //console.log(tabel_id);
@@ -1805,6 +1845,68 @@
                             })
                             .append('<div style="margin: 10px;">Кол-во ночных смен: <span class="calculateInsInvoice">'+nightSmenaCount+'</span></div>')
                             .append('<div style="margin: 10px;">Общая сумма: <span class="calculateInvoice">'+nightSmenaCount*1000+'</span> руб.</div>')
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "bottom": "2px",
+                                "width": "100%"
+                            })
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                            )
+                    )
+            );
+
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+    }
+
+    //Показываем промежуточный блок для добавления дефицита
+    function showPrevMonthDeficitAdd (filial_id){
+
+        $('#overlay').show();
+
+        var deficit_summ = $("#ostatokDeficit").html();
+        //console.log(deficit_summ);
+
+        // console.log($("#iWantThisMonth").html());
+        // console.log($("#iWantThisYear").html());
+        var calendar_month = $("#iWantThisMonth").html();
+        var calendar_year = $("#iWantThisYear").html();
+
+        var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_PrevMonthDeficitAdd('+filial_id+')">';
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative"
+                    })
+                    .append('<span style="margin: 5px;"><i>Выберите в какой месяц необходимо добавить и нажмите сохранить</i></span>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "10px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%"
+                            })
+                            .append('<select name="iWantThisMonth" id="iWantThisMonthh_prevdef" style="margin-right: 5px;">'+calendar_month+'</select>')
+                            .append('<select name="iWantThisYear" id="iWantThisYearh_prevdef">'+calendar_year+'</select>')
+                            .append('<div style="margin: 10px;">Cумма: <span class="calculateInvoice">'+deficit_summ+'</span> руб.</div>')
                     )
                     .append(
                         $('<div/>')
