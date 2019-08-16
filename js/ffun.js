@@ -4286,16 +4286,17 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                //console.log(res);
+                // console.log(res);
                 //$('#errrror').html(res.subtractions_j);
-                console.log(res.subtractions_j);
+                // console.log(res.subtractions_j);
                 //console.log(res.subtractions_j.length);
 
                 if(res.result == 'success') {
                     //console.log('success');
                     //$('#errrror').html(res.data);
 
-                    var prev_month_filial_summ = number_format((res.prev_month_filial_summ), 2, '.', ' ');
+                    //var prev_month_filial_summ = number_format((res.prev_month_filial_summ), 2, '.', ' ');
+                    var prev_month_filial_summ = Number(res.prev_month_filial_summ);
 
                     //var subtractionsSumm_arr = [];
 
@@ -4371,7 +4372,7 @@
 
 
 
-                    $("#prev_month_filial_summ").html(prev_month_filial_summ);
+                    $("#prev_month_filial_summ").html(number_format((prev_month_filial_summ), 2, '.', ' '));
 
 
                     //- Итог общий
@@ -4698,6 +4699,8 @@
                             Number(
                                 $("#summMinusAllMonth").html().replace(/\s{1,}/g, '')
                             )
+                            +
+                            prev_month_filial_summ
                         )
                         , 2, '.', ' ')
                     );
@@ -4710,6 +4713,10 @@
 
                     $("#SummGiveoutMonth").html(number_format((SummPrepayment + SummHolidayPay + SummHospitalPay + SummSalary), 2, '.', ' '));
 
+                    // console.log(Number($("#ostatokNalAllMonth").html().replace(/\s{1,}/g, '')));
+                    // console.log(Number($("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')));
+                    // console.log(Number(prev_month_filial_summ));
+
                     $("#ostatokFinalNalAllMonth").html(number_format(
                         (Number(
                                 $("#ostatokNalAllMonth").html().replace(/\s{1,}/g, '')
@@ -4718,8 +4725,6 @@
                             Number(
                                 $("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')
                             )
-                            +
-                            Number(prev_month_filial_summ)
                         )
                         , 2, '.', ' ')
                     );
@@ -4732,8 +4737,6 @@
                             Number(
                                 $("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')
                             )
-                            +
-                            Number(prev_month_filial_summ)
                         )
                         , 2, '.', ' ')
                     );
@@ -4741,7 +4744,7 @@
 
 
                     //Выдачи из кассы (подробно за месяц)
-                    var giveouts_j = res.giveouts_j
+                    var giveouts_j = res.giveouts_j;
 
                     $("#giveout_cash").html(giveouts_j);
 

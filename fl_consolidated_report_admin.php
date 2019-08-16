@@ -616,6 +616,10 @@
                                     <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Наличные</div>    
                                 </div>
                                 <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">остаток за прошлый месяц</div>
+                                    <div id="prev_month_filial_summ" class="cellRight" style="text-align: right;">-</div>
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
                                     <div class="cellLeft">наличные касса</div>
                                     <div id="SummNalAllMonthItog2" class="cellRight" style="text-align: right;">-</div>
                                 </div>
@@ -668,10 +672,6 @@
                                     <div class="cellLeft">материалы</div>
                                     <div id="SummMaterialGiveout" class="cellRight" style="text-align: right;">-</div>
                                 </div>-->
-                                <div class="cellsBlock" style="font-size: 14px;">
-                                    <div class="cellLeft">остаток за прошлый месяц</div>
-                                    <div id="prev_month_filial_summ" class="cellRight" style="text-align: right;">-</div>
-                                </div>
                                 <div class="cellsBlock" style="font-size: 14px;">
                                     <div class="cellLeft" style="font-weight: bold;">итого</div>
                                     <div id="SummGiveoutMonth" class="cellRight" style="font-weight: bold; text-align: right;">-</div>   

@@ -306,6 +306,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 $summ4ZP[$tabel_j['office_id']] = $summ4ZP_All;
             }
             //var_dump($itog_filials_percents);
+            //var_dump($summ4ZP);
 
             //Посчитаем по сколько могли бы выдать с каждого филиала на текущий момент, если бы выдавали со всей суммы
             //пропорционально полученным деньгам

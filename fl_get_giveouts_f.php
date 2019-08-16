@@ -227,27 +227,48 @@
 //                20 => Литейный 59,
 //                21 => Бассейная 45
 
-                $prev_month_filial_summ_arr = array(
-                    11 => 0,
-                    12 => -151929,
-                    13 => -169961,
-                    14 => -232,
-                    15 => -411380,
-                    16 => -684164,
-                    17 => -533,
-                    18 => -16780,
-                    19 => -218297,
-                    20 => -323,
-                    21 => 0
-                );
+//                $prev_month_filial_summ_arr = array(
+//                    11 => 0,
+//                    12 => -151929,
+//                    13 => -169961,
+//                    14 => -232,
+//                    15 => -411380,
+//                    16 => -684164,
+//                    17 => -533,
+//                    18 => -16780,
+//                    19 => -218297,
+//                    20 => -323,
+//                    21 => 0
+//                );
+
+                //Получаем дефициты предыдущих месяцев
+                $prev_month_filial_summ_arr = array();
+
+                $query = "SELECT `filial_id`, `summ` 
+                        FROM `fl_journal_prev_month_filial_deficit` 
+                        WHERE `filial_id`='{$_POST['filial_id']}' AND `year`='{$_POST['year']}' 
+                        AND (`month`='0{$_POST['month']}' OR `month`='".(int)$_POST['month']."')";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        //array_push($paidouts_temp_j, $arr);
+
+                        $prev_month_filial_summ_arr[$arr['filial_id']] = $arr['summ'];
+                    }
+                }
+//            var_dump($prev_month_filial_summ_arr);
 
                 $prev_month_filial_summ = 0;
 
-                if (((int)$_POST['month'] == 7) && ($_POST['year'] == 2019)){
+                //if (((int)$_POST['month'] == 7) && ($_POST['year'] == 2019)){
                     if (isset($prev_month_filial_summ_arr[$_POST['filial_id']])){
                         $prev_month_filial_summ = $prev_month_filial_summ_arr[$_POST['filial_id']];
                     }
-                }
+                //}
 
 
                 echo json_encode(array('result' => 'success', 'subtractions_j' => $subtractions_j, 'fl_refunds_j' => $fl_refunds_j, 'material_consumption_j' => $material_consumption_j, 'giveouts_j' => $giveouts_result_str, 'prev_month_filial_summ' => $prev_month_filial_summ));

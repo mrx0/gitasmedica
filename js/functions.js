@@ -554,7 +554,7 @@
 				iname: $("#i").val(),
 				oname: $("#o").val(),
 
-				sex:sex_value,
+				sex:sex_value
 			},
 			// тип передачи данных
 			dataType: "json",
@@ -609,11 +609,11 @@
 
 							sex:sex_value,
 
-							session_id: session_id,
+							session_id: session_id
 						},
 						success:function(data){
-							/*$("#errrror").html(data);*/
-							$("#data").html(data);
+							$("#errrror").html(data);
+							//$("#errrror").html(data);
 						}
 					})
 				// в случае ошибок в форме

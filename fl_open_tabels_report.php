@@ -1,7 +1,7 @@
 <?php
 
-//fl_main_report2.php
-//Финальный отчет v2.0
+//fl_open_tabels_report.php
+//Отчёт не закрытые табели
 
 	require_once 'header.php';
 
