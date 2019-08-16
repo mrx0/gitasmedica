@@ -669,12 +669,12 @@
                                     <div id="SummMaterialGiveout" class="cellRight" style="text-align: right;">-</div>
                                 </div>-->
                                 <div class="cellsBlock" style="font-size: 14px;">
-                                    <div class="cellLeft" style="font-weight: bold;">итого</div>
-                                    <div id="SummGiveoutMonth" class="cellRight" style="font-weight: bold; text-align: right;">-</div>   
-                                </div>
-                                <div class="cellsBlock" style="font-size: 14px;">
                                     <div class="cellLeft">остаток за прошлый месяц</div>
                                     <div id="prev_month_filial_summ" class="cellRight" style="text-align: right;">-</div>
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft" style="font-weight: bold;">итого</div>
+                                    <div id="SummGiveoutMonth" class="cellRight" style="font-weight: bold; text-align: right;">-</div>   
                                 </div>
                                 <div class="cellsBlock" style="font-size: 14px;">
                                     <div class="cellLeft" style="font-weight: bold; background-color: rgba(255, 0, 0, 0.37);">остаток в кассе</div>

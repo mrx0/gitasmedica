@@ -4723,8 +4723,8 @@
                             Number(
                                 $("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')
                             )
-                            +
-                            Number(prev_month_filial_summ)
+                            /*+
+                            Number(prev_month_filial_summ)*/
                         )
                         , 2, '.', ' ')
                     );
@@ -4737,8 +4737,8 @@
                             Number(
                                 $("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')
                             )
-                            +
-                            Number(prev_month_filial_summ)
+                            /*+
+                            Number(prev_month_filial_summ)*/
                         )
                         , 2, '.', ' ')
                     );
