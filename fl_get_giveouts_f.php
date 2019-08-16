@@ -244,7 +244,10 @@
                 //Получаем дефициты предыдущих месяцев
                 $prev_month_filial_summ_arr = array();
 
-                $query = "SELECT `filial_id`, `summ` FROM `fl_journal_prev_month_filial_deficit` WHERE `filial_id`='{$_POST['filial_id']}' AND `year`='{$_POST['year']}' AND `month`='{$_POST['month']}'";
+                $query = "SELECT `filial_id`, `summ` 
+                        FROM `fl_journal_prev_month_filial_deficit` 
+                        WHERE `filial_id`='{$_POST['filial_id']}' AND `year`='{$_POST['year']}' 
+                        AND (`month`='0{$_POST['month']}' OR `month`='".(int)$_POST['month']."')";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
