@@ -725,22 +725,23 @@
                     //var_dump($arr);
                     //array_push($subtractions_j, $arr);
                     if ($arr['noch'] != 1) {
-                        if (!isset($subtractions_j[$arr['permissions']])) {
-                            $subtractions_j[$arr['permissions']] = array();
-                        }
-                        if (!isset($subtractions_j[$arr['permissions']][$arr['worker_id']])) {
-                            $subtractions_j[$arr['permissions']][$arr['worker_id']] = array();
+                        if ($arr['type'] != 4) {
+                            if (!isset($subtractions_j[$arr['permissions']])) {
+                                $subtractions_j[$arr['permissions']] = array();
+                            }
+                            if (!isset($subtractions_j[$arr['permissions']][$arr['worker_id']])) {
+                                $subtractions_j[$arr['permissions']][$arr['worker_id']] = array();
 
-                            $subtractions_j[$arr['permissions']][$arr['worker_id']]['data'] = array();
-                            $subtractions_j[$arr['permissions']][$arr['worker_id']]['name'] = $arr['name'];
-                        }
-                        if (!isset($subtractions_j[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']])) {
-                            $subtractions_j[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']] = array();
-                        }
-                        array_push($subtractions_j[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']], $arr);
+                                $subtractions_j[$arr['permissions']][$arr['worker_id']]['data'] = array();
+                                $subtractions_j[$arr['permissions']][$arr['worker_id']]['name'] = $arr['name'];
+                            }
+                            if (!isset($subtractions_j[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']])) {
+                                $subtractions_j[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']] = array();
+                            }
+                            array_push($subtractions_j[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']], $arr);
 
-                        $subtractions_summ += $arr['summ'];
-
+                            $subtractions_summ += $arr['summ'];
+                        }
                         if ($arr['type'] == 4){
                             $subtractions_summ_beznal += $arr['summ'];
                         }
