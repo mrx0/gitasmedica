@@ -1319,7 +1319,7 @@
             //);
             //var_dump($subtractions_summ_beznal);
 
-            $ostatok = $cashbox_nal + $arenda - $giveoutcash_summ - $subtractions_summ - $paidouts_temp_summ - $bank_summ - $director_summ + $prev_month_filial_summ + $subtractions_summ_beznal;
+            $ostatok = $cashbox_nal + $arenda - $giveoutcash_summ - $subtractions_summ - $paidouts_temp_summ - $bank_summ - $director_summ + $prev_month_filial_summ;
 
             $ostatok = number_format($ostatok, 0, '.', ' ');
 
