@@ -692,7 +692,10 @@
 
             //Получаем данные по выданным деньгам на филилале (зп, авансы и тд.)
             $subtractions_j = array();
+            //Общая сумма
             $subtractions_summ = 0;
+            //Выдано на карту (безнал)
+            $subtractions_summ_beznal = 0;
 
             //По филиально в зависимости от оплат
 //            $query = "SELECT flj_sub.*, sw.	permissions, sw.name
@@ -737,6 +740,10 @@
                         array_push($subtractions_j[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']], $arr);
 
                         $subtractions_summ += $arr['summ'];
+
+                        if ($arr['type'] == 4){
+                            $subtractions_summ_beznal += $arr['summ'];
+                        }
                     }
 
                 }
@@ -811,6 +818,7 @@
             //Вносится вручную
             $paidouts_temp_j = array();
             $paidouts_temp_summ = 0;
+
 
             $query = "SELECT * FROM `fl_journal_paidouts_temp` WHERE `filial_id`='{$filial_id}' AND `year`='$year' AND `month`='$month'";
 
@@ -1297,9 +1305,19 @@
 
 
             //Остаток
-            //var_dump($cashbox_nal + $beznal + $arenda - $giveoutcash_summ - $subtractions_summ - $bank_summ - $director_summ);
+            //var_dump(
+            //$cashbox_nal
+            // + $arenda
+            // - $giveoutcash_summ
+            // - $subtractions_summ
+            // - $paidouts_temp_summ
+            // - $bank_summ
+            // - $director_summ
+            // + $prev_month_filial_summ
+            // - $subtractions_summ_beznal
+            //);
 
-            $ostatok = $cashbox_nal + $arenda - $giveoutcash_summ - $subtractions_summ - $paidouts_temp_summ - $bank_summ - $director_summ + $prev_month_filial_summ;
+            $ostatok = $cashbox_nal + $arenda - $giveoutcash_summ - $subtractions_summ - $paidouts_temp_summ - $bank_summ - $director_summ + $prev_month_filial_summ - $subtractions_summ_beznal;
 
             $ostatok = number_format($ostatok, 0, '.', ' ');
 
