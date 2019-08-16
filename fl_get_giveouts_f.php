@@ -227,19 +227,37 @@
 //                20 => Литейный 59,
 //                21 => Бассейная 45
 
-                $prev_month_filial_summ_arr = array(
-                    11 => 0,
-                    12 => -151929,
-                    13 => -169961,
-                    14 => -232,
-                    15 => -411380,
-                    16 => -684164,
-                    17 => -533,
-                    18 => -16780,
-                    19 => -218297,
-                    20 => -323,
-                    21 => 0
-                );
+//                $prev_month_filial_summ_arr = array(
+//                    11 => 0,
+//                    12 => -151929,
+//                    13 => -169961,
+//                    14 => -232,
+//                    15 => -411380,
+//                    16 => -684164,
+//                    17 => -533,
+//                    18 => -16780,
+//                    19 => -218297,
+//                    20 => -323,
+//                    21 => 0
+//                );
+
+                //Получаем дефициты предыдущих месяцев
+                $prev_month_filial_summ_arr = array();
+
+                $query = "SELECT `filial_id`, `summ` FROM `fl_journal_prev_month_filial_deficit` WHERE `filial_id`='{$_POST['filial_id']}' AND `year`='{$_POST['year']}' AND `month`='{$_POST['month']}'";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        //array_push($paidouts_temp_j, $arr);
+
+                        $prev_month_filial_summ_arr[$arr['filial_id']] = $arr['summ'];
+                    }
+                }
+//            var_dump($prev_month_filial_summ_arr);
 
                 $prev_month_filial_summ = 0;
 
