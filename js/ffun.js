@@ -4296,7 +4296,7 @@
                     //$('#errrror').html(res.data);
 
                     //var prev_month_filial_summ = number_format((res.prev_month_filial_summ), 2, '.', ' ');
-                    var prev_month_filial_summ = res.prev_month_filial_summ;
+                    var prev_month_filial_summ = Number(res.prev_month_filial_summ);
 
                     //var subtractionsSumm_arr = [];
 
@@ -4711,7 +4711,7 @@
                     $("#SummHospitalPayGiveout").html(number_format((SummHospitalPay), 2, '.', ' '));
                     $("#SummSalaryGiveout").html(number_format((SummSalary), 2, '.', ' '));
 
-                    $("#SummGiveoutMonth").html(number_format((SummPrepayment + SummHolidayPay + SummHospitalPay + SummSalary + Number(prev_month_filial_summ)), 2, '.', ' '));
+                    $("#SummGiveoutMonth").html(number_format((SummPrepayment + SummHolidayPay + SummHospitalPay + SummSalary), 2, '.', ' '));
 
                     // console.log(Number($("#ostatokNalAllMonth").html().replace(/\s{1,}/g, '')));
                     // console.log(Number($("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')));
