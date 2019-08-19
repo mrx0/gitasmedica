@@ -1190,6 +1190,13 @@
                     $personal_zp_str .= '
                         </tr>';
                 }
+
+                $zp_percent = 0;
+
+                if (($cashbox_nal + $beznal + $insure_summ) > 0){
+                    $zp_percent = number_format(($permission_summ * 100 / ($cashbox_nal + $beznal + $insure_summ)), 2, '.', ' ')
+                }
+
                 echo '
                         <li class="filterBlock">
                             <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: '.$bg_color.';">
@@ -1197,7 +1204,7 @@
                             </div>
                             <div class="cellRight" style="width: 180px; min-width: 180px; background-color: '.$bg_color.';">
                                 <div style="float:left;">' . number_format($permission_summ, 0, '.', ' ') . '</div>
-                                <div style="float:right;">' . number_format(($permission_summ * 100 / ($cashbox_nal + $beznal + $insure_summ)), 2, '.', ' ') . '%</div>
+                                <div style="float:right;">' . $zp_percent . '%</div>
                             </div>
                         </li>';
             }
