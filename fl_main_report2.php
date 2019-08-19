@@ -1194,7 +1194,7 @@
                 $zp_percent = 0;
 
                 if (($cashbox_nal + $beznal + $insure_summ) > 0){
-                    $zp_percent = number_format(($permission_summ * 100 / ($cashbox_nal + $beznal + $insure_summ)), 2, '.', ' ')
+                    $zp_percent = number_format(($permission_summ * 100 / ($cashbox_nal + $beznal + $insure_summ)), 2, '.', ' ');
                 }
 
                 echo '
