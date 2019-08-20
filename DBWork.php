@@ -1156,6 +1156,31 @@
 		return ($mysql_insert_id);
 	}
 
+	//Вставка и обновление Абонемента из-под Web
+	function WriteAbonToDB_Edit ($session_id, $num, $abon_type, $min_count, $exp_days, $summ){
+
+        $msql_cnnct = ConnectToDB ();
+
+        $time = date('Y-m-d H:i:s', time());
+
+		$query = "INSERT INTO `journal_abonement_solar` (
+			`num`, `abon_type`, `summ`, `min_count`, `exp_days`, `create_time`, `create_person`)
+			VALUES (
+			'{$num}', '{$abon_type}', '{$summ}', '{$min_count}', '{$exp_days}', '{$time}', '{$session_id}') ";
+
+		//mysqli_query($query) or die($query.' -> '.mysql_error());
+		//mysqli_close();
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        //ID новой позиции
+        $mysql_insert_id = mysqli_insert_id($msql_cnnct);
+
+		//логирование
+		AddLog (GetRealIp(), $session_id, '', 'Добавлен абонемент. Номер: ['.$num.']. Сумма: ['.$summ.'] руб.');
+
+		return ($mysql_insert_id);
+	}
+
 	//Редактирование Сертификата из-под Web
 	function WriteCertToDB_Update ($session_id, $id, $name, $contract, $contacts){
 		$old = '';
@@ -1187,7 +1212,38 @@
 		AddLog (GetRealIp(), $session_id, $old, 'Отредактирована лаборатория ['.$id.']. ['.date('d.m.y H:i', $time).']. Название: ['.$name.']. Договор: ['.$contract.']. Контакты: ['.$contacts.'].');
 	}
 
-	//Вставка и обновление специализации из-под Web
+	//Редактирование Абонемента из-под Web !!! доделать
+	function WriteAbonToDB_Update ($session_id, $id, $name, $contract, $contacts){
+//		$old = '';
+//
+//        $msql_cnnct = ConnectToDB ();
+//
+//        //Для лога соберем сначала то, что было в записи.
+//		$query = "SELECT * FROM `journal_abonement_solar` WHERE `id`=$id";
+//
+//        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//		$number = mysqli_num_rows($res);
+//
+//		if ($number != 0){
+//			$arr = mysqli_fetch_assoc($res);
+//			$old = 'Название: ['.$arr['name'].']. Договор: ['.$arr['contract'].']. Контакты: ['.$arr['contacts'].']';
+//		}else{
+//			$old = 'Не нашли старую запись.';
+//		}
+//		$time = time();
+//
+//		$query = "UPDATE `journal_abonement_solar` SET `name`='{$name}', `contract`='{$contract}', `contacts`='{$contacts}' WHERE `id`='{$id}'";
+//
+//        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//        //CloseDB ($msql_cnnct);
+//
+//		//логирование
+//		AddLog (GetRealIp(), $session_id, $old, 'Отредактирована лаборатория ['.$id.']. ['.date('d.m.y H:i', $time).']. Название: ['.$name.']. Договор: ['.$contract.']. Контакты: ['.$contacts.'].');
+	}
+
+	//Вставка и обновление специализации из-под Web !!! доделать
 	function WriteToDB_EditSpecialization ($name, $permission, $session_id){
 
         $msql_cnnct = ConnectToDB ();
@@ -1212,35 +1268,35 @@
 		return ($mysql_insert_id);
 	}
 
-	//Редактирование специализации из-под Web
+	//Редактирование специализации из-под Web !!! доделать
 	function WriteSpecializationToDB_Update ($id, $name, $session_id){
-		$old = '';
-
-        $msql_cnnct = ConnectToDB ();
-
-        //Для лога соберем сначала то, что было в записи.
-		$query = "SELECT * FROM `spr_labor` WHERE `id`=$id";
-
-        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-		$number = mysqli_num_rows($res);
-
-		if ($number != 0){
-			$arr = mysqli_fetch_assoc($res);
-			$old = 'Название: ['.$arr['name'].']. Договор: ['.$arr['contract'].']. Контакты: ['.$arr['contacts'].']';
-		}else{
-			$old = 'Не нашли старую запись.';
-		}
-		$time = time();
-
-		$query = "UPDATE `spr_labor` SET `name`='{$name}', `contract`='{$contract}', `contacts`='{$contacts}' WHERE `id`='{$id}'";
-
-        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-        //CloseDB ($msql_cnnct);
-
-		//логирование
-		AddLog (GetRealIp(), $session_id, $old, 'Отредактирована лаборатория ['.$id.']. ['.date('d.m.y H:i', $time).']. Название: ['.$name.']. Договор: ['.$contract.']. Контакты: ['.$contacts.'].');
+//		$old = '';
+//
+//        $msql_cnnct = ConnectToDB ();
+//
+//        //Для лога соберем сначала то, что было в записи.
+//		$query = "SELECT * FROM `spr_labor` WHERE `id`=$id";
+//
+//        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//		$number = mysqli_num_rows($res);
+//
+//		if ($number != 0){
+//			$arr = mysqli_fetch_assoc($res);
+//			$old = 'Название: ['.$arr['name'].']. Договор: ['.$arr['contract'].']. Контакты: ['.$arr['contacts'].']';
+//		}else{
+//			$old = 'Не нашли старую запись.';
+//		}
+//		$time = time();
+//
+//		$query = "UPDATE `spr_labor` SET `name`='{$name}', `contract`='{$contract}', `contacts`='{$contacts}' WHERE `id`='{$id}'";
+//
+//        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//        //CloseDB ($msql_cnnct);
+//
+//		//логирование
+//		AddLog (GetRealIp(), $session_id, $old, 'Отредактирована лаборатория ['.$id.']. ['.date('d.m.y H:i', $time).']. Название: ['.$name.']. Договор: ['.$contract.']. Контакты: ['.$contacts.'].');
 	}
 
 	
@@ -1475,6 +1531,33 @@
 	
 	//Выборка для быстрого поиска сертификата
 	function SelForFastSearchCert ($datatable, $search_data){
+
+        $msql_cnnct = ConnectToDB ();
+
+        $rez = array();
+
+		//!Использовать надо везде. Очищение данных от мусора
+		$search_data = trim(strip_tags(stripcslashes(htmlspecialchars($search_data))));
+		$datatable = trim(strip_tags(stripcslashes(htmlspecialchars($datatable))));
+
+		//$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' LIMIT 5";
+		$query = "SELECT * FROM `$datatable` WHERE (`num` LIKE '{$search_data}%') AND `status`<> 9 ORDER BY `num` ASC LIMIT 5";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
+		if ($number != 0){
+			while ($arr = mysqli_fetch_assoc($res)){
+				//echo "\n<li>".$row["name"]."</li>"; //$row["name"] - имя таблицы
+				array_push($rez, $arr);
+			}
+		}
+
+		return $rez;
+	}
+
+	//Выборка для быстрого поиска абонемента
+	function SelForFastSearchAbon ($datatable, $search_data){
 
         $msql_cnnct = ConnectToDB ();
 

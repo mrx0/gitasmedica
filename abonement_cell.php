@@ -1,7 +1,7 @@
 <?php
 
-//cert_cell.php
-//Продать сертификат
+//abonement_cell.php
+//Продать абонемент
 
 require_once 'header.php';
 
@@ -13,18 +13,39 @@ if ($enter_ok){
             include_once 'DBWork.php';
             include_once 'functions.php';
 
-            $cert_j = SelDataFromDB('journal_cert', $_GET['id'], 'id');
-            //var_dump($cert_j);
+            $filials_j = getAllFilials(true, false, false);
+            //var_dump($filials_j);
 
-            if ($cert_j != 0){
+            $abonement_j = SelDataFromDB('journal_abonement_solar', $_GET['id'], 'id');
+            //var_dump($abonement_j);
+
+            if ($abonement_j != 0){
+
+                $abon_type_name = '';
+
+                $msql_cnnct = ConnectToDB ();
+
+                $query = "SELECT `name` FROM `spr_solar_abonements` WHERE `id` = '{$abonement_j[0]['abon_type']}' LIMIT 1";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0) {
+                    $arr = mysqli_fetch_assoc($res);
+
+                    $abon_type_name = $arr['name'];
+                }
+                //var_dump($abon_types_j);
+
                 echo '
 						<div id="status">
 							<header>
                                 <div class="nav">
-                                    <a href="certificates.php" class="b">Сертификаты</a>
+                                    <a href="abonements.php" class="b">Абонементы</a>
                                 </div>
 								<h2>
-									Продать сертификат <a href="certificate.php?id='.$cert_j[0]['id'].'" class="ahref">#'.$cert_j[0]['id'].'</a>';
+									Продать абонемент <a href="abonement.php?id='.$abonement_j[0]['id'].'" class="ahref">#'.$abonement_j[0]['id'].'</a>';
 
 
                 echo '
@@ -40,22 +61,39 @@ if ($enter_ok){
                     echo '
 								<div class="cellsBlock2">
 									<div class="cellLeft">Номер</div>
-									<div class="cellRight">'.$cert_j[0]['num'].'</div>
+									<div class="cellRight">'.$abonement_j[0]['num'].'</div>
 								</div>
 									
 								<div class="cellsBlock2">
-									<div class="cellLeft">Номинал</div>
-									<div class="cellRight">'.$cert_j[0]['nominal'].' руб.</div>
+									<div class="cellLeft">Название</div>
+									<div class="cellRight">'.$abon_type_name.'</div>
 								</div>';
+
+                    echo '
+                                <div class="cellsBlock2">
+                                    <div class="cellLeft">Срок годности (дней)</div>
+                                    <div class="cellRight">
+                                        '.$abonement_j[0]['exp_days'].'
+                                    </div>
+                                </div>';
+
+                    echo '
+                                <div class="cellsBlock2">
+                                    <div class="cellLeft">Всего минут</div>
+                                    <div class="cellRight">
+                                        '.$abonement_j[0]['min_count'].'
+                                    </div>
+                                </div>';
+
                     echo '								
 								<div class="cellsBlock2">
 									<div class="cellLeft">Филиал</div>
 									<div class="cellRight">';
 
-                    $offices_j = SelDataFromDB('spr_filials', $_SESSION['filial'], 'offices');
+                    //$offices_j = SelDataFromDB('spr_filials', $_SESSION['filial'], 'offices');
 
-                    if ($offices_j != 0) {
-                        echo $offices_j[0]['name'].'
+                    if (!empty($filials_j)) {
+                        echo $filials_j[$_SESSION['filial']]['name'].'
                                 <input type="hidden" id="filial_id" name="filial_id" value="'.$_SESSION['filial'].'">';
                     }
 
@@ -95,30 +133,18 @@ if ($enter_ok){
                     }
 
                     echo '
-                                <div class="cellsBlock2">
-                                    <div class="cellLeft">Срок годности (месяцев)</div>
-                                    <div class="cellRight">
-                                        <select name="expirationDate" id="expirationDate">
-                                                <option value="3">3</option>
-                                                <option value="6">6</option>
-                                                <option value="12">12</option>
-                                        </select>
-                                    </div>
-                                </div>';
-
-                    echo '
 								<div class="cellsBlock2">
 									<div class="cellLeft">
 									    Цена продажи(руб.)<br>
 									    <span style="font-size: 70%">если не соответствует номиналу</span>
 									</div>
 									<div class="cellRight">
-									    <input type="text" name="cell_price" id="cell_price" value="'.$cert_j[0]['nominal'].'">
+									    <input type="text" name="cell_price" id="cell_price" value="'.$abonement_j[0]['summ'].'">
                                         <label id="cell_price_error" class="error"></label>
 									</div>
 								</div>
                                 <div id="errror"></div>   
-                                <input type="button" class="b" value="Продать" onclick="showCertCell('.$cert_j[0]['id'].')">';
+                                <input type="button" class="b" value="Продать" onclick="showAbonCell('.$abonement_j[0]['id'].')">';
 
                 }else{
                     echo '
