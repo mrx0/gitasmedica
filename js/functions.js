@@ -1707,6 +1707,7 @@
 
     //Добавляем/редактируем в базу абонемент
     function  Ajax_abon_add(id, mode, reqData){
+    	//console.log(mode);
 
         var link = "abon_add_f.php";
 
@@ -1730,6 +1731,8 @@
             },
             // действие, при ответе с сервера
             success:function(data){
+            	//console.log(data);
+
                 if(data.result == 'success') {
                     //console.log('success');
                     $('#data').html(data.data);

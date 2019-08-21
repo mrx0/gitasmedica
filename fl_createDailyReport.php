@@ -228,9 +228,12 @@
                     $SummCertBeznal = 0;
                     $CertCount = 0;
                     $SummGiveOutCash = 0;
+                    $SummAbonNal = 0;
+                    $SummAbonBeznal = 0;
+                    $AbonCount = 0;
 
                     $result = ajaxShowResultCashbox($datastart, $dataend, $filial_id, 0, 1, false);
-                    //var_dump($result);
+                    var_dump($result);
 
                     if (!empty($result)) {
                         if (!empty($result['rezult'])) {
@@ -243,6 +246,7 @@
                                 }
                             }
                         }
+                        //сертификаты
                         if (!empty($result['rezult_cert'])) {
 
                             $CertCount = count($result['rezult_cert']);
@@ -253,6 +257,20 @@
                                 }
                                 if ($item['summ_type'] == 2) {
                                     $SummCertBeznal += $item['cell_price'];
+                                }
+                            }
+                        }
+                        //абонементы
+                        if (!empty($result['rezult_abon'])) {
+
+                            $AbonCount = count($result['rezult_abon']);
+
+                            foreach ($result['rezult_abon'] as $item) {
+                                if ($item['summ_type'] == 1) {
+                                    $SummAbonNal += $item['cell_price'];
+                                }
+                                if ($item['summ_type'] == 2) {
+                                    $SummмAbonBeznal += $item['cell_price'];
                                 }
                             }
                         }
@@ -268,7 +286,11 @@
                     var_dump($SummBeznal);
                     var_dump($CertCount);
                     var_dump($SummCertNal);
-                    var_dump($SummCertBeznal);*/
+                    var_dump($SummCertBeznal);
+                    var_dump($AbonCount);
+                    var_dump($SummAbonNal);
+                    var_dump($SummAbonBeznal);
+                    */
 
                     echo '
                                 <div class="cellsBlock400px" style="font-size: 90%;">
@@ -282,6 +304,9 @@
                                         <div style="margin: 6px 0 2px;">Продано сертификатов: <b><i id="CertCount" class="">' . $CertCount . '</i></b> шт.</div>
                                         <div style="margin: 2px 0;">- наличная оплата: <b><i id="SummCertNal" class="allSummNal">' . $SummCertNal . '</i></b> руб.</div>
                                         <div style="margin: 2px 0;">- безналичная оплата: <b><i id="SummCertBeznal" class="allSummBeznal">' . $SummCertBeznal . '</i></b> руб.</div>
+                                        <div style="margin: 6px 0 2px;">Продано абонементов: <b><i id="AbonCount" class="">' . $AbonCount . '</i></b> шт.</div>
+                                        <div style="margin: 2px 0;">- наличная оплата: <b><i id="SummAbonNal" class="allSummNal">' . $SummAbonNal . '</i></b> руб.</div>
+                                        <div style="margin: 2px 0;">- безналичная оплата: <b><i id="SummAbonBeznal" class="allSummBeznal">' . $SummAbonBeznal . '</i></b> руб.</div>
                                     </div>
                                 </div>';
 
@@ -300,7 +325,7 @@
                         echo '
                                 <input type="hidden" id="arendaNal" value="0">';
                     }
-                    echo '
+                    /*echo '
                                 <div class="cellsBlock400px" style="font-size: 90%; display: none;">
                                     <div class="cellLeft">
                                         Ортопантомограмма + КТ
@@ -310,9 +335,9 @@
                                         <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="ortoSummNal" class="allSummInputNal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
                                         <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="ortoSummBeznal" class="allSummInputBeznal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
                                     </div>
-                                </div>';
+                                </div>';*/
 
-                    echo '
+/*                    echo '
                                 <div class="cellsBlock400px" style="font-size: 90%; display: none;">
                                     <div class="cellLeft">
                                         Специалисты<br>
@@ -322,7 +347,7 @@
                                         <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="specialistSummNal" class="allSummInputNal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
                                         <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="specialistSummBeznal" class="allSummInputBeznal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
                                     </div>
-                                </div>';
+                                </div>';*/
 
                     echo '<input type="hidden" id="specialistSummNal" value="0">';
                     echo '<input type="hidden" id="specialistSummNal" value="0">';
@@ -330,8 +355,8 @@
                     echo '<input type="hidden" id="ortoSummNal" value="0">';
                     echo '<input type="hidden" id="ortoSummBeznal" value="0">';
 
-                    echo '
-                                <div class="cellsBlock400px" style="font-size: 90%;">
+                    /*echo '
+                                <div class="cellsBlock400px" style="font-size: 90%; display: none;">
                                     <div class="cellLeft">
                                         Анализы<br>
                                         <span style="font-size:80%; color: #999; ">для ПР72</span>
@@ -340,10 +365,13 @@
                                         <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="analizSummNal" class="allSummInputNal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
                                         <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="analizSummBeznal" class="allSummInputBeznal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
                                     </div>
-                                </div>';
+                                </div>';*/
 
-                    echo '
-                                <div class="cellsBlock400px" style="font-size: 90%;">
+                    echo '<input type="hidden" id="analizSummNal" value="0">';
+                    echo '<input type="hidden" id="analizSummBeznal" value="0">';
+
+                    /*echo '
+                                <div class="cellsBlock400px" style="font-size: 90%; display: none;">
                                     <div class="cellLeft">
                                         Солярий<br>
                                         <span style="font-size:80%; color: #999; "></span>
@@ -352,7 +380,10 @@
                                         <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="solarSummNal" class="allSummInputNal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
                                         <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="solarSummBeznal" class="allSummInputBeznal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
                                     </div>
-                                </div>';
+                                </div>';*/
+
+                    echo '<input type="hidden" id="solarSummNal" value="0">';
+                    echo '<input type="hidden" id="solarSummBeznal" value="0">';
 
                     //конец левого блока
                     echo '

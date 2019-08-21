@@ -1232,7 +1232,7 @@
                                <b>Прочие выдачи/расходы</b>
                             </div>
                             <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
-                                <a href="fl_paidout_another_test_in_tabel_add.php" class="ahref b2 no_print">Добавить</a>
+                                <a href="fl_paidout_another_test_in_tabel_add.php?filial_id='.$filial_id.'" class="ahref b2 no_print">Добавить</a>
                             </div>
                         </li>';
 
@@ -1480,9 +1480,9 @@
                                         <td>
                                             I(ост)
                                         </td>
-                                        <td>
+                                        <!--<td>
                                             II(6)
-                                        </td>
+                                        </td>-->
                                         <td>
                                             II
                                         </td>
@@ -1495,17 +1495,17 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            '.$zapis_j[5]['pervich_summ_arr'][1].'
+                                            '.($zapis_j[5]['pervich_summ_arr'][1] + $zapis_j[5]['pervich_summ_arr'][2]).'
                                         </td>
                                         <td>
                                             '.$zapis_j[5]['pervich_summ_arr'][2].'
                                         </td>
                                         <td>
-                                            '.$zapis_j[5]['pervich_summ_arr'][3].'
+                                            '.($zapis_j[5]['pervich_summ_arr'][3] + $zapis_j[5]['pervich_summ_arr'][4]).'
                                         </td>
-                                        <td>
+                                        <!--<td>
                                             '.$zapis_j[5]['pervich_summ_arr'][4].'
-                                        </td>
+                                        </td>-->
                                         <td>
                                             
                                         </td>
@@ -1637,11 +1637,11 @@
                                             I(ост)
                                         </td>
                                         <td>
-                                            II(6)
-                                        </td>
-                                        <td>
                                             II
                                         </td>
+                                        <!--<td>
+                                            II(6)
+                                        </td>-->
                                         <td>
                                             
                                         </td>
@@ -1651,17 +1651,17 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            '.$zapis_j[6]['pervich_summ_arr'][1].'
+                                            '.($zapis_j[6]['pervich_summ_arr'][1] + $zapis_j[6]['pervich_summ_arr'][2]).'
                                         </td>
                                         <td>
                                             '.$zapis_j[6]['pervich_summ_arr'][2].'
                                         </td>
                                         <td>
-                                            '.$zapis_j[6]['pervich_summ_arr'][3].'
+                                            '.($zapis_j[6]['pervich_summ_arr'][3] + $zapis_j[6]['pervich_summ_arr'][4]).'
                                         </td>
-                                        <td>
+                                        <!--<td>
                                             '.$zapis_j[6]['pervich_summ_arr'][4].'
-                                        </td>
+                                        </td>-->
                                         <td>
                                             
                                         </td>
@@ -1753,11 +1753,11 @@
                                             I(ост)
                                         </td>
                                         <td>
-                                            II(6)
-                                        </td>
-                                        <td>
                                             II
                                         </td>
+                                        <!--<td>
+                                            II(6)
+                                        </td>-->
                                         <td>
                                             
                                         </td>
@@ -1767,17 +1767,17 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            '.$zapis_j[10]['pervich_summ_arr'][1].'
+                                            '.($zapis_j[10]['pervich_summ_arr'][1] + $zapis_j[10]['pervich_summ_arr'][2]).'
                                         </td>
                                         <td>
                                             '.$zapis_j[10]['pervich_summ_arr'][2].'
                                         </td>
                                         <td>
-                                            '.$zapis_j[10]['pervich_summ_arr'][3].'
+                                            '.($zapis_j[10]['pervich_summ_arr'][3] + $zapis_j[10]['pervich_summ_arr'][4]).'
                                         </td>
-                                        <td>
+                                        <!--<td>
                                             '.$zapis_j[10]['pervich_summ_arr'][4].'
-                                        </td>
+                                        </td>-->
                                         <td>
                                             
                                         </td>

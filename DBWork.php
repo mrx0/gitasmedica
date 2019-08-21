@@ -1176,7 +1176,7 @@
         $mysql_insert_id = mysqli_insert_id($msql_cnnct);
 
 		//логирование
-		AddLog (GetRealIp(), $session_id, '', 'Добавлен абонемент. Номер: ['.$num.']. Сумма: ['.$summ.'] руб.');
+		AddLog (GetRealIp(), $session_id, '', 'Добавлен абонемент. Номер: ['.$num.']. Тип: ['.$abon_type.'] руб.');
 
 		return ($mysql_insert_id);
 	}

@@ -13,8 +13,12 @@
 		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
-			$offices = $offices_j = SelDataFromDB('spr_filials', '', '');
+
+			//$offices = $offices_j = SelDataFromDB('spr_filials', '', '');
 			//var_dump ($offices);
+
+            $filials_j = getAllFilials(true, false, false);
+            //var_dump($filials_j);
 
             require 'variables.php';
 
@@ -187,6 +191,7 @@
 								<a href="?'.$dopFilial.$dopDate.'&who=5&kab=1" class="b" style="'.$stom_color.'">Стоматологи</a>
 								<a href="?'.$dopFilial.$dopDate.'&who=6&kab=1" class="b" style="'.$cosm_color.'">Косметологи</a>
 								<a href="?'.$dopFilial.$dopDate.'&who=10&kab=1" class="b" style="'.$somat_color.'">Специалисты</a>
+								<a href="zapis_solar.php" class="b" style="">Солярий</a>
 								<a href="zapis_full2.php" class="b" style="">Без записи</a>
 							</li>
 							<li class="cellsBlock" style="width: auto; margin-bottom: 20px;">
@@ -197,15 +202,15 @@
 									<div>
 										<select name="SelectFilial" id="SelectFilial">
 											';
-				if ($offices_j != 0){
-					for ($i=0;$i<count($offices_j);$i++){
+				if (!empty($filials_j)){
+                    foreach($filials_j as $f_id => $filial_item){
 						$selected = '';
 						if (isset($_GET['filial'])){
-							if ($offices_j[$i]['id'] == $_GET['filial']){
+							if ($f_id == $_GET['filial']){
 								$selected = 'selected';
 							}
 						}
-						echo "<option value='".$offices_j[$i]['id']."' $selected>".$offices_j[$i]['name']."</option>";
+						echo "<option value='".$f_id."' $selected>".$filial_item['name']."</option>";
 					}
 				}
 				echo '

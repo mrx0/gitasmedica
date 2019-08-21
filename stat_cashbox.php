@@ -112,7 +112,7 @@
 								
 								<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Показывать проданные сертификаты
+										Показывать проданные сертификаты и абонементы
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
 										<input type="checkbox" id="certificatesShow" name="certificatesShow" value="1" checked>
