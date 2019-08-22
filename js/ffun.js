@@ -5526,6 +5526,87 @@
         $("#revenuePercent").focus();
     }
 
+    //Показывает окно с процентами
+    function showPersonalPecentHere (worker_id, worker_name){
+        //console.log(mode);
+        $('#overlay').show();
+
+        var res_str = '<table style="font-size: 80%;">'+
+        '<tr><td>Наим.</td><td>Работа</td><td>Материал</td><td>Фикс.</td></tr>';
+
+        $(".percentCatItem").each(function() {
+            var cat_id = ($(this).attr("cat_id"));
+            var cat_name = ($(this).html());
+            // console.log(cat_id);
+            // console.log(cat_name);
+
+            var cpp1 = $(".cpp_1_"+worker_id+"_"+cat_id).html();
+            var cpp2 = $(".cpp_2_"+worker_id+"_"+cat_id).html();
+            var cpp3 = $(".cpp_3_"+worker_id+"_"+cat_id).html();
+
+            res_str += '<tr>';
+            res_str += '<td style="text-align: left; border-bottom: 1px solid rgb(119, 95, 95);">' + cat_name + ' :</td>';
+            if (cpp1 > 0)
+            res_str += '<td style="border-bottom: 1px solid rgb(119, 95, 95);">' + cpp1 + '%</td>';
+            if (cpp2 > 0)
+            res_str += '<td style="border-bottom: 1px solid rgb(119, 95, 95);">' + cpp2 + '%</td>';
+            if (cpp3 > 0)
+            res_str += '<td style="border-bottom: 1px solid rgb(119, 95, 95);">' + cpp3 + ' руб.</td>';
+            res_str += '</tr>';
+
+        });
+
+        res_str += '</table>';
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        }).css({
+            "bottom": "auto", /*Выравниваем вверх*/
+            "height": "auto" /*Выравниваем высоту*/
+        })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative"
+                    })
+                    .append('<div style="margin: 5px;"><i><b>'+worker_name+'</b></i></div>')
+                    .append('<div style="margin: 5px;">'+res_str +'</div>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-10px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%"
+                            })
+                            .append('<div style="margin: 50px;"><input type="text" id="revenuePercent" value=">%</div>')
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                /*"position": "absolute",*/
+                                "bottom": "2px",
+                                "width": "100%"
+                            })
+                            .append(
+                                '<input type="button" class="b" value="Закрыть" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                            )
+                    )
+            );
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+        $("#revenuePercent").focus();
+    }
+
 
     //Рассчёт общих часов сотрудников за месяц
     function calculateWorkerHours(){

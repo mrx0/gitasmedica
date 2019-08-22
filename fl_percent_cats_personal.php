@@ -134,7 +134,7 @@
                 </script>';
 
             echo '
-                <div id="status">
+                <div id="status" class="no_print">
                     <header>
                         <div class="nav">
                             <a href="fl_percent_cats.php" class="b">Общие</a>
@@ -171,13 +171,17 @@
                 echo '
                                     
 								</div>';
-                foreach ($spr_percents_j as $percent_cat){
+                foreach ($spr_percents_j as $cat_id => $percent_cat){
+                    //var_dump($percent_cat);
+
                     echo '
                                 <div class="cellName" style="text-align: center; width: 210px; min-width: 210px; padding: 4px 0 0; background-color: rgba('.$percent_cat['color'].', 0.7)">
-                                    '.$percent_cat['name'].'<br>
-                                    <div class="cellDivide" style="width: 65px; font-size: 10px;">Работа</div>
-                                    <div class="cellDivide" style="width: 65px; font-size: 10px;">Материал</div>
-                                    <div class="cellDivide" style="width: 65px; font-size: 10px;">Спец. цена</div>
+                                    <div  class="percentCatItem" cat_id="'.$cat_id.'">'.$percent_cat['name'].'</div>
+                                    <div>
+                                        <div class="cellDivide" style="width: 65px; font-size: 10px;">Работа</div>
+                                        <div class="cellDivide" style="width: 65px; font-size: 10px;">Материал</div>
+                                        <div class="cellDivide" style="width: 65px; font-size: 10px;">Спец. цена</div>
+                                    </div>
                                 </div>';
                 }
 
@@ -188,6 +192,9 @@
                     echo '
 							<li class="cellsBlock2 cellsBlockHover" style="font-weight: normal; font-size: 11px; margin-bottom: -1px;">
 							    <div style="position: relative;">
+                                    <div onclick="showPersonalPecentHere('.$worker['id'].', \''.$worker['full_name'].'\')" style="position: absolute; right: 25px; top: 2px; font-size: 12px; border: 1px solid #BFBCB5; background-color: #FFF; padding: 0 6px; cursor: pointer;">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Персонально" style="color: blue;"></i>
+                                    </div>
 								    <a href="user.php?id='.$worker['id'].'" class="cellFullName ahref 4filter" id="4filter" style="text-align: left;">'.$worker['full_name'].'</a>
                                     <div onclick="fl_changePersonalPercentCatdefault('.$worker['id'].');" id ="changePersonalPercentCatdefault" style="position: absolute; right: 0px; top: 2px; font-size: 12px; color: green; border: 1px solid #BFBCB5; background-color: #FFF; padding: 0 6px; cursor: pointer;">
                                         <i class="fa fa-refresh" aria-hidden="true" title="По умолчанию" style="color: red;"></i>
@@ -221,7 +228,7 @@
                                 <div class="cellName" style="text-align: center; width: 210px; min-width: 210px; padding: 0;background-color: rgba('.$percent_cat['color'].', 0.7); font-size: 120%; font-weight: bold;">
                                     <div class="cellDivide" style="width: 65px; font-size: 10px; position: relative;">';
                         echo '
-                                        <span class="changePersonalPercentCat" worker_id="'.$worker['id'].'" cat_id="'.$cat_id.'" type_id="1" style="cursor: pointer;">';
+                                        <span class="changePersonalPercentCat cpp_1_'.$worker['id'].'_'.$cat_id.'" worker_id="'.$worker['id'].'" cat_id="'.$cat_id.'" type_id="1" style="cursor: pointer;">';
 
                         //Если есть индивидуальные
                         if (isset($percents_personal_j[$cat_id][1])){
@@ -235,7 +242,7 @@
                                     </div>
                                     <div class="cellDivide" style="width: 65px; font-size: 10px; position: relative;">';
                         echo '
-                                        <span class="changePersonalPercentCat" worker_id="'.$worker['id'].'" cat_id="'.$cat_id.'" type_id="2" style="cursor: pointer;">';
+                                        <span class="changePersonalPercentCat cpp_2_'.$worker['id'].'_'.$cat_id.'" worker_id="'.$worker['id'].'" cat_id="'.$cat_id.'" type_id="2" style="cursor: pointer;">';
 
                         //Если есть индивидуальные
                         if (isset($percents_personal_j[$cat_id][2])){
@@ -251,7 +258,7 @@
                         //Спец цены (не зависит от процента, тупо фиксированная)
                         echo ' 
                                     <div class="cellDivide" style="width: 65px; font-size: 10px; position: relative;">
-                                        <span class="changePersonalPercentCat" worker_id="'.$worker['id'].'" cat_id="'.$cat_id.'" type_id="3" style="cursor: pointer;">';
+                                        <span class="changePersonalPercentCat cpp_3_'.$worker['id'].'_'.$cat_id.'" worker_id="'.$worker['id'].'" cat_id="'.$cat_id.'" type_id="3" style="cursor: pointer;">';
 
                         //Если есть индивидуальные
                         if (isset($percents_personal_j[$cat_id][3])){
@@ -282,7 +289,7 @@
 
 			echo '	
 			<!-- Подложка только одна -->
-			<div id="overlay"></div>';
+			<div id="overlay" class="no_print"></div>';
 
 			
 		}else{
