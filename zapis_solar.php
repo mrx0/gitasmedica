@@ -256,7 +256,8 @@
 
 
 
-                echo '!!! вот тут пиши';
+                echo '<a href="solar_add.php" class="ahref b">Добавить посещение</a>';
+                echo '<a href="solar_realiz_add.php" class="ahref b">Реализация</a>';
 
             }else{
 				echo '

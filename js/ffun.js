@@ -3976,7 +3976,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                //console.log(res);
+                console.log(res);
 
                 if(res.result == 'success') {
                     //console.log('success');

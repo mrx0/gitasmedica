@@ -233,7 +233,7 @@
                     $AbonCount = 0;
 
                     $result = ajaxShowResultCashbox($datastart, $dataend, $filial_id, 0, 1, false);
-                    var_dump($result);
+                    //var_dump($result);
 
                     if (!empty($result)) {
                         if (!empty($result['rezult'])) {
@@ -270,7 +270,7 @@
                                     $SummAbonNal += $item['cell_price'];
                                 }
                                 if ($item['summ_type'] == 2) {
-                                    $SummмAbonBeznal += $item['cell_price'];
+                                    $SummAbonBeznal += $item['cell_price'];
                                 }
                             }
                         }
@@ -350,7 +350,7 @@
                                 </div>';*/
 
                     echo '<input type="hidden" id="specialistSummNal" value="0">';
-                    echo '<input type="hidden" id="specialistSummNal" value="0">';
+                    echo '<input type="hidden" id="specialistSummBeznal" value="0">';
 
                     echo '<input type="hidden" id="ortoSummNal" value="0">';
                     echo '<input type="hidden" id="ortoSummBeznal" value="0">';

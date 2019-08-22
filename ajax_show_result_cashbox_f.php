@@ -108,7 +108,7 @@
                             $filialResult[$order_item['filial_id']]['data'] = array();
                             $filialResult[$order_item['filial_id']]['data_cert'] = array();
                             $filialResult[$order_item['filial_id']]['data_abon'] = array();
-                            $filialResult[$order_item['filial_id']]['office_name'] = $office_j_arr[$order_item['office_id']]['name'];
+                            $filialResult[$order_item['filial_id']]['office_name'] = $office_j_arr[$order_item['filial_id']]['name'];
                             array_push($filialResult[$order_item['filial_id']]['data_abon'], $order_item);
                         }
                         //var_dump($filialResult[$order_item['office_id']]);

@@ -144,7 +144,7 @@
 //                        echo ($abonements_j[$i]['nominal'] - $abonements_j[$i]['debited']).' руб.';
 //                    }
 
-                    echo $abonements_j[$i]['min_count'].' / '.$abonements_j[$i]['debited_min'].' / '.($abonements_j[$i]['min_count'] - $abonements_j[$i]['debited_min']);
+                    echo $abonements_j[$i]['min_count'].' / '.$abonements_j[$i]['debited_min'].' / <span style="color:red; font-weight: bold;">'.($abonements_j[$i]['min_count'] - $abonements_j[$i]['debited_min']).'</span>';
 
                     echo '
                                  </div>';
