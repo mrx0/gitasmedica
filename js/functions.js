@@ -301,6 +301,46 @@
         }
     });
 
+    //Для поиска абонемента из модального окна
+    $('#search_abon').bind("change keyup input click", function() {
+
+        //var $this = $(this);
+        var val = $(this).val();
+        //console.log(val);
+
+        if (val.length > 1){
+            $.ajax({
+                url:"FastSearchAbon.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data:{
+					num: val
+				},
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success:function(res){
+                    //console.log(res);
+
+                    if(res.result == 'success') {
+                    	//console.log(res.data);
+
+                        $(".search_result_abon").html(res.data).fadeIn(); //Выводим полученые данные в списке
+                    }else{
+                        //console.log(res.data);
+					}
+                },
+				error:function(){
+                	//console.log(12);
+				}
+            });
+        }else{
+            $("#search_result_abon").hide();
+        }
+    });
+
 	//Для изменения цены вручную
     function changePriceItem(newPrice, start_price){
         //console.log(newPrice);
@@ -5648,6 +5688,35 @@
 
 	}
 
+	//Подсчёт суммы для счёта с учетом абонемента
+	function calculatePaymentAbon (){
+
+	    //Общее кол-во минут, оставшееся для использования на всех абонементах
+		var SummAbon = 0;
+		//В итоге, сколько можно срезать минут с абонемента
+		var rezSumm = 0;
+
+		//Минуты, которые хотим исползовать сейчас
+		var min_count = Number($("#min_count").val());
+        //console.log(SummAbon);
+
+        $(".abon_pay").each(function() {
+            SummAbon += Number($(this).html());
+		});
+        //console.log(SummAbon);
+
+        //Если общая сумма минут больше чем хотим использовать
+        if (SummAbon > min_count){
+            rezSumm = min_count;
+		}else{
+            rezSumm = SummAbon;
+		}
+		console.log(rezSumm);
+
+        $("#summ").html(rezSumm);
+
+	}
+
 	//Смена исполнителя для расчета
     function changeWorkerInCalculate (){
 
@@ -7802,6 +7871,68 @@
 
     }
 
+    //Показываем блок для поиска и добавления абонемента
+    function showAbonPayAdd(){
+
+        $('#overlay').show();
+
+        var buttonsStr = '';
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        }).css({
+            "height": "250px"
+        })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative"
+                    })
+                    .append('<span style="margin: 0;"><i></i></span>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-90px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%"
+                            })
+                            .append(
+								'<div id="search_abon_input_target">'+
+								'</div>'
+							).css({
+                            "position": "absolute",
+                            "width": "405px",
+                            "z-index": "1"
+                        })
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "bottom": "2px",
+                                "width": "100%"
+                            })
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'#search_abon_input\').append($(\'#search_abon_input_target\').children()); $(\'.center_block\').remove(); $(\'#search_result_abon\').html(\'\'); $(\'#search_abon\').val(\'\');">'
+                            )
+                    )
+            );
+
+        $('#search_abon_input_target').append($('#search_abon_input').children());
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+    }
+
 
     //Промежуточная функция добавления заказа в лабораторию
     function showLabOrderAdd(mode){
@@ -8489,6 +8620,52 @@
 		});
 	}
 
+	//Добавим абонемент в оплату
+	function Ajax_abon_add_pay(id){
+
+        $('#overlay').hide();
+        $('#search_abon_input').append($('#search_abon_input_target').children());
+        $('.center_block').remove();
+        $('#search_result_abon').html('');
+        $('#search_abon').val('');
+
+        //$('.have_money_or_not').show();
+        $('#abons_result').show();
+        $('#showAbonPayAdd_button').hide();
+
+		$.ajax({
+			url: "FastSearchAbonOne.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                id: id
+            },
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//console.log(res);
+
+				$('.center_block').remove();
+				$('#overlay').hide();
+
+				if(res.result == "success"){
+					//$('#data').hide();
+                    $('#abons_result').append(res.data);
+
+                    calculatePaymentAbon();
+
+				}else{
+					//$('#errror').html(res.data);
+				}
+			}
+		});
+	}
+
 	//Очистить все сертификаты
 	function certsResultDel(){
 
@@ -8500,6 +8677,25 @@
 				'<td><span class="lit_grey_text">Номер</span></td>'+
 					'<td><span class="lit_grey_text">Номинал</span></td>'+
 					'<td><span class="lit_grey_text">К оплате (остаток)</span></td>'+
+				'<td style="text-align: center;"><i class="fa fa-times" aria-hidden="true" title="Удалить"></i></td>'+
+            '</tr>'
+		);
+
+        $('#summ').html(0);
+
+	}
+
+	//Очистить все абонементы
+	function abonsResultDel(){
+
+        $('#abons_result').hide();
+        $('#showAbonPayAdd_button').show();
+
+        $('#abons_result').html(
+			'<tr>'+
+				'<td><span class="lit_grey_text">Номер</span></td>'+
+					'<td><span class="lit_grey_text">Всего минут</span></td>'+
+					'<td><span class="lit_grey_text">Осталось</span></td>'+
 				'<td style="text-align: center;"><i class="fa fa-times" aria-hidden="true" title="Удалить"></i></td>'+
             '</tr>'
 		);
