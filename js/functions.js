@@ -5711,7 +5711,7 @@
 		}else{
             rezSumm = SummAbon;
 		}
-		console.log(rezSumm);
+		//console.log(rezSumm);
 
         $("#summ").html(rezSumm);
 

@@ -206,7 +206,7 @@ if ($enter_ok){
 
         echo '                    
                             <div id="errror"></div>
-                                <input type="button" class="b" value="Добавить" onclick="fl_showSolarAdd()">
+                                <input type="button" class="b" value="Добавить" onclick="fl_showSolarAdd('.$filial_id.')">
                                 <!--fl_showPaidoutAnotherAdd-->
                             </div>
                         </form>';

@@ -2380,6 +2380,46 @@
         });
     }
 
+    //Добавляем/редактируем в базу оплату солярия
+    function fl_Ajax_solar_add(reqData){
+        //console.log(reqData);
+
+        var link = "fl_solar_add_f.php";
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data: reqData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(res){
+                console.log(res);
+//                console.log(res.data);
+                //$('#data').html(res)
+
+                blockWhileWaiting (true);
+
+                if(res.result == 'success') {
+                    //console.log('success');
+                    //$('#data').html(res.data);
+
+                    //location.reload();
+                }else{
+                    //console.log('error');
+                    //$('#errror').html(res.data);
+                    //$('#errrror').html('');
+                }
+            }
+        });
+    }
+
     //Добавляем/редактируем в базу расход материалов для наряда
     function fl_Ajax_MaterialsConsumptionAdd(invoice_id, mode){
 
@@ -2791,6 +2831,44 @@
                 }
             }
         })
+    }
+
+    //Промежуточная функция для ввода оплаты за солярий
+    function fl_showSolarAdd(filial_id){
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        //!!!тут сделано только для одного абонемента, если надо переделать, то тут
+        var abon_id = $(".abon_pay").attr('abon_id');
+        //console.log(abon_id);
+
+        if (abon_id === undefined){
+            abon_id = 0;
+        }
+
+        if (Number($('#min_count').val()) > 0){
+            var reqData = {
+                filial_id: filial_id,
+                date: $('#iWantThisDate2').val(),
+                device_type: $('#selectDeviceType').val(),
+                min_count: $('#min_count').val(),
+                summ_type: $('#summ_type').val(),
+                oneMinPrice: $('#oneMinPrice').html(),
+                finPrice: $('#finPrice').html(),
+                descr: $('#descr').val(),
+                abon_id: abon_id
+
+            };
+            //console.log(reqData);
+
+            fl_Ajax_solar_add(reqData);
+
+        }else{
+            $("#errror").html('<span style="color: red">Ошибка, что-то заполнено не так.</span>');
+            $("#min_count_error").html('<span style="color: red">В этом поле ошибка</span>');
+            $("#min_count_error").show();
+        }
     }
 
     //Провести табель
