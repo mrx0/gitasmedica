@@ -19,8 +19,8 @@ if ($enter_ok){
 
         $filial_id = 15;
 
-        if (isset($_POST['filial_id'])){
-            $filial_id = $_POST['filial_id'];
+        if (isset($_GET['filial_id'])){
+            $filial_id = $_GET['filial_id'];
         }else{
             if (isset($_SESSION['filial_id'])){
                 $filial_id = $_SESSION['filial_id'];
@@ -61,7 +61,7 @@ if ($enter_ok){
                     <header>
                         <div class="nav">
                             <!--<a href="fl_tabels.php" class="b">Важный отчёт</a>-->
-                            <a href="zapis_solar.php" class="b">Обратно</a>
+                            <a href="zapis_solar.php?filial_id='.$filial_id.'" class="b">Солярий</a>
                         </div>
                         <h2>Добавить посещение солярия ';
 
@@ -123,7 +123,7 @@ if ($enter_ok){
                             <div class="cellsBlock2">
                                 <div class="cellLeft">
                                 <span style="font-size:80%;  color: #555;">Кол-во минут</span><br>
-                                    <input type="text" id="min_count" value="0" class="paidout_summ2" autocomplete="off" autofocus>
+                                    <input type="text" id="min_count" value="0" class="" autocomplete="off" autofocus>
                                     <label id="min_count_error" class="error"></label>
                                 </div>
                             </div>
@@ -174,6 +174,21 @@ if ($enter_ok){
                                 <div class="cellLeft">
                                 <span style="font-size:80%;  color: #555;">Стоимость (руб.)</span><br>
                                     <div id="finPrice" class="calculateOrder"></div>
+                                </div>
+                            </div>
+                            
+                            <div id="realizSummBlock" class="cellsBlock2">
+                                <div class="cellLeft">
+                                <span style="font-size:80%;  color: #555;">Средства для загара (руб.)</span><br>
+                                    <input type="text" id="realiz_summ" value="0" class="" autocomplete="off" autofocus>
+                                    <label id="realiz_summ_error" class="error"></label>
+                                </div>
+                            </div>
+                            
+                            <div id="allSummBlock" class="cellsBlock2">
+                                <div class="cellLeft">
+                                <span style="font-size:80%;  color: #555;">Всего (руб.)</span><br>
+                                    <div id="allSumm" class="calculateOrder"></div>
                                 </div>
                             </div>
                             
@@ -239,8 +254,16 @@ if ($enter_ok){
                         
                         var min_count = $("#min_count").val();
                         //console.log(min_count);
-                        
+
+                        //Всего за загар
                         $("#finPrice").html(min_price * min_count);
+                        
+                        //Средства для загара
+                        var realiz_summ = $("#realiz_summ").val();
+                        
+                        //Всего 
+                        $("#allSumm").html(min_price * min_count + Number(realiz_summ));
+                        
                         
 
                     });
@@ -261,7 +284,14 @@ if ($enter_ok){
                         var min_count = $("#min_count").val();
                         //console.log(min_count);
                         
+                        //Всего за загар
                         $("#finPrice").html(min_price * min_count);
+                        
+                        //Средства для загара
+                        var realiz_summ = $("#realiz_summ").val();
+                        
+                        //Всего 
+                        $("#allSumm").html(min_price * min_count + Number(realiz_summ));
                         
                         blockWhileWaiting (false);
                         
@@ -299,7 +329,61 @@ if ($enter_ok){
                         var min_count = $("#min_count").val();
                         //console.log(min_count);
                         
+                        //Всего за загар
                         $("#finPrice").html(min_price * min_count);
+                        
+                        //Средства для загара
+                        var realiz_summ = $("#realiz_summ").val();
+                        
+                        //Всего 
+                        $("#allSumm").html(min_price * min_count + Number(realiz_summ));
+                        
+                        blockWhileWaiting (false);
+                        
+                    });
+                    //Потеря фокуса на средствах для загара
+                    $("#realiz_summ").blur(function() {
+                        //console.log($(this).val());
+                        
+                        var value = $(this).val();
+                        //Если не число
+                        if (isNaN(value)){
+                            $(this).val(0);
+                        }else{
+                            if (value < 0){
+                                $(this).val(value * -1);
+                            }else{
+                                if (value == ""){
+                                    $(this).val(0);
+                                }else{
+                                    if (value === undefined){
+                                        $(this).val(0);
+                                    }else{
+                                        //Всё норм с типами данных
+                                        //console.log("Всё норм с типами данных")
+                                    }
+                                }
+                            }
+                        }
+                        
+                        //Получаем значение аттрибута в select
+                        var min_price = $("option:selected", $("#selectDeviceType")).attr("min_price");
+                        
+                        $("#oneMinPrice").html(min_price);
+                        
+                        var min_count = $("#min_count").val();
+                        //console.log(min_count);
+                        
+                        //Всего за загар
+                        $("#finPrice").html(min_price * min_count);
+                        
+                        //Средства для загара
+                        var realiz_summ = $("#realiz_summ").val();
+                        
+                        //Всего 
+                        $("#allSumm").html(min_price * min_count + Number(realiz_summ));
+                        
+                        blockWhileWaiting (false);
                         
                     });
                     //Если действия над кол-вом минут
@@ -314,6 +398,11 @@ if ($enter_ok){
                                 $(this).val("")
                             }
                             $("#finPrice").html(0);
+                            
+                            //Средства для загара
+                            //Всего 
+                            $("#allSumm").html($("#realiz_summ").val());
+                            
                         }
                         if (!isNaN($(this).val())){
                             //console.log($(this).val());
@@ -332,9 +421,66 @@ if ($enter_ok){
                                 var min_count = $("#min_count").val();
                                 //console.log(min_count);
                                 
+                                //Всего за загар
                                 $("#finPrice").html(min_price * min_count);
+                                
+                                //Средства для загара
+                                var realiz_summ = $("#realiz_summ").val();
+                                
+                                //Всего 
+                                $("#allSumm").html(min_price * min_count + Number(realiz_summ));
+                                
                             }else{
                                 $("#finPrice").html(0);
+                                
+                                //Средства для загара
+                                //Всего 
+                                $("#allSumm").html($("#realiz_summ").val());
+                            }
+                        }
+                    });
+                    //Если действия над средствами для загара
+                    $("#realiz_summ").bind("change keyup input click", function() {
+                        if($(this).val().length > 0){
+                            //console.log($(this).val().length);
+                            
+                            //меняем запятую на точку (разделитель)
+                            $(this).val($(this).val().replace(\',\', \'.\'));
+                            
+                            if ($(this).val() == 0){
+                                $(this).val("")
+                            }
+                            
+                            $("#allSumm").html(0);
+                        }
+                        if (!isNaN($(this).val())){
+                            //console.log($(this).val());
+                            //console.log($(this).val().length);
+                            
+                            //Получаем значение аттрибута в select
+                            var min_price = $("option:selected", $("#selectDeviceType")).attr("min_price");
+                            //console.log(min_price);
+                            
+                            if ($(this).val().length > 0){ 
+                                
+                                //console.log($(this).val().length);
+                                
+                                $("#allSumm").html($(this).val());
+                                
+                                var min_count = $("#min_count").val();
+                                //console.log(min_count);
+                                
+                                //Всего за загар
+                                $("#finPrice").html(min_price * min_count);
+                                
+                                //Средства для загара
+                                var realiz_summ = $("#realiz_summ").val();
+                                
+                                //Всего 
+                                $("#allSumm").html(min_price * min_count + Number(realiz_summ));
+                                
+                            }else{
+                                $("#allSumm").html(Number($("#finPrice").html()));
                             }
                         }
                     });
@@ -348,11 +494,15 @@ if ($enter_ok){
                             
                             $("#oneMinPriceBlock").hide();
                             $("#finPriceBlock").hide();
+                            $("#realizSummBlock").hide();
+                            $("#allSummBlock").hide();
                         }else{
                             $("#selectAbonementBlock").hide();
                             
                             $("#oneMinPriceBlock").show();
                             $("#finPriceBlock").show();
+                            $("#realizSummBlock").show();
+                            $("#allSummBlock").show();
                         }
                     });
                     

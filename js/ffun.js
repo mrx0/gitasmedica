@@ -2400,20 +2400,25 @@
             },
             // действие, при ответе с сервера
             success:function(res){
-                console.log(res);
-//                console.log(res.data);
+                // console.log(res);
+                // console.log(res.data);
+
                 //$('#data').html(res)
 
                 blockWhileWaiting (true);
 
                 if(res.result == 'success') {
-                    //console.log('success');
-                    //$('#data').html(res.data);
+                    // console.log('success');
 
-                    //location.reload();
+                    //$('#data').html(res.data);
+                    //blockWhileWaiting (false);
+
+                    document.location.href = "zapis_solar.php?filial_id=" + reqData.filial_id;
                 }else{
                     //console.log('error');
-                    //$('#errror').html(res.data);
+
+                    blockWhileWaiting (false);
+                    $('#errrror').html(res.data);
                     //$('#errrror').html('');
                 }
             }
@@ -2850,14 +2855,16 @@
         if (Number($('#min_count').val()) > 0){
             var reqData = {
                 filial_id: filial_id,
-                date: $('#iWantThisDate2').val(),
+                date_in: $('#iWantThisDate2').val(),
                 device_type: $('#selectDeviceType').val(),
                 min_count: $('#min_count').val(),
-                summ_type: $('#summ_type').val(),
+                summ_type: $('input[name=summ_type]:checked').val(),
                 oneMinPrice: $('#oneMinPrice').html(),
                 finPrice: $('#finPrice').html(),
                 descr: $('#descr').val(),
-                abon_id: abon_id
+                abon_id: abon_id,
+
+                realiz_summ: $('#realiz_summ').val()
 
             };
             //console.log(reqData);
