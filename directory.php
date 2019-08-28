@@ -15,6 +15,8 @@
 
             //echo '<a href="equipment.php" class="b3" title="Номенлатура">Номенлатура</a>';
 
+            echo '<a href="abonements.php" class="b3" title="Абонементы солярия">Абонементы</a>';
+
             //echo '<a href="stocks.php" class="b3" title="Акции">Акции</a>';
             if (($finances['see_all'] == 1) || $god_mode) {
                 echo '<a href="fl_percent_cats.php" class="b3" title="Категории процентов">Категории процентов</a>';

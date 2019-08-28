@@ -159,8 +159,8 @@
 							
 								<h2>Запись '.$day.' ',$monthsName[$month],' ',$year,' <small>(подробное описание)</small></h2>
 								<b>Филиал</b> '.$filial[0]['name'].'<br>
-								<b>Кабинет '.$kab.'</b><br>
-								<span style="color: green; font-size: 120%; font-weight: bold;">'.$whose.'</span><br>
+								<!--<b>Кабинет '.$kab.'</b><br>-->
+								<span style="color: green; font-size: 120%; font-weight: bold;">Без записи</span><br>
 								<br><br>';
 
 					echo '			
@@ -187,6 +187,7 @@
 								<a href="zapis_full.php?'.$dopFilial.$dopDate.'&who=5&kab=1" class="b" style="'.$stom_color.'">Стоматологи</a>
 								<a href="zapis_full.php?'.$dopFilial.$dopDate.'&who=6&kab=1" class="b" style="'.$cosm_color.'">Косметологи</a>
 								<a href="zapis_full.php?'.$dopFilial.$dopDate.'&who=10&kab=1" class="b" style="'.$somat_color.'">Специалисты</a>
+								<a href="zapis_solar.php" class="b" style="">Солярий</a>
 								<a href="zapis_full2.php" class="b" style="background-color: #fff261;">Без записи</a>
 							</li>
 							<li class="cellsBlock" style="width: auto; margin-bottom: 20px;">
@@ -364,7 +365,7 @@
 			echo '	
 						
 					</div>
-					<div id="doc_title">Подробная запись '.$whose.'/'.$day.' ',$monthsName[$month],' ',$year,'/'.$filial[0]['name'].' - Асмедика</div>';
+					<div id="doc_title">Без записи /'.$day.' ',$monthsName[$month],' ',$year,'/'.$filial[0]['name'].' - Асмедика</div>';
 			echo '	
 			<!-- Подложка только одна -->
 			<div id="overlay"></div>';

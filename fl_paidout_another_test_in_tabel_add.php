@@ -17,6 +17,16 @@ if ($enter_ok){
 
         require 'variables.php';
 
+        $filial_id = 15;
+
+        if (isset($_POST['filial_id'])){
+            $filial_id = $_POST['filial_id'];
+        }else{
+            if (isset($_SESSION['filial_id'])){
+                $filial_id = $_SESSION['filial_id'];
+            }
+        }
+
         $filials_j = getAllFilials(false, false, false);
         //var_dump($filials_j);
 
@@ -26,7 +36,8 @@ if ($enter_ok){
                 <div id="status">
                     <header>
                         <div class="nav">
-                            <a href="fl_tabels.php" class="b">Важный отчёт</a>
+                            <!--<a href="fl_tabels.php" class="b">Важный отчёт</a>-->
+                            <a href="fl_main_report2.php?filial_id='.$filial_id.'" class="b">Финальный отчёт</a>
                         </div>
                         <h2>Добавить выплату ';
 
@@ -112,7 +123,11 @@ if ($enter_ok){
 
         if (!empty($filials_j)) {
             foreach ($filials_j as $f_id => $filials_j_data) {
-                echo "<option value='".$f_id."'>".$filials_j_data['name']."</option>";
+                $selected = '';
+                if ($filial_id == $f_id){
+                    $selected = ' selected';
+                }
+                echo "<option value='".$f_id."' $selected>".$filials_j_data['name']."</option>";
             }
         }
 

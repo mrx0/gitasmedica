@@ -27,6 +27,14 @@
                                     <div id="search_result_fcert2"></div>
                                 </div>';
 
+    $block_fast_search_abonement = '
+                                <div class="cellRight" style="box-shadow: -1px 1px 8px #333;">
+                                    <span style="font-size: 70%;">Быстрый поиск абонемента</span><br />
+                                    <input type="text" size="50" name="searchdata_fabon" id="search_abon" placeholder="Введите для поиска" value="" class="who_fabon"  autocomplete="off">
+                                    <!--<ul id="search_result_fc" class="search_result_fc"></ul><br />-->
+                                    <div id="search_result_fabon2"></div>
+                                </div>';
+
 
     $block_show_settings_add_temp_zapis = '
                                 <div id="ShowSettingsAddTempZapis" style="position: absolute; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; z-index:105; padding:10px;">

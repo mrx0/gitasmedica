@@ -301,6 +301,46 @@
         }
     });
 
+    //Для поиска абонемента из модального окна
+    $('#search_abon').bind("change keyup input click", function() {
+
+        //var $this = $(this);
+        var val = $(this).val();
+        //console.log(val);
+
+        if (val.length > 1){
+            $.ajax({
+                url:"FastSearchAbon.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data:{
+					num: val
+				},
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success:function(res){
+                    //console.log(res);
+
+                    if(res.result == 'success') {
+                    	//console.log(res.data);
+
+                        $(".search_result_abon").html(res.data).fadeIn(); //Выводим полученые данные в списке
+                    }else{
+                        //console.log(res.data);
+					}
+                },
+				error:function(){
+                	//console.log(12);
+				}
+            });
+        }else{
+            $("#search_result_abon").hide();
+        }
+    });
+
 	//Для изменения цены вручную
     function changePriceItem(newPrice, start_price){
         //console.log(newPrice);
@@ -1705,6 +1745,46 @@
         });
     }
 
+    //Добавляем/редактируем в базу абонемент
+    function  Ajax_abon_add(id, mode, reqData){
+    	//console.log(mode);
+
+        var link = "abon_add_f.php";
+
+        if (mode == 'edit'){
+            link = "abon_edit_f.php";
+        }
+
+        reqData['abon_id'] = id;
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data: reqData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(data){
+            	//console.log(data);
+
+                if(data.result == 'success') {
+                    //console.log('success');
+                    $('#data').html(data.data);
+                }else{
+                    //console.log('error');
+                    $('#errror').html(data.data);
+                    $('#errrror').html('');
+                }
+            }
+        });
+    }
+
     //Добавляем/редактируем в базу специализацию
     function Ajax_specialization_add(mode){
 
@@ -1898,6 +1978,64 @@
                 }
             }
         })
+    }
+
+    //Промежуточная функция добавления/редактирования абонемента
+    function showAbonAdd(id, mode){
+        //console.log(mode);
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        var num = $('#num').val();
+        var abon_type = document.querySelector('input[name="abon_type"]:checked');
+        if (abon_type != null) {
+            //console.log(abon_type.value);
+
+            var reqData = {
+                num: num,
+                abon_type: abon_type.value
+            };
+            //console.log(reqData);
+
+            //проверка данных на валидность
+            $.ajax({
+                url:"ajax_test.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+
+                data: reqData,
+
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success:function(data){
+                    if(data.result == 'success'){
+
+                        Ajax_abon_add(id, mode, reqData);
+
+                        //в случае ошибок в форме
+                    }else{
+                        // перебираем массив с ошибками
+                        for(var errorField in data.text_error){
+                            // выводим текст ошибок
+                            $('#'+errorField+'_error').html(data.text_error[errorField]);
+                            // показываем текст ошибок
+                            $('#'+errorField+'_error').show();
+                            // обводим инпуты красным цветом
+                            // $('#'+errorField).addClass('error_input');
+                        }
+                        $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                    }
+                }
+            })
+        }else{
+            //console.log(abon_type);
+
+            $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+		}
     }
 
     function Ajax_change_expiresTime(id){
@@ -5550,6 +5688,35 @@
 
 	}
 
+	//Подсчёт суммы для счёта с учетом абонемента
+	function calculatePaymentAbon (){
+
+	    //Общее кол-во минут, оставшееся для использования на всех абонементах
+		var SummAbon = 0;
+		//В итоге, сколько можно срезать минут с абонемента
+		var rezSumm = 0;
+
+		//Минуты, которые хотим исползовать сейчас
+		var min_count = Number($("#min_count").val());
+        //console.log(SummAbon);
+
+        $(".abon_pay").each(function() {
+            SummAbon += Number($(this).html());
+		});
+        //console.log(SummAbon);
+
+        //Если общая сумма минут больше чем хотим использовать
+        if (SummAbon > min_count){
+            rezSumm = min_count;
+		}else{
+            rezSumm = SummAbon;
+		}
+		//console.log(rezSumm);
+
+        $("#summ").html(rezSumm);
+
+	}
+
 	//Смена исполнителя для расчета
     function changeWorkerInCalculate (){
 
@@ -7462,8 +7629,7 @@
         })
     }
 
-
-   //Показываем блок с суммами и кнопками Для сертификата
+	//Показываем блок с суммами и кнопками Для сертификата
     function showCertCell(id){
         //console.log(id);
         hideAllErrors ();
@@ -7471,7 +7637,7 @@
         var cell_price = $('#cell_price').val();
         //console.log(cell_price);
 
-        var office_id = $('#office_id').val();
+        var filial_id = $('#filial_id').val();
 
         //проверка данных на валидность
         $.ajax({
@@ -7491,7 +7657,7 @@
                 if(data.result == 'success'){
                     $('#overlay').show();
 
-                    var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_cert_cell('+id+', '+cell_price+', '+office_id+')">';
+                    var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_cert_cell('+id+', '+cell_price+', '+filial_id+')">';
 
                     // Создаем меню:
                     var menu = $('<div/>', {
@@ -7503,7 +7669,7 @@
                                 .css({
                                     "height": "100%",
                                     "border": "1px solid #AAA",
-                                    "position": "relative",
+                                    "position": "relative"
                                 })
                                 .append('<span style="margin: 5px;"><i>Проверьте сумму и нажмите сохранить</i></span>')
                                 .append(
@@ -7516,7 +7682,7 @@
                                             "left": "0",
                                             "bottom": "0",
                                             "right": "0",
-                                            "height": "50%",
+                                            "height": "50%"
                                         })
                                         .append('<div style="margin: 10px;">Сумма: <span class="calculateInvoice">'+cell_price+'</span> руб.</div>')
                                 )
@@ -7525,7 +7691,97 @@
                                         .css({
                                             "position": "absolute",
                                             "bottom": "2px",
+                                            "width": "100%"
+                                        })
+                                        .append(buttonsStr+
+                                            '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                                        )
+                                )
+                        );
+
+                    menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+                // в случае ошибок в форме
+                }else{
+                	//console.log(1);
+                    // перебираем массив с ошибками
+                    for(var errorField in data.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(data.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                }
+            }
+        })
+    }
+
+	//Показываем блок с суммами и кнопками Для абонемента
+    function showAbonCell(id){
+        //console.log(id);
+        hideAllErrors ();
+
+        var cell_price = $('#cell_price').val();
+        //console.log(cell_price);
+
+        var filial_id = $('#filial_id').val();
+
+        //проверка данных на валидность
+        $.ajax({
+            url:"ajax_test.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    cell_price: cell_price
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                if(data.result == 'success'){
+                    $('#overlay').show();
+
+                    var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_abon_cell('+id+', '+cell_price+', '+filial_id+')">';
+
+                    // Создаем меню:
+                    var menu = $('<div/>', {
+                        class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+                    })
+                        .appendTo('#overlay')
+                        .append(
+                            $('<div/>')
+                                .css({
+                                    "height": "100%",
+                                    "border": "1px solid #AAA",
+                                    "position": "relative"
+                                })
+                                .append('<span style="margin: 5px;"><i>Проверьте сумму и нажмите сохранить</i></span>')
+                                .append(
+                                    $('<div/>')
+                                        .css({
+                                            "position": "absolute",
                                             "width": "100%",
+                                            "margin": "auto",
+                                            "top": "-10px",
+                                            "left": "0",
+                                            "bottom": "0",
+                                            "right": "0",
+                                            "height": "50%"
+                                        })
+                                        .append('<div style="margin: 10px;">Сумма: <span class="calculateInvoice">'+cell_price+'</span> руб.</div>')
+                                )
+                                .append(
+                                    $('<div/>')
+                                        .css({
+                                            "position": "absolute",
+                                            "bottom": "2px",
+                                            "width": "100%"
                                         })
                                         .append(buttonsStr+
                                             '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
@@ -7610,6 +7866,68 @@
             );
 
         $('#search_cert_input_target').append($('#search_cert_input').children());
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+    }
+
+    //Показываем блок для поиска и добавления абонемента
+    function showAbonPayAdd(){
+
+        $('#overlay').show();
+
+        var buttonsStr = '';
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        }).css({
+            "height": "250px"
+        })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative"
+                    })
+                    .append('<span style="margin: 0;"><i></i></span>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-90px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%"
+                            })
+                            .append(
+								'<div id="search_abon_input_target">'+
+								'</div>'
+							).css({
+                            "position": "absolute",
+                            "width": "405px",
+                            "z-index": "1"
+                        })
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "bottom": "2px",
+                                "width": "100%"
+                            })
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'#search_abon_input\').append($(\'#search_abon_input_target\').children()); $(\'.center_block\').remove(); $(\'#search_result_abon\').html(\'\'); $(\'#search_abon\').val(\'\');">'
+                            )
+                    )
+            );
+
+        $('#search_abon_input_target').append($('#search_abon_input').children());
 
         menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
 
@@ -8079,20 +8397,22 @@
         //console.log(summ_type);
         var expirationDate =  $('#expirationDate').val();
 
+        var reqData = {
+            cert_id: id,
+            cell_price: cell_price,
+            office_id: office_id,
+            cell_date: $('#iWantThisDate2').val(),
+            summ_type: summ_type,
+            expirationDate: expirationDate
+		};
+        //console.log(reqData);
+
 		$.ajax({
 			url: "cert_cell_f.php",
 			global: false,
 			type: "POST",
 			dataType: "JSON",
-			data:
-			{
-                cert_id: id,
-                cell_price: cell_price,
-                office_id: office_id,
-                cell_date: $('#iWantThisDate2').val(),
-                summ_type: summ_type,
-                expirationDate: expirationDate
-            },
+			data: reqData,
 			cache: false,
 			beforeSend: function() {
 				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
@@ -8110,6 +8430,52 @@
 									'</ul>');
                     setTimeout(function () {
                         window.location.replace('certificate.php?id='+id+'');
+                        //console.log('client.php?id='+id);
+                    }, 100);
+				}else{
+					$('#errror').html(res.data);
+				}
+			}
+		});
+	}
+
+	//Продаём абонемент по базе
+	function Ajax_abon_cell(id, cell_price, filial_id){
+
+        var summ_type = document.querySelector('input[name="summ_type"]:checked').value;
+        //console.log(summ_type);
+        //var expirationDate =  $('#expirationDate').val();
+
+		$.ajax({
+			url: "abon_cell_f.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                abonement_id: id,
+                cell_price: cell_price,
+                filial_id: filial_id,
+                cell_date: $('#iWantThisDate2').val(),
+                summ_type: summ_type
+            },
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//console.log(res);
+				$('.center_block').remove();
+				$('#overlay').hide();
+
+				if(res.result == "success"){
+					//$('#data').hide();
+					$('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Абонемент продан</li>'+
+									'</ul>');
+                    setTimeout(function () {
+                        window.location.replace('abonement.php?id='+id+'');
                         //console.log('client.php?id='+id);
                     }, 100);
 				}else{
@@ -8164,7 +8530,52 @@
         }
 	}
 
-	//Добавим сертификат сертификат в оплату
+	//Удалим продажу абонемента
+	function Ajax_abonement_celling_del(id){
+
+        var rys = false;
+
+        rys = confirm("Вы собираетесь отменить продажу абонемента.\nВы уверены?");
+
+        if (rys) {
+
+            var link = "abonement_cell_dell_f.php";
+
+            var Data = {
+                abonement_id: id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: Data,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+
+					 if(res.result == "success"){
+					    //$('#data').hide();
+					    $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+					    '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Продажа отменена</li>'+
+					    '</ul>');
+					    setTimeout(function () {
+                            location.reload();
+					    }, 100);
+					 }
+					 if(res.result == "error"){
+					    $('#errror').html(res.data);
+					 }
+                }
+            });
+        }
+	}
+
+	//Добавим сертификат в оплату
 	function Ajax_cert_add_pay(id){
 
         $('#overlay').hide();
@@ -8209,6 +8620,52 @@
 		});
 	}
 
+	//Добавим абонемент в оплату
+	function Ajax_abon_add_pay(id){
+
+        $('#overlay').hide();
+        $('#search_abon_input').append($('#search_abon_input_target').children());
+        $('.center_block').remove();
+        $('#search_result_abon').html('');
+        $('#search_abon').val('');
+
+        //$('.have_money_or_not').show();
+        $('#abons_result').show();
+        $('#showAbonPayAdd_button').hide();
+
+		$.ajax({
+			url: "FastSearchAbonOne.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                id: id
+            },
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//console.log(res);
+
+				$('.center_block').remove();
+				$('#overlay').hide();
+
+				if(res.result == "success"){
+					//$('#data').hide();
+                    $('#abons_result').append(res.data);
+
+                    calculatePaymentAbon();
+
+				}else{
+					//$('#errror').html(res.data);
+				}
+			}
+		});
+	}
+
 	//Очистить все сертификаты
 	function certsResultDel(){
 
@@ -8220,6 +8677,25 @@
 				'<td><span class="lit_grey_text">Номер</span></td>'+
 					'<td><span class="lit_grey_text">Номинал</span></td>'+
 					'<td><span class="lit_grey_text">К оплате (остаток)</span></td>'+
+				'<td style="text-align: center;"><i class="fa fa-times" aria-hidden="true" title="Удалить"></i></td>'+
+            '</tr>'
+		);
+
+        $('#summ').html(0);
+
+	}
+
+	//Очистить все абонементы
+	function abonsResultDel(){
+
+        $('#abons_result').hide();
+        $('#showAbonPayAdd_button').show();
+
+        $('#abons_result').html(
+			'<tr>'+
+				'<td><span class="lit_grey_text">Номер</span></td>'+
+					'<td><span class="lit_grey_text">Всего минут</span></td>'+
+					'<td><span class="lit_grey_text">Осталось</span></td>'+
 				'<td style="text-align: center;"><i class="fa fa-times" aria-hidden="true" title="Удалить"></i></td>'+
             '</tr>'
 		);

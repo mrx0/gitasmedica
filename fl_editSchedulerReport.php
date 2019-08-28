@@ -346,7 +346,7 @@
                             
                         });
 						
-                        //Живой поиск
+                        //
                         $("#arendaNal, #ortoSummNal, #ortoSummBeznal, #specialistSummNal, #specialistSummBeznal, #analizSummNal, #analizSummBeznal, #summMinusNal, #summMinusBeznal, #solarSummNal, #solarSummBeznal").bind("change keyup input click", function() {
                             if($(this).val().length > 0){
                                 //console.log($(this).val().length);

@@ -291,7 +291,7 @@
                                         //if ((($invoice_j[0]['summ'] != $invoice_j[0]['paid']) && ($invoice_j[0]['closed_time'] == 0)) || ($invoice_j[0]['summins'] != 0) || (($invoice_j[0]['summins'] == 0) && ($invoice_j[0]['summ'] == 0) && ($invoice_j[0]['paid'] == 0))) {
                                         echo '
                                             <ul style="margin-left: 6px; margin-bottom: 10px;">	
-                                                <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Посещение</li>';
+                                                <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Посещение</li>';ё
 
                                         $t_f_data_db = array();
                                         $cosmet_data_db = array();

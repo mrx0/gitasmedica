@@ -284,7 +284,27 @@
 			echo '<li><a href="stomat.php" title="Стоматология">Стоматология</a></li>';
 		}*/
 		if (($cosm['see_all'] == 1) || ($cosm['see_own'] == 1) || $god_mode){
-			echo '<li><a href="cosmet.php">Косметология</a></li>';
+			echo '
+                <li>
+                    <a href="cosmet.php">Косметология</a>';
+            /*echo '
+                    <ul style="background: #FFF; width: 108px;">
+                        <li><a href="" style="height: 20px; border: 1px dotted #CCC;">
+                            --- 
+                        </a>
+                        </li>
+                        <li><a href="" style="height: 20px; border: 1px dotted #CCC;">
+                            ---
+                        </a>
+                        </li>
+                        <li><a href="" style="height: 20px; border: 1px dotted #CCC;">
+                            ---
+                        <!--<div class="have_new-zapis notes_count" style="display: none; top: -5px; right: -20px; background: red;" title=""></div>-->
+                        </a>
+                        </li>
+                    </ul>';*/
+            echo '
+                </li>';
 		}
 		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
             echo '<li>';
@@ -305,23 +325,23 @@
                 echo '
                     <ul style="background: #FFF; width: 108px;">
                         <li><a href="zapis_own.php?y=' . $yearT . '&m=' . $monthT . '&d=' . $dayT . '&worker=' . $_SESSION['id'] . '" style="height: 20px; border: 1px dotted #CCC;">
-                        Моя запись
+                            Моя запись
                         </a></li>
                     </ul>';
             }else{
                 echo '
                     <ul style="background: #FFF; width: 108px;">
                         <li><a href="zapis.php?y=' . $yearT . '&m=' . $monthT . '&d=' . $dayT . '&filial=' . $filial_id_default . '" style="height: 20px; border: 1px dotted #CCC;">
-                        Запись
+                            Запись
                         </a>
                         </li>
                         <li><a href="zapis_full.php?y=' . $yearT . '&m=' . $monthT . '&d=' . $dayT . '&filial=' . $filial_id_default . '" style="height: 20px; border: 1px dotted #CCC;">
-                        Подробно
+                            Подробно
                         </a>
                         </li>
                         <li><a href="zapis_online.php" style="height: 20px; border: 1px dotted #CCC;">
-                        Запись онлайн
-                        <div class="have_new-zapis notes_count" style="display: none; top: -5pxz; right: -20px; background: red;" title="Есть необработанные онлайн заявки"></div>
+                            Запись онлайн
+                        <div class="have_new-zapis notes_count" style="display: none; top: -5px; right: -20px; background: red;" title="Есть необработанные онлайн заявки"></div>
                         </a>
                         </li>
                     </ul>';
