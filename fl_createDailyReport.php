@@ -224,13 +224,24 @@
 
                     $SummNalStomCosm = 0;
                     $SummBeznalStomCosm = 0;
+
                     $SummCertNal = 0;
                     $SummCertBeznal = 0;
                     $CertCount = 0;
+
                     $SummGiveOutCash = 0;
+
                     $SummAbonNal = 0;
                     $SummAbonBeznal = 0;
                     $AbonCount = 0;
+
+                    $SummSolarNal = 0;
+                    $SummSolarBeznal = 0;
+                    $SolarCount = 0;
+
+                    $SummRealizNal = 0;
+                    $SummRealizBeznal = 0;
+                    $RealizCount = 0;
 
                     $result = ajaxShowResultCashbox($datastart, $dataend, $filial_id, 0, 1, false);
                     //var_dump($result);
@@ -274,6 +285,35 @@
                                 }
                             }
                         }
+                        //солярий
+                        if (!empty($result['rezult_solar'])) {
+
+                            $SolarCount = count($result['rezult_solar']);
+
+                            foreach ($result['rezult_solar'] as $item) {
+                                if ($item['summ_type'] == 1) {
+                                    $SummSolarNal += $item['summ'];
+                                }
+                                if ($item['summ_type'] == 2) {
+                                    $SummSolarBeznal += $item['summ'];
+                                }
+                            }
+                        }
+                        //реализация
+                        if (!empty($result['rezult_realiz'])) {
+
+                            $AbonRealiz = count($result['rezult_realiz']);
+
+                            foreach ($result['rezult_realiz'] as $item) {
+                                if ($item['summ_type'] == 1) {
+                                    $SummRealizNal += $item['summ'];
+                                }
+                                if ($item['summ_type'] == 2) {
+                                    $SummRealizBeznal += $item['summ'];
+                                }
+                            }
+                        }
+                        //Расходы
                         if (!empty($result['rezult_give_out_cash'])){
                             foreach ($result['rezult_give_out_cash'] as $item) {
                                 $SummGiveOutCash += $item['summ'];
@@ -301,12 +341,22 @@
                                     <div class="cellRight" id="general">
                                         <div style="margin: 2px 0;">Наличная оплата: <b><i id="SummNalStomCosm" class="allSummNal">' . $SummNalStomCosm . '</i></b> руб.</div>
                                         <div style="margin: 2px 0;">Безналичная оплата: <b><i id="SummBeznalStomCosm" class="allSummBeznal">' . $SummBeznalStomCosm . '</i></b> руб.</div>
+                                        
                                         <div style="margin: 6px 0 2px;">Продано сертификатов: <b><i id="CertCount" class="">' . $CertCount . '</i></b> шт.</div>
-                                        <div style="margin: 2px 0;">- наличная оплата: <b><i id="SummCertNal" class="allSummNal">' . $SummCertNal . '</i></b> руб.</div>
-                                        <div style="margin: 2px 0;">- безналичная оплата: <b><i id="SummCertBeznal" class="allSummBeznal">' . $SummCertBeznal . '</i></b> руб.</div>
+                                        <div style="margin: 2px 0;">- нал. оплата: <b><i id="SummCertNal" class="allSummNal">' . $SummCertNal . '</i></b> руб.</div>
+                                        <div style="margin: 2px 0;">- безнал. оплата: <b><i id="SummCertBeznal" class="allSummBeznal">' . $SummCertBeznal . '</i></b> руб.</div>
+                                        
                                         <div style="margin: 6px 0 2px;">Продано абонементов: <b><i id="AbonCount" class="">' . $AbonCount . '</i></b> шт.</div>
-                                        <div style="margin: 2px 0;">- наличная оплата: <b><i id="SummAbonNal" class="allSummNal">' . $SummAbonNal . '</i></b> руб.</div>
-                                        <div style="margin: 2px 0;">- безналичная оплата: <b><i id="SummAbonBeznal" class="allSummBeznal">' . $SummAbonBeznal . '</i></b> руб.</div>
+                                        <div style="margin: 2px 0;">- нал. оплата: <b><i id="SummAbonNal" class="allSummNal">' . $SummAbonNal . '</i></b> руб.</div>
+                                        <div style="margin: 2px 0;">- безнал. оплата: <b><i id="SummAbonBeznal" class="allSummBeznal">' . $SummAbonBeznal . '</i></b> руб.</div>
+                                        
+                                        <div style="margin: 6px 0 2px;">Посещения солярия: <b><i id="SolarCount" class="">' . $SolarCount . '</i></b> шт.</div>
+                                        <div style="margin: 2px 0;">- нал. оплата: <b><i id="SummSolarNal" class="allSummNal">' . $SummSolarNal . '</i></b> руб.</div>
+                                        <div style="margin: 2px 0;">- безнал. оплата: <b><i id="SummSolarBeznal" class="allSummBeznal">' . $SummSolarBeznal . '</i></b> руб.</div>
+                                        
+                                        <div style="margin: 6px 0 2px;">Реализация: <b><i id="RealizCount" class="">' . $RealizCount . '</i></b> шт.</div>
+                                        <div style="margin: 2px 0;">- нал. оплата: <b><i id="SummRealizNal" class="allSummNal">' . $SummRealizNal . '</i></b> руб.</div>
+                                        <div style="margin: 2px 0;">- безнал. оплата: <b><i id="SummRealizBeznal" class="allSummBeznal">' . $SummRealizBeznal . '</i></b> руб.</div>
                                     </div>
                                 </div>';
 

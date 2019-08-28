@@ -2145,8 +2145,10 @@
         $msql_cnnct = ConnectToDB2 ();
 
         $rezult = array();
-        $rezult_abon = array();
         $rezult_cert = array();
+        $rezult_abon = array();
+        $rezult_solar = array();
+        $rezult_realiz = array();
         $rezult_give_out_cash = array();
         $arr = array();
 
@@ -2197,7 +2199,7 @@
                     STR_TO_DATE('".$datastart." 00:00:00', '%Y-%m-%d %H:%i:%s')
                     AND 
                     STR_TO_DATE('".$dataend." 23:59:59', '%Y-%m-%d %H:%i:%s') 
-                    ".$queryFilial.$queryType."
+                    ".$queryFilial.$queryType.$show_deleted_str."
                     ORDER BY `cell_time` DESC";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -2218,7 +2220,7 @@
                     STR_TO_DATE('".$datastart." 00:00:00', '%Y-%m-%d %H:%i:%s')
                     AND 
                     STR_TO_DATE('".$dataend." 23:59:59', '%Y-%m-%d %H:%i:%s') 
-                    ".$queryFilial2.$queryType."
+                    ".$queryFilial2.$queryType.$show_deleted_str."
                     ORDER BY `cell_time` DESC";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -2226,6 +2228,49 @@
             if ($number != 0){
                 while ($arr = mysqli_fetch_assoc($res)){
                     array_push($rezult_abon, $arr);
+                }
+            }else{
+                //addClientBalanceNew ($client_id, $Summ);
+            }
+        }
+
+        //Приход денег за солярий
+        if ($certificatesShow != 0){
+            $query = "SELECT * FROM `journal_solar` WHERE
+                    `date_in` BETWEEN 
+                    STR_TO_DATE('".$datastart." 00:00:00', '%Y-%m-%d %H:%i:%s')
+                    AND 
+                    STR_TO_DATE('".$dataend." 23:59:59', '%Y-%m-%d %H:%i:%s') 
+                    AND (`summ_type`='1' OR `summ_type`='2')
+                    ".$queryFilial2.$queryType.$show_deleted_str."
+                    ORDER BY `date_in` DESC";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($rezult_solar, $arr);
+                }
+            }else{
+                //addClientBalanceNew ($client_id, $Summ);
+            }
+        }
+
+        //Приход денег за реализацию
+        if ($certificatesShow != 0){
+            $query = "SELECT * FROM `journal_realiz` WHERE
+                    `date_in` BETWEEN 
+                    STR_TO_DATE('".$datastart." 00:00:00', '%Y-%m-%d %H:%i:%s')
+                    AND 
+                    STR_TO_DATE('".$dataend." 23:59:59', '%Y-%m-%d %H:%i:%s') 
+                    ".$queryFilial2.$queryType.$show_deleted_str."
+                    ORDER BY `date_in` DESC";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($rezult_realiz, $arr);
                 }
             }else{
                 //addClientBalanceNew ($client_id, $Summ);
@@ -2258,6 +2303,8 @@
         $result['rezult'] = $rezult;
         $result['rezult_cert'] = $rezult_cert;
         $result['rezult_abon'] = $rezult_abon;
+        $result['rezult_solar'] = $rezult_solar;
+        $result['rezult_realiz'] = $rezult_realiz;
         $result['rezult_give_out_cash'] = $rezult_give_out_cash;
 
         return $result;

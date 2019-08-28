@@ -4028,22 +4028,44 @@
             arenda: $("#arendaNal").val(),
             zreport: $("#zreport").val(),
             allsumm: $("#allsumm").html(),
+
             SummNal: $("#SummNal").html(),
             SummBeznal: $("#SummBeznal").html(),
+
             SummNalStomCosm: $("#SummNalStomCosm").html(),
             SummBeznalStomCosm: $("#SummBeznalStomCosm").html(),
+
             CertCount: $("#CertCount").html(),
             SummCertNal: $("#SummCertNal").html(),
             SummCertBeznal: $("#SummCertBeznal").html(),
+
+            AbonCount: $("#AbonCount").html(),
+            SummAbonNal: $("#SummAbonNal").html(),
+            SummAbonBeznal: $("#SummAbonBeznal").html(),
+
+            SolarCount: $("#SolarCount").html(),
+            SummSolarNal: $("#SummSolarNal").html(),
+            SummSolarBeznal: $("#SummSolarBeznal").html(),
+
+            RealizCount: $("#RealizCount").html(),
+            SummRealizNal: $("#SummRealizNal").html(),
+            SummRealizBeznal: $("#SummRealizBeznal").html(),
+
+
             ortoSummNal: $("#ortoSummNal").val(),
             ortoSummBeznal: $("#ortoSummBeznal").val(),
+
             specialistSummNal: $("#specialistSummNal").val(),
             specialistSummBeznal: $("#specialistSummBeznal").val(),
+
             analizSummNal: $("#analizSummNal").val(),
             analizSummBeznal: $("#analizSummBeznal").val(),
+
             solarSummNal: $("#solarSummNal").val(),
             solarSummBeznal: $("#solarSummBeznal").val(),
-            summMinusNal: $("#summMinusNal").html()/*,
+
+            summMinusNal: $("#summMinusNal").html()
+            /*,
             bankSummNal: $("#bankSummNal").html(),
             directorSummNal: $("#directorSummNal").html()*/
         };
