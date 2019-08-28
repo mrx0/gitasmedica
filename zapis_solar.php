@@ -458,6 +458,7 @@
                                 </li>';
 
                     foreach ($realiz_j as $item){
+                        //var_dump ($item);
 
                         //Если удалён, то меняем цвет на серый
                         if ( $item['status'] != 9){
@@ -500,9 +501,9 @@
                         }elseif($item['summ_type'] == 3) {
                             $result_temp .= 'По абонементу<br><br>';
 
-                            if ($item['abon_id'] > 0){
-                                $result_temp .= '<a href="abonement.php?id='.$item['abon_id'].'" class="ahref button_tiny">Абонемент #'.$item['abon_id'].'</a>';
-                            }
+//                            if ($item['abon_id'] > 0){
+//                                $result_temp .= '<a href="abonement.php?id='.$item['abon_id'].'" class="ahref button_tiny">Абонемент #'.$item['abon_id'].'</a>';
+//                            }
 
                         }else{
                             $result_temp .= '<span style="color: red;">Ошибка #58!</span>';

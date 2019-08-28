@@ -355,11 +355,11 @@
                                     </div>
                                 </div>';*/
 
-                        echo '<input type="hidden" id="specialistSummNal" value="0">';
-                        echo '<input type="hidden" id="specialistSummBeznal" value="0">';
+                        echo '<input type="hidden" id="specialistSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_specialist_nal'].'">';
+                        echo '<input type="hidden" id="specialistSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_specialist_beznal'].'">';
 
-                        echo '<input type="hidden" id="ortoSummNal" value="0">';
-                        echo '<input type="hidden" id="ortoSummBeznal" value="0">';
+                        echo '<input type="hidden" id="ortoSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_orto_nal'].'">';
+                        echo '<input type="hidden" id="ortoSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_orto_beznal'].'">';
 
 /*                        echo '
                                 <div class="cellsBlock400px" style="font-size: 90%;">
@@ -373,8 +373,8 @@
                                     </div>
                                 </div>';*/
 
-                        echo '<input type="hidden" id="analizSummNal" value="0">';
-                        echo '<input type="hidden" id="analizSummBeznal" value="0">';
+                        echo '<input type="hidden" id="analizSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_analiz_nal'].'">';
+                        echo '<input type="hidden" id="analizSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_analiz_beznal'].'">';
 
 /*                        echo '
                                 <div class="cellsBlock400px" style="font-size: 90%;">
@@ -388,8 +388,8 @@
                                     </div>
                                 </div>';*/
 
-                        echo '<input type="hidden" id="solarSummNal" value="0">';
-                        echo '<input type="hidden" id="solarSummBeznal" value="0">';
+                        echo '<input type="hidden" id="solarSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_solar_nal'].'">';
+                        echo '<input type="hidden" id="solarSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_solar_beznal'].'">';
 
                         //конец левого блока
                         echo '

@@ -122,7 +122,7 @@ if ($enter_ok){
                             
                             <div class="cellsBlock2">
                                 <div class="cellLeft">
-                                <span style="font-size:80%;  color: #555;">Кол-во минут</span><br>
+                                <span style="font-size:80%;  color: #555;">Кол-во минут<br>(оплаченные или которые вычитаются с абонемента)</span><br>
                                     <input type="text" id="min_count" value="0" class="" autocomplete="off" autofocus>
                                     <label id="min_count_error" class="error"></label>
                                 </div>
@@ -242,6 +242,8 @@ if ($enter_ok){
                 
                 <script>
                 
+                    var onlyRealiz = false;
+                
                     $(document).ready(function(){
                         //console.log($("#selectDeviceType").val());
                         
@@ -261,11 +263,12 @@ if ($enter_ok){
                         //Средства для загара
                         var realiz_summ = $("#realiz_summ").val();
                         
-                        //Всего 
-                        $("#allSumm").html(min_price * min_count + Number(realiz_summ));
-                        
-                        
-
+                        //Всего
+                        if (onlyRealiz){
+                            $("#allSumm").html(Number(realiz_summ));
+                        }else{
+                            $("#allSumm").html(min_price * min_count + Number(realiz_summ));                            
+                        }
                     });
                     
 
@@ -291,7 +294,11 @@ if ($enter_ok){
                         var realiz_summ = $("#realiz_summ").val();
                         
                         //Всего 
-                        $("#allSumm").html(min_price * min_count + Number(realiz_summ));
+                        if (onlyRealiz){
+                            $("#allSumm").html(Number(realiz_summ));
+                        }else{
+                            $("#allSumm").html(min_price * min_count + Number(realiz_summ));                            
+                        }
                         
                         blockWhileWaiting (false);
                         
@@ -336,8 +343,12 @@ if ($enter_ok){
                         var realiz_summ = $("#realiz_summ").val();
                         
                         //Всего 
-                        $("#allSumm").html(min_price * min_count + Number(realiz_summ));
-                        
+                        if (onlyRealiz){
+                            $("#allSumm").html(Number(realiz_summ));
+                        }else{
+                            $("#allSumm").html(min_price * min_count + Number(realiz_summ));                            
+                        }
+
                         blockWhileWaiting (false);
                         
                     });
@@ -381,8 +392,12 @@ if ($enter_ok){
                         var realiz_summ = $("#realiz_summ").val();
                         
                         //Всего 
-                        $("#allSumm").html(min_price * min_count + Number(realiz_summ));
-                        
+                        if (onlyRealiz){
+                            $("#allSumm").html(Number(realiz_summ));
+                        }else{
+                            $("#allSumm").html(min_price * min_count + Number(realiz_summ));                            
+                        }
+
                         blockWhileWaiting (false);
                         
                     });
@@ -426,10 +441,13 @@ if ($enter_ok){
                                 
                                 //Средства для загара
                                 var realiz_summ = $("#realiz_summ").val();
-                                
+
                                 //Всего 
-                                $("#allSumm").html(min_price * min_count + Number(realiz_summ));
-                                
+                                if (onlyRealiz){
+                                    $("#allSumm").html(Number(realiz_summ));
+                                }else{
+                                    $("#allSumm").html(min_price * min_count + Number(realiz_summ));                                    
+                                }                                
                             }else{
                                 $("#finPrice").html(0);
                                 
@@ -477,13 +495,24 @@ if ($enter_ok){
                                 var realiz_summ = $("#realiz_summ").val();
                                 
                                 //Всего 
-                                $("#allSumm").html(min_price * min_count + Number(realiz_summ));
+                                if (onlyRealiz){
+                                    $("#allSumm").html(Number(realiz_summ));
+                                }else{
+                                    $("#allSumm").html(min_price * min_count + Number(realiz_summ));                                    
+                                }
+
                                 
-                            }else{
-                                $("#allSumm").html(Number($("#finPrice").html()));
+                            }else{  
+                                //Всего
+                                if (onlyRealiz){
+                                    $("#allSumm").html(0);
+                                }else{
+                                    $("#allSumm").html(Number($("#finPrice").html()));
+                                }
                             }
                         }
                     });
+                            
                     //Изменение типа оплаты
                     $("input[id=summ_type]").change(function() {
                         //console.log($(this).val());
@@ -496,6 +525,9 @@ if ($enter_ok){
                             $("#finPriceBlock").hide();
                             $("#realizSummBlock").hide();
                             $("#allSummBlock").hide();
+                            
+                            //Маркер, если сумма только за реализацию
+                            onlyRealiz = true;
                         }else{
                             $("#selectAbonementBlock").hide();
                             
@@ -503,7 +535,32 @@ if ($enter_ok){
                             $("#finPriceBlock").show();
                             $("#realizSummBlock").show();
                             $("#allSummBlock").show();
+                            
+                            //Маркер, если сумма только за реализацию
+                            onlyRealiz = false;
                         }
+                        
+                        //Получаем значение аттрибута в select
+                        var min_price = $("option:selected", $("#selectDeviceType")).attr("min_price");
+                        
+                        $("#oneMinPrice").html(min_price);
+                        
+                        var min_count = $("#min_count").val();
+                        //console.log(min_count);
+                        
+                        //Всего за загар
+                        $("#finPrice").html(min_price * min_count);
+                        
+                        //Средства для загара
+                        var realiz_summ = $("#realiz_summ").val();
+                        
+                        //Всего 
+                        if (onlyRealiz){
+                            $("#allSumm").html(Number(realiz_summ));
+                        }else{
+                            $("#allSumm").html(min_price * min_count + Number(realiz_summ));                            
+                        }
+                        
                     });
                     
                     

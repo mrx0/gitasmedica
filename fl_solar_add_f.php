@@ -107,16 +107,20 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         $_POST['finPrice'] = 0;
                     }
 
-                    //Вставим новую запись по солярию
-                    $query = "INSERT INTO `journal_solar` (
-                    `filial_id`, `date_in`, `device_type`, `min_count`, `summ_type`, `abon_id`, `min_price`, `summ`, `descr`, `create_time`, `create_person`)
-                    VALUES (
-                    '{$_POST['filial_id']}', '{$date_in}', '{$_POST['device_type']}', '{$_POST['min_count']}', '{$_POST['summ_type']}', '{$_POST['abon_id']}', '{$_POST['oneMinPrice']}', '{$_POST['finPrice']}', '{$_POST['descr']}', '{$time}', '{$_SESSION['id']}')";
+                    //Если минут больше 0, то добавим
+                    if ($_POST['min_count'] > 0) {
 
-                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                        //Вставим новую запись по солярию
+                        $query = "INSERT INTO `journal_solar` (
+                        `filial_id`, `date_in`, `device_type`, `min_count`, `summ_type`, `abon_id`, `min_price`, `summ`, `descr`, `create_time`, `create_person`)
+                        VALUES (
+                        '{$_POST['filial_id']}', '{$date_in}', '{$_POST['device_type']}', '{$_POST['min_count']}', '{$_POST['summ_type']}', '{$_POST['abon_id']}', '{$_POST['oneMinPrice']}', '{$_POST['finPrice']}', '{$_POST['descr']}', '{$time}', '{$_SESSION['id']}')";
 
-                    //ID новой позиции
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                        //ID новой позиции
 //                    $mysqli_insert_id = mysqli_insert_id($msql_cnnct);
+                    }
 
                     //Реализация (средства для загара)
                     if ($_POST['realiz_summ'] > 0){
