@@ -112,7 +112,7 @@
                     CloseDB($msql_cnnct);
                 }
 			}else{
-                echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка #20. Что-то пошло не так</div>'));
+                echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка #20. Что-то пошло не так</div>', 'd' => $_POST));
 			}
 		}
 	}
