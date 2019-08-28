@@ -38,14 +38,33 @@ if ($enter_ok){
                     'min_price' => 35
             ),
             array(
-                'id' => 1,
+                'id' => 2,
                 'name' => 'Вертикальный Luxura V5',
                 'min_price' => 30
             ),
             array(
-                'id' => 1,
+                'id' => 3,
                 'name' => 'Горизонтальный X7',
                 'min_price' => 30
+            )
+        );
+
+        //Цена по соляриям по филиалам
+        $solar_cost_j = array(
+            14 => array(
+                1 => 35,
+                2 => 30,
+                3 => 30
+            ),
+            15 => array(
+                1 => 30,
+                2 => 30,
+                3 => 25
+            ),
+            17 => array(
+                1 => 35,
+                2 => 30,
+                3 => 30
             )
         );
         //var_dump($solar_devices_j);
@@ -108,9 +127,20 @@ if ($enter_ok){
                                     <select name="selectDeviceType" id="selectDeviceType">';
 
         foreach ($solar_devices_j as $device_item){
+
+            if (isset($solar_cost_j[$filial_id])){
+                if (isset($solar_cost_j[$filial_id][$device_item['id']])){
+                    $min_price = $solar_cost_j[$filial_id][$device_item['id']];
+                }else{
+                    $min_price = 0;
+                }
+            }else{
+                $min_price = 0;
+            }
+
             echo '
                                     
-                                        <option value="'.$device_item['id'].'" min_price="'.$device_item['min_price'].'">'.$device_item['name'].'</option>';
+                                        <option value="'.$device_item['id'].'" min_price="'.$min_price.'">'.$device_item['name'].'</option>';
 
         }
         echo '

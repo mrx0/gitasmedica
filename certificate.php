@@ -154,7 +154,7 @@
                                         <span style="font-size: 80%;">Изменить срок <i class="fa fa-calendar" aria-hidden="true"></i></span><br>
                                         <input type="text" id="dataCertEnd" name="dataCertEnd" class="dateс" value="'.date('d.m.Y', strtotime($cert_j[0]['expires_time'])).'" onfocus="this.select();_Calendar.lcs(this)"
                                         onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
-                                        <i class="fa fa-check" aria-hidden="true" style="color: green; cursor: pointer;" title="Применить" onclick="Ajax_change_expiresTime('.$_GET['id'].');"></i>
+                                        <i class="fa fa-check" aria-hidden="true" style="color: green; cursor: pointer;" title="Применить" onclick="Ajax_change_expiresTime(\'cert\','.$_GET['id'].');"></i>
                                     </div>';
                             }
                             echo '    

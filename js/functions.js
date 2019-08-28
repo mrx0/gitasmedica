@@ -2038,10 +2038,17 @@
 		}
     }
 
-    function Ajax_change_expiresTime(id){
+    function Ajax_change_expiresTime(type ,id){
         //console.log(id);
+        //console.log(type);
 
-        var link = "cert_change_expiresTime.php";
+        if (type == 'cert') {
+            var link = "cert_change_expiresTime.php";
+        }
+        if (type == 'abon') {
+            var link = "abon_change_expiresTime.php";
+        }
+
 
         var dataCertEnd = $('#dataCertEnd').val();
         var dataCertEnd_arr = dataCertEnd.split('.');
@@ -2055,19 +2062,19 @@
 
         }else{
 
-            var certData = {
-                cert_id: id,
+            var reqData = {
+                id: id,
                 dataCertEnd: dataCertEnd_arr[2] + "-" + dataCertEnd_arr[1] + "-" + dataCertEnd_arr[0]
             };
 
-            console.log(dataCertEnd_arr[2]+"-"+dataCertEnd_arr[1]+"-"+dataCertEnd_arr[0]);
+            //console.log(dataCertEnd_arr[2]+"-"+dataCertEnd_arr[1]+"-"+dataCertEnd_arr[0]);
 
             $.ajax({
                 url: link,
                 global: false,
                 type: "POST",
                 dataType: "JSON",
-                data: certData,
+                data: reqData,
 
                 cache: false,
                 beforeSend: function () {
