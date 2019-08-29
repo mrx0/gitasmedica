@@ -392,7 +392,7 @@ if ($enter_ok){
                         }
                         
                         ///CalculateSolar (Number($("#min_count").val()), Number($("#oneMinPrice").val()), Number($("#discount").val()), Number($("#realiz_summ").val()), onlyRealiz);
-                        $("#allSumm").html(Number($(this).val()) + Number($("#finPrice").val()));  
+                        $("#allSumm").html(Number($(this).val()) + Number($("#realiz_summ").val()));  
                         
                     });
                     //Потеря фокуса на средствах для загара

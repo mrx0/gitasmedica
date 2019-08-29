@@ -88,6 +88,7 @@
                 echo '
                         <div>
 						    <a href="fl_tabel_print_choice.php?type='.$type.'" class="b4">Печать пачки</a>
+						    <a href="fl_tabels_check.php" class="b4">Проверка табелей</a>
 						</div>';
                 echo '    
 					</header>
