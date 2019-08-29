@@ -27,8 +27,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         //...и сертификата
         $query_abon_dop = '';
 
-        if (!isset($_POST['filial_id']) || !isset($_POST['date_in']) || !isset($_POST['device_type']) ||
-            !isset($_POST['min_count']) || !isset($_POST['summ_type']) ||
+        if (!isset($_POST['filial_id']) || !isset($_POST['date_in']) ||
+            !isset($_POST['min_count']) || !isset($_POST['discount']) || !isset($_POST['summ_type']) ||
             !isset($_POST['oneMinPrice']) || !isset($_POST['finPrice']) ||
             !isset($_POST['descr']) || !isset($_POST['abon_id']) ||
             !isset($_POST['realiz_summ'])
@@ -112,9 +112,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                         //Вставим новую запись по солярию
                         $query = "INSERT INTO `journal_solar` (
-                        `filial_id`, `date_in`, `device_type`, `min_count`, `summ_type`, `abon_id`, `min_price`, `summ`, `descr`, `create_time`, `create_person`)
+                        `filial_id`, `date_in`, `discount`, `min_count`, `summ_type`, `abon_id`, `min_price`, `summ`, `descr`, `create_time`, `create_person`)
                         VALUES (
-                        '{$_POST['filial_id']}', '{$date_in}', '{$_POST['device_type']}', '{$_POST['min_count']}', '{$_POST['summ_type']}', '{$_POST['abon_id']}', '{$_POST['oneMinPrice']}', '{$_POST['finPrice']}', '{$_POST['descr']}', '{$time}', '{$_SESSION['id']}')";
+                        '{$_POST['filial_id']}', '{$date_in}', '{$_POST['discount']}', '{$_POST['min_count']}', '{$_POST['summ_type']}', '{$_POST['abon_id']}', '{$_POST['oneMinPrice']}', '{$_POST['finPrice']}', '{$_POST['descr']}', '{$time}', '{$_SESSION['id']}')";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 

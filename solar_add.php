@@ -122,37 +122,37 @@ if ($enter_ok){
 
         //var_dump($solar_cost_j[$filial_id]);
 
+//        echo '
+//                            <div class="cellsBlock2">
+//                                <div class="cellLeft">
+//                                    <span style="font-size:80%;  color: #555;">Тип солярия</span><br>
+//                                    <select name="selectDeviceType" id="selectDeviceType">';
+
+
+//        foreach ($solar_devices_j as $device_item){
+//
+//            if (isset($solar_cost_j[$filial_id])){
+//                if (isset($solar_cost_j[$filial_id][$device_item['id']])){
+//                    $min_price = $solar_cost_j[$filial_id][$device_item['id']];
+//                }else{
+//                    $min_price = 0;
+//                }
+//            }else{
+//                $min_price = 0;
+//            }
+//
+//            echo '
+//
+//                                        <option value="'.$device_item['id'].'" min_price="'.$min_price.'">'.$device_item['name'].'</option>';
+//
+//        }
+//        echo '
+//                                    </select>';
+
+//        echo '
+//                                </div>
+//                            </div>';
         echo '
-                            <div class="cellsBlock2">
-                                <div class="cellLeft">
-                                    <span style="font-size:80%;  color: #555;">Тип солярия</span><br>
-                                    <select name="selectDeviceType" id="selectDeviceType">';
-
-
-        foreach ($solar_devices_j as $device_item){
-
-            if (isset($solar_cost_j[$filial_id])){
-                if (isset($solar_cost_j[$filial_id][$device_item['id']])){
-                    $min_price = $solar_cost_j[$filial_id][$device_item['id']];
-                }else{
-                    $min_price = 0;
-                }
-            }else{
-                $min_price = 0;
-            }
-
-            echo '
-                                    
-                                        <option value="'.$device_item['id'].'" min_price="'.$min_price.'">'.$device_item['name'].'</option>';
-
-        }
-        echo '
-                                    </select>';
-
-        echo '
-                                </div>
-                            </div>
-                            
                             <div class="cellsBlock2">
                                 <div class="cellLeft">
                                 <span style="font-size:80%;  color: #555;">Кол-во минут<br>(оплаченные или которые вычитаются с абонемента)</span><br>
@@ -196,17 +196,6 @@ if ($enter_ok){
                             </div>';
 
         echo '
-                            <!--<div id="discountBlock" class="cellsBlock2">
-                                <div class="cellLeft">
-                                    <span style="font-size:80%;  color: #555;">Скидка</span><br>
-                                    <input id="discount" name="discount" value="0" type="radio" checked> Нет скидки<br>
-                                    <input id="discount" name="discount" value="17" type="radio"> 30%<br>
-                                    <input id="discount" name="discount" value="16" type="radio"> 35%<br>
-                                    <input id="discount" name="discount" value="12" type="radio"> 50%<br>
-                                    <input id="discount" name="discount" value="9" type="radio"> 65%<br>
-                                </div>
-                            </div>-->
-                            
                             <div id="oneMinPriceBlock" class="cellsBlock2">
                                 <div class="cellLeft">
                                 <span style="font-size:80%;  color: #555;">Цена 1 мин. (руб.)</span><br>
@@ -216,10 +205,21 @@ if ($enter_ok){
                                 </div>
                             </div>
                             
+                            <div id="discountBlock" class="cellsBlock2">
+                                <div class="cellLeft">
+                                <span style="font-size:80%;  color: #555;">Скидка ( % )</span><br>
+                                    <input type="text" id="discount" value="0" class="" autocomplete="off">
+                                    <label id="discount_error" class="error"></label>
+                                    <!--<div id="oneMinPrice"></div>-->
+                                </div>
+                            </div>
+                            
                             <div id="finPriceBlock" class="cellsBlock2">
                                 <div class="cellLeft">
                                 <span style="font-size:80%;  color: #555;">Стоимость (руб.)</span><br>
-                                    <div id="finPrice" class="calculateOrder"></div>
+                                    <input type="text" id="finPrice" value="0" class="" style="font-size: 18px;font-weight: bold;font-style: italic;color: rgb(2, 108, 33);" autocomplete="off" autofocus>
+                                    <label id="finPrice_error" class="error"></label>
+                                    <!--<div id="finPrice" class="calculateOrder"></div>-->
                                 </div>
                             </div>
                             
@@ -291,66 +291,25 @@ if ($enter_ok){
                     var onlyRealiz = false;
                 
                     $(document).ready(function(){
-                        //console.log($("#selectDeviceType").val());
-                        
-                        //Получаем значение аттрибута в select
-                        //var min_price = $("option:selected", $("#selectDeviceType")).attr("min_price");
-                        //console.log(min_price);
-                        
-                        //Цена за 1 минуту
-                        //$("#oneMinPrice").html(min_price);
-                        
-                        //var min_count = $("#min_count").val();
-                        //console.log(min_count);
-
-                        //Всего за загар
-//                        $("#finPrice").html(min_price * min_count);
-                        $("#finPrice").html(0);
-                        
-                        //Средства для загара
-//                        var realiz_summ = $("#realiz_summ").val();
-//                        
-//                        //Всего
-//                        if (onlyRealiz){
-//                            $("#allSumm").html(Number(realiz_summ));
-//                        }else{
-//                            $("#allSumm").html(min_price * min_count + Number(realiz_summ));                            
-//                        }
+                        //Обнуляем все суммы
+                        $("#finPrice").val(0);
                         $("#allSumm").html(0);
                     });
                     
 
                     //Изменение типа солярия
-                    $("#selectDeviceType").change(function(){
-                        
-                        blockWhileWaiting (true);
-                        
-                        //Получаем значение аттрибута в select
+//                    $("#selectDeviceType").change(function(){
+//                        
+//                        blockWhileWaiting (true);
+//                        
+//                        //Получаем значение аттрибута в select
 //                        var min_price = $("option:selected", this).attr("min_price");
 //                        //console.log( min_price);
 //                        //console.log($(this).val());
 //                        
-//                        $("#oneMinPrice").html(min_price);
+//                        blockWhileWaiting (false);
 //                        
-//                        var min_count = $("#min_count").val();
-//                        //console.log(min_count);
-//                        
-//                        //Всего за загар
-//                        $("#finPrice").html(min_price * min_count);
-//                        
-//                        //Средства для загара
-//                        var realiz_summ = $("#realiz_summ").val();
-//                        
-//                        //Всего 
-//                        if (onlyRealiz){
-//                            $("#allSumm").html(Number(realiz_summ));
-//                        }else{
-//                            $("#allSumm").html(min_price * min_count + Number(realiz_summ));                            
-//                        }
-                        
-                        blockWhileWaiting (false);
-                        
-                    });
+//                    });
                     //Потеря фокуса на кол-ве минут
                     $("#min_count").blur(function() {
                         //console.log($(this).val());
@@ -376,29 +335,7 @@ if ($enter_ok){
                             }
                         }
                         
-                        //Получаем значение аттрибута в select
-                        //var min_price = $("option:selected", $("#selectDeviceType")).attr("min_price");
-                        var min_price = Number($("#oneMinPrice").val());
-                        
-                        //$("#oneMinPrice").html(min_price);
-                        
-                        var min_count = $("#min_count").val();
-                        //console.log(min_count);
-                        
-                        //Всего за загар
-                        $("#finPrice").html(min_price * min_count);
-                        
-                        //Средства для загара
-                        var realiz_summ = $("#realiz_summ").val();
-                        
-                        //Всего 
-                        if (onlyRealiz){
-                            $("#allSumm").html(Number(realiz_summ));
-                        }else{
-                            $("#allSumm").html(min_price * min_count + Number(realiz_summ));                            
-                        }
-
-                        blockWhileWaiting (false);
+                        CalculateSolar (Number($("#min_count").val()), Number($("#oneMinPrice").val()), Number($("#discount").val()), Number($("#realiz_summ").val()), onlyRealiz);
                         
                     });
                     //Потеря фокуса на цене за 1 минуту
@@ -426,33 +363,11 @@ if ($enter_ok){
                             }
                         }
                         
-                        //Получаем значение аттрибута в select
-                        //var min_price = $("option:selected", $("#selectDeviceType")).attr("min_price");
-                        var min_price = Number($("#oneMinPrice").val());
-                        
-                        //$("#oneMinPrice").html(min_price);
-                        
-                        var min_count = $("#min_count").val();
-                        //console.log(min_count);
-                        
-                        //Всего за загар
-                        $("#finPrice").html(min_price * min_count);
-                        
-                        //Средства для загара
-                        var realiz_summ = $("#realiz_summ").val();
-                        
-                        //Всего 
-                        if (onlyRealiz){
-                            $("#allSumm").html(Number(realiz_summ));
-                        }else{
-                            $("#allSumm").html(min_price * min_count + Number(realiz_summ));                            
-                        }
-
-                        blockWhileWaiting (false);
+                        CalculateSolar (Number($("#min_count").val()), Number($("#oneMinPrice").val()), Number($("#discount").val()), Number($("#realiz_summ").val()), onlyRealiz);
                         
                     });
-                    //Потеря фокуса на средствах для загара
-                    $("#realiz_summ").blur(function() {
+                    //Потеря фокуса на стоимости
+                    $("#finPrice").blur(function() {
                         //console.log($(this).val());
                         
                         var value = $(this).val();
@@ -476,29 +391,37 @@ if ($enter_ok){
                             }
                         }
                         
-                        //Получаем значение аттрибута в select
-                        //var min_price = $("option:selected", $("#selectDeviceType")).attr("min_price");
-                        var min_price = Number($("#oneMinPrice").val());
+                        ///CalculateSolar (Number($("#min_count").val()), Number($("#oneMinPrice").val()), Number($("#discount").val()), Number($("#realiz_summ").val()), onlyRealiz);
+                        $("#allSumm").html(Number($(this).val()) + Number($("#finPrice").val()));  
                         
-                        //$("#oneMinPrice").html(min_price);
+                    });
+                    //Потеря фокуса на средствах для загара
+                    $("#realiz_summ, #discount").blur(function() {
+                        //console.log($(this).val());
                         
-                        var min_count = $("#min_count").val();
-                        //console.log(min_count);
-                        
-                        //Всего за загар
-                        $("#finPrice").html(min_price * min_count);
-                        
-                        //Средства для загара
-                        var realiz_summ = $("#realiz_summ").val();
-                        
-                        //Всего 
-                        if (onlyRealiz){
-                            $("#allSumm").html(Number(realiz_summ));
+                        var value = $(this).val();
+                        //Если не число
+                        if (isNaN(value)){
+                            $(this).val(0);
                         }else{
-                            $("#allSumm").html(min_price * min_count + Number(realiz_summ));                            
+                            if (value < 0){
+                                $(this).val(value * -1);
+                            }else{
+                                if (value == ""){
+                                    $(this).val(0);
+                                }else{
+                                    if (value === undefined){
+                                        $(this).val(0);
+                                    }else{
+                                        //Всё норм с типами данных
+                                        //console.log("Всё норм с типами данных")
+                                    }
+                                }
+                            }
                         }
-
-                        blockWhileWaiting (false);
+                        
+                        //CalculateSolar (Number($("#min_count").val()), Number($("#oneMinPrice").val()), Number($("#discount").val()), Number($("#realiz_summ").val()), onlyRealiz);
+                        $("#allSumm").html(Number($(this).val()) + Number($("#finPrice").val()));  
                         
                     });
                     //Если действия над кол-вом минут
@@ -512,7 +435,7 @@ if ($enter_ok){
                             if ($(this).val() == 0){
                                 $(this).val("")
                             }
-                            $("#finPrice").html(0);
+                            $("#finPrice").val(0);
                             
                             //Средства для загара
                             //Всего 
@@ -523,34 +446,12 @@ if ($enter_ok){
                             //console.log($(this).val());
                             //console.log($(this).val().length);
                             
-                            //Получаем значение аттрибута в select
-                            //var min_price = $("option:selected", $("#selectDeviceType")).attr("min_price");
-                            var min_price = Number($("#oneMinPrice").val());
-                            //console.log(min_price);
-                            
                             if ($(this).val().length > 0){ 
                                 
-                                //console.log($(this).val().length);
+                                CalculateSolar (Number($("#min_count").val()), Number($("#oneMinPrice").val()), Number($("#discount").val()), Number($("#realiz_summ").val()), onlyRealiz);
                                 
-                                //$("#oneMinPrice").html(min_price);
-                                
-                                var min_count = $("#min_count").val();
-                                //console.log(min_count);
-                                
-                                //Всего за загар
-                                $("#finPrice").html(min_price * min_count);
-                                
-                                //Средства для загара
-                                var realiz_summ = $("#realiz_summ").val();
-
-                                //Всего 
-                                if (onlyRealiz){
-                                    $("#allSumm").html(Number(realiz_summ));
-                                }else{
-                                    $("#allSumm").html(min_price * min_count + Number(realiz_summ));                                    
-                                }                                
                             }else{
-                                $("#finPrice").html(0);
+                                $("#finPrice").val(0);
                                 
                                 //Средства для загара
                                 //Всего 
@@ -569,7 +470,7 @@ if ($enter_ok){
                             if ($(this).val() == 0){
                                 $(this).val("")
                             }
-                            $("#finPrice").html(0);
+                            $("#finPrice").val(0);
                             
                             //Средства для загара
                             //Всего 
@@ -582,32 +483,56 @@ if ($enter_ok){
                             
                             //Получаем значение аттрибута в select
                             //var min_price = $("option:selected", $("#selectDeviceType")).attr("min_price");
-                            var min_price = Number($("#oneMinPrice").val());
-                            //console.log(min_price);
                             
                             if ($(this).val().length > 0){ 
                                 
-                                //console.log($(this).val().length);
+                                CalculateSolar (Number($("#min_count").val()), Number($("#oneMinPrice").val()), Number($("#discount").val()), Number($("#realiz_summ").val()), onlyRealiz);
                                 
-                                $("#oneMinPrice").html(min_price);
-                                
-                                var min_count = $("#min_count").val();
-                                //console.log(min_count);
-                                
-                                //Всего за загар
-                                $("#finPrice").html(min_price * min_count);
+                            }else{
+                                $("#finPrice").val(0);
                                 
                                 //Средства для загара
-                                var realiz_summ = $("#realiz_summ").val();
-
                                 //Всего 
-                                if (onlyRealiz){
-                                    $("#allSumm").html(Number(realiz_summ));
-                                }else{
-                                    $("#allSumm").html(min_price * min_count + Number(realiz_summ));                                    
-                                }                                
+                                $("#allSumm").html($("#realiz_summ").val());
+                            }
+                        }
+                    });
+                    //Если действия над стоимостью
+                    $("#finPrice").bind("change keyup input click", function() {
+                        //console.log($(this).val());
+                        
+                        if($(this).val().length > 0){
+                            console.log($(this).val().length);
+                            
+                            //меняем запятую на точку (разделитель)
+                            $(this).val($(this).val().replace(\',\', \'.\'));
+                            
+                            if ($(this).val() == 0){
+                                $(this).val("")
+                            }
+                            //$("#finPrice").val(0);
+                            
+                            //Средства для загара
+                            //Всего 
+                            $("#allSumm").html($("#realiz_summ").val());
+                            
+                        }
+                        if (!isNaN($(this).val())){
+                            //console.log($(this).val());
+                            //console.log($(this).val().length);
+//                            console.log(isNaN($(this).val()));
+                            
+                            //Получаем значение аттрибута в select
+                            //var min_price = $("option:selected", $("#selectDeviceType")).attr("min_price");
+                            
+                            if ($(this).val().length > 0){ 
+                                
+                                //CalculateSolar (Number($("#min_count").val()), Number($("#oneMinPrice").val()), Number($("#discount").val()), Number($("#realiz_summ").val()), onlyRealiz);
+                                
+                                $("#allSumm").html(Number($(this).val()) + Number($("#realiz_summ").val()));                                
+                                
                             }else{
-                                $("#finPrice").html(0);
+                                $("#finPrice").val(0);
                                 
                                 //Средства для загара
                                 //Всего 
@@ -627,79 +552,60 @@ if ($enter_ok){
                                 $(this).val("")
                             }
                             
-                            $("#allSumm").html(0);
+                            //$("#allSumm").html(0);
                         }
                         if (!isNaN($(this).val())){
                             //console.log($(this).val());
                             //console.log($(this).val().length);
                             
-                            //Получаем значение аттрибута в select
-                            //var min_price = $("option:selected", $("#selectDeviceType")).attr("min_price");
-                            var min_price = Number($("#oneMinPrice").val());
-                            //console.log(min_price);
-                            
                             if ($(this).val().length > 0){ 
                                 
-                                //console.log($(this).val().length);
-                                
-                                $("#allSumm").html($(this).val());
-                                
-                                var min_count = $("#min_count").val();
-                                //console.log(min_count);
-                                
-                                //Всего за загар
-                                $("#finPrice").html(min_price * min_count);
-                                
-                                //Средства для загара
-                                var realiz_summ = $("#realiz_summ").val();
-                                
-                                //Всего 
-                                if (onlyRealiz){
-                                    $("#allSumm").html(Number(realiz_summ));
-                                }else{
-                                    $("#allSumm").html(min_price * min_count + Number(realiz_summ));                                    
-                                }
-
+//                                CalculateSolar (Number($("#min_count").val()), Number($("#oneMinPrice").val()), Number($("#discount").val()), Number($("#realiz_summ").val()), onlyRealiz);
+                                $("#allSumm").html(Number($(this).val()) + Number($("#finPrice").val()));  
                                 
                             }else{  
                                 //Всего
                                 if (onlyRealiz){
                                     $("#allSumm").html(0);
                                 }else{
-                                    $("#allSumm").html(Number($("#finPrice").html()));
+                                    $("#allSumm").html(Number($("#finPrice").val()));
                                 }
                             }
                         }
                     });
                             
                     //Изменение скидки
-                    $("input[id=discount]").change(function() {
+                    $("#discount").bind("change keyup input click", function() {
                         //console.log($(this).val());
                         
-                        if ($(this).val() == 0){
-                            //Получаем значение аттрибута в select
-                            //var min_price = $("option:selected", $("#selectDeviceType")).attr("min_price");
-                            var min_price = Number($("#oneMinPrice").val());
-                        }else{
-                            var min_price = $(this).val();
+                        if($(this).val().length > 0){
+                            //console.log($(this).val().length);
+                            
+                            //меняем запятую на точку (разделитель)
+                            $(this).val($(this).val().replace(\',\', \'.\'));
+                            
+                            if ($(this).val() == 0){
+                                $(this).val("")
+                            }
+                            
+                            $("#allSumm").html(0);
                         }
-                        
-                        $("#oneMinPrice").html(min_price);    
-                        
-                        var min_count = $("#min_count").val();
-                        //console.log(min_count);
-                        
-                        //Всего за загар
-                        $("#finPrice").html(min_price * min_count);
-                        
-                        //Средства для загара
-                        var realiz_summ = $("#realiz_summ").val();
-                        
-                        //Всего 
-                        if (onlyRealiz){
-                            $("#allSumm").html(Number(realiz_summ));
-                        }else{
-                            $("#allSumm").html(min_price * min_count + Number(realiz_summ));                            
+                        if (!isNaN($(this).val())){
+                            //console.log($(this).val());
+                            //console.log($(this).val().length);
+                            
+                            if ($(this).val().length > 0){ 
+                                
+                                CalculateSolar (Number($("#min_count").val()), Number($("#oneMinPrice").val()), Number($("#discount").val()), Number($("#realiz_summ").val()), onlyRealiz);
+                                
+                            }else{  
+                                //Всего
+                                if (onlyRealiz){
+                                    $("#allSumm").html(0);
+                                }else{
+                                    $("#allSumm").html(Number($("#finPrice").val()));
+                                }
+                            }
                         }
                     });
                     
@@ -715,6 +621,7 @@ if ($enter_ok){
                             $("#finPriceBlock").hide();
                             $("#realizSummBlock").hide();
                             $("#allSummBlock").hide();
+                            $("#discountBlock").hide();
                             
                             //Маркер, если сумма только за реализацию
                             onlyRealiz = true;
@@ -725,33 +632,11 @@ if ($enter_ok){
                             $("#finPriceBlock").show();
                             $("#realizSummBlock").show();
                             $("#allSummBlock").show();
+                            $("#discountBlock").show();
                             
                             //Маркер, если сумма только за реализацию
                             onlyRealiz = false;
                         }
-                        
-                        //Получаем значение аттрибута в select
-                        //var min_price = $("option:selected", $("#selectDeviceType")).attr("min_price");
-                        var min_price = Number($("#oneMinPrice").val());
-                        
-                        //$("#oneMinPrice").html(min_price);
-                        
-                        var min_count = $("#min_count").val();
-                        //console.log(min_count);
-                        
-                        //Всего за загар
-                        $("#finPrice").html(min_price * min_count);
-                        
-                        //Средства для загара
-                        var realiz_summ = $("#realiz_summ").val();
-                        
-                        //Всего 
-                        if (onlyRealiz){
-                            $("#allSumm").html(Number(realiz_summ));
-                        }else{
-                            $("#allSumm").html(min_price * min_count + Number(realiz_summ));                            
-                        }
-                        
                     });
                     
                     
