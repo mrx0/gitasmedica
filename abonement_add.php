@@ -25,7 +25,7 @@ if ($enter_ok){
 
     $msql_cnnct = ConnectToDB ();
 
-    $query = "SELECT * FROM `spr_solar_abonements` WHERE `status` <> '9'";
+    $query = "SELECT * FROM `spr_solar_abonements` WHERE `status` <> '9' ORDER BY `name`";
 
     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -53,7 +53,7 @@ if ($enter_ok){
 							</div>
 						</div>
 						
-						<div class="cellsBlock2">
+						<div class="cellsBlock2" style="width: auto;">
 							<div class="cellLeft">Тип абонемента</div>
 							<div class="cellRight">';
     if (!empty($abon_types_j)){
