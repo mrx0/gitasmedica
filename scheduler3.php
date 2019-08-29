@@ -14,7 +14,7 @@
 			include_once 'widget_calendar.php';
 			include_once 'variables.php';
 
-            ``
+            $filials_j = getAllFilials(false, false, false);
             //var_dump ($filials_j);
 
             //обнулим сессионные данные для редактирования
