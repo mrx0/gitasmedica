@@ -286,23 +286,14 @@
 		if (($cosm['see_all'] == 1) || ($cosm['see_own'] == 1) || $god_mode){
 			echo '
                 <li>
-                    <a href="cosmet.php">Косметология</a>';
-            /*echo '
+                    <a href="cosmet.php" style="width: 85px;">Косметология</a>';
+            echo '
                     <ul style="background: #FFF; width: 108px;">
-                        <li><a href="" style="height: 20px; border: 1px dotted #CCC;">
-                            --- 
+                        <li><a href="zapis_solar.php" style="height: 20px; border: 1px dotted #CCC;">
+                            Солярий
                         </a>
                         </li>
-                        <li><a href="" style="height: 20px; border: 1px dotted #CCC;">
-                            ---
-                        </a>
-                        </li>
-                        <li><a href="" style="height: 20px; border: 1px dotted #CCC;">
-                            ---
-                        <!--<div class="have_new-zapis notes_count" style="display: none; top: -5px; right: -20px; background: red;" title=""></div>-->
-                        </a>
-                        </li>
-                    </ul>';*/
+                    </ul>';
             echo '
                 </li>';
 		}

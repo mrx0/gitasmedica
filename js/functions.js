@@ -2038,10 +2038,17 @@
 		}
     }
 
-    function Ajax_change_expiresTime(id){
+    function Ajax_change_expiresTime(type ,id){
         //console.log(id);
+        //console.log(type);
 
-        var link = "cert_change_expiresTime.php";
+        if (type == 'cert') {
+            var link = "cert_change_expiresTime.php";
+        }
+        if (type == 'abon') {
+            var link = "abon_change_expiresTime.php";
+        }
+
 
         var dataCertEnd = $('#dataCertEnd').val();
         var dataCertEnd_arr = dataCertEnd.split('.');
@@ -2055,19 +2062,19 @@
 
         }else{
 
-            var certData = {
-                cert_id: id,
+            var reqData = {
+                id: id,
                 dataCertEnd: dataCertEnd_arr[2] + "-" + dataCertEnd_arr[1] + "-" + dataCertEnd_arr[0]
             };
 
-            console.log(dataCertEnd_arr[2]+"-"+dataCertEnd_arr[1]+"-"+dataCertEnd_arr[0]);
+            //console.log(dataCertEnd_arr[2]+"-"+dataCertEnd_arr[1]+"-"+dataCertEnd_arr[0]);
 
             $.ajax({
                 url: link,
                 global: false,
                 type: "POST",
                 dataType: "JSON",
-                data: certData,
+                data: reqData,
 
                 cache: false,
                 beforeSend: function () {
@@ -2598,7 +2605,7 @@
                 //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             success:function(res){
-            	console.log(res.data);
+            	//console.log(res.data);
 
             	if (res.data == "true"){
 					$("#manageMessage").html("Управление <span style='color: green;'>включено</span>");
@@ -9141,6 +9148,68 @@
         }
     }
 
+    //Удаление(блокировка) посещения солярия
+    function fl_deleteSolar (id){
+
+        var rys = false;
+
+        rys = confirm("Вы хотите удалить документ. \n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "fl_delete_solar_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: id
+                },
+                cache: false,
+                beforeSend: function () {
+                    // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    $('#errrror').html(data);
+                    setTimeout(function () {
+                        window.location.replace('');
+                        //console.log('client.php?id='+id);
+                    }, 100);
+                }
+            })
+        }
+    }
+
+    //Удаление(блокировка) релизации
+    function fl_deleteRealiz (id){
+
+        var rys = false;
+
+        rys = confirm("Вы хотите удалить документ. \n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "fl_delete_realiz_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: id
+                },
+                cache: false,
+                beforeSend: function () {
+                    // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    $('#errrror').html(data);
+                    setTimeout(function () {
+                        window.location.replace('');
+                        //console.log('client.php?id='+id);
+                    }, 100);
+                }
+            })
+        }
+    }
+
     //Восстановление(разблокировка) расходного ордера
     function fl_reopenGiveout_cash (order_id){
 
@@ -9171,6 +9240,37 @@
             })
         }
     }
+
+    //Восстановление(разблокировка) посещения солярия
+    // function fl_reopenSolar (order_id){
+    //
+    //     var rys = false;
+    //
+    //     rys = confirm("Вы хотите восстановить расходный ордер. \n\nВы уверены?");
+    //
+    //     if (rys) {
+    //         $.ajax({
+    //             url: "fl_reopen_give_out_cash_f.php",
+    //             global: false,
+    //             type: "POST",
+    //             dataType: "JSON",
+    //             data: {
+    //                 id: order_id
+    //             },
+    //             cache: false,
+    //             beforeSend: function () {
+    //                 // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+    //             },
+    //             success: function (data) {
+    //                 $('#errrror').html(data);
+    //                 setTimeout(function () {
+    //                     window.location.replace('');
+    //                     //console.log('client.php?id='+id);
+    //                 }, 100);
+    //             }
+    //         })
+    //     }
+    // }
 
 
     //Добавляем/редактируем в базу заказ в лабораторию
@@ -11183,3 +11283,17 @@
 
         filialsSubtractionsChange();
 	}
+
+	//Функция считает стоимость посолярию
+    function CalculateSolar(min_count, min_price, discount, realiz_summ, onlyRealiz){
+        //Всего за загар
+        var fin_price = (min_price * min_count)/100 * (100 - discount);
+
+        $("#finPrice").val(fin_price);
+
+        if (onlyRealiz){
+            $("#allSumm").html(Number(realiz_summ));
+        }else{
+            $("#allSumm").html(fin_price + Number(realiz_summ));
+        }
+    }

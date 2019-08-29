@@ -594,8 +594,14 @@
 
                             //Сумма часов только на всех филиалах
                             if (isset($hours_j[$worker_data['id']][$ii])) {
-                                $hours = array_sum($hours_j[$worker_data['id']][$ii]);
+                                if (($_SESSION['id'] == $worker_data['id']) || ($scheduler['see_all'] == 1) || $god_mode) {
+                                    $hours = array_sum($hours_j[$worker_data['id']][$ii]);
+                                } else {
+                                    $hours = '+';
+
+                                }
                             }
+
                         }
 
                         if (($scheduler['edit'] == 1) || $god_mode) {
@@ -787,8 +793,17 @@
                             }*/
 
                             //Сумма часов только на всех филиалах
+//                            if (isset($hours_j[$worker_data['id']][$ii])) {
+//                                $hours = array_sum($hours_j[$worker_data['id']][$ii]);
+//                            }
+
                             if (isset($hours_j[$worker_data['id']][$ii])) {
-                                $hours = array_sum($hours_j[$worker_data['id']][$ii]);
+                                if (($_SESSION['id'] == $worker_data['id']) || ($scheduler['see_all'] == 1) || $god_mode) {
+                                    $hours = array_sum($hours_j[$worker_data['id']][$ii]);
+                                } else {
+                                    $hours = '+';
+
+                                }
                             }
                         }
 

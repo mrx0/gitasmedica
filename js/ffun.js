@@ -2852,15 +2852,16 @@
             abon_id = 0;
         }
 
-        if (Number($('#min_count').val()) > 0){
+        if ((Number($('#finPrice').val()) > 0) || (Number($('#realiz_summ').val()) > 0)){
             var reqData = {
                 filial_id: filial_id,
                 date_in: $('#iWantThisDate2').val(),
-                device_type: $('#selectDeviceType').val(),
+                /*device_type: $('#selectDeviceType').val(),*/
                 min_count: $('#min_count').val(),
+                discount: $('#discount').val(),
                 summ_type: $('input[name=summ_type]:checked').val(),
                 oneMinPrice: $('#oneMinPrice').html(),
-                finPrice: $('#finPrice').html(),
+                finPrice: $('#finPrice').val(),
                 descr: $('#descr').val(),
                 abon_id: abon_id,
 

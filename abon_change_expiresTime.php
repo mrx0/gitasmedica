@@ -1,7 +1,7 @@
 <?php 
 
-//cert_change_expiresTime.php
-//Функция редактирования даты истечения срока сертификата
+//abon_change_expiresTime.php
+//Функция редактирования даты истечения срока абонемента
 
 	session_start();
 	
@@ -17,16 +17,16 @@
 			}else{
                 include_once 'DBWork.php';
 
-                $cert_j = SelDataFromDB('journal_cert', $_POST['id'], 'id');
+                $abon_j = SelDataFromDB('journal_abonement_solar', $_POST['id'], 'id');
 
-                if ($cert_j != 0) {
+                if ($abon_j != 0) {
 
                     $msql_cnnct = ConnectToDB();
 
                     $time = date('Y-m-d H:i:s', time());
 
                     //Обновляем
-                    $query = "UPDATE `journal_cert` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `expires_time`='{$_POST['dataCertEnd']}' WHERE `id`='{$_POST['id']}'";
+                    $query = "UPDATE `journal_abonement_solar` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `expires_time`='{$_POST['dataCertEnd']}' WHERE `id`='{$_POST['id']}'";
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                     //логирование

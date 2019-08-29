@@ -558,8 +558,14 @@
                             $y = $datastart_array[0];
 
 
+                            if (isset($order_item['office_id'])){
+                                $filial_id = $order_item['office_id'];
+                            }
+                            if (isset($order_item['filial_id'])){
+                                $filial_id = $order_item['filial_id'];
+                            }
                             $filialData_str .= '
-                                         <a href="fl_createDailyReport.php?filial_id=' . $order_item['filial_id'] . '&d=' . $d . '&m=' . $m . '&y=' . $y . '" class="b">Ежедневный отчёт</a>';
+                                         <a href="fl_createDailyReport.php?filial_id=' . $filial_id . '&d=' . $d . '&m=' . $m . '&y=' . $y . '" class="b">Ежедневный отчёт</a>';
 
                             $filialData_str .= '
                                     </div>
