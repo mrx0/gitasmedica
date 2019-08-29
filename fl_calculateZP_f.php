@@ -30,16 +30,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         //$data_temp_arr = explode(".", $_POST['dataend']);
         $dataend = $d->format('Y-m-t');
 
-        //Смотрим наряды, закрытые за период
-        //$query = "SELECT `summ`,`summins`, `office_id`, (SUM(`summ`)+ SUM(`summins`)) AS all_summ FROM `journal_invoice` WHERE `status`='5' AND `closed_time` BETWEEN '{$datastart}' AND '{$dataend}'";
-//        $query = "
-//        SELECT ji.summ, ji.summins, ji.office_id, z.noch
-//        FROM `journal_invoice` ji
-//        LEFT JOIN `zapis` z ON ji.zapis_id = z.id
-//        WHERE ji.status='5' AND ji.closed_time BETWEEN '{$datastart}' AND '{$dataend}'
-//        ";
-
-        //Смотрим оплаты
+        //Смотрим оплаты по нарядам, которые закрыли в указанном месяце
         $query = "SELECT jp.filial_id, jp.summ, z.noch 
         FROM `journal_payment` jp
         LEFT JOIN `journal_invoice` ji ON ji.id = jp.invoice_id
@@ -48,19 +39,6 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         //Если ассистент, то только стоматология
         if ($_POST['typeW'] == 7){
-//            $query = "
-//            SELECT `summ`,`summins`, `office_id`
-//            FROM `journal_invoice`
-//            WHERE `type` ='5' AND `status`='5' AND `closed_time` BETWEEN '{$datastart}' AND '{$dataend}'
-//            ";
-
-//            $query = "
-//            SELECT ji.summ, ji.summins, ji.office_id, z.noch
-//            FROM `journal_invoice` ji
-//            LEFT JOIN `zapis` z ON ji.zapis_id = z.id
-//            WHERE ji.status='5' AND ji.type ='5' AND ji.closed_time BETWEEN '{$datastart}' AND '{$dataend}'
-//            ";
-
             $query = "SELECT jp.filial_id, jp.summ, z.noch 
             FROM `journal_payment` jp
             INNER JOIN `journal_invoice` ji ON ji.id = jp.invoice_id AND ji.type = '5'
@@ -131,25 +109,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         $summ_arr = $journal;
 
-
         //Делаем рассчеты
         //Выводим результат
         if (!empty($journal)) {
-
-//            $summ_arr = array();
-//            $all_summ = 0;
-//
-//            foreach ($journal as $filial_id => $filial_journal){
-//                //var_dump($item);
-//                if (!isset($summ_arr[$filial_id])){
-//                    $summ_arr[$filial_id] = 0;
-//                }
-//
-//                foreach ($filial_journal as $item){
-//                    //$summ_arr[$filial_id] += $item['summ'] + $item['summins'];
-//                    $summ_arr[$filial_id] += $item['summ'];
-//                }
-//            }
 
             echo json_encode(array('result' => 'success', 'data' => $summ_arr, 'msg' => ''));
 
