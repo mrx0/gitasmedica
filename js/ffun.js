@@ -2852,7 +2852,7 @@
             abon_id = 0;
         }
 
-        if ((Number($('#finPrice').val()) > 0) || (Number($('#realiz_summ').val()) > 0)){
+        if ((Number($('#finPrice').val()) > 0) || (Number($('#realiz_summ').val()) > 0) || (abon_id != 0)){
             var reqData = {
                 filial_id: filial_id,
                 date_in: $('#iWantThisDate2').val(),
@@ -5528,7 +5528,7 @@
     }
 
     //Функция изменения процента от выручки
-    function Ajax_revenue_percent_change (type, filial_id, category){
+    function Ajax_revenue_percent_change (table, type, filial_id, category){
 
         var value = $("#revenuePercent").val();
         value =  value.replace(',', '.');
@@ -5537,9 +5537,20 @@
         if (!isNaN(value)) {
             if (value.length > 0){
 
+                // if (table == 'solar') {
+                //     var link = "fl_revenue_percent_solar_change_f.php";
+                // }else{
+                //     if (table == 'realiz'){
+                //         var link = "fl_revenue_percent_realiz_change_f.php";
+                //     }else{
+                //         var link = "fl_revenue_percent_change_f.php";
+                //     }
+                // }
+
                 var link = "fl_revenue_percent_change_f.php";
 
                 var reqData = {
+                    table: table,
                     permission: type,
                     filial_id: filial_id,
                     category: category,
@@ -5577,12 +5588,12 @@
     }
 
     //Показывает окно для изменения процента от выручки
-    function revenuePercentChangeShow (haveValue, type, type_name, filial_id, filial_name, category, category_name, value){
+    function revenuePercentChangeShow (table, haveValue, type, type_name, filial_id, filial_name, category, category_name, value){
         //console.log(mode);
         $('#overlay').show();
 
 
-        var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_revenue_percent_change('+type+', '+filial_id+', '+category+')">';
+        var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_revenue_percent_change(\''+table+'\', '+type+', '+filial_id+', '+category+')">';
 
         // if (haveValue){
         // }

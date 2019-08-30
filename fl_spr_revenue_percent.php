@@ -16,183 +16,32 @@
 
             require 'variables.php';
 
-            /*$who = '&who=5';
-            $whose = 'Стоматологов ';
-            $selected_stom = ' selected';
-            $selected_cosm = ' ';
-            $datatable = 'scheduler_stom';*/
-
-
-            $who = '&who=4';
-            $whose = 'Администраторы ';
-            /*$selected_stom = ' selected';
-            $selected_cosm = ' ';
-            $datatable = 'scheduler_stom';
-            $kabsForDoctor = 'stom';*/
-            $type = 4;
-
-            $stom_color = '';
-            $cosm_color = '';
-            $somat_color = '';
-            $admin_color = 'background-color: #fff261;';
-            $assist_color = '';
-            $other_color = '';
-
             //тип (космет/стомат/...)
-            if (isset($_GET['who'])){
-                /*if ($_GET['who'] == 5){
-                    $who = '&who=5';
-                    $whose = 'Стоматологи ';
-                    $selected_stom = ' selected';
-                    $selected_cosm = ' ';
-                    $datatable = 'scheduler_stom';
-                    $kabsForDoctor = 'stom';
-                    $type = 5;
-
-                    $stom_color = 'background-color: #fff261;';
-                    $cosm_color = '';
-                    $somat_color = '';
-                    $admin_color = '';
-                    $assist_color = '';
-                    $other_color = '';
-                }elseif($_GET['who'] == 6){
-                    $who = '&who=6';
-                    $whose = 'Косметологи ';
-                    $selected_stom = ' ';
-                    $selected_cosm = ' selected';
-                    $datatable = 'scheduler_cosm';
-                    $kabsForDoctor = 'cosm';
-                    $type = 6;
-
-                    $stom_color = '';
-                    $cosm_color = 'background-color: #fff261;';
-                    $somat_color = '';
-                    $admin_color = '';
-                    $assist_color = '';
-                    $other_color = '';
-                }elseif($_GET['who'] == 10){
-                    $who = '&who=10';
-                    $whose = 'Специалисты ';
-                    $selected_stom = ' ';
-                    $selected_cosm = ' selected';
-                    $datatable = 'scheduler_somat';
-                    $kabsForDoctor = 'somat';
-                    $type = 10;
-
-
-                    $stom_color = '';
-                    $cosm_color = '';
-                    $somat_color = 'background-color: #fff261;';
-                    $admin_color = '';
-                    $assist_color = '';
-                    $other_color = '';
-                }else*/if($_GET['who'] == 4){
-                    $who = '&who=4';
-                    $whose = 'Администраторы ';
-                    $selected_stom = ' ';
-                    $selected_cosm = ' selected';
-                    /*$datatable = 'scheduler_somat';
-                    $kabsForDoctor = 'somat';*/
-                    $type = 4;
-
-                    $stom_color = '';
-                    $cosm_color = '';
-                    $somat_color = '';
-                    $admin_color = 'background-color: #fff261;';
-                    $assist_color = '';
-                    $other_color = '';
-                }elseif($_GET['who'] == 7){
-                    $who = '&who=7';
-                    $whose = 'Ассистенты ';
-                    $selected_stom = ' ';
-                    $selected_cosm = ' selected';
-                    /*$datatable = 'scheduler_somat';
-                    $kabsForDoctor = 'somat';*/
-                    $type = 7;
-
-                    $stom_color = '';
-                    $cosm_color = '';
-                    $somat_color = '';
-                    $admin_color = '';
-                    $assist_color = 'background-color: #fff261;';
-                    $other_color = '';
-                /*}elseif($_GET['who'] == 11){
-                        $who = '&who=11';
-                        $whose = 'Ассистенты ';
-                        $selected_stom = ' ';
-                        $selected_cosm = ' selected';
-                        /*$datatable = 'scheduler_somat';
-                        $kabsForDoctor = 'somat';*/
-                    /*$type = 11;
-
-                    $stom_color = '';
-                    $cosm_color = '';
-                    $somat_color = '';
-                    $admin_color = '';
-                    $assist_color = '';
-                    $other_color = 'background-color: #fff261;';*/
-                }else{
-                    /*$who = '&who=5';
-                    $whose = 'Стоматологи ';
-                    $selected_stom = ' selected';
-                    $selected_cosm = ' ';
-                    $datatable = 'scheduler_stom';
-                    $kabsForDoctor = 'stom';
-                    $type = 5;
-
-                    $stom_color = 'background-color: #fff261;';
-                    $cosm_color = '';
-                    $somat_color = '';
-                    $admin_color = '';
-                    $assist_color = '';
-                    $other_color = '';*/
-
-                    $who = '&who=4';
-                    $whose = 'Администраторы ';
-                    /*$selected_stom = ' selected';
-                    $selected_cosm = ' ';
-                    $datatable = 'scheduler_stom';
-                    $kabsForDoctor = 'stom';*/
-                    $type = 4;
-
-                    $stom_color = '';
-                    $cosm_color = '';
-                    $somat_color = '';
-                    $admin_color = 'background-color: #fff261;';
-                    $assist_color = '';
-                    $other_color = '';
-                }
+            if (isset($_GET['who'])) {
+                $getWho = returnGetWho($_GET['who'], 4, array(4,7));
             }else{
-                /*$who = '&who=5';
-                $whose = 'Стоматологи ';
-                $selected_stom = ' selected';
-                $selected_cosm = ' ';
-                $datatable = 'scheduler_stom';
-                $kabsForDoctor = 'stom';
-                $type = 5;
-
-                $stom_color = 'background-color: #fff261;';
-                $cosm_color = '';
-                $somat_color = '';
-                $admin_color = '';
-                $assist_color = '';
-                $other_color = '';*/
-
-                $who = '&who=4';
-                $whose = 'Администраторы ';
-                /*$selected_stom = ' selected';
-                $selected_cosm = ' ';
-                $datatable = 'scheduler_stom';
-                $kabsForDoctor = 'stom';*/
-                $type = 4;
-
-                $stom_color = '';
-                $cosm_color = '';
-                $somat_color = '';
-                $admin_color = 'background-color: #fff261;';
-                $assist_color = '';
-                $other_color = '';
+                $getWho = returnGetWho(4, 4, array(4,7));
             }
+            //var_dump($getWho);
+
+            $who = $getWho['who'];
+            $whose = $getWho['whose'];
+            $selected_stom = $getWho['selected_stom'];
+            $selected_cosm = $getWho['selected_cosm'];
+            $datatable = $getWho['datatable'];
+            $kabsForDoctor = $getWho['kabsForDoctor'];
+            $type = $getWho['type'];
+
+            $stom_color = $getWho['stom_color'];
+            $cosm_color = $getWho['cosm_color'];
+            $somat_color = $getWho['somat_color'];
+            $admin_color = $getWho['admin_color'];
+            $assist_color = $getWho['assist_color'];
+            $sanit_color = $getWho['sanit_color'];
+            $ubor_color = $getWho['ubor_color'];
+            $dvornik_color = $getWho['dvornik_color'];
+            $other_color = $getWho['other_color'];
+            $all_color = $getWho['all_color'];
 
             include_once 'ffun.php';
 
@@ -202,6 +51,8 @@
 
             //Процент с выручки для этого типа
             $revenue_percent_j = array();
+            $revenue_solar_percent_j = array();
+            $revenue_realiz_percent_j = array();
 
             $arr = array();
             $rez = array();
@@ -210,6 +61,7 @@
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
             $number = mysqli_num_rows($res);
+
             if ($number != 0){
                 while ($arr = mysqli_fetch_assoc($res)){
                     if (!isset($revenue_percent_j[$arr['filial_id']])){
@@ -222,6 +74,46 @@
                 }
             }
             //var_dump($revenue_percent_j);
+
+            //Доберём солярий и крема если это админы
+            if ($type == 4){
+                //Солярий
+                $query = "SELECT * FROM `fl_spr_revenue_solar_percent` WHERE `permission` = '{$type}'";
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        if (!isset($revenue_solar_percent_j[$arr['filial_id']])){
+                            $revenue_solar_percent_j[$arr['filial_id']] = array();
+                        }
+                        if (!isset($revenue_solar_percent_j[$arr['filial_id']][$arr['category']])){
+                            $revenue_solar_percent_j[$arr['filial_id']][$arr['category']] = array();
+                        }
+                        $revenue_solar_percent_j[$arr['filial_id']][$arr['category']] = $arr;
+                    }
+                }
+                //var_dump($revenue_solar_percent_j);
+                //Крема
+                $query = "SELECT * FROM `fl_spr_revenue_realiz_percent` WHERE `permission` = '{$type}'";
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        if (!isset($revenue_realiz_percent_j[$arr['filial_id']])){
+                            $revenue_realiz_percent_j[$arr['filial_id']] = array();
+                        }
+                        if (!isset($revenue_realiz_percent_j[$arr['filial_id']][$arr['category']])){
+                            $revenue_realiz_percent_j[$arr['filial_id']][$arr['category']] = array();
+                        }
+                        $revenue_realiz_percent_j[$arr['filial_id']][$arr['category']] = $arr;
+                    }
+                }
+                //var_dump($revenue_realiz_percent_j);
+            }
 
 
             //Категории для этого типа
@@ -275,6 +167,8 @@
                                 <!--<a href="?who=11" class="b" style="'.$other_color.'">Прочие</a>-->
                             </li>';
 
+            echo '% с закрытых работ';
+
             echo '
                             <table style="border-bottom: 1px solid #BFBCB5; border-right: 1px solid #BFBCB5; margin:5px; font-size: 80%;">
                                 <tr>
@@ -305,12 +199,12 @@
 
                     if (isset($revenue_percent_j[$filial_item['id']][$category_item['id']])) {
                         echo '
-                            <div style="cursor: pointer;" onclick="revenuePercentChangeShow(true, '.$type.', \''.$whose.'\','.$filial_item['id'].', \''.$filial_item['name'].'\', '.$category_item['id'].', \''.$category_item['name'].'\', '.$revenue_percent_j[$filial_item['id']][$category_item['id']]['value'].');">
+                            <div style="cursor: pointer;" onclick="revenuePercentChangeShow(\'main\', true, '.$type.', \''.$whose.'\','.$filial_item['id'].', \''.$filial_item['name'].'\', '.$category_item['id'].', \''.$category_item['name'].'\', '.$revenue_percent_j[$filial_item['id']][$category_item['id']]['value'].');">
                                 '.$revenue_percent_j[$filial_item['id']][$category_item['id']]['value'].'%
                             </div>';
                     }else{
                         echo'
-                            <div style="cursor: pointer;" onclick="revenuePercentChangeShow(false, '.$type.', \''.$whose.'\', '.$filial_item['id'].', \''.$filial_item['name'].'\', '.$category_item['id'].', \''.$category_item['name'].'\', \'\');">
+                            <div style="cursor: pointer;" onclick="revenuePercentChangeShow(\'main\', false, '.$type.', \''.$whose.'\', '.$filial_item['id'].', \''.$filial_item['name'].'\', '.$category_item['id'].', \''.$category_item['name'].'\', \'\');">
                                 <span style="color: red;">Не указано</span>
                             </div>';
                     }
@@ -329,71 +223,120 @@
             echo '
                             </table>';
 
-  /*                              <li class="cellsBlock2" style="font-weight: bold; font-size: 11px; background: #FFF;">
-                                    <div class="cellFullName" style="text-align: center">
-                                        Полное имя';
-                echo $block_fast_filter;
-                echo '
-                                        
-                                    </div>';
+            if ($type == 4) {
 
-                    echo '
-                                    <div class="cellName" style="text-align: center; padding: 4px 0 0;">
-                                        Сумма
-                                    </div>
-                                    <!--<div class="cellName" style="text-align: center; padding: 4px 0 0;">
-                                        С какого числа
-                                    </div>-->
-                                    ';
-
+                echo '% с солярия';
 
                 echo '
-                                </li>';
+                            <table style="border-bottom: 1px solid #BFBCB5; border-right: 1px solid #BFBCB5; margin:5px; font-size: 80%;">
+                                <tr>
+                                    <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>Филиал</b></td>';
 
-                foreach ($revenue_percent_j as $filial_item){
-                    echo '
-                                <li class="cellsBlock2 cellsBlockHover" style="font-weight: normal; font-size: 11px; margin-bottom: -1px;">
-                                    <a href="user.php?id='.$worker['id'].'" class="cellFullName ahref 4filter" id="4filter" style="text-align: left;">
-                                        '.$worker['full_name'].'
-                                    </a>';
+                if (!empty($categories_j)) {
 
-                    //Оклад этого сотрудника, который действует сейчас
-                    $arr = array();
-                    $rez = array();
-
-                    $salary = 0;
-
-                    $query = "SELECT * FROM `fl_spr_salaries` WHERE `worker_id` = '{$worker['id']}' ORDER BY `date_from` DESC LIMIT 1";
-                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-                    $number = mysqli_num_rows($res);
-                    if ($number != 0){
-                        while ($arr = mysqli_fetch_assoc($res)){
-                            $salary = $arr['summ'];
-                        }
-                    }else{
-                        $salary = '<span style="color: red;">Не указано</span>';
+                    foreach ($categories_j as $category_item) {
+                        echo '
+                                    <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b><i>' . $category_item['name'] . '</i></b></td>';
                     }
-
-                    echo '
-                                    <div class="cellName" style="text-align: center; padding: 4px 0 0;">
-                                        <a href="fl_edit_salary.php?worker_id='.$worker['id'].'" class="ahref">'.$salary.'</a>
-                                    </div>
-                                    <!--<div class="cellName" style="text-align: center; padding: 4px 0 0;">
-                                        С какого числа
-                                    </div>-->
-                                    ';
-
-
-                    echo '
-                                </li>';
                 }
 
-                echo '</ul>';*/
-            /*}else{
-                echo 'Ничего нет...';
-            }*/
+                echo '
+                                </tr>';
 
+                foreach ($filials_j as $filial_item) {
+
+                    echo '
+                                <tr>';
+                    echo '
+                                    <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">' . $filial_item['name'] . '</td>';
+
+                    foreach ($categories_j as $category_item) {
+
+                        echo '
+                                    <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">';
+
+                        if (isset($revenue_solar_percent_j[$filial_item['id']][$category_item['id']])) {
+                            echo '
+                            <div style="cursor: pointer;" onclick="revenuePercentChangeShow(\'solar\', true, ' . $type . ', \'' . $whose . '\',' . $filial_item['id'] . ', \'' . $filial_item['name'] . '\', ' . $category_item['id'] . ', \'' . $category_item['name'] . '\', ' . $revenue_solar_percent_j[$filial_item['id']][$category_item['id']]['value'] . ');">
+                                ' . $revenue_solar_percent_j[$filial_item['id']][$category_item['id']]['value'] . '%
+                            </div>';
+                        } else {
+                            echo '
+                            <div style="cursor: pointer;" onclick="revenuePercentChangeShow(\'solar\', false, ' . $type . ', \'' . $whose . '\', ' . $filial_item['id'] . ', \'' . $filial_item['name'] . '\', ' . $category_item['id'] . ', \'' . $category_item['name'] . '\', \'\');">
+                                <span style="color: red;">Не указано</span>
+                            </div>';
+                        }
+
+                        echo '
+                                        </div>
+                                    </td>';
+                    }
+
+
+                    echo '
+                                </tr>';
+
+                }
+
+                echo '
+                            </table>';
+
+                echo '% с реализации';
+
+                echo '
+                            <table style="border-bottom: 1px solid #BFBCB5; border-right: 1px solid #BFBCB5; margin:5px; font-size: 80%;">
+                                <tr>
+                                    <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>Филиал</b></td>';
+
+                if (!empty($categories_j)) {
+
+                    foreach ($categories_j as $category_item) {
+                        echo '
+                                    <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b><i>' . $category_item['name'] . '</i></b></td>';
+                    }
+                }
+
+                echo '
+                                </tr>';
+
+                foreach ($filials_j as $filial_item) {
+
+                    echo '
+                                <tr>';
+                    echo '
+                                    <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">' . $filial_item['name'] . '</td>';
+
+                    foreach ($categories_j as $category_item) {
+
+                        echo '
+                                    <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">';
+
+                        if (isset($revenue_realiz_percent_j[$filial_item['id']][$category_item['id']])) {
+                            echo '
+                            <div style="cursor: pointer;" onclick="revenuePercentChangeShow(\'realiz\', true, ' . $type . ', \'' . $whose . '\',' . $filial_item['id'] . ', \'' . $filial_item['name'] . '\', ' . $category_item['id'] . ', \'' . $category_item['name'] . '\', ' . $revenue_realiz_percent_j[$filial_item['id']][$category_item['id']]['value'] . ');">
+                                ' . $revenue_realiz_percent_j[$filial_item['id']][$category_item['id']]['value'] . '%
+                            </div>';
+                        } else {
+                            echo '
+                            <div style="cursor: pointer;" onclick="revenuePercentChangeShow(\'realiz\', false, ' . $type . ', \'' . $whose . '\', ' . $filial_item['id'] . ', \'' . $filial_item['name'] . '\', ' . $category_item['id'] . ', \'' . $category_item['name'] . '\', \'\');">
+                                <span style="color: red;">Не указано</span>
+                            </div>';
+                        }
+
+                        echo '
+                                        </div>
+                                    </td>';
+                    }
+
+
+                    echo '
+                                </tr>';
+
+                }
+
+                echo '
+                            </table>';
+            }
 
             echo '
                         </div>
