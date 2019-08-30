@@ -2852,7 +2852,7 @@
             abon_id = 0;
         }
 
-        if ((Number($('#finPrice').val()) > 0) || (Number($('#realiz_summ').val()) > 0)){
+        if ((Number($('#finPrice').val()) > 0) || (Number($('#realiz_summ').val()) > 0) || (abon_id != 0)){
             var reqData = {
                 filial_id: filial_id,
                 date_in: $('#iWantThisDate2').val(),

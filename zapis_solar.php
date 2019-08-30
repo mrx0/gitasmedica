@@ -247,8 +247,10 @@
                 $solar_j = array();
 
                 //Получаем все по солярию за дату по филиалу
-                $query = "SELECT * FROM `journal_solar` WHERE `filial_id` = '{$_GET['filial_id']}' AND 
-                DAY(`date_in`) = '".dateTransformation ($day)."' AND MONTH(`date_in`) = '".dateTransformation ($month)."' AND YEAR(`date_in`) = '{$year}' ORDER BY `date_in` DESC";
+                $query = "SELECT js.*, jas.num FROM `journal_solar` js 
+                LEFT JOIN `journal_abonement_solar` jas ON jas.id=js.abon_id
+                WHERE js.filial_id = '{$_GET['filial_id']}' AND
+                DAY(js.date_in) = '".dateTransformation ($day)."' AND MONTH(js.date_in) = '".dateTransformation ($month)."' AND YEAR(js.date_in) = '{$year}' ORDER BY js.date_in DESC";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -301,9 +303,9 @@
                                     <div class="cellName" style="text-align: center; border-right: none;">
                                         <b>Тип оплаты</b>           
                                     </div>
-                                    <!--<div class="cellName" style="text-align: center; border-right: none;">
+                                    <div class="cellName" style="text-align: center; border-right: none;">
                                         <b>Минуты</b>
-                                     </div>-->
+                                     </div>
                                     <div class="cellName" style="text-align: center; border-right: none;">
                                         <b>Сумма</b>
                                      </div>
@@ -317,6 +319,7 @@
                                 </li>';
 
                     foreach ($solar_j as $item){
+                        //var_dump($item);
 
                         //Если удалён, то меняем цвет на серый
                         if ( $item['status'] != 9){
@@ -360,7 +363,7 @@
                             $result_temp .= 'По абонементу<br><br>';
 
                             if ($item['abon_id'] > 0){
-                                $result_temp .= '<a href="abonement.php?id='.$item['abon_id'].'" class="ahref button_tiny">Абонемент #'.$item['abon_id'].'</a>';
+                                $result_temp .= '<a href="abonement.php?id='.$item['abon_id'].'" class="ahref button_tiny">Абонемент #'.$item['num'].'</a>';
                             }
 
                         }else{
@@ -369,11 +372,11 @@
 
                         $result_temp .= '                              
                                     </div>
-                                    <!--<div class="cellName" style="border-right: none; border-top: none;">
+                                    <div class="cellName" style="border-right: none; border-top: none;">
                                         <div style="text-align: right;">
                                             <span class="calculateOrder" style="font-size: 13px">' . $item['min_count'] . '</span>
                                         </div>
-                                    </div>-->
+                                    </div>
                                     <div class="cellName" style="border-right: none; border-top: none;">
                                         <div style="text-align: right;">
                                             <span class="calculateInvoice" style="font-size: 13px">' . $item['summ'] . '</span> руб.
