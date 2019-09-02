@@ -30,6 +30,8 @@
                     $query = "SELECT `id` FROM `fl_spr_revenue_solar_percent` WHERE `permission`='{$_POST['permission']}' AND `filial_id`='{$_POST['filial_id']}' AND `category`='{$_POST['category']}'";
                 }elseif ($_POST['table'] == 'realiz'){
                     $query = "SELECT `id` FROM `fl_spr_revenue_realiz_percent` WHERE `permission`='{$_POST['permission']}' AND `filial_id`='{$_POST['filial_id']}' AND `category`='{$_POST['category']}'";
+                }elseif ($_POST['table'] == 'abon'){
+                    $query = "SELECT `id` FROM `fl_spr_revenue_abon_percent` WHERE `permission`='{$_POST['permission']}' AND `filial_id`='{$_POST['filial_id']}' AND `category`='{$_POST['category']}'";
                 }else{
                     $query = "SELECT `id` FROM `fl_spr_revenue_percent` WHERE `permission`='{$_POST['permission']}' AND `filial_id`='{$_POST['filial_id']}' AND `category`='{$_POST['category']}'";
                 }
@@ -47,6 +49,8 @@
                         $query = "UPDATE `fl_spr_revenue_solar_percent` SET `value` = '{$_POST['value']}', `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}' WHERE `id`='{$id}'";
                     }elseif ($_POST['table'] == 'realiz'){
                         $query = "UPDATE `fl_spr_revenue_realiz_percent` SET `value` = '{$_POST['value']}', `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}' WHERE `id`='{$id}'";
+                    }elseif ($_POST['table'] == 'abon'){
+                        $query = "UPDATE `fl_spr_revenue_abon_percent` SET `value` = '{$_POST['value']}', `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}' WHERE `id`='{$id}'";
                     }else{
                         $query = "UPDATE `fl_spr_revenue_percent` SET `value` = '{$_POST['value']}', `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}' WHERE `id`='{$id}'";
                     }
@@ -59,6 +63,10 @@
                         '{$_POST['permission']}', '{$_POST['filial_id']}', '{$_POST['category']}', '{$_POST['value']}', '{$time}', '{$_SESSION['id']}');";
                     }elseif ($_POST['table'] == 'realiz'){
                         $query = "INSERT INTO `fl_spr_revenue_realiz_percent` (`permission`, `filial_id`, `category`, `value`, `create_person`, `create_time`)
+                        VALUES (
+                        '{$_POST['permission']}', '{$_POST['filial_id']}', '{$_POST['category']}', '{$_POST['value']}', '{$time}', '{$_SESSION['id']}');";
+                    }elseif ($_POST['table'] == 'abon'){
+                        $query = "INSERT INTO `fl_spr_revenue_abon_percent` (`permission`, `filial_id`, `category`, `value`, `create_person`, `create_time`)
                         VALUES (
                         '{$_POST['permission']}', '{$_POST['filial_id']}', '{$_POST['category']}', '{$_POST['value']}', '{$time}', '{$_SESSION['id']}');";
                     }else{

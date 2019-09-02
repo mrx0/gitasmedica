@@ -75,7 +75,7 @@
             }
             //var_dump($revenue_percent_j);
 
-            //Доберём солярий и крема если это админы
+            //Доберём солярий, абонементы и крема, если это админы
             if ($type == 4){
                 //Солярий
                 $query = "SELECT * FROM `fl_spr_revenue_solar_percent` WHERE `permission` = '{$type}'";
@@ -113,6 +113,24 @@
                     }
                 }
                 //var_dump($revenue_realiz_percent_j);
+                //Абонементы
+                $query = "SELECT * FROM `fl_spr_revenue_abon_percent` WHERE `permission` = '{$type}'";
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        if (!isset($revenue_abon_percent_j[$arr['filial_id']])){
+                            $revenue_abon_percent_j[$arr['filial_id']] = array();
+                        }
+                        if (!isset($revenue_abon_percent_j[$arr['filial_id']][$arr['category']])){
+                            $revenue_abon_percent_j[$arr['filial_id']][$arr['category']] = array();
+                        }
+                        $revenue_abon_percent_j[$arr['filial_id']][$arr['category']] = $arr;
+                    }
+                }
+                //var_dump($revenue_abon_percent_j);
             }
 
 
@@ -319,6 +337,62 @@
                         } else {
                             echo '
                             <div style="cursor: pointer;" onclick="revenuePercentChangeShow(\'realiz\', false, ' . $type . ', \'' . $whose . '\', ' . $filial_item['id'] . ', \'' . $filial_item['name'] . '\', ' . $category_item['id'] . ', \'' . $category_item['name'] . '\', \'\');">
+                                <span style="color: red;">Не указано</span>
+                            </div>';
+                        }
+
+                        echo '
+                                        </div>
+                                    </td>';
+                    }
+
+
+                    echo '
+                                </tr>';
+
+                }
+
+                echo '
+                            </table>';
+
+                echo '% с проданных абонементов';
+
+                echo '
+                            <table style="border-bottom: 1px solid #BFBCB5; border-right: 1px solid #BFBCB5; margin:5px; font-size: 80%;">
+                                <tr>
+                                    <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>Филиал</b></td>';
+
+                if (!empty($categories_j)) {
+
+                    foreach ($categories_j as $category_item) {
+                        echo '
+                                    <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b><i>' . $category_item['name'] . '</i></b></td>';
+                    }
+                }
+
+                echo '
+                                </tr>';
+
+                foreach ($filials_j as $filial_item) {
+
+                    echo '
+                                <tr>';
+                    echo '
+                                    <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">' . $filial_item['name'] . '</td>';
+
+                    foreach ($categories_j as $category_item) {
+
+                        echo '
+                                    <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">';
+
+                        if (isset($revenue_abon_percent_j[$filial_item['id']][$category_item['id']])) {
+                            echo '
+                            <div style="cursor: pointer;" onclick="revenuePercentChangeShow(\'abon\', true, ' . $type . ', \'' . $whose . '\',' . $filial_item['id'] . ', \'' . $filial_item['name'] . '\', ' . $category_item['id'] . ', \'' . $category_item['name'] . '\', ' . $revenue_abon_percent_j[$filial_item['id']][$category_item['id']]['value'] . ');">
+                                ' . $revenue_abon_percent_j[$filial_item['id']][$category_item['id']]['value'] . '%
+                            </div>';
+                        } else {
+                            echo '
+                            <div style="cursor: pointer;" onclick="revenuePercentChangeShow(\'abon\', false, ' . $type . ', \'' . $whose . '\', ' . $filial_item['id'] . ', \'' . $filial_item['name'] . '\', ' . $category_item['id'] . ', \'' . $category_item['name'] . '\', \'\');">
                                 <span style="color: red;">Не указано</span>
                             </div>';
                         }

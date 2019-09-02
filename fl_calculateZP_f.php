@@ -14,11 +14,13 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         include_once 'DBWork.php';
         include_once 'functions.php';
 
-        if ($_POST['month'] < 10) {
-            $month = '0'.$_POST['month'];
-        }else{
-            $month = $_POST['month'];
-        }
+//        if ($_POST['month'] < 10) {
+//            $month = '0'.$_POST['month'];
+//        }else{
+//            $month = $_POST['month'];
+//        }
+
+        $month = dateTransformation ($_POST['month']);
 
         //$data_temp_arr = explode(".", $_POST['datastart']);
         $datastart = $_POST['year'].'-'.$month.'-01';
@@ -30,20 +32,39 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         //$data_temp_arr = explode(".", $_POST['dataend']);
         $dataend = $d->format('Y-m-t');
 
-        //Смотрим оплаты по нарядам, которые закрыли в указанном месяце
-        $query = "SELECT jp.filial_id, jp.summ, z.noch 
-        FROM `journal_payment` jp
-        LEFT JOIN `journal_invoice` ji ON ji.id = jp.invoice_id
-        LEFT JOIN `zapis` z ON ji.zapis_id = z.id
-        WHERE MONTH(jp.date_in) = '{$month}' AND YEAR(jp.date_in) = '{$_POST['year']}'";
+//        //Суммы нарядов, закрытых в указанном месяце
+//        $query = "SELECT ji.office_id AS filial_id, ji.summ, z.noch
+//        FROM `journal_invoice` ji
+//        LEFT JOIN `zapis` z ON ji.zapis_id = z.id
+//        WHERE MONTH(ji.closed_time) = '{$month}' AND YEAR(ji.closed_time) = '{$_POST['year']}'";
+//
+//        //Если ассистент, то только стоматология
+//        if ($_POST['typeW'] == 7){
+//            $query = "SELECT ji.office_id AS filial_id, ji.summ, z.noch
+//            FROM `journal_invoice` ji
+//            LEFT JOIN `zapis` z ON ji.zapis_id = z.id
+//            WHERE MONTH(ji.closed_time) = '{$month}' AND YEAR(ji.closed_time) = '{$_POST['year']}' AND ji.type = '5'";
+//
+//        }
 
-        //Если ассистент, то только стоматология
-        if ($_POST['typeW'] == 7){
-            $query = "SELECT jp.filial_id, jp.summ, z.noch 
+        //До сентября 2019 считалось так
+        //Смотрим оплаты по нарядам, которые администраторы внесли в указанном месяце
+        //20190902 добавили  || TRUE и продолжили пока дальше так считать
+        if ((($month < '08') AND ($_POST['year'] == 2019)) || ($_POST['year'] < 2019) || TRUE){
+            $query = "SELECT jp.filial_id, jp.summ, z.noch
             FROM `journal_payment` jp
-            INNER JOIN `journal_invoice` ji ON ji.id = jp.invoice_id AND ji.type = '5'
+            LEFT JOIN `journal_invoice` ji ON ji.id = jp.invoice_id
             LEFT JOIN `zapis` z ON ji.zapis_id = z.id
             WHERE MONTH(jp.date_in) = '{$month}' AND YEAR(jp.date_in) = '{$_POST['year']}'";
+
+            //Если ассистент, то только стоматология
+            if ($_POST['typeW'] == 7) {
+                $query = "SELECT jp.filial_id, jp.summ, z.noch
+                FROM `journal_payment` jp
+                INNER JOIN `journal_invoice` ji ON ji.id = jp.invoice_id AND ji.type = '5'
+                LEFT JOIN `zapis` z ON ji.zapis_id = z.id
+                WHERE MONTH(jp.date_in) = '{$month}' AND YEAR(jp.date_in) = '{$_POST['year']}'";
+            }
         }
 
         //var_dump($query);
@@ -79,11 +100,11 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         //Наряды по стоматологическим страховым работам
         $invoices_ins_j = array();
-        //Сумма по наряды по стоматологическим страховым работам
+        //Сумма по наряды по закрытым в этом месяце стоматологическим страховым работам
         $invoices_ins_summ = 0;
 
         $query = "
-            SELECT ji.office_id, ji.summins, z.noch
+            SELECT ji.office_id AS filial_id, ji.summins, z.noch
             FROM `journal_invoice` ji
             LEFT JOIN `zapis` z ON ji.zapis_id = z.id
             WHERE ji.type='5' AND MONTH(ji.closed_time) = '{$month}' AND YEAR(ji.closed_time) = '{$_POST['year']}'
@@ -99,10 +120,10 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 //Исключаем ночные
                 if ($arr['noch'] != 1) {
                     //array_push($invoices_ins_j, $arr);
-                    if (!isset($journal[$arr['office_id']])){
-                        $journal[$arr['office_id']] = 0;
+                    if (!isset($journal[$arr['filial_id']])){
+                        $journal[$arr['filial_id']] = 0;
                     }
-                    $journal[$arr['office_id']] += $arr['summins'];
+                    $journal[$arr['filial_id']] += $arr['summins'];
                 }
             }
         }
