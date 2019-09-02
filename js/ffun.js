@@ -5791,11 +5791,12 @@
                 //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             success: function (res) {
-                //console.log (res);
+                //console.log (res.data_solar);
 
                 if (res.result == "success") {
                     //console.log (res);
 
+                    //Выручка
                     $(".filialMoney").each(function(){
                         //console.log($(this).attr("filial_id"));
 
@@ -5814,8 +5815,93 @@
                             //$(this).html('<span style="color: rgb(243, 0, 0);">не прикреплен</span>');
                             $(this).html('0.00');
 
-                            $("#w_id_"+worker_id).attr("filialMoney", number_format(res.data[filial_id], 2, '.', ''));
+                            $("#w_id_"+worker_id).attr("filialMoney", 0);
                         }
+                    });
+
+                    //Солярий
+                    $(".filialSolar").each(function(){
+                        //console.log($(this).attr("filial_id"));
+                        //console.log(res.data_solar[filial_id]);
+
+                        var filial_id = $(this).attr("filial_id");
+                        var worker_id = $(this).attr("w_id");
+
+                        //Если есть прикрепление к филиалу и только для 17 филиала (Черн)
+                        if ((filial_id > 0) && (filial_id == 17)){
+                            //console.log(filial_id);
+                            //console.log(res.data[filial_id]);
+                            if (typeof(res.data_solar[filial_id]) != "undefined" && res.data_solar[filial_id] !== null) {
+                                $(this).html(number_format(res.data_solar[filial_id]['solar'], 2, '.', ' '));
+
+                                $("#w_id_" + worker_id).attr("filialSolar", number_format(res.data_solar[filial_id]['solar'], 2, '.', ''));
+                            }else{
+                                $(this).html('0.00');
+
+                                $("#w_id_"+worker_id).attr("filialSolar", 0);
+                            }
+                        }/*else{
+                            //$(this).html('<span style="color: rgb(243, 0, 0);">не прикреплен</span>');
+                            $(this).html('0.00');
+
+                            $("#w_id_"+worker_id).attr("filialSolar", 0);
+                        }*/
+                    });
+
+                    //Реализация
+                    $(".filialRealiz").each(function(){
+                        //console.log($(this).attr("filial_id"));
+
+                        var filial_id = $(this).attr("filial_id");
+                        var worker_id = $(this).attr("w_id");
+
+                        //Если есть прикрепление к филиалу и только для 17 филиала (Черн)
+                        if ((filial_id > 0) && (filial_id == 17)){
+                            //console.log(filial_id);
+                            //console.log(res.data[filial_id]);
+                            if (typeof(res.data_solar[filial_id]) != "undefined" && res.data_solar[filial_id] !== null) {
+                                $(this).html(number_format(res.data_solar[filial_id]['realiz'], 2, '.', ' '));
+
+                                $("#w_id_" + worker_id).attr("filialRealiz", number_format(res.data_solar[filial_id]['realiz'], 2, '.', ''));
+                            }else{
+                                $(this).html('0.00');
+
+                                $("#w_id_"+worker_id).attr("filialSolar", 0);
+                            }
+                        }/*else{
+                            //$(this).html('<span style="color: rgb(243, 0, 0);">не прикреплен</span>');
+                            $(this).html('0.00');
+
+                            $("#w_id_"+worker_id).attr("filialRealiz", 0);
+                        }*/
+                    });
+
+                    //Абонементы
+                    $(".filialAbon").each(function(){
+                        //console.log($(this).attr("filial_id"));
+
+                        var filial_id = $(this).attr("filial_id");
+                        var worker_id = $(this).attr("w_id");
+
+                        //Если есть прикрепление к филиалу и только для 17 филиала (Черн)
+                        if ((filial_id > 0) && (filial_id == 17)){
+                            //console.log(filial_id);
+                            //console.log(res.data[filial_id]);
+                            if (typeof(res.data_solar[filial_id]) != "undefined" && res.data_solar[filial_id] !== null) {
+                                $(this).html(number_format(res.data_solar[filial_id]['abon'], 2, '.', ' '));
+
+                                $("#w_id_" + worker_id).attr("filialAbon", number_format(res.data_solar[filial_id]['abon'], 2, '.', ''));
+                            }else{
+                                $(this).html('0.00');
+
+                                $("#w_id_"+worker_id).attr("filialSolar", 0);
+                            }
+                        }/*else{
+                            //$(this).html('<span style="color: rgb(243, 0, 0);">не прикреплен</span>');
+                            $(this).html('0.00');
+
+                            $("#w_id_"+worker_id).attr("filialAbon", 0);
+                        }*/
                     });
 
                     $(".itogZP").each(function(){

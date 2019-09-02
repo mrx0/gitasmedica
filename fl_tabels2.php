@@ -437,6 +437,18 @@
                         echo '
                                         <div class="filialMoney" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'">                                                            
                                         </div>';
+                        //Солярий
+                        echo '
+                                        <div class="filialSolar" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'">
+                                        </div>';
+                        //Реализация
+                        echo '
+                                        <div class="filialRealiz" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'">
+                                        </div>';
+                        //Абонементы солярия
+                        echo '
+                                        <div class="filialAbon" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'">
+                                        </div>';
                         echo '
                                     </td>
                                     <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">';
@@ -459,7 +471,7 @@
                                         
                                     </td>
                                     <td style="width: 70px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; font-weight: bold;">
-                                        <div id="w_id_'.$worker_data['id'].'" class="itogZP" w_id="'.$worker_data['id'].'" f_id="'.$worker_filial_id. '" oklad="'.$oklad.'" w_hours="'.$w_hours.','.$w_normaSmen.'" w_percentHours="'.$w_percentHours.'" worker_revenue_percent="'.$worker_revenue_percent.'" filialMoney="0" worker_category_id="'.$worker_category_id.'" style="">
+                                        <div id="w_id_'.$worker_data['id'].'" class="itogZP" w_id="'.$worker_data['id'].'" f_id="'.$worker_filial_id. '" oklad="'.$oklad.'" w_hours="'.$w_hours.','.$w_normaSmen.'" w_percentHours="'.$w_percentHours.'" worker_revenue_percent="'.$worker_revenue_percent.'" filialMoney="0" filialSolar="0" filialRealiz="0" filialAbon="0" worker_category_id="'.$worker_category_id.'" style="">
                                         </div>';
 
                         echo '

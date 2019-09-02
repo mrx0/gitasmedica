@@ -130,14 +130,78 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         $summ_arr = $journal;
 
+
+        //Солярий
+        $summ_solar = array();
+
+        $query = "SELECT * FROM `journal_solar` WHERE
+                     MONTH(`date_in`) = '{$month}' AND YEAR(`date_in`) = '{$_POST['year']}'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                //Раскидываем в массив
+                if (!isset($summ_solar[$arr['filial_id']])){
+                    $summ_solar[$arr['filial_id']] = array();
+                    $summ_solar[$arr['filial_id']]['solar'] = 0;
+                    $summ_solar[$arr['filial_id']]['realiz'] = 0;
+                    $summ_solar[$arr['filial_id']]['abon'] = 0;
+                }
+                $summ_solar[$arr['filial_id']]['solar'] += $arr['summ'];
+            }
+        }
+        //Реализация
+        $query = "SELECT * FROM `journal_realiz` WHERE
+                     MONTH(`date_in`) = '{$month}' AND YEAR(`date_in`) = '{$_POST['year']}'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                //Раскидываем в массив
+                if (!isset($summ_solar[$arr['filial_id']])){
+                    $summ_solar[$arr['filial_id']] = array();
+                    $summ_solar[$arr['filial_id']]['solar'] = 0;
+                    $summ_solar[$arr['filial_id']]['realiz'] = 0;
+                    $summ_solar[$arr['filial_id']]['abon'] = 0;
+                }
+                $summ_solar[$arr['filial_id']]['realiz'] += $arr['summ'];
+            }
+        }
+        //Абонементы
+        $query = "SELECT * FROM `journal_abonement_solar` WHERE
+                     MONTH(`cell_time`) = '{$month}' AND YEAR(`cell_time`) = '{$_POST['year']}'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                //Раскидываем в массив
+                if (!isset($summ_solar[$arr['filial_id']])){
+                    $summ_solar[$arr['filial_id']] = array();
+                    $summ_solar[$arr['filial_id']]['solar'] = 0;
+                    $summ_solar[$arr['filial_id']]['realiz'] = 0;
+                    $summ_solar[$arr['filial_id']]['abon'] = 0;
+                }
+                $summ_solar[$arr['filial_id']]['abon'] += $arr['summ'];
+            }
+        }
+
         //Делаем рассчеты
         //Выводим результат
         if (!empty($journal)) {
 
-            echo json_encode(array('result' => 'success', 'data' => $summ_arr, 'msg' => ''));
+            echo json_encode(array('result' => 'success', 'data' => $summ_arr, 'data_solar' => $summ_solar, 'msg' => ''));
 
         } else {
-            echo json_encode(array('result' => 'empty', 'data' => array(), 'msg' => '<div class="query_neok">Ничего не найдено</div>'));
+            echo json_encode(array('result' => 'empty', 'data' => array(), 'data_solar' => array(), 'msg' => '<div class="query_neok">Ничего не найдено</div>'));
         }
     }
 }
