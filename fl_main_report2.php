@@ -644,24 +644,28 @@
             echo '
 			        <div id="report" class="report" style="margin-top: 10px;">';
 
-                $cashbox_nal = 0;
-                $beznal = 0;
-                $arenda = 0;
-                $rashod = 0;
-                $ostatok = 0;
+            $cashbox_nal = 0;
+            $beznal = 0;
+            $arenda = 0;
+            $rashod = 0;
+            $ostatok = 0;
 
-                $temp_solar_beznal = 0;
-                $temp_solar_nal = 0;
+            $temp_solar_beznal = 0;
+            $temp_solar_nal = 0;
 
-                foreach ($reports_j as $report){
-                    $cashbox_nal += $report['nal'];
-                    $beznal += $report['beznal'];
-                    $arenda += $report['arenda'];
-                    $rashod += $report['temp_giveoutcash'];
+            foreach ($reports_j as $report){
+                $cashbox_nal += $report['nal'];
+                $beznal += $report['beznal'];
+                $arenda += $report['arenda'];
+                $rashod += $report['temp_giveoutcash'];
 
-                    $temp_solar_nal += $report['temp_solar_nal'];
-                    $temp_solar_beznal += $report['temp_solar_beznal'];
-                }
+                $temp_solar_nal += $report['temp_solar_nal'] + $report['cashbox_abon_nal'] + $report['cashbox_solar_nal'] + $report['cashbox_realiz_nal'];
+                $temp_solar_beznal += $report['temp_solar_beznal'] + $report['cashbox_abon_beznal'] + $report['cashbox_solar_beznal'] + $report['cashbox_realiz_beznal'];
+            }
+
+            //получаем всё по солярию
+
+
 
 //                var_dump('Итоги');
 //                var_dump('---------------------------------');

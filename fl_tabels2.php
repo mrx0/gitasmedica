@@ -231,6 +231,75 @@
                 }
                 //var_dump($revenue_percent_j);
 
+                //Процент с солярия для этого типа
+                $revenue_solar_percent_j = array();
+
+                $arr = array();
+                $rez = array();
+
+                $query = "SELECT * FROM `fl_spr_revenue_solar_percent` WHERE `permission` = '{$type}'";
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        if (!isset($revenue_solar_percent_j[$arr['filial_id']])){
+                            $revenue_solar_percent_j[$arr['filial_id']] = array();
+                        }
+                        if (!isset($revenu_solare_percent_j[$arr['filial_id']][$arr['category']])){
+                            $revenue_solar_percent_j[$arr['filial_id']][$arr['category']] = array();
+                        }
+                        $revenue_solar_percent_j[$arr['filial_id']][$arr['category']] = $arr;
+                    }
+                }
+                //var_dump($revenue_solar_percent_j);
+
+                //Процент с реализации для этого типа
+                $revenue_realiz_percent_j = array();
+
+                $arr = array();
+                $rez = array();
+
+                $query = "SELECT * FROM `fl_spr_revenue_realiz_percent` WHERE `permission` = '{$type}'";
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        if (!isset($revenue_realiz_percent_j[$arr['filial_id']])){
+                            $revenue_realiz_percent_j[$arr['filial_id']] = array();
+                        }
+                        if (!isset($revenu_realiz_percent_j[$arr['filial_id']][$arr['category']])){
+                            $revenue_realiz_percent_j[$arr['filial_id']][$arr['category']] = array();
+                        }
+                        $revenue_realiz_percent_j[$arr['filial_id']][$arr['category']] = $arr;
+                    }
+                }
+                //var_dump($revenue_realiz_percent_j);
+
+                //Процент с проданных абонементов для этого типа
+                $revenue_abon_percent_j = array();
+
+                $arr = array();
+                $rez = array();
+
+                $query = "SELECT * FROM `fl_spr_revenue_abon_percent` WHERE `permission` = '{$type}'";
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        if (!isset($revenue_abon_percent_j[$arr['filial_id']])){
+                            $revenue_realiz_abon_j[$arr['filial_id']] = array();
+                        }
+                        if (!isset($revenu_abon_percent_j[$arr['filial_id']][$arr['category']])){
+                            $revenue_abon_percent_j[$arr['filial_id']][$arr['category']] = array();
+                        }
+                        $revenue_abon_percent_j[$arr['filial_id']][$arr['category']] = $arr;
+                    }
+                }
+                //var_dump($revenue_abon_percent_j);
+
                 //Получаем нормы смен для этого типа
                 $arr = array();
                 $normaSmen = array();
@@ -337,6 +406,9 @@
                         $worker_filial_id = 0;
                         $w_percentHours = 0;
                         $worker_revenue_percent = 0.00;
+                        $worker_revenue_solar_percent = 0.00;
+                        $worker_revenue_realiz_percent = 0.00;
+                        $worker_revenue_abon_percent = 0.00;
                         $oklad = 0.00;
 
                         echo '
@@ -456,22 +528,71 @@
                         //% от выручки
                         if ($haveCategory && $haveFilial){
                             echo '
-                                    <div id="w_revenue_summ_'.$worker_data['id'].'" style="display: inline;">
-                                    </div>';
+                                    <div>
+                                        <div id="w_revenue_summ_'.$worker_data['id'].'" style="display: inline;">
+                                        </div>';
 
 
                             $worker_revenue_percent = $revenue_percent_j[$worker_filial_id][$worker_category_id]['value'];
 
                             echo '
-                                    <div style="display: inline;">
-                                        ('.number_format($worker_revenue_percent, 1, '.', ' ').'%)
+                                        <div style="display: inline;">
+                                            ('.number_format($worker_revenue_percent, 1, '.', ' ').'%)
+                                        </div>
                                     </div>';
+
+                            //Для чернышевской (солярий, абонемент, реализация)
+                            if ($worker_filial_id == 17){
+                                //Солярий
+                                echo '
+                                    <div>
+                                        <div id="w_revenue_solar_summ_'.$worker_data['id'].'" style="display: inline;">
+                                        </div>';
+
+
+                                $worker_revenue_solar_percent = $revenue_solar_percent_j[$worker_filial_id][$worker_category_id]['value'];
+
+                                echo '
+                                        <div style="display: inline;">
+                                            ('.number_format($worker_revenue_solar_percent, 1, '.', ' ').'%)
+                                        </div>
+                                    </div>';
+                                //Реализация
+                                echo '
+                                    <div>
+                                        <div id="w_revenue_realiz_summ_'.$worker_data['id'].'" style="display: inline;">
+                                        </div>';
+
+
+                                $worker_revenue_realiz_percent = $revenue_realiz_percent_j[$worker_filial_id][$worker_category_id]['value'];
+
+                                echo '
+                                        <div style="display: inline;">
+                                            ('.number_format($worker_revenue_realiz_percent, 1, '.', ' ').'%)
+                                        </div>
+                                    </div>';
+                                //Абонемент
+                                echo '
+                                    <div>
+                                        <div id="w_revenue_abon_summ_'.$worker_data['id'].'" style="display: inline;">
+                                        </div>';
+
+
+                                $worker_revenue_abon_percent = $revenue_abon_percent_j[$worker_filial_id][$worker_category_id]['value'];
+
+                                echo '
+                                        <div style="display: inline;">
+                                            ('.number_format($worker_revenue_solar_percent, 1, '.', ' ').'%)
+                                        </div>
+                                    </div>';
+                            }
+
                         }
                         echo '
                                         
                                     </td>
                                     <td style="width: 70px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; font-weight: bold;">
-                                        <div id="w_id_'.$worker_data['id'].'" class="itogZP" w_id="'.$worker_data['id'].'" f_id="'.$worker_filial_id. '" oklad="'.$oklad.'" w_hours="'.$w_hours.','.$w_normaSmen.'" w_percentHours="'.$w_percentHours.'" worker_revenue_percent="'.$worker_revenue_percent.'" filialMoney="0" filialSolar="0" filialRealiz="0" filialAbon="0" worker_category_id="'.$worker_category_id.'" style="">
+                                        <div id="w_id_'.$worker_data['id'].'" class="itogZP" w_id="'.$worker_data['id'].'" f_id="'.$worker_filial_id. '" oklad="'.$oklad.'" w_hours="'.$w_hours.','.$w_normaSmen.'" w_percentHours="'.$w_percentHours.'" worker_revenue_percent="'.$worker_revenue_percent.'" worker_revenue_solar_percent="'. $worker_revenue_solar_percent.'" worker_revenue_realiz_percent="'. $worker_revenue_realiz_percent.'" worker_revenue_abon_percent="'. $worker_revenue_abon_percent.'" filialMoney="0" filialSolar="0" filialRealiz="0" filialAbon="0" worker_category_id="'.$worker_category_id.'" style="">
                                         </div>';
 
                         echo '

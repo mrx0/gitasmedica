@@ -78,7 +78,8 @@
                                             <a href="fl_my_tabels.php" class="b">Табели</a>';
                         }else {
                             echo '
-                                            <a href="fl_tabels.php?who='.$tabel_j[0]['type'].'" class="b">Важный отчёт</a>';
+                                            <a href="fl_tabels.php?who='.$tabel_j[0]['type'].'" class="b">Важный отчёт</a>
+                                            <a href="fl_tabels_check.php" class="b">Проверка табелей</a>';
                         }
                         echo '
                                         </div>
@@ -1001,7 +1002,7 @@
 
                         echo '
                                         <div style="background-color: rgba(56, 245, 70, 0.36); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            <div>Итого осталось выплатить: <span class="calculateOrder" style="font-size: 16px; ', ($summItog) <= 0 ? 'color: red;' : '' ,'">' . intval($summItog) . '</span> руб.<br>
+                                            <div>Итого осталось выплатить: <span id="summItog" class="calculateOrder" style="font-size: 16px; ', ($summItog) <= 0 ? 'color: red;' : '' ,'">' . intval($summItog) . '</span> руб.<br>
                                             <span style="font-size: 80%; color: #8C8C8C;">сумма округляется до целого для удобства расчетов</span></div>
                                             <div>';
 
