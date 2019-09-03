@@ -4878,9 +4878,9 @@
     }
 
     //Функция сравнения с реальностью сохраненных ежеднеынх отчетов (Если были изменения)
-    function checkConsolidateReports(date, filial_id){
-        console.log(date+'/'+filial_id);
-    }
+    //function checkConsolidateReports(date, filial_id){
+        //console.log(date+'/'+filial_id);
+    //}
 
     //Получение отчёта по какому-то дню из филиала и заполнение отчета
     function fl_getDailyReports(thisObj){
@@ -4961,7 +4961,8 @@
             success: function(res){
                 //console.log(res);
                 //console.log(res.count);
-                //console.log(date == getTodayDate());
+                console.log(date);
+                console.log(res.real_summs);
 
                 if(res.result == 'success') {
                     //console.log('success');
@@ -5025,7 +5026,7 @@
 
 
                             //Теперь хотим сравнить с реальностью и поставить метку, если не совпадает
-                            checkConsolidateReports(date, $("#SelectFilial").val());
+                            //checkConsolidateReports(date, $("#SelectFilial").val());
 
                         }else{
 

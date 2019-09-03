@@ -13,6 +13,9 @@
 			if (isset($_POST['date']) && isset($_POST['filial_id'])){
 				include_once 'DBWork.php';
 
+                //!!! @@@
+                include_once 'ffun.php';
+
                 //разбираемся с правами
                 $god_mode = FALSE;
 
@@ -76,6 +79,96 @@
                 }
 
 
+                //Попробуем собрать РЕАЛЬНЫЕ данные за эту дату
+                $report_date = $d.'.'.$m.'.'.$y;
+
+                $datastart = date('Y-m-d', strtotime($report_date.' 00:00:00'));
+                $dataend = date('Y-m-d', strtotime($report_date.' 23:59:59'));
+
+                $SummNal = 0;
+                $SummBeznal = 0;
+                $SummGiveOutCash = 0;
+
+                $result = ajaxShowResultCashbox($datastart, $dataend, $_POST['filial_id'], 0, 1, false);
+
+                if (!empty($result)) {
+                    if (!empty($result['rezult'])) {
+                        foreach ($result['rezult'] as $item) {
+                            if ($item['summ_type'] == 1) {
+                                $SummNal += $item['summ'];
+                            }
+                            if ($item['summ_type'] == 2) {
+                                $SummBeznal += $item['summ'];
+                            }
+                        }
+                    }
+                    //сертификаты
+                    if (!empty($result['rezult_cert'])) {
+
+                        $CertCount = count($result['rezult_cert']);
+
+                        foreach ($result['rezult_cert'] as $item) {
+                            if ($item['summ_type'] == 1) {
+                                $SummNal += $item['cell_price'];
+                            }
+                            if ($item['summ_type'] == 2) {
+                                $SummBeznal += $item['cell_price'];
+                            }
+                        }
+                    }
+                    //абонементы
+                    if (!empty($result['rezult_abon'])) {
+
+                        $AbonCount = count($result['rezult_abon']);
+
+                        foreach ($result['rezult_abon'] as $item) {
+                            if ($item['summ_type'] == 1) {
+                                $SummNal += $item['cell_price'];
+                            }
+                            if ($item['summ_type'] == 2) {
+                                $SummBeznal += $item['cell_price'];
+                            }
+                        }
+                    }
+                    //солярий
+                    if (!empty($result['rezult_solar'])) {
+
+                        $SolarCount = count($result['rezult_solar']);
+
+                        foreach ($result['rezult_solar'] as $item) {
+                            if ($item['summ_type'] == 1) {
+                                $SummNal += $item['summ'];
+                            }
+                            if ($item['summ_type'] == 2) {
+                                $SummBeznal += $item['summ'];
+                            }
+                        }
+                    }
+                    //реализация
+                    if (!empty($result['rezult_realiz'])) {
+
+                        $RealizCount = count($result['rezult_realiz']);
+
+                        foreach ($result['rezult_realiz'] as $item) {
+                            if ($item['summ_type'] == 1) {
+                                $SummNal += $item['summ'];
+                            }
+                            if ($item['summ_type'] == 2) {
+                                $SummBeznal += $item['summ'];
+                            }
+                        }
+                    }
+                    //Расходы
+                    if (!empty($result['rezult_give_out_cash'])){
+                        foreach ($result['rezult_give_out_cash'] as $item) {
+                            $SummGiveOutCash += $item['summ'];
+                        }
+                    }
+
+                }
+                //Итоговый массив из реальности
+                $realSumms = array('nal' => $SummNal, 'beznal' => $SummBeznal, 'giveout' => $SummGiveOutCash);
+
                 CloseDB ($msql_cnnct);
 
                 if (!empty($report_j) || ($giveout_bank_summ > 0) || ($giveout_director_summ > 0)){
@@ -85,18 +178,18 @@
                         //$a = true;
                         //Если есть права, то возвращаем данные
                         if (($finances['see_all'] == 1) || $god_mode) {
-                            echo json_encode(array('result' => 'success', 'data' => $report_j, 'giveout_bank' => $giveout_bank_summ,  'giveout_director' => $giveout_director_summ, 'count' => count($report_j)));
+                            echo json_encode(array('result' => 'success', 'data' => $report_j, 'giveout_bank' => $giveout_bank_summ,  'giveout_director' => $giveout_director_summ, 'count' => count($report_j), 'real_summs' => $realSumms));
                         //Если нет прав, то возвращаем пустой массив, но указываем кол-во элементов в нём
                         }else{
-                            echo json_encode(array('result' => 'success', 'data' => $report_j, 'giveout_bank' => 0,  'giveout_director' => 0, 'count' => count($report_j)));
+                            echo json_encode(array('result' => 'success', 'data' => $report_j, 'giveout_bank' => 0,  'giveout_director' => 0, 'count' => count($report_j), 'real_summs' => $realSumms));
                         }
                     }else{
                         //Если есть права, то возвращаем данные
                         if (($finances['see_all'] == 1) || $god_mode) {
-                            echo json_encode(array('result' => 'success', 'data' => $report_j, 'giveout_bank' => $giveout_bank_summ,  'giveout_director' => $giveout_director_summ, 'count' => count($report_j)));
+                            echo json_encode(array('result' => 'success', 'data' => $report_j, 'giveout_bank' => $giveout_bank_summ,  'giveout_director' => $giveout_director_summ, 'count' => count($report_j), 'real_summs' => $realSumms));
                         //Если нет прав, то возвращаем пустой массив, но указываем кол-во элементов в нём
                         }else{
-                            echo json_encode(array('result' => 'success', 'data' => array(), 'giveout_bank' => array(),  'giveout_director' => array(), 'count' => count($report_j)));
+                            echo json_encode(array('result' => 'success', 'data' => array(), 'giveout_bank' => array(),  'giveout_director' => array(), 'count' => count($report_j), 'real_summs' => array()));
                         }
                     }
                 }else{
