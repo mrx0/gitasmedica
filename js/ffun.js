@@ -4878,6 +4878,7 @@
     }
 
     //Функция сравнения с реальностью сохраненных ежеднеынх отчетов (Если были изменения)
+    ///!!! не используем
     //function checkConsolidateReports(date, filial_id){
         //console.log(date+'/'+filial_id);
     //}
@@ -4961,8 +4962,8 @@
             success: function(res){
                 //console.log(res);
                 //console.log(res.count);
-                console.log(date);
-                console.log(res.real_summs);
+                //console.log(date);
+                //console.log(res.real_summs);
 
                 if(res.result == 'success') {
                     //console.log('success');
@@ -5027,6 +5028,20 @@
 
                             //Теперь хотим сравнить с реальностью и поставить метку, если не совпадает
                             //checkConsolidateReports(date, $("#SelectFilial").val());
+
+                            if ((Number(data.nal) != Number(res.real_summs['nal'])) || (Number(data.beznal) != Number(res.real_summs['beznal']))){
+                                // console.log($(thisObj).find(".reportDate").html());
+                                // console.log(Number(data.nal));
+                                // console.log(Number(res.real_summs['nal']));
+                                // console.log('---------------');
+                                // console.log(Number(data.beznal));
+                                // console.log(Number(res.real_summs['beznal']));
+                                // console.log('/////////////////////////');
+
+                                $(thisObj).find(".reportDate").css({
+                                            "background-color": "rgba(47, 186, 239, 0.7)"
+                                        });
+                            }
 
                         }else{
 

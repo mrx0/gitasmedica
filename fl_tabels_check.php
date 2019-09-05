@@ -35,12 +35,14 @@
 
             $filial_id = 0;
 
-            if (isset($_SESSION['filial'])){
-                $filial_id = $_SESSION['filial'];
+            if (isset($_GET['filial'])) {
+                $filial_id = $_GET['filial'];
+
             }else {
-                if (!isset($_GET['filial'])) {
+                if (isset($_SESSION['filial'])){
+                    $filial_id = $_SESSION['filial'];
                 } else {
-                    $filial_id = $_GET['filial'];
+                    $filial_id = 15;
                 }
             }
             //var_dump($filial_id);
