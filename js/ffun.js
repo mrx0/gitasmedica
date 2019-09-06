@@ -2901,7 +2901,7 @@
 
         if (rys) {
 
-            if (Number($("#summItog").html()) == 0) {
+            //if (Number($("#summItog").html()) == 0) {
 
                 $.ajax({
                     url: link,
@@ -2921,15 +2921,16 @@
 
                         if (res.result == "success") {
                             //console.log(res);
-                            location.reload();
+                            //location.reload();
                         } else {
-                            $('#errror').html(res.data);
+                            //$('#errror').html(res.data);
+                            alert("Сумма табеля не равна нулю [ "+parseInt(res.data)+" ] ! Невозможно провести.");
                         }
                     }
                 });
-            }else{
-                alert("Сумма табеля не равна нулю! Невозможно провести.");
-            }
+            // }else{
+            //     alert("Сумма табеля не равна нулю! Невозможно провести.");
+            // }
         }
     }
 

@@ -36,10 +36,10 @@ if ($enter_ok){
                 <div id="status">
                     <header>
                         <div class="nav">
-                            <!--<a href="fl_tabels.php" class="b">Важный отчёт</a>-->
+                            <a href="fl_consolidated_report_admin.php?filial_id='.$filial_id.'" class="b">Сводный отчёт по филиалу</a>
                             <a href="fl_main_report2.php?filial_id='.$filial_id.'" class="b">Финальный отчёт</a>
                         </div>
-                        <h2>Добавить выплату ';
+                        <h2>Добавить выплату / расход';
 
         echo '
                       </h2>

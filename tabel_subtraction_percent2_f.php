@@ -84,15 +84,29 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         if ($number != 0){
             $tabel_j = mysqli_fetch_assoc($res);
+            //var_dump($tabel_j);
 
             $worker_id = $tabel_j['worker_id'];
+            //var_dump($worker_id);
             //Обозначим общую сумму к выплате. Собираем её из всех начислений (сумма РЛ, отпуск, больничный, премия...)
             //Если доктор (стом, косм,...)
-            if (($tabel_j['type'] == 5) || ($tabel_j['type'] == 6) || ($tabel_j['type'] == 10)) {
-                //$summ4ZP_All = intval($tabel_j['summ_calc'] + $tabel_j['surcharge']);
-                $summ4ZP_All = $tabel_j['summ_calc'] + $tabel_j['surcharge'];
-            }else{
-                $summ4ZP_All = $tabel_j['summ'];
+//            if (($tabel_j['type'] == 5) || ($tabel_j['type'] == 6) || ($tabel_j['type'] == 10)) {
+//                //$summ4ZP_All = intval($tabel_j['summ_calc'] + $tabel_j['surcharge']);
+//                $summ4ZP_All = $tabel_j['summ_calc'] + $tabel_j['surcharge'];
+////                var_dump('1');
+////                var_dump($tabel_j['summ_calc']);
+////                var_dump('2');
+////                var_dump($tabel_j['surcharge']);
+//            }else{
+//                $summ4ZP_All = $tabel_j['summ'];
+////                var_dump('3');
+////                var_dump($tabel_j['surcharge']);
+//            }
+            //Я хз, че я пытался сделать выше, но теперь так будет
+            //Хотя я вообще не понимаю, что я пытаюсь тут сделать...
+            $summ4ZP_All = $tabel_j['summ'] + $tabel_j['surcharge'];
+            if ($tabel_j['type'] == 7){
+                $summ4ZP_All += $tabel_j['summ_calc'];
             }
 
         }
@@ -101,6 +115,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
 
         if (!empty($tabel_j)) {
+            //Если стоматологи/косметологи
             if (($tabel_j['type'] == 5) || ($tabel_j['type'] == 6)) {
                 //Если больничный или отпускной !!! или на карту ?!!!, то с одного филиала предложим
                 if (($paidout_type == 2) || ($paidout_type == 3) || ($paidout_type == 4)){
@@ -408,7 +423,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
             //var_dump($_SESSION['subtraction_data']);
 
             echo '
-                <table>';
+                <table style="display: none;">';
 
             echo '
                     <tr>
@@ -446,8 +461,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
             echo '
                 </table>
-                <div class="button_tiny" style="width: 100px; font-size: 75%; cursor: pointer;" onclick="tabelSubtractionPercent(' . $tabel_id . ', ' . $tabel_j['type'] . ', '.$paidout_type.', ' . $iWantMyMoney . ', '.$paidout_summ_tabel.');">По умолчанию</div>
-                <div style="width: 250px; background-color: #EEE; border: 1px dotted #CCC; margin: 10px; padding: 5px; font-size: 85%;">
+                <div class="button_tiny" style="display: none; width: 100px; font-size: 75%; cursor: pointer;" onclick="tabelSubtractionPercent(' . $tabel_id . ', ' . $tabel_j['type'] . ', '.$paidout_type.', ' . $iWantMyMoney . ', '.$paidout_summ_tabel.');">По умолчанию</div>
+                <div style="display: none; width: 250px; background-color: #EEE; border: 1px dotted #CCC; margin: 10px; padding: 5px; font-size: 85%;">
                     <div>Всего: <span id="fil_sub_sum" style="font-weight: bold;">' . array_sum($filial_subtraction) . '</span></div>
                     <div><span id="fil_sub_msg"></span></div>
                 </div>

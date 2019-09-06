@@ -165,14 +165,14 @@
 
                         echo '
                             <tr>
-                                <td>'.$permissions_j[$type]['name'].'</td>
+                                <td colspan="6">'.$permissions_j[$type]['name'].'</td>
                             </tr>';
                         foreach ($type_data as $worker_id => $worker_zapis_data) {
                             //var_dump($worker_zapis_data);
 
                             echo '
                             <tr>
-                                <td>'.WriteSearchUser('spr_workers', $worker_id, 'user', false).'</td>
+                                <td colspan="6">'.WriteSearchUser('spr_workers', $worker_id, 'user', false).'</td>
                             </tr>';
 
                             foreach ($worker_zapis_data as $item) {
@@ -187,14 +187,18 @@
 
                                 echo '
                                 <tr>
-                                    <td>'.$start_time_h . ':' . $start_time_m . ' - ' . $end_time_h . ':' . $end_time_m.'</td>
-                                    <td>'.WriteSearchUser('spr_clients', $item['patient'], 'user', false).'</td>
+                                    <td style="width: 100px; font-size: 80%;">'.$start_time_h . ':' . $start_time_m . ' - ' . $end_time_h . ':' . $end_time_m.'</td>
+                                    <td style="width: 180px;">'.WriteSearchUser('spr_clients', $item['patient'], 'user', false).'</td>
+                                    <td style="width: 180px;">наряды (+типы работ)</td>
+                                    <td style="width: 180px;">ордеры если были</td>
+                                    <td style="width: 180px;">проведенные оплаты по наряду</td>
+                                    <td style="width: 180px;">р/л + отметка врача</td>
                                 </tr>';
                             }
 
                             echo '
                             <tr>
-                                <td>';
+                                <td colspan="6">';
 
                             echo showZapisRezult($worker_zapis_data, false, false, false, false, false, false, 0, true, false);
 
