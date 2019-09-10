@@ -2921,7 +2921,7 @@
 
                         if (res.result == "success") {
                             //console.log(res);
-                            //location.reload();
+                            location.reload();
                         } else {
                             //$('#errror').html(res.data);
                             alert("Сумма табеля не равна нулю [ "+parseInt(res.data)+" ] ! Невозможно провести.");

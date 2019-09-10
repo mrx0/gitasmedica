@@ -151,7 +151,7 @@
                                             <div>Филиал <b>' . $filials_j[$tabel_j[0]['office_id']]['name'] . '</b></div>';
                         }
 
-                        //Админы, ассистенты
+                        //Админы, ассистенты, санитарки, уборщицы, дворники
                         if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7) || ($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15)) {
                             echo '
                                             <div>Филиал, к которому прикреплен сотрудник ';
@@ -655,8 +655,8 @@
 
                         }
 
-                        //Админы, ассистенты
-                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7)) {
+                        //Админы, ассистенты, санитарки, уборщицы, дворники
+                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7) || ($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15)) {
                             //Часы работника
                             $w_hours = 0;
                             $w_normaSmen = 0;
@@ -803,8 +803,8 @@
                         }
 
 
-                        //Админы, ассистенты
-                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7)) {
+                        //Админы, ассистенты, санитарки, уборщицы, дворники
+                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7) || ($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15)) {
                             //Часы
                             echo '
                                 <div style="background-color: rgba(181, 165, 165, 0.16); border: 1px dotted #AAA; margin: 5px 0 10px; padding: 1px 3px; ">
@@ -831,14 +831,17 @@
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
                                                Начислено за время: <span class="" style="font-size: 14px; color: #555;  font-weight: bold;">' . number_format($tabel_j[0]['per_from_salary'], 0, '.', '') . ' руб. </span>
                                             </div>
-                                        </div>
+                                        </div>';
+                            //Админы, ассистенты
+                            if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7)){
+                                echo '
                                         <div style="margin-bottom: 5px;">
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
                                                 Процент с выручки: <span class="" style="font-size: 14px; color: #555;  font-weight: bold;">' . number_format($tabel_j[0]['percent_summ'], 0, '.', '') . ' руб. <span style="font-weight: normal;">('.$tabel_j[0]['revenue_percent'].'%)</span></span>
                                             </div>
                                         </div>
                                         ';
-
+                            }
                             echo '
                                         </div>
                                     </div>
@@ -862,6 +865,13 @@
                                             Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ_calc'] . '</span> руб.
                                         </div>';
                             }
+                            echo '
+                                        <div style="background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
+                                            Рассчёт: <span class="calculateOrder" style="font-size: 13px">' . ($tabel_j[0]['summ'] + $tabel_j[0]['summ_calc']) . '</span> руб.
+                                        </div>';
+                        }
+                        //Санитарки, уборщицы, дворники
+                        if (($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15)) {
                             echo '
                                         <div style="background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
                                             Рассчёт: <span class="calculateOrder" style="font-size: 13px">' . ($tabel_j[0]['summ'] + $tabel_j[0]['summ_calc']) . '</span> руб.
@@ -903,7 +913,7 @@
 
                         echo '
                                                 
-                                                <div>Всего начислено: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['surcharge'] . '</span> руб.</div>
+                                                <div>Всего дополнительно начислено: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['surcharge'] . '</span> руб.</div>
                                             </div>
                                         </div>';
 
