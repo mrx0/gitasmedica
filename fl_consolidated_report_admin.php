@@ -15,7 +15,7 @@
 			include_once 'ffun.php';
             require 'variables.php';
 
-            //Опция доступа к филиалам конкретных сотрудников
+            //Опция доступа к филиалам конкретных сотрудников (права доступа)
             $optionsWF = getOptionsWorkerFilial($_SESSION['id']);
             //var_dump($optionsWF);
 

@@ -2921,7 +2921,8 @@
 
                         if (res.result == "success") {
                             //console.log(res);
-                            location.reload();
+                            //location.reload();
+                            window.location.replace("fl_tabel.php?id="+tabel_id);
                         } else {
                             //$('#errror').html(res.data);
                             alert("Сумма табеля не равна нулю [ "+parseInt(res.data)+" ] ! Невозможно провести.");

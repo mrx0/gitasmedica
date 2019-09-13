@@ -357,9 +357,15 @@
                         }
                         //var_dump(microtime(true) - $script_start);
 
-                        //Вычеты
-                        //$query = "SELECT * FROM `fl_journal_tabels_ex` WHERE `tabel_id`='".$tabel_j[0]['id']."'";
-                        $query = "SELECT * FROM `fl_journal_deductions` WHERE `tabel_id`='".$tabel_j[0]['id']."';";
+                        //Вычеты на этом филиале
+                        //$query = "SELECT * FROM `fl_journal_deductions` WHERE `tabel_id`='".$tabel_j[0]['id']."';";
+
+                        //Вычеты этому человеку за этот месяц везде
+                        $query = "
+                              SELECT fl_jd.*, fl_jt.month, fl_jt.year, fl_jt.office_id FROM 
+                              `fl_journal_tabels` fl_jt
+                              RIGHT JOIN `fl_journal_deductions` fl_jd ON fl_jt.id = fl_jd.tabel_id 
+                              WHERE fl_jt.worker_id = '{$tabel_j[0]['worker_id']}' AND fl_jt.month = '{$tabel_j[0]['month']}' AND fl_jt.year = '{$tabel_j[0]['year']}';";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -372,16 +378,22 @@
                             //$sheduler_zapis = 0;
                             //var_dump ($sheduler_zapis);
                         }
+                        //var_dump($tabel_deductions_j);
                         //var_dump(microtime(true) - $script_start);
 
+                        //Всего удержано
                         $rezultD = '';
+
+                        //Что уже внесено в других табелях во всех филиалах
+                        $rezultSall = '';
+
 
                         if (!empty($tabel_deductions_j)) {
 
                             foreach ($tabel_deductions_j as $rezData) {
-
-                                $rezultD .=
-                                    '
+                                if ($rezData['tabel_id'] == $tabel_j[0]['id']) {
+                                    $rezultD .=
+                                        '
                                     <div class="cellsBlockHover" style="background-color: #ffffff; border: 1px solid #BFBCB5; margin: 1px 7px 7px;; position: relative; display: inline-block; vertical-align: top;">
                                         <div style="display: inline-block; width: 200px;">
                                             <div>
@@ -392,19 +404,19 @@
                                                     </div>
                                                     <div style="display: inline-block; vertical-align: middle; font-size: 90%;">
                                                         <b>';
-                                if ($rezData['type'] == 2){
-                                    $rezultD .= ' налог ';
-                                }elseif ($rezData['type'] == 3){
-                                    $rezultD .= ' штраф/вычет ';
-                                }elseif ($rezData['type'] == 4){
-                                    $rezultD .= ' ссуда ';
-                                }elseif ($rezData['type'] == 5){
-                                    $rezultD .= ' за обучение ';
-                                }else {
-                                    $rezultD .= ' за материалы ';
-                                }
-                                $rezultD .=
-                                                        ' #' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);"><br>создано: ' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>
+                                    if ($rezData['type'] == 2) {
+                                        $rezultD .= ' налог ';
+                                    } elseif ($rezData['type'] == 3) {
+                                        $rezultD .= ' штраф/вычет ';
+                                    } elseif ($rezData['type'] == 4) {
+                                        $rezultD .= ' ссуда ';
+                                    } elseif ($rezData['type'] == 5) {
+                                        $rezultD .= ' за обучение ';
+                                    } else {
+                                        $rezultD .= ' за материалы ';
+                                    }
+                                    $rezultD .=
+                                        ' #' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);"><br>создано: ' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>
                                                     </div>
                                                 </div>
                                                 <div>
@@ -415,34 +427,64 @@
                                                 
                                             </a>
                                             </div>';
-                                if (mb_strlen($rezData['descr']) > 0){
-                                    $rezultD .= '
+                                    if (mb_strlen($rezData['descr']) > 0) {
+                                        $rezultD .= '
                                             <div style="margin: 5px 0 0 3px; font-size: 80%;">
-                                                <b>Комментарий:</b> '.$rezData['descr'].'                                                
+                                                <b>Комментарий:</b> ' . $rezData['descr'] . '                                                
                                             </div>';
-                                }
-                                $rezultD .= '
-                                        </div>';
-                                if ($tabel_j[0]['status'] != 7) {
+                                    }
                                     $rezultD .= '
+                                        </div>';
+                                    if ($tabel_j[0]['status'] != 7) {
+                                        $rezultD .= '
                                         <div style="display: inline-block; vertical-align: top;">
                                             <div class="settings_text" style="border: 1px solid #CCC; padding: 3px; margin: 1px; width: 12px; text-align: center;"  onclick="contextMenuShow(' . $tabel_j[0]['id'] . ', ' . $rezData['id'] . ', event, \'tabel_deduction_options\');">
                                                 <i class="fa fa-caret-down"></i>
                                             </div>
                                         </div>';
-                                }
-                                $rezultD .= '
+                                    }
+                                    $rezultD .= '
                                         <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
                                     </div>';
 
-                                //$summCalc += $rezData['summ'];
+                                    //$summCalc += $rezData['summ'];
+                                }
 
+                                $rezultSall .= '
+                                    <a href="fl_tabel.php?id='.$rezData['tabel_id'].'" class="b" style="font-size: 80%; padding: 5px; border-color: red; ">
+                                        <div style="font-weight: bold;">';
+                                if ($rezData['type'] == 2) {
+                                    $rezultSall .= ' налог   ';
+                                } elseif ($rezData['type'] == 4) {
+                                    $rezultSall .= ' ссуда ';
+                                } elseif ($rezData['type'] == 5) {
+                                    $rezultSall .= ' обучение ';
+                                } else {
+                                    $rezultSall .= ' штраф ';
+                                }
+                                $rezultSall .= '
+                                            #'.$rezData['id'].'
+                                        </div>
+                                        <div style="margin: 1px 0; padding: 1px 3px; font-size: 10px">
+                                            Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">' . $rezData['summ'] . '</span> руб.
+                                        </div>
+                                        <div style="font-size: 80%;">
+                                            В табеле '.$rezData['tabel_id'].'<br> (['.$filials_j[$rezData['office_id']]['name2'].'] '.$monthsName[$rezData['month']].' '.$rezData['year'].')
+                                        </div>
+                                    </a>';
                             }
                         }
                         //var_dump(microtime(true) - $script_start);
 
-                        //Надбавки
-                        $query = "SELECT * FROM `fl_journal_surcharges` WHERE `tabel_id`='".$tabel_j[0]['id']."';";
+                        //Надбавки к этому табелю
+                        //$query = "SELECT * FROM `fl_journal_surcharges` WHERE `tabel_id`='".$tabel_j[0]['id']."';";
+
+                        //Надбавки этому человеку за этот месяц везде
+                        $query = "
+                              SELECT fl_js.*, fl_jt.month, fl_jt.year, fl_jt.office_id FROM 
+                              `fl_journal_tabels` fl_jt
+                              RIGHT JOIN `fl_journal_surcharges` fl_js ON fl_jt.id = fl_js.tabel_id 
+                              WHERE fl_jt.worker_id = '{$tabel_j[0]['worker_id']}' AND fl_jt.month = '{$tabel_j[0]['month']}' AND fl_jt.year = '{$tabel_j[0]['year']}';";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -453,68 +495,93 @@
                             }
                         }else{
                             //$sheduler_zapis = 0;
-                            //var_dump ($sheduler_zapis);
+
                         }
+                        //var_dump ($tabel_surcharges_j);
                         //var_dump(microtime(true) - $script_start);
 
+                        //Начислено в этот табель
                         $rezultS = '';
 
                         if (!empty($tabel_surcharges_j)) {
 
                             foreach ($tabel_surcharges_j as $rezData) {
+                                if ($rezData['tabel_id'] == $tabel_j[0]['id']) {
 
-                                $rezultS .=
-                                    '
-                                    <div class="cellsBlockHover" style="background-color: #ffffff; border: 1px solid #BFBCB5; margin: 1px 7px 7px;; position: relative; display: inline-block; vertical-align: top;">
-                                        <div style="display: inline-block; width: 200px;">
-                                            <div>
-                                            <a href="#" class="ahref">
+                                    $rezultS .=
+                                        '
+                                        <div class="cellsBlockHover" style="background-color: #ffffff; border: 1px solid #BFBCB5; margin: 1px 7px 7px;; position: relative; display: inline-block; vertical-align: top;">
+                                            <div style="display: inline-block; width: 200px;">
                                                 <div>
-                                                    <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
-                                                        <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+                                                <a href="#" class="ahref">
+                                                    <div>
+                                                        <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+                                                            <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+                                                        </div>
+                                                        <div style="display: inline-block; vertical-align: middle; font-size: 90%;">
+                                                            <b>';
+                                    if ($rezData['type'] == 2) {
+                                        $rezultS .= ' отпускной ';
+                                    } elseif ($rezData['type'] == 3) {
+                                        $rezultS .= ' больничный ';
+                                    } else {
+                                        $rezultS .= ' премия ';
+                                    }
+                                    $rezultS .=
+                                        '#' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);"><br>создано: ' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>
+                                                        </div>
                                                     </div>
-                                                    <div style="display: inline-block; vertical-align: middle; font-size: 90%;">
-                                                        <b>';
-                                if ($rezData['type'] == 2){
-                                    $rezultS .= ' отпускной ';
-                                }elseif ($rezData['type'] == 3){
-                                    $rezultS .= ' больничный ';
-                                }else {
-                                    $rezultS .= ' премия ';
-                                }
-                                $rezultS .=
-                                                        '#' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);"><br>создано: ' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>
+                                                    <div>
+                                                        <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
+                                                            Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">' . $rezData['summ'] . '</span> руб.
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div>
-                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
-                                                        Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">' . $rezData['summ'] . '</span> руб.
-                                                    </div>
-                                                </div>
-                                                
-                                            </a>
-                                            </div>';
-                                if (mb_strlen($rezData['descr']) > 0){
+                                                    
+                                                </a>
+                                                </div>';
+                                    if (mb_strlen($rezData['descr']) > 0) {
+                                        $rezultS .= '
+                                                <div style="margin: 5px 0 0 3px; font-size: 80%;">
+                                                    <b>Комментарий:</b> ' . $rezData['descr'] . '                                                
+                                                </div>';
+                                    }
                                     $rezultS .= '
-                                            <div style="margin: 5px 0 0 3px; font-size: 80%;">
-                                                <b>Комментарий:</b> '.$rezData['descr'].'                                                
                                             </div>';
-                                }
-                                $rezultS .= '
-                                        </div>';
-                                if ($tabel_j[0]['status'] != 7) {
+                                    if ($tabel_j[0]['status'] != 7) {
+                                        $rezultS .= '
+                                            <div style="display: inline-block; vertical-align: top;">
+                                                <div class="settings_text" style="border: 1px solid #CCC; padding: 3px; margin: 1px; width: 12px; text-align: center;"  onclick="contextMenuShow(' . $tabel_j[0]['id'] . ', ' . $rezData['id'] . ', event, \'tabel_surcharge_options\');">
+                                                    <i class="fa fa-caret-down"></i>
+                                                </div>
+                                            </div>';
+                                    }
                                     $rezultS .= '
-                                        <div style="display: inline-block; vertical-align: top;">
-                                            <div class="settings_text" style="border: 1px solid #CCC; padding: 3px; margin: 1px; width: 12px; text-align: center;"  onclick="contextMenuShow(' . $tabel_j[0]['id'] . ', ' . $rezData['id'] . ', event, \'tabel_surcharge_options\');">
-                                                <i class="fa fa-caret-down"></i>
-                                            </div>
+                                            <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
                                         </div>';
-                                }
-                                $rezultS .= '
-                                        <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->
-                                    </div>';
 
-                                //$summCalc += $rezData['summ'];
+                                    //$summCalc += $rezData['summ'];
+                                }
+
+                                $rezultSall .= '
+                                    <a href="fl_tabel.php?id='.$rezData['tabel_id'].'" class="b" style="font-size: 80%; padding: 5px; border-color: blue;">
+                                        <div style="font-weight: bold;">';
+                                if ($rezData['type'] == 2) {
+                                    $rezultSall .= ' отпускной ';
+                                } elseif ($rezData['type'] == 3) {
+                                    $rezultSall .= ' больничный ';
+                                } else {
+                                    $rezultSall .= ' премия ';
+                                }
+                                $rezultSall .= '
+                                            #'.$rezData['id'].'
+                                        </div>
+                                        <div style="margin: 1px 0; padding: 1px 3px; font-size: 10px">
+                                            Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">' . $rezData['summ'] . '</span> руб.
+                                        </div>
+                                        <div style="font-size: 80%;">
+                                            В табеле '.$rezData['tabel_id'].'<br> (['.$filials_j[$rezData['office_id']]['name2'].'] '.$monthsName[$rezData['month']].' '.$rezData['year'].')
+                                        </div>
+                                    </a>';
 
                             }
                         }
@@ -671,6 +738,8 @@
 
                             $w_percentHours = $tabel_j[0]['hours_percent'];
                         }
+                        echo '<span style="font-size:80%;  color: #555;">Удержания и документы к выплате, уже выписанные данному сотруднику в этом месяце:</span><br>';
+                        echo $rezultSall;
 
                         //Врачи
                         if (($tabel_j[0]['type'] == 5) || ($tabel_j[0]['type'] == 6) || ($tabel_j[0]['type'] == 10) || ($tabel_j[0]['type'] == 7)) {

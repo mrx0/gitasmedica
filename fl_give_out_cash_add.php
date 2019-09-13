@@ -63,6 +63,7 @@
                     <div class="nav">
                         <a href="stat_cashbox.php" class="b">Касса</a>
                         <a href="giveout_cash.php?filial_id=' . $current_filial . '&d=' . $day . '&m=' . $month . '&y=' . $year.'" class="b">Расходные ордеры</a>
+                        <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт</a>
                     </div>
                     <h2>Новый расходный ордер</h2>
                     <ul style="margin-left: 6px; margin-bottom: 10px;">

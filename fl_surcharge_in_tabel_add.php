@@ -29,6 +29,8 @@ if ($enter_ok){
 
                 if ($tabel_j != 0){
 
+                    $filials_j = getAllFilials(false, true, true);
+
                     echo '
                             <div id="status">
                                 <header>
@@ -48,6 +50,7 @@ if ($enter_ok){
 
                     echo '
                                    ] в <a href="'.$link.'?id='.$_GET['tabel_id'].'" class="ahref">табель #'.$_GET['tabel_id'].'</a></h2>
+                                   <div style="font-size: 87%; padding-bottom: 10px; font-weight: bold;"><i>'.WriteSearchUser('spr_workers', $tabel_j[0]['worker_id'], 'user', false).'  ['.$filials_j[$tabel_j[0]['office_id']]['name2'].']  '.$monthsName[$tabel_j[0]['month']].' '.$tabel_j[0]['year'].'</i></div>
                                     <!--Заполните поля-->
                                 </header>';
 
@@ -81,7 +84,7 @@ if ($enter_ok){
                         //Надбавки
                         //$query = "SELECT * FROM `fl_journal_surcharges` WHERE `tabel_id`='{$tabel_j[0]['id']}' AND `type` = '{$_GET['type']}';";
                         $query = "
-                              SELECT fl_js.* FROM 
+                              SELECT fl_js.*, fl_jt.month, fl_jt.year, fl_jt.office_id FROM 
                               `fl_journal_tabels` fl_jt
                               RIGHT JOIN `fl_journal_surcharges` fl_js ON fl_jt.id = fl_js.tabel_id  AND fl_js.type = '{$_GET['type']}' 
                               WHERE fl_jt.worker_id = '{$tabel_j[0]['worker_id']}' AND fl_jt.month = '{$tabel_j[0]['month']}' AND fl_jt.year = '{$tabel_j[0]['year']}';";
@@ -124,7 +127,7 @@ if ($enter_ok){
                                     '#' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);"><br>создано: ' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>
                                                         </div>
                                                         <div style="font-size: 80%; text-align: right;">
-                                                            В <a href="fl_tabel.php?id='.$rezData['tabel_id'].'" class="ahref">табеле '.$rezData['tabel_id'].'</a>
+                                                            В <a href="fl_tabel.php?id='.$rezData['tabel_id'].'" class="ahref">табеле '.$rezData['tabel_id'].'<br> (['.$filials_j[$rezData['office_id']]['name2'].'] '.$monthsName[$rezData['month']].' '.$rezData['year'].')</a>
                                                         </div>
                                                     </div>
 
@@ -183,7 +186,7 @@ if ($enter_ok){
                     }
 
                     echo '
-                                    <form action="cert_add_f.php">
+                                    
                                 
                                         <div class="cellsBlock2">
                                             <div class="cellLeft">
@@ -202,7 +205,7 @@ if ($enter_ok){
                                         
                                         <div id="errror"></div>                        
                                         <input type="button" class="b" value="Добавить" onclick="fl_showSurchargeAdd(0, '.$_GET['tabel_id'].', '.$_GET['type'].', \''.$link.'\', \'add\')">
-                                    </form>';
+                                    ';
 
                     echo '
                                 </div>
