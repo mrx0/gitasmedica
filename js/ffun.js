@@ -6130,7 +6130,7 @@
                                 $("#worker_" + worker_id).html("<a href='fl_tabel.php?id=" + res.data[worker_id]['id'] + "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(215, 34, 236, 0.98); font-size: 130%;' title='Табель не проведён'></i></a> " +
                                     "");
                             } else {
-                                $("#worker_" + worker_id).html("<a href='fl_tabel2.php?id=" + res.data[worker_id]['id'] + "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(236,31,0,0.98); font-size: 130%;' title='Обновите данные табели'></i></a> " +
+                                $("#worker_" + worker_id).html("<a href='fl_tabel.php?id=" + res.data[worker_id]['id'] + "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(236,31,0,0.98); font-size: 130%;' title='Обновите данные табели'></i></a> " +
                                     "<i class='fa fa-refresh' aria-hidden='true' style='color: rgb(218, 133, 9); font-size: 100%; cursor: pointer;' title='Обновить' onclick=\'refreshTabelForWorkerFromSchedulerReport("+res.data[worker_id]['id']+", "+worker_id+");\'></i>");
                             }
                         }
@@ -6173,8 +6173,14 @@
                 oklad: $("#w_id_" + worker_id).attr("oklad"),
                 w_percenthours: $("#w_id_" + worker_id).attr("w_percenthours"),
                 worker_revenue_percent: $("#w_id_" + worker_id).attr("worker_revenue_percent"),
+                worker_revenue_solar_percent: $("#w_id_" + worker_id).attr("worker_revenue_solar_percent"),
+                worker_revenue_realiz_percent: $("#w_id_" + worker_id).attr("worker_revenue_realiz_percent"),
+                worker_revenue_abon_percent: $("#w_id_" + worker_id).attr("worker_revenue_abon_percent"),
                 per_from_salary: Number($("#zp_temp_" + worker_id).html()),
                 filialmoney: $("#w_id_" + worker_id).attr("filialmoney"),
+                filialsolar: $("#w_id_" + worker_id).attr("filialSolar"),
+                filialrealiz: $("#w_id_" + worker_id).attr("filialRealiz"),
+                filialabon: $("#w_id_" + worker_id).attr("filialAbon"),
                 w_revenue_summ: Number($("#w_revenue_summ_"+worker_id).html()),
                 worker_category_id: $("#w_id_" + worker_id).attr("worker_category_id"),
                 w_hours: $("#w_id_" + worker_id).attr("w_hours"),
@@ -6239,8 +6245,14 @@
                 oklad: $("#w_id_" + worker_id).attr("oklad"),
                 w_percenthours: $("#w_id_" + worker_id).attr("w_percenthours"),
                 worker_revenue_percent: $("#w_id_" + worker_id).attr("worker_revenue_percent"),
+                worker_revenue_solar_percent: $("#w_id_" + worker_id).attr("worker_revenue_solar_percent"),
+                worker_revenue_realiz_percent: $("#w_id_" + worker_id).attr("worker_revenue_realiz_percent"),
+                worker_revenue_abon_percent: $("#w_id_" + worker_id).attr("worker_revenue_abon_percent"),
                 per_from_salary: Number($("#zp_temp_" + worker_id).html()),
                 filialmoney: $("#w_id_" + worker_id).attr("filialmoney"),
+                filialsolar: $("#w_id_" + worker_id).attr("filialSolar"),
+                filialrealiz: $("#w_id_" + worker_id).attr("filialRealiz"),
+                filialabon: $("#w_id_" + worker_id).attr("filialAbon"),
                 worker_category_id: $("#w_id_" + worker_id).attr("worker_category_id"),
                 w_hours: $("#w_id_" + worker_id).attr("w_hours"),
                 summ: Number($("#w_id_" + worker_id).html())

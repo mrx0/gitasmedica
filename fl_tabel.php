@@ -906,7 +906,9 @@
                                 echo '
                                         <div style="margin-bottom: 5px;">
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
-                                                Процент с выручки: <span class="" style="font-size: 14px; color: #555;  font-weight: bold;">' . number_format($tabel_j[0]['percent_summ'], 0, '.', '') . ' руб. <span style="font-weight: normal;">('.$tabel_j[0]['revenue_percent'].'%)</span></span>
+                                                <!--Процент с выручки: <span class="" style="font-size: 14px; color: #555;  font-weight: bold;">' . number_format($tabel_j[0]['percent_summ'], 0, '.', '') . ' руб. <span style="font-weight: normal;">('.$tabel_j[0]['revenue_percent'].'%)</span></span>-->
+                                                Сумма от процентов с выручки: <span class="" style="font-size: 14px; color: #555;  font-weight: bold;">' . number_format($tabel_j[0]['percent_summ'], 0, '.', '') . ' руб. </span>
+                                                
                                             </div>
                                         </div>
                                         ';
