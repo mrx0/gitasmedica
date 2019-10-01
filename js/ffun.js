@@ -5982,6 +5982,7 @@
                             revenue_solar_summ = (((filialSolar / 100) * worker_revenue_solar_percent) / 100) * w_percentHours;
                             revenue_realiz_summ = (((filialRealiz / 100) * worker_revenue_realiz_percent) / 100) * w_percentHours;
                             revenue_abon_summ = (((filialAbon / 100) * worker_revenue_abon_percent) / 100) * w_percentHours;
+                            //console.log(revenue_abon_summ);
 
 
                             //var itogZP = zp_temp + revenue_summ;

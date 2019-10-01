@@ -582,7 +582,7 @@
 
                                 echo '
                                         <div style="display: inline;">
-                                            ('.number_format($worker_revenue_solar_percent, 1, '.', ' ').'%)
+                                            ('.number_format($worker_revenue_abon_percent, 1, '.', ' ').'%)
                                         </div>
                                     </div>';
                             }
