@@ -15,7 +15,7 @@
 			include_once 'ffun.php';
             require 'variables.php';
 
-            //Опция доступа к филиалам конкретных сотрудников
+            //Опция доступа к филиалам конкретных сотрудников (права доступа)
             $optionsWF = getOptionsWorkerFilial($_SESSION['id']);
             //var_dump($optionsWF);
 
@@ -332,7 +332,7 @@
                     echo '
                         <li class="' . $weekend_block . ' cellsBlockHover blockControl" style="font-weight: bold; font-size: 12px; color: #949393; ' . $today_outline . '">';
                     echo '
-                            <div class="cellTime cellsTimereport reportDate" status="4" report_id="0" filial_id="'.$filial_id.'" style="text-align: center; cursor: pointer; ' . $today_color . ' '. $today_border .''. $today_border_l .'">
+                            <div class="cellTime cellsTimereport reportDate" status="4" report_id="0" filial_id="'.$filial_id.'" style="position: relative; text-align: center; cursor: pointer; ' . $today_color . ' '. $today_border .''. $today_border_l .'">
                                 ' . $data . '
                             </div>';
 

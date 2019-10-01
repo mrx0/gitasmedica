@@ -16,6 +16,10 @@
 
             $filials_j = getAllFilials(false, false, false);
 			//var_dump ($filials_j);
+
+            //Получили список прав
+            $permissions_j = getAllPermissions(false, true);
+            //var_dump($permissions_j);
 			
 			$kabsInFilialExist = FALSE;
 			$kabsInFilial = array();
@@ -31,12 +35,14 @@
 
             $filial_id = 0;
 
-            if (isset($_SESSION['filial'])){
-                $filial_id = $_SESSION['filial'];
+            if (isset($_GET['filial'])) {
+                $filial_id = $_GET['filial'];
+
             }else {
-                if (!isset($_GET['filial'])) {
+                if (isset($_SESSION['filial'])){
+                    $filial_id = $_SESSION['filial'];
                 } else {
-                    $filial_id = $_GET['filial'];
+                    $filial_id = 15;
                 }
             }
             //var_dump($filial_id);
@@ -150,6 +156,8 @@
 						</div>
 						
 						<h2>Проверка табелей</h2>
+						
+						<span style="font-size: 85%; color: #7D7D7D;">Отображаются только <span style="color: red;">не закрытые (не выплаченные до конца, не проведёные)</span> табели.</span>
 					</header>';
 			echo '
 					</div>';
@@ -246,10 +254,11 @@
                                                     <div style="display: inline-block; vertical-align: middle; font-size: 100%">';
 
 
-                        echo '
-                                                        <b><i>Табель #' . $rezData['id'] . '</i></b><br>';
+                        echo '<b><i>Табель #' . $rezData['id'] . '</i></b><br>';
+                        echo '<span style="font-size: 77%; color: #7D7D7D;">'.$monthsName[$month],' ',$year.'</span><br>';
                         echo '<i style="font-size: 80%;">' . WriteSearchUser('spr_workers', $rezData['worker_id'], 'user', false) . '</i><br>';
-                        echo '<span style="font-size: 70%;">' . $filials_j[$rezData['office_id']]['name'] . '</span>';
+                        echo '<i style="font-size: 80%;">' . $permissions_j[$rezData['type']]['name'] . '</i> / ';
+                        echo '<span style="font-size: 70%;">' . $filials_j[$rezData['office_id']]['name2'] . '</span>';
                         echo '
                                                     </div>
                                                 </div>
@@ -290,6 +299,7 @@
                                                                 Осталось: 
                                                             </td>
                                                             <td style="text-align: right; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
+                                                                <div class="markForTabelDeploy" tabel_id="'.$rezData['id'].'" rez_summ="' . intval($summItog - $rezData['paidout'] - $rezData['deduction']) . '" style="display: none;"></div>
                                                                 <span class="calculateInvoice calculateCalculateN" style="font-size: 13px">
                                                                     ' . intval($summItog - $rezData['paidout'] - $rezData['deduction']) . '
                                                                 </span> руб.

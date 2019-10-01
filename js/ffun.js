@@ -2881,7 +2881,9 @@
 
     //Провести табель
     function deployTabel (tabel_id){
-        //console.log(mode);
+        //console.log(tabel_id);
+        //console.log(Number($("#summItog").html()));
+
 
         //убираем ошибки
         hideAllErrors ();
@@ -2899,30 +2901,37 @@
 
         if (rys) {
 
-            $.ajax({
-                url: link,
-                global: false,
-                type: "POST",
-                dataType: "JSON",
+            //if (Number($("#summItog").html()) == 0) {
 
-                data:deployData,
+                $.ajax({
+                    url: link,
+                    global: false,
+                    type: "POST",
+                    dataType: "JSON",
 
-                cache: false,
-                beforeSend: function () {
-                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-                },
-                // действие, при ответе с сервера
-                success: function (res) {
-                    //console.log(res);
+                    data: deployData,
 
-                    if (res.result == "success") {
+                    cache: false,
+                    beforeSend: function () {
+                        //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                    },
+                    // действие, при ответе с сервера
+                    success: function (res) {
                         //console.log(res);
-                        location.reload();
-                    } else {
-                        $('#errror').html(res.data);
+
+                        if (res.result == "success") {
+                            //console.log(res);
+                            //location.reload();
+                            window.location.replace("fl_tabel.php?id="+tabel_id);
+                        } else {
+                            //$('#errror').html(res.data);
+                            alert("Сумма табеля не равна нулю [ "+parseInt(res.data)+" ] ! Невозможно провести.");
+                        }
                     }
-                }
-            });
+                });
+            // }else{
+            //     alert("Сумма табеля не равна нулю! Невозможно провести.");
+            // }
         }
     }
 
@@ -4870,6 +4879,12 @@
         });
     }
 
+    //Функция сравнения с реальностью сохраненных ежеднеынх отчетов (Если были изменения)
+    ///!!! не используем
+    //function checkConsolidateReports(date, filial_id){
+        //console.log(date+'/'+filial_id);
+    //}
+
     //Получение отчёта по какому-то дню из филиала и заполнение отчета
     function fl_getDailyReports(thisObj){
 
@@ -4949,7 +4964,8 @@
             success: function(res){
                 //console.log(res);
                 //console.log(res.count);
-                //console.log(date == getTodayDate());
+                //console.log(date);
+                //console.log(res.real_summs);
 
                 if(res.result == 'success') {
                     //console.log('success');
@@ -5011,6 +5027,23 @@
                             //И id
                             $(thisObj).find(".reportDate").attr('report_id', data.id);
 
+
+                            //Теперь хотим сравнить с реальностью и поставить метку, если не совпадает
+                            //checkConsolidateReports(date, $("#SelectFilial").val());
+
+                            if ((Number(data.nal) != Number(res.real_summs['nal'])) || (Number(data.beznal) != Number(res.real_summs['beznal']))){
+                                // console.log($(thisObj).find(".reportDate").html());
+                                // console.log(Number(data.nal));
+                                // console.log(Number(res.real_summs['nal']));
+                                // console.log('---------------');
+                                // console.log(Number(data.beznal));
+                                // console.log(Number(res.real_summs['beznal']));
+                                // console.log('/////////////////////////');
+
+                                $(thisObj).find(".reportDate").css({
+                                            "background-color": "rgba(47, 186, 239, 0.7)"
+                                        });
+                            }
 
                         }else{
 
@@ -5791,11 +5824,12 @@
                 //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             success: function (res) {
-                //console.log (res);
+                //console.log (res.data_solar);
 
                 if (res.result == "success") {
                     //console.log (res);
 
+                    //Выручка
                     $(".filialMoney").each(function(){
                         //console.log($(this).attr("filial_id"));
 
@@ -5814,8 +5848,93 @@
                             //$(this).html('<span style="color: rgb(243, 0, 0);">не прикреплен</span>');
                             $(this).html('0.00');
 
-                            $("#w_id_"+worker_id).attr("filialMoney", number_format(res.data[filial_id], 2, '.', ''));
+                            $("#w_id_"+worker_id).attr("filialMoney", 0);
                         }
+                    });
+
+                    //Солярий
+                    $(".filialSolar").each(function(){
+                        //console.log($(this).attr("filial_id"));
+                        //console.log(res.data_solar[filial_id]);
+
+                        var filial_id = $(this).attr("filial_id");
+                        var worker_id = $(this).attr("w_id");
+
+                        //Если есть прикрепление к филиалу и только для 17 филиала (Черн)
+                        if ((filial_id > 0) && (filial_id == 17)){
+                            //console.log(filial_id);
+                            //console.log(res.data[filial_id]);
+                            if (typeof(res.data_solar[filial_id]) != "undefined" && res.data_solar[filial_id] !== null) {
+                                $(this).html(number_format(res.data_solar[filial_id]['solar'], 2, '.', ' '));
+
+                                $("#w_id_" + worker_id).attr("filialSolar", number_format(res.data_solar[filial_id]['solar'], 2, '.', ''));
+                            }else{
+                                $(this).html('0.00');
+
+                                $("#w_id_"+worker_id).attr("filialSolar", 0);
+                            }
+                        }/*else{
+                            //$(this).html('<span style="color: rgb(243, 0, 0);">не прикреплен</span>');
+                            $(this).html('0.00');
+
+                            $("#w_id_"+worker_id).attr("filialSolar", 0);
+                        }*/
+                    });
+
+                    //Реализация
+                    $(".filialRealiz").each(function(){
+                        //console.log($(this).attr("filial_id"));
+
+                        var filial_id = $(this).attr("filial_id");
+                        var worker_id = $(this).attr("w_id");
+
+                        //Если есть прикрепление к филиалу и только для 17 филиала (Черн)
+                        if ((filial_id > 0) && (filial_id == 17)){
+                            //console.log(filial_id);
+                            //console.log(res.data[filial_id]);
+                            if (typeof(res.data_solar[filial_id]) != "undefined" && res.data_solar[filial_id] !== null) {
+                                $(this).html(number_format(res.data_solar[filial_id]['realiz'], 2, '.', ' '));
+
+                                $("#w_id_" + worker_id).attr("filialRealiz", number_format(res.data_solar[filial_id]['realiz'], 2, '.', ''));
+                            }else{
+                                $(this).html('0.00');
+
+                                $("#w_id_"+worker_id).attr("filialRealiz", 0);
+                            }
+                        }/*else{
+                            //$(this).html('<span style="color: rgb(243, 0, 0);">не прикреплен</span>');
+                            $(this).html('0.00');
+
+                            $("#w_id_"+worker_id).attr("filialRealiz", 0);
+                        }*/
+                    });
+
+                    //Абонементы
+                    $(".filialAbon").each(function(){
+                        //console.log($(this).attr("filial_id"));
+
+                        var filial_id = $(this).attr("filial_id");
+                        var worker_id = $(this).attr("w_id");
+
+                        //Если есть прикрепление к филиалу и только для 17 филиала (Черн)
+                        if ((filial_id > 0) && (filial_id == 17)){
+                            //console.log(filial_id);
+                            //console.log(res.data[filial_id]);
+                            if (typeof(res.data_solar[filial_id]) != "undefined" && res.data_solar[filial_id] !== null) {
+                                $(this).html(number_format(res.data_solar[filial_id]['abon'], 2, '.', ' '));
+
+                                $("#w_id_" + worker_id).attr("filialAbon", number_format(res.data_solar[filial_id]['abon'], 2, '.', ''));
+                            }else{
+                                $(this).html('0.00');
+
+                                $("#w_id_"+worker_id).attr("filialAbon", 0);
+                            }
+                        }/*else{
+                            //$(this).html('<span style="color: rgb(243, 0, 0);">не прикреплен</span>');
+                            $(this).html('0.00');
+
+                            $("#w_id_"+worker_id).attr("filialAbon", 0);
+                        }*/
                     });
 
                     $(".itogZP").each(function(){
@@ -5826,12 +5945,24 @@
                         var w_percentHours = Number($(this).attr("w_percentHours"));
                         var worker_revenue_percent = Number($(this).attr("worker_revenue_percent"));
                         var filialMoney = Number($(this).attr("filialMoney"));
+
+                        var worker_revenue_solar_percent = Number($(this).attr("worker_revenue_solar_percent"));
+                        var filialSolar = Number($(this).attr("filialSolar"));
+                        var worker_revenue_realiz_percent = Number($(this).attr("worker_revenue_realiz_percent"));
+                        var filialRealiz = Number($(this).attr("filialRealiz"));
+                        var worker_revenue_abon_percent = Number($(this).attr("worker_revenue_abon_percent"));
+                        var filialAbon = Number($(this).attr("filialAbon"));
                         //console.log(w_percentHours);
+                        //console.log(worker_revenue_solar_percent);
+                        //console.log(filialSolar);
 
                         if (w_percentHours > 0){
 
                             var zp_temp = 0;
                             var revenue_summ = 0;
+                            var revenue_solar_summ = 0;
+                            var revenue_realiz_summ = 0;
+                            var revenue_abon_summ = 0;
 
                             //Администраторы
                             // if (typeW == 4) {
@@ -5848,11 +5979,21 @@
 
                             revenue_summ = (((filialMoney / 100) * worker_revenue_percent) / 100) * w_percentHours;
 
-                            var itogZP = zp_temp + revenue_summ;
+                            revenue_solar_summ = (((filialSolar / 100) * worker_revenue_solar_percent) / 100) * w_percentHours;
+                            revenue_realiz_summ = (((filialRealiz / 100) * worker_revenue_realiz_percent) / 100) * w_percentHours;
+                            revenue_abon_summ = (((filialAbon / 100) * worker_revenue_abon_percent) / 100) * w_percentHours;
+
+
+                            //var itogZP = zp_temp + revenue_summ;
+                            var itogZP = zp_temp + revenue_summ + revenue_solar_summ + revenue_realiz_summ + revenue_abon_summ;
                             //console.log(itogZP);
 
                             $("#zp_temp_"+worker_id).html(number_format(zp_temp, 2, '.', ''));
                             $("#w_revenue_summ_"+worker_id).html(number_format(revenue_summ, 2, '.', ''));
+
+                            $("#w_revenue_solar_summ_"+worker_id).html(number_format(revenue_solar_summ, 2, '.', ''));
+                            $("#w_revenue_realiz_summ_"+worker_id).html(number_format(revenue_realiz_summ, 2, '.', ''));
+                            $("#w_revenue_abon_summ_"+worker_id).html(number_format(revenue_abon_summ, 2, '.', ''));
                             //console.log("#zp_temp_"+worker_id);
                             $(this).html(number_format(itogZP, 0, '.', ''));
                         }else{

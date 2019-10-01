@@ -61,6 +61,7 @@
                     <header id="header">
                         <div class="nav">
                             <a href="stat_cashbox.php" class="b">Касса</a>
+                            <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт</a>
                         </div>
                         <h2 style="">Расходные ордеры</h2>
                         <div>

@@ -29,6 +29,28 @@ if ($enter_ok){
 
                 if ($tabel_j != 0){
 
+                    $filials_j = getAllFilials(false, true, true);
+
+                    //Сумма налога
+                    $tax_summ = 0;
+
+                    //Если налог, пробуем вытащить из базы цифру
+                    if ($_GET['type'] == 2){
+                        $msql_cnnct = ConnectToDB ();
+
+                        $query = "SELECT `summ` FROM  `fl_journal_taxes` WHERE `worker_id` = '{$tabel_j[0]['worker_id']}';";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0) {
+                            $arr = mysqli_fetch_assoc($res);
+
+                            $tax_summ = $arr['summ'];
+                        }
+                        //var_dump($tax_summ);
+                    }
+
                     echo '
                             <div id="status">
                                 <header>
@@ -52,7 +74,8 @@ if ($enter_ok){
 
                     echo '
                                     ] из <a href="'.$link.'?id='.$_GET['tabel_id'].'" class="ahref">табеля #'.$_GET['tabel_id'].'</a></h2>
-                                    Заполните поля
+                                    <div style="font-size: 87%; padding-bottom: 10px; font-weight: bold;"><i>'.WriteSearchUser('spr_workers', $tabel_j[0]['worker_id'], 'user', false).'  ['.$filials_j[$tabel_j[0]['office_id']]['name2'].']  '.$monthsName[$tabel_j[0]['month']].' '.$tabel_j[0]['year'].'</i></div>
+                                    <!--Заполните поля-->
                                 </header>';
 
                     echo '
@@ -65,7 +88,7 @@ if ($enter_ok){
                                         <div class="cellsBlock2">
                                             <div class="cellLeft">
                                             <span style="font-size:80%;  color: #555;">Сумма (руб.)</span><br>
-                                                <input type="text" name="deduction_summ" id="deduction_summ" value="">
+                                                <input type="text" name="deduction_summ" id="deduction_summ" value="'.$tax_summ.'">
                                                 <label id="deduction_summ_error" class="error"></label>
                                             </div>
                                         </div>

@@ -260,7 +260,7 @@
                             //реализация
                             if (!empty($result['rezult_realiz'])) {
 
-                                $AbonRealiz = count($result['rezult_realiz']);
+                                $RealizCount = count($result['rezult_realiz']);
 
                                 foreach ($result['rezult_realiz'] as $item) {
                                     if ($item['summ_type'] == 1) {
