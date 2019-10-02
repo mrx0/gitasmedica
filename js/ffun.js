@@ -6029,7 +6029,7 @@
             var w_percentHours = Number($(this).attr("w_percentHours"));
             var worker_revenue_percent = Number($(this).attr("worker_revenue_percent"));
             var filialMoney = Number($(this).attr("filialMoney"));
-            console.log(w_percentHours);
+            //console.log(w_percentHours);
 
             if (w_percentHours > 0){
 
@@ -6054,7 +6054,7 @@
                 //console.log(revenue_summ);
 
                 var itogZP = zp_temp + revenue_summ;
-                console.log(itogZP);
+                //console.log(itogZP);
 
                 $("#zp_temp_"+worker_id).html(number_format(zp_temp, 2, '.', ''));
                 $("#w_revenue_summ_"+worker_id).html(number_format(revenue_summ, 2, '.', ''));
@@ -6270,7 +6270,7 @@
                     //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
                 },
                 success: function (res) {
-                    //console.log (res);
+                    // console.log (res);
 
                     if (res.result == "success") {
                         //console.log(res.data);
