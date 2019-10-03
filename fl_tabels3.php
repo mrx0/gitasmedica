@@ -295,8 +295,8 @@
 
                     }
                 }
-                var_dump($query);
-                var_dump($hours_j);
+//                var_dump($query);
+//                var_dump($hours_j);
 
                 $block_fast_filter = '';
 
