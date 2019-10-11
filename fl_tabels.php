@@ -84,11 +84,15 @@
 				echo '
                     <div class="no_print"> 
 					<header style="margin-bottom: 5px;">
+						<div class="nav">
+						    <a href="fl_tabels2.php" class="b4">Отчёт по часам</a>
+						    <a href="fl_tabels_check.php" class="b4">Проверка табелей</a>
+                        </div>
+
 						<h1>Важный отчёт</h1>';
                 echo '
                         <div>
 						    <a href="fl_tabel_print_choice.php?type='.$type.'" class="b4">Печать пачки</a>
-						    <a href="fl_tabels_check.php" class="b4">Проверка табелей</a>
 						</div>';
                 echo '    
 					</header>

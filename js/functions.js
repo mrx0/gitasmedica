@@ -8938,7 +8938,7 @@
         var menu = $('<div/>', {
             class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
         }).css({
-            "top": "120px",
+            "top": "-170px",
             "height": "fit-content",
             "width": "45%",
             "background-color": "rgb(195, 194, 194)"

@@ -226,7 +226,7 @@
                             </div>';
 
                             echo '
-                                <input type="button" class="b" value="Применить" onclick="fl_editSchedulerReport_add(\''.$_GET['report_id'].'\');">';
+                                <input type="button" id="fl_editSchedulerReport_add" class="b" value="Применить" onclick="fl_editSchedulerReport_add(\''.$_GET['report_id'].'\'); $(this).attr(\'disabled\', \'disabled\');">';
 
                         }else{
                             echo '<span style="color: red;">Ничего не найдено</span>';

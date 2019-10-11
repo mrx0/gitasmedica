@@ -295,6 +295,7 @@
 
                     }
                 }
+//                var_dump($query);
 //                var_dump($hours_j);
 
                 $block_fast_filter = '';
@@ -334,6 +335,9 @@
                         $worker_filial_id = 0;
                         $w_percentHours = 0;
                         $worker_revenue_percent = 0.00;
+                        $worker_revenue_solar_percent = 0.00;
+                        $worker_revenue_realiz_percent = 0.00;
+                        $worker_revenue_abon_percent = 0.00;
                         $oklad = 0.00;
 
                         //--
@@ -514,7 +518,7 @@
                                             
                                         </td>
                                         <td style="width: 70px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; font-weight: bold;">
-                                            <div id="w_id_' . $worker_data['id'] . '" class="itogZP" w_id="' . $worker_data['id'] . '" f_id="' . $worker_filial_id . '" oklad="' . $oklad . '" w_hours="' . $w_hours . ',' . $w_normaSmen . '" w_percentHours="' . $w_percentHours . '" worker_revenue_percent="' . $worker_revenue_percent . '" filialMoney="0" worker_category_id="' . $worker_category_id . '" style="">
+                                            <div id="w_id_' . $worker_data['id'] . '" class="itogZP" w_id="' . $worker_data['id'] . '" f_id="' . $worker_filial_id . '" oklad="' . $oklad . '" w_hours="' . $w_hours . ',' . $w_normaSmen . '" w_percentHours="' . $w_percentHours . '" worker_revenue_percent="' . $worker_revenue_percent . '" worker_revenue_solar_percent="'. $worker_revenue_solar_percent.'" worker_revenue_realiz_percent="'. $worker_revenue_realiz_percent.'" worker_revenue_abon_percent="'. $worker_revenue_abon_percent.'" filialMoney="0" filialSolar="0" filialRealiz="0" filialAbon="0" worker_category_id="'.$worker_category_id.'" style="">
                                             </div>';
 
                                 echo '

@@ -1029,7 +1029,7 @@
         var menu = $('<div/>', {
             class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
         }).css({
-            "top": "120px",
+            "top": "-170px",
             "height": "fit-content",
             "width": "45%",
             "background-color": "rgb(195, 194, 194)"
@@ -4329,6 +4329,9 @@
                 }
             }
         });
+
+        setTimeout('$("#fl_editSchedulerReport_add").removeAttr("disabled")', 1500);
+
     }
 
     //Удалить часы за смену по id
@@ -4403,7 +4406,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                // console.log(res);
+                console.log(res);
                 //$('#errrror').html(res.subtractions_j);
                 // console.log(res.subtractions_j);
                 //console.log(res.subtractions_j.length);
@@ -4417,9 +4420,9 @@
 
                     //var subtractionsSumm_arr = [];
 
-                    var subtractions = res.subtractions_j;
+                    var SummPrepayment = 0, SummHolidayPay = 0, SummHospitalPay = 0, SummSalary = 0, SummRefund = 0, SummWithdraw = 0;
 
-                    var SummPrepayment = 0, SummHolidayPay = 0, SummHospitalPay = 0, SummSalary = 0;
+                    var subtractions = res.subtractions_j;
 
                     if (subtractions.length > 0){
                         for(var i = 0; i < subtractions.length; i++){
@@ -4455,10 +4458,24 @@
                             }
                         }
                     }
+
+                    //Выдачи (возвраты) денег пациентам
+                    var withdraws = res.withdraw_j;
+
+                    if (withdraws.length > 0){
+                        for(var i = 0; i < withdraws.length; i++){
+
+                            SummWithdraw += parseFloat(withdraws[i].summ)
+
+                        }
+                    }
                     // console.log(SummPrepayment);
                     // console.log(SummHolidayPay);
                     // console.log(SummHospitalPay);
                     // console.log(SummSalary);
+                    // console.log(SummRefund);
+                    // console.log(SummWithdraw);
+
 
                     //
                     $("#itogSummAllMonth").html(0);
@@ -4827,8 +4844,11 @@
                     $("#SummHolidayPayGiveout").html(number_format((SummHolidayPay), 2, '.', ' '));
                     $("#SummHospitalPayGiveout").html(number_format((SummHospitalPay), 2, '.', ' '));
                     $("#SummSalaryGiveout").html(number_format((SummSalary), 2, '.', ' '));
+                    //$("#SummRefundGiveout").html(number_format((SummRefund), 2, '.', ' '));
+                    $("#SummWithdrawGiveout").html(number_format((SummWithdraw), 2, '.', ' '));
 
-                    $("#SummGiveoutMonth").html(number_format((SummPrepayment + SummHolidayPay + SummHospitalPay + SummSalary), 2, '.', ' '));
+
+                    $("#SummGiveoutMonth").html(number_format((SummPrepayment + SummHolidayPay + SummHospitalPay + SummSalary + SummRefund + SummWithdraw), 2, '.', ' '));
 
                     // console.log(Number($("#ostatokNalAllMonth").html().replace(/\s{1,}/g, '')));
                     // console.log(Number($("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')));
@@ -6029,7 +6049,7 @@
             var w_percentHours = Number($(this).attr("w_percentHours"));
             var worker_revenue_percent = Number($(this).attr("worker_revenue_percent"));
             var filialMoney = Number($(this).attr("filialMoney"));
-            console.log(w_percentHours);
+            //console.log(w_percentHours);
 
             if (w_percentHours > 0){
 
@@ -6054,7 +6074,7 @@
                 //console.log(revenue_summ);
 
                 var itogZP = zp_temp + revenue_summ;
-                console.log(itogZP);
+                //console.log(itogZP);
 
                 $("#zp_temp_"+worker_id).html(number_format(zp_temp, 2, '.', ''));
                 $("#w_revenue_summ_"+worker_id).html(number_format(revenue_summ, 2, '.', ''));
@@ -6130,7 +6150,7 @@
                                 $("#worker_" + worker_id).html("<a href='fl_tabel.php?id=" + res.data[worker_id]['id'] + "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(215, 34, 236, 0.98); font-size: 130%;' title='Табель не проведён'></i></a> " +
                                     "");
                             } else {
-                                $("#worker_" + worker_id).html("<a href='fl_tabel2.php?id=" + res.data[worker_id]['id'] + "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(236,31,0,0.98); font-size: 130%;' title='Обновите данные табели'></i></a> " +
+                                $("#worker_" + worker_id).html("<a href='fl_tabel.php?id=" + res.data[worker_id]['id'] + "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(236,31,0,0.98); font-size: 130%;' title='Обновите данные табели'></i></a> " +
                                     "<i class='fa fa-refresh' aria-hidden='true' style='color: rgb(218, 133, 9); font-size: 100%; cursor: pointer;' title='Обновить' onclick=\'refreshTabelForWorkerFromSchedulerReport("+res.data[worker_id]['id']+", "+worker_id+");\'></i>");
                             }
                         }
@@ -6173,8 +6193,14 @@
                 oklad: $("#w_id_" + worker_id).attr("oklad"),
                 w_percenthours: $("#w_id_" + worker_id).attr("w_percenthours"),
                 worker_revenue_percent: $("#w_id_" + worker_id).attr("worker_revenue_percent"),
+                worker_revenue_solar_percent: $("#w_id_" + worker_id).attr("worker_revenue_solar_percent"),
+                worker_revenue_realiz_percent: $("#w_id_" + worker_id).attr("worker_revenue_realiz_percent"),
+                worker_revenue_abon_percent: $("#w_id_" + worker_id).attr("worker_revenue_abon_percent"),
                 per_from_salary: Number($("#zp_temp_" + worker_id).html()),
                 filialmoney: $("#w_id_" + worker_id).attr("filialmoney"),
+                filialsolar: $("#w_id_" + worker_id).attr("filialSolar"),
+                filialrealiz: $("#w_id_" + worker_id).attr("filialRealiz"),
+                filialabon: $("#w_id_" + worker_id).attr("filialAbon"),
                 w_revenue_summ: Number($("#w_revenue_summ_"+worker_id).html()),
                 worker_category_id: $("#w_id_" + worker_id).attr("worker_category_id"),
                 w_hours: $("#w_id_" + worker_id).attr("w_hours"),
@@ -6239,8 +6265,14 @@
                 oklad: $("#w_id_" + worker_id).attr("oklad"),
                 w_percenthours: $("#w_id_" + worker_id).attr("w_percenthours"),
                 worker_revenue_percent: $("#w_id_" + worker_id).attr("worker_revenue_percent"),
+                worker_revenue_solar_percent: $("#w_id_" + worker_id).attr("worker_revenue_solar_percent"),
+                worker_revenue_realiz_percent: $("#w_id_" + worker_id).attr("worker_revenue_realiz_percent"),
+                worker_revenue_abon_percent: $("#w_id_" + worker_id).attr("worker_revenue_abon_percent"),
                 per_from_salary: Number($("#zp_temp_" + worker_id).html()),
                 filialmoney: $("#w_id_" + worker_id).attr("filialmoney"),
+                filialsolar: $("#w_id_" + worker_id).attr("filialSolar"),
+                filialrealiz: $("#w_id_" + worker_id).attr("filialRealiz"),
+                filialabon: $("#w_id_" + worker_id).attr("filialAbon"),
                 worker_category_id: $("#w_id_" + worker_id).attr("worker_category_id"),
                 w_hours: $("#w_id_" + worker_id).attr("w_hours"),
                 summ: Number($("#w_id_" + worker_id).html())
@@ -6258,7 +6290,7 @@
                     //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
                 },
                 success: function (res) {
-                    //console.log (res);
+                    // console.log (res);
 
                     if (res.result == "success") {
                         //console.log(res.data);

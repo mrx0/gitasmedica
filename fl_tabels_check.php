@@ -153,6 +153,7 @@
 					<header>
 						<div class="nav">
 							<a href="fl_tabels.php" class="b">Важный отчёт</a>
+							<a href="fl_tabels2.php" class="b">Отчёт по часам</a>
 						</div>
 						
 						<h2>Проверка табелей</h2>

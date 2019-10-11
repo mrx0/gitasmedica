@@ -1,7 +1,7 @@
 <?php
 
-//scheduler3.php
-//Расписание администраторов и ассистентов v2.0
+//scheduler4.php
+//Расписание прочего персонала
 
 	require_once 'header.php';
 	
@@ -352,7 +352,7 @@
                                     <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
                                     <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
                                     <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
-                                    <a href="scheduler4.php?'.$dopFilial.$dopDate.'&who=11" class="b" style="'.$other_color.'">Прочие</a>
+                                    <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=11" class="b" style="'.$other_color.'">Прочие</a>
                                 </li>
                                 <li style="width: auto; margin-bottom: 20px;">
                                     <div style="display: inline-block; margin-right: 20px;">

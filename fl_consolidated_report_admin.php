@@ -666,7 +666,7 @@
                                 </div>-->
                                 <div class="cellsBlock" style="font-size: 14px;">
                                     <div class="cellLeft">возвраты</div>
-                                    <div id="SummRefundGiveout" class="cellRight" style="text-align: right;">-</div>
+                                    <div id="SummWithdrawGiveout" class="cellRight" style="text-align: right;">-</div>
                                 </div>
                                 <!--<div class="cellsBlock" style="font-size: 14px;">
                                     <div class="cellLeft">материалы</div>
