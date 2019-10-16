@@ -53,6 +53,22 @@
                 }
                 //var_dump($subtractions_j);
 
+                //Выдачи (возвраты) денег пациентам
+                $fl_withdraw_j = array();
+
+                $query = "SELECT * FROM  `journal_withdraw` WHERE `filial_id`='{$_POST['filial_id']}' AND MONTH(`date_in`) = '".dateTransformation($_POST['month'])."' AND YEAR(`date_in`) = '{$_POST['year']}'";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0) {
+                    while ($arr = mysqli_fetch_assoc($res)) {
+                        array_push($fl_withdraw_j, $arr);
+                    }
+                }
+                //var_dump($fl_withdraw_j);
+
                 //Выплаты !!! не доделал, переделать всё, если понадобится вообще.
                 $fl_refunds_j = array();
 
@@ -271,7 +287,7 @@
                 //}
 
 
-                echo json_encode(array('result' => 'success', 'subtractions_j' => $subtractions_j, 'fl_refunds_j' => $fl_refunds_j, 'material_consumption_j' => $material_consumption_j, 'giveouts_j' => $giveouts_result_str, 'prev_month_filial_summ' => $prev_month_filial_summ));
+                echo json_encode(array('result' => 'success', 'subtractions_j' => $subtractions_j, 'refunds_j' => $fl_refunds_j, 'withdraw_j' => $fl_withdraw_j, 'material_consumption_j' => $material_consumption_j, 'giveouts_j' => $giveouts_result_str, 'prev_month_filial_summ' => $prev_month_filial_summ));
 
             }
         }else{

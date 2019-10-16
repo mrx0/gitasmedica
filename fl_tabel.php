@@ -79,6 +79,7 @@
                         }else {
                             echo '
                                             <a href="fl_tabels.php?who='.$tabel_j[0]['type'].'" class="b">Важный отчёт</a>
+                                            <a href="fl_tabels2.php?who='.$tabel_j[0]['type'].'" class="b">Отчёт по часам</a>
                                             <a href="fl_tabels_check.php" class="b">Проверка табелей</a>';
                         }
                         echo '

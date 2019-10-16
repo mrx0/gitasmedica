@@ -1,7 +1,7 @@
 <?php
 
-//scheduler3.php
-//Расписание администраторов и ассистентов v2.0
+//scheduler4.php
+//Расписание прочего персонала
 
 	require_once 'header.php';
 	
@@ -18,7 +18,7 @@
             //var_dump ($filials_j);
 
             //обнулим сессионные данные для редактирования
-            unset($_SESSION['scheduler3']);
+            unset($_SESSION['scheduler4']);
             //var_dump ($_SESSION);
 
 			$dop = '';
@@ -134,6 +134,24 @@
 
             $msql_cnnct = ConnectToDB ();
 
+            //Получаем календарь на указанный год
+            $holidays_arr = array();
+
+            $query = "SELECT * FROM `spr_proizvcalendar_holidays` WHERE `year` = '$year'";
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    //Раскидываем в массив
+                    if (!isset($holidays_arr[$arr['month']])){
+                        $holidays_arr[$arr['month']] = array();
+                        array_push($holidays_arr[$arr['month']], $arr['day']);
+                    }else{
+                        array_push($holidays_arr[$arr['month']], $arr['day']);
+                    }
+                }
+            }
+            //var_dump($holidays_arr);
 
             //Получаем нормы смен для этого типа
             $arr = array();
@@ -149,12 +167,13 @@
                 }
             }
             //var_dump($normaSmen);
+            $normaSmen[11] = 7;
 
-            //Получаем сотрудников этого филиала
+            //Получаем сотрудников этого типа
             $arr = array();
             $filial_workers = array();
 
-            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$type' AND `filial_id` = '{$_GET['filial']}' AND `status` = '0' ORDER BY `full_name` ASC";
+            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$type' AND `status` = '0' ORDER BY `full_name` ASC";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -167,25 +186,6 @@
                 }
                 //$markSheduler = 1;
             }
-
-            //Получаем сотрудников НЕ из этого филиала
-            $arr = array();
-            $filial_not_workers = array();
-
-            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$type' AND `filial_id` <> '{$_GET['filial']}' AND `status` = '0' ORDER BY `full_name` ASC";
-
-            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-            $number = mysqli_num_rows($res);
-
-            if ($number != 0){
-                while ($arr = mysqli_fetch_assoc($res)){
-                    //Раскидываем в массив
-                    //array_push($filial_not_workers, $arr);
-                    $filial_not_workers[$arr['id']] = $arr;
-                }
-            }
-            //var_dump($filial_not_workers);
 
             //Получаем график факт этого филиала
 			$arr = array();
@@ -244,18 +244,18 @@
 
             $filial_not_workers_temp = array();
 
-            foreach ($filial_not_workers as $workers_item){
-			    //var_dump($workers_item);
+//            foreach ($filial_not_workers as $workers_item){
+//			    //var_dump($workers_item);
+//
+//
+//                if (isset($schedulerFakt[$workers_item['id']])){
+//                    //!!!Тест перемещение любого элемента ассоциативного массива в начало этого же массива
+//                    //$filial_not_workers = array($workers_item['id'] => $filial_not_workers[$workers_item['id']]) + $filial_not_workers;
+//                    $filial_not_workers_temp[$workers_item['id']] = $filial_not_workers[$workers_item['id']];
+//                }
+//            }
 
-
-                if (isset($schedulerFakt[$workers_item['id']])){
-                    //!!!Тест перемещение любого элемента ассоциативного массива в начало этого же массива
-                    //$filial_not_workers = array($workers_item['id'] => $filial_not_workers[$workers_item['id']]) + $filial_not_workers;
-                    $filial_not_workers_temp[$workers_item['id']] = $filial_not_workers[$workers_item['id']];
-                }
-            }
-
-            $filial_not_workers = $filial_not_workers_temp + $filial_not_workers;
+//            $filial_not_workers = $filial_not_workers_temp + $filial_not_workers;
             //var_dump($filial_not_workers );
 
 
@@ -388,20 +388,16 @@
 							</div>';
 								
 			echo '<div class="no_print">';
-			echo widget_calendar ($month, $year, 'scheduler3.php', $dop);
+			echo widget_calendar ($month, $year, 'scheduler4.php', $dop);
 			echo '</div>';
 			
 			echo '</ul>';
-
-
-
-
 
 			//Календарная сетка
             echo '
                 <table style="border-bottom: 1px solid #BFBCB5; border-right: 1px solid #BFBCB5; margin:5px; font-size: 80%;">
                     <tr class="<!--sticky f-sticky-->">
-                        <td style="width: 260px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>ФИО</b><br><span style="color: rgb(35, 175, 53); font-size: 80%;">прикреплены к филиалу</span></td>';
+                        <td style="width: 260px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>ФИО</b></td>';
 
             //Всего
             echo '
@@ -415,13 +411,20 @@
             for ($i=1; $i <= $day_count; $i++){
                 //var_dump($weekday_temp);
 
+                //будни
+                $BgColor = ' background-color: rgba(220, 220, 220, 0.5);';
+
                 //суббота воскресение
                 if (($weekday_temp == 6) || ($weekday_temp == 7)){
                     $BgColor = ' background-color: rgba(234, 123, 32, 0.33);';
                 }else{
-                    //будни
-                    $BgColor = ' background-color: rgba(220, 220, 220, 0.5);';
+                    //Выделение цветом праздников
+                    if (in_array(dateTransformation($i), $holidays_arr[dateTransformation($month)])) {
+                        $BgColor = ' background-color: rgba(234, 123, 32, 0.33);';
+                    }
                 }
+                //var_dump(dateTransformation($i));
+                //var_dump(in_array(dateTransformation($i), $holidays_arr[dateTransformation($month)]));
 
                 //Выделим, если сегодняшний день
                 $Shtrih = '';
@@ -491,13 +494,18 @@
 
                         $selectedDate = 0;
 
+                        //будни
+                        $BgColor = ' background-color: rgba(255, 255, 255, 0.15);';
+
                         //Если нет сотрудника
                         //суббота воскресение
                         if (($weekday_temp == 6) || ($weekday_temp == 7)){
                             $BgColor = ' background-color: rgba(234, 123, 32, 0.15);';
                         }else{
-                            //будни
-                            $BgColor = ' background-color: rgba(255, 255, 255, 0.15);';
+                            //Выделение цветом праздников
+                            if (in_array(dateTransformation($i), $holidays_arr[dateTransformation($month)])) {
+                                $BgColor = ' background-color: rgba(234, 123, 32, 0.15);';
+                            }
                         }
 
                         //Выделим, если сегодняшний день
@@ -646,221 +654,7 @@
                 }
             }
 
-            echo '
-                    <tr>
-                        <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>ФИО</b><br><span style="color: rgb(243, 0, 0); font-size: 80%;">не прикреплены к филиалу</span></td>';
-            echo '
-                        <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">
-                        </td>';
 
-            for ($i=1; $i<=$day_count; $i++){
-
-                //суббота воскресение
-                //if (($weekday_temp == 6) || ($weekday_temp == 7)){
-                //    $BgColor = ' background-color: rgba(234, 123, 32, 0.33);';
-                //}else{
-                    //будни
-                    $BgColor = ' background-color: rgba(255, 255, 255, 1);';
-                //}
-
-                echo '
-                        <td style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; /*border-left: 1px solid #BFBCB5;*/ padding: 5px; text-align: right;"></td>';
-
-                //Если счетчик дней недели зашел за 7, возвращаем на понедельник
-//                $weekday_temp++;
-//                if ($weekday_temp > 7){
-//                    $weekday_temp = 1;
-//                }
-            }
-
-            //Для сотрудников НЕ прикрепленных к этому филиалу выведем
-            if (!empty($filial_not_workers)) {
-                foreach ($filial_not_workers as $worker_data) {
-                    echo '
-                    <tr class="cellsBlockHover workerItem" worker_id="'.$worker_data['id'].'">
-                        <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;"><b>'.$worker_data['full_name'].'</b></td>';
-
-                    $weekday_temp = $weekday;
-
-                    //Всего
-                    echo '
-                        <td id="schedulerResult_'.$worker_data['id'].'" class="hoverDate" style="width: 20px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" title="">
-                            <div id="allMonthHours_'.$worker_data['id'].'" class="allMonthHours" style="display: inline;">0</div>/<div id="allMonthNorma_'.$worker_data['id'].'" style="display: inline;">'.($normaSmen[(int)$month] * $normaHours).'</div>(<div id="hoursMonthPercent_'.$worker_data['id'].'" style="display: inline;">0</div>%)
-                        </td>';
-
-
-                    //Выведем даты месяца
-                    for ($i=1; $i<=$day_count; $i++){
-
-                        $title = '';
-
-                        $selectedDate = 0;
-
-                        //Если нет сотрудника
-                        //суббота воскресение
-                        if (($weekday_temp == 6) || ($weekday_temp == 7)){
-                            $BgColor = ' background-color: rgba(234, 123, 32, 0.15);';
-                        }else{
-                            //будни
-                            $BgColor = ' background-color: rgba(255, 255, 255, 0.15);';
-                        }
-
-                        //Выделим, если сегодняшний день
-                        $Shtrih = '';
-                        $currentDayColor = '';
-
-                        if (($i == $day) && ($cur_month == $month) && ($cur_year == $year)) {
-                            $currentDayColor = 'color: red; font-weight: bold;';
-
-                            //суббота воскресение
-                            if (($weekday_temp == 6) || ($weekday_temp == 7)){
-                                //$Shtrih = 'background: linear-gradient(135deg, rgba(234, 123, 32, 0.15) 49.9%, rgba(179, 179, 179, 0.67) 49.9%, rgba(179, 179, 179, 0.67) 60%, rgba(234, 123, 32, 0.15) 60% ), linear-gradient(135deg, rgba(179, 179, 179, 0.67) 10%, rgba(234, 123, 32, 0.15) 10% ); background-size: 0.5em 0.5em;';
-                            }else{
-                                //будни
-                                //$Shtrih = 'background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 49.9%, rgba(179, 179, 179, 0.67) 49.9%, rgba(179, 179, 179, 0.67) 60%, rgba(255, 255, 255, 0.15) 60% ), linear-gradient(135deg, rgba(179, 179, 179, 0.67) 10%, rgba(255, 255, 255, 0.15) 10% ); background-size: 0.5em 0.5em;';
-                            }
-                        }
-
-                        $worker_is_here = false;
-
-                        //Если тут есть сотрудник по графику
-                        if (isset($schedulerFakt[$worker_data['id']])){
-                            if (isset($schedulerFakt[$worker_data['id']][$i])){
-
-                                $selectedDate = 1;
-                                $worker_is_here = true;
-
-                                //суббота воскресение
-                                if (($weekday_temp == 6) || ($weekday_temp == 7)){
-                                    $BgColor = ' background-color: rgba(24, 144, 54, 0.52) !important;';
-                                }else{
-                                    //будни
-                                    $BgColor = ' background-color: rgba(49, 239, 96, 0.52) !important;';
-                                }
-                            }
-                        }
-
-
-                        //Если сотрудник по графику есть в другом филиале
-                        if (isset($schedulerFaktOther[$worker_data['id']])){
-                            if (isset($schedulerFaktOther[$worker_data['id']][$i])){
-
-                                $title = $filials_j[$schedulerFaktOther[$worker_data['id']][$i]]['name'];
-
-                                if (!$worker_is_here) {
-
-                                    $selectedDate = 2;
-
-                                    //суббота воскресение
-                                    if (($weekday_temp == 6) || ($weekday_temp == 7)) {
-                                        $BgColor = ' background-color: rgba(35, 137, 146, 0.52) !important;';
-                                    } else {
-                                        //будни
-                                        $BgColor = ' background-color: rgba(49, 224, 239, 0.52) !important;';
-                                    }
-                                }else{
-
-                                    $selectedDate = 3;
-
-                                    //суббота воскресение
-                                    if (($weekday_temp == 6) || ($weekday_temp == 7)) {
-                                        $BgColor = ' background-color: rgba(130, 34, 35, 0.52) !important;';
-                                    } else {
-                                        //будни
-                                        $BgColor = ' background-color: rgba(236, 107, 107, 0.52) !important;';
-                                    }
-                                }
-                            }
-                        }
-
-                        $invoiceFreeAddStr = '';
-
-                        //Для ассистентов
-                        if ($type == 7) {
-                            //Добавление нарядов "с улицы" если ассист на этом филиале
-                            if (($selectedDate == 1) || ($selectedDate == 3)) {
-                                $invoiceFreeAddStr .= 'else contextMenuShow(\''.$worker_data['id'].','.$type.','.$_GET['filial'].'\', \''.$i.'.'.$month.'.'.$year.'\', event, \'invoice_add_free\');';
-                            }
-                        }
-
-                        //Есть ли уже указанные часы сотрудника
-                        $hours = '';
-
-                        if (!empty ($hours_j)){
-                            if ($i < 10){
-                                $ii = '0'.$i;
-                            }else{
-                                $ii = $i;
-                            }
-
-                            //Сумма часов только на этом филиале
-                            /*if (isset($hours_j[$worker_data['id']][$ii][$_GET['filial']])){
-                                $hours = $hours_j[$worker_data['id']][$ii][$_GET['filial']];
-                            }*/
-
-                            //Сумма часов только на всех филиалах
-//                            if (isset($hours_j[$worker_data['id']][$ii])) {
-//                                $hours = array_sum($hours_j[$worker_data['id']][$ii]);
-//                            }
-
-                            if (isset($hours_j[$worker_data['id']][$ii])) {
-                                if (array_sum($hours_j[$worker_data['id']][$ii]) > 0) {
-                                    if (($_SESSION['id'] == $worker_data['id']) || ($scheduler['see_all'] == 1) || $god_mode) {
-                                        //$hours = array_sum($hours_j[$worker_data['id']][$ii]);
-                                        $hours = '<div id="" class="dayHours_' . $worker_data['id'] . '">' . array_sum($hours_j[$worker_data['id']][$ii]) . '</div>';
-                                    } else {
-                                        if ((date('d') == '28') || (date('d') == '29') || (date('d') == '30') || (date('d') == '31') || (date('d') == '01') || (date('d') == '02') || (date('d') == '03')) {
-                                            $hours = '<i class="fa fa-plus-circle" style="color: rgb(72, 141, 16); font-size: 150%; text-shadow: 1px 1px 1px #999;"></i><div id="" class="dayHours_' . $worker_data['id'] . '" style="display: none;">' . array_sum($hours_j[$worker_data['id']][$ii]) . '</div>';
-                                        } else {
-                                            $hours = '<i class="fa fa-plus-circle" style="color: rgb(72, 141, 16); font-size: 150%; text-shadow: 1px 1px 1px #999;"></i>';
-                                        }
-
-                                    }
-                                }
-                            }
-                        }
-
-//                        echo '
-//                            <td selectedDate="'.$selectedDate.'" worker_id='.$worker_data['id'].' day='.$i.' class="hoverDate'.$i.' schedulerItem" style="width: 20px; '.$BgColor.' '.$Shtrih.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, '.$worker_data['id'].', '.$_GET['filial'].', '.$i.', '.$month.', '.$year.', '.$weekday_temp.'); '.$invoiceFreeAddStr.'" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\''.$ii.'.'.$month.'.'.$year.'\', 0, event, \'showCurDate\'); *//*$(\'.hoverDate'.$i.'\').addClass(\'cellsBlockHover2\');*/" onmouseout="/*SetVisible(this,false);*/ /*$(\'.hoverDate'.$i.'\').removeClass(\'cellsBlockHover2\');*/" title="'.$title.'">
-//                                <div id="" class="dayHours_'.$worker_data['id'].'">'.$hours.'</div>
-//                                <!--<div style="display: none;"><i style="'.$currentDayColor.'">'.$i.'</i></div>-->
-//                            </td>';
-
-                        if (($scheduler['edit'] == 1) || $god_mode) {
-                            echo '
-                            <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, ' . $worker_data['id'] . ', ' . $_GET['filial'] . ', ' . $i . ', ' . $month . ', ' . $year . ', ' . $weekday_temp . '); ' . $invoiceFreeAddStr . '" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
-                                <div id="" class="dayHours_' . $worker_data['id'] . '">' . $hours . '</div>
-                            </td>';
-                        }elseif ($scheduler['add_worker'] == 1){
-                            if (($i == $day) && ($cur_month == $month) && ($cur_year == $year)) {
-                                echo '
-                                <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, ' . $worker_data['id'] . ', ' . $_GET['filial'] . ', ' . $i . ', ' . $month . ', ' . $year . ', ' . $weekday_temp . '); ' . $invoiceFreeAddStr . '" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
-                                    <div id="" class="dayHours_' . $worker_data['id'] . '">' . $hours . '</div>
-                                </td>';
-                            }else{
-                                echo '
-                                <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
-                                    <div id="" class="dayHours_' . $worker_data['id'] . '">' . $hours . '</div>
-                                </td>';
-                            }
-                        }else{
-                            echo '
-                            <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
-                                <div id="" class="dayHours_' . $worker_data['id'] . '">' . $hours . '</div>
-                            </td>';
-                        }
-
-
-                        //Если счетчик дней недели зашел за 7, возвращаем на понедельник
-                        $weekday_temp++;
-                        if ($weekday_temp > 7){
-                            $weekday_temp = 1;
-                        }
-                    }
-                    echo '
-                    </tr>';
-                }
-            }
 
             echo '
                 </table>';
@@ -917,7 +711,7 @@
                                 var target = $(event.target);
                                 //console.log(target.attr(\'status\'));                            
                                 
-                                contextMenuShow(target.attr(\'worker_id\'), target.attr(\'day\'), event, \'scheduler3\');
+                                contextMenuShow(target.attr(\'worker_id\'), target.attr(\'day\'), event, \'scheduler4\');
                             }
                         }else{
                             document.oncontextmenu = function() {};

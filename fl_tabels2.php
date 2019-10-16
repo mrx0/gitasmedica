@@ -118,7 +118,8 @@
 //                            <a href="fl_my_tabels.php" class="b">Табели</a>';
 //                        }else {
                             echo '
-                            <a href="fl_tabels.php?'.$who.'" class="b">Важный отчёт</a>';
+                            <a href="fl_tabels.php?'.$who.'" class="b">Важный отчёт</a>
+                            <a href="fl_tabels_check.php" class="b">Проверка табелей</a>';
 //                        }
                         echo '
                         </div>

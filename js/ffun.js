@@ -1029,7 +1029,7 @@
         var menu = $('<div/>', {
             class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
         }).css({
-            "top": "120px",
+            "top": "-170px",
             "height": "fit-content",
             "width": "45%",
             "background-color": "rgb(195, 194, 194)"
@@ -4329,6 +4329,9 @@
                 }
             }
         });
+
+        setTimeout('$("#fl_editSchedulerReport_add").removeAttr("disabled")', 1500);
+
     }
 
     //Удалить часы за смену по id
@@ -4403,7 +4406,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                // console.log(res);
+                console.log(res);
                 //$('#errrror').html(res.subtractions_j);
                 // console.log(res.subtractions_j);
                 //console.log(res.subtractions_j.length);
@@ -4417,9 +4420,9 @@
 
                     //var subtractionsSumm_arr = [];
 
-                    var subtractions = res.subtractions_j;
+                    var SummPrepayment = 0, SummHolidayPay = 0, SummHospitalPay = 0, SummSalary = 0, SummRefund = 0, SummWithdraw = 0;
 
-                    var SummPrepayment = 0, SummHolidayPay = 0, SummHospitalPay = 0, SummSalary = 0;
+                    var subtractions = res.subtractions_j;
 
                     if (subtractions.length > 0){
                         for(var i = 0; i < subtractions.length; i++){
@@ -4455,10 +4458,24 @@
                             }
                         }
                     }
+
+                    //Выдачи (возвраты) денег пациентам
+                    var withdraws = res.withdraw_j;
+
+                    if (withdraws.length > 0){
+                        for(var i = 0; i < withdraws.length; i++){
+
+                            SummWithdraw += parseFloat(withdraws[i].summ)
+
+                        }
+                    }
                     // console.log(SummPrepayment);
                     // console.log(SummHolidayPay);
                     // console.log(SummHospitalPay);
                     // console.log(SummSalary);
+                    // console.log(SummRefund);
+                    // console.log(SummWithdraw);
+
 
                     //
                     $("#itogSummAllMonth").html(0);
@@ -4827,8 +4844,11 @@
                     $("#SummHolidayPayGiveout").html(number_format((SummHolidayPay), 2, '.', ' '));
                     $("#SummHospitalPayGiveout").html(number_format((SummHospitalPay), 2, '.', ' '));
                     $("#SummSalaryGiveout").html(number_format((SummSalary), 2, '.', ' '));
+                    //$("#SummRefundGiveout").html(number_format((SummRefund), 2, '.', ' '));
+                    $("#SummWithdrawGiveout").html(number_format((SummWithdraw), 2, '.', ' '));
 
-                    $("#SummGiveoutMonth").html(number_format((SummPrepayment + SummHolidayPay + SummHospitalPay + SummSalary), 2, '.', ' '));
+
+                    $("#SummGiveoutMonth").html(number_format((SummPrepayment + SummHolidayPay + SummHospitalPay + SummSalary + SummRefund + SummWithdraw), 2, '.', ' '));
 
                     // console.log(Number($("#ostatokNalAllMonth").html().replace(/\s{1,}/g, '')));
                     // console.log(Number($("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')));
