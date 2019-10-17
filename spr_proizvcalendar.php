@@ -67,7 +67,7 @@
 
             $msql_cnnct = ConnectToDB ();
 
-            //Получаем календарь на указанный год
+            //Получаем календарь выходных на указанный год
             $holidays_arr = array();
 
             $query = "SELECT * FROM `spr_proizvcalendar_holidays` WHERE `year` = '$year'";
@@ -244,14 +244,14 @@
                     $holliday_color = '';
 
                     //Выделение цветом выходных
-                    if (($di % 7 == 0) || ($di % 7 == 6)){
-                        $holliday_color = 'font-size: 95%; font-weight: bold; color: red;';
-                    }else{
-                        //Выделение цветом праздников
+//                    if (($di % 7 == 0) || ($di % 7 == 6)){
+//                        $holliday_color = 'font-size: 95%; font-weight: bold; color: red;';
+//                    }else{
+                        //Выделение цветом праздников и выходных
                         if (in_array(dateTransformation($d), $holidays_arr[dateTransformation($i)])){
                             $holliday_color = 'font-size: 95%; font-weight: bold; color: red;';
                         }
-                    }
+//                    }
 
                     echo '
                                     <td class="cellsBlockHover" style="'.$today_color.' text-align: center; text-align: -moz-center; text-align: -webkit-center; vertical-align: top;">';

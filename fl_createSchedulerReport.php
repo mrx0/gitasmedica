@@ -48,6 +48,11 @@
                 }
             }
 
+            $type_str = '';
+            if (isset($_GET['type'])){
+                $type_str = 'type='.$_GET['type'];
+            }
+
             $report_date = $d.'.'.$m.'.'.$y;
 
 //            $datastart = date('Y-m-d', strtotime($report_date.' 00:00:00'));
@@ -266,7 +271,7 @@
                         //                    if (($scheduler['see_all'] == 1) || (($scheduler['see_all'] != 1) && ($d == date('d', time())) && ($m == date('m', time())) && ($y == date('Y', time()))) || $god_mode){
                         echo '
                                 <span style="color: red;">Отчёт за указаную дату для этого филиала уже был сформирован.</span><br>
-                                <span style="color: red;">Вы можете его <a href="fl_editSchedulerReport.php?report_id=' . $get_str . '" class="">отредактировать</a></span>';
+                                <span style="color: red;">Вы можете его <a href="fl_editSchedulerReport.php?'.$type_str.'&report_id=' . $get_str . '" class="">отредактировать</a></span>';
                         //                    }else{
                         //                        echo '
                         //                            <span style="color: red;">Отчёт за указаную дату для этого филиала уже был сформирован.</span>';

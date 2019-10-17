@@ -50,6 +50,11 @@
 //                        $dop_query .= '';
 //                    }
 
+                    $type_str = '';
+                    if (isset($_GET['type'])){
+                        $type_str = '&type='.$_GET['type'];
+                    }
+
                     $query = "SELECT sch.*, s_w.full_name AS full_name, s_p.name AS type_name  FROM `fl_journal_scheduler_report` sch
                     LEFT JOIN `spr_workers` s_w
                       ON sch.worker_id = s_w.id

@@ -4497,7 +4497,7 @@
 			),
             11 => array(
                 'who' => '&who=11',
-                'whose' => 'Прочее ',
+                'whose' => 'Прочие ',
                 'selected_stom' => ' ',
                 'selected_cosm' => ' selected',
                 'datatable' => 'scheduler_somat',

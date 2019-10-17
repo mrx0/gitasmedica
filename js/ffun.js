@@ -5819,6 +5819,48 @@
         });
     }
 
+    //Рассчёт общих дней сотрудников за месяц
+    function calculateWorkerDays(){
+        $(".workerItem").each(function() {
+            var worker_id = ($(this).attr("worker_id"));
+            //console.log(worker_id);
+
+            //var summHours = 0;
+            var summDays = 0;
+
+            $(".dayHours_"+worker_id).each(function() {
+                //summHours += parseFloat($(this).html(), 10) || 0;
+                //summHours += $(this).html();
+                //console.log($(this).html());
+                //console.log(parseInt($(this).html(), 10));
+                summDays += 1 || 0;
+            });
+            //console.log(summHours);
+            //console.log(summDays);
+
+            //Выведем кол-во часов
+            // $("#allMonthHours_"+worker_id).html(summHours);
+            $("#allMonthHours_"+worker_id).html(summDays);
+
+            //Берем норму смен этого месяца для этого сотрудника
+            //!!! Хотя норма для всех одинакова по сути... короче бред тут каждый раз брать одно и то же с разных мест
+
+            var normaSmen = parseInt($("#allMonthNorma_"+worker_id).html(), 10) || 0;
+            //console.log(normaSmen);
+
+            //var hoursMonthPercent = 0;
+            var hoursMonthPercent = summDays * 100/normaSmen;
+
+            $("#hoursMonthPercent_"+worker_id).html(number_format(hoursMonthPercent, 2, '.', ' '));
+
+            $("#schedulerResult_"+worker_id).css({
+                "background-image": "linear-gradient(to right, " + Colorize(Number(hoursMonthPercent.toFixed(0)), 1) + " " + Number(hoursMonthPercent.toFixed(0)) + "%, rgba(255, 255, 255, 0) 0%)"
+            });
+            //console.log("linear-gradient(to right, " + Colorize(hoursMonthPercent.toFixed(0)) + " " + hoursMonthPercent.toFixed(0) + "%, rgba(255, 255, 255, 0) 0%)");
+
+        });
+    }
+
     //Получение выручек всех филиалов и расчет зп
     function fl_calculateZP (month, year, typeW){
         // console.log(month);
