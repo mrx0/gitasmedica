@@ -446,8 +446,8 @@
                 }
 
                 echo '
-                        <td style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; '.$Shtrih.' padding: 5px; text-align: right; cursor: pointer;" onclick="window.location.href = \'fl_createSchedulerReport.php?filial_id='.$_GET['filial'].'&d='.$ii.'&m='.$month.'&y='.$year.'\';">
-                            <b><i style="'.$currentDayColor.'" onclick="window.location.replace(\'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'#tabs-1\');">'.$ii.'</i></b>
+                        <td style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; '.$Shtrih.' padding: 5px; text-align: right; cursor: pointer;" onclick="window.location.href = \'fl_createSchedulerReport.php?filial_id='.$_GET['filial'].'&d='.$ii.'&m='.$month.'&y='.$year.'&type='.$type.'\';">
+                            <b><i style="'.$currentDayColor.'" onclick="window.location.replace(\'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'#tabs-1\');">'.$ii.'</i></b><br><span>'.$dayWeek_arr[$weekday_temp].'</span>
                         </td>';
 
                 //Если счетчик дней недели зашел за 7, возвращаем на понедельник

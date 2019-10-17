@@ -38,9 +38,9 @@
 
             //тип (космет/стомат/...)
             if (isset($_GET['who'])) {
-                $getWho = returnGetWho($_GET['who'], 4, array(4,7,13,14,15,11));
+                $getWho = returnGetWho($_GET['who'], 11, array(4,7,13,14,15,11));
             }else{
-                $getWho = returnGetWho(4, 4, array(4,7,13,14,15,11));
+                $getWho = returnGetWho(11, 11, array(4,7,13,14,15,11));
             }
             //var_dump($getWho);
 
@@ -134,12 +134,15 @@
 
             $msql_cnnct = ConnectToDB ();
 
-            //Получаем календарь на указанный год
+            //Получаем календарь выходных на указанный год
             $holidays_arr = array();
 
-            $query = "SELECT * FROM `spr_proizvcalendar_holidays` WHERE `year` = '$year'";
+            $query = "SELECT * FROM `spr_proizvcalendar_holidays` WHERE `year` = '$year' AND `month` = '$month'";
+
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
             $number = mysqli_num_rows($res);
+
             if ($number != 0){
                 while ($arr = mysqli_fetch_assoc($res)){
                     //Раскидываем в массив
@@ -151,23 +154,28 @@
                     }
                 }
             }
+            //var_dump($number);
             //var_dump($holidays_arr);
+
+            //Рабочие дни месяца
+            $work_days_norma = $day_count - $number;
+            //var_dump($work_days_norma);
 
             //Получаем нормы смен для этого типа
             $arr = array();
             $normaSmen = array();
 
-            $query = "SELECT * FROM `fl_spr_normasmen` WHERE `type` = '$type'";
-            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-            $number = mysqli_num_rows($res);
-            if ($number != 0){
-                while ($arr = mysqli_fetch_assoc($res)){
-                    //Раскидываем в массив
-                    $normaSmen[$arr['month']] = $arr['count'];
-                }
-            }
+//            $query = "SELECT * FROM `fl_spr_normasmen` WHERE `type` = '$type'";
+//            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//            $number = mysqli_num_rows($res);
+//            if ($number != 0){
+//                while ($arr = mysqli_fetch_assoc($res)){
+//                    //Раскидываем в массив
+//                    $normaSmen[$arr['month']] = $arr['count'];
+//                }
+//            }
             //var_dump($normaSmen);
-            $normaSmen[11] = 7;
+            //$normaSmen[10] = 7;
 
             //Получаем сотрудников этого типа
             $arr = array();
@@ -194,6 +202,7 @@
             $query = "SELECT `id`, `day`, `worker` FROM `scheduler` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year' AND `filial`='{$_GET['filial']}'";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 			$number = mysqli_num_rows($res);
+
 			if ($number != 0){
 				while ($arr = mysqli_fetch_assoc($res)){
 					//Раскидываем в массив
@@ -402,7 +411,7 @@
             //Всего
             echo '
                         <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">
-                            Часы<br><span style="color: rgb(158, 158, 158); font-size: 80%;">всего/ норма/ %</span>
+                            Дни<br><span style="color: rgb(158, 158, 158); font-size: 80%;">всего/ норма/ %</span>
                         </td>';
 
             $weekday_temp = $weekday;
@@ -418,7 +427,7 @@
                 if (($weekday_temp == 6) || ($weekday_temp == 7)){
                     $BgColor = ' background-color: rgba(234, 123, 32, 0.33);';
                 }else{
-                    //Выделение цветом праздников
+                    //Выделение цветом праздников и выходных
                     if (in_array(dateTransformation($i), $holidays_arr[dateTransformation($month)])) {
                         $BgColor = ' background-color: rgba(234, 123, 32, 0.33);';
                     }
@@ -442,15 +451,11 @@
                     }
                 }
 
-                if ($i < 10){
-                    $ii = '0'.$i;
-                }else{
-                    $ii = $i;
-                }
+                $ii = dateTransformation($i);
 
                 echo '
-                        <td style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; '.$Shtrih.' padding: 5px; text-align: right; cursor: pointer;" onclick="window.location.href = \'fl_createSchedulerReport.php?filial_id='.$_GET['filial'].'&d='.$ii.'&m='.$month.'&y='.$year.'\';">
-                            <b><i style="'.$currentDayColor.'" onclick="window.location.replace(\'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'#tabs-1\');">'.$ii.'</i></b>
+                        <td style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; '.$Shtrih.' padding: 5px; text-align: right; cursor: pointer;" onclick="window.location.href = \'fl_createSchedulerReport.php?filial_id='.$_GET['filial'].'&d='.$ii.'&m='.$month.'&y='.$year.'&type='.$type.'\';">
+                            <b><i style="'.$currentDayColor.'" onclick="window.location.replace(\'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'#tabs-1\');">'.$ii.'</i></b><br><span>'.$dayWeek_arr[$weekday_temp].'</span>
                         </td>';
 
                 //Если счетчик дней недели зашел за 7, возвращаем на понедельник
@@ -480,7 +485,7 @@
                     //Всего
                     echo '
                         <td id="schedulerResult_'.$worker_data['id'].'" class="hoverDate" style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;" title="">
-                            <div id="allMonthHours_'.$worker_data['id'].'" class="allMonthHours" style="display: inline;">0</div>/<div id="allMonthNorma_'.$worker_data['id'].'" style="display: inline;">'.($normaSmen[(int)$month] * $normaHours).'</div>(<div id="hoursMonthPercent_'.$worker_data['id'].'" style="display: inline;">0</div>%)
+                            <div id="allMonthHours_'.$worker_data['id'].'" class="allMonthHours" style="display: inline;">0</div>/<div id="allMonthNorma_'.$worker_data['id'].'" style="display: inline;">'.$work_days_norma.'</div>(<div id="hoursMonthPercent_'.$worker_data['id'].'" style="display: inline;">0</div>%)
                         </td>';
 
 
@@ -499,14 +504,14 @@
 
                         //Если нет сотрудника
                         //суббота воскресение
-                        if (($weekday_temp == 6) || ($weekday_temp == 7)){
-                            $BgColor = ' background-color: rgba(234, 123, 32, 0.15);';
-                        }else{
-                            //Выделение цветом праздников
+//                        if (($weekday_temp == 6) || ($weekday_temp == 7)){
+//                            $BgColor = ' background-color: rgba(234, 123, 32, 0.15);';
+//                        }else{
+                            //Выделение цветом праздников и выходных
                             if (in_array(dateTransformation($i), $holidays_arr[dateTransformation($month)])) {
                                 $BgColor = ' background-color: rgba(234, 123, 32, 0.15);';
                             }
-                        }
+//                        }
 
                         //Выделим, если сегодняшний день
                         $Shtrih = '';
@@ -589,11 +594,8 @@
                         $hours = '';
 
                         if (!empty ($hours_j)){
-                            if ($i < 10){
-                                $ii = '0'.$i;
-                            }else{
-                                $ii = $i;
-                            }
+
+                            $ii = dateTransformation($i);
 
                             //Сумма часов только на этом филиале
                             /*if (isset($hours_j[$worker_data['id']][$ii][$_GET['filial']])){
@@ -720,7 +722,7 @@
                                 
                     //Посчитаем кол-во всех часов за месяц для каждого
                     $(document).ready(function() {
-                        calculateWorkerHours(); 
+                        calculateWorkerDays(); 
                     });
   
 

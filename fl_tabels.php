@@ -112,6 +112,7 @@
 								    <a href="?who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
                                     <a href="?who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
                                     <a href="?who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
+                                    <a href="?who=11" class="b" style="'.$other_color.'">Прочие</a>
 								    <!--<a href="fl_tabels_noch.php?who=5" class="b" style="">Ночь стом.</a>
 								    <a href="fl_tabels_noch.php?who=7" class="b" style="">Ночь ассист.</a>-->
                                 </li>
