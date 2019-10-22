@@ -64,11 +64,13 @@
             $all_color = $getWho['all_color'];
 
             //!!!Норма часов
-            if ($type == 15){
-                $normaHours = 2;
-            }else{
-                $normaHours = 12;
-            }
+//            if ($type == 15){
+//                $normaHours = 2;
+//            }else{
+//                $normaHours = 12;
+//            }
+
+            $normaHours = getNormaHours(0, true, $type);
 
 			if (isset($_GET['m']) && isset($_GET['y'])){
 				//операции со временем						

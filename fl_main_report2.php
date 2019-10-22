@@ -1395,6 +1395,17 @@
 
             echo '<div style="display: inline-block; vertical-align: top; margin-left: 10px;">';
 
+
+            //Сумма за детскую стоматологию
+            $child_stom_summ = 0;
+
+            //Если за детскую стоматологию есть сумма
+            if (isset($rezult_arr[5])){
+                if (isset($rezult_arr[5]['child_stom_summ'])){
+                    $child_stom_summ = $rezult_arr[5]['child_stom_summ'];
+                }
+            }
+
             //Стоматология
             if (isset($rezult_arr[5])){
                 echo '
@@ -1408,7 +1419,7 @@
                 if (!empty($rezult_arr[5])){
                     if (!empty($rezult_arr[5]['data'])){
                         //arsort($rezult_arr[5]['data']);
-                        echo number_format(array_sum($rezult_arr[5]['data']), 0, '.', ' ');
+                        echo number_format(array_sum($rezult_arr[5]['data']) + $child_stom_summ, 0, '.', ' ');
                     }else{
                         echo 'нет данных';
                     }
@@ -1421,16 +1432,6 @@
                     </li>';
             }
 
-
-            //Сумма за детскую стоматологию
-            $child_stom_summ = 0;
-
-            //Если за детскую стоматологию есть сумма
-            if (isset($rezult_arr[5])){
-                if (isset($rezult_arr[5]['child_stom_summ'])){
-                    $child_stom_summ = $rezult_arr[5]['child_stom_summ'];
-                }
-            }
 
 
             if (isset($rezult_arr[5])){
@@ -1452,7 +1453,8 @@
                                        <b>' . $percents_j[5][$percent_cat_id]['name'] . '</b>
                                     </div>
                                     <div class="cellRight" style="width: 150px; min-width: 150px;">
-                                        <div style="float:left;">' . number_format($value, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format((($value * 100) / (array_sum($rezult_arr[5]['data']) - $child_stom_summ)), 2, '.', '') . '%</div>
+                                        <!--<div style="float:left;">' . number_format($value, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format((($value * 100) / (array_sum($rezult_arr[5]['data']) - $child_stom_summ)), 2, '.', '') . '%</div>-->
+                                        <div style="float:left;">' . number_format($value, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format((($value * 100) / (array_sum($rezult_arr[5]['data']) + $child_stom_summ)), 2, '.', '') . '%</div>
                                     </div>
                                 </li>';
                             }else{
@@ -1466,7 +1468,8 @@
                                    <b>Детство</b>
                                 </div>
                                 <div class="cellRight" style="width: 150px; min-width: 150px;">
-                                    <div style="float:left;">'.number_format($child_stom_summ, 0, '.', ' ').'</div> <div style="float:right;">'.number_format((($child_stom_summ * 100)/ (array_sum($rezult_arr[5]['data']) - $child_stom_summ)), 2, '.', '').'%</div>
+                                    <!--<div style="float:left;">'.number_format($child_stom_summ, 0, '.', ' ').'</div> <div style="float:right;">'.number_format((($child_stom_summ * 100)/ (array_sum($rezult_arr[5]['data']) - $child_stom_summ)), 2, '.', '').'%</div>-->
+                                    <div style="float:left;">'.number_format($child_stom_summ, 0, '.', ' ').'</div> <div style="float:right;">'.number_format((($child_stom_summ * 100)/ (array_sum($rezult_arr[5]['data']) + $child_stom_summ)), 2, '.', '').'%</div>
                                 </div>
                             </li>';
                     }

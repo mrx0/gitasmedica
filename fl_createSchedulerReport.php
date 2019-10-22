@@ -48,9 +48,12 @@
                 }
             }
 
+            $type = 0;
+
             $type_str = '';
             if (isset($_GET['type'])){
                 $type_str = 'type='.$_GET['type'];
+                $type = $_GET['type'];
             }
 
             $report_date = $d.'.'.$m.'.'.$y;
@@ -216,6 +219,9 @@
 
                         if (!empty($scheduler_j)) {
                             foreach ($scheduler_j as $sch_item) {
+                                $norma_hours = getNormaHours($sch_item['worker']);
+                                //var_dump($norma_hours);
+
                                 echo '
                                     <div class="cellsBlock400px">
                                         <div class="cellLeft" style="font-size: 90%;">
@@ -223,7 +229,7 @@
                                             <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">' . $sch_item['type_name'] . '</span>
                                         </div>
                                         <div class="cellRight" style="font-size: 13px;">
-                                            <input type="text" size="1" class="workerHoursValue" worker_id="' . $sch_item['worker'] . '" worker_type="' . $sch_item['type'] . '" value="12" autocomplete="off"> часов
+                                            <input type="text" size="1" class="workerHoursValue" worker_id="' . $sch_item['worker'] . '" worker_type="' . $sch_item['type'] . '" value="'.$norma_hours.'" autocomplete="off"> часов
                                             <label id="hours_' . $sch_item['worker'] . '_num_error" class="error"></label>
                                         </div>
                                     </div>';
@@ -256,7 +262,7 @@
                             </div>';
 
                         echo '
-                            <input type="button" class="b" value="Добавить" onclick="fl_createSchedulerReport_add();">';
+                            <input type="button" id="fl_createSchedulerReport_add" class="b" value="Добавить" onclick="fl_createSchedulerReport_add('.$type.'); $(this).attr(\'disabled\', \'disabled\');">';
 
                         echo '
                         </div>';

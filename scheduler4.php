@@ -64,11 +64,14 @@
             $all_color = $getWho['all_color'];
 
             //!!!Норма часов
-            if ($type == 15){
-                $normaHours = 2;
-            }else{
-                $normaHours = 12;
-            }
+//            if ($type == 15){
+//                $normaHours = 2;
+//            }else{
+//                $normaHours = 12;
+//            }
+
+            //Тут по категории не будем брать. Ниже будем брать индивидуально для каждого
+            //$normaHours = getNormaHours(0, true, $type);
 
 			if (isset($_GET['m']) && isset($_GET['y'])){
 				//операции со временем						
@@ -411,7 +414,7 @@
             //Всего
             echo '
                         <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">
-                            Дни<br><span style="color: rgb(158, 158, 158); font-size: 80%;">всего/ норма/ %</span>
+                            Часы<br><span style="color: rgb(158, 158, 158); font-size: 80%;">всего/ норма/ %</span>
                         </td>';
 
             $weekday_temp = $weekday;
@@ -471,6 +474,8 @@
             if (!empty($filial_workers)) {
                 foreach ($filial_workers as $worker_data) {
 
+                    $normaHours = getNormaHours($worker_data['id']);
+
                     echo '
                     <tr class="cellsBlockHover workerItem" worker_id="'.$worker_data['id'].'">
                         <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">
@@ -485,7 +490,7 @@
                     //Всего
                     echo '
                         <td id="schedulerResult_'.$worker_data['id'].'" class="hoverDate" style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;" title="">
-                            <div id="allMonthHours_'.$worker_data['id'].'" class="allMonthHours" style="display: inline;">0</div>/<div id="allMonthNorma_'.$worker_data['id'].'" style="display: inline;">'.$work_days_norma.'</div>(<div id="hoursMonthPercent_'.$worker_data['id'].'" style="display: inline;">0</div>%)
+                            <div id="allMonthHours_'.$worker_data['id'].'" class="allMonthHours" style="display: inline;">0</div>/<div id="allMonthNorma_'.$worker_data['id'].'" style="display: inline;">'.($work_days_norma * $normaHours).'</div>(<div id="hoursMonthPercent_'.$worker_data['id'].'" style="display: inline;">0</div>%)
                         </td>';
 
 
@@ -583,12 +588,12 @@
                         $invoiceFreeAddStr = '';
 
                         //Для ассистентов
-                        if ($type == 7) {
-                            //Добавление нарядов "с улицы" если ассист на этом филиале
-                            if (($selectedDate == 1) || ($selectedDate == 3)) {
-                                $invoiceFreeAddStr .= 'else contextMenuShow(\''.$worker_data['id'].','.$type.','.$_GET['filial'].'\', \''.$i.'.'.$month.'.'.$year.'\', event, \'invoice_add_free\');';
-                            }
-                        }
+//                        if ($type == 7) {
+//                            //Добавление нарядов "с улицы" если ассист на этом филиале
+//                            if (($selectedDate == 1) || ($selectedDate == 3)) {
+//                                $invoiceFreeAddStr .= 'else contextMenuShow(\''.$worker_data['id'].','.$type.','.$_GET['filial'].'\', \''.$i.'.'.$month.'.'.$year.'\', event, \'invoice_add_free\');';
+//                            }
+//                        }
 
                         //Есть ли уже указанные часы сотрудника
                         $hours = '';
@@ -722,7 +727,8 @@
                                 
                     //Посчитаем кол-во всех часов за месяц для каждого
                     $(document).ready(function() {
-                        calculateWorkerDays(); 
+                        //calculateWorkerDays();
+                         calculateWorkerHours();
                     });
   
 

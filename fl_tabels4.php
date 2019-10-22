@@ -347,18 +347,29 @@
                 if ($number != 0){
                     while ($arr = mysqli_fetch_assoc($res)){
                         //Раскидываем в массив
+//                        if (!isset($hours_j[$arr['worker_id']])) {
+//                            $hours_j[$arr['worker_id']] = array();
+//                        }
+//                        if (!isset($hours_j[$arr['worker_id']][$arr['day']])) {
+//                            $hours_j[$arr['worker_id']][$arr['day']] = array();
+//                        }
+//                        if (!isset($hours_j[$arr['worker_id']][$arr['day']][$arr['filial_id']])) {
+//                            $hours_j[$arr['worker_id']][$arr['day']][$arr['filial_id']] = array();
+//                        }
+//                        //array_push($hours_j, $arr);
+//                        //$hours_j[$arr['worker_id']][$arr['filial_id']] += $arr['hours'];
+//                        $hours_j[$arr['worker_id']][$arr['day']][$arr['filial_id']] = $arr['hours'];
+
+
                         if (!isset($hours_j[$arr['worker_id']])) {
                             $hours_j[$arr['worker_id']] = array();
                         }
-                        if (!isset($hours_j[$arr['worker_id']][$arr['day']])) {
-                            $hours_j[$arr['worker_id']][$arr['day']] = array();
-                        }
-                        if (!isset($hours_j[$arr['worker_id']][$arr['day']][$arr['filial_id']])) {
-                            $hours_j[$arr['worker_id']][$arr['day']][$arr['filial_id']] = array();
+                        if (!isset($hours_j[$arr['worker_id']][$arr['filial_id']])) {
+                            $hours_j[$arr['worker_id']][$arr['filial_id']] = 0;
                         }
                         //array_push($hours_j, $arr);
-                        //$hours_j[$arr['worker_id']][$arr['filial_id']] += $arr['hours'];
-                        $hours_j[$arr['worker_id']][$arr['day']][$arr['filial_id']] = $arr['hours'];
+                        $hours_j[$arr['worker_id']][$arr['filial_id']] += $arr['hours'];
+
 
                     }
                 }
@@ -515,6 +526,9 @@
                                 $w_days = 0;
                                 $w_percentDays = 0;
 
+                                $normaHours = getNormaHours($worker_data['id']);
+
+                                $w_normaHours = $work_days_norma * $normaHours;
 
                                 //Смены часы
                                 if (isset($hours_j[$worker_data['id']])) {
@@ -522,12 +536,11 @@
                                     //Норма смен (часов) по специализациям
                                     //$w_normaSmen = $normaSmen[$worker_specializ_data['id']][(int)$month]*12;
 
-                                    //$w_hours = array_sum($hours_j[$worker_data['id']]);
-                                    $w_days = count($hours_j[$worker_data['id']]);
-                                    $w_percentDays = number_format($w_days * 100 / $work_days_norma, 5, '.', '');
+                                    $w_hours = array_sum($hours_j[$worker_data['id']]);
+                                    $w_percentHours = number_format($w_hours * 100 / $w_normaHours, 5, '.', '');
 
                                     echo '
-                                                <div id="w_hours_' . $worker_data['id'] . '" style="margin-bottom: 15px; box-shadow: 0 0 3px 1px rgb(197, 197, 197); text-align: center;">' . $w_days . '/ <span id="w_norma_' . $worker_data['id'] . '">' . $work_days_norma . '</span>/ ' . number_format($w_percentDays, 2, '.', '') . '%</div>';
+                                                <div id="w_hours_' . $worker_data['id'] . '" style="margin-bottom: 15px; box-shadow: 0 0 3px 1px rgb(197, 197, 197); text-align: center;">' . $w_hours . '/ <span id="w_norma_' . $worker_data['id'] . '">' . $w_normaHours . '</span>/ ' . number_format($w_percentHours, 2, '.', '') . '%</div>';
 
                                     //Нарисуем табличку со всеми филиалами
 //                                    echo '
@@ -586,7 +599,7 @@
                                             
                                         </td>
                                         <td style="width: 70px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; font-weight: bold;">
-                                            <div id="w_id_' . $worker_data['id'] . '" class="itogZP" w_id="' . $worker_data['id'] . '" f_id="' . $worker_filial_id . '" oklad="' . $oklad . '" w_hours="' . $w_days . ',' . $work_days_norma . '" w_percentHours="' . $w_percentDays . '" worker_revenue_percent="' . $worker_revenue_percent . '" worker_revenue_solar_percent="'. $worker_revenue_solar_percent.'" worker_revenue_realiz_percent="'. $worker_revenue_realiz_percent.'" worker_revenue_abon_percent="'. $worker_revenue_abon_percent.'" filialMoney="0" filialSolar="0" filialRealiz="0" filialAbon="0" worker_category_id="'.$worker_category_id.'" style="">
+                                            <div id="w_id_' . $worker_data['id'] . '" class="itogZP" w_id="' . $worker_data['id'] . '" f_id="' . $worker_filial_id . '" oklad="' . $oklad . '" w_hours="' . $w_hours . ',' . $normaHours . '" w_percentHours="' . $w_percentHours . '" worker_revenue_percent="' . $worker_revenue_percent . '" worker_revenue_solar_percent="'. $worker_revenue_solar_percent.'" worker_revenue_realiz_percent="'. $worker_revenue_realiz_percent.'" worker_revenue_abon_percent="'. $worker_revenue_abon_percent.'" filialMoney="0" filialSolar="0" filialRealiz="0" filialAbon="0" worker_category_id="'.$worker_category_id.'" style="">
                                             </div>';
 
                                 echo '
