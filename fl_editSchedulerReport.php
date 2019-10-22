@@ -50,9 +50,12 @@
 //                        $dop_query .= '';
 //                    }
 
+                    $type = 0;
+
                     $type_str = '';
                     if (isset($_GET['type'])){
                         $type_str = '&type='.$_GET['type'];
+                        $type = $_GET['type'];
                     }
 
                     $query = "SELECT sch.*, s_w.full_name AS full_name, s_p.name AS type_name  FROM `fl_journal_scheduler_report` sch
@@ -60,7 +63,8 @@
                       ON sch.worker_id = s_w.id
                     LEFT JOIN `spr_permissions` s_p
                       ON s_w.permissions = s_p.id
-                    WHERE ".$dop_query;
+                    WHERE ".$dop_query."
+                    ORDER BY sch.type, s_w.full_name ASC";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -165,6 +169,13 @@
 
                             foreach ($dailyReports_j as $sch_item){
 
+                                $border_color = '';
+                                $norma_hours = $sch_item['hours'];
+                                if ($norma_hours == 0) {
+                                    $norma_hours = getNormaHours($sch_item['worker_id']);
+                                    $border_color = 'border: 1px solid rgb(255, 0, 0)';
+                                }
+
                                 echo '
                                 <div class="cellsBlock400px" style="position: relative;">
                                     <div class="cellLeft" style="font-size: 90%;">
@@ -172,7 +183,7 @@
                                         <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'.$sch_item['type_name'].'</span>
                                     </div>
                                     <div class="cellRight" style="font-size: 13px;">
-                                        <input type="text" size="1" class="workerHoursValue" worker_id="'.$sch_item['worker_id'].'" worker_type="'.$sch_item['type'].'" value="'.$sch_item['hours'].'" autocomplete="off"> часов
+                                        <input type="text" size="1" class="workerHoursValue" style="'.$border_color.'" worker_id="'.$sch_item['worker_id'].'" worker_type="'.$sch_item['type'].'" value="'.$norma_hours.'" autocomplete="off"> часов
                                         <label id="hours_'.$sch_item['worker_id'].'_num_error" class="error"></label>
                                     </div>';
                                 if (($scheduler['see_all'] == 1) || $god_mode) {
@@ -231,7 +242,7 @@
                             </div>';
 
                             echo '
-                                <input type="button" id="fl_editSchedulerReport_add" class="b" value="Применить" onclick="fl_editSchedulerReport_add(\''.$_GET['report_id'].'\'); $(this).attr(\'disabled\', \'disabled\');">';
+                                <input type="button" id="fl_editSchedulerReport_add" class="b" value="Применить" onclick="fl_editSchedulerReport_add(\''.$_GET['report_id'].'\', '.$type.'); $(this).attr(\'disabled\', \'disabled\');">';
 
                         }else{
                             echo '<span style="color: red;">Ничего не найдено</span>';

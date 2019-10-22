@@ -317,11 +317,14 @@
 
                 //Норма смен (часов)
                 //!!!Норма часов
-                if ($type == 15){
-                    $normaHours = 2;
-                }else{
-                    $normaHours = 12;
-                }
+//                if ($type == 15){
+//                    $normaHours = 2;
+//                }else{
+//                    $normaHours = 12;
+//                }
+
+                $normaHours = getNormaHours(0, true, $type);
+
                 $w_normaSmen = $normaSmen[(int)$month] * $normaHours;
 
                 //Получаем оклады по категориям для всех

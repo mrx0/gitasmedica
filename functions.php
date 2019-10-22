@@ -5184,6 +5184,65 @@
         var_dump($itog_filials_summ_ostatok_temp);
 	}
 
+	//Получить нормы часов персональные или общие
+	function getNormaHours($worker_id, $by_type=false, $type=0){
+
+		$norma = 0;
+
+		$msql_cnnct = ConnectToDB ();
+
+		if ($by_type){
+			//Если нет персональной нормы, берем общую для типа
+			$query = "SELECT `count` FROM `fl_spr_normahours` WHERE `type`='" . $type . "' LIMIT 1";
+			$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+			$number = mysqli_num_rows($res);
+			if ($number != 0) {
+				$arr = mysqli_fetch_assoc($res);
+				$norma = $arr['count'];
+			}
+		}else {
+			$type = 0;
+
+			//Узнаем категорию сотрудника
+			$query = "SELECT `id`, `permissions` AS `type` FROM `spr_workers` WHERE `id`='" . $worker_id . "' LIMIT 1";
+
+			$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+			$number = mysqli_num_rows($res);
+			//var_dump($number);
+
+			if ($number != 0) {
+				$arr = mysqli_fetch_assoc($res);
+
+				$type = $arr['type'];
+
+				//Вытащим сразу индивидуальную норму
+				$query = "SELECT `count` FROM `fl_spr_normahours_personal` WHERE `worker_id`='" . $worker_id . "' LIMIT 1";
+				$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+				$number = mysqli_num_rows($res);
+				//var_dump($number);
+
+				if ($number != 0) {
+					$arr = mysqli_fetch_assoc($res);
+					$norma = $arr['count'];
+				} else {
+					//Если нет персональной нормы, берем общую для типа
+					$query = "SELECT `count` FROM `fl_spr_normahours` WHERE `type`='" . $type . "' LIMIT 1";
+					$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+					$number = mysqli_num_rows($res);
+					if ($number != 0) {
+						$arr = mysqli_fetch_assoc($res);
+						$norma = $arr['count'];
+					}
+				}
+			}
+		}
+
+		return $norma;
+	}
 
 	//Here is a quick and easy way to convert a CSV file to an associated array:
 	/**

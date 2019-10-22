@@ -724,7 +724,7 @@
                         }
 
                         //Админы, ассистенты, санитарки, уборщицы, дворники
-                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7) || ($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15)) {
+                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7) || ($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15) || ($tabel_j[0]['type'] == 11)) {
                             //Часы работника
                             $w_hours = 0;
                             $w_normaSmen = 0;
@@ -874,7 +874,12 @@
 
 
                         //Админы, ассистенты, санитарки, уборщицы, дворники
-                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7) || ($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15)) {
+                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7) || ($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15) || ($tabel_j[0]['type'] == 11)) {
+
+//                            if ($tabel_j[0]['type'] == 11) {
+//                                !!! хотел тут рассчтитать нормы рабочих дней для прочее, но лень
+//                            }
+
                             //Часы
                             echo '
                                 <div style="background-color: rgba(181, 165, 165, 0.16); border: 1px dotted #AAA; margin: 5px 0 10px; padding: 1px 3px; ">
@@ -883,20 +888,33 @@
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
                                                 Оклад: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">' . $tabel_j[0]['salary'] . ' руб.</span>
                                             </div>
-                                        </div>
+                                        </div>';
+
+                            if ($tabel_j[0]['type'] != 11) {
+                                echo '
                                         <div style="margin-bottom: 5px;">
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
                                                 Категория: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">' . $category_j[0]['name'] . '</span>
                                             </div>
-                                        </div>
+                                        </div>';
+                            }
+
+                            echo '
                                         <div style="margin-bottom: 7px;">
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1); display: inline;">
                                                 Всего часов в этом месяце: <span class="" style="font-size: 14px; color: #555; font-weight: bold;">' . $w_hours . '</span>
                                             </div>
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1); display: inline;">
-                                                (<span class="allMonthHours" style="font-size: 12px; /*font-weight: bold; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);*/">' . $w_percentHours . '</span>% от нормы ' . $w_normaSmen . ' часов)
+                                                (<span class="allMonthHours" style="font-size: 12px; /*font-weight: bold; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);*/">' . $w_percentHours . '</span>% от нормы ';
+
+                            if ($tabel_j[0]['type'] != 11) {
+                                echo $w_normaSmen . ' часов';
+                            }
+
+                            echo ')
                                             </div>
-                                        </div>
+                                        </div>';
+                            echo '
                                         <div style="margin-bottom: 5px;">
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1);">
                                                Начислено за время: <span class="" style="font-size: 14px; color: #555;  font-weight: bold;">' . number_format($tabel_j[0]['per_from_salary'], 0, '.', '') . ' руб. </span>
