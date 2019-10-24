@@ -222,8 +222,18 @@
                                 $norma_hours = getNormaHours($sch_item['worker']);
                                 //var_dump($norma_hours);
 
+                                $display_style = '';
+
+                                if ($sch_item['type'] == 11) {
+                                    if (($finances['see_all'] == 1) || $god_mode) {
+                                        //--
+                                    }else{
+                                        $display_style = 'display: none;';
+                                    }
+                                }
+
                                 echo '
-                                    <div class="cellsBlock400px">
+                                    <div class="cellsBlock400px" style="'.$display_style.'">
                                         <div class="cellLeft" style="font-size: 90%;">
                                             ' . $sch_item['full_name'] . '<br>
                                             <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">' . $sch_item['type_name'] . '</span>
