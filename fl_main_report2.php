@@ -354,12 +354,19 @@
             //суммы по категориям
             //$rezult_arr['data'][ID категории]['category_summ'] = 0;
 
+            //!!! Для костыля с %
+//            //Массив для хранения общих сумм по категориям
+//            $rezult_arr_summ = array();
+//            //Массив для хранения % по категориям
+//            $rezult_arr_prcnt = array();
+
             //Костыль для типа 7
             $rezult_arr[7]['data'] = array();
 
             //переменная для строки, где будут ссылки на наряды, если с ними что-то не так
             $warn_str_percent_cats = '';
 
+            //Проход по нарядам
             foreach ($invoices_j as $enter => $enter_data){
                 //Если пришел к врачу
                 if (($enter == 1) || ($enter == 6)){
@@ -392,7 +399,7 @@
 
                                 $pervich_status = 0;
 
-                                //Дети стоматология
+                                //Дети стоматологии
                                 $child_stom_summ = 0;
 
                                 //Пороход по данным наряда (позиции)
@@ -425,32 +432,56 @@
                                         //$pervich_status = $data['pervich'];
 
                                         //Если не продолжение работы
-                                        if ($data['pervich'] != 5) {
-                                            //                                        var_dump($data['percent_cats']);
+                                        //if ($data['pervich'] != 5) {
+                                            //var_dump($data['percent_cats']);
 
                                             //Дети стоматология
                                             //var_dump(getyeardiff(strtotime($data['birthday']), 0));
                                             if (($type == 5) && (getyeardiff(strtotime($data['birthday']), 0) <= 14)) {
                                                 $child_stom_summ += $data['itog_price'];
                                                 //var_dump($invoice_id);
+
+                                                //Соберем общие суммы по категориям
+                                                if (!isset($rezult_arr_summ[$type])){
+                                                    $rezult_arr_summ[$type] = 0;
+                                                }
+                                                $rezult_arr_summ[$type] +=  $data['itog_price'];
+
                                             } else {
                                                 //Костыль для категории 7 (ассистенты)
+                                                //Если не ассистенты
                                                 if (!in_array($data['percent_cats'], [58, 59, 61, 62])) {
                                                     if (!isset($rezult_arr[$type]['data'][$data['percent_cats']])) {
                                                         $rezult_arr[$type]['data'][$data['percent_cats']] = 0;
                                                     }
                                                     $rezult_arr[$type]['data'][$data['percent_cats']] += $data['itog_price'];
+
+                                                    //Соберем общие суммы по категориям
+                                                    if (!isset($rezult_arr_summ[$type])){
+                                                        $rezult_arr_summ[$type] = 0;
+                                                    }
+                                                    $rezult_arr_summ[$type] +=  $data['itog_price'];
+
                                                 } else {
+                                                    //Если ассистенты (позиция, которая используется только для ассистов (кт, орто))
                                                     if (!isset($rezult_arr[7]['data'][$data['percent_cats']])) {
                                                         $rezult_arr[7]['data'][$data['percent_cats']] = 0;
                                                     }
                                                     $rezult_arr[7]['data'][$data['percent_cats']] += $data['itog_price'];
+
+                                                    //Соберем общие суммы по категориям
+                                                    if (!isset($rezult_arr_summ[7])){
+                                                        $rezult_arr_summ[7] = 0;
+                                                    }
+                                                    $rezult_arr_summ[7] +=  $data['itog_price'];
                                                 }
                                             }
-                                        }
+                                        //}
                                     }
-
                                 }
+                                //var_dump( $rezult_arr_summ);
+
+                                //Детство отдельно добавим
                                 if ($type == 5){
                                     $rezult_arr[$type]['child_stom_summ'] += $child_stom_summ;
                                 }
@@ -468,8 +499,9 @@
 
                             }
 
+                            //страховые
                             if (!empty($type_data['insure_data'])) {
-                                //страховые
+                                //Проход по страховым нарядам
                                 foreach ($type_data['insure_data'] as $invoice_id => $invoice_data) {
 
                                     if (!isset($rezult_arr[$type]['insure_data'])) {
@@ -526,6 +558,8 @@
                 }
             }
 //            var_dump($rezult_arr);
+//            var_dump($rezult_arr_summ);
+
 
             //Если какие-то косяки с категориями процентов
 //            echo '<div class="no_print" style="font-size: 110%;">';
@@ -693,6 +727,19 @@
 //                var_dump($rashod);
 //                var_dump('Остаток');
 //                var_dump(number_format($cashbox_nal + $arenda - $rashod, 0, '.', ' '));
+
+
+            //!!! костыль с % Добавим сумму за солярий в массив сумм
+//            $rezult_arr_summ['sol'] = $temp_solar_nal + $temp_solar_beznal;
+            //var_dump($rezult_arr_summ);
+
+            //!!! Костыль!
+            // Вычислим % по каждому типу (5,6, etc)
+//            foreach ($rezult_arr_summ as $type => $summ){
+//                $rezult_arr_prcnt[$type] = number_format($summ * 100 / (array_sum($rezult_arr_summ)), 2, '.', '');
+//            }
+//            var_dump(array_sum($rezult_arr_summ));
+//            var_dump($rezult_arr_prcnt);
 
             //Получаем данные по выданным деньгам на филилале (зп, авансы и тд.)
             $subtractions_j = array();
@@ -1083,17 +1130,26 @@
                     <table width="" style="border: 1px solid #CCC;">';
 
             //Загловок
+//            $personal_zp_str .= '
+//                        <tr>
+//                            <td colspan="6" style="font-size:80%;"><b>Выдачи сотрудникам:</b></td>
+//                        </tr>
+//                        <tr style="background-color: rgba(252, 237, 199, 0.77);">
+//                            <td style="width: 149px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
+//                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">аванс</i></td>
+//                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">зп</i></td>
+//                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">отпускной</i></td>
+//                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">больничный</i></td>
+//                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">на карту</i></td>
+//                        </tr>';
+
             $personal_zp_str .= '
                         <tr>
-                            <td colspan="6" style="font-size:80%;"><b>Выдачи сотрудникам подробно:</b></td>
+                            <td colspan="2" style="font-size:80%;"><b>Выдачи сотрудникам:</b></td>
                         </tr>
                         <tr style="background-color: rgba(252, 237, 199, 0.77);">
                             <td style="width: 149px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
-                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">аванс</i></td>
-                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">зп</i></td>
-                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">отпускной</i></td>
-                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">больничный</i></td>
-                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">на карту</i></td>
+                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">всего</i></td>
                         </tr>';
 
             //Пошли по типам/должностям
@@ -1123,19 +1179,26 @@
                             </div>
                         </li>';
 
+//                $personal_zp_str .= '
+//                        <tr style="background-color: rgba(225, 248, 220, 0.77);">
+//                            <td style="width: 149px; outline: 1px solid rgb(233, 233, 233); text-align: left;"><b style="color: rgb(0, 36, 255); font-size: 90%;">'.$permissions_j[$permissions]['name'].'</b></td>
+//                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
+//                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
+//                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
+//                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
+//                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
+//                        </tr>';
+
                 $personal_zp_str .= '
                         <tr style="background-color: rgba(225, 248, 220, 0.77);">
                             <td style="width: 149px; outline: 1px solid rgb(233, 233, 233); text-align: left;"><b style="color: rgb(0, 36, 255); font-size: 90%;">'.$permissions_j[$permissions]['name'].'</b></td>
-                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
-                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
-                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
-                            <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
                             <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
                         </tr>';
 
                 //foreach ($subtractions_data as $type => $type_data){
                     //var_dump($typ);
                     //var_dump($type_data);
+                //Пошли по сотрудникам
                 foreach ($subtractions_data as $worker_id => $worker_data) {
                     //var_dump($worker_data);
 
@@ -1148,6 +1211,7 @@
                         <tr>
                             <td style="outline: 1px solid rgb(233, 233, 233); text-align: left;">' . $w_name . '</td>';
 
+                    //Массив для распределения сумм по типам
                     $temp_summ_arr = array(1=>0,7=>0,2=>0,3=>0,4=>0);
 
                     foreach ($worker_data['data'] as $type => $type_data){
@@ -1181,14 +1245,19 @@
                     }
                     //var_dump($temp_summ_arr);
 
-                    foreach ($temp_summ_arr as $temp_summ){
-
-                        $personal_zp_str .= '
+//                    foreach ($temp_summ_arr as $temp_summ){
+//
+//                        $personal_zp_str .= '
+//                            <td style="outline: 1px solid rgb(233, 233, 233); text-align: right;">
+//                                '.$temp_summ.'
+//                            </td>
+//                            ';
+//                    }
+                    $personal_zp_str .= '
                             <td style="outline: 1px solid rgb(233, 233, 233); text-align: right;">
-                                '.$temp_summ.'
+                                '.array_sum($temp_summ_arr).'
                             </td>
                             ';
-                    }
 
 
                     $personal_zp_str .= '
@@ -1408,6 +1477,29 @@
 
             //Стоматология
             if (isset($rezult_arr[5])){
+
+                //!!! Костыль.
+                // Предположительная сумма выручки по стоматологии
+                $stom_summ_temp = $cashbox_nal + $beznal + $insure_summ - ($temp_solar_nal + $temp_solar_beznal);
+
+                //Сумма по стоматологии будет разницей:
+                //Вся выручка минус косметология, специалисты, орто/кт, солярий
+                if (!empty($rezult_arr[7])) {
+                    if (!empty($rezult_arr[7]['data'])) {
+                        $stom_summ_temp -= array_sum($rezult_arr[7]['data']);
+                    }
+                }
+                if (!empty($rezult_arr[6])) {
+                    if (!empty($rezult_arr[6]['data'])) {
+                        $stom_summ_temp -= array_sum($rezult_arr[6]['data']);
+                    }
+                }
+                if (!empty($rezult_arr[10])) {
+                    if (!empty($rezult_arr[10]['data'])) {
+                        $stom_summ_temp -= array_sum($rezult_arr[6]['data']);
+                    }
+                }
+
                 echo '
                     <li class="filterBlock">
                         <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
@@ -1419,7 +1511,15 @@
                 if (!empty($rezult_arr[5])){
                     if (!empty($rezult_arr[5]['data'])){
                         //arsort($rezult_arr[5]['data']);
-                        echo number_format(array_sum($rezult_arr[5]['data']) + $child_stom_summ, 0, '.', ' ');
+
+//                        echo number_format(array_sum($rezult_arr[5]['data']) + $child_stom_summ, 0, '.', ' ').' ';
+                        echo number_format($stom_summ_temp, 0, '.', ' ');
+
+//                        //!!! Костыль для %
+//                        echo number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[5], 0, '.', ' ');
+//                        var_dump(number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[5], 0, '.', ' '));
+//                        var_dump($cashbox_nal + $beznal + $insure_summ);
+
                     }else{
                         echo 'нет данных';
                     }
@@ -1447,6 +1547,12 @@
 
                             //Если все хорошо в массиве с данными
                             if ((strlen($percent_cat_id) > 0) && ($value != 0)) {
+                                //%
+                                $cat_prcnt_temp = $value * 100 / (array_sum($rezult_arr[5]['data']) + $child_stom_summ);
+//                                var_dump($cat_prcnt_temp);
+//                                var_dump($stom_summ_temp);
+//                                var_dump($stom_summ_temp / 100 * $cat_prcnt_temp);
+
                                 echo '
                                 <li class="filterBlock">
                                     <div class="cellLeft" style="width: 120px; min-width: 120px;">
@@ -1454,7 +1560,8 @@
                                     </div>
                                     <div class="cellRight" style="width: 150px; min-width: 150px;">
                                         <!--<div style="float:left;">' . number_format($value, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format((($value * 100) / (array_sum($rezult_arr[5]['data']) - $child_stom_summ)), 2, '.', '') . '%</div>-->
-                                        <div style="float:left;">' . number_format($value, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format((($value * 100) / (array_sum($rezult_arr[5]['data']) + $child_stom_summ)), 2, '.', '') . '%</div>
+                                        <!--<div style="float:left;">' . number_format($value, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format((($value * 100) / (array_sum($rezult_arr[5]['data']) + $child_stom_summ)), 2, '.', '') . '%</div>-->
+                                        <div style="float:left;">' . number_format($stom_summ_temp / 100 * $cat_prcnt_temp, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format($cat_prcnt_temp, 2, '.', '') . '%</div>
                                     </div>
                                 </li>';
                             }else{
@@ -1462,6 +1569,11 @@
                             }
                         }
                         //Детство отдельно
+
+                        //%
+                        $cat_prcnt_temp = $child_stom_summ * 100 / (array_sum($rezult_arr[5]['data']) + $child_stom_summ);
+
+
                         echo '
                             <li class="filterBlock">
                                 <div class="cellLeft" style="width: 120px; min-width: 120px;">
@@ -1469,7 +1581,8 @@
                                 </div>
                                 <div class="cellRight" style="width: 150px; min-width: 150px;">
                                     <!--<div style="float:left;">'.number_format($child_stom_summ, 0, '.', ' ').'</div> <div style="float:right;">'.number_format((($child_stom_summ * 100)/ (array_sum($rezult_arr[5]['data']) - $child_stom_summ)), 2, '.', '').'%</div>-->
-                                    <div style="float:left;">'.number_format($child_stom_summ, 0, '.', ' ').'</div> <div style="float:right;">'.number_format((($child_stom_summ * 100)/ (array_sum($rezult_arr[5]['data']) + $child_stom_summ)), 2, '.', '').'%</div>
+                                    <!--<div style="float:left;">'.number_format($child_stom_summ, 0, '.', ' ').'</div> <div style="float:right;">'.number_format((($child_stom_summ * 100)/ (array_sum($rezult_arr[5]['data']) + $child_stom_summ)), 2, '.', '').'%</div>-->
+                                    <div style="float:left;">' . number_format($stom_summ_temp / 100 * $cat_prcnt_temp, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format($cat_prcnt_temp, 2, '.', '') . '%</div>
                                 </div>
                             </li>';
                     }
@@ -1539,7 +1652,13 @@
                 if (!empty($rezult_arr[7])){
                     if (!empty($rezult_arr[7]['data'])){
                         //arsort($rezult_arr[10]['data']);
-                        echo number_format(array_sum($rezult_arr[7]['data']), 0, '.', ' ');
+
+                        echo number_format(array_sum($rezult_arr[7]['data']), 0, '.', ' ').' ';
+
+//                        //!!! Костыль для %
+//                        echo number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[7], 0, '.', ' ');
+//                        var_dump(number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[7], 0, '.', ' '));
+
                     }else{
                         echo 'нет данных';
                     }
@@ -1595,7 +1714,13 @@
                 if (!empty($rezult_arr[6])){
                     if (!empty($rezult_arr[6]['data'])){
                         //arsort($rezult_arr[5]['data']);
-                        echo number_format(array_sum($rezult_arr[6]['data']), 0, '.', ' ');
+
+                        echo number_format(array_sum($rezult_arr[6]['data']), 0, '.', ' ').' ';
+
+//                        //!!! Костыль для %
+//                        echo number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[6], 0, '.', ' ');
+//                        var_dump(number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[6], 0, '.', ' '));
+
                     }else{
                         echo 'нет данных';
                     }
@@ -1691,8 +1816,13 @@
                         </div>
                         <div class="cellRight" style="width: 150px; min-width: 150px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
-                echo
-                            number_format(($temp_solar_nal + $temp_solar_beznal), 0, '.', ' ');
+                echo    number_format(($temp_solar_nal + $temp_solar_beznal), 0, '.', ' ').' ';
+
+//                //!!! Костыль для %
+//                echo number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt['sol'], 0, '.', ' ');
+//                var_dump(number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt['sol'], 0, '.', ' '));
+
+
                 echo '
                         </div>
                     </li>';
@@ -1711,7 +1841,13 @@
                 if (!empty($rezult_arr[10])){
                     if (!empty($rezult_arr[10]['data'])){
                         //arsort($rezult_arr[10]['data']);
-                        echo number_format(array_sum($rezult_arr[10]['data']), 0, '.', ' ');
+
+                        echo number_format(array_sum($rezult_arr[10]['data']), 0, '.', ' ').' ';
+
+//                        //!!! Костыль для %
+//                        echo number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[10], 0, '.', ' ');
+//                        var_dump(number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[10], 0, '.', ' '));
+
                     }else{
                         echo 'нет данных';
                     }

@@ -6389,6 +6389,10 @@
 
     //Добавляем/редактируем в базу выплату в банку
     function  fl_Ajax_add_in_bank(mode, reqData){
+        //console.log(reqData);
+
+        var date_arr = reqData['date'].split(".");
+        var date_str = "&m="+date_arr[1]+"&y="+date_arr[2];
 
         var link = "fl_addInBank_f.php";
 
@@ -6414,7 +6418,7 @@
                     //$('#data').html(res.data);
 
                     blockWhileWaiting (true);
-                    document.location.href = "fl_consolidated_report_admin.php?filial_id=" + reqData.filial_id;
+                    document.location.href = "fl_consolidated_report_admin.php?filial_id=" + reqData.filial_id + date_str;
 
                 }else{
                     //console.log('error');
@@ -6427,6 +6431,10 @@
 
     //Добавляем/редактируем в базу выплату динектору
     function  fl_Ajax_add_to_director(mode, reqData){
+        //console.log(reqData);
+
+        var date_arr = reqData['date'].split(".");
+        var date_str = "&m="+date_arr[1]+"&y="+date_arr[2];
 
         var link = "fl_addToDirector_f.php";
 
@@ -6452,7 +6460,7 @@
                     //$('#data').html(res.data);
 
                     blockWhileWaiting (true);
-                    document.location.href = "fl_consolidated_report_admin.php?filial_id=" + reqData.filial_id;
+                    document.location.href = "fl_consolidated_report_admin.php?filial_id=" + reqData.filial_id + date_str;
 
                 }else{
                     //console.log('error');

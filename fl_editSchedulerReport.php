@@ -176,8 +176,18 @@
                                     $border_color = 'border: 1px solid rgb(255, 0, 0)';
                                 }
 
+                                $display_style = '';
+
+                                if ($sch_item['type'] == 11) {
+                                    if (($finances['see_all'] == 1) || $god_mode) {
+                                        //--
+                                    }else{
+                                        $display_style = 'display: none;';
+                                    }
+                                }
+
                                 echo '
-                                <div class="cellsBlock400px" style="position: relative;">
+                                <div class="cellsBlock400px" style="position: relative; '.$display_style.'">
                                     <div class="cellLeft" style="font-size: 90%;">
                                         '.$sch_item['full_name'].'<br>
                                         <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'.$sch_item['type_name'].'</span>
@@ -202,15 +212,33 @@
                             if (!empty($scheduler_j)){
 
                                 foreach ($scheduler_j as $sch_item){
+                                    //var_dump($sch_item);
+
+                                    $border_color = '';
+//                                    $norma_hours = $sch_item['hours'];
+//                                    if ($norma_hours == 0) {
+                                        $norma_hours = getNormaHours($sch_item['worker']);
+//                                        $border_color = 'border: 1px solid rgb(255, 0, 0)';
+//                                    }
+
+                                    $display_style = '';
+
+                                    if ($sch_item['type'] == 11) {
+                                        if (($finances['see_all'] == 1) || $god_mode) {
+                                            //--
+                                        }else{
+                                            $display_style = 'display: none;';
+                                        }
+                                    }
 
                                     echo '
-                                        <div class="cellsBlock400px">
+                                        <div class="cellsBlock400px" style="'.$display_style.'">
                                             <div class="cellLeft" style="font-size: 90%;">
                                                 '.$sch_item['full_name'].'<br>
                                                 <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'.$sch_item['type_name'].'</span>
                                             </div>
                                             <div class="cellRight" style="font-size: 13px;">
-                                                <input type="text" size="1" class="workerHoursValue" worker_id="'.$sch_item['worker'].'" worker_type="'.$sch_item['type'].'" value="0" autocomplete="off"> часов
+                                                <input type="text" size="1" class="workerHoursValue" style="'.$border_color.'" worker_id="'.$sch_item['worker'].'" worker_type="'.$sch_item['type'].'" value="'.$norma_hours.'" autocomplete="off"> часов
                                                 <label id="hours_'.$sch_item['worker'].'_num_error" class="error"></label>
                                             </div>
                                         </div>';
