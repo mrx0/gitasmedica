@@ -1496,7 +1496,7 @@
                 }
                 if (!empty($rezult_arr[10])) {
                     if (!empty($rezult_arr[10]['data'])) {
-                        $stom_summ_temp -= array_sum($rezult_arr[6]['data']);
+                        $stom_summ_temp -= array_sum($rezult_arr[10]['data']);
                     }
                 }
 
