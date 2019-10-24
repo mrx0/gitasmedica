@@ -1,14 +1,14 @@
 <?php
 
-//scheduler4.php
-//Расписание прочего персонала
+//scheduler5.php
+//Расписание конкретного персонала, который не входит в другие группы
 
 	require_once 'header.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
 
-        if (($finances['see_all'] == 1) || $god_mode) {
+        if (($_SESSION['id'] == 270) || $god_mode) {
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			include_once 'widget_calendar.php';
@@ -18,7 +18,7 @@
             //var_dump ($filials_j);
 
             //обнулим сессионные данные для редактирования
-            unset($_SESSION['scheduler4']);
+            unset($_SESSION['scheduler5']);
             //var_dump ($_SESSION);
 
 			$dop = '';
@@ -63,12 +63,8 @@
             $other_color = $getWho['other_color'];
             $all_color = $getWho['all_color'];
 
-            //!!!Норма часов
-//            if ($type == 15){
-//                $normaHours = 2;
-//            }else{
-//                $normaHours = 12;
-//            }
+            //Массив типов сотрудников для этого конкретного отчёта
+            $workers_target_arr = [1, 9, 12, 777];
 
             //Тут по категории не будем брать. Ниже будем брать индивидуально для каждого
             //$normaHours = getNormaHours(0, true, $type);
@@ -180,11 +176,15 @@
             //var_dump($normaSmen);
             //$normaSmen[10] = 7;
 
+
+            $workers_target_str = implode(',', $workers_target_arr);
+
             //Получаем сотрудников этого типа
             $arr = array();
             $filial_workers = array();
 
-            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$type' AND `status` = '0' ORDER BY `full_name` ASC";
+            $query = "SELECT * FROM `spr_workers` WHERE `permissions` IN ($workers_target_str) AND `status` = '0' ORDER BY `full_name` ASC";
+            //var_dump($query);
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -197,6 +197,7 @@
                 }
                 //$markSheduler = 1;
             }
+            //var_dump($filial_workers);
 
             //Получаем график факт этого филиала
 			$arr = array();
@@ -367,11 +368,11 @@
 
             if (($finances['see_all'] == 1) || $god_mode) {
                 echo '
-                                    <a href="scheduler4.php?' . $dopFilial . $dopDate . '&who=11" class="b" style="' . $other_color . '">Прочие</a>';
+                                    <a href="scheduler4.php?' . $dopFilial . $dopDate . '&who=11" class="b" style="">Прочие</a>';
                 //!!! Только для ВВ
                 if (($_SESSION['id'] == 270) || ($god_mode)){
                     echo '
-                                    <a href="scheduler5.php?' . $dopFilial . $dopDate . '&who=999" class="b" style="">Другие</a>';
+                                    <a href="scheduler5.php?' . $dopFilial . $dopDate . '&who=999" class="b" style="background-color: #fff261;">Другие</a>';
                 }
             }
 
@@ -411,7 +412,7 @@
 							</div>';
 								
 			echo '<div class="no_print">';
-			echo widget_calendar ($month, $year, 'scheduler4.php', $dop);
+			echo widget_calendar ($month, $year, 'scheduler5.php', $dop);
 			echo '</div>';
 			
 			echo '</ul>';
@@ -729,7 +730,7 @@
                                 var target = $(event.target);
                                 //console.log(target.attr(\'status\'));                            
                                 
-                                contextMenuShow(target.attr(\'worker_id\'), target.attr(\'day\'), event, \'scheduler4\');
+                                contextMenuShow(target.attr(\'worker_id\'), target.attr(\'day\'), event, \'scheduler5\');
                             }
                         }else{
                             document.oncontextmenu = function() {};

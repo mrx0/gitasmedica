@@ -102,6 +102,11 @@
 
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
+								<a href="report_zapis_daily.php" class="b3">Ведомость</a>
+							</li>';
+
+                echo '				
+							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_cashbox.php" class="b3">Касса</a>
 							</li>';
 

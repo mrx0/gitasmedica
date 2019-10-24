@@ -1,7 +1,7 @@
 <?php
 
-//fl_salaries.php
-//Оклады
+//fl_salaries2.php
+//Оклады сотрудников вторая часть для конкретных сотрудников
 
     require_once 'header.php';
     require_once 'blocks_dom.php';
@@ -10,7 +10,8 @@
         require_once 'header_tags.php';
         //var_dump($stom);
 
-        if (($finances['see_all'] == 1) || $god_mode){
+        //!!! Только для ВВ
+        if (($_SESSION['id'] == 270) || $god_mode){
             include_once 'DBWork.php';
             include_once 'functions.php';
             //$offices = SelDataFromDB('spr_filials', '', '');
@@ -45,26 +46,28 @@
             $other_color = $getWho['other_color'];
             $all_color = $getWho['all_color'];
 
+            //Массив типов сотрудников для этого конкретного отчёта
+            $workers_target_arr = [1, 9, 12, 777];
+
             include_once 'ffun.php';
 
             $msql_cnnct = ConnectToDB2 ();
 
-            $workers_j = array();
-            //$spr_salaries_j = array();
+            $workers_target_str = implode(',', $workers_target_arr);
 
             //Сотрудники этого типа
             $arr = array();
-            $rez = array();
+            $workers_j = array();
+            //$spr_salaries_j = array();
 
-            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '{$type}' AND `status` <> '8' ORDER BY `full_name` ASC";
+            $query = "SELECT * FROM `spr_workers` WHERE `permissions` IN ($workers_target_str) AND `status` <> '8' ORDER BY `full_name` ASC";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
             $number = mysqli_num_rows($res);
             if ($number != 0){
                 while ($arr = mysqli_fetch_assoc($res)){
-                    array_push($rez, $arr);
+                    array_push($workers_j, $arr);
                 }
-                $workers_j = $rez;
             }
 
             //Специализации
@@ -114,14 +117,14 @@
                             <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
                                 <!--<a href="?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>-->
                                 <!--<a href="?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>-->
-                                <a href="?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
+                                <a href="fl_salaries.php?who=10" class="b" style="">Специалисты</a>
                                 <!--<a href="?who=4" class="b" style="'.$admin_color.'">Администраторы</a>-->
                                 <!--<a href="?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>-->
-                                <a href="?who=11" class="b" style="'.$other_color.'">Прочие</a>';
+                                <a href="fl_salaries.php?who=11" class="b" style="">Прочие</a>';
             //!!! Только для ВВ
             if (($_SESSION['id'] == 270) || ($god_mode)){
                 echo '
-                                <a href="fl_salaries2.php?who=999" class="b" style="">Другие</a>';
+                                <a href="fl_salaries2.php?who=999" class="b" style="background-color: #fff261;">Другие</a>';
             }
             echo '	
                             </li>';
