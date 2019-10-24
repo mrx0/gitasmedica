@@ -9148,6 +9148,68 @@
         }
     }
 
+    //Удаление из банка
+    function fl_deleteInBank (item_id){
+
+        var rys = false;
+
+        rys = confirm("Вы собираетесь удалить документ. \n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "fl_delete_in_bank_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: item_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    $('#errrror').html(data);
+                    setTimeout(function () {
+                        window.location.replace('');
+                        //console.log('client.php?id='+id);
+                    }, 100);
+                }
+            })
+        }
+    }
+
+    //Удаление АН
+    function fl_deleteToDirector (item_id){
+
+        var rys = false;
+
+        rys = confirm("Вы собираетесь удалить документ. \n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "fl_delete_to_director_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: item_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    $('#errrror').html(data);
+                    setTimeout(function () {
+                        window.location.replace('');
+                        //console.log('client.php?id='+id);
+                    }, 100);
+                }
+            })
+        }
+    }
+
     //Удаление(блокировка) посещения солярия
     function fl_deleteSolar (id){
 

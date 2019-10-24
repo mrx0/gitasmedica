@@ -165,6 +165,11 @@
 
 
                     } else {
+                        if (isset($offices_j[$zapis_online_j[$i]['place']])){
+                            $filial_name = $offices_j[$zapis_online_j[$i]['place']]['name'];
+                        }else{
+                            $filial_name = 'не указан';
+                        }
                         $deleted_zapis .= '
 							<li class="cellsBlock cellsBlockHover" style="' . $bgcolor . '">
 								<div class="cellTime" style="text-align: center">
@@ -184,7 +189,7 @@
 								    ' . $zapis_online_j[$i]['time'] . '
 								</div>-->
 								<div class="cellOffice" style="text-align: center;">
-								    ' . $offices_j[$zapis_online_j[$i]['place']]['name'] . '<br>
+								    ' . $filial_name . '<br>
 								    <b>' . $permissions_j[$zapis_online_j[$i]['type']]['name'] . '</b>
 								</div>
 								<div class="cellTime ahref" style="text-align: center" onclick="contextMenuShow('.$zapis_online_j[$i]['id'].', '.$zapis_online_j[$i]['status'].', event, \'zapisOnlineStatusChange\');">

@@ -69,7 +69,7 @@
                     <header id="header">
                         <div class="nav">
                             <a href="stat_cashbox.php" class="b">Касса</a>';
-            if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
+            if (!empty($optionsWF[$_SESSION['id']]) || $god_mode){
                 echo '
                 <a href="fl_paidout_another_test_in_tabel_add.php" class="b">Добавить расход вручную</a>';
             }
@@ -267,14 +267,16 @@
                                 Расход
                             </div>';
                 if (($finances['see_all'] == 1) || $god_mode) {
-                    $report_header .= '
-                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
-                                Банк
-                            </div>';
-                    $report_header .= '
-                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
-                                АН
-                            </div>';
+                    if (in_array($filial_id, $optionsWF[$_SESSION['id']]) || $god_mode) {
+                        $report_header .= '
+                                <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+                                    Банк
+                                </div>';
+                        $report_header .= '
+                                <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+                                    АН
+                                </div>';
+                    }
                 }
 
                 $report_header .= ' 
@@ -433,14 +435,16 @@
                                 -
                             </a>';
                     if (($finances['see_all'] == 1) || $god_mode) {
-                        echo '
-                            <a href="fl_in_bank_add.php?filial_id='.$filial_id.'&d='.dateTransformation($d).'&m='.dateTransformation($month).'&y='.$year.'" class="ahref cellTime cellsTimereport giveout_inBank" style="text-align: center; font-weight: normal; ' . $today_border . '">
+                        if (in_array($filial_id, $optionsWF[$_SESSION['id']]) || $god_mode) {
+                            echo '
+                            <a href="fl_in_bank_add.php?filial_id=' . $filial_id . '&d=' . dateTransformation($d) . '&m=' . dateTransformation($month) . '&y=' . $year . '" class="ahref cellTime cellsTimereport giveout_inBank" style="text-align: center; font-weight: normal; ' . $today_border . '">
                                 -
                             </a>';
-                        echo '
-                            <a href="fl_to_director_add.php?filial_id='.$filial_id.'&d='.dateTransformation($d).'&m='.dateTransformation($month).'&y='.$year.'" class="ahref cellTime cellsTimereport giveout_director" style="text-align: center; font-weight: normal; ' . $today_border . '">
+                            echo '
+                            <a href="fl_to_director_add.php?filial_id=' . $filial_id . '&d=' . dateTransformation($d) . '&m=' . dateTransformation($month) . '&y=' . $year . '" class="ahref cellTime cellsTimereport giveout_director" style="text-align: center; font-weight: normal; ' . $today_border . '">
                                 -
                             </a>';
+                        }
                     }
 
                     echo '
