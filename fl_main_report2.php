@@ -1100,7 +1100,6 @@
                                <b>Всего:</b>
                             </div>
                             <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: rgba(191, 191, 191, 0.38); text-align: right;">
-                                <!--<b>'.number_format($giveout_all_summ, 0, '.', ' ').'</b>-->                                
                                 <b>'.number_format($giveoutcash_summ, 0, '.', ' ').'</b>                                
                             </div>
                         </li>';
@@ -1559,8 +1558,6 @@
                                        <b>' . $percents_j[5][$percent_cat_id]['name'] . '</b>
                                     </div>
                                     <div class="cellRight" style="width: 150px; min-width: 150px;">
-                                        <!--<div style="float:left;">' . number_format($value, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format((($value * 100) / (array_sum($rezult_arr[5]['data']) - $child_stom_summ)), 2, '.', '') . '%</div>-->
-                                        <!--<div style="float:left;">' . number_format($value, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format((($value * 100) / (array_sum($rezult_arr[5]['data']) + $child_stom_summ)), 2, '.', '') . '%</div>-->
                                         <div style="float:left;">' . number_format($stom_summ_temp / 100 * $cat_prcnt_temp, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format($cat_prcnt_temp, 2, '.', '') . '%</div>
                                     </div>
                                 </li>';
@@ -1570,8 +1567,12 @@
                         }
                         //Детство отдельно
 
-                        //%
-                        $cat_prcnt_temp = $child_stom_summ * 100 / (array_sum($rezult_arr[5]['data']) + $child_stom_summ);
+                        if (array_sum($rezult_arr[5]['data']) + $child_stom_summ > 0) {
+                            //%
+                            $cat_prcnt_temp = $child_stom_summ * 100 / (array_sum($rezult_arr[5]['data']) + $child_stom_summ);
+                        }else{
+                            $cat_prcnt_temp = 0;
+                        }
 
 
                         echo '
@@ -1580,8 +1581,6 @@
                                    <b>Детство</b>
                                 </div>
                                 <div class="cellRight" style="width: 150px; min-width: 150px;">
-                                    <!--<div style="float:left;">'.number_format($child_stom_summ, 0, '.', ' ').'</div> <div style="float:right;">'.number_format((($child_stom_summ * 100)/ (array_sum($rezult_arr[5]['data']) - $child_stom_summ)), 2, '.', '').'%</div>-->
-                                    <!--<div style="float:left;">'.number_format($child_stom_summ, 0, '.', ' ').'</div> <div style="float:right;">'.number_format((($child_stom_summ * 100)/ (array_sum($rezult_arr[5]['data']) + $child_stom_summ)), 2, '.', '').'%</div>-->
                                     <div style="float:left;">' . number_format($stom_summ_temp / 100 * $cat_prcnt_temp, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format($cat_prcnt_temp, 2, '.', '') . '%</div>
                                 </div>
                             </li>';
