@@ -2813,6 +2813,44 @@
         })
     }
 
+    //Выборка нарядов в лаборатории
+    function Ajax_show_result_stat_lab_order(){
+
+        var status = document.querySelector('input[name="status"]:checked').value;
+
+        var reqData = {
+            all_time: all_time,
+            datastart:  $("#datastart").val(),
+            dataend:  $("#dataend").val(),
+
+            //Кто создал запись
+            //creator:$("#search_worker").val(),
+            //Пациент
+            client:$("#search_client").val(),
+            //К кому запись
+            worker:$("#search_client4").val(),
+            labor:$("#labor").val(),
+            filial:$("#filial").val(),
+
+            status:status
+        };
+        console.log(reqData);
+
+        $.ajax({
+            url:"ajax_show_result_stat_labor_order_f.php",
+            global: false,
+            type: "POST",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                $('#qresult').html(data);
+            }
+        })
+    }
+
     //Выборка нарядов
     function Ajax_show_result_stat_invoice2(){
 

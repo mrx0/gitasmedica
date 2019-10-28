@@ -272,7 +272,7 @@
             //Ночь
             //var_dump($zapis_j_noch);
             //День
-            //var_dump($zapis_j);
+            var_dump($zapis_j);
             //var_dump($zapis_j[7]);
             //Не пришли
             //var_dump($zapis_not_enter);
@@ -1510,6 +1510,8 @@
                 if (!empty($rezult_arr[5])){
                     if (!empty($rezult_arr[5]['data'])){
                         //arsort($rezult_arr[5]['data']);
+
+                        if ($stom_summ_temp < 0) $stom_summ_temp = 0;
 
 //                        echo number_format(array_sum($rezult_arr[5]['data']) + $child_stom_summ, 0, '.', ' ').' ';
                         echo number_format($stom_summ_temp, 0, '.', ' ');

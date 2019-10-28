@@ -18,7 +18,7 @@
             //var_dump ($filials_j);
 
             //обнулим сессионные данные для редактирования
-            unset($_SESSION['scheduler5']);
+            unset($_SESSION['scheduler3']);
             //var_dump ($_SESSION);
 
 			$dop = '';
@@ -63,7 +63,7 @@
             $other_color = $getWho['other_color'];
             $all_color = $getWho['all_color'];
 
-            //Массив типов сотрудников для этого конкретного отчёта
+            //Массив типов сотрудников, которые никуда не входят
             $workers_target_arr = [1, 9, 12, 777];
 
             //Тут по категории не будем брать. Ниже будем брать индивидуально для каждого
@@ -203,7 +203,7 @@
 			$arr = array();
             $schedulerFakt = array();
 
-            $query = "SELECT `id`, `day`, `worker` FROM `scheduler` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year' AND `filial`='{$_GET['filial']}'";
+            $query = "SELECT `id`, `day`, `worker` FROM `scheduler` WHERE `type` IN ($workers_target_str) AND `month` = '$month' AND `year` = '$year' AND `filial`='{$_GET['filial']}'";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 			$number = mysqli_num_rows($res);
 
@@ -229,7 +229,7 @@
 			$arr = array();
             $schedulerFaktOther = array();
 
-            $query = "SELECT `id`, `day`, `worker`, `filial` FROM `scheduler` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year' AND `filial` <> '{$_GET['filial']}'";
+            $query = "SELECT `id`, `day`, `worker`, `filial` FROM `scheduler` WHERE `type` IN ($workers_target_str) AND `month` = '$month' AND `year` = '$year' AND `filial` <> '{$_GET['filial']}'";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
             $number = mysqli_num_rows($res);
             if ($number != 0){
@@ -276,7 +276,9 @@
             $arr = array();
             $hours_j = array();
 
-            $query = "SELECT * FROM `fl_journal_scheduler_report` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year'";
+            $workers_target_str = implode(',', $workers_target_arr);
+
+            $query = "SELECT * FROM `fl_journal_scheduler_report` WHERE `type` IN ('$workers_target_str') AND `month` = '$month' AND `year` = '$year'";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
             $number = mysqli_num_rows($res);
@@ -341,7 +343,7 @@
 					</div>';
 			echo '
 					<div id="data" style="margin-top: 5px;">
-					    <input type="hidden" id="type" value="'.$type.'">
+					    <input type="hidden" id="type" value="99">
 						<ul style="margin-left: 6px; margin-bottom: 20px;">';
 			if (($scheduler['edit'] == 1) || ($scheduler['add_worker'] == 1) || $god_mode){
 				echo '
