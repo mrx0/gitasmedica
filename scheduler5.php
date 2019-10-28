@@ -278,7 +278,7 @@
 
             $workers_target_str = implode(',', $workers_target_arr);
 
-            $query = "SELECT * FROM `fl_journal_scheduler_report` WHERE `type` IN ('$workers_target_str') AND `month` = '$month' AND `year` = '$year'";
+            $query = "SELECT * FROM `fl_journal_scheduler_report` WHERE `type` IN ($workers_target_str) AND `month` = '$month' AND `year` = '$year'";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
             $number = mysqli_num_rows($res);
@@ -300,8 +300,8 @@
 
                 }
             }
-            //var_dump($query);
-            //var_dump($hours_j);
+//            var_dump($query);
+//            var_dump($hours_j);
 
             //переменная, чтоб вкл/откл редактирование
             $iCanManage = 'false';
