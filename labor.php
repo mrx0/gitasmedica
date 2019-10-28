@@ -1,7 +1,7 @@
 <?php
 
 //labor.php
-//
+//Карточка лаборатории
 
 	require_once 'header.php';
 	

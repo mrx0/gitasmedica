@@ -21,6 +21,9 @@
                     $filials_j = getAllFilials(false, false, false);
                     //var_dump($filials_j);
 
+                    //Массив типов сотрудников для этого конкретного отчёта
+                    $workers_target_arr = [1, 9, 12, 777];
+
                     //Сегодняшняя дата
                     /*$d = date('d', time());
                     $m = date('n', time());
@@ -76,7 +79,7 @@
                         }
                     }
                     //var_dump($query);
-                    //var_dump($dailyReports_j);
+//                    var_dump($dailyReports_j);
 
                     echo '
                         <div id="status">
@@ -105,7 +108,9 @@
                         //Все сотрудники, которые есть в графике тут в эту дату
                         $scheduler_j = array();
 
-                        $dop_query = " AND (sch.type='4' OR sch.type='7' OR sch.type='11' OR sch.type='13' OR sch.type='14' OR sch.type='15') ";
+                        $workers_target_str = implode(',', $workers_target_arr);
+
+                        $dop_query = " AND (sch.type='4' OR sch.type='7' OR sch.type='11' OR sch.type='13' OR sch.type='14' OR sch.type='15' OR sch.type IN ($workers_target_str)) ";
 
                         $query = "SELECT sch.*, s_w.full_name AS full_name, s_p.name AS type_name FROM `scheduler` sch 
                           LEFT JOIN `spr_workers` s_w
@@ -168,6 +173,7 @@
 
 
                             foreach ($dailyReports_j as $sch_item){
+                                //var_dump($sch_item);
 
                                 $border_color = '';
                                 $norma_hours = $sch_item['hours'];
@@ -196,7 +202,7 @@
                                         <input type="text" size="1" class="workerHoursValue" style="'.$border_color.'" worker_id="'.$sch_item['worker_id'].'" worker_type="'.$sch_item['type'].'" value="'.$norma_hours.'" autocomplete="off"> часов
                                         <label id="hours_'.$sch_item['worker_id'].'_num_error" class="error"></label>
                                     </div>';
-                                if (($scheduler['see_all'] == 1) || $god_mode) {
+                                if (($scheduler['see_all'] == 1) || $god_mode || (($scheduler['add_own'] == 1) && ($_SESSION['filial'] == $sch_item['filial_id']) && ($report_date == date('d.m.Y', time())))) {
                                     echo '
                                         <i class="fa fa-times" aria-hidden="true" style="position: absolute; top: 10px; right: 10px; cursor: pointer; color:red;" title="Удалить" onclick="fl_deleteSchedulerReportItem(' . $sch_item['id'] . ');"></i>';
                                 }

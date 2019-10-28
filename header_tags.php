@@ -354,6 +354,8 @@
 
 		//echo '<li><a href="search.php"><i class="fa fa-search"></i></a></li>';
 
+        echo '<li><a href="spr_proizvcalendar.php"><i class="fa fa-calendar" aria-hidden="true"></i></a></li>';
+        
 		if ($god_mode){
 			echo '<li><a href="admin.php" style="font-size: 110%;"><i class="fa fa-cogs"></i></a></li>';
 		}

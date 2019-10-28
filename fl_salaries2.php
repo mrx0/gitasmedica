@@ -46,7 +46,7 @@
             $other_color = $getWho['other_color'];
             $all_color = $getWho['all_color'];
 
-            //Массив типов сотрудников для этого конкретного отчёта
+            //Массив типов сотрудников, которые никуда не входят
             $workers_target_arr = [1, 9, 12, 777];
 
             include_once 'ffun.php';

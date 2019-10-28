@@ -18,7 +18,7 @@
             //var_dump ($filials_j);
 
             //обнулим сессионные данные для редактирования
-            unset($_SESSION['scheduler4']);
+            unset($_SESSION['scheduler3']);
             //var_dump ($_SESSION);
 
 			$dop = '';

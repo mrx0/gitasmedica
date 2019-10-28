@@ -32,7 +32,7 @@
 
                 echo '<a href="fl_salaries_category.php" class="b3" title="Оклады по должностям">Оклады по должностям</a>';
 
-                echo '<a href="spr_proizvcalendar.php" class="b3" title="Производственный календарь">Производственный календарь</a>';
+                //echo '<a href="spr_proizvcalendar.php" class="b3" title="Производственный календарь">Производственный календарь</a>';
 
                 echo '<a href="fl_spr_revenue_percent.php" class="b3" title="Проценты от выручки">Проценты от выручки</a>';
             }

@@ -1,7 +1,7 @@
 <?php
 
 //laboratiries.php
-//
+//Лаборатории
 
 	require_once 'header.php';
 

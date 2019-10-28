@@ -22,6 +22,9 @@
             $filials_j = getAllFilials(false, false, false);
             //var_dump($filials_j);
 
+            //Массив типов сотрудников, которые никуда не входят
+            $workers_target_arr = [1, 9, 12, 777];
+
             //Сегодняшняя дата
             $d = date('d', time());
             $m = date('m', time());
@@ -193,9 +196,11 @@
                         //Получим сотрудников, кто в графике
                         $scheduler_j = array();
 
-                        $msql_cnnct = ConnectToDB();
+                        //$msql_cnnct = ConnectToDB();
 
-                        $dop_query = " AND (sch.type='4' OR sch.type='7' OR sch.type='11' OR sch.type='13' OR sch.type='14' OR sch.type='15') ";
+                        $workers_target_str = implode(',', $workers_target_arr);
+
+                        $dop_query = " AND (sch.type='4' OR sch.type='7' OR sch.type='11' OR sch.type='13' OR sch.type='14' OR sch.type='15' OR sch.type IN ($workers_target_str)) ";
 
                         $query = "SELECT sch.*, s_w.full_name AS full_name, s_p.name AS type_name FROM `scheduler` sch 
                           LEFT JOIN `spr_workers` s_w
@@ -214,8 +219,8 @@
                                 array_push($scheduler_j, $arr);
                             }
                         }
-                        //                    var_dump($query);
-                        //                    var_dump($scheduler_j);
+//                    var_dump($query);
+//                        var_dump($scheduler_j);
 
                         if (!empty($scheduler_j)) {
                             foreach ($scheduler_j as $sch_item) {
