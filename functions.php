@@ -343,7 +343,8 @@
 		}
 		return $temp_arr1;
 	}
-	
+
+	//Проверка не уволен ли
 	function isFired($id){
 		$user = SelDataFromDB('spr_workers', $id, 'user');
 		if ($user != 0){
