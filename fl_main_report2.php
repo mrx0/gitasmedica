@@ -22,6 +22,9 @@
 
         if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
 
+
+            $permissions_sort_method = [5,6,10,7,4,13,14,15,9,12];
+
             $filials_j = getAllFilials(false, false, false);
             //var_dump($filials_j);
 
@@ -200,13 +203,14 @@
 
 
 
-            //Типы посещений - первичка/нет (количество)
+            //Типы посещений - первичка/нет (количество) (pervich)
             //Памятка
             //1 - Посещение для пациента первое без работы
             //2 - Посещение для пациента первое с работой
             //3 - Посещение для пациента не первое
             //4 - Посещение для пациента не первое, но был более полугода назад
             //5 - Продолжение работы
+            //6 - Без записи (enter)
             $pervich_summ_arr = array(0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0);
 
             //Получаем данные по записи за месяц
@@ -262,6 +266,7 @@
                                 array_push($zapis_ids, $arr['id']);
                             } else {
                                 if ($arr['enter'] == 0) {
+                                    //не пришел
                                     $zapis_not_enter++;
                                 }
                             }
@@ -272,7 +277,7 @@
             //Ночь
             //var_dump($zapis_j_noch);
             //День
-            var_dump($zapis_j);
+            //var_dump($zapis_j);
             //var_dump($zapis_j[7]);
             //Не пришли
             //var_dump($zapis_not_enter);
@@ -288,8 +293,11 @@
             $invoices_j2 = array();
             $invoices_notinsure_ids = array();
 
+            //Массив, где будем хранить суммы нарядов, чтобы потом определять первичное посещение или нет по сумме
+            $zapis_summ = array();
+
             $query = "
-                    SELECT jiex.*, ji.summ AS invoice_summ, ji.summins AS invoice_summins, ji.status AS invoice_status, ji.type AS type, z.enter AS enter, z.pervich AS pervich, sc.birthday2 AS birthday
+                    SELECT jiex.*, ji.summ AS invoice_summ, ji.summins AS invoice_summins, ji.status AS invoice_status, ji.type AS type, ji.zapis_id AS zapis_id, z.enter AS enter, z.pervich AS pervich, sc.birthday2 AS birthday
                     FROM `zapis` z
                     INNER JOIN `journal_invoice` ji ON z.id = ji.zapis_id AND 
                     z.office = '{$filial_id}' AND z.year = '{$year}' AND z.month = '{$month}' AND (z.enter = '1' OR z.enter = '6')
@@ -305,11 +313,14 @@
 
             if ($number != 0){
                 while ($arr = mysqli_fetch_assoc($res)){
+                    //var_dump($arr);
+
                     array_push($invoices_j2, $arr);
 
                     //Пришел/не пришел/с улицы
                     if (!isset($invoices_j[$arr['enter']])){
                         $invoices_j[$arr['enter']] = array();
+
                     }
                     //тип стом, косм, ...
                     if (!isset($invoices_j[$arr['enter']][$arr['type']])){
@@ -332,17 +343,128 @@
                         array_push($invoices_j[$arr['enter']][$arr['type']]['data'][$arr['invoice_id']], $arr);
 
                     }
-            //категории работ
+
+
+                    //Теперь суммы нарядов
+                    //Пришел/не пришел/с улицы
+                    if (!isset($zapis_summ[$arr['type']])){
+                        $zapis_summ[$arr['type']] = array();
+
+                    }
+                    //тип стом, косм, ...
+                    if (!isset($zapis_summ[$arr['type']][$arr['pervich']])){
+                        $zapis_summ[$arr['type']][$arr['pervich']] = array();
+                        $zapis_summ[$arr['type']][$arr['pervich']]['data'] = array();
+                        $zapis_summ[$arr['type']][$arr['pervich']]['insure_data'] = array();
+                    }
+                    //Если страховой
+                    if ($arr['insure'] == 1){
+                        if (!isset($zapis_summ[$arr['type']][$arr['pervich']]['insure_data'][$arr['zapis_id']])) {
+                            $zapis_summ[$arr['type']][$arr['pervich']]['insure_data'][$arr['zapis_id']] = 0;
+                        }
+                        $zapis_summ[$arr['type']][$arr['pervich']]['insure_data'][$arr['zapis_id']] += (int)$arr['itog_price'];
+                    }else{
+                        if (!isset($zapis_summ[$arr['type']][$arr['pervich']]['data'][$arr['zapis_id']])){
+                            $zapis_summ[$arr['type']][$arr['pervich']]['data'][$arr['zapis_id']] = 0;
+                        }
+                        $zapis_summ[$arr['type']][$arr['pervich']]['data'][$arr['zapis_id']] += (int)$arr['itog_price'];
+                    }
+                    //if ($arr['invoice_id'] = 83364) var_dump($arr);
                 }
             }
             //сортируем по основным ключам
             ksort($invoices_j);
+            ksort($zapis_summ);
+//            var_dump($zapis_summ);
+
+            //!!! тестовая проверка нового определения первичек
+            $pervich_summ_arr_new = array();
+
+//            foreach($pervich_summ_arr as $y_id => $y){
+//                if (isset($zapis_summ[$y_id][5]['data'])){
+//                    foreach ($zapis_summ[$y_id][5]['data'] as $i_id => $i_summ){
+//                        //var_dump($i_id.' => '.$i_summ);
+//                        if ($i_summ <= 1100){
+//                            $pervich_summ_arr_new[5][$y_id] ++;
+//                        }
+//                    }
+//                }
+//            }
+            //var_dump($pervich_summ_arr_new);
+
+            foreach($zapis_summ as $type => $pervich_data){
+                foreach($pervich_data as $pervich => $zapis_data){
+                    if  (!isset($pervich_summ_arr_new[$type])){
+                        $pervich_summ_arr_new[$type] = $pervich_summ_arr;
+                    }
+//                    if  (!isset($pervich_summ_arr_new[$type][$pervich])){
+//                        $pervich_summ_arr_new[$type][$pervich] = 0;
+//                    }
+                    if (isset($zapis_data['data'])){
+                        if (!empty($zapis_data['data'])){
+                            foreach($zapis_data['data'] as $i_id => $i_summ){
+                                if ($pervich == 1 || $pervich == 2) {
+                                    //Стоматология
+                                    if ($type == 5) {
+                                        if ($i_summ > 0){
+                                            if ($i_summ < 1100) {
+                                                $pervich_summ_arr_new[$type][1]++;
+                                            } else {
+                                                $pervich_summ_arr_new[$type][2]++;
+                                            }
+                                        }
+                                    }
+                                    //Косметология
+                                    //!!! Доделать
+                                    if ($type == 6) {
+//                                        if ($i_summ > 0){
+//                                            if ($i_summ < 1100) {
+//                                                $pervich_summ_arr_new[$type][1]++;
+//                                            } else {
+//                                                $pervich_summ_arr_new[$type][2]++;
+//                                            }
+//                                        }
+                                    }
+                                    //Соматика
+                                    if ($type == 10) {
+                                        if ($i_summ > 0){
+                                            if ($i_summ < 990) {
+                                                $pervich_summ_arr_new[$type][1]++;
+                                            } else {
+                                                $pervich_summ_arr_new[$type][2]++;
+                                            }
+                                        }
+                                    }
+                                }
+                                if ($pervich == 3 || $pervich == 4 || $pervich == 5) {
+                                    if ($i_summ > 0){
+                                        $pervich_summ_arr_new[$type][3]++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            //var_dump($pervich_summ_arr_new[5]);
+
+
+
+            //Памятка
+            //1 - Посещение для пациента первое без работы
+            //2 - Посещение для пациента первое с работой
+            //3 - Посещение для пациента не первое
+            //4 - Посещение для пациента не первое, но был более полугода назад
+            //5 - Продолжение работы
+            //6 - Без записи (enter)
+
+
+
 
             foreach ($invoices_j as $id => $data){
                 //сортируем по ключам, которые тип стом, косм,...
                 ksort($invoices_j[$id]);
             }
-            //var_dump($invoices_j);
             //var_dump($invoices_j[1][5]['data']);
             //var_dump($invoices_j2);
 
@@ -402,7 +524,7 @@
                                 //Дети стоматологии
                                 $child_stom_summ = 0;
 
-                                //Пороход по данным наряда (позиции)
+                                //Проход по данным наряда (позиции)
                                 foreach ($invoice_data as $data){
                                     //var_dump($data);
                                     //var_dump($data['percent_cats']);
@@ -742,6 +864,7 @@
 //            var_dump($rezult_arr_prcnt);
 
             //Получаем данные по выданным деньгам на филилале (зп, авансы и тд.)
+            $subtractions_j_temp = array();
             $subtractions_j = array();
             //Общая сумма
             $subtractions_summ = 0;
@@ -774,25 +897,26 @@
             if ($number != 0){
                 while ($arr = mysqli_fetch_assoc($res)){
                     //var_dump($arr);
-                    //array_push($subtractions_j, $arr);
+                    //array_push($subtractions_j_temp, $arr);
                     if ($arr['noch'] != 1) {
                         if ($arr['type'] != 4) {
-                            if (!isset($subtractions_j[$arr['permissions']])) {
-                                $subtractions_j[$arr['permissions']] = array();
+                            if (!isset($subtractions_j_temp[$arr['permissions']])) {
+                                $subtractions_j_temp[$arr['permissions']] = array();
                             }
-                            if (!isset($subtractions_j[$arr['permissions']][$arr['worker_id']])) {
-                                $subtractions_j[$arr['permissions']][$arr['worker_id']] = array();
+                            if (!isset($subtractions_j_temp[$arr['permissions']][$arr['worker_id']])) {
+                                $subtractions_j_temp[$arr['permissions']][$arr['worker_id']] = array();
 
-                                $subtractions_j[$arr['permissions']][$arr['worker_id']]['data'] = array();
-                                $subtractions_j[$arr['permissions']][$arr['worker_id']]['name'] = $arr['name'];
+                                $subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'] = array();
+                                $subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['name'] = $arr['name'];
                             }
-                            if (!isset($subtractions_j[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']])) {
-                                $subtractions_j[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']] = array();
+                            if (!isset($subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']])) {
+                                $subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']] = array();
                             }
-                            array_push($subtractions_j[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']], $arr);
+                            array_push($subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']], $arr);
 
                             $subtractions_summ += $arr['summ'];
                         }
+                        //На карту
                         if ($arr['type'] == 4){
                             $subtractions_summ_beznal += $arr['summ'];
                         }
@@ -801,9 +925,18 @@
                 }
             }
             //var_dump($query);
-            //var_dump($subtractions_j);
-            //var_dump($subtractions_j[5]);
+            //var_dump($subtractions_j_temp);
+            //var_dump($subtractions_j_temp[5]);
 
+            //отсортируем по $permissions_sort_method
+            foreach ($permissions_sort_method as $key){
+                //var_dump($key);
+
+                if (isset($subtractions_j_temp[$key])) {
+                    $subtractions_j[$key] = $subtractions_j_temp[$key];
+                }
+            }
+            //var_dump($subtractions_j);
 
             //Банк
             $bank_j = array();
@@ -872,7 +1005,7 @@
             $paidouts_temp_summ = 0;
 
 
-            $query = "SELECT * FROM `fl_journal_paidouts_temp` WHERE `filial_id`='{$filial_id}' AND `year`='$year' AND `month`='$month'";
+            $query = "SELECT * FROM `fl_journal_paidouts_temp` WHERE `filial_id`='{$filial_id}' AND `year`='$year' AND `month`='$month' ORDER BY `worker_id`";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -1616,13 +1749,16 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            '.($zapis_j[5]['pervich_summ_arr'][1] + $zapis_j[5]['pervich_summ_arr'][2]).'
+                                            '.($zapis_j[5]['pervich_summ_arr'][1] + $zapis_j[5]['pervich_summ_arr'][2]).'<br>
+                                            <span style="color: red;">'.($pervich_summ_arr_new[5][1] + $pervich_summ_arr_new[5][2]).'</span>
                                         </td>
                                         <td>
-                                            '.$zapis_j[5]['pervich_summ_arr'][2].'
+                                            '.$zapis_j[5]['pervich_summ_arr'][2].'<br>
+                                            <span style="color: red;">'.$pervich_summ_arr_new[5][2].'</span>
                                         </td>
                                         <td>
-                                            '.($zapis_j[5]['pervich_summ_arr'][3] + $zapis_j[5]['pervich_summ_arr'][4]).'
+                                            '.($zapis_j[5]['pervich_summ_arr'][3] + $zapis_j[5]['pervich_summ_arr'][4]).'<br>
+                                            <span style="color: red;">'.($pervich_summ_arr_new[5][3] + $pervich_summ_arr_new[5][4]).'</span>
                                         </td>
                                         <!--<td>
                                             '.$zapis_j[5]['pervich_summ_arr'][4].'
@@ -1784,13 +1920,16 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            '.($zapis_j[6]['pervich_summ_arr'][1] + $zapis_j[6]['pervich_summ_arr'][2]).'
+                                            '.($zapis_j[6]['pervich_summ_arr'][1] + $zapis_j[6]['pervich_summ_arr'][2]).'<br>
+                                            <span style="color: red;">'.($pervich_summ_arr_new[6][1] + $pervich_summ_arr_new[6][2]).'</span>
                                         </td>
                                         <td>
-                                            '.$zapis_j[6]['pervich_summ_arr'][2].'
+                                            '.$zapis_j[6]['pervich_summ_arr'][2].'<br>
+                                            <span style="color: red;">'.$pervich_summ_arr_new[6][2].'</span>
                                         </td>
                                         <td>
-                                            '.($zapis_j[6]['pervich_summ_arr'][3] + $zapis_j[6]['pervich_summ_arr'][4]).'
+                                            '.($zapis_j[6]['pervich_summ_arr'][3] + $zapis_j[6]['pervich_summ_arr'][4]).'<br>
+                                            <span style="color: red;">'.($pervich_summ_arr_new[6][3] + $pervich_summ_arr_new[6][4]).'</span>
                                         </td>
                                         <!--<td>
                                             '.$zapis_j[6]['pervich_summ_arr'][4].'
@@ -1911,13 +2050,16 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            '.($zapis_j[10]['pervich_summ_arr'][1] + $zapis_j[10]['pervich_summ_arr'][2]).'
+                                            '.($zapis_j[10]['pervich_summ_arr'][1] + $zapis_j[10]['pervich_summ_arr'][2]).'<br>
+                                            <span style="color: red;">'.($pervich_summ_arr_new[10][1] + $pervich_summ_arr_new[10][2]).'</span>
                                         </td>
                                         <td>
-                                            '.$zapis_j[10]['pervich_summ_arr'][2].'
+                                            '.$zapis_j[10]['pervich_summ_arr'][2].'<br>
+                                            <span style="color: red;">'.$pervich_summ_arr_new[10][2].'</span>
                                         </td>
                                         <td>
-                                            '.($zapis_j[10]['pervich_summ_arr'][3] + $zapis_j[10]['pervich_summ_arr'][4]).'
+                                            '.($zapis_j[10]['pervich_summ_arr'][3] + $zapis_j[10]['pervich_summ_arr'][4]).'<br>
+                                            <span style="color: red;">'.($pervich_summ_arr_new[10][3] + $pervich_summ_arr_new[10][4]).'</span>
                                         </td>
                                         <!--<td>
                                             '.$zapis_j[10]['pervich_summ_arr'][4].'
