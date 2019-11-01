@@ -54,7 +54,7 @@
 			$card = str_replace(",",", ",$card);
 			$card = str_replace("/","/ ",$card);
 						
-			WriteClientToDB_Update ($_POST['session_id'], $_POST['id'], $_POST['comment'], $card, $therapist, $therapist2, $birthday, $birthday2, $_POST['sex'], $_POST['telephone'], $_POST['passport'], $_POST['alienpassportser'], $_POST['alienpassportnom'], $_POST['passportvidandata'], $_POST['passportvidankem'], $_POST['address'], $_POST['polis'], $_POST['fo'], $_POST['io'], $_POST['oo'], $_POST['htelephone'], $_POST['telephoneo'], $_POST['htelephoneo'], $_POST['polisdata'], $_POST['insurecompany']);
+			WriteClientToDB_Update ($_POST['session_id'], $_POST['id'], $_POST['comment'], $card, $therapist, $therapist2, $birthday, $birthday2, $_POST['sex'], $_POST['telephone'], $_POST['email'], $_POST['passport'], $_POST['alienpassportser'], $_POST['alienpassportnom'], $_POST['passportvidandata'], $_POST['passportvidankem'], $_POST['address'], $_POST['polis'], $_POST['fo'], $_POST['io'], $_POST['oo'], $_POST['htelephone'], $_POST['telephoneo'], $_POST['htelephoneo'], $_POST['polisdata'], $_POST['insurecompany']);
 
 			echo '
 				<div class="query_ok">

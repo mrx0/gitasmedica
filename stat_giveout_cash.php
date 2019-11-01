@@ -1,6 +1,6 @@
 <?php
 
-//giveout_cash.php
+//stat_giveout_cash.php
 //Расходный ордер
 
 	require_once 'header.php';
@@ -142,13 +142,13 @@
                 echo '
 	
                         <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: left; margin-bottom: 10px;">
-                            <div style="font-size: 90%; color: rgb(125, 125, 125);">Сегодня: <a href="giveout_cash.php?filial_id=' . $filial_id . '" class="ahref">' . date("d") . ' ' . $monthsName[date("m")] . ' ' . date("Y") . '</a></div>
+                            <div style="font-size: 90%; color: rgb(125, 125, 125);">Сегодня: <a href="stat_giveout_cash.php?filial_id=' . $filial_id . '" class="ahref">' . date("d") . ' ' . $monthsName[date("m")] . ' ' . date("Y") . '</a></div>
                             <div>
                                 <span style="color: rgb(125, 125, 125);">
                                     Изменить дату:
                                     <input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.$day.'.'.$month.'.'.$year.'" onfocus="this.select();_Calendar.lcs(this)" 
                                         onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off"> 
-                                    <span class="button_tiny" style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'giveout_cash.php?filial_id=' . $filial_id . '\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
+                                    <span class="button_tiny" style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'stat_giveout_cash.php?filial_id=' . $filial_id . '\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
                                 </span>
                             </div>
                         </li>';
@@ -295,8 +295,9 @@
                         //Удалить или восстановить
                         if ( $item['status'] != 9) {
                             $result_temp .= ' 
-                                    <div class="cellCosmAct info" style="font-size: 100%; text-align: center; border-top: none;" onclick="fl_deleteGiveout_cash(' . $item['id'] . ');">
-                                        <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
+                                    <div class="cellCosmAct info" style="font-size: 100%; text-align: center; border-top: none;">
+                                        <a href="giveout_cash_edit.php?id='.$item['id'].'" class="ahref"><i class="fa fa-pencil-square-o" aria-hidden="true" style="cursor: pointer;"  title="Редактировать"></i></a><br><br>
+                                        <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить" onclick="fl_deleteGiveout_cash(' . $item['id'] . ');"></i>
                                     </div>';
                         }else {
                             $result_temp .= '

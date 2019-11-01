@@ -14,11 +14,14 @@
 
             require 'variables.php';
 
-            $invoice_id = 0;
+            $filials_j = getAllFilials(false, false, false);
+            //var_dump($filials_j);
 
-            if (isset($_GET['invoice_id'])){
-                $invoice_id = $_GET['invoice_id'];
-            }
+//            $invoice_id = 0;
+//
+//            if (isset($_GET['invoice_id'])){
+//                $invoice_id = $_GET['invoice_id'];
+//            }
 
             //Дата
             //операции со временем
@@ -56,13 +59,14 @@
 //                    $current_filial = 15;
 //                }
 //            }
+            //var_dump($current_filial);
 
             echo '
             <div id="status">
                 <header>
                     <div class="nav">
                         <a href="stat_cashbox.php" class="b">Касса</a>
-                        <a href="giveout_cash.php?filial_id=' . $current_filial . '&d=' . $day . '&m=' . $month . '&y=' . $year.'" class="b">Расходные ордеры</a>
+                        <a href="stat_giveout_cash.php?filial_id=' . $current_filial . '&d=' . $day . '&m=' . $month . '&y=' . $year.'" class="b">Расходные ордеры</a>
                         <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт</a>
                     </div>
                     <h2>Новый расходный ордер</h2>
@@ -161,23 +165,23 @@
 //                    $current_filial = $_SESSION['filial'];
 //                }
 
-                $offices_j = SelDataFromDB('spr_filials', '', '');
+                //$offices_j = SelDataFromDB('spr_filials', '', '');
 
                 echo '
                                     <select name="filial" id="filial">';
-                if ($offices_j != 0){
-                    for ($i=0;$i<count($offices_j);$i++){
-                        echo "<option value='".$offices_j[$i]['id']."' ", $current_filial == $offices_j[$i]['id'] ? "selected" : "" ,">".$offices_j[$i]['name']."</option>";
+                if (!empty($filials_j)){
+                    foreach ($filials_j as $f_id => $f_item){
+                        echo "<option value='".$f_id."' ", $current_filial == $f_id ? "selected" : "" ,">".$f_item['name']."</option>";
                     }
                 }
                 echo '
                                     </select>';
             }else{
-                $offices_j = SelDataFromDB('spr_filials', $_SESSION['filial'], 'offices');
-                if ($offices_j != 0) {
-                    echo $offices_j[0]['name'].'
+                //$offices_j = SelDataFromDB('spr_filials', $_SESSION['filial'], 'offices');
+                //if ($offices_j != 0) {
+                    echo $filials_j[$_SESSION['filial']]['name'].'
                     <input type="hidden" id="filial" name="filial" value="'.$_SESSION['filial'].'">';
-                }
+                //}
             }
             echo '
                                 </li>

@@ -634,6 +634,8 @@
 							telephoneo: $("#telephoneo").val(),
 							htelephoneo: $("#htelephoneo").val(),
 
+                            email: $("#email").val(),
+
 							passport: $("#passport").val(),
 							passportvidandata: $("#passportvidandata").val(),
 							passportvidankem: $("#passportvidankem").val(),
@@ -647,7 +649,7 @@
 							polisdata: $("#polisdata").val(),
 							insurecompany: $("#insurecompany").val(),
 
-							sex:sex_value,
+							sex: sex_value,
 
 							session_id: session_id
 						},
@@ -726,6 +728,8 @@
 
 							telephoneo: $("#telephoneo").val(),
 							htelephoneo: $("#htelephoneo").val(),
+
+                            email: $("#email").val(),
 
 							passport: $("#passport").val(),
 							passportvidandata: $("#passportvidandata").val(),
