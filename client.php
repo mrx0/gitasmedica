@@ -191,6 +191,15 @@ ORDER BY `name`;
 				echo '
 									</div>
 								</div>';
+
+                echo '
+								<div class="cellsBlock2">
+									<div class="cellLeft">Email</div>
+									<div class="cellRight">
+                                        '.$client_j[0]['email'].'';
+                echo '
+									</div>
+								</div>';
 								
 				echo '
 								<div class="cellsBlock2">

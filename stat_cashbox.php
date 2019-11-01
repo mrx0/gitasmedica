@@ -23,7 +23,7 @@
 					<header style="margin-bottom: 5px;">
 					    <div class="nav">
                             <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт</a>
-                            <a href="giveout_cash.php" class="b">Расходные ордеры</a>
+                            <a href="stat_giveout_cash.php" class="b">Расходные ордеры</a>
                         </div>
 						<h1>Касса</h1>';
                 echo '		

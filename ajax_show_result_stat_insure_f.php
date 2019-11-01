@@ -460,7 +460,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                             $rez_str_invoice_ex .= $rezult2[0]['name'];
 
                                         } else {
-                                            $rez_str_invoice_ex .= '<span class="query_neok" style="padding-top: 0">ошибка названия позиции</span>';
+                                            $rez_str_invoice_ex .= '<span class="query_neok" style="padding-top: 0">ошибка названия позиции</span>`';
                                         }
 
                                         $rez_str_invoice_ex .= '

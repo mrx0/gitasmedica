@@ -116,6 +116,13 @@
 								</div>
 							</div>
 							
+							<div class="cellsBlock2">
+								<div class="cellLeft">Email</div>
+								<div class="cellRight">
+                                    <input type="text" name="email" id="email" value="">
+								</div>
+							</div>
+							
 							<div id="toggleDiv1" class="cellsBlock2" style="margin-top: 2px; margin-bottom: -1px; display: block; margin: 3px 0;">
 								<div class="cellLeft" style="font-weight: bold; width: 500px; cursor: pointer;">
 									Паспортные данные
