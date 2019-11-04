@@ -42,6 +42,9 @@
                             echo '
                                 <div id="status">
                                     <header>
+                                        <div class="nav">
+                                            <a href="giveout_cash_all.php?filial_id=' . $giveoutcash_j[0]['office_id'] . '&d=' . $day . '&m=' . $month . '&y=' . $year.'" class="b">Расходные ордеры</a>
+                                        </div>
                                         <h2>Редактировать расходный ордер #' . $_GET['id'] . '</h2>
                                         <ul style="margin-left: 6px; margin-bottom: 10px;">
                                             <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">

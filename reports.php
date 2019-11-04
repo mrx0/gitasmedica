@@ -117,7 +117,7 @@
 
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
-								<a href="stat_giveout_cash.php" class="b3">Расходные ордеры</a>
+								<a href="giveout_cash_all.php" class="b3">Расходные ордеры</a>
 							</li>';
 
                 echo '				

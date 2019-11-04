@@ -431,7 +431,7 @@
                                 -
                             </div>';*/
                     echo '
-                            <a href="stat_giveout_cash.php?filial_id='.$filial_id.'&d='.dateTransformation($d).'&m='.dateTransformation($month).'&y='.$year.'" class="ahref cellTime cellsTimereport summMinusNal" style="text-align: center; font-weight: normal; cursor: pointer; '. $today_border .'">
+                            <a href="giveout_cash_all.php?filial_id='.$filial_id.'&d='.dateTransformation($d).'&m='.dateTransformation($month).'&y='.$year.'" class="ahref cellTime cellsTimereport summMinusNal" style="text-align: center; font-weight: normal; cursor: pointer; '. $today_border .'">
                                 -
                             </a>';
                     if (($finances['see_all'] == 1) || $god_mode) {

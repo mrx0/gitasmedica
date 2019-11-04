@@ -9129,11 +9129,13 @@
 
 				if(res.result == "success"){
 					//$('#data').hide();
+                    if (mode == 'add'){
 
-                    date_arr = date_in.split(".");
-                    //console.log(date_arr);
 
-					$('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+                        date_arr = date_in.split(".");
+                        //console.log(date_arr);
+
+					    $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
 											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован расходный ордер</li>'+
 											'<li class="cellsBlock" style="width: auto;">'+
 												'<div class="cellName">'+
@@ -9152,6 +9154,9 @@
                         						'<a href="fl_give_out_cash_add.php?filial_id='+office_id+'&d='+date_arr[0]+'&m='+date_arr[1]+'&y='+date_arr[2]+'" class="b">Добавить ещё</a>'+
 					                        '</li>'+
 										'</ul>');
+                    }else{
+                        location.reload();
+                    }
 				}else{
 					$('#errror').html(res.data);
 				}
