@@ -402,14 +402,14 @@
                         echo '
                                 <div class="cellsBlock400px" style="font-size: 90%;">
                                     <div class="cellLeft">
-                                        Расход <!--<a href="stat_giveout_cash.php?filial_id='.$filial_id.'&d=01&m='.$dailyReports_j[0]['month'].'&y='.$dailyReports_j[0]['year'].'"><i class="fa fa-sign-in" aria-hidden="true" title="Перейти к расходам"></i></a>--><br>
+                                        Расход <!--<a href="giveout_cash_all.php?filial_id='.$filial_id.'&d=01&m='.$dailyReports_j[0]['month'].'&y='.$dailyReports_j[0]['year'].'"><i class="fa fa-sign-in" aria-hidden="true" title="Перейти к расходам"></i></a>--><br>
                                         <span style="font-size:80%; color: #999; ">Выдано из кассы</span>
                                     </div>
                                     <div class="cellRight" style="color: red;">
                                         <!--<input type="text" id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; " value="'.$dailyReports_j[0]['temp_giveoutcash'].'"><span  style="font-size: 90%;"> руб.</span>-->
                                         <!--<input type="text" id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; " value="$SummGiveOutCashNal"><span  style="font-size: 90%;"> руб.</span>-->
                                         <span id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; ">'.$SummGiveOutCash.'</span><span  style="font-size: 90%;"> руб.</span>
-                                        <a href="stat_giveout_cash.php?filial_id='.$filial_id.'&d='.$dailyReports_j[0]['day'].'&m='.$dailyReports_j[0]['month'].'&y='.$dailyReports_j[0]['year'].'" class="ahref button_tiny" style="font-size: 80%; cursor: pointer; float: right;">Подробно</a>
+                                        <a href="giveout_cash_all.php?filial_id='.$filial_id.'&d='.$dailyReports_j[0]['day'].'&m='.$dailyReports_j[0]['month'].'&y='.$dailyReports_j[0]['year'].'" class="ahref button_tiny" style="font-size: 80%; cursor: pointer; float: right;">Подробно</a>
                                     </div>
                                 </div>';
 

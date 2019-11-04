@@ -1749,16 +1749,16 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            '.($zapis_j[5]['pervich_summ_arr'][1] + $zapis_j[5]['pervich_summ_arr'][2]).'<br>
-                                            <span style="color: red;">'.($pervich_summ_arr_new[5][1] + $pervich_summ_arr_new[5][2]).'</span>
+                                            <!--'.($zapis_j[5]['pervich_summ_arr'][1] + $zapis_j[5]['pervich_summ_arr'][2]).'<br>-->
+                                            <span style="/*color: red;*/">'.($pervich_summ_arr_new[5][1] + $pervich_summ_arr_new[5][2]).'</span>
                                         </td>
                                         <td>
-                                            '.$zapis_j[5]['pervich_summ_arr'][2].'<br>
-                                            <span style="color: red;">'.$pervich_summ_arr_new[5][2].'</span>
+                                            <!--'.$zapis_j[5]['pervich_summ_arr'][2].'<br>-->
+                                            <span style="/*color: red;*/">'.$pervich_summ_arr_new[5][2].'</span>
                                         </td>
                                         <td>
-                                            '.($zapis_j[5]['pervich_summ_arr'][3] + $zapis_j[5]['pervich_summ_arr'][4]).'<br>
-                                            <span style="color: red;">'.($pervich_summ_arr_new[5][3] + $pervich_summ_arr_new[5][4]).'</span>
+                                            <!--'.($zapis_j[5]['pervich_summ_arr'][3] + $zapis_j[5]['pervich_summ_arr'][4]).'<br>-->
+                                            <span style="/*color: red;*/">'.($pervich_summ_arr_new[5][3] + $pervich_summ_arr_new[5][4]).'</span>
                                         </td>
                                         <!--<td>
                                             '.$zapis_j[5]['pervich_summ_arr'][4].'
@@ -1920,16 +1920,16 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            '.($zapis_j[6]['pervich_summ_arr'][1] + $zapis_j[6]['pervich_summ_arr'][2]).'<br>
-                                            <span style="color: red;">'.($pervich_summ_arr_new[6][1] + $pervich_summ_arr_new[6][2]).'</span>
+                                            <!--'.($zapis_j[6]['pervich_summ_arr'][1] + $zapis_j[6]['pervich_summ_arr'][2]).'<br>-->
+                                            <span style="/*color: red-->;*/">'.($pervich_summ_arr_new[6][1] + $pervich_summ_arr_new[6][2]).'</span>
                                         </td>
                                         <td>
-                                            '.$zapis_j[6]['pervich_summ_arr'][2].'<br>
-                                            <span style="color: red;">'.$pervich_summ_arr_new[6][2].'</span>
+                                            <!--'.$zapis_j[6]['pervich_summ_arr'][2].'<br>-->
+                                            <span style="/*color: red;*/">'.$pervich_summ_arr_new[6][2].'</span>
                                         </td>
                                         <td>
-                                            '.($zapis_j[6]['pervich_summ_arr'][3] + $zapis_j[6]['pervich_summ_arr'][4]).'<br>
-                                            <span style="color: red;">'.($pervich_summ_arr_new[6][3] + $pervich_summ_arr_new[6][4]).'</span>
+                                            <!--'.($zapis_j[6]['pervich_summ_arr'][3] + $zapis_j[6]['pervich_summ_arr'][4]).'<br>-->
+                                            <span style="/*color: red;*/">'.($pervich_summ_arr_new[6][3] + $pervich_summ_arr_new[6][4]).'</span>
                                         </td>
                                         <!--<td>
                                             '.$zapis_j[6]['pervich_summ_arr'][4].'
@@ -2050,16 +2050,16 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            '.($zapis_j[10]['pervich_summ_arr'][1] + $zapis_j[10]['pervich_summ_arr'][2]).'<br>
-                                            <span style="color: red;">'.($pervich_summ_arr_new[10][1] + $pervich_summ_arr_new[10][2]).'</span>
+                                            <!--'.($zapis_j[10]['pervich_summ_arr'][1] + $zapis_j[10]['pervich_summ_arr'][2]).'<br>-->
+                                            <span style="/*color: red;*/">'.($pervich_summ_arr_new[10][1] + $pervich_summ_arr_new[10][2]).'</span>
                                         </td>
                                         <td>
-                                            '.$zapis_j[10]['pervich_summ_arr'][2].'<br>
-                                            <span style="color: red;">'.$pervich_summ_arr_new[10][2].'</span>
+                                            <!--'.$zapis_j[10]['pervich_summ_arr'][2].'<br>-->
+                                            <span style="/*color: red;*/">'.$pervich_summ_arr_new[10][2].'</span>
                                         </td>
                                         <td>
-                                            '.($zapis_j[10]['pervich_summ_arr'][3] + $zapis_j[10]['pervich_summ_arr'][4]).'<br>
-                                            <span style="color: red;">'.($pervich_summ_arr_new[10][3] + $pervich_summ_arr_new[10][4]).'</span>
+                                            <!--'.($zapis_j[10]['pervich_summ_arr'][3] + $zapis_j[10]['pervich_summ_arr'][4]).'<br>-->
+                                            <span style="/*color: red;*/">'.($pervich_summ_arr_new[10][3] + $pervich_summ_arr_new[10][4]).'</span>
                                         </td>
                                         <!--<td>
                                             '.$zapis_j[10]['pervich_summ_arr'][4].'
@@ -2214,6 +2214,7 @@
 
 
                 foreach ($giveoutcash_ex_j as $item){
+                    //var_dump($item);
 
                     $bgColor = '';
 
@@ -2221,13 +2222,9 @@
                                 <li class="cellsBlock" style="width: auto; '.$bgColor.'">';
                     echo '
                                     <div class="cellOrder" style="width: 120px; min-width: 120px; position: relative; border-right: none; border-top: none; font-size: 90%;">
-                                        <b>Расх. ордер #' . $item['id'] . '</b><!--<br>от ' . date('d.m.y', strtotime($item['date_in'])) . '<br>-->
-                                        <span style="font-size: 90%;  color: #555;">';
+                                        
+                                        <a href="giveout_cash_all.php?filial_id='.$item['office_id'].'&d='.date("d", strtotime($item['date_in'])).'&m='.date("m", strtotime($item['date_in'])).'&y='.date("Y", strtotime($item['date_in'])).'" class="ahref"><b>Расх. ордер #' . $item['id'] . '</b></a>
 
-
-                    echo '
-                                        </span>
-                                                        
                                     </div>
                                     <div class="cellName" style="border-right: none; border-top: none;">';
                     if ($item['type'] != 0) {

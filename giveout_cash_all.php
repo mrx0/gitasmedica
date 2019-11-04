@@ -142,13 +142,15 @@
                 echo '
 	
                         <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: left; margin-bottom: 10px;">
-                            <div style="font-size: 90%; color: rgb(125, 125, 125);">Сегодня: <a href="stat_giveout_cash.php?filial_id=' . $filial_id . '" class="ahref">' . date("d") . ' ' . $monthsName[date("m")] . ' ' . date("Y") . '</a></div>
+                            <div style="font-size: 90%; color: rgb(125, 125, 125);">Сегодня: <a href="giveout_cash_all.php?filial_id=' . $filial_id . '" class="ahref">' . date("d") . ' ' . $monthsName[date("m")] . ' ' . date("Y") . '</a></div>
                             <div>
                                 <span style="color: rgb(125, 125, 125);">
                                     Изменить дату:
+                                    <a href="giveout_cash_all.php?filial_id=' . $filial_id . '&d='.explode('.', date('d.m.Y', strtotime('-1 days', gmmktime(0, 0, 0, $month, $day, $year))))[0].'&m='.explode('.', date('d.m.Y', strtotime('-1 days', gmmktime(0, 0, 0, $month, $day, $year))))[1].'&y='.explode('.', date('d.m.Y', strtotime('-1 days', gmmktime(0, 0, 0, $month, $day, $year))))[2].'" class="b4" title="Пред. день"><i class="fa fa-caret-left" aria-hidden="true"></i></a>
+                                    <a href="giveout_cash_all.php?filial_id=' . $filial_id . '&d='.explode('.', date('d.m.Y', strtotime('+1 days', gmmktime(0, 0, 0, $month, $day, $year))))[0].'&m='.explode('.', date('d.m.Y', strtotime('+1 days', gmmktime(0, 0, 0, $month, $day, $year))))[1].'&y='.explode('.', date('d.m.Y', strtotime('+1 days', gmmktime(0, 0, 0, $month, $day, $year))))[2].'" class="b4" title="След. день"><i class="fa fa-caret-right" aria-hidden="true"></i></a>
                                     <input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.$day.'.'.$month.'.'.$year.'" onfocus="this.select();_Calendar.lcs(this)" 
                                         onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off"> 
-                                    <span class="button_tiny" style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'stat_giveout_cash.php?filial_id=' . $filial_id . '\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
+                                    <span class="button_tiny" style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'giveout_cash_all.php?filial_id=' . $filial_id . '\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
                                 </span>
                             </div>
                         </li>';

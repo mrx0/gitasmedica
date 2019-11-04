@@ -144,7 +144,7 @@
                         $giveouts_result_str .= '
                                 <li class="cellsBlock cellsBlockHover" style="width: auto; ">
                                     <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Все расходы из кассы за месяц подробно:</div>
-                                    <!--<div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">stat_giveout_cash.php?filial_id=15&d=31&m=07&y=2019</div>-->
+                                    <!--<div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">giveout_cash_all.php?filial_id=15&d=31&m=07&y=2019</div>-->
                                 </li>';
 
 
@@ -204,7 +204,7 @@
 //                            if ( $item['status'] != 9) {
                                 $giveouts_result_str .= '
                                     <div class="cellCosmAct info" style="font-size: 100%; text-align: center; border-top: none;">
-                                        <a href="stat_giveout_cash.php?filial_id='.$_POST['filial_id'].'&d='.date("d", strtotime($item['date_in'])).'&m='.$_POST['month'].'&y='.$_POST['year'].'"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                                        <a href="giveout_cash_all.php?filial_id='.$_POST['filial_id'].'&d='.date("d", strtotime($item['date_in'])).'&m='.$_POST['month'].'&y='.$_POST['year'].'"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                                     </div>';
 //                            }else {
 //                                $result_temp .= '
