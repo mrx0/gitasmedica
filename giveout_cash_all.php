@@ -297,8 +297,9 @@
                         //Удалить или восстановить
                         if ( $item['status'] != 9) {
                             $result_temp .= ' 
-                                    <div class="cellCosmAct info" style="font-size: 100%; text-align: center; border-top: none;" onclick="fl_deleteGiveout_cash(' . $item['id'] . ');">
-                                        <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
+                                    <div class="cellCosmAct info" style="font-size: 100%; text-align: center; border-top: none;">
+                                        <a href="giveout_cash_edit.php?id='.$item['id'].'" class="ahref"><i class="fa fa-pencil-square-o" aria-hidden="true" style="cursor: pointer;"  title="Редактировать"></i></a><br><br>
+                                        <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить" onclick="fl_deleteGiveout_cash(' . $item['id'] . ');"></i>
                                     </div>';
                         }else {
                             $result_temp .= '
