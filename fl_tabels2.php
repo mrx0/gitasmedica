@@ -145,7 +145,7 @@
                                 <a href="fl_tabels3.php?who=13'.$dopDate.'" class="b" style="'.$sanit_color.'">Санитарки</a>
                                 <a href="fl_tabels3.php?who=14'.$dopDate.'" class="b" style="'.$ubor_color.'">Уборщицы</a>
                                 <a href="fl_tabels3.php?who=15'.$dopDate.'" class="b" style="'.$dvornik_color.'">Дворники</a>
-                                <a href="fl_tabels3.php?who=11" class="b" style="'.$other_color.'">Прочие</a>
+                                <a href="fl_tabels4.php?who=11" class="b" style="'.$other_color.'">Прочие</a>
                             </li>';
 
 

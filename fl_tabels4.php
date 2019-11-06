@@ -216,7 +216,7 @@
 //                $query = "SELECT * FROM `fl_spr_salaries` WHERE `worker_id` IN ($w_id_str)";
 
                 echo '<div class="no_print">';
-                echo widget_calendar ($month, $year, 'fl_tabels3.php', $dop);
+                echo widget_calendar ($month, $year, 'fl_tabels4.php', $dop);
                 echo '</div>';
 
 
@@ -523,15 +523,17 @@
                                 
                                                                     <td style="width: 120px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">';
 
-                                $w_days = 0;
-                                $w_percentDays = 0;
+                                $w_hours = 0;
+                                $w_percentHours = 0;
 
                                 $normaHours = getNormaHours($worker_data['id']);
 
                                 $w_normaHours = $work_days_norma * $normaHours;
 
+
                                 //Смены часы
                                 if (isset($hours_j[$worker_data['id']])) {
+                                        //var_dump($hours_j[$worker_data['id']]);
 
                                     //Норма смен (часов) по специализациям
                                     //$w_normaSmen = $normaSmen[$worker_specializ_data['id']][(int)$month]*12;
