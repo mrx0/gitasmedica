@@ -224,12 +224,14 @@
 
                         if (!empty($scheduler_j)) {
                             foreach ($scheduler_j as $sch_item) {
+                                //var_dump($sch_item);
+
                                 $norma_hours = getNormaHours($sch_item['worker']);
                                 //var_dump($norma_hours);
 
                                 $display_style = '';
 
-                                if ($sch_item['type'] == 11) {
+                                if (($sch_item['type'] == 1) || ($sch_item['type'] == 9) || ($sch_item['type'] == 11) || ($sch_item['type'] == 12) || ($sch_item['type'] == 777)) {
                                     if (($finances['see_all'] == 1) || $god_mode) {
                                         //--
                                     }else{

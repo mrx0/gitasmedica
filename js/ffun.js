@@ -4199,6 +4199,7 @@
 
         $(".workerHoursValue").each(function(){
             // console.log($(this).attr('worker_id'));
+            // console.log($(this).attr('worker_type'));
             // console.log($(this).val());
 
             if (isNaN($(this).val())){
@@ -4210,7 +4211,7 @@
                 $("#hours_"+$(this).attr('worker_id')+"_num_error").show();
             }else{
                 //Часов должно быть хоть сколько-нибудь
-                if ($(this).val() > 0) {
+                if (($(this).val() > 0) || (($(this).val() && (($(this).attr('worker_type') == 1) || ($(this).attr('worker_type') == 9) || ($(this).attr('worker_type') == 11) || ($(this).attr('worker_type') == 12) || ($(this).attr('worker_type') == 777))))){
                     workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
                     workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
                 }else{
@@ -4314,7 +4315,7 @@
                 $("#hours_"+$(this).attr('worker_id')+"_num_error").show();
             }else{
                 //Часов должно быть хоть сколько-нибудь
-                if ($(this).val() > 0) {
+                if (($(this).val() > 0) || (($(this).val() && (($(this).attr('worker_type') == 1) || ($(this).attr('worker_type') == 9) || ($(this).attr('worker_type') == 11) || ($(this).attr('worker_type') == 12) || ($(this).attr('worker_type') == 777))))){
                     workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
                     workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
                 }else{
