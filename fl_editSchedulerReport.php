@@ -38,7 +38,7 @@
                     $report_ids_arr = array_diff($report_ids_arr, array(''));
                     //var_dump($report_ids_arr);
 
-                    //Смотрим не было ли уже отчета на этом филиале за этот день
+                    //Для отчета на этом филиале за этот день
                     $dailyReports_j = array();
 
                     $msql_cnnct = ConnectToDB();
@@ -61,6 +61,7 @@
                         $type = $_GET['type'];
                     }
 
+                    //Смотрим не было ли уже отчета на этом филиале за этот день
                     $query = "SELECT sch.*, s_w.full_name AS full_name, s_p.name AS type_name  FROM `fl_journal_scheduler_report` sch
                     LEFT JOIN `spr_workers` s_w
                       ON sch.worker_id = s_w.id
@@ -184,7 +185,7 @@
 
                                 $display_style = '';
 
-                                if ($sch_item['type'] == 11) {
+                                if (($sch_item['type'] == 1) || ($sch_item['type'] == 9) || ($sch_item['type'] == 11) || ($sch_item['type'] == 12) || ($sch_item['type'] == 777)) {
                                     if (($finances['see_all'] == 1) || $god_mode) {
                                         //--
                                     }else{
@@ -214,7 +215,7 @@
                             }
                             //var_dump($scheduler_j);
 
-                            //Если остались сотрудники, которые тут работают в эту дату, но их не оказалось в графике
+                            //Если остались сотрудники, которые тут работают в эту дату, но у них еще нет часов в базе
                             if (!empty($scheduler_j)){
 
                                 foreach ($scheduler_j as $sch_item){
@@ -224,7 +225,7 @@
 //                                    $norma_hours = $sch_item['hours'];
 //                                    if ($norma_hours == 0) {
                                         $norma_hours = getNormaHours($sch_item['worker']);
-//                                        $border_color = 'border: 1px solid rgb(255, 0, 0)';
+                                        $border_color = 'border: 1px solid rgb(255, 0, 0)';
 //                                    }
 
                                     $display_style = '';
