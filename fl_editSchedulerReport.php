@@ -18,11 +18,13 @@
                     //!!! @@@
                     include_once 'ffun.php';
 
+                    include_once 'variables.php';
+
                     $filials_j = getAllFilials(false, false, false);
                     //var_dump($filials_j);
 
                     //Массив типов сотрудников для этого конкретного отчёта
-                    $workers_target_arr = [1, 9, 12, 777];
+                    //$workers_target_arr = [1, 9, 12, 777];
 
                     //Сегодняшняя дата
                     /*$d = date('d', time());

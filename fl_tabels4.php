@@ -18,6 +18,7 @@
 			include_once 'filter_f.php';
 			include_once 'ffun.php';
             include_once 'widget_calendar.php';
+            include_once 'variables.php';
 
             $dop = '';
             $dopWho = '';
@@ -169,7 +170,14 @@
                                 <a href="fl_tabels3.php?who=13'.$dopDate.'" class="b" style="'.$sanit_color.'">Санитарки</a>
                                 <a href="fl_tabels3.php?who=14'.$dopDate.'" class="b" style="'.$ubor_color.'">Уборщицы</a>
                                 <a href="fl_tabels3.php?who=15'.$dopDate.'" class="b" style="'.$dvornik_color.'">Дворники</a>
-                                <a href="fl_tabels4.php?who=11" class="b" style="'.$other_color.'">Прочие</a>
+                                <a href="fl_tabels4.php?who=11'.$dopDate.'" class="b" style="'.$other_color.'">Прочие</a>';
+
+                if (in_array($_SESSION['permissions'], $workers_target_arr) || ($_SESSION['id'] == 270) || $god_mode) {
+                    echo '
+                                <a href="fl_tabels5.php?who=999' . $dopDate . '" class="b" style="">Другие</a>';
+                }
+
+                echo '
                             </li>';
 
 

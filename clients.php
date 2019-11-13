@@ -1,7 +1,7 @@
 <?php
 
-//index.php
-//Главная
+//clients.php
+//Список пациентов
 
 	require_once 'header.php';
     require_once 'blocks_dom.php';

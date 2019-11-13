@@ -16,6 +16,8 @@
             //!!! @@@
             include_once 'ffun.php';
 
+            include_once 'variables.php';
+
             //Определён ли филиал
             $have_target_filial = true;
 
@@ -23,7 +25,7 @@
             //var_dump($filials_j);
 
             //Массив типов сотрудников, которые никуда не входят
-            $workers_target_arr = [1, 9, 12, 777];
+            //$workers_target_arr = [1, 9, 12, 777];
 
             //Сегодняшняя дата
             $d = date('d', time());

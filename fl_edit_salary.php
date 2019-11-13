@@ -15,7 +15,7 @@
             require 'variables.php';
 
             //Массив типов сотрудников, которые никуда не входят
-            $workers_target_arr = [1, 9, 12, 777];
+            //$workers_target_arr = [1, 9, 12, 777];
 
             if ($_GET){
                 if (isset($_GET['worker_id'])){

@@ -249,8 +249,8 @@
                 echo '
                                     <a href="scheduler4.php?' . $dopFilial . $dopDate . '&who=11" class="b" style="' . $other_color . '">Прочие</a>';
 
-                //!!! Только для ВВ
-                if (($_SESSION['id'] == 270) || ($god_mode)){
+
+                if (in_array($_SESSION['permissions'], $workers_target_arr) || ($_SESSION['id'] == 270) || $god_mode) {
                     echo '
                                     <a href="scheduler5.php?' . $dopFilial . $dopDate . '&who=999" class="b" style="">Другие</a>';
                 }
