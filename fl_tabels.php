@@ -207,7 +207,7 @@
 
                             echo '<h2>' .$permissions_j[$type]['name'].'</h2><h1>'.$worker['name'].'</h2>';
 
-                            $tabs_rez_js .= '$( "#tabs_w'.$type.'_'.$worker['id'].'").tabs();';
+                            $tabs_rez_js .= '$( "#tabs_w'.$type.'_'.$worker['id'].'").tabs({collapsible: true, active: false});';
 
                             echo '
                                     <div id="tabs_w'.$type.'_'.$worker['id'].'" style="font-size: 100%;">
@@ -242,6 +242,7 @@
                             foreach ($filials_j as $office){
 
                                 if ($office['id'] != 11) {
+
                                     echo '
                                         <div id="tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" style="position: relative; width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); font-size: 12px; margin-top: 65px;">';
 
@@ -257,8 +258,13 @@
                                             </div>';
 
                                     echo '
-                                            <div id="refreshID_'.$type.'_'.$worker['id'].'_'.$office['id'].'" style="position: absolute; cursor: pointer; top: 1px; right: 5px; font-size: 180%; color: #0C0C0C;" onclick="refreshOnlyThisTab($(this), '.$type . ',' . $worker['id'] . ',' . $office['id'].'); fl_addCalcsIDsINSessionForTabel([], 0, 0, 0, 0);" title="Обновить эту вкладку">
+                                            <div id="refreshID_'.$type.'_'.$worker['id'].'_'.$office['id'].'" style="position: absolute; cursor: pointer; top: -30px; right: 5px; font-size: 180%; color: #0C0C0C;" onclick="refreshOnlyThisTab($(this), '.$type . ',' . $worker['id'] . ',' . $office['id'].'); fl_addCalcsIDsINSessionForTabel([], 0, 0, 0, 0);" title="Обновить эту вкладку">
                                                 <span style="font-size: 50%;">Обновить эту вкладку</span> <i class="fa fa-refresh" aria-hidden="true"></i>
+                                            </div>';
+
+                                    echo '
+                                            <div id="" style="position: absolute; top: -22px; left: 5px; font-size: 130%; color: rgb(0, 123, 182)">
+                                               '.$office['name'].'
                                             </div>';
 
                                     echo '
@@ -293,6 +299,7 @@
 				
 				
 				$( "#tabs_w" ).tabs();
+				
 				//$( "#tabs_ww" ).tabs();
 				//$( "#tabs_w2" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 				'.$tabs_rez_js.'
