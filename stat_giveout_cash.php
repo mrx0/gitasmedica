@@ -91,12 +91,12 @@
                         <div style="font-size: 90%; margin: 10px 0;">
                             Филиалы: <br>';
 
-            echo '<input type="checkbox" id="fullAll" name="fullAll" class="fullType" value="0" checked> Все<br>';
+            echo '<input type="checkbox" id="filialsAll" name="filialsAll" class="filialChoice" value="0" checked> Все<br>';
 
             foreach ($filials_j as $filial_item) {
 
                 echo '
-                <input type="checkbox" id="fullAll" name="fullAll" class="fullType" value="0" checked disabled> ' . $filial_item['name'] . '<br>';
+                <input type="checkbox" id="filial_'.$filial_item['id'].'" name="filial_'.$filial_item['id'].'" class="filialChoice" value="'.$filial_item['id'].'" checked> ' . $filial_item['name'] . '<br>';
             }
 
             echo '
@@ -181,12 +181,12 @@
 
                 foreach ($giveoutcash_j as $filial_id => $filial_giveoutcash_data){
 
-                    echo '<tr>';
+                    echo '<tr id="row_f_'.$filial_id.'" class="cellsBlockHover">';
                     echo '<td style="border: 1px solid #BFBCB5; padding: 2px;">'.$filials_j[$filial_id]['name2'].'</td>';
 
                     foreach ($give_out_cash_types_j as $type_id => $type_name){
 
-                        echo '<td style="border: 1px solid #BFBCB5; padding: 2px; text-align: right;">';
+                        echo '<td class="filialSumm_'.$filial_id.'" type_id="'.$type_id.'" style="border: 1px solid #BFBCB5; padding: 2px; text-align: right;">';
 
                         if (isset($giveoutcash_j[$filial_id][$type_id])) {
                             echo $giveoutcash_j[$filial_id][$type_id];
@@ -200,7 +200,7 @@
                     }
 
                     //Прочее
-                    echo '<td style="border: 1px solid #BFBCB5; padding: 2px; text-align: right;">';
+                    echo '<td class="filialSumm_'.$filial_id.'" type_id="0" style="border: 1px solid #BFBCB5; padding: 2px; text-align: right;">';
 
                     if (isset($giveoutcash_j[$filial_id][0])) {
                         echo $giveoutcash_j[$filial_id][0];
@@ -219,7 +219,7 @@
 
                 foreach ($give_out_cash_types_j as $type_id => $type_name){
 
-                    echo '<td style="width: 80px; border: 1px solid #BFBCB5; padding: 2px; text-align: right;"><b>';
+                    echo '<td id="typeSumm_'.$type_id.'" class="typeSumm" style="width: 80px; border: 1px solid #BFBCB5; padding: 2px; text-align: right; font-weight: bold;">';
 
                     if (isset($giveoutcash_summs[$type_id])) {
                         echo $giveoutcash_summs[$type_id];
@@ -227,18 +227,18 @@
                         echo 0;
                     }
 
-                    echo '</b></td>';
+                    echo '</td>';
                 }
 
                 //Прочее
-                echo '<td style="width: 80px; outline: 1px solid #BFBCB5; padding: 2px; text-align: right;"><b>';
+                echo '<td id="typeSumm_0" class="typeSumm" style="width: 80px; outline: 1px solid #BFBCB5; padding: 2px; text-align: right; font-weight: bold;">';
 
                 if (isset($giveoutcash_summs[0])) {
                     echo $giveoutcash_summs[0];
                 }else{
                     echo 0;
                 }
-                echo '</b></td>';
+                echo '</td>';
 
                 echo '</tr>';
 
@@ -246,138 +246,6 @@
             }else{
                 echo '<span style="color: red;">Ничего не найдено</span>';
             }
-
-//                if (!empty($rezult)){
-//                    //var_dump($rezult);
-//
-//                    $result = '';
-//                    $deleted_orders = '';
-//
-//                    echo '
-//                        <div class="" style="">
-//                            <ul style="margin-left: 6px; margin-bottom: 10px; font-size: 14px;">
-//                                <li style="font-size: 110%; margin-bottom: 5px;">
-//                                    Найдены расходные ордеры:
-//                                </li>';
-//                    echo '
-//                                <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
-//                    echo '
-//                                    <div class="cellOrder" style="text-align: center; border-right: none;">
-//                                        <b>№</b>
-//                                    </div>
-//                                    <div class="cellName" style="text-align: center; border-right: none;">
-//                                        <b>Тип</b>
-//                                    </div>
-//                                    <div class="cellName" style="text-align: center; border-right: none;">
-//                                        <b>Сумма</b>
-//                                                 </div>
-//                                    <div class="cellName" style="text-align: center; border-right: none;">
-//                                        <b>Комментарий</b>
-//                                    </div>
-//                                    <div class="cellCosmAct" style="text-align: center;">
-//                                        <b>-</b>
-//                                    </div>';
-//                    echo '
-//                                </li>';
-//
-//                    foreach ($rezult as $item){
-//
-//                        //Если удалён, то меняем цвет на серый
-//                        if ( $item['status'] != 9){
-//                            $bgColor = '';
-//                        }else{
-//                            $bgColor = 'background-color: rgba(199, 199, 199, 1);';
-//                        }
-//
-//                        $result_temp = '
-//                                <li class="cellsBlock cellsBlockHover" style="width: auto; '.$bgColor.'">';
-//                        $result_temp .= '
-//                                    <div class="cellOrder" style="position: relative; border-right: none; border-top: none;">
-//                                        <b>Расходный ордер #' . $item['id'] . '</b><br>от ' . date('d.m.y', strtotime($item['date_in'])) . '<br>
-//                                        <span style="font-size: 90%;  color: #555;">';
-//
-//                        if (($item['create_time'] != 0) || ($item['create_person'] != 0)) {
-//                            $result_temp .= '
-//                                            Добавлен: ' . date('d.m.y H:i', strtotime($item['create_time'])) . '<br>
-//                                            Автор: ' . WriteSearchUser('spr_workers', $item['create_person'], 'user', true) . '<br>';
-//                        } else {
-//                            $result_temp .= 'Добавлен: не указано<br>';
-//                        }
-//                        /*if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
-//                            echo'
-//                                            Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
-//                                            <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
-//                        }*/
-//                        $result_temp .= '
-//                                        </span>
-//
-//                                    </div>
-//                                    <div class="cellName" style="border-right: none; border-top: none;">';
-//                        if ($item['type'] != 0) {
-//                            $result_temp .= $give_out_cash_types_j[$item['type']];
-//                        }else{
-//                            $result_temp .= 'Прочее';
-//
-//                            if ($item['additional_info'] != '') {
-//                                $result_temp .= ':<br><i>' . $item['additional_info'] . '</i>';
-//                            }
-//                            //var_dump($item);
-//                        }
-//
-//                        $result_temp .= '
-//                                    </div>
-//                                    <div class="cellName" style="border-right: none; border-top: none;">
-//                                        <div style="text-align: right;">
-//                                            <span class="calculateInvoice" style="font-size: 13px">' . $item['summ'] . '</span> руб.
-//                                        </div>
-//                                    </div>
-//                                    <div class="cellName" style="border-right: none; border-top: none;">
-//                                        <div style="margin: 1px 0; padding: 1px 3px;">
-//                                            <span class="" style="font-size: 13px">' . $item['comment'] . '</span>
-//                                        </div>
-//                                    </div>';
-//
-//                        //Удалить или восстановить
-//                        if ( $item['status'] != 9) {
-//                            $result_temp .= '
-//                                    <div class="cellCosmAct info" style="font-size: 100%; text-align: center; border-top: none;">
-//                                        <a href="giveout_cash_edit.php?id='.$item['id'].'" class="ahref"><i class="fa fa-pencil-square-o" aria-hidden="true" style="cursor: pointer;"  title="Редактировать"></i></a><br><br>
-//                                        <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить" onclick="fl_deleteGiveout_cash(' . $item['id'] . ');"></i>
-//                                    </div>';
-//                        }else {
-//                            $result_temp .= '
-//                                    <div class="cellCosmAct info" style="font-size: 100%; text-align: center; border-top: none;" onclick="fl_reopenGiveout_cash('.$item['id'].');">
-//                                        <i class="fa fa-reply" aria-hidden="true" style="cursor: pointer;"  title="Восстановить"></i>
-//                                    </div>';
-//                        }
-//
-//                        $result_temp .= '
-//                                </li>';
-//
-//                        //Если не удалённый
-//                        if ( $item['status'] != 9){
-//                            $result .= $result_temp;
-//                        }else{
-//                            $deleted_orders .= $result_temp;
-//                        }
-//
-//                    }
-//
-//                    //Выводим
-//                    echo $result;
-//
-//                    if (($finances['see_all'] == 1) || $god_mode) {
-//                        echo $deleted_orders;
-//                    }
-//
-//                    echo '
-//                            </ul>
-//                        </div>';
-//                }else{
-//                    echo '<span style="color: red;">Ничего не найдено</span>';
-//                }
-
-            //}
 
             echo '
                     </div>
@@ -391,44 +259,122 @@
 
 				<script type="text/javascript">
 
-                    $(function() {
-                        $("#SelectFilial").change(function(){
-                            
-                            blockWhileWaiting (true);
-                            
-                            var get_data_str = "";
-                            
-                            var params = window
-                                .location
-                                .search
-                                .replace("?","")
-                                .split("&")
-                                .reduce(
-                                    function(p,e){
-                                        var a = e.split(\'=\');
-                                        p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
-                                        return p;
-                                    },
-                                    {}
-                                );
-                            //console.log(params);
-                                                            
-                            for (key in params) {
-                                //console.log(key.length);  
-                                                              
-                                if (key.length > 0){
-                                    if (key.indexOf("filial_id") == -1){
-                                        get_data_str = get_data_str + "&" + key + "=" + params[key];
+                    //Проверка и установка checkbox
+                    $(".filialChoice").click(function() {
+                        
+                        var checked_status = $(this).is(":checked");
+                        var thisId = $(this).attr("id");
+                        var pin_status = false;
+                        var allCheckStatus = false;
+                        
+                        if (thisId == "filialsAll"){
+                            if (checked_status){
+                                pin_status = true;
+                            }else{
+                                pin_status = false;
+                            }
+                            $(".filialChoice").each(function() {
+                                $(this).prop("checked", pin_status);
+                                
+                                //Если это какой-то филиал, а не "Все"
+                                if ($(this).val() > 0){
+                                    //console.log($(this).val());
+                                    
+                                    //Если отметка есть, показываем, если нет, то прячем
+                                    if (pin_status){
+                                        $("#row_f_"+$(this).val()).show();
+                                    }else{
+                                        $("#row_f_"+$(this).val()).hide();
                                     }
                                 }
+                            });
+                        }else{
+                            if (!checked_status){
+                                $("#filialsAll").prop("checked", false);
+                                
+                                if ($(this).val() > 0){
+                                    //console.log($(this).val());
+                                    
+                                    $("#row_f_"+$(this).val()).hide();
+                                }
+                            }else{
+                                allCheckStatus = true; 
+                                $(".filialChoice").each(function() {
+                                    if ($(this).attr("id") != "filialsAll"){
+                                        if (!$(this).is(":checked")){
+                                            allCheckStatus = false;
+                                            
+                                            if ($(this).val() > 0){
+                                                //console.log($(this).val());
+                                    
+                                                $("#row_f_"+$(this).val()).hide();
+                                            }
+                                        }else{
+                                            if ($(this).val() > 0){
+                                                //console.log($(this).val());
+                                    
+                                                $("#row_f_"+$(this).val()).show();
+                                            }
+                                        }
+                                        
+
+                                    }
+                                });
+                                if (allCheckStatus){
+                                    $("#filialsAll").prop("checked", true);
+                                    
+                                }
                             }
-                            //console.log(get_data_str);
-                            
-                            document.location.href = "?filial_id="+$(this).val() + "&" + get_data_str;
-                        });
+                        }
+                        
+                        calculateGiveoutCashAll();
+                        
                     });
                     
-                    			
+                    
+                    //Функция посчета сумм по филиалам, которые выбраны
+                    function calculateGiveoutCashAll(){
+                        //Обнулим сумму
+                        $(".typeSumm").each(function() {
+                            $(this).html(0);
+                        });
+                        
+                        $(".filialChoice").each(function() {
+                            if ($(this).attr("id") != "filialsAll"){
+                                //Если отметка стоит
+                                if ($(this).is(":checked")){
+                                    //console.log("-------------------------");
+                                    //console.log($(this).val());
+                                    
+                                    $(".filialSumm_"+$(this).val()).each(function() {
+                                        //console.log($(this).html());
+                                        //console.log(Number($(this).html()));
+                                        
+                                        //console.log("*******");
+                                        var type = $(this).attr("type_id");
+                                        //console.log(type);
+                                        
+                                        var typeSumm = Number($("#typeSumm_"+type).html());
+                                        //console.log(type + " => " + Number($(this).html()) + " / " + typeSumm);
+                                        
+                                        //var tempSumm = typeSumm + Number($(this).html());
+                                        
+                                        $("#typeSumm_"+type).html(typeSumm + Number($(this).html()));
+        
+//                                        if (type == 0){
+//                                            console.log(typeSumm + " + " + Number($(this).html()) + " = " + tempSumm);
+//                                            console.log("+++++++++++++++++++++++++++++");
+//                                            console.log($("#typeSumm_"+type).html());
+//                                        }
+                                        
+                                     });
+
+                                    
+                                    //$("#summ_"+type).html();
+                                }
+                            }
+                        });
+                    }
                 
 				</script>';
 
