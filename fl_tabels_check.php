@@ -178,7 +178,7 @@
                                         <a href="fl_tabels_check.php?'.$dopFilial.$dopDate.'&who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
                                         <a href="fl_tabels_check.php?'.$dopFilial.$dopDate.'&who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
                                         <a href="fl_tabels_check.php?'.$dopFilial.$dopDate.'&who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
-                                        <!--<a href="fl_tabels_check.php?'.$dopFilial.$dopDate.'&who=11" class="b" style="'.$other_color.'">Прочие</a>-->
+                                        <a href="fl_tabels_check.php?'.$dopFilial.$dopDate.'&who=11" class="b" style="'.$other_color.'">Прочие</a>
                                 </li>
                                 <li style="width: auto; margin-bottom: 20px;">
                                     <div style="display: inline-block; margin-right: 20px;">
@@ -227,6 +227,16 @@
             if (true){
                 foreach($rez as $rezData) {
                     //var_dump($rezData);
+
+                    $bgcolor = "background-color: rgba(73, 252, 78, 0.17);";
+
+                    if (($rezData['month'] == date('m')) && ($rezData['year'] == date('Y'))){
+                        $bgcolor = "background-color: rgba(73, 252, 78, 0.17);";
+                    }else{
+                        $bgcolor = "background-color: rgba(245, 4, 66, 0.17);";
+                    }
+
+
                     //никак не используются
                     $invoice_rez_str = '';
 
@@ -242,7 +252,7 @@
                     if ((intval($summItog - $rezData['paidout'] - $rezData['deduction']) != 0) || ($rezData['status'] != 7)) {
 
                         echo '
-                                    <div class="cellsBlockHover" style="width: 216px; border: 1px solid #BFBCB5; margin-top: 1px; position: relative; display: inline-block;">
+                                    <div class="cellsBlockHover" style="width: 216px; '.$bgcolor.' border: 1px solid #BFBCB5; margin-top: 1px; position: relative; display: inline-block;">
                                         <div style="display: inline-block; width: 180px;">';
                         echo '
                                             <a href="fl_tabel.php?id=' . $rezData['id'] . '" class="ahref">';
