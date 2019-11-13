@@ -104,6 +104,21 @@ ORDER BY `name`;
                     if ($client_j[0]['status'] != 9) {
                         echo '<a href="finance_account.php?client_id='.$client_j[0]['id'].'" class="b" style="display: inline; margin-left: 20px; font-size: 70%; padding: 2px 5px;">Управление счётом</a>';
                         echo '<a href="zapis.php?client_id='.$client_j[0]['id'].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Записать пациента</a>';
+                        if (($_SESSION['permissions'] == 3) || $god_mode){
+                            //var_dump($client_j[0]['installment']);
+                            //Нет отметки о рассрочке
+                            if ($client_j[0]['installment'] == 0) {
+                                echo '<span class="info"  style="display: inline; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus('.$client_j[0]['id'].', '.$client_j[0]['installment'].');"><i class="fa fa-database" aria-hidden="true" title="Нет рассрочек"></i></span>';
+                            }
+                            //Включена рассрочка
+                            if ($client_j[0]['installment'] == 1) {
+                                echo '<span class="info"  style="display: inline; color: red; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus('.$client_j[0]['id'].', '.$client_j[0]['installment'].');"><i class="fa fa-database" aria-hidden="true" title="Есть незакрытая рассрочка"></i></span>';
+                            }
+                            //Рассрочка закрыта
+                            if ($client_j[0]['installment'] == 7) {
+                                echo '<span class="info"  style="display: inline; color: green; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus('.$client_j[0]['id'].', '.$client_j[0]['installment'].');"><i class="fa fa-database" aria-hidden="true" title="Рассрочка закрыта"></i></span>';
+                            }
+                        }
                     }
                 }
 

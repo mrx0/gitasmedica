@@ -60,10 +60,12 @@
 
                         //if (!$thisCalcIsInAnotherTabel){
 
+                            $time = date('Y-m-d H:i:s', time());
+
                             //Вставим новый табель
-                            $query = "INSERT INTO `fl_journal_tabels` (`office_id`, `worker_id`, `type`, `month`, `year`, `summ`)
+                            $query = "INSERT INTO `fl_journal_tabels` (`office_id`, `worker_id`, `type`, `month`, `year`, `summ`, `create_time`, `create_person`)
                             VALUES (
-                            '{$filialID}', '{$workerID}', '{$typeID}', '{$_POST['tabelMonth']}', '{$_POST['tabelYear']}', '{$_POST['summCalcs']}')";
+                            '{$filialID}', '{$workerID}', '{$typeID}', '{$_POST['tabelMonth']}', '{$_POST['tabelYear']}', '{$_POST['summCalcs']}', '{$time}', '{$_SESSION['id']}')";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 

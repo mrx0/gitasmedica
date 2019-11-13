@@ -141,7 +141,8 @@
                     $query = "SELECT jinv.*, scli.full_name FROM `journal_invoice` jinv
                                 LEFT JOIN `spr_clients` scli
                                 ON scli.id = jinv.client_id
-                                WHERE jinv.status <> '9' AND jinv.summ <> jinv.paid AND jinv.create_time > '2017-12-01 08:30:00' ".$query;
+                                WHERE jinv.status <> '9' AND jinv.summ <> jinv.paid AND jinv.create_time > '2017-12-01 08:30:00' ".$query."
+                                ORDER BY `id` DESC";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -197,7 +198,7 @@
 										<a href="invoice.php?id=' . $data['id'] . '"    class="cellTime ahref" style="text-align: center; ">Наряд #'.$data['id'].' от '. $data['create_time'] . '</a>
 										    <div class="cellName" style="text-align: right; ">Сумма наряда: ' . $data['summ'] . ' руб.</div>
 										    <div class="cellName" style="text-align: right; ">Не оплачено: <span style="color:red"><BR>' . ($data['summ']-$data['paid']) . '</span> руб.</div>
-										    <a href="invoice.php?id='.$data['client_id'].'" class="ahref cellText" style="max-width: 250px;">'.$data['full_name'].'<br><br>
+										    <a href="client.php?id='.$data['client_id'].'" class="ahref cellText" style="max-width: 250px;">'.$data['full_name'].'<br><br>
 										    '.$filials_j[$data['office_id']]['name2'].'
 										    </a>
 										    <div class="cellName" style="text-align: left; width: 160px; min-width: 160px;">

@@ -115,6 +115,13 @@
 								<a href="stat_cashbox.php" class="b3">Касса</a>
 							</li>';
 
+                if (($_SESSION['permissions'] == 3) || $god_mode){
+                    echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="stat_installments.php" class="b3">Открытые рассрочки</a>
+							</li>';
+                }
+
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="giveout_cash_all.php" class="b3">Расходные ордеры</a>

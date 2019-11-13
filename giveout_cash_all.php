@@ -62,6 +62,7 @@
                         <div class="nav">
                             <a href="stat_cashbox.php" class="b">Касса</a>
                             <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт</a>
+                            <a href="stat_giveout_cash.php" class="b">Расходы по филиалам</a>
                         </div>
                         <h2 style="">Расходные ордеры</h2>
                         <div>

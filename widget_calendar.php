@@ -4,7 +4,10 @@
 //Календарик
 
 function widget_calendar ($month, $year, $path, $dop){
-	
+//    var_dump($month);
+//    var_dump($year);
+//    var_dump($path);
+
 	$result = '';
 	
 	//if ($month < 10) $month = '0'.$month;

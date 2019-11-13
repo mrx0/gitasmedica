@@ -47,7 +47,7 @@
                         $calcArr = $_SESSION['fl_calcs_tabels']['main_data'];
 
                         foreach ($calcArr as $calcID) {
-                            $query .= "INSERT INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`, `noch`) VALUES ('{$mysqli_insert_id}', '{$calcID}', '0');";
+                            $query .= "INSERT INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`, `noch`, `create_time`, `create_person`) VALUES ('{$mysqli_insert_id}', '{$calcID}', '0', '{$time}', '{$_SESSION['id']}');";
 
                             //$summCalcs += $rezData['summ'];
 

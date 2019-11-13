@@ -11406,3 +11406,34 @@
             $("#allSumm").html(fin_price + Number(realiz_summ));
         }
     }
+
+    //Изменить статус рассрочки
+    function changeInstallmentStatus(client_id, installment_status_now){
+
+        var link = "installment_status_change_f.php";
+
+        var reqData = {
+            client_id: client_id,
+            installment_status_now: installment_status_now
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == 'success') {
+                    location.reload();
+                }
+            }
+        })
+    }
