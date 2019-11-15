@@ -29,6 +29,8 @@
 
                         $summCalcs = 0;
 
+                        $time = date('Y-m-d H:i:s', time());
+
                         $msql_cnnct = ConnectToDB2();
 
                         //Вставим новый табель
@@ -46,7 +48,7 @@
                         $calcArr = $_SESSION['fl_calcs_tabels']['main_data'];
 
                         foreach ($calcArr as $calcID) {
-                            $query .= "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`, `noch`) VALUES ('{$_POST['tabelForAdding']}', '{$calcID}', '0');";
+                            $query .= "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`, `noch`, `create_time`, `create_person`) VALUES ('{$_POST['tabelForAdding']}', '{$calcID}', '0', '{$time}', '{$_SESSION['id']}');";
 
                             //$summCalcs += $rezData['summ'];
 

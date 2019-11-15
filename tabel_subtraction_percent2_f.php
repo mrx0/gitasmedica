@@ -391,36 +391,41 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
             //var_dump(array_sum($summ4ZP));
 
 
-            //Посчитаем, сколько откуда реально выдадим с учетом суммы,
-            //которую реально хотим выдать $iWantMyMoney
-            foreach ($itog_filials_percents as $filial_id => $percent) {
-                if (!isset($filial_subtraction[$filial_id])) {
-                    $filial_subtraction[$filial_id] = 0;
+            //Избегаем деления на 0
+            if (array_sum($summ4ZP) > 0) {
+
+                //Посчитаем, сколько откуда реально выдадим с учетом суммы,
+                //которую реально хотим выдать $iWantMyMoney
+                foreach ($itog_filials_percents as $filial_id => $percent) {
+                    if (!isset($filial_subtraction[$filial_id])) {
+                        $filial_subtraction[$filial_id] = 0;
+                    }
+                    $filial_subtraction[$filial_id] = $summ4ZP[$filial_id] / 100 * ($iWantMyMoney * 100 / array_sum($summ4ZP));
                 }
-                $filial_subtraction[$filial_id] = $summ4ZP[$filial_id] / 100 * ($iWantMyMoney * 100 / array_sum($summ4ZP));
+                //echo '<span style="font-size: 85%;"><b>Ключевое3 !</b> Сколько ПРЕДЛАГАЕТСЯ ВСЕГО выдать с какого филиала в ЭТОТ раз</span>';
+                //var_dump($filial_subtraction);
+
+                //Просто для самоконтроля, должна получиться общая сумма выдаче
+                //var_dump(array_sum($filial_subtraction));
+                //var_dump(array_sum($filial_subtraction) + array_sum($summ4ZP_prev));
+
+                //Чистим данные в сессии
+                //unset($_SESSION['subtraction_data']);
+
+                //Сохраним данные в сессии для дальнейшего использования
+                if (!isset($_SESSION['subtraction_data'])) {
+                    $_SESSION['subtraction_data'] = array();
+                }
+
+                //Сколько всего надо вычесть по каждой позиции со всех филиалов
+                //$_SESSION['subtraction_data'][$tabel_id]['pos_subtraction'] = $pos_subtraction;
+                //Сколько надо вычесть сейчас по каждой позиции с каждого филиала
+                $_SESSION['subtraction_data'][$tabel_id]['subtraction_temp'] = $filial_subtraction;
+                //Всего вычтем с филиалов
+                //$_SESSION['subtraction_data'][$tabel_id]['pos_subtraction_summ_filials'] = $pos_subtraction_summ_filials;
+                //var_dump($_SESSION['subtraction_data']);
+
             }
-            //echo '<span style="font-size: 85%;"><b>Ключевое3 !</b> Сколько ПРЕДЛАГАЕТСЯ ВСЕГО выдать с какого филиала в ЭТОТ раз</span>';
-            //var_dump($filial_subtraction);
-
-            //Просто для самоконтроля, должна получиться общая сумма выдаче
-            //var_dump(array_sum($filial_subtraction));
-            //var_dump(array_sum($filial_subtraction) + array_sum($summ4ZP_prev));
-
-            //Чистим данные в сессии
-            //unset($_SESSION['subtraction_data']);
-
-            //Сохраним данные в сессии для дальнейшего использования
-            if (!isset($_SESSION['subtraction_data'])){
-                $_SESSION['subtraction_data'] = array();
-            }
-
-            //Сколько всего надо вычесть по каждой позиции со всех филиалов
-            //$_SESSION['subtraction_data'][$tabel_id]['pos_subtraction'] = $pos_subtraction;
-            //Сколько надо вычесть сейчас по каждой позиции с каждого филиала
-            $_SESSION['subtraction_data'][$tabel_id]['subtraction_temp'] = $filial_subtraction;
-            //Всего вычтем с филиалов
-            //$_SESSION['subtraction_data'][$tabel_id]['pos_subtraction_summ_filials'] = $pos_subtraction_summ_filials;
-            //var_dump($_SESSION['subtraction_data']);
 
             echo '
                 <table style="display: none;">';

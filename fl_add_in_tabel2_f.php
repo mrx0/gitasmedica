@@ -70,11 +70,13 @@
 
                         if (!$thisCalcIsInAnotherTabel) {
 
+                            $time = date('Y-m-d H:i:s', time());
+
                             foreach ($calcArr as $calcID => $status) {
                                 if (!$tabel_noch) {
-                                    $query .= "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`, `noch`) VALUES ('{$_POST['tabelForAdding']}', '{$calcID}', '0');";
+                                    $query .= "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`, `noch`, `create_time`, `create_person`) VALUES ('{$_POST['tabelForAdding']}', '{$calcID}', '0', '{$time}', '{$_SESSION['id']}');";
                                 }else{
-                                    $query .= "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`, `noch`) VALUES ('{$_POST['tabelForAdding']}', '{$calcID}', '1');";
+                                    $query .= "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`, `noch`, `create_time`, `create_person`) VALUES ('{$_POST['tabelForAdding']}', '{$calcID}', '1', '{$time}', '{$_SESSION['id']}');";
                                 }
                                 //$summCalcs += $rezData['summ'];
 

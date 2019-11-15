@@ -11245,7 +11245,9 @@
             $("#paidout_summ_error").html('Вы собираетесь выдать больше, чем указано в табеле (' + paidout_summ_tabel + ' руб.).');
             $("#paidout_summ_error").show();
             // $("#showPaidoutAddbutton").hide();
-		}//else {
+		}
+		//Иногда мы хотим выдать больше, поэтому else закомментили
+		//else {
 
             var link = "tabel_subtraction_percent2_f.php";
 
@@ -11284,6 +11286,13 @@
                 }
             })
         // }
+
+        //Спрячем кнопку провести, если суммы не сойдутся
+        if ((Number(summ) > Number(paidout_summ_tabel)) || (Number(summ) == 0)) {
+            $("#addDeployButton").hide();
+        }else{
+            $("#addDeployButton").show();
+        }
 	}
 
 	//!!! пример работы пауза между нажатиями
