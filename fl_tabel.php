@@ -313,7 +313,7 @@
                                 && ($tabel_j[0]['month'] ==  date('m', strtotime($invoice_create_time3)))){
                             }else{
                                 $rezult .= '
-                                                        <i class="fa fa-warning" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);" title="РЛ за прошедший период"></i>';
+                                                        <i class="fa fa-warning" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);></i>';
                             }
 
 
