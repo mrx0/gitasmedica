@@ -2317,7 +2317,7 @@
             },
             // действие, при ответе с сервера
             success:function(res){
-                console.log(res.data);
+                //console.log(res.data);
                 //$('#data').html(res)
 
                 if(res.result == 'success') {
@@ -2327,8 +2327,12 @@
                     blockWhileWaiting (true);
 
                     if (paidoutData['deploy']) {
-                        deployTabel(tabel_id);
-                        document.location.href = link_res+"?id="+tabel_id;
+                        setTimeout(function(){
+
+                            deployTabel(tabel_id);
+                            document.location.href = link_res+"?id="+tabel_id;
+
+                        }, 100);
                     }else {
                         document.location.href = link_res + "?id=" + tabel_id;
                     }
@@ -2749,7 +2753,7 @@
             deploy: deploy,
             subtractions: filials_subtractions
         };
-        //console.log(paidoutData);
+            //console.log(paidoutData);
 
         //проверка данных на валидность
         $.ajax({
