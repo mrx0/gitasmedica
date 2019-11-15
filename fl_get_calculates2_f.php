@@ -202,7 +202,20 @@
                                             <div>
                                                 <a href="fl_calculate.php?id=' . $rezData['id'] . '" class="ahref">
                                                     <div>
-                                                        <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+                                                        <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">';
+
+                                //Если время наряда меньше текущего месяца, сигнализируем
+//                                $resultFilialStr .= date('y.m.01', time()).'<br>';
+//                                $resultFilialStr .= $rezData['in_create_time'];
+//                                $resultFilialStr .= $invoice_create_time2;
+                                //$resultFilialStr .= date('y.m.01', time()) > $invoice_create_time2;
+
+                                if (date('y.m.01', time()) > $invoice_create_time2){
+                                    $resultFilialStr .= '
+                                                        <i class="fa fa-warning" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);" title="РЛ за прошедший период"></i>';
+                                }
+
+                                $resultFilialStr .= '
                                                             <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                         </div>
                                                         <div style="display: inline-block; vertical-align: middle;">

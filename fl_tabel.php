@@ -246,6 +246,8 @@
                                 $summ = $arr['summ'];
                                 $summins = $arr['summins'];
                                 $invoice_create_time = date('d.m.y', strtotime($arr['create_time']));
+                                $invoice_create_time2 = date('y.m.d', strtotime($arr['create_time']));
+                                $invoice_create_time3 = $arr['create_time'];
                                 $zapis_id = $arr['zapis_id'];
                                 $invoice_type = $arr['type'];
                                 //var_dump($zapis_id);
@@ -294,12 +296,29 @@
 
                             $rezult .=
                                 '
-                                <div class="cellsBlockHover" style="'.$background_color.' border: 1px solid #BFBCB5; margin: 1px 7px 7px;; position: relative; display: inline-block; vertical-align: top;">
+                                <div class="cellsBlockHover" data-sort="'.$invoice_create_time2.'" style="'.$background_color.' border: 1px solid #BFBCB5; margin: 1px 7px 7px;; position: relative; display: inline-block; vertical-align: top;">
                                     <div style="display: inline-block; width: 200px;">
                                         <div>
                                         <a href="fl_calculate.php?id='.$rezData['id'].'" class="ahref">
                                             <div>
-                                                <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+                                                <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">';
+
+                            //Если время не соответсвует текущему месяцу/году, сигнализируем
+//                                $rezult .= date('y.m.01', time()).'<br>';
+//                                $rezult .= $rezData['in_create_time'];
+//                                $rezult .= $invoice_create_time2;
+                            //$rezult .= date('y.m.01', time()) > $invoice_create_time2;
+
+                            if (($tabel_j[0]['year'] ==  date('Y', strtotime($invoice_create_time3)))
+                                && ($tabel_j[0]['month'] ==  date('m', strtotime($invoice_create_time3)))){
+                            }else{
+                                $rezult .= '
+                                                        <i class="fa fa-warning" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);" title="РЛ за прошедший период"></i>';
+                            }
+
+
+
+                            $rezult .= '
                                                     <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                 </div>
                                                 <div style="display: inline-block; vertical-align: middle; font-size: 90%;">
