@@ -126,6 +126,7 @@
                                 $summ = $arr['summ'];
                                 $summins = $arr['summins'];
                                 $invoice_create_time = date('d.m.y', strtotime($arr['create_time']));
+                                $invoice_create_time2 = date('y.m.d', strtotime($arr['in_create_time']));
                                 $zapis_id = $arr['zapis_id'];
                                 $invoice_type = $arr['type'];
                             }
@@ -178,7 +179,21 @@
                                         <div>
                                             <a href="fl_calculate.php?id='.$rezData['id'].'" class="ahref">
                                                 <div>
-                                                    <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+                                                    <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">';
+
+                                //Если время наряда меньше текущего месяца, сигнализируем
+//                                $rezult .= date('y.m.01', time()).'<br>';
+//                                $rezult .= $rezData['in_create_time'];
+//                                $rezult .= $invoice_create_time2;
+                                //$rezult .= date('y.m.01', time()) > $invoice_create_time2;
+
+                                if (date('y.m.01', time()) > $invoice_create_time2){
+                                    $rezult .= '
+                                                        <i class="fa fa-warning" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);" title="РЛ за прошедший период"></i>';
+                                }
+
+                                $rezult .= '
+
                                                         <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                     </div>
                                                     <div style="display: inline-block; vertical-align: middle;">
