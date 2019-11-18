@@ -1,7 +1,7 @@
 <?php
 
-//fl_tabels.php
-//Важный отчёт
+//fl_tabels999.php
+//Важный отчёт конкретного персонала, который не входит в другие группы
 
     //!!!Сортировка - нигде не используется??
     function cmp($a, $b)
@@ -54,6 +54,8 @@
             $other_color = $getWho['other_color'];
             $all_color = $getWho['all_color'];
 
+            //Костыль для "Другие"
+            $type = 999;
 
 			$workers_j = array();
 
@@ -105,21 +107,21 @@
 						    <ul style="margin-left: 6px; margin-bottom: 20px;">
 						        <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
                                 <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-                                    <a href="fl_tabels.php?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
-                                    <a href="fl_tabels.php?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>
-                                    <a href="fl_tabels.php?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
-                                    <a href="fl_tabels.php?who=4" class="b" style="'.$admin_color.'">Администраторы</a>
-                                    <a href="fl_tabels.php?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
-								    <a href="fl_tabels.php?who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
-                                    <a href="fl_tabels.php?who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
-                                    <a href="fl_tabels.php?who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
-                                    <a href="fl_tabels.php?who=11" class="b" style="'.$other_color.'">Прочие</a>
+                                    <a href="fl_tabels.php?who=5" class="b" style="">Стоматологи</a>
+                                    <a href="fl_tabels.php?who=6" class="b" style="">Косметологи</a>
+                                    <a href="fl_tabels.php?who=10" class="b" style="">Специалисты</a>
+                                    <a href="fl_tabels.php?who=4" class="b" style="">Администраторы</a>
+                                    <a href="fl_tabels.php?who=7" class="b" style="">Ассистенты</a>
+								    <a href="fl_tabels.php?who=13" class="b" style="">Санитарки</a>
+                                    <a href="fl_tabels.php?who=14" class="b" style="">Уборщицы</a>
+                                    <a href="fl_tabels.php?who=15" class="b" style="">Дворники</a>
+                                    <a href="fl_tabels.php?who=11" class="b" style="">Прочие</a>
 								    <!--<a href="fl_tabels_noch.php?who=5" class="b" style="">Ночь стом.</a>
 								    <a href="fl_tabels_noch.php?who=7" class="b" style="">Ночь ассист.</a>-->';
 
                 if (in_array($_SESSION['permissions'], $workers_target_arr) || ($_SESSION['id'] == 270) || $god_mode) {
                     echo '
-                                <a href="fl_tabels999.php?who=999" class="b" style="">Другие</a>';
+                                <a href="fl_tabels999.php?who=999" class="b" style="background-color: #fff261;">Другие</a>';
                 }
                 echo '
                                 </li>
@@ -157,7 +159,12 @@
                     //if (($permission['id'] != 1) && ($permission['id'] != 2) && ($permission['id'] != 3) && ($permission['id'] != 8) && ($permission['id'] != 9)){
 
                         //Выберем всех сотрудников с такой должностью
-                        $query = "SELECT * FROM `spr_workers` WHERE `permissions`='{$type}' AND `status` <> '8'";
+                        $workers_target_str = implode(',', $workers_target_arr);
+
+                        //$query = "SELECT * FROM `spr_workers` WHERE `permissions`='{$type}' AND `status` <> '8'";
+
+                        $query = "SELECT * FROM `spr_workers` WHERE `permissions` IN ($workers_target_str) AND `status` <> '8'";
+                
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                         $number = mysqli_num_rows($res);
@@ -208,12 +215,13 @@
 
                         //содержимое по сотрудникам
                         foreach ($workers_j as $worker){
+                            //var_dump($worker['permissions']);
 
                             echo '
 
                                 <div id="tabs-' . $type . '_' . $worker['id'] . '" class="workerDataAllFilials" workerData="' . $type . '_' . $worker['id'] . '" style="width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); margin-left: 150px; font-size: 12px;">';
 
-                            echo '<h2>' .$permissions_j[$type]['name'].'</h2><h1>'.$worker['name'].'</h2>';
+                            echo '<h2>', $type == 999 ? "-" : $permissions_j[$type]['name'] ,'</h2><h1>'.$worker['name'].'</h2>';
 
                             $tabs_rez_js .= '$( "#tabs_w'.$type.'_'.$worker['id'].'").tabs({collapsible: true, active: false});';
 
@@ -255,18 +263,18 @@
                                         <div id="tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" style="position: relative; width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); font-size: 12px; margin-top: 65px;">';
 
                                     echo '
-                                            <div class="tableTabels" style="background-color: rgba(210, 255, 167, 0.64)" id="'.$type . '_' . $worker['id'] . '_' . $office['id'].'_tabels">
+                                            <div class="tableTabels" style="background-color: rgba(210, 255, 167, 0.64)" id="'.$worker['permissions'] . '_' . $worker['id'] . '_' . $office['id'].'_tabels">
                                                 <!--<div style="width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);"><img src="img/wait.gif" style="float:left;"><span style="float: right;  font-size: 90%;"> обработка...</span></div>-->
                                             </div>';
 
                                     echo '
-                                            <div class="tableDataNPaidCalcs" style="width: 665px; background-color: rgba(251, 170, 170, 0.18);" id="'.$type . '_' . $worker['id'] . '_' . $office['id'].'">
+                                            <div class="tableDataNPaidCalcs" style="width: 665px; background-color: rgba(251, 170, 170, 0.18);" id="'.$worker['permissions'] . '_' . $worker['id'] . '_' . $office['id'].'">
                                                 <!--<div style=\'width: 120px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);\'><img src=\'img/wait.gif\' style=\'float:left;\'><span style=\'float: right;  font-size: 90%;\'> обработка...<br>загрузка<br>расч. листов</span></div>-->
                                                 Нет данных по необработанным расчетным листам
                                             </div>';
 
                                     echo '
-                                            <div id="refreshID_'.$type.'_'.$worker['id'].'_'.$office['id'].'" style="position: absolute; cursor: pointer; top: -30px; right: 5px; font-size: 180%; color: #0C0C0C;" onclick="refreshOnlyThisTab($(this), '.$type . ',' . $worker['id'] . ',' . $office['id'].'); fl_addCalcsIDsINSessionForTabel([], 0, 0, 0, 0);" title="Обновить эту вкладку">
+                                            <div id="refreshID_'.$worker['permissions'].'_'.$worker['id'].'_'.$office['id'].'" style="position: absolute; cursor: pointer; top: -30px; right: 5px; font-size: 180%; color: #0C0C0C;" onclick="refreshOnlyThisTab($(this), '.$worker['permissions'] . ',' . $worker['id'] . ',' . $office['id'].'); fl_addCalcsIDsINSessionForTabel([], 0, 0, 0, 0);" title="Обновить эту вкладку">
                                                 <span style="font-size: 50%;">Обновить эту вкладку</span> <i class="fa fa-refresh" aria-hidden="true"></i>
                                             </div>';
 

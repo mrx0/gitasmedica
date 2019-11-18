@@ -3544,6 +3544,16 @@
                     worker = ids_arr[1];
                     office = ids_arr[2];
 
+
+                    //Костыль для конкретного персонала, который не входит в другие группы
+                    var workers_target_arr = [1, 9, 12, 777];
+                    //console.log(permission);
+                    //console.log(workers_target_arr.indexOf(Number(permission)));
+
+                    if (workers_target_arr.indexOf(Number(permission)) !== -1){
+                        permission = 999;
+                    }
+
                     if (res.status == 1){
                         thisObj.html(res.data);
 
@@ -6218,7 +6228,7 @@
                 //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             success: function (res) {
-                //console.log (res);
+                console.log (res);
 
                 if (res.result == "success") {
                     //console.log (res.data);
