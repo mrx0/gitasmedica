@@ -33,7 +33,15 @@
                     $month = $_POST['month'];
                 }
 
-                $query = "SELECT `id`, `worker_id`, `office_id`, `summ`, `status` FROM `fl_journal_tabels` WHERE `type`='{$_POST['typeW']}' AND `month` = '{$month}' AND `year` = '{$_POST['year']}' AND `status` <> '9';";
+                if ($_POST['typeW'] == 999){
+                    //Выберем всех сотрудников с такой должностью
+                    $workers_target_str = implode(',', $workers_target_arr);
+
+                    $query = "SELECT `id`, `worker_id`, `office_id`, `summ`, `status` FROM `fl_journal_tabels` WHERE `type` IN ($workers_target_str) AND `month` = '{$month}' AND `year` = '{$_POST['year']}' AND `status` <> '9';";
+
+                }else {
+                    $query = "SELECT `id`, `worker_id`, `office_id`, `summ`, `status` FROM `fl_journal_tabels` WHERE `type`='{$_POST['typeW']}' AND `month` = '{$month}' AND `year` = '{$_POST['year']}' AND `status` <> '9';";
+                }
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
