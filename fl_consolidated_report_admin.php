@@ -50,18 +50,19 @@
             if (isset($_GET['filial_id'])) {
                 $filial_id = $_GET['filial_id'];
             }else{
-                if (isset($_SESSION['filial'])) {
-                    $filial_id = $_SESSION['filial'];
-                }else{
-                    if (($finances['see_all'] == 1) || $god_mode){
-                        $have_target_filial = true;
-                        $filial_id = 15;
-                    }else {
+                if (($finances['see_all'] == 1) || $god_mode){
+                    $have_target_filial = false;
+                    $filial_id = 0;
+                }else {
+                    if (isset($_SESSION['filial'])) {
+                        $filial_id = $_SESSION['filial'];
+                    }else{
                         $have_target_filial = false;
                         $filial_id = 0;
                     }
                 }
             }
+            //var_dump($filial_id);
 
 
             echo '
@@ -740,8 +741,12 @@
 			    </div>';
 
             }else{
-                echo '
+                if (($finances['see_all'] == 1) || $god_mode) {
+
+                }else {
+                    echo '
                          <span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <i class="ahref change_filial">определить</i></span><br>';
+                }
             }
             echo '
                     </div>

@@ -197,12 +197,12 @@
 								<a href="fl_tabels.php" class="b3">Важный отчёт</a>
 							</li>';
 
-                if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
-                    echo '				
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="fl_main_report2.php" class="b3">Финальный отчёт</a>
-							</li>';
-                }
+//                if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
+//                    echo '
+//							<li class="cellsBlock" style="margin: 1px;">
+//								<a href="fl_main_report2.php" class="b3">Финальный отчёт</a>
+//							</li>';
+//                }
 
                 echo '
                             <li class="cellsBlock" style="margin: 1px;">

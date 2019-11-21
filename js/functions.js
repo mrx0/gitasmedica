@@ -11446,3 +11446,48 @@
             }
         })
     }
+
+    //Функция блокирует вкладки
+    function disableTabs (permission, worker){
+        //console.log($('#tabs_w'+permission+'_'+worker+' .notes_count2'));
+
+        var tabs_id_arr = [];
+        // tabs_id_arr.push(0);
+
+
+        $('#tabs_w'+permission+'_'+worker+' .notes_count3').each(function(){
+
+            var filial_id = $(this).attr('filial_id');
+            //console.log(filial_id);
+            //console.log(($('#tabs_notes2_'+permission+'_'+worker+'_'+filial_id).css("display") == 'none'));//
+            console.log(($('#tabs_notes_'+permission+'_'+worker+'_'+filial_id).css("display") == 'none'));
+
+            if (($('#tabs_notes2_'+permission+'_'+worker+'_'+filial_id).css("display") == 'none')
+                &&
+                ($('#tabs_notes_'+permission+'_'+worker+'_'+filial_id).css("display") == 'none'))
+            {
+                var index = $('#tabs_w'+permission+'_'+worker+' a[href="#tabs-'+permission+'_'+worker+'_'+filial_id+'"]').parent().index();
+                tabs_id_arr.push (index);
+            }
+
+            $('#tabs_w'+permission+'_'+worker).tabs( "option", "disabled", tabs_id_arr );
+
+        })
+
+        // if (($('#tabs_notes2_'+permission+'_'+worker+'_'+office).css("display") == 'none')
+        // if (($('#tabs_notes3_'+permission+'_'+worker+'_'+office).css("display") == 'none')
+
+        // if (($('#tabs_w'+permission+'_'+worker+' .notes_count2').css("display") == 'none')
+        //     &&
+        //     ($('#tabs_w'+permission+'_'+worker+' .notes_count3').css("display") == 'none'))
+        // {
+        //     var office = $('#tabs_w'+permission+'_'+worker+' .notes_count3').attr('filial_id');
+        //     //console.log(office);
+        //
+        //     var index = $('#tabs_w'+permission+'_'+worker+' a[href="#tabs-'+permission+'_'+worker+'_'+office+'"]').parent().index();
+        //     tabs_id_arr.push (index);
+        // }
+        //
+        // $('#tabs_w'+permission+'_'+worker).tabs( "option", "disabled", tabs_id_arr );
+
+    }

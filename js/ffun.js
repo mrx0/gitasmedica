@@ -3397,6 +3397,19 @@
                         $("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display", "none");
                     }
 
+                    // console.log($("#tabs_notes2_"+permission+"_"+worker+"_"+office).css("display"));
+                    // console.log($("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display"));
+
+                    // var index = $('#tabs_w'+permission+'_'+worker+' a[href="#tabs-'+permission+'_'+worker+'_'+office+'"]').parent().index();
+                    //
+                    // if (($('#tabs_notes2_'+permission+'_'+worker+'_'+office).css("display") == 'none')
+                    //     &&
+                    //     ($('#tabs_notes_'+permission+'_'+worker+'_'+office).css("display") == 'none'))
+                    // {
+                    //     $('#tabs_w'+worker+'_'+office).tabs( "option", "disabled", [ index ] );
+                    // }
+
+
                     if (res.status == 0){
                         thisObj.html("Нет данных по необработанным расчетным листам");
 
@@ -3573,6 +3586,34 @@
                         thisObj.parent().find(".summTabelNPaid").html(res.summCalc);
 
                     }
+
+                    // console.log($("#tabs_notes2_"+permission+"_"+worker+"_"+office).css("display"));
+                    // console.log($("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display"));
+
+
+                    // console.log($("#tabs_notes2_"+permission+"_"+worker+"_"+office).css("display"));
+                    // console.log($("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display"));
+                    // console.log(permission);
+                    // console.log(worker);
+                    // console.log(office);
+                    // console.log($('#tabs_notes2_'+permission+'_'+worker+'_'+office).css("display"));
+                    // console.log($('#tabs_notes2_'+permission+'_'+worker+'_'+office).css("display") == 'none');
+                    // console.log((($('#tabs_notes2_'+permission+'_'+worker+'_'+office).css("display") == 'none')&&($('#tabs_notes_'+permission+'_'+worker+'_'+office).css("display") == 'none')));
+
+                    // var index = $('#tabs_w'+permission+'_'+worker+' a[href="#tabs-'+permission+'_'+worker+'_'+office+'"]').parent().index();
+                    //
+                    // //console.log('Index: ' + index);
+                    //
+                    // if (($('#tabs_notes2_'+permission+'_'+worker+'_'+office).css("display") == 'none')
+                    //     &&
+                    //     ($('#tabs_notes_'+permission+'_'+worker+'_'+office).css("display") == 'none'))
+                    // {
+                    //     $('#tabs_w'+permission+'_'+worker).tabs( "option", "disabled", [ index ] );
+                    // }
+
+                    //!!!Если и нужна блокировка закладок, то запускать не отсюда, а в самом конце,
+                    //а значит переделать саму функцию
+                    //disableTabs (permission, worker);
 
                     if (res.status == 0){
                         thisObj.html("Нет данных по табелям");

@@ -102,7 +102,14 @@
             $arr = array();
             $workers_rez = array();
 
-            $query = "SELECT `id`, `name` FROM `spr_workers` WHERE `permissions` = '{$_GET['type']}' AND `status` <> '8'";
+            if ($_GET['type'] == 999){
+                //Выберем всех сотрудников с такой должностью
+                $workers_target_str = implode(',', $workers_target_arr);
+
+                $query = "SELECT `id`, `name` FROM `spr_workers` WHERE `permissions` IN ($workers_target_str) AND `status` <> '8'";
+            }else {
+                $query = "SELECT `id`, `name` FROM `spr_workers` WHERE `permissions` = '{$_GET['type']}' AND `status` <> '8'";
+            }
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
