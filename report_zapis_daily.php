@@ -113,6 +113,8 @@
                             <div>
                                 <span style="color: rgb(125, 125, 125);">
                                     Изменить дату:
+                                    <a href="report_zapis_daily.php?&filial_id='.$filial_id.'&d='.explode('.', date('d.m.Y', strtotime('-1 days', gmmktime(0, 0, 0, $month, $day, $year))))[0].'&m='.explode('.', date('d.m.Y', strtotime('-1 days', gmmktime(0, 0, 0, $month, $day, $year))))[1].'&y='.explode('.', date('d.m.Y', strtotime('-1 days', gmmktime(0, 0, 0, $month, $day, $year))))[2].'" class="b4" title="Пред. день"><i class="fa fa-caret-left" aria-hidden="true"></i></a>
+                                    <a href="report_zapis_daily.php?&filial_id='.$filial_id.'&d='.explode('.', date('d.m.Y', strtotime('+1 days', gmmktime(0, 0, 0, $month, $day, $year))))[0].'&m='.explode('.', date('d.m.Y', strtotime('+1 days', gmmktime(0, 0, 0, $month, $day, $year))))[1].'&y='.explode('.', date('d.m.Y', strtotime('+1 days', gmmktime(0, 0, 0, $month, $day, $year))))[2].'" class="b4" title="След. день"><i class="fa fa-caret-right" aria-hidden="true"></i></a>
                                     <input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.$day.'.'.$month.'.'.$year.'" onfocus="this.select();_Calendar.lcs(this)" 
                                         onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off"> 
                                     <span class="button_tiny" style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'report_zapis_daily.php?filial_id=' . $filial_id . '\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
@@ -141,6 +143,8 @@
                 $number = mysqli_num_rows($res);
                 if ($number != 0){
                     while ($arr = mysqli_fetch_assoc($res)){
+                        //var_dump($arr);
+
                         //array_push($zapis_j, $arr);
                         if (!isset($zapis_j[$arr['type']])){
                             $zapis_j[$arr['type']] = array();
@@ -163,11 +167,14 @@
                         $number = mysqli_num_rows($res1);
                         if ($number != 0) {
                             while ($arr1 = mysqli_fetch_assoc($res1)) {
-                                if (!isset($order_j[$arr['id']])) {
-                                    $invoice_j[$arr['id']] = array();
-                                }
-                                array_push($invoice_j[$arr['id']], $arr1);
+                                //var_dump($arr1);
 
+                                if ($arr1['id'] != null) {
+                                    if (!isset($order_j[$arr['id']])) {
+                                        $invoice_j[$arr['id']] = array();
+                                    }
+                                    array_push($invoice_j[$arr['id']], $arr1);
+                                }
                                 //оплаты по этим нарядам
                                 //!!! не доделано, доделать  ?
 //                                SELECT *

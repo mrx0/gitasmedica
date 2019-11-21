@@ -231,10 +231,10 @@
                                                 <a href="#tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '">
                                                     ' . $office['name2'] . '
                                                     <div class="notes_count_div">
-                                                        <div id="tabs_notes2_' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count3" style="display: none;">
+                                                        <div id="tabs_notes2_' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count3" style="display: none;" filial_id="' . $office['id'] . '">
                                                             <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
                                                         </div>
-                                                        <div id="tabs_notes_' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count2" style="display: none;">
+                                                        <div id="tabs_notes_' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count2" style="display: none;" filial_id="' . $office['id'] . '">
                                                             <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
                                                         </div>
                                                     </div>
