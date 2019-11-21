@@ -30,11 +30,11 @@
                         <a href="#tabs-' . $filials_j_data['id'] . '">
                             '.$filials_j_data['name2'].'
                             <div class="notes_count_div">
-                                <div id="tabs_notes2_' . $_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'] . '" class="notes_count3" style="display: none;" filial_id="' . $office['id'] . '">
+                                <div id="tabs_notes2_' . $_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'] . '" class="notes_count3" style="display: none;" filial_id="' . $filials_j_data['id'] . '">
                                     <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
                                 </div>
                                 
-                                <div id="tabs_notes_' . $_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'] . '" class="notes_count2" style="display: none;" filial_id="' . $office['id'] . '">
+                                <div id="tabs_notes_' . $_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'] . '" class="notes_count2" style="display: none;" filial_id="' . $filials_j_data['id'] . '">
                                     <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
                                 </div>
                                 
