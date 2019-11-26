@@ -11491,3 +11491,63 @@
         // $('#tabs_w'+permission+'_'+worker).tabs( "option", "disabled", tabs_id_arr );
 
     }
+
+    //Добавление посещения стоматолога
+    function Ajax_add_task_stomat() {
+
+        var link = "add_task_stomat_f.php";
+
+        var arrayRemoveAct = new Array();
+        var arrayRemoveWorker = new Array();
+
+        $(".remove_add_search").each(function() {
+            if (($(this).attr("id")).indexOf("td_title") != -1){
+                var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
+                arrayRemoveAct[IndexArr] = document.getElementById($(this).attr("id")).value;
+            }
+            if (($(this).attr("id")).indexOf("td_worker") != -1){
+                var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
+                arrayRemoveWorker [IndexArr] = document.getElementById($(this).attr("id")).value;
+            }
+        });
+
+        var reqData = {
+            zapis_id: $("#zapis_id").val(),
+
+            complaints: $("#complaints").val(),
+            objectively: $("#objectively").val(),
+            diagnosis: $("#diagnosis").val(),
+            therapy: $("#therapy").val(),
+            recommended: $("#recommended").val(),
+
+            comment: $("#comment").val(),
+
+            notes: $("#add_notes_show").val(),
+            remove: $("#add_remove_show").val(),
+
+            removeAct: JSON.stringify(arrayRemoveAct),
+            removeWork: JSON.stringify(arrayRemoveWorker),
+
+            add_notes_type: $("#add_notes_type").val(),
+            add_notes_months: $("#add_notes_months").val(),
+            add_notes_days: $("#add_notes_days").val()
+        };
+        console.log(reqData);
+
+        // $.ajax({
+        //     url: link,
+        //     global: false,
+        //     type: "POST",
+        //     dataType: "JSON",
+        //     data: reqData,
+        //     cache: false,
+        //     beforeSend: function () {
+        //
+        //     },
+        //     success: function (res) {
+        //         //console.log (res);
+        //
+        //         $("#status").html(res);
+        //     }
+        // })
+    }
