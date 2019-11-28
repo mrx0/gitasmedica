@@ -1433,7 +1433,7 @@
 				{
                     zapis_id: zapis_id,
                     client_id: client_id,
-					new_client: name,
+					new_client: name
 				},
 				cache: false,
 				beforeSend: function() {
@@ -11512,7 +11512,7 @@
         });
 
         var reqData = {
-            zapis_id: $("#zapis_id").val(),
+            zapis_id: $("#zapis").val(),
 
             complaints: $("#complaints").val(),
             objectively: $("#objectively").val(),
@@ -11532,22 +11532,22 @@
             add_notes_months: $("#add_notes_months").val(),
             add_notes_days: $("#add_notes_days").val()
         };
-        console.log(reqData);
+        //console.log(reqData);
 
-        // $.ajax({
-        //     url: link,
-        //     global: false,
-        //     type: "POST",
-        //     dataType: "JSON",
-        //     data: reqData,
-        //     cache: false,
-        //     beforeSend: function () {
-        //
-        //     },
-        //     success: function (res) {
-        //         //console.log (res);
-        //
-        //         $("#status").html(res);
-        //     }
-        // })
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                $("#status").html(res);
+            }
+        })
     }

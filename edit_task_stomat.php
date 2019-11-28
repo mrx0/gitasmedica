@@ -1,7 +1,7 @@
 <?php
 
-//task_edit_stomat.php
-//Редактирование посещения косметолога
+//edit_task_edit_stomat.php
+//Редактирование посещения стоматолога
 
 	require_once 'header.php';
 	
@@ -36,7 +36,7 @@
 						<div id="status">
 							<header>
 								<h2>Редактировать посещение</h2>
-								<a href="zub_photo.php?id='.$_GET['id'].'" class="b">Снимки</a>
+								<a href="zub_photo.php?id='.$_GET['id'].'" class="b">Добавить снимки</a>
 							</header>';
 
 					echo '

@@ -94,7 +94,7 @@
                 }
                 //var_dump($sheduler_zapis);
 
-                //Если запись есть, а она дожна быть
+                //Если запись есть (а она должна быть)
                 if (!empty($sheduler_zapis)) {
 
                     $client_id = $sheduler_zapis[0]['patient'];
@@ -105,7 +105,7 @@
 
                     $get_client = $client_j[0]['full_name'];
 
-                    //Получаем последнюю ЗФ этого пациента (если есть)
+                    //Получаем последнюю ЗФ этого пациента (если есть), чтобы прошлые состояния зубов показать
                     $query = "SELECT * FROM `journal_tooth_status` WHERE `client` = '{$client_id}' ORDER BY `create_time` DESC LIMIT 1";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -179,7 +179,6 @@
                                 </div>';
                         echo '						
                                 <div class="cellsBlock3">
-                                    <!--<div class="cellLeft">Зубная формула</div>-->
                                     <div class="cellRight" id="teeth_map">';
 
                         //Разбиваем запись с ',' на массив и записываем в новый массив
@@ -347,7 +346,8 @@
                         //Комментарий
                         echo '
                                 <div class="cellsBlock3">
-                                    <span style="font-size: 80%;">Комментарий</span><br>
+                                    <div class="cellLeft">
+                                        <span style="font-size: 80%;">Комментарий</span><br>
                                         <textarea name="comment" id="comment" cols="50" rows="4"></textarea>
                                     </div>
                                 </div>';
@@ -419,7 +419,7 @@
                                         <div id="add_remove_here" style="display:none;">
                                             <table id="table_container">
                                             </table>
-                                            <a href="#modal1" class="open_modal b" id="">Добавить направление</a>
+                                            <a href="#modal1" class="open_modal b2" id="">Добавить направление</a>
                                             <!--<input type="button" class="b" value="Добавить поле" id="add" onclick="return add_new_image(' . $_SESSION['id'] . ');">-->
                                             <div id="mini"></div>
                                         </div>
@@ -427,7 +427,8 @@
                                 </div>';
 
                         echo '                                
-                                <input type="hidden" id="zapis_id" name="zapis_id" value="' . $zapis_id . '">
+                                <input type="hidden" id="zapis" name="zapis" value="' . $zapis_id . '">
+                                <input type="hidden" id="client" name="client" value="' . $client_id . '">
                                 <div id="errror"></div>
                                 <input type="button" class="b" value="Добавить" onclick=Ajax_add_task_stomat()>';
 
@@ -473,7 +474,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <a href="#" class="b" id="close_mdd" onclick="AddRemoveData()" style="">Направить</a>
+                                        <a href="#" class="b" id="close_mdd" onclick="AddRemoveData()" style="">Добавить</a>
                                     </td>
                                 </tr>
                             </table>
@@ -754,8 +755,8 @@
                             var arrayRemoveWorker = new Array();
                             var maxIndex = 1;
                             
-                            var input_title = document.getElementById("input_title").value;
-                            var search_client3 = document.getElementById("search_client3").value;
+                            var input_title = $("#input_title").val();
+                            var search_client3 = $("#search_client3").val();
                             //alert(input_title);
                             
                             $(".remove_add_search").each(function() {
@@ -815,18 +816,21 @@
                                 
                                 
                                 //$("#mini").append(this + "<br>");
+                                
                             });
-                            
-                            
-                            
-                                            //скрываем модальные окна
-                                            /*$("#modal1, #modal2") // все модальные окна
-                                                .animate({opacity: 0, top: "45%"}, 50, // плавно прячем
-                                                    function(){ // после этого
-                                                        $(this).css("display", "none");
-                                                        $("#overlay").fadeOut(50); // прячем подложку
-                                                    }
-                                                );*/
+                                    
+                            //скрываем модальные окна
+                            $("#modal1, #modal2") // все модальные окна
+                                .animate({opacity: 0, top: \'45%\'}, 50, // плавно прячем
+                            function(){ // после этого
+                                $(this).css(\'display\', \'none\');
+                                $(\'#overlay\').fadeOut(50); // прячем подложку
+                            }
+                            );
+                                    
+                            //Очистим поля ввода
+                            $("#input_title").val(""); 
+                            $("#search_client3").val("");
             
                         };
                     </script>
