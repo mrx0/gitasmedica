@@ -10,127 +10,300 @@
 		
 		if (($stom['edit'] == 1) || $god_mode){
 			if ($_GET){
+
 				include_once 'DBWork.php';
 				include_once 'functions.php';
 
                 require 'variables.php';
 
-				include_once 'tooth_status.php';
+                // !!! **** тест с записью
+                include_once 'showZapisRezult.php';
+
+                include_once 'tooth_status.php';
 				
-				$task = SelDataFromDB('journal_tooth_status', $_GET['id'], 'task');
+				//$task = SelDataFromDB('journal_tooth_status', $_GET['id'], 'task');
 				//var_dump($task);
 				
 				$closed = FALSE;
 				$dop = array();
+
+                $sheduler_zapis = array();
+
+                $task = array();
+
+                $msql_cnnct = ConnectToDB ();
+
+                //Получаем данные
+                $query = "
+                SELECT j_ts.*, j_tex.complaints, j_tex.objectively, j_tex.diagnosis, j_tex.therapy, j_tex.recommended FROM `journal_tooth_status` j_ts
+                 LEFT JOIN `journal_tooth_ex` j_tex ON j_tex.id = j_ts.id
+                WHERE j_ts.id = '{$_GET['id']}'";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        array_push($task, $arr);
+                    }
+
+                }
+                //var_dump($task);
 				
-				if ($task !=0){
-					if ($task[0]['office'] == 99){
-						$office = 'Во всех';
-					}else{
-						$offices = SelDataFromDB('spr_filials', '', '');
-						//var_dump ($offices);
-						//$office = $offices[0]['name'];
-					}	
+				if (!empty($task)){
+//					if ($task[0]['office'] == 99){
+//						$office = 'Во всех';
+//					}else{
+//						$offices = SelDataFromDB('spr_filials', '', '');
+//						//var_dump ($offices);
+//						//$office = $offices[0]['name'];
+//					}
+
+                    $zapis_id = $task[0]['zapis_id'];
+
+                    //Получаем данные по записи
+                    $query = "SELECT * FROM `zapis` WHERE `id`='".$zapis_id."' LIMIT 1";
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                    $number = mysqli_num_rows($res);
+                    if ($number != 0){
+                        while ($arr = mysqli_fetch_assoc($res)){
+                            array_push($sheduler_zapis, $arr);
+                        }
+                    }
+                    //var_dump($sheduler_zapis);
+
+                    //Если запись есть (а она должна быть, если ЗФ не очень старая, ведь раньше записи не было)
+                    if (!empty($sheduler_zapis)) {
+                        $client_id = $sheduler_zapis[0]['patient'];
+                        $filial_id = $sheduler_zapis[0]['office'];
+                    }else{
+                        $client_id = $task[0]['client'];
+                        $filial_id = $task[0]['office'];
+                    }
+
+
 					echo '
 						<script src="js/init.js" type="text/javascript"></script>
 						<div id="status">
 							<header>
-								<h2>Редактировать посещение</h2>
-								<a href="zub_photo.php?id='.$_GET['id'].'" class="b">Добавить снимки</a>
+								<h2>Редактировать посещение <a href="task_stomat_inspection.php?id='.$task[0]['id'].'" class="ahref">#'.$task[0]['id'].'</a></h2>
+								<!--<a href="zub_photo.php?id='.$_GET['id'].'" class="b">Добавить снимки</a>-->
 							</header>';
+
+                    //Надо найти клиента
+                    $client_j = SelDataFromDB ('spr_clients', $client_id, 'client_id');
+
+                    if ($client_j != 0){
+                        $client = $client_j[0]["name"];
+                        if ($client_j[0]["birthday"] != -1577934000){
+                            $cl_age = getyeardiff($client_j[0]["birthday"], 0);
+                        }else{
+                            $cl_age = 0;
+                        }
+                    }else{
+                        $client = 'unknown';
+                        $cl_age = 0;
+                    }
+
+                    //Перенесено сюда снизу
+                    //ЗО и тд
+                    $dop = array();
+
+                    $query = "SELECT * FROM `journal_tooth_status_temp` WHERE `id` = '{$task[0]['id']}'";
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                    $number = mysqli_num_rows($res);
+
+                    if ($number != 0){
+                        while ($arr = mysqli_fetch_assoc($res)){
+                            array_push($dop, $arr);
+                        }
+                    }
+
+                    include_once 't_surface_name.php';
+                    include_once 't_surface_status.php';
+
+                    $arr = array();
+                    $decription = $task[0];
+                    //var_dump($decription);
+
+                    unset($decription['id']);
+                    unset($decription['office']);
+                    unset($decription['client']);
+                    unset($decription['create_time']);
+                    unset($decription['create_person']);
+                    unset($decription['last_edit_time']);
+                    unset($decription['last_edit_person']);
+                    unset($decription['worker']);
+
+                    unset($decription['comment']);
+
+                    unset($decription['zapis_date']);
+                    unset($decription['zapis_id']);
+
+                    unset($decription['complaints']);
+                    unset($decription['objectively']);
+                    unset($decription['diagnosis']);
+                    unset($decription['therapy']);
+                    unset($decription['recommended']);
+                    //var_dump($decription);
+
+                    $t_f_data = array();
+
+                    //собрали массив с зубами и статусами по поверхностям
+                    foreach ($decription as $key => $value){
+                        $surfaces_temp = explode(',', $value);
+                        //var_dump($surfaces_temp);
+                        foreach ($surfaces_temp as $key1 => $value1){
+                            ///!!!Еба костыль
+                            if ($key1 < 13){
+                                $t_f_data[$key][$surfaces[$key1]] = $value1;
+                            }
+                        }
+                    }
+                    //var_dump ($t_f_data);
+
+                    if (!empty($dop[0])){
+                        //var_dump($dop[0]);
+
+                        unset($dop[0]['id']);
+                        //var_dump($dop[0]);
+
+                        foreach($dop[0] as $key => $value){
+                            //var_dump($value);
+
+                            if ($value != '0'){
+                                //var_dump($value);
+
+                                $dop_arr = json_decode($value, true);
+                                //var_dump($dop_arr);
+
+                                foreach ($dop_arr as $n_key => $n_value){
+                                    if ($n_key == 'zo'){
+                                        $t_f_data[$key]['zo'] = $n_value;
+                                        //$t_f_data_draw[$key]['zo'] = $n_value;
+                                    }
+                                    if ($n_key == 'shinir'){
+                                        $t_f_data[$key]['shinir'] = $n_value;
+                                        //$t_f_data_draw[$key]['shinir'] = $n_value;
+                                    }
+                                    if ($n_key == 'podvizh'){
+                                        $t_f_data[$key]['podvizh'] = $n_value;
+                                        //$t_f_data_draw[$key]['podvizh'] = $n_value;
+                                    }
+                                    if ($n_key == 'retein'){
+                                        $t_f_data[$key]['retein'] = $n_value;
+                                        //$t_f_data_draw[$key]['retein'] = $n_value;
+                                    }
+                                    if ($n_key == 'skomplect'){
+                                        $t_f_data[$key]['skomplect'] = $n_value;
+                                        //$t_f_data_draw[$key]['skomplect'] = $n_value;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    //var_dump ($t_f_data);
+
+                    //Показываем карточку записи
+                    echo showZapisRezult($sheduler_zapis, false, false, false, false, false, false, 0, false, false);
 
 					echo '
 							<div id="data">';
-							
-					/*if ($task[0]['end_time'] == 0){
-						$ended = 'Нет';
-						$closed = FALSE;
-					}else{
-						$ended = date('d.m.y H:i', $task[0]['end_time']);
-						$closed = TRUE;
-					}*/
-					if (!$closed){
-					
-						echo '
-									<form action="edit_task_stomat_f.php">
-										<div class="cellsBlock2">
-											<div class="cellLeft">
-												Время посещения<br>
-												<span style="font-size:70%;">
-													Согласно записи
-												</span>
-											</div>
-											<div class="cellRight">';
-						if ($task[0]['zapis_date'] != 0){
-							echo date('d.m.y H:i', $task[0]['zapis_date']);
-						}else{
-							echo 'не было привязано к записи';
-						}
-						echo '
-											</div>
-										</div>
-										<div class="cellsBlock2" style="display: none">
-											<div class="cellLeft">Дата посещения</div>
-											<div class="cellRight">';
-				if ($task[0]['create_time'] != 0){
-					//print_r  (getdate($client[0]['birthday']));
-					$bdate = getdate($task[0]['create_time']);
-					echo '
-						<input type="hidden" id="sel_seconds" name="sel_seconds" value="'.$bdate['seconds'].'">
-						<input type="hidden" id="sel_minutes" name="sel_minutes" value="'.$bdate['minutes'].'">
-						<input type="hidden" id="sel_hours" name="sel_hours" value="'.$bdate['hours'].'">';
-				}else{
-					$bdate = 0;
-				}
-				echo '<select name="sel_date" id="sel_date">';
-				$i = 1;
-				while ($i <= 31) {
-					echo "<option value='" . $i . "'", $bdate['mday'] == $i ? ' selected':'' ,">$i</option>";
-					$i++;
-				}
-				echo "</select>";
-				// Месяц
-				echo "<select name='sel_month' id='sel_month'>";
-				$month = array(
-					"Январь",
-					"Февраль",
-					"Март",
-					"Апрель",
-					"Май",
-					"Июнь",
-					"Июль",
-					"Август",
-					"Сентябрь",
-					"Октябрь",
-					"Ноябрь",
-					"Декабрь"
-				);
-				foreach ($month as $m => $n) {
-					echo "<option value='" . ($m + 1) . "'", ($bdate['mon'] == ($m + 1)) ? ' selected':'' ,">$n</option>";
-				}
-				echo "</select>";
-				// Год
-				echo "<select name='sel_year' id='sel_year'>";
-				$j = 1920;
-				while ($j <= 2020) {
-					echo "<option value='" . $j . "'", $bdate['year'] == $j ? ' selected':'' ,">$j</option>";
-					$j++;
-				}
-				echo '</select>
 
-											
-											</div>
-										</div>
-																				
-										<div class="cellsBlock2">
-											<div class="cellLeft">Врач</div>
-											<div class="cellRight">'.WriteSearchUser('spr_workers',$task[0]['worker'], 'user', true).'</div>
-										</div>
-										
-										<div class="cellsBlock2">
-											<div class="cellLeft">Пациент</div>
-											<div class="cellRight">'.WriteSearchUser('spr_clients', $task[0]['client'], 'user', true).'</div>
-										</div>';
+					if (!$closed){
+
+                        echo '
+                                <div class="cellsBlock3">
+                                    <div class="cellLeft">
+                                        <span style="font-size:80%;  color: #555;">Зубная формула</span><br>
+                                    </div>
+                                </div>';
+					
+//						echo '
+//									<form action="edit_task_stomat_f.php">
+//										<div class="cellsBlock2">
+//											<div class="cellLeft">
+//												Время посещения<br>
+//												<span style="font-size:70%;">
+//													Согласно записи
+//												</span>
+//											</div>
+//											<div class="cellRight">';
+//						if ($task[0]['zapis_date'] != 0){
+//							echo date('d.m.y H:i', $task[0]['zapis_date']);
+//						}else{
+//							echo 'не было привязано к записи';
+//						}
+//						echo '
+//											</div>
+//										</div>
+//										<div class="cellsBlock2" style="display: none">
+//											<div class="cellLeft">Дата посещения</div>
+//											<div class="cellRight">';
+//				if ($task[0]['create_time'] != 0){
+//					//print_r  (getdate($client[0]['birthday']));
+//					$bdate = getdate($task[0]['create_time']);
+//					echo '
+//						<input type="hidden" id="sel_seconds" name="sel_seconds" value="'.$bdate['seconds'].'">
+//						<input type="hidden" id="sel_minutes" name="sel_minutes" value="'.$bdate['minutes'].'">
+//						<input type="hidden" id="sel_hours" name="sel_hours" value="'.$bdate['hours'].'">';
+//				}else{
+//					$bdate = 0;
+//				}
+//				echo '<select name="sel_date" id="sel_date">';
+//				$i = 1;
+//				while ($i <= 31) {
+//					echo "<option value='" . $i . "'", $bdate['mday'] == $i ? ' selected':'' ,">$i</option>";
+//					$i++;
+//				}
+//				echo "</select>";
+//				// Месяц
+//				echo "<select name='sel_month' id='sel_month'>";
+//				$month = array(
+//					"Январь",
+//					"Февраль",
+//					"Март",
+//					"Апрель",
+//					"Май",
+//					"Июнь",
+//					"Июль",
+//					"Август",
+//					"Сентябрь",
+//					"Октябрь",
+//					"Ноябрь",
+//					"Декабрь"
+//				);
+//				foreach ($month as $m => $n) {
+//					echo "<option value='" . ($m + 1) . "'", ($bdate['mon'] == ($m + 1)) ? ' selected':'' ,">$n</option>";
+//				}
+//				echo "</select>";
+//				// Год
+//				echo "<select name='sel_year' id='sel_year'>";
+//				$j = 1920;
+//				while ($j <= 2020) {
+//					echo "<option value='" . $j . "'", $bdate['year'] == $j ? ' selected':'' ,">$j</option>";
+//					$j++;
+//				}
+//				echo '</select>
+//
+//
+//											</div>
+//										</div>
+//
+//										<div class="cellsBlock2">
+//											<div class="cellLeft">Врач</div>
+//											<div class="cellRight">'.WriteSearchUser('spr_workers',$task[0]['worker'], 'user', true).'</div>
+//										</div>
+//
+//										<div class="cellsBlock2">
+//											<div class="cellLeft">Пациент</div>
+//											<div class="cellRight">'.WriteSearchUser('spr_clients', $task[0]['client'], 'user', true).'</div>
+//										</div>';
 
                 /*echo '
 										<div class="cellsBlock2">
@@ -148,87 +321,94 @@
 											</div>
 										</div>';*/
 
-                echo '						
-										<div class="cellsBlock2">
-											<div class="cellLeft">Филиал</div>
-											<div class="cellRight">';
-
-                $offices_j = SelDataFromDB('spr_filials', $task[0]['office'] , 'offices');
-
-                echo $offices_j[0]['name'].'<input type="hidden" id="filial" name="filial" value="'.$task[0]['office'] .'">';
-
-                echo '
-											</div>
-										</div>';
-
-				echo '
-										<div class="cellsBlock2">
-											<div class="cellLeft">Описание</div>
-											<div class="cellRight">
-											</div>
-										</div>
-										';
+//                echo '
+//										<div class="cellsBlock2">
+//											<div class="cellLeft">Филиал</div>
+//											<div class="cellRight">';
+//
+//                $offices_j = SelDataFromDB('spr_filials', $task[0]['office'] , 'offices');
+//
+//                echo $offices_j[0]['name'].'<input type="hidden" id="filial" name="filial" value="'.$task[0]['office'] .'">';
+//
+//                echo '
+//											</div>
+//										</div>';
+//
+//				echo '
+//										<div class="cellsBlock2">
+//											<div class="cellLeft">Описание</div>
+//											<div class="cellRight">
+//											</div>
+//										</div>
+//										';
 					
-						$t_f_data_db_temp = array();
+//						$t_f_data_db_temp = array();
 						
-						require 'config.php';
-						mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-						mysql_select_db($dbName) or die(mysql_error()); 
-						mysql_query("SET NAMES 'utf8'");
-						$time = time();
-						$query = "SELECT * FROM `journal_tooth_status` WHERE `id` = '{$_GET['id']}'";
-						$res = mysql_query($query) or die($q);
-						$number = mysql_num_rows($res);
-						if ($number != 0){
-							while ($arr = mysql_fetch_assoc($res)){
-								array_push($t_f_data_db_temp, $arr);
-							}
-							$t_f_data_db = $t_f_data_db_temp[0];
-						}else
-							$t_f_data_db = $t_f_data_db_first;
-						
-						
-						//ЗО и тд						
-						$query = "SELECT * FROM `journal_tooth_status_temp` WHERE `id` = '{$task[0]['id']}'";
-						$res = mysql_query($query) or die($query);
-						$number = mysql_num_rows($res);
-						if ($number != 0){
-							while ($arr = mysql_fetch_assoc($res)){
-								array_push($dop, $arr);
-							}
-							
-						}						
-						
+//						require 'config.php';
+//						mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+//						mysql_select_db($dbName) or die(mysql_error());
+//						mysql_query("SET NAMES 'utf8'");
 
+//						$time = time();
 
-						
-						$client = $t_f_data_db['client'];
+//						$query = "SELECT * FROM `journal_tooth_status` WHERE `id` = '{$_GET['id']}'";
+//
+//                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//                        $number = mysqli_num_rows($res);
+//
+//						if ($number != 0){
+//                            while ($arr = mysqli_fetch_assoc($res)){
+//								array_push($t_f_data_db_temp, $arr);
+//							}
+//							$t_f_data_db = $t_f_data_db_temp[0];
+//						}else
+//							$t_f_data_db = $t_f_data_db_first;
+//
+//
+//
+//
+//						//ЗО и тд
+//						$query = "SELECT * FROM `journal_tooth_status_temp` WHERE `id` = '{$task[0]['id']}'";
+//
+//						$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//                        $number = mysqli_num_rows($res);
+//
+//						if ($number != 0){
+//                            while ($arr = mysqli_fetch_assoc($res)){
+//								array_push($dop, $arr);
+//							}
+//
+//						}
+
+//						$client = $t_f_data_db['client'];
 						
 						//var_dump ($t_f_data_db);
 						
-						unset($t_f_data_db['id']);
-						unset($t_f_data_db['office']);
-						unset($t_f_data_db['client']);
-						unset($t_f_data_db['create_time']);
-						unset($t_f_data_db['create_person']);
-						unset($t_f_data_db['last_edit_time']);
-						unset($t_f_data_db['last_edit_person']);
-						unset($t_f_data_db['worker']);
-						unset($t_f_data_db['comment']);
-						unset($t_f_data_db['zapis_date']);
-						unset($t_f_data_db['zapis_id']);
-						
-						
-						//Разбиваем запись с ',' на массив и записываем в новый массив
-						foreach ($t_f_data_db as $key => $value){
-							$surfaces_temp = explode(',', $value);
-							foreach ($surfaces_temp as $key1 => $value1){
-								///!!!Еба костыль
-								if ($key1 < 13){
-									$t_f_data[$key][$surfaces[$key1]] = $value1;
-								}
-							}
-						}
+//						unset($t_f_data_db['id']);
+//						unset($t_f_data_db['office']);
+//						unset($t_f_data_db['client']);
+//						unset($t_f_data_db['create_time']);
+//						unset($t_f_data_db['create_person']);
+//						unset($t_f_data_db['last_edit_time']);
+//						unset($t_f_data_db['last_edit_person']);
+//						unset($t_f_data_db['worker']);
+//						unset($t_f_data_db['comment']);
+//						unset($t_f_data_db['zapis_date']);
+//						unset($t_f_data_db['zapis_id']);
+//
+//
+//						//Разбиваем запись с ',' на массив и записываем в новый массив
+//						foreach ($t_f_data_db as $key => $value){
+//							$surfaces_temp = explode(',', $value);
+//							foreach ($surfaces_temp as $key1 => $value1){
+//								///!!!Еба костыль
+//								if ($key1 < 13){
+//									$t_f_data[$key][$surfaces[$key1]] = $value1;
+//								}
+//							}
+//						}
 						
 						//var_dump ($t_f_data);
 						/*unset($t_f_data['id']);
@@ -244,53 +424,51 @@
 						//unset($dop[0]['id']);
 						
 						//var_dump ($t_f_data);
-						if (!empty($dop[0])){
-							//var_dump($dop[0]);
-							unset($dop[0]['id']);
-							//var_dump($dop[0]);
-							foreach($dop[0] as $key => $value){
-								//var_dump($value);
-								if ($value != '0'){
-									//var_dump($value);
-									$dop_arr = json_decode($value, true);
-									//var_dump($dop_arr);
-									foreach ($dop_arr as $n_key => $n_value){
-										if ($n_key == 'zo'){
-											$t_f_data[$key]['zo'] = $n_value;
-											//$t_f_data_draw[$key]['zo'] = $n_value;
-										}
-										if ($n_key == 'shinir'){
-											$t_f_data[$key]['shinir'] = $n_value;
-											//$t_f_data_draw[$key]['shinir'] = $n_value;
-										}
-										if ($n_key == 'podvizh'){
-											$t_f_data[$key]['podvizh'] = $n_value;
-											//$t_f_data_draw[$key]['podvizh'] = $n_value;
-										}
-										if ($n_key == 'retein'){
-											$t_f_data[$key]['retein'] = $n_value;
-											//$t_f_data_draw[$key]['retein'] = $n_value;
-										}
-										if ($n_key == 'skomplect'){
-											$t_f_data[$key]['skomplect'] = $n_value;
-											//$t_f_data_draw[$key]['skomplect'] = $n_value;
-										}
-									}
-								}
-							}
-						}
+//						if (!empty($dop[0])){
+//							//var_dump($dop[0]);
+//							unset($dop[0]['id']);
+//							//var_dump($dop[0]);
+//							foreach($dop[0] as $key => $value){
+//								//var_dump($value);
+//								if ($value != '0'){
+//									//var_dump($value);
+//									$dop_arr = json_decode($value, true);
+//									//var_dump($dop_arr);
+//									foreach ($dop_arr as $n_key => $n_value){
+//										if ($n_key == 'zo'){
+//											$t_f_data[$key]['zo'] = $n_value;
+//											//$t_f_data_draw[$key]['zo'] = $n_value;
+//										}
+//										if ($n_key == 'shinir'){
+//											$t_f_data[$key]['shinir'] = $n_value;
+//											//$t_f_data_draw[$key]['shinir'] = $n_value;
+//										}
+//										if ($n_key == 'podvizh'){
+//											$t_f_data[$key]['podvizh'] = $n_value;
+//											//$t_f_data_draw[$key]['podvizh'] = $n_value;
+//										}
+//										if ($n_key == 'retein'){
+//											$t_f_data[$key]['retein'] = $n_value;
+//											//$t_f_data_draw[$key]['retein'] = $n_value;
+//										}
+//										if ($n_key == 'skomplect'){
+//											$t_f_data[$key]['skomplect'] = $n_value;
+//											//$t_f_data_draw[$key]['skomplect'] = $n_value;
+//										}
+//									}
+//								}
+//							}
+//						}
 						
 						//var_dump ($t_f_data);		
 						
 						//!!!Тест. Пробуем записать в сессию.
-						$_SESSION['journal_tooth_status_temp'][$client] = $t_f_data;
+						$_SESSION['journal_tooth_status_temp'][$client_id] = $t_f_data;
+						//var_dump($_SESSION['journal_tooth_status_temp']);
 						
 						//var_dump($_SESSION);
 						
 						echo '						
-								<div class="cellsBlock3">
-									<div class="cellRight">Зубная формула</div>
-								</div>
 								<div class="cellsBlock3">
 									<div class="cellRight" id="teeth_map">';
 									
@@ -302,19 +480,66 @@
 									</div>
 								</div>';
 					
-						echo '
-										
-										
-										<div class="cellsBlock2">
-											<div class="cellLeft">Комментарий</div>
-											<div class="cellRight">
-												<textarea name="comment" id="comment" cols="35" rows="10" style="vertical-align:top; text-align:left;">'
-												.$task[0]['comment'].
-												'</textarea>
-											</div>
-										</div>';
+
+                        //Жалобы
+                        echo '
+                                <div class="cellsBlock3">
+                                    <div class="cellLeft">
+        							    <span style="font-size: 80%; font-weight: bold;">Жалобы</span><br>
+                                        <textarea name="complaints" id="complaints" cols="80" rows="4">'.$task[0]['complaints'].'</textarea>
+                                    </div>
+                                </div>';
+
+                        //Объективно
+                        echo '
+                                <div class="cellsBlock3">
+                                    <div class="cellLeft">
+        							    <span style="font-size: 80%; font-weight: bold;">Объективно</span><br>
+                                        <textarea name="objectively" id="objectively" cols="80" rows="6">'.$task[0]['objectively'].'</textarea>
+                                    </div>
+                                </div>';
+
+                        //Диагноз
+                        echo '
+                                <div class="cellsBlock3">
+                                    <div class="cellLeft">
+        							    <span style="font-size: 80%; font-weight: bold;">Диагноз</span><br>
+                                        <textarea name="diagnosis" id="diagnosis" cols="80" rows="2">'.$task[0]['diagnosis'].'</textarea>
+                                    </div>
+                                </div>';
+
+                        //Лечение
+                        echo '
+                                <div class="cellsBlock3">
+                                    <div class="cellLeft">
+        							    <span style="font-size: 80%; font-weight: bold;">Лечение</span><br>
+                                        <textarea name="therapy" id="therapy" cols="80" rows="6">'.$task[0]['therapy'].'</textarea>
+                                    </div>
+                                </div>';
+
+                        //Рекомендовано
+                        echo '
+                                <div class="cellsBlock3">
+                                    <div class="cellLeft">
+        							    <span style="font-size: 80%; font-weight: bold;">Рекомендовано</span><br>
+                                        <textarea name="recommended" id="recommended" cols="80" rows="5">'.$task[0]['recommended'].'</textarea>
+                                    </div>
+                                </div>';
+
+                        //Комментарий
+                        echo '
+                                <div class="cellsBlock3">
+                                    <div class="cellLeft">
+                                        <span style="font-size: 80%;">Комментарий</span><br>
+                                            <textarea name="comment" id="comment" cols="50" rows="4">'.$task[0]['comment'].'</textarea>
+                                    </div>
+                                </div>';
+
+
+
 						//Напоминания / особые отметки				
 						$notes = SelDataFromDB ('notes', $_GET['id'], 'task');
+
 						if ($notes != 0){
 							echo '
 							<div class="cellsBlock2">
@@ -380,7 +605,8 @@
 							</div>
 							';
 						}
-										
+
+                        //Направления
 						$removes = SelDataFromDB ('removes', $task[0]['id'], 'task');
 
 						echo WriteRemoves($removes, 0, 0, false);
@@ -401,58 +627,79 @@
 								</div>
 							</div>
 							';
-						
-						//Первичка
-						$dop = array();
-						$query = "SELECT * FROM `journal_tooth_ex` WHERE `id` = '{$task[0]['id']}'";
-						$res = mysql_query($query) or die($query);
-						$number = mysql_num_rows($res);
-						if ($number != 0){
-							while ($arr = mysql_fetch_assoc($res)){
-								array_push($dop, $arr);
-							}
-							
-						}	
-						
-						if (!empty($dop) && ($dop[0]['pervich'] == 1)){
-							$checked_pervich = ' checked';
-						}else{
-							$checked_pervich = '';
-						}
-						if (!empty($dop) && ($dop[0]['insured'] == 1)){
-							$checked_insured = ' checked';
-						}else{
-							$checked_insured = '';
-						}
-						if (!empty($dop) && ($dop[0]['noch'] == 1)){
-							$checked_noch = ' checked';
-						}else{
-							$checked_noch = '';
-						}
-						
-						echo '
-							<div class="cellsBlock3">
-								<div class="cellLeft">Первичный</div>
-								<div class="cellRight">
-									<input type="checkbox" name="pervich" id="pervich" value="1" '.$checked_pervich.'> да
-								</div>
-							</div>';
-						echo '
-							<div class="cellsBlock3">
-								<div class="cellLeft">Страховой</div>
-								<div class="cellRight">
-									<input type="checkbox" name="insured" id="insured" value="1" '.$checked_insured.'> да
-								</div>
-							</div>';
-						echo '
-							<div class="cellsBlock3">
-								<div class="cellLeft">Ночной</div>
-								<div class="cellRight">
-									<input type="checkbox" name="noch" id="noch" value="1" '.$checked_noch.'> да
-								</div>
-							</div>';
-							
-						mysql_close();	
+//
+//                        echo '
+//                            <div class="cellsBlock3" style="margin-bottom: 10px;">
+//                                <span style="font-size: 80%; color: #999;">
+//                                    Создан: '.date('d.m.y H:i', $task[0]['create_time']).' пользователем
+//                                    '.WriteSearchUser('spr_workers', $task[0]['create_person'], 'user', true).'';
+//                        if ((($task[0]['last_edit_time'] != 0) || ($task[0]['last_edit_person'] !=0)) && (($task[0]['create_time'] != $task[0]['last_edit_time']))){
+//                            echo '
+//                                    <br>
+//                                    Редактировался: '.date('d.m.y H:i', $task[0]['last_edit_time']).' пользователем
+//                                    '.WriteSearchUser('spr_workers', $task[0]['last_edit_person'], 'user', true).'';
+//                        }
+//                        echo '
+//                                </span>
+//                            </div>';
+
+
+
+//                        //Первичка
+//						$dop = array();
+//
+//						$query = "SELECT * FROM `journal_tooth_ex` WHERE `id` = '{$task[0]['id']}'";
+//
+//						$res = mysql_query($query) or die($query);
+//
+//						$number = mysql_num_rows($res);
+//						if ($number != 0){
+//							while ($arr = mysql_fetch_assoc($res)){
+//								array_push($dop, $arr);
+//							}
+//
+//						}
+//
+//						if (!empty($dop) && ($dop[0]['pervich'] == 1)){
+//							$checked_pervich = ' checked';
+//						}else{
+//							$checked_pervich = '';
+//						}
+//						if (!empty($dop) && ($dop[0]['insured'] == 1)){
+//							$checked_insured = ' checked';
+//						}else{
+//							$checked_insured = '';
+//						}
+//						if (!empty($dop) && ($dop[0]['noch'] == 1)){
+//							$checked_noch = ' checked';
+//						}else{
+//							$checked_noch = '';
+//						}
+//
+//						echo '
+//							<div class="cellsBlock3">
+//								<div class="cellLeft">Первичный</div>
+//								<div class="cellRight">
+//									<input type="checkbox" name="pervich" id="pervich" value="1" '.$checked_pervich.'> да
+//								</div>
+//							</div>';
+//						echo '
+//							<div class="cellsBlock3">
+//								<div class="cellLeft">Страховой</div>
+//								<div class="cellRight">
+//									<input type="checkbox" name="insured" id="insured" value="1" '.$checked_insured.'> да
+//								</div>
+//							</div>';
+//						echo '
+//							<div class="cellsBlock3">
+//								<div class="cellLeft">Ночной</div>
+//								<div class="cellRight">
+//									<input type="checkbox" name="noch" id="noch" value="1" '.$checked_noch.'> да
+//								</div>
+//							</div>';
+//
+//						mysql_close();
+
 						echo '
 										<br />
 										<div class="cellsBlock2">

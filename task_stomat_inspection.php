@@ -134,8 +134,7 @@
 					}
 					
 					//Перенесено сюда снизу
-					
-					//ЗО и тд	
+					//ЗО и тд
 					$dop = array();
 
 					$query = "SELECT * FROM `journal_tooth_status_temp` WHERE `id` = '{$task[0]['id']}'";
@@ -385,18 +384,19 @@
                     if ($prev_tooth_status_id != 0) {
                         echo '
                         <div class="cellsBlock2">
-                        <!--<a href = "task_stomat_inspection.php?id='.$prev_tooth_status_id.'" class="ahref" style="font-weight:bold; font-size: 80%; color: #353535;">
-                        Открыть предыдущую</i>
-                        </a>-->
+                            <!--<a href = "task_stomat_inspection.php?id='.$prev_tooth_status_id.'" class="ahref" style="font-weight:bold; font-size: 80%; color: #353535;">
+                                Открыть предыдущую</i>
+                            </a>-->
                         </div>
                         <div class="cellsBlock2" style="margin-bottom: 10px;">
-                        <a href = "#" onclick = "window.open(\'task_stomat_inspection_window.php?id='.$prev_tooth_status_id.'\',\'test\', \'width=700,height=350,status=no,resizable=no,top=200,left=200\'); return false;" class="ahref" style="font-weight:bold; font-size: 80%; color: #353535;">
-                        Открыть предыдущую ЗФ в новом окне <i class="fa fa-external-link" aria-hidden="true"></i>
-                        </a>
-                        </div>
+                            <a href = "#" onclick = "window.open(\'task_stomat_inspection_window.php?id='.$prev_tooth_status_id.'\',\'test\', \'width=700,height=350,status=no,resizable=no,top=200,left=200\'); return false;" class="ahref" style="font-weight:bold; font-size: 80%; color: #353535;">
+                                Открыть предыдущую ЗФ в новом окне <i class="fa fa-external-link" aria-hidden="true"></i>
+                            </a>
+                            </div>
                         <div>
                         ';
                     }
+
 
                     if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
                         echo '	
