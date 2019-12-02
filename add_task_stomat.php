@@ -15,15 +15,19 @@
 			include_once 'functions.php';
 
             require 'variables.php';
-			
+
+            // !!! **** тест с записью
+            include_once 'showZapisRezult.php';
+
 			include_once 'tooth_status.php';
 
-            $msql_cnnct = ConnectToDB ();
+            $filials_j = getAllFilials(true, false, true);
+            //var_dump($filials_j);
+
+            $sheduler_zapis = array();
 			
-			//$offices = SelDataFromDB('spr_filials', '', '');
-			
-			$post_data = '';
-			$js_data = '';
+			//$post_data = '';
+			//$js_data = '';
 			$dop = array();
 			$t_f_data_draw = array();
 			$first_db = TRUE;
@@ -70,229 +74,112 @@
 			
 			//var_dump($_GET);
 			
-			//Если у нас по GET передали клиента
-			$get_client = '';
-			if (isset($_GET['client']) && ($_GET['client'] != '')){
-				$client_j = SelDataFromDB('spr_clients', $_GET['client'], 'user');
-				if ($client_j !=0){
-					$get_client = $client_j[0]['full_name'];
+			//Если у нас по GET передали ID записи
+			if (isset($_GET['zapis_id'])){
 
+                $msql_cnnct = ConnectToDB ();
 
-					$time = time();
+                $zapis_id = $_GET['zapis_id'];
 
-					$query = "SELECT * FROM `journal_tooth_status` WHERE `client` = '{$_GET['client']}' ORDER BY `create_time` DESC LIMIT 1";
+			    //Получаем данные по записи
+                $query = "SELECT * FROM `zapis` WHERE `id`='".$zapis_id."' LIMIT 1";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        array_push($sheduler_zapis, $arr);
+                    }
+                }
+                //var_dump($sheduler_zapis);
+
+                //Если запись есть (а она должна быть)
+                if (!empty($sheduler_zapis)) {
+
+                    $client_id = $sheduler_zapis[0]['patient'];
+                    $filial_id = $sheduler_zapis[0]['office'];
+
+                    //Получаем все данные по клиенту
+                    $client_j = SelDataFromDB('spr_clients', $client_id, 'user');
+
+                    $get_client = $client_j[0]['full_name'];
+
+                    //Получаем последнюю ЗФ этого пациента (если есть), чтобы прошлые состояния зубов показать
+                    $query = "SELECT * FROM `journal_tooth_status` WHERE `client` = '{$client_id}' ORDER BY `create_time` DESC LIMIT 1";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-					$number = mysqli_num_rows($res);
-					if ($number != 0){
-						while ($arr = mysqli_fetch_assoc($res)){
-							array_push($t_f_data_db_temp, $arr);
-						}
-						$t_f_data_db = $t_f_data_db_temp[0];
-						$first_db = FALSE;
-					}else{
-						$t_f_data_db = $t_f_data_db_first;
-					}
-					//mysql_close();
-					
-					
-					
-					
-				}
-				
-			}else{
-				$t_f_data_db = $t_f_data_db_first;
-				//$first_db = FALSE;
-			}
-			
-			if (isset($_GET['filial'])){
-				$selected_fil = $_GET['filial'];
-			}else{
-				//Автоматизация выбора филиала
-				/*if (isset($_SESSION['filial']) && !empty($_SESSION['filial'])){
-					$selected_fil = $_SESSION['filial'];
-				}else{
-					$selected_fil = 0;
-				}*/
+                    $number = mysqli_num_rows($res);
 
-                $selected_fil = 0;
-			}
-			
-			if (isset($_GET['pervich']) && (($_GET['pervich'] == 1) || ($_GET['pervich'] == 2))){
-				$pervich_check = ' checked';
-			}else{
-				$pervich_check = '';			
-			}
-			
-			if (isset($_GET['insured']) && ($_GET['insured'] == 1)){
-				$insured_check = ' checked';
-			}else{
-				$insured_check = '';			
-			}
-			
-			if (isset($_GET['noch']) && ($_GET['noch'] == 1)){
-				$noch_check = ' checked';
-			}else{
-				$noch_check = '';			
-			}
-			
-			if (isset($_GET['date'])){
-				$zapis_date = date('d.m.y H:i', $_GET['date']);
-				$zapis_date_hidden = $_GET['date'];
-			}else{
-				$zapis_date = date('d.m.y H:i', time());		
-				$zapis_date_hidden = time();
-			}
-			
-			if (isset($_GET['id'])){
-				$zapis_id = $_GET['id'];
-			}else{
-				$zapis_id = 0;
-			}
-			
-			//$t_f_data_db = $t_f_data_db_temp;
+                    if ($number != 0) {
+                        while ($arr = mysqli_fetch_assoc($res)) {
+                            array_push($t_f_data_db_temp, $arr);
+                        }
+                        $t_f_data_db = $t_f_data_db_temp[0];
+                        $first_db = FALSE;
+                    } else {
+                        $t_f_data_db = $t_f_data_db_first;
+                    }
 
-            if (($client_j != 0) && ($selected_fil != 0)){
-                if (
-                    ($client_j[0]['card'] == NULL) ||
-                    ($client_j[0]['birthday2'] == '0000-00-00') ||
-                    ($client_j[0]['sex'] == 0) ||
-                    ($client_j[0]['address'] == NULL)
-                ){
-                    echo '<div class="query_neok">В <a href="client.php?id='.$_GET['client'].'">карточке пациента</a> не заполнены все необходимые графы.</div>';
-                }else {
+                    //Если карточка пациента не заполнена
+                    if (
+                        ($client_j[0]['card'] == NULL) ||
+                        ($client_j[0]['birthday2'] == '0000-00-00') ||
+                        ($client_j[0]['sex'] == 0) ||
+                        ($client_j[0]['address'] == NULL)
+                    ){
+                        echo '<div class="query_neok">В <a href="client.php?id='.$client_id.'">карточке пациента</a> не заполнены все необходимые графы.</div>';
+                    }else {
 
-                    echo '
+                        echo '
                         <script src="js/init.js" type="text/javascript"></script>
                         <div id="status">
                             <header>
-                                <h2>Добавить осмотр пациенту: '.WriteSearchUser('spr_clients', $client_j[0]['id'], 'user', true).'</h2>';
+                                <h2>Добавить осмотр пациенту: <a href="client.php?id='.$client_id.'" class="ahref">'.$get_client.'</a></h2>';
 
-                    //переменная для просроченных
-                    $allPayed = true;
+                        //переменная для просроченных
+                        $allPayed = true;
 
-                    //Долги/авансы
-                    //
-                    //!!! @@@
-                    //Баланс контрагента
-                    include_once 'ffun.php';
-                    //$client_balance = json_decode(calculateBalance ($client_j[0]['id']), true);
-                    //Долг контрагента
-                    $client_debt = json_decode(calculateDebt ($client_j[0]['id']), true);
+                        //Долги/авансы
+                        //
+                        //!!! @@@
+                        //Баланс контрагента
+                        include_once 'ffun.php';
 
-                    if ($client_debt['summ'] > 0){
-                        $allPayed = false;
-                    }
+                        //Долг контрагента
+                        $client_debt = json_decode(calculateDebt ($client_id), true);
 
+                        if ($client_debt['summ'] > 0){
+                            $allPayed = false;
+                        }
 
-                    if (!$allPayed) {
-                        echo '
+                        //Если есть долги
+                        if (!$allPayed) {
+                            echo '
                             <div style="color: red; font-size: 13px;">
 							    <span style="font-size: 17px;"><i class="fa fa-exclamation-circle" aria-hidden="true" title="Есть долги"></i></span> У пациента есть долги.
                             </div>';
-                    }
+                        }
 
-                    echo '            
-                                Заполните поля
+                        echo ' 
                             </header>';
 
-                    echo '
+                        //Показываем карточку записи
+                        echo showZapisRezult($sheduler_zapis, false, false, false, false, false, false, 0, false, false);
+
+                        echo '
                             <div id="data">';
 
-                    echo '
-                                <form action="add_task_stomat_f.php">';
-                    echo '		
-                                    <div class="cellsBlock3">
-                                        <div class="cellLeft">
-                                            Время посещения<br>
-                                            <span style="font-size:70%;">
-                                                Согласно записи
-                                            </span>
-                                        </div>
-                                        <div class="cellRight">
-                                            ' . $zapis_date . '
-                                        </div>
-                                    </div>';
-
-                    if (($stom['add_new'] == 1) || $god_mode) {
-                        if (isset($_GET['worker'])) {
-                            $workerEcho = WriteSearchUser('spr_workers', $_GET['worker'], 'user_full', false);
-                        } else {
-                            $workerEcho = '';
-                        }
                         echo '
-                                    <div style="margin-bottom: 10px; color: #777; font-size: 90%;">Необходимо выбрать исполнителя</div>
-                                    <div class="cellsBlock3" style="margin-bottom: 20px;">
-                                        <div class="cellLeft">Исполнитель</div>
-                                        <div class="cellRight">
-                                            <input type="text" size="50" name="searchdata2" id="search_worker" placeholder="Введите первые три буквы для поиска" value="' . $workerEcho . '" class="who2"  autocomplete="off">
-                                            <ul id="search_result2" class="search_result2"></ul><br />
-                                            <label id="worker_error" class="error"></label>
-                                        </div>
-                                    </div>';
-                    }
-
-                    /*echo '
-                                    <div class="cellsBlock3">
-                                        <div class="cellLeft">Филиал</div>
-                                        <div class="cellRight">
-                                            <select name="filial" id="filial">
-                                                <option value="0" selected>Выберите филиал</option>';
-                    if ($offices != 0) {
-                        for ($i = 0; $i < count($offices); $i++) {
-                            echo "<option value='" . $offices[$i]['id'] . "' ", $selected_fil == $offices[$i]['id'] ? "selected" : "", ">" . $offices[$i]['name'] . "</option>";
-                        }
-                    }
-                    echo '
-                                            </select>
-                                            <label id="filial_error" class="error"></label>
-                                        </div>
-                                    </div>';*/
-
-                    echo '
-                                    <div class="cellsBlock3">
-                                        <div class="cellLeft">Филиал</div>
-                                        <div class="cellRight">';
-                    $offices_j = SelDataFromDB('spr_filials', $selected_fil, 'offices');
-
-                    echo $offices_j[0]['name'].'<input type="hidden" id="filial" name="filial" value="'.$selected_fil.'">';
-
-                    echo '
-                                        </div>
-                                    </div>';
-                    echo '
-        
-                                    <div class="cellsBlock3">
-                                        <div class="cellLeft">Пациент</div>
-                                        <div class="cellRight">
-                                            <input type="text" size="50" name="searchdata" id="search_client" placeholder="Введите первые три буквы для поиска" value="' . $get_client . '" class="who"  autocomplete="off" disabled>
-                                            <ul id="search_result" class="search_result"></ul><br />
-                                            <label id="client_error" class="error"></label>
-                                        </div>
+                                <div class="cellsBlock3">
+                                    <div class="cellLeft">
+                                        <span style="font-size:80%;  color: #555;">Зубная формула</span><br>
                                     </div>
-        
-        
-            <!--<script type="text/javascript">
-                function showMe (box){
-                    var vis = (box.checked) ? "block" : "none";
-                    document.getElementById(\'div1\').style.display = vis;
-                }
-            </script>-->
-        
-            ';
-
-
-                    echo '						
-                                        <div class="cellsBlock3">
-                                            <div class="cellRight">Зубная формула</div>
-                                        </div>
-                                        <div class="cellsBlock3">
-                                            <!--<div class="cellLeft">Зубная формула</div>-->
-                                            <div class="cellRight" id="teeth_map">';
-
-
-                    if (isset($_GET['client']) && ($_GET['client'] != '')) {
+                                </div>';
+                        echo '						
+                                <div class="cellsBlock3">
+                                    <div class="cellRight" id="teeth_map">';
 
                         //Разбиваем запись с ',' на массив и записываем в новый массив
                         foreach ($t_f_data_db as $key => $value) {
@@ -305,6 +192,7 @@
                             }
                         }
                         //var_dump($t_f_data_db);
+
                         //ЗО и тд
                         if (!$first_db) {
 
@@ -322,6 +210,7 @@
                         }
                         //var_dump($dop);
                         //var_dump($t_f_data);
+
                         unset($t_f_data['id']);
                         unset($t_f_data['office']);
                         unset($t_f_data['client']);
@@ -345,7 +234,6 @@
                         unset($t_f_data_db['comment']);
                         unset($t_f_data_db['zapis_date']);
                         unset($t_f_data_db['zapis_id']);
-
                         //unset($dop[0]['id']);
 
 
@@ -359,8 +247,8 @@
                             }
                         }
 
-
                         //var_dump ($t_f_data);
+
                         if (!empty($dop[0])) {
                             //var_dump($dop[0]);
                             unset($dop[0]['id']);
@@ -396,71 +284,105 @@
                                 }
                             }
                         }
-
                         //var_dump ($t_f_data);
 
-                        //var_dump($t_f_data);
-
                         //Пробуем записать в сессию.
-                        $_SESSION['journal_tooth_status_temp'][$_GET['client']] = $t_f_data_draw;
+                        $_SESSION['journal_tooth_status_temp'][$client_id] = $t_f_data_draw;
                         //var_dump($_SESSION['journal_tooth_status_temp']);
 
-                    } else {
-                        //Разбиваем запись с ',' на массив и записываем в новый массив
-                        foreach ($t_f_data_db as $key => $value) {
-                            $surfaces_temp = explode(',', $value);
-                            foreach ($surfaces_temp as $key1 => $value1) {
-                                $t_f_data[$key][$surfaces[$key1]] = $value1;
-                            }
-                        }
-                        $t_f_data_draw = $t_f_data;
-                    }
+                        //рисуем зубную формулу
+                        include_once 'teeth_map_svg.php';
+                        DrawTeethMap($t_f_data_draw, 1, $tooth_status, $tooth_alien_status, $surfaces, '');
 
-
-                    //echo $new_id;
-                    //$t_f_data_db['id'] = $new_id;
-
-                    //var_dump($t_f_data_draw);
-
-                    //рисуем зубную формулу
-                    include_once 'teeth_map_svg.php';
-                    DrawTeethMap($t_f_data_draw, 1, $tooth_status, $tooth_alien_status, $surfaces, '');
-
-                    echo '
-                                            </div>
-                                        </div>
+                        echo '
+                                    </div>
                                 </div>';
 
-                    echo '
+                        //Жалобы
+                        echo '
                                 <div class="cellsBlock3">
                                     <div class="cellLeft">
-                                        Создать напоминание
-                                        <input type="checkbox" name="add_notes_show" id="add_notes_show" value="1" onclick="Add_notes_stomat_show(this)">
+        							    <span style="font-size: 90%;">Жалобы</span><br>
+                                        <textarea name="complaints" id="complaints" cols="80" rows="4"></textarea>
                                     </div>
-                                    
-                                    <div class="cellRight">
-                                        <table id="add_notes_here" style="display:block; display:none;">
+                                </div>';
+
+                        //Объективно
+                        echo '
+                                <div class="cellsBlock3">
+                                    <div class="cellLeft">
+        							    <span style="font-size: 90%;">Объективно</span><br>
+                                        <textarea name="objectively" id="objectively" cols="80" rows="6"></textarea>
+                                    </div>
+                                </div>';
+
+                        //Диагноз
+                        echo '
+                                <div class="cellsBlock3">
+                                    <div class="cellLeft">
+        							    <span style="font-size: 90%;">Диагноз</span><br>
+                                        <textarea name="diagnosis" id="diagnosis" cols="80" rows="2"></textarea>
+                                    </div>
+                                </div>';
+
+                        //Лечение
+                        echo '
+                                <div class="cellsBlock3">
+                                    <div class="cellLeft">
+        							    <span style="font-size: 90%;">Лечение</span><br>
+                                        <textarea name="therapy" id="therapy" cols="80" rows="6"></textarea>
+                                    </div>
+                                </div>';
+
+                        //Рекомендовано
+                        echo '
+                                <div class="cellsBlock3">
+                                    <div class="cellLeft">
+        							    <span style="font-size: 90%;">Рекомендовано</span><br>
+                                        <textarea name="recommended" id="recommended" cols="80" rows="5"></textarea>
+                                    </div>
+                                </div>';
+
+                        //Комментарий
+                        echo '
+                                <div class="cellsBlock3">
+                                    <div class="cellLeft">
+                                        <span style="font-size: 80%;">Комментарий</span><br>
+                                        <textarea name="comment" id="comment" cols="50" rows="4"></textarea>
+                                    </div>
+                                </div>';
+
+
+
+                        //Напоминания
+                        echo '
+                                <div class="cellsBlock3">
+                                    <div class="cellLeft">
+                                        <!--<span class="ahref button_tiny" style="font-size:80%;  color: #555;">Создать напоминание</span> <input type="checkbox" name="add_notes_show" id="add_notes_show" value="1" onclick="Add_notes_stomat_show(this)"><br>-->
+                                        <span class="ahref button_tiny" style="font-size:80%;  color: #555;" onclick="toggleSomething (\'#add_notes_here\'); Add_notes_stomat_show();">Создать напоминание</span><br><br>
+                                        <input type="hidden" name="add_notes_show" id="add_notes_show" value="0">
+                                        <table id="add_notes_here" style="display:none;">
                                             <tr>
                                                 <td colspan="2">
                                                 
                                                     <!--<form action="add_notes_stomat_f.php">-->
                                                         <select name="add_notes_type" id="add_notes_type">
                                                             <option value="0" selected>Выберите</option>';
-                    foreach ($for_notes as $for_notes_id =>  $for_notes_descr){
-                        echo '<option value="'.$for_notes_id.'">'.$for_notes_descr.'</option>';
-                    }
-                    /*echo '
-                                                            <option value="1">Каласепт, Метапекс, Септомиксин (Эндосольф)</option>
-                                                            <option value="2">Временная пломба</option>
-                                                            <option value="3">Открытый зуб</option>
-                                                            <option value="4">Депульпин</option>
-                                                            <option value="5">Распломбирован под вкладку (вкладка)</option>
-                                                            <option value="6">Имплантация (ФДМ ,  абатмент, временная коронка на импланте)</option>
-                                                            <option value="7">Временная коронка</option>
-                                                            <option value="10">Установлены брекеты</option>
-                                                            <option value="8">Санированные пациенты ( поддерживающее лечение через 6 мес)</option>
-                                                            <option value="9">Прочее</option>';*/
-                    echo '
+                        foreach ($for_notes as $for_notes_id =>  $for_notes_descr){
+                            echo '<option value="'.$for_notes_id.'">'.$for_notes_descr.'</option>';
+                        }
+                        /*echo '
+                                                                <option value="1">Каласепт, Метапекс, Септомиксин (Эндосольф)</option>
+                                                                <option value="2">Временная пломба</option>
+                                                                <option value="3">Открытый зуб</option>
+                                                                <option value="4">Депульпин</option>
+                                                                <option value="5">Распломбирован под вкладку (вкладка)</option>
+                                                                <option value="6">Имплантация (ФДМ ,  абатмент, временная коронка на импланте)</option>
+                                                                <option value="7">Временная коронка</option>
+                                                                <option value="10">Установлены брекеты</option>
+                                                                <option value="8">Санированные пациенты ( поддерживающее лечение через 6 мес)</option>
+                                                                <option value="9">Прочее</option>';*/
+                        echo '
                                                         </select>
                                                     <!--</form>-->
                                                 
@@ -484,363 +406,344 @@
                                                 </td>
                                             </tr>-->
                                         </table>
-                                        
                                     </div>
-                                </div>
-                                
-                                
+                                </div>';
+
+
+                        echo '
                                 <div class="cellsBlock3">
                                     <div class="cellLeft">
-                                        Создать направление
-                                        <input type="checkbox" name="add_remove_show" id="add_remove_show" value="1" onclick="Add_remove_stomat_show(this)">
-                                    </div>
-                                    <div class="cellRight">
-                                        <div id="add_remove_here" style="display:block; display:none;">
+                                        <!--<span style="font-size:80%;  color: #555;">Создать направление</span> <input type="checkbox" name="add_remove_show" id="add_remove_show" value="1" onclick="Add_remove_stomat_show(this)"><br>-->
+                                        <span class="ahref button_tiny" style="font-size:80%;  color: #555;" onclick="toggleSomething (\'#add_remove_here\'); Add_remove_stomat_show();">Создать направление</span><br><br>
+                                        <input type="hidden" name="add_remove_show" id="add_remove_show" value="0">
+                                        <div id="add_remove_here" style="display:none;">
                                             <table id="table_container">
                                             </table>
-                                            <a href="#modal1" class="open_modal b" id="">Добавить направление</a>
+                                            <a href="#modal1" class="open_modal b2" id="">Добавить направление</a>
                                             <!--<input type="button" class="b" value="Добавить поле" id="add" onclick="return add_new_image(' . $_SESSION['id'] . ');">-->
                                             <div id="mini"></div>
                                         </div>
                                     </div>
                                 </div>';
 
-                    echo '
-                                <div class="cellsBlock3">
-                                    <div class="cellLeft">Комментарий</div>
-                                    <div class="cellRight">
-                                        <textarea name="comment" id="comment" cols="35" rows="5"></textarea>
-                                    </div>
-                                </div>';
-                    echo '
-                                <div class="cellsBlock3">
-                                    <div class="cellLeft">Первичный</div>
-                                    <div class="cellRight">
-                                        <input type="checkbox" name="pervich" id="pervich" value="1" ' . $pervich_check . ' disabled> да
-                                    </div>
-                                </div>';
-                    echo '
-                                <div class="cellsBlock3">
-                                    <div class="cellLeft">Страховой</div>
-                                    <div class="cellRight">
-                                        <input type="checkbox" name="insured" id="insured" value="1" ' . $insured_check . ' disabled> да
-                                    </div>
-                                </div>';
-                    echo '
-                                <div class="cellsBlock3">
-                                    <div class="cellLeft">Ночной</div>
-                                    <div class="cellRight">
-                                        <input type="checkbox" name="noch" id="noch" value="1" ' . $noch_check . ' disabled> да
-                                    </div>
-                                </div>';
+                        echo '                                
+                                <input type="hidden" id="zapis" name="zapis" value="' . $zapis_id . '">
+                                <input type="hidden" id="client" name="client" value="' . $client_id . '">
+                                <div id="errror"></div>
+                                <input type="button" class="b" value="Добавить" onclick=Ajax_add_task_stomat()>';
 
-                    echo '
-                                    <input type="hidden" id="author" name="author" value="' . $_SESSION['id'] . '">
-                                    <input type="hidden" id="client" name="client" value="' . $client_j[0]['id'] . '">
-                                    <input type="hidden" id="zapis_date" name="zapis_date" value="' . $zapis_date_hidden . '">
-                                    <input type="hidden" id="zapis_id" name="zapis_id" value="' . $zapis_id . '">
-                                    <div id="errror"></div>
-                                    <input type="button" class="b" value="Добавить" onclick=Ajax_add_task_stomat()>
-                                </form>
-                                
-        
-                                ';
-
-                    echo '
+                        echo '
                             </div>
                             <div id="doc_title">Добавить осмотр [Стоматология] </div>
+                        </div>';
+
+
+
+
+                        echo '
+
+                        <!-- Подложка только одна -->
+                        <div id="overlay"></div>
+
+                        <!-- Модальные окна -->
+                        
+                        <!--Направления-->
+                        <div id="modal1" class="modal_div">
+                            <span class="modal_close">X</span>
+                            <table>
+                                <tr>
+                                    <td>
+                                        Причина направления
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text" name="input_title" id="input_title" class="search_data"  autocomplete="off" style="width: 200px;">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        К кому направляем
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text" size="50" name="searchdata3" id="search_client3" placeholder="Введите первые три буквы для поиска" value="" class="who3"  autocomplete="off" />
+                                        <ul id="search_result3" class="search_result3"></ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="#" class="b" id="close_mdd" onclick="AddRemoveData()" style="">Добавить</a>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                         
-                    <!-- Модальные окна -->
-                    <div id="modal1" class="modal_div">
-                        <span class="modal_close">X</span>
-                        <table>
-                            <tr>
-                                <td>
-                                    Причина направления
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" name="input_title" id="input_title" class="search_data"  autocomplete="off" style="width: 200px;">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    К кому направляем
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="50" name="searchdata3" id="search_client3" placeholder="Введите первые три буквы для поиска" value="" class="who3"  autocomplete="off" />
-                                    <ul id="search_result3" class="search_result3"></ul>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a href="#" class="b" id="close_mdd" onclick="AddRemoveData()" style="">Направить</a>
-                                </td>
-                            </tr>
-                        </table>
-        
-                        
-                        
-        
-                    </div>
-                    <!-- Подложка только одна -->
-                    <div id="overlay"></div>
-                    
-                    <!-- Модальные окна -->
-                    <div id="modal2" class="modal_div">
-                        <span class="modal_close">X</span>
+                        <!--Для ЗФ-->
+                        <div id="modal2" class="modal_div">
+                            <span class="modal_close">X</span>
                             
-                                <h3>Выбор нескольких сегментов зубной формулы.</h3>
-                                <b>Статус: </b>
-                                <div id="t_summ_status"></div>
+                            <h3>Выбор нескольких сегментов зубной формулы.</h3>
+                            <b>Статус: </b>
+                            <div id="t_summ_status"></div>
         
-        
-                                    <table>
-                                        <tr>
-                                            <td>
-                                                <table width="100%" style="border: 1px solid #BEBEBE; margin:5px;">
-                                                    <tr>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            18
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            17
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            16
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            15
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            14
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            13
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            12
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            11
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t18" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t17" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t16" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t15" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t14" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t13" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t12" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t11" value="1">
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                            <td>
-                                                <table width="100%" style="border: 1px solid #BEBEBE; margin:5px;">
-                                                    <tr>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            21
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            22
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            23
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            24
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            25
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            26
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            27
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            28
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t21" value="1">
-                                                        </td>
-                                                            <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t22" value="1">
-                                                        </td>
-                                                            <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t23" value="1">
-                                                        </td>
-                                                            <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t24" value="1">
-                                                        </td>
-                                                            <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t25" value="1">
-                                                        </td>
-                                                            <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t26" value="1">
-                                                        </td>
-                                                            <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t27" value="1">
-                                                        </td>
-                                                            <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t28" value="1">
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <table width="100%" style="border: 1px solid #BEBEBE; margin:5px;">
+                                            <tr>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    18
                                                 </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <table width="100%" style="border: 1px solid #BEBEBE; margin:5px;">
-                                                    <tr>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            48
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            47
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            46
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            45
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            44
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            43
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            42
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            41
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t48" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t47" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t46" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t45" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t44" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t43" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t42" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t41" value="1">
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                            <td>
-                                                <table width="100%" style="border: 1px solid #BEBEBE; margin:5px;">
-                                                    <tr>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            31
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            32
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            33
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            34
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            35
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            36
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            37
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            38
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t31" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t32" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t33" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t34" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t35" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t36" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t37" value="1">
-                                                        </td>
-                                                        <td style="border: 1px solid #BEBEBE;">
-                                                            <input type="checkbox" name="t38" value="1">
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="checkbox" name="implant" value="1"> + имплант
-                                            </td>
-                                        </tr>
-                                    </table>
-                                <a href="#" class="b" onclick="refreshAllTeeth()">Применить</a>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    17
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    16
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    15
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    14
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    13
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    12
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    11
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t18" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t17" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t16" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t15" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t14" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t13" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t12" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t11" value="1">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table width="100%" style="border: 1px solid #BEBEBE; margin:5px;">
+                                            <tr>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    21
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    22
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    23
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    24
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    25
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    26
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    27
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    28
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t21" value="1">
+                                                </td>
+                                                    <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t22" value="1">
+                                                </td>
+                                                    <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t23" value="1">
+                                                </td>
+                                                    <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t24" value="1">
+                                                </td>
+                                                    <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t25" value="1">
+                                                </td>
+                                                    <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t26" value="1">
+                                                </td>
+                                                    <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t27" value="1">
+                                                </td>
+                                                    <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t28" value="1">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table width="100%" style="border: 1px solid #BEBEBE; margin:5px;">
+                                            <tr>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    48
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    47
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    46
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    45
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    44
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    43
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    42
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    41
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t48" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t47" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t46" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t45" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t44" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t43" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t42" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t41" value="1">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table width="100%" style="border: 1px solid #BEBEBE; margin:5px;">
+                                            <tr>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    31
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    32
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    33
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    34
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    35
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    36
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    37
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    38
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t31" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t32" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t33" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t34" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t35" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t36" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t37" value="1">
+                                                </td>
+                                                <td style="border: 1px solid #BEBEBE;">
+                                                    <input type="checkbox" name="t38" value="1">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="implant" value="1"> + имплант
+                                    </td>
+                                </tr>
+                            </table>
+                            <a href="#" class="b" onclick="refreshAllTeeth()">Применить</a>
                             
-                    </div>
+                        </div>
+                        
                         ';
+                        
 
-                    //Фунция JS для проверки не нажаты ли чекбоксы + AJAX
+                    }
 
+
+                }else{
+                    echo '<h1>Ошибка при получении данных.</h1><a href="index.php">На главную</a>';
+                }
+
+			}else{
+                echo '<h1>Ошибка при получении данных.</h1><a href="index.php">На главную</a>';
+			}
+
+
+
+                    //Фунции JS
                     echo '
                     
                     <script type="text/javascript">
@@ -852,8 +755,8 @@
                             var arrayRemoveWorker = new Array();
                             var maxIndex = 1;
                             
-                            var input_title = document.getElementById("input_title").value;
-                            var search_client3 = document.getElementById("search_client3").value;
+                            var input_title = $("#input_title").val();
+                            var search_client3 = $("#search_client3").val();
                             //alert(input_title);
                             
                             $(".remove_add_search").each(function() {
@@ -913,18 +816,21 @@
                                 
                                 
                                 //$("#mini").append(this + "<br>");
+                                
                             });
-                            
-                            
-                            
-                                            //скрываем модальные окна
-                                            /*$("#modal1, #modal2") // все модальные окна
-                                                .animate({opacity: 0, top: "45%"}, 50, // плавно прячем
-                                                    function(){ // после этого
-                                                        $(this).css("display", "none");
-                                                        $("#overlay").fadeOut(50); // прячем подложку
-                                                    }
-                                                );*/
+                                    
+                            //скрываем модальные окна
+                            $("#modal1, #modal2") // все модальные окна
+                                .animate({opacity: 0, top: \'45%\'}, 50, // плавно прячем
+                            function(){ // после этого
+                                $(this).css(\'display\', \'none\');
+                                $(\'#overlay\').fadeOut(50); // прячем подложку
+                            }
+                            );
+                                    
+                            //Очистим поля ввода
+                            $("#input_title").val(""); 
+                            $("#search_client3").val("");
             
                         };
                     </script>
@@ -978,174 +884,60 @@
         })
         
                         
-                        document.getElementById(\'add_notes_show\').checked=false;
-                        document.getElementById(\'add_remove_show\').checked=false;
-                        
-                        function Add_notes_stomat_show(box) {
-                            var vis = (box.checked) ? "block" : "none";
-                            document.getElementById(\'add_notes_here\').style.display = vis;
+//                        document.getElementById(\'add_notes_show\').checked=false;
+//                        document.getElementById(\'add_remove_show\').checked=false;
+//                        
+//                        function Add_notes_stomat_show(box) {
+//                            var vis = (box.checked) ? "block" : "none";
+//                            document.getElementById(\'add_notes_here\').style.display = vis;
+//                        }
+
+                        function Add_notes_stomat_show() {
+//                            console.log($("#add_notes_here").css("display"));
+//                            console.log($("#add_notes_show").css("display"));
+                            
+                            //через полсекунды ставим значение 1 в маркер
+                            setTimeout(function () {
+                                if ($("#add_notes_here").css("display") == "none"){
+                                    $("#add_notes_show").val(0);
+                                }else{
+                                    $("#add_notes_show").val(1);
+                                }                                
+                            }, 500);
+                            
+
                         }
-                        function Add_remove_stomat_show(box) {
-                            var vis = (box.checked) ? "block" : "none";
-                            document.getElementById(\'add_remove_here\').style.display = vis;
+
+//                        function Add_remove_stomat_show(box) {
+//                            var vis = (box.checked) ? "block" : "none";
+//                            document.getElementById(\'add_remove_here\').style.display = vis;
+//                        }
+
+                        function Add_remove_stomat_show() {
+//                            console.log($("#add_remove_here").css("display"));
+//                            console.log($("#add_remove_show").css("display"));
+                            
+                            //через полсекунды ставим значение 1 в маркер
+                            setTimeout(function () {
+                                if ($("#add_remove_here").css("display") == "none"){
+                                    $("#add_remove_show").val(0);
+                                }else{
+                                    $("#add_remove_show").val(1);
+                                }                                
+                            }, 500);
+                            
+
                         }
         
-        function Ajax_add_task_stomat() {
-                // убираем класс ошибок с инпутов
-                $(\'input\').each(function(){
-                    $(this).removeClass(\'error_input\');
-                });
-                // прячем текст ошибок
-                $(\'.error\').hide();
-                 
-                // получение данных из полей
-               // var client = $(\'#search_client\').val();
-                //var filial = $(\'#filial\').val();
-                 
-                $.ajax({
-                    // метод отправки 
-                    type: "POST",
-                    // путь до скрипта-обработчика
-                    url: "ajax_test.php",
-                    // какие данные будут переданы
-                    data: {
-                        client:document.getElementById("search_client").value,
-                        filial:document.getElementById("filial").value,';
-                    if (($stom['add_new'] == 1) || $god_mode) {
-                        echo '
-                        worker:document.getElementById("search_worker").value,';
-                    }
-                    echo '
-                    },
-                    // тип передачи данных
-                    dataType: "json",
-                    // действие, при ответе с сервера
-                    success: function(data){
-                        // в случае, когда пришло success. Отработало без ошибок
-                        if(data.result == \'success\'){   
-                            //alert(\'форма корректно заполнена\');
-                                ' . $js_data . '
-                                if ($("#add_notes_show").prop("checked")){
-                                    notes_val = 1;
-                                }else{
-                                    notes_val = 0;
-                                }
-                                if ($("#add_remove_show").prop("checked")){
-                                    remove_val = 1;
-                                }else{
-                                    remove_val = 0;
-                                }
-                                if ($("#pervich").prop("checked")){
-                                    pervich = 1;
-                                }else{
-                                    pervich = 0;
-                                }
-                                if ($("#insured").prop("checked")){
-                                    insured = 1;
-                                }else{
-                                    insured = 0;
-                                }
-                                if ($("#noch").prop("checked")){
-                                    noch = 1;
-                                }else{
-                                    noch = 0;
-                                }
-                                
-                                var arrayRemoveAct = new Array();
-                                var arrayRemoveWorker = new Array();
-                            
-                                $(".remove_add_search").each(function() {
-                                    if (($(this).attr("id")).indexOf("td_title") != -1){
-                                            var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
-                                            arrayRemoveAct[IndexArr] = document.getElementById($(this).attr("id")).value;
-                                        }
-                                        if (($(this).attr("id")).indexOf("td_worker") != -1){
-                                            var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
-                                            arrayRemoveWorker [IndexArr] = document.getElementById($(this).attr("id")).value;
-                                        }
-                                });
-                                
-                                ajax({
-                                    url:"add_task_stomat_f.php",
-                                    statbox:"status",
-                                    method:"POST",
-                                    data:
-                                    {
-                                        author:document.getElementById("author").value,
-                                        //client:document.getElementById("search_client").value,
-                                        client:$("#client").val(),
-                                        filial:document.getElementById("filial").value,
-                                        comment:document.getElementById("comment").value,
-                                                
-                                        notes:notes_val,
-                                        remove:remove_val,
-                                                
-                                        removeAct:JSON.stringify(arrayRemoveAct),
-                                        removeWork:JSON.stringify(arrayRemoveWorker),
-                                                
-                                        add_notes_type:document.getElementById("add_notes_type").value,
-                                        add_notes_months:document.getElementById("add_notes_months").value,
-                                        add_notes_days:document.getElementById("add_notes_days").value,
-                                        
-                                        zapis_date:document.getElementById("zapis_date").value,
-                                        zapis_id:document.getElementById("zapis_id").value,
-                                        
-                                        pervich:pervich,
-                                        insured:insured,
-                                        noch:noch,';
 
-                    if (($stom['add_new'] == 1) || $god_mode) {
-                        echo '
-                                        worker:document.getElementById("search_worker").value,';
-                    }
-                    echo '									
-                                        search_client3:document.getElementById("search_client3").value,';
-                    //new_id:'.$new_id.',';
-                    echo $post_data;
-                    echo '
-                                    },
-                                    success:function(data){
-                                        document.getElementById("status").innerHTML=data;
-                                    }
-                                })
-                        // в случае ошибок в форме
-                        }else{
-                            // перебираем массив с ошибками
-                            for(var errorField in data.text_error){
-                                // выводим текст ошибок 
-                                $(\'#\'+errorField+\'_error\').html(data.text_error[errorField]);
-                                // показываем текст ошибок
-                                $(\'#\'+errorField+\'_error\').show();
-                                // обводим инпуты красным цветом
-                               // $(\'#\'+errorField).addClass(\'error_input\');                      
-                            }
-                            document.getElementById("errror").innerHTML=\'<span style="color: red">Ошибка, что-то заполнено не так.</span>\'
-                        }
-                    }
-                      });	
-                            };  
-                              
-                        </script> 
+       </script> 
                         
         
                         
                         
                         
                     ';
-                    /*echo '
-                        <script type="text/javascript">
-                            $("input").change(function() {
-                                var $input = $(this);';
-                    echo $js_data;
-                    echo '
-                            });
-                        </script>
-                    ';*/
-                    //mysql_close();
-                }
-			}else{
-                echo '<h1>Ошибка при получении данных.</h1><a href="index.php">На главную</a>';
-            }
+
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}

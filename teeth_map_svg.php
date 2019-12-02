@@ -554,7 +554,8 @@
 					var retein = $("input[name=retein]:checked").val();
 					var skomplect = $("input[name=skomplect]:checked").val();
 					
-					var client = document.getElementById("client").value;
+					//var client_id = $("#client_id").val();
+					var client_id = $("#client").val();
 					
                     $.ajax({  
                         url: "teeth_map_svg_edit.php",  
@@ -576,7 +577,7 @@
 								skomplect:skomplect,
 								n:'.$nm.',
 								
-								client: client,
+								client: client_id
 							},
                         success: function(html){  
                             $("#teeth_map").html(html);  
