@@ -71,7 +71,7 @@
 					<script src="js/init.js" type="text/javascript"></script>
 					<script src="js/init2.js" type="text/javascript"></script>
 						<header>
-							<h2>История [стоматология] пациент #'.$_GET['client'].'</h2>
+							<h2>История ЗФ пациента</h2>
 						</header>';
 						
 				echo '

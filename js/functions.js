@@ -1433,7 +1433,7 @@
 				{
                     zapis_id: zapis_id,
                     client_id: client_id,
-					new_client: name,
+					new_client: name
 				},
 				cache: false,
 				beforeSend: function() {
@@ -11489,5 +11489,157 @@
         // }
         //
         // $('#tabs_w'+permission+'_'+worker).tabs( "option", "disabled", tabs_id_arr );
+
+    }
+
+    //Добавление посещения стоматолога
+    function Ajax_add_task_stomat() {
+
+        var link = "add_task_stomat_f.php";
+
+        var arrayRemoveAct = new Array();
+        var arrayRemoveWorker = new Array();
+
+        $(".remove_add_search").each(function() {
+            if (($(this).attr("id")).indexOf("td_title") != -1){
+                var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
+                arrayRemoveAct[IndexArr] = document.getElementById($(this).attr("id")).value;
+            }
+            if (($(this).attr("id")).indexOf("td_worker") != -1){
+                var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
+                arrayRemoveWorker [IndexArr] = document.getElementById($(this).attr("id")).value;
+            }
+        });
+
+        var reqData = {
+            zapis_id: $("#zapis").val(),
+
+            complaints: $("#complaints").val(),
+            objectively: $("#objectively").val(),
+            diagnosis: $("#diagnosis").val(),
+            therapy: $("#therapy").val(),
+            recommended: $("#recommended").val(),
+
+            comment: $("#comment").val(),
+
+            notes: $("#add_notes_show").val(),
+            remove: $("#add_remove_show").val(),
+
+            removeAct: JSON.stringify(arrayRemoveAct),
+            removeWork: JSON.stringify(arrayRemoveWorker),
+
+            add_notes_type: $("#add_notes_type").val(),
+            add_notes_months: $("#add_notes_months").val(),
+            add_notes_days: $("#add_notes_days").val()
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                $("#status").html(res);
+            }
+        })
+    }
+
+    //Редактирование посещения стоматолога
+    function Ajax_edit_task_stomat(){
+
+        var link = "edit_task_stomat_f.php";
+
+        var add_notes_type = 0;
+        var add_notes_months = 0;
+        var add_notes_days = 0;
+
+        var notes_val = 0;
+        var remove_val = 0;
+
+        if ($("#add_notes_show")){
+            if ($("#add_notes_show").prop("checked")){
+                notes_val = 1;
+                add_notes_type = $("#add_notes_type").val();
+                add_notes_months = $("#add_notes_months").val();
+                add_notes_days = $("#add_notes_days").val();
+            }
+        }
+
+        if ($("#add_remove_show").prop("checked")){
+            remove_val = 1;
+        }
+
+        var arrayRemoveAct = new Array();
+        var arrayRemoveWorker = new Array();
+
+        $(".remove_add_search").each(function() {
+            if (($(this).attr("id")).indexOf("td_title") != -1){
+                var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
+                arrayRemoveAct[IndexArr] = document.getElementById($(this).attr("id")).value;
+            }
+            if (($(this).attr("id")).indexOf("td_worker") != -1){
+                var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
+                arrayRemoveWorker [IndexArr] = document.getElementById($(this).attr("id")).value;
+            }
+        });
+
+        var reqData = {
+            id: $("#id").val(),
+            client_id: $("#client").val(),
+
+            complaints: $("#complaints").val(),
+            objectively: $("#objectively").val(),
+            diagnosis: $("#diagnosis").val(),
+            therapy: $("#therapy").val(),
+            recommended: $("#recommended").val(),
+
+            comment: $("#comment").val(),
+
+            sel_date: $("#sel_date").val(),
+            sel_month: $("#sel_month").val(),
+            sel_year: $("#sel_year").val(),
+
+            sel_seconds: $("#sel_seconds").val(),
+            sel_minutes: $("#sel_minutes").val(),
+            sel_hours: $("#sel_hours").val(),
+
+            notes: notes_val,
+            remove: remove_val,
+
+            removeAct: JSON.stringify(arrayRemoveAct),
+            removeWork: JSON.stringify(arrayRemoveWorker),
+
+            add_notes_type: add_notes_type,
+            add_notes_months: add_notes_months,
+            add_notes_days: add_notes_days,
+
+            client: $("#client").val()
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                $("#status").html(res);
+            }
+        })
 
     }

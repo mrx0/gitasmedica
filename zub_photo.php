@@ -43,7 +43,7 @@
 											</div>
 										</div>
 										<div class="cellsBlock3">
-											<div class="cellLeft">Формула</div>
+											<div class="cellLeft">Посещение</div>
 											<div class="cellRight">
 												<a href="task_stomat_inspection.php?id='.$task_stomat[0]['id'].'" class="ahref">#'.$task_stomat[0]['id'].'</a>
 											</div>
@@ -80,7 +80,7 @@
 						echo '
 							<div style=" margin-bottom: 30px; margin-top: 30px;">
 								<div style="border: 1px solid #ccc; width: 400px; margin: 0 0 2px 0; padding: 2px;">
-									Снимки с внутриротовой камеры
+									Снимки
 								</div>';
 						for($i = 0; $i < count($rezult); $i++){
 							echo '
