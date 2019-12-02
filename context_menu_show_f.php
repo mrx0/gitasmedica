@@ -61,14 +61,16 @@
 
 					if ($insures_j != 0){
 						for ($i=0;$i<count($insures_j);$i++){
-                            $bgColor = '';
+                            if ($insures_j[$i]['status'] != 9) {
+                                $bgColor = '';
 
-						    if ($insures_j[$i]['id'] == $_POST['dop']['client_insure']) {
-                                $bgColor = 'background-color: yellow;';
+                                if ($insures_j[$i]['id'] == $_POST['dop']['client_insure']) {
+                                    $bgColor = 'background-color: yellow;';
+                                }
+
+                                $data .= '
+                                    <li style="' . $bgColor . '"><div onclick="insureInvoice(' . $insures_j[$i]['id'] . ')">' . $insures_j[$i]['name'] . '</div></li>';
                             }
-
-							$data .= '
-								<li style="'.$bgColor.'"><div onclick="insureInvoice('.$insures_j[$i]['id'].')">'.$insures_j[$i]['name'].'</div></li>';
 						}
 					}
 				}

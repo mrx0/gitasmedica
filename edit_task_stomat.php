@@ -700,15 +700,16 @@
 //
 //						mysql_close();
 
-						echo '
-										<br />
-										<div class="cellsBlock2">
-											<div class="cellLeft">Подтвердить редактирование</div>
-											<div class="cellRight">
-												<input type="checkbox" name="change_true">
-											</div>
-										</div>	
+//						echo '
+//										<br />
+//										<div class="cellsBlock2">
+//											<div class="cellLeft">Подтвердить редактирование</div>
+//											<div class="cellRight">
+//												<input type="checkbox" name="change_true">
+//											</div>
+//										</div>';
 
+						echo '
 										<div class="cellsBlock2">
 											<span style="font-size: 80%; color: #999;">
 												Создан: '.date('d.m.y H:i', $task[0]['create_time']).' пользователем
@@ -723,109 +724,9 @@
 											</span>
 										</div>
 										<input type="hidden" id="id" name="id" value="'.$_GET['id'].'">
-										<input type="hidden" id="client" name="client" value="'.$client.'">
-										<!--<input type="hidden" id="author" name="author" value="'.$_SESSION['id'].'">-->
-										<input type=\'button\' class="b" value="Применить" onclick=\'
-											var add_notes_type = 0;
-											var add_notes_months = 0;
-											var add_notes_days = 0;
-											if (document.getElementById("#add_notes_show")){
-												
-												if ($("#add_notes_show").prop("checked")){
-													notes_val = 1;
-													add_notes_type = document.getElementById("add_notes_type").value;
-													add_notes_months = document.getElementById("add_notes_months").value;
-													add_notes_days = document.getElementById("add_notes_days").value;
-												}else{
-													notes_val = 0;
-													
-												}
-											}else{
-												notes_val = 0;
-											}
-											if ($("#add_remove_show").prop("checked")){
-												remove_val = 1;
-											}else{
-												remove_val = 0;
-											}
-												
-											if ($("#pervich").prop("checked")){
-												pervich_val = 1;
-											}else{
-												pervich_val = 0;
-											}
-											if ($("#insured").prop("checked")){
-												insured_val = 1;
-											}else{
-												insured_val = 0;
-											}
-											if ($("#noch").prop("checked")){
-												noch_val = 1;
-											}else{
-												noch_val = 0;
-											}
-											
-											var arrayRemoveAct = new Array();
-											var arrayRemoveWorker = new Array();
-										
-											$(".remove_add_search").each(function() {
-												if (($(this).attr("id")).indexOf("td_title") != -1){
-														var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
-														arrayRemoveAct[IndexArr] = document.getElementById($(this).attr("id")).value;
-													}
-													if (($(this).attr("id")).indexOf("td_worker") != -1){
-														var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
-														arrayRemoveWorker [IndexArr] = document.getElementById($(this).attr("id")).value;
-													}
-											});
-											
-											
-											ajax({
-												url:"edit_task_stomat_f.php",
-												statbox:"status",
-												method:"POST",
-												data:
-												{
-													id:document.getElementById("id").value,
-													filial:document.getElementById("filial").value,
-													comment:document.getElementById("comment").value,
-													
-													
-													sel_date:document.getElementById("sel_date").value,
-													sel_month:document.getElementById("sel_month").value,
-													sel_year:document.getElementById("sel_year").value,
-													
-													sel_seconds:document.getElementById("sel_seconds").value,
-													sel_minutes:document.getElementById("sel_minutes").value,
-													sel_hours:document.getElementById("sel_hours").value,
-													
-													notes:notes_val,
-													remove:remove_val,
-													
-													pervich:pervich_val,
-													noch:noch_val,
-													insured:insured_val,
-													
-													removeAct:JSON.stringify(arrayRemoveAct),
-													removeWork:JSON.stringify(arrayRemoveWorker),
-													
-													add_notes_type:add_notes_type,
-													add_notes_months:add_notes_months,
-													add_notes_days:add_notes_days,
-													
-													
-													client:'.$client.',
-													
-													
-													';
-													
-					
-					echo							'
-												},
-												success:function(data){document.getElementById("status").innerHTML=data;}
-											})\'
-										>
-									</form>';	
+										<input type="hidden" id="client_id" name="client_id" value="'.$client_id.'">
+										<input type="hidden" id="client" name="client" value="'.$client_id.'">
+										<input type="button" class="b" value="Применить" onclick="Ajax_edit_task_stomat()">';
 					}else{
 						echo '<h1>Какая-то ошибка</h1>';
 					}

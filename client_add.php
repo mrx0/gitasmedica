@@ -188,8 +188,9 @@
 				
 				if ($insures_j != 0){
 					for ($i=0;$i<count($insures_j);$i++){
-
-						echo "<option value='".$insures_j[$i]['id']."'>".$insures_j[$i]['name']."</option>";
+					    if ($insures_j[$i]['status'] != 9) {
+                            echo "<option value='" . $insures_j[$i]['id'] . "'>" . $insures_j[$i]['name'] . "</option>";
+                        }
 					}
 				}
 				echo '

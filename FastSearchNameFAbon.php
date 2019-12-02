@@ -42,16 +42,21 @@
                     }
 
                     //потрачено
-                    if ($fast_search[$i]["nominal"] - $fast_search[$i]["debited"] <= 0) {
+                    //if ($fast_search[$i]["nominal"] - $fast_search[$i]["debited"] <= 0) {
+                    if ($fast_search[$i]["min_count"] - $fast_search[$i]["debited_min"] <= 0) {
                         $debited_txt .= 'потрачено';
                         $debited = true;
                         $debited_color = 'background-color: rgba(239,47,55, .7)';
                     }
 
                     //if (($fast_search[$i]['cell_time'] != '0000-00-00 00:00:00') && ($fast_search[$i]['status'] == 7)) {
+//                        $rez .= "<tr>
+//                        <td><span class='lit_grey_text'>номер</span><br><a href='certificate.php?id=".$fast_search[$i]['id']."' class='ahref'>" . $fast_search[$i]["num"] . "</a></td>
+//                            <td><span class='lit_grey_text'>номинал</span><br>" . $fast_search[$i]["nominal"] . "</td>
+//                            <td><span class='lit_grey_text'>был продан</span><br>";
                         $rez .= "<tr>
                         <td><span class='lit_grey_text'>номер</span><br><a href='certificate.php?id=".$fast_search[$i]['id']."' class='ahref'>" . $fast_search[$i]["num"] . "</a></td>
-                            <td><span class='lit_grey_text'>номинал</span><br>" . $fast_search[$i]["nominal"] . "</td>
+                            <td><span class='lit_grey_text'>номинал</span><br>" . $fast_search[$i]["min_count"] . "</td>
                             <td><span class='lit_grey_text'>был продан</span><br>";
                         if (($fast_search[$i]['cell_time'] == '0000-00-00 00:00:00') && ($fast_search[$i]['status'] != 7)) {
                             $rez .= '
@@ -62,8 +67,10 @@
 
                         $rez .= '<span style="'.$expired_color.'">'.$expired_txt.'</span>';
 
+//                        $rez .= "</td>
+//                            <td><span class='lit_grey_text'>остаток</span><br>" . ($fast_search[$i]["nominal"] - $fast_search[$i]["debited"])."<br>";
                         $rez .= "</td>
-                            <td><span class='lit_grey_text'>остаток</span><br>" . ($fast_search[$i]["nominal"] - $fast_search[$i]["debited"])."<br>";
+                            <td><span class='lit_grey_text'>остаток</span><br>" . ($fast_search[$i]["min_count"] - $fast_search[$i]["debited_min"])."<br>";
 
                         $rez .= '<span style="'.$debited_color.'">'.$debited_txt.'</span>';
 
