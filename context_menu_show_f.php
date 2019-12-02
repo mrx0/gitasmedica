@@ -61,7 +61,7 @@
 
 					if ($insures_j != 0){
 						for ($i=0;$i<count($insures_j);$i++){
-                            if ($insures_j[$i]['status'] != 9) {
+                            if ($insures_j[$i]['status'] != 9){
                                 $bgColor = '';
 
                                 if ($insures_j[$i]['id'] == $_POST['dop']['client_insure']) {
