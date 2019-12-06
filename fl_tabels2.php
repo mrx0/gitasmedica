@@ -545,7 +545,7 @@
 
                             echo '
                                         <div style="display: inline;">
-                                            ('.number_format($worker_revenue_percent, 1, '.', ' ').'%)
+                                            ('.number_format($worker_revenue_percent, 2, '.', ' ').'%)
                                         </div>
                                     </div>';
 

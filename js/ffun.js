@@ -6098,6 +6098,7 @@
                     });
 
                     $(".itogZP").each(function(){
+                        //console.log("itogZP");
 
                         var worker_id = $(this).attr("w_id");
 
@@ -6112,9 +6113,12 @@
                         var filialRealiz = Number($(this).attr("filialRealiz"));
                         var worker_revenue_abon_percent = Number($(this).attr("worker_revenue_abon_percent"));
                         var filialAbon = Number($(this).attr("filialAbon"));
-                        //console.log(w_percentHours);
-                        //console.log(worker_revenue_solar_percent);
-                        //console.log(filialSolar);
+
+                        //if (worker_id == 518) {
+                            // console.log(w_percentHours);
+                            // console.log(worker_revenue_solar_percent);
+                            // console.log(filialSolar);
+                        //}
 
                         if (w_percentHours > 0){
 
@@ -6138,6 +6142,12 @@
                             zp_temp = (oklad * w_percentHours) / 100;
 
                             revenue_summ = (((filialMoney / 100) * worker_revenue_percent) / 100) * w_percentHours;
+                            // if (worker_id == 518) {
+                            //     console.log(filialMoney);
+                            //     console.log(worker_revenue_percent);
+                            //     console.log(w_percentHours);
+                            //     console.log(revenue_summ);
+                            // }
 
                             revenue_solar_summ = (((filialSolar / 100) * worker_revenue_solar_percent) / 100) * w_percentHours;
                             revenue_realiz_summ = (((filialRealiz / 100) * worker_revenue_realiz_percent) / 100) * w_percentHours;
