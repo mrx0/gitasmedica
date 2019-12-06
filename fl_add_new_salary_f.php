@@ -25,9 +25,9 @@
 
                 //Вставим новую запись
                 $query = "INSERT INTO `fl_spr_salaries` (
-                  `worker_id`, `summ`, `date_from`, `create_time`, `create_person`)
+                  `worker_id`, `summ`, `date_from`, `category`, `create_time`, `create_person`)
                 VALUES (
-                  '{$_POST['worker_id']}', '{$_POST['summ']}', '{$date_from}', '{$time}', '{$_SESSION['id']}')";
+                  '{$_POST['worker_id']}', '{$_POST['summ']}', '{$date_from}', '{$_POST['category_id']}', '{$time}', '{$_SESSION['id']}')";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

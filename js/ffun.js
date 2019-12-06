@@ -5452,6 +5452,7 @@
                         var reqData = {
                             worker_id: $("#worker_id").val(),
                             date_from: $("#iWantThisDate2").val(),
+                            category_id: $("#category_id").val(),
                             summ: newVal
                         };
                     }

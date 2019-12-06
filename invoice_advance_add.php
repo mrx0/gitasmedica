@@ -1,7 +1,7 @@
 <?php
 
-//invoice_add.php
-//Выписываем счёт
+//invoice_advance_add.php
+//Выписываем предварительный счёт (калькуляция работ делается доктором)
 
 	require_once 'header.php';
     require_once 'blocks_dom.php';
@@ -149,7 +149,7 @@
                                         </div>
                                         
                                         <!--<span style="color: red;">Тестовый режим. Уже сохраняется и даже как-то работает</span>-->
-                                        <h2>Новый наряд</h2>';
+                                        <h2>Новый предварительный расчёт</h2>';
 
                                 echo '		
                                     </header>';
@@ -652,7 +652,7 @@
                                                                 <ul class="ul-tree ul-drop live_filter" id="lasttree">';
 
                                     //Показывает дерево прайса
-                                    showTree2(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0, $_GET['type']);
+                                    showTree2(15, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0, $_GET['type']);
 
                                     echo '
                                                                 </ul>
@@ -700,7 +700,7 @@
                                                 <div id="errror" class="invoceHeader" style="position: relative;">
                                                     <div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
                                                         <div>	
-                                                            <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\', false)">
+                                                            <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\', false)">
                                                         </div>
                                                     </div>
                                                     <div>
@@ -765,7 +765,7 @@
 
                                     echo '
                                             <div>	
-                                                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\', false)">
+                                                <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\', true)">
                                             </div>
                                         </div>
                     

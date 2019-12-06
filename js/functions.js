@@ -7190,8 +7190,10 @@
 	}
 
 	//Показываем блок с суммами и кнопками Для наряда
-	function showInvoiceAdd(invoice_type, mode){
+	function showInvoiceAdd(invoice_type, mode, adv){
 		//console.log(mode);
+		console.log(adv);
+
 		$('#overlay').show();
 
 		var Summ = $("#calculateInvoice").html();

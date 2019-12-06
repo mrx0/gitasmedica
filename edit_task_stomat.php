@@ -1,6 +1,6 @@
 <?php
 
-//edit_task_edit_stomat.php
+//edit_task_stomat.php
 //Редактирование посещения стоматолога
 
 	require_once 'header.php';

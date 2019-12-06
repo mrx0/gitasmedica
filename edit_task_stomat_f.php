@@ -116,7 +116,8 @@
 					$for_query_update = substr($for_query_update, 0, -1);
 					$n_zuba_i = substr($n_zuba_i, 0, -2);
 					$stat_zuba_i = substr($stat_zuba_i, 0, -2);
-					
+
+					//Дополнительные отметки на зубах (зо, ... и т.д.)
 					$query = "DELETE FROM `journal_tooth_status_temp` WHERE `id` = '{$_POST['id']}'";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);

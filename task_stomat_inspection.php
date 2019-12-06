@@ -98,6 +98,21 @@
                         }
                     }
 
+                    $last_tooth_status_id = 0;
+
+                    //Выбрать последнюю ЗФ
+                    $query = "SELECT `id` FROM `journal_tooth_status` WHERE `client`='{$client_id}' ORDER BY `create_time` DESC LIMIT 1";
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                    $number = mysqli_num_rows($res);
+
+                    if ($number != 0){
+                        while ($arr = mysqli_fetch_assoc($res)){
+                            $last_tooth_status_id = $arr['id'];
+                        }
+                    }
+
                     //$office = $filials_j[$filial_id]['name'];
 
                     //Стом статусы
@@ -253,7 +268,7 @@
                     echo '
                                 <div class="cellsBlock3">
                                     <div class="cellLeft">
-                                        <span style="font-size:80%;  color: #555;">Зубная формула</span><br>
+                                        <span style="font-size:80%;  color: #555;">Зубная формула на момент посещения</span><br>
                                     </div>
                                 </div>';
 
@@ -381,20 +396,25 @@
                                 </div>';
 
 
-                    if ($prev_tooth_status_id != 0) {
+                    if (($last_tooth_status_id != 0) && ($last_tooth_status_id != $_GET['id'])){
                         echo '
-                        <div class="cellsBlock2">
-                            <!--<a href = "task_stomat_inspection.php?id='.$prev_tooth_status_id.'" class="ahref" style="font-weight:bold; font-size: 80%; color: #353535;">
-                                Открыть предыдущую</i>
-                            </a>-->
-                        </div>
                         <div class="cellsBlock2" style="margin-bottom: 10px;">
-                            <a href = "#" onclick = "window.open(\'task_stomat_inspection_window.php?id='.$prev_tooth_status_id.'\',\'test\', \'width=700,height=350,status=no,resizable=no,top=200,left=200\'); return false;" class="ahref" style="font-weight:bold; font-size: 80%; color: #353535;">
-                                Открыть предыдущую ЗФ в новом окне <i class="fa fa-external-link" aria-hidden="true"></i>
-                            </a>
+                            <span onclick = "window.open(\'task_stomat_inspection_last_window.php?id=' . $last_tooth_status_id . '\',\'test\', \'width=700,height=350,status=no,resizable=no,top=200,left=200\'); return false;" class="ahref" style="font-weight:bold; font-size: 80%; color: #353535;">
+                                Открыть последнюю ЗФ в новом окне <i class="fa fa-external-link" aria-hidden="true"></i>
+                            </span>
                             </div>
-                        <div>
-                        ';
+                        <div>';
+                    }
+
+
+                    if (($prev_tooth_status_id != 0) && ($prev_tooth_status_id != $_GET['id'])){
+                        echo '
+                        <div class="cellsBlock2" style="margin-bottom: 10px;">
+                            <span onclick = "window.open(\'task_stomat_inspection_window.php?id=' . $prev_tooth_status_id . '\',\'test\', \'width=700,height=350,status=no,resizable=no,top=200,left=200\'); return false;" class="ahref" style="font-weight:bold; font-size: 80%; color: #353535;">
+                                Открыть предыдущую ЗФ в новом окне <i class="fa fa-external-link" aria-hidden="true"></i>
+                            </span>
+                            </div>
+                        <div>';
                     }
 
 

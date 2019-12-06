@@ -449,7 +449,7 @@
                                     echo '
                                                         <div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
                                                             <div>	
-                                                                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . 88 . ', \'add\')">
+                                                                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . 88 . ', \'add\', false)">
                                                             </div>
                                                         </div>';
                                     echo '
@@ -499,7 +499,7 @@
                                     echo '
                                             </div>
                                             <div>	
-                                                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . 7 . ', \'add\')">
+                                                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . 7 . ', \'add\', false)">
                                             </div>
                                         </div>
                     
