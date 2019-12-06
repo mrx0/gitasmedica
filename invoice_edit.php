@@ -737,7 +737,7 @@
                                                     <div id="errror" class="invoceHeader" style="position: relative;">
                                                         <div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
                                                             <div>	
-                                                                <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\')">
+                                                                <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\', false)">
                                                             </div>
                                                         </div>
                                                         <div>
@@ -802,7 +802,7 @@
 
                                         echo '
                                             <div>	
-                                                <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\')">
+                                                <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\', false)">
                                             </div>
                                         </div>
                     

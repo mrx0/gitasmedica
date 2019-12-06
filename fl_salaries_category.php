@@ -131,6 +131,7 @@ if ($enter_ok){
                                     </div>';
 
                 foreach ($categories_j as $category) {
+                    //var_dump($categories_j);
 
                     //Оклад этого сотрудника, который действует сейчас
                     $arr = array();
@@ -149,6 +150,8 @@ if ($enter_ok){
                     } else {
                         $salary = '<span style="color: red;">Не указано</span>';
                     }
+
+                    //var_dump($salary);
 
                     echo '
                                         <div class="cellName" style="text-align: center;">

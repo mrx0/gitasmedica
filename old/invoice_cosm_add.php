@@ -437,7 +437,7 @@
 								</div>';
 						
 						echo '
-							<input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd('.$sheduler_zapis[0]['type'].')">
+							<input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd('.$sheduler_zapis[0]['type'].', false)">
 							</div>
 						</div>
 	

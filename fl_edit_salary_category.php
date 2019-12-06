@@ -20,7 +20,7 @@
                 if ((isset($_GET['type_id'])) && (isset($_GET['filial_id']))){
 
                     //Если ассистенты или админы
-                    if (($_GET['type_id'] == 4) || ($_GET['type_id'] == 4)) {
+                    if (($_GET['type_id'] == 4) || ($_GET['type_id'] == 7)) {
                         $category_j = SelDataFromDB('spr_categories', $_GET['category_id'], 'id');
                         //var_dump($category_j);
                     }
@@ -36,12 +36,12 @@
                                 <div id="status">
                                     <header>
                                         <div class="nav">
-                                            <a href="fl_salaries_category.php" class="b">Оклады по должностям</a>
+                                            <a href="fl_salaries_category.php?who='.$_GET['type_id'].'" class="b">Оклады по должностям</a>
                                         </div>
                                         <h1>Оклад для должности "'.$permissions_j[0]['name'].'"</h1>
                                         Филиал: '.$filials_j[$_GET['filial_id']]['name'].'<br>';
                             //Если ассистенты или админы
-                            if (($_GET['type_id'] == 4) || ($_GET['type_id'] == 4)) {
+                            if (($_GET['type_id'] == 4) || ($_GET['type_id'] == 7)) {
                                 echo '
                                         Категория: ' . $category_j[0]['name'] . '';
                             }
@@ -51,7 +51,7 @@
                             echo '
                                     <div id="data">';
                             //Если ассистенты или админы
-                            if (($_GET['type_id'] == 4) || ($_GET['type_id'] == 4)) {
+                            if (($_GET['type_id'] == 4) || ($_GET['type_id'] == 7)) {
                                 echo '
                                         <input type="hidden" id="category_id" value="' . $_GET['category_id'] . '">';
                             }else{
@@ -68,7 +68,7 @@
                             $salaries_j = array();
 
                             //Если ассистенты или админы
-                            if (($_GET['type_id'] == 4) || ($_GET['type_id'] == 4)) {
+                            if (($_GET['type_id'] == 4) || ($_GET['type_id'] == 7)) {
                                 //$query = "SELECT * FROM `fl_spr_percents` ORDER BY `type`";
                                 $query = "SELECT * FROM `fl_spr_salaries_category` WHERE `permission`='{$_GET['type_id']}' AND `category`='{$category_j[0]['id']}' AND `filial_id`='{$_GET['filial_id']}'  ORDER BY `date_from` DESC";
                             }else{
