@@ -6098,6 +6098,7 @@
                     });
 
                     $(".itogZP").each(function(){
+                        //console.log("itogZP");
 
                         var worker_id = $(this).attr("w_id");
 
@@ -6112,9 +6113,12 @@
                         var filialRealiz = Number($(this).attr("filialRealiz"));
                         var worker_revenue_abon_percent = Number($(this).attr("worker_revenue_abon_percent"));
                         var filialAbon = Number($(this).attr("filialAbon"));
-                        //console.log(w_percentHours);
-                        //console.log(worker_revenue_solar_percent);
-                        //console.log(filialSolar);
+
+                        //if (worker_id == 518) {
+                            // console.log(w_percentHours);
+                            // console.log(worker_revenue_solar_percent);
+                            // console.log(filialSolar);
+                        //}
 
                         if (w_percentHours > 0){
 
@@ -6138,6 +6142,12 @@
                             zp_temp = (oklad * w_percentHours) / 100;
 
                             revenue_summ = (((filialMoney / 100) * worker_revenue_percent) / 100) * w_percentHours;
+                            // if (worker_id == 518) {
+                            //     console.log(filialMoney);
+                            //     console.log(worker_revenue_percent);
+                            //     console.log(w_percentHours);
+                            //     console.log(revenue_summ);
+                            // }
 
                             revenue_solar_summ = (((filialSolar / 100) * worker_revenue_solar_percent) / 100) * w_percentHours;
                             revenue_realiz_summ = (((filialRealiz / 100) * worker_revenue_realiz_percent) / 100) * w_percentHours;
@@ -6270,7 +6280,7 @@
                 //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             success: function (res) {
-                console.log (res);
+                //console.log (res);
 
                 if (res.result == "success") {
                     //console.log (res.data);
