@@ -25,7 +25,7 @@
                 $db_ex = 'journal_invoice_ex';
                 $db_ex_mkb = 'journal_invoice_ex_mkb';
 
-                if ($_POST['adv']){
+                if ($_POST['adv'] == 'true'){
                     $db = 'journal_advanaced_invoice';
                     $db_ex = 'journal_advanaced_invoice_ex';
                     $db_ex_mkb = 'journal_advanaced_invoice_ex_mkb';
