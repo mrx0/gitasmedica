@@ -41,6 +41,7 @@
                                         <div id="data">
                                             <input type="hidden" id="worker_id" value="' . $worker_j[0]['id'] . '">
                                             <input type="hidden" id="pass" value="fl_add_new_salary_f">';
+//                                            <input type="hidden" id="category_id" value="0">';
 
                             $msql_cnnct = ConnectToDB();
 
