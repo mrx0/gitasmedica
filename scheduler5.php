@@ -491,7 +491,7 @@
                 foreach ($filial_workers as $worker_data) {
                     //var_dump($worker_data);
 
-                    if (($_SESSION['id'] == $worker_data['id']) || ($_SESSION['id'] == 270) || $god_mode) {
+                    if (($_SESSION['id'] == $worker_data['id']) || ($_SESSION['id'] == 270) || $god_mode || ($worker_data['permissions'] == 777)) {
 
                         $normaHours = getNormaHours($worker_data['id']);
 

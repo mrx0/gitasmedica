@@ -14,6 +14,7 @@
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
+        include_once 'variables.php';
 		//var_dump($_SESSION['fl_calcs_tabels']);
 
         if (($_SESSION['id'] == 270) || $god_mode) {
@@ -23,7 +24,7 @@
 			include_once 'filter_f.php';
 			include_once 'ffun.php';
 
-            include_once 'variables.php';
+            //include_once 'variables.php';
 
             unset($_SESSION['fl_calcs_tabels2']);
 

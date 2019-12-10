@@ -373,6 +373,14 @@
                                                                 </a>
                                                             </div>
                                                         </li>';
+                                        $rezult .= '
+														<li>
+															<div>
+																<a href="invoice_advance_add.php?client=' . $ZapisHereQueryToday[$z]['patient'] . '&filial=' . $ZapisHereQueryToday[$z]['office'] . '&date=' . strtotime($ZapisHereQueryToday[$z]['day'] . '.' . $month . '.' . $ZapisHereQueryToday[$z]['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $ZapisHereQueryToday[$z]['id'] . '&worker=' . $ZapisHereQueryToday[$z]['worker'] . '&type=' . $ZapisHereQueryToday[$z]['type'] . '" class="ahref">
+																	Предварительный расчёт
+																</a>
+															</div>
+														</li>';
                                     }
                                     if (($ZapisHereQueryToday[$z]['type'] == 6) && $cosm_edit) {
                                         $rezult .= '
