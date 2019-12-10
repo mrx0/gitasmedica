@@ -9,8 +9,12 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 		//var_dump($stom);
-		
-		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
+
+        //2019-12-10 изменено временно, проверить
+        //чтобы не пускало врачей в общую запись
+
+		//if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
+		if (($scheduler['see_all'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 

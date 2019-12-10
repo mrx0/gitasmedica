@@ -7192,7 +7192,7 @@
 	//Показываем блок с суммами и кнопками Для наряда
 	function showInvoiceAdd(invoice_type, mode, adv){
 		//console.log(mode);
-		console.log(adv);
+		//console.log(adv);
 
 		$('#overlay').show();
 
@@ -7205,7 +7205,7 @@
 			SummInsBlock = '<div>Страховка: <span class="calculateInsInvoice">'+SummIns+'</span> руб.</div>';
 		}
 
-		var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'add\')">';
+		var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'add\', '+adv+')">';
 
 		// if (invoice_type == 88){
          //    buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_free_add(\'add\')">';
@@ -7216,7 +7216,7 @@
 		// }
 
 		if (mode == 'edit'){
-			buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'edit\')">';
+			buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'edit\', '+adv+')">';
 		}
 
 
@@ -8046,7 +8046,7 @@
     }
 
     //Добавляем/редактируем в базу наряд из сессии (сама функция)
-    function Ajax_invoice_add_f(invoice_type, mode, zapis_id){
+    function Ajax_invoice_add_f(invoice_type, mode, zapis_id, adv){
 
         var invoice_id = 0;
 
@@ -8083,7 +8083,9 @@
             summins: SummIns,
 
             invoice_type: invoice_type,
-            invoice_id: invoice_id
+            invoice_id: invoice_id,
+
+            adv: adv
 		};
 
         if (zapis_id != 0) {
@@ -8110,30 +8112,48 @@
 
                 if(res.result == "success"){
                     $('#data').hide();
-                    $('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
-                        '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован наряд</li>'+
-                        '<li class="cellsBlock" style="width: auto;">'+
-                        '<a href="invoice.php?id='+res.data+'" class="cellName ahref">'+
-                        '<b>Наряд #'+res.data+'</b><br>'+
-                        '</a>'+
-                        '<div class="cellName">'+
-                        '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
-                        'Сумма:<br>'+
-                        '<span class="calculateInvoice" style="font-size: 13px">'+Summ+'</span> руб.'+
-                        '</div>'+
-                        SummInsStr+
-                        '</div>'+
-                        '</li>'+
-                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-                        '<a href="payment_add.php?invoice_id='+res.data+'" class="b">Оплатить</a>'+
-                        '</li>'+
-                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-                        '<a href="add_order.php?client_id='+client+'&invoice_id='+res.data+'" class="b">Добавить приходный ордер</a>'+
-                        '</li>'+
-                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-                        '<a href="finance_account.php?client_id='+client+'" class="b">Управление счётом</a>'+
-                        '</li>'+
-                        '</ul>');
+                    if (adv){
+                        $('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
+                            '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован предварительный расчёт</li>' +
+                            '<li class="cellsBlock" style="width: auto;">' +
+                            '<a href="invoice_advance.php?id=' + res.data + '" class="cellName ahref">' +
+                            '<b>Пред. расчёт #' + res.data + '</b><br>' +
+                            '</a>' +
+                            '<div class="cellName">' +
+                            '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">' +
+                            'Сумма:<br>' +
+                            '<span class="calculateInvoice" style="font-size: 13px">' + Summ + '</span> руб.' +
+                            '</div>' +
+                            SummInsStr +
+                            '</div>' +
+                            '</li>' +
+                            '</ul>');
+                    }else {
+                        $('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
+                            '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован наряд</li>' +
+                            '<li class="cellsBlock" style="width: auto;">' +
+                            '<a href="invoice.php?id=' + res.data + '" class="cellName ahref">' +
+                            '<b>Наряд #' + res.data + '</b><br>' +
+                            '</a>' +
+                            '<div class="cellName">' +
+                            '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">' +
+                            'Сумма:<br>' +
+                            '<span class="calculateInvoice" style="font-size: 13px">' + Summ + '</span> руб.' +
+                            '</div>' +
+                            SummInsStr +
+                            '</div>' +
+                            '</li>' +
+                            '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">' +
+                            '<a href="payment_add.php?invoice_id=' + res.data + '" class="b">Оплатить</a>' +
+                            '</li>' +
+                            '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">' +
+                            '<a href="add_order.php?client_id=' + client + '&invoice_id=' + res.data + '" class="b">Добавить приходный ордер</a>' +
+                            '</li>' +
+                            '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">' +
+                            '<a href="finance_account.php?client_id=' + client + '" class="b">Управление счётом</a>' +
+                            '</li>' +
+                            '</ul>');
+                    }
                 }else{
                     $('#errror').html(res.data);
                 }
@@ -8142,7 +8162,7 @@
 	}
 
 	//Добавляем/редактируем в базу наряд из сессии
-	function Ajax_invoice_add(mode){
+	function Ajax_invoice_add(mode, adv){
 		//console.log(mode);
 
         var invoice_type = $("#invoice_type").val();
@@ -8174,7 +8194,7 @@
 
                     if(res.result == "success"){
 
-                        Ajax_invoice_add_f(invoice_type, mode, res.data)
+                        Ajax_invoice_add_f(invoice_type, mode, res.data, adv)
 
                     }else{
                         $('#errror').html(res.data);
@@ -8184,7 +8204,7 @@
 
 
 		}else {
-            Ajax_invoice_add_f(invoice_type, mode, 0)
+            Ajax_invoice_add_f(invoice_type, mode, 0, adv)
         }
 	}
 

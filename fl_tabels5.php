@@ -9,16 +9,17 @@
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
+        include_once 'variables.php';
 		//var_dump($_SESSION);
 
-        if (($_SESSION['id'] == 270) || $god_mode) {
+        if (in_array($_SESSION['permissions'], $workers_target_arr) || ($_SESSION['id'] == 270) || $god_mode) {
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			include_once 'filter.php';
 			include_once 'filter_f.php';
 			include_once 'ffun.php';
             include_once 'widget_calendar.php';
-            include_once 'variables.php';
+            //include_once 'variables.php';
 
             $dop = '';
             $dopWho = '';
@@ -457,7 +458,7 @@
                     foreach ($workers_j as $worker_data) {
                         //var_dump($worker_data);
 
-                        if (($_SESSION['id'] == $worker_data['id']) || ($_SESSION['id'] == 270) || $god_mode) {
+                        if (($_SESSION['id'] == $worker_data['id']) || ($_SESSION['id'] == 270) || $god_mode || ($worker_data['permissions'] == 777)) {
 
                             $normaHours = getNormaHours($worker_data['id']);
 

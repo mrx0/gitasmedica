@@ -3006,6 +3006,14 @@
                                                                 </a>
                                                             </div>
                                                         </li>';
+                        $rezult .= '
+														<li>
+															<div>
+																<a href="invoice_advance_add.php?client=' . $zapisData['patient'] . '&filial=' . $zapisData['office'] . '&date=' . strtotime($zapisData['day'] . '.' . $month . '.' . $zapisData['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $zapisData['id'] . '&worker=' . $zapisData['worker'] . '&type=' . $zapisData['type'] . '" class="ahref">
+																	Предварительный расчёт
+																</a>
+															</div>
+														</li>';
                     }
                     if (($zapisData['type'] == 6) && $cosm_edit && $main_zapis) {
                         $rezult .= '

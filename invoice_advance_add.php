@@ -9,7 +9,7 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 	
-		if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
+		if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode){
 	
 			include_once 'DBWork.php';
 			include_once 'functions.php';
@@ -27,7 +27,7 @@
 			if ($_GET){
                 $invoice_free = false;
 
-			    //Если наряд "с улицы"
+			    //Если калькуляция "с улицы"
 			    if (isset($_GET['free'])){
 			        if ($_GET['free'] == 1){
                         $invoice_free = true;
@@ -76,7 +76,7 @@
 
                             $msql_cnnct = ConnectToDB ();
 
-                            //Если наряд "с улицы"
+                            //Если калькуляция "с улицы"
                             if (!$invoice_free) {
                                 $query = "SELECT * FROM `zapis` WHERE `id`='" . $_GET['id'] . "'";
 
@@ -373,7 +373,7 @@
 //                                    var_dump(date("m"));
 //                                    var_dump(date("Y"));
 
-                                    echo '<h1>Нельзя добавлять наряды задним числом</h1>';
+                                    echo '<h1>Нельзя добавлять калькуляции задним числом</h1>';
                                 }else{
                                     if ($sheduler_zapis[0]['type'] == 5) {
                                         //Зубки
@@ -700,7 +700,7 @@
                                                 <div id="errror" class="invoceHeader" style="position: relative;">
                                                     <div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
                                                         <div>	
-                                                            <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\', false)">
+                                                            <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\', true)">
                                                         </div>
                                                     </div>
                                                     <div>
@@ -823,6 +823,10 @@
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}
+
+        echo '
+		    <div id="doc_title">Новый предварительный расчёт /' . WriteSearchUser('spr_clients', $sheduler_zapis[0]['patient'], 'user', false) . ' - Асмедика</div>';
+
 	}else{
 		header("location: enter.php");
 	}

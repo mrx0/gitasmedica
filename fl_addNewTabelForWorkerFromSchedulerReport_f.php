@@ -20,9 +20,11 @@
                 !isset($_POST['per_from_salary']) || !isset($_POST['filialmoney'])  || !isset($_POST['w_revenue_summ']) || !isset($_POST['worker_category_id']) ||
                 !isset($_POST['w_hours']) || !isset($_POST['summ'])
             ) {
-                echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
+                echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка #59. Что-то пошло не так</div>'));
             } else {
-                if ((($_POST['filial_id'] != 0) && ($_POST['w_hours'] != 0)) || ($_POST['type'] == 11)) {
+                if ((($_POST['filial_id'] != 0) && ($_POST['w_hours'] != 0)) ||
+                    ($_POST['type'] == 1) || ($_POST['type'] == 9) || ($_POST['type'] == 11) || ($_POST['type'] == 12) || ($_POST['type'] == 777)
+                ) {
 
                     //Смотрим, нет ли у этого сотрудника уже табеля за этот месяц
                     $msql_cnnct = ConnectToDB();
@@ -61,7 +63,7 @@
                         echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Табель сотрудника за этот месяц уже создан.</div>'));
                     }
                 }else{
-                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
+                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка #60. Что-то пошло не так</div>', 'post' => $_POST));
                 }
             }
         }
