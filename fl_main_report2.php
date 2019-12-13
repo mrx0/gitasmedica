@@ -23,7 +23,7 @@
         if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
 
 
-            $permissions_sort_method = [5,6,10,7,4,13,14,15,9,12,777];
+            $permissions_sort_method = [5,6,10,7,4,13,14,15,9,12,11,777];
 
             $filials_j = getAllFilials(false, false, false);
             //var_dump($filials_j);
