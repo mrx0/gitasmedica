@@ -113,7 +113,7 @@
                             }
 //                            var_dump($sheduler_zapis[0]);
 //                            var_dump($scheduler_json_str);
-                            //echo ($scheduler_json_str);
+//                            echo ($scheduler_json_str);
 
                             //if ($client !=0){
                             if (!empty($sheduler_zapis) || (($_GET['client'] == 1) && ($_GET['id'] == 0))) {
@@ -212,6 +212,7 @@
 
                                     echo '
                                                 <div class="cellName" style="position: relative; ' . $back_color . '">';
+
                                     $start_time_h = floor($sheduler_zapis[0]['start_time'] / 60);
                                     $start_time_m = $sheduler_zapis[0]['start_time'] % 60;
                                     if ($start_time_m < 10) $start_time_m = '0' . $start_time_m;
@@ -230,8 +231,8 @@
                                                 </div>';
                                     echo '
                                                 <div class="cellName">';
-                                    echo
-                                        'Пациент <br><b>' . WriteSearchUser('spr_clients', $sheduler_zapis[0]['patient'], 'user', true) . '</b>';
+                                    echo '
+                                                    Пациент <br><b>' . WriteSearchUser('spr_clients', $sheduler_zapis[0]['patient'], 'user', true) . '</b>';
                                     echo '
                                                 </div>';
                                     echo '
@@ -240,8 +241,7 @@
                                     $offices = SelDataFromDB('spr_filials', $sheduler_zapis[0]['office'], 'offices');
 
                                     echo '
-                                                    Филиал:<br>' .
-                                        $offices[0]['name'];
+                                                    Филиал:<br>' . $offices[0]['name'];
                                     echo '
                                                 </div>';
                                     echo '
@@ -263,11 +263,66 @@
                                 }
 
                                 //Наряды
+//                                echo '
+//                                    <ul id="invoices" style="margin-left: 6px; margin-bottom: 10px;">
+//                                        <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Последний выписанный наряд для этой записи</li>';
+//
+//                                $query = "SELECT * FROM `journal_invoice` WHERE `zapis_id`='" . $_GET['id'] . "' AND `status` <> '1' AND `status` <> '9' ORDER BY `create_time` DESC LIMIT 1";
+//
+//                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+//                                $number = mysqli_num_rows($res);
+//                                if ($number != 0) {
+//                                    while ($arr = mysqli_fetch_assoc($res)) {
+//                                        array_push($invoice_j, $arr);
+//                                    }
+//                                } else
+//                                    $invoice_j = 0;
+//                                //var_dump ($invoice_j);
+//
+//                                if ($invoice_j != 0) {
+//                                    //var_dump ($invoice_j);
+//
+//                                    foreach ($invoice_j as $invoice_item) {
+//                                        echo '
+//                                            <li class="cellsBlock" style="width: auto;">';
+//                                        echo '
+//                                                <a href="invoice.php?id=' . $invoice_item['id'] . '" class="cellName ahref">
+//                                                    <b>Наряд #' . $invoice_item['id'] . '</b><br>
+//                                                    <span style="font-size: 85%; color: #999;">' . date('d.m.y H:i', strtotime($invoice_item['create_time'])) . '</span>
+//                                                </a>
+//                                                <div class="cellName">
+//                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+//                                                        Сумма:<br>
+//                                                        <span class="calculateInvoice" style="font-size: 13px">' . $invoice_item['summ'] . '</span> руб.
+//                                                    </div>';
+//                                        if ($invoice_item['summins'] != 0) {
+//                                            echo '
+//                                                <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+//                                                    Страховка:<br>
+//                                                    <span class="calculateInsInvoice" style="font-size: 13px">' . $invoice_item['summins'] . '</span> руб.
+//                                                </div>';
+//                                        }
+//                                        echo '
+//                                                </div>';
+//                                        echo '
+//                                            </li>';
+//                                    }
+//
+//                                } else {
+//                                    echo '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 5px; color: red;">Нет нарядов</li>';
+//                                }
+//
+//                                echo '
+//                                    </ul>';
+
+
+
+                                //Предварительные расчёты пациента (пока все)
                                 echo '
                                     <ul id="invoices" style="margin-left: 6px; margin-bottom: 10px;">					
-                                        <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Последний выписанный наряд для этой записи</li>';
+                                        <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Предварительные расчёты пациента:</li>';
 
-                                $query = "SELECT * FROM `journal_invoice` WHERE `zapis_id`='" . $_GET['id'] . "' AND `status` <> '1' AND `status` <> '9' ORDER BY `create_time` DESC LIMIT 1";
+                                $query = "SELECT * FROM `journal_advanaced_invoice` WHERE `client_id`='" . $_GET['client'] . "' AND `status` <> '9' ORDER BY `create_time`";
 
                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
                                 $number = mysqli_num_rows($res);
@@ -281,32 +336,40 @@
 
                                 if ($invoice_j != 0) {
                                     //var_dump ($invoice_j);
-
+                                    echo '
+                                            <li class="cellsBlock" style="width: auto; vertical-align: top;">';
                                     foreach ($invoice_j as $invoice_item) {
+
                                         echo '
-                                            <li class="cellsBlock" style="width: auto;">';
-                                        echo '
-                                                <a href="invoice.php?id=' . $invoice_item['id'] . '" class="cellName ahref">
-                                                    <b>Наряд #' . $invoice_item['id'] . '</b><br>
-                                                    <span style="font-size: 85%; color: #999;">' . date('d.m.y H:i', strtotime($invoice_item['create_time'])) . '</span>
-                                                </a>
-                                                <div class="cellName">
-                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                        Сумма:<br>
-                                                        <span class="calculateInvoice" style="font-size: 13px">' . $invoice_item['summ'] . '</span> руб.
-                                                    </div>';
+                                                <div class="cellsBlockHover" style="display: inline-block;  vertical-align: top;">
+                                                    <a href="invoice_advance.php?id=' . $invoice_item['id'] . '" class="cellName ahref" style="border-right: none;">
+                                                        <b>Пред. расчёт #' . $invoice_item['id'] . '</b><br>
+                                                        <span style="font-size: 85%; color: #999;">Автор: ' . WriteSearchUser('spr_workers', $invoice_item['create_person'], 'user', false) . '</span><br>
+                                                        <span style="font-size: 85%; color: #999;">' . date('d.m.y H:i', strtotime($invoice_item['create_time'])) . '</span>
+                                                    </a>
+                                                    <div class="cellName" style="border-left: none;">
+                                                        <div style="margin: 1px 0; padding: 1px 3px;">
+                                                            <i>'.$invoice_item['comment'].'</i>
+                                                        </div>
+                                                        <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+                                                            Сумма:<br>
+                                                            <span class="calculateInvoice" style="font-size: 13px">' . $invoice_item['summ'] . '</span> руб.
+                                                        </div>';
                                         if ($invoice_item['summins'] != 0) {
                                             echo '
-                                                <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                    Страховка:<br>
-                                                    <span class="calculateInsInvoice" style="font-size: 13px">' . $invoice_item['summins'] . '</span> руб.
-                                                </div>';
+                                                        <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+                                                            Страховка:<br>
+                                                            <span class="calculateInsInvoice" style="font-size: 13px">' . $invoice_item['summins'] . '</span> руб.
+                                                        </div>';
                                         }
                                         echo '
-                                                </div>';
+                                                    </div>';
                                         echo '
-                                            </li>';
+                                                </div>';
+
                                     }
+                                    echo '
+                                            </li>';
 
                                 } else {
                                     echo '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 5px; color: red;">Нет нарядов</li>';
@@ -314,6 +377,9 @@
 
                                 echo '
                                     </ul>';
+
+
+
 
                                 $discount = $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['discount'];
 
@@ -614,10 +680,18 @@
                                                                 </div>-->
                                                             </div>
                                                         </div>
-                                                    </div>
-                                            ';
-
+                                                    </div>';
                                     }
+
+                                    echo '	
+                                                <div style="font-size: 80%; color: #AAA; margin: 10px 0;">
+                                                    <div style="margin-bottom: 5px;">
+                                                        <span style="color: #AAA; margin-bottom: 2px;">Комментарий (описание), если необходимо</span>
+                                                    </div>
+                                                    <div>
+                                                        <input type="text" size="30" maxlength="30" name="comment" id="comment" placeholder="Не более 30 символов" value="" autocomplete="off" style="font-size: 110%;">
+                                                    </div>
+                                                </div>';
 
                                     echo '			
                                                 <div  style="display: inline-block;/* width: 380px; height: 600px;*/">';

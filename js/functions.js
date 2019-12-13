@@ -8049,12 +8049,17 @@
     function Ajax_invoice_add_f(invoice_type, mode, zapis_id, adv){
 
         var invoice_id = 0;
+        var comment = "";
 
         var link = "invoice_add_f.php";
 
         if (mode == 'edit'){
             link = "invoice_edit_f.php";
             invoice_id = $("#invoice_id").val();
+        }
+
+        if (adv){
+            comment = $("#comment").val();
         }
 
         var Summ = $("#calculateInvoice").html();
@@ -8085,7 +8090,8 @@
             invoice_type: invoice_type,
             invoice_id: invoice_id,
 
-            adv: adv
+            adv: adv,
+            comment: comment
 		};
 
         if (zapis_id != 0) {
@@ -8105,7 +8111,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                //console.log(res);
+                console.log(res);
 
                 $('.center_block').remove();
                 $('#overlay').hide();

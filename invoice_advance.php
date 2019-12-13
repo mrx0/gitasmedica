@@ -172,26 +172,26 @@
 							if (($finances['edit'] == 1) || $god_mode){
 								if ($invoice_j[0]['status'] != 9){
 									echo '
-												<a href="invoice_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+												<a href="invoice_advance_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
 								}
 								if (($invoice_j[0]['status'] == 9) && (($finances['close'] == 1) || $god_mode)){
 									echo '
-										<a href="#" onclick="Ajax_reopen_invoice('.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 100%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
+										<a href="#" onclick="Ajax_reopen_invoice_advance('.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 100%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
 								}
 							}
 							//Изменить дату внесения
-							if (($finances['see_all'] == 1) || $god_mode){
-								if ($invoice_j[0]['status'] != 9){
-									echo '
-												<a href="invoice_time_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Изменить дату"><i class="fa fa-clock-o" aria-hidden="true"></i></a>';
-								}
-							}
-							if (($finances['close'] == 1) || $god_mode){
-								if ($invoice_j[0]['status'] != 9){
-									echo '
-												<a href="invoice_del.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
-								}
-							}
+//							if (($finances['see_all'] == 1) || $god_mode){
+//								if ($invoice_j[0]['status'] != 9){
+//									echo '
+//												<a href="invoice_time_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Изменить дату"><i class="fa fa-clock-o" aria-hidden="true"></i></a>';
+//								}
+//							}
+//							if (($finances['close'] == 1) || $god_mode){
+//								if ($invoice_j[0]['status'] != 9){
+//									echo '
+//												<a href="invoice_del.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+//								}
+//							}
 
 							echo '			
 										</h2>';
@@ -421,7 +421,8 @@
 
 
                             echo '
-                                                <div style="display: inline-block; vertical-align: top;">';
+                                                <div style="display: inline-block; vertical-align: top;">
+                                                    <i>'.$invoice_j[0]['comment'].'</i>';
 
 //                            //Если сумма выписанная не равна сумме оплаченной
 //                            if ($invoice_j[0]['summ'] != $invoice_j[0]['paid']) {
@@ -895,289 +896,289 @@
 
 
 
-                            //Документы закрытия/оплаты нарядов списком
-                            $payment_j = array();
+//                            //Документы закрытия/оплаты нарядов списком
+//                            $payment_j = array();
+//
+//                            $query = "SELECT * FROM `journal_payment` WHERE `invoice_id`='".$_GET['id']."' ORDER BY `date_in` DESC";
+//                            //var_dump($query);
+//
+//                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//                            $number = mysqli_num_rows($res);
+//                            if ($number != 0){
+//                                while ($arr = mysqli_fetch_assoc($res)){
+//                                    array_push($payment_j, $arr);
+//                                }
+//                            }else{
+//
+//                            }
 
-                            $query = "SELECT * FROM `journal_payment` WHERE `invoice_id`='".$_GET['id']."' ORDER BY `date_in` DESC";
-                            //var_dump($query);
-
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                            $number = mysqli_num_rows($res);
-                            if ($number != 0){
-                                while ($arr = mysqli_fetch_assoc($res)){
-                                    array_push($payment_j, $arr);
-                                }
-                            }else{
-
-                            }
-
-                            if (!empty($payment_j)) {
-                                echo '
-                                            <div class="invoceHeader" style="">
-                                                <ul style="margin-left: 6px; margin-bottom: 10px;">
-                                                    <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
-                                                        Проведённые оплаты по наряду:
-                                                    </li>';
-
-                                foreach ($payment_j as $payment_item) {
-
-                                    $pay_type_mark = '';
-                                    $cert_num = '';
-
-                                    if ($payment_item['type'] == 1){
-                                        $pay_type_mark = '<i class="fa fa-certificate" aria-hidden="true" title="Оплата сертификатом"></i>';
-                                        //Найдем сертификат по его id
-                                        $query = "SELECT `num` FROM `journal_cert` WHERE `id`='".$payment_item['cert_id']."' LIMIT 1";
-                                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                                        $number = mysqli_num_rows($res);
-                                        if ($number != 0) {
-                                            $arr = mysqli_fetch_assoc($res);
-                                            $cert_num = 'Сертификатом №'.$arr['num'];
-                                        } else {
-                                            $cert_num = 'Ошибка сертификата';
-                                        }
-                                    }
-
-                                    //var_dump($payment_item['filial_id']);
-
-                                    echo '
-                                                    <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
-                                    echo '
-                                                        <div class="cellOrder" style="position: relative;">
-                                                            <b>Оплата #' . $payment_item['id'] . '</b> от ' . date('d.m.y', strtotime($payment_item['date_in'])) . ' '.$cert_num.'<br>
-                                                            <span style="font-size:90%;  color: #555;">
-                                                                Филиал: ';
-                                    if (($finances['see_all'] == 1) || $god_mode) {
-                                        echo '
-                                                                <div id="change_payment_filial" class="ahref change_payment_filial" payment_id="'.$payment_item['id'].'" filial_id="'.$payment_item['filial_id'].'" style="display: inline;">';
-                                    }
-                                    if ($payment_item['filial_id'] > 0){
-                                         echo $filials_j[$payment_item['filial_id']]['name'].'<br>';
-                                    }else{
-                                        echo '<span style="color: red;">не указан</span><br>';
-                                    }
-                                    if (($finances['see_all'] == 1) || $god_mode) {
-                                        echo '
-                                                                        </div>';
-                                    }
-
-                                    if (($payment_item['create_time'] != 0) || ($payment_item['create_person'] != 0)) {
-                                        echo '
-                                                                Добавлен: ' . date('d.m.y H:i', strtotime($payment_item['create_time'])) . '<br>
-                                                                Автор: ' . WriteSearchUser('spr_workers', $payment_item['create_person'], 'user', false) . '<br>';
-                                    } else {
-                                        echo 'Добавлен: не указано<br>';
-                                    }
-                                    /*if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
-                                        echo'
-                                                                Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
-                                                                <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
-                                    }*/
-                                    echo '
-                                                            </span>
-                                                            <span style="position: absolute; top: 2px; right: 3px;">'. $pay_type_mark .'</span>
-                                                        </div>
-                                                        <div class="cellName">
-                                                            <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                                Сумма:<br>
-                                                                <span class="calculateOrder" style="font-size: 13px">' . $payment_item['summ'] . '</span> руб.
-                                                            </div>
-                                                        </div>
-                                                        <div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="deletePaymentItem('.$payment_item['id'].', '.$invoice_j[0]['client_id'].', '.$invoice_j[0]['id'].');">
-                                                            <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
-                                                        </div>
-                                                        ';
-                                    echo '
-                                                    </li>';
-                                }
-
-                                echo '
-                                                </ul>
-                                            </div>';
-                            }
+//                            if (!empty($payment_j)) {
+//                                echo '
+//                                            <div class="invoceHeader" style="">
+//                                                <ul style="margin-left: 6px; margin-bottom: 10px;">
+//                                                    <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
+//                                                        Проведённые оплаты по наряду:
+//                                                    </li>';
+//
+//                                foreach ($payment_j as $payment_item) {
+//
+//                                    $pay_type_mark = '';
+//                                    $cert_num = '';
+//
+//                                    if ($payment_item['type'] == 1){
+//                                        $pay_type_mark = '<i class="fa fa-certificate" aria-hidden="true" title="Оплата сертификатом"></i>';
+//                                        //Найдем сертификат по его id
+//                                        $query = "SELECT `num` FROM `journal_cert` WHERE `id`='".$payment_item['cert_id']."' LIMIT 1";
+//                                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//                                        $number = mysqli_num_rows($res);
+//                                        if ($number != 0) {
+//                                            $arr = mysqli_fetch_assoc($res);
+//                                            $cert_num = 'Сертификатом №'.$arr['num'];
+//                                        } else {
+//                                            $cert_num = 'Ошибка сертификата';
+//                                        }
+//                                    }
+//
+//                                    //var_dump($payment_item['filial_id']);
+//
+//                                    echo '
+//                                                    <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
+//                                    echo '
+//                                                        <div class="cellOrder" style="position: relative;">
+//                                                            <b>Оплата #' . $payment_item['id'] . '</b> от ' . date('d.m.y', strtotime($payment_item['date_in'])) . ' '.$cert_num.'<br>
+//                                                            <span style="font-size:90%;  color: #555;">
+//                                                                Филиал: ';
+//                                    if (($finances['see_all'] == 1) || $god_mode) {
+//                                        echo '
+//                                                                <div id="change_payment_filial" class="ahref change_payment_filial" payment_id="'.$payment_item['id'].'" filial_id="'.$payment_item['filial_id'].'" style="display: inline;">';
+//                                    }
+//                                    if ($payment_item['filial_id'] > 0){
+//                                         echo $filials_j[$payment_item['filial_id']]['name'].'<br>';
+//                                    }else{
+//                                        echo '<span style="color: red;">не указан</span><br>';
+//                                    }
+//                                    if (($finances['see_all'] == 1) || $god_mode) {
+//                                        echo '
+//                                                                        </div>';
+//                                    }
+//
+//                                    if (($payment_item['create_time'] != 0) || ($payment_item['create_person'] != 0)) {
+//                                        echo '
+//                                                                Добавлен: ' . date('d.m.y H:i', strtotime($payment_item['create_time'])) . '<br>
+//                                                                Автор: ' . WriteSearchUser('spr_workers', $payment_item['create_person'], 'user', false) . '<br>';
+//                                    } else {
+//                                        echo 'Добавлен: не указано<br>';
+//                                    }
+//                                    /*if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
+//                                        echo'
+//                                                                Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
+//                                                                <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
+//                                    }*/
+//                                    echo '
+//                                                            </span>
+//                                                            <span style="position: absolute; top: 2px; right: 3px;">'. $pay_type_mark .'</span>
+//                                                        </div>
+//                                                        <div class="cellName">
+//                                                            <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+//                                                                Сумма:<br>
+//                                                                <span class="calculateOrder" style="font-size: 13px">' . $payment_item['summ'] . '</span> руб.
+//                                                            </div>
+//                                                        </div>
+//                                                        <div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="deletePaymentItem('.$payment_item['id'].', '.$invoice_j[0]['client_id'].', '.$invoice_j[0]['id'].');">
+//                                                            <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
+//                                                        </div>
+//                                                        ';
+//                                    echo '
+//                                                    </li>';
+//                                }
+//
+//                                echo '
+//                                                </ul>
+//                                            </div>';
+//                            }
 
                         //Расчетных листов списком
-                        $fl_calculate_j = array();
+//                        $fl_calculate_j = array();
 
-                        $query = "SELECT * FROM `fl_journal_calculate` WHERE `invoice_id`='".$_GET['id']."' ORDER BY `create_time` DESC";
-                        //var_dump($query);
-
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                        $number = mysqli_num_rows($res);
-                        if ($number != 0){
-                            while ($arr = mysqli_fetch_assoc($res)){
-                                array_push($fl_calculate_j, $arr);
-                            }
-                        }else{
-
-                        }
-
-
-                        if (!empty($fl_calculate_j)) {
-                            echo '
-                                            <div class="invoceHeader" style="">
-                                                <ul style="margin-left: 6px; margin-bottom: 10px;">
-                                                    <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
-                                                        Расчётные листы по наряду:
-                                                    </li>';
-                            foreach ($fl_calculate_j as $calculate_item) {
-
-                                echo '
-                                                    <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
-                                echo '
-                                                        <a href="fl_calculate.php?id='.$calculate_item['id'].'" class="cellOrder ahref" style="position: relative;">
-                                                            <b>Расчёт #' . $calculate_item['id'] . '</b> от ' . date('d.m.y', strtotime($calculate_item['date_in'])) . '<br>
-                                                            <span style="font-size:80%;  color: #555;">';
-
-                                if (($calculate_item['create_time'] != 0) || ($calculate_item['create_person'] != 0)) {
-                                    echo '
-                                                                Добавлен: ' . date('d.m.y H:i', strtotime($calculate_item['create_time'])) . '<br>
-                                                                <!--Автор: ' . WriteSearchUser('spr_workers', $calculate_item['create_person'], 'user', true) . '<br>-->';
-                                } else {
-                                    echo 'Добавлен: не указано<br>';
-                                }
-                                /*if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
-                                    echo'
-                                                            Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
-                                                            <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
-                                }*/
-                                echo '
-                                                            </span>
-                                                            
-                                                        </a>
-                                                        <div class="cellName">
-                                                            '.WriteSearchUser('spr_workers', $calculate_item['worker_id'], 'user', true).'<br>
-                                                        </div>
-                                                        <div class="cellName">
-                                                            <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                                Сумма к расчёту:<br>
-                                                                <span class="calculateOrder" style="font-size: 13px">' . $calculate_item['summ_inv'] . '</span> руб.
-                                                            </div>
-                                                        </div>
-                                                        <div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="fl_deleteCalculateItem('.$calculate_item['id'].', '.$invoice_j[0]['client_id'].', '.$invoice_j[0]['id'].');">
-                                                            <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
-                                                        </div>
-                                                        ';
-                                echo '
-                                                    </li>';
-                            }
-
-                            echo '
-                                                </ul>
-                                            </div>';
-                        }
+//                        $query = "SELECT * FROM `fl_journal_calculate` WHERE `invoice_id`='".$_GET['id']."' ORDER BY `create_time` DESC";
+//                        //var_dump($query);
+//
+//                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//                        $number = mysqli_num_rows($res);
+//                        if ($number != 0){
+//                            while ($arr = mysqli_fetch_assoc($res)){
+//                                array_push($fl_calculate_j, $arr);
+//                            }
+//                        }else{
+//
+//                        }
+//
+//
+//                        if (!empty($fl_calculate_j)) {
+//                            echo '
+//                                            <div class="invoceHeader" style="">
+//                                                <ul style="margin-left: 6px; margin-bottom: 10px;">
+//                                                    <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
+//                                                        Расчётные листы по наряду:
+//                                                    </li>';
+//                            foreach ($fl_calculate_j as $calculate_item) {
+//
+//                                echo '
+//                                                    <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
+//                                echo '
+//                                                        <a href="fl_calculate.php?id='.$calculate_item['id'].'" class="cellOrder ahref" style="position: relative;">
+//                                                            <b>Расчёт #' . $calculate_item['id'] . '</b> от ' . date('d.m.y', strtotime($calculate_item['date_in'])) . '<br>
+//                                                            <span style="font-size:80%;  color: #555;">';
+//
+//                                if (($calculate_item['create_time'] != 0) || ($calculate_item['create_person'] != 0)) {
+//                                    echo '
+//                                                                Добавлен: ' . date('d.m.y H:i', strtotime($calculate_item['create_time'])) . '<br>
+//                                                                <!--Автор: ' . WriteSearchUser('spr_workers', $calculate_item['create_person'], 'user', true) . '<br>-->';
+//                                } else {
+//                                    echo 'Добавлен: не указано<br>';
+//                                }
+//                                /*if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
+//                                    echo'
+//                                                            Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
+//                                                            <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
+//                                }*/
+//                                echo '
+//                                                            </span>
+//
+//                                                        </a>
+//                                                        <div class="cellName">
+//                                                            '.WriteSearchUser('spr_workers', $calculate_item['worker_id'], 'user', true).'<br>
+//                                                        </div>
+//                                                        <div class="cellName">
+//                                                            <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+//                                                                Сумма к расчёту:<br>
+//                                                                <span class="calculateOrder" style="font-size: 13px">' . $calculate_item['summ_inv'] . '</span> руб.
+//                                                            </div>
+//                                                        </div>
+//                                                        <div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="fl_deleteCalculateItem('.$calculate_item['id'].', '.$invoice_j[0]['client_id'].', '.$invoice_j[0]['id'].');">
+//                                                            <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
+//                                                        </div>
+//                                                        ';
+//                                echo '
+//                                                    </li>';
+//                            }
+//
+//                            echo '
+//                                                </ul>
+//                                            </div>';
+//                        }
 
                             //Возвраты средств на счёт по этому наряду
-                            if (!empty($fl_refund_j)) {
-                                echo '
-                                            <div class="invoceHeader" style="">
-                                                <ul style="margin-left: 6px; margin-bottom: 10px;">
-                                                    <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
-                                                        Возвраты средств на счёт по наряду:
-                                                    </li>';
-                                foreach ($fl_refund_j as $refund_item) {
-
-                                    echo '
-                                                    <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
-                                    echo '
-                                                        <a href="fl_refund.php?id='.$refund_item['id'].'" class="cellOrder ahref" style="position: relative;">
-                                                            <b>Возврат #' . $refund_item['id'] . '</b> от ' . date('d.m.y', strtotime($refund_item['date_in'])) . '<br>
-                                                            <span style="font-size:80%;  color: #555;">';
-
-                                    if (($refund_item['create_time'] != 0) || ($refund_item['create_person'] != 0)) {
-                                        echo '
-                                                                Добавлен: ' . date('d.m.y H:i', strtotime($refund_item['create_time'])) . '<br>
-                                                                <!--Автор: ' . WriteSearchUser('spr_workers', $refund_item['create_person'], 'user', true) . '<br>-->';
-                                    } else {
-                                        echo 'Добавлен: не указано<br>';
-                                    }
-                                    /*if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
-                                        echo'
-                                                                Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
-                                                                <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
-                                    }*/
-                                    echo '
-                                                            </span>
-                                                            
-                                                        </a>
-                                                        <div class="cellName">
-                                                            Основание: ' . $refund_item['descr'] . '<br>
-                                                        </div>
-                                                        <div class="cellName">
-                                                            <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                                Сумма к возврату:<br>
-                                                                <span class="calculateInvoice" style="font-size: 13px">' . $refund_item['summ'] . '</span> руб.
-                                                            </div>
-                                                        </div>
-                                                        <!--<div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="fl_deleteRefundItem('.$refund_item['id'].', '.$invoice_j[0]['client_id'].', '.$invoice_j[0]['id'].');">
-                                                            <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
-                                                        </div>-->
-                                                        ';
-                                    echo '
-                                                    </li>';
-                                }
-
-                                echo '
-                                                </ul>
-                                            </div>';
-                            }
-
-
-                            if (!empty($mat_cons_j_ex)) {
-                                if (!empty($mat_cons_j_ex['data'])) {
-                                    echo '
-                                                <div class="invoceHeader" style="">
-                                                    <ul style="margin-left: 6px; margin-bottom: 10px;">
-                                                        <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
-                                                            Затраты на материалы:
-                                                        </li>';
-                                    //foreach ($mat_cons_j_ex['data'] as $mat_cons_item) {
-
-                                        echo '
-                                                        <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
-                                        echo '
-                                                            <a href="#" class="cellOrder ahref" style="position: relative;">
-                                                                <b>Расход #' . $mat_cons_j_ex['id'] . '</b> от ' . date('d.m.y', strtotime($mat_cons_j_ex['create_time'])) . '<br>
-                                                                <span style="font-size:80%;  color: #555;">';
-
-                                        if (($mat_cons_j_ex['create_time'] != 0) || ($mat_cons_j_ex['create_person'] != 0)) {
-                                            echo '
-                                                                    Добавлен: ' . date('d.m.y H:i', strtotime($mat_cons_j_ex['create_time'])) . '<br>
-                                                                    <!--Автор: ' . WriteSearchUser('spr_workers', $mat_cons_j_ex['create_person'], 'user', true) . '<br>-->';
-                                        } else {
-                                            echo 'Добавлен: не указано<br>';
-                                        }
-                                        /*if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
-                                            echo'
-                                                                    Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
-                                                                    <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
-                                        }*/
-                                        echo '
-                                                                </span>
-                                                                
-                                                            </a>
-                                                            <div class="cellName">
-                                                                ' . $mat_cons_j_ex['descr'] . '<br>
-                                                            </div>
-                                                            <div class="cellName">
-                                                                <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                                    Сумма:<br>
-                                                                    <span class="calculateOrder" style="font-size: 13px">' . $mat_cons_j_ex['all_summ'] . '</span> руб.
-                                                                </div>
-                                                            </div>
-                                                            <div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="fl_deleteMaterialConsumption(' . $mat_cons_j_ex['id'] . ', ' . $invoice_j[0]['id'] . ');">
-                                                                <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
-                                                            </div>
-                                                            ';
-                                        echo '
-                                                        </li>';
-                                    //}
-
-                                    echo '
-                                                    </ul>
-                                                </div>';
-                                }
-                            }
+//                            if (!empty($fl_refund_j)) {
+//                                echo '
+//                                            <div class="invoceHeader" style="">
+//                                                <ul style="margin-left: 6px; margin-bottom: 10px;">
+//                                                    <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
+//                                                        Возвраты средств на счёт по наряду:
+//                                                    </li>';
+//                                foreach ($fl_refund_j as $refund_item) {
+//
+//                                    echo '
+//                                                    <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
+//                                    echo '
+//                                                        <a href="fl_refund.php?id='.$refund_item['id'].'" class="cellOrder ahref" style="position: relative;">
+//                                                            <b>Возврат #' . $refund_item['id'] . '</b> от ' . date('d.m.y', strtotime($refund_item['date_in'])) . '<br>
+//                                                            <span style="font-size:80%;  color: #555;">';
+//
+//                                    if (($refund_item['create_time'] != 0) || ($refund_item['create_person'] != 0)) {
+//                                        echo '
+//                                                                Добавлен: ' . date('d.m.y H:i', strtotime($refund_item['create_time'])) . '<br>
+//                                                                <!--Автор: ' . WriteSearchUser('spr_workers', $refund_item['create_person'], 'user', true) . '<br>-->';
+//                                    } else {
+//                                        echo 'Добавлен: не указано<br>';
+//                                    }
+//                                    /*if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
+//                                        echo'
+//                                                                Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
+//                                                                <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
+//                                    }*/
+//                                    echo '
+//                                                            </span>
+//
+//                                                        </a>
+//                                                        <div class="cellName">
+//                                                            Основание: ' . $refund_item['descr'] . '<br>
+//                                                        </div>
+//                                                        <div class="cellName">
+//                                                            <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+//                                                                Сумма к возврату:<br>
+//                                                                <span class="calculateInvoice" style="font-size: 13px">' . $refund_item['summ'] . '</span> руб.
+//                                                            </div>
+//                                                        </div>
+//                                                        <!--<div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="fl_deleteRefundItem('.$refund_item['id'].', '.$invoice_j[0]['client_id'].', '.$invoice_j[0]['id'].');">
+//                                                            <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
+//                                                        </div>-->
+//                                                        ';
+//                                    echo '
+//                                                    </li>';
+//                                }
+//
+//                                echo '
+//                                                </ul>
+//                                            </div>';
+//                            }
+//
+//
+//                            if (!empty($mat_cons_j_ex)) {
+//                                if (!empty($mat_cons_j_ex['data'])) {
+//                                    echo '
+//                                                <div class="invoceHeader" style="">
+//                                                    <ul style="margin-left: 6px; margin-bottom: 10px;">
+//                                                        <li style="font-size: 110%; color: #7D7D7D; margin-bottom: 5px;">
+//                                                            Затраты на материалы:
+//                                                        </li>';
+//                                    //foreach ($mat_cons_j_ex['data'] as $mat_cons_item) {
+//
+//                                        echo '
+//                                                        <li class="cellsBlock" style="width: auto; background: rgb(253, 244, 250);">';
+//                                        echo '
+//                                                            <a href="#" class="cellOrder ahref" style="position: relative;">
+//                                                                <b>Расход #' . $mat_cons_j_ex['id'] . '</b> от ' . date('d.m.y', strtotime($mat_cons_j_ex['create_time'])) . '<br>
+//                                                                <span style="font-size:80%;  color: #555;">';
+//
+//                                        if (($mat_cons_j_ex['create_time'] != 0) || ($mat_cons_j_ex['create_person'] != 0)) {
+//                                            echo '
+//                                                                    Добавлен: ' . date('d.m.y H:i', strtotime($mat_cons_j_ex['create_time'])) . '<br>
+//                                                                    <!--Автор: ' . WriteSearchUser('spr_workers', $mat_cons_j_ex['create_person'], 'user', true) . '<br>-->';
+//                                        } else {
+//                                            echo 'Добавлен: не указано<br>';
+//                                        }
+//                                        /*if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
+//                                            echo'
+//                                                                    Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
+//                                                                    <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
+//                                        }*/
+//                                        echo '
+//                                                                </span>
+//
+//                                                            </a>
+//                                                            <div class="cellName">
+//                                                                ' . $mat_cons_j_ex['descr'] . '<br>
+//                                                            </div>
+//                                                            <div class="cellName">
+//                                                                <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+//                                                                    Сумма:<br>
+//                                                                    <span class="calculateOrder" style="font-size: 13px">' . $mat_cons_j_ex['all_summ'] . '</span> руб.
+//                                                                </div>
+//                                                            </div>
+//                                                            <div class="cellCosmAct info" style="font-size: 100%; text-align: center;" onclick="fl_deleteMaterialConsumption(' . $mat_cons_j_ex['id'] . ', ' . $invoice_j[0]['id'] . ');">
+//                                                                <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
+//                                                            </div>
+//                                                            ';
+//                                        echo '
+//                                                        </li>';
+//                                    //}
+//
+//                                    echo '
+//                                                    </ul>
+//                                                </div>';
+//                                }
+//                            }
 
 
 							echo '
@@ -1189,7 +1190,7 @@
 
 
                             echo '
-		                            <div id="doc_title">Наряд #'.$_GET['id'].' Сумма: '.$invoice_j[0]['summ'].' / '.WriteSearchUser('spr_clients',  $invoice_j[0]['client_id'], 'user', false).' - Асмедика</div>';
+		                            <div id="doc_title">Пред. расчёт #'.$_GET['id'].' Сумма: '.$invoice_j[0]['summ'].' / '.WriteSearchUser('spr_clients',  $invoice_j[0]['client_id'], 'user', false).' - Асмедика</div>';
 							echo '
 								</div>
 							';
