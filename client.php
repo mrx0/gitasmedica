@@ -1357,6 +1357,7 @@ ORDER BY `name`;
 									</div>';
 						}
 
+
                         //Лаборатория
                         $laborder_j = SelDataFromDB ('journal_laborder', $client_j[0]['id'], 'client');
                         //var_dump($laborder_j);
@@ -1452,6 +1453,76 @@ ORDER BY `name`;
                         }
 
 						//mysql_close();
+
+
+
+
+                        //Предварительные расчёты пациента
+                        $invoice_j = array();
+
+                        echo '
+                                    <ul id="invoices" style="margin-left: 6px; margin-bottom: 10px;">					
+                                        <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Предварительные расчёты пациента:</li>';
+
+
+
+                        $query = "SELECT * FROM `journal_advanaced_invoice` WHERE `client_id`='" . $client_j[0]['id'] . "' AND `status` <> '9' ORDER BY `create_time`";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0) {
+                            while ($arr = mysqli_fetch_assoc($res)) {
+                                array_push($invoice_j, $arr);
+                            }
+                        } else
+                            $invoice_j = 0;
+                        //var_dump ($invoice_j);
+
+                        if ($invoice_j != 0) {
+                            //var_dump ($invoice_j);
+                            echo '
+                                            <li class="cellsBlock" style="width: auto; vertical-align: top;">';
+                            foreach ($invoice_j as $invoice_item) {
+
+                                echo '
+                                                <div class="cellsBlockHover" style="display: inline-block;  vertical-align: top;">
+                                                    <a href="invoice_advance.php?id=' . $invoice_item['id'] . '" class="cellName ahref" style="border-right: none;">
+                                                        <b>Пред. расчёт #' . $invoice_item['id'] . '</b><br>
+                                                        <span style="font-size: 85%; color: #999;">Автор: ' . WriteSearchUser('spr_workers', $invoice_item['create_person'], 'user', false) . '</span><br>
+                                                        <span style="font-size: 85%; color: #999;">' . date('d.m.y H:i', strtotime($invoice_item['create_time'])) . '</span>
+                                                    </a>
+                                                    <div class="cellName" style="border-left: none;">
+                                                        <div style="margin: 1px 0; padding: 1px 3px;">
+                                                            <i>'.$invoice_item['comment'].'</i>
+                                                        </div>
+                                                        <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+                                                            Сумма:<br>
+                                                            <span class="calculateInvoice" style="font-size: 13px">' . $invoice_item['summ'] . '</span> руб.
+                                                        </div>';
+                                if ($invoice_item['summins'] != 0) {
+                                    echo '
+                                                        <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+                                                            Страховка:<br>
+                                                            <span class="calculateInsInvoice" style="font-size: 13px">' . $invoice_item['summins'] . '</span> руб.
+                                                        </div>';
+                                }
+                                echo '
+                                                    </div>';
+                                echo '
+                                                </div>';
+
+                            }
+                            echo '
+                                            </li>';
+
+                        } else {
+                            echo '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 5px; color: red;">Нет нарядов</li>';
+                        }
+
+                        echo '
+                                    </ul>';
+
+
 						
 						echo '
 							</div>';

@@ -23,13 +23,18 @@
         if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
 
 
-            $permissions_sort_method = [5,6,10,7,4,13,14,15,9,12];
+            $permissions_sort_method = [5,6,10,7,4,13,14,15,9,12,777];
 
             $filials_j = getAllFilials(false, false, false);
             //var_dump($filials_j);
 
             //Получили список прав
             $permissions_j = getAllPermissions(false, true);
+            //var_dump($permissions_j);
+
+            //!!! костыль для меня =)
+            //array_push($permissions_j, array('id' => '777', 'name' => 'Сис.админ'));
+            $permissions_j[777] = array('id' => '777', 'name' => 'Сис.админ');
             //var_dump($permissions_j);
 
 
@@ -1284,8 +1289,11 @@
                             </tr>';
 
                 //Пошли по типам/должностям
+                //var_dump($subtractions_j);
+
                 foreach ($subtractions_j as $permissions => $subtractions_data) {
                     //var_dump($subtractions_data);
+                    //var_dump($permissions);
 
                     //Для создания разных цветов полей
                     //var_dump($bg_color);
