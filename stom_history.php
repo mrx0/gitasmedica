@@ -288,6 +288,13 @@
                             unset($t_f_data['zapis_date']);
                             unset($t_f_data['zapis_id']);
 
+                            unset($t_f_data['complaints']);
+                            unset($t_f_data['objectively']);
+                            unset($t_f_data['diagnosis']);
+                            unset($t_f_data['therapy']);
+                            unset($t_f_data['recommended']);
+
+                            //var_dump ($t_f_data);
                             //var_dump ($dop[0]);
 
                             if (!empty($dop[0])){

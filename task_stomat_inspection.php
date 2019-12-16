@@ -331,7 +331,7 @@
                                 <div class="cellsBlock3">
                                     <div class="cellLeft">
         							    <span style="font-size: 80%; font-weight: bold;">Жалобы</span><br>
-                                        <i style="font-size: 120%;">'.$task[0]['complaints'].'</i>
+                                        <i style="font-size: 120%;">' ,$task[0]['complaints'] != '' ? $task[0]['complaints'] : '-', '</i>
                                     </div>
                                 </div>';
 
@@ -340,7 +340,7 @@
                                 <div class="cellsBlock3">
                                     <div class="cellLeft">
         							    <span style="font-size: 80%; font-weight: bold;">Объективно</span><br>
-                                        <i style="font-size: 120%;">'.$task[0]['objectively'].'</i>
+                                        <i style="font-size: 120%;">' ,$task[0]['objectively'] != '' ? $task[0]['objectively'] : '-', '</i>
                                     </div>
                                 </div>';
 
@@ -349,7 +349,7 @@
                                 <div class="cellsBlock3">
                                     <div class="cellLeft">
         							    <span style="font-size: 80%; font-weight: bold;">Диагноз</span><br>
-                                        <i style="font-size: 120%;">'.$task[0]['diagnosis'].'</i>
+                                        <i style="font-size: 120%;">' ,$task[0]['diagnosis'] != '' ? $task[0]['diagnosis'] : '-', '</i>
                                     </div>
                                 </div>';
 
@@ -358,7 +358,7 @@
                                 <div class="cellsBlock3">
                                     <div class="cellLeft">
         							    <span style="font-size: 80%; font-weight: bold;">Лечение</span><br>
-                                        <i style="font-size: 120%;">'.$task[0]['therapy'].'</i>
+                                        <i style="font-size: 120%;">' ,$task[0]['therapy'] != '' ? $task[0]['therapy'] : '-', '</i>
                                     </div>
                                 </div>';
 
@@ -367,7 +367,7 @@
                                 <div class="cellsBlock3">
                                     <div class="cellLeft">
         							    <span style="font-size: 80%; font-weight: bold;">Рекомендовано</span><br>
-                                        <i style="font-size: 120%;">'.$task[0]['recommended'].'</i>
+                                        <i style="font-size: 120%;">' ,$task[0]['recommended'] != '' ? $task[0]['recommended'] : '-', '</i>
                                     </div>
                                 </div>';
 
@@ -376,7 +376,7 @@
                                 <div class="cellsBlock3">
                                     <div class="cellLeft">
                                         <span style="font-size: 80%;">Комментарий</span><br>
-                                        <i style="font-size: 120%;">'.$task[0]['comment'].'</i>
+                                        <i style="font-size: 120%;">' ,$task[0]['comment'] != '' ? $task[0]['comment'] : '-', '</i>
                                     </div>
                                 </div>';
 
