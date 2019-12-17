@@ -127,6 +127,13 @@
 								<a href="giveout_cash_all.php" class="b3">Расходные ордеры</a>
 							</li>';
 
+                if (($finances['see_all'] == 1) || $god_mode){
+                    echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="stat_giveout_cash.php" class="b3">Расходы по филиалам</a>
+							</li>';
+                }
+
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_consolidated_report_admin.php" class="b3">Сводный отчёт по филиалу</a>

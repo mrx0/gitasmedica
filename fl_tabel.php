@@ -559,7 +559,7 @@
                                                     
                                                 </a>
                                                 </div>';
-                                    if (mb_strlen($rezData['descr']) > 0) {
+
                                         $rezultS .= '
                                                 <div style="margin: 5px 0 0 3px; font-size: 80%;">
                                                     <b>Комментарий:</b> ' . $rezData['descr'] . '                                                
@@ -758,8 +758,15 @@
 
                             $w_percentHours = $tabel_j[0]['hours_percent'];
                         }
-                        echo '<span style="font-size:80%;  color: #555;">Удержания и документы к выплате, уже выписанные данному сотруднику в этом месяце:</span><br>';
-                        echo $rezultSall;
+                        echo '<span style="font-size:80%;  color: #555;">Удержания и документы к выплате, уже выписанные данному сотруднику в этом месяце:</span>';
+
+                        //var_dump($rezultSall);
+                        if (mb_strlen($rezultSall) > 0){
+                            echo $rezultSall;
+                        }else {
+                            echo '<span style="color: red; font-size: 80%;"> ничего нет</span>';
+                        }
+                        echo '<br>';
 
                         //Врачи
                         if (($tabel_j[0]['type'] == 5) || ($tabel_j[0]['type'] == 6) || ($tabel_j[0]['type'] == 10) || ($tabel_j[0]['type'] == 7)) {
@@ -1184,9 +1191,9 @@
 			}else{
 				echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 			}
-		}else{
-            echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
-		}
+//		}else{
+//            echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+//		}
 	}else{
 		header("location: enter.php");
 	}

@@ -189,8 +189,8 @@
 
                 //Фильтр по филиалам
                 echo '
-                            <div style="margin-top: 5px; font-size: 80%;">
-                                Показывать только филиал: 
+                            <div style="margin-top: 5px; font-size: 80%; display: inline-block;">
+                                Показывать только филиал:
 
                                 <select name="filterFilial" id="filterFilial" style="font-size: 93%;">
                                     <option value="-1">Все</option>';
@@ -207,7 +207,6 @@
 
                 echo '
                             </div>';
-
 
                 echo '
                         </ul>';
@@ -392,8 +391,11 @@
                                 <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Выручка, руб.</i></td>
                                 <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Надбавка от выручки, руб.(%)</i></td>
                                 <td style="width: 70px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Итого, руб.</i></td>
-                                <td style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">-</td>
-                                ';
+                                <td style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">
+                                    <div class="button_tiny" style="margin-top: 5px; font-size: 120%; display: inline-block; cursor: pointer;" title="Обновить все" onclick="refreshAllTabelsForWorkerFromSchedulerReport();">
+                                        <i class="fa fa-refresh" aria-hidden="true" style="color: rgb(218, 133, 9);"></i>
+                                    </div>
+                                </td>';
                 echo '
                             </tr>';
 
