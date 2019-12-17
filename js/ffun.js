@@ -6454,8 +6454,39 @@
         }
     }
 
+    //Поиск на странице табелей, требующих обновления и о попытка обновления данных
+    function refreshAllTabelsForWorkerFromSchedulerReport(){
+        $(".fa-refresh").each(function() {
+            //console.log($(this).attr('onclick'));
+
+            var str_temp = $(this).attr('onclick');
+            // console.log(str_temp);
+
+            if (str_temp !== undefined){
+
+                //var str = str_temp.split('(')[1];
+                var str = str_temp.substring(str_temp.indexOf('(')+1, str_temp.indexOf(')'));
+                //console.log(str.replace(/\s/g, ''));
+
+                var tabel_id = str.split(',')[0].replace(/\s/g, '');
+                var worker_id = str.split(',')[1].replace(/\s/g, '');
+
+                // console.log(tabel_id);
+                // console.log(worker_id);
+
+                refreshTabelForWorkerFromSchedulerReport(tabel_id, worker_id);
+
+            }
+
+            //пример обрезки строки, красиво
+            // var str = "50ml+$100";
+            // var a = str.split('+')[0]; // 50ml
+            // var b = str.split('+')[1]; // $100
+        })
+    }
+
     //Добавляем/редактируем в базу выплату в банку
-    function  fl_Ajax_add_in_bank(mode, reqData){
+    function fl_Ajax_add_in_bank(mode, reqData){
         //console.log(reqData);
 
         var date_arr = reqData['date'].split(".");

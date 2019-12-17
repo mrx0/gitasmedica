@@ -1713,7 +1713,7 @@
 	};
 
     //Добавляем/редактируем в базу сертификат
-    function  Ajax_cert_add(id, mode, certData){
+    function Ajax_cert_add(id, mode, certData){
 
         var link = "cert_add_f.php";
 
@@ -1750,7 +1750,7 @@
     }
 
     //Добавляем/редактируем в базу абонемент
-    function  Ajax_abon_add(id, mode, reqData){
+    function Ajax_abon_add(id, mode, reqData){
     	//console.log(mode);
 
         var link = "abon_add_f.php";
