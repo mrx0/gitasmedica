@@ -88,7 +88,7 @@
 //								<td class="cellCosmAct" style="text-align: center" title="Страховое">Стр.</td>';
 
 				echo '
-								<td class="cellCosmAct" style="text-align: center">Пол</td>
+								<td class="cellCosmAct" style="text-align: center; font-size: 120%;"><i class="fa fa-info" aria-hidden="true"></i></td>
 								<!--<td class="cellCosmAct" style="text-align: center; width: 80px; min-width: 80px; max-width: 80px;">Карта</td>-->
 								<td class="cellTime" style="text-align: center">Д. рож.</td>
 								<td class="cellCosmAct" style="text-align: center">Лет</td>
@@ -115,19 +115,8 @@
 //                                </td>';
 
                     echo '
-                                <td class="cellCosmAct" style="text-align: center">';
-						if ($clients_j[$i]['sex'] != 0){
-							if ($clients_j[$i]['sex'] == 1){
-								echo 'М';
-							}
-							if ($clients_j[$i]['sex'] == 2){
-								echo 'Ж';
-							}
-						}else{
-							echo '-';
-						}
-						
-						echo '
+                                <td class="cellCosmAct" style="text-align: center; font-size: 120%;">
+                                    <a href="client.php?id='.$clients_j[$i]['id'].'" class="ahref" style="color: rgb(0, 176, 255);" target="_blank" rel="nofollow noopener"><i class="fa fa-user-secret" aria-hidden="true"></i></a>
                                 </td>';
 //						echo '
 //                                <td class="cellCosmAct" style="text-align: center; width: 80px; min-width: 80px; max-width: 80px;">'.$clients_j[$i]['card'].'</td>';
