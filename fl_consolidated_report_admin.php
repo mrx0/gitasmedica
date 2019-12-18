@@ -94,6 +94,8 @@
 
                 echo '
                             <select name="SelectFilial" id="SelectFilial">';
+                echo '
+                                <option value="0" selected>Выберите филиал</option>';
 
                 foreach ($filials_j as $filial_item) {
 
