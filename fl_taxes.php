@@ -55,7 +55,7 @@
             $arr = array();
             $rez = array();
 
-            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '{$type}' AND `status` <> '8'";
+            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '{$type}' AND `status` <> '8' ORDER BY `full_name`";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
             $number = mysqli_num_rows($res);
