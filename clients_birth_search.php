@@ -76,6 +76,9 @@
 				echo '
 				
 					<div id="data">
+					    <span>
+					    Всего: '.$number.'
+					    </span>
                         <table>
 							<tr class="cellsBlock" style="font-weight:bold;">	
 								<td class="cellFullName" style="text-align: center">
