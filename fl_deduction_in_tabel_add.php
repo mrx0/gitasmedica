@@ -88,7 +88,7 @@ if ($enter_ok){
                                         <div class="cellsBlock2">
                                             <div class="cellLeft">
                                             <span style="font-size:80%;  color: #555;">Сумма (руб.)</span><br>
-                                                <input type="text" name="deduction_summ" id="deduction_summ" value="'.$tax_summ.'">
+                                                <input type="text" name="deduction_summ" id="deduction_summ" value="', $tax_summ == 0 ? '' : $tax_summ ,'" autocomplete="off" autofocus>
                                                 <label id="deduction_summ_error" class="error"></label>
                                             </div>
                                         </div>

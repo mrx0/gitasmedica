@@ -191,7 +191,7 @@ if ($enter_ok){
                                         <div class="cellsBlock2">
                                             <div class="cellLeft">
                                             <span style="font-size:80%;  color: #555;">Сумма (руб.)</span><br>
-                                                <input type="text" name="surcharge_summ" id="surcharge_summ" value="">
+                                                <input type="text" name="surcharge_summ" id="surcharge_summ" value="" autocomplete="off" autofocus>
                                                 <label id="surcharge_summ_error" class="error"></label>
                                             </div>
                                         </div>

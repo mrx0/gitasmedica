@@ -762,7 +762,7 @@
 
                         //var_dump($rezultSall);
                         if (mb_strlen($rezultSall) > 0){
-                            echo $rezultSall;
+                            echo '<br>'.$rezultSall;
                         }else {
                             echo '<span style="color: red; font-size: 80%;"> ничего нет</span>';
                         }
