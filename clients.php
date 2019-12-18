@@ -75,9 +75,12 @@
 				echo '
 					<a href="client_add.php" class="b">Добавить</a>';
 			}
-			if (!$filter){
-				echo '<button class="md-trigger b" data-modal="modal-11">Поиск</button>';
-			}
+//			if (!$filter){
+//				echo '<button class="md-trigger b" data-modal="modal-11">Поиск</button>';
+//			}
+
+            echo '<a href="clients_birth_search.php" class="b">Поиск по др</a>';
+
 			echo '
 				</header>';
 			
