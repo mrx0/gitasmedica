@@ -239,10 +239,13 @@
 //							</li>';
 
                 //if (($finances['see_all'] == 1) || $god_mode) {
-                echo '
-                            <li class="cellsBlock" style="margin: 1px;">
-                                <a href="fl_report_noch.php" class="b3">Ночь</a>
-                            </li>';
+
+
+
+//                echo '
+//                            <li class="cellsBlock" style="margin: 1px;">
+//                                <a href="fl_report_noch.php" class="b3">Ночь</a>
+//                            </li>';
 
 
                 //}
