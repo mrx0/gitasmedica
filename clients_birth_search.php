@@ -76,6 +76,9 @@
 				echo '
 				
 					<div id="data">
+					    <span>
+					    Всего: '.$number.'
+					    </span>
                         <table>
 							<tr class="cellsBlock" style="font-weight:bold;">	
 								<td class="cellFullName" style="text-align: center">
@@ -89,7 +92,7 @@
 
 				echo '
 								<td class="cellCosmAct" style="text-align: center; font-size: 120%;"><i class="fa fa-info" aria-hidden="true"></i></td>
-								<!--<td class="cellCosmAct" style="text-align: center; width: 80px; min-width: 80px; max-width: 80px;">Карта</td>-->
+								<td class="cellCosmAct" style="text-align: center">Пол</td>
 								<td class="cellTime" style="text-align: center">Д. рож.</td>
 								<td class="cellCosmAct" style="text-align: center">Лет</td>
 								<td class="cellFullName" style="text-align: center">Контакты</td>
@@ -118,43 +121,57 @@
                                 <td class="cellCosmAct" style="text-align: center; font-size: 120%;">
                                     <a href="client.php?id='.$clients_j[$i]['id'].'" class="ahref" style="color: rgb(0, 176, 255);" target="_blank" rel="nofollow noopener"><i class="fa fa-user-secret" aria-hidden="true"></i></a>
                                 </td>';
-//						echo '
-//                                <td class="cellCosmAct" style="text-align: center; width: 80px; min-width: 80px; max-width: 80px;">'.$clients_j[$i]['card'].'</td>';
-//
-						echo '
-                                <td class="cellTime" style="text-align: center">';
-						if ($clients_j[$i]['birthday2'] == '0000-00-00'){
-							echo 'не указана';
-						}else{
-							echo date('d.m.Y', strtotime($clients_j[$i]['birthday2']));
-						}
-						echo '				
-                                </td>';
-						echo '
+
+                    echo '
                                 <td class="cellCosmAct" style="text-align: center">';
-						if ($clients_j[$i]['birthday2'] == '0000-00-00'){
-							echo '-';
-						}else{
-							echo '<b>'.getyeardiff(strtotime($clients_j[$i]['birthday2']), 0).'</b>';
-						}
-						echo '
+                    if ($clients_j[$i]['sex'] != 0){
+                        if ($clients_j[$i]['sex'] == 1){
+                            echo 'М';
+                        }
+                        if ($clients_j[$i]['sex'] == 2){
+                            echo 'Ж';
+                        }
+                    }else{
+                        echo '-';
+                    }
+
+                    echo '
+                                </td>';
+
+                    echo '
+                                <td class="cellTime" style="text-align: center">';
+                    if ($clients_j[$i]['birthday2'] == '0000-00-00'){
+                        echo 'не указана';
+                    }else{
+                        echo date('d.m.Y', strtotime($clients_j[$i]['birthday2']));
+                    }
+                    echo '				
+                                </td>';
+                    echo '
+                                <td class="cellCosmAct" style="text-align: center">';
+                    if ($clients_j[$i]['birthday2'] == '0000-00-00'){
+                        echo '-';
+                    }else{
+                        echo '<b>'.getyeardiff(strtotime($clients_j[$i]['birthday2']), 0).'</b>';
+                    }
+                    echo '
                                 </td>';
 									
-						echo '
+                    echo '
                                 <td class="cellFullName">'.$clients_j[$i]['telephone'];
-						if ($clients_j[$i]['htelephone'] != ''){
-							echo '
+                    if ($clients_j[$i]['htelephone'] != ''){
+                        echo '
 										дом. '.$clients_j[$i]['htelephone'].'';
-						}
-						if ($clients_j[$i]['telephoneo'] != ''){
-							echo '
+                    }
+                    if ($clients_j[$i]['telephoneo'] != ''){
+                        echo '
 										тел.оп. '.$clients_j[$i]['telephoneo'].'';
-						}
-						if ($clients_j[$i]['htelephoneo'] != ''){
-							echo '
+                    }
+                    if ($clients_j[$i]['htelephoneo'] != ''){
+                        echo '
 										дом.тел.оп. '.$clients_j[$i]['htelephoneo'].'';
-						}
-						echo '
+                    }
+                    echo '
                                 </td>
                                 <td class="cellText">'.$clients_j[$i]['comment'].'</td>
                             </tr>';
