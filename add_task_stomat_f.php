@@ -9,6 +9,7 @@
 		header("location: enter.php");
 	}else{
 		include_once 'DBWork.php';
+		include_once 'functions.php';
 		//var_dump ($_POST);
 		//var_dump ($_SESSION['journal_tooth_status_temp']);
 		if ($_POST){
@@ -150,6 +151,16 @@
                     $insured_status = $sheduler_zapis[0]['insured'];
                     $noch_status = $sheduler_zapis[0]['noch'];
 
+                    $month = dateTransformation($sheduler_zapis[0]['month']);
+
+//                    $start_time_h = floor($sheduler_zapis[0]['start_time'] / 60);
+//                    $start_time_m = $sheduler_zapis[0]['start_time'] % 60;
+//                    if ($start_time_m < 10) $start_time_m = '0' . $start_time_m;
+//                    $end_time_h = floor(($sheduler_zapis[0]['start_time'] + $sheduler_zapis[0]['wt']) / 60);
+//                    if ($end_time_h > 23) $end_time_h = $end_time_h - 24;
+//                    $end_time_m = ($sheduler_zapis[0]['start_time'] + $sheduler_zapis[0]['wt']) % 60;
+//                    if ($end_time_m < 10) $end_time_m = '0' . $end_time_m;
+
                     $query = "
 								INSERT INTO `journal_tooth_ex` (
 									`id`, `pervich`, `noch`, `insured`, `complaints`, `objectively`, `diagnosis`, `therapy`, `recommended`)
@@ -162,6 +173,7 @@
 								<a href="task_stomat_inspection.php?id='.$task.'" class="ahref">Посещение #'.$task.'</a> добавлено в журнал.
 								<br><br>
 								<a href="zub_photo.php?id='.$task.'" class="b">Добавить фото</a>
+								<a href="invoice_advance_add.php?client=' . $sheduler_zapis[0]['patient'] . '&filial=' . $sheduler_zapis[0]['office'] . '&date=' . strtotime($sheduler_zapis[0]['day'] . '.' . $month . '.' . $sheduler_zapis[0]['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $sheduler_zapis[0]['id'] . '&worker=' . $sheduler_zapis[0]['worker'] . '&type=' . $sheduler_zapis[0]['type'] . '" class="b">Предварительный расчёт</a>
 								<header>
 									<span style= "color: rgba(255,39,39,0.7); padding: 2px;">
 										Напоминание: Если вы что-то забыли или необходимо внести изменения,<br />
