@@ -321,6 +321,7 @@
                                     <div id="data">';
 
                                 echo "	
+                                        <input type='hidden' id='adv' name='adv' value='false'>
                                         <input type='hidden' id='client' name='client' value='" . $_GET['client'] . "'>
                                         <input type='hidden' id='client_insure' name='client_insure' value='" . $client_j[0]['insure'] . "'>
                                         <input type='hidden' id='zapis_id' name='zapis_id' value='" . $_GET['id'] . "'>
@@ -802,7 +803,7 @@
                                                     addInvoiceInSession(t_number);
                                                 });
                                                 
-                                                fillInvoiseRez(true);
+                                                fillInvoiseRez(true, false);
                                             });
                                             
                                         </script>';

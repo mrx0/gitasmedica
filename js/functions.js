@@ -5840,6 +5840,9 @@
 		// 	link = "fill_invoice_cosm_from_session_f.php";
 		// }
 
+        var adv = $("#adv").val();
+		//console.log(adv);
+
 		$.ajax({
 			url: link,
 			global: false,
@@ -5852,7 +5855,8 @@
 				filial: $("#filial").val(),
 				worker: $("#worker").val(),
                 invoice_type: invoice_type,
-                client_insure: $("#client_insure").val()
+                client_insure: $("#client_insure").val(),
+                adv: adv
 			},
 			cache: false,
 			beforeSend: function() {
