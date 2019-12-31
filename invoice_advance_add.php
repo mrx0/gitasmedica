@@ -428,7 +428,7 @@
                                     (($sheduler_zapis[0]['year'] < date("Y")) ||
                                     (($sheduler_zapis[0]['year'] == date("Y")) && ($month < date("m"))) ||
                                     (($month == date("m")) && ($sheduler_zapis[0]['day'] < date("d")))) &&
-                                    !(($finances['see_all'] == 1) || $god_mode) &&
+                                    !(($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode) &&
                                     !(($sheduler_zapis[0]['noch'] == '1') && ($diff_hours <= 14))
                                 ) {
 //                                    var_dump($sheduler_zapis[0]['day']);
@@ -440,7 +440,7 @@
 //                                    var_dump(date("m"));
 //                                    var_dump(date("Y"));
 
-                                    echo '<h1>Нельзя добавлять калькуляции задним числом</h1>';
+                                    echo '<h1>Нельзя добавлять предварительные расчеты задним числом</h1>';
                                 }else{
                                     if ($sheduler_zapis[0]['type'] == 5) {
                                         //Зубки

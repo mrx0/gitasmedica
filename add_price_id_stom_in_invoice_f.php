@@ -52,6 +52,7 @@
                             $temp_arr['gift'] = 0;
                             $temp_arr['spec_koeff'] = 0;
                             $temp_arr['discount'] = 0;
+                            $temp_arr['jaw_select'] = 0;
 
                             //$temp_arr['percent_cats'] = 0;
 

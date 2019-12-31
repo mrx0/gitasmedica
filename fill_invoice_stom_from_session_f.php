@@ -294,8 +294,17 @@
 								//Если предварительный расчет
                                 if ($_POST['adv'] == 'true') {
                                     $request .= '
-									<div class="cellCosmAct settings_text" jawselect="' . $items['jaw_select'] . '" style="font-size: 70%; text-align: center;  width: 80px; min-width: 80px; max-width: 80px; ' . $bg_col . '" onclick="contextMenuShow(' . $ind . ', ' . $key . ', event, \'jaw_selectItem\');">
-										-
+									<div class="cellCosmAct settings_text" jawselect="' . $items['jaw_select'] . '" style="font-size: 70%; text-align: center;  width: 80px; min-width: 80px; max-width: 80px; ' . $bg_col . '" onclick="contextMenuShow(' . $ind . ', ' . $key . ', event, \'jaw_selectItem\');">';
+
+                                    if ($items['jaw_select'] == 1){
+                                        $request .= 'ВЧ';
+                                    }elseif($items['jaw_select'] == 2){
+                                        $request .= 'НЧ';
+                                    }else {
+                                        $request .= '-';
+                                    }
+
+                                    $request .= '
 									</div>';
                                 }else{
 
