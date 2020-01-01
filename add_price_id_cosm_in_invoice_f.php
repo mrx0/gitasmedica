@@ -44,6 +44,7 @@
 							$temp_arr['quantity'] = 1;
 							$temp_arr['insure'] = 0;
 							$temp_arr['insure_approve'] = 0;
+							$temp_arr['jaw_select'] = 0;
 							$temp_arr['price'] = 0;
 							$temp_arr['start_price'] = 0;
 							$temp_arr['guarantee'] = 0;

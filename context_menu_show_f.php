@@ -92,6 +92,16 @@
 						</li>'.
 						'<li><div><input type="number" size="2" name="discount" id="discount" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="discountInvoice($(\'#discount\').val())"> Применить</div></div></li>';
 				}
+
+				//Челюсть (верхняя/нижняя) общее
+				if ($_POST['mark'] == 'jaw_select'){
+					$data = '
+						<li><div onclick="jawselectInvoice(0)">нет (очистить)</div></li>
+						<li><div onclick="jawselectInvoice(1)">ВЧ</div></li>
+						<li><div onclick="jawselectInvoice(2)">НЧ</div></li>
+						';
+				}
+
 				//Страховая согласовано позиция
 				if ($_POST['mark'] == 'insure_approveItem'){
 					$data = '
@@ -141,6 +151,15 @@
                             <div onclick="discountItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 50)" style="display: inline;">50%</div>
                         </li>'.
 						'<li><div><input type="number" size="2" name="discount" id="discount" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="discountItemInvoice('.$_POST['ind'].', '.$_POST['key'].', $(\'#discount\').val())"> Применить</div></div></li>';
+				}
+				//Челюсть (верхняя/нижняя) позиция
+				if ($_POST['mark'] == 'jaw_selectItem'){
+					$data = '
+						<li><div onclick="jawselectItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 0)">нет (очистить)</div></li>
+						<li><div onclick="jawselectItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 1)">ВЧ</li>
+						<li><div onclick="jawselectItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 2)">НЧ</li>
+                        ';
+
 				}
 				//Страховка позиция
 				if ($_POST['mark'] == 'insureItem'){

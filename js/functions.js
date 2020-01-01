@@ -5540,6 +5540,7 @@
 
 				//получаем значение согласования
 				insureapprove = $(this).prev().attr('insureapprove');
+                //console.log(insureapprove);
 			}
 
 			//получаем значение гарантии
@@ -5600,6 +5601,8 @@
 
 			//с учетом скидки акции, но если не страховая
             if (insure == 0) {
+                //console.log(insure);
+
                 stoim = stoim - (stoim * discount / 100);
 
             	//Убрали округление 2017.08.09
@@ -5614,11 +5617,17 @@
 
             //суммируем сумму в итоги
             if ((guarantee == 0) && (gift == 0)) {
-                if (insure != 0){
-                    if (insureapprove != 0){
-                        SummIns += stoim;
+                if ((typeof insure != "undefined") && (typeof insureapprove != "undefined")) {
+                    if (insure != 0) {
+                        console.log(typeof(insure));
+
+                        if (insureapprove != 0) {
+                            SummIns += stoim;
+                        }
+                    } else {
+                        Summ += stoim;
                     }
-                }else{
+                } else {
                     Summ += stoim;
                 }
             }
@@ -5840,6 +5849,9 @@
 		// 	link = "fill_invoice_cosm_from_session_f.php";
 		// }
 
+        var adv = $("#adv").val();
+		//console.log(adv);
+
 		$.ajax({
 			url: link,
 			global: false,
@@ -5852,7 +5864,8 @@
 				filial: $("#filial").val(),
 				worker: $("#worker").val(),
                 invoice_type: invoice_type,
-                client_insure: $("#client_insure").val()
+                client_insure: $("#client_insure").val(),
+                adv: adv
 			},
 			cache: false,
 			beforeSend: function() {
@@ -6463,6 +6476,52 @@
 		});
 	}
 
+	//Изменить челюсть (верхняя/нижняя) у всех
+	function jawselectInvoice(jaw_select){
+		//console.log(discount);
+
+        var invoice_type = $("#invoice_type").val();
+
+        var link = "add_jawselect_price_id_in_invoice_f.php";
+        if (invoice_type == 88){
+            link = "add_jawselect_price_id_in_invoice_free_f.php";
+        }
+
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+
+		$.ajax({
+			url: link,
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                jaw_select: jaw_select,
+				client: $("#client").val(),
+				zapis_id: $("#zapis_id").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val(),
+
+				invoice_type: invoice_type
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+
+                // $("#discountValue").html(Number(discount));
+
+                fillInvoiseRez(true);
+
+			}
+		});
+	}
+
 	//Изменить страховую у всех
 	function insureInvoice(insure){
 
@@ -6819,6 +6878,54 @@
 				ind: ind,
 				key: key,
 				discount: discount,
+				client: $("#client").val(),
+				zapis_id: $("#zapis_id").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val(),
+
+				invoice_type: invoice_type
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//console.log(res);
+
+                fillInvoiseRez(true);
+
+			}
+		});
+	}
+
+	//Изменить челюсть (верхняя/нижняя) у этого зуба
+	function jawselectItemInvoice(ind, key, jaw_select){
+
+		var invoice_type = $("#invoice_type").val();
+
+		var link = 'add_jawselect_price_id_in_item_invoice_f.php';
+
+		if (invoice_type == 88){
+            link = "add_jawselect_price_id_in_item_invoice_free_f.php";
+		}
+
+		//console.log(discount);
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+
+		$.ajax({
+			url: link,
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+				ind: ind,
+				key: key,
+                jaw_select: jaw_select,
 				client: $("#client").val(),
 				zapis_id: $("#zapis_id").val(),
 				filial: $("#filial").val(),
@@ -9797,6 +9904,15 @@
             // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'spec_koeff');
+            }
+        });
+
+        $("body").on("click", "#jaw_select", function(event){
+            //console.log(1);
+
+            // Проверяем нажата ли именно левая кнопка мыши:
+            if (event.which === 1)  {
+                contextMenuShow(0, 0, event, 'jaw_select');
             }
         });
 

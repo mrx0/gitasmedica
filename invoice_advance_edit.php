@@ -1,15 +1,16 @@
 <?php
 
-//invoice_edit.php
-//Редактируем счёт
+//invoice_advance_edit.php
+//Редактируем предварительный расчёт
 
 	require_once 'header.php';
     require_once 'blocks_dom.php';
 	
 	if ($enter_ok){
 		require_once 'header_tags.php';
-	
-		if (($finances['edit'] == 1) || $god_mode){
+
+        //!!! Доделать! дать права на редактирование только автору и руководству
+        if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode){
 			if ($_GET){
 				include_once 'DBWork.php';
 				include_once 'functions.php';
@@ -21,7 +22,7 @@
 
 				if (isset($_GET['id'])){
 					
-					$invoice_j = SelDataFromDB('journal_invoice', $_GET['id'], 'id');
+					$invoice_j = SelDataFromDB('journal_advanaced_invoice', $_GET['id'], 'id');
 					//var_dump($invoice_j);
 					
 					if ($invoice_j != 0){
@@ -46,9 +47,11 @@
                         }else {
 
                             //Если заднее число
-                            if ((strtotime($invoice_j[0]['create_time']) + 12 * 60 * 60 < time()) && (($finances['see_all'] != 1) && !$god_mode)) {
-                                echo '<h1>Нельзя редактировать задним числом</h1>';
-                            } else {
+
+                            //!!! 2019-12-31 временно отключено, потом вернуть
+//                            if ((strtotime($invoice_j[0]['create_time']) + 12 * 60 * 60 < time()) && (($finances['see_all'] != 1) && !$god_mode)) {
+//                                echo '<h1>Нельзя редактировать задним числом</h1>';
+//                            } else {
 
                                 $sheduler_zapis = array();
                                 $invoice_ex_j = array();
@@ -86,7 +89,7 @@
                                     }
 
                                     //Хочу получить все данные по этому наряду и захреначить их в сессиию
-                                    $query = "SELECT * FROM `journal_invoice_ex` WHERE `invoice_id`='" . $_GET['id'] . "';";
+                                    $query = "SELECT * FROM `journal_advanaced_invoice_ex` WHERE `invoice_id`='" . $_GET['id'] . "';";
                                     //var_dump($query);
 
                                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -111,7 +114,7 @@
                                     }
 
                                     //Для МКБ
-                                    $query = "SELECT * FROM `journal_invoice_ex_mkb` WHERE `invoice_id`='" . $_GET['id'] . "';";
+                                    $query = "SELECT * FROM `journal_advanaced_invoice_ex_mkb` WHERE `invoice_id`='" . $_GET['id'] . "';";
                                     //var_dump ($query);
 
                                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -244,7 +247,7 @@
                                             </div>-->
                                             
                                             <!--<span style="color: red;">Тестовый режим. Уже сохраняется и даже как-то работает</span>-->
-                                            <h2>Редактировать наряд <a href="invoice.php?id=' . $_GET['id'] . '" class="ahref">#' . $_GET['id'] . '</a></h2>';
+                                            <h2>Редактировать предварительный расчет <a href="invoice_advance.php?id=' . $_GET['id'] . '" class="ahref">#' . $_GET['id'] . '</a></h2>';
 
                                     echo '
                                             <div class="cellsBlock2" style="margin-bottom: 10px;">
@@ -283,12 +286,14 @@
 
 
                                     //if (((($invoice_j[0]['summ'] == $invoice_j[0]['paid']) && ($invoice_j[0]['summ'] != 0)) || ($invoice_j[0]['status'] == 5) || ($invoice_j[0]['summins'] != 0)) && !($god_mode || ($finances['see_all'] == 1))) {
-                                    if (((($invoice_j[0]['summ'] == $invoice_j[0]['paid']) && ($invoice_j[0]['summ'] != 0)) || ($invoice_j[0]['status'] == 5)) && !($god_mode || ($finances['see_all'] == 1))) {
-                                        echo '
-                                                    <div>
-                                                        <div style="display: inline-block; color: red;">Наряд оплачен или работа закрыта. Редактировать нельзя</div>
-                                                    </div>';
-                                    } else {
+
+                                    //!!! 2019-12-31 временно отключено, потом вернуть и пересмотреть, надо ли это тут.
+//                                    if (((($invoice_j[0]['summ'] == $invoice_j[0]['paid']) && ($invoice_j[0]['summ'] != 0)) || ($invoice_j[0]['status'] == 5)) && !($god_mode || ($finances['see_all'] == 1))) {
+//                                        echo '
+//                                                    <div>
+//                                                        <div style="display: inline-block; color: red;">Наряд оплачен или работа закрыта. Редактировать нельзя</div>
+//                                                    </div>';
+//                                    } else {
                                         //if ((($invoice_j[0]['summ'] != $invoice_j[0]['paid']) && ($invoice_j[0]['closed_time'] == 0)) || ($invoice_j[0]['summins'] != 0) || (($invoice_j[0]['summins'] == 0) && ($invoice_j[0]['summ'] == 0) && ($invoice_j[0]['paid'] == 0))) {
                                         echo '
                                             <ul style="margin-left: 6px; margin-bottom: 10px;">	
@@ -405,7 +410,7 @@
                                             <div id="data">';
 
                                         echo '	
-                                                <input type="hidden" id="adv" name="adv" value="false">
+                                                <input type="hidden" id="adv" name="adv" value="true">
                                                 <input type="hidden" id="invoice_id" name="client" value="' . $invoice_j[0]['id'] . '">
                                                 <input type="hidden" id="client" name="client" value="' . $invoice_j[0]['client_id'] . '">
                                                 <input type="hidden" id="client_insure" name="client_insure" value="' . $client_j[0]['insure'] . '">
@@ -739,7 +744,7 @@
                                                     <div id="errror" class="invoceHeader" style="position: relative;">
                                                         <div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
                                                             <div>	
-                                                                <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\', false)">
+                                                                <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\', true)">
                                                             </div>
                                                         </div>
                                                         <div>
@@ -841,13 +846,14 @@
                                                     addInvoiceInSession(t_number);
                                                 });
                                                 
-                                                fillInvoiseRez(true, false);
+                                                fillInvoiseRez(true, true);
                                             });
                                             
                                         </script>
      
                                         ';
-                                    }/*else{
+                                    //}
+                                    /*else{
                                         echo '
                                                     <div>
                                                         <div style="display: inline-block; color: red;">Наряд оплачен или работа закрыта. Редактировать нельзя</div>
@@ -858,7 +864,7 @@
                                 } else {
                                     echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
                                 }
-                            }
+                            //}
                         }
 					}else{
 						echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';

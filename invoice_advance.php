@@ -169,7 +169,9 @@
 
 									<h2>Предварительный расчёт #'.$_GET['id'].'';
 
-							if (($finances['edit'] == 1) || $god_mode){
+							//if (($finances['edit'] == 1) || $god_mode){
+                        //!!! Доделать! дать права на редактирование только автору и руководству
+                            if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode){
 								if ($invoice_j[0]['status'] != 9){
 									echo '
 												<a href="invoice_advance_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
@@ -555,12 +557,16 @@
 												</div>';
                             if ($invoice_j[0]['type'] != 88) {
                                 if ($sheduler_zapis[0]['type'] == 5) {
+//                                    echo '
+//												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px;">
+//													<i><b>Страх.</b></i>
+//												</div>
+//												<div class="cellCosmAct" style="font-size: 80%; text-align: center;">
+//													<i><b>Сог.</b></i>
+//												</div>';
                                     echo '
 												<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px;">
-													<i><b>Страх.</b></i>
-												</div>
-												<div class="cellCosmAct" style="font-size: 80%; text-align: center;">
-													<i><b>Сог.</b></i>
+													<i><b>Челюсть</b></i>
 												</div>';
                                 }
                             }
@@ -718,48 +724,66 @@
                                         $price = $item['price'];
 
                                         if ($invoice_j[0]['type'] != 88) {
+//                                            if ($sheduler_zapis[0]['type'] == 5) {
+////                                                if ($item['insure'] != 0) {
+////                                                    //Написать страховую
+////                                                    $insure_j = SelDataFromDB('spr_insure', $item['insure'], 'id');
+////
+////                                                    if ($insure_j != 0) {
+////                                                        $insure_name = $insure_j[0]['name'];
+////                                                    } else {
+////                                                        $insure_name = '?';
+////                                                    }
+////                                                } else {
+////                                                    $insure_name = 'нет';
+////                                                }
+//
+//
+//
+//                                            }
+
+
                                             if ($sheduler_zapis[0]['type'] == 5) {
-                                                if ($item['insure'] != 0) {
-                                                    //Написать страховую
-                                                    $insure_j = SelDataFromDB('spr_insure', $item['insure'], 'id');
+//                                                echo '
+//                                                    <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic; overflow: hidden;">
+//                                                        ' . $insure_name . '
+//                                                    </div>';
+//
+//
+//                                                if ($item['insure'] != 0) {
+//                                                    if ($item['insure_approve'] == 1) {
+//                                                        echo '
+//                                                                <div class="cellCosmAct" style="font-size: 70%; text-align: center;">
+//                                                                    <i class="fa fa-check" aria-hidden="true" style="font-size: 150%;"></i>
+//                                                                </div>';
+//                                                    } else {
+//                                                        echo '
+//                                                            <div class="cellCosmAct" style="font-size: 100%; text-align: center; background: rgba(255, 0, 0, 0.5) none repeat scroll 0% 0%;">
+//                                                                <i class="fa fa-ban" aria-hidden="true"></i>
+//                                                            </div>';
+//                                                    }
+//
+//                                                } else {
+//                                                    echo '
+//                                                        <div class="cellCosmAct" insureapprove="' . $item['insure_approve'] . '" style="font-size: 70%; text-align: center;">
+//                                                            -
+//                                                        </div>';
+//                                                }
 
-                                                    if ($insure_j != 0) {
-                                                        $insure_name = $insure_j[0]['name'];
-                                                    } else {
-                                                        $insure_name = '?';
-                                                    }
-                                                } else {
-                                                    $insure_name = 'нет';
-                                                }
-                                            }
-
-
-                                            if ($sheduler_zapis[0]['type'] == 5) {
                                                 echo '
-                                                    <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic; overflow: hidden;">
-                                                        ' . $insure_name . '
-                                                    </div>';
+                                                    <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic; overflow: hidden;">';
 
-
-                                                if ($item['insure'] != 0) {
-                                                    if ($item['insure_approve'] == 1) {
-                                                        echo '
-                                                                <div class="cellCosmAct" style="font-size: 70%; text-align: center;">
-                                                                    <i class="fa fa-check" aria-hidden="true" style="font-size: 150%;"></i>
-                                                                </div>';
-                                                    } else {
-                                                        echo '
-                                                            <div class="cellCosmAct" style="font-size: 100%; text-align: center; background: rgba(255, 0, 0, 0.5) none repeat scroll 0% 0%;">
-                                                                <i class="fa fa-ban" aria-hidden="true"></i>
-                                                            </div>';
-                                                    }
-
-                                                } else {
-                                                    echo '
-                                                        <div class="cellCosmAct" insureapprove="' . $item['insure_approve'] . '" style="font-size: 70%; text-align: center;">
-                                                            -
-                                                        </div>';
+                                                if ($item['jaw_select'] == 1){
+                                                    echo 'ВЧ';
+                                                }elseif($item['jaw_select'] == 2){
+                                                    echo 'НЧ';
+                                                }else {
+                                                    echo '-';
                                                 }
+
+                                                echo '                                                        
+                                                    </div>';
+                                                
                                             }
                                         }
                                         echo '
