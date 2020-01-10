@@ -25,7 +25,10 @@ array('Компьютер PC Asus',   'шт.', '1', 7000, 7000),
 array('Флеш карта USB 16Гб', 'шт.', '2', 800,  1600)
 );
 
-$sum=0; for ($i=0;$i<count($tovarname);$i++){ $sum+=$tovarname[$i][4]; }  //общая сумма заказа
+$sum=0; 
+for ($i=0; $i < count($tovarname); $i++){
+	$sum+=$tovarname[$i][4]; 
+}  //общая сумма заказа
 $iinomer = 0;                                                             //номер п/п в таблице
 $tabletrtovari = '';                                                      //товары
 

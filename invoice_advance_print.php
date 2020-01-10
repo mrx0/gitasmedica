@@ -1,7 +1,7 @@
 <?php
 
-//invoice_advance.php
-//Предварительный расчёт
+//invoice_advance_print.php
+//Предварительный расчёт ПЕЧАТЬ
 
 	require_once 'header.php';
 	
@@ -29,7 +29,7 @@
 			
 			if ($_GET){
 				if (isset($_GET['id'])){
-					
+
 					$invoice_j = SelDataFromDB('journal_advanaced_invoice', $_GET['id'], 'id');
 					
 					if ($invoice_j != 0){
@@ -170,7 +170,7 @@
 									<h2>Предварительный расчёт #'.$_GET['id'].'';
 
 							//if (($finances['edit'] == 1) || $god_mode){
-                        //!!! Доделать! дать права на редактирование только автору и руководству
+                            //!!! Доделать! дать права на редактирование только автору и руководству
                             if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode){
 								if ($invoice_j[0]['status'] != 9){
 									echo '
@@ -371,8 +371,6 @@
 								$invoice_ex_j_mkb = 0;*/
 							//var_dump ($invoice_ex_j_mkb);
 
-
-                            echo '<a href="test_abonement.php?id='.$_GET['id'].'" class="ahref b4" target="_blank" rel="nofollow noopener">Печать</a>';
 
 							echo '
 								<div id="data">';
