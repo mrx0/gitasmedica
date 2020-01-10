@@ -983,14 +983,14 @@
                             }
                             echo '
                                         <div style="background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            Рассчёт: <span class="calculateOrder" style="font-size: 13px">' . ($tabel_j[0]['summ'] + $tabel_j[0]['summ_calc']) . '</span> руб.
+                                            Расчёт: <span class="calculateOrder" style="font-size: 13px">' . ($tabel_j[0]['summ'] + $tabel_j[0]['summ_calc']) . '</span> руб.
                                         </div>';
                         }
                         //Санитарки, уборщицы, дворники
                         if (($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15)) {
                             echo '
                                         <div style="background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            Рассчёт: <span class="calculateOrder" style="font-size: 13px">' . ($tabel_j[0]['summ'] + $tabel_j[0]['summ_calc']) . '</span> руб.
+                                            Расчёт: <span class="calculateOrder" style="font-size: 13px">' . ($tabel_j[0]['summ'] + $tabel_j[0]['summ_calc']) . '</span> руб.
                                         </div>';
                         }
 
