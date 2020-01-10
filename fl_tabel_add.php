@@ -262,7 +262,7 @@ if ($enter_ok){
                             $calculate_summ_inv = 0;
                             $calculate_summins_inv = 0;
 
-                            //Получим уже существующие рассчёты
+                            //Получим уже существующие расчёты
                             $query = "SELECT `id`, `summ_inv`, `summ` FROM `fl_journal_calculate` WHERE `invoice_id`='".$_GET['invoice_id']."' AND `zapis_id`='".$sheduler_zapis[0]['id']."';";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);

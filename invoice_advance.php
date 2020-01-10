@@ -372,6 +372,8 @@
 							//var_dump ($invoice_ex_j_mkb);
 
 
+                            echo '<a href="invoice_advance_print.php?id='.$_GET['id'].'" class="ahref b4" target="_blank" rel="nofollow noopener">Печать</a>';
+
 							echo '
 								<div id="data">';
 

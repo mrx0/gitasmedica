@@ -39,6 +39,13 @@
 			<link rel="stylesheet" href="css/calendar.css" type="text/css">
 			
 			<link rel="stylesheet" href="css/dds.css" type="text/css">
+			
+			
+			<!--Для печати. ТЕСТ-->
+<!--			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.3.0/paper.css">
+			<style>@page { size: A5 }</style>-->
+			
+			
 						
 			<script type="text/javascript" src="js/dict.js"></script>
 			<script type="text/javascript" src="js/common1.js"></script>
