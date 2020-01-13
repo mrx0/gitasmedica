@@ -7,13 +7,13 @@ require_once 'header.php';
 
 if ($enter_ok){
 
+    include_once 'DBWork.php';
+    include_once 'functions.php';
+
     require_once 'permissions.php';
 
-    //!!! переделай тут права!!!
-    if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || ($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode) {
-
-        include_once 'DBWork.php';
-        include_once 'functions.php';
+    //if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || ($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode) {
+    if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode){
 
         echo '
 
@@ -48,7 +48,8 @@ if ($enter_ok){
                 </head>';
 
 
-        $paper_format = 'A5 landscape';
+        //$paper_format = 'A5 landscape';
+        $paper_format = 'A4';
 
         if (isset($_GET['format'])){
             if ($_GET['format'] == 'A4') {
