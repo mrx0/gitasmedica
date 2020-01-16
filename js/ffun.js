@@ -1081,7 +1081,7 @@
     }
 
 
-    //Добавить расчетные листы в новый табель, попутно создать этот новый табель (Пока только диалоговое окно)
+    //Добавить расчетные листы в новый табель, попутно создать этот новый табель
     function fl_addNewTabelIN2 (newTabel, type_id, worker_id, filial_id){
 
         /*if (newTabel) {
@@ -1130,7 +1130,8 @@
         var reqData = {
             type_id: type_id,
             worker_id: worker_id,
-            filial_id: filial_id
+            filial_id: filial_id,
+            newTabel: newTabel?1:0
         };
 
         $.ajax({
@@ -1350,7 +1351,7 @@
             tabelMonth: $("#tabelMonth").val(),
             tabelYear: $("#tabelYear").val()
         };
-        console.log(reqData);
+        //console.log(reqData);
 
         $.ajax({
             url: link,
@@ -1367,7 +1368,7 @@
                 //console.log(res);
 
                 if(res.result == "success"){
-                    //console.log(res);
+                    console.log(res);
 
                     //document.location.href = "fl_tabels.php";
                     //window.close('newTabelwindow');
@@ -3636,6 +3637,8 @@
                             // })
                         }
                     }
+
+
                 }
 
                 if(res.result == "error"){

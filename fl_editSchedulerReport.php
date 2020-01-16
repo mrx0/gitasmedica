@@ -188,6 +188,7 @@
                                 $display_style = '';
 
                                 if (($sch_item['type'] == 1) || ($sch_item['type'] == 9) || ($sch_item['type'] == 11) || ($sch_item['type'] == 12) || ($sch_item['type'] == 777)) {
+                                    //Если есть право на посмотреть
                                     if (($finances['see_all'] == 1) || $god_mode) {
                                         //--
                                     }else{

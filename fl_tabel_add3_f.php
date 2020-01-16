@@ -26,6 +26,8 @@
                         $typeID = $_POST['type_id'];
                         $filialID = $_POST['filial_id'];
                         $workerID = $_POST['worker_id'];
+
+                        $_POST['summCalcs'] = 0;
 //
 //                        $thisCalcIsInAnotherTabel = FALSE;
 //                        $CalcIsInAnotherTabelID = 0;
