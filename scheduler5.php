@@ -491,7 +491,9 @@
                 foreach ($filial_workers as $worker_data) {
                     //var_dump($worker_data);
 
-                    if (($_SESSION['id'] == $worker_data['id']) || ($_SESSION['id'] == 270) || $god_mode || ($worker_data['permissions'] == 777)) {
+                    //Если своё или отдельные другие личности (или ВВ (костыли пошли ппц))
+//                    if (($_SESSION['id'] == 270) || $god_mode || ($worker_data['permissions'] == 777)
+//                     || ($worker_data['id'] == 314) || ($worker_data['id'] == 299)) {
 
                         $normaHours = getNormaHours($worker_data['id']);
 
@@ -645,10 +647,18 @@
                             }
 
                             if (($scheduler['edit'] == 1) || $god_mode) {
-                                echo '
-                                <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, ' . $worker_data['id'] . ', ' . $_GET['filial'] . ', ' . $i . ', ' . $month . ', ' . $year . ', ' . $weekday_temp . '); ' . $invoiceFreeAddStr . '" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
-                                    ' . $hours . '
-                                </td>';
+                                //часы только свои
+                                if (($_SESSION['id'] == $worker_data['id']) || ($_SESSION['id'] == 270) || $god_mode) {
+                                    echo '
+                                    <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, ' . $worker_data['id'] . ', ' . $_GET['filial'] . ', ' . $i . ', ' . $month . ', ' . $year . ', ' . $weekday_temp . '); ' . $invoiceFreeAddStr . '" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
+                                        ' . $hours . '
+                                    </td>';
+                                }else{
+                                    echo '
+                                    <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, ' . $worker_data['id'] . ', ' . $_GET['filial'] . ', ' . $i . ', ' . $month . ', ' . $year . ', ' . $weekday_temp . '); ' . $invoiceFreeAddStr . '" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
+                                        
+                                    </td>';
+                                }
                             } elseif ($scheduler['add_worker'] == 1) {
                                 if (($i == $day) && ($cur_month == $month) && ($cur_year == $year)) {
                                     echo '
@@ -677,7 +687,7 @@
                         }
                         echo '
                         </tr>';
-                    }
+//                    }
                 }
             }
 

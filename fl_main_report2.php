@@ -146,7 +146,7 @@
                                     <select name="iWantThisYear" id="iWantThisYear">';
                 for ($i = 2017; $i <= (int)date('Y') + 2; $i++) {
                     $selected = '';
-                    if ($i == (int)date('Y')) {
+                    if ($i == (int)$year) {
                         $selected = 'selected';
                     }
                     echo '

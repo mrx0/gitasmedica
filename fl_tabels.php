@@ -271,9 +271,15 @@
                                             </div>';
 
                                     echo '
+                                            <div id="" style="position: absolute; top: -25px; right: 160px; cursor: pointer;">
+                                               <span class="b4" onclick="fl_addNewClearTabelIN(true, ' . $type . ', ' . $worker['id'] . ', ' . $office['id'] . ');">Пустой табель +</span>
+                                            </div>';
+
+                                    echo '
                                             <div id="" style="position: absolute; top: -22px; left: 5px; font-size: 130%; color: rgb(0, 123, 182)">
                                                '.$office['name'].'
                                             </div>';
+
 
                                     echo '
                                         </div>';
