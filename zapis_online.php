@@ -67,6 +67,10 @@
     		$dop = '';
     		if (isset($_SESSION['filial'])){
                 $dop = "WHERE `place`='".$_SESSION['filial']."'";
+
+                if ($_SESSION['filial'] == 15){
+                    $dop = "WHERE (`place`='".$_SESSION['filial']."' OR `place`='')";
+                }
             }
 
             //$query = "SELECT * FROM `zapis_online` ".$dop." ORDER BY `id` DESC LIMIT {$limit_pos[0]}, {$limit_pos[1]};";

@@ -79,8 +79,10 @@
                         }else {
                             echo '
                                             <a href="fl_tabels.php?who='.$tabel_j[0]['type'].'" class="b">Важный отчёт</a>
-                                            <a href="fl_tabels2.php?who='.$tabel_j[0]['type'].'" class="b">Отчёт по часам</a>
-                                            <a href="fl_tabels_check.php" class="b">Проверка табелей</a>';
+                                            <a href="fl_tabels2.php?who='.$tabel_j[0]['month'].'" class="b">Отчёт по часам</a>
+                                            <a href="fl_tabels_check.php" class="b">Проверка табелей</a>
+                                            <a href="fl_tabels_simple_pay.php?&filial='.$tabel_j[0]['office_id'].'&m='.$tabel_j[0]['month'].'&y='.$tabel_j[0]['year'].'&who='.$tabel_j[0]['type'].'" class="b">Проверка табелей 2</a>
+                                            ';
                         }
                         echo '
                                         </div>
@@ -1077,7 +1079,7 @@
 
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
                             echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1&filial_id='.$tabel_j[0]['office_id'].'" class="b" style = "font-size: 80%;">Аванс +</a ></div>';
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=7&filial_id='.$tabel_j[0]['office_id'].'" class="b" style = "font-size: 80%;">ЗП +</a ></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=7&filial_id='.$tabel_j[0]['office_id'].'" class="b" style = "font-size: 80%;">ЗП +</a></div>';
                             echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">Отпускные +</a></div>';
                             echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">Больничный +</a></div>';
                             echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=4&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">На карту +</a></div>';
