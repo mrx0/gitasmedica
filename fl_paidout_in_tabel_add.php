@@ -25,6 +25,10 @@ if ($enter_ok){
 //                    $link = 'fl_tabel2.php';
 //                }
 
+                if (isset($_GET['ref'])){
+                    var_dump($_GET['ref']);
+                }
+
                 $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['tabel_id'], 'id');
                 //var_dump($tabel_j);
 
