@@ -469,12 +469,12 @@ if ($enter_ok){
                     </section>
                   
                     <div class="no_print" style="position: fixed; top: 10px; right: 10px; border: 1px solid #0C0C0C; border-radius: 5px; padding: 5px 5px; background-color: #FFFFFF">
-                        <a href="?id='.$_GET['id'].'&format=A4" class="cellCosmAct b" style="text-align: center; display: inline-block !important; vertical-align: middle; height: auto; border-radius: 3px;">
+                        <!--<a href="?id='.$_GET['id'].'&format=A4" class="cellCosmAct b" style="text-align: center; display: inline-block !important; vertical-align: middle; height: auto; border-radius: 3px;">
                             A4
                         </a>
                         <a href="?id='.$_GET['id'].'&format=A5" class="cellCosmAct b" style="text-align: center; display: inline-block !important; vertical-align: middle; height: auto; border-radius: 3px;">
                             A5
-                        </a>
+                        </a>-->
                         <div class="cellCosmAct b" style="text-align: center; display: inline-block !important; vertical-align: middle; height: auto; border-radius: 3px;"
                         onclick="window.print();">
                             <i class="fa fa-print" aria-hidden="true"></i>

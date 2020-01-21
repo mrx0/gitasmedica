@@ -2711,3 +2711,8 @@ input[type="submit"].msg_send:hover{
 .rezult_item3print{
 	page-break-before: always;
 }
+
+/*Для таблиц, чтоб печатать на несколько листов*/
+tr{
+	page-break-inside: avoid;
+}
