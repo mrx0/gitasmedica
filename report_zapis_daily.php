@@ -152,7 +152,11 @@
                         if (!isset($zapis_j[$arr['type']][$arr['worker']])){
                             $zapis_j[$arr['type']][$arr['worker']] = array();
                         }
-                        array_push($zapis_j[$arr['type']][$arr['worker']], $arr);
+                        if (!isset($zapis_j[$arr['type']][$arr['worker']][$arr['patient']])){
+                            $zapis_j[$arr['type']][$arr['worker']][$arr['patient']] = array();
+                        }
+
+                        array_push($zapis_j[$arr['type']][$arr['worker']][$arr['patient']], $arr);
 
                         //Наряды (к записи которые) сразу выберем
                         $query1 = "
@@ -169,19 +173,27 @@
                             while ($arr1 = mysqli_fetch_assoc($res1)) {
                                 //var_dump($arr1);
 
-                                if ($arr1['id'] != null) {
-                                    if (!isset($order_j[$arr['id']])) {
-                                        $invoice_j[$arr['id']] = array();
-                                    }
-                                    array_push($invoice_j[$arr['id']], $arr1);
+//                                if ($arr1['id'] != null) {
+//                                    if (!isset($order_j[$arr['id']])) {
+//                                        $invoice_j[$arr['id']] = array();
+//                                    }
+//                                    array_push($invoice_j[$arr['id']], $arr1);
+//                                }
+
+                                if (!isset($invoice_j[$arr1['client_id']])){
+                                    $invoice_j[$arr1['client_id']] = array();
                                 }
+
+                                array_push($invoice_j[$arr1['client_id']], $arr1);
+
+
                                 //оплаты по этим нарядам
                                 //!!! не доделано, доделать  ?
 //                                SELECT *
 //                                FROM `journal_payment`
                             }
                         }
-                        //var_dump($invoice_j);
+//                        var_dump($invoice_j);
                     }
                 }
                 //var_dump($zapis_j);
@@ -231,12 +243,15 @@
                     //include_once 'showZapisRezult.php';
 
                     foreach ($zapis_j as $type => $type_data){
-                        //var_dump($type_data);
+                        //var_dump($type_data['enter']);
+
+                        //if ($type_data['enter'] != 6){}
 
                         echo '
                             <tr style="">
                                 <td colspan="6" style="padding-top: 10px; border: 1px solid #e0e0e0;">'.$permissions_j[$type]['name'].'</td>
                             </tr>';
+
                         foreach ($type_data as $worker_id => $worker_zapis_data) {
                             //var_dump($worker_zapis_data);
 
@@ -245,32 +260,45 @@
                                 <td colspan="6" style="font-style: italic; font-weight: bold; color: rgb(36, 59, 158); border: 1px solid #e0e0e0;">'.WriteSearchUser('spr_workers', $worker_id, 'user', false).'</td>
                             </tr>';
 
-                            foreach ($worker_zapis_data as $item) {
-                                //Время начала - конца приема
-                                $start_time_h = floor($item['start_time'] / 60);
-                                $start_time_m = $item['start_time'] % 60;
-                                if ($start_time_m < 10) $start_time_m = '0' . $start_time_m;
-                                $end_time_h = floor(($item['start_time'] + $item['wt']) / 60);
-                                if ($end_time_h > 23) $end_time_h = $end_time_h - 24;
-                                $end_time_m = ($item['start_time'] + $item['wt']) % 60;
-                                if ($end_time_m < 10) $end_time_m = '0' . $end_time_m;
+                            foreach ($worker_zapis_data as $client_id => $client_zapis_data) {
+
+                                $client_order_str = '';
 
                                 echo '
                                 <tr>
-                                    <td style="width: 150px; padding: 5px; font-size: 80%; border: 1px solid #e0e0e0;"><i>'.$start_time_h . ':' . $start_time_m . ' - ' . $end_time_h . ':' . $end_time_m.'</i><br>
+                                    <td style="width: 150px; padding: 5px; font-size: 80%; border: 1px solid #e0e0e0;">
                                         <span style="font-size: 90%;">Пациент:</span><br>
-                                        <span style="font-size: 120%;"><b>'.WriteSearchUser('spr_clients', $item['patient'], 'user', false).'</b></span>
+                                        <span style="font-size: 120%;"><b>' . WriteSearchUser('spr_clients', $client_id, 'user', false) . '</b></span><br>';
+
+
+                                foreach ($client_zapis_data as $item) {
+
+                                    //Время начала - конца приема
+                                    $start_time_h = floor($item['start_time'] / 60);
+                                    $start_time_m = $item['start_time'] % 60;
+                                    if ($start_time_m < 10) $start_time_m = '0' . $start_time_m;
+                                    $end_time_h = floor(($item['start_time'] + $item['wt']) / 60);
+                                    if ($end_time_h > 23) $end_time_h = $end_time_h - 24;
+                                    $end_time_m = ($item['start_time'] + $item['wt']) % 60;
+                                    if ($end_time_m < 10) $end_time_m = '0' . $end_time_m;
+
+                                    echo '
+                                        <i>' . $start_time_h . ':' . $start_time_m . ' - ' . $end_time_h . ':' . $end_time_m . '</i><br>';
+                                }
+
+                                echo '
                                     </td>
+
                                     <td style="width: 180px; padding: 5px; border: 1px solid #e0e0e0;">
-                                        <span style="font-size: 80%;">Внесённые средства</span>';
+                                            <span style="font-size: 80%;">Внесённые средства</span>';
 
                                 //Если есть ордеры этого человека
-                                if (isset($order_j[$item['patient']])){
+                                if (isset($order_j[$client_id])) {
                                     echo '
-                                    <ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">';
+                                        <ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">';
 
                                     //Выведем их
-                                    foreach ($order_j[$item['patient']] as $order_item){
+                                    foreach ($order_j[$client_id] as $order_item) {
 
                                         $order_type_mark = '';
 
@@ -283,72 +311,72 @@
                                         }
 
                                         echo '
-                                        <li class="cellsBlock" style="width: auto; position: relative;">
-                                            <div class="cellName">
-                                                <div href="order.php?id='.$order_item['id'].'" class="" style="margin-bottom: 4px;">
-                                                    '.$order_type_mark.' <b>Ордер #'.$order_item['id'].'</b><br>
+                                            <li class="cellsBlock" style="width: auto; position: relative;">
+                                                <div class="cellName">
+                                                    <div href="order.php?id=' . $order_item['id'] . '" class="" style="margin-bottom: 4px;">
+                                                        ' . $order_type_mark . ' <b>Ордер #' . $order_item['id'] . '</b><br>
+                                                    </div>
+                                                    <div style="border-top: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+                                                        Сумма:<br>
+                                                        <span class="calculateOrder" style="font-size: 13px">' . $order_item['summ'] . '</span> руб.
+                                                    </div>
                                                 </div>
-                                                <div style="border-top: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                    Сумма:<br>
-                                                    <span class="calculateOrder" style="font-size: 13px">'.$order_item['summ'].'</span> руб.
-                                                </div>
-                                            </div>
-                                            <!--<span style="position: absolute; top: 2px; right: 5px;">'. $order_type_mark.'</span>-->
-                                        </li>';
+                                                <!--<span style="position: absolute; top: 2px; right: 5px;">' . $order_type_mark . '</span>-->
+                                            </li>';
                                     }
                                     echo '
-                                    </ul>';
+                                        </ul>';
 
-                                }else{
+                                } else {
                                     echo '<br><span style="color: red; font-style: italic;">не вносилось</span>';
                                 }
 
                                 echo '
-                                    </td>
-                                    <td style="width: 180px; padding: 5px; border: 1px solid #e0e0e0;">
-                                        <span style="font-size: 80%;">Наряды</span>';
+                                        </td>
+                                        <td style="width: 180px; padding: 5px; border: 1px solid #e0e0e0;">
+                                            <span style="font-size: 80%;">Наряды</span>';
 
-                                if (!empty($invoice_j)){
-                                    if (isset($invoice_j[$item['id']])){
+                                if (!empty($invoice_j)) {
+                                    if (isset($invoice_j[$client_id])) {
                                         echo '
-                                        <ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">';
-                                        foreach ($invoice_j[$item['id']] as $invoice_item) {
+                                            <ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">';
+                                        foreach ($invoice_j[$client_id] as $invoice_item) {
                                             echo '
-                                            <!--<div class="cellsBlockHover calculateBlockItem" worker_mark="" style=" /*width: 217px;*/ display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">-->
-                                            <li class="cellsBlock" style="width: auto; position: relative;">
-                                                <div class="cellName">
-                                                    <div style="display: inline-block; /*width: 190px;*/">
-                                                        <div>
-                                                            <a href="invoice.php?id=' . $invoice_item['id'] . '" class="ahref">
-                                                                <div>
-                                                                    <div style="display: inline-block; vertical-align: middle; font-size: 15px; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
-                                                                        <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
-                                                                    </div>
-                                                                    <div style="display: inline-block; vertical-align: middle;">
-                                                                            <b>Наряд #' . $invoice_item['id'] . '</b>
-                                                                    </div>
-                                                                </div>
-                                                            </a>
+                                                <!--<div class="cellsBlockHover calculateBlockItem" worker_mark="" style=" /*width: 217px;*/ display: inline-block; border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">-->
+                                                <li class="cellsBlock" style="width: auto; position: relative;">
+                                                    <div class="cellName">
+                                                        <div style="display: inline-block; /*width: 190px;*/">
                                                             <div>
-                                                                <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
+                                                                <a href="invoice.php?id=' . $invoice_item['id'] . '" class="ahref">
                                                                     <div>
-                                                                        <div style="width: 70px; display: inline-block;">Сумма:</div>
-                                                                        <div style="display: inline-block;">
-                                                                            <span class="calculateInvoice calculateCalculateN" style="font-size: 11px;">' . $invoice_item['summ'] . ' руб.</span>
+                                                                        <div style="display: inline-block; vertical-align: middle; font-size: 15px; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+                                                                            <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+                                                                        </div>
+                                                                        <div style="display: inline-block; vertical-align: middle;">
+                                                                                <b>Наряд #' . $invoice_item['id'] . '</b>
                                                                         </div>
                                                                     </div>
-                                                                    <div>
-                                                                        <div style="width: 70px; display: inline-block;">Оплачено:</div>
-                                                                        <div style="display: inline-block;">
-                                                                            <span class="calculateInvoice calculateCalculateN" style="font-size: 11px; color: #333;">' . $invoice_item['summ'] . ' руб.</span>
+                                                                </a>
+                                                                <div>
+                                                                    <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 10px">
+                                                                        <div>
+                                                                            <div style="width: 70px; display: inline-block;">Сумма:</div>
+                                                                            <div style="display: inline-block;">
+                                                                                <span class="calculateInvoice calculateCalculateN" style="font-size: 11px;">' . $invoice_item['summ'] . ' руб.</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div style="width: 70px; display: inline-block;">Оплачено:</div>
+                                                                            <div style="display: inline-block;">
+                                                                                <span class="calculateInvoice calculateCalculateN" style="font-size: 11px; color: #333;">' . $invoice_item['summ'] . ' руб.</span>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                                    
                                                                 
-                                                            
-                                                        </div>
-                                                        <div style="margin: 5px 0 5px 3px; font-size: 90%;">';
+                                                            </div>
+                                                            <div style="margin: 5px 0 5px 3px; font-size: 90%;">';
 
                                             //Категории процентов(работ)
                                             $percent_cats_arr = explode(',', $invoice_item['percent_cats']);
@@ -367,35 +395,26 @@
                                             }
 
                                             echo '
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </li>';
+                                                </li>';
                                         }
                                         echo '
-                                        </ul>';
+                                            </ul>';
                                     }
                                 }
 
                                 echo '
-                                    </td>
-                                    <!--<td style="width: 180px; border: 1px solid #e0e0e0;">
-                                        проведенные оплаты по наряду
-                                    </td>-->
-                                    
-                                    <!--<td style="width: 180px; border: 1px solid #e0e0e0;">р/л + отметка врача</td>-->
-                                </tr>';
+                                        </td>
+                                        <!--<td style="width: 180px; border: 1px solid #e0e0e0;">
+                                            проведенные оплаты по наряду
+                                        </td>-->
+                                        
+                                        <!--<td style="width: 180px; border: 1px solid #e0e0e0;">р/л + отметка врача</td>-->
+                                    </tr>';
                             }
 
-//                            echo '
-//                            <tr>
-//                                <td colspan="6">';
-//
-//                            //echo showZapisRezult($worker_zapis_data, false, false, false, false, false, false, 0, true, false);
-//
-//                            echo '
-//                                </td>
-//                            </tr>';
                         }
                     }
                 }else{
@@ -410,7 +429,7 @@
             echo '
                     </div>
                 </div>
-                <div id="doc_title">Расходные ордеры - Асмедика</div>';
+                <div id="doc_title">Отчёт - сверка - Асмедика</div>';
 
             echo '	
 			    <!-- Подложка только одна -->
