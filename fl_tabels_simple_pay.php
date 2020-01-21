@@ -219,7 +219,7 @@
                                             </select>
                                         </div>
                                     </div>
-<!--                                    <div style="display: inline-block; margin-right: 20px;">
+                                    <!--<div style="display: inline-block; margin-right: 20px;">
     
                                         <div style="display: inline-block; margin-right: 20px;">
                                             <a href="?'.$dopWho.$dopFilial.'" class="dotyel" style="font-size: 70%;">Сбросить</a>
@@ -248,130 +248,136 @@
 
                     foreach ($workerData as $rezData){
 
-                        //var_dump($rezData);
+//                        if ($rezData['type'] != 777) {
+                        if ((($rezData['type'] != 1) && ($rezData['type'] != 9) && ($rezData['type'] != 11) && ($rezData['type'] != 12) && ($rezData['type'] != 777)) ||
+                            ($_SESSION['id'] == $rezData['worker_id']) || ($_SESSION['id'] == 270) || $god_mode || ($rezData['type'] == 777)
+                        ){
 
-                        $bgcolor = "background-color: rgba(73, 252, 78, 0.17);";
+                            //var_dump($rezData);
 
-                        if (($rezData['month'] == date('m')) && ($rezData['year'] == date('Y'))) {
                             $bgcolor = "background-color: rgba(73, 252, 78, 0.17);";
-                        } else {
-                            $bgcolor = "background-color: rgba(245, 4, 66, 0.17);";
-                        }
+
+                            if (($rezData['month'] == date('m')) && ($rezData['year'] == date('Y'))) {
+                                $bgcolor = "background-color: rgba(73, 252, 78, 0.17);";
+                            } else {
+                                $bgcolor = "background-color: rgba(245, 4, 66, 0.17);";
+                            }
 
 
-                        //никак не используются
-                        $invoice_rez_str = '';
+                            //никак не используются
+                            $invoice_rez_str = '';
 
-                        //Общая сумма, которую начислили
-                        $summItog = $rezData['summ'] + $rezData['surcharge'] + $rezData['night_smena'] + $rezData['empty_smena'];
+                            //Общая сумма, которую начислили
+                            $summItog = $rezData['summ'] + $rezData['surcharge'] + $rezData['night_smena'] + $rezData['empty_smena'];
 
-                        //Если ассистент, то плюсуем сумму за РЛ
-                        if ($rezData['type'] == 7) {
-                            $summItog += $rezData['summ_calc'];
-                        }
-                        //var_dump(intval($summItog - $rezData['paidout'] - $rezData['deduction']));
+                            //Если ассистент, то плюсуем сумму за РЛ
+                            if ($rezData['type'] == 7) {
+                                $summItog += $rezData['summ_calc'];
+                            }
+                            //var_dump(intval($summItog - $rezData['paidout'] - $rezData['deduction']));
 
-                        if ((intval($summItog - $rezData['paidout'] - $rezData['deduction']) != 0) || ($rezData['status'] != 7)) {
+                            if ((intval($summItog - $rezData['paidout'] - $rezData['deduction']) != 0) || ($rezData['status'] != 7)) {
 
-                            echo '
-                                        <div class="cellsBlockHover" style="width: 500px; ' . $bgcolor . ' border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
-                                            <div style="width: 500px; box-shadow: -2px -1px 3px 1px rgb(137, 137, 137);">';
-                            echo '
-                                                <a href="fl_tabel.php?id=' . $rezData['id'] . '" class="ahref">';
+                                echo '
+                                            <div class="cellsBlockHover" style="width: 500px; ' . $bgcolor . ' border: 1px solid #BFBCB5; margin-top: 1px; position: relative;">
+                                                <div style="width: 500px; box-shadow: -2px -1px 3px 1px rgb(137, 137, 137);">';
+                                echo '
+                                                    <a href="fl_tabel.php?id=' . $rezData['id'] . '" class="ahref">';
 
-                            echo '
-                                                    <div style="display: inline-block; vertical-align: top;">
-                                                        <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
-                                                            <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+                                echo '
+                                                        <div style="display: inline-block; vertical-align: top;">
+                                                            <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+                                                                <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
+                                                            </div>
+                                                            <div style="display: inline-block; vertical-align: middle; font-size: 100%; width: 160px;">';
+
+
+                                echo '<b><i>Табель #' . $rezData['id'] . '</i></b><br>';
+                                echo '<span style="font-size: 77%; color: #7D7D7D;">' . $monthsName[$month], ' ', $year . '</span><br>';
+                                echo '<i style="font-size: 80%;">' . WriteSearchUser('spr_workers', $rezData['worker_id'], 'user', false) . '</i><br>';
+                                echo '<i style="font-size: 80%;">' , ($rezData['type'] == 777) ? '' : $permissions_j[$rezData['type']]['name'] , '</i> / ';
+                                echo '<span style="font-size: 70%;">' . $filials_j[$rezData['office_id']]['name2'] . '</span>';
+                                echo '
+                                                            </div>
                                                         </div>
-                                                        <div style="display: inline-block; vertical-align: middle; font-size: 100%; width: 160px;">';
-
-
-                            echo '<b><i>Табель #' . $rezData['id'] . '</i></b><br>';
-                            echo '<span style="font-size: 77%; color: #7D7D7D;">' . $monthsName[$month], ' ', $year . '</span><br>';
-                            echo '<i style="font-size: 80%;">' . WriteSearchUser('spr_workers', $rezData['worker_id'], 'user', false) . '</i><br>';
-                            echo '<i style="font-size: 80%;">' . $permissions_j[$rezData['type']]['name'] . '</i> / ';
-                            echo '<span style="font-size: 70%;">' . $filials_j[$rezData['office_id']]['name2'] . '</span>';
-                            echo '
+                                                        <div style="display: inline-block; vertical-align: top;">
+                                                            <table style="width: 180px; border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 11px">
+                                                                <tr>
+                                                                    <td style="text-align: left; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
+                                                                        Начислено:
+                                                                    </td>
+                                                                    <td style="text-align: right; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
+                                                                        <span class="calculateOrder calculateCalculateN" style="font-size: 13px;">
+                                                                            ' . intval($summItog) . '
+                                                                        </span> руб.
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="text-align: left; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
+                                                                        Удержано: 
+                                                                    </td>
+                                                                    <td style="text-align: right; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
+                                                                        <span class="calculateInvoice calculateCalculateN" style="font-size: 13px">
+                                                                            ' . $rezData['deduction'] . '
+                                                                        </span> руб.
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="text-align: left; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
+                                                                        Выплачено:
+                                                                    </td>
+                                                                    <td style="text-align: right; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
+                                                                        <span class="calculateInvoice calculateCalculateN" style="font-size: 13px; color: rgb(12, 0, 167);">
+                                                                            ' . $rezData['paidout'] . '
+                                                                        </span> руб.
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="text-align: left; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
+                                                                        Осталось: 
+                                                                    </td>
+                                                                    <td style="text-align: right; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
+                                                                        <div class="markForTabelDeploy" tabel_id="' . $rezData['id'] . '" rez_summ="' . intval($summItog - $rezData['paidout'] - $rezData['deduction']) . '" style="display: none;"></div>
+                                                                        <span class="calculateInvoice calculateCalculateN" style="font-size: 13px">
+                                                                            ' . intval($summItog - $rezData['paidout'] - $rezData['deduction']) . '
+                                                                        </span> руб.
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
                                                         </div>
-                                                    </div>
-                                                    <div style="display: inline-block; vertical-align: top;">
-                                                        <table style="width: 180px; border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px; font-size: 11px">
-                                                            <tr>
-                                                                <td style="text-align: left; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
-                                                                    Начислено:
-                                                                </td>
-                                                                <td style="text-align: right; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
-                                                                    <span class="calculateOrder calculateCalculateN" style="font-size: 13px;">
-                                                                        ' . intval($summItog) . '
-                                                                    </span> руб.
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style="text-align: left; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
-                                                                    Удержано: 
-                                                                </td>
-                                                                <td style="text-align: right; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
-                                                                    <span class="calculateInvoice calculateCalculateN" style="font-size: 13px">
-                                                                        ' . $rezData['deduction'] . '
-                                                                    </span> руб.
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style="text-align: left; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
-                                                                    Выплачено:
-                                                                </td>
-                                                                <td style="text-align: right; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
-                                                                    <span class="calculateInvoice calculateCalculateN" style="font-size: 13px; color: rgb(12, 0, 167);">
-                                                                        ' . $rezData['paidout'] . '
-                                                                    </span> руб.
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style="text-align: left; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
-                                                                    Осталось: 
-                                                                </td>
-                                                                <td style="text-align: right; border-bottom: 1px solid rgba(191, 188, 181, 0.4);">
-                                                                    <div class="markForTabelDeploy" tabel_id="' . $rezData['id'] . '" rez_summ="' . intval($summItog - $rezData['paidout'] - $rezData['deduction']) . '" style="display: none;"></div>
-                                                                    <span class="calculateInvoice calculateCalculateN" style="font-size: 13px">
-                                                                        ' . intval($summItog - $rezData['paidout'] - $rezData['deduction']) . '
-                                                                    </span> руб.
-                                                                </td>
-                                                            </tr>
-                                                        </table>
+                                                        
+                                                    </a>
+                                                    ' . $invoice_rez_str . '
+               
+                                                    <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px;">';
+                                if (intval($summItog - $rezData['paidout'] - $rezData['deduction']) > 0) {
+                                    echo '
+                                                        <a href="fl_paidout_in_tabel_add.php?tabel_id=' . $rezData['id'] . '&type=7&filial_id=' . $filial_id . '&ref=' . urlencode('fl_tabels_simple_pay.php?&filial=' . $filial_id . '&m=' . $month . '&y=' . $year . '&who=' . $rezData['type']) . '" class="b" style = "font-size: 80%;">ЗП +</a>';
+                                }
+                                if ((intval($summItog - $rezData['paidout'] - $rezData['deduction']) == 0) && ($rezData['status'] == 0)) {
+                                    echo '
+                                                        <button class="b" style="font-size: 80%;" onclick="deployTabel(' . $rezData['id'] . ');">Провести</button>';
+                                }
+                                //var_dump($rezData['status']);
+                                echo '
                                                     </div>
                                                     
-                                                </a>
-                                                ' . $invoice_rez_str . '
-           
-                                                <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px;">';
-                            if (intval($summItog - $rezData['paidout'] - $rezData['deduction']) > 0) {
-                                echo '
-                                                    <a href="fl_paidout_in_tabel_add.php?tabel_id=' . $rezData['id'] . '&type=7&filial_id=' . $filial_id . '&ref=' . urlencode('fl_tabels_simple_pay.php?&filial=' . $filial_id . '&m=' . $month . '&y=' . $year . '&who=' . $rezData['type']) . '" class="b" style = "font-size: 80%;">ЗП +</a>';
-                            }
-                            if ((intval($summItog - $rezData['paidout'] - $rezData['deduction']) == 0) && ($rezData['status'] == 0)) {
-                                echo '
-                                                    <button class="b" style="font-size: 80%;" onclick="deployTabel(' . $rezData['id'] . ');">Провести</button>';
-                            }
-                            //var_dump($rezData['status']);
-                            echo '
-                                                </div>
-                                                
-                                            </div>';
-                            if ($rezData['status'] == 7) {
-                                echo '
-                                            <div style="display: inline-block; vertical-align: top; font-size: 180%;">
-                                                <!--<div style="border: 1px solid #CCC; padding: 3px; margin: 1px;">-->
-                                                    <i class="fa fa-check" aria-hidden="true" style="color: green;" title="Проведён"></i>
-                                                <!--</div>-->
-                                            </div>';
+                                                </div>';
+                                if ($rezData['status'] == 7) {
+                                    echo '
+                                                <div style="display: inline-block; vertical-align: top; font-size: 180%;">
+                                                    <!--<div style="border: 1px solid #CCC; padding: 3px; margin: 1px;">-->
+                                                        <i class="fa fa-check" aria-hidden="true" style="color: green;" title="Проведён"></i>
+                                                    <!--</div>-->
+                                                </div>';
 
-                            } else {
-                                //$notDeployCount++;
-                            }
+                                } else {
+                                    //$notDeployCount++;
+                                }
 
-                            echo '
-                                        </div>';
+                                echo '
+                                            </div>';
+                            }
                         }
                     }
                 }
