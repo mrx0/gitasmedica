@@ -120,7 +120,8 @@
 //                        }else {
                             echo '
                             <a href="fl_tabels.php?'.$who.'" class="b">Важный отчёт</a>
-                            <a href="fl_tabels_check.php" class="b">Проверка табелей</a>';
+                            <a href="fl_tabels_check.php" class="b">Проверка табелей</a>
+                            <a href="fl_tabels_simple_pay.php" class="b">Проверка табелей 2</a>';
 //                        }
                         echo '
                         </div>

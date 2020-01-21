@@ -91,6 +91,7 @@
 						<div class="nav">
 						    <a href="fl_tabels2.php" class="b4">Отчёт по часам</a>
 						    <a href="fl_tabels_check.php" class="b4">Проверка табелей</a>
+						    <a href="fl_tabels_simple_pay.php" class="b">Проверка табелей 2</a>
                         </div>
 
 						<h1>Важный отчёт</h1>';

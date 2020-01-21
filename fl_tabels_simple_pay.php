@@ -31,6 +31,8 @@
 			$typeQ = '';
 			$filialQ = '';
 
+            $type = 0;
+
             $getWho = array();
 
             $filial_id = 0;
