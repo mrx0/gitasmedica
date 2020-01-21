@@ -26,7 +26,7 @@ if ($enter_ok){
 //                }
 
                 if (isset($_GET['ref'])){
-                    var_dump($_GET['ref']);
+                    //var_dump($_GET['ref']);
                 }
 
                 $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['tabel_id'], 'id');
@@ -78,7 +78,12 @@ if ($enter_ok){
                                 <header>
                                     <div class="nav">
                                         <!--<a href="fl_tabel.php?id='.$_GET['tabel_id'].'" class="b">Вернуться в табель #'.$_GET['tabel_id'].'</a>-->
-                                        <a href="fl_tabels.php" class="b">Важный отчёт</a>
+                                        <a href="fl_tabels.php" class="b">Важный отчёт</a>';
+                    if (isset($_GET['ref'])){
+                        echo '
+                                        <a href="fl_tabels_simple_pay.php?&filial='.$tabel_j[0]['office_id'].'&m='.$tabel_j[0]['month'].'&y='.$tabel_j[0]['year'].'&who='.$tabel_j[0]['type'].'" class="b">Проверка табелей 2</a>';
+                    }
+                    echo '
                                     </div>
                                     <h2>Добавить выплату [';
 
@@ -309,8 +314,13 @@ if ($enter_ok){
                     echo '                    
                                         <input type="hidden" name="noch" id="noch" value="'.$noch.'">
                                         <input type="hidden" name="tabel_type" id="tabel_type" value="'.$tabel_j[0]['type'].'">
-                                        <input type="hidden" name="paidout_type" id="paidout_type" value="'.$_GET['type'].'">
-                                        
+                                        <input type="hidden" name="paidout_type" id="paidout_type" value="'.$_GET['type'].'">';
+
+                    if (isset($_GET['ref'])){
+                        echo '
+                                        <input type="hidden" name="ref" id="ref" value="fl_tabels_simple_pay.php?&filial='.$tabel_j[0]['office_id'].'&m='.$tabel_j[0]['month'].'&y='.$tabel_j[0]['year'].'&who='.$tabel_j[0]['type'].'">';
+                    }
+                    echo '
                                         <div id="errror"></div>
                                         <div id="showPaidoutAddbutton" style="display: none;">
                                             <input type="button" class="b" value="Добавить" onclick="fl_showPaidoutAdd(0, '.$_GET['tabel_id'].', '.$_GET['type'].', '.$tabel_j[0]['worker_id'].', '.$tabel_j[0]['month'].', '.$tabel_j[0]['year'].', \''.$link.'\', \'add\', false, 2)">

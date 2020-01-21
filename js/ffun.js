@@ -2318,6 +2318,7 @@
             },
             // действие, при ответе с сервера
             success:function(res){
+                //console.log(paidoutData['deploy']);
                 //console.log(res.data);
                 //$('#data').html(res)
 
@@ -2328,14 +2329,51 @@
                     blockWhileWaiting (true);
 
                     if (paidoutData['deploy']) {
-                        setTimeout(function(){
 
-                            deployTabel(tabel_id);
-                            document.location.href = link_res+"?id="+tabel_id;
+                        wait(function(runNext){
 
-                        }, 100);
+                            setTimeout(function(){
+
+                                deployTabel(tabel_id);
+
+                                runNext();
+
+                            }, 500);
+
+                        }).wait(function(){
+
+                            setTimeout(function(){
+
+                                if ($('#ref').val() === undefined) {
+                                    document.location.href = link_res + "?id=" + tabel_id;
+                                }else{
+                                    document.location.href = $('#ref').val();
+                                }
+
+                            }, 500);
+
+                        });
+
+                        // setTimeout(function(){
+                        //     //console.log($('#ref').val());
+                        //
+                        //     deployTabel(tabel_id);
+                        //
+                        //     if ($('#ref').val() === undefined) {
+                        //         document.location.href = link_res + "?id=" + tabel_id;
+                        //     }else{
+                        //         document.location.href = $('#ref').val();
+                        //     }
+                        //
+                        // }, 100);
                     }else {
-                        document.location.href = link_res + "?id=" + tabel_id;
+                        ///console.log($('#ref').val());
+
+                        if ($('#ref').val() === undefined) {
+                            document.location.href = link_res + "?id=" + tabel_id;
+                        }else{
+                            document.location.href = $('#ref').val();
+                        }
                     }
                 }else{
                     //console.log('error');
@@ -2899,6 +2937,7 @@
 
         var link = "fl_deployTabel_f.php";
 
+
         var rys = false;
 
         rys = confirm("Вы собираетесь провести табель.\nПосле этого изменить его не получится.\nВы уверены?");
@@ -2926,8 +2965,15 @@
 
                         if (res.result == "success") {
                             //console.log(res);
+                            //console.log($('#ref').val());
                             //location.reload();
-                            window.location.replace("fl_tabel.php?id="+tabel_id);
+
+                            if ($('#ref').val() === undefined) {
+                                window.location.replace("fl_tabel.php?id="+tabel_id);
+                            }else{
+                                window.location.replace($('#ref').val());
+                            }
+
                         } else {
                             //$('#errror').html(res.data);
                             alert("Сумма табеля не равна нулю [ "+parseInt(res.data)+" ] ! Невозможно провести.");

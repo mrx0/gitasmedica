@@ -341,8 +341,17 @@
                                                 </a>
                                                 ' . $invoice_rez_str . '
            
-                                                <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px;">
-                                                    <a href="fl_paidout_in_tabel_add.php?tabel_id='.$rezData['id'].'&type=7&filial_id='.$filial_id.'&ref=\'fl_tabels_simple_pay.php?&filial='.$filial_id.'&m='.$month.'&y='.$year.'&who='.$rezData['type'].'\'" class="b" style = "font-size: 80%;">ЗП +</a>                                           
+                                                <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px;">';
+                            if (intval($summItog - $rezData['paidout'] - $rezData['deduction']) > 0) {
+                                echo '
+                                                    <a href="fl_paidout_in_tabel_add.php?tabel_id=' . $rezData['id'] . '&type=7&filial_id=' . $filial_id . '&ref=' . urlencode('fl_tabels_simple_pay.php?&filial=' . $filial_id . '&m=' . $month . '&y=' . $year . '&who=' . $rezData['type']) . '" class="b" style = "font-size: 80%;">ЗП +</a>';
+                            }
+                            if ((intval($summItog - $rezData['paidout'] - $rezData['deduction']) == 0) && ($rezData['status'] == 0)) {
+                                echo '
+                                                    <button class="b" style="font-size: 80%;" onclick="deployTabel(' . $rezData['id'] . ');">Провести</button>';
+                            }
+                            //var_dump($rezData['status']);
+                            echo '
                                                 </div>
                                                 
                                             </div>';
@@ -363,6 +372,9 @@
                         }
                     }
                 }
+
+                echo '
+                                        <input type="hidden" name="ref" id="ref" value="fl_tabels_simple_pay.php?&filial=' . $filial_id . '&m=' . $month . '&y=' . $year . '&who=' . $type .'">';
             }
 
 
