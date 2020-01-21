@@ -154,6 +154,7 @@
 						<div class="nav">
 							<a href="fl_tabels.php" class="b">Важный отчёт</a>
 							<a href="fl_tabels2.php" class="b">Отчёт по часам</a>
+							<a href="fl_tabels_simple_pay.php?&filial='.$filial_id.'&m='.$month.'&y='.$year.''.$dopWho.'" class="b">Проверка табелей 2</a>
 						</div>
 						
 						<h2>Проверка табелей</h2>

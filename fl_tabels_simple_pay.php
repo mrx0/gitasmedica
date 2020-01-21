@@ -170,9 +170,10 @@
 						<div class="nav">
 							<a href="fl_tabels.php" class="b">Важный отчёт</a>
 							<a href="fl_tabels2.php" class="b">Отчёт по часам</a>
+							<a href="fl_tabels_check.php?&filial='.$filial_id.'&m='.$month.'&y='.$year.''.$dopWho.'" class="b">Проверка табелей</a>
 						</div>
 						
-						<h2>Проверка табелей</h2>
+						<h2>Проверка табелей 2</h2>
 						
 						<span style="font-size: 85%; color: #7D7D7D;">Отображаются только <span style="color: red;">не закрытые (не выплаченные до конца, не проведёные)</span> табели.</span>
 					</header>';
@@ -438,7 +439,7 @@
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}
 		echo '
-		    <div id="doc_title">Проверка табелей/',$monthsName[$month],' ',$year,' - Асмедика</div>';
+		    <div id="doc_title">Проверка табелей 2/',$monthsName[$month],' ',$year,' - Асмедика</div>';
 	}else{
 		header("location: enter.php");
 	}
