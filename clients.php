@@ -223,10 +223,10 @@
 						}*/
 
 					}else{
-						$deleted_clients .= '
-							<!--<div class="cellCosmAct" style="text-align: center"></div>-->
-							<div class="cellCosmAct" style="text-align: center"></div>
-							';
+//						$deleted_clients .= '
+//							<!--<div class="cellCosmAct" style="text-align: center"></div>-->
+//							<div class="cellCosmAct" style="text-align: center"></div>
+//							';
 					}
 					if ($clients_j[$i]['status'] != 9){
 						echo '
@@ -303,7 +303,7 @@
 						$deleted_clients .= '
 									</div>';
 						$deleted_clients .= '
-									<div class="cellCosmAct" style="text-align: center; width: 60px; min-width: 60px; max-width: 60px;">'.$clients_j[$i]['card'].'</div>';
+									<div class="cellCosmAct" style="text-align: center; width: 80px; min-width: 80px; max-width: 80px;">'.$clients_j[$i]['card'].'</div>';
 						$deleted_clients .= '
 									<div class="cellTime" style="text-align: center">';
 
