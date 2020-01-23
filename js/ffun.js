@@ -3148,14 +3148,14 @@
                         $(this).val(Number($(this).val()));
                         materials_consumption_pos_all_summ += Number($(this).val());
 
-                        if (materials_consumption_pos_all_summ > mat_paid_summ){
-                            alert("Сумма расходов не может превышать суммы оплаты.");
-                            materials_consumption_pos_all_summ = mat_paid_summ;
-                            $(".materials_consumption_pos_all").val(materials_consumption_pos_all_summ);
-                            $("#matConsAccept").prop("disabled", true);
-                        }else{
+                        // if (materials_consumption_pos_all_summ > mat_paid_summ){
+                        //     alert("Сумма расходов не может превышать суммы оплаты.");
+                        //     materials_consumption_pos_all_summ = mat_paid_summ;
+                        //     $(".materials_consumption_pos_all").val(materials_consumption_pos_all_summ);
+                        //     $("#matConsAccept").prop("disabled", true);
+                        // }else{
                             $("#matConsAccept").prop("disabled", false);
-                        }
+                        // }
 
                     } else {
                         $(this).val(0);
@@ -3352,11 +3352,11 @@
 
                 var mat_cons_pos_summ_all = Number($(this).val());
 
-                if (mat_cons_pos_summ_all > mat_paid_summ){
-                    alert("Сумма расходов не может превышать суммы оплаты.");
-                    mat_cons_pos_summ_all = mat_paid_summ;
-                    $(this).val(mat_cons_pos_summ_all);
-                }
+                // if (mat_cons_pos_summ_all > mat_paid_summ){
+                //     alert("Сумма расходов не может превышать суммы оплаты.");
+                //     mat_cons_pos_summ_all = mat_paid_summ;
+                //     $(this).val(mat_cons_pos_summ_all);
+                // }
 
                 var chkBoxsCount = $('input[type=checkbox]:checked').length;
 
