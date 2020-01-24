@@ -12,6 +12,7 @@
 		if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
+            include_once 'widget_calendar.php';
 			include_once 'ffun.php';
             require 'variables.php';
 
@@ -64,6 +65,8 @@
             }
             //var_dump($filial_id);
 
+            $dop = 'filial_id='.$filial_id;
+
 
             echo '
                 <div id="status">
@@ -84,6 +87,12 @@
                     <div id="data">';
             echo '				
                         <div id="errrror"></div>';
+
+
+
+            echo '<div class="no_print">';
+            echo widget_calendar ($month, $year, 'fl_consolidated_report_admin.php', $dop);
+            echo '</div><br>';
 
             //Выбор филиала
             echo '
@@ -118,31 +127,34 @@
             }
 
             //Выбор месяц и год
-            echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Дата: ';
+//            echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Дата: ';
+//            echo '
+//			                <select name="iWantThisMonth" id="iWantThisMonth" style="margin-right: 5px;">';
+//            foreach ($monthsName as $mNumber => $mName){
+//                $selected = '';
+//                if ((int)$mNumber == (int)$month){
+//                    $selected = 'selected';
+//                }
+//                echo '
+//				                <option value="'.$mNumber.'" '.$selected.'>'.$mName.'</option>';
+//            }
+//            echo '
+//			                </select>
+//			                <select name="iWantThisYear" id="iWantThisYear">';
+//            for ($i = 2017; $i <= (int)date('Y')+2; $i++){
+//                $selected = '';
+//                if ($i == (int)date('Y')){
+//                    $selected = 'selected';
+//                }
+//                echo '
+//				                <option value="'.$i.'" '.$selected.'>'.$i.'</option>';
+//            }
+//            echo '
+//			                </select>
+//			                <span class="button_tiny" style="font-size: 90%; cursor: pointer" onclick="iWantThisDate(\'fl_consolidated_report_admin.php?filial_id='. $filial_id . '\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>';
+
+
             echo '
-			                <select name="iWantThisMonth" id="iWantThisMonth" style="margin-right: 5px;">';
-            foreach ($monthsName as $mNumber => $mName){
-                $selected = '';
-                if ((int)$mNumber == (int)$month){
-                    $selected = 'selected';
-                }
-                echo '
-				                <option value="'.$mNumber.'" '.$selected.'>'.$mName.'</option>';
-            }
-            echo '
-			                </select>
-			                <select name="iWantThisYear" id="iWantThisYear">';
-            for ($i = 2017; $i <= (int)date('Y')+2; $i++){
-                $selected = '';
-                if ($i == (int)date('Y')){
-                    $selected = 'selected';
-                }
-                echo '
-				                <option value="'.$i.'" '.$selected.'>'.$i.'</option>';
-            }
-            echo '
-			                </select>
-			                <span class="button_tiny" style="font-size: 90%; cursor: pointer" onclick="iWantThisDate(\'fl_consolidated_report_admin.php?filial_id='. $filial_id . '\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
 			                <div style="font-size: 90%; color: rgb(125, 125, 125); float: right;">Сегодня: <a href="fl_consolidated_report_admin.php" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></div>
 			            </div>';
 

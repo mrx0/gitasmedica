@@ -13,6 +13,7 @@
         //if (($_SESSION['id'] == 270) || ($god_mode)){
         include_once 'DBWork.php';
         include_once 'functions.php';
+        include_once 'widget_calendar.php';
         include_once 'ffun.php';
         require 'variables.php';
 
@@ -73,6 +74,8 @@
                 }
             }
 
+            $dop = 'filial_id='.$filial_id;
+
             echo '
                 <div id="status">
                     <header id="header">
@@ -94,6 +97,10 @@
             if (TRUE) {
                 echo '				
                             <div id="errrror"></div>';
+
+                echo '<div class="no_print">';
+                echo widget_calendar ($month, $year, 'fl_main_report2.php', $dop);
+                echo '</div><br>';
 
                 //Выбор филиала
                 echo '
@@ -129,34 +136,35 @@
                 //            }
 
                 //Выбор месяц и год
-                echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Дата: ';
+//                echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Дата: ';
+//                echo '
+//                                <span id="getThisCalendar">
+//                                    <select name="iWantThisMonth" id="iWantThisMonth" style="margin-right: 5px;">';
+//                foreach ($monthsName as $mNumber => $mName) {
+//                    $selected = '';
+//                    if ((int)$mNumber == (int)$month) {
+//                        $selected = 'selected';
+//                    }
+//                    echo '
+//                                        <option value="' . $mNumber . '" ' . $selected . '>' . $mName . '</option>';
+//                }
+//                echo '
+//                                    </select>
+//                                    <select name="iWantThisYear" id="iWantThisYear">';
+//                for ($i = 2017; $i <= (int)date('Y') + 2; $i++) {
+//                    $selected = '';
+//                    if ($i == (int)$year) {
+//                        $selected = 'selected';
+//                    }
+//                    echo '
+//                                        <option value="' . $i . '" ' . $selected . '>' . $i . '</option>';
+//                }
+//                echo '
+//                                    </select>
+//                                </span>
+//                                <span class="button_tiny" style="font-size: 90%; cursor: pointer" onclick="iWantThisDate(\'fl_main_report2.php?filial_id=' . $filial_id . '\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
+//                                <div style="font-size: 90%; color: rgb(125, 125, 125); float: right;">Сегодня: <a href="fl_main_report2.php" class="ahref">' . date("d") . ' ' . $monthsName[date("m")] . ' ' . date("Y") . '</a></div>';
                 echo '
-                                <span id="getThisCalendar">
-                                    <select name="iWantThisMonth" id="iWantThisMonth" style="margin-right: 5px;">';
-                foreach ($monthsName as $mNumber => $mName) {
-                    $selected = '';
-                    if ((int)$mNumber == (int)$month) {
-                        $selected = 'selected';
-                    }
-                    echo '
-                                        <option value="' . $mNumber . '" ' . $selected . '>' . $mName . '</option>';
-                }
-                echo '
-                                    </select>
-                                    <select name="iWantThisYear" id="iWantThisYear">';
-                for ($i = 2017; $i <= (int)date('Y') + 2; $i++) {
-                    $selected = '';
-                    if ($i == (int)$year) {
-                        $selected = 'selected';
-                    }
-                    echo '
-                                        <option value="' . $i . '" ' . $selected . '>' . $i . '</option>';
-                }
-                echo '
-                                    </select>
-                                </span>
-                                <span class="button_tiny" style="font-size: 90%; cursor: pointer" onclick="iWantThisDate(\'fl_main_report2.php?filial_id=' . $filial_id . '\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
-                                <div style="font-size: 90%; color: rgb(125, 125, 125); float: right;">Сегодня: <a href="fl_main_report2.php" class="ahref">' . date("d") . ' ' . $monthsName[date("m")] . ' ' . date("Y") . '</a></div>
                             </div>';
 
                 //Количество дней в месяце
@@ -1058,7 +1066,7 @@
                                    <b>Приход</b>
                                 </div>
                                 <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: rgba(236, 247, 95, 0.52); text-align: right;">
-                                    <b>' . number_format($cashbox_nal + $arenda + $beznal + $insure_summ, 0, '.', ' ') . '</b>
+                                    <b id="allSumm">' . number_format($cashbox_nal + $arenda + $beznal + $insure_summ, 0, '.', ' ') . '</b>
                                 </div>
                             </li>';
 
@@ -1256,7 +1264,7 @@
                                    <b>Заработная плата</b>
                                 </div>
                                 <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
-    
+
                                 </div>
                             </li>';
 
@@ -1403,6 +1411,7 @@
                             </tr>';
                     }
 
+                    //Процент зп от выручки
                     $zp_percent = 0;
 
                     if (($cashbox_nal + $beznal + $insure_summ) > 0) {
@@ -1415,8 +1424,8 @@
                                    <!--<b>всего:</b>-->
                                 </div>
                                 <div class="cellRight" style="width: 180px; min-width: 180px; background-color: ' . $bg_color . ';">
-                                    <div style="float:left;">' . number_format($permission_summ, 0, '.', ' ') . '</div>
-                                    <div style="float:right;">' . $zp_percent . '%</div>
+                                    <div id="permission_summ'.$permissions.'" permission_id="'.$permissions.'" style="float:left;">' . number_format($permission_summ, 0, '.', ' ') . '</div>
+                                    <div class="percent'.$permissions.'" style="float:right;">' . $zp_percent . '%</div>
                                 </div>
                             </li>';
                 }
@@ -1648,7 +1657,7 @@
                             if ($stom_summ_temp < 0) $stom_summ_temp = 0;
 
                             //                        echo number_format(array_sum($rezult_arr[5]['data']) + $child_stom_summ, 0, '.', ' ').' ';
-                            echo number_format($stom_summ_temp, 0, '.', ' ');
+                            echo '<span id="summ5">'.number_format($stom_summ_temp, 0, '.', ' ').'</span>';
 
                             //                        //!!! Костыль для %
                             //                        echo number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[5], 0, '.', ' ');
@@ -1790,7 +1799,7 @@
                         if (!empty($rezult_arr[7]['data'])) {
                             //arsort($rezult_arr[10]['data']);
 
-                            echo number_format(array_sum($rezult_arr[7]['data']), 0, '.', ' ') . ' ';
+                            echo '<span id="summ7">'.number_format(array_sum($rezult_arr[7]['data']), 0, '.', ' ') . '</span>';
 
                             //                        //!!! Костыль для %
                             //                        echo number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[7], 0, '.', ' ');
@@ -1849,7 +1858,7 @@
                         if (!empty($rezult_arr[6]['data'])) {
                             //arsort($rezult_arr[5]['data']);
 
-                            echo number_format(array_sum($rezult_arr[6]['data']), 0, '.', ' ') . ' ';
+                            echo '<span id="summ6">'.number_format(array_sum($rezult_arr[6]['data']), 0, '.', ' ') . '</span>';
 
                             //                        //!!! Костыль для %
                             //                        echo number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[6], 0, '.', ' ');
@@ -1953,7 +1962,7 @@
                             </div>
                             <div class="cellRight" style="width: 150px; min-width: 150px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
-                    echo number_format(($temp_solar_nal + $temp_solar_beznal), 0, '.', ' ') . ' ';
+                    echo '<span id="summSol">'.number_format(($temp_solar_nal + $temp_solar_beznal), 0, '.', ' ') . '</span>';
 
                     //                //!!! Костыль для %
                     //                echo number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt['sol'], 0, '.', ' ');
@@ -1979,7 +1988,7 @@
                         if (!empty($rezult_arr[10]['data'])) {
                             //arsort($rezult_arr[10]['data']);
 
-                            echo number_format(array_sum($rezult_arr[10]['data']), 0, '.', ' ') . ' ';
+                            echo '<span id="summ10">'.number_format(array_sum($rezult_arr[10]['data']), 0, '.', ' ') . '</span>';
 
                             //                        //!!! Костыль для %
                             //                        echo number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[10], 0, '.', ' ');
@@ -2291,7 +2300,150 @@
                         $("#main").css({margin: \'0\', padding: \'10px 0 20px\'});                        
                         $("#header").css({"padding-left": \'10px\'});                        
                         $("#data").css({margin: \'10px \'});                        
-                        $("#livefilter-list").css({width: \'min-content\'});                        
+                        $("#livefilter-list").css({width: \'min-content\'}); 
+                                               
+                                               
+                       //$(".permission_summ").each(function(){
+                           
+                            var allSumm = 0;
+                            var stomSumm = 0;
+                            var cosmSumm = 0;
+                            var assSumm = 0;
+                            var specSumm = 0;
+                            var solSumm = 0;
+                            
+                            if ($("#allSumm").html() !== undefined){
+                                //allSumm = Number($("#allSumm").html().replace(/\s+/g, \'\'));
+                                allSumm = Number(('.$cashbox_nal.' + '.$beznal.' + '.$insure_summ.'));
+                            }
+                            if ($("#summ5").html() !== undefined){
+                                stomSumm = Number($("#summ5").html().replace(/\s+/g, \'\'));
+                            }
+                            if ($("#summ6").html() !== undefined){
+                                cosmSumm = Number($("#summ6").html().replace(/\s+/g, \'\'));
+                            }
+                            if ($("#summ7").html() !== undefined){
+                                assSumm = Number($("#summ7").html().replace(/\s+/g, \'\'));
+                            }
+                            if ($("#summ10").html() !== undefined){
+                                specSumm = Number($("#summ10").html().replace(/\s+/g, \'\'));
+                            }
+                            if ($("#summSol").html() !== undefined){
+                                solSumm = Number($("#summSol").html().replace(/\s+/g, \'\'));
+                            }
+
+                            var id = $(this).attr("permission_id");
+                            //console.log(id);
+//                            console.log(assSumm);
+//                            console.log(allSumm);
+                            
+                            //if (($cashbox_nal + $beznal + $insure_summ) > 0) {
+//                                number_format(($permission_summ * 100 / ($cashbox_nal + $beznal + $insure_summ)), 2, \'.\', \' \');
+                            //}
+                            
+                            if ($(".percent5").html() !== undefined){
+                                $(".percent5").html(
+                                    number_format((Number($("#permission_summ5").html().replace(/\s+/g, \'\')) * 100 / stomSumm), 2, \'.\', \' \')
+                                );
+                            }else{
+                                $(".percent5").html(0);
+                            }
+                            $(".percent5").append(" %");
+                            
+                            if ($(".percent6").html() !== undefined){
+                                $(".percent6").html(
+                                    number_format((Number($("#permission_summ6").html().replace(/\s+/g, \'\')) * 100 / cosmSumm), 2, \'.\', \' \')
+                                );
+                            }else{
+                                $(".percent6").html(0);
+                            }
+                            $(".percent6").append(" %");
+                            
+                            if ($(".percent7").html() !== undefined){
+                                $(".percent7").html(
+                                    number_format((Number($("#permission_summ7").html().replace(/\s+/g, \'\')) * 100 / (stomSumm + assSumm)), 2, \'.\', \' \')
+                                );
+                            }else{
+                                $(".percent7").html(0);
+                            }
+                            $(".percent7").append(" %");
+                            
+                            if ($(".percent10").html() !== undefined){
+                                $(".percent10").html(
+                                    number_format((Number($("#permission_summ10").html().replace(/\s+/g, \'\')) * 100 / specSumm), 2, \'.\', \' \')
+                                );
+                            }else{
+                                $(".percent10").html(0);
+                            }
+                            $(".percent10").append(" %");
+                            
+                            //адм
+                            if ($(".percent4").html() !== undefined){
+                                $(".percent4").html(
+                                    number_format((Number($("#permission_summ4").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
+                                );
+                            }else{
+                                $(".percent4").html(0);
+                            }
+                            $(".percent4").append(" %");
+                            
+                            if ($(".percent9").html() !== undefined){
+                                $(".percent9").html(
+                                    number_format((Number($("#permission_summ9").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
+                                );
+                            }else{
+                                $(".percent9").html(0);
+                            }
+                            $(".percent9").append(" %");
+                            
+                            if ($(".percent11").html() !== undefined){
+                                $(".percent11").html(
+                                    number_format((Number($("#permission_summ11").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
+                                );
+                            }else{
+                                $(".percent11").html(0);
+                            }
+                            $(".percent11").append(" %");
+                            
+                            if ($(".percent13").html() !== undefined){
+                                $(".percent13").html(
+                                    number_format((Number($("#permission_summ13").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
+                                );
+                            }else{
+                                $(".percent13").html(0);
+                            }
+                            $(".percent13").append(" %");
+                            
+                            if ($(".percent14").html() !== undefined){
+                                $(".percent14").html(
+                                    number_format((Number($("#permission_summ14").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
+                                );
+                            }else{
+                                $(".percent14").html(0);
+                            }
+                            $(".percent14").append(" %");
+                            
+                            if ($(".percent15").html() !== undefined){
+                                $(".percent15").html(
+                                    number_format((Number($("#permission_summ15").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
+                                );
+                            }else{
+                                $(".percent15").html(0);
+                            }
+                            $(".percent15").append(" %");
+                                
+                            if ($(".percent777").html() !== undefined){
+                                $(".percent777").html(
+                                    number_format((Number($("#permission_summ777").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
+                                );
+                            }else{
+                                $(".percent777").html(0);
+                            }
+                            $(".percent777").append(" %");
+
+                       //});
+                                               
+                                               
                     });
 
                     $(function() {
