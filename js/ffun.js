@@ -1876,7 +1876,7 @@
         // console.log($("#iWantThisMonth").html());
         // console.log($("#iWantThisYear").html());
         var calendar_month = $("#iWantThisMonth").html();
-        var calendar_year = $("#iWantThisYear").html();
+        var calendar_year = $("#iWantThisYear").val();
 
         var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_PrevMonthDeficitAdd('+filial_id+')">';
 
@@ -1906,7 +1906,8 @@
                                 "height": "50%"
                             })
                             .append('<select name="iWantThisMonth" id="iWantThisMonthh_prevdef" style="margin-right: 5px;">'+calendar_month+'</select>')
-                            .append('<select name="iWantThisYear" id="iWantThisYearh_prevdef">'+calendar_year+'</select>')
+                            //.append('<select name="iWantThisYear" id="iWantThisYearh_prevdef">'+calendar_year+'</select>')
+                            .append('<input name="iWantThisYear" id="iWantThisYearh_prevdef" type="number" value="'+calendar_year+'" min="2000" max="2030" size="4" style="width: 60px;">')
                             .append('<div style="margin: 10px;">Cумма: <span class="calculateInvoice">'+deficit_summ+'</span> руб.</div>')
                     )
                     .append(
