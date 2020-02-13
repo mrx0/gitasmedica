@@ -20,9 +20,13 @@
                 $time = date('Y-m-d H:i:s', time());
                 //$date_in = date('Y-m-d H:i:s', strtotime($_POST['date_in']." 09:00:00"));
 
-                $worker_j = SelDataFromDB ('spr_workers', $_POST['worker'], 'worker_full_name');
+                if (mb_strlen($_POST['worker']) > 0) {
+                    $worker_j = SelDataFromDB('spr_workers', $_POST['worker'], 'worker_full_name');
+                }else{
+                    $worker_j = 0;
+                }
 
-                if ($worker_j != 0){
+                //if ($worker_j != 0){
 
                     $worker_id = $worker_j[0]['id'];
 
@@ -38,9 +42,9 @@
 
                     echo json_encode(array('result' => 'success', 'data' => $_POST['worker']));
 
-                }else{
-                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">В нашей базе нет такого сотрудника</div>'));
-                }
+//                }else{
+//                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">В нашей базе нет такого сотрудника</div>'));
+//                }
             }
         }
     }
