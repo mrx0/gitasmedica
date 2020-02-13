@@ -119,15 +119,16 @@ if ($enter_ok){
                             <div class="cellsBlock2">
                                 <div class="cellLeft">
                                     <span style="font-size:80%;  color: #555;">Филиал</span><br>
-                                    <select name="SelectFilial" id="SelectFilial">';
+                                    <select name="SelectFilial" id="SelectFilial">
+                                    <option value="0" selected>Выберите филиал</option>';
 
         if (!empty($filials_j)) {
             foreach ($filials_j as $f_id => $filials_j_data) {
                 $selected = '';
                 if ($filial_id == $f_id){
-                    $selected = ' selected';
+                    //$selected = ' selected';
                 }
-                echo "<option value='".$f_id."' $selected>".$filials_j_data['name']."</option>";
+                echo "<option value='".$f_id."' >".$filials_j_data['name']."</option>";
             }
         }
 
