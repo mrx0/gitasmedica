@@ -3851,11 +3851,11 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                console.log(res);
+                //console.log(res);
 
                 var calc_ids_arr = Array.from(res.data);
 
-                //!!! Хороший пример паузы в цикле (пауза в цикле)
+                //!!! Хороший пример паузы в цикле (пауза в цикле) через рекурсию
                 //Не использовать, если есть вариант, что массив изменится во время
                 //И если обязательно индексы цифровые и по порядку
                 if (calc_ids_arr.length > 0) {
@@ -3876,7 +3876,7 @@
                             //Работает по-ебаному (лень просто переделывать, лепим костыли),
                             //а именно: ей нужно скормить перемменную вида chkBox_5_400_16
                             //В которой хранятся тип (стом, косм...)/5, ID работника/400, филиал/16)
-                            //То создадим такую ебаную переменную reqData.data =)
+                            //Поэтому создадим такую ебаную переменную reqData.data =)
 
                             reqData.data = 'chkBox_6_000_00';
 
@@ -6732,4 +6732,318 @@
         })
     }
 
+    //
+    function fl_mainReportAverage() {
+        //console.log($("#month_count").val());
+        // console.log($("#month_start").val());
+        // console.log($("#year_start").val());
+        // console.log($("#month_end").val());
+        // console.log($("#year_end").val());
+        // console.log($("#SelectFilial").val());
 
+        var just_do_it = false;
+
+        //убираем ошибки
+        hideAllErrors();
+
+        if (Number($("#year_start").val()) > Number($("#year_end").val())) {
+            $('#errrror').html('<span class="query_neok">Ошибка в указанном периоде.</span>');
+        } else {
+            if (Number($("#year_start").val()) == Number($("#year_end").val())) {
+                if (Number($("#month_start").val()) > Number($("#month_end").val())) {
+                    $('#errrror').html('<span class="query_neok">Ошибка в указанном периоде.</span>');
+                } else {
+                    just_do_it = true;
+                }
+            } else {
+                just_do_it = true;
+            }
+        }
+
+        //Если с датами все более менее, то выполняем
+        if (just_do_it) {
+
+            var link = "fl_mainReportAverage_getDates_f.php";
+
+            var reqData = {
+                month_start: $("#month_start").val(),
+                year_start: $("#year_start").val(),
+                month_end: $("#month_end").val(),
+                year_end: $("#year_end").val(),
+                filial_id: $("#SelectFilial").val()
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    //console.log (res);
+
+                    if (res.result == "success") {
+                        //console.log(res.data);
+
+                        $("#res_table_tmpl").html(res.res_str);
+
+                        $("#date_start_name").html(res.date_start_name);
+                        $("#date_end_name").html(res.date_end_name);
+                        $("#filial_name").html(res.filial_name);
+                        $("#filial_name2").html(res.filial_name);
+
+
+                        var months_arr = Array.from(res.months_arr);
+                        //console.log(months_arr);
+
+                        //!!! Хороший пример паузы в цикле (пауза в цикле) через рекурсию
+                        //Не использовать, если есть вариант, что массив изменится во время
+                        //И если обязательно индексы цифровые и по порядку
+                        if (months_arr.length > 0) {
+
+                            var foo = function (i) {
+                                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+
+                                window.setTimeout(function () {
+                                    //console.log(months_arr[i]);
+
+                                    link = "fl_mainReportAverage_getData_f.php";
+                                    // link = "fl_reloadPercentsMarkedCalculates.php";
+
+                                    reqData.date = months_arr[i];
+                                    //console.log(reqData);
+
+                                    //По каждому индексу даты: делаем...
+                                    $.ajax({
+                                        url: link,
+                                        global: false,
+                                        type: "POST",
+                                        dataType: "JSON",
+                                        data: reqData,
+                                        cache: false,
+                                        beforeSend: function () {
+                                        },
+                                        // действие, при ответе с сервера
+                                        success: function (res) {
+                                            // console.log(res);
+
+                                            if (res.result == "success") {
+                                                // console.log(months_arr[i] + ' ***');
+                                                //console.log(res);
+                                                //console.log(res.permission_summs);
+                                                //console.log(res.giveoutcash_j);
+
+                                                $(".allMoney_"+res.month+"_"+res.year).html(Number(res.nal + res.beznal + res.arenda + res.insure_summ));
+
+                                                $(".bank_"+res.month+"_"+res.year).html(Number(res.bank_summ));
+                                                $(".director_"+res.month+"_"+res.year).html(Number(res.director_summ));
+                                                $(".nal_"+res.month+"_"+res.year).html(Number(res.nal));
+                                                $(".beznal_"+res.month+"_"+res.year).html(Number(res.beznal));
+                                                $(".arenda_"+res.month+"_"+res.year).html(Number(res.arenda));
+
+                                                //var permission_summs = Array.from(res.permission_summs);
+                                                //  console.log(5 in res.permission_summs);
+
+                                                if (5 in res.permission_summs){
+                                                    $(".zpStom_" + res.month + "_" + res.year).html(Number(res.permission_summs[5]));
+                                                }
+                                                if (6 in res.permission_summs){
+                                                    $(".zpCosm_" + res.month + "_" + res.year).html(Number(res.permission_summs[6]));
+                                                }
+                                                if (10 in res.permission_summs){
+                                                    $(".zpSomat_" + res.month + "_" + res.year).html(Number(res.permission_summs[10]));
+                                                }
+                                                if (7 in res.permission_summs){
+                                                    $(".zpAssist_" + res.month + "_" + res.year).html(Number(res.permission_summs[7]));
+                                                }
+                                                if (4 in res.permission_summs){
+                                                    $(".zpAdm_" + res.month + "_" + res.year).html(Number(res.permission_summs[4]));
+                                                }
+
+                                                //zpSanitUborDvor
+                                                var zpSanitUborDvor = 0;
+                                                if (13 in res.permission_summs){
+                                                    zpSanitUborDvor +=  Number(res.permission_summs[13]);
+                                                }
+                                                if (14 in res.permission_summs){
+                                                    zpSanitUborDvor +=  Number(res.permission_summs[14]);
+                                                }
+                                                if (15 in res.permission_summs){
+                                                    zpSanitUborDvor +=  Number(res.permission_summs[15]);
+                                                }
+                                                $(".zpSanitUborDvor_"+res.month+"_"+res.year).html(zpSanitUborDvor);
+
+                                                if (11 in res.permission_summs){
+                                                    $(".zpZavh_" + res.month + "_" + res.year).html(Number(res.permission_summs[11]));
+                                                }
+
+                                                //zpPom
+                                                var zpPom = 0;
+                                                if (9 in res.permission_summs){
+                                                    zpPom +=  Number(res.permission_summs[9]);
+                                                }
+                                                if (12 in res.permission_summs){
+                                                    zpPom +=  Number(res.permission_summs[12]);
+                                                }
+                                                $(".zpPom_"+res.month+"_"+res.year).html(zpPom);
+
+                                                $(".remont_"+res.month+"_"+res.year).html(res.giveoutcash_j[3]);
+                                            }
+                                        }
+                                    });
+
+                                    if (i < months_arr.length-1){
+                                        foo(i + 1);
+                                    } else {
+                                        //По окончании цикла, который выше, чего-то делаем
+                                        //console.log("Обновляем суммы.");
+
+                                        window.setTimeout(function () {
+                                            var date_arr = {};
+                                            var m_count = 0;
+
+                                            var allMoney = 0;
+                                            var arenda = 0;
+                                            var nal = 0;
+                                            var beznal = 0;
+                                            var zpStom = 0;
+                                            var zpCosm = 0;
+                                            var zpSomat = 0;
+                                            var zpAssist = 0;
+                                            var zpAdm = 0;
+                                            var zpSanitUborDvor = 0;
+                                            var zpZavh = 0;
+                                            var zpPom = 0;
+                                            var remont = 0;
+
+                                            $(".need_date").each(function () {
+                                                //console.log($(this).attr("need_date"));
+
+                                                date_arr = $(this).attr("need_date").split("_");
+
+                                                var m = date_arr[0];
+                                                var y = date_arr[1];
+
+                                                m_count++;
+
+                                                $(".allMoney_" + m + "_" + y).each(function () {
+                                                    allMoney += Number($(this).html());
+                                                });
+
+                                                $(".arenda_" + m + "_" + y).each(function () {
+                                                    arenda += Number($(this).html());
+                                                });
+
+                                                $(".nal_" + m + "_" + y).each(function () {
+                                                    nal += Number($(this).html());
+                                                });
+
+                                                $(".beznal_" + m + "_" + y).each(function () {
+                                                    beznal += Number($(this).html());
+                                                });
+
+                                                $(".zpStom_" + m + "_" + y).each(function () {
+                                                    zpStom += Number($(this).html());
+                                                });
+
+                                                $(".zpCosm_" + m + "_" + y).each(function () {
+                                                    zpCosm += Number($(this).html());
+                                                });
+
+                                                $(".zpSomat_" + m + "_" + y).each(function () {
+                                                    zpSomat += Number($(this).html());
+                                                });
+
+                                                $(".zpAssist_" + m + "_" + y).each(function () {
+                                                    zpAssist += Number($(this).html());
+                                                });
+
+                                                $(".zpAdm_" + m + "_" + y).each(function () {
+                                                    zpAdm += Number($(this).html());
+                                                });
+
+                                                $(".zpSanitUborDvor_" + m + "_" + y).each(function () {
+                                                    zpSanitUborDvor += Number($(this).html());
+                                                });
+
+                                                $(".zpZavh_" + m + "_" + y).each(function () {
+                                                    zpZavh += Number($(this).html());
+                                                });
+
+                                                $(".zpPom_" + m + "_" + y).each(function () {
+                                                    zpPom += Number($(this).html());
+                                                });
+
+                                                $(".remont_" + m + "_" + y).each(function () {
+                                                    remont += Number($(this).html());
+                                                });
+
+                                            });
+
+                                            // console.log(m_count);
+                                            // console.log(allMoney);
+                                            // console.log(arenda);
+
+
+                                            //Выводим результат
+                                            $(".allMoney_summ").html(allMoney);
+                                            $(".allMoney_average").html(number_format(allMoney/m_count, 2, '.', ''));
+
+                                            $(".arenda_summ").html(arenda);
+                                            $(".arenda_average").html(number_format(arenda/m_count, 2, '.', ''));
+
+                                            $(".nal_summ").html(nal);
+                                            $(".nal_average").html(number_format(nal/m_count, 2, '.', ''));
+
+                                            $(".beznal_summ").html(beznal);
+                                            $(".beznal_average").html(number_format(beznal/m_count, 2, '.', ''));
+
+                                            $(".zpStom_summ").html(zpStom);
+                                            $(".zpStom_average").html(number_format(zpStom/m_count, 2, '.', ''));
+
+                                            $(".zpCosm_summ").html(zpCosm);
+                                            $(".zpCosm_average").html(number_format(zpCosm/m_count, 2, '.', ''));
+
+                                            $(".zpSomat_summ").html(zpSomat);
+                                            $(".zpSomat_average").html(number_format(zpSomat/m_count, 2, '.', ''));
+
+                                            $(".zpAssist_summ").html(zpAssist);
+                                            $(".zpAssist_average").html(number_format(zpAssist/m_count, 2, '.', ''));
+
+                                            $(".zpAdm_summ").html(zpAdm);
+                                            $(".zpAdm_average").html(number_format(zpAdm/m_count, 2, '.', ''));
+
+                                            $(".zpSanitUborDvor_summ").html(zpSanitUborDvor);
+                                            $(".zpSanitUborDvor_average").html(number_format(zpSanitUborDvor/m_count, 2, '.', ''));
+
+                                            $(".zpZavh_summ").html(zpZavh);
+                                            $(".zpZavh_average").html(number_format(zpZavh/m_count, 2, '.', ''));
+
+                                            $(".zpPom_summ").html(zpPom);
+                                            $(".zpPom_average").html(number_format(zpPom/m_count, 2, '.', ''));
+
+                                            $(".remont_summ").html(remont);
+                                            $(".remont_average").html(number_format(remont/m_count, 2, '.', ''));
+
+                                            $('#errrror').html('');
+                                        }, 500);
+                                    }
+                                }, 1000);
+                            };
+                            foo(0);
+                        }
+
+
+
+                    } else {
+                        //--
+                    }
+                }
+            })
+        }
+    }

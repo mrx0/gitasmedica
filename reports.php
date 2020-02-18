@@ -139,6 +139,13 @@
 								<a href="fl_consolidated_report_admin.php" class="b3">Сводный отчёт по филиалу</a>
 							</li>';
 
+                if (($_SESSION['permissions'] == 3) || $god_mode){
+                    echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="fl_main_report_average.php" class="b3">Усреднённый отчёт</a>
+							</li>';
+                }
+
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_client_finance2.php" class="b3">Открытые наряды</a>
