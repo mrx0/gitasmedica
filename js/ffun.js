@@ -6843,7 +6843,7 @@
                                                 $(".bank_"+res.month+"_"+res.year).html(Number(res.bank_summ));
                                                 $(".director_"+res.month+"_"+res.year).html(Number(res.director_summ));
                                                 $(".nal_"+res.month+"_"+res.year).html(Number(res.nal));
-                                                $(".beznal_"+res.month+"_"+res.year).html(Number(res.beznal));
+                                                $(".beznal_"+res.month+"_"+res.year).html(Number(res.beznal + res.insure_summ));
                                                 $(".arenda_"+res.month+"_"+res.year).html(Number(res.arenda));
 
                                                 //var permission_summs = Array.from(res.permission_summs);
