@@ -213,7 +213,7 @@
 								<div style="margin-top: 10px; margin-bottom: 18px;">
 									Игнорировать существующий график <input type="checkbox" name="ignoreshed" id="ignoreshed" value="1">
 								</div>
-								<input type="button" class="b" value="Применить" onclick="if (iCanManage) Ajax_change_shed()">
+								<input type="button" class="b" value="Применить" onclick="if (iCanManage) Ajax_change_shed('.$type.')">
 							</div>
 						</li>';
 			}

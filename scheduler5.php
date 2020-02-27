@@ -561,6 +561,8 @@
                             if (isset($schedulerFakt[$worker_data['id']])) {
                                 if (isset($schedulerFakt[$worker_data['id']][$i])) {
 
+
+
                                     $selectedDate = 1;
                                     $worker_is_here = true;
 
@@ -578,7 +580,7 @@
                             if (isset($schedulerFaktOther[$worker_data['id']])) {
                                 if (isset($schedulerFaktOther[$worker_data['id']][$i])) {
 
-                                    $title = $filials_j[$schedulerFaktOther[$worker_data['id']][$i]]['name'];
+                                    $title = $filials_j[$schedulerFaktOther[$worker_data['id']][$i]]['name2'];
 
                                     if (!$worker_is_here) {
 
@@ -628,13 +630,15 @@
                                     $hours = $hours_j[$worker_data['id']][$ii][$_GET['filial']];
                                 }*/
 
-                                //Сумма часов только на всех филиалах
-                                if (isset($hours_j[$worker_data['id']][$ii])) {
-                                    if (array_sum($hours_j[$worker_data['id']][$ii]) > 0) {
-                                        if (($_SESSION['id'] == $worker_data['id']) || ($scheduler['see_all'] == 1) || $god_mode) {
-                                            $hours = '<div id="" class="dayHours_' . $worker_data['id'] . '">' . array_sum($hours_j[$worker_data['id']][$ii]) . '</div>';
+                                //Сумма часов на всех филиалах
+                                if (isset($hours_j[$worker_data['id']][$ii])){
+                                    if (array_sum($hours_j[$worker_data['id']][$ii]) > 0){
+                                        //Если смотрят своё или есть права смотреть чужое
+                                        if (($_SESSION['id'] == $worker_data['id']) || ($scheduler['see_all'] == 1) || $god_mode){
+                                            $hours = '<div id="" class="dayHours_' . $worker_data['id'] . '" style="display: none;" title="'.$title.'">' . array_sum($hours_j[$worker_data['id']][$ii]) . '</div><div style="font-size: 10px;">' . array_sum($hours_j[$worker_data['id']][$ii]) . '</div>';
                                         } else {
-                                            if ((date('d') == '28') || (date('d') == '29') || (date('d') == '30') || (date('d') == '31') || (date('d') == '01') || (date('d') == '02') || (date('d') == '03')) {
+                                            //Если конец месяца или самое начало следующего (чтобы админы контролировали хоть иногда)
+                                            if ((date('d') == '28') || (date('d') == '29') || (date('d') == '30') || (date('d') == '31') || (date('d') == '01') || (date('d') == '02') || (date('d') == '03')){
                                                 $hours = '<i class="fa fa-plus-circle" style="color: rgb(72, 141, 16); font-size: 150%; text-shadow: 1px 1px 1px #999;"></i><div id="" class="dayHours_' . $worker_data['id'] . '" style="display: none;">' . array_sum($hours_j[$worker_data['id']][$ii]) . '</div>';
                                             } else {
                                                 $hours = '<i class="fa fa-plus-circle" style="color: rgb(72, 141, 16); font-size: 150%; text-shadow: 1px 1px 1px #999;"></i>';
@@ -735,11 +739,11 @@
 
                     //Клик на дате
                     $("body").on("mousedown", ".schedulerItem", function(event){
-                        //console.log(event.which);
+//                        console.log(event.which);
                         if (iCanManage){
 //                            console.log(iCanManage);
 
-                            document.oncontextmenu = function() {return false;};
+//                            document.oncontextmenu = function() {return false;};
 
                             //Проверяем нажата ли именно правая кнопка мыши:
                             if (event.which === 3){
@@ -751,17 +755,23 @@
                                 contextMenuShow(target.attr(\'worker_id\'), target.attr(\'day\'), event, \'scheduler5\');
                             }
                         }else{
-                            document.oncontextmenu = function() {};
+//                            document.oncontextmenu = function() {};
                         }
                     });
                                 
                     //Посчитаем кол-во всех часов за месяц для каждого
                     $(document).ready(function() {
                         //calculateWorkerDays();
-                         calculateWorkerHours();
+                        calculateWorkerHours();
+                         
+                        if (iCanManage){
+                            //выключаем контекстное меню
+                            document.oncontextmenu = function() {return false;};
+                        }else{
+                            //включаем контекстное меню
+                            document.oncontextmenu = function() {};
+                        }
                     });
-  
-
                                 
 				
 					 /*<![CDATA[*/
@@ -799,8 +809,53 @@
                             
                             blockWhileWaiting (true);
                             
+                            var get_data_str = "";
+							    
+                                //!!!Получение данных из GET тест
+                                /*var params = window
+                                    .location
+                                    .search
+                                    .replace("?","")
+                                    .split("&")
+                                    .reduce(
+                                        function(p,e){
+                                            var a = e.split(\'=\');
+                                            p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+                                            return p;
+                                        },
+                                        {}
+                                    );*/
+                                
+                                //console.log(params["data"]);
+                                //выведет в консоль значение  GET-параметра data
+                                //console.log(params);
+                                
+                                var params = window
+                                    .location
+                                    .search
+                                    .replace("?","")
+                                    .split("&")
+                                    .reduce(
+                                        function(p,e){
+                                            var a = e.split(\'=\');
+                                            p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+                                            return p;
+                                        },
+                                        {}
+                                    );
+                                //console.log(params);
+                                                                
+                                for (key in params) {
+                                    if (key.indexOf("filial") == -1){
+                                        get_data_str = get_data_str + "&" + key + "=" + params[key];
+                                    }
+                                }
+                                //console.log(get_data_str);
+							    
+								document.location.href = "?filial="+$(this).val() + get_data_str;
+                            
                             //var dayW = document.getElementById("SelectDayW").value;
-                            document.location.href = "?filial="+$(this).val()+"'.$who.'";
+                            //document.location.href = "?filial="+$(this).val()+"'.$who.'";
                         });
                         $("#SelectDayW").change(function(){
                         
