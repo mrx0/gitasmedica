@@ -72,9 +72,52 @@ if ($enter_ok){
                         <article>
                                 
                                    <!--<h2 style="padding: 0 0 7px; font-size: 3.5mm; color: #0C0C0C; text-align: center; font-weight: bold;">Предварительный расчёт #</h2>-->';
+
+        $fio = '<u>'.'ФИО ПАЦИЕНТА'.'</u>';
+        $fio_str = '';
+        $bdate_str = '<u>'.'00.00.0000'.'</u>';
+        $age_str = '<u>'.'00'.'</u>';
+        $sex_str = '<u>'.'?'.'</u>';
+
+        if (isset($_GET['client_id'])){
+
+            $msql_cnnct = ConnectToDB ();
+
+            //Для лога соберем сначала то, что было в записи.
+            $query = "SELECT * FROM `spr_clients` WHERE `id`='{$_GET['client_id']}'";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0){
+                $arr = mysqli_fetch_assoc($res);
+                $fio = mb_strtoupper($arr['full_name'], "UTF-8");
+                $bdate_str = '<u>'.date('d.m.Y', strtotime($arr['birthday2'])).'</u>';
+                $age_str = '<u>'.getyeardiff(strtotime($arr['birthday2']), 0).'</u>';
+                if ($arr['sex'] == 1){
+                    $sex_str = '<u>'.'М'.'</u>';
+                }
+                if ($arr['sex'] == 2){
+                    $sex_str = '<u>'.'Ж'.'</u>';
+                }
+            }
+
+        }
+
+        //Соберём данные, присвоим значения переменным
+
+
+
+
+        $diff_symbols = 41 - mb_strlen($fio, 'UTF-8');
+        $fio_str .= str_repeat("_", intval($diff_symbols/2)).'<u>'.$fio.'</u>'.str_repeat("_", $diff_symbols - intval($diff_symbols/2));
+
+
+
         echo '
                             <div style="/*border: 1px solid #CCC;*/ width: 49%; height: 200mm; float: left; vertical-align: top; font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 12px">
-                                <div style="margin-top: 20px;">«__» __________ 20__ г.</div>
+                                <!--<div style="margin-top: 20px;">«__» __________ 20__ г.</div>
                                 <div style="margin-top: 15px;">Жалобы: </div>
                                 <div>___________________________________________________________</div>
                                 <div>___________________________________________________________</div>
@@ -120,12 +163,12 @@ if ($enter_ok){
                                 <div style="clear: both; margin-top: 20px;">
                                     <div style="display: inline-block; width: 50%; font-size: 10px;">Список рекомендаций получил(а)</div>
                                     <div style="display: inline-block; font-size: 10px;">Подпись пациента ________________</div>
-                                </div>
+                                </div>-->
                             </div>
                             
                             <div style="/*border: 1px solid #CCC;*/ width: 49%; height: 200mm; float: right; vertical-align: top; font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 12px">
-                                <div style="font-size: 10px;">
-                                    <table style="text-align: center; border-top: 1px solid #111; border-bottom: 1px solid #111;">
+                                <div style="font-size: 8px;">
+                                    <table style="text-align: center; border-top: 1px solid #111; border-bottom: 1px solid #111; width: 100%;">
                                         <tr>
                                             <td width="30%" style="vertical-align: middle; padding: 2px 4px;">Министерство Здравоохранения<br>РФ</td>
                                             <td rowspan="2" style="vertical-align: middle; padding: 2px 4px; border-left: 1px solid #111; border-right: 1px solid #111;">ООО «Приор»<br>СПб, пр. Гражданский, д.114</td>
@@ -136,18 +179,37 @@ if ($enter_ok){
                                         </tr>
                                     </table>
                                 </div>
-                                <div style="text-align: center; margin-top: 30px; font-weight: bold;">Вкладыш из медицинской карты стоматологического больного</div>
-                                <div style="text-align: center; margin-top: 15px; font-weight: bold;">№_______________</div>
-                                <div style="margin-top: 20px;">Фамилия, имя, отчество ___________________________________________</div>
-                                <div style="margin-top: 10px; text-align: justify;">_________________________________________ возраст ______________</div>
-                                <div style="margin-top: 10px; text-align: justify;">Пол (м. ж.)_______ Адрес _________________________________________</div>
+                                <div style="text-align: center; margin-top: 30px; font-weight: bold;">Медицинская карта стоматологического больного</div>
+                                <div style="text-align: center; margin-top: 15px; font-weight: bold;">№______________г.</div>
                                 <div style="margin-top: 10px;">_____________________________________________________________</div>
-                                <div style="margin-top: 10px;">Контактный телефон _____________________________________________</div>
-                                <div style="margin-top: 20px;">
-                                    <div style="display: inline-block; width: 50%;">«__» __________ 20__ г.</div>
-                                    <div style="display: inline-block;">Лечащий врач _________________</div>
+                                <div style="margin-top: 10px;">Фамилия, имя, отчество '.$fio_str.'</div>
+                                <div style="margin-top: 10px;">_____________________________________________________________</div>
+                                <div style="margin-top: 10px;">Год рождения __'.$bdate_str.'____ полных лет _'.$age_str.'______________пол (м.ж.)_'.$sex_str.'_</div>
+                                <div style="margin-top: 10px;"> Адрес ________________________________________________________</div>
+                                <div style="margin-top: 10px;">_____________________________________________________________</div>
+                                <div style="margin-top: 10px;">E-mail ________________________________________________________</div>
+                                <div style="margin-top: 10px;">Профессия _____________________________________________________</div>									
+                                <div style="margin-top: 10px;">Диагноз _______________________________________________________</div> 									
+                                <div style="margin-top: 10px;">Жалобы _______________________________________________________</div>
+                                <div style="margin-top: 10px;">_____________________________________________________________</div>
+                                <div style="margin-top: 10px;">_____________________________________________________________</div>
+                                <div style="margin-top: 10px;">_____________________________________________________________</div>
+                                <div style="margin-top: 10px;">_____________________________________________________________</div>
+                                <div style="margin-top: 10px;">_____________________________________________________________</div>
+                                <div style="margin-top: 10px;">Перенесенные и сопутствующие заболевания ___________________________</div>
+                                <div style="margin-top: 10px;">_____________________________________________________________</div>
+                                <div style="margin-top: 10px;">_______________________________________Онкосмотр______________</div>
+                                <div style="margin-top: 10px;">_______________________________________Гепатит________________</div>
+                                <div style="margin-top: 10px;">Развитие настоящего заболевания ___________________________________</div>
+                                <div style="margin-top: 10px;">_____________________________________________________________</div>
+                                <div style="margin-top: 10px;">_______________________________________ТВС___________________</div>
+                                <div style="margin-top: 10px;">_______________________________________Вен.заболев._____________</div>
+                                <div style="margin-top: 10px;">_________________________________________«__» __________ 20__ г.</div>
+                                <div style="margin-top: 10px;">
+                                    <div style="display: inline-block; width: 50%; font-size: 12px;"></div>
+                                    <div style="display: inline-block; font-size: 12px;">Лечащий врач ________________</div>
                                 </div>
-                                <div style="margin-top: 20px;">Карточка находится ______________________________________________</div>
+                                <div style="margin-top: 10px; text-align: center;  font-size: 16px;">-1-</div>
                             </div>';
 
         echo '           
