@@ -132,8 +132,13 @@ ORDER BY `name`;
 				echo '
 							Номер карты: '.$client_j[0]['card'].'';
 
+
                 echo '
                         </header>';
+
+                echo '<div style="margin-top: 7px; font-size: 70%; color: #777;">
+                <a href="test_print2.php?client_id=' . $client_j[0]['id'] . '" class="ahref b2 no_print"  target="_blank" rel="nofollow noopener">Мед.карта стом.(тест) </a>
+                </div>';
 
 				echo '
                     <div style="margin-top: 7px; font-size: 70%; color: #777;">
