@@ -439,20 +439,35 @@
                 }
 
                 //!!!Для графика ассистентов... ???
-                if ($_POST['mark'] == 'scheduler3'){
-                    $data .= '
-                            <li><div onclick="">Весь день</div></li>
-                            <li><div onclick="">Утро</li>
-                            <li><div onclick="">Вечер</li>
-                            <li><div onclick="">Ночь</li>
-                            <hr>
-                            <li><div onclick=""><i>Весь день ?</i></div></li>
-                            <li><div onclick=""><i>Утро ?</i></li>
-                            <li><div onclick=""><i>Вечер ?</i></li>
-                            <li><div onclick=""><i>Ночь ?</i></li>
-                            <hr>
-                            <li><div onclick=""><b>Очистить</b></li>';
-                }
+//                if ($_POST['mark'] == 'scheduler3'){
+//                    $data .= '
+//                            <li><div onclick="">Весь день</div></li>
+//                            <li><div onclick="">Утро</li>
+//                            <li><div onclick="">Вечер</li>
+//                            <li><div onclick="">Ночь</li>
+//                            <hr>
+//                            <li><div onclick=""><i>Весь день ?</i></div></li>
+//                            <li><div onclick=""><i>Утро ?</i></li>
+//                            <li><div onclick=""><i>Вечер ?</i></li>
+//                            <li><div onclick=""><i>Ночь ?</i></li>
+//                            <hr>
+//                            <li><div onclick=""><b>Очистить</b></li>';
+//                }
+//
+//                if ($_POST['mark'] == 'scheduler5'){
+//                    $data .= '
+//                            <li><div onclick="">Удалить смену</div></li>
+//                            <li><div onclick="">Часов: <input type="text" id="newHours" name="newHours" value="0"> <i class="fa fa-check-square" style=" color: green;"></i></li>
+//                            <li><div onclick="">Вечер</li>
+//                            <li><div onclick="">Ночь</li>
+//                            <hr>
+//                            <li><div onclick=""><i>Весь день ?</i></div></li>
+//                            <li><div onclick=""><i>Утро ?</i></li>
+//                            <li><div onclick=""><i>Вечер ?</i></li>
+//                            <li><div onclick=""><i>Ночь ?</i></li>
+//                            <hr>
+//                            <li><div onclick=""><b>Очистить</b></li>';
+//                }
 
                 //Для добавления наряда "с улицы"
                 if ($_POST['mark'] == 'invoice_add_free'){

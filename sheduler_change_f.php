@@ -15,7 +15,7 @@
 //        var_dump(in_array(15, $_POST['filials_arr']));
 
 		if ($_POST) {
-            if (isset($_POST['all_fililas_chckd']) && isset($_POST['filials_arr'])){
+            if (isset($_POST['all_fililas_chckd']) && isset($_POST['filials_arr']) && isset($_POST['type'])){
                 if (($_POST['all_fililas_chckd'] == 1) || (!empty($_POST['filials_arr']))){
 
                     //Максимально кол-во дней в месяце, где будем менять
@@ -57,7 +57,7 @@
                     $msql_cnnct = ConnectToDB();
 
                     //получаем шаблон графика из базы
-                    $query = "SELECT `filial`, `day`, `smena`, `kab`, `worker`, `type` FROM `sheduler_template`";
+                    $query = "SELECT `filial`, `day`, `smena`, `kab`, `worker`, `type` FROM `sheduler_template` WHERE `type`='{$_POST['type']}'";
 
                     $shedTemplate = 0;
 

@@ -2466,7 +2466,8 @@
 
 	//Меняем фактический график по шаблону планового
 	//!!!пример массив checkbox
-	function Ajax_change_shed() {
+	function Ajax_change_shed(type) {
+	    //console.log(type);
 
 		var day = $("#SelectDayShedOptions").val();
 		var month = $("#SelectMonthShedOptions").val();
@@ -2500,7 +2501,8 @@
 				year: year,
 				ignoreshed: ignoreshed,
                 all_fililas_chckd: all_fililas_chckd,
-                filials_arr: filials_chckd_arr
+                filials_arr: filials_chckd_arr,
+                type: type
 			},
 			cache: false,
 			beforeSend: function() {
@@ -2614,8 +2616,12 @@
 
             	if (res.data == "true"){
 					$("#manageMessage").html("Управление <span style='color: green;'>включено</span>");
+					//выключаем контекстное меню
+                    document.oncontextmenu = function() {return false;};
 				}else{
                     $("#manageMessage").html("Управление <span style='color: red;'>выключено</span>");
+                    //включаем контекстное меню
+                    document.oncontextmenu = function() {};
 				}
             }
         })
