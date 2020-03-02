@@ -393,7 +393,14 @@
 
                                             echo '
                                                 </ul>';
+
+                                            echo
+                                                '<input type="hidden" id="ztime" value="'.strtotime($sheduler_zapis[0]['year'].'-'.$month.'-'.$sheduler_zapis[0]['day']).'">';
+
+
                                         }
+
+
 
                                         //Наряды
                                         echo '
@@ -841,7 +848,7 @@
                                                     addInvoiceInSession(t_number);
                                                 });
                                                 
-                                                fillInvoiseRez(true, false);
+                                                fillInvoiseRez(true);
                                             });
                                             
                                         </script>

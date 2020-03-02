@@ -846,7 +846,7 @@
                                                     addInvoiceInSession(t_number);
                                                 });
                                                 
-                                                fillInvoiseRez(true, true);
+                                                fillInvoiseRez(true);
                                             });
                                             
                                         </script>

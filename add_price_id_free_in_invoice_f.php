@@ -64,7 +64,7 @@
                             include_once 'ffun.php';
 
                             //получим цены
-                            $prices = takePrices ((int)$_POST['price_id'], 0);
+                            $prices = takePrices ((int)$_POST['price_id'], 0, 0);
                             //var_dump($prices);
 
                             if (!empty($prices)) {

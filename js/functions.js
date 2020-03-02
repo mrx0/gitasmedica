@@ -5626,7 +5626,7 @@
             if ((guarantee == 0) && (gift == 0)) {
                 if ((typeof insure != "undefined") && (typeof insureapprove != "undefined")) {
                     if (insure != 0) {
-                        console.log(typeof(insure));
+                        //console.log(typeof(insure));
 
                         if (insureapprove != 0) {
                             SummIns += stoim;
@@ -5859,6 +5859,15 @@
         var adv = $("#adv").val();
 		//console.log(adv);
 
+
+        //Время записи (для корректировки цен)
+        var ztime = $("#ztime").val();
+
+        if (ztime == undefined){
+            ztime = 0;
+        }
+        //console.log(ztime);
+
 		$.ajax({
 			url: link,
 			global: false,
@@ -5872,7 +5881,8 @@
 				worker: $("#worker").val(),
                 invoice_type: invoice_type,
                 client_insure: $("#client_insure").val(),
-                adv: adv
+                adv: adv,
+                ztime: ztime
 			},
 			cache: false,
 			beforeSend: function() {

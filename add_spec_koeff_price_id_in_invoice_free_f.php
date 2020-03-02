@@ -39,7 +39,7 @@
                                 $insure = $_SESSION['invoice_data']['free_invoice']['data'][$ind]['insure'];
 
                                 //получим цены
-                                $prices = takePrices ($item, $insure);
+                                $prices = takePrices ($item, $insure, 0);
                                 //var_dump($prices);
 
                                 if (!empty($prices)) {

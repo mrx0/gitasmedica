@@ -176,7 +176,7 @@
                                     $spec_koeff = $items['spec_koeff'];
 
                                     //получим цены
-                                    $prices = takePrices ($items['price_id'], $items['insure']);
+                                    $prices = takePrices ($items['price_id'], $items['insure'], 0);
                                     //var_dump($prices);
 
                                     if (!empty($prices)) {

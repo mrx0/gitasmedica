@@ -387,14 +387,18 @@
     }
 
     //берем цены из прайса
-    function takePrices ($item, $insure){
+    function takePrices ($item, $insure, $ttime){
 
         $msql_cnnct = ConnectToDB2 ();
 
         $prices_j = array();
         $arr = array();
 
-        $time = time();
+        if ($ttime == 0) {
+            $time = time();
+        }else{
+            $time = $ttime;
+        }
 
         //Вытащим цены позиции
         $query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices` WHERE `item`='".$item."' AND $time > `date_from` ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
