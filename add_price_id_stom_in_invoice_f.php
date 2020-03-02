@@ -119,7 +119,7 @@
                             include_once 'ffun.php';
 
                             //получим цены
-                            $prices = takePrices((int)$_POST['price_id'], (int)$_POST['client_insure']);
+                            $prices = takePrices((int)$_POST['price_id'], (int)$_POST['client_insure'], 0);
                             //var_dump($prices);
 
                             if (!empty($prices)) {

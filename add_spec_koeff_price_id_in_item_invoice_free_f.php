@@ -38,7 +38,7 @@
 
 
                             //получим цены
-                            $prices = takePrices ($item, $insure);
+                            $prices = takePrices ($item, $insure, 0);
                             //var_dump($prices);
 
                             if (!empty($prices)) {

@@ -40,7 +40,7 @@
                                     $insure = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['insure'];
 
 								    //получим цены
-                                    $prices = takePrices ($item, $insure);
+                                    $prices = takePrices ($item, $insure, 0);
                                     //var_dump($prices);
 
                                     if (!empty($prices)) {
@@ -62,7 +62,7 @@
                                 $insure = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['insure'];
 
                                 //получим цены
-                                $prices = takePrices ($item, $insure);
+                                $prices = takePrices ($item, $insure, 0);
                                 //var_dump($prices);
 
                                 if (!empty($prices)) {

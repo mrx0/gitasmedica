@@ -352,7 +352,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         foreach($rezult_arr_fio as $fio_time => $rezult_arr_time) {
 
                             if ($fio_time != 'data'){
-                                //var_dump ($rezult_arr_time);
+//                                var_dump ($rezult_arr_time['invoice_ex']);
 
                                 $rez_str_invoice_zub = '';
                                 //Сумма каждого наряда

@@ -2370,106 +2370,109 @@
 //                                number_format(($permission_summ * 100 / ($cashbox_nal + $beznal + $insure_summ)), 2, \'.\', \' \');
                             //}
                             
-                            if ($(".percent5").html() !== undefined){
-                                $(".percent5").html(
-                                    number_format((Number($("#permission_summ5").html().replace(/\s+/g, \'\')) * 100 / stomSumm), 2, \'.\', \' \')
-                                );
-                            }else{
-                                $(".percent5").html(0);
-                            }
-                            $(".percent5").append(" %");
-                            
-                            if ($(".percent6").html() !== undefined){
-                                $(".percent6").html(
-                                    number_format((Number($("#permission_summ6").html().replace(/\s+/g, \'\')) * 100 / cosmSumm), 2, \'.\', \' \')
-                                );
-                            }else{
-                                $(".percent6").html(0);
-                            }
-                            $(".percent6").append(" %");
-                            
-                            if ($(".percent7").html() !== undefined){
-                                $(".percent7").html(
-                                    number_format((Number($("#permission_summ7").html().replace(/\s+/g, \'\')) * 100 / (stomSumm + assSumm)), 2, \'.\', \' \')
-                                );
-                            }else{
-                                $(".percent7").html(0);
-                            }
-                            $(".percent7").append(" %");
-                            
-                            if ($(".percent10").html() !== undefined){
-                                $(".percent10").html(
-                                    number_format((Number($("#permission_summ10").html().replace(/\s+/g, \'\')) * 100 / specSumm), 2, \'.\', \' \')
-                                );
-                            }else{
-                                $(".percent10").html(0);
-                            }
-                            $(".percent10").append(" %");
-                            
-                            //адм
-                            if ($(".percent4").html() !== undefined){
-                                $(".percent4").html(
-                                    number_format((Number($("#permission_summ4").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
-                                );
-                            }else{
-                                $(".percent4").html(0);
-                            }
-                            $(".percent4").append(" %");
-                            
-                            if ($(".percent9").html() !== undefined){
-                                $(".percent9").html(
-                                    number_format((Number($("#permission_summ9").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
-                                );
-                            }else{
-                                $(".percent9").html(0);
-                            }
-                            $(".percent9").append(" %");
-                            
-                            if ($(".percent11").html() !== undefined){
-                                $(".percent11").html(
-                                    number_format((Number($("#permission_summ11").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
-                                );
-                            }else{
-                                $(".percent11").html(0);
-                            }
-                            $(".percent11").append(" %");
-                            
-                            if ($(".percent13").html() !== undefined){
-                                $(".percent13").html(
-                                    number_format((Number($("#permission_summ13").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
-                                );
-                            }else{
-                                $(".percent13").html(0);
-                            }
-                            $(".percent13").append(" %");
-                            
-                            if ($(".percent14").html() !== undefined){
-                                $(".percent14").html(
-                                    number_format((Number($("#permission_summ14").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
-                                );
-                            }else{
-                                $(".percent14").html(0);
-                            }
-                            $(".percent14").append(" %");
-                            
-                            if ($(".percent15").html() !== undefined){
-                                $(".percent15").html(
-                                    number_format((Number($("#permission_summ15").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
-                                );
-                            }else{
-                                $(".percent15").html(0);
-                            }
-                            $(".percent15").append(" %");
+                            if (allSumm > 0){
                                 
-                            if ($(".percent777").html() !== undefined){
-                                $(".percent777").html(
-                                    number_format((Number($("#permission_summ777").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
-                                );
+                                if ($(".percent5").html() !== undefined){
+                                    $(".percent5").html(
+                                        number_format((Number($("#permission_summ5").html().replace(/\s+/g, \'\')) * 100 / stomSumm), 2, \'.\', \' \')
+                                    );
+                                }else{
+                                    $(".percent5").html(0);
+                                }
+                                $(".percent5").append(" %");
+                                
+                                if ($(".percent6").html() !== undefined){
+                                    $(".percent6").html(
+                                        number_format((Number($("#permission_summ6").html().replace(/\s+/g, \'\')) * 100 / cosmSumm), 2, \'.\', \' \')
+                                    );
+                                }else{
+                                    $(".percent6").html(0);
+                                }
+                                $(".percent6").append(" %");
+                                
+                                if ($(".percent7").html() !== undefined){
+                                    $(".percent7").html(
+                                        number_format((Number($("#permission_summ7").html().replace(/\s+/g, \'\')) * 100 / (stomSumm + assSumm)), 2, \'.\', \' \')
+                                    );
+                                }else{
+                                    $(".percent7").html(0);
+                                }
+                                $(".percent7").append(" %");
+                                
+                                if ($(".percent10").html() !== undefined){
+                                    $(".percent10").html(
+                                        number_format((Number($("#permission_summ10").html().replace(/\s+/g, \'\')) * 100 / specSumm), 2, \'.\', \' \')
+                                    );
+                                }else{
+                                    $(".percent10").html(0);
+                                }
+                                $(".percent10").append(" %");
+                                
+                                //адм
+                                if ($(".percent4").html() !== undefined){
+                                    $(".percent4").html(
+                                        number_format((Number($("#permission_summ4").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
+                                    );
+                                }else{
+                                    $(".percent4").html(0);
+                                }
+                                $(".percent4").append(" %");
+                                
+                                if ($(".percent9").html() !== undefined){
+                                    $(".percent9").html(
+                                        number_format((Number($("#permission_summ9").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
+                                    );
+                                }else{
+                                    $(".percent9").html(0);
+                                }
+                                $(".percent9").append(" %");
+                                
+                                if ($(".percent11").html() !== undefined){
+                                    $(".percent11").html(
+                                        number_format((Number($("#permission_summ11").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
+                                    );
+                                }else{
+                                    $(".percent11").html(0);
+                                }
+                                $(".percent11").append(" %");
+                                
+                                if ($(".percent13").html() !== undefined){
+                                    $(".percent13").html(
+                                        number_format((Number($("#permission_summ13").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
+                                    );
+                                }else{
+                                    $(".percent13").html(0);
+                                }
+                                $(".percent13").append(" %");
+                                
+                                if ($(".percent14").html() !== undefined){
+                                    $(".percent14").html(
+                                        number_format((Number($("#permission_summ14").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
+                                    );
+                                }else{
+                                    $(".percent14").html(0);
+                                }
+                                $(".percent14").append(" %");
+                                
+                                if ($(".percent15").html() !== undefined){
+                                    $(".percent15").html(
+                                        number_format((Number($("#permission_summ15").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
+                                    );
+                                }else{
+                                    $(".percent15").html(0);
+                                }
+                                $(".percent15").append(" %");
+                                    
+                                if ($(".percent777").html() !== undefined){
+                                    $(".percent777").html(
+                                        number_format((Number($("#permission_summ777").html().replace(/\s+/g, \'\')) * 100 / allSumm), 2, \'.\', \' \')
+                                    );
+                                }else{
+                                    $(".percent777").html(0);
+                                }
+                                $(".percent777").append(" %");
                             }else{
-                                $(".percent777").html(0);
                             }
-                            $(".percent777").append(" %");
-
                        //});
                                                
                                                

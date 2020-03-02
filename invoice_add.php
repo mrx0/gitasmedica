@@ -803,7 +803,7 @@
                                                     addInvoiceInSession(t_number);
                                                 });
                                                 
-                                                fillInvoiseRez(true, false);
+                                                fillInvoiseRez(true);
                                             });
                                             
                                         </script>';
