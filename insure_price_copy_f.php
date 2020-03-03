@@ -17,10 +17,8 @@
                 if (($_POST['id'] != 0) && ($_POST['id2'] != 0)) {
                     //var_dump ($arr4fill);
 
-                    require 'config.php';
-                    mysql_connect($hostname, $username, $db_pass) OR DIE("Не возможно создать соединение ");
-                    mysql_select_db($dbName) or die(mysql_error());
-                    mysql_query("SET NAMES 'utf8'");
+                    $msql_cnnct = ConnectToDB ();
+
                     $time = time();
 
                     //Выбираем данные компании донора
@@ -29,10 +27,12 @@
                     // $rez = array();
                     $arr4fill = array();
 
-                    $res = mysql_query($query) or die($query);
-                    $number = mysql_num_rows($res);
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                    $number = mysqli_num_rows($res);
+
                     if ($number != 0) {
-                        while ($arr = mysql_fetch_assoc($res)) {
+                        while ($arr = mysqli_fetch_assoc($res)) {
                             $arr4fill[$arr['item']]['item'] = $arr['item'];
                             //array_push($rez);
                         }
@@ -46,10 +46,12 @@
                         $arr = array();
                         $price4fill = array();
 
-                        $res = mysql_query($query) or die($query);
-                        $number = mysql_num_rows($res);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                        $number = mysqli_num_rows($res);
+
                         if ($number != 0) {
-                            while ($arr = mysql_fetch_assoc($res)) {
+                            while ($arr = mysqli_fetch_assoc($res)) {
                                 if (isset($price4fill[$arr['item']])){
                                     if ($price4fill[$arr['item']]['date_from'] < $arr['date_from']){
                                         $price4fill[$arr['item']]['price'] = $arr['price'];
@@ -77,10 +79,10 @@
 
                         //Удаляем старые данные для второй компании
                         $query = "DELETE FROM `spr_pricelists_insure` WHERE `insure`='{$_POST['id2']}'";
-                        mysql_query($query) or die(mysql_error() . ' -> ' . $query);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                         $query = "DELETE FROM `spr_priceprices_insure` WHERE `insure`='{$_POST['id2']}'";
-                        mysql_query($query) or die(mysql_error() . ' -> ' . $query);
+                        //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
 
                         foreach ($arr4fill as $item) {
@@ -88,10 +90,10 @@
                             $query = "INSERT INTO `spr_pricelists_insure` (`item`, `insure`, `create_time`, `create_person`) 
                             VALUES (
                             '{$item['item']}', '{$_POST['id2']}', '{$time}', '{$_SESSION['id']}')";
-                            mysql_query($query) or die(mysql_error() . ' -> ' . $query);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                             //ID новой позиции
-                            $mysql_insert_id = mysql_insert_id();
+                            $mysql_insert_id = mysqli_insert_id($msql_cnnct);
 
                             $price = 0;
                             //Сегодня 09:00:00
@@ -110,7 +112,7 @@
                                 `insure`, `item`, `price`, `price2`, `price3`, `date_from`, `create_time`, `create_person`) 
                                 VALUES (
                             '{$_POST['id2']}', '{$item['item']}', '{$price}', '{$price2}', '{$price3}', '{$fromdate}', '{$time}', '{$_SESSION['id']}')";
-                            mysql_query($query) or die(mysql_error() . ' -> ' . $query);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                         }
                         //var_dump($price4fill);
