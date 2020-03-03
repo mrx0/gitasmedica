@@ -862,7 +862,7 @@
                                 })
 
                             } else if (res.result == "empty") {
-
+                                $('#errror').html('<div class="query_neok">Ошибка #61. Нет данных.</div>');
                             } else {
                                 $('#errror').html(res.data);
                             }
