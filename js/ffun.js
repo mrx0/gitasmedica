@@ -6462,6 +6462,7 @@
             rys = confirm("Вы собираетесь обновить данные в табеле. \n\nВы уверены?");
         }else{
             rys = true;
+            blockWhileWaiting (true);
         }
         if (rys) {
 

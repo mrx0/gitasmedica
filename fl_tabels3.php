@@ -548,6 +548,10 @@
                 echo '
 		            <div id="doc_title">Отчёт по часам - Асмедика</div>';
 
+                echo '	
+                <!-- Подложка только одна -->
+                <div id="overlay"></div>';
+
 				echo '
 
 				<script type="text/javascript">
