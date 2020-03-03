@@ -29,19 +29,19 @@
 								//var_dump($start_day);
 								//var_dump($iWantThisDate2);
 								
-								if ($iWantThisDate2 >= $start_day){
+//								if ($iWantThisDate2 >= $start_day){
 									WriteToDB_EditPricePrice_insure ($_POST['id'], $_POST['insure'], $_POST['price'], $_POST['price2'], $_POST['price3'], $iWantThisDate2, $_SESSION['id']);
 								
 									echo '
 										<div class="query_ok">
 											Цена изменена.<br><br>
 										</div>';
-								}else{
-									echo '
-										<div class="query_neok">
-											Задним числом изменять нельзя.<br><br>
-										</div>';
-								}
+//								}else{
+//									echo '
+//										<div class="query_neok">
+//											Задним числом изменять нельзя.<br><br>
+//										</div>';
+//								}
 							}else{
 								echo '
 									<div class="query_neok">
