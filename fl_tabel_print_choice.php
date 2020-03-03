@@ -44,12 +44,13 @@
                                         </div>
 									    <div>';
             echo '
-									        <select name="SelectMonth" id="SelectMonth" style="margin-right: 5px;">';
+									        <select name="SelectMonth" id="SelectMonth" style="margin-right: 5px;">
+									            <option value="0">Выберите месяц</option>';
             foreach ($monthsName as $mNumber => $mName){
                 $selected = '';
-                if ((int)$mNumber == (int)date('m')){
-                    $selected = 'selected';
-                }
+//                if ((int)$mNumber == (int)date('m')){
+//                    $selected = 'selected';
+//                }
                 echo '
 										        <option value="'.$mNumber.'" '.$selected.'>'.$mName.'</option>';
             }

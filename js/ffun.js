@@ -6356,7 +6356,7 @@
                                     "");
                             } else {
                                 $("#worker_" + worker_id).html("<a href='fl_tabel.php?id=" + res.data[worker_id]['id'] + "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(236,31,0,0.98); font-size: 130%;' title='Обновите данные табели'></i></a> " +
-                                    "<i class='fa fa-refresh' aria-hidden='true' style='color: rgb(218, 133, 9); font-size: 100%; cursor: pointer;' title='Обновить' onclick=\'refreshTabelForWorkerFromSchedulerReport("+res.data[worker_id]['id']+", "+worker_id+");\'></i>");
+                                    "<i class='fa fa-refresh' aria-hidden='true' style='color: rgb(218, 133, 9); font-size: 100%; cursor: pointer;' title='Обновить' onclick=\'refreshTabelForWorkerFromSchedulerReport("+res.data[worker_id]['id']+", "+worker_id+", true);\'></i>");
                             }
                         }
                     }
@@ -6444,7 +6444,7 @@
     }
 
     //Обновление данных табеля
-    function refreshTabelForWorkerFromSchedulerReport(tabel_id, worker_id){
+    function refreshTabelForWorkerFromSchedulerReport(tabel_id, worker_id, confirmation){
         // console.log(tabel_id);
         // console.log(worker_id);
         // console.log($("#w_id_"+worker_id).attr("oklad"));
@@ -6458,8 +6458,11 @@
 
         var rys = false;
 
-        rys = confirm("Вы собираетесь обновить данные в табеле. \n\nВы уверены?");
-
+        if (confirmation) {
+            rys = confirm("Вы собираетесь обновить данные в табеле. \n\nВы уверены?");
+        }else{
+            rys = true;
+        }
         if (rys) {
 
             var link = "fl_refreshTabelForWorkerFromSchedulerReport_f.php";
@@ -6529,7 +6532,7 @@
                 // console.log(tabel_id);
                 // console.log(worker_id);
 
-                refreshTabelForWorkerFromSchedulerReport(tabel_id, worker_id);
+                refreshTabelForWorkerFromSchedulerReport(tabel_id, worker_id, false);
 
             }
 
