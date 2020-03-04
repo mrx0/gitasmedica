@@ -517,7 +517,6 @@
                             }
                         }else{
                             //$sheduler_zapis = 0;
-
                         }
                         //var_dump ($tabel_surcharges_j);
                         //var_dump(microtime(true) - $script_start);
@@ -528,6 +527,8 @@
                         if (!empty($tabel_surcharges_j)) {
 
                             foreach ($tabel_surcharges_j as $rezData) {
+//                                var_dump($rezData);
+
                                 if ($rezData['tabel_id'] == $tabel_j[0]['id']) {
 
                                     $rezultS .=
@@ -566,7 +567,7 @@
                                                 <div style="margin: 5px 0 0 3px; font-size: 80%;">
                                                     <b>Комментарий:</b> ' . $rezData['descr'] . '                                                
                                                 </div>';
-                                    }
+
                                     $rezultS .= '
                                             </div>';
                                     if ($tabel_j[0]['status'] != 7) {
@@ -604,9 +605,10 @@
                                             В табеле '.$rezData['tabel_id'].'<br> (['.$filials_j[$rezData['office_id']]['name2'].'] '.$monthsName[$rezData['month']].' '.$rezData['year'].')
                                         </div>
                                     </a>';
-
+//                                var_dump($rezData['id']);
                             }
                         }
+
                         //var_dump(microtime(true) - $script_start);
 
                         //Выплаты
@@ -1193,9 +1195,9 @@
 			}else{
 				echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 			}
-//		}else{
-//            echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
-//		}
+		}else{
+            echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+		}
 	}else{
 		header("location: enter.php");
 	}

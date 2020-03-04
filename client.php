@@ -104,7 +104,7 @@ ORDER BY `name`;
                     if ($client_j[0]['status'] != 9) {
                         echo '<a href="finance_account.php?client_id='.$client_j[0]['id'].'" class="b" style="display: inline; margin-left: 20px; font-size: 70%; padding: 2px 5px;">Управление счётом</a>';
                         echo '<a href="zapis.php?client_id='.$client_j[0]['id'].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Записать пациента</a>';
-                        if (($_SESSION['permissions'] == 3) || $god_mode){
+                        if (($_SESSION['permissions'] == 3) || ($_SESSION['id'] == 364) || $god_mode){
                             //var_dump($client_j[0]['installment']);
                             //Нет отметки о рассрочке
                             if ($client_j[0]['installment'] == 0) {
