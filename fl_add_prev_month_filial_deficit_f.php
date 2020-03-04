@@ -26,7 +26,7 @@
                 $date = $_POST['year'].'-'.$_POST['month'].'-01';
                 $todaydate = date('Y').'-'.date('m').'-01';
 
-                if ($date >= $todaydate) {
+                if (($date >= $todaydate) || ($_SESSION['permissions'] == 3)) {
                     $msql_cnnct = ConnectToDB();
 
                     $query = "SELECT `id` FROM `fl_journal_prev_month_filial_deficit` 
