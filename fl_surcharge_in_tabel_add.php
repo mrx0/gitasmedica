@@ -44,8 +44,12 @@ if ($enter_ok){
                         echo ' отпускной ';
                     }elseif ($_GET['type'] == 3){
                         echo ' больничный ';
-                    }else {
+                    }elseif ($_GET['type'] == 1){
                         echo ' премия ';
+                    }elseif ($_GET['type'] == 4){
+                        echo ' прочее ';
+                    }else {
+                        echo ' <span style="color: red;">!Ошибка типа</span> ';
                     }
 
                     echo '

@@ -9,7 +9,8 @@
 		require_once 'header_tags.php';
 
 		//var_dump($_SESSION);
-        if (($_SESSION['permissions'] == 3) || $god_mode){
+        //if (($_SESSION['permissions'] == 3) || ($_SESSION['id'] == 364) || $god_mode){
+        if (($finances['see_all'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			include_once 'filter.php';

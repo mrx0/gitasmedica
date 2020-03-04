@@ -115,7 +115,7 @@
 								<a href="stat_cashbox.php" class="b3">Касса</a>
 							</li>';
 
-                if (($_SESSION['permissions'] == 3) || $god_mode){
+                if (($finances['see_all'] == 1) || $god_mode){
                     echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_installments.php" class="b3">Открытые рассрочки</a>
