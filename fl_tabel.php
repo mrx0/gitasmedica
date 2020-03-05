@@ -387,7 +387,7 @@
                               SELECT fl_jd.*, fl_jt.month, fl_jt.year, fl_jt.office_id FROM 
                               `fl_journal_tabels` fl_jt
                               RIGHT JOIN `fl_journal_deductions` fl_jd ON fl_jt.id = fl_jd.tabel_id 
-                              WHERE fl_jt.worker_id = '{$tabel_j[0]['worker_id']}' AND fl_jt.month = '{$tabel_j[0]['month']}' AND fl_jt.year = '{$tabel_j[0]['year']}' AND fl_jt.status <> '9';";
+                              WHERE fl_jt.worker_id = '{$tabel_j[0]['worker_id']}' AND fl_jt.month = '{$tabel_j[0]['month']}' AND fl_jt.year = '{$tabel_j[0]['year']}' AND (fl_jt.status <> '9' OR fl_jt.id = '{$tabel_j[0]['id']}');";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -506,7 +506,7 @@
                               SELECT fl_js.*, fl_jt.month, fl_jt.year, fl_jt.office_id FROM 
                               `fl_journal_tabels` fl_jt
                               RIGHT JOIN `fl_journal_surcharges` fl_js ON fl_jt.id = fl_js.tabel_id 
-                              WHERE fl_jt.worker_id = '{$tabel_j[0]['worker_id']}' AND fl_jt.month = '{$tabel_j[0]['month']}' AND fl_jt.year = '{$tabel_j[0]['year']}' AND fl_jt.status <> '9';";
+                              WHERE fl_jt.worker_id = '{$tabel_j[0]['worker_id']}' AND fl_jt.month = '{$tabel_j[0]['month']}' AND fl_jt.year = '{$tabel_j[0]['year']}' AND (fl_jt.status <> '9' OR fl_jt.id = '{$tabel_j[0]['id']}');";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
