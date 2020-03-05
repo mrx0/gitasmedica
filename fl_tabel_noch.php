@@ -456,7 +456,7 @@
                                 }elseif ($rezData['type'] == 3){
                                     $rezultS .= ' больничный ';
                                 }else {
-                                    $rezultS .= ' премия ';
+                                    $rezultS .= ' прочее ';
                                 }
                                 $rezultS .=
                                                         '#' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);"><br>создано: ' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>

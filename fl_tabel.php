@@ -387,7 +387,7 @@
                               SELECT fl_jd.*, fl_jt.month, fl_jt.year, fl_jt.office_id FROM 
                               `fl_journal_tabels` fl_jt
                               RIGHT JOIN `fl_journal_deductions` fl_jd ON fl_jt.id = fl_jd.tabel_id 
-                              WHERE fl_jt.worker_id = '{$tabel_j[0]['worker_id']}' AND fl_jt.month = '{$tabel_j[0]['month']}' AND fl_jt.year = '{$tabel_j[0]['year']}';";
+                              WHERE fl_jt.worker_id = '{$tabel_j[0]['worker_id']}' AND fl_jt.month = '{$tabel_j[0]['month']}' AND fl_jt.year = '{$tabel_j[0]['year']}' AND fl_jt.status <> '9';";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -506,7 +506,7 @@
                               SELECT fl_js.*, fl_jt.month, fl_jt.year, fl_jt.office_id FROM 
                               `fl_journal_tabels` fl_jt
                               RIGHT JOIN `fl_journal_surcharges` fl_js ON fl_jt.id = fl_js.tabel_id 
-                              WHERE fl_jt.worker_id = '{$tabel_j[0]['worker_id']}' AND fl_jt.month = '{$tabel_j[0]['month']}' AND fl_jt.year = '{$tabel_j[0]['year']}';";
+                              WHERE fl_jt.worker_id = '{$tabel_j[0]['worker_id']}' AND fl_jt.month = '{$tabel_j[0]['month']}' AND fl_jt.year = '{$tabel_j[0]['year']}' AND fl_jt.status <> '9';";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -548,7 +548,7 @@
                                     } elseif ($rezData['type'] == 3) {
                                         $rezultS .= ' больничный ';
                                     } else {
-                                        $rezultS .= ' премия ';
+                                        $rezultS .= ' прочее ';
                                     }
                                     $rezultS .=
                                         '#' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);"><br>создано: ' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>
@@ -593,7 +593,7 @@
                                 } elseif ($rezData['type'] == 3) {
                                     $rezultSall .= ' больничный ';
                                 } else {
-                                    $rezultSall .= ' премия ';
+                                    $rezultSall .= ' прочее ';
                                 }
                                 $rezultSall .= '
                                             #'.$rezData['id'].'
@@ -1005,7 +1005,7 @@
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
                             echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style = "font-size: 80%;" >Отпускной +</a ></div>';
                             echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3" class="b" style="font-size: 80%;">Больничный +</a></div>';
-                            echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style="font-size: 80%;">Премия +</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style="font-size: 80%;">Прочее +</a></div>';
                         }
 
                         //Надбавки
