@@ -120,7 +120,7 @@
                                                         //.. но мы её игнорируем,
                                                         //то тупо удаляем и вставляем новую
                                                         if ($_POST['ignoreshed'] == 1) {
-                                                            $queryDelete = "DELETE FROM `scheduler` WHERE `day`>='{$day}' AND `month`='{$month}' AND `year`='{$year}' AND (`type`='5' OR `type`='6' OR `type`='10'); ";
+                                                            $queryDelete = "DELETE FROM `scheduler` WHERE `day`>='{$day}' AND `month`='{$month}' AND `year`='{$year}' AND `filial`='{$filial}' AND `type`='{$type}'; ";
 
                                                             $res = mysqli_query($msql_cnnct, $queryDelete) or die(mysqli_error($msql_cnnct) . ' -> ' . $queryDelete);
 

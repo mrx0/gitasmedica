@@ -45,8 +45,6 @@ if ($enter_ok){
                     }elseif ($_GET['type'] == 3){
                         echo ' больничный ';
                     }elseif ($_GET['type'] == 1){
-                        echo ' премия ';
-                    }elseif ($_GET['type'] == 4){
                         echo ' прочее ';
                     }else {
                         echo ' <span style="color: red;">!Ошибка типа</span> ';
@@ -125,7 +123,7 @@ if ($enter_ok){
                                 } elseif ($rezData['type'] == 3) {
                                     $rezultS .= ' больничный ';
                                 } else {
-                                    $rezultS .= ' премия ';
+                                    $rezultS .= ' прочее ';
                                 }
                                 $rezultS .=
                                     '#' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);"><br>создано: ' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>

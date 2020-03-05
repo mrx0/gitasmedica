@@ -118,6 +118,9 @@
 			$filial = SelDataFromDB('spr_filials', $_GET['filial'], 'offices');
 			//var_dump($filial['name']);
 
+            //Сколько смен отображать (раньше было 4, потому что работали ночью)
+            $maxSmens = 2;
+
             $msql_cnnct = ConnectToDB ();
 
 			//Получаем график факт на текущий филиал
@@ -365,7 +368,7 @@
 							if (isset($schedulerFakt[$d])){
 								//if ($d==3) var_dump ($schedulerFakt[$d]);
 								//номера смен 1 - день 2- вечер 3 - ночь 4 - утро
-								for ($smenaN = 1; $smenaN <= 4; $smenaN++) {
+								for ($smenaN = 1; $smenaN <= $maxSmens; $smenaN++) {
 									//отсутствие врачей в клинике
 									$now_ahtung = TRUE;
 									$ahtung = TRUE;
@@ -586,7 +589,7 @@
 								//Если вообще никого целый день и ночь
 								//Но нам нужен только день
 								$ahtung = TRUE;
-									for ($smenaN = 1; $smenaN <= 4; $smenaN++) {
+									for ($smenaN = 1; $smenaN <= $maxSmens; $smenaN++) {
 										if (($smenaN == 1) || ($smenaN == 2)){
 											$kabsNone .= '
 													<div style="width: 100%; height: 35px; min-height: 35px; outline: 1px solid  #BBB; display: table; margin-bottom: 3px; font-size: 70%;">
