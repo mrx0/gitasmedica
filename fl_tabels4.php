@@ -744,7 +744,7 @@
                 $(function() {
                     $("#filterFilial").change(function(){
                         
-                        blockWhileWaiting (true);
+                        //blockWhileWaiting (true);
                         
                         var filter_filial_id = $(this).val();
 
