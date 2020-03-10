@@ -135,7 +135,8 @@
             $query = "SELECT fl_jt.*, sw.name FROM `fl_journal_tabels` fl_jt
                       LEFT JOIN `spr_workers` sw ON sw.id = fl_jt.worker_id
                       WHERE fl_jt.month = '$month' AND fl_jt.year = '$year'
-                       AND ((fl_jt.status<>'7' AND fl_jt.status<>'9') 
+                       AND fl_jt.status <> '9' 
+                       AND ((fl_jt.status <> '7') 
                         OR ((fl_jt.summ + fl_jt.surcharge + fl_jt.night_smena + fl_jt.empty_smena - fl_jt.paidout - fl_jt.deduction) <> '0'))
                          ".$typeQ.$filialQ;
 
@@ -156,7 +157,7 @@
                     array_push($rez[$arr['name']], $arr);
 				}
 			}
-			//var_dump($rez);
+			var_dump($rez);
 			//var_dump($query);
 
             //Сортируем по имени
