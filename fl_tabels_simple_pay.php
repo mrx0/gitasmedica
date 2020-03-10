@@ -157,7 +157,7 @@
                     array_push($rez[$arr['name']], $arr);
 				}
 			}
-			var_dump($rez);
+//			var_dump($rez);
 			//var_dump($query);
 
             //Сортируем по имени
