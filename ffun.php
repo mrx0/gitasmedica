@@ -1434,9 +1434,15 @@
                             <div style="padding: 2px 0 3px; font-size: 115%;">
                                 <i style="font-weight: bold;">'.$worker_j['name'].'</i> / <span style="font-size: 85%;">'.$worker_j['type_name'].'</span> / <span style="font-size: 85%;">'.$worker_j['cat_name'].'</span>
                             </div>
-                            <div style="background-color: rgba(144,247,95, 0.4); font-size: 130%; padding: 5px 5px 2px;">
-                                <div style="display: inline;">К выплате:</div>
-                                <div style="float: right; display: inline; text-align: right; font-size: 110%;"><b><i><div class="pay_must_'.$tabel_id.'" style="display: inline;">0</div> р.</i></b></div>
+                            <div style="height: 17px; background-color: rgba(144,247,95, 0.4); font-size: 130%; padding: 5px 5px 2px;">
+                                <div style="float: left; font-size: 80%;">
+                                    <div style="display: inline; font-size: 77%;">К выплате:</div>
+                                    <div style="display: inline; font-size: 110%;"><b><i><div class="pay_must_'.$tabel_id.'" style="display: inline;">0</div> р.</i></b></div>
+                                </div>
+                                <div style="float: right;">
+                                    <div style="font-size: 11px;">_________/__________________</div>
+                                    <div style="font-size: 7px;">дата/подпись</div>
+                                </div>
                             </div>
                             
                         </div>
