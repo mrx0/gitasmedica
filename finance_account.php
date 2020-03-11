@@ -278,7 +278,7 @@
 
 
                             echo '
-		                            <div id="doc_title">Счёт пациента '.WriteSearchUser('spr_clients',   $client_j[0]['id'], 'user', false).' - Асмедика</div>';
+		                            <div id="doc_title">'.WriteSearchUser('spr_clients',   $client_j[0]['id'], 'user', false).' - Счёт пациента - Асмедика</div>';
 
 
                             echo '<script src="js/dds.js" type="text/javascript"></script>';
