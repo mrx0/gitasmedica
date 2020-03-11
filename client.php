@@ -1644,7 +1644,7 @@ ORDER BY `name`;
 			}
 				
 			echo '					
-				<div id="doc_title">Пациент: '.$client_j[0]['full_name'].' - Асмедика</div>
+				<div id="doc_title">'.$client_j[0]['full_name'].' - Карточка пациента - Асмедика</div>
 				</div>
 			</div>
 
