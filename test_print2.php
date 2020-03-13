@@ -73,19 +73,38 @@ if ($enter_ok){
                                 
                                    <!--<h2 style="padding: 0 0 7px; font-size: 3.5mm; color: #0C0C0C; text-align: center; font-weight: bold;">Предварительный расчёт #</h2>-->';
 
-        $fio = '<u>'.'ФИО ПАЦИЕНТА'.'</u>';
+        $org_name = 'ООО «Приор»';
+
+        $filial_address = 'СПб, пр. Гражданский, д.114';
+
+        $org_props = '
+            Зарегистрировано Регистрационной палатой Администрации Санкт-Петербурга 15.01.2001,<br>
+            регистрационный номер 229902, ОГРН  1037811001337<br> 
+            Юридический адрес: 191014, Санкт – Петербург, Литейный пр., 59, лит.А, пом. 14-Н<br>
+            Место осуществления медицинской деятельности: Санкт-Петербург, Гражданский пр., д. 114,<br>
+            корп.1, лит. А, часть пом. 53Н<br>
+            Лицензия на осуществление медицинской деятельности №78-01-004424 от 21 февраля 2014 г.,<br>
+            выдана Комитетом по здравоохранению Санкт-Петербурга: 191023,<br> 
+            Санкт-Петербург, Малая Садовая ул., д. 1, тел. (812) 6355564<br>
+            ИНН: 7805196817 /КПП: 784101001  Р/с  40702810501001204723<br>
+            Филиал Северо-Западный ПАО Банка «ФК Открытие» БИК 044030795<br>
+            к/с 30101810540300000795
+        ';
+
+
+        $fio = '<u> '.'ФИО ПАЦИЕНТА'.' </u>';
         $fio_str_left = '';
         $fio_str_right = '';
-        $bdate_str = '<u>'.'00.00.0000'.'</u>';
-        $age_str = '<u>'.'00'.'</u>';
-        $sex_str = '<u>'.'?'.'</u>';
+        $bdate_str = '<u> '.'00.00.0000'.' </u>';
+        $age_str = '<u> '.'00'.' </u>';
+        $sex_str = '<u> '.'?'.' </u>';
 
         $card = '';
 
-        $telephone = '__(____)__________';
-        $htelephone = '__(____)__________';
-        $telephoneo = '__(____)__________';
-        $htelephoneo = '__(____)__________';
+        $telephone = ' __(____)__________ ';
+        $htelephone = ' __(____)__________ ';
+        $telephoneo = ' __(____)__________ ';
+        $htelephoneo = ' __(____)__________ ';
 
         $email = '';
         $email_str_right = '';
@@ -96,10 +115,10 @@ if ($enter_ok){
 
         $passporto = ' серия _________ № _________________';
         $passportvidandatao = '«___» ___________ _____ г.';
-        $passportvidankemo = '___________________________________________________________________________';
+        $passportvidankemo = '_____________________________________________________________________';
 
         $address = '_____________________________________________________________________';
-        $addresso = '_____________________________________________________________________';
+        $addresso = '_________________________________________________________________';
 
         if (isset($_GET['client_id'])){
 
@@ -117,30 +136,30 @@ if ($enter_ok){
 //                var_dump($arr);
 
                 $fio = mb_strtoupper($arr['full_name'], "UTF-8");
-                $bdate_str = '<u>'.date('d.m.Y', strtotime($arr['birthday2'])).'</u>';
-                $age_str = '<u>'.getyeardiff(strtotime($arr['birthday2']), 0).'</u>';
+                $bdate_str = '<u> '.date('d.m.Y', strtotime($arr['birthday2'])).' </u>';
+                $age_str = '<u> '.getyeardiff(strtotime($arr['birthday2']), 0).' </u>';
                 if ($arr['sex'] == 1){
-                    $sex_str = '<u>'.'М'.'</u>';
+                    $sex_str = '<u> '.'М'.' </u>';
                 }
                 if ($arr['sex'] == 2){
-                    $sex_str = '<u>'.'Ж'.'</u>';
+                    $sex_str = '<u> '.'Ж'.' </u>';
                 }
 
                 $card = $arr['card'];
 
                 //Телефон
                 if (mb_strlen($arr['telephone']) > 0) {
-                    $telephone = '<u>'.$arr['telephone'].'</u>';
+                    $telephone = '<u> '.$arr['telephone'].' </u>';
                 }
                 if (mb_strlen($arr['htelephone']) > 0) {
-                    $htelephone = '<u>'.$arr['htelephone'].'</u>';
+                    $htelephone = '<u> '.$arr['htelephone'].' </u>';
                 }
                 //Если есть данные опекуна, переделаем телефон
                 if (mb_strlen($arr['telephoneo']) > 0){
-                    $telephoneo = '<u>'.$arr['telephoneo'].'</u>';
+                    $telephoneo = '<u> '.$arr['telephoneo'].' </u>';
                 }
                 if (mb_strlen($arr['htelephoneo']) > 0){
-                    $htelephoneo = '<u>'.$arr['htelephoneo'].'</u>';
+                    $htelephoneo = '<u> '.$arr['htelephoneo'].' </u>';
                 }
 
                 //E-mail
@@ -169,22 +188,29 @@ if ($enter_ok){
 
         //Соберём данные, присвоим значения переменным
         //ФИО
-        $diff_symbols_left = 71 - mb_strlen($fio, 'UTF-8');
+        $diff_symbols_left = 50 - mb_strlen($fio, 'UTF-8');
         $diff_symbols_right = 50 - mb_strlen($fio, 'UTF-8');
-        $fio_str_left = str_repeat("_", intval($diff_symbols_left/2)).'<u>'.$fio.'</u>'.str_repeat("_", $diff_symbols_left - intval($diff_symbols_left/2));
-        $fio_str_right = str_repeat("_", intval($diff_symbols_right/2)).'<u>'.$fio.'</u>'.str_repeat("_", $diff_symbols_right - intval($diff_symbols_right/2));
 
-        $diff_symbols_right = 75 - mb_strlen($email, 'UTF-8');
-        $email_str_right = '<u>'.$email.'</u>'.str_repeat("_", $diff_symbols_right);
+        $fio_str_left = str_repeat("_", intval($diff_symbols_left/2)).'<u> '.$fio.' </u>'.str_repeat("_", $diff_symbols_left - intval($diff_symbols_left/2));
+        $fio_str_right = str_repeat("_", intval($diff_symbols_right/2)).'<u> '.$fio.' </u>'.str_repeat("_", $diff_symbols_right - intval($diff_symbols_right/2));
+
+        $diff_symbols_right = 75 - mb_strlen($address, 'UTF-8');
+        $address_str_right = ''.'<u> '.$address.' </u>'.str_repeat("_", $diff_symbols_right);
+//        $address_str_right = ''.'<u> '.$address.' </u><u> &emsp; &emsp; </u>';
 
 
+        $diff_symbols_right = 72 - mb_strlen($email, 'UTF-8');
+        $email_str_right = '<u> '.$email.' </u>'.str_repeat("_", $diff_symbols_right);
+
+        $diff_symbols_right = 71 - (mb_strlen($telephone, 'UTF-8') + (mb_strlen($htelephone, 'UTF-8')));
+        $telephone_str_right = ' моб.: '.$telephone.' , дом.: '.$htelephone.''.str_repeat("_", $diff_symbols_right);
 
         echo '
                             <div style="position: relative; /*border: 1px solid #CCC;*/ width: 49%; height: 200mm; float: left; vertical-align: top; font-family: \'Times New Roman\', Georgia, Times, serif; font-size: 12px">
                                 <div style="margin-top: 7px; font-weight: bold; text-align: center;">6. Приложения и дополнительные соглашения</div>
                                 <div style="margin-top: 5px; text-align: center;">6.1. С указанными ниже документами ознакомлен, согласен и обязуюсь соблюдать.</div> 
-                                <div style="margin-top: 5px;">
-                                    <table style="text-align: center; border-collapse: collapse;">
+                                <div style="width: 132mm; margin-top: 5px;">
+                                    <table style="text-align: center; border-collapse: collapse; font-size: 98%">
                                         <tr>
                                             <td style="width: 15px; border: 1px solid #111; vertical-align: middle; padding: 2px 4px;"></td>
                                             <td style="width: 50%; border: 1px solid #111; vertical-align: middle; padding: 2px 4px;"></td>
@@ -212,47 +238,37 @@ if ($enter_ok){
                                 </div>
                                 <div style="margin-top: 7px; font-weight: bold; text-align: center;">7. Реквизиты и подписи сторон</div>
                                 <div style="margin-top: 5px; font-weight: bold;">Пациент</div>
-                                <div style="margin-top: 1px;">Ф.И.О. '.$fio_str_left.'</div>										
+                                <div class="card_print" style="margin-top: 1px;">Ф.И.О. '.$fio_str_left.'</div>										
                                 <div style="margin-top: 1px;">Место жительства: '.$address.'</div>
                                 <div style="margin-top: 1px;">Паспорт: '.$passport.'</div>
                                 <div style="margin-top: 1px;">Кем выдан: '.$passportvidankem.'</div>
                                 <div style="margin-top: 1px;">Дата выдачи: '.$passportvidandata.'</div>
                                 <div style="margin-top: 1px;">Телефон моб.: '.$telephone.' / дом.: '.$htelephone.'</div>
-                                <div style="margin-top: 1px;">Место работы _________________________ Должность ______________________________________</div>
-                                <div style="margin-top: 1px;">___________________________ /__________________________________________________________</div>
+                                <div class="card_print" style="margin-top: 1px;">Место работы _________________________ Должность _________________________________</div>
+                                <div class="card_print" style="margin-top: 1px;">_____________________ /__________________________________________________________</div>
                                 <div style="margin-top: -2px; font-size: 9px;">
                                     <div style="width: 30%; display: inline-block; text-align: center;">подпись</div><div style="width: 50%; display: inline-block; text-align: center;">расшифровка подписи</div>
                                 </div> 
                                 <div style="margin-top: 2px; clear: both;">От имени пациента. Законный представитель пациента:</div>
-                                <div style="margin-top: 3px;">___________________________ /__________________________________________________________</div>
+                                <div class="card_print" style="margin-top: 1px;">_____________________ /__________________________________________________________</div>
                                 <div style="margin-top: -2px; font-size: 9px;">
                                     <div style="width: 30%; display: inline-block; text-align: center;">подпись</div><div style="width: 50%; display: inline-block; text-align: center;">Ф.И.О., разборчиво</div>
                                 </div>
                                 <div style="margin-top: 3px; clear: both;">Паспорт: '.$passporto.'</div>
-                                <div style="margin-top: 1px;">Кем выдан: '.$passportvidankemo.'</div>
+                                <div class="card_print" style="margin-top: 1px;">Кем выдан: '.$passportvidankemo.'</div>
                                 <div style="margin-top: 1px;">Дата выдачи: '.$passportvidandatao.'</div>
-                                <div style="margin-top: 1px;">Место жительства: '.$addresso.'</div>
-                                <div style="margin-top: 1px;">Место работы _________________________ Должность ______________________________________</div>
+                                <div class="card_print" style="margin-top: 1px;">Место жительства: '.$addresso.'</div>
+                                <div class="card_print" style="margin-top: 1px;">Место работы _________________________ Должность _________________________________</div>
                                 <div style="margin-top: 1px;">Телефон моб.: '.$telephoneo.' / дом.: '.$htelephoneo.'</div>
-                                <div style="margin-top: 3px;">Я  даю  свое  согласие   на  отправку   мне   медицинских  документов  и  прочей  медицинской  информации о состоянии моего здоровья  на  e-mail: '.$email.'</div>
-                                <div style="margin-top: 3px;">Экземпляр договора на руки получил(а).</div>
-                                <div style="margin-top: 1px;">___________________________ /__________________________________________________________</div>
+                                <div class="card_print" style="margin-top: 3px; text-align: left; text-align-last: left;">Я даю свое согласие на отправку мне медицинских документов и прочей медицинской информации о состоянии моего здоровья на e-mail: '.$email.'</div>
+                                <div style="margin-top: 3px; text-align: left;">Экземпляр договора на руки получил(а).</div>
+                                <div class="card_print" style="margin-top: 1px;">_____________________ /__________________________________________________________</div>
                                 <div style="margin-top: -2px; font-size: 9px;">
                                     <div style="width: 30%; display: inline-block; text-align: center;">подпись</div><div style="width: 50%; display: inline-block; text-align: center;">расшифровка подписи</div>
                                 </div>
-                                <div style="margin-top: 7px;"><span style="font-weight: bold;">Исполнитель:</span> ООО “Приор”</div>
+                                <div style="margin-top: 7px;"><span style="font-weight: bold;">Исполнитель:</span> '.$org_name.'</div>
                                 <div style="margin-top: 0px; font-size: 85%;">
-                                    Зарегистрировано Регистрационной палатой Администрации Санкт-Петербурга 15.01.2001,<br>
-                                    регистрационный номер 229902, ОГРН  1037811001337<br> 
-                                    Юридический адрес: 191014, Санкт – Петербург, Литейный пр., 59, лит.А, пом. 14-Н<br>
-                                    Место осуществления медицинской деятельности: Санкт-Петербург, Гражданский пр., д. 114,<br>
-                                    корп.1, лит. А, часть пом. 53Н<br>
-                                    Лицензия на осуществление медицинской деятельности №78-01-004424 от 21 февраля 2014 г.,<br>
-                                    выдана Комитетом по здравоохранению Санкт-Петербурга: 191023,<br> 
-                                    Санкт-Петербург, Малая Садовая ул., д. 1, тел. (812) 6355564<br>
-                                    ИНН: 7805196817 /КПП: 784101001  Р/с  40702810501001204723<br>
-                                    Филиал Северо-Западный ПАО Банка «ФК Открытие» БИК 044030795<br>
-                                    к/с 30101810540300000795
+                                    '.$org_props.'
                                 </div>
                                 <div style="margin-top: 10px;">
                                     <div style="display: inline-block; width: 50%; font-size: 12px;">
@@ -263,7 +279,7 @@ if ($enter_ok){
                                         </div>
                                     </div>
                                 </div>
-                                <div style="position: absolute; bottom: -5px; left: 50%; text-align: center;  font-size: 10px;">-24-</div>
+                                <div style="margin-top: 5px; text-align: center;  font-size: 10px;">-24-</div>
                             </div>
                             
                             <div style="position: relative; /*border: 1px solid #CCC;*/ width: 49%; height: 200mm; float: right; vertical-align: top; font-family: \'Times New Roman\', Georgia, Times, serif; font-size: 12px">
@@ -271,7 +287,7 @@ if ($enter_ok){
                                     <table style="text-align: center; border-top: 1px solid #111; border-bottom: 1px solid #111; width: 100%;">
                                         <tr>
                                             <td width="30%" style="vertical-align: middle; padding: 2px 4px;">Министерство Здравоохранения<br>РФ</td>
-                                            <td rowspan="2" style="vertical-align: middle; padding: 2px 4px; border-left: 1px solid #111; border-right: 1px solid #111;">ООО «Приор»<br>СПб, пр. Гражданский, д.114</td>
+                                            <td rowspan="2" style="vertical-align: middle; padding: 2px 4px; border-left: 1px solid #111; border-right: 1px solid #111;">'.$org_name.'<br>'.$filial_address.'</td>
                                             <td rowspan="2" width="30%" style="vertical-align: middle; padding: 2px 4px;">Медицинская документация<br>Форма №043/у<br>Утверждена Минздравом СССР<br>04.10.80 №1030</td>
                                         </tr>
                                         <tr>
@@ -281,35 +297,36 @@ if ($enter_ok){
                                 </div>
                                 <div style="text-align: center; margin-top: 30px; font-weight: bold;">Медицинская карта стоматологического больного</div>
                                 <div style="text-align: center; margin-top: 15px; font-weight: bold;">№ '.$card.'</div>
-                                <div style="margin-top: 10px;">________________________________________________________________________________</div>
-                                <div style="margin-top: 10px;">Фамилия, имя, отчество '.$fio_str_right.'</div>
-                                <div style="margin-top: 10px;">________________________________________________________________________________</div>
-                                <div style="margin-top: 10px;">Год рождения _____'.$bdate_str.'______ полных лет '.$age_str.'__________________ пол (м.ж.) ___'.$sex_str.'__</div>
-                                <div style="margin-top: 10px;"> Адрес __________________________________________________________________________</div>
-                                <div style="margin-top: 10px;">________________________________________________________________________________</div>
-                                <div style="margin-top: 10px;">E-mail __'.$email_str_right.'</div>
-                                <div style="margin-top: 10px;">Профессия ______________________________________________________________________</div>									
-                                <div style="margin-top: 10px;">Диагноз ________________________________________________________________________</div> 									
-                                <div style="margin-top: 10px;">Жалобы ________________________________________________________________________</div>
-                                <div style="margin-top: 10px;">________________________________________________________________________________</div>
-                                <div style="margin-top: 10px;">________________________________________________________________________________</div>
-                                <div style="margin-top: 10px;">________________________________________________________________________________</div>
-                                <div style="margin-top: 10px;">________________________________________________________________________________</div>
-                                <div style="margin-top: 10px;">________________________________________________________________________________</div>
-                                <div style="margin-top: 10px;">Перенесенные и сопутствующие заболевания _________________________________________</div>
-                                <div style="margin-top: 10px;">________________________________________________________________________________</div>
-                                <div style="margin-top: 10px;">________________________________________________Онкосмотр_______________________</div>
-                                <div style="margin-top: 10px;">________________________________________________Гепатит__________________________</div>
-                                <div style="margin-top: 10px;">Развитие настоящего заболевания ___________________________________________________</div>
-                                <div style="margin-top: 10px;">________________________________________________________________________________</div>
-                                <div style="margin-top: 10px;">_____________________________________________________ТВС_______________________</div>
-                                <div style="margin-top: 10px;">_____________________________________________________Вен.заболев.________________</div>
-                                <div style="margin-top: 10px;">_________________________________________________________«___» ___________ 20__ г.</div>
-                                <div style="margin-top: 10px;">
+                                <div class="card_print" style="margin-top: 10px;"><u> &emsp; &emsp; </u></div>
+                                <div class="card_print" style="margin-top: 10px;">Фамилия, имя, отчество '.$fio_str_right.'</div>
+                                <div class="card_print" style="margin-top: 10px;"><u> &emsp; &emsp; </u></div>
+                                <div class="card_print" style="margin-top: 10px;">Год рождения _____'.$bdate_str.'______ полных лет '.$age_str.'__________________ пол (м.ж.) ___'.$sex_str.'__</div>
+                                <div class="card_print" style="margin-top: 10px;"> Адрес '.$address_str_right.' </div>
+                                <div class="card_print" style="margin-top: 10px;"><u> &emsp; &emsp; </u></div>
+                                <div class="card_print" style="margin-top: 10px;">Телефон '.$telephone_str_right.'</div>
+                                <div class="card_print" style="margin-top: 10px;">Профессия ______________________________________________________________________</div>									
+                                <div class="card_print" style="margin-top: 10px;">Диагноз ________________________________________________________________________</div> 									
+                                <div class="card_print" style="margin-top: 10px;">Жалобы ________________________________________________________________________</div>
+                                <div class="card_print" style="margin-top: 10px;"><u> &emsp; &emsp; </u></div>
+                                <div class="card_print" style="margin-top: 10px;"><u> &emsp; &emsp; </u></div>
+                                <div class="card_print" style="margin-top: 10px;"><u> &emsp; &emsp; </u></div>
+                                <div class="card_print" style="margin-top: 10px;"><u> &emsp; &emsp; </u></div>
+                                <div class="card_print" style="margin-top: 10px;"><u> &emsp; &emsp; </u></div>
+                                <div class="card_print" style="margin-top: 10px;">Перенесенные и сопутствующие заболевания _________________________________________</div>
+                                <div class="card_print" style="margin-top: 10px;"><u> &emsp; &emsp; </u></div>
+                                <div class="card_print" style="margin-top: 10px;">________________________________________________ Онкосмотр _______________________</div>
+                                <div class="card_print" style="margin-top: 10px;">________________________________________________ Гепатит __________________________</div>
+                                <div class="card_print" style="margin-top: 10px;">Развитие настоящего заболевания ___________________________________________________</div>
+                                <div class="card_print" style="margin-top: 10px;"><u> &emsp; &emsp; </u></div>
+                                <div class="card_print" style="margin-top: 10px;">_______________________________________________ ТВС _____________________________</div>
+                                <div class="card_print" style="margin-top: 10px;">_______________________________________________ Вен.заболев. ______________________</div>
+                                <div class="card_print" style="margin-top: 10px;">_________________________________________________________«___» ___________ 20__ г.</div>
+                                <div class="card_print" style="margin-top: 10px;">
                                     <div style="display: inline-block; width: 50%; font-size: 12px;"></div>
                                     <div style="display: inline-block; font-size: 12px;">Лечащий врач _______________________</div>
                                 </div>
-                                <div style="position: absolute; bottom: -5px; left: 50%; text-align: center;  font-size: 10px;">-1-</div>
+                                <!--<div style="position: absolute; bottom: -5px; left: 50%; text-align: center;  font-size: 10px;">-1-</div>-->
+                                <div style="margin-top: 5px; text-align: center;  font-size: 10px;">-1-</div>
                             </div>';
 
         echo '           
