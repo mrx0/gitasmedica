@@ -2716,3 +2716,10 @@ input[type="submit"].msg_send:hover{
 tr{
 	page-break-inside: avoid;
 }
+
+.card_print {
+	width: 130mm;
+	text-align: justify;
+	-moz-text-align-last: justify;
+	text-align-last: justify;
+}

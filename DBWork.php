@@ -3,6 +3,7 @@
 //DBWork.php
 //
 
+//запись в файл write to file writetofile (для отладок)
 ///include_once 'writen.php';
 ///WriteToFile('1.TXT', $query);
 
