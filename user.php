@@ -71,6 +71,20 @@
                         </div>
 
                         <div class="cellsBlock2">
+                            <div class="cellLeft">Дата рождения</div>
+                            <div class="cellRight">';
+            if ($user[0]['birth'] == '0000-00-00'){
+                echo 'не указана';
+            }else{
+                echo
+                    date('d.m.Y', strtotime($user[0]['birth'])).'<br>
+						<!--полных лет <b>'.getyeardiff(strtotime($user[0]['birth']), 0).'</b>-->';
+            }
+            echo
+                            '</div>
+                        </div>
+
+                        <div class="cellsBlock2">
                             <div class="cellLeft">Должность</div>
                             <div class="cellRight">';
 			echo $permissions;

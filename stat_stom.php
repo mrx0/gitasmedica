@@ -14,13 +14,15 @@
 			include_once 'functions.php';
 			include_once 'filter.php';
 			include_once 'filter_f.php';
-			
-			
-			require 'config.php';
-			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-			mysql_select_db($dbName) or die(mysql_error()); 
-			mysql_query("SET NAMES 'utf8'");
-				
+
+
+//			require 'config.php';
+//			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+//			mysql_select_db($dbName) or die(mysql_error());
+//			mysql_query("SET NAMES 'utf8'");
+
+            $msql_cnnct = ConnectToDB ();
+
 			$arr = array();
 			$rez = array();
 		
@@ -171,12 +173,14 @@
 				$sw = $filter_rez[1];
 				if (($stom['see_all'] == 1) || $god_mode){
 					$query = "SELECT `worker`,`office` FROM `journal_tooth_status` WHERE {$filter_rez[1]} ORDER BY `create_time` DESC";
-					$res = mysql_query($query) or die($query);
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
 					$number = mysql_num_rows($res);
 					if ($number != 0){
 						//Всего посещений
 						$vsego = $number;
-						while ($arr = mysql_fetch_assoc($res)){
+						while ($arr = mysqli_fetch_assoc($res)){
 							array_push($workers, $arr['worker']);
 							$workers = array_unique($workers);
 							array_push($filials, $arr['office']);
@@ -235,12 +239,14 @@
 					$itog[$value]['name'] = WriteSearchUser('spr_workers', $value, 'user', false);
 					
 					$query = "SELECT * FROM `journal_tooth_status` WHERE {$filter_rez[1]} AND `worker`={$value} ORDER BY `create_time` DESC";
-					$res = mysql_query($query) or die($query);
-					$number = mysql_num_rows($res);
+
+					$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                    $number = mysqli_num_rows($res);
 					if ($number != 0){
 						//Всего посещений
 						$w_vsego = $number;
-						while ($arr = mysql_fetch_assoc($res)){
+						while ($arr = mysqli_fetch_assoc($res)){
 							//!!!Зачем мне этот массив тут???
 							array_push($journal_w, $arr);
 						}
@@ -264,12 +270,15 @@
 						$office = $offices[0]['name'];
 						$f_journal = array();
 						$query = "SELECT * FROM `journal_tooth_status` WHERE {$filter_rez[1]} AND `worker`={$value} AND `office`={$value1} ORDER BY `create_time` DESC";
-						$res = mysql_query($query) or die($query);
-						$number = mysql_num_rows($res);
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                        $number = mysqli_num_rows($res);
+
 						if ($number != 0){
 							//Всего посещений
 							$f_vsego = $number;
-							while ($arr = mysql_fetch_assoc($res)){
+							while ($arr = mysqli_fetch_assoc($res)){
 								array_push($f_journal, $arr);
 							}
 							/*echo '
@@ -281,145 +290,7 @@
 							$itog[$value]['office'][$value1]['name'] = $office;
 							$itog[$value]['office'][$value1]['f_vsego'] = $f_vsego;
 							
-							//первичные все по филиалам
-							//$query = "SELECT * FROM `journal_tooth_status` WHERE {$filter_rez[1]} AND `worker`={$value} AND `office`={$value1} AND `c13`='1' ORDER BY `create_time` DESC";
-							//$res = mysql_query($query) or die($query);
-							//$number = mysql_num_rows($res);
-							//if ($number != 0){
-							//	$p_vsego = $number;
-								/*echo '<div class="cellName">
-										первичных: <b>'.$p_vsego.'</b>
-									</div>
-								</div>';*/
-							//	$itog[$value]['office'][$value1]['p_vsego'] = $p_vsego;
-								
-							//}else{
-							//	$p_vsego = 0;
-							//	$itog[$value]['office'][$value1]['p_vsego'] = 0;
-								//echo 'В филиале '.$office.' посещений не было.<br />';
-								//echo '</div>';
-							//}
-							
-							
-							//по процедурам пошли
-							/*for ($k = 0; $k < count($actions_stomat)-2; $k++) { 
-								if ($actions_stomat[$k]['active'] != 0){
-									//echo '<div class="cellCosmAct tooltip " style="text-align: center" title="'.$actions_cosmet[$k]['full_name'].'">'.$actions_cosmet[$i]['name'].'</div>';
-							
-									$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$value} AND `office`={$value1} AND `c{$actions_cosmet[$k]['id']}`='1' ORDER BY `create_time` DESC";
-									$res = mysql_query($query) or die($query);
-									$number = mysql_num_rows($res);
-									if ($number != 0){
-										$с1 = $number;
-										/*echo '
-											<div class="cellsBlock2">
-												<div class="cellCosmAct" style="text-align: center; background-color: '.$actions_cosmet[$k]['color'].';">
-													'.$actions_cosmet[$k]['full_name'].'
-												</div>
-												<div class="cellCosmAct">
-													'.$с1.'
-												';*/
-							/*			$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['name'] = $actions_cosmet[$k]['name'];
-										$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['full_name'] = $actions_cosmet[$k]['full_name'];
-										$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['color'] = $actions_cosmet[$k]['color'];
-										$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['vsego'] = $с1;
-										
-										$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['sex'][0] = 0;
-										$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['sex'][1] = 0;
-										$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['sex'][2] = 0;
-										
-										while ($arr = mysql_fetch_assoc($res)){
-											//var_dump($arr['client']);
-											$query1 = "SELECT `sex` FROM `spr_clients` WHERE `id`='{$arr['client']}'";
-											$res1 = mysql_query($query1) or die($query1);
-											$number1 = mysql_num_rows($res1);
-											if ($number1 != 0){
-												while ($arr1 = mysql_fetch_assoc($res1)){
-													if ($arr1['sex'] == 1){
-														$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['sex'][1]++;
-													}elseif ($arr1['sex'] == 2){
-														$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['sex'][2]++;
-													}else{
-														$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['sex'][0]++;
-													}
-														
-													//echo 'HHH:'.$arr1['sex'].'<br />';
-												}
-											}
-										}
-										
-									}else{
-										$с1 = 0;
-										/*echo '
-											<div class="cellsBlock2">
-												<div class="cellCosmAct" style="text-align: center; background-color: '.$actions_cosmet[$k]['color'].';">
-													'.$actions_cosmet[$k]['full_name'].'
-												</div>
-												<div class="cellCosmAct">
-													'.$с1.'
-												';*/
-							/*			$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['name'] = $actions_cosmet[$k]['name'];
-										$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['full_name'] = $actions_cosmet[$k]['full_name'];
-										$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['color'] = $actions_cosmet[$k]['color'];
-										$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['vsego'] = 0;
-									}
-									
-									
-									
-									//по процедурам + первичка
-	
 
-									//'SELECT * FROM tab2 WHERE title NOT IN(SELECT title FROM tab1)'
-									if ($actions_cosmet[$k]['id'] == 13){
-										$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$value} AND `office`={$value1} AND `c13`='1' AND 
-										`c1` <> '1' AND `c2` <> '1' AND `c3` <> '1' AND `c4` <> '1' AND `c5` <> '1' AND `c6` <> '1' AND `c7` <> '1' AND `c8` <> '1' AND `c9` <> '1' AND `c10` <> '1' AND 
-										`c11` <> '1' AND `c12` <> '1' AND `c14` <> '1' AND `c15` <> '1' AND `c16` <> '1' AND `c17` <> '1' AND `c18` <> '1' AND `c19` <> '1' AND `c20` <> '1' AND `c21` <> '1' AND 
-										`c22` <> '1' 
-										ORDER BY `create_time` DESC";
-									}else{
-										$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$value} AND `office`={$value1} AND `c{$actions_cosmet[$k]['id']}`='1' AND `c13`='1' ORDER BY `create_time` DESC";
-									}
-									//var_dump ($query);
-									$res = mysql_query($query) or die($query);
-									$number = mysql_num_rows($res);
-									if ($number != 0){
-										$с1 = $number;
-										//echo ' (первичных: '.$с1.')</div>';
-										
-										$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['p_vsego'] = $с1;
-									}else{
-										$с1 = 0;
-										$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['p_vsego'] = 0;
-										//echo '</div>';
-									}
-									//echo '</div>';
-									
-									
-									//Для КД не I
-	
-
-									//'SELECT * FROM tab2 WHERE title NOT IN(SELECT title FROM tab1)'
-									if ($actions_cosmet[$k]['id'] == 12){
-										$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$value} AND `office`={$value1} AND `c13` <> '1' AND `c12` = '1' ORDER BY `create_time` DESC";
-										//var_dump ($query);
-										$res = mysql_query($query) or die($query);
-										$number = mysql_num_rows($res);
-										if ($number != 0){
-											$с1 = $number;
-											$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['II_KD'] = $с1;
-										}else{
-											$с1 = 0;
-											$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['II_KD'] = 0;
-											//echo '</div>';
-										}
-										//echo '</div>';
-									}
-
-									
-									
-								}
-							}*/
-							
 						}else{
 							$f_vsego = 0;
 							
@@ -474,149 +345,19 @@
 									<div class="cellsBlock2">
 										<div class="cellName">';
 							//var_dump ($value1);
-							/*foreach ($value1['action'] as $k => $v){
-								//var_dump ($v);
-							
-							
-								echo '
-									<div class="cellsBlock">
-										<div class="cellPriority" style="background-color: '.$v['color'].';">
-										</div>
-										<div class="cellName">
-											'.$v['full_name'].'
-										</div>
-										<div class="cellName" style="text-align: center; color: ', $v['vsego'] > 0 ? 'green': 'red' ,';">
-											'.$v['vsego'].'/'.$v['p_vsego'], $v['vsego'] > 0 ? '/(М:'.$v['sex'][1].',Ж:'.$v['sex'][2].',-:'.$v['sex'][0].')' : '' ,'
-										</div>
-									</div>';
 
-						
-							}*/		
 							echo '
 										</div>
 									</div>
 									</div>';
-							//ЭаЭд I II
-							/*echo '
-									<div class="cellsBlock2">
-										<div class="cellName">
-											<canvas id="clientOs_'.$key.'_'.$key1.'_epil" width="400" height="350"></canvas>
-										</div>
-									</div>';
-									
-							//I + КД		
-							echo '
-									<div class="cellsBlock2">
-										<div class="cellName">
-											<canvas id="clientOs_'.$key.'_'.$key1.'_KDI" width="400" height="350"></canvas>
-										</div>
-									</div>';
-									
-							//Все		
-							echo '
-									<div class="cellsBlock2">
-										<div class="cellName">
-											<canvas id="clientOs_'.$key.'_'.$key1.'_All" width="400" height="350"></canvas>
-										</div>
-									</div>';*/
+
 							echo '
 
 								</div>';
 								
 								
 								
-							//графики	
-							//$key - сотрудник
-							//$key1 - филиал
-							
-							/*$query = "SELECT * FROM `journal_cosmet1` WHERE {$filter_rez[1]} AND `worker`={$key} AND `office`={$key1} AND `c{$actions_cosmet[$k]['id']}`='1' AND `c13`='1' ORDER BY `create_time` DESC";
-							$res = mysql_query($query) or die($query);
-							$number = mysql_num_rows($res);
-							if ($number != 0){
-								$с1 = $number;
-								
-							$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['p_vsego'] = $с1;
-							}else{
-								$с1 = 0;
-								$itog[$value]['office'][$value1]['action'][$actions_cosmet[$k]['id']]['p_vsego'] = 0;
-							}*/
-							
-							/*echo '		
-									<script>
-										/*var randomScalingFactor = function(){ return Math.round(Math.random()*100)};*/
-							/*			var barData = {
-											labels: [\'Эа Эд I\', \'Эа Эд II\'],
-											datasets: [
-												{
-													fillColor : "rgba(220,220,220,0.5)",
-													strokeColor : "rgba(220,220,220,0.8)",
-													highlightFill: "rgba(220,220,220,0.75)",
-													highlightStroke: "rgba(220,220,220,1)",
-													data: ['.$value1['action'][1]['p_vsego'].', '.($value1['action'][1]['vsego'] - $value1['action'][1]['p_vsego']).']
-												},
-												{
-													fillColor : "rgba(151,187,205,0.5)",
-													strokeColor : "rgba(151,187,205,0.8)",
-													highlightFill : "rgba(151,187,205,0.75)",
-													highlightStroke : "rgba(151,187,205,1)",
-													data: ['.$value1['action'][22]['p_vsego'].', '.($value1['action'][22]['vsego'] - $value1['action'][22]['p_vsego']).']
-												}
-											]
-										};
 
-										var context = document.getElementById(\'clientOs_'.$key.'_'.$key1.'_epil\').getContext(\'2d\');
-										var clientsChart = new Chart(context).Bar(barData);
-									</script>
-									';
-									
-							echo '		
-									<script>
-										var barData = {
-											labels: [\'I\', \'I + КД\', \'II + КД\'],
-											datasets: [
-												{
-													fillColor : "rgba(220,220,220,0.5)",
-													strokeColor : "rgba(220,220,220,0.8)",
-													highlightFill: "rgba(220,220,220,0.75)",
-													highlightStroke: "rgba(220,220,220,1)",
-													data: ['.$value1['p_vsego'].', '.$value1['action'][12]['p_vsego'].', '.$value1['action'][12]['II_KD'].']
-												}
-											]
-										};
-
-										var context = document.getElementById(\'clientOs_'.$key.'_'.$key1.'_KDI\').getContext(\'2d\');
-										var clientsChart = new Chart(context).Bar(barData);
-									</script>
-									';
-									
-							echo '		
-									<script>
-										var barData = {
-											labels: [';
-							foreach ($value1['action'] as $key2 => $value2){
-								echo '\''.$value2['full_name'].'\',';
-							}
-							echo 					'],
-											datasets: [
-												{
-													fillColor : "rgba(151,187,205,0.5)",
-													strokeColor : "rgba(151,187,205,0.8)",
-													highlightFill : "rgba(151,187,205,0.75)",
-													highlightStroke : "rgba(151,187,205,1)",
-													data: 	[';
-							foreach ($value1['action'] as $key2 => $value2){
-								echo '\''.$value2['vsego'].'\',';
-							}
-							echo
-															']
-												}
-											]
-										};
-
-										var context = document.getElementById(\'clientOs_'.$key.'_'.$key1.'_All\').getContext(\'2d\');
-										var clientsChart = new Chart(context).Bar(barData);
-									</script>
-									';*/
 						}
 	
 					
@@ -627,16 +368,8 @@
 				
 				
 				echo '</div>';
-				
-				
-				
-				
-				
 
-				
-				
-				
-				mysql_close();
+            CloseDB ($msql_cnnct);
 
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

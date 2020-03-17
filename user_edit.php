@@ -56,6 +56,21 @@
                                         </div>
                                         <div class="cellRight"><a href="user.php?id='.$_GET['id'].'" class="ahref">'.$user[0]['full_name'].'</a></div>
                                     </div>
+                                    
+                                    <div class="cellsBlock2">
+                                        <div class="cellLeft">Дата рождения</div>
+                                        <div class="cellRight">';
+
+                    //var_dump(explode('-', $user[0]['birth'])[1]);
+
+			echo selectDate (explode('-', $user[0]['birth'])[2], explode('-', $user[0]['birth'])[1], explode('-', $user[0]['birth'])[0]);
+
+			echo '	
+                                            <label id="sel_date_error" class="error"></label>
+                                            <label id="sel_month_error" class="error"></label>
+                                            <label id="sel_year_error" class="error"></label>
+                                        </div>
+                                    </div>
 								
 						            <!--<div class="cellsBlock2">
 									    <div class="cellLeft">Организация</div>
@@ -84,7 +99,7 @@
                     if ((($user[0]['permissions'] != 1) && ($user[0]['permissions'] != 2) && ($user[0]['permissions'] != 3) && ($user[0]['permissions'] != 8)) || ($god_mode)){
                         echo '
                                             <select name="permissions" id="permissions">
-                                                <option value="0">Нажми и выбери</option>';
+                                                <option value="0">Выберите должность</option>';
                         for ($i=0;$i<count($arr_permissions);$i++){
                             if ((($arr_permissions[$i]['id'] != 1) && ($arr_permissions[$i]['id'] != 2) && ($arr_permissions[$i]['id'] != 3) && ($arr_permissions[$i]['id'] != 8)) || ($god_mode)){
                                 if ($user[0]['permissions'] == $arr_permissions[$i]['id']){
@@ -156,7 +171,7 @@
                         if ($categories_j != 0) {
 
                             echo '<select name="SelectCategory" id="SelectCategory">';
-                            echo "<option value=''>Нажми и выбери</option>";
+                            echo "<option value=''>Выберите категорию</option>";
 
                             foreach ($categories_j as $data) {
                                 $slctd = '';

@@ -19,20 +19,19 @@
 					<a href="client.php?id='.$_POST['client'].'" class="b">Вернуться в карточку</a>';
 			}else{
 				
-				require 'config.php';
-				mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
-				mysql_select_db($dbName) or die(mysql_error()); 
-				mysql_query("SET NAMES 'utf8'");
+                $msql_cnnct = ConnectToDB ();
+
 				$time = time();
 				$query = "INSERT INTO `spr_kd_img` (
 					`client`, `face_graf`, `uptime`) 
 				VALUES (
 					'{$_POST['client']}', '1', '{$time}'
 				)";
-				
-				mysql_query($query) or die(mysql_error());
-				
-				$task_face = mysql_insert_id();
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                //ID новой позиции
+				$task_face = mysqli_insert_id($msql_cnnct);
 								
 				$extension = pathinfo('uploads/'.$_POST['face'], PATHINFO_EXTENSION);
 				
@@ -44,9 +43,9 @@
 					VALUES (
 						'{$_POST['client']}', '2', '{$time}'
 					)";
-					mysql_query($query) or die(mysql_error());
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 					
-					$task_graf = mysql_insert_id();
+					$task_graf = mysqli_insert_id($msql_cnnct);
 					
 					$extension = pathinfo('uploads/'.$_POST['graf'], PATHINFO_EXTENSION);
 					
@@ -56,9 +55,9 @@
 				/*echo $task_face.'<br />';
 				if ($task_graf != '') 
 					echo $task_face;*/
-				
-				
-				mysql_close();
+
+
+                CloseDB ($msql_cnnct);
 
                 echo '
                     Изображения добавлены<br /><br />
