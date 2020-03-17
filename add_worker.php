@@ -10,6 +10,7 @@
 		
 		if (($workers['add_new'] == 1) || $god_mode){
 			include_once 'DBWork.php';
+            include_once 'functions.php';
 			
 			$orgs = SelDataFromDB('spr_org', '', '');
 			$permissions = SelDataFromDB('spr_permissions', '', '');
@@ -47,6 +48,19 @@
 									<input type="text" name="o" id="o" value="">
 								</div>
 							</div>
+							
+							<div class="cellsBlock2">
+								<div class="cellLeft">Дата рождения</div>
+								<div class="cellRight">';
+								
+			echo selectDate (0, 0, 0);
+
+			echo '	
+									<label id="sel_date_error" class="error"></label>
+									<label id="sel_month_error" class="error"></label>
+									<label id="sel_year_error" class="error"></label>
+								</div>
+							</div>
 
 							<div class="cellsBlock2">
 								<div class="cellLeft">Контакты</div>
@@ -72,7 +86,7 @@
 								<div class="cellLeft">Должность</div>
 								<div class="cellRight">
 									<select name="permissions" id="permissions">
-										<option value="0" selected>Нажми и выбери</option>';
+										<option value="0" selected>Выберите должность</option>';
 									if ($permissions !=0){
 										//if ($god_mode){
 											for ($i=0;$i<count($permissions);$i++){
@@ -99,6 +113,10 @@
 										f:document.getElementById("f").value,
 										i:document.getElementById("i").value,
 										o:document.getElementById("o").value,
+										
+                                        sel_date: $("#sel_date").val(),
+                                        sel_month: $("#sel_month").val(),
+                                        sel_year: $("#sel_year").val(),
 										
 										contacts:document.getElementById("contacts").value,
 										//org:document.getElementById("org").value,

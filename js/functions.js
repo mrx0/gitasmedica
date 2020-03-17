@@ -566,7 +566,11 @@
                     status: status,
                     specializations: checkedItems2(),
                     category: category,
-                    filial: filial
+                    filial: filial,
+
+                    sel_date: $("#sel_date").val(),
+                    sel_month: $("#sel_month").val(),
+                    sel_year: $("#sel_year").val()
 
                 },
             cache: false,
@@ -595,7 +599,7 @@
 				iname: $("#i").val(),
 				oname: $("#o").val(),
 
-				sex:sex_value
+				sex: sex_value
 			},
 			// тип передачи данных
 			dataType: "json",

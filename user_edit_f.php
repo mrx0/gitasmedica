@@ -16,7 +16,7 @@
                 $_POST['specializations'] = array();
             }
 
-			WriteWorkerToDB_Update ($_SESSION['id'], $_POST['worker_id'], $_POST['org'], $_POST['permissions'], $_POST['specializations'], $_POST['category'], $_POST['filial'], $_POST['contacts'], $_POST['status']);
+			WriteWorkerToDB_Update ($_SESSION['id'], $_POST['worker_id'], $_POST['sel_date'], $_POST['sel_month'], $_POST['sel_year'], $_POST['org'], $_POST['permissions'], $_POST['specializations'], $_POST['category'], $_POST['filial'], $_POST['contacts'], $_POST['status']);
 
 			echo '
 				<h1>Карточка отредактирована.</h1>

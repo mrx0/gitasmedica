@@ -43,7 +43,7 @@
 
         echo '
                                 <select name="permissions" id="permissions">
-                                    <option value="0">Нажми и выбери</option>';
+                                    <option value="0">Выберите специализацию</option>';
 
         for ($i=0;$i<count($arr_permissions);$i++){
                 echo "<option value='".$arr_permissions[$i]['id']."'>".$arr_permissions[$i]['name']."</option>";

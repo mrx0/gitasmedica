@@ -627,16 +627,18 @@
 	}
 	
 	//Вставка и обновление списка пользователей из-под Web
-	function WriteWorkerToDB_Edit ($session_id, $login, $name, $full_name, $password, $contacts, $permissions, $org){
+	function WriteWorkerToDB_Edit ($session_id, $login, $name, $full_name, $sel_date, $sel_month, $sel_year, $password, $contacts, $permissions, $org){
 
         $msql_cnnct = ConnectToDB ();
+
+        $birthday = $sel_year.'-'.$sel_month.'-'.$sel_date;
 
 		$time = time();
 
 		$query = "INSERT INTO `spr_workers` (
-			`login`, `name`, `full_name`, `password`, `contacts`, `permissions`, `org`)
+			`login`, `name`, `full_name`, `birth`, `password`, `contacts`, `permissions`, `org`)
 			VALUES (
-			'{$login}', '{$name}', '{$full_name}', '{$password}', '{$contacts}', '{$permissions}', '{$org}') ";
+			'{$login}', '{$name}', '{$full_name}', '{$birthday}', '{$password}', '{$contacts}', '{$permissions}', '{$org}') ";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -925,7 +927,7 @@
 	}
 	
 	//Обновление карточки пользователя из-под Web
-	function WriteWorkerToDB_Update($session_id, $worker_id, $org, $permissions, $specializations, $category, $filial_id, $contacts, $status){
+	function WriteWorkerToDB_Update($session_id, $worker_id, $sel_date, $sel_month, $sel_year, $org, $permissions, $specializations, $category, $filial_id, $contacts, $status){
 
         $msql_cnnct = ConnectToDB ();
 
@@ -949,7 +951,9 @@
             $fired = 1;
         }
 
-		$query = "UPDATE `spr_workers` SET `org`='{$org}', `permissions`='{$permissions}', `filial_id`='{$filial_id}', `contacts`='{$contacts}', `fired`='{$fired}', `status`='{$status}' WHERE `id`='{$worker_id}'";
+        $birthday = $sel_year.'-'.$sel_month.'-'.$sel_date;
+
+		$query = "UPDATE `spr_workers` SET `birth`='{$birthday}',  `org`='{$org}', `permissions`='{$permissions}', `filial_id`='{$filial_id}', `contacts`='{$contacts}', `fired`='{$fired}', `status`='{$status}' WHERE `id`='{$worker_id}'";
 
 		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

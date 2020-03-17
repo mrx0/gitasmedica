@@ -1420,10 +1420,12 @@
 	
 	//Дерево с return
 	function returnTree($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id){
-		require 'config.php';
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+//		require 'config.php';
+//		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+//		mysql_select_db($dbName) or die(mysql_error());
+//		mysql_query("SET NAMES 'utf8'");
+
+        $msql_cnnct = ConnectToDB ();
 				
 		static $rezult_arr = array();
 				
@@ -1467,11 +1469,13 @@
 			$first = FALSE;
 		}
 		//var_dump ($query);
-		
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($rez, $arr);
 			}
 			$rezult = $rez;
@@ -1543,11 +1547,12 @@
 					
 					$query = "SELECT * FROM `{$dbtable}` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$deleted_str." ".$q_dop." ORDER BY `name`";			
 					//var_dump($query);
-					
-					$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
-					$number = mysql_num_rows($res);	
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+					$number = mysqli_num_rows($res);
 					if ($number != 0){
-						while ($arr2 = mysql_fetch_assoc($res)){
+						while ($arr2 = mysqli_fetch_assoc($res)){
 							array_push($rez2, $arr2);
 						}
 						$items_j = $rez2;
@@ -1591,12 +1596,12 @@
 							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
 							$query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
 							//var_dump($query);
-							
-							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
-							$number = mysql_num_rows($res);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+							$number = mysqli_num_rows($res);
 							if ($number != 0){
-								$arr3 = mysql_fetch_assoc($res);
+								$arr3 = mysqli_fetch_assoc($res);
 								$price = $arr3['price'];
 								$price2 = $arr3['price2'];
 								$price3 = $arr3['price3'];
@@ -1626,9 +1631,10 @@
 				
 				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
 				//var_dump($query);
-				
-				$res = mysql_query($query) or die($query);
-				$number = mysql_num_rows($res);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+				$number = mysqli_num_rows($res);
 				//var_dump($number);
 
 				if ($number != 0){
