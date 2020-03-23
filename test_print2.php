@@ -43,7 +43,9 @@ if ($enter_ok){
                       div.no_print {display: none; }
                       .never_print_it {display: none; }
                       #scrollUp {display: none; }
-                    </style> 
+                    </style>
+                     
+                    <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
         
                 </head>';
 
@@ -109,16 +111,16 @@ if ($enter_ok){
         $email = '';
         $email_str_right = '';
 
-        $passport = ' серия _________ № _________________';
+        $passport = ' серия _________ № ________________________________________________________';
         $passportvidandata = '«___» ___________ _____ г.';
         $passportvidankem = '___________________________________________________________________________';
 
-        $passporto = ' серия _________ № _________________';
+        $passporto = ' серия _________ № ________________________________________________________';
         $passportvidandatao = '«___» ___________ _____ г.';
         $passportvidankemo = '_____________________________________________________________________';
 
-        $address = '_____________________________________________________________________';
-        $addresso = '_________________________________________________________________';
+        $address = '';
+        $addresso = '';
 
         if (isset($_GET['client_id'])){
 
@@ -169,7 +171,7 @@ if ($enter_ok){
 
                 //Паспорт
                 if (mb_strlen($arr['passport']) > 0){
-                    $passport = ' серия '.explode(' ', $arr['passport'])[0].' № '.explode(' ', $arr['passport'])[1].'';
+                    $passport = '<u> серия '.explode(' ', $arr['passport'])[0].' № '.explode(' ', $arr['passport'])[1].' </u>';
                 }
                 if (mb_strlen($arr['passportvidandata']) > 0){
                     $passportvidandata = $arr['passportvidandata'];
@@ -190,20 +192,23 @@ if ($enter_ok){
         //ФИО
         $diff_symbols_left = 50 - mb_strlen($fio, 'UTF-8');
         $diff_symbols_right = 50 - mb_strlen($fio, 'UTF-8');
-
         $fio_str_left = str_repeat("_", intval($diff_symbols_left/2)).'<u> '.$fio.' </u>'.str_repeat("_", $diff_symbols_left - intval($diff_symbols_left/2));
         $fio_str_right = str_repeat("_", intval($diff_symbols_right/2)).'<u> '.$fio.' </u>'.str_repeat("_", $diff_symbols_right - intval($diff_symbols_right/2));
 
+        $diff_symbols_left = 65 - mb_strlen($address, 'UTF-8');
         $diff_symbols_right = 75 - mb_strlen($address, 'UTF-8');
-        $address_str_right = ''.'<u> '.$address.' </u>'.str_repeat("_", $diff_symbols_right);
-//        $address_str_right = ''.'<u> '.$address.' </u><u> &emsp; &emsp; </u>';
-
+        $address_str_left = '<u> '.$address.'</u>'.str_repeat("_", $diff_symbols_left);
+        $address_str_right = '<u> '.$address.' </u>'.str_repeat("_", $diff_symbols_right);
 
         $diff_symbols_right = 72 - mb_strlen($email, 'UTF-8');
         $email_str_right = '<u> '.$email.' </u>'.str_repeat("_", $diff_symbols_right);
 
         $diff_symbols_right = 71 - (mb_strlen($telephone, 'UTF-8') + (mb_strlen($htelephone, 'UTF-8')));
         $telephone_str_right = ' моб.: '.$telephone.' , дом.: '.$htelephone.''.str_repeat("_", $diff_symbols_right);
+        $telephone_str_left = ' моб.: '.$telephone.' , дом.: '.$htelephone.''.str_repeat("_", $diff_symbols_right);
+
+        $diff_symbols_left = 65 - mb_strlen($address, 'UTF-8');
+        $passport_str_left = '<u> '.$passport.'</u>'.str_repeat("_", $diff_symbols_left);
 
         echo '
                             <div style="position: relative; /*border: 1px solid #CCC;*/ width: 49%; height: 200mm; float: left; vertical-align: top; font-family: \'Times New Roman\', Georgia, Times, serif; font-size: 12px">
@@ -239,11 +244,11 @@ if ($enter_ok){
                                 <div style="margin-top: 7px; font-weight: bold; text-align: center;">7. Реквизиты и подписи сторон</div>
                                 <div style="margin-top: 5px; font-weight: bold;">Пациент</div>
                                 <div class="card_print" style="margin-top: 1px;">Ф.И.О. '.$fio_str_left.'</div>										
-                                <div style="margin-top: 1px;">Место жительства: '.$address.'</div>
-                                <div style="margin-top: 1px;">Паспорт: '.$passport.'</div>
+                                <div class="card_print" style="margin-top: 1px;">Место жительства: '.$address_str_left.'</div>
+                                <div class="card_print" style="margin-top: 1px;">Паспорт: '.$passport_str_left.'</div>
                                 <div style="margin-top: 1px;">Кем выдан: '.$passportvidankem.'</div>
                                 <div style="margin-top: 1px;">Дата выдачи: '.$passportvidandata.'</div>
-                                <div style="margin-top: 1px;">Телефон моб.: '.$telephone.' / дом.: '.$htelephone.'</div>
+                                <div class="card_print" style="margin-top: 1px;">Телефон '.$telephone_str_left.' </div>
                                 <div class="card_print" style="margin-top: 1px;">Место работы _________________________ Должность _________________________________</div>
                                 <div class="card_print" style="margin-top: 1px;">_____________________ /__________________________________________________________</div>
                                 <div style="margin-top: -2px; font-size: 9px;">
@@ -254,7 +259,7 @@ if ($enter_ok){
                                 <div style="margin-top: -2px; font-size: 9px;">
                                     <div style="width: 30%; display: inline-block; text-align: center;">подпись</div><div style="width: 50%; display: inline-block; text-align: center;">Ф.И.О., разборчиво</div>
                                 </div>
-                                <div style="margin-top: 3px; clear: both;">Паспорт: '.$passporto.'</div>
+                                <div class="card_print" style="margin-top: 3px; clear: both;">Паспорт: '.$passporto.'</div>
                                 <div class="card_print" style="margin-top: 1px;">Кем выдан: '.$passportvidankemo.'</div>
                                 <div style="margin-top: 1px;">Дата выдачи: '.$passportvidandatao.'</div>
                                 <div class="card_print" style="margin-top: 1px;">Место жительства: '.$addresso.'</div>
@@ -266,7 +271,7 @@ if ($enter_ok){
                                 <div style="margin-top: -2px; font-size: 9px;">
                                     <div style="width: 30%; display: inline-block; text-align: center;">подпись</div><div style="width: 50%; display: inline-block; text-align: center;">расшифровка подписи</div>
                                 </div>
-                                <div style="margin-top: 7px;"><span style="font-weight: bold;">Исполнитель:</span> '.$org_name.'</div>
+                                <div style="margin-top: 7px;"><span style="font-weight: bold;">Исполнитель:</span> <div class="settings_text selected-html-element" style="display: inline;" onclick="contextMenuShow(0, 0, event, \'discounts\');">'.$org_name.'</div></div>
                                 <div style="margin-top: 0px; font-size: 85%;">
                                     '.$org_props.'
                                 </div>
@@ -346,6 +351,17 @@ if ($enter_ok){
                             <i class="fa fa-print" aria-hidden="true"></i>
                         </div>
                     </div>
+                    
+                    
+                    
+                    <script src="js/functions.js"></script>
+                
+                    <!--
+                    // Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+                    $(\'*\').removeClass(\'selected-html-element\');
+                    // Удаляем предыдущие вызванное контекстное меню:
+                    $(\'.context-menu\').remove();
+                    -->
                 
                 </body>';
 
