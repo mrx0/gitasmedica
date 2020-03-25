@@ -927,7 +927,7 @@
 	}
 	
 	//Обновление карточки пользователя из-под Web
-	function WriteWorkerToDB_Update($session_id, $worker_id, $sel_date, $sel_month, $sel_year, $org, $permissions, $specializations, $category, $filial_id, $contacts, $status){
+	function WriteWorkerToDB_Update($session_id, $worker_id, $sel_date, $sel_month, $sel_year, $org, $permissions, $specializations, $category, $filial_id, $contacts, $status, $spec_oklad, $spec_prikaz8){
 
         $msql_cnnct = ConnectToDB ();
 
@@ -953,7 +953,7 @@
 
         $birthday = $sel_year.'-'.$sel_month.'-'.$sel_date;
 
-		$query = "UPDATE `spr_workers` SET `birth`='{$birthday}',  `org`='{$org}', `permissions`='{$permissions}', `filial_id`='{$filial_id}', `contacts`='{$contacts}', `fired`='{$fired}', `status`='{$status}' WHERE `id`='{$worker_id}'";
+		$query = "UPDATE `spr_workers` SET `birth`='{$birthday}', `org`='{$org}', `permissions`='{$permissions}', `filial_id`='{$filial_id}', `contacts`='{$contacts}', `fired`='{$fired}', `status`='{$status}' WHERE `id`='{$worker_id}'";
 
 		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -978,6 +978,17 @@
             $query = "INSERT INTO `journal_work_cat` (`worker_id`, `category`) VALUES ('$worker_id', '$category')";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
         }
+
+        //Приказ8 и Оклад
+        $query = "INSERT INTO `options_worker_spec` (
+					`worker_id`, `oklad`, `prikaz8`)
+					VALUES (
+						'{$worker_id}', '{$spec_oklad}', '{$spec_prikaz8}')
+					ON DUPLICATE KEY UPDATE
+					`oklad` = '{$spec_oklad}',
+					`prikaz8` = '{$spec_prikaz8}'
+					";
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
 		//логирование
 		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован пользователь ['.$worker_id.']. ['.date('d.m.y H:i', $time).']. Контакты: ['.$contacts.']. Организация: ['.$org.']. Права: ['.$permissions.']. Статус: ['.$status.']');
