@@ -110,15 +110,15 @@
 									method:"POST",
 									data:
 									{
-										f:document.getElementById("f").value,
-										i:document.getElementById("i").value,
-										o:document.getElementById("o").value,
+										f: $("#f").val(),
+										i: $("#i").val(),
+										o: $("#o").val(),
 										
                                         sel_date: $("#sel_date").val(),
                                         sel_month: $("#sel_month").val(),
                                         sel_year: $("#sel_year").val(),
 										
-										contacts:document.getElementById("contacts").value,
+										contacts: document.getElementById("contacts").value,
 										//org:document.getElementById("org").value,
 										org:0,
 										permissions:document.getElementById("permissions").value,

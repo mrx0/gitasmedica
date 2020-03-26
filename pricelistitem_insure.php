@@ -92,7 +92,7 @@
 							<div id="status">
 								<header>
                                     <div class="nav">
-                                        <a href=insure_price.php?id='.$_GET['insure'].'" class="b">Прайс компании</a>
+                                        <a href="insure_price.php?id='.$_GET['insure'].'" class="b">Прайс компании</a>
                                         <a href="pricelist.php" class="b">Основной прайс</a>
                                         <a href="pricelistitem.php?id='.$_GET['id'].'" class="b">Эта позиция в основном прайсе</a>
                                     </div>

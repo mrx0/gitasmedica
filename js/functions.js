@@ -521,11 +521,13 @@
 
         $('input[type="checkbox"]').each(function() {
             var cboxValue = $(this).val();
-            //console.log($(this).attr("id"));
+            //console.log($(this).attr("name"));
 
-            if ($(this).attr("id") != 'fired') {
-                if ($(this).prop("checked")) {
-                    cboxArray = itemExistsChecker2(cboxArray, cboxValue);
+            if ($(this).attr("name") == 'specializations[]'){
+                if ($(this).attr("id") != 'fired') {
+                    if ($(this).prop("checked")) {
+                        cboxArray = itemExistsChecker2(cboxArray, cboxValue);
+                    }
                 }
             }
         });
@@ -552,6 +554,16 @@
 
         var filial = $('#SelectFilial').val();
 
+        var spec_prikaz8 = $("input[name=spec_prikaz8]:checked").val();
+        if (spec_prikaz8 === undefined){
+            spec_prikaz8 = 0;
+        }
+
+        var spec_oklad = $("input[name=spec_oklad]:checked").val();
+        if (spec_oklad === undefined){
+            spec_oklad = 0;
+        }
+
         $.ajax({
             url:"user_edit_f.php",
             global: false,
@@ -570,8 +582,10 @@
 
                     sel_date: $("#sel_date").val(),
                     sel_month: $("#sel_month").val(),
-                    sel_year: $("#sel_year").val()
+                    sel_year: $("#sel_year").val(),
 
+                    spec_prikaz8: spec_prikaz8,
+                    spec_oklad: spec_oklad
                 },
             cache: false,
             beforeSend: function() {

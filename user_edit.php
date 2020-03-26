@@ -32,7 +32,30 @@
                 $category = SelDataFromDB('journal_work_cat', $_GET['id'], 'worker_id');
                 //var_dump($category);
                 $filials_j = getAllFilials(false, false, true);
-			
+
+                //Отметки по дополнительным опциям
+                $spec_prikaz8_checked = '';
+                $spec_oklad_checked = '';
+
+                $msql_cnnct = ConnectToDB ();
+
+                $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$_GET['id']} LIMIT 1'";
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0){
+                    $arr = mysqli_fetch_assoc($res);
+                    if ($arr['prikaz8'] == 1){
+                        $spec_prikaz8_checked = 'checked';
+                    }
+                    if ($arr['oklad'] == 1){
+                        $spec_oklad_checked = 'checked';
+                    }
+                }
+
+                CloseDB ($msql_cnnct);
+
                 if ($user !=0){
                     echo '
                         <div id="status">
@@ -48,9 +71,9 @@
                                     <div class="cellsBlock2">
                                         <div class="cellLeft">ФИО';
 
-                    if ($god_mode || ($workers['edit'] == 1)){
+                    //if ($god_mode || ($workers['edit'] == 1)){
                         echo '    <a href="user_edit_fio.php?id='.$_GET['id'].'"><i class="fa fa-cog" title="Редактировать ФИО"></i></a>';
-                    }
+                    //}
 
 				    echo '
                                         </div>
@@ -220,6 +243,20 @@
 									<div class="cellLeft">Контакты</div>
 									<div class="cellRight">
 										<textarea name="contacts" id="contacts" cols="35" rows="5">'.$user[0]['contacts'].'</textarea>
+									</div>
+								</div>';
+
+                    echo '								
+								
+								<div class="cellsBlock2">
+									<div class="cellLeft">Особые отметки</div>
+									<div class="cellRight">
+									    <div>
+                                            <input type="checkbox" name="spec_prikaz8" value="1" '.$spec_prikaz8_checked.'> Приказ №8
+										</div>
+										<div>
+										    <input type="checkbox" name="spec_oklad" value="1" '.$spec_oklad_checked.'> Оклад
+										</div>
 									</div>
 								</div>';
 
