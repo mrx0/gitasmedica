@@ -31,6 +31,26 @@ if ($enter_ok){
 
                     $filials_j = getAllFilials(false, true, true);
 
+                    //Сумма надбавки
+                    $surcharge_summ = 0;
+
+                    //Если налог, пробуем вытащить из базы цифру
+                    if ($_GET['type'] == 1){
+                        $msql_cnnct = ConnectToDB ();
+
+                        $query = "SELECT `summ` FROM  `fl_spr_surcharges` WHERE `worker_id` = '{$tabel_j[0]['worker_id']}' AND `type` = '1';";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0) {
+                            $arr = mysqli_fetch_assoc($res);
+
+                            $surcharge_summ = $arr['summ'];
+                        }
+                        //var_dump($surcharge_summ);
+                    }
+
                     echo '
                             <div id="status">
                                 <header>
@@ -193,7 +213,8 @@ if ($enter_ok){
                                         <div class="cellsBlock2">
                                             <div class="cellLeft">
                                             <span style="font-size:80%;  color: #555;">Сумма (руб.)</span><br>
-                                                <input type="text" name="surcharge_summ" id="surcharge_summ" value="" autocomplete="off" autofocus>
+                                                <!--<input type="text" name="surcharge_summ" id="surcharge_summ" value="" autocomplete="off" autofocus>-->
+                                                <input type="text" name="surcharge_summ" id="surcharge_summ" value="', $surcharge_summ == 0 ? '' : $surcharge_summ ,'" autocomplete="off" autofocus>
                                                 <label id="surcharge_summ_error" class="error"></label>
                                             </div>
                                         </div>
