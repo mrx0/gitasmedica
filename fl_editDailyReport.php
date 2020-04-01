@@ -452,7 +452,7 @@
                         </div>';
 
                         echo '
-                            <input type="button" class="b" value="Применить" onclick="fl_editDailyReport_add('.$_GET['report_id'].');">';
+                            <input type="button" class="b" value="Применить" onclick="fl_editDailyReport_add('.$_GET['report_id'].', \''.$dailyReports_j[0]['month'].'\', \''.$dailyReports_j[0]['year'].'\');">';
 
                     }else{
                         echo '<span style="color: red;">Ничего не найдено</span>';

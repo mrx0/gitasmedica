@@ -35,6 +35,10 @@
                 //echo '<a href="spr_proizvcalendar.php" class="b3" title="Производственный календарь">Производственный календарь</a>';
 
                 echo '<a href="fl_spr_revenue_percent.php" class="b3" title="Проценты от выручки">Проценты от выручки</a>';
+
+                if (($_SESSION['permissions'] == 3) || $god_mode) {
+                    echo '<a href="fl_surcharges.php" class="b3" title="Прочие доплаты сотрудникам">Прочие доплаты сотрудникам</a>';
+                }
             }
 
             echo '<a href="pricelist.php" class="b3" title="Прайс">Прайс</a>';

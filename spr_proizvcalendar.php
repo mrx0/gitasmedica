@@ -71,20 +71,47 @@
             $holidays_arr = array();
 
             $query = "SELECT * FROM `spr_proizvcalendar_holidays` WHERE `year` = '$year'";
+
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
             $number = mysqli_num_rows($res);
+
             if ($number != 0){
                 while ($arr = mysqli_fetch_assoc($res)){
                     //Раскидываем в массив
-                    if (!isset($holidays_arr[$arr['month']])){
+                    if (!isset($holidays_arr[$arr['month']])) {
                         $holidays_arr[$arr['month']] = array();
-                        array_push($holidays_arr[$arr['month']], $arr['day']);
-                    }else{
-                        array_push($holidays_arr[$arr['month']], $arr['day']);
                     }
+                    array_push($holidays_arr[$arr['month']], $arr['day']);
                 }
             }
             //var_dump($holidays_arr);
+
+            //Получаем ДР сотрудников
+            //Получаем календарь выходных на указанный год
+            $birthdays_arr = array();
+
+            $query = "SELECT `id`, `name`, `birth` FROM `spr_workers` WHERE `birth` <> '0000-00-00'";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    //Раскидываем в массив
+
+                    $bday_index = explode('-', $arr['birth'])[1].'-'.explode('-', $arr['birth'])[2];
+
+                    if (!isset($birthdays_arr[$bday_index])) {
+                        $birthdays_arr[$bday_index] = array();
+                    }
+
+                    array_push($birthdays_arr[$bday_index], $arr);
+                }
+            }
+            //var_dump($birthdays_arr);
+
 
             //переменная, чтоб вкл/откл редактирование
             $iCanManage = 'false';
@@ -233,10 +260,11 @@
                     }
 
                     //выделение сегодня цветом
-                    $now="$year-$i-".sprintf("%02d", $d);
+                    $now="$year-".dateTransformation($i)."-".sprintf("%02d", $d);
+                    //var_dump($now);
 
                     if ($now == $today){
-                        $today_color = 'outline: 2px solid red;';
+                        $today_color = 'outline: 1px solid red; background-color: rgba(7, 255, 60, 0.33); font-weight: bold;';
                     }else{
                         $today_color = 'border:1px solid rgba(191, 188, 181, 0.3);';
                     }
@@ -253,6 +281,15 @@
                         }
 //                    }
 
+
+                    //Метки ДР на днях
+                    $day_marks = '';
+                    if (array_key_exists(dateTransformation($i)."-".sprintf("%02d", $d), $birthdays_arr)) {
+                        $day_marks = '<div style="position: absolute; color: red; font-size: 70%; top: -8px; right: -4px;">&#9679;</div>';
+                    }
+
+
+
                     echo '
                                     <td class="cellsBlockHover" style="'.$today_color.' text-align: center; text-align: -moz-center; text-align: -webkit-center; vertical-align: top;">';
                     if ($d < 1 || $d > $day_count){
@@ -263,8 +300,9 @@
                                         <div style="vertical-align:top;'.$holliday_color.'" id="">
                                             <div>';
                         echo '				
-                                                <div style="text-align: right; margin: 3px;">
+                                                <div style="text-align: right; margin: 3px; position: relative;">
                                                     '.$d.'
+                                                    '.$day_marks.'
                                                 </div>
                                             </div>
                                         </div>';

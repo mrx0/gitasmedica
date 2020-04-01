@@ -108,7 +108,7 @@
                 echo 'не указана';
             }else{
                 echo
-                    date('d.m.Y', strtotime($user[0]['birth'])).'<br>
+                explode('-', $user[0]['birth'])[2].' '.$monthsName[explode('-', $user[0]['birth'])[1]]. '<br>
 						<!--полных лет <b>'.getyeardiff(strtotime($user[0]['birth']), 0).'</b>-->';
             }
             echo

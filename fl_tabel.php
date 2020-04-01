@@ -138,7 +138,7 @@
                         echo '
                                     <div id="data" style="margin: 0;">
                                     
-                                        <div style="font-size: 90%; margin-bottom: 20px;">
+                                        <div style="font-size: 90%; margin-bottom: 5px;">
                                             <div style="color: #252525; font-weight: bold;">'.$monthsName[$tabel_j[0]['month']].' '.$tabel_j[0]['year'].'</div>
                                             <div>
                                                 Сотрудник <b>'.WriteSearchUser('spr_workers', $tabel_j[0]['worker_id'], 'user_full', true).'</b> ';
@@ -473,7 +473,7 @@
                                 }
 
                                 $rezultSall .= '
-                                    <a href="fl_tabel.php?id='.$rezData['tabel_id'].'" class="b" style="font-size: 80%; padding: 5px; border-color: red; ">
+                                    <a href="fl_tabel.php?id=' . $rezData['tabel_id'] . '" class="b" style="font-size: 80%; padding: 5px; border-color: red; ">
                                         <div style="font-weight: bold;">';
                                 if ($rezData['type'] == 2) {
                                     $rezultSall .= ' налог   ';
@@ -485,13 +485,19 @@
                                     $rezultSall .= ' штраф ';
                                 }
                                 $rezultSall .= '
-                                            #'.$rezData['id'].'
+                                            #' . $rezData['id'] . '
                                         </div>
                                         <div style="margin: 1px 0; padding: 1px 3px; font-size: 10px">
                                             Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">' . $rezData['summ'] . '</span> руб.
                                         </div>
                                         <div style="font-size: 80%;">
-                                            В табеле '.$rezData['tabel_id'].'<br> (['.$filials_j[$rezData['office_id']]['name2'].'] '.$monthsName[$rezData['month']].' '.$rezData['year'].')
+                                            В табеле '.$rezData['tabel_id'].'';
+                                            if ($rezData['tabel_id'] == $_GET['id']){
+                                                $rezultSall .= '<b>[в этом]</b>';
+                                            }else {
+                                                $rezultSall .= '';
+                                            }
+                                            $rezultSall .= '<br> (['.$filials_j[$rezData['office_id']]['name2'].'] '.$monthsName[$rezData['month']].' '.$rezData['year'].')
                                         </div>
                                     </a>';
                             }
@@ -586,7 +592,7 @@
                                 }
 
                                 $rezultSall .= '
-                                    <a href="fl_tabel.php?id='.$rezData['tabel_id'].'" class="b" style="font-size: 80%; padding: 5px; border-color: blue;">
+                                    <a href="fl_tabel.php?id='.$rezData['tabel_id'].'" class="b" style="font-size: 80%; padding: 5px; border-color: green;">
                                         <div style="font-weight: bold;">';
                                 if ($rezData['type'] == 2) {
                                     $rezultSall .= ' отпускной ';
@@ -602,7 +608,13 @@
                                             Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">' . $rezData['summ'] . '</span> руб.
                                         </div>
                                         <div style="font-size: 80%;">
-                                            В табеле '.$rezData['tabel_id'].'<br> (['.$filials_j[$rezData['office_id']]['name2'].'] '.$monthsName[$rezData['month']].' '.$rezData['year'].')
+                                            В табеле '.$rezData['tabel_id'].'';
+                                            if ($rezData['tabel_id'] == $_GET['id']){
+                                                $rezultSall .= '<b>[в этом]</b>';
+                                            }else {
+                                                $rezultSall .= '';
+                                            }
+                                            $rezultSall .= '<br> (['.$filials_j[$rezData['office_id']]['name2'].'] '.$monthsName[$rezData['month']].' '.$rezData['year'].')
                                         </div>
                                     </a>';
 //                                var_dump($rezData['id']);
@@ -762,6 +774,85 @@
 
                             $w_percentHours = $tabel_j[0]['hours_percent'];
                         }
+
+                        //Фиксированные выплаты и удержания, которые надо внести (налоги, прочее, ...)
+                        //Налоги
+                        $tax_arr = array();
+
+                        $query = "SELECT * FROM  `fl_journal_taxes` WHERE `worker_id` = '{$tabel_j[0]['worker_id']} LIMIT 1';";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0) {
+                            $arr = mysqli_fetch_assoc($res);
+
+                            array_push($tax_arr, $arr);
+                        }
+                        //var_dump($tax_arr);
+
+                        $surcharge_arr = array();
+
+                        //Прочие доплаты сотрудникам (фиксированные)
+                        $query = "SELECT * FROM `fl_spr_surcharges` WHERE `worker_id` = '{$tabel_j[0]['worker_id']}' AND `type` = '1'";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0) {
+                            $arr = mysqli_fetch_assoc($res);
+
+                            array_push($surcharge_arr, $arr);
+                        }
+                        //var_dump($surcharge_arr);
+
+                        //Выводим на экран
+                        if (!empty($tax_arr) || !empty($surcharge_arr)){
+                            echo '<div><span style="font-size:80%;  color: #555;">Фиксированные удержания и документы к выплате, которые необходимо внести:</span><div>';
+                            if (!empty($tax_arr)){
+                                foreach ($tax_arr as $rezData) {
+//                                var_dump($rezData);
+
+                                    echo '
+                                    <div style="width: 130px; margin: 1px 0; padding: 1px 5px; border: 1px dashed red; display: inline-block;">
+                                        <div style="font-size: 70%; font-weight: bold;">
+                                            налог
+                                        </div>
+                                        <div style="font-size: 65%; margin: 1px 0; padding: 1px 5px;">
+                                            Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">' . $rezData['summ'] . '</span> руб.
+                                        </div>
+                                    </div>';
+//                                var_dump($rezData['id']);
+                                }
+                            }
+                            if (!empty($surcharge_arr)){
+                                foreach ($surcharge_arr as $rezData) {
+//                                var_dump($rezData);
+
+                                    echo '
+                                    <div style="width: 130px; margin: 1px 0; padding: 1px 5px; border: 1px dashed green;  display: inline-block;">
+                                        <div style="font-size: 70%; font-weight: bold;">';
+                                    if ($rezData['type'] == 2) {
+                                        echo ' отпускной ';
+                                    } elseif ($rezData['type'] == 3) {
+                                        echo ' больничный ';
+                                    } else {
+                                        echo ' прочее ';
+                                    }
+                                    echo '
+                                        </div>
+                                        <div style="font-size: 65%; margin: 1px 0; padding: 1px 5px;">
+                                            Сумма: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">' . $rezData['summ'] . '</span> руб.
+                                        </div>
+                                    </div>';
+//                                var_dump($rezData['id']);
+                                }
+                            }
+                            echo '</div></div>';
+                        }
+
+
+
                         echo '<span style="font-size:80%;  color: #555;">Удержания и документы к выплате, уже выписанные данному сотруднику в этом месяце:</span>';
 
                         //var_dump($rezultSall);
