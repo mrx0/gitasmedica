@@ -69,6 +69,11 @@
 								<div class="cellText" style="text-align: center; border: 0;"></div>
 							</li>';
 
+                    //Общая сумма долгов
+                    $debtAllSumm = 0;
+                    //Общая сумма доступно
+                    $dostOstatokAllSumm = 0;
+
                     foreach ($clients_w_installment as $cl_data) {
                         //var_dump($cl_data);
 
@@ -85,8 +90,8 @@
                         $dostOstatok = $client_balance['summ'] - $client_balance['debited'] - $client_balance['withdraw'] + $client_balance['refund'];
 
 						echo '
-                        <li class="cellsBlock cellsBlockHover" style="">
-								<a href="client.php?id='.$cl_data['id'].'" class="cellFullName ahref 4filter" id="4filter">'.$cl_data['full_name'].'</a>';
+                            <li class="cellsBlock cellsBlockHover" style="">
+								<a href="client.php?id='.$cl_data['id'].'" class="cellFullName ahref 4filter" id="4filter" target="_blank" rel="nofollow noopener">'.$cl_data['full_name'].'</a>';
 
 						echo '
 								<div class="cellCosmAct" style="text-align: right; width: 100px; min-width: 100px; max-width: 100px;">
@@ -95,14 +100,36 @@
 								<div class="cellCosmAct" style="text-align: right; width: 100px; min-width: 100px; max-width: 100px;">
 								    <span class="calculateOrder" style="font-size: 13px; color: grey;">'.$dostOstatok.'</span>
                                 </div>
-                                <a href="finance_account.php?client_id='.$cl_data['id'].'" class="ahref cellCosmAct" style="text-align: center;">
+                                <a href="finance_account.php?client_id='.$cl_data['id'].'" class="ahref cellCosmAct" style="text-align: center;" target="_blank" rel="nofollow noopener">
                                     <i class="fa fa-chevron-right" style="color: grey; float: right;" aria-hidden="true"></i>
                                 </a>';
 
                         echo '
-                                <div class="cellText" style="text-align: center; border: 0;"></div>';
+                                <div class="cellText" style="text-align: center; border: 0;"></div>
+                            </li>';
+
+                        $debtAllSumm += $client_debt['summ'];
+                        $dostOstatokAllSumm += $dostOstatok;
 
 				    }
+
+
+                    echo '
+							<li class="cellsBlock" style="font-weight:bold;">	
+								<div class="cellFullName" style="">
+                                    Общая сумма
+                                </div>
+								<div class="cellCosmAct" style="text-align: right; width: 100px; min-width: 100px; max-width: 100px;">
+								    <span class="calculateInvoice" style="font-size: 13px">'.number_format($debtAllSumm, 0, '.', ' ').'</span>
+                                </div>
+								<div class="cellCosmAct" style="text-align: right; width: 100px; min-width: 100px; max-width: 100px;">
+								    <span class="calculateOrder" style="font-size: 13px; color: grey;">'.number_format($dostOstatokAllSumm, 0, '.', ' ').'</span>
+                                </div>
+								<div class="cellCosmAct" style="text-align: left; width: 100px; min-width: 100px; max-width: 100px;">
+								    Итого:<br><span class="calculateOrder" style="font-size: 13px; color: blueviolet;">'.number_format(($debtAllSumm-$dostOstatokAllSumm), 0, '.', ' ').'</span>
+                                </div>
+                                <div class="cellText" style="text-align: center; border: 0;"></div>
+                            </li>';
 
                     echo '
 					        </ul>';
