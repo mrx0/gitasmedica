@@ -56,6 +56,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         $dop['patientUnic'] = $_POST['patientUnic'];
 
+        //Финальный массив для результатов...
+        $rezFinal_arr = array();
+
         //Кто создал запись
         if ($_POST['creator'] != ''){
             include_once 'DBWork.php';
@@ -312,7 +315,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                           ON ji.id = ji_ex.invoice_id
                             WHERE ji.summ <> '0' AND ji.summins = '0'
                             AND CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) BETWEEN '{$_POST['datastart']}' AND '{$_POST['dataend']}' 
-                            AND z.enter = '1'";
+                            AND z.enter = '1' AND z.insured = '0'";
 
                     //Филиал
                     if ($_POST['filial'] != 99) {
@@ -328,7 +331,6 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                     if ($_POST['typeW'] != 0) {
                         $query .= "AND z.type = '" . $_POST['typeW'] . "'";
                     }
-
 
 
 
@@ -355,9 +357,21 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             }
 
                             array_push($journal[$arr['office_id']][$arr['worker_id']][$arr['zapis_id']][$arr['invoice_id']], $arr);
+
+                            if (!isset($rezFinal_arr[$arr['office_id']])){
+                                $rezFinal_arr[$arr['office_id']] = array();
+                            }
+                            if (!isset($rezFinal_arr[$arr['office_id']][$arr['worker_id']])){
+                                $rezFinal_arr[$arr['office_id']][$arr['worker_id']] = array();
+                            }
+                            if (!isset($rezFinal_arr[$arr['office_id']][$arr['worker_id']])){
+                                $rezFinal_arr[$arr['office_id']][$arr['worker_id']] = array();
+                            }
+
                         }
                     }
 //                    var_dump($journal);
+//                    var_dump($rezFinal_arr);
 
                     //Обработка результата
                     if (!empty($journal)) {
@@ -367,6 +381,11 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         //var_dump($filials_j);
 
                         echo '<table style="border: 1px solid #CCC;">';
+
+                        echo '
+                            <tr>
+                                <td colspan="3">Необработанные наряды (обработанные скрыты <div id="" style="font-size: 80%; color: #601ba5; cursor: pointer; display: inline;" onclick="toggleSomething (\'.hiddenTRs\');">показать/скрыть</div>)</td>
+                            </tr>';
 
                         //Для каждого филиала
                         foreach ($journal as $filial_id => $filial_arr){
@@ -402,14 +421,6 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                     //Для каждого наряда
                                     foreach ($zapis_arr as $invoice_id => $invoice_arr){
 
-                                        echo '<tr>';
-
-                                        echo '<td style="border: 1px solid limegreen; vertical-align: top; padding: 2px;">';
-//                                        var_dump($invoice_id);
-//                                        var_dump($invoice_arr);
-
-                                        echo '<a href="invoice.php?id='.$invoice_id.'" class="ahref">'.$invoice_id.'</a><br>';
-
                                         //Наценка:
                                         $spec_koeff_arr = array();
                                         //Скидка:
@@ -434,29 +445,54 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                             if (!in_array($discount, $discount_arr)){
                                                 array_push($discount_arr, $discount);
                                             }
-
                                         }
+
+                                        if (count ($spec_koeff_arr) == 1){
+                                            if (count ($discount_arr) == 1){
+                                                if(!isset($rezFinal_arr[$filial_id][$worker_id][$spec_koeff_arr[0]])){
+                                                    $rezFinal_arr[$filial_id][$worker_id][$spec_koeff_arr[0]] = array();
+                                                }
+                                                if(!isset($rezFinal_arr[$filial_id][$worker_id][$spec_koeff_arr[0]][$discount_arr[0]])){
+                                                    $rezFinal_arr[$filial_id][$worker_id][$spec_koeff_arr[0]][$discount_arr[0]] = 0;
+                                                }
+                                                $rezFinal_arr[$filial_id][$worker_id][$spec_koeff_arr[0]][$discount_arr[0]] ++;
+                                            }
+                                        }
+
+                                        if ((count ($spec_koeff_arr) > 1) || (count ($discount_arr) > 1)) {
+                                            echo '<tr>';
+                                        }else{
+                                            echo '<tr class="hiddenTRs" style="display: none;">';
+                                        }
+
+                                        echo '<td style="border: 1px solid limegreen; vertical-align: top; padding: 2px;">';
+                                        echo '<a href="invoice.php?id=' . $invoice_id . '" class="ahref" target="_blank" rel="nofollow noopener">' . $invoice_id . '</a><br>';
+
                                         echo 'Наценка: ';
-                                        if (count ($spec_koeff_arr) > 1){
+                                        if (count($spec_koeff_arr) > 1) {
                                             echo '<i class="fa fa-warning" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);"></i>';
                                         }
-                                        foreach ($spec_koeff_arr as $item){
-                                            echo $item.'/';
+                                        foreach ($spec_koeff_arr as $item) {
+                                            echo $item . '/';
                                         }
+
                                         echo '<br>';
 
                                         echo 'Скидка: ';
-                                        if (count ($discount_arr) > 1){
+                                        if (count($discount_arr) > 1) {
                                             echo '<i class="fa fa-warning" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);"></i>';
                                         }
-                                        foreach ($discount_arr as $item){
-                                            echo $item.'/';
+                                        foreach ($discount_arr as $item) {
+                                            echo $item . '/';
                                         }
+
                                         echo '<br>';
 
-                                        echo '</td>';
+                                        if ((count ($spec_koeff_arr) > 1) || (count ($discount_arr) > 1)) {
+                                            echo '</td>';
 
-                                        echo '</tr>';
+                                            echo '</tr>';
+                                        }
 
                                     }
                                 }
@@ -470,76 +506,82 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                             }
 
-//                            echo '</td>';
-
-                            //echo '</table>';
-
-//                            echo '</td>';
-
-//                            echo '</tr>';
                         }
 
                         echo '</table>';
 
-//                        // !!! **** тест с записью
-//                        include_once 'showZapisRezult2.php';
-//
-//                        if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode) {
-//                            $finance_edit = true;
-//                            $edit_options = true;
-//                        }
-//
-//                        if (($stom['add_own'] == 1) || ($stom['add_new'] == 1) || $god_mode) {
-//                            $stom_edit = true;
-//                            $edit_options = true;
-//                        }
-//                        if (($cosm['add_own'] == 1) || ($cosm['add_new'] == 1) || $god_mode) {
-//                            $cosm_edit = true;
-//                            $edit_options = true;
-//                        }
-//
-//                        if (($zapis['add_own'] == 1) || ($zapis['add_new'] == 1) || $god_mode) {
-//                            $admin_edit = true;
-//                            $edit_options = true;
-//                        }
-//
-//                        if (($scheduler['see_all'] == 1) || $god_mode) {
-//                            $upr_edit = true;
-//                            $edit_options = true;
-//                        }
+//                        var_dump($rezFinal_arr[19]);
 
-                        //Если хотим видеть только уникальные пациенты
-//                        if ($_POST['patientUnic'] == 1){
-//                            //var_dump($journal);
-//
-//                            $journal_temp = array();
-//
-//                            foreach($journal as $journal_item){
-//                                //Нам нужны фио пациентов чтоб потом сортировать их по фио
-//
-//                                $journal_temp[WriteSearchUser('spr_clients', $journal_item['patient'], 'user_full', false)] =  $journal_item;
-//                            }
-//
-//                            ksort($journal_temp);
-//                            $journal = $journal_temp;
-//                            $journal = array_values($journal_temp);
-//
-//                            //var_dump($journal);
-//                        }
+                        echo '<table style="border: 1px solid #CCC; margin-top: 20px;">';
 
-
-//                        echo showZapisRezult2($journal, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, 0, true, false, $dop);
-                        //$ZapisHereQueryToday, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $type, $format, $menu, $dop
-
-//
                         echo '
-                                    <li class="cellsBlock" style="margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
-                                        Всего : ' . count($journal) . '<br>
-                                    </li>
+                            <tr>
+                                <td colspan="3">Итоговая таблица</td>
+                            </tr>';
 
-                                    <li class="cellsBlock" style="margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
-                                        '.$query.'
-                                    </li>';
+                        //Выводим итог
+                        //Для каждого филиала
+                        foreach ($rezFinal_arr as $filial_id => $filial_arr) {
+
+                            echo '<tr>';
+
+                            echo '<td rowspan="'.(count($filial_arr)+1).'" style="border: 1px solid #CCC; vertical-align: top; padding: 2px; font-size: 80%">'.$filials_j[$filial_id]['name'].'</td>';
+
+                            echo '<td style="display: none;"></td>';
+
+                            echo '</tr>';
+
+                            //Для каждого сотрудника
+                            foreach ($filial_arr as $worker_id => $worker_arr) {
+                                //Сортируем по ключу
+                                ksort($worker_arr);
+                                //var_dump($worker_arr);
+
+                                echo '<tr>';
+
+
+                                echo '<td style="border: 1px solid #CCC; vertical-align: top; padding: 2px; font-size: 80%">'.WriteSearchUser('spr_workers', $worker_id, 'user', false).'</td>';
+
+                                echo '</td>';
+
+                                echo '<td style="border: 1px solid #CCC; vertical-align: top; padding: 2px;">';
+
+                                //echo '<table border="0">';
+
+                                //var_dump($worker_arr);
+                                foreach ($worker_arr as $spec_koeff_ind => $discount_ind_arr) {
+                                    //Сортируем по ключу
+                                    ksort($discount_ind_arr);
+//                                    var_dump($discount_ind_arr);
+
+                                    foreach($discount_ind_arr as $discount_ind => $count){
+                                        echo '+'.$spec_koeff_ind.'%  -'.$discount_ind.'% => '.$count.'<br>';
+                                    }
+                                }
+
+                                //echo '</table>';
+
+
+                                echo '</td>';
+
+                                echo '</tr>';
+                            }
+
+                        }
+
+                        echo '</table>';
+
+
+
+
+//                        echo '
+//                                    <li class="cellsBlock" style="margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
+//                                        Всего : ' . count($journal) . '<br>
+//                                    </li>
+//
+//                                    <li class="cellsBlock" style="margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
+//                                        '.$query.'
+//                                    </li>';
 
                         echo '
                                         </ul>
@@ -552,11 +594,6 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                     echo '<span style="color: red;">Ожидается слишком большой результат выборки. Уточните запрос.</span>';
                 }
 
-                //var_dump($query);
-                //var_dump($queryDopEx);
-                //var_dump($queryDopClient);
-
-                //mysql_close();
             }else {
                 echo '<span style="color: red;">Не найден пациент.</span>';
             }
