@@ -113,7 +113,18 @@
 
                         $workers_target_str = implode(',', $workers_target_arr);
 
-                        $dop_query = " AND (sch.type='4' OR sch.type='7' OR sch.type='11' OR sch.type='13' OR sch.type='14' OR sch.type='15' OR sch.type IN ($workers_target_str)) ";
+                        //$dop_query = " AND (sch.type='4' OR sch.type='7' OR sch.type='11' OR sch.type='13' OR sch.type='14' OR sch.type='15' OR sch.type IN ($workers_target_str)) ";
+
+                        $dop_query = " 
+                        AND (sch.type='4' OR sch.type='7' OR sch.type='11' OR sch.type='13' OR sch.type='14' OR sch.type='15' 
+                        OR sch.type IN ($workers_target_str)
+                        OR 
+                            sch.worker IN (
+                                SELECT s_w.id FROM `spr_workers` s_w 
+                                LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = s_w.id
+                                WHERE (opt_ws.oklad = '1') AND s_w.status = '0' 
+                            )
+                        ) ";
 
                         $query = "SELECT sch.*, s_w.full_name AS full_name, s_p.name AS type_name FROM `scheduler` sch 
                           LEFT JOIN `spr_workers` s_w

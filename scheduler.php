@@ -14,8 +14,9 @@
 			include_once 'widget_calendar.php';
 			include_once 'variables.php';
 
-			$offices = $offices_j = SelDataFromDB('spr_filials', '', '');
-			//var_dump ($offices);
+            $filials_j = getAllFilials(true, true, false);
+            //var_dump ($filials_j);
+
 			
 			$kabsInFilialExist = FALSE;
 			$kabsInFilial = array();
@@ -269,16 +270,16 @@
 									<div>
 										<select name="SelectFilial" id="SelectFilial">
 											';
-			if ($offices_j != 0){
-				for ($i=0;$i<count($offices_j);$i++){
-					$selected = '';
-					if (isset($_GET['filial'])){
-						if ($offices_j[$i]['id'] == $_GET['filial']){
-							$selected = 'selected';
-						}
-					}
-					echo "<option value='".$offices_j[$i]['id']."' $selected>".$offices_j[$i]['name']."</option>";
-				}
+			if (!empty($filials_j)){
+                foreach ($filials_j as $filial_id => $filial_data){
+                    $selected = '';
+                    if (isset($_GET['filial'])){
+                        if ($filial_id == $_GET['filial']){
+                            $selected = 'selected';
+                        }
+                    }
+                    echo "<option value='".$filial_id."' $selected>".$filial_data['name']."</option>";
+                }
 			}
 			echo '
 										</select>

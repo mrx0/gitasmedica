@@ -14,7 +14,7 @@
 			include_once 'widget_calendar.php';
 			include_once 'variables.php';
 
-            $filials_j = getAllFilials(false, false, false);
+            $filials_j = getAllFilials(true, true, false);
             //var_dump ($filials_j);
 
             //обнулим сессионные данные для редактирования
@@ -181,10 +181,15 @@
             //$normaSmen[10] = 7;
 
             //Получаем сотрудников этого типа
+            //+Сотрудники с особыми отметками (оклад)
             $arr = array();
             $filial_workers = array();
 
-            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '$type' AND `status` = '0' ORDER BY `full_name` ASC";
+            $query = "
+            SELECT s_w.* FROM `spr_workers` s_w 
+              LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = s_w.id
+              WHERE (s_w.permissions = '$type' OR opt_ws.oklad = '1') AND s_w.status = '0' 
+            ORDER BY s_w.full_name ASC";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -197,13 +202,30 @@
                 }
                 //$markSheduler = 1;
             }
+//            var_dump($filial_workers);
 
             //Получаем график факт этого филиала
+            //+Сотрудники с особыми отметками (оклад)
 			$arr = array();
             $schedulerFakt = array();
 
-            $query = "SELECT `id`, `day`, `worker` FROM `scheduler` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year' AND `filial`='{$_GET['filial']}'";
+            $query = "
+            SELECT sch.id, sch.day, sch.worker FROM `scheduler` sch
+              WHERE (sch.type = '$type'  
+              OR 
+              sch.worker IN (
+                SELECT s_w.id FROM `spr_workers` s_w 
+                  LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = s_w.id
+                  WHERE (s_w.permissions = '$type' OR opt_ws.oklad = '1') AND s_w.status = '0' 
+              ))
+              AND sch.month = '$month' AND sch.year = '$year' AND sch.filial='{$_GET['filial']}'";
+
+
+//            LEFT JOIN `spr_workers` s_w
+//              LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = sch.worker
+
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
 			$number = mysqli_num_rows($res);
 
 			if ($number != 0){
@@ -220,17 +242,36 @@
 				}
 			}
 			//var_dump($query);
+
 			
 			//$schedulerFakt = $rez;
             //var_dump($schedulerFakt);
 
             //Получаем график факт с других филиалов
+            //+Сотрудники с особыми отметками (оклад)
 			$arr = array();
             $schedulerFaktOther = array();
 
-            $query = "SELECT `id`, `day`, `worker`, `filial` FROM `scheduler` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year' AND `filial` <> '{$_GET['filial']}'";
+//            $query = "
+//            SELECT `id`, `day`, `worker`, `filial` FROM `scheduler`
+//              WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year' AND `filial` <> '{$_GET['filial']}'";
+
+
+            $query = "
+            SELECT sch.id, sch.day, sch.worker, sch.filial FROM `scheduler` sch
+              WHERE (sch.type = '$type'  
+              OR 
+              sch.worker IN (
+                SELECT s_w.id FROM `spr_workers` s_w 
+                  LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = s_w.id
+                  WHERE (s_w.permissions = '$type' OR opt_ws.oklad = '1') AND s_w.status = '0' 
+              ))
+              AND sch.month = '$month' AND sch.year = '$year' AND sch.filial <> '{$_GET['filial']}'";
+
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
             $number = mysqli_num_rows($res);
+
             if ($number != 0){
                 while ($arr = mysqli_fetch_assoc($res)){
                     //Раскидываем в массив
@@ -275,7 +316,17 @@
             $arr = array();
             $hours_j = array();
 
-            $query = "SELECT * FROM `fl_journal_scheduler_report` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year'";
+            $query = "
+            SELECT fl_jsch_rep.* FROM `fl_journal_scheduler_report` fl_jsch_rep
+              WHERE (fl_jsch_rep.type = '$type' 
+              OR 
+              fl_jsch_rep.worker_id IN (
+                SELECT s_w.id FROM `spr_workers` s_w 
+                  LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = s_w.id
+                  WHERE (s_w.permissions = '$type' OR opt_ws.oklad = '1') AND s_w.status = '0' 
+              ))
+              AND fl_jsch_rep.month = '$month' AND fl_jsch_rep.year = '$year'";
+
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
             $number = mysqli_num_rows($res);
@@ -502,6 +553,7 @@
             //Для сотрудников прикрепленных к этому филиалу выведем
             if (!empty($filial_workers)) {
                 foreach ($filial_workers as $worker_data) {
+//                    var_dump($worker_data);
 
                     $normaHours = getNormaHours($worker_data['id']);
 
@@ -509,12 +561,46 @@
                     <tr class="cellsBlockHover workerItem" worker_id="'.$worker_data['id'].'">
                         <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">
                             <b>'.$worker_data['full_name'].'</b>';
+
+
+                    if ($worker_data['permissions'] != $type) {
+                        echo ' <i class="fa fa-info-circle" style="color: green; font-size: 125%;;" title="Особые отметки">';
+                    }
 //                    echo '
 //                            <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
 //                                <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
 //                            </div>';
                     echo '
                         </td>';
+
+
+
+
+                    //Получаем нормы смен для этого типа
+                    $arr = array();
+                    $normaSmen = array();
+
+                    //Если тип сотрудника не соответствует текущему (для особых отметок)
+                    if ($worker_data['permissions'] != $type) {
+
+                        $work_days_norma = 0;
+
+                        $query = "SELECT * FROM `fl_spr_normasmen` WHERE `type` = '{$worker_data['permissions']}'";
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0) {
+                            while ($arr = mysqli_fetch_assoc($res)) {
+                                //Раскидываем в массив
+                                $normaSmen[$arr['month']] = $arr['count'];
+                            }
+                        }
+                        //var_dump($normaSmen);
+
+                        if (isset($normaSmen[(int)$month])) {
+                            $work_days_norma = $normaSmen[(int)$month];
+                        }
+                    }
+
 
                     //Всего
                     echo '
@@ -654,15 +740,24 @@
 
                         }
 
+                        //Если есть права редактиравать всех
                         if (($scheduler['edit'] == 1) || $god_mode) {
+                            $manage_day = '';
+
+                            //Если тип соответсвует и это не особые отметки, то можно менять
+                            if ($worker_data['permissions'] == $type) {
+                                $manage_day = 'onclick="if (iCanManage) changeTempSchedulerSession(this, ' . $worker_data['id'] . ', ' . $_GET['filial'] . ', ' . $i . ', ' . $month . ', ' . $year . ', ' . $weekday_temp . '); ' . $invoiceFreeAddStr . '" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');"';
+                            }
+
                             echo '
-                            <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, ' . $worker_data['id'] . ', ' . $_GET['filial'] . ', ' . $i . ', ' . $month . ', ' . $year . ', ' . $weekday_temp . '); ' . $invoiceFreeAddStr . '" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
+                            <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" '.$manage_day.' title="' . $title . '">
                                 '.$hours.'
                             </td>';
                         }elseif ($scheduler['add_worker'] == 1){
+                            //Только текущий день
                             if (($i == $day) && ($cur_month == $month) && ($cur_year == $year)) {
                                 echo '
-                                <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, ' . $worker_data['id'] . ', ' . $_GET['filial'] . ', ' . $i . ', ' . $month . ', ' . $year . ', ' . $weekday_temp . '); ' . $invoiceFreeAddStr . '" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
+                                <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" '.$manage_day.' title="' . $title . '">
                                     '.$hours.'
                                 </td>';
                             }else{
