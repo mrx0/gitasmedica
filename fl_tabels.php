@@ -157,8 +157,12 @@
 
                     //if (($permission['id'] != 1) && ($permission['id'] != 2) && ($permission['id'] != 3) && ($permission['id'] != 8) && ($permission['id'] != 9)){
 
-                        //Выберем всех сотрудников с такой должностью
-                        $query = "SELECT * FROM `spr_workers` WHERE `permissions`='{$type}' AND `status` <> '8'";
+                        //Выберем всех сотрудников с такой должностью + спец отметки
+                        $query = "
+                        SELECT s_w.*, opt_w_s.oklad, opt_w_s.prikaz8 FROM `spr_workers` s_w 
+                          LEFT JOIN `options_worker_spec` opt_w_s ON opt_w_s.worker_id = s_w.id
+                        WHERE s_w.permissions='{$type}' AND s_w.status <> '8'";
+
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                         $number = mysqli_num_rows($res);
@@ -167,6 +171,7 @@
                                 $workers_j[$arr['name']] = $arr;
                             }
                         }
+                        //var_dump($query);
 
                         //Сортируем по имени
                         ksort($workers_j);

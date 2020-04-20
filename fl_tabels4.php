@@ -190,13 +190,17 @@
                 $w_id_str = '';
 
                 //Выберем всех сотрудников с такой должностью
+                //+Сотрудники с особыми отметками (оклад)
                 //$query = "SELECT * FROM `spr_workers` WHERE `permissions`='{$type}' AND `status` <> '8'";
 
                 $query = "SELECT sw.*, sc.name AS cat_name, sc.id AS cat_id
-                FROM `spr_workers` sw  
+                FROM `spr_workers` sw
+                
+                LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = sw.id
+                  
                 LEFT JOIN `journal_work_cat` jwcat ON sw.id = jwcat.worker_id
                 LEFT JOIN `spr_categories` sc ON jwcat.category = sc.id
-                WHERE sw.permissions = '".$type."'  AND sw.status <> '8'
+                WHERE (sw.permissions = '".$type."' OR opt_ws.oklad = '1')  AND sw.status <> '8'
                 ORDER BY sw.full_name ASC";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -327,10 +331,20 @@
                 $arr = array();
                 $salariesWorkers = array();
 
-                $query = "SELECT * FROM (SELECT * FROM `fl_spr_salaries` WHERE `worker_id` IN ($w_id_str) ORDER BY `date_from` DESC) AS sub";
+                //!!! Правильный запрос окладов по датам (или неправильный, но пока работает как надо)
+                $query = "
+                SELECT * FROM (
+                  SELECT * FROM `fl_spr_salaries` WHERE `worker_id` IN ($w_id_str) 
+                  AND ((YEAR(`date_from`) < '$year') OR (YEAR(`date_from`) = '$year' AND (MONTH(`date_from`) < '$month' OR MONTH(`date_from`) = '$month')))
+                  ORDER BY `date_from` DESC
+                ) AS sub GROUP BY `worker_id`";
+
+
                 //var_dump($query);
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
                 $number = mysqli_num_rows($res);
+
                 if ($number != 0){
                     while ($arr = mysqli_fetch_assoc($res)){
                         //Раскидываем в массив
@@ -341,13 +355,27 @@
 
                     }
                 }
+//                var_dump($query );
+//                var_dump($salariesWorkers);
 
 
                 //Соберём часы за месяц отовсюду для этого типа
                 $arr = array();
                 $hours_j = array();
 
-                $query = "SELECT * FROM `fl_journal_scheduler_report` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year'";
+                //$query = "SELECT * FROM `fl_journal_scheduler_report` WHERE `type` = '$type' AND `month` = '$month' AND `year` = '$year'";
+
+                $query = "
+                SELECT fl_jsch_rep.* FROM `fl_journal_scheduler_report` fl_jsch_rep
+                  WHERE (fl_jsch_rep.type = '$type' 
+                  OR 
+                  fl_jsch_rep.worker_id IN (
+                    SELECT s_w.id FROM `spr_workers` s_w 
+                      LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = s_w.id
+                      WHERE (s_w.permissions = '$type' OR opt_ws.oklad = '1') AND s_w.status = '0' 
+                  ))
+                  AND fl_jsch_rep.month = '$month' AND fl_jsch_rep.year = '$year'";
+
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                 $number = mysqli_num_rows($res);
@@ -539,9 +567,33 @@
                                 $w_percentHours = 0;
 
                                 $normaHours = getNormaHours($worker_data['id']);
+                                //var_dump($normaHours);
 
-                                $w_normaHours = $work_days_norma * $normaHours;
+                                //Если тип сотрудника не соответствует текущему (для особых отметок)
+                                if ($worker_data['permissions'] != $type) {
 
+                                    $work_days_norma_temp = 0;
+
+                                    $query = "SELECT * FROM `fl_spr_normasmen` WHERE `type` = '{$worker_data['permissions']}'";
+                                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                                    $number = mysqli_num_rows($res);
+                                    if ($number != 0) {
+                                        while ($arr = mysqli_fetch_assoc($res)) {
+                                            //Раскидываем в массив
+                                            $normaSmen[$arr['month']] = $arr['count'];
+                                        }
+                                    }
+                                    //var_dump($normaSmen);
+
+                                    if (isset($normaSmen[(int)$month])) {
+                                        $work_days_norma_temp = $normaSmen[(int)$month];
+                                    }
+
+                                }else{
+                                    $work_days_norma_temp = $work_days_norma;
+                                }
+
+                                $w_normaHours = $work_days_norma_temp * $normaHours;
 
                                 //Смены часы
                                 if (isset($hours_j[$worker_data['id']])) {
@@ -551,7 +603,10 @@
                                     //$w_normaSmen = $normaSmen[$worker_specializ_data['id']][(int)$month]*12;
 
                                     $w_hours = array_sum($hours_j[$worker_data['id']]);
-                                    $w_percentHours = number_format($w_hours * 100 / $w_normaHours, 5, '.', '');
+
+                                    if ($w_normaHours != 0) {
+                                        $w_percentHours = number_format($w_hours * 100 / $w_normaHours, 5, '.', '');
+                                    }
 
                                     echo '
                                                 <div id="w_hours_' . $worker_data['id'] . '" style="margin-bottom: 15px; box-shadow: 0 0 3px 1px rgb(197, 197, 197); text-align: center;">' . $w_hours . '/ <span id="w_norma_' . $worker_data['id'] . '">' . $w_normaHours . '</span>/ ' . number_format($w_percentHours, 2, '.', '') . '%</div>';
@@ -620,7 +675,7 @@
                                         </td> 
                                         <td id="worker_' . $worker_data['id'] . '" class="workerTabel" f_id="' . $worker_filial_id . '" style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center; font-size: 120%;">
                                             <i class="fa fa-file-text" aria-hidden="true" style="color: rgba(0, 0, 0, 0.30); font-size: 130%;" title="Нет табеля"></i>
-                                            <i class="fa fa-plus" style="color: green; font-size: 100%; cursor: pointer;" title="Добавить" onclick="addNewTabelForWorkerFromSchedulerReport(' . $worker_data['id'] . ', ' . $worker_filial_id . ', ' . $type . ');"></i>
+                                            <i class="fa fa-plus" style="color: green; font-size: 100%; cursor: pointer;" title="Добавить" onclick="addNewTabelForWorkerFromSchedulerReport(' . $worker_data['id'] . ', ' . $worker_filial_id . ', ' . $worker_data['permissions'] . ');"></i>
                                         </td>
                                     </tr>';
                         //    }

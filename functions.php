@@ -5420,7 +5420,7 @@
 		$msql_cnnct = ConnectToDB ();
 
 		if ($by_type){
-			//Если нет персональной нормы, берем общую для типа
+			//Берем общую для типа
 			$query = "SELECT `count` FROM `fl_spr_normahours` WHERE `type`='" . $type . "' LIMIT 1";
 			$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 

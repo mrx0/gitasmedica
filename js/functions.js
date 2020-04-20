@@ -2979,7 +2979,7 @@
 
             patientUnic: patientUnic
         };
-        console.log(reqData);
+        //console.log(reqData);
 
         $.ajax({
             url:"ajax_show_result_stat_percents_f.php",

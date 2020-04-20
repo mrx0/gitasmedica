@@ -104,7 +104,9 @@
 
                     $msql_cnnct = ConnectToDB();
 
-                    $query = "SELECT * FROM `fl_journal_scheduler_report` WHERE `filial_id`='{$filial_id}' AND `day`='{$d}' AND  `month`='$m' AND  `year`='$y'";
+                    $query = "
+                    SELECT * FROM `fl_journal_scheduler_report` 
+                      WHERE `filial_id`='{$filial_id}' AND `day`='{$d}' AND  `month`='$m' AND  `year`='$y'";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -202,7 +204,16 @@
 
                         $workers_target_str = implode(',', $workers_target_arr);
 
-                        $dop_query = " AND (sch.type='4' OR sch.type='7' OR sch.type='11' OR sch.type='13' OR sch.type='14' OR sch.type='15' OR sch.type IN ($workers_target_str)) ";
+                        $dop_query = " 
+                        AND (sch.type='4' OR sch.type='7' OR sch.type='11' OR sch.type='13' OR sch.type='14' OR sch.type='15' 
+                        OR sch.type IN ($workers_target_str)
+                        OR 
+                            sch.worker IN (
+                                SELECT s_w.id FROM `spr_workers` s_w 
+                                LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = s_w.id
+                                WHERE (opt_ws.oklad = '1') AND s_w.status = '0' 
+                            )
+                        ) ";
 
                         $query = "SELECT sch.*, s_w.full_name AS full_name, s_p.name AS type_name FROM `scheduler` sch 
                           LEFT JOIN `spr_workers` s_w
@@ -210,6 +221,7 @@
                           LEFT JOIN `spr_permissions` s_p
                           ON sch.type = s_p.id
                           WHERE sch.filial='{$filial_id}' AND sch.day='{$d}' AND  sch.month='{$m}' AND  sch.year='{$y}'" . $dop_query . " 
+                          GROUP BY sch.worker
                           ORDER BY sch.type, s_w.full_name ASC";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -221,7 +233,7 @@
                                 array_push($scheduler_j, $arr);
                             }
                         }
-//                    var_dump($query);
+//                        var_dump($query);
 //                        var_dump($scheduler_j);
 
                         if (!empty($scheduler_j)) {

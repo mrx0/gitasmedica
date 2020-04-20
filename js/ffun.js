@@ -5474,7 +5474,7 @@
 
                 newInput = document.createElement("input");
                 newInput.type = "text";
-                newInput.maxLength = 7;
+                newInput.maxLength = 10;
                 newInput.setAttribute("size", 20);
                 newInput.style.width = "80px";
                 newInput.style.fontSize = "18px";
@@ -5609,7 +5609,7 @@
 
                     newInput = document.createElement("input");
                     newInput.type = "text";
-                    newInput.maxLength = 8;
+                    newInput.maxLength = 10;
                     newInput.setAttribute("size", 20);
                     newInput.style.width = "50px";
                     newInput.addEventListener("blur", function () {
@@ -5740,7 +5740,7 @@
 
                     newInput = document.createElement("input");
                     newInput.type = "text";
-                    newInput.maxLength = 8;
+                    newInput.maxLength = 10;
                     newInput.setAttribute("size", 20);
                     newInput.style.width = "50px";
                     newInput.addEventListener("blur", function () {

@@ -40,7 +40,24 @@
                     $query = "SELECT `id`, `worker_id`, `office_id`, `summ`, `status` FROM `fl_journal_tabels` WHERE `type` IN ($workers_target_str) AND `month` = '{$month}' AND `year` = '{$_POST['year']}' AND `status` <> '9';";
 
                 }else {
-                    $query = "SELECT `id`, `worker_id`, `office_id`, `summ`, `status` FROM `fl_journal_tabels` WHERE `type`='{$_POST['typeW']}' AND `month` = '{$month}' AND `year` = '{$_POST['year']}' AND `status` <> '9';";
+                    $query = "
+                    SELECT fl_j_tab.id, fl_j_tab.worker_id, fl_j_tab.office_id, fl_j_tab.summ, fl_j_tab.status 
+                    FROM `fl_journal_tabels` fl_j_tab
+                    LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = fl_j_tab.worker_id
+                    WHERE (fl_j_tab.type='{$_POST['typeW']}' OR opt_ws.oklad = '1') AND fl_j_tab.month = '{$month}' AND fl_j_tab.year = '{$_POST['year']}' AND fl_j_tab.status <> '9';";
+
+//                    $query = "SELECT sw.*, sc.name AS cat_name, sc.id AS cat_id
+//                        FROM `spr_workers` sw
+//
+//                        LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = sw.id
+//
+//                        LEFT JOIN `journal_work_cat` jwcat ON sw.id = jwcat.worker_id
+//                        LEFT JOIN `spr_categories` sc ON jwcat.category = sc.id
+//                        WHERE (sw.permissions = '".$type."' OR opt_ws.oklad = '1')  AND sw.status <> '8'
+//                        ORDER BY sw.full_name ASC";
+
+
+
                 }
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);

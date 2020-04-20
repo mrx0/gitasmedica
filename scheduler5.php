@@ -20,7 +20,7 @@
 			include_once 'widget_calendar.php';
 
 
-            $filials_j = getAllFilials(false, false, false);
+            $filials_j = getAllFilials(true, true, false);
             //var_dump ($filials_j);
 
             //обнулим сессионные данные для редактирования
