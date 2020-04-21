@@ -129,10 +129,14 @@
                             LEFT JOIN `journal_cosmet1` wm ON wm.zapis_id = jcalc.zapis_id";
                 }
 
+                //20200421 добавил ограничение, чтоб не собирались ночные посещения, так как ночи давно нет
                 $query .= "
                             WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.status <> '7'
                             AND jcalc.id NOT IN ( SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id) 
                             AND jcalc.date_in > '2018-05-31'
+                            
+                            AND zapis.noch = '0'
+                             
                             GROUP BY jcalc.id";
 
                 //GROUP BY jcalc.id ORDER BY jcalc.id DESC";

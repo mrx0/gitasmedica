@@ -3436,8 +3436,6 @@
                         thisObj.html(res.data);
 
                         //Показываем оповещения на фио и филиале
-                        //$("#tabs_notes_"+permission+"_"+worker).show();
-                        //$("#tabs_notes_"+permission+"_"+worker+"_"+office).show();
                         //console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
 
                         $("#tabs_notes_"+permission+"_"+worker).css("display", "inline-block");
@@ -3449,19 +3447,6 @@
                         //$("#tabs_notes_"+permission+"_"+worker).css("display", "none");
                         $("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display", "none");
                     }
-
-                    // console.log($("#tabs_notes2_"+permission+"_"+worker+"_"+office).css("display"));
-                    // console.log($("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display"));
-
-                    // var index = $('#tabs_w'+permission+'_'+worker+' a[href="#tabs-'+permission+'_'+worker+'_'+office+'"]').parent().index();
-                    //
-                    // if (($('#tabs_notes2_'+permission+'_'+worker+'_'+office).css("display") == 'none')
-                    //     &&
-                    //     ($('#tabs_notes_'+permission+'_'+worker+'_'+office).css("display") == 'none'))
-                    // {
-                    //     $('#tabs_w'+worker+'_'+office).tabs( "option", "disabled", [ index ] );
-                    // }
-
 
                     if (res.status == 0){
                         thisObj.html("Нет данных по необработанным расчетным листам");
@@ -3501,7 +3486,7 @@
                 //thisObj.html("<div style='width: 120px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка<br>расч. листов</span></div>");
             },
             success:function(res){
-                //console.log(res);
+                // console.log(res);
                 //console.log(reqData.worker);
                 // if (reqData.worker == 492) {
                 //     console.log(res.query);

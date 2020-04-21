@@ -11793,7 +11793,7 @@
             var filial_id = $(this).attr('filial_id');
             //console.log(filial_id);
             //console.log(($('#tabs_notes2_'+permission+'_'+worker+'_'+filial_id).css("display") == 'none'));//
-            console.log(($('#tabs_notes_'+permission+'_'+worker+'_'+filial_id).css("display") == 'none'));
+            //console.log(($('#tabs_notes_'+permission+'_'+worker+'_'+filial_id).css("display") == 'none'));
 
             if (($('#tabs_notes2_'+permission+'_'+worker+'_'+filial_id).css("display") == 'none')
                 &&
