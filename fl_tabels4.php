@@ -473,6 +473,10 @@
                                         <td style="border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px;">
                                             <b>' . $worker_data['full_name'] . '</b> ';
 
+                        if ($worker_data['permissions'] != $type) {
+                            echo ' <i class="fa fa-info-circle" style="color: green; font-size: 125%;;" title="Особые отметки">';
+                        }
+
 
                                 //var_dump($specializations);
 
