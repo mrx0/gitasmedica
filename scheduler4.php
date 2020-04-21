@@ -580,10 +580,11 @@
                     $arr = array();
                     $normaSmen = array();
 
+
                     //Если тип сотрудника не соответствует текущему (для особых отметок)
                     if ($worker_data['permissions'] != $type) {
 
-                        $work_days_norma = 0;
+                        $work_days_norma_temp = 0;
 
                         $query = "SELECT * FROM `fl_spr_normasmen` WHERE `type` = '{$worker_data['permissions']}'";
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -597,15 +598,17 @@
                         //var_dump($normaSmen);
 
                         if (isset($normaSmen[(int)$month])) {
-                            $work_days_norma = $normaSmen[(int)$month];
+                            $work_days_norma_temp = $normaSmen[(int)$month];
                         }
+                    }else{
+                        $work_days_norma_temp = $work_days_norma;
                     }
 
 
                     //Всего
                     echo '
                         <td id="schedulerResult_'.$worker_data['id'].'" class="hoverDate" style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;" title="">
-                            <div id="allMonthHours_'.$worker_data['id'].'" class="allMonthHours" style="display: inline;">0</div>/<div id="allMonthNorma_'.$worker_data['id'].'" style="display: inline;">'.($work_days_norma * $normaHours).'</div>(<div id="hoursMonthPercent_'.$worker_data['id'].'" style="display: inline;">0</div>%)
+                            <div id="allMonthHours_'.$worker_data['id'].'" class="allMonthHours" style="display: inline;">0</div>/<div id="allMonthNorma_'.$worker_data['id'].'" style="display: inline;">'.($work_days_norma_temp * $normaHours).'</div>(<div id="hoursMonthPercent_'.$worker_data['id'].'" style="display: inline;">0</div>%)
                         </td>';
 
 

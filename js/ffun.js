@@ -4352,7 +4352,7 @@
                         setTimeout(function () {
                             //window.location.replace('stat_cashbox.php');
                             //window.location.replace('scheduler3.php?filial_id='+filial_id);
-                            window.location.href = res_location+'?filial_id=' + filial_id;
+                            window.location.href = res_location+'?filial=' + filial_id;
                             //console.log('client.php?id='+id);
                         }, 500);
                     } else {
@@ -4454,7 +4454,7 @@
                         setTimeout(function () {
                             //window.location.replace('stat_cashbox.php');
                             //window.location.replace('scheduler3.php?filial_id='+filial_id);
-                            window.location.href = res_location + '?filial_id=' + filial_id;
+                            window.location.href = res_location + '?filial=' + filial_id;
                             //console.log('client.php?id='+id);
                         }, 500);
                     } else {
@@ -6480,7 +6480,41 @@
         })
     }
 
-    //Добавление нового табеля админа, ассиста
+    //Поиск на странице отсутствующих табелей и попытка создать их
+    function addAllTabelsForWorkerFromSchedulerReport(){
+
+        $(".fa-plus").each(function() {
+            //console.log($(this).attr('onclick'));
+
+            var str_temp = $(this).attr('onclick');
+            // console.log(str_temp);
+
+            if (str_temp !== undefined){
+
+                //var str = str_temp.split('(')[1];
+                var str = str_temp.substring(str_temp.indexOf('(')+1, str_temp.indexOf(')'));
+                //console.log(str.replace(/\s/g, ''));
+
+                var worker_id = str.split(',')[0].replace(/\s/g, '');
+                var filial_id = str.split(',')[1].replace(/\s/g, '');
+                var type_id = str.split(',')[2].replace(/\s/g, '');
+
+                // console.log(worker_id);
+                // console.log(filial_id);
+                // console.log(type_id);
+
+                //addNewTabelForWorkerFromSchedulerReport(worker_id, filial_id, type_id);
+
+            }
+
+            //пример обрезки строки, красиво
+            // var str = "50ml+$100";
+            // var a = str.split('+')[0]; // 50ml
+            // var b = str.split('+')[1]; // $100
+        })
+    }
+
+    //Добавление нового табеля админа, ассиста, ...
     function addNewTabelForWorkerFromSchedulerReport(worker_id, filial_id, type){
         // console.log(tabel_id);
         // console.log(worker_id);
