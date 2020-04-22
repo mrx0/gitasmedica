@@ -6071,8 +6071,12 @@
             var normaSmen = parseInt($("#allMonthNorma_"+worker_id).html(), 10) || 0;
             //console.log(normaSmen);
 
-            //var hoursMonthPercent = 0;
-            var hoursMonthPercent = summHours*100/normaSmen;
+            var hoursMonthPercent = 0;
+
+            if (normaSmen == 0){
+            }else {
+                hoursMonthPercent = summHours * 100 / normaSmen;
+            }
 
             $("#hoursMonthPercent_"+worker_id).html(number_format(hoursMonthPercent, 2, '.', ' '));
 
@@ -6113,8 +6117,12 @@
             var normaSmen = parseInt($("#allMonthNorma_"+worker_id).html(), 10) || 0;
             //console.log(normaSmen);
 
-            //var hoursMonthPercent = 0;
-            var hoursMonthPercent = summDays * 100/normaSmen;
+            var hoursMonthPercent = 0;
+
+            if (normaSmen == 0){
+            }else {
+                hoursMonthPercent = summHours * 100 / normaSmen;
+            }
 
             $("#hoursMonthPercent_"+worker_id).html(number_format(hoursMonthPercent, 2, '.', ' '));
 

@@ -564,6 +564,11 @@
             spec_oklad = 0;
         }
 
+        var spec_work_6days = $("input[name=spec_work_6days]:checked").val();
+        if (spec_work_6days === undefined){
+            spec_work_6days = 0;
+        }
+
         $.ajax({
             url:"user_edit_f.php",
             global: false,
@@ -585,7 +590,8 @@
                     sel_year: $("#sel_year").val(),
 
                     spec_prikaz8: spec_prikaz8,
-                    spec_oklad: spec_oklad
+                    spec_oklad: spec_oklad,
+                    spec_work_6days: spec_work_6days
                 },
             cache: false,
             beforeSend: function() {

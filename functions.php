@@ -123,6 +123,25 @@
 		}
 		return $rez;
 	}
+
+	//Функция показывает, сколько рабочих дней в указанном месяце при 6тидневой рабочей неделе (без праздников)
+	function getWeekdays($m, $y = NULL){
+		$arrDtext = array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
+
+		if(is_null($y) || (!is_null($y) && $y == ''))
+			$y = date('Y');
+
+		$d = 1;
+		$timestamp = mktime(0,0,0,$m,$d,$y);
+		$lastDate = date('t', $timestamp);
+		$workingDays = 0;
+		for($i=$d; $i<=$lastDate; $i++){
+			if(in_array(date('D', mktime(0,0,0,$m,$i,$y)), $arrDtext)){
+				$workingDays++;
+			}
+		}
+		return $workingDays;
+	}
 	
 	//Специализации работника (не должность)
 	function workerSpecialization($worker_id){
