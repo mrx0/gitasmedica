@@ -164,22 +164,6 @@
             $work_days_norma = $day_count - $number;
             //var_dump($work_days_norma);
 
-            //Получаем нормы смен для этого типа
-            $arr = array();
-            $normaSmen = array();
-
-//            $query = "SELECT * FROM `fl_spr_normasmen` WHERE `type` = '$type'";
-//            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-//            $number = mysqli_num_rows($res);
-//            if ($number != 0){
-//                while ($arr = mysqli_fetch_assoc($res)){
-//                    //Раскидываем в массив
-//                    $normaSmen[$arr['month']] = $arr['count'];
-//                }
-//            }
-            //var_dump($normaSmen);
-            //$normaSmen[10] = 7;
-
             //Получаем сотрудников этого типа
             //+Сотрудники с особыми отметками (оклад)
             $arr = array();
@@ -582,24 +566,9 @@
 
 
                     //Если тип сотрудника не соответствует текущему (для особых отметок)
+                    //!!! костыль, потому что сотрудник такой пока только ОДИН, потом переделеать по необходимости под все случаи
                     if ($worker_data['permissions'] != $type) {
-
-                        $work_days_norma_temp = 0;
-
-                        $query = "SELECT * FROM `fl_spr_normasmen` WHERE `type` = '{$worker_data['permissions']}'";
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-                        $number = mysqli_num_rows($res);
-                        if ($number != 0) {
-                            while ($arr = mysqli_fetch_assoc($res)) {
-                                //Раскидываем в массив
-                                $normaSmen[$arr['month']] = $arr['count'];
-                            }
-                        }
-                        //var_dump($normaSmen);
-
-                        if (isset($normaSmen[(int)$month])) {
-                            $work_days_norma_temp = $normaSmen[(int)$month];
-                        }
+                        $work_days_norma_temp = getWeekdays($month, $year);
                     }else{
                         $work_days_norma_temp = $work_days_norma;
                     }

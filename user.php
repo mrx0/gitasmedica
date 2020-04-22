@@ -48,6 +48,7 @@
 
             $spec_prikaz8 = false;
             $spec_oklad = false;
+            $work_6days = false;
 
             if ($number != 0){
                 $arr = mysqli_fetch_assoc($res);
@@ -56,6 +57,9 @@
                 }
                 if ($arr['oklad'] == 1){
                     $spec_oklad = true;
+                }
+                if ($arr['work6days'] == 1){
+                    $work_6days = true;
                 }
             }
 
@@ -192,6 +196,13 @@
                 echo '
                     <div>
                         Оклад
+                    </div>';
+            }
+
+            if ($work_6days){
+                echo '
+                    <div>
+                        6 дней/нед.
                     </div>';
             }
 

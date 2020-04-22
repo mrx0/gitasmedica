@@ -927,7 +927,7 @@
 	}
 	
 	//Обновление карточки пользователя из-под Web
-	function WriteWorkerToDB_Update($session_id, $worker_id, $sel_date, $sel_month, $sel_year, $org, $permissions, $specializations, $category, $filial_id, $contacts, $status, $spec_oklad, $spec_prikaz8){
+	function WriteWorkerToDB_Update($session_id, $worker_id, $sel_date, $sel_month, $sel_year, $org, $permissions, $specializations, $category, $filial_id, $contacts, $status, $spec_oklad, $spec_prikaz8, $spec_work_6days){
 
         $msql_cnnct = ConnectToDB ();
 
@@ -981,12 +981,13 @@
 
         //Приказ8 и Оклад
         $query = "INSERT INTO `options_worker_spec` (
-					`worker_id`, `oklad`, `prikaz8`)
+					`worker_id`, `oklad`, `prikaz8`, `work6days`)
 					VALUES (
-						'{$worker_id}', '{$spec_oklad}', '{$spec_prikaz8}')
+						'{$worker_id}', '{$spec_oklad}', '{$spec_prikaz8}', '{$spec_work_6days}')
 					ON DUPLICATE KEY UPDATE
 					`oklad` = '{$spec_oklad}',
-					`prikaz8` = '{$spec_prikaz8}'
+					`prikaz8` = '{$spec_prikaz8}',
+					`work6days` = '{$spec_work_6days}'
 					";
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
