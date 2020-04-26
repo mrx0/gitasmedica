@@ -65,6 +65,7 @@
                     echo '
 								<div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">Долг</div>
 								<div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">Доступно на счету</div>
+								<div class="cellCosmAct" style="text-align: center;">-</div>
 								<div class="cellCosmAct" style="text-align: center;">Упр. сч.</div>
 								<div class="cellText" style="text-align: center; border: 0;"></div>
 							</li>';
@@ -100,6 +101,9 @@
 								<div class="cellCosmAct" style="text-align: right; width: 100px; min-width: 100px; max-width: 100px;">
 								    <span class="calculateOrder" style="font-size: 13px; color: grey;">'.$dostOstatok.'</span>
                                 </div>
+                                <a href="pay_blank_pdf_qr.php?client_id='.$cl_data['id'].'" class="ahref cellCosmAct" style="text-align: center;" target="_blank" rel="nofollow noopener">
+                                    <i class="fa fa-file-text" style="font-size: 140%; color: rgb(74, 148, 70); /*float: right;*/" aria-hidden="true"></i>
+                                </a>
                                 <a href="finance_account.php?client_id='.$cl_data['id'].'" class="ahref cellCosmAct" style="text-align: center;" target="_blank" rel="nofollow noopener">
                                     <i class="fa fa-chevron-right" style="color: grey; float: right;" aria-hidden="true"></i>
                                 </a>';
