@@ -132,6 +132,81 @@
         return ' rgba('+red+', '+green+', 0, '+alpha+')';
     }
 
+    //Функция для создания бланка платежки с QR кодом в формате PDF
+    function createPayBlankPdfQRCode(){
+
+	    //получим все данные со странички, проверим их и поедем дальше
+        //Сам человек или опекун
+        var thisFIO = document.querySelector('input[name="thisFIO"]:checked').value;
+
+        //Если опекун
+        if (thisFIO == 1){
+            var fio = $("#fioo").val();
+        }else{
+            var fio = $("#fio").val();
+        }
+
+        //Длина строки JS
+        //Если заполнены ФИО
+        if (fio.length > 0){
+            //Адрес
+            var address = $("#address").val();
+
+            //Если заполнен адрес
+            if (address.length > 0){
+                //Назначение платежа/коммент
+                var comment = $("#comment").val();
+
+                if (comment.length > 0){
+                    //Сумма
+                    var rub = $("#rub").val();
+                    var kop = $("#kop").val();
+                    // console.log(Number(rub));
+                    // console.log(Number(kop));
+                    // console.log(isNaN(rub));
+                    // console.log(isNaN(kop));
+
+                    //Если сумма число
+                    if ((!isNaN(rub) && !isNaN(kop)) && (Number(rub) + Number(kop) > 0)){
+                        //console.log(Number(rub) + Number(kop)/100);
+
+                        //Если выбрали организацию
+                        var org_id = $("#SelectOrg").val();
+
+                        if (org_id != 0) {
+
+                            var inn = $("#inn").html();
+                            var kpp = $("#kpp").html();
+                            var org_full_name = $("#org_full_name").html();
+                            var bik = $("#bik").html();
+                            var ks = $("#ks").html();
+                            var bank_name = $("#bank_name").html();
+                            var rs = $("#rs").html();
+                            var payerinn = $("#payerinn").val();
+
+                            //console.log('pay_blank_pdf_qr_create.php?inn=' + inn + '&kpp=' + kpp + '&org_full_name=' + org_full_name + '&bik=' + bik + '&ks=' + ks + '&bank_name=' + bank_name + '&rs=' + rs + '&fio=' + fio + '&address=' + address + '&comment=' + comment + '&summ=' + (Number(rub) + Number(kop)));
+                            window.open('pay_blank_pdf_qr_create.php?inn=' + inn + '&kpp=' + kpp + '&org_full_name=' + org_full_name + '&bik=' + bik + '&ks=' + ks + '&bank_name=' + bank_name + '&rs=' + rs + '&fio=' + fio + '&address=' + address + '&comment=' + comment + '&rub=' + (Number(rub) + '&kop=' + Number(kop)) + '&payerinn=' + payerinn);
+                        }else{
+                            alert ("Выберите Юр. лицо");
+                        }
+
+                    }else{
+                        alert ("Проверьте сумму");
+                    }
+
+                }else{
+                    alert ("Заполните назначение платежа");
+                }
+            }
+            else{
+                alert ("Проверьте заполнение адреса");
+            }
+
+        }else{
+            alert ("Проверьте заполнение ФИО");
+        }
+    }
+
     //Вывод данных сессии в консоль
     function fromSessionInConsole(){
 
