@@ -287,7 +287,7 @@ if ($enter_ok){
                             <div class="cellsBlock2">
                                 <div class="cellLeft">Назначение</div>
                                 <div class="cellRight">
-                                    <textarea name="comment" id="comment" cols="35" rows="2" style="width: 98%; font-size: 14px;">Оплата счета '.$client_j[0]['card'].'/Д от '.date("d.m.Y").'</textarea>
+                                    <textarea name="comment" id="comment" cols="35" rows="2" style="width: 98%; font-size: 14px;">Оплата счета '.(str_replace('/', '', explode(' ', $client_j[0]['card']))[0]).'/Д от '.date("d.m.Y").'</textarea>
                                 </div>
                             </div>';
 
