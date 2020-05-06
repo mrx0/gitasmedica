@@ -82,6 +82,7 @@
             $rezult_arr = $datas['rezult_arr'];
             $cashbox_nal = $datas['cashbox_nal'];
             $arenda = $datas['arenda'];
+            $money_from_outside = $datas['money_from_outside'];
             $beznal = $datas['beznal'];
             $giveoutcash_summ = $datas['giveoutcash_summ'];
             $subtractions_j = $datas['subtractions_j'];
@@ -100,7 +101,6 @@
             $zapis_j = $datas['zapis_j'];
             $pervich_summ_arr_new = $datas['pervich_summ_arr_new'];
 
-
             $dop = 'filial_id='.$filial_id;
 
             echo '
@@ -108,7 +108,7 @@
                     <header id="header">
                         <div class="nav never_print_it">
                             <a href="fl_consolidated_report_admin.php?filial_id='.$filial_id.'&m='.$month.'&y='.$year.'" class="b">Сводный отчёт по филиалу</a>
-ь <тбии>    </тбии>                            <a href="fl_money_from_outside_add.php" class="b">Добавить доход вручную</a>
+                            <a href="fl_money_from_outside_add.php" class="b">Добавить приход вручную</a>
                         </div>
                         <h2 style="padding: 0;">Отчёт '.$filials_j[$filial_id]['name2'].' / '.$monthsName[$month].' '.$year.'</h2>
                     </header>';
@@ -1146,6 +1146,16 @@
 
                 echo '
                             <li class="filterBlock">
+                                <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: rgba(247,109,2,0.3);">
+                                   <b>Приход извне</b>
+                                </div>
+                                <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(247,109,2,0.3);">
+                                    <div style="float:left;">' . number_format($money_from_outside, 0, '.', ' ') . '</div>
+                                </div>
+                            </li>';
+
+                echo '
+                            <li class="filterBlock">
                                 <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 110%; font-weight: bold; background-color: rgba(236, 247, 95, 0.52);">
                                    <b>Всего нал:</b>
                                 </div>
@@ -1608,16 +1618,6 @@
                             <li class="filterBlock">
                                 <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 140%; font-weight: bold; background-color: rgba(219, 214, 214, 0.25);">
                                    <b>Итог</b>
-                                </div>
-                                <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 214, 214, 0.25);">
-    
-                                </div>
-                            </li>';
-
-                echo '
-                            <li class="filterBlock">
-                                <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: rgba(219, 214, 214, 0.25);">
-                                    
                                 </div>
                                 <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 140%; background-color: rgba(219, 214, 214, 0.25); text-align: right;">
                                     <b>0</b>
