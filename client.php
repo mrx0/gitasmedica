@@ -221,6 +221,15 @@ ORDER BY `name`;
 									</div>
 								</div>';
 								
+                echo '
+								<div class="cellsBlock2">
+									<div class="cellLeft">ИНН</div>
+									<div class="cellRight">
+                                        '.$client_j[0]['inn'].'';
+                echo '
+									</div>
+								</div>';
+
 				echo '
 								<div class="cellsBlock2">
 									<div class="cellLeft">Паспорт</div>

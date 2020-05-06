@@ -676,7 +676,7 @@
                                             </td> 
                                             <td id="worker_' . $worker_data['id'] . '" class="workerTabel" f_id="' . $worker_filial_id . '" style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center; font-size: 120%;">
                                                 <i class="fa fa-file-text" aria-hidden="true" style="color: rgba(0, 0, 0, 0.30); font-size: 130%;" title="Нет табеля"></i>
-                                                <i class="fa fa-plus" style="color: green; font-size: 100%; cursor: pointer;" title="Добавить" onclick="addNewTabelForWorkerFromSchedulerReport(' . $worker_data['id'] . ', ' . $worker_filial_id . ', ' . $worker_data['permissions'] . ');"></i>
+                                                <i class="fa fa-plus" style="color: green; font-size: 100%; cursor: pointer;" title="Добавить" onclick="addNewTabelForWorkerFromSchedulerReport(' . $worker_data['id'] . ', ' . $worker_filial_id . ', ' . $worker_data['permissions'] . ', false);"></i>
                                             </td>
                                         </tr>';
                             //    }

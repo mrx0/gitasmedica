@@ -209,7 +209,7 @@ if ($enter_ok){
                                     ИНН плательщика
                                 </div>
                                 <div class="cellRight">
-                                    <input type="text" name="payerinn" id="payerinn" style="width: 98%; font-size: 14px;" value="">
+                                    <input type="text" name="payerinn" id="payerinn" style="width: 98%; font-size: 14px;" value="'.$client_j[0]['inn'].'">
                                 </div>
                             </div>';
 

@@ -93,6 +93,15 @@
                                             <input type="text" name="email" id="email" value="'.$client[0]['email'].'">
 										</div>
 									</div>';
+
+                    echo '
+									<div class="cellsBlock2">
+										<div class="cellLeft">ИНН</div>
+										<div class="cellRight">
+                                            <input type="text" name="inn" id="inn" value="'.$client[0]['inn'].'">
+										</div>
+									</div>';
+
 					echo '			
 					
 									<div id="toggleDiv1" class="cellsBlock2" style="margin-top: 2px; margin-bottom: -1px; display: block; margin: 3px 0;">

@@ -106,8 +106,9 @@
             echo '
                 <div id="status">
                     <header id="header">
-                        <div class="nav">
+                        <div class="nav never_print_it">
                             <a href="fl_consolidated_report_admin.php?filial_id='.$filial_id.'&m='.$month.'&y='.$year.'" class="b">Сводный отчёт по филиалу</a>
+ь <тбии>    </тбии>                            <a href="fl_money_from_outside_add.php" class="b">Добавить доход вручную</a>
                         </div>
                         <h2 style="padding: 0;">Отчёт '.$filials_j[$filial_id]['name2'].' / '.$monthsName[$month].' '.$year.'</h2>
                     </header>';
@@ -1481,8 +1482,8 @@
                                 <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 100%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
                                    <b>Прочие выдачи/расходы</b>
                                 </div>
-                                <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
-                                    <a href="fl_paidout_another_test_in_tabel_add.php?filial_id=' . $filial_id . '" class="ahref b2 no_print"  target="_blank" rel="nofollow noopener">Добавить</a>
+                                <div class="cellRight never_print_it" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
+                                    <a href="fl_paidout_another_test_in_tabel_add.php?filial_id=' . $filial_id . '" class="ahref b2 never_print_it"  target="_blank" rel="nofollow noopener">Добавить</a>
                                 </div>
                             </li>';
 
@@ -1592,7 +1593,7 @@
                 echo '
                             <li class="filterBlock">
                                 <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: rgba(219, 215, 214, 0.44);;">
-                                    <button class="ahref b2 no_print" onclick="showPrevMonthDeficitAdd(' . $filial_id . ');">Сохранить</button>
+                                    <button class="ahref b2 never_print_it" onclick="showPrevMonthDeficitAdd(' . $filial_id . ');">Сохранить</button>
                                 </div>
                                 <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: rgba(219, 215, 214, 0.44);; text-align: right;">
                                     <div id="ostatokDeficit" style="font-weight: bold;">' . $ostatok . '</div>
@@ -2164,7 +2165,7 @@
                                     <div class="" style="">
                                         <ul style="/*margin-left: 6px;*/ margin-bottom: 10px; font-size: 14px;">
                                             <li class="cellsBlock" style="width: auto; font-size: 80%;">
-                                                <div class="cellOrder" style="width: 590px; text-align: left;">
+                                                <div class="cellOrder" style="width: 622px; text-align: left;">
                                                     <b>Прочие выдачи/расходы подробно:</b>
                                                 </div>
                                             </li>';
@@ -2182,6 +2183,9 @@
                                                  </div>
                                                 <div class="cellName" style="text-align: center;">
                                                     <b>Описание</b>
+                                                </div>
+                                                <div class="cellCosmAct info" style="text-align: center;">
+                                                    -
                                                 </div>';
                     echo '
                                             </li>';
@@ -2218,6 +2222,9 @@
                                                  </div>
                                                 <div class="cellName" style="text-align: center;">
                                                     ' . $paidouts_item['descr'] . '
+                                                </div>
+                                                <div class="cellCosmAct info" style="font-size: 100%; text-align: center; " onclick="deletePaidoutsTempItem('. $paidouts_item['id'].', this);">
+                                                    <i class="fa fa-times" aria-hidden="true" style="cursor: pointer;"  title="Удалить"></i>
                                                 </div>';
                         echo '
                                             </li>';

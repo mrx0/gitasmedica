@@ -317,7 +317,15 @@
                                 <!--<td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Закрыто работ на сумму, руб.</i></td>-->
                                 <!--<td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Надбавка от выручки, руб.(%)</i></td>-->
                                 <td style="width: 70px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Итого, руб.</i></td>
-                                <td style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">
+<!--                                <td style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">
+                                    <div class="button_tiny" style="margin-top: 5px; font-size: 120%; display: inline-block; cursor: pointer;" title="Обновить все" onclick="refreshAllTabelsForWorkerFromSchedulerReport();">
+                                        <i class="fa fa-refresh" aria-hidden="true" style="color: rgb(218, 133, 9);"></i>
+                                    </div>
+                                </td>-->
+                                <td style="width: 60px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">
+                                    <div class="button_tiny" style="margin-top: 5px; font-size: 120%; display: inline-block; cursor: pointer;" title="Добавить всем" onclick="addAllTabelsForWorkerFromSchedulerReport();">
+                                        <i class="fa fa-plus" aria-hidden="true" style="color: green;"></i>
+                                    </div>
                                     <div class="button_tiny" style="margin-top: 5px; font-size: 120%; display: inline-block; cursor: pointer;" title="Обновить все" onclick="refreshAllTabelsForWorkerFromSchedulerReport();">
                                         <i class="fa fa-refresh" aria-hidden="true" style="color: rgb(218, 133, 9);"></i>
                                     </div>
@@ -533,7 +541,7 @@
                                         </td> 
                                         <td id="worker_' . $worker_data['id'] . '" class="workerTabel" f_id="' . $worker_filial_id . '" style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center; font-size: 120%;">
                                             <i class="fa fa-file-text" aria-hidden="true" style="color: rgba(0, 0, 0, 0.30); font-size: 130%;" title="Нет табеля"></i>
-                                            <i class="fa fa-plus" style="color: green; font-size: 100%; cursor: pointer;" title="Добавить" onclick="addNewTabelForWorkerFromSchedulerReport(' . $worker_data['id'] . ', ' . $worker_filial_id . ', ' . $type . ');"></i>
+                                            <i class="fa fa-plus" style="color: green; font-size: 100%; cursor: pointer;" title="Добавить" onclick="addNewTabelForWorkerFromSchedulerReport(' . $worker_data['id'] . ', ' . $worker_filial_id . ', ' . $type . ', false);"></i>
                                         </td>
                                     </tr>';
                         //    }

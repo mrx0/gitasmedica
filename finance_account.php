@@ -63,6 +63,13 @@
                                     <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
                                         Контрагент: '.WriteSearchUser('spr_clients',   $client_j[0]['id'], 'user_full', true).'
                                     </li> 
+                                    <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
+                                        <a href="pay_blank_pdf_qr.php?client_id='. $client_j[0]['id'].'" class="ahref" style="text-align: center;" target="_blank" rel="nofollow noopener" title="Выписать счет на оплату">
+                                            Выписать счет на оплату в банке
+                                            <i class="fa fa-file-text" style="font-size: 140%; color: rgb(74, 148, 70); /*float: right;*/" aria-hidden="true"></i>
+                                        </a>
+                                    </li> 
+                                    
                                 </ul>';
                             echo '
                                 <div id="data">';
