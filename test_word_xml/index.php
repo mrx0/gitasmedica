@@ -1,6 +1,7 @@
 <?php
 
 /*
+ * Создать, редактировать Word файл через PHP
 Пример создан сайтом: http://blogjquery.ru/php-word-generaciya
 */
 

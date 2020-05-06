@@ -101,7 +101,7 @@
 								<div class="cellCosmAct" style="text-align: right; width: 100px; min-width: 100px; max-width: 100px;">
 								    <span class="calculateOrder" style="font-size: 13px; color: grey;">'.$dostOstatok.'</span>
                                 </div>
-                                <a href="pay_blank_pdf_qr.php?client_id='.$cl_data['id'].'" class="ahref cellCosmAct" style="text-align: center;" target="_blank" rel="nofollow noopener">
+                                <a href="pay_blank_pdf_qr.php?client_id='.$cl_data['id'].'" class="ahref cellCosmAct" style="text-align: center;" target="_blank" rel="nofollow noopener" title="Выписать счет на оплату">
                                     <i class="fa fa-file-text" style="font-size: 140%; color: rgb(74, 148, 70); /*float: right;*/" aria-hidden="true"></i>
                                 </a>
                                 <a href="finance_account.php?client_id='.$cl_data['id'].'" class="ahref cellCosmAct" style="text-align: center;" target="_blank" rel="nofollow noopener">

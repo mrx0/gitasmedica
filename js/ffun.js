@@ -558,6 +558,39 @@
         }
     }
 
+    //Удалить Прочую выдачу/расход
+    function deletePaidoutsTempItem(id){
+        //console.log(id);
+
+        var rys = false;
+
+        rys = confirm("Удалить Выдачу?");
+
+        if (rys) {
+
+
+            $.ajax({
+                url: "fl_paidouts_temp_item_del_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (data) {
+
+                    location.reload();
+
+                }
+            });
+        }
+    }
+
     //Удалить затраты на материалы
     function fl_deleteMaterialConsumption(id, invoice_id){
         //console.log(id);
@@ -2424,6 +2457,46 @@
         });
     }
 
+
+    //Добавляем/редактируем в базу приход извне
+    function  fl_Ajax_money_from_outside_add(moneyData){
+        //console.log(paidoutData);
+
+        var link = "fl_money_from_outside_add_f.php";
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data: moneyData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(res){
+//                console.log(res.data);
+                //$('#data').html(res)
+
+                blockWhileWaiting (true);
+
+                if(res.result == 'success') {
+                    //console.log('success');
+                    //$('#data').html(res.data);
+
+                    location.reload();
+                }else{
+                    //console.log('error');
+                    $('#errror').html(res.data);
+                    //$('#errrror').html('');
+                }
+            }
+        });
+    }
+
     //Добавляем/редактируем в базу оплату солярия
     function fl_Ajax_solar_add(reqData){
         //console.log(reqData);
@@ -2868,6 +2941,61 @@
                     if (res.result == 'success') {
 
                         fl_Ajax_paidout_another_add(paidoutData);
+
+                        // в случае ошибок в форме
+                    } else {
+                        // перебираем массив с ошибками
+                        for (var errorField in res.text_error) {
+                            // выводим текст ошибок
+                            $('#' + errorField + '_error').html(res.text_error[errorField]);
+                            // показываем текст ошибок
+                            $('#' + errorField + '_error').show();
+                            // обводим инпуты красным цветом
+                            // $('#'+errorField).addClass('error_input');
+                        }
+                        $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                    }
+                }
+            })
+        }
+    }
+
+    //Промежуточная функция для прихода денег извне
+    function fl_showMoneyFromOutsideAdd(){
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        if ($('#SelectFilial').val() == 0){
+            $("#errror").html('<div class="query_neok">Не выбран филиал</div>');
+        }else {
+
+            var moneyData = {
+                month: $('#iWantThisMonth').val(),
+                year: $('#iWantThisYear').val(),
+                summ: $('#paidout_summ').val(),
+                filial_id: $('#SelectFilial').val(),
+                descr: $('#descr').val()
+            };
+            //console.log(paidoutData);
+
+            //проверка данных на валидность
+            $.ajax({
+                url: "ajax_test.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+
+                data: {summ: $('#summ').val()},
+
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    if (res.result == 'success') {
+
+                        fl_Ajax_money_from_outside_add(moneyData);
 
                         // в случае ошибок в форме
                     } else {
@@ -6511,7 +6639,9 @@
                 // console.log(filial_id);
                 // console.log(type_id);
 
-                //addNewTabelForWorkerFromSchedulerReport(worker_id, filial_id, type_id);
+                if (Number($("#w_id_" + worker_id).html()) > 0) {
+                    addNewTabelForWorkerFromSchedulerReport(worker_id, filial_id, type_id);
+                }
 
             }
 
@@ -6523,7 +6653,7 @@
     }
 
     //Добавление нового табеля админа, ассиста, ...
-    function addNewTabelForWorkerFromSchedulerReport(worker_id, filial_id, type){
+    function addNewTabelForWorkerFromSchedulerReport(worker_id, filial_id, type, all=true){
         // console.log(tabel_id);
         // console.log(worker_id);
         // console.log($("#w_id_"+worker_id).attr("oklad"));
@@ -6535,11 +6665,15 @@
         // console.log($("#w_id_"+worker_id).attr("w_hours"));
         // console.log(Number($("#w_id_"+worker_id).html()));
 
-        var rys = false;
+        if (!all) {
+            var rys = false;
 
-        rys = confirm("Добавить новый табель?");
+            rys = confirm("Добавить новый табель?");
+        }else{
+            // rys = confirm("1");
+        }
 
-        if (rys) {
+        if (rys || all) {
 
             var link = "fl_addNewTabelForWorkerFromSchedulerReport_f.php";
 
@@ -6565,7 +6699,7 @@
                 w_hours: $("#w_id_" + worker_id).attr("w_hours"),
                 summ: Number($("#w_id_" + worker_id).html())
             };
-            //console.log(reqData);
+            // console.log(reqData);
 
             $.ajax({
                 url: link,
@@ -6578,7 +6712,7 @@
                     //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
                 },
                 success: function (res) {
-                    console.log (res);
+                    //console.log (res);
                     //$("#errrror").html(res);
 
                     if (res.result == "success") {

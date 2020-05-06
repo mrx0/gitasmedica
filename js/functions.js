@@ -735,6 +735,7 @@
 							htelephoneo: $("#htelephoneo").val(),
 
                             email: $("#email").val(),
+                            inn: $("#inn").val(),
 
 							passport: $("#passport").val(),
 							passportvidandata: $("#passportvidandata").val(),
@@ -830,6 +831,7 @@
 							htelephoneo: $("#htelephoneo").val(),
 
                             email: $("#email").val(),
+                            inn: $("#inn").val(),
 
 							passport: $("#passport").val(),
 							passportvidandata: $("#passportvidandata").val(),
@@ -11728,8 +11730,8 @@
                 summ = $(this).val(),
                 tabel_id = $(this).attr("tabel_id"),
             	paidout_summ_tabel = $(this).attr("paidout_summ_tabel"),
-                tabel_type = $("#tabel_type").val();;
-            	paidout_type = $("#paidout_type").val();;
+                tabel_type = $("#tabel_type").val();
+            	paidout_type = $("#paidout_type").val();
 
             if (summ.length > 2) {
 
