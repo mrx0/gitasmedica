@@ -1144,7 +1144,8 @@
                                 </div>
                             </li>';
 
-                echo '
+                if ($money_from_outside > 0) {
+                    echo '
                             <li class="filterBlock">
                                 <div class="cellLeft" style="width: 120px; min-width: 120px; background-color: rgba(247,109,2,0.3);">
                                    <b>Приход извне</b>
@@ -1153,6 +1154,7 @@
                                     <div style="float:left;">' . number_format($money_from_outside, 0, '.', ' ') . '</div>
                                 </div>
                             </li>';
+                }
 
                 echo '
                             <li class="filterBlock">
