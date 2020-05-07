@@ -2342,7 +2342,7 @@
                 $query = "SELECT * FROM `fl_journal_tabels` WHERE `worker_id`='{$worker_id}' AND `type`='{$type_id}' AND `office_id`='{$filial_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2019' OR (`year` = '2019' AND `month` > '05'));";
             }
         }else{
-            //Выберем табели уже существующие для этого работника
+            //Выберем табели уже существующие для этого работника (ночь)
 
             //Если для всех филиалов
             if (($type_id == 0) && ($filial_id == 0)) {
