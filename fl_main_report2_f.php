@@ -590,6 +590,22 @@
         //var_dump($certificate_payments_j);
         //var_dump($certificate_payments_summ);
 
+        //Получаем приходы извне
+        $money_from_outside = 0;
+
+        $query = "SELECT `summ` FROM `fl_journal_money_from_outside` WHERE `filial_id`='{$filial_id}' AND `year`='$year' AND `month`='$month'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0) {
+            while ($arr = mysqli_fetch_assoc($res)) {
+                $money_from_outside += $arr['summ'];
+            }
+        }
+
+
         //Получаем данные из сводного отчета за месяц
         $reports_j = array();
 
@@ -703,6 +719,38 @@
         //var_dump($subtractions_j_temp);
         //var_dump($subtractions_j_temp[5]);
 
+
+        //Сколько еще осталось выплатить
+        $salary_debt_j_temp = array();
+        $salary_debt_j = array();
+        //Общая сумма
+        $salary_debt_summ = 0;
+
+        $query = "SELECT fl_jt.* FROM `fl_journal_tabels` fl_jt
+                      WHERE fl_jt.month = '$month' AND fl_jt.year = '$year' AND fl_jt.office_id='{$filial_id}'
+                       AND fl_jt.status <> '9' 
+                       AND ((fl_jt.summ + fl_jt.surcharge + fl_jt.summ_calc + fl_jt.night_smena + fl_jt.empty_smena - fl_jt.paidout - fl_jt.deduction) <> '0')";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0) {
+            while ($arr = mysqli_fetch_assoc($res)) {
+//                var_dump($arr['id']);
+//                var_dump($arr['summ'] + $arr['surcharge'] + $arr['night_smena'] + $arr['empty_smena'] - $arr['paidout'] - $arr['deduction']);
+
+                $salary_debt_summ += intval($arr['summ'] + $arr['surcharge'] + $arr['night_smena'] + $arr['empty_smena'] - $arr['paidout'] - $arr['deduction']);
+
+                if(($arr['type'] != 5) && ($arr['type'] != 6) && ($arr['type'] != 10)){
+                    $salary_debt_summ += intval($arr['summ_calc']);
+                }
+            }
+        }
+
+        //var_dump($salary_debt_summ);
+
+
         //отсортируем по $permissions_sort_method
         foreach ($permissions_sort_method as $key) {
             //var_dump($key);
@@ -799,6 +847,7 @@
             'rezult_arr' => $rezult_arr,
             'cashbox_nal' => $cashbox_nal,
             'arenda' => $arenda,
+            'money_from_outside' => $money_from_outside,
             'beznal' => $beznal,
             'giveoutcash_summ' => $giveoutcash_summ,
             'subtractions_j' => $subtractions_j,
@@ -816,6 +865,7 @@
             'prev_month_filial_summ_arr' => $prev_month_filial_summ_arr,
             'zapis_j' => $zapis_j,
             'pervich_summ_arr_new' => $pervich_summ_arr_new,
+            'salary_debt_summ' => $salary_debt_summ,
         );
 
         return $result;

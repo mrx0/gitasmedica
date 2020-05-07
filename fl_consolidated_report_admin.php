@@ -76,7 +76,7 @@
             if (!empty($optionsWF[$_SESSION['id']]) || $god_mode){
                 echo '
                 <a href="fl_paidout_another_test_in_tabel_add.php" class="b">Добавить расход вручную</a>
-                <a href="fl_money_from_outside_add.php" class="b">Добавить доход вручную</a>';
+                <a href="fl_money_from_outside_add.php" class="b">Добавить приход вручную</a>';
             }
 
             echo '
