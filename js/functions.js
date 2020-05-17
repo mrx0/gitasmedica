@@ -12059,3 +12059,157 @@
         })
 
     }
+
+    //Загрузка элементов склада
+    function getScladItems (cat_id, start, limit, free=true, pick=false, pick_id=-1){
+
+        var link = "get_sclad_items_f.php";
+
+        var reqData = {
+            cat_id: cat_id,
+            start: start,
+            limit: limit,
+            free: free
+        };
+        //console.log(reqData);
+
+        //Если надо выделить группу
+        if (pick){
+            //Сначала очищаем у всех окраску
+            $(".droppable").css({"background-color": ""});
+
+            //Теперь покрасим
+            $("#cat_"+pick_id).css({"background-color": "rgba(131, 219, 83, 0.5)"});
+        }
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == 'success') {
+
+                    $("#sclad_items_rezult").html(res.data);
+
+                }
+            }
+        })
+    }
+
+    //Показываем блок для подтверждения переноса
+    function showMoveApprove(item, target){
+        //console.log(item);
+        //console.log(target);
+        // console.log(item.elem.id+" in "+target.id);
+
+        item.elem.style.display = 'none';
+
+        if (item.elem.id.split('_')[0] == 'cat') {
+            moveScladItemInCategory(0, item.elem.id.split('_')[1], target.id.split('_')[1]);
+        }
+        if (item.elem.id.split('_')[0] == 'item') {
+            moveScladItemInCategory(item.elem.id.split('_')[1], 0, target.id.split('_')[1]);
+        }
+
+        // $('#overlay').show();
+        //
+        // var item_name = $("#item_name_"+item.elem.id.split('_')[1]).html();
+        // var target_name = $("#cat_"+target.id.split('_')[1]).html();
+        //
+        // var buttonsStr = '<input type="button" class="b" value="Ok" onclick="alert(888);">';
+        //
+        // // Создаем меню:
+        // var menu = $('<div/>', {
+        //     class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        // })
+        //     .appendTo('#overlay')
+        //     .append(
+        //         $('<div/>')
+        //             .css({
+        //                 "height": "100%",
+        //                 "border": "1px solid #AAA",
+        //                 "position": "relative",
+        //             })
+        //             .append('<span style="margin: 5px;"><i>Подтвердите перемещение</i></span>')
+        //             .append(
+        //                 $('<div/>')
+        //                     .css({
+        //                         "position": "absolute",
+        //                         "width": "100%",
+        //                         "margin": "auto",
+        //                         "top": "-10px",
+        //                         "left": "0",
+        //                         "bottom": "0",
+        //                         "right": "0",
+        //                         "height": "50%",
+        //                     })
+        //                     .append('<div style="margin: 10px;"><b style="color: orangered;"><i>'+item_name+'</i></b> в <b style="color: darkolivegreen;">'+target_name+'</b>')
+        //             )
+        //             .append(
+        //                 $('<div/>')
+        //                     .css({
+        //                         "position": "absolute",
+        //                         "bottom": "2px",
+        //                         "width": "100%",
+        //                     })
+        //                     .append(buttonsStr+
+        //                         '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
+        //                     )
+        //             )
+        //     );
+        //
+        // menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+    }
+
+    //Перемещаем позицию в другую категорию
+    function moveScladItemInCategory (item_id, cat_id, target_cat_id){
+
+        var link = "move_sclad_items_in_cat_f.php";
+
+        var reqData = {
+            item_id: item_id,
+            cat_id: cat_id,
+            target_cat_id: target_cat_id
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                console.log (res);
+
+                if (res.result == 'success') {
+
+                    // $("#sclad_items_rezult").html(res.data);
+
+                    //Если надо выделить группу
+                    // if (pick){
+                    //     //Сначала очищаем у всех окраску
+                    //     $(".droppable").css({"background-color": ""});
+                    //
+                    //     //Теперь покрасим
+                    //     $("#cat_"+pick_id).css({"background-color": "rgba(131, 219, 83, 0.5)"});
+                    // }
+
+                }
+            }
+        })
+
+    }

@@ -1043,6 +1043,48 @@
 		return $first.$last;
 	}
 
+	//Проверка родителей в дереве
+	function checkExistTreeParents ($dbtable, $item_id, $target_item_id, $exist=false){
+//		var_dump('----------------');
+//		var_dump($item_id);
+//		var_dump($target_item_id);
+//		var_dump($exist);
+
+		if (!$exist) {
+            $msql_cnnct = ConnectToDB();
+
+            $query = "SELECT `parent_id` FROM $dbtable WHERE `id` = '$target_item_id' AND `status` <> '9' LIMIT 1";
+            //var_dump($query);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0) {
+                $arr = mysqli_fetch_assoc($res);
+                //var_dump($arr['parent_id']);
+
+                //Если нашли совпадение с $target_item_id, заканчиваем проверки
+                if ($item_id == $arr['parent_id']) {
+
+                    $exist = true;
+                    return $exist;
+
+                } else {
+                    $exist = checkExistTreeParents($dbtable, $item_id, $arr['parent_id']);
+                }
+            }
+
+            return $exist;
+
+
+        }
+
+        CloseDB($msql_cnnct);
+
+        return $exist;
+	}
+
 	//Долги/Авансы
 	function DebtsPrepayments ($id){
 		//require 'config.php';
@@ -2609,10 +2651,14 @@
 		
 		//Если первый проход
 		if ($first){
+
+			//!!! переделай под это
+			//$msql_cnnct = ConnectToDB ();
+
 			require 'config.php';
-		
+
 			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-			mysql_select_db($dbName) or die(mysql_error()); 
+			mysql_select_db($dbName) or die(mysql_error());
 			mysql_query("SET NAMES 'utf8'");
 		}
 		
@@ -2915,6 +2961,198 @@
 //			}
 //		}
 //	}
+
+
+	//для Склада
+//	function showTreeSclad ($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype, $msql_cnnct){
+//
+//		$sclad_rez = array();
+//
+//		$rez_str = '';
+//
+//		$color_array = array(
+//			'background-color: rgba(255, 236, 24, 0.5);',
+//			'background-color: rgba(103, 251, 66, 0.5);',
+//			'background-color: rgba(97, 227, 255, 0.5);',
+//		);
+//		$color_index = $last_level;
+//
+//		//Если первый проход
+////		if ($first){
+////
+////			$msql_cnnct = ConnectToDB ();
+////
+////		}
+//
+//		//определяем уровень для запроса
+//		if ($level == NULL){
+//			$parent_str = '`parent_id` IS NULL';
+//		}else{
+//			$parent_str = '`parent_id` = '.$level;
+//		}
+//
+//		//берем верхний уровень
+//		$query = "SELECT * FROM `$dbtable` WHERE ".$parent_str;
+////		var_dump($query);
+//
+//		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//		$number = mysqli_num_rows($res);
+//
+//		if ($number != 0){
+//			while ($arr = mysqli_fetch_assoc($res)){
+//				array_push($sclad_rez, $arr);
+//			}
+//		}
+//        //var_dump($sclad_rez);
+//
+//
+//		//Если первый проход
+//		if ($first){
+//			$rez_str .= '
+//					<div style="margin: 10px 0 5px; font-size: 11px; cursor: pointer;">
+//						<!--<span class="dotyel a-action lasttreedrophide">скрыть всё</span>, <span class="dotyel a-action lasttreedropshow">раскрыть всё</span>-->
+//					</div>';
+//			$rez_str .= '
+//					<div style="/*width: 350px;*/ height: 600px; overflow-y: scroll; border: 1px solid #CCC;">
+//						<ul class="ul-tree ul-drop" id="lasttree" style="padding-left: 0px;">';
+//		}
+//
+//		if (!empty($sclad_rez)){
+//			foreach ($sclad_rez as $sclad_rez_value){
+//				if ($sclad_rez_value['node_count'] > 0) {
+//                    $rez_str .= '
+//						<li>
+//							<div class="drop" style="background-position: 0px 0px;"></div>
+//							<p onclick="" ><b>#' . $sclad_rez_value['id'] . '</b> ' . $sclad_rez_value['name'] . '</p>';
+//
+//					$rez_str .= '
+//							<ul style="display: block;">';
+//
+//					$rez_str .= showTreeSclad($sclad_rez_value['id'], '', 'list', 0, FALSE, 0, FALSE, $dbtable, 0, 0, $msql_cnnct);
+//
+//					$rez_str .= '
+//							</ul>';
+//					$rez_str .= '
+//						</li>';
+//
+//				} else {
+//					$rez_str .= '
+//							<li>
+//								<p onclick=""><b>#' . $sclad_rez_value['id'] . '</b> ' . $sclad_rez_value['name'] . '</p>
+//							</li>';
+//				}
+//				//if ($type == 'list'){
+//				//echo $space.$value['name'].'<br>';
+//
+//				//играемся с цветом
+//				/*if ($value['level'] == 0) {
+//					$style_name = 'font-size: 130%;';
+//					$style_name .= $color_array[0];
+//					//$this_level = 0;
+//				}else{
+//					$style_name = 'font-size: 110%; font-style: oblique;';
+//					//$style_name .= 'background-color: rgba(97, 227, 255, 0.5)';
+//					if (isset($color_array[$color_index])){
+//						$style_name .= $color_array[$color_index];
+//					}else{
+//						$style_name .= 'background-color: rgba(225, 126, 255, 0.5);';
+//					}
+//				}*/
+//			}
+//		}
+//
+//		if ($first){
+//			$rez_str .= '
+//					</ul>
+//				</div>';
+//			//mysql_close();
+//		}
+//
+//		return $rez_str;
+//	}
+
+	//для Склада
+	function showTreeSclad2 ($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype, $msql_cnnct){
+		//var_dump($first);
+
+		$sclad_rez = array();
+
+		$rez_str = '';
+
+		//определяем уровень для запроса
+		if ($level == NULL){
+			$parent_str = "`parent_id` = '0'";
+		}else{
+			$parent_str = "`parent_id` = ".$level;
+		}
+
+		//берем верхний уровень
+		$query = "SELECT * FROM `$dbtable` WHERE ".$parent_str;
+		//var_dump($query);
+
+		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
+
+		if ($number != 0){
+			while ($arr = mysqli_fetch_assoc($res)){
+				array_push($sclad_rez, $arr);
+			}
+		}
+        //var_dump($sclad_rez);
+
+
+		//Если первый проход
+		if ($first){
+            //var_dump($sclad_rez);
+
+			$rez_str .= '	
+					<div style="margin: 10px 0 5px; font-size: 11px; cursor: pointer;">
+						<!--<span class="dotyel a-action lasttreedrophide">скрыть всё</span>, <span class="dotyel a-action lasttreedropshow">раскрыть всё</span>-->
+					</div>';
+			$rez_str .= '	
+					<div style="/*width: 350px;*/ height: 600px; overflow-y: scroll; border: 1px solid #CCC;">
+						<ol class="tree">
+						<li>
+							<label id="cat_0" class="droppable hover" onclick="getScladItems (0, 0, 50, false, true, 0); return;"><b>#0</b> Вне категории</label> <input type="checkbox" id="folder0" checked /> 
+						</li>';
+		}else{
+            $rez_str .= '<ol class="tree2">';
+		}
+
+		if (!empty($sclad_rez)){
+			foreach ($sclad_rez as $sclad_rez_value){
+				if ($sclad_rez_value['node_count'] > 0) {
+                    $rez_str .= '	
+						<li>
+							<label id="cat_'.$sclad_rez_value['id'].'" class="draggable droppable hover" onclick="getScladItems ('.$sclad_rez_value['id'].', 0, 50, false, true, '.$sclad_rez_value['id'].'); return;"><b>#' . $sclad_rez_value['id'] . '</b> ' . $sclad_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$sclad_rez_value['id'].'" checked />';
+
+					$rez_str .= showTreeSclad2($sclad_rez_value['id'], '', 'list', 0, FALSE, 0, FALSE, $dbtable, 0, 0, $msql_cnnct);
+
+					$rez_str .= '	
+						</li>';
+
+				} else {
+                    $rez_str .= '	
+						<li>
+							<label id="cat_'.$sclad_rez_value['id'].'" class="draggable droppable hover" onclick="getScladItems ('.$sclad_rez_value['id'].', 0, 50, false, true, '.$sclad_rez_value['id'].'); return;"><b>#' . $sclad_rez_value['id'] . '</b> ' . $sclad_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$sclad_rez_value['id'].'" checked />';
+                    $rez_str .= '	
+						</li>';
+				}
+			}
+			$rez_str .= '	
+					</ol>';
+		}
+
+		if ($first){
+			$rez_str .= '	
+					</ol>
+				</div>';
+		}
+
+		return $rez_str;
+	}
 
 	//Для контекстной менюшки для управления записью
     function contexMenuZapisMain ($zapisData, $filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $main_zapis, $title_time, $title_client, $title_descr){
