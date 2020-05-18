@@ -2753,6 +2753,7 @@ ol.tree2{
 	position: relative;
 	margin-left: -15px;
 	list-style: none;
+	margin-bottom: 5px;
 }
 li.file
 {
@@ -2847,19 +2848,31 @@ li input:checked + ol > li:last-child {
 
 /*Для переноса DnD*/
 .dnd_class {
-	background-color: rgba(243, 243, 243, 0.8);
+	background-color: rgba(243, 243, 243, 0.5);
 	box-shadow: -1px 4px 17px 3px rgb(160, 164, 165);
 }
 
 .droppable:hover {
 	cursor: pointer;
 	font-weight: bold;
+	background-color: rgba(201, 243, 227, 0.5);
 }
 
-.droppable .hover:hover {
+/*.droppable .hover:hover {
 	color: red;
 	font-weight: bold;
 	cursor: pointer;
+}*/
+
+.uponMe
+{
+	color: red;
+	font-weight: bold;
+	cursor: pointer;
+	/*box-shadow: -1px 4px 17px 3px rgb(165, 28, 52);*/
+	border-bottom: 1px solid rgba(233, 18, 8, 0.4);
 }
+
+
 
 

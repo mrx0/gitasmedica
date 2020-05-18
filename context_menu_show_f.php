@@ -484,6 +484,14 @@
 //                }
 
 
+                //Для работы с категориями на складе
+                if ($_POST['mark'] == 'sclad_cat'){
+                    $data .= '
+                            <li><div onclick="">Добавить категорию</div></li>
+                            <li><div onclick="">Добавить позицию</div></li>
+                    ';
+                }
+
 				echo json_encode(array('result' => 'success', 'data' => $data));
 
 			}

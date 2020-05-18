@@ -147,10 +147,7 @@
                     </div>';
 
             echo '
-                    <div style="width: 350px; max-width: 350px; min-width: 350px;">';
-
-
-            echo showTreeSclad2(NUll, '', 'list', 0, TRUE, 0, FALSE, 'spr_sclad_category', 0, 0, $msql_cnnct);
+                    <div id="sclad_cat_rezult" style="width: 350px; max-width: 350px; min-width: 350px;">';
 
 
             echo '
@@ -176,6 +173,10 @@
 
 
             echo '
+
+
+		
+
                 </div>';
 
 
@@ -186,7 +187,9 @@
 
 			echo '
 							</ul>
-						</div>';
+						</div>
+	
+						';
 
 
 			//var_dump(checkExistTreeParents ('spr_sclad_category', 2, 3));
@@ -209,7 +212,7 @@
 				    //console.log(123);
 				    //$("#sclad_items_rezult").html(123);
 				    
-				    //getScladCategories ();
+				    getScladCategories ();
 				    getScladItems (0, 0, 50, true);
 
 				});				
@@ -220,30 +223,45 @@
             
             <script>
             
-                //Перемещение отменилось 
-                DragManager.onDragCancel = function(dragObject) {
-                    console.log(\'Cancel\');
-                
-                    dragObject.avatar.rollback();
-                };
-            
-                //Перемещение удачно закончилось
-                DragManager.onDragEnd = function(dragObject, dropElem) {
-//                    console.log(\'End\');
-//                    console.log(dragObject);
-                    console.log(dropElem);
-                    console.log(dragObject.elem.id+" in "+dropElem.id);
-                    
-                    showMoveApprove (dragObject, dropElem);
-                    
-                    
-//                  dragObject.elem.style.display = \'none\';
-//                  dropElem.classList.add(\'computer-smile\');
-                  
-//                  setTimeout(function() {
-////                    dropElem.classList.remove(\'computer-smile\');
-//                  }, 200);
-                };
+//                //Переносимый элемент не над целью
+//                dragManager.onLeave = function(dropElem) {
+//                    console.log("onLeave");
+//                    
+//                    //dropElem.className =  \'\'
+//                }
+//                
+//                //Переносимый элемент над целью
+//                dragManager.onEnter = function(dropElem) {
+//                    console.log("onEnter");
+//                    
+//                    //dropElem.className = \'uponMe\'
+//                }
+//            
+//                //Перемещение отменилось 
+//                dragManager.onDragCancel = function(dragObject) {
+////                    console.log(\'Cancel\');
+//                
+//                    dragObject.avatar.rollback();
+//                };
+//            
+//                //Перемещение удачно закончилось
+//                dragManager.onDragEnd = function(dragObject, dropElem) {
+////                    console.log(\'End\');
+////                    console.log(dragObject);
+////                    console.log(dropElem);
+////                    console.log(dragObject.elem.id+" in "+dropElem.id);
+//                    
+//                    showMoveApprove (dragObject, dropElem);
+//                    
+//                    
+////                  dragObject.elem.style.display = \'none\';
+////                  dropElem.classList.add(\'computer-smile\');
+//                  
+////                  setTimeout(function() {
+//////                    dropElem.classList.remove(\'computer-smile\');
+////                  }, 200);
+//                };
+
             </script>
             
             ';

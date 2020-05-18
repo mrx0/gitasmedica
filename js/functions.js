@@ -439,7 +439,7 @@
 
 	//попытка показать контекстное меню
 	function contextMenuShow(ind, key, event, mark){
-		//console.log(mark);
+		//console.log(event);
 
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
@@ -462,6 +462,15 @@
 
             dopReq.date = date;
             dopReq.filial_id = filial_id;
+            //console.log(dopReq);
+        }
+
+        if (mark == 'sclad_cat') {
+
+			var cat_id = target.attr('id').split('_')[1];
+            //console.log(cat_id);
+
+            dopReq.cat_id = cat_id;
             //console.log(dopReq);
         }
 
@@ -12104,6 +12113,54 @@
         })
     }
 
+    //Загрузка категорий склада
+    function getScladCategories (){
+
+        var link = "get_sclad_categories_f.php";
+
+        var reqData = {
+            type: 5
+        };
+        //console.log(reqData);
+
+        //Если надо выделить группу
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == 'success') {
+
+                    $("#sclad_cat_rezult").html(res.data);
+
+
+                    //!!! Правильный пример контекстного меню (правильный? точно? ну пока работает)
+
+                    var menuArea = document.querySelector(".tree");
+
+                    //if(menuArea){
+                        menuArea.addEventListener( "contextmenu", event => {
+                            event.preventDefault();
+
+                            contextMenuShow(0, 0, event, "sclad_cat");
+
+                        }, false);
+                    //}
+
+                }
+            }
+        })
+    }
+
     //Показываем блок для подтверждения переноса
     function showMoveApprove(item, target){
         //console.log(item);
@@ -12207,6 +12264,8 @@
                     //     //Теперь покрасим
                     //     $("#cat_"+pick_id).css({"background-color": "rgba(131, 219, 83, 0.5)"});
                     // }
+
+                    getScladCategories ();
 
                 }
             }
