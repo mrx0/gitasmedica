@@ -30,6 +30,7 @@
 
                 $dop_cat = '';
 
+                //Если хотим позиции определённой категории
                 if ($_POST['free'] !== 'true'){
                     $dop_cat = " AND sit.parent_id = '$cat_id'";
                 }
@@ -49,26 +50,30 @@
                 $number = mysqli_num_rows($res);
 
                 if ($number != 0) {
-                    $rezult .= 	'<table style="border: 1px solid #CCC;">';
+                    $rezult .= 	'<table style="/*border: 1px solid #CCC;*/ width: 100%;">';
+
+                    $border_top = 'border-top: 1px solid #CCC;';
 
                     while ($arr = mysqli_fetch_assoc($res)) {
                         //array_push($rezult_arr, $arr);
 
                         $rezult .= 	'
                             <tr id="item_'.$arr['id'].'" class="draggable sclad_item_tr">
-                                <td>#'.$arr['id'].'</td>
-								<td id="item_name_'.$arr['id'].'">'.$arr['name'].'</td>
-								<td>Срок годности</td>
-								<td>Гарантия</td>
-								<td>Описание</td>
-								<td>Кол-во</td>
+                                <td style="border-left: 1px solid #CCC; width: 60px;  text-align: left; '.$border_top.'">#'.$arr['id'].'</td>
+								<td id="item_name_'.$arr['id'].'" style="'.$border_top.'">'.$arr['name'].'</td>
+								<!--<td style="'.$border_top.'">Срок годности</td>
+								<td style="'.$border_top.'">Гарантия</td>
+								<td style="'.$border_top.'">Описание</td>-->
+								<td style="width: 60px; text-align: right; '.$border_top.'">5</td>
                             </tr>';
+
+                        $border_top = '';
 
                     }
                     $rezult .= 	'</table>';
                 }
 
-                echo json_encode(array('result' => 'success', 'data' => $rezult, 'query' => $query,  'post' => $_POST));
+                echo json_encode(array('result' => 'success', 'data' => $rezult, 'count' => $number));
 
             }
         }

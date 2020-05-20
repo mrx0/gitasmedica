@@ -487,9 +487,30 @@
                 //Для работы с категориями на складе
                 if ($_POST['mark'] == 'sclad_cat'){
                     $data .= '
-                            <li><div onclick="">Добавить категорию</div></li>
-                            <li><div onclick="">Добавить позицию</div></li>
-                    ';
+                            <li><div onclick="showScladCatItemAdd('.$_POST['ind'].', \'category\');">Добавить категорию</div></li>
+                            <li><div onclick="showScladCatItemAdd('.$_POST['ind'].', \'item\');">Добавить позицию</div></li>
+                            ';
+                    if ($_POST['key'] == 'dop'){
+                        $data .= '
+                            <li><div onclick="showScladCatItemEdit('.$_POST['ind'].', \'category\');">Редактировать</div></li>
+                            <!--<li><div onclick="showCatDelete('.$_POST['ind'].');">Пометить на удаление</div></li>-->
+                            ';
+                    }
+                }
+
+                //Для работы с позициями на складе
+                if ($_POST['mark'] == 'sclad_item'){
+                    $data .= '
+                            <li><div onclick="showScladCatItemAdd('.$_POST['ind'].', \'item\');">Добавить приход</div></li>
+                            <li><div onclick="showScladCatItemAdd('.$_POST['ind'].', \'item\');">Добавить перемещение</div></li>
+                            <li><div onclick="showScladCatItemAdd('.$_POST['ind'].', \'item\');">Добавить списание</div></li>
+                            ';
+                    //if ($_POST['key'] == 'dop'){
+                        $data .= '
+                            <li><div onclick="showScladCatItemEdit('.$_POST['ind'].', \'item\');">Редактировать</div></li>
+                            <!--<li><div onclick="showItemDelete('.$_POST['ind'].');">Пометить на удаление</div></li>-->
+                            ';
+                    //}
                 }
 
 				echo json_encode(array('result' => 'success', 'data' => $data));

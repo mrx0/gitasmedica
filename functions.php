@@ -1553,7 +1553,7 @@
 				$rez2 = array();
 				$arr3 = array();
 				$rez3 = array();
-				
+
 				/*if ($type == 'select'){
 					//echo $space.$value['name'].'<br>';
 					$selected = '';
@@ -1562,10 +1562,10 @@
 					}
 					echo '<option value="'.$value['id'].'" '.$selected.'>'.$space.$value['name'].'</option>';
 				}*/
-				
+
 				if ($type == 'return'){
 					//echo $space.$value['name'].'<br>';
-					
+
 					/*if ($value['level'] == 0) {
 						$style_name = 'font-size: 130%;';
 						$style_name .= $color_array[0];
@@ -1586,7 +1586,7 @@
 							$style_name .= 'background-color: rgba(225, 126, 255, 0.5);';
 						}*/
 					//}
-					
+
 					//Если не страховая
 					/*if ($insure_id == 0){
 						echo '
@@ -1605,7 +1605,7 @@
 							</div>
 						</li>';
 					}*/
-					
+
 					$query = "SELECT * FROM `{$dbtable}` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$deleted_str." ".$q_dop." ORDER BY `name`";			
 					//var_dump($query);
 
@@ -3102,57 +3102,85 @@
 		}
         //var_dump($sclad_rez);
 
-
 		//Если первый проход
 		if ($first){
             //var_dump($sclad_rez);
 
-			$rez_str .= '	
-					<div style="margin: 10px 0 5px; font-size: 11px; cursor: pointer;">
-						<!--<span class="dotyel a-action lasttreedrophide">скрыть всё</span>, <span class="dotyel a-action lasttreedropshow">раскрыть всё</span>-->
-					</div>';
-			$rez_str .= '	
-					<div style="/*width: 350px;*/ height: 600px; overflow-y: scroll; border: 1px solid #CCC;">
+            if ($type == 'list') {
+                $rez_str .= '	
 						<ol class="tree">
 						<li>
-							<label id="cat_0" class="droppable hover" onclick="getScladItems (0, 0, 50, false, true, 0); return;"><b>#0</b> Вне категории</label> <input type="checkbox" id="folder0" checked /> 
+							<label id="cat_0" class="droppable hover" onclick="getScladItems (0, 0, 50, false, true, 0); return;" cat_name=""><b>#0</b> Вне категории</label> <input type="checkbox" id="folder0" checked /> 
 						</li>';
+            }
+
+
 		}else{
-            $rez_str .= '<ol class="tree2">';
+            if ($type == 'list') {
+                $rez_str .= '<ol class="tree2">';
+            }
 		}
 
 		if (!empty($sclad_rez)){
 			foreach ($sclad_rez as $sclad_rez_value){
-				if ($sclad_rez_value['node_count'] > 0) {
-                    $rez_str .= '	
-						<li>
-							<label id="cat_'.$sclad_rez_value['id'].'" class="draggable droppable hover" onclick="getScladItems ('.$sclad_rez_value['id'].', 0, 50, false, true, '.$sclad_rez_value['id'].'); return;"><b>#' . $sclad_rez_value['id'] . '</b> ' . $sclad_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$sclad_rez_value['id'].'" checked />';
 
-					$rez_str .= showTreeSclad2($sclad_rez_value['id'], '', 'list', 0, FALSE, 0, FALSE, $dbtable, 0, 0, $msql_cnnct);
+                if ($type == 'list'){
 
-					$rez_str .= '	
-						</li>';
+					if ($sclad_rez_value['node_count'] > 0) {
+						$rez_str .= '	
+							<li>
+								<label id="cat_'.$sclad_rez_value['id'].'" class="draggable droppable hover" onclick="getScladItems ('.$sclad_rez_value['id'].', 0, 50, false, true, '.$sclad_rez_value['id'].'); return;" cat_name="' . $sclad_rez_value['name'] . '"><b>#' . $sclad_rez_value['id'] . '</b> ' . $sclad_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$sclad_rez_value['id'].'" checked />';
 
-				} else {
-                    $rez_str .= '	
-						<li>
-							<label id="cat_'.$sclad_rez_value['id'].'" class="draggable droppable hover" onclick="getScladItems ('.$sclad_rez_value['id'].', 0, 50, false, true, '.$sclad_rez_value['id'].'); return;"><b>#' . $sclad_rez_value['id'] . '</b> ' . $sclad_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$sclad_rez_value['id'].'" checked />';
-                    $rez_str .= '	
-						</li>';
+						$rez_str .= showTreeSclad2($sclad_rez_value['id'], '', 'list', 0, FALSE, 0, FALSE, $dbtable, 0, 0, $msql_cnnct);
+
+						$rez_str .= '	
+							</li>';
+
+					} else {
+						$rez_str .= '	
+							<li>
+								<label id="cat_'.$sclad_rez_value['id'].'" class="draggable droppable hover" onclick="getScladItems ('.$sclad_rez_value['id'].', 0, 50, false, true, '.$sclad_rez_value['id'].'); return;" cat_name="' . $sclad_rez_value['name'] . '"><b>#' . $sclad_rez_value['id'] . '</b> ' . $sclad_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$sclad_rez_value['id'].'" checked />';
+						$rez_str .= '	
+							</li>';
+					}
 				}
+
+                if ($type == 'select'){
+                    //echo $space.$value['name'].'<br>';
+
+                    $selected = '';
+                    if ($sclad_rez_value['id'] == $sel_id){
+                        $selected = ' selected';
+                    }
+                    $rez_str .= '<option value="'.$sclad_rez_value['id'].'" '.$selected.'>'.$space.$sclad_rez_value['name'].'</option>';
+
+                    $space2 = $space. '...';
+                    //$last_level2 = $last_level+1;
+
+                    $rez_str .= showTreeSclad2($sclad_rez_value['id'], $space2, 'select', $sel_id, FALSE, 0, FALSE, $dbtable, 0, 0, $msql_cnnct);
+                }
 			}
-			$rez_str .= '	
+
+            if ($type == 'list') {
+                $rez_str .= '	
 					</ol>';
+            }
+
+
 		}
 
 		if ($first){
-			$rez_str .= '	
-					</ol>
-				</div>';
+            if ($type == 'list') {
+				$rez_str .= '	
+					</ol>';
+            }
 		}
+
+
 
 		return $rez_str;
 	}
+
 
 	//Для контекстной менюшки для управления записью
     function contexMenuZapisMain ($zapisData, $filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $main_zapis, $title_time, $title_client, $title_descr){

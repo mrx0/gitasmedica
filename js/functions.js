@@ -445,6 +445,9 @@
 		$('*').removeClass('selected-html-element');
 		// Удаляем предыдущие вызванное контекстное меню:
 		$('.context-menu').remove();
+
+		//Запретить или разрешить показывать меню и отключить при этом стандартное контекстное меню
+        var finShow = true;
 		
 		// Получаем элемент на котором был совершен клик:
 		var target = $(event.target);
@@ -466,12 +469,43 @@
         }
 
         if (mark == 'sclad_cat') {
+            //console.log(target.attr('id'));
 
-			var cat_id = target.attr('id').split('_')[1];
-            //console.log(cat_id);
+            ind = 0;
 
-            dopReq.cat_id = cat_id;
-            //console.log(dopReq);
+            if ((target.attr('id') !== undefined) && (target.attr('id') !== 'sclad_cat_rezult')) {
+                ind = target.attr('id').split('_')[1];
+                //console.log(ind);
+            }
+
+            if (target.attr('id') !== 'sclad_cat_rezult') {
+                key = 'dop';
+            }
+        }
+
+        if (mark == 'sclad_item') {
+            //console.log(target.closest('tr').attr('id'));
+
+            ind = 0;
+
+            if (target.closest('tr').attr('id') !== undefined) {
+                event.preventDefault();
+
+                ind = target.closest('tr').attr('id').split('_')[1];;
+                console.log(ind);
+
+            }else{
+                finShow = false;
+            }
+
+            // if ((target.attr('id') !== undefined) && (target.attr('id') !== 'sclad_cat_rezult')) {
+            //     ind = target.attr('id').split('_')[1];
+            //     //console.log(ind);
+            // }
+            //
+            // if (target.attr('id') !== 'sclad_cat_rezult') {
+            //     key = 'dop';
+            // }
         }
 
         if ((mark == 'insure') || (mark == 'insureItem')){
@@ -576,7 +610,10 @@
 				}
 
                 // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
-				menu.show();
+                if (finShow) {
+                    //event.preventDefault();
+                    menu.show();
+                }
 		
 			}
 		});
@@ -12106,7 +12143,23 @@
 
                 if (res.result == 'success') {
 
-                    $("#sclad_items_rezult").html(res.data);
+                    if (cat_id == 0){
+                        if (free){
+
+                        }else {
+                            $("#cat_name_show").html("Вне категории");
+                            $("#cat_name_show").show();
+                        }
+                    }else {
+                        $("#cat_name_show").html($("#cat_" + cat_id).attr("cat_name"));
+                        $("#cat_name_show").show();
+                    }
+
+                    if (res.count > 0) {
+                        $("#sclad_items_rezult").html(res.data);
+                    }else{
+                        $("#sclad_items_rezult").html('<span style="color: red; font-weight: bold; font-size: 80%; margin-left: 20px;">Ничего нет в этой категории</span>');
+                    }
 
                 }
             }
@@ -12145,7 +12198,7 @@
 
                     //!!! Правильный пример контекстного меню (правильный? точно? ну пока работает)
 
-                    var menuArea = document.querySelector(".tree");
+/*                    var menuArea = document.querySelector(".tree");
 
                     //if(menuArea){
                         menuArea.addEventListener( "contextmenu", event => {
@@ -12154,7 +12207,7 @@
                             contextMenuShow(0, 0, event, "sclad_cat");
 
                         }, false);
-                    //}
+                    //}*/
 
                 }
             }
@@ -12250,7 +12303,7 @@
 
             },
             success: function (res) {
-                console.log (res);
+                //console.log (res);
 
                 if (res.result == 'success') {
 
@@ -12272,3 +12325,350 @@
         })
 
     }
+
+    //Показываем блок для добавления категории склада
+    // function showScladCategoryAdd(id){
+    //
+    //     // item.elem.style.display = 'none';
+    //     //
+    //     // if (item.elem.id.split('_')[0] == 'cat') {
+    //     //     moveScladItemInCategory(0, item.elem.id.split('_')[1], target.id.split('_')[1]);
+    //     // }
+    //     // if (item.elem.id.split('_')[0] == 'item') {
+    //     //     moveScladItemInCategory(item.elem.id.split('_')[1], 0, target.id.split('_')[1]);
+    //     // }
+    //
+    //     $('#overlay').show();
+    //
+    //     // var item_name = $("#item_name_"+item.elem.id.split('_')[1]).html();
+    //     // var target_name = $("#cat_"+target.id.split('_')[1]).html();
+    //
+    //     var buttonsStr = '<input type="button" class="b" value="Ok" onclick="alert(888);">';
+    //
+    //     // Создаем меню:
+    //     var menu = $('<div/>', {
+    //         class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+    //     })
+    //         .appendTo('#overlay')
+    //         .append(
+    //             $('<div/>')
+    //                 .css({
+    //                     "height": "100%",
+    //                     "border": "1px solid #AAA",
+    //                     "position": "relative",
+    //                 })
+    //                 .append('<span style="margin: 5px;"><i>Новая категория</i></span>')
+    //                 .append(
+    //                     $('<div/>')
+    //                         .css({
+    //                             "position": "absolute",
+    //                             "width": "100%",
+    //                             "margin": "auto",
+    //                             "top": "-10px",
+    //                             "left": "0",
+    //                             "bottom": "0",
+    //                             "right": "0",
+    //                             "height": "50%",
+    //                         })
+    //                         .append('<div style="margin: 10px;"><b style="color: orangered;"><i>'+id+'</i></b> в <b style="color: darkolivegreen;">'+id+'</b>')
+    //                 )
+    //                 .append(
+    //                     $('<div/>')
+    //                         .css({
+    //                             "position": "absolute",
+    //                             "bottom": "2px",
+    //                             "width": "100%",
+    //                         })
+    //                         .append(buttonsStr+
+    //                             '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
+    //                         )
+    //                 )
+    //         );
+    //
+    //     menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+    //
+    // }
+
+    //Показываем блок для добавления позиции склада
+    function showScladCatItemAdd(targetId, type){
+        // console.log(type);
+
+        var link = "get_sclad_cat_show_f.php";
+
+        var reqData = {
+            targetId: targetId
+        };
+
+        var descr = 'Новая позиция';
+
+        if (type == 'category'){
+            descr = 'Новая категория';
+        }
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == 'success') {
+
+
+                    $('#overlay').show();
+
+                    //var res = '12313213';
+
+                    var buttonsStr = '<input type="button" class="b" value="Ok" onclick="scladCatItemAdd('+targetId+', \''+type+'\');">';
+
+                    if (type == 'category'){
+                        buttonsStr = '<input type="button" class="b" value="Ok" onclick="scladCatItemAdd('+targetId+', \''+type+'\');">';
+                    }
+
+                    // Создаем меню:
+                    var menu = $('<div/>', {
+                        class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+                    })
+                        .css({
+                            "height": "300px"
+                        })
+                        .appendTo('#overlay')
+                        .append(
+                            $('<div/>')
+                                .css({
+                                    "height": "100%",
+                                    "border": "1px solid #AAA",
+                                    "position": "relative"
+                                })
+                                .append('<span style="margin: 5px;"><i>'+descr+'</i></span>')
+                                .append(
+                                    $('<div/>')
+                                        .css({
+                                            "position": "absolute",
+                                            "width": "100%",
+                                            "margin": "auto",
+                                            "top": "-110px",
+                                            "left": "0",
+                                            "bottom": "0",
+                                            "right": "0",
+                                            "height": "50%"
+                                        })
+                                        .append('<div style="margin-top: 3px;"><span style="font-size:90%; color: #333; ">Введите название</span><br><input name="newCatItemName" id="newCatItemName" type="text" value="" style="width: 250px; font-size: 120%;">')
+                                        .append('<div id="existCatItem" class="error"></div>')
+                                        .append(res.data)
+                                )
+                                .append(
+                                    $('<div/>')
+                                        .css({
+                                            "position": "absolute",
+                                            "bottom": "2px",
+                                            "width": "100%"
+                                        })
+                                        .append(buttonsStr+
+                                            '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
+                                        )
+                                )
+                        );
+
+                    menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+
+                }
+            }
+        })
+    }
+
+
+    //Показываем блок для добавления позиции склада
+    function showScladCatItemEdit(id, type){
+        // console.log(type);
+
+        $(".context-menu").remove();
+
+        if (type == 'category') {
+            var descr = 'Редактировать категорию';
+            var oldName = $("#cat_" + id).attr("cat_name");
+        }
+
+        if (type == 'item') {
+            var descr = 'Редактировать позицию';
+            var oldName = $("#item_name_"+id).html();
+        }
+        //console.log(oldName);
+
+        if (oldName.length > 0){
+
+            $('#overlay').show();
+
+            var buttonsStr = '<input type="button" class="b" value="Ok" onclick="scladCatItemEdit('+id+', \''+type+'\');">';
+
+            // Создаем меню:
+            var menu = $('<div/>', {
+                class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+            })
+                .css({
+                    "height": "300px"
+                })
+                .appendTo('#overlay')
+                .append(
+                    $('<div/>')
+                        .css({
+                            "height": "100%",
+                            "border": "1px solid #AAA",
+                            "position": "relative"
+                        })
+                        .append('<span style="margin: 5px;"><i>'+descr+'</i></span>')
+                        .append(
+                            $('<div/>')
+                                .css({
+                                    "position": "absolute",
+                                    "width": "100%",
+                                    "margin": "auto",
+                                    "top": "-110px",
+                                    "left": "0",
+                                    "bottom": "0",
+                                    "right": "0",
+                                    "height": "50%"
+                                })
+                                .append('<div style="margin-top: 3px;"><span style="font-size:90%; color: #333; ">Введите новое название</span><br><input name="newCatItemName" id="newCatItemName" type="text" value="'+oldName+'" style="width: 250px; font-size: 120%;">')
+                                .append('<div id="existCatItem" class="error"></div>')
+                        )
+                        .append(
+                            $('<div/>')
+                                .css({
+                                    "position": "absolute",
+                                    "bottom": "2px",
+                                    "width": "100%"
+                                })
+                                .append(buttonsStr+
+                                    '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
+                                )
+                        )
+                );
+
+            menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+
+        }
+
+    }
+
+    //Добавляем категорию или позицию в склад
+    function scladCatItemAdd(targetId, type){
+        //console.log();
+
+        hideAllErrors();
+
+        var link = "fl_sclad_cat_item_add_f.php";
+
+        var newCatItemName = $("#newCatItemName").val();
+        //console.log(newCatItemName);
+
+        if (newCatItemName.length > 0){
+            var reqData = {
+                name: newCatItemName,
+                type: type,
+                targetId: targetId
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+
+                },
+                success: function (res) {
+                    //console.log (res);
+
+                    $('.center_block').remove();
+                    $('#overlay').hide();
+
+                    if (res.result == 'success') {
+                        // console.log (res);
+
+                        getScladCategories ();
+
+                    } else {
+                        $("#existCatItem").html(res.data);
+                        $("#existCatItem").show();
+                    }scladCatItemEdit
+                }
+            })
+        }else{
+            $("#existCatItem").html('<span style="color: red; font-weight: bold;">Ничего не ввели</span>');
+            $("#existCatItem").show();
+        }
+
+    }
+
+
+    //Редактируем имя категории/позиции
+    function scladCatItemEdit(id, type){
+        //console.log();
+
+        hideAllErrors();
+
+        var link = "fl_sclad_cat_item_edit_f.php";
+
+        var newCatItemName = $("#newCatItemName").val();
+        //console.log(newCatItemName);
+
+        if (newCatItemName.length > 0){
+            var reqData = {
+                name: newCatItemName,
+                id: id,
+                type: type
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+
+                },
+                success: function (res) {
+                    //console.log (res);
+
+                    $('.center_block').remove();
+                    $('#overlay').hide();
+
+                    if (res.result == 'success') {
+                        //console.log (res);
+
+                        getScladCategories ();
+                        //getScladItems (cat, 0, 50, true);
+
+                        if (type == 'item') {
+                            $("#item_name_"+id).html(newCatItemName);
+                        }
+
+                    } else {
+                        $("#existCatItem").html(res.data);
+                        $("#existCatItem").show();
+                    }
+                }
+            })
+        }else{
+            $("#existCatItem").html('<span style="color: red; font-weight: bold;">Ничего не ввели</span>');
+            $("#existCatItem").show();
+        }
+
+    }
+
+

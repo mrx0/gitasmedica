@@ -79,7 +79,7 @@
                             //Если полмещаем не в дочерний элемент
                             if (!checkExistTreeParents ('spr_sclad_category', $_POST['cat_id'], $_POST['target_cat_id'])) {
 
-                                //Если бывший родитель указан не корень (0)
+                                //Если бывший родитель указан и это не корень (0)
                                 if ($parent_id_now != 0) {
 
                                     //Обновляем кол-во подкатегорий (node_count)
