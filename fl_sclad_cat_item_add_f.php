@@ -13,7 +13,7 @@
             include_once 'DBWork.php';
             include_once 'ffun.php';
 
-            if (!isset($_POST['name']) || !isset($_POST['type']) || !isset($_POST['targetId'])){
+            if (!isset($_POST['name']) || !isset($_POST['type']) || !isset($_POST['targetId']) || !isset($_POST['item_units_val'])){
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
             }else {
 
@@ -23,16 +23,18 @@
 
                 $time = date('Y-m-d H:i:s', time());
 
-                if ($_POST['type'] == 'category'){
-                    $dbtable = 'spr_sclad_category';
-                }else{
-                    $dbtable = 'spr_sclad_items';
-                }
-
                 //Добавляем позицию
-                $query = "INSERT INTO `$dbtable` (`name`, `parent_id`)
+                if ($_POST['type'] == 'category'){
+                    $query = "INSERT INTO `spr_sclad_category` (`name`, `parent_id`)
                                 VALUES (
                                 '{$_POST['name']}', '{$_POST['targetId']}');";
+                }else{
+                    $query = "INSERT INTO `spr_sclad_items` (`name`, `parent_id`, `unit`)
+                                VALUES (
+                                '{$_POST['name']}', '{$_POST['targetId']}', '{$_POST['item_units_val']}');";
+                }
+
+
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 

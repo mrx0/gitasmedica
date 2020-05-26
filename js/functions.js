@@ -492,7 +492,7 @@
                 event.preventDefault();
 
                 ind = target.closest('tr').attr('id').split('_')[1];;
-                console.log(ind);
+                //console.log(ind);
 
             }else{
                 finShow = false;
@@ -12393,17 +12393,32 @@
     function showScladCatItemAdd(targetId, type){
         // console.log(type);
 
-        var link = "get_sclad_cat_show_f.php";
-
-        var reqData = {
-            targetId: targetId
-        };
-
         var descr = 'Новая позиция';
 
         if (type == 'category'){
             descr = 'Новая категория';
         }
+
+        //Если позиция, спросим еще, про единицы измерения
+        var unit_select = '';
+
+        if (type == 'item'){
+            unit_select =
+                '<div style="margin-top: 20px;">' +
+                    '<select name="unit_sel" id="unit_sel" style="width: 200px;">'+
+                        '<option value="0">Выберите ед. измерения</option>' +
+                        '<option value="pc">штуки</option>' +
+                        '<option value="kg">килограммы</option>'+
+                        '<option value="l">литры</option>'+
+                    '</select>' +
+                '</div>';
+        }
+
+        var link = "get_sclad_cat_show_f.php";
+
+        var reqData = {
+            targetId: targetId
+        };
 
         $.ajax({
             url: link,
@@ -12460,7 +12475,7 @@
                                             "height": "50%"
                                         })
                                         .append('<div style="margin-top: 3px;"><span style="font-size:90%; color: #333; ">Введите название</span><br><input name="newCatItemName" id="newCatItemName" type="text" value="" style="width: 250px; font-size: 120%;">')
-                                        .append('<div id="existCatItem" class="error"></div>')
+                                        .append(unit_select)
                                         .append(res.data)
                                 )
                                 .append(
@@ -12470,6 +12485,7 @@
                                             "bottom": "2px",
                                             "width": "100%"
                                         })
+                                        .append('<div id="existCatItem" class="error"></div>')
                                         .append(buttonsStr+
                                             '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
                                         )
@@ -12491,6 +12507,9 @@
 
         $(".context-menu").remove();
 
+        //Если позиция, спросим еще, про единицы измерения
+        var unit_select = '';
+
         if (type == 'category') {
             var descr = 'Редактировать категорию';
             var oldName = $("#cat_" + id).attr("cat_name");
@@ -12499,8 +12518,19 @@
         if (type == 'item') {
             var descr = 'Редактировать позицию';
             var oldName = $("#item_name_"+id).html();
+
+            //console.log(oldName);
+
+            unit_select =
+                '<div style="margin-top: 20px;">' +
+                '<select name="unit_sel" id="unit_sel" style="width: 200px;">'+
+                '<option value="0">Выберите ед. измерения</option>' +
+                '<option value="pc">штуки</option>' +
+                '<option value="kg">килограммы</option>'+
+                '<option value="l">литры</option>'+
+                '</select>' +
+                '</div>';
         }
-        //console.log(oldName);
 
         if (oldName.length > 0){
 
@@ -12537,7 +12567,7 @@
                                     "height": "50%"
                                 })
                                 .append('<div style="margin-top: 3px;"><span style="font-size:90%; color: #333; ">Введите новое название</span><br><input name="newCatItemName" id="newCatItemName" type="text" value="'+oldName+'" style="width: 250px; font-size: 120%;">')
-                                .append('<div id="existCatItem" class="error"></div>')
+                                .append(unit_select)
                         )
                         .append(
                             $('<div/>')
@@ -12546,6 +12576,7 @@
                                     "bottom": "2px",
                                     "width": "100%"
                                 })
+                                .append('<div id="existCatItem" class="error"></div>')
                                 .append(buttonsStr+
                                     '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
                                 )
@@ -12554,6 +12585,14 @@
 
             menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
 
+            //Выделяем пункт в select единиц измерения (Если позиция)
+            if (type == 'item') {
+                //!!! Поиск по аттрибуту в DOM
+                //!!! Выбор пунтка в select
+                var item_unit = $('[item_unit_' + id + ']').attr('item_unit_' + id);
+
+                document.querySelector('#unit_sel').value = item_unit;
+            }
 
         }
 
@@ -12565,46 +12604,76 @@
 
         hideAllErrors();
 
-        var link = "fl_sclad_cat_item_add_f.php";
-
         var newCatItemName = $("#newCatItemName").val();
         //console.log(newCatItemName);
 
-        if (newCatItemName.length > 0){
-            var reqData = {
-                name: newCatItemName,
-                type: type,
-                targetId: targetId
-            };
-            //console.log(reqData);
+        //Если будет позиция, то указываем еще и ед.изм.
+        var item_units = false;
+        var item_units_val = 0;
 
-            $.ajax({
-                url: link,
-                global: false,
-                type: "POST",
-                dataType: "JSON",
-                data: reqData,
-                cache: false,
-                beforeSend: function () {
+        if (type == 'item'){
+            if ($("#unit_sel").val() == 0) {
+                item_units = false;
+            }else{
+                item_units = true;
+                item_units_val = $("#unit_sel").val();
+            }
+        }else{
+            item_units = true;
+        }
 
-                },
-                success: function (res) {
-                    //console.log (res);
+        if (newCatItemName.trim().length > 0){
+            if (item_units) {
 
-                    $('.center_block').remove();
-                    $('#overlay').hide();
+                var link = "fl_sclad_cat_item_add_f.php";
 
-                    if (res.result == 'success') {
-                        // console.log (res);
+                var reqData = {
+                    name: newCatItemName.trim(),
+                    type: type,
+                    targetId: targetId,
+                    item_units_val: item_units_val
+                };
+                //console.log(reqData);
 
-                        getScladCategories ();
+                $.ajax({
+                    url: link,
+                    global: false,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: reqData,
+                    cache: false,
+                    beforeSend: function () {
 
-                    } else {
-                        $("#existCatItem").html(res.data);
-                        $("#existCatItem").show();
-                    }scladCatItemEdit
-                }
-            })
+                    },
+                    success: function (res) {
+                        //console.log (res);
+
+                        $('.center_block').remove();
+                        $('#overlay').hide();
+
+                        if (res.result == 'success') {
+                            // console.log (res);
+
+                            //Если категория, перезагрузим их
+                            if (type == 'category') {
+                                getScladCategories();
+                            }
+
+                            //Если позиция, загрузим позиции этой категории
+                            if (type == 'item') {
+                                getScladItems(targetId, 0, 50, false, true, targetId);
+                            }
+
+                        } else {
+                            $("#existCatItem").html(res.data);
+                            $("#existCatItem").show();
+                        }
+                    }
+                })
+            }else{
+                $("#existCatItem").html('<span style="color: red; font-weight: bold;">Выберите единицы измерения</span>');
+                $("#existCatItem").show();
+            }
         }else{
             $("#existCatItem").html('<span style="color: red; font-weight: bold;">Ничего не ввели</span>');
             $("#existCatItem").show();
@@ -12619,51 +12688,88 @@
 
         hideAllErrors();
 
-        var link = "fl_sclad_cat_item_edit_f.php";
+        //!!! Объявим локальный объект для этой ф-ции. потом может исправим и вынесем выше в для всех
+        //Еденицы измерения
+        let units = {
+            pc: 'шт.',
+            kg: 'кг.',
+            l: 'л.',
+        }
 
         var newCatItemName = $("#newCatItemName").val();
         //console.log(newCatItemName);
 
-        if (newCatItemName.length > 0){
-            var reqData = {
-                name: newCatItemName,
-                id: id,
-                type: type
-            };
-            //console.log(reqData);
+        //Если будет позиция, то указываем еще и ед.изм.
+        var item_units = false;
+        var item_units_val = 0;
 
-            $.ajax({
-                url: link,
-                global: false,
-                type: "POST",
-                dataType: "JSON",
-                data: reqData,
-                cache: false,
-                beforeSend: function () {
+        if (type == 'item'){
+            if ($("#unit_sel").val() == 0) {
+                item_units = false;
+            }else{
+                item_units = true;
+                item_units_val = $("#unit_sel").val();
+            }
+        }else{
+            item_units = true;
+        }
+        //console.log(item_units);
 
-                },
-                success: function (res) {
-                    //console.log (res);
+        if (newCatItemName.trim().length > 0){
+            //console.log(newCatItemName.trim().length);
 
-                    $('.center_block').remove();
-                    $('#overlay').hide();
+            if (item_units) {
 
-                    if (res.result == 'success') {
+                var link = "fl_sclad_cat_item_edit_f.php";
+
+                var reqData = {
+                    name: newCatItemName.trim(),
+                    id: id,
+                    type: type,
+                    item_units_val: item_units_val
+                };
+                //console.log(reqData);
+
+                $.ajax({
+                    url: link,
+                    global: false,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: reqData,
+                    cache: false,
+                    beforeSend: function () {
+
+                    },
+                    success: function (res) {
                         //console.log (res);
 
-                        getScladCategories ();
-                        //getScladItems (cat, 0, 50, true);
+                        $('.center_block').remove();
+                        $('#overlay').hide();
 
-                        if (type == 'item') {
-                            $("#item_name_"+id).html(newCatItemName);
+                        if (res.result == 'success') {
+                            //console.log (res);
+
+                            getScladCategories ();
+                            //getScladItems (cat, 0, 50, true);
+
+                            if (type == 'item') {
+                                //Обновим имя, не обновляя страницу
+                                $('#item_name_'+id).html(newCatItemName);
+                                //Обновим ед.изм., не обновляя страницу
+                                $('[item_unit_'+id+']').attr('item_unit_'+id, item_units_val);
+                                $('[item_unit_'+id+']').html(units[item_units_val]);
+                            }
+
+                        } else {
+                            $("#existCatItem").html(res.data);
+                            $("#existCatItem").show();
                         }
-
-                    } else {
-                        $("#existCatItem").html(res.data);
-                        $("#existCatItem").show();
                     }
-                }
-            })
+                })
+            }else {
+                $("#existCatItem").html('<span style="color: red; font-weight: bold;">Выберите единицы измерения</span>');
+                $("#existCatItem").show();
+            }
         }else{
             $("#existCatItem").html('<span style="color: red; font-weight: bold;">Ничего не ввели</span>');
             $("#existCatItem").show();

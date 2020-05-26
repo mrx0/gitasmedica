@@ -13,7 +13,7 @@
             include_once 'DBWork.php';
             include_once 'ffun.php';
 
-            if (!isset($_POST['name']) || !isset($_POST['id']) || !isset($_POST['type'])){
+            if (!isset($_POST['name']) || !isset($_POST['id']) || !isset($_POST['type']) || !isset($_POST['item_units_val'])){
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
             }else {
 
@@ -24,12 +24,12 @@
                 $time = date('Y-m-d H:i:s', time());
 
                 if ($_POST['type'] == 'category') {
-                    $dbtable = 'spr_sclad_category';
+                    $query = "UPDATE `spr_sclad_category` SET `name` = '{$_POST['name']}' WHERE `id` ='{$_POST['id']}'";
                 }else{
-                    $dbtable = 'spr_sclad_items';
+                    $query = "UPDATE `spr_sclad_items` SET `name` = '{$_POST['name']}', `unit`='{$_POST['item_units_val']}' WHERE `id` ='{$_POST['id']}'";
                 }
 
-                $query = "UPDATE `$dbtable` SET `name` = '{$_POST['name']}' WHERE `id` ='{$_POST['id']}'";
+
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 

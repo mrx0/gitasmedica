@@ -62,6 +62,7 @@
 	$rezult = SelDataFromDB('spr_workers', $login, 'login');
 	//извлекаем из базы все данные о пользователе с введенным логином
 	//var_dump ($rezult);
+
     if ($rezult !=0){
 		if (empty($rezult[0]['password'])){
 			//если пользователя с введенным логином не существует

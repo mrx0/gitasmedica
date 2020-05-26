@@ -972,7 +972,7 @@
 		return $sanat;
 	}
 	
-	function selectDate ($selD, $selM, $selY){
+	function selectDate ($selD, $selM, $selY, $yStart=0, $selIndex=0){
 		//var_dump($selD);
 		//var_dump($selM);
 		//var_dump($selY);
@@ -996,9 +996,19 @@
 		
 		$i = 1;
 		$j = 1920;
+
+		if ($yStart != 0){
+            $j = $yStart;
+		}
+
+		$index = '';
+
+		if ($selIndex != 0){
+            $index = $selIndex;
+		}
 		
 		//День
-		$result .= '<select name="sel_date" id="sel_date">';
+		$result .= '<select name="sel_date'.$index.'" id="sel_date'.$index.'">';
 		$result .= '<option value="00">00</option>';
 		while ($i <= 31) {
 			if ($selD == $i) $selected = ' selected'; else $selected = '';
@@ -1009,7 +1019,7 @@
 		$result .= '</select>';
 		
 		// Месяц
-		$result .= '<select name="sel_month" id="sel_month">';
+		$result .= '<select name="sel_month'.$index.'" id="sel_month'.$index.'">';
 		$result .= '<option value="00">---</option>';
 		foreach ($month as $m => $n) {
 			if ($selM == $m+1) $selected = ' selected'; else $selected = '';
@@ -1019,7 +1029,7 @@
 		$result .= '</select>';
 		
 		// Год
-		$result .= '<select name="sel_year" id="sel_year">';
+		$result .= '<select name="sel_year'.$index.'" id="sel_year'.$index.'">';
 		$result .= '<option value="0000">0000</option>';
 		while ($j <= 2020) {
 			if ($selY == $j) $selected = ' selected'; else $selected = '';

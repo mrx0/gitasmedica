@@ -2002,7 +2002,7 @@ input.dateс {
 }
 
 /* Стили для ссылок пунктов меню: */
-.context-menu ul li div {
+.context-menu ul li div, a.ahref_context {
 	color: #333;
 	text-decoration: none;
 	font-size: 11px;
@@ -2010,10 +2010,11 @@ input.dateс {
 	padding: 3px;
 	cursor: pointer;
 }
-            
-.context-menu ul li div:hover {
+
+.context-menu ul li div:hover, a.ahref_context:hover {
 	background-color: #eee;
 }
+
 
 .center_block {
     /*width: 200px; /* Ширина элемента в пикселах */
@@ -2739,7 +2740,7 @@ tr{
 
 ol.tree
 {
-	padding: 0 0 0 30px;
+	/*padding: 0 0 0 30px;*/
 	width: 300px;
 }
 
@@ -2841,9 +2842,10 @@ li input:checked + ol > li:last-child {
 	border-bottom: 1px solid #CCC;
 	border-right: 1px solid #CCC;
 	/*vertical-align: top;*/
-	padding: 2px 8px 2px 1px;
+	padding: 2px 5px 1px 2px;
 	font-size: 88%;
 	text-align: left;
+	overflow: hidden;
 }
 
 /*Для переноса DnD*/
@@ -2858,11 +2860,9 @@ li input:checked + ol > li:last-child {
 	background-color: rgba(201, 243, 227, 0.5);
 }
 
-/*.droppable .hover:hover {
-	color: red;
-	font-weight: bold;
-	cursor: pointer;
-}*/
+.context_pick {
+	background-color: rgba(201, 243, 227, 0.5);
+}
 
 /*Стиль для склада, выделение при переносе dnd*/
 .uponMe
@@ -2876,8 +2876,8 @@ li input:checked + ol > li:last-child {
 
 /*Стиль для склада (поиск похожих, ошибки) при добавлении*/
 #existCatItem {
-	position: absolute;
-	left: 35%;
+/*	position: absolute;
+	left: 35%;*/
 	/*top: 0%;*/
 }
 

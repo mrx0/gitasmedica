@@ -78,9 +78,9 @@
 				</script>';
 
 			echo '
-						<div id="data">
-							<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
-                            </ul>';
+                <div id="data">
+                    <ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
+                    </ul>';
 			/*echo '
 								<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
 								<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
@@ -140,46 +140,39 @@
             //***
 
             echo '
-                <div style="display: inline-block; border: 1px solid #c5c5c5; position: relative; vertical-align: top;">';
+                    <div style="white-space: nowrap;">
+                        <div style="display: inline-block; border: 1px solid #c5c5c5; position: relative; vertical-align: top;">
+                            
+                            <div style="margin: 5px 0 5px; font-size: 11px; cursor: pointer;">
+                            <!--<span class="dotyel a-action lasttreedrophide">скрыть всё</span>, <span class="dotyel a-action lasttreedropshow">раскрыть всё</span>-->
+                            </div>
+                            
+                            <div id="sclad_cat_rezult" style="width: 350px; max-width: 350px; min-width: 350px; height: 600px; overflow: hidden;">
+                            
+                            </div>
+                        </div>
+                        
+                        <div style="display: inline-block; border: 1px solid #c5c5c5; position: relative;">
+                            
+                            <div style="margin: 5px 0 5px; font-size: 11px; cursor: pointer;">
+                                <span id="cat_name_show"></span>
+                            </div>
+                            
+                            <div id="sclad_items_rezult" style="width: 700px; max-width: 700px; min-width: 700px; height: 600px;">
+                            
+                            </div>
 
-            echo '	
-                    <div style="margin: 5px 0 5px; font-size: 11px; cursor: pointer;">
-                        <!--<span class="dotyel a-action lasttreedrophide">скрыть всё</span>, <span class="dotyel a-action lasttreedropshow">раскрыть всё</span>-->
+                        </div>
                     </div>';
 
             echo '
-                    <div id="sclad_cat_rezult" style="width: 350px; max-width: 350px; min-width: 350px; height: 600px;">
+                    <div style="white-space: nowrap;">
+                        Набор
                     </div>';
-
-            echo '
-                </div>';
-
-
-            echo '
-                <div style="display: inline-block; border: 1px solid #c5c5c5; position: relative;">';
-
-            echo '	
-                    <div style="margin: 5px 0 5px; font-size: 11px; cursor: pointer;">
-                        <span id="cat_name_show"></span>
-                    </div>';
-
-            echo '
-                    <div id="sclad_items_rezult" style="width: 600px; max-width: 600px; min-width: 600px; height: 600px;">
-                    </div>';
-
-            echo '		
-
-                </div>';
-
-
-//            var_dump( checkExistTreeParents ('spr_sclad_category', 3, 2));
-
 
 			echo '
 
-						</div>
-	
-						';
+                </div>';
 
 
 			//var_dump(checkExistTreeParents ('spr_sclad_category', 2, 3));
@@ -218,25 +211,41 @@
 
                     var scladCategories = document.querySelector("#sclad_cat_rezult");
 
-                    //if(menuArea){
-                        scladCategories.addEventListener("contextmenu", event => {
-                            event.preventDefault();
+                    scladCategories.addEventListener("contextmenu", event => {
+                        //console.log($(event.target).attr("id"));
+                        
+                        event.preventDefault();
+                        
+//                        //Сначала очищаем у всех окраску
+//                        $(".droppable, .draggable").removeClass("context_pick");
+//                        //Теперь покрасим
+//                        if (event.target.classList.contains("droppable")){ 
+//                            $(event.target).addClass("context_pick");
+//                        }
 
-                            contextMenuShow(0, 0, event, "sclad_cat");
+                        contextMenuShow(0, 0, event, "sclad_cat");
 
-                        }, false);
-                    //}
+                    }, false);
                     
                     var scladItems = document.querySelector("#sclad_items_rezult");
 
-                    //if(menuArea){
-                        scladItems.addEventListener("contextmenu", event => {
-                            //event.preventDefault();
+                    scladItems.addEventListener("contextmenu", event => {
+                        //console.log(event.target.closest("tr"));
 
-                            contextMenuShow(0, 0, event, "sclad_item");
+                        //event.preventDefault();
+                       
+//                        //Сначала очищаем у всех окраску
+//                        $(".droppable, .draggable").removeClass("context_pick");
+//                        //Теперь покрасим
+//                        if (event.target.closest("tr") != null){
+//                            if (event.target.closest("tr").classList.contains("draggable")){ 
+//                                $(event.target.closest("tr")).addClass("context_pick");
+//                            }
+//                        }
 
-                        }, false);
-                    //}
+                        contextMenuShow(0, 0, event, "sclad_item");
+
+                    }, false);
 
             </script>
             

@@ -27,7 +27,7 @@
                 }
 
                 $rezult .= '
-                    <div style="margin-top: 60px;">
+                    <div style="margin-top: 20px;">
                         <span style="font-size:90%; color: #333; ">Категория, куда добавим</span><br>
 						<select name="scladCategory" id="scladCategory" size="6" style="width: 250px;">
 							<option value="0" '.$selected.'>Вне категории</option>';
