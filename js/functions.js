@@ -12107,7 +12107,8 @@
     }
 
     //Загрузка элементов склада
-    function getScladItems (cat_id, start, limit, free=true, pick=false, pick_id=-1){
+    function getScladItems (cat_id, start, limit, free=true, pick=false, pick_id=-1, search_data=''){
+        //Для позиции ВООБЩЕ СОВСЕМ БЕЗ категории free == 'true'
 
         var link = "get_sclad_items_f.php";
 
@@ -12115,11 +12116,12 @@
             cat_id: cat_id,
             start: start,
             limit: limit,
-            free: free
+            free: free,
+            search_data: search_data
         };
-        //console.log(reqData);
+        // console.log(reqData);
 
-        //Если надо выделить группу
+        //Если надо выделить группу c id == pick_id
         if (pick){
             //Сначала очищаем у всех окраску
             $(".droppable").css({"background-color": ""});
@@ -12139,13 +12141,17 @@
 
             },
             success: function (res) {
-                //console.log (res);
+                // console.log (res);
 
                 if (res.result == 'success') {
 
                     if (cat_id == 0){
                         if (free){
-
+                            //Если поиск по фразе делаем
+                            if (search_data.length > 0){
+                                $("#cat_name_show").html("Результат поиска");
+                                $("#cat_name_show").show();
+                            }
                         }else {
                             $("#cat_name_show").html("Вне категории");
                             $("#cat_name_show").show();
@@ -12158,7 +12164,7 @@
                     if (res.count > 0) {
                         $("#sclad_items_rezult").html(res.data);
                     }else{
-                        $("#sclad_items_rezult").html('<span style="color: red; font-weight: bold; font-size: 80%; margin-left: 20px;">Ничего нет в этой категории</span>');
+                        $("#sclad_items_rezult").html('<span style="color: red; font-weight: bold; font-size: 80%; margin-left: 20px;">Ничего не найдено</span>');
                     }
 
                 }
@@ -12517,7 +12523,7 @@
 
         if (type == 'item') {
             var descr = 'Редактировать позицию';
-            var oldName = $("#item_name_"+id).html();
+            var oldName = $("#item_name_"+id).attr("item_name");
 
             //console.log(oldName);
 
@@ -12775,6 +12781,125 @@
             $("#existCatItem").show();
         }
 
+    }
+
+    //Добавление в сессию данных по складским позициям, с которыми будем работать (ID)
+    function addScladItemsSetINSession(item_id, status){
+        // console.log(item_id);
+        // console.log(status);
+
+        var link = "addScladItemsSetINSession.php";
+
+        var reqData = {
+            item_id: item_id,
+            status: status
+        };
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == "success") {
+                    // console.log (res);
+
+                    //Показать выбранные позиции
+                    fillScladItemsInSet ();
+
+                }else{
+                    //--
+                }
+            }
+        })
+    }
+
+    //Показывает выбранные позиции из сессии
+    function fillScladItemsInSet (){
+        var link = "fill_sclad_items_in_set_f.php";
+
+        //Хоть что-то передадим
+        var reqData = {
+            type: 0
+        };
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == "success") {
+                    // console.log (res);
+
+                    if (res.count > 0) {
+                        $("#sclad_items_in_set_rezult").html(res.data);
+                        $("#sclad_items_in_set").show();
+                    }else{
+                        $("#sclad_items_in_set_rezult").html('<span style="color: red; font-weight: bold; font-size: 80%; margin-left: 20px;">Ничего нет</span>');
+                        $("#sclad_items_in_set").hide();
+                    }
+
+                    $("#itemInSetCount").html(res.count);
+
+                }else{
+                    //--
+                }
+            }
+        })
+    }
+
+    //Удалить текущую позицию из набора
+    function deleteScladItemsFromSet(ind=0){
+        // console.log(ind);
+
+        var link = "delete_sclad_item_from_set_f.php";
+
+        var reqData = {
+            item_id: ind
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+
+                //Показать выбранные позиции
+                fillScladItemsInSet ();
+
+                if (ind != 0) {
+                    $("#selected_item_" + ind).prop("checked", false);
+                }
+
+                // if(res.result == "success"){
+                //     //console.log(111);
+                // }
+            }
+        });
     }
 
 

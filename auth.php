@@ -22,6 +22,8 @@
     unset($_SESSION['fl_calcs_tabels2']);
     unset($_SESSION['scheduler3']);
     unset($_SESSION['subtraction_data']);
+    //!!! Для склада
+    unset($_SESSION['sclad']);
 
 	//вся процедура работает на сессиях. Именно в ней хранятся данные  пользователя, пока он находится на сайте. Очень важно запустить их в  самом начале странички!!!
 	if (isset($_POST['login'])){

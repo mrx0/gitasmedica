@@ -107,6 +107,19 @@
                             </div>
                         </div>';
 
+
+        //Данные из сессии
+
+
+        if (isset($_SESSION['sclad'])) {
+            if (!empty($_SESSION['sclad']['items_data'])) {
+
+                var_dump($_SESSION['sclad']['items_data']);
+
+            }
+        }
+
+
         echo '			
                                                 <div  style="display: inline-block;/* width: 380px; height: 600px;*/">';
 

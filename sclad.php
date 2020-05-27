@@ -53,87 +53,18 @@
 			echo '
 				<header>
 					<h1>Склад</h1>
-						<!--<div>
-							<span style="font-size: 80%; color: #AAA">Перейти к прайсу страховой</span><br>';
-			echo '
-							<select name="insurecompany" id="insurecompany">
-								<option value="0">Выберите страховую</option>';
-			$insures_j = SelDataFromDB('spr_insure', '', '');
-
-			if ($insures_j != 0){
-				for ($i=0;$i<count($insures_j);$i++){
-                    echo "<option value='".$insures_j[$i]['id']."'>".$insures_j[$i]['name']."</option>";
-			    }
-			}
-			echo '
-							</select>
-							<span class="button_tiny" style="font-size: 90%; cursor: pointer" onclick="iWantThisInsurePrice()"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
-						</div>-->
 				</header>';
 
 			//переменная, чтоб вкл/откл редактирование
-			echo '
-				<script>
-					var iCanManage = false;
-				</script>';
+//			echo '
+//				<script>
+//					var iCanManage = false;
+//				</script>';
 
 			echo '
                 <div id="data">
                     <ul class="live_filter" id="livefilter-list" style="margin-left:6px;">
                     </ul>';
-			/*echo '
-								<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
-								<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-									<a href="?who=stom" class="b">Стоматологи</a>
-									<a href="?who=cosm" class="b">Косметологи</a>
-								</li>';*/
-
-//			if (($items['add_new'] == 1) || $god_mode){
-//				echo '
-//					<a href="add_pricelist_item.php" class="b">Добавить позицию</a>';
-//				echo '
-//					<a href="add_pricelist_group.php?'.$who.'" class="b">Добавить группу/подгруппу</a>';
-//			}
-//
-//            if (($items['edit'] == 1) || $god_mode){
-//                echo '
-//								<div class="no_print">
-//								<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
-//									<div style="cursor: pointer;" onclick="manageScheduler()">
-//										<span style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">Управление</span> <i class="fa fa-cog" title="Настройки"></i>
-//									</div>
-//    						        <div id="DIVdelCheckedItems" style="display: none; width: 400px; margin-bottom: 10px; border: 1px dotted #BFBCB5; padding: 20px 10px 10px; background-color: #EEE;">
-//    						            Переместить выбранные позиции в группу<br>
-//    	    							<!--<input type="button" class="b" value="Удалить" onclick="if (iCanManage) Ajax_change_shed()">-->
-//    	    							<input type="button" class="b" value="Переместить" onclick="showMoveCheckedItems();">
-//    	    							<div id="errrror"></div>
-//    							    </div>
-//								</li>
-//								</div>';
-//                //managePriceList
-//            }
-
-			/*echo '
-								<p style="margin: 5px 0; padding: 2px;">
-									Быстрый поиск:
-									<input type="text" class="filter" name="livefilter" id="livefilter-input" value="" placeholder="Поиск"/>
-								</p>';*/
-			/*echo '
-								<li class="cellsBlock" style="font-weight:bold; width: auto;">
-									<div class="cellPriority" style="text-align: center"></div>
-									<div class="cellName" style="text-align: center; width: 350px; min-width: 350px; max-width: 350px;">Наименование</div>
-									<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">Цена, руб.</div>
-								</li>';*/
-
-			//$services_j = SelDataFromDB('spr_pricelist_template', 'services', $type);
-			//var_dump ($services_j);
-
-//			$arr = array();
-//			$rez = array();
-//			$arr4 = array();
-//			$rez4 = array();
-//			$arr3 = array();
-//			$rez3 = array();
 
             $msql_cnnct = ConnectToDB();
 
@@ -147,18 +78,30 @@
                             <!--<span class="dotyel a-action lasttreedrophide">скрыть всё</span>, <span class="dotyel a-action lasttreedropshow">раскрыть всё</span>-->
                             </div>
                             
-                            <div id="sclad_cat_rezult" style="width: 350px; max-width: 350px; min-width: 350px; height: 600px; overflow: hidden;">
+                            <div id="sclad_cat_rezult" style="width: 350px; max-width: 350px; min-width: 350px; height: 500px; overflow: hidden;">
                             
                             </div>
                         </div>
                         
-                        <div style="display: inline-block; border: 1px solid #c5c5c5; position: relative;">
-                            
+                        <div style="display: inline-block; border: 1px solid #c5c5c5; position: relative;">';
+
+            echo '
+                            <div style="box-shadow: -1px 1px 5px rgba(51, 51, 51, 0.32); position: relative;">
+                                <!--<i class="fa fa-search" aria-hidden="true"></i>-->
+                                <!--<input type="text" id="" name="" class="" placeholder="&#xF002;" value="">-->
+                                
+                                <!--!!!Пример замена placeholder на иконку fontawesome плейсхолдер-->
+                                <input type="text" name="search_sclad_items" id="search_sclad_items" placeholder="&#xF002;" value="" class="" style="font-family:Verdana, FontAwesome; width: 99%;" autocomplete="off">
+                                <!--<div class="button_in_input" onclick=clearSearchInput();><i class="fa fa-times" aria-hidden="true" style="color: #CCC; font-size: 130%;" title="Очистить"></i></div>-->
+                            </div>';
+
+
+            echo '
                             <div style="margin: 5px 0 5px; font-size: 11px; cursor: pointer;">
                                 <span id="cat_name_show"></span>
                             </div>
                             
-                            <div id="sclad_items_rezult" style="width: 700px; max-width: 700px; min-width: 700px; height: 600px;">
+                            <div id="sclad_items_rezult" style="width: 700px; max-width: 700px; min-width: 700px; height: 479px;">
                             
                             </div>
 
@@ -166,8 +109,34 @@
                     </div>';
 
             echo '
-                    <div style="white-space: nowrap;">
-                        Набор
+                    <div style="white-space: nowrap;">';
+            echo '
+                        <div id="sclad_items_in_set" style="display: none; width: 700px; border: 1px solid #c5c5c5; border-radius: 3px; position: relative;">';
+
+        echo '
+                            <div id="errror" class="invoceHeader" style="position: relative; padding: 5px 10px;">
+                                <div>
+                                    <div style="">Выбрано позиций: <span id="itemInSetCount" style="">0</span> шт.</div>
+                                </div>
+                                <div style="font-size: 11px;">
+                                    <div>
+                                        <a href="sclad_prihod_add.php" class="ahref b">Добавить приход</a>
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: 10px; right: 10px; font-size: 11px;">
+                                     <div class="settings_text" onclick="deleteScladItemsFromSet();">Очистить всё</div>
+                                </div>';
+
+        echo '
+                            </div>';
+
+
+        echo '
+                            <div id="sclad_items_in_set_rezult" style="max-height: 260px; overflow-y: scroll; overflow-x: hidden; float: none">
+                            </div>';
+        echo '
+                        </div>';
+        echo '
                     </div>';
 
 			echo '
@@ -179,6 +148,15 @@
 
             CloseDB ($msql_cnnct);
 
+//            var_dump($_SESSION['sclad']['items_data']);
+//            var_dump(array_search($_SESSION['sclad']['items_data'][18], $_SESSION['sclad']['items_data']));
+//            var_dump(in_array(13, $_SESSION['sclad']['items_data']));
+//            unset($array[array_search($_SESSION['sclad']['items_data'], $_SESSION['sclad']['items_data'])]);
+//            unset($_SESSION['sclad']['items_data']['13']);
+//            var_dump($_SESSION['sclad']['items_data']);
+
+
+            //unset($_SESSION['sclad']['items_data'][$_POST['item_id']]);
 
             echo '	
 			<!-- Подложка только одна -->
@@ -197,8 +175,59 @@
 				    
 				    getScladCategories ();
 				    getScladItems (0, 0, 50, true);
+				    //Показать выбранные позиции
+				    fillScladItemsInSet ();
 
-				});				
+				});	
+
+                //Живой поиск
+                $("#search_sclad_items").bind("change keyup input click", function() {
+                    //console.log($(this).val());
+            
+//                    if(this.value.length > 0){
+//                        $(".button_in_input").show();
+//                    }else {
+//                        $(".button_in_input").hide();
+//                    }
+            
+                    if($(this).val().length > 0){
+//                        console.log($(this).val());
+                        
+                        getScladItems (0, 0, 50, true, false, -1, $(this).val());
+                                //(cat_id, start, limit, free=true, pick=false, pick_id=-1, search=\'\')
+                        
+//                        $.ajax({
+//                            url: "FastSearchNameFC.php", //Путь к обработчику
+//                            //statbox:"status",
+//                            type:"POST",
+//                            data:
+//                            {
+//                                \'searchdata\':this.value
+//                            },
+//                            response: \'text\',
+//                            success: function(data){
+//                                //$(".search_result_fc").html(data).fadeIn(); //Выводим полученые данные в списке
+//                                $("#search_result_fc2").html(data); //Выводим полученые данные в списке
+//                            }
+//                        })
+//            
+                    }/*else{
+                        $("#search_result_fc2").html("");
+                        //var elemFC2 = $("#search_result_fc2"); 
+                        //elemFC2.hide();
+                    }*/
+                })
+                    
+//                $(".search_result_fc").hover(function(){
+//                    $(".who_fc").blur(); //Убираем фокус с input
+//                })
+
+                $("#search_sclad_items" ).blur(function() {
+                    $("#search_sclad_items").val("");
+                });
+
+				
+				
                 
             </script>
             
@@ -246,6 +275,21 @@
                         contextMenuShow(0, 0, event, "sclad_item");
 
                     }, false);
+                    
+                    
+                    
+                    //Выбираем элементы из списка в сессии для добавления в набор внизу 
+                    $("body").on("click", ".select_item", function(){
+                        var checked_status = $(this).prop("checked");
+//                        console.log(checked_status);
+
+                        var item_id = $(this).attr("id").split("_")[2];
+//                        console.log(item_id);
+            
+                        //Добавим в сессию данные
+                        addScladItemsSetINSession(item_id, checked_status);
+            
+                    });
 
             </script>
             

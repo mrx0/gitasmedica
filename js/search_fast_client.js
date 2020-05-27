@@ -33,9 +33,9 @@ $(function(){
 		}
 	})
 	    
-	$(".search_result_fc").hover(function(){
-		$(".who_fc").blur(); //Убираем фокус с input
-	})
+	// $(".search_result_fc").hover(function(){
+	// 	$(".who_fc").blur(); //Убираем фокус с input
+	// })
 })
 
 $(function(){
@@ -64,9 +64,9 @@ $(function(){
 		}
 	})
 
-	$(".search_result_fc").hover(function(){
-		$(".who_fc").blur(); //Убираем фокус с input
-	})
+	// $(".search_result_fc").hover(function(){
+	// 	$(".who_fc").blur(); //Убираем фокус с input
+	// })
 })
 
 $(function(){
@@ -95,8 +95,8 @@ $(function(){
 		}
 	})
 
-	$(".search_result_fc").hover(function(){
-		$(".who_fc").blur(); //Убираем фокус с input
-	})
+	// $(".search_result_fc").hover(function(){
+	// 	$(".who_fc").blur(); //Убираем фокус с input
+	// })
 })
 
