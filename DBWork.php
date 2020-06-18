@@ -1530,7 +1530,23 @@
 		$datatable = trim(strip_tags(stripcslashes(htmlspecialchars($datatable))));
 
 		//$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' LIMIT 5";
-		$query = "SELECT * FROM `$datatable` WHERE `name` LIKE '%$search_data%' AND `status`<> 9 ORDER BY `name` ASC LIMIT 10";
+		$query = "SELECT * FROM `$datatable` db WHERE db.name LIKE '%$search_data%' AND db.status <> '8' ORDER BY db.name ASC LIMIT 10";
+
+		if ($datatable == 'spr_workers') {
+            //Получаем всё по сотруднику
+            $query = "SELECT db.*, s_p.name AS type_name, s_c.name AS cat_name
+                          FROM  `$datatable` db
+                          
+                          LEFT JOIN `spr_permissions` s_p ON s_p.id = db.permissions
+                          LEFT JOIN `journal_work_cat` j_wk ON j_wk.worker_id = db.id
+                          LEFT JOIN `spr_categories` s_c ON s_c.id = j_wk.category
+                          
+                          WHERE db.name LIKE '%$search_data%' AND db.status <> '8'
+                          
+                          ORDER BY db.name ASC
+                          LIMIT 10";
+        }
+
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

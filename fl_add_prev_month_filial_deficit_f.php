@@ -26,6 +26,7 @@
                 $date = $_POST['year'].'-'.$_POST['month'].'-01';
                 $todaydate = date('Y').'-'.date('m').'-01';
 //!!! Временно открыл доступ куда угодно кому угодно 20200618
+//!!! Временно открыл доступ куда угодно кому угодно 20200618
                 //if (($date >= $todaydate) || ($_SESSION['permissions'] == 3)) {
                     $msql_cnnct = ConnectToDB();
 

@@ -191,10 +191,10 @@
 										Наряды
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="checkbox" id="invoiceAll" name="invoiceAll" class="invoiceType" value="1" checked> Все<br>
-										<input type="checkbox" id="invoicePaid" name="invoicePaid" class="invoiceType" value="1" checked> Оплаченные<br>
-										<input type="checkbox" id="invoiceNotPaid" name="invoiceNotPaid" class="invoiceType" value="1" checked> Не оплаченные<br>
-										<input type="checkbox" id="invoiceInsure" name="invoiceInsure" class="invoiceType" value="1" checked> Страховые<br>
+										<input type="checkbox" id="invoiceAll" name="invoiceAll" class="invoiceType" value="1" checked disabled> Все<br>
+										<input type="checkbox" id="invoicePaid" name="invoicePaid" class="invoiceType" value="1" checked disabled> Оплаченные<br>
+										<input type="checkbox" id="invoiceNotPaid" name="invoiceNotPaid" class="invoiceType" value="1" checked disabled> Не оплаченные<br>
+										<input type="checkbox" id="invoiceInsure" name="invoiceInsure" class="invoiceType" value="1" checked disabled> Страховые<br>
 										<!--<input type="checkbox" id="statusAnother" name="statusAnother" class="invoiceType" value="1" checked> Все остальные<br>-->
 									</div>
 								</li>

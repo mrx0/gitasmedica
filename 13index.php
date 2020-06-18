@@ -46,7 +46,7 @@
 				
 				$query = "UPDATE `journal_tooth_status` SET `$n_tooth`='".implode(',', $rez_arr)."' WHERE `id`=$need_id";
 				
-				var_dump($query);
+				//var_dump($query);
 				
 				$res = mysql_query($query) or die($query);
 				

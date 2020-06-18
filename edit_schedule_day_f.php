@@ -78,7 +78,7 @@
 												</div>';
 											echo json_encode(array('result' => 'success', 'data' => $data));
 											//header ('Location: scheduler.php?filial='.$_POST['filial'].$who.'&m='.$_POST['month'].'&y='.$_POST['year'].'');
-											//client_add.php
+
 										}else{
 											$data = '
 												<div class="query_neok">

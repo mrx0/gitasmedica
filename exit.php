@@ -27,6 +27,8 @@
     unset($_SESSION['fl_calcs_tabels2']);
     unset($_SESSION['scheduler3']);
     unset($_SESSION['subtraction_data']);
+    //!!! Для склада
+    unset($_SESSION['sclad']);
 
 	//Переадресовываем на главную
 	//header("location: index.php");
