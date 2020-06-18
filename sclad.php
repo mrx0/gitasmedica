@@ -52,6 +52,9 @@
 
 			echo '
 				<header>
+                    <div class="nav">
+                        <a href="prihods.php" class="b">Приходные накладные</a>
+                    </div>
 					<h1>Склад</h1>
 				</header>';
 

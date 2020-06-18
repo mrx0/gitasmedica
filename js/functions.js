@@ -12414,8 +12414,8 @@
                     '<select name="unit_sel" id="unit_sel" style="width: 200px;">'+
                         '<option value="0">Выберите ед. измерения</option>' +
                         '<option value="pc">штуки</option>' +
-                        '<option value="kg">килограммы</option>'+
-                        '<option value="l">литры</option>'+
+                        '<option value="gr">граммы</option>'+
+                        '<option value="ml">милилитры</option>'+
                     '</select>' +
                 '</div>';
         }
@@ -12532,8 +12532,8 @@
                 '<select name="unit_sel" id="unit_sel" style="width: 200px;">'+
                 '<option value="0">Выберите ед. измерения</option>' +
                 '<option value="pc">штуки</option>' +
-                '<option value="kg">килограммы</option>'+
-                '<option value="l">литры</option>'+
+                '<option value="gк">граммы</option>'+
+                '<option value="ml">милилитры</option>'+
                 '</select>' +
                 '</div>';
         }
@@ -12698,8 +12698,8 @@
         //Еденицы измерения
         let units = {
             pc: 'шт.',
-            kg: 'кг.',
-            l: 'л.',
+            gr: 'г.',
+            ml: 'мл.',
         }
 
         var newCatItemName = $("#newCatItemName").val();
@@ -12866,13 +12866,72 @@
     }
 
     //Удалить текущую позицию из набора
-    function deleteScladItemsFromSet(ind=0){
+    function deleteScladItemsFromSet(item_id=0, ind=0, reload=false){
         // console.log(ind);
 
-        var link = "delete_sclad_item_from_set_f.php";
+        //Если не надо перезагружать страницу, значит мы скорее всего тут sclad.php
+        if (!reload) {
+            var link = "delete_sclad_item_from_set_f.php";
+
+            var reqData = {
+                item_id: item_id
+            };
+        //А если надо перезагружать страницу, значит мы скорее всего тут например тут sclad_prihod_add.php
+        }else{
+            var link = "delete_sclad_item_from_prihod_data_f.php";
+
+            var reqData = {
+                item_id: item_id,
+                ind: ind
+            };
+        }
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+
+                //Если не надо перезагружать страницу, значит мы скорее всего тут sclad.php
+                if (!reload) {
+                    //Показать выбранные позиции
+                    fillScladItemsInSet();
+
+                    if (item_id != 0) {
+                        $("#selected_item_" + item_id).prop("checked", false);
+                    } else {
+                        $(".select_item").each(function () {
+                            $(this).prop("checked", false);
+                        })
+                    }
+                //А если надо перезагружать страницу, значит мы скорее всего тут например тут sclad_prihod_add.php
+                }else{
+                    location.reload();
+                }
+
+                // if(res.result == "success"){
+                //     //console.log(111);
+                // }
+            }
+        });
+    }
+
+    //Удалить текущую позицию из набора
+    function copyScladItemsFromSet(item_id=0, ind=0){
+        // console.log(ind);
+
+        var link = "copy_sclad_item_from_prihod_data_f.php";
 
         var reqData = {
-            item_id: ind
+            item_id: item_id,
+            ind: ind
         };
 
         $.ajax({
@@ -12888,18 +12947,449 @@
             // действие, при ответе с сервера
             success: function(res){
 
-                //Показать выбранные позиции
-                fillScladItemsInSet ();
 
-                if (ind != 0) {
-                    $("#selected_item_" + ind).prop("checked", false);
-                }
+                location.reload();
 
-                // if(res.result == "success"){
-                //     //console.log(111);
-                // }
             }
         });
     }
 
+    //Изменяем кол-во в позиции на приходе
+    function changeQuantityScladItemPrihod(ind, itemId, dataObj){
+        //console.log(ind);
+        //console.log(itemId);
+        //console.log(dataObj);
+
+        var link = "add_quantity_sclad_item_prihod_f.php";
+
+        //количество
+        var quantity = dataObj.value;
+        //console.log(quantity);
+
+        if (!isNaN(quantity)){
+            if (quantity >= 0) {
+                var reqData = {
+                    item_id: itemId,
+                    ind: ind,
+                    quantity: quantity
+                };
+                //console.log(reqData);
+
+                $.ajax({
+                    url: link,
+                    global: false,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: reqData,
+                    cache: false,
+                    beforeSend: function () {
+                        //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                    },
+                    // действие, при ответе с сервера
+                    success: function (res) {
+                        //console.log(res.data);
+
+                        //changeSumScladItemPrihod(ind, itemId);
+
+                    }
+                });
+            }else{
+                $(dataObj).addClass("input_error");
+            }
+        }else{
+            $(dataObj).addClass("input_error");
+        }
+    }
+
+    //Изменяем цену позиции на приходе
+    function changePriceScladItemPrihod(ind, itemId, dataObj){
+        //console.log(ind);
+        //console.log(itemId);
+        //console.log(dataObj);
+
+        var link = "add_price_sclad_item_prihod_f.php";
+
+        //количество
+        var price = dataObj.value;
+        // console.log(price);
+        // console.log(price > 0);
+
+        if (!isNaN(price)) {
+
+            var reqData = {
+                item_id: itemId,
+                ind: ind,
+                price: price
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    // console.log(res.data);
+
+                    //changeSumScladItemPrihod(ind, itemId);
+
+                }
+            });
+        }else{
+            $(dataObj).addClass("input_error");
+        }
+    }
+
+    //Изменяем сумму позиции, а потом общую
+    function changeSumScladItemPrihod(ind, item_id){
+
+        //$(".sclad_item_prihod_count").each(function(){
+            // console.log($(this).val());
+            // console.log($("#price_"+item_id+"_"+ind).val());
+            // console.log($("#price_"+item_id+"_"+ind).val() * $(this).val());
+
+            // if ($(this).val() > 0){
+                $("#summ_"+item_id+"_"+ind).html( number_format($("#price_"+item_id+"_"+ind).val() * $("#sclad_item_prihod_count_"+item_id+"_"+ind).val(), 2, '.', ''));
+            // }
+        //})
+
+        //Общая сумма
+        let summ = 0;
+
+        $(".sclad_item_prihod_summ").each(function() {
+            summ += parseFloat($(this).html());
+        });
+        $("#itemInSetSumm").html(summ);
+
+    }
+
+    //Изменяем тип гарантии позиции (гарантия, срок годности или нихера)
+    function changeExpGarantTypeScladItemPrihod(ind, itemId, dataObj){
+        //console.log(dataObj.val());
+        //console.log(this);
+
+        var link = "add_exp_garant_type_sclad_item_prihod_f.php";
+
+        //тип (гарантия или срок годности или ничего)
+        var eg_type = dataObj.value;
+        //console.log(eg_type);
+
+        var reqData = {
+            item_id: itemId,
+            ind: ind,
+            eg_type: eg_type
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                // console.log(res.data);
+
+                //Ничего не делаем, потому что все и так хорошо?
+
+            }
+        });
+    }
+
+    //Изменяем дату гарантии позиции (гарантия, срок годности)
+    function changeExpGarantDateScladItemPrihod(ind, itemId, newDate){
+        // console.log(newDate);
+        //console.log(this);
+
+        var link = "add_exp_garant_date_sclad_item_prihod_f.php";
+
+        //дата
+        // var eg_date = dataObj.value;
+        var eg_date = newDate;
+        //console.log(eg_date);
+
+        var reqData = {
+            item_id: itemId,
+            ind: ind,
+            eg_date: eg_date
+        };
+        // console.log('777');
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                console.log(res.data);
+
+                //Ничего не делаем, потому что все и так хорошо?
+
+            }
+        });
+    }
+
+    //Делаем что-то после изменения даты в календаре
+    function doSomeThingAfterChangeCalendar(class_arr, id, curDate, newDate) {
+        //console.log(arguments);
+
+        //Будем тут работать только по конкретным условиям (не на всех страницах это надо)
+
+        //Если есть класс .eg_date, значит работаем "на складе", например приход
+        if(class_arr.indexOf("eg_date") != -1){
+
+
+            //Если у нас есть нужный объект, то работаем
+            if (typeof(eg_date_arr) != "undefined") {
+                //console.log(eg_date_arr);
+
+                let item_id = id.split("_")[1];
+                let ind = id.split("_")[2];
+
+                if (!(item_id in eg_date_arr)){
+                    eg_date_arr[item_id] = [];
+                }
+                if (!(ind in  eg_date_arr[item_id])){
+                    eg_date_arr[item_id][ind] = $(this).val();
+                }
+
+                changeExpGarantDateScladItemPrihod(ind, item_id, newDate);
+            }
+        }
+    }
+
+    //Проверяем и добавляем приход
+    function Ajax_sclad_prihod_add(edit = false){
+        console.log(edit);
+
+        hideAllErrors();
+
+        let all_good = true;
+
+        $(".sclad_item_prihod_count").each(function(){
+            // console.log(typeof(Number($(this).val())));
+            // console.log(Number($(this).val()));
+            // console.log(isNaN($(this).val()));
+
+            if (!isNaN($(this).val())){
+                if (Number($(this).val()) > 0){
+
+                    $(this).removeClass("input_error");
+
+                }else{
+                    all_good = false;
+
+                    $(this).addClass("input_error");
+                    // input_error
+                    //return false;
+                }
+            }else{
+                //ошибка
+            }
+        })
+        // console.log(all_good);
+
+        if ($("#provider").val().length == 0){
+            all_good = false;
+            $("#provider").addClass("input_error");
+        }else{
+            $("#provider").removeClass("input_error");
+        }
+
+        if ($("#prov_doc").val().length == 0){
+            all_good = false;
+            $("#prov_doc").addClass("input_error");
+        }else{
+            $("#prov_doc").removeClass("input_error");
+        }
+
+        if (all_good){
+
+            //Добавляем приходную накладную
+            var link = "sclad_prihod_add_f.php";
+
+            if (edit){
+                link = "sclad_prihod_edit_f.php";
+            }
+
+            //Надо что-то передать
+            var reqData = {
+                provider_name: $("#provider").val(),
+                prov_doc: $("#prov_doc").val(),
+                filial_id: $("#SelectFilial").val(),
+                prihod_time: $("#iWantThisDate2").val()
+            };
+            // console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function(res){
+                    // $('#errrror').html(res);
+                    // console.log(res.data);
+
+                    //Переедем в накладную?
+                    //window.open('sclad_prihod.php?id='+res.data);
+                    document.location.href = 'sclad_prihod.php?id='+res.data;
+                }
+            });
+
+        }else{
+            $('#errror').html('<span style="color: red; font-weight: bold;">Проверьте введённые данные.</span>');
+        }
+    }
+
+    //Отмена действий на складе (отмена прихода, перемещения, списания, ...)
+    function Ajax_sclad_cancel(from, to){
+
+        //!!!Добавить потом сюда условия всякие
+        //if (from == 'prihod_add'){
+            var link = "sclad_prihod_cancel_f.php";
+        //}
+
+        //Надо что-то передать
+        var reqData = {
+            id: 1
+        };
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                // $('#errrror').html(res);
+                //console.log(res.data);
+
+                //Переедем по ссылке
+                document.location.href = to;
+            }
+        });
+    }
+
+    //Показываем блок с поиском позиции на складе для добавления её в список на приход
+    function showAddNewScladItemsSetINSession(){
+
+        //$(".context-menu").remove();
+
+        //Если позиция, спросим еще, про единицы измерения
+        var unit_select = '';
+
+        var descr = 'Добавить позицию';
+
+        $('#overlay').show();
+
+        //var buttonsStr = '<input type="button" class="b" value="Ok" onclick="addNewScladItemsSetINSession();">';
+        var buttonsStr = '';
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        })
+            .css({
+                "height": "300px"
+            })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative"
+                    })
+                    .append('<span style="margin: 5px;"><i>'+descr+'</i></span>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-110px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%"
+                            })
+                            .append('<div style="margin-top: 3px;"><span style="font-size:90%; color: #333; ">Введите название</span><br>' +
+                                '<input type="text" name="sclad_item_search" id="sclad_item_search" placeholder="Введите для поиска" value="" class="sclad_item_search" autocomplete="off" style="width: 250px; font-size: 120%;">' +
+                                '<ul id="search_result_sclad_item" class="search_result_sclad_item"></ul>')
+                            .append(unit_select)
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "bottom": "2px",
+                                "width": "100%"
+                            })
+                            .append('<div id="existCatItem" class="error"></div>')
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
+                            )
+                    )
+            );
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+    }
+
+    function addNewScladItemsSetINSession(itemId){
+
+        var link = "add_new_sclad_item_from_prihod_data_f.php";
+
+        var reqData = {
+            item_id: itemId
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+
+
+                location.reload();
+
+            }
+        });
+    }
 

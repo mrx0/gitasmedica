@@ -35,7 +35,7 @@ $(function(){
 	    
     //При выборе результата поиска, прячем список и заносим выбранный результат в input
     $(".search_result2").on("click", "li", function(){
-        console.log(this.firstChild);
+        //console.log(this.firstChild);
 
         //Раньше было так
         //s_user = $(this).text();

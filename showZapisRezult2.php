@@ -176,7 +176,27 @@
                     $rezultInvoice = '';
 
                     if (!empty($invoice_data_db)) {
-                        //var_dump($invoice_data_db);
+//                        var_dump($invoice_data_db);
+
+
+                        //Пройдемся по нарядам
+                        foreach ($invoice_data_db as $invoice_data){
+                            //Если по страховой
+                            if ($invoice_data['summins'] > 0){
+                                //var_dump($invoice_data_db);
+                                $invoiceInsure = true;
+                            }
+                            //Если не оплачено
+                            if (($invoice_data['summ'] != 0) && ($invoice_data['summ'] != $invoice_data['paid'])){
+                                //var_dump($invoice_data_db);
+                                $invoiceNotPaid = true;
+                            }
+                            //Если оплачено
+                            if (($invoice_data['summ'] != 0) && ($invoice_data['summ'] == $invoice_data['paid'])){
+                                //var_dump($invoice_data_db);
+                                $invoicePaid = true;
+                            }
+                        }
 
                         $rezultInvoices = showInvoiceDivRezult($invoice_data_db, true, false, true, false, false, false);
                         //$data, $minimal, $show_categories, $show_absent, $show_deleted
@@ -315,7 +335,7 @@
 
                         if ($dop['patientUnic'] == 1) {
                             $rezult .=
-                                '<b>' . WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', true) . '</b>';
+                                '<b>' . WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', true, true) . '</b>';
                         }
 
                         if ($dop['patientUnic'] != 1) {

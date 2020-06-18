@@ -183,7 +183,7 @@
 	}
 
 	//Пишем ФИО человека
-	function WriteSearchUser($datatable, $sw, $type, $link){
+	function WriteSearchUser($datatable, $sw, $type, $link, $show_info=false){
 		if ($type == 'user_full'){
 			$search = 'user';
 		}else{
@@ -196,24 +196,47 @@
 		if ($datatable == 'spr_workers'){
 			$uri = 'user.php';
 		}
-		
+
+		$info_str = '';
+
 		if ($sw != ''){
 			$user = SelDataFromDB($datatable, $sw, $search);
 			//var_dump ($user);
 			//var_dump ($search);
 
+            if ($show_info){
+                $info_str .= ' <i class="fa fa-info-circle" aria-hidden="true" title="';
+
+                $info_str .= '
+                тел.: '.$user[0]['telephone'];
+                    if ($user[0]['htelephone'] != NULL) {
+                        $info_str .= '
+                /д.тел: ' . $user[0]['htelephone'];
+                    }
+                    if ($user[0]['telephoneo'] != NULL) {
+                        $info_str .= ' 
+                /тел оп.: ' . $user[0]['telephoneo'];
+                    }
+                    if ($user[0]['htelephoneo'] != NULL) {
+                        $info_str .= ' 
+                /д.тел оп.: ' . $user[0]['htelephoneo'];
+                    }
+
+                $info_str .= '" style="font-size: 110%; color: rgb(214, 89, 0); float: right;"></i>';
+			}
+
 			if ($user != 0){
 				if ($type == 'user_full'){
 					if ($link){
-						return '<a href="'.$uri.'?id='.$sw.'" class="ahref">'.$user[0]['full_name'].'</a>';
+						return '<a href="'.$uri.'?id='.$sw.'" class="ahref" target="_blank" rel="nofollow noopener">'.$user[0]['full_name']. '</a>'.$info_str;
 					}else{
-						return $user[0]['full_name'];
+						return $user[0]['full_name'].''.$info_str.'';
 					}
 				}else{
 					if ($link){
-						return '<a href="'.$uri.'?id='.$sw.'" class="ahref">'.$user[0]['name'].'</a>';
+						return '<a href="'.$uri.'?id='.$sw.'" class="ahref">'.$user[0]['name'].'</a>'.$info_str;
 					}else{
-						return $user[0]['name'];
+						return $user[0]['name'].''.$info_str.'';
 					}
 				}
 			}else{

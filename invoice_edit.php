@@ -874,10 +874,10 @@
 					echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 				}
 			}else{
-				echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
+                echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 			}
 		}else{
-			echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+            echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}
 	}else{
 		header("location: enter.php");

@@ -500,12 +500,12 @@
 
                 //Для работы с позициями на складе
                 if ($_POST['mark'] == 'sclad_item'){
-                    $data .= '
-                            <li><div onclick="addScladItemToSet('.$_POST['ind'].');">Добавить в список</div></li>
-                            <li><a href="sclad_prihod_add.php?g_id='.$_POST['ind'].'" class="ahref_context" style="">Добавить приход</a></li>
-                            <li><a href="sclad_move_add.php?g_id='.$_POST['ind'].'" class="ahref_context" style="">Добавить перемещение</a></li>
-                            <li><div onclick="showScladCatItemAdd('.$_POST['ind'].', \'item\');">Добавить списание</div></li>
-                            ';
+//                    $data .= '
+//                            <li><div onclick="addScladItemToSet('.$_POST['ind'].');">Добавить в список</div></li>
+//                            <li><a href="sclad_prihod_add.php?g_id='.$_POST['ind'].'" class="ahref_context" style="">Добавить приход</a></li>
+//                            <li><a href="sclad_move_add.php?g_id='.$_POST['ind'].'" class="ahref_context" style="">Добавить перемещение</a></li>
+//                            <li><div onclick="showScladCatItemAdd('.$_POST['ind'].', \'item\');">Добавить списание</div></li>
+//                            ';
                     //if ($_POST['key'] == 'dop'){
                         $data .= '
                             <li><div onclick="showScladCatItemEdit('.$_POST['ind'].', \'item\');">Редактировать</div></li>

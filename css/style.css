@@ -889,14 +889,14 @@ input[type="submit"]:focus, .button:focus, .button_close:focus, .b:focus, .b2:fo
 	z-index: 999;
 }
 
-.search_result_cert, .search_result_abon {
+.search_result_cert, .search_result_abon, .search_result_sclad_item {
 	font-size: 80%;
 	background: #FFF;
 	border: 1px #ccc solid;
 	margin: 0;
 }
 
-.search_result li,.search_result2 li,.search_result3 li,.search_result4 li,.search_result5 li,.search_result_fc li, .search_result_cert li, .search_result_abon li{
+.search_result li,.search_result2 li,.search_result3 li,.search_result4 li,.search_result5 li,.search_result_fc li, .search_result_cert li, .search_result_abon li, .search_result_sclad_item li{
 	list-style: none;
 	padding: 5px 10px;
    /* margin: 0 0 0 -40px;*/
@@ -907,7 +907,7 @@ input[type="submit"]:focus, .button:focus, .button_close:focus, .b:focus, .b2:fo
 	transition:0.1s;
 }
 
-.search_result li:hover,.search_result2 li:hover,.search_result3 li:hover,.search_result4 li:hover,.search_result5 li:hover,.search_result_fc li:hover, .search_result_cert li:hover, .search_result_abon li:hover{
+.search_result li:hover,.search_result2 li:hover,.search_result3 li:hover,.search_result4 li:hover,.search_result5 li:hover,.search_result_fc li:hover, .search_result_cert li:hover, .search_result_abon li:hover, .search_result_sclad_item li:hover{
    /* background: #F9FF00;*/
     color: grey;
 	background: rgba(144,247,95, 0.5);
@@ -2357,7 +2357,7 @@ ul.ul-drop div.drop {
 
 
 .tableInsStat tr td {
-	padding: 5px;
+	/*padding: 5px;*/
 	border: 1px dotted #b3c0c8;
 	font-size: 11px;
 }
@@ -2911,4 +2911,8 @@ input[type="submit"] {
 	background: url(images/video.png) no-repeat 50% 50%; !* Параметры фона *!
 }*/
 
+/*Стиль для input, если ошибка*/
+.input_error {
+	border: 1px red solid !important;
+}
 
