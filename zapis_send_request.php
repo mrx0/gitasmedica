@@ -32,7 +32,7 @@
 		
 		mysqli_close($msql_connect);
 		
-		var_dump($query);
+		//var_dump($query);
 	}else{
 		var_dump('neOk');
 	}

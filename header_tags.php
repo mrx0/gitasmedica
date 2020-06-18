@@ -73,7 +73,7 @@
 			
 			<script type="text/javascript" src="js/search5.js"></script>
 			
-			<script type="text/javascript" src="js/search_fast_client.js"></script>
+			<script type="text/javascript" src="js/search_fast.js"></script>
 			
 			<script type="text/javascript" src="js/jquery.multi-select.js"></script>
 			

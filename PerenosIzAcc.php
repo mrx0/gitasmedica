@@ -1,6 +1,6 @@
 <?php
 
-//price.php
+//PerenosIzAcc.php
 //
 
 /*

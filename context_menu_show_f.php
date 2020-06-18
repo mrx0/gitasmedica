@@ -484,6 +484,36 @@
 //                }
 
 
+                //Для работы с категориями на складе
+                if ($_POST['mark'] == 'sclad_cat'){
+                    $data .= '
+                            <li><div onclick="showScladCatItemAdd('.$_POST['ind'].', \'category\');">Добавить категорию</div></li>
+                            <li><div onclick="showScladCatItemAdd('.$_POST['ind'].', \'item\');">Добавить позицию</div></li>
+                            ';
+                    if ($_POST['key'] == 'dop'){
+                        $data .= '
+                            <li><div onclick="showScladCatItemEdit('.$_POST['ind'].', \'category\');">Редактировать</div></li>
+                            <!--<li><div onclick="showCatDelete('.$_POST['ind'].');">Пометить на удаление</div></li>-->
+                            ';
+                    }
+                }
+
+                //Для работы с позициями на складе
+                if ($_POST['mark'] == 'sclad_item'){
+//                    $data .= '
+//                            <li><div onclick="addScladItemToSet('.$_POST['ind'].');">Добавить в список</div></li>
+//                            <li><a href="sclad_prihod_add.php?g_id='.$_POST['ind'].'" class="ahref_context" style="">Добавить приход</a></li>
+//                            <li><a href="sclad_move_add.php?g_id='.$_POST['ind'].'" class="ahref_context" style="">Добавить перемещение</a></li>
+//                            <li><div onclick="showScladCatItemAdd('.$_POST['ind'].', \'item\');">Добавить списание</div></li>
+//                            ';
+                    //if ($_POST['key'] == 'dop'){
+                        $data .= '
+                            <li><div onclick="showScladCatItemEdit('.$_POST['ind'].', \'item\');">Редактировать</div></li>
+                            <!--<li><div onclick="showItemDelete('.$_POST['ind'].');">Пометить на удаление</div></li>-->
+                            ';
+                    //}
+                }
+
 				echo json_encode(array('result' => 'success', 'data' => $data));
 
 			}
