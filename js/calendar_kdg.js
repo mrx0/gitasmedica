@@ -173,7 +173,7 @@ var _Calendar=function(){
 
 			d='';
 			for(var y=2014; y<=md+endYear; y++)  d=d+'<option value="'+y+'"'+(y==cy?' selected':'')+'>'+y+'</option>'; // цикл по годам
-			_Calendar.$('mns').innerHTML=' <select onChange="_Calendar.cmonth(this);">' + vd + '</select><select onChange="_Calendar.cyear(this);">' + d + '</select>'; // текущий месяц и год
+			_Calendar.$('mns').innerHTML=' <select onChange="_Calendar.cmonth(this);">' + vd + '</select><select onChange="_Calendar.cyear(this);">' + d + '</select>'; // текущий месяц и текущий год
 
 			marr=((cy%4)==0)?_Calendar.mnl:_Calendar.mnn;
 
