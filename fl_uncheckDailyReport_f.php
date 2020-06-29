@@ -41,13 +41,13 @@
                     $today = date('Y-m-d', time());
                     $monthStart15daysPlus = date('Y-m-d', strtotime('+1 month +14 days', gmmktime(0, 0, 0, $month, 1, $year)));
 
-//!!! Временно открыл доступ куда угодно кому угодно 20200618
-                    //if (($today <= $monthStart15daysPlus) || ($_SESSION['permissions'] == 3)) {
+                    //ограничение по времени на редактирование
+                    if (($today <= $monthStart15daysPlus) || ($_SESSION['permissions'] == 3)) {
                         //Обновляем
                         $query = "UPDATE `fl_journal_daily_report` SET `status` = '0' WHERE `id`='{$_POST['report_id']}'";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-                    //}
+                    }
 
                 }
 
