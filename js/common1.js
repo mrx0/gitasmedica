@@ -1380,7 +1380,9 @@ function buildTHeaders(t, token) {
 -function () {
 	if (!window.dict) window.dict = {}
 	if (!dict.config) dict.config = {}
-	var dc = (dict.config.calendar) || {}, d = document, year_offset = dc.year_offset || 0,
+	var dc = (dict.config.calendar) || {}, d = document,
+		/*year_offset = dc.year_offset || 0,*/
+		year_offset = 5,
 	year0 = parseInt(dc.year0) || new Date().getFullYear(),
 	red_day = 'red',
 	hover = 'hover',
@@ -1500,7 +1502,11 @@ function buildTHeaders(t, token) {
 		
 		var p = ce('p'), months = buildField('select', {}, lang.mm),
 		 years = {}, yl = year_offset * 2 + 1, y0 = Y - year_offset;
-		
+		console.log(years);
+		console.log(y0);
+		console.log(yl);
+		console.log(year_offset);
+
 		for (var i = 0; i < yl; i ++) {years[y0] = y0++}
 		years = buildField('select', {}, years)
 		ac(years, p)

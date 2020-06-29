@@ -25,9 +25,9 @@
                 //Сравнение дат, если меньше либо равно текущему месяцу, то ничего нельзя делать
                 $date = $_POST['year'].'-'.$_POST['month'].'-01';
                 $todaydate = date('Y').'-'.date('m').'-01';
-//!!! Временно открыл доступ куда угодно кому угодно 20200618
-//!!! Временно открыл доступ куда угодно кому угодно 20200618
-                //if (($date >= $todaydate) || ($_SESSION['permissions'] == 3)) {
+
+                //ограничение по времени на редактирование
+                if (($date >= $todaydate) || ($_SESSION['permissions'] == 3)) {
                     $msql_cnnct = ConnectToDB();
 
                     $query = "SELECT `id` FROM `fl_journal_prev_month_filial_deficit` 
@@ -60,9 +60,9 @@
                     //AddLog (GetRealIp(), $session_id, '', 'Добавлен вычет. Номер: ['.$num.']. Номинал: ['.$nominal.'] руб.');
 
                     echo json_encode(array('result' => 'success', 'data' => 'Ok'));
-                //}else{
-                //    echo json_encode(array('result' => 'error', 'data' => 'Ошибка #56. Нельзя сохранять/обновлять данные прошлыми датами.'));
-                //}
+                }else{
+                    echo json_encode(array('result' => 'error', 'data' => 'Ошибка #56. Нельзя сохранять/обновлять данные прошлыми датами.'));
+                }
 
             }
         }
