@@ -68,8 +68,17 @@
     		if (isset($_SESSION['filial'])){
                 $dop = "WHERE `place`='".$_SESSION['filial']."'";
 
+                //Если энгельса, то плюсуем пустые (без филиала)
                 if ($_SESSION['filial'] == 15){
                     $dop = "WHERE (`place`='".$_SESSION['filial']."' OR `place`='')";
+                }
+                //Если 72, то плюсуем 54
+                if ($_SESSION['filial'] == 19){
+                    $dop = "WHERE (`place`='".$_SESSION['filial']."' OR `place`='13')";
+                }
+                //Если ком, то плюсуем авиа
+                if ($_SESSION['filial'] == 14){
+                    $dop = "WHERE (`place`='".$_SESSION['filial']."' OR `place`='12')";
                 }
             }
 
