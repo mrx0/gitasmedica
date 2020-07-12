@@ -243,7 +243,7 @@
 			</style> 
 
 		</head>
-		<body>
+		<body oncopy="return false;">
 
 		<div class="no_print"> 
 		<header class="h">
