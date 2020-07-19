@@ -634,15 +634,15 @@
                                 if (isset($hours_j[$worker_data['id']][$ii])){
                                     if (array_sum($hours_j[$worker_data['id']][$ii]) > 0){
                                         //Если смотрят своё или есть права смотреть чужое
-                                        if (($_SESSION['id'] == $worker_data['id']) || ($scheduler['see_all'] == 1) || $god_mode){
+                                        if (($_SESSION['id'] == $worker_data['id'])/* || ($scheduler['see_all'] == 1)*/ || $god_mode){
                                             $hours = '<div id="" class="dayHours_' . $worker_data['id'] . '" style="display: none;" title="'.$title.'">' . array_sum($hours_j[$worker_data['id']][$ii]) . '</div><div style="font-size: 10px;">' . array_sum($hours_j[$worker_data['id']][$ii]) . '</div>';
                                         } else {
                                             //Если конец месяца или самое начало следующего (чтобы админы контролировали хоть иногда)
-                                            if ((date('d') == '28') || (date('d') == '29') || (date('d') == '30') || (date('d') == '31') || (date('d') == '01') || (date('d') == '02') || (date('d') == '03')){
+                                            //if ((date('d') == '28') || (date('d') == '29') || (date('d') == '30') || (date('d') == '31') || (date('d') == '01') || (date('d') == '02') || (date('d') == '03')){
                                                 $hours = '<i class="fa fa-plus-circle" style="color: rgb(72, 141, 16); font-size: 150%; text-shadow: 1px 1px 1px #999;"></i><div id="" class="dayHours_' . $worker_data['id'] . '" style="display: none;">' . array_sum($hours_j[$worker_data['id']][$ii]) . '</div>';
-                                            } else {
+                                            /*} else {
                                                 $hours = '<i class="fa fa-plus-circle" style="color: rgb(72, 141, 16); font-size: 150%; text-shadow: 1px 1px 1px #999;"></i>';
-                                            }
+                                            }*/
 
                                         }
                                     }
@@ -660,7 +660,7 @@
                                 }else{
                                     echo '
                                     <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, ' . $worker_data['id'] . ', ' . $_GET['filial'] . ', ' . $i . ', ' . $month . ', ' . $year . ', ' . $weekday_temp . '); ' . $invoiceFreeAddStr . '" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
-                                        
+                                        ' . $hours . '
                                     </td>';
                                 }
                             } elseif ($scheduler['add_worker'] == 1) {

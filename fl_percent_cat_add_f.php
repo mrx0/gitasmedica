@@ -27,12 +27,12 @@
                 $number = mysqli_num_rows($res);
 
                 if ($number != 0) {
-                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Эта категория уже заполнена, попробуйте её отредактировать.</div>'));
+                    echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Такая категория уже есть.</div>'));
                 } else {
                     //Добавляем категорию процентов в базу
                     $percent_cat_id = WritePercentCatToDB_Edit($_SESSION['id'], $_POST['cat_name'], (int)$_POST['work_percent'], (int)$_POST['material_percent'], (int)$_POST['summ_special'], $_POST['personal_id']);
 
-                    echo json_encode(array('result' => 'success', 'data' => '<div class="query_ok"><a href="fl_percent_cat.php?id=1" class="ahref">Категория процентов</a> добавлена.</div>'));
+                    echo json_encode(array('result' => 'success', 'data' => '<div class="query_ok"><a href="fl_percent_cat.php?id='.$percent_cat_id.'" class="ahref">Категория процентов</a> добавлена.</div>'));
                 }
             }
         }

@@ -1,7 +1,7 @@
 <?php
 
-//fl_percent_cat_add.php
-//Добавить категорию процентов
+//fl_percent_cat_edit.php
+//Редактировать категорию процентов
 
 require_once 'header.php';
 
@@ -12,27 +12,33 @@ if ($enter_ok){
 
         include_once 'DBWork.php';
 
-        echo '
+        $percent_j = SelDataFromDB('fl_spr_percents', $_GET['id'], 'id');
+        //var_dump($percent_j);
+
+        if ($percent_j != 0){
+
+            $permissions_j = SelDataFromDB('spr_permissions', '', '');
+            //var_dump($permissions_j);
+
+            echo '
                 <div id="status">
                     <header>
                         <div class="nav">
                             <a href="fl_percent_cats.php" class="b">Категории процентов</a>
                         </div>
-                        <h2>Добавить категорию процентов</h2>
-                        Заполните поля
+                        <h2>Редактировать Категорию процентов <a href="fl_percent_cat.php?id='.$_GET['id'].'" class="ahref">#'.$_GET['id'].'</a></h2>
                     </header>';
 
-        echo '
+            echo '
                     <div id="data">';
-        echo '
+            echo '
                         <div id="errrror"></div>';
-        echo '
-                        <form action="cert_add_f.php">
+            echo '
                     
                             <div class="cellsBlock2">
                                 <div class="cellLeft">Название</div>
                                 <div class="cellRight">
-                                    <input type="text" name="cat_name" id="cat_name" value="">
+                                    <input type="text" name="cat_name" id="cat_name" value="'.$percent_j[0]['name'].'"> <div style="float: right; width: 20px; height: 20px; background-color: rgb('.$percent_j[0]['color'].'); border: 1px solid grey;"></div>
                                     <label id="cat_name_error" class="error"></label>
                                 </div>
                             </div>
@@ -40,7 +46,7 @@ if ($enter_ok){
                             <div class="cellsBlock2">
                                 <div class="cellLeft">Процент за работу (общий)</div>
                                 <div class="cellRight">
-                                    <input type="text" name="work_percent" id="work_percent" value="">
+                                    <input type="text" name="work_percent" id="work_percent" value="'.$percent_j[0]['work_percent'].'">
                                     <label id="work_percent_error" class="error"></label>
                                 </div>
                             </div>
@@ -48,7 +54,7 @@ if ($enter_ok){
                             <div class="cellsBlock2">
                                 <div class="cellLeft">Процент за материал (общий)</div>
                                 <div class="cellRight">
-                                    <input type="text" name="material_percent" id="material_percent" value="">
+                                    <input type="text" name="material_percent" id="material_percent" value="'.$percent_j[0]['material_percent'].'">
                                     <label id="material_percent_error" class="error"></label>
                                 </div>
                             </div>
@@ -56,46 +62,50 @@ if ($enter_ok){
                             <div class="cellsBlock2">
                                 <div class="cellLeft">Спец. цена фиксированная, руб.</div>
                                 <div class="cellRight">
-                                    <input type="text" name="summ_special" id="summ_special" value="">
+                                    <input type="text" name="summ_special" id="summ_special" value="'.$percent_j[0]['summ_special'].'">
                                     <label id="summ_special_error" class="error"></label>
                                 </div>
                             </div>';
 
-        echo '					
+            echo '					
                             <div class="cellsBlock2">
                                 <div class="cellLeft">Персонал (тип)</div>
                                 <div class="cellRight">';
-        echo '
+            echo '
                                 <select name="personal_id" id="personal_id">
                                     <option value="0">Нажмите, чтобы выбрать</option>';
 
-        $permissions_j = SelDataFromDB('spr_permissions', '', '');
-        //var_dump($permissions_j);
+            if ($permissions_j != 0){
+                for ($i=0; $i < count($permissions_j); $i++){
+                    if ($permissions_j[$i]['id'] == $percent_j[0]['type']) {
+                        $selected = 'selected';
+                    } else {
+                        $selected = '';
+                    }
 
-        if ($permissions_j != 0){
-            for ($i=0; $i < count($permissions_j); $i++){
-
-                //стом, косм, спец, ассист
-                if (($permissions_j[$i]['id'] == 5) || ($permissions_j[$i]['id'] == 6) || ($permissions_j[$i]['id'] == 7) || ($permissions_j[$i]['id'] == 10)) {
-                    echo "<option value='" . $permissions_j[$i]['id'] . "'>" . $permissions_j[$i]['name'] . "</option>";
+                    //стом, косм, спец, ассист
+                    if (($permissions_j[$i]['id'] == 5) || ($permissions_j[$i]['id'] == 6) || ($permissions_j[$i]['id'] == 7) || ($permissions_j[$i]['id'] == 10)) {
+                        echo "<option value='" . $permissions_j[$i]['id'] . "' $selected>" . $permissions_j[$i]['name'] . "</option>";
+                    }
                 }
             }
-        }
 
-        echo '
+            echo '
                                 </select>
                                     <label id="personal_id_error" class="error"></label>
                                 </div>
                             </div>';
 
-        echo '					
+            echo '					
                             <div id="errror"></div>                        
-                            <input type="button" class="b" value="Добавить" onclick="Ajax_cat_add(0, \'add\')">
-                        </form>';
+                            <input type="button" class="b" value="Применить" onclick="Ajax_cat_add('.$_GET['id'].', \'edit\')">';
 
-        echo '
+            echo '
                     </div>
                 </div>';
+        }else{
+            echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+        }
     }else{
         echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
     }

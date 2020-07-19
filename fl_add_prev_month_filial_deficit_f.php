@@ -41,7 +41,7 @@
                         $arr = mysqli_fetch_assoc($res);
                         $deficit_id = $arr['id'];
 
-                        $query = "DELETE FROM `fl_journal_prev_month_filial_deficit` 
+                        $query = "DELETE FROM `fl_journal_prev_month_filial_deficit`
                           WHERE `id`='" . $deficit_id . "'";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);

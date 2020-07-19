@@ -114,7 +114,7 @@
 
             //Выбор месяц и год
             echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Дата: ';
-            1
+            echo '
                             </span>
 			                <span class="button_tiny" style="font-size: 90%; cursor: pointer" onclick="iWantThisDate(\'fl_main_report2.php?filial_id='. $filial_id . '\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
 			                <div style="font-size: 90%; color: rgb(125, 125, 125); float: right;">Сегодня: <a href="fl_main_report2.php" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></div>

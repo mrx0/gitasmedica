@@ -1151,7 +1151,16 @@
                                    <b>Приход извне</b>
                                 </div>
                                 <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(247,109,2,0.3);">
-                                    <div style="float:left;">' . number_format($money_from_outside, 0, '.', ' ') . '</div>
+                                    <div style="float:left;">' . number_format($money_from_outside, 0, '.', ' ') . '</div>';
+
+                    if (($_SESSION['permissions'] == 3) || ($god_mode)) {
+                        echo '                
+                                    <span class="never_print_it" style="font-size: 120%; float: right;">
+                                        <i class="fa fa-times" aria-hidden="true" style="color: red; cursor: pointer;" title="Удалить все приходы" onclick="Ajax_MoneyFromOutsideDelete('.$filial_id.', '.$year.', \''.$month.'\');"></i>
+                                    </span>';
+                    }
+
+                    echo '
                                 </div>
                             </li>';
                 }
@@ -1212,9 +1221,16 @@
                         <div style="border: 1px solid #CCC;">
                             <li class="filterBlock">
                                 <div class="cellLeft" style="width: 310px; min-width: 310px; font-size: 100%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
-                                   <b>Дефицит предыдущего м-ца</b>
-                                
-    
+                                    <b>Дефицит предыдущего м-ца</b>';
+
+                if (($_SESSION['permissions'] == 3) || ($god_mode)) {
+                    echo '                
+                                    <span class="never_print_it" style="font-size: 120%; float: right;">
+                                        <i class="fa fa-times" aria-hidden="true" style="color: red; cursor: pointer;" title="Удалить" onclick="Ajax_PrevMonthDeficitDelete('.$filial_id.', '.$year.', \''.$month.'\');"></i>
+                                    </span>';
+                }
+
+                echo '
                                 </div>
                             </li>';
 
@@ -1589,7 +1605,7 @@
                 //);
                 //var_dump($subtractions_summ_beznal);
 
-                $ostatok = $cashbox_nal + $arenda - $giveoutcash_summ - $subtractions_summ - $paidouts_temp_summ - $bank_summ - $director_summ + $prev_month_filial_summ;
+                $ostatok = $cashbox_nal + $arenda - $giveoutcash_summ - $subtractions_summ - $paidouts_temp_summ - $bank_summ - $director_summ + $prev_month_filial_summ + $money_from_outside;
 
                 $ostatok = number_format($ostatok, 0, '.', ' ');
 

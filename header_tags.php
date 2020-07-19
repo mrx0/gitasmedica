@@ -242,18 +242,33 @@
 			  #scrollUp {display: none; }
 			</style> 
 
-		</head>
-		<body oncopy="return false;">
+		</head>';
 
+    include_once 'DBWork.php';
+    require_once 'permissions.php';
+
+//	var_dump($god_mode);
+//	var_dump($enter_ok);
+
+	if (!$god_mode) {
+        echo '
+		<body oncopy="return false;">';
+    }else {
+        echo '
+		<body>';
+    }
+
+
+	echo '
 		<div class="no_print"> 
 		<header class="h">
 			<nav>
 				<ul class="vert-nav">';
 	//Если в системе
 	if ($enter_ok){
-		include_once 'DBWork.php';
+//		include_once 'DBWork.php';
 
-		require_once 'permissions.php';
+//		require_once 'permissions.php';
 
         //Для автоматизации выбора филиала
         if (isset($_SESSION['filial']) && !empty($_SESSION['filial'])){
@@ -275,6 +290,10 @@
 
 		//echo '<li><a href="index.php" style="position: relative">Главная<div style="font-size:80%">'.$version.'</div><div class="have_new-topic notes_count" style="display: none; top: 0; right: 0; background: red;" title="Есть непрочитанные сообщения"></div></a></li>';
 		echo '<li><a href="index.php" style="position: relative">Главная<div class="have_new-topic notes_count" style="display: none; top: 0; right: 0; background: red;" title="Есть непрочитанные сообщения"></div></a></li>';
+
+//		var_dump($ticket['see_all']);
+//		var_dump($ticket['see_own']);
+//		var_dump($god_mode);
 
 		if (($ticket['see_all'] == 1) || ($ticket['see_own'] == 1) || $god_mode){
 			echo '<li><a href="tickets.php">Тикеты<div class="have_new-ticket notes_count" style="display: none; top: 0; right: 0; background: red;" title="">4545</div></a></li>';
