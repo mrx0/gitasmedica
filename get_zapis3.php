@@ -100,12 +100,30 @@
             }
 
             //Выборка
-            if (empty($_SESSION['filial'])){
-                $query = "SELECT COUNT(*) AS total FROM `zapis_online` WHERE `status` <> '7' AND `status` <> '6' ";
-            }else{
-                $query = "SELECT COUNT(*) AS total FROM `zapis_online` WHERE `status` <> '7' AND `status` <> '6' AND `place` = '".$_SESSION['filial']."'";
-            }
+//            if (empty($_SESSION['filial'])){
+//                $query = "SELECT COUNT(*) AS total FROM `zapis_online` WHERE `status` <> '7' AND `status` <> '6' ";
+//            }else{
+//                $query = "SELECT COUNT(*) AS total FROM `zapis_online` WHERE `status` <> '7' AND `status` <> '6' AND `place` = '".$_SESSION['filial']."'";
+//            }
 
+            $dop = '';
+            if (isset($_SESSION['filial'])){
+                $dop = "AND `place`='".$_SESSION['filial']."'";
+
+                //Если энгельса, то плюсуем пустые (без филиала)
+                if ($_SESSION['filial'] == 15){
+                    $dop = "AND (`place`='".$_SESSION['filial']."' OR `place`='')";
+                }
+                //Если 72, то плюсуем 54
+                if ($_SESSION['filial'] == 19){
+                    $dop = "AND (`place`='".$_SESSION['filial']."' OR `place`='13')";
+                }
+                //Если ком, то плюсуем авиа
+                if ($_SESSION['filial'] == 14){
+                    $dop = "AND (`place`='".$_SESSION['filial']."' OR `place`='12')";
+                }
+            }
+            $query = "SELECT COUNT(*) AS total FROM `zapis_online` WHERE `status` <> '7' AND `status` <> '6' ".$dop."";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

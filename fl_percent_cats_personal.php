@@ -138,7 +138,7 @@
                     <header>
                         <div class="nav">
                             <a href="fl_percent_cats.php" class="b">Общие</a>
-                            <a href="fl_salaries.php" class="b">Оклады сотрудников</a>
+                            <!--<a href="fl_salaries.php" class="b">Оклады сотрудников</a>-->
                         </div>
                         <h1>Персональные категории процентов</h1>
                         <span style= "color: red; font-size: 90%;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> При расчётах, если указана "Cпец. цена", проценты будут игнорироваться.</span>';
@@ -176,7 +176,10 @@
 
                     echo '
                                 <div class="cellName" style="text-align: center; width: 210px; min-width: 210px; padding: 4px 0 0; background-color: rgba('.$percent_cat['color'].', 0.7)">
-                                    <div  class="percentCatItem" cat_id="'.$cat_id.'">'.$percent_cat['name'].'</div>
+                                    <div  class="percentCatItem" cat_id="'.$cat_id.'">
+                                        <!--'.$percent_cat['name'].'-->
+                                        <a href="fl_percent_cat.php?id='.$percent_cat['id'].'" class="ahref" style="text-align: left; width: 180px; min-width: 180px;" id="4filter">'.$percent_cat['name'].'</a>
+                                    </div>
                                     <div>
                                         <div class="cellDivide" style="width: 65px; font-size: 10px;">Работа</div>
                                         <div class="cellDivide" style="width: 65px; font-size: 10px;">Материал</div>

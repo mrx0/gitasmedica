@@ -1818,20 +1818,20 @@
             ticket_id = $("#ticket_id").val();
         }
 
-		var descr = $("#descr").val();
-		var plan_date = $("#iWantThisDate2").val();
-		var workers = $("#postCategory").val();
-        var workers_type = $("#workers_type").val();
-        var filial = $("#filial").val();
+		// var descr = $("#descr").val();
+		// var plan_date = $("#iWantThisDate2").val();
+		// var workers = $("#postCategory").val();
+        // var workers_type = $("#workers_type").val();
+        // var filial = $("#filial").val();
 		//console.log(ticket_type);
 
-        var certData = {
-            descr: descr,
-            plan_date: plan_date,
-            workers: workers,
-            workers_type: workers_type,
-            filial: filial,
-            ticket_id: ticket_id
+        let certData = {
+            descr: $("#descr").val(),
+            plan_date: $("#iWantThisDate2").val(),
+            workers: $("#postCategory").val(),
+            workers_type: $("#workers_type").val(),
+            filial: $("#filial").val(),
+            ticket_id: $("#filial").val()
         };
 
 		$.ajax({
@@ -1984,7 +1984,10 @@
     }
 
     //Добавляем/редактируем в базу категории процентов
-    function Ajax_cat_add(mode){
+    function Ajax_cat_add(id, mode){
+
+        //убираем ошибки
+        hideAllErrors ();
 
         var link = "fl_percent_cat_add_f.php";
 
@@ -1993,92 +1996,95 @@
         }
 		//console.log(link);
 
-        var cat_name = $('#cat_name').val();
-        var work_percent = $('#work_percent').val();
-        var material_percent = $('#material_percent').val();
-        var summ_special = $('#summ_special').val();
-        var personal_id = $('#personal_id').val();
+        // var cat_name = $('#cat_name').val();
+        // var work_percent = $('#work_percent').val();
+        // var material_percent = $('#material_percent').val();
+        // var summ_special = $('#summ_special').val();
+        // var personal_id = $('#personal_id').val();
 
-        // убираем класс ошибок с инпутов
-        $("input").each(function(){
-            $(this).removeClass("error_input");
-        });
-        // прячем текст ошибок
-        $(".error").hide();
+        if ($('#personal_id').val() == 0) {
+            $("#personal_id_error").html('<span style="color: red">В этом поле ошибка</span>');
+            $("#personal_id_error").show();
+        }else{
 
-        //проверка данных на валидность
-        $.ajax({
-            url:"ajax_test.php",
-            global: false,
-            type: "POST",
-            dataType: "JSON",
+            let reqData = {
+                cat_name: $('#cat_name').val(),
+                work_percent: $('#work_percent').val(),
+                material_percent: $('#material_percent').val(),
+                summ_special: $('#summ_special').val(),
+                personal_id: $('#personal_id').val(),
+                cat_id: id
+            };
+            console.log(reqData);
 
-            data:{
-                cat_name: cat_name,
-                work_percent: work_percent,
-                material_percent: material_percent,
-                summ_special: summ_special,
-                personal_id: personal_id
-            },
+            // убираем класс ошибок с инпутов
+            $("input").each(function () {
+                $(this).removeClass("error_input");
+            });
+            // прячем текст ошибок
+            $(".error").hide();
 
-            cache: false,
-            beforeSend: function() {
-                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-            },
-            success:function(data){
-                if(data.result == 'success'){
-                    //console.log(data.result);
-                    $.ajax({
-                        url: link,
-                        global: false,
-                        type: "POST",
-                        dataType: "JSON",
+            //проверка данных на валидность
+            $.ajax({
+                url: "ajax_test.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
 
-                        data:
-                            {
-                                cat_name: cat_name,
-                                work_percent: work_percent,
-                                material_percent: material_percent,
-                                summ_special: summ_special,summ_special: summ_special,
-                                personal_id: personal_id
+                data: {cat_name: $('#cat_name').val()},
+
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    if (data.result == 'success') {
+                        //console.log(data.result);
+                        $.ajax({
+                            url: link,
+                            global: false,
+                            type: "POST",
+                            dataType: "JSON",
+
+                            data: reqData,
+
+                            cache: false,
+                            beforeSend: function () {
+                                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
                             },
+                            // действие, при ответе с сервера
+                            success: function (data) {
+                                //console.log(data.data);
 
-                        cache: false,
-                        beforeSend: function() {
-                            //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-                        },
-                        // действие, при ответе с сервера
-                        success:function(data){
-                            //console.log(data.data);
-
-                            if(data.result == 'success') {
-                                //console.log('success');
-                                $('#data').html(data.data);
-                                setTimeout(function () {
-                                    //window.location.replace('specializations.php');
-                                }, 100);
-                            }else{
-                                //console.log('error');
-                                $('#errror').html(data.data);
-                                //$('#errrror').html('');
+                                if (data.result == 'success') {
+                                    //console.log('success');
+                                    $('#data').html(data.data);
+                                    setTimeout(function () {
+                                        //window.location.replace('specializations.php');
+                                    }, 100);
+                                } else {
+                                    //console.log('error');
+                                    $('#errror').html(data.data);
+                                    //$('#errrror').html('');
+                                }
                             }
+                        });
+                        // в случае ошибок в форме
+                    } else {
+                        // перебираем массив с ошибками
+                        for (var errorField in data.text_error) {
+                            // выводим текст ошибок
+                            $('#' + errorField + '_error').html(data.text_error[errorField]);
+                            // показываем текст ошибок
+                            $('#' + errorField + '_error').show();
+                            // обводим инпуты красным цветом
+                            // $('#'+errorField).addClass('error_input');
                         }
-                    });
-                // в случае ошибок в форме
-                }else{
-                    // перебираем массив с ошибками
-                    for(var errorField in data.text_error){
-                        // выводим текст ошибок
-                        $('#'+errorField+'_error').html(data.text_error[errorField]);
-                        // показываем текст ошибок
-                        $('#'+errorField+'_error').show();
-                        // обводим инпуты красным цветом
-                        // $('#'+errorField).addClass('error_input');
+                        $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
                     }
-                    $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
                 }
-            }
-        })
+            })
+        }
     }
 
 	//!!! тут очередная "правильная" ф-ция
