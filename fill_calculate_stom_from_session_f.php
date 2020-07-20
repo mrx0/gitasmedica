@@ -233,7 +233,7 @@
                                         $request .= '
                                                     </select>';*/
 
-                                        $request .= '<i>'.$percent_c/fl_percent_cat.phpt_name.'</i>';
+                                        $request .= '<i>'.$percent_cat_name.'</i>';
 
                                         $request .= '
                                                     </div>
