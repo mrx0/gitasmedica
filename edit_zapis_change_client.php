@@ -71,7 +71,7 @@
                                             </div>
                                             <div class="cellRight">
                                                 <input type="text" size="30" name="searchdata" id="search_client" placeholder="Введите ФИО пациента" value="" class="who"  autocomplete="off" style="width: 90%;"> 
-                                                <ul id="search_result" class="search_result"></ul><br />
+                                                <ul id="search_result" class="search_result"></ul><br>
                                             </div>
                                         </div>';
 

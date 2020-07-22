@@ -36,7 +36,7 @@
 
                 $res_data = '';
 
-                    //переменная для суммы оплаты
+                //переменная для суммы оплаты
                 $payed = 0;
                 //переменная для потрачено с баланса
                 $debited = 0;
@@ -129,10 +129,20 @@
                                                     //пересчитаем долги и баланс еще разок
                                                     //!!! @@@
                                                     //Баланс контрагента
+                                                    $payer_id = $client_id;
 
-                                                    $client_balance = json_decode(calculateBalance($client_j[0]['id']), true);
+                                                    //Проверка тот же плательщик или другой
+                                                    if (isset($_POST['another_payer'])){
+                                                        if ($_POST['another_payer'] == 'true'){
+                                                            if (isset($_POST['another_payer_id'])){
+                                                                $payer_id = $_POST['another_payer_id'];
+                                                            }
+                                                        }
+                                                    }
+
+                                                    $client_balance = json_decode(calculateBalance($payer_id), true);
                                                     //Долг контрагента
-                                                    $client_debt = json_decode(calculateDebt($client_j[0]['id']), true);
+                                                    $client_debt = json_decode(calculateDebt($payer_id), true);
 
                                                     //Нет доступных средств на счету
                                                     if (($client_balance['summ'] <= 0) || ($client_balance['summ'] - $client_balance['debited'] - $client_balance['withdraw'] + $client_balance['refund'] <= 0)) {
@@ -157,7 +167,7 @@
                                                                 $query = "INSERT INTO `journal_payment` (
                                                                   `client_id`, `invoice_id`, `filial_id`, `summ`, `date_in`, `comment`, `create_time`, `create_person`)
                                                                 VALUES (
-                                                                  '{$client_id}', '{$invoice_id}', '{$_POST['filial_id']}', '{$_POST['summ']}', '{$date_in}', '{$_POST['comment']}', '{$time}', '{$_SESSION['id']}')";
+                                                                  '{$payer_id}', '{$invoice_id}', '{$_POST['filial_id']}', '{$_POST['summ']}', '{$date_in}', '{$_POST['comment']}', '{$time}', '{$_SESSION['id']}')";
                                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                                                                 //ID новой позиции
@@ -173,14 +183,14 @@
                                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                                                                 //Обновим потраченное в балансе
-                                                                $query = "UPDATE `journal_balance` SET `debited`='$debited'  WHERE `client_id`='$client_id'";
+                                                                $query = "UPDATE `journal_balance` SET `debited`='$debited'  WHERE `client_id`='$payer_id'";
                                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                                                                 //Обновим общий долг
-                                                                calculateDebt($client_id);
-                                                                calculateBalance ($client_id);
+                                                                calculateDebt($payer_id);
+                                                                calculateBalance ($payer_id);
 
-                                                                /*$query = "UPDATE `journal_debt` SET `summ`='$debited'  WHERE `client_id`='$client_id'";
+                                                                /*$query = "UPDATE `journal_debt` SET `summ`='$debited'  WHERE `client_id`='$payer_id'";
                                                                 mysql_query($query) or die(mysql_error() . ' -> ' . $query);*/
 
 

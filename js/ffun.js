@@ -61,10 +61,10 @@
 	});
 
     //Показываем блок с суммами и кнопками Для оплаты наряда
-    function showPaymentAdd(mode){
-        //console.log(mode);
+    function showPaymentAdd(mode, another_payer = false){
+        // console.log(another_payer);
 
-        var Summ = document.getElementById("summ").value;
+        let Summ = $("#summ").val();
 
         //проверка данных на валидность
         $.ajax({
@@ -91,11 +91,11 @@
                     }*/
 
                     if (mode == 'add'){
-                       Ajax_payment_add('add');
+                       Ajax_payment_add('add', another_payer);
                     }
 
                     if (mode == 'edit'){
-                        Ajax_payment_add('edit');
+                        Ajax_payment_add('edit', another_payer);
                     }
 
                     // Создаем меню:
@@ -291,43 +291,50 @@
     }
 
     //Добавляем/редактируем в базу оплату
-    function Ajax_payment_add(mode){
-        //console.log(mode);
+    function Ajax_payment_add(mode, another_payer = false){
+        //console.log(another_payer);
 
-        var payment_id = 0;
+        let payment_id = 0;
 
-        var link = "payment_add_f.php";
+        let link = "payment_add_f.php";
 
         if (mode == 'edit'){
             link = "payment_edit_f.php";
             payment_id = $("#payment_id").val();
         }
 
-        var Summ = $("#summ").val();
-        var invoice_id = $("#invoice_id").val();
-        var filial_id = $("#filial_id").val();
+        let reqData = {
+            client_id: $("#client_id").val(),
+            invoice_id: $("#invoice_id").val(),
+            filial_id: $("#filial_id").val(),
+            summ: $("#summ").val(),
+            date_in: $("#date_in").val(),
+            comment: $("#comment").val()
+        };
 
-        var client_id = $("#client_id").val();
-        var date_in = $("#date_in").val();
-        //console.log(date_in);
+        if (another_payer){
+            reqData.another_payer = true;
+            reqData.another_payer_id = $("#new_payer_id").val();
+        }
 
-        var comment = $("#comment").val();
-        //console.log(comment);
+        // var Summ = $("#summ").val();
+        // var invoice_id = $("#invoice_id").val();
+        // var filial_id = $("#filial_id").val();
+        //
+        // var client_id = $("#client_id").val();
+        // var date_in = $("#date_in").val();
+        // //console.log(date_in);
+        //
+        // var comment = $("#comment").val();
+
+        //console.log(reqData);
 
         $.ajax({
             url: link,
             global: false,
             type: "POST",
             dataType: "JSON",
-            data:
-                {
-                    client_id: client_id,
-                    invoice_id: invoice_id,
-                    filial_id: filial_id,
-                    summ: Summ,
-                    date_in: date_in,
-                    comment: comment
-                },
+            data: reqData,
             cache: false,
             beforeSend: function() {
                 //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
