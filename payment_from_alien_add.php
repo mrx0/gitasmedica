@@ -1,7 +1,7 @@
 <?php
 
-//payment_add.php
-//Оплатить наряд заказ с баланса/счета
+//payment_from_alien_add.php
+//Оплатить наряд заказ с баланса/счета другого пациента
 
 	require_once 'header.php';
 	
@@ -24,7 +24,7 @@
 			//unset($_SESSION['invoice_data']);
 			
 			if ($_GET){
-				if (isset($_GET['invoice_id'])){
+				if ((isset($_GET['invoice_id'])) && (isset($_GET['client_id']))){
 					
 					$invoice_j = SelDataFromDB('journal_invoice', $_GET['invoice_id'], 'id');
 
@@ -76,7 +76,7 @@
 							<div id="status">
 								<header>
 
-									<h2>Внесение оплаты по наряду <a href="invoice.php?id='.$_GET['invoice_id'].'" class="ahref">#'.$_GET['invoice_id'].'</a></h2>';
+									<h2>Внесение оплаты по наряду <a href="invoice.php?id='.$_GET['invoice_id'].'" class="ahref">#'.$_GET['invoice_id'].'</a> с выбором плательщика</h2>';
 
 							echo '
 										<div class="cellsBlock2" style="margin-bottom: 10px;">
@@ -106,6 +106,7 @@
 								<ul style="margin-left: 6px; margin-bottom: 10px;">	
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Посещение</li>';
 
+								
 
                         // !!! **** тест с записью
                         include_once 'showZapisRezult.php';
@@ -148,10 +149,10 @@
                                     echo '
                                         </div>';
                                 }
-                                echo '
+                                /*echo '
                                         <div>
                                             <a href="certificate_payment_add.php?invoice_id=' . $_GET['invoice_id'] . '" class="b">Оплатить сертификатом</a>
-                                        </div>';
+                                        </div>';*/
                                 echo '
 										</div>';
 
@@ -160,7 +161,7 @@
                                 //!!! @@@
                                 //Баланс контрагента
                                 include_once 'ffun.php';
-                                $client_balance = json_decode(calculateBalance($client_j[0]['id']), true);
+                                $client_balance = json_decode(calculateBalance($_GET['client_id']), true);
                                 //Долг контрагента
                                 //$client_debt = json_decode(calculateDebt ($client_j[0]['id']), true);
 
@@ -170,6 +171,16 @@
 										<div id="paymentAddRezult" class="cellsBlock" style="font-size: 90%;" >
 											<div class="cellText2" style="padding: 2px 4px;">
                                                 <ul id="balance" style="padding: 5px; margin: 0 5px 10px; display: inline-block; vertical-align: top; /*border: 1px outset #AAA;*/">';
+
+                                echo '
+                                                <li style="margin-top: 5px; margin-bottom: 5px; font-size: 90%;">
+                                                   <b>Плательщик: </b><br>
+                                                   <input type="text" size="40" name="searchdata" id="search_client" placeholder="Введите первые три буквы для поиска" value="' . WriteSearchUser('spr_clients', $_GET['client_id'], 'user_full', false) . '" class="who"  autocomplete="off" style="margin-top: 5px; font-size: 120%;">
+                                                   <!--!!!Изменить-->
+                                                   <span id="changeNewPayer_id" class="button_tiny" style="font-size: 110%; cursor: pointer" onclick="changeNewPayer();"><i class="fa fa-check-square" style=" color: green;"></i> Изменить</span>
+                                                   <ul id="search_result" class="search_result"></ul><br>
+                                                </li>
+                                                <input type="hidden" id="new_payer_id" value="'.$_GET['client_id'].'">';
 
                                 echo '
                                                     <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
@@ -183,12 +194,12 @@
                                                         <div class="availableBalance" id="availableBalance" style="display: inline;">Нет доступных средств на счету</div>
                                                     </li>
                                                     
-                                                    <li style="font-size: 100%; color: #7D7D7D; margin-bottom: 5px;">
+                                                    <!--<li style="font-size: 100%; color: #7D7D7D; margin-bottom: 5px;">
                                                         <a href="add_order.php?client_id=' . $client_j[0]['id'] . '" class="b">Добавить приходный ордер</a>
                                                     </li>
                                                     <li style="font-size: 100%; color: #7D7D7D; margin-bottom: 5px;">
 												        <a href="finance_account.php?client_id=' . $client_j[0]['id'] . '" class="b">Управление счётом</a>
-											        </li>';
+											        </li>-->';
 
                                 } else {
                                     $have_no_money_style = '';
@@ -276,7 +287,7 @@
                                                             <div id="errror"></div>
                                                             <input type="hidden" id="client_id" name="client_id" value="' . $invoice_j[0]['client_id'] . '">
                                                             <input type="hidden" id="invoice_id" name="invoice_id" value="' . $_GET['invoice_id'] . '">
-                                                            <input type="button" class="b" value="Сохранить" onclick="showPaymentAdd(\'add\')">
+                                                            <input type="button" class="b" value="Сохранить" onclick="showPaymentAdd(\'add\', true)">
                                                         </div>';
 
 
@@ -303,6 +314,23 @@
 
                             <!-- Подложка только одна -->
 					        <div id="overlay"></div>';
+
+                        echo '
+							<script>
+                                $(".search_result").on("click", "li", function(){
+
+                                    let client_id = $(this).attr("client_id");
+                                    //console.log(client_id);
+                                    
+                                    $("#new_payer_id").val(client_id);
+        
+                                    $("#changeNewPayer_id").css({
+                                        "border": "1px dashed red",
+                                        "color": "red",
+                                    })
+                                    
+                                });
+                            </script>';
 
 
 						/*}else{

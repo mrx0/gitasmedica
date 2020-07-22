@@ -12112,6 +12112,40 @@
 
     }
 
+    //Изменение плательщика наряда
+    function changeNewPayer(){
+        //!!!Получение данных из GET тест
+        //console.log(params["data"]);
+        //выведет в консоль значение  GET-параметра data
+        //console.log(params);
+
+        let get_data_str = "";
+
+        let params = window
+            .location
+            .search
+            .replace("?","")
+            .split("&")
+            .reduce(
+                function(p,e){
+                    let a = e.split('=');
+                    p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+                    return p;
+                },
+                {}
+            );
+
+        for (let key in params) {
+            if (key.indexOf("client_id") == -1){
+                get_data_str = get_data_str + "&" + key + "=" + params[key];
+            }
+        }
+        // console.log(get_data_str);
+
+        //!!! window.location.href - это правильное использование
+        window.location.href = "payment_from_alien_add.php?client_id="+$("#new_payer_id").val() + get_data_str;
+    }
+
     //Загрузка элементов склада
     function getScladItems (cat_id, start, limit, free=true, pick=false, pick_id=-1, search_data=''){
         //Для позиции ВООБЩЕ СОВСЕМ БЕЗ категории free == 'true'
