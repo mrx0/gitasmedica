@@ -2514,7 +2514,7 @@
 
     //Добавляем/редактируем в базу приход извне
     function  fl_Ajax_money_from_outside_add(moneyData){
-        //console.log(paidoutData);
+        console.log(moneyData);
 
         let link = "fl_money_from_outside_add_f.php";
 
@@ -2543,6 +2543,47 @@
 
                     location.reload();
                     //window.location.replace("fl_tabel.php?id="+tabel_id);
+
+                }else{
+                    //console.log('error');
+                    $('#errror').html(res.data);
+                    //$('#errrror').html('');
+                }
+            }
+        });
+    }
+
+    //Добавляем/редактируем в базу расходы на материалы
+    function  fl_Ajax_material_cost_add(moneyData){
+        //console.log(moneyData);
+
+        let link = "fl_material_cost_add_f.php";
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data: moneyData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(res){
+//                console.log(res.data);
+                //$('#data').html(res)
+
+                blockWhileWaiting (true);
+
+                if(res.result == 'success') {
+                    //console.log('success');
+                    //$('#data').html(res.data);
+
+                    //location.reload();
+                    window.location.href = "material_costs_test.php?filial_id="+moneyData.filial_id+"&m="+moneyData.month+"&y="+moneyData.year;
 
                 }else{
                     //console.log('error');
@@ -3116,6 +3157,66 @@
                     }
                 }
             })
+        }
+    }
+
+    //Промежуточная функция для Добавления расходов
+    function fl_showMaterialCostAdd_test(){
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        if ($('#SelectFilial').val() == 0){
+            $("#errror").html('<div class="query_neok">Не выбран филиал</div>');
+        }else {
+            if ($('#SelectCategory').val() == 0){
+                $("#errror").html('<div class="query_neok">Не выбрана категория</div>');
+            }else {
+
+                let moneyData = {
+                    month: $('#iWantThisMonth').val(),
+                    year: $('#iWantThisYear').val(),
+                    summ: $('#paidout_summ').val(),
+                    filial_id: $('#SelectFilial').val(),
+                    cat_id: $('#SelectCategory').val(),
+                    descr: $('#descr').val()
+                };
+                //console.log(paidoutData);
+
+                //проверка данных на валидность
+                $.ajax({
+                    url: "ajax_test.php",
+                    global: false,
+                    type: "POST",
+                    dataType: "JSON",
+
+                    data: {summ: $('#summ').val()},
+
+                    cache: false,
+                    beforeSend: function () {
+                        //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                    },
+                    success: function (res) {
+                        if (res.result == 'success') {
+
+                            fl_Ajax_material_cost_add(moneyData);
+
+                            // в случае ошибок в форме
+                        } else {
+                            // перебираем массив с ошибками
+                            for (var errorField in res.text_error) {
+                                // выводим текст ошибок
+                                $('#' + errorField + '_error').html(res.text_error[errorField]);
+                                // показываем текст ошибок
+                                $('#' + errorField + '_error').show();
+                                // обводим инпуты красным цветом
+                                // $('#'+errorField).addClass('error_input');
+                            }
+                            $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                        }
+                    }
+                })
+            }
         }
     }
 

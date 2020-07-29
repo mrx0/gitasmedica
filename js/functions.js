@@ -9212,6 +9212,50 @@
 
 	}
 
+    function Ajax_MaterialCostDelete (id){
+        //console.log();
+
+        let rys = false;
+
+        rys = confirm("Вы хотите удалить расход материалов. \n\nВы уверены?");
+        //console.log(885);
+
+        if (rys) {
+
+            let link = "fl_material_cost_delete_f.php";
+            //console.log(link);
+
+            let reqData = {
+                id: id
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    // console.log(res);
+
+                    if (res.result == "success") {
+                        location.reload();
+                    } else {
+                        alert(res.data);
+                        //$("#overlay").hide();
+                        $('#errrror').html('<div class="query_neok">' + res.data + '</div>');
+                    }
+                }
+            });
+        }
+    }
+
 	//Добавляем/редактируем в базу ордер
 	function Ajax_order_add(mode){
 		//console.log(mode);
