@@ -140,7 +140,7 @@
                             <a href="fl_percent_cats.php" class="b">Общие</a>
                             <!--<a href="fl_salaries.php" class="b">Оклады сотрудников</a>-->
                         </div>
-                        <h1>Персональные категории процентов <a href="fl_percent_cats_personal_4print.php" class="b3" style="font-weight: normal; font-size: 55%;">Версия для печати <i class="fa fa-print" aria-hidden="true"></i></a></h1>
+                        <h1>Персональные категории процентов</h1>
                         <span style= "color: red; font-size: 90%;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> При расчётах, если указана "Cпец. цена", проценты будут игнорироваться.</span>';
             echo '			
                     </header>';
