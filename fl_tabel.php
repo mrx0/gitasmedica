@@ -179,6 +179,30 @@
                         $msql_cnnct = ConnectToDB2 ();
                         //var_dump(microtime(true) - $script_start);
 
+                        //Отметки по дополнительным опциям
+                        //!!! Здесь функция большая и избыточная, но лень переписывать
+                        $spec_prikaz8_checked = '';
+                        $spec_oklad_checked = '';
+
+                        $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$tabel_j[0]['worker_id']} LIMIT 1'";
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                        $number = mysqli_num_rows($res);
+
+                        $spec_prikaz8 = false;
+                        $spec_oklad = false;
+
+                        if ($number != 0){
+                            $arr = mysqli_fetch_assoc($res);
+                            if ($arr['prikaz8'] == 1){
+                                $spec_prikaz8 = true;
+                            }
+                            if ($arr['oklad'] == 1){
+                                $spec_oklad = true;
+                            }
+                        }
+                        //var_dump($spec_prikaz8);
+
                         //Категории процентов
                         $percent_cats_j = array();
                         //Для сортировки по названию
@@ -1227,10 +1251,14 @@
                                             <span style="font-size: 80%; color: #8C8C8C;">сумма округляется до целого для удобства расчетов</span></div>
                                             <div>';
 
+                        echo '<span style="color: red; font-size: 90%;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%"></i> Сотруднику применяется приказ №8</span><br>';
+
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
                             if ($tabel_j[0]['type'] == 6) {
-                                echo '
-                                                <button class="b" style="font-size: 80%;" onclick="prikazNomerVosem(' . $tabel_j[0]['worker_id'] . ', ' . $_GET['id'] . ');">Применить приказ №8</button>';
+                                if ($spec_prikaz8) {
+                                    echo '
+                                                <button class="b" style="font-size: 80%;color: white; background: #ff3636;" onclick="prikazNomerVosem(' . $tabel_j[0]['worker_id'] . ', ' . $_GET['id'] . ');">Применить приказ №8</button>';
+                                }
                             }
                             echo '
                                                 <button class="b" style="font-size: 80%;" onclick="deployTabel(' . $_GET['id'] . ');">Провести табель</button>';

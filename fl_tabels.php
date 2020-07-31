@@ -172,6 +172,7 @@
                             }
                         }
                         //var_dump($query);
+                        //var_dump($workers_j);
 
                         //Сортируем по имени
                         ksort($workers_j);
@@ -197,7 +198,11 @@
                                     <li>
                                         <a href="#tabs-' . $type . '_' . $worker['id'] . '" onclick="clearAllChecked(); hideAllErrors();">
                                             ' . $worker['name'] . '
-                                            <div  class="notes_count_div">
+                                            <div  class="notes_count_div">';
+                            if ($worker['prikaz8']){
+                                echo '<span style="font-size: 70%; font-weight: bold; color: white; background: red; padding: 0 2px;">8</span>';
+                            }
+                            echo '
                                                 <div id="tabs_notes2_' . $type . '_' . $worker['id'].'" class="notes_count3" style="display: none;">
                                                     <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
                                                 </div>
@@ -219,7 +224,15 @@
 
                                 <div id="tabs-' . $type . '_' . $worker['id'] . '" class="workerDataAllFilials" workerData="' . $type . '_' . $worker['id'] . '" style="width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); margin-left: 150px; font-size: 12px;">';
 
-                            echo '<h2>' .$permissions_j[$type]['name'].'</h2><h1>'.$worker['name'].'</h2>';
+                            echo '
+                                    <h2>' .$permissions_j[$type]['name'];
+                            echo '
+                                    </h2>
+                                    <h1>'.$worker['name'].'</h1>';
+                            if ($worker['prikaz8']){
+                                echo '<span style="color: red; "><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%"></i> Сотруднику применяется приказ №8</span>';
+                            }
+
 
                             $tabs_rez_js .= '$( "#tabs_w'.$type.'_'.$worker['id'].'").tabs({collapsible: true, active: false});';
 
