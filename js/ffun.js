@@ -6305,7 +6305,7 @@
         '<tr><td>Наим.</td><td>Работа</td><td>Материал</td><td>Фикс.</td></tr>';
 
         $(".percentCatItem").each(function() {
-            var cat_id = ($(this).attr("cat_id"));
+            var cat_id = fl_createSchedulerReport_add($(this).attr("cat_id"));
             var cat_name = ($(this).html());
             // console.log(cat_id);
             // console.log(cat_name);
@@ -6396,7 +6396,7 @@
             //console.log(summHours);
 
             //Выведем кол-во часов
-            $("#allMonthHours_"+worker_id).html(summHours);
+            $("#allMonthHours_"+worker_id).html(number_format(summHours, 2, '.', ' '));
 
             //Берем норму смен этого месяца для этого сотрудника
             //!!! Хотя норма для всех одинакова по сути... короче бред тут каждый раз брать одно и то же с разных мест

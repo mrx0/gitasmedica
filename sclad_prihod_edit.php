@@ -382,7 +382,7 @@ if ($enter_ok){
                             <div id="overlay"></div>';
 
                     echo '
-                            <div id="doc_title">Склад - Асмедика</div>';
+                            <div id="doc_title">Редактирование приходной накладной #'.$_GET['id'].' - Асмедика</div>';
 
                     echo '
                             

@@ -381,7 +381,7 @@
                 <div id="overlay"></div>';
 
             echo '
-                <div id="doc_title">Склад - Асмедика</div>';
+                <div id="doc_title">Создание приходной накладной - Асмедика</div>';
 
             echo '
 				
