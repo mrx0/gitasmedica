@@ -1870,7 +1870,7 @@
                         if (!empty($rezult_arr[7]['data'])) {
                             arsort($rezult_arr[7]['data']);
 
-                            var_dump($rezult_arr[7]['data']);
+                            //var_dump($rezult_arr[7]['data']);
 
                             foreach ($rezult_arr[7]['data'] as $percent_cat_id => $value) {
 
