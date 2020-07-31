@@ -1875,7 +1875,7 @@
                                 if (isset($percents_j[7][$percent_cat_id])) {
                                     $percent_cat_name = $percents_j[7][$percent_cat_id]['name'];
                                 } else {
-                                    $percent_cat_name = $percents_j[$percent_cat_id]['name'] . '<i class="fa fa-warning" aria-hidden="true"></i>';
+                                    $percent_cat_name = $percents_j[7][$percent_cat_id]['name'] . '<i class="fa fa-warning" aria-hidden="true"></i>';
                                 }
 
                                 echo '
