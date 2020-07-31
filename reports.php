@@ -212,6 +212,7 @@
 							</li>';
 
 //                if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
+//                if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
 //                    echo '
 //							<li class="cellsBlock" style="margin: 1px;">
 //								<a href="fl_main_report2.php" class="b3">Финальный отчёт</a>
@@ -264,6 +265,20 @@
 
 
                 //}
+                echo '
+						</ul>';
+            }
+
+            if (($finances['see_all'] == 1) || $god_mode) {
+                echo '
+						<ul class="reportBlock" style="">
+								<h1>Складской учёт [ТЕСТ]</h1>';
+
+                echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="sclad.php" class="b3">Склад (тест)</a>
+							</li>';
+
                 echo '
 						</ul>';
             }
