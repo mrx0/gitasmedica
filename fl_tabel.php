@@ -1250,8 +1250,9 @@
                                             <div>Итого осталось выплатить: <span id="summItog" class="calculateOrder" style="font-size: 16px; ', ($summItog) <= 0 ? 'color: red;' : '' ,'">' . intval($summItog) . '</span> руб.<br>
                                             <span style="font-size: 80%; color: #8C8C8C;">сумма округляется до целого для удобства расчетов</span></div>
                                             <div>';
-
-                        echo '<span style="color: red; font-size: 90%;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%"></i> Сотруднику применяется приказ №8</span><br>';
+                        if ($spec_prikaz8) {
+                            echo '<span style="color: red; font-size: 90%;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%"></i> Сотруднику применяется приказ №8</span><br>';
+                        }
 
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
                             if ($tabel_j[0]['type'] == 6) {
