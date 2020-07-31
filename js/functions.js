@@ -13262,7 +13262,7 @@
 
     //Проверяем и добавляем приход
     function Ajax_sclad_prihod_add(edit = false){
-        console.log(edit);
+        //console.log(edit);
 
         hideAllErrors();
 

@@ -1,7 +1,7 @@
 <?php
 
-//material_costs_test.php
-//Расходы на материалы test
+//sclad_prihods.php
+//Приходные накладные
 
 	require_once 'header.php';
 	
@@ -9,7 +9,7 @@
 		require_once 'header_tags.php';
 		//var_dump($_SESSION);
 
-		if (($finances['see_all'] == 1) || $god_mode){
+        if (($items['see_all'] == 1) || ($items['see_own'] == 1) || $god_mode){
 			//include_once 'DBWork.php';
 
             /*!!!Тест PDO*/
@@ -41,42 +41,39 @@
             }
 
             //Филиал
-            if (isset($_SESSION['filial'])) {
-                $filial_id = $_SESSION['filial'];
-                $have_target_filial = true;
-            } else {
-                $filial_id = 15;
-            }
+//            if (isset($_SESSION['filial'])) {
+//                $filial_id = $_SESSION['filial'];
+//                $have_target_filial = true;
+//            } else {
+            $filial_id = 0;
+//            }
 
-            if (($finances['see_all'] == 1) || $god_mode) {
+            //if (($finances['see_all'] == 1) || $god_mode) {
                 if (isset($_GET['filial_id'])) {
                     $filial_id = $_GET['filial_id'];
-                    $have_target_filial = true;
+//                    $have_target_filial = true;
                 }
+            //}
+
+            $status = 0;
+
+            if (isset($_GET['status'])) {
+                $status = $_GET['status'];
             }
 
-            $dop = 'filial_id='.$filial_id;
-
-//            if ($have_target_filial) {
-//                $href_str = '?filial_id=' . $filial_id . '&m=' . $month . '&y=' . $year;
-//                //var_dump($href_str);
-//            }
+            $dop = 'filial_id='.$filial_id.'&status='.$status;
 
             echo '
                 <div id="status">
                     <header id="header">
                         <div class="nav">
-                            <a href="fl_consolidated_report_admin.php?filial_id='.$filial_id.'" class="b">Сводный отчёт по филиалу</a>
-                            <a href="fl_main_report2.php?filial_id='.$filial_id.'" class="b">Финальный отчёт</a>
+                            <a href="sclad.php" class="b">Склад</a>
                         </div>
-                        <h2 style="">Расходы на материалы по филиалам</h2>
-                        <div>
-						    <a href="material_cost_add_test.php?filial_id='.$filial_id.'" class="b">Добавить расход</a>
-						</div>
+                        <h2 style="">Приходные накладные</h2>
                     </header>';
 
             echo '
-                    <div id="data">';
+                    <div id="data" style="margin-top: 5px;">';
             echo '				
                         <div id="errrror"></div>';
 
@@ -84,17 +81,16 @@
             //$dop = '';
 
             echo '<div class="no_print">';
-            echo widget_calendar ($month, $year, 'material_costs_test.php', $dop);
+            echo widget_calendar ($month, $year, 'sclad_prihods.php', $dop);
             echo '</div>';
-
 
             //Выбор филиала
             echo '
-                        <div style="font-size: 90%; margin: 10px 0;">
-                            Филиалы: <br>
+                        <div style="font-size: 90%; margin: 10px 0; display: inline-block;">
+                            Филиал:
 
-            <select name="SelectFilial" id="SelectFilial">
-							<option value="0" selected>Выберите филиал</option>';
+                            <select name="SelectFilial" id="SelectFilial">
+							    <option value="0" selected>Выберите филиал</option>';
             if (!empty($filials_j)){
                 foreach($filials_j as $f_id => $filial_item){
                     $selected = '';
@@ -104,11 +100,18 @@
                     echo "<option value='".$f_id."' $selected>".$filial_item['name']."</option>";
                 }
             }
-				echo '
-            </select>
+            echo '
+                            </select>
 
 
-                        </div>';
+                        </div>
+                        <div style="font-size: 90%; display: inline-block; background: #f1f1f1; padding: 3px;">
+                            Только не проведённые <input type="checkbox" id="prihod_status" value="1" ', $status == 1? 'checked' : '' ,'>
+                        </div>
+                        <div style="font-size: 90%; display: inline-block;">
+                            <span id="acceptScladPrihodsSettings" class="button_tiny" style="font-size: 100%; cursor: pointer" onclick=""><i class="fa fa-check-square" style=" color: green;"></i> Применить</span>
+                        </div>
+                        ';
 
 
 //            $msql_cnnct = ConnectToDB ();
@@ -240,7 +243,7 @@
             echo '
                     </div>
                 </div>
-                <div id="doc_title">Расходы на материалы по филиалам - Асмедика</div>';
+                <div id="doc_title">Приходные накладные - Асмедика</div>';
 
             echo '	
 			    <!-- Подложка только одна -->
@@ -250,46 +253,47 @@
             echo '
 					<script>
 					
-						$(function() {
-							$("#SelectFilial").change(function(){
-							    
-							    if ($(this).val() != 0){
-							        
-							        blockWhileWaiting (true);
-								    
-                                    let get_data_str = "";
+					    $(\'#acceptScladPrihodsSettings\').on(\'click\', function(data){
+                            let prihod_status = 0;
 
-                                    let params = window
-                                        .location
-                                        .search
-                                        .replace("?","")
-                                        .split("&")
-                                        .reduce(
-                                            function(p,e){
-                                                let a = e.split(\'=\');
-                                                p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
-                                                return p;
-                                            },
-                                            {}
-                                        );
-                                    //console.log(params);
-                                                    
-                                    for (let key in params) {
-//                                        console.log(key.indexOf("filial_id"));
-                                        if (key.length > 0){
-                                            if (key.indexOf("filial_id") == -1){
-                                                get_data_str = get_data_str + "&" + key + "=" + params[key];
-                                            }
-                                        }
-                                    }
-                                    //console.log(get_data_str);
+                            if ($(\'#prihod_status\').prop("checked")){
+                                prihod_status = 1;
+                            }
+                            //console.log(prihod_status);
                             
-                                    //!!! window.location.href - это правильное использование
-                                    window.location.href = "material_costs_test.php?filial_id="+$(this).val() + get_data_str;
-								}
-							});
-						});
-						
+                            let filial_id = $(\'#SelectFilial\').val();
+                            //console.log(filial_id);
+                            
+                            let get_data_str = "";
+
+                            let params = window
+                                .location
+                                .search
+                                .replace("?","")
+                                .split("&")
+                                .reduce(
+                                    function(p,e){
+                                        let a = e.split(\'=\');
+                                        p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+                                        return p;
+                                    },
+                                    {}
+                                );
+                            //console.log(params);
+                                            
+                            for (let key in params) {
+//                                        console.log(key.indexOf("filial_id"));
+                                if (key.length > 0){
+                                    if ((key.indexOf("filial_id") == -1) &&((key.indexOf("status") == -1))){
+                                        get_data_str = get_data_str + "&" + key + "=" + params[key];
+                                    }
+                                }
+                            }
+                            //console.log(get_data_str);
+                                    
+                            window.location.href = "sclad_prihods.php?filial_id=" + filial_id + "&status=" + prihod_status + get_data_str;
+                            
+                        })
 					</script>';
 
 		}else{

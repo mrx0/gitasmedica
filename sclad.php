@@ -12,48 +12,48 @@
             include_once 'DBWork.php';
 
 			//тип (космет/стомат/...)
-			if (isset($_GET['who'])){
-				if ($_GET['who'] == 'stom'){
-					$who = '&who=stom';
-					$whose = 'Стоматология ';
-					$selected_stom = ' selected';
-					$selected_cosm = ' ';
-					$datatable = 'scheduler_stom';
-					$kabsForDoctor = 'stom';
-					$type = 5;
-				}elseif($_GET['who'] == 'cosm'){
-					$who = '&who=cosm';
-					$whose = 'Косметология ';
-					$selected_stom = ' ';
-					$selected_cosm = ' selected';
-					$datatable = 'scheduler_cosm';
-					$kabsForDoctor = 'cosm';
-					$type = 6;
-				}else{
-					$who = '&who=stom';
-					$whose = 'Стоматология ';
-					$selected_stom = ' selected';
-					$selected_cosm = ' ';
-					$datatable = 'scheduler_stom';
-					$kabsForDoctor = 'stom';
-					$type = 5;
-					$_GET['who'] = 'stom';
-				}
-			}else{
-				$who = '&who=stom';
-				$whose = 'Стоматология ';
-				$selected_stom = ' selected';
-				$selected_cosm = ' ';
-				$datatable = 'scheduler_stom';
-				$kabsForDoctor = 'stom';
-				$type = 5;
-				$_GET['who'] = 'stom';
-			}
+//			if (isset($_GET['who'])){
+//				if ($_GET['who'] == 'stom'){
+//					$who = '&who=stom';
+//					$whose = 'Стоматология ';
+//					$selected_stom = ' selected';
+//					$selected_cosm = ' ';
+//					$datatable = 'scheduler_stom';
+//					$kabsForDoctor = 'stom';
+//					$type = 5;
+//				}elseif($_GET['who'] == 'cosm'){
+//					$who = '&who=cosm';
+//					$whose = 'Косметология ';
+//					$selected_stom = ' ';
+//					$selected_cosm = ' selected';
+//					$datatable = 'scheduler_cosm';
+//					$kabsForDoctor = 'cosm';
+//					$type = 6;
+//				}else{
+//					$who = '&who=stom';
+//					$whose = 'Стоматология ';
+//					$selected_stom = ' selected';
+//					$selected_cosm = ' ';
+//					$datatable = 'scheduler_stom';
+//					$kabsForDoctor = 'stom';
+//					$type = 5;
+//					$_GET['who'] = 'stom';
+//				}
+//			}else{
+//				$who = '&who=stom';
+//				$whose = 'Стоматология ';
+//				$selected_stom = ' selected';
+//				$selected_cosm = ' ';
+//				$datatable = 'scheduler_stom';
+//				$kabsForDoctor = 'stom';
+//				$type = 5;
+//				$_GET['who'] = 'stom';
+//			}
 
 			echo '
 				<header>
                     <div class="nav">
-                        <a href="prihods.php" class="b">Приходные накладные</a>
+                        <a href="sclad_prihods.php" class="b">Приходные накладные</a>
                     </div>
 					<h1>Склад</h1>
 				</header>';

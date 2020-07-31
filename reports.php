@@ -239,6 +239,10 @@
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_percents.php" class="b3">Отчёт по скидкам и наценкам</a>
 							</li>';
+                echo '
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="material_costs_test.php" class="b3">Расходы на материалы</a>
+							</li>';
                 /*echo '
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="absents.php" class="b3">Отпуск/больничный</a>
