@@ -1135,6 +1135,27 @@
 		})
 	}
 
+	//Удаление блокировка филиала
+	function Ajax_del_filial(id) {
+
+		ajax({
+			url:"filial_del_f.php",
+			statbox:"errrror",
+			method:"POST",
+			data:
+			{
+				id: id
+			},
+			success:function(data){
+				 $("#errrror").html(data);
+				setTimeout(function () {
+                    //!!! переход window.location.href - это правильное использование
+                    window.location.href = 'filial.php?id='+id;
+				}, 100);
+			}
+		})
+	}
+
 	//Удаление блокировка сертификата
 	function Ajax_del_cert(id) {
 
@@ -1428,6 +1449,30 @@
 				setTimeout(function () {
 					window.location.replace('labor.php?id='+id);
 					//console.log('pricelistitem.php?id='+id);
+				}, 100);
+			}
+		})
+	}
+
+	//разблокировка филиала
+	function Ajax_reopen_filial(id) {
+
+		ajax({
+			url:"filial_reopen_f.php",
+			method:"POST",
+			data:
+			{
+				id: id,
+			},
+			success:function(data){
+				// $("#errrror").html(data);
+				setTimeout(function () {
+					//window.location.replace('labor.php?id='+id);
+					//console.log('pricelistitem.php?id='+id);
+
+                    window.location.href = 'filial.php?id='+id;
+
+
 				}, 100);
 			}
 		})
@@ -2311,7 +2356,7 @@
 
 	function Ajax_edit_labor(id) {
 		// убираем класс ошибок с инпутов
-		$hideAllErrors ();
+		hideAllErrors ();
 
 		var name =  $("#name").val();
 		var contract =  $("#contract").val();
@@ -2362,6 +2407,38 @@
 				}
 			}
 		});
+	};
+
+	//Редактируем филиал
+	function Ajax_edit_filial(id) {
+		// убираем класс ошибок с инпутов
+		hideAllErrors ();
+
+        let link = "filial_edit_f.php";
+
+        let reqData = {
+            id: id,
+            name: $("#name").val(),
+            address: $("#address").val(),
+            contacts: $("#contacts").val()
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                //console.log(res.data);
+
+                $("#errrror").html(res);
+            }
+        })
 	};
 
 
@@ -12186,7 +12263,7 @@
         }
         // console.log(get_data_str);
 
-        //!!! window.location.href - это правильное использование
+        //!!! переход window.location.href - это правильное использование
         window.location.href = "payment_from_alien_add.php?client_id="+$("#new_payer_id").val() + get_data_str;
     }
 
@@ -13475,5 +13552,85 @@
 
             }
         });
+    }
+
+    //Показываем блок с кнопками Для проведения наряда
+    function showPrihodClose(prihod_id){
+        //console.log(mode);
+        let rys = false;
+
+        rys = confirm("Провести приходную накладную?");
+
+        if (rys) {
+
+            let link = "prihod_close_f.php";
+
+            let reqData = {
+                prihod_id: prihod_id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    //console.log (res);
+
+                    if (res.result == "success") {
+                        setTimeout(function () {
+                            window.location.href = "sclad_prihod.php?id="+prihod_id;
+                        }, 200);
+                    } else {
+
+                    }
+                }
+            })
+        }
+    }
+
+    //Показываем блок с кнопками Для снятия проведения приходной накладной
+    function showPrihodOpen(prihod_id){
+        //console.log(mode);
+        var rys = false;
+
+        rys = confirm("Снять отметку о проведении приходной накладной?");
+
+        if (rys) {
+
+            var link = "prihod_open_f.php";
+
+            var reqData = {
+                prihod_id: prihod_id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    //console.log (res);
+
+                    if (res.result == "success") {
+                        setTimeout(function () {
+                            window.location.href = "sclad_prihod.php?id="+prihod_id;
+                        }, 200);
+                    } else {
+
+                    }
+                }
+            })
+        }
     }
 

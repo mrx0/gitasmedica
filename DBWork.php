@@ -816,6 +816,23 @@
 		AddLog (GetRealIp(), $session_id, '', 'Разблокирована лаборатория ['.$id.']. ['.date('d.m.y H:i', $time).'].');
 	}
 
+    //Разблокировать  лабораторию
+	function WriteToDB_ReopenFilial ($session_id, $id){
+
+        $msql_cnnct = ConnectToDB ();
+
+		$time = time();
+
+		$query = "UPDATE `spr_filials` SET `status`='0' WHERE `id`='{$id}'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        //CloseDB ($msql_cnnct);
+
+		//логирование
+		AddLog (GetRealIp(), $session_id, '', 'Разблокирован филиал ['.$id.']. ['.date('d.m.y H:i', $time).'].');
+	}
+
     //Разблокировать  сертификат
 	function WriteToDB_ReopenCert ($session_id, $id){
 
@@ -1146,6 +1163,37 @@
 
 		//логирование
 		AddLog (GetRealIp(), $session_id, $old, 'Отредактирована лаборатория ['.$id.']. ['.date('d.m.y H:i', $time).']. Название: ['.$name.']. Договор: ['.$contract.']. Контакты: ['.$contacts.'].');
+	}
+
+	//Редактирование карточки филиала из-под Web
+	function WriteFilialToDB_Update ($session_id, $id, $name, $address, $contacts){
+		$old = '';
+
+        $msql_cnnct = ConnectToDB ();
+
+		//Для лога соберем сначала то, что было в записи.
+		$query = "SELECT * FROM `spr_filials` WHERE `id`=$id";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
+
+		if ($number != 0){
+			$arr = mysqli_fetch_assoc($res);
+			$old = 'Название: ['.$arr['name'].']. Адрес: ['.$arr['address'].']. Контакты: ['.$arr['contacts'].']';
+		}else{
+			$old = 'Не нашли старую запись.';
+		}
+		$time = time();
+
+		$query = "UPDATE `spr_filials` SET `name`='{$name}', `address`='{$address}', `contacts`='{$contacts}' WHERE `id`='{$id}'";
+
+		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        //CloseDB ($msql_cnnct);
+
+		//логирование
+		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован филиал ['.$id.']. ['.date('d.m.y H:i', $time).']. Название: ['.$name.']. Адрес: ['.$address.']. Контакты: ['.$contacts.'].');
 	}
 
 	//Вставка и обновление Сертификата из-под Web

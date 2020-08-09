@@ -1,5 +1,7 @@
 <?php
 
+//DBWorkPDO.php
+
 /**
  * Class wrapper for working with PDO
  */

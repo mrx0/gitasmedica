@@ -1,7 +1,7 @@
 <?php 
 
-//labor_edit_f.php
-//Функция для редактирования лаборатории
+//fl_give_out_cash_edit_f.php
+//
 
 	session_start();
 	

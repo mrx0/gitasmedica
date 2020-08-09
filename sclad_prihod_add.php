@@ -28,7 +28,7 @@
 
             //!!!для тестов
 //            unset($_SESSION['sclad']['items_prihod_data']);
-            var_dump($_SESSION['sclad']['items_prihod_data']);
+//            var_dump($_SESSION['sclad']['items_prihod_data']);
 
 			echo '
 				<div id="status">
@@ -61,14 +61,14 @@
             echo '
                                             <select name="SelectFilial" id="SelectFilial">';
 
-            $selected_filial = 0;
+            $selected_filial = 15;
 
             if (isset($_SESSION['filial'])){
                 $selected_filial = $_SESSION['filial'];
             }
 
             echo '
-                                                <option value="0" ', $selected_filial == 0 ? 'selected': '' ,'>Главный склад [ПР21]</option>';
+                                                <option value="15" ', $selected_filial == 15 ? 'selected': '' ,'>Главный склад [ПР21]</option>';
 
 
 
@@ -80,8 +80,12 @@
                     $selected = 'selected';
                 }
 
-                echo '
+                //Главный склад (Энгельса)
+                if ($filial_item['id'] != 15) {
+
+                    echo '
                                                 <option value="' . $filial_item['id'] . '" ' . $selected . '>' . $filial_item['name2'] . '</option>';
+                }
             }
 
             echo '
@@ -104,7 +108,7 @@
                                 <label id="sel_date_error" class="error"></label>
                                 <label id="sel_month_error" class="error"></label>
                                 <label id="sel_year_error" class="error"></label>
-                            </div>sclad_item.php
+                            </div>
                         </div>
 					
                         <div class="cellsBlock2">
