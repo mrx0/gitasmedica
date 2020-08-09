@@ -12225,7 +12225,7 @@
 
             },
             success: function (res) {
-                // console.log (res);
+                console.log (res.q);
 
                 if (res.result == 'success') {
 
@@ -12751,7 +12751,7 @@
 
                             //Если позиция, загрузим позиции этой категории
                             if (type == 'item') {
-                                getScladItems(targetId, 0, 50, false, true, targetId);
+                                getScladItems(targetId, 0, 1000, false, true, targetId);
                             }
 
                         } else {
@@ -12840,7 +12840,7 @@
                             //console.log (res);
 
                             getScladCategories ();
-                            //getScladItems (cat, 0, 50, true);
+                            //getScladItems (cat, 0, 1000, true);
 
                             if (type == 'item') {
                                 //Обновим имя, не обновляя страницу

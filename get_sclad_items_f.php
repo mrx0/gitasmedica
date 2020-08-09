@@ -54,8 +54,13 @@
 //                WHERE sit.parent_id = '$cat_id'
 //                LIMIT $start , $count";
 
-                $query = "SELECT * FROM `spr_sclad_items` sit
+                $query = "SELECT sit.*, SUM(sav.quantity) AS quantity 
+                FROM `spr_sclad_items` sit
+                LEFT JOIN `sclad_availability` sav 
+                ON sav.sclad_item_id = sit.id
                 WHERE TRUE $dop_cat
+                GROUP BY sit.id
+                ORDER BY sav.quantity
                 LIMIT $start , $count";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -112,7 +117,7 @@
                                 </td>
 								<!--<td style="">Срок годности</td>
 								<td style="">Гарантия</td>-->
-								<td style="width: 60px; text-align: right;">5</td>
+								<td style="width: 60px; text-align: right;">'.$arr['quantity'].'</td>
 								<td style="text-align: left;" ';
 
                         if (isset($units[$arr['unit']])) {

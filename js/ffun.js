@@ -215,7 +215,7 @@
                 //$('#errror').html(res.data); не работает, которое ниже
                 //Приходится смотреть через консоль
                 console.log(res);
-                
+
                 $('.center_block').remove();
                 $('#overlay').hide();
 
@@ -4149,9 +4149,9 @@
         //console.log (newPercent);
         //console.log (controlCategories);
 
-        var link = "fl_prikazNomerVosem_JustDoIt_f.php";
+        let link = "fl_prikazNomerVosem_JustDoIt_f.php";
 
-        var reqData = {
+        let reqData = {
             tabel_id: tabel_id,
             newPercent: newPercent,
             controlCategories: controlCategories
@@ -4171,71 +4171,39 @@
             success: function(res){
                 //console.log(res);
 
-                var calc_ids_arr = Array.from(res.data);
+                if (res.result == 'success') {
+                    let calc_ids_arr = Array.from(res.data);
+                    //console.log(calc_ids_arr);
 
-                //!!! Хороший пример паузы в цикле (пауза в цикле) через рекурсию
-                //Не использовать, если есть вариант, что массив изменится во время
-                //И если обязательно индексы цифровые и по порядку
-                if (calc_ids_arr.length > 0) {
+                    //!!! Хороший пример паузы в цикле (пауза в цикле) через рекурсию
+                    //Не использовать, если есть вариант, что массив изменится во время
+                    //И если обязательно индексы цифровые и по порядку
+                    if (calc_ids_arr.length > 0) {
 
-                    var foo = function (i) {
-                        $("#prikazNomerVosem").html("<i>Обновляем данные для РЛ</i>: #<b>"+calc_ids_arr[i]+"</b><br>");
+                        let foo = function (i) {
+                            $("#prikazNomerVosem").html("<i>Обновляем данные для РЛ</i>: #<b>" + calc_ids_arr[i] + "</b><br>");
 
-                        window.setTimeout(function () {
-                            //console.log(calc_ids_arr[i]);
+                            window.setTimeout(function () {
+                                //console.log(calc_ids_arr[i]);
 
-                            link = "fl_reloadPercentsMarkedCalculates.php";
+                                link = "fl_reloadPercentsMarkedCalculates.php";
 
-                            reqData.tabel_id = tabel_id;
-                            reqData.newPercent = newPercent;
-                            reqData.controlCategories = controlCategories;
+                                reqData.tabel_id = tabel_id;
+                                reqData.newPercent = newPercent;
+                                reqData.controlCategories = controlCategories;
 
-                            //Так как функция, находящаяся в fl_reloadPercentsMarkedCalculates.php
-                            //Работает по-ебаному (лень просто переделывать, лепим костыли),
-                            //а именно: ей нужно скормить перемменную вида chkBox_5_400_16
-                            //В которой хранятся тип (стом, косм...)/5, ID работника/400, филиал/16)
-                            //Поэтому создадим такую ебаную переменную reqData.data =)
+                                //Так как функция, находящаяся в fl_reloadPercentsMarkedCalculates.php
+                                //Работает по-ебаному (лень просто переделывать, лепим костыли),
+                                //а именно: ей нужно скормить перемменную вида chkBox_5_400_16
+                                //В которой хранятся тип (стом, косм...)/5, ID работника/400, филиал/16)
+                                //Поэтому создадим такую ебаную переменную reqData.data =)
 
-                            reqData.data = 'chkBox_6_000_00';
+                                reqData.data = 'chkBox_6_000_00';
 
-                            reqData.main_data = [];
+                                reqData.main_data = [];
 
-                            reqData.main_data[reqData.main_data.length] = calc_ids_arr[i];
+                                reqData.main_data[reqData.main_data.length] = calc_ids_arr[i];
 
-                            //По каждому из id пересчитываем РЛ
-                            $.ajax({
-                                url: link,
-                                global: false,
-                                type: "POST",
-                                dataType: "JSON",
-                                data: {
-                                    calcArr: reqData
-                                },
-                                cache: false,
-                                beforeSend: function () {
-                                },
-                                // действие, при ответе с сервера
-                                success: function (res) {
-                                    //console.log(res);
-
-                                    if (res.result == "success") {
-                                        //$("#prikazNomerVosem").append("<i>Новый РЛ</i>: <b>"+res.newCalcID+"</b> <i>создан<br></i>");
-                                    }
-                                }
-                            });
-
-                            if (i < calc_ids_arr.length-1){
-                                foo(i + 1);
-                            } else {
-                                //По окончании цикла, который выше, чего-то делаем
-                                //console.log("Обновляем сумму табеля.");
-
-                                $("#prikazNomerVosem").html("Обновляем сумму табеля.");
-
-                                link = "fl_updateTabelBalance_f.php";
-
-                                //А тут мне пришлось создать отдельный файл с функцией, которая тупо передаёт
-                                //дальше ID табеля и тот пересчитывает свою сумму.
                                 //По каждому из id пересчитываем РЛ
                                 $.ajax({
                                     url: link,
@@ -4243,7 +4211,7 @@
                                     type: "POST",
                                     dataType: "JSON",
                                     data: {
-                                        tabel_id: tabel_id
+                                        calcArr: reqData
                                     },
                                     cache: false,
                                     beforeSend: function () {
@@ -4253,16 +4221,53 @@
                                         //console.log(res);
 
                                         if (res.result == "success") {
-                                            location.reload();
-                                        }else{
-                                            console.log(res.data);
+                                            //$("#prikazNomerVosem").append("<i>Новый РЛ</i>: <b>"+res.newCalcID+"</b> <i>создан<br></i>");
                                         }
                                     }
                                 });
-                            }
-                        }, 1000);
-                    };
-                    foo(0);
+
+                                if (i < calc_ids_arr.length - 1) {
+                                    foo(i + 1);
+                                } else {
+                                    //По окончании цикла, который выше, чего-то делаем
+                                    //console.log("Обновляем сумму табеля.");
+
+                                    $("#prikazNomerVosem").html("Обновляем сумму табеля.");
+
+                                    link = "fl_updateTabelBalance_f.php";
+
+                                    //А тут мне пришлось создать отдельный файл с функцией, которая тупо передаёт
+                                    //дальше ID табеля и тот пересчитывает свою сумму.
+                                    //По каждому из id пересчитываем РЛ
+                                    $.ajax({
+                                        url: link,
+                                        global: false,
+                                        type: "POST",
+                                        dataType: "JSON",
+                                        data: {
+                                            tabel_id: tabel_id
+                                        },
+                                        cache: false,
+                                        beforeSend: function () {
+                                        },
+                                        // действие, при ответе с сервера
+                                        success: function (res) {
+                                            //console.log(res);
+
+                                            if (res.result == "success") {
+                                                location.reload();
+                                            } else {
+                                                //console.log(res.data);
+                                            }
+                                        }
+                                    });
+                                }
+                            }, 1000);
+                        };
+                        foo(0);
+                    }
+                }else{
+                    $("#prikazNomerVosem").html("<i style='color: red;'>Нет РЛ, подходящих для перерасчёта</i>");
                 }
             }
         });
@@ -4358,7 +4363,7 @@
 
                     }else{
                         console.log(res);
-                        
+
                     }
                 }
             });

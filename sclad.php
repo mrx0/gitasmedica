@@ -177,7 +177,7 @@
 				    //$("#sclad_items_rezult").html(123);
 				    
 				    getScladCategories ();
-				    getScladItems (0, 0, 50, true);
+				    getScladItems (0, 0, 1000, true);
 				    //Показать выбранные позиции
 				    fillScladItemsInSet ();
 
@@ -196,7 +196,7 @@
                     if($(this).val().length > 0){
 //                        console.log($(this).val());
                         
-                        getScladItems (0, 0, 50, true, false, -1, $(this).val());
+                        getScladItems (0, 0, 1000, true, false, -1, $(this).val());
                                 //(cat_id, start, limit, free=true, pick=false, pick_id=-1, search=\'\')
                         
 //                        $.ajax({

@@ -28,6 +28,7 @@
 
             //!!!для тестов
 //            unset($_SESSION['sclad']['items_prihod_data']);
+            var_dump($_SESSION['sclad']['items_prihod_data']);
 
 			echo '
 				<div id="status">
@@ -103,7 +104,7 @@
                                 <label id="sel_date_error" class="error"></label>
                                 <label id="sel_month_error" class="error"></label>
                                 <label id="sel_year_error" class="error"></label>
-                            </div>
+                            </div>sclad_item.php
                         </div>
 					
                         <div class="cellsBlock2">
