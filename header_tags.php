@@ -39,6 +39,13 @@
 			<link rel="stylesheet" href="css/calendar.css" type="text/css">
 			
 			<link rel="stylesheet" href="css/dds.css" type="text/css">
+			
+			
+			<!--Для печати. ТЕСТ-->
+<!--			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.3.0/paper.css">
+			<style>@page { size: A5 }</style>-->
+			
+			
 						
 			<script type="text/javascript" src="js/dict.js"></script>
 			<script type="text/javascript" src="js/common1.js"></script>
@@ -66,7 +73,7 @@
 			
 			<script type="text/javascript" src="js/search5.js"></script>
 			
-			<script type="text/javascript" src="js/search_fast_client.js"></script>
+			<script type="text/javascript" src="js/search_fast.js"></script>
 			
 			<script type="text/javascript" src="js/jquery.multi-select.js"></script>
 			
@@ -235,18 +242,33 @@
 			  #scrollUp {display: none; }
 			</style> 
 
-		</head>
-		<body>
+		</head>';
 
+    include_once 'DBWork.php';
+    require_once 'permissions.php';
+
+//	var_dump($god_mode);
+//	var_dump($enter_ok);
+
+	if (!$god_mode) {
+        echo '
+		<body oncopy="return false;">';
+    }else {
+        echo '
+		<body>';
+    }
+
+
+	echo '
 		<div class="no_print"> 
 		<header class="h">
 			<nav>
 				<ul class="vert-nav">';
 	//Если в системе
 	if ($enter_ok){
-		include_once 'DBWork.php';
+//		include_once 'DBWork.php';
 
-		require_once 'permissions.php';
+//		require_once 'permissions.php';
 
         //Для автоматизации выбора филиала
         if (isset($_SESSION['filial']) && !empty($_SESSION['filial'])){
@@ -269,6 +291,10 @@
 		//echo '<li><a href="index.php" style="position: relative">Главная<div style="font-size:80%">'.$version.'</div><div class="have_new-topic notes_count" style="display: none; top: 0; right: 0; background: red;" title="Есть непрочитанные сообщения"></div></a></li>';
 		echo '<li><a href="index.php" style="position: relative">Главная<div class="have_new-topic notes_count" style="display: none; top: 0; right: 0; background: red;" title="Есть непрочитанные сообщения"></div></a></li>';
 
+//		var_dump($ticket['see_all']);
+//		var_dump($ticket['see_own']);
+//		var_dump($god_mode);
+
 		if (($ticket['see_all'] == 1) || ($ticket['see_own'] == 1) || $god_mode){
 			echo '<li><a href="tickets.php">Тикеты<div class="have_new-ticket notes_count" style="display: none; top: 0; right: 0; background: red;" title="">4545</div></a></li>';
 		}
@@ -284,7 +310,18 @@
 			echo '<li><a href="stomat.php" title="Стоматология">Стоматология</a></li>';
 		}*/
 		if (($cosm['see_all'] == 1) || ($cosm['see_own'] == 1) || $god_mode){
-			echo '<li><a href="cosmet.php">Косметология</a></li>';
+			echo '
+                <li>
+                    <a href="cosmet.php" style="width: 85px;">Косметология</a>';
+            echo '
+                    <ul style="background: #FFF; width: 108px;">
+                        <li><a href="zapis_solar.php" style="height: 20px; border: 1px dotted #CCC;">
+                            Солярий
+                        </a>
+                        </li>
+                    </ul>';
+            echo '
+                </li>';
 		}
 		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
             echo '<li>';
@@ -305,23 +342,23 @@
                 echo '
                     <ul style="background: #FFF; width: 108px;">
                         <li><a href="zapis_own.php?y=' . $yearT . '&m=' . $monthT . '&d=' . $dayT . '&worker=' . $_SESSION['id'] . '" style="height: 20px; border: 1px dotted #CCC;">
-                        Моя запись
+                            Моя запись
                         </a></li>
                     </ul>';
             }else{
                 echo '
                     <ul style="background: #FFF; width: 108px;">
                         <li><a href="zapis.php?y=' . $yearT . '&m=' . $monthT . '&d=' . $dayT . '&filial=' . $filial_id_default . '" style="height: 20px; border: 1px dotted #CCC;">
-                        Запись
+                            Запись
                         </a>
                         </li>
                         <li><a href="zapis_full.php?y=' . $yearT . '&m=' . $monthT . '&d=' . $dayT . '&filial=' . $filial_id_default . '" style="height: 20px; border: 1px dotted #CCC;">
-                        Подробно
+                            Подробно
                         </a>
                         </li>
                         <li><a href="zapis_online.php" style="height: 20px; border: 1px dotted #CCC;">
-                        Запись онлайн
-                        <div class="have_new-zapis notes_count" style="display: none; top: -5pxz; right: -20px; background: red;" title="Есть необработанные онлайн заявки"></div>
+                            Запись онлайн
+                        <div class="have_new-zapis notes_count" style="display: none; top: -5px; right: -20px; background: red;" title="Есть необработанные онлайн заявки"></div>
                         </a>
                         </li>
                     </ul>';
@@ -343,6 +380,8 @@
 
 		//echo '<li><a href="search.php"><i class="fa fa-search"></i></a></li>';
 
+        echo '<li><a href="spr_proizvcalendar.php"><i class="fa fa-calendar" aria-hidden="true"></i></a></li>';
+        
 		if ($god_mode){
 			echo '<li><a href="admin.php" style="font-size: 110%;"><i class="fa fa-cogs"></i></a></li>';
 		}

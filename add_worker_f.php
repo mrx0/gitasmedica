@@ -111,6 +111,7 @@
 				$password = PassGen();
 				
 				$full_name = CreateFullName(trim($_POST['f']), trim($_POST['i']), trim($_POST['o']));
+
 				//Проверяем есть ли такой пользователь
 				if (isSameFullName('spr_workers', $full_name, 0)){
 					echo 'Такой пользователь уже есть.<br /><br />
@@ -121,8 +122,8 @@
 					$login = CreateLogin(trim($_POST['f']), trim($_POST['i']), trim($_POST['o']));
 					//Если такой логин уже есть, добавляем символ 2 в конце или 3 или 4 ..
 					$login = isSameLogin ($login);
-					WriteWorkerToDB_Edit ($_POST['session_id'], $login, $name, $full_name, $password, $_POST['contacts'], $_POST['permissions'], $_POST['org']);
-				
+					WriteWorkerToDB_Edit ($_POST['session_id'], $login, $name, $full_name, $_POST['sel_date'], $_POST['sel_month'], $_POST['sel_year'], $password, $_POST['contacts'], $_POST['permissions'], $_POST['org']);
+
 					echo '
 						<h1>Пользователь добавлен в базу.</h1>
 						ФИО: '.$full_name.'<br />

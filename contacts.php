@@ -299,7 +299,7 @@
 
 				//Выводим уволенных
 				if ($fired_all != ''){
-					if (($workers['see_own'] == 1) || $god_mode){
+					if (($workers['edit'] == 1) || $god_mode){
 						if (true || $god_mode){
 							echo $fired_all;
 						}

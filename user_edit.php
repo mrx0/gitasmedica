@@ -32,7 +32,34 @@
                 $category = SelDataFromDB('journal_work_cat', $_GET['id'], 'worker_id');
                 //var_dump($category);
                 $filials_j = getAllFilials(false, false, true);
-			
+
+                //Отметки по дополнительным опциям
+                $spec_prikaz8_checked = '';
+                $spec_oklad_checked = '';
+                $spec_work_6days_checked = '';
+
+                $msql_cnnct = ConnectToDB ();
+
+                $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$_GET['id']} LIMIT 1'";
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0){
+                    $arr = mysqli_fetch_assoc($res);
+                    if ($arr['prikaz8'] == 1){
+                        $spec_prikaz8_checked = 'checked';
+                    }
+                    if ($arr['oklad'] == 1){
+                        $spec_oklad_checked = 'checked';
+                    }
+                    if ($arr['work6days'] == 1){
+                        $spec_work_6days_checked = 'checked';
+                    }
+                }
+
+                CloseDB ($msql_cnnct);
+
                 if ($user !=0){
                     echo '
                         <div id="status">
@@ -48,13 +75,28 @@
                                     <div class="cellsBlock2">
                                         <div class="cellLeft">ФИО';
 
-                    if ($god_mode || ($workers['edit'] == 1)){
+                    //if ($god_mode || ($workers['edit'] == 1)){
                         echo '    <a href="user_edit_fio.php?id='.$_GET['id'].'"><i class="fa fa-cog" title="Редактировать ФИО"></i></a>';
-                    }
+                    //}
 
 				    echo '
                                         </div>
                                         <div class="cellRight"><a href="user.php?id='.$_GET['id'].'" class="ahref">'.$user[0]['full_name'].'</a></div>
+                                    </div>
+                                    
+                                    <div class="cellsBlock2">
+                                        <div class="cellLeft">Дата рождения</div>
+                                        <div class="cellRight">';
+
+                    //var_dump(explode('-', $user[0]['birth'])[1]);
+
+			echo selectDate (explode('-', $user[0]['birth'])[2], explode('-', $user[0]['birth'])[1], explode('-', $user[0]['birth'])[0]);
+
+			echo '	
+                                            <label id="sel_date_error" class="error"></label>
+                                            <label id="sel_month_error" class="error"></label>
+                                            <label id="sel_year_error" class="error"></label>
+                                        </div>
                                     </div>
 								
 						            <!--<div class="cellsBlock2">
@@ -84,7 +126,7 @@
                     if ((($user[0]['permissions'] != 1) && ($user[0]['permissions'] != 2) && ($user[0]['permissions'] != 3) && ($user[0]['permissions'] != 8)) || ($god_mode)){
                         echo '
                                             <select name="permissions" id="permissions">
-                                                <option value="0">Нажми и выбери</option>';
+                                                <option value="0">Выберите должность</option>';
                         for ($i=0;$i<count($arr_permissions);$i++){
                             if ((($arr_permissions[$i]['id'] != 1) && ($arr_permissions[$i]['id'] != 2) && ($arr_permissions[$i]['id'] != 3) && ($arr_permissions[$i]['id'] != 8)) || ($god_mode)){
                                 if ($user[0]['permissions'] == $arr_permissions[$i]['id']){
@@ -156,7 +198,7 @@
                         if ($categories_j != 0) {
 
                             echo '<select name="SelectCategory" id="SelectCategory">';
-                            echo "<option value=''>Нажми и выбери</option>";
+                            echo "<option value=''>Выберите категорию</option>";
 
                             foreach ($categories_j as $data) {
                                 $slctd = '';
@@ -205,6 +247,23 @@
 									<div class="cellLeft">Контакты</div>
 									<div class="cellRight">
 										<textarea name="contacts" id="contacts" cols="35" rows="5">'.$user[0]['contacts'].'</textarea>
+									</div>
+								</div>';
+
+                    echo '								
+								
+								<div class="cellsBlock2">
+									<div class="cellLeft">Особые отметки</div>
+									<div class="cellRight">
+									    <div>
+                                            <input type="checkbox" name="spec_prikaz8" value="1" '.$spec_prikaz8_checked.'> Приказ №8
+										</div>
+										<div>
+										    <input type="checkbox" name="spec_oklad" value="1" '.$spec_oklad_checked.'> Оклад
+										</div>
+										<div>
+										    <input type="checkbox" name="spec_work_6days" value="1" '.$spec_work_6days_checked.'> 6 дней/нед.
+										</div>
 									</div>
 								</div>';
 

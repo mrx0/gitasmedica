@@ -35,6 +35,36 @@
 
             $filials_j = getAllFilials(false, false, true);
 
+            //Отметки по дополнительным опциям
+            $spec_prikaz8_checked = '';
+            $spec_oklad_checked = '';
+
+            $msql_cnnct = ConnectToDB ();
+
+            $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$_GET['id']} LIMIT 1'";
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            $spec_prikaz8 = false;
+            $spec_oklad = false;
+            $work_6days = false;
+
+            if ($number != 0){
+                $arr = mysqli_fetch_assoc($res);
+                if ($arr['prikaz8'] == 1){
+                    $spec_prikaz8 = true;
+                }
+                if ($arr['oklad'] == 1){
+                    $spec_oklad = true;
+                }
+                if ($arr['work6days'] == 1){
+                    $work_6days = true;
+                }
+            }
+
+            CloseDB ($msql_cnnct);
+
 			//операции со временем						
 			$month = date('m');		
 			$year = date('Y');
@@ -68,6 +98,25 @@
                         <div class="cellsBlock2">
                             <div class="cellLeft">ФИО</div>
                             <div class="cellRight">'.$user[0]['full_name'].'</div>
+                        </div>
+                        
+                        <div class="cellsBlock2">
+                            <div class="cellLeft">Логин</div>
+                            <div class="cellRight">'.$user[0]['login'].'</div>
+                        </div>
+
+                        <div class="cellsBlock2">
+                            <div class="cellLeft">Дата рождения</div>
+                            <div class="cellRight">';
+            if ($user[0]['birth'] == '0000-00-00'){
+                echo 'не указана';
+            }else{
+                echo
+                explode('-', $user[0]['birth'])[2].' '.$monthsName[explode('-', $user[0]['birth'])[1]]. '<br>
+						<!--полных лет <b>'.getyeardiff(strtotime($user[0]['birth']), 0).'</b>-->';
+            }
+            echo
+                            '</div>
                         </div>
 
                         <div class="cellsBlock2">
@@ -126,15 +175,43 @@
                         </div>
                                         
                         <div class="cellsBlock2">
-                            <div class="cellLeft">Логин</div>
-                            <div class="cellRight">'.$user[0]['login'].'</div>
-                        </div>
-                        
-                        <div class="cellsBlock2">
                             <div class="cellLeft">Контакты</div>
                             <div class="cellRight">'.$user[0]['contacts'].'</div>
-                        </div>
-                        
+                        </div>';
+
+            echo '								
+								
+                        <div class="cellsBlock2">
+                            <div class="cellLeft">Особые отметки</div>
+                            <div class="cellRight">';
+
+            if ($spec_prikaz8){
+                echo '
+                    <div>
+                        Приказ №8
+                    </div>';
+            }
+
+            if ($spec_oklad){
+                echo '
+                    <div>
+                        Оклад
+                    </div>';
+            }
+
+            if ($work_6days){
+                echo '
+                    <div>
+                        6 дней/нед.
+                    </div>';
+            }
+
+            echo '
+                            </div>
+                        </div>';
+
+
+            echo '            
                         <br><br><br>';
 
 			echo '

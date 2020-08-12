@@ -55,7 +55,7 @@
             $arr = array();
             $rez = array();
 
-            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '{$type}' AND `status` <> '8'";
+            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '{$type}' AND `status` <> '8' ORDER BY `full_name`";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
             $number = mysqli_num_rows($res);
@@ -94,15 +94,20 @@
                             <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
                             <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
                                 <!--<a href="contacts.php" class="b" style="'.$all_color.'">Все</a>-->
-                                <a href="?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
-                                <a href="?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>
-                                <a href="?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
-                                <a href="?who=4" class="b" style="'.$admin_color.'">Администраторы</a>
-                                <a href="?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
-                                <a href="?who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
-                                <a href="?&who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
-                                <a href="?who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
-                                <a href="?who=11" class="b" style="'.$other_color.'">Прочие</a>
+                                <a href="fl_taxes.php?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
+                                <a href="fl_taxes.php?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>
+                                <a href="fl_taxes.php?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
+                                <a href="fl_taxes.php?who=4" class="b" style="'.$admin_color.'">Администраторы</a>
+                                <a href="fl_taxes.php?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
+                                <a href="fl_taxes.php?who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
+                                <a href="fl_taxes.php?&who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
+                                <a href="fl_taxes.php?who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
+                                <a href="fl_taxes.php?who=11" class="b" style="'.$other_color.'">Прочие</a>';
+            if (in_array($_SESSION['permissions'], $workers_target_arr) || ($_SESSION['id'] == 270) || $god_mode) {
+                echo '
+                                <a href="fl_taxes2.php" class="b" style="">Другие</a>';
+            }
+            echo '
                             </li>';
 
             if (!empty($workers_j)){

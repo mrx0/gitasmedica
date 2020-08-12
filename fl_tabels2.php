@@ -18,6 +18,7 @@
 			include_once 'filter_f.php';
 			include_once 'ffun.php';
             include_once 'widget_calendar.php';
+            include_once 'variables.php';
 
             $dop = '';
             $dopWho = '';
@@ -62,6 +63,8 @@
                 $year = date('Y');
             }
 
+            //var_dump(date('m'));
+
             //Сегодняшняя дата
             $day = date("d");
             $cur_month = date("m");
@@ -85,10 +88,6 @@
 //            var_dump($dopFilial);
 
             $today = date("Y-m-d");
-
-
-
-
 
 			$workers_j = array();
 
@@ -120,7 +119,9 @@
 //                            <a href="fl_my_tabels.php" class="b">Табели</a>';
 //                        }else {
                             echo '
-                            <a href="fl_tabels.php?'.$who.'" class="b">Важный отчёт</a>';
+                            <a href="fl_tabels.php?'.$who.'" class="b">Важный отчёт</a>
+                            <a href="fl_tabels_check.php" class="b">Проверка табелей</a>
+                            <a href="fl_tabels_simple_pay.php" class="b">Проверка табелей 2</a>';
 //                        }
                         echo '
                         </div>
@@ -141,16 +142,19 @@
                         <ul style="margin-left: 6px; margin-bottom: 20px;">
                             <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
                             <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-                                <a href="?who=4'.$dopDate.'" class="b" style="'.$admin_color.'">Администраторы</a>
-                                <a href="?who=7'.$dopDate.'" class="b" style="'.$assist_color.'">Ассистенты</a>
+                                <a href="fl_tabels2.php?who=4'.$dopDate.'" class="b" style="'.$admin_color.'">Администраторы</a>
+                                <a href="fl_tabels2.php?who=7'.$dopDate.'" class="b" style="'.$assist_color.'">Ассистенты</a>
                                 <a href="fl_tabels3.php?who=13'.$dopDate.'" class="b" style="'.$sanit_color.'">Санитарки</a>
                                 <a href="fl_tabels3.php?who=14'.$dopDate.'" class="b" style="'.$ubor_color.'">Уборщицы</a>
                                 <a href="fl_tabels3.php?who=15'.$dopDate.'" class="b" style="'.$dvornik_color.'">Дворники</a>
-                                <!--<a href="fl_tabels3.php?who=11" class="b" style="'.$other_color.'">Прочие</a>-->
+                                <a href="fl_tabels4.php?who=11'.$dopDate.'" class="b" style="'.$other_color.'">Прочие</a>';
+
+                if (in_array($_SESSION['permissions'], $workers_target_arr) || ($_SESSION['id'] == 270) || $god_mode) {
+                    echo '
+                                <a href="fl_tabels5.php?who=999'.$dopDate.'" class="b" style="">Другие</a>';
+                }
+                echo '
                             </li>';
-
-
-
 
                 //Соберем массив сотрудников
                 $workers_j = array();
@@ -186,8 +190,8 @@
 
                 //Фильтр по филиалам
                 echo '
-                            <div style="margin-top: 5px; font-size: 80%;">
-                                Показывать только филиал: 
+                            <div style="margin-top: 5px; font-size: 80%; display: inline-block;">
+                                Показывать только филиал:
 
                                 <select name="filterFilial" id="filterFilial" style="font-size: 93%;">
                                     <option value="-1">Все</option>';
@@ -204,7 +208,6 @@
 
                 echo '
                             </div>';
-
 
                 echo '
                         </ul>';
@@ -233,6 +236,75 @@
                 }
                 //var_dump($revenue_percent_j);
 
+                //Процент с солярия для этого типа
+                $revenue_solar_percent_j = array();
+
+                $arr = array();
+                $rez = array();
+
+                $query = "SELECT * FROM `fl_spr_revenue_solar_percent` WHERE `permission` = '{$type}'";
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        if (!isset($revenue_solar_percent_j[$arr['filial_id']])){
+                            $revenue_solar_percent_j[$arr['filial_id']] = array();
+                        }
+                        if (!isset($revenu_solare_percent_j[$arr['filial_id']][$arr['category']])){
+                            $revenue_solar_percent_j[$arr['filial_id']][$arr['category']] = array();
+                        }
+                        $revenue_solar_percent_j[$arr['filial_id']][$arr['category']] = $arr;
+                    }
+                }
+                //var_dump($revenue_solar_percent_j);
+
+                //Процент с реализации для этого типа
+                $revenue_realiz_percent_j = array();
+
+                $arr = array();
+                $rez = array();
+
+                $query = "SELECT * FROM `fl_spr_revenue_realiz_percent` WHERE `permission` = '{$type}'";
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        if (!isset($revenue_realiz_percent_j[$arr['filial_id']])){
+                            $revenue_realiz_percent_j[$arr['filial_id']] = array();
+                        }
+                        if (!isset($revenu_realiz_percent_j[$arr['filial_id']][$arr['category']])){
+                            $revenue_realiz_percent_j[$arr['filial_id']][$arr['category']] = array();
+                        }
+                        $revenue_realiz_percent_j[$arr['filial_id']][$arr['category']] = $arr;
+                    }
+                }
+                //var_dump($revenue_realiz_percent_j);
+
+                //Процент с проданных абонементов для этого типа
+                $revenue_abon_percent_j = array();
+
+                $arr = array();
+                $rez = array();
+
+                $query = "SELECT * FROM `fl_spr_revenue_abon_percent` WHERE `permission` = '{$type}'";
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        if (!isset($revenue_abon_percent_j[$arr['filial_id']])){
+                            $revenue_realiz_abon_j[$arr['filial_id']] = array();
+                        }
+                        if (!isset($revenu_abon_percent_j[$arr['filial_id']][$arr['category']])){
+                            $revenue_abon_percent_j[$arr['filial_id']][$arr['category']] = array();
+                        }
+                        $revenue_abon_percent_j[$arr['filial_id']][$arr['category']] = $arr;
+                    }
+                }
+                //var_dump($revenue_abon_percent_j);
+
                 //Получаем нормы смен для этого типа
                 $arr = array();
                 $normaSmen = array();
@@ -249,11 +321,14 @@
 
                 //Норма смен (часов)
                 //!!!Норма часов
-                if ($type == 15){
-                    $normaHours = 2;
-                }else{
-                    $normaHours = 12;
-                }
+//                if ($type == 15){
+//                    $normaHours = 2;
+//                }else{
+//                    $normaHours = 12;
+//                }
+
+                $normaHours = getNormaHours(0, true, $type);
+
                 $w_normaSmen = $normaSmen[(int)$month] * $normaHours;
 
                 //Получаем оклады по категориям для всех
@@ -314,11 +389,17 @@
                                 <td style="width: 80px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Оклад, руб.</i></td>
                                 <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Часы</i><br><span style="color: rgb(158, 158, 158); font-size: 80%;">всего/ норма/ %</span></td>
                                 <td style="width: 80px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Начислено за время</i></td>
-                                <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Закрыто работ на сумму, руб.</i></td>
+                                <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Выручка, руб.</i></td>
                                 <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Надбавка от выручки, руб.(%)</i></td>
                                 <td style="width: 70px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;"><i>Итого, руб.</i></td>
-                                <td style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">-</td>
-                                ';
+                                <td style="width: 60px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center;">
+                                    <div class="button_tiny" style="margin-top: 5px; font-size: 120%; display: inline-block; cursor: pointer;" title="Добавить всем" onclick="addAllTabelsForWorkerFromSchedulerReport();">
+                                        <i class="fa fa-plus" aria-hidden="true" style="color: green;"></i>
+                                    </div>
+                                    <div class="button_tiny" style="margin-top: 5px; font-size: 120%; display: inline-block; cursor: pointer;" title="Обновить все" onclick="refreshAllTabelsForWorkerFromSchedulerReport();">
+                                        <i class="fa fa-refresh" aria-hidden="true" style="color: rgb(218, 133, 9);"></i>
+                                    </div>
+                                </td>';
                 echo '
                             </tr>';
 
@@ -339,6 +420,9 @@
                         $worker_filial_id = 0;
                         $w_percentHours = 0;
                         $worker_revenue_percent = 0.00;
+                        $worker_revenue_solar_percent = 0.00;
+                        $worker_revenue_realiz_percent = 0.00;
+                        $worker_revenue_abon_percent = 0.00;
                         $oklad = 0.00;
 
                         echo '
@@ -439,6 +523,18 @@
                         echo '
                                         <div class="filialMoney" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'">                                                            
                                         </div>';
+                        //Солярий
+                        echo '
+                                        <div class="filialSolar" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'">
+                                        </div>';
+                        //Реализация
+                        echo '
+                                        <div class="filialRealiz" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'">
+                                        </div>';
+                        //Абонементы солярия
+                        echo '
+                                        <div class="filialAbon" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'">
+                                        </div>';
                         echo '
                                     </td>
                                     <td style="width: 100px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">';
@@ -446,29 +542,78 @@
                         //% от выручки
                         if ($haveCategory && $haveFilial){
                             echo '
-                                    <div id="w_revenue_summ_'.$worker_data['id'].'" style="display: inline;">
-                                    </div>';
+                                    <div>
+                                        <div id="w_revenue_summ_'.$worker_data['id'].'" style="display: inline;">
+                                        </div>';
 
 
                             $worker_revenue_percent = $revenue_percent_j[$worker_filial_id][$worker_category_id]['value'];
 
                             echo '
-                                    <div style="display: inline;">
-                                        ('.number_format($worker_revenue_percent, 1, '.', ' ').'%)
+                                        <div style="display: inline;">
+                                            ('.number_format($worker_revenue_percent, 2, '.', ' ').'%)
+                                        </div>
                                     </div>';
+
+                            //Для чернышевской (солярий, абонемент, реализация)
+                            if ($worker_filial_id == 17){
+                                //Солярий
+                                echo '
+                                    <div>
+                                        <div id="w_revenue_solar_summ_'.$worker_data['id'].'" style="display: inline;">
+                                        </div>';
+
+
+                                $worker_revenue_solar_percent = $revenue_solar_percent_j[$worker_filial_id][$worker_category_id]['value'];
+
+                                echo '
+                                        <div style="display: inline;">
+                                            ('.number_format($worker_revenue_solar_percent, 1, '.', ' ').'%)
+                                        </div>
+                                    </div>';
+                                //Реализация
+                                echo '
+                                    <div>
+                                        <div id="w_revenue_realiz_summ_'.$worker_data['id'].'" style="display: inline;">
+                                        </div>';
+
+
+                                $worker_revenue_realiz_percent = $revenue_realiz_percent_j[$worker_filial_id][$worker_category_id]['value'];
+
+                                echo '
+                                        <div style="display: inline;">
+                                            ('.number_format($worker_revenue_realiz_percent, 1, '.', ' ').'%)
+                                        </div>
+                                    </div>';
+                                //Абонемент
+                                echo '
+                                    <div>
+                                        <div id="w_revenue_abon_summ_'.$worker_data['id'].'" style="display: inline;">
+                                        </div>';
+
+
+                                $worker_revenue_abon_percent = $revenue_abon_percent_j[$worker_filial_id][$worker_category_id]['value'];
+
+                                echo '
+                                        <div style="display: inline;">
+                                            ('.number_format($worker_revenue_abon_percent, 1, '.', ' ').'%)
+                                        </div>
+                                    </div>';
+                            }
+
                         }
                         echo '
                                         
                                     </td>
                                     <td style="width: 70px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; font-weight: bold;">
-                                        <div id="w_id_'.$worker_data['id'].'" class="itogZP" w_id="'.$worker_data['id'].'" f_id="'.$worker_filial_id. '" oklad="'.$oklad.'" w_hours="'.$w_hours.','.$w_normaSmen.'" w_percentHours="'.$w_percentHours.'" worker_revenue_percent="'.$worker_revenue_percent.'" filialMoney="0" worker_category_id="'.$worker_category_id.'" style="">
+                                        <div id="w_id_'.$worker_data['id'].'" class="itogZP" w_id="'.$worker_data['id'].'" f_id="'.$worker_filial_id. '" oklad="'.$oklad.'" w_hours="'.$w_hours.','.$w_normaSmen.'" w_percentHours="'.$w_percentHours.'" worker_revenue_percent="'.$worker_revenue_percent.'" worker_revenue_solar_percent="'. $worker_revenue_solar_percent.'" worker_revenue_realiz_percent="'. $worker_revenue_realiz_percent.'" worker_revenue_abon_percent="'. $worker_revenue_abon_percent.'" filialMoney="0" filialSolar="0" filialRealiz="0" filialAbon="0" worker_category_id="'.$worker_category_id.'" style="">
                                         </div>';
 
                         echo '
                                     </td> 
                                     <td id="worker_'.$worker_data['id'].'" class="workerTabel" f_id="'.$worker_filial_id. '" style="width: 30px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: center; font-size: 120%;">
                                         <i class="fa fa-file-text" aria-hidden="true" style="color: rgba(0, 0, 0, 0.30); font-size: 130%;" title="Нет табеля"></i>
-                                        <i class="fa fa-plus" style="color: green; font-size: 100%; cursor: pointer;" title="Добавить" onclick="addNewTabelForWorkerFromSchedulerReport('.$worker_data['id'].', '.$worker_filial_id.', '.$type.');"></i>
+                                        <i class="fa fa-plus" style="color: green; font-size: 100%; cursor: pointer;" title="Добавить" onclick="addNewTabelForWorkerFromSchedulerReport('.$worker_data['id'].', '.$worker_filial_id.', '.$type.', false);"></i>
                                     </td>
                                 </tr>';
                     }
@@ -480,6 +625,10 @@
 
                 echo '
 		            <div id="doc_title">Отчёт по часам - Асмедика</div>';
+
+                echo '	
+                <!-- Подложка только одна -->
+                <div id="overlay"></div>';
 
 				echo '
 
@@ -585,7 +734,7 @@
                 $(function() {
                     $("#filterFilial").change(function(){
                         
-                        blockWhileWaiting (true);
+                        //blockWhileWaiting (true);
                         
                         var filter_filial_id = $(this).val();
 

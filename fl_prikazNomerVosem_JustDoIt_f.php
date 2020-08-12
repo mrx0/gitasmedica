@@ -79,7 +79,7 @@
                         echo json_encode(array('result' => 'success', 'data' => $calc_arr, 'data2' => $query));
 
                     }else{
-                        echo json_encode(array('result' => 'error', 'data' => $query));
+                        echo json_encode(array('result' => 'error', 'data2' => $query));
                     }
                 }
             }

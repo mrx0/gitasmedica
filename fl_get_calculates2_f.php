@@ -28,6 +28,29 @@
 
                 $msql_cnnct = ConnectToDB();
 
+                //Отметки по дополнительным опциям
+                //!!! Здесь функция большая и избыточная, но лень переписывать
+                $spec_prikaz8_checked = '';
+                $spec_oklad_checked = '';
+
+                $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$_POST['worker']} LIMIT 1'";
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                $spec_prikaz8 = false;
+                $spec_oklad = false;
+
+                if ($number != 0){
+                    $arr = mysqli_fetch_assoc($res);
+                    if ($arr['prikaz8'] == 1){
+                        $spec_prikaz8 = true;
+                    }
+                    if ($arr['oklad'] == 1){
+                        $spec_oklad = true;
+                    }
+                }
+
                 //Категории процентов
                 $percent_cats_j = array();
                 //Для сортировки по названию
@@ -106,10 +129,14 @@
                             LEFT JOIN `journal_cosmet1` wm ON wm.zapis_id = jcalc.zapis_id";
                 }
 
+                //20200421 добавил ограничение, чтоб не собирались ночные посещения, так как ночи давно нет
                 $query .= "
                             WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.status <> '7'
                             AND jcalc.id NOT IN ( SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id) 
                             AND jcalc.date_in > '2018-05-31'
+                            
+                            AND zapis.noch = '0'
+                             
                             GROUP BY jcalc.id";
 
                 //GROUP BY jcalc.id ORDER BY jcalc.id DESC";
@@ -139,6 +166,13 @@
 
                     if (!empty($calculateData)){
 
+                        $disabled_chkbox = '';
+
+                        //Если спец отметка оклад, то отключаем добавление РЛ
+                        if ($spec_oklad){
+                            $disabled_chkbox = 'disabled';
+                        }
+
                         //include_once 'fl_showCalculateRezult.php';
 
                         $rezArrayTemp = array();
@@ -154,7 +188,7 @@
                                     Необработанные расчётные листы
                                 </div>
                                 <div style="margin: 5px 0; padding: 2px; text-align: center; color: #0C0C0C;">
-                                    Выделить всё <input type="checkbox" id="chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$filial_id.'" name="checkAll" class="checkAll" chkBoxData="chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$filial_id.'" value="1">
+                                    Выделить всё <input type="checkbox" id="chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$filial_id.'" name="checkAll" class="checkAll" chkBoxData="chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$filial_id.'" value="1" '.$disabled_chkbox.'>
                                 </div>
                                 <div id="calcs_list_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$filial_id.'">';
 
@@ -202,7 +236,20 @@
                                             <div>
                                                 <a href="fl_calculate.php?id=' . $rezData['id'] . '" class="ahref">
                                                     <div>
-                                                        <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+                                                        <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">';
+
+                                //Если время наряда меньше текущего месяца, сигнализируем
+//                                $resultFilialStr .= date('y.m.01', time()).'<br>';
+//                                $resultFilialStr .= $rezData['in_create_time'];
+//                                $resultFilialStr .= $invoice_create_time2;
+                                //$resultFilialStr .= date('y.m.01', time()) > $invoice_create_time2;
+
+                                if (date('y.m.01', time()) > $invoice_create_time2){
+                                    $resultFilialStr .= '
+                                                        <i class="fa fa-warning" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);" title="РЛ за прошедший период"></i>';
+                                }
+
+                                $resultFilialStr .= '
                                                             <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                         </div>
                                                         <div style="display: inline-block; vertical-align: middle;">
@@ -240,7 +287,7 @@
                                         </div>
                                         <div style="display: inline-block; vertical-align: top;">
                                             <div style=" padding: 3px; margin: 1px;" title="Выделить">
-                                                <input type="checkbox" worker_mark="' . $worker_mark . '" class="chkBoxCalcs chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $filial_id . '" name="nPaidCalcs_' . $rezData['id'] . '" chkBoxData="chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $filial_id . '" value="1">
+                                                <input type="checkbox" worker_mark="' . $worker_mark . '" class="chkBoxCalcs chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $filial_id . '" name="nPaidCalcs_' . $rezData['id'] . '" chkBoxData="chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $filial_id . '" value="1" '.$disabled_chkbox.'>
                                             </div>
                                         </div>
                                         <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->

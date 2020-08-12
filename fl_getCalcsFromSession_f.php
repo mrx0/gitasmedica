@@ -165,11 +165,11 @@
 
                             //Выберем табели уже существующие для этого работника
                             //Если ассистент
-                            if ($typeID == 7){
+//                            if ($typeID == 7){
                                 $tabels_j = fl_getTabels(0, $workerID, 0, false, true);
-                            }else {
-                                $tabels_j = fl_getTabels($typeID, $workerID, $filialID, false, false);
-                            }
+//                            }else {
+//                                $tabels_j = fl_getTabels($typeID, $workerID, $filialID, false, false);
+//                            }
 
 
                             if (!empty($tabels_j)) {
@@ -249,10 +249,10 @@
 
                                             if (!$tabel_noch) {
                                                 $result .= '
-                                                        Табель #' . $rezData['id'] . ' <span style="font-size: 80%;">[' . $filials_j[$rezData['office_id']]['name2'] . ']</span>';
+                                                        Табель #' . $rezData['id'] . ' <span style="font-size: 80%;"><b>[' . $filials_j[$rezData['office_id']]['name2'] . ']</b></span>';
                                             }else{
                                                 $result .= '
-                                                        Табель <img src="img/night.png" style="width: 11px;" title="Ночное"> #' . $rezData['id'] . ' <span style="font-size: 80%;">[' . $filials_j[$rezData['filial_id']]['name2'] . ']</span>';
+                                                        Табель <img src="img/night.png" style="width: 11px;" title="Ночное"> #' . $rezData['id'] . ' <span style="font-size: 80%;"><b>[' . $filials_j[$rezData['filial_id']]['name2'] . ']</b></span>';
                                             }
 
                                             $result .= '

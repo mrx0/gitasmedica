@@ -15,7 +15,7 @@
 //        var_dump(in_array(15, $_POST['filials_arr']));
 
 		if ($_POST) {
-            if (isset($_POST['all_fililas_chckd']) && isset($_POST['filials_arr'])){
+            if (isset($_POST['all_fililas_chckd']) && isset($_POST['filials_arr']) && isset($_POST['type'])){
                 if (($_POST['all_fililas_chckd'] == 1) || (!empty($_POST['filials_arr']))){
 
                     //Максимально кол-во дней в месяце, где будем менять
@@ -57,7 +57,7 @@
                     $msql_cnnct = ConnectToDB();
 
                     //получаем шаблон графика из базы
-                    $query = "SELECT `filial`, `day`, `smena`, `kab`, `worker`, `type` FROM `sheduler_template`";
+                    $query = "SELECT `filial`, `day`, `smena`, `kab`, `worker`, `type` FROM `sheduler_template` WHERE `type`='{$_POST['type']}'";
 
                     $shedTemplate = 0;
 
@@ -79,6 +79,10 @@
 
                     //Если шаблон графика есть
                     if ($shedTemplate != 0) {
+
+                        $queryDelete = '';
+                        $queryInsert = '';
+
                         //Пробегаемся с указанного дня до последнего дня месяца
                         for ($i = $day; $i <= $max_days; $i++) {
                             $month_stamp = mktime(0, 0, 0, $month, $i, $year);
@@ -116,17 +120,15 @@
                                                         //.. но мы её игнорируем,
                                                         //то тупо удаляем и вставляем новую
                                                         if ($_POST['ignoreshed'] == 1) {
-                                                            $query = "DELETE FROM `scheduler` WHERE `day`>='{$day}' AND `month`='{$month}' AND `year`='{$year}' AND (`type`='5' OR `type`='6' OR `type`='10')";
+                                                            $queryDelete = "DELETE FROM `scheduler` WHERE `day`>='{$day}' AND `month`='{$month}' AND `year`='{$year}' AND `filial`='{$filial}' AND `type`='{$type}'; ";
 
-                                                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                                                            $res = mysqli_query($msql_cnnct, $queryDelete) or die(mysqli_error($msql_cnnct) . ' -> ' . $queryDelete);
 
                                                             foreach ($valueK as $worker => $val) {
                                                                 //Вставляем запись
-                                                                $query = "INSERT INTO `scheduler` (`year`, `month`, `day`, `filial`, `kab`, `smena`, `smena_t`, `worker`, `type`)
-                                                                VALUES
-                                                                ('{$year}', '{$month}', '{$i}', '{$filial}', '{$kab}', '{$smena}', NULL, '{$worker}', '{$type}')";
+                                                                $queryInsert = "INSERT INTO `scheduler` (`year`, `month`, `day`, `filial`, `kab`, `smena`, `smena_t`, `worker`, `type`) VALUES ('{$year}', '{$month}', '{$i}', '{$filial}', '{$kab}', '{$smena}', NULL, '{$worker}', '{$type}');";
 
-                                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                                                                $res = mysqli_query($msql_cnnct, $queryInsert) or die(mysqli_error($msql_cnnct) . ' -> ' . $queryInsert);
                                                             }
                                                         } else {
                                                             $canUpdate = FALSE;
@@ -135,15 +137,29 @@
                                                     } else {
                                                         foreach ($valueK as $worker => $val) {
                                                             //Вставляем запись
-                                                            $query = "INSERT INTO `scheduler` (`year`, `month`, `day`, `filial`, `kab`, `smena`, `smena_t`, `worker`, `type`)
-                                                            VALUES
-                                                            ('{$year}', '{$month}', '{$i}', '{$filial}', '{$kab}', '{$smena}', NULL, '{$worker}', '{$type}')";
+                                                            $queryInsert = "INSERT INTO `scheduler` (`year`, `month`, `day`, `filial`, `kab`, `smena`, `smena_t`, `worker`, `type`) VALUES ('{$year}', '{$month}', '{$i}', '{$filial}', '{$kab}', '{$smena}', NULL, '{$worker}', '{$type}');";
 
-                                                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                                                            $res = mysqli_query($msql_cnnct, $queryInsert) or die(mysqli_error($msql_cnnct) . ' -> ' . $queryInsert);
                                                         }
                                                     }
                                                 }
                                             }
+
+                                            //Делаем сформированные запросы
+//                                            if ($canUpdate) {
+//                                                if (!empty($queryDelete)){
+//                                                    $res = mysqli_query($msql_cnnct, $queryDelete) or die(mysqli_error($msql_cnnct) . ' -> ' . $queryDelete);
+//                                                }
+//                                                if (!empty($queryInsert)){
+//                                                    $res = mysqli_multi_query($msql_cnnct, $queryInsert) or die(mysqli_error($msql_cnnct) . ' -> ' . $queryInsert);
+//
+//                                                    while (mysqli_next_result($msql_cnnct)) // flush multi_queries
+//                                                    {
+//                                                        if (!mysqli_more_results($msql_cnnct)) break;
+//                                                    }
+//                                                }
+//                                            }
+
                                         }
                                     }
                                 }

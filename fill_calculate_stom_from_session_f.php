@@ -104,7 +104,7 @@
 
                                 foreach ($invoice_data as $key => $items){
 
-                                    if ($items['guarantee'] == 0) {
+                                   if ($items['guarantee'] == 0) {
 
                                         $percent_cat = $_SESSION['calculate_data'][$client][$zapis_id]['data'][$ind][$key]['percent_cats'];
 
@@ -151,7 +151,7 @@
                                             $spec_koeff = $items['spec_koeff'];
 
                                             //получим цены
-                                            $prices = takePrices($items['price_id'], $items['insure']);
+                                            $prices = takePrices($items['price_id'], $items['insure'], 0);
                                             //var_dump($prices);
 
                                             if (!empty($prices)) {

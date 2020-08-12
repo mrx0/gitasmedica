@@ -62,6 +62,9 @@
             $filials_j = getAllFilials(true, false, false);
 			//var_dump($filials_j);
 
+            //Сколько смен отображать (раньше было 4, потому что работали ночью)
+            $maxSmens = 2;
+
             $filials_j2 = getAllFilials(false, false, false);
 
             if (isset($_GET['filial'])){
@@ -213,7 +216,7 @@
 								<div style="margin-top: 10px; margin-bottom: 18px;">
 									Игнорировать существующий график <input type="checkbox" name="ignoreshed" id="ignoreshed" value="1">
 								</div>
-								<input type="button" class="b" value="Применить" onclick="if (iCanManage) Ajax_change_shed()">
+								<input type="button" class="b" value="Применить" onclick="if (iCanManage) Ajax_change_shed('.$type.')">
 							</div>
 						</li>';
 			}
@@ -337,7 +340,7 @@
                                     echo '
                                     <div class="cellTime" style="padding: 0; text-align: center; background-color: #FEFEFE; width: 150px; min-width: 125px; max-width: 150px;">';
                                     //номера смен 1 - день 2- вечер 3 - ночь 4 - утро
-                                    for ($smenaN = 1; $smenaN <= 4; $smenaN++) {
+                                    for ($smenaN = 1; $smenaN <= $maxSmens; $smenaN++) {
                                         echo '
                                         <div style="outline: 1px solid #666; display: table; margin-bottom: 3px;">
                                             <div style="vertical-align: middle; width: 5px; box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2); display: table-cell !important;">

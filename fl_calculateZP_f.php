@@ -14,11 +14,13 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         include_once 'DBWork.php';
         include_once 'functions.php';
 
-        if ($_POST['month'] < 10) {
-            $month = '0'.$_POST['month'];
-        }else{
-            $month = $_POST['month'];
-        }
+//        if ($_POST['month'] < 10) {
+//            $month = '0'.$_POST['month'];
+//        }else{
+//            $month = $_POST['month'];
+//        }
+
+        $month = dateTransformation ($_POST['month']);
 
         //$data_temp_arr = explode(".", $_POST['datastart']);
         $datastart = $_POST['year'].'-'.$month.'-01';
@@ -30,42 +32,39 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         //$data_temp_arr = explode(".", $_POST['dataend']);
         $dataend = $d->format('Y-m-t');
 
-        //Смотрим наряды, закрытые за период
-        //$query = "SELECT `summ`,`summins`, `office_id`, (SUM(`summ`)+ SUM(`summins`)) AS all_summ FROM `journal_invoice` WHERE `status`='5' AND `closed_time` BETWEEN '{$datastart}' AND '{$dataend}'";
-//        $query = "
-//        SELECT ji.summ, ji.summins, ji.office_id, z.noch
+//        //Суммы нарядов, закрытых в указанном месяце
+//        $query = "SELECT ji.office_id AS filial_id, ji.summ, z.noch
 //        FROM `journal_invoice` ji
 //        LEFT JOIN `zapis` z ON ji.zapis_id = z.id
-//        WHERE ji.status='5' AND ji.closed_time BETWEEN '{$datastart}' AND '{$dataend}'
-//        ";
-
-        //Смотрим оплаты
-        $query = "SELECT jp.filial_id, jp.summ, z.noch 
-        FROM `journal_payment` jp
-        LEFT JOIN `journal_invoice` ji ON ji.id = jp.invoice_id
-        LEFT JOIN `zapis` z ON ji.zapis_id = z.id
-        WHERE MONTH(jp.date_in) = '{$month}' AND YEAR(jp.date_in) = '{$_POST['year']}'";
-
-        //Если ассистент, то только стоматология
-        if ($_POST['typeW'] == 7){
-//            $query = "
-//            SELECT `summ`,`summins`, `office_id`
-//            FROM `journal_invoice`
-//            WHERE `type` ='5' AND `status`='5' AND `closed_time` BETWEEN '{$datastart}' AND '{$dataend}'
-//            ";
-
-//            $query = "
-//            SELECT ji.summ, ji.summins, ji.office_id, z.noch
+//        WHERE MONTH(ji.closed_time) = '{$month}' AND YEAR(ji.closed_time) = '{$_POST['year']}'";
+//
+//        //Если ассистент, то только стоматология
+//        if ($_POST['typeW'] == 7){
+//            $query = "SELECT ji.office_id AS filial_id, ji.summ, z.noch
 //            FROM `journal_invoice` ji
 //            LEFT JOIN `zapis` z ON ji.zapis_id = z.id
-//            WHERE ji.status='5' AND ji.type ='5' AND ji.closed_time BETWEEN '{$datastart}' AND '{$dataend}'
-//            ";
+//            WHERE MONTH(ji.closed_time) = '{$month}' AND YEAR(ji.closed_time) = '{$_POST['year']}' AND ji.type = '5'";
+//
+//        }
 
-            $query = "SELECT jp.filial_id, jp.summ, z.noch 
+        //До сентября 2019 считалось так
+        //Смотрим оплаты по нарядам, которые администраторы внесли в указанном месяце
+        //20190902 добавили  || TRUE и продолжили пока дальше так считать
+        if ((($month < '08') AND ($_POST['year'] == 2019)) || ($_POST['year'] < 2019) || TRUE){
+            $query = "SELECT jp.filial_id, jp.summ, z.noch
             FROM `journal_payment` jp
-            INNER JOIN `journal_invoice` ji ON ji.id = jp.invoice_id AND ji.type = '5'
+            LEFT JOIN `journal_invoice` ji ON ji.id = jp.invoice_id
             LEFT JOIN `zapis` z ON ji.zapis_id = z.id
             WHERE MONTH(jp.date_in) = '{$month}' AND YEAR(jp.date_in) = '{$_POST['year']}'";
+
+            //Если ассистент, то только стоматология
+            if ($_POST['typeW'] == 7) {
+                $query = "SELECT jp.filial_id, jp.summ, z.noch
+                FROM `journal_payment` jp
+                INNER JOIN `journal_invoice` ji ON ji.id = jp.invoice_id AND ji.type = '5'
+                LEFT JOIN `zapis` z ON ji.zapis_id = z.id
+                WHERE MONTH(jp.date_in) = '{$month}' AND YEAR(jp.date_in) = '{$_POST['year']}'";
+            }
         }
 
         //var_dump($query);
@@ -101,11 +100,11 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         //Наряды по стоматологическим страховым работам
         $invoices_ins_j = array();
-        //Сумма по наряды по стоматологическим страховым работам
+        //Сумма по наряды по закрытым в этом месяце стоматологическим страховым работам
         $invoices_ins_summ = 0;
 
         $query = "
-            SELECT ji.office_id, ji.summins, z.noch
+            SELECT ji.office_id AS filial_id, ji.summins, z.noch
             FROM `journal_invoice` ji
             LEFT JOIN `zapis` z ON ji.zapis_id = z.id
             WHERE ji.type='5' AND MONTH(ji.closed_time) = '{$month}' AND YEAR(ji.closed_time) = '{$_POST['year']}'
@@ -121,10 +120,10 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                 //Исключаем ночные
                 if ($arr['noch'] != 1) {
                     //array_push($invoices_ins_j, $arr);
-                    if (!isset($journal[$arr['office_id']])){
-                        $journal[$arr['office_id']] = 0;
+                    if (!isset($journal[$arr['filial_id']])){
+                        $journal[$arr['filial_id']] = 0;
                     }
-                    $journal[$arr['office_id']] += $arr['summins'];
+                    $journal[$arr['filial_id']] += $arr['summins'];
                 }
             }
         }
@@ -132,29 +131,77 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         $summ_arr = $journal;
 
 
+        //Солярий
+        $summ_solar = array();
+
+        $query = "SELECT * FROM `journal_solar` WHERE
+                     MONTH(`date_in`) = '{$month}' AND YEAR(`date_in`) = '{$_POST['year']}'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                //Раскидываем в массив
+                if (!isset($summ_solar[$arr['filial_id']])){
+                    $summ_solar[$arr['filial_id']] = array();
+                    $summ_solar[$arr['filial_id']]['solar'] = 0;
+                    $summ_solar[$arr['filial_id']]['realiz'] = 0;
+                    $summ_solar[$arr['filial_id']]['abon'] = 0;
+                }
+                $summ_solar[$arr['filial_id']]['solar'] += $arr['summ'];
+            }
+        }
+        //Реализация
+        $query = "SELECT * FROM `journal_realiz` WHERE
+                     MONTH(`date_in`) = '{$month}' AND YEAR(`date_in`) = '{$_POST['year']}'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                //Раскидываем в массив
+                if (!isset($summ_solar[$arr['filial_id']])){
+                    $summ_solar[$arr['filial_id']] = array();
+                    $summ_solar[$arr['filial_id']]['solar'] = 0;
+                    $summ_solar[$arr['filial_id']]['realiz'] = 0;
+                    $summ_solar[$arr['filial_id']]['abon'] = 0;
+                }
+                $summ_solar[$arr['filial_id']]['realiz'] += $arr['summ'];
+            }
+        }
+        //Абонементы
+        $query = "SELECT * FROM `journal_abonement_solar` WHERE
+                     MONTH(`cell_time`) = '{$month}' AND YEAR(`cell_time`) = '{$_POST['year']}'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                //Раскидываем в массив
+                if (!isset($summ_solar[$arr['filial_id']])){
+                    $summ_solar[$arr['filial_id']] = array();
+                    $summ_solar[$arr['filial_id']]['solar'] = 0;
+                    $summ_solar[$arr['filial_id']]['realiz'] = 0;
+                    $summ_solar[$arr['filial_id']]['abon'] = 0;
+                }
+                $summ_solar[$arr['filial_id']]['abon'] += $arr['summ'];
+            }
+        }
+
         //Делаем рассчеты
         //Выводим результат
         if (!empty($journal)) {
 
-//            $summ_arr = array();
-//            $all_summ = 0;
-//
-//            foreach ($journal as $filial_id => $filial_journal){
-//                //var_dump($item);
-//                if (!isset($summ_arr[$filial_id])){
-//                    $summ_arr[$filial_id] = 0;
-//                }
-//
-//                foreach ($filial_journal as $item){
-//                    //$summ_arr[$filial_id] += $item['summ'] + $item['summins'];
-//                    $summ_arr[$filial_id] += $item['summ'];
-//                }
-//            }
-
-            echo json_encode(array('result' => 'success', 'data' => $summ_arr, 'msg' => ''));
+            echo json_encode(array('result' => 'success', 'data' => $summ_arr, 'data_solar' => $summ_solar, 'msg' => ''));
 
         } else {
-            echo json_encode(array('result' => 'empty', 'data' => array(), 'msg' => '<div class="query_neok">Ничего не найдено</div>'));
+            echo json_encode(array('result' => 'empty', 'data' => array(), 'data_solar' => array(), 'msg' => '<div class="query_neok">Ничего не найдено</div>'));
         }
     }
 }

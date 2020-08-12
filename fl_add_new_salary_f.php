@@ -24,6 +24,10 @@
                 $msql_cnnct = ConnectToDB ();
 
                 //Вставим новую запись
+//                $query = "INSERT INTO `fl_spr_salaries` (
+//                  `worker_id`, `summ`, `date_from`, `category`, `create_time`, `create_person`)
+//                VALUES (
+//                  '{$_POST['worker_id']}', '{$_POST['summ']}', '{$date_from}', '{$_POST['category_id']}', '{$time}', '{$_SESSION['id']}')";
                 $query = "INSERT INTO `fl_spr_salaries` (
                   `worker_id`, `summ`, `date_from`, `create_time`, `create_person`)
                 VALUES (

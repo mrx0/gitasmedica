@@ -3,6 +3,7 @@
 //DBWork.php
 //
 
+//запись в файл write to file writetofile (для отладок)
 ///include_once 'writen.php';
 ///WriteToFile('1.TXT', $query);
 
@@ -626,16 +627,18 @@
 	}
 	
 	//Вставка и обновление списка пользователей из-под Web
-	function WriteWorkerToDB_Edit ($session_id, $login, $name, $full_name, $password, $contacts, $permissions, $org){
+	function WriteWorkerToDB_Edit ($session_id, $login, $name, $full_name, $sel_date, $sel_month, $sel_year, $password, $contacts, $permissions, $org){
 
         $msql_cnnct = ConnectToDB ();
+
+        $birthday = $sel_year.'-'.$sel_month.'-'.$sel_date;
 
 		$time = time();
 
 		$query = "INSERT INTO `spr_workers` (
-			`login`, `name`, `full_name`, `password`, `contacts`, `permissions`, `org`)
+			`login`, `name`, `full_name`, `birth`, `password`, `contacts`, `permissions`, `org`)
 			VALUES (
-			'{$login}', '{$name}', '{$full_name}', '{$password}', '{$contacts}', '{$permissions}', '{$org}') ";
+			'{$login}', '{$name}', '{$full_name}', '{$birthday}', '{$password}', '{$contacts}', '{$permissions}', '{$org}') ";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -646,30 +649,30 @@
 	}
 	
 	//Вставка и обновление списка пациентов из-под Web
-	function WriteClientToDB_Edit ($session_id, $name, $full_name, $f, $i, $o, $fo, $io, $oo, $comment, $card, $therapist, $therapist2, $birthday, $birthday2, $sex, $telephone, $htelephone, $telephoneo, $htelephoneo, $passport, $alienpassportser, $alienpassportnom, $passportvidandata, $passportvidankem, $address, $polis, $polisdata, $insurecompany){
+	function WriteClientToDB_Edit ($session_id, $name, $full_name, $f, $i, $o, $fo, $io, $oo, $comment, $card, $therapist, $therapist2, $birthday, $birthday2, $sex, $telephone, $htelephone, $telephoneo, $htelephoneo, $email, $inn, $passport, $alienpassportser, $alienpassportnom, $passportvidandata, $passportvidankem, $address, $polis, $polisdata, $insurecompany){
 
 	    $msql_cnnct = ConnectToDB ();
 
 		$time = time();
 
 		$query = "INSERT INTO `spr_clients` (
-			`name`, `full_name`, `f`, `i`, `o`, `fo`, `io`, `oo`, `comment`, `card`, `sex`, `birthday`, `birthday2`, `telephone`, `htelephone`, `telephoneo`, `htelephoneo`, `passport`, `alienpassportser`, `alienpassportnom`, `passportvidandata`, `passportvidankem`, `address`, `polis`, `polisdata`, `insure`, `therapist`, `therapist2`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`)
+			`name`, `full_name`, `f`, `i`, `o`, `fo`, `io`, `oo`, `comment`, `card`, `sex`, `birthday`, `birthday2`, `telephone`, `htelephone`, `telephoneo`, `htelephoneo`, `email`, `inn`, `passport`, `alienpassportser`, `alienpassportnom`, `passportvidandata`, `passportvidankem`, `address`, `polis`, `polisdata`, `insure`, `therapist`, `therapist2`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`)
 			VALUES (
-			'{$name}', '{$full_name}', '{$f}', '{$i}', '{$o}', '{$fo}', '{$io}', '{$oo}', '{$comment}', '{$card}', '{$sex}', '{$birthday}', '{$birthday2}', '{$telephone}', '{$htelephone}', '{$telephoneo}', '{$htelephoneo}', '{$passport}', '{$alienpassportser}', '{$alienpassportnom}', '{$passportvidandata}', '{$passportvidankem}', '{$address}', '{$polis}', '{$polisdata}', '{$insurecompany}', '{$therapist}', '{$therapist2}', '{$time}', '{$session_id}', '0', '0') ";
+			'{$name}', '{$full_name}', '{$f}', '{$i}', '{$o}', '{$fo}', '{$io}', '{$oo}', '{$comment}', '{$card}', '{$sex}', '{$birthday}', '{$birthday2}', '{$telephone}', '{$htelephone}', '{$telephoneo}', '{$htelephoneo}', '{$email}', '{$inn}', '{$passport}', '{$alienpassportser}', '{$alienpassportnom}', '{$passportvidandata}', '{$passportvidankem}', '{$address}', '{$polis}', '{$polisdata}', '{$insurecompany}', '{$therapist}', '{$therapist2}', '{$time}', '{$session_id}', '0', '0') ";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
         $mysql_insert_id = mysqli_insert_id($msql_cnnct);
 
 		//логирование
-		AddLog (GetRealIp(), $session_id, '', 'Добавлен пациент. ['.date('d.m.y H:i', $time).']. ['.$full_name.']. Комментарий: ['.$comment.']. Карта: ['.$card.']. Пол: ['.$sex.']. Дата рождения: ['.$birthday.']. Телефон: ['.$telephone.'].  Телефон2: ['.$htelephone.']. Серия/номер паспорта ['.$passport.']. Серия/номер паспорта (иностр.) ['.$alienpassportser.'/'.$passportvidandata.']. Дата выдачи ['.$passportvidandata.']. Выдан кем ['.$passportvidankem.']. Адрес ['.$address.']. Полис ['.$polis.']. Дата полиса ['.$polisdata.']. Страховая компания ['.$insurecompany.']. Лечащий врач [стоматология]: ['.$therapist.']. Лечащий врач [косметология]: ['.$therapist2.']');
+		AddLog (GetRealIp(), $session_id, '', 'Добавлен пациент. ['.date('d.m.y H:i', $time).']. ['.$full_name.']. Комментарий: ['.$comment.']. Карта: ['.$card.']. Пол: ['.$sex.']. Дата рождения: ['.$birthday.']. Телефон: ['.$telephone.']. Телефон2: ['.$htelephone.'].  Email: ['.$email.'].  ИНН: ['.$inn.']. Серия/номер паспорта ['.$passport.']. Серия/номер паспорта (иностр.) ['.$alienpassportser.'/'.$passportvidandata.']. Дата выдачи ['.$passportvidandata.']. Выдан кем ['.$passportvidankem.']. Адрес ['.$address.']. Полис ['.$polis.']. Дата полиса ['.$polisdata.']. Страховая компания ['.$insurecompany.']. Лечащий врач [стоматология]: ['.$therapist.']. Лечащий врач [косметология]: ['.$therapist2.']');
 		
 		return ($mysql_insert_id);
 	}
 	
 	
 	//Обновление карточки пациента из-под Web
-	function WriteClientToDB_Update ($session_id, $id, $comment, $card, $therapist, $therapist2, $birthday, $birthday2, $sex, $telephone, $passport, $alienpassportser, $alienpassportnom, $passportvidandata, $passportvidankem, $address, $polis, $fo, $io, $oo, $htelephone, $telephoneo, $htelephoneo, $polisdata, $insurecompany){
+	function WriteClientToDB_Update ($session_id, $id, $comment, $card, $therapist, $therapist2, $birthday, $birthday2, $sex, $telephone, $email, $inn, $passport, $alienpassportser, $alienpassportnom, $passportvidandata, $passportvidankem, $address, $polis, $fo, $io, $oo, $htelephone, $telephoneo, $htelephoneo, $polisdata, $insurecompany){
 
 	    $old = '';
 
@@ -684,19 +687,19 @@
 
 		if ($number != 0){
 			$arr = mysqli_fetch_assoc($res);
-			$old = 'Комментарий: ['.$arr['comment'].']. Карта: ['.$arr['card'].']. Дата рождения: ['.$arr['birthday'].']. Пол: ['.$arr['sex'].']. Телефон: ['.$arr['telephone'].']. Серия/номер паспорта ['.$arr['passport'].']. Серия/номер паспорта (иностр.) ['.$arr['alienpassportser'].'/'.$arr['passportvidandata'].']. Дата выдачи ['.$arr['passportvidandata'].']. Выдан кем ['.$arr['passportvidankem'].']. Адрес ['.$arr['address'].']. Полис ['.$arr['polis'].']. Дата ['.$arr['polisdata'].']. Страховая ['.$arr['insure'].']. Лечащий врач [стоматология]: ['.$arr['therapist'].']. Лечащий врач [косметология]: ['.$arr['therapist2'].']';
+			$old = 'Комментарий: ['.$arr['comment'].']. Карта: ['.$arr['card'].']. Дата рождения: ['.$arr['birthday'].']. Пол: ['.$arr['sex'].']. Телефон: ['.$arr['telephone'].']. Email: ['.$arr['email'].']. ИНН: ['.$arr['inn'].']. Серия/номер паспорта ['.$arr['passport'].']. Серия/номер паспорта (иностр.) ['.$arr['alienpassportser'].'/'.$arr['passportvidandata'].']. Дата выдачи ['.$arr['passportvidandata'].']. Выдан кем ['.$arr['passportvidankem'].']. Адрес ['.$arr['address'].']. Полис ['.$arr['polis'].']. Дата ['.$arr['polisdata'].']. Страховая ['.$arr['insure'].']. Лечащий врач [стоматология]: ['.$arr['therapist'].']. Лечащий врач [косметология]: ['.$arr['therapist2'].']';
 		}else{
 			$old = 'Не нашли старую запись.';
 		}
 
 		$time = time();
 
-		$query = "UPDATE `spr_clients` SET `sex`='{$sex}', `birthday`='{$birthday}', `birthday2`='{$birthday2}', `therapist`='{$therapist}', `therapist2`='{$therapist2}', `comment`='{$comment}', `card`='{$card}', `telephone`='{$telephone}', `passport`='{$passport}', `alienpassportser`='{$alienpassportser}', `alienpassportnom`='{$alienpassportnom}', `passportvidandata`='{$passportvidandata}', `passportvidankem`='{$passportvidankem}', `address`='{$address}', `polis`='{$polis}', `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `fo`='{$fo}', `io`='{$io}', `oo`='{$oo}', `htelephone`='{$htelephone}', `telephoneo`='{$telephoneo}', `htelephoneo`='{$htelephoneo}', `polisdata`='{$polisdata}', `insure`='{$insurecompany}' WHERE `id`='{$id}'";
+		$query = "UPDATE `spr_clients` SET `sex`='{$sex}', `birthday`='{$birthday}', `birthday2`='{$birthday2}', `therapist`='{$therapist}', `therapist2`='{$therapist2}', `comment`='{$comment}', `card`='{$card}', `telephone`='{$telephone}', `email`='{$email}', `inn`='{$inn}', `passport`='{$passport}', `alienpassportser`='{$alienpassportser}', `alienpassportnom`='{$alienpassportnom}', `passportvidandata`='{$passportvidandata}', `passportvidankem`='{$passportvidankem}', `address`='{$address}', `polis`='{$polis}', `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `fo`='{$fo}', `io`='{$io}', `oo`='{$oo}', `htelephone`='{$htelephone}', `telephoneo`='{$telephoneo}', `htelephoneo`='{$htelephoneo}', `polisdata`='{$polisdata}', `insure`='{$insurecompany}' WHERE `id`='{$id}'";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
 		//логирование
-		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован пациент ['.$id.']. ['.date('d.m.y H:i', $time).']. Комментарий: ['.$comment.']. Карта: ['.$card.']. Дата рождения: ['.$birthday.']. Пол: ['.$sex.']. Телефон: ['.$telephone.']. Серия/номер паспорта ['.$passport.']. Серия/номер паспорта (иностр.) ['.$alienpassportser.'/'.$passportvidandata.']. Дата выдачи ['.$passportvidandata.']. Выдан кем ['.$passportvidankem.']. Адрес ['.$address.']. Полис ['.$polis.']. Дата ['.$polisdata.']. Страховая ['.$insurecompany.']. Лечащий врач [стоматология]: ['.$therapist.']. Лечащий врач [косметология]: ['.$therapist2.']');
+		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован пациент ['.$id.']. ['.date('d.m.y H:i', $time).']. Комментарий: ['.$comment.']. Карта: ['.$card.']. Дата рождения: ['.$birthday.']. Пол: ['.$sex.']. Телефон: ['.$telephone.']. Email: ['.$email.']. ИНН: ['.$inn.']. Серия/номер паспорта ['.$passport.']. Серия/номер паспорта (иностр.) ['.$alienpassportser.'/'.$passportvidandata.']. Дата выдачи ['.$passportvidandata.']. Выдан кем ['.$passportvidankem.']. Адрес ['.$address.']. Полис ['.$polis.']. Дата ['.$polisdata.']. Страховая ['.$insurecompany.']. Лечащий врач [стоматология]: ['.$therapist.']. Лечащий врач [косметология]: ['.$therapist2.']');
 	}
 
 	//Удаление(блокировка) карточки пациента из-под Web
@@ -813,6 +816,23 @@
 		AddLog (GetRealIp(), $session_id, '', 'Разблокирована лаборатория ['.$id.']. ['.date('d.m.y H:i', $time).'].');
 	}
 
+    //Разблокировать  лабораторию
+	function WriteToDB_ReopenFilial ($session_id, $id){
+
+        $msql_cnnct = ConnectToDB ();
+
+		$time = time();
+
+		$query = "UPDATE `spr_filials` SET `status`='0' WHERE `id`='{$id}'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        //CloseDB ($msql_cnnct);
+
+		//логирование
+		AddLog (GetRealIp(), $session_id, '', 'Разблокирован филиал ['.$id.']. ['.date('d.m.y H:i', $time).'].');
+	}
+
     //Разблокировать  сертификат
 	function WriteToDB_ReopenCert ($session_id, $id){
 
@@ -924,7 +944,7 @@
 	}
 	
 	//Обновление карточки пользователя из-под Web
-	function WriteWorkerToDB_Update($session_id, $worker_id, $org, $permissions, $specializations, $category, $filial_id, $contacts, $status){
+	function WriteWorkerToDB_Update($session_id, $worker_id, $sel_date, $sel_month, $sel_year, $org, $permissions, $specializations, $category, $filial_id, $contacts, $status, $spec_oklad, $spec_prikaz8, $spec_work_6days){
 
         $msql_cnnct = ConnectToDB ();
 
@@ -948,7 +968,9 @@
             $fired = 1;
         }
 
-		$query = "UPDATE `spr_workers` SET `org`='{$org}', `permissions`='{$permissions}', `filial_id`='{$filial_id}', `contacts`='{$contacts}', `fired`='{$fired}', `status`='{$status}' WHERE `id`='{$worker_id}'";
+        $birthday = $sel_year.'-'.$sel_month.'-'.$sel_date;
+
+		$query = "UPDATE `spr_workers` SET `birth`='{$birthday}', `org`='{$org}', `permissions`='{$permissions}', `filial_id`='{$filial_id}', `contacts`='{$contacts}', `fired`='{$fired}', `status`='{$status}' WHERE `id`='{$worker_id}'";
 
 		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -973,6 +995,18 @@
             $query = "INSERT INTO `journal_work_cat` (`worker_id`, `category`) VALUES ('$worker_id', '$category')";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
         }
+
+        //Приказ8 и Оклад
+        $query = "INSERT INTO `options_worker_spec` (
+					`worker_id`, `oklad`, `prikaz8`, `work6days`)
+					VALUES (
+						'{$worker_id}', '{$spec_oklad}', '{$spec_prikaz8}', '{$spec_work_6days}')
+					ON DUPLICATE KEY UPDATE
+					`oklad` = '{$spec_oklad}',
+					`prikaz8` = '{$spec_prikaz8}',
+					`work6days` = '{$spec_work_6days}'
+					";
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
 		//логирование
 		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован пользователь ['.$worker_id.']. ['.date('d.m.y H:i', $time).']. Контакты: ['.$contacts.']. Организация: ['.$org.']. Права: ['.$permissions.']. Статус: ['.$status.']');
@@ -1131,6 +1165,37 @@
 		AddLog (GetRealIp(), $session_id, $old, 'Отредактирована лаборатория ['.$id.']. ['.date('d.m.y H:i', $time).']. Название: ['.$name.']. Договор: ['.$contract.']. Контакты: ['.$contacts.'].');
 	}
 
+	//Редактирование карточки филиала из-под Web
+	function WriteFilialToDB_Update ($session_id, $id, $name, $address, $contacts){
+		$old = '';
+
+        $msql_cnnct = ConnectToDB ();
+
+		//Для лога соберем сначала то, что было в записи.
+		$query = "SELECT * FROM `spr_filials` WHERE `id`=$id";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
+
+		if ($number != 0){
+			$arr = mysqli_fetch_assoc($res);
+			$old = 'Название: ['.$arr['name'].']. Адрес: ['.$arr['address'].']. Контакты: ['.$arr['contacts'].']';
+		}else{
+			$old = 'Не нашли старую запись.';
+		}
+		$time = time();
+
+		$query = "UPDATE `spr_filials` SET `name`='{$name}', `address`='{$address}', `contacts`='{$contacts}' WHERE `id`='{$id}'";
+
+		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        //CloseDB ($msql_cnnct);
+
+		//логирование
+		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован филиал ['.$id.']. ['.date('d.m.y H:i', $time).']. Название: ['.$name.']. Адрес: ['.$address.']. Контакты: ['.$contacts.'].');
+	}
+
 	//Вставка и обновление Сертификата из-под Web
 	function WriteCertToDB_Edit ($session_id, $num, $nominal){
 
@@ -1152,6 +1217,31 @@
 
 		//логирование
 		AddLog (GetRealIp(), $session_id, '', 'Добавлен сертификат. Номер: ['.$num.']. Номинал: ['.$nominal.'] руб.');
+
+		return ($mysql_insert_id);
+	}
+
+	//Вставка и обновление Абонемента из-под Web
+	function WriteAbonToDB_Edit ($session_id, $num, $abon_type, $min_count, $exp_days, $summ){
+
+        $msql_cnnct = ConnectToDB ();
+
+        $time = date('Y-m-d H:i:s', time());
+
+		$query = "INSERT INTO `journal_abonement_solar` (
+			`num`, `abon_type`, `summ`, `min_count`, `exp_days`, `create_time`, `create_person`)
+			VALUES (
+			'{$num}', '{$abon_type}', '{$summ}', '{$min_count}', '{$exp_days}', '{$time}', '{$session_id}') ";
+
+		//mysqli_query($query) or die($query.' -> '.mysql_error());
+		//mysqli_close();
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        //ID новой позиции
+        $mysql_insert_id = mysqli_insert_id($msql_cnnct);
+
+		//логирование
+		AddLog (GetRealIp(), $session_id, '', 'Добавлен абонемент. Номер: ['.$num.']. Тип: ['.$abon_type.'] руб.');
 
 		return ($mysql_insert_id);
 	}
@@ -1187,7 +1277,38 @@
 		AddLog (GetRealIp(), $session_id, $old, 'Отредактирована лаборатория ['.$id.']. ['.date('d.m.y H:i', $time).']. Название: ['.$name.']. Договор: ['.$contract.']. Контакты: ['.$contacts.'].');
 	}
 
-	//Вставка и обновление специализации из-под Web
+	//Редактирование Абонемента из-под Web !!! доделать
+	function WriteAbonToDB_Update ($session_id, $id, $name, $contract, $contacts){
+//		$old = '';
+//
+//        $msql_cnnct = ConnectToDB ();
+//
+//        //Для лога соберем сначала то, что было в записи.
+//		$query = "SELECT * FROM `journal_abonement_solar` WHERE `id`=$id";
+//
+//        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//		$number = mysqli_num_rows($res);
+//
+//		if ($number != 0){
+//			$arr = mysqli_fetch_assoc($res);
+//			$old = 'Название: ['.$arr['name'].']. Договор: ['.$arr['contract'].']. Контакты: ['.$arr['contacts'].']';
+//		}else{
+//			$old = 'Не нашли старую запись.';
+//		}
+//		$time = time();
+//
+//		$query = "UPDATE `journal_abonement_solar` SET `name`='{$name}', `contract`='{$contract}', `contacts`='{$contacts}' WHERE `id`='{$id}'";
+//
+//        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//        //CloseDB ($msql_cnnct);
+//
+//		//логирование
+//		AddLog (GetRealIp(), $session_id, $old, 'Отредактирована лаборатория ['.$id.']. ['.date('d.m.y H:i', $time).']. Название: ['.$name.']. Договор: ['.$contract.']. Контакты: ['.$contacts.'].');
+	}
+
+	//Вставка и обновление специализации из-под Web !!! доделать
 	function WriteToDB_EditSpecialization ($name, $permission, $session_id){
 
         $msql_cnnct = ConnectToDB ();
@@ -1212,35 +1333,35 @@
 		return ($mysql_insert_id);
 	}
 
-	//Редактирование специализации из-под Web
+	//Редактирование специализации из-под Web !!! доделать
 	function WriteSpecializationToDB_Update ($id, $name, $session_id){
-		$old = '';
-
-        $msql_cnnct = ConnectToDB ();
-
-        //Для лога соберем сначала то, что было в записи.
-		$query = "SELECT * FROM `spr_labor` WHERE `id`=$id";
-
-        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-		$number = mysqli_num_rows($res);
-
-		if ($number != 0){
-			$arr = mysqli_fetch_assoc($res);
-			$old = 'Название: ['.$arr['name'].']. Договор: ['.$arr['contract'].']. Контакты: ['.$arr['contacts'].']';
-		}else{
-			$old = 'Не нашли старую запись.';
-		}
-		$time = time();
-
-		$query = "UPDATE `spr_labor` SET `name`='{$name}', `contract`='{$contract}', `contacts`='{$contacts}' WHERE `id`='{$id}'";
-
-        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-        //CloseDB ($msql_cnnct);
-
-		//логирование
-		AddLog (GetRealIp(), $session_id, $old, 'Отредактирована лаборатория ['.$id.']. ['.date('d.m.y H:i', $time).']. Название: ['.$name.']. Договор: ['.$contract.']. Контакты: ['.$contacts.'].');
+//		$old = '';
+//
+//        $msql_cnnct = ConnectToDB ();
+//
+//        //Для лога соберем сначала то, что было в записи.
+//		$query = "SELECT * FROM `spr_labor` WHERE `id`=$id";
+//
+//        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//		$number = mysqli_num_rows($res);
+//
+//		if ($number != 0){
+//			$arr = mysqli_fetch_assoc($res);
+//			$old = 'Название: ['.$arr['name'].']. Договор: ['.$arr['contract'].']. Контакты: ['.$arr['contacts'].']';
+//		}else{
+//			$old = 'Не нашли старую запись.';
+//		}
+//		$time = time();
+//
+//		$query = "UPDATE `spr_labor` SET `name`='{$name}', `contract`='{$contract}', `contacts`='{$contacts}' WHERE `id`='{$id}'";
+//
+//        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//        //CloseDB ($msql_cnnct);
+//
+//		//логирование
+//		AddLog (GetRealIp(), $session_id, $old, 'Отредактирована лаборатория ['.$id.']. ['.date('d.m.y H:i', $time).']. Название: ['.$name.']. Договор: ['.$contract.']. Контакты: ['.$contacts.'].');
 	}
 
 	
@@ -1457,7 +1578,23 @@
 		$datatable = trim(strip_tags(stripcslashes(htmlspecialchars($datatable))));
 
 		//$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' LIMIT 5";
-		$query = "SELECT * FROM `$datatable` WHERE `name` LIKE '%$search_data%' AND `status`<> 9 ORDER BY `name` ASC LIMIT 10";
+		$query = "SELECT * FROM `$datatable` db WHERE db.name LIKE '%$search_data%' AND db.status <> '8' ORDER BY db.name ASC LIMIT 10";
+
+		if ($datatable == 'spr_workers') {
+            //Получаем всё по сотруднику
+            $query = "SELECT db.*, s_p.name AS type_name, s_c.name AS cat_name
+                          FROM  `$datatable` db
+                          
+                          LEFT JOIN `spr_permissions` s_p ON s_p.id = db.permissions
+                          LEFT JOIN `journal_work_cat` j_wk ON j_wk.worker_id = db.id
+                          LEFT JOIN `spr_categories` s_c ON s_c.id = j_wk.category
+                          
+                          WHERE db.name LIKE '%$search_data%' AND db.status <> '8'
+                          
+                          ORDER BY db.name ASC
+                          LIMIT 10";
+        }
+
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -1475,6 +1612,33 @@
 	
 	//Выборка для быстрого поиска сертификата
 	function SelForFastSearchCert ($datatable, $search_data){
+
+        $msql_cnnct = ConnectToDB ();
+
+        $rez = array();
+
+		//!Использовать надо везде. Очищение данных от мусора
+		$search_data = trim(strip_tags(stripcslashes(htmlspecialchars($search_data))));
+		$datatable = trim(strip_tags(stripcslashes(htmlspecialchars($datatable))));
+
+		//$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' LIMIT 5";
+		$query = "SELECT * FROM `$datatable` WHERE (`num` LIKE '{$search_data}%') AND `status`<> 9 ORDER BY `num` ASC LIMIT 5";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
+		if ($number != 0){
+			while ($arr = mysqli_fetch_assoc($res)){
+				//echo "\n<li>".$row["name"]."</li>"; //$row["name"] - имя таблицы
+				array_push($rez, $arr);
+			}
+		}
+
+		return $rez;
+	}
+
+	//Выборка для быстрого поиска абонемента
+	function SelForFastSearchAbon ($datatable, $search_data){
 
         $msql_cnnct = ConnectToDB ();
 

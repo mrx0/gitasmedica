@@ -124,7 +124,7 @@
                     $all_color = '';
                 }elseif($_GET['who'] == 11){
                     $who = '&who=11';
-                    $whose = 'Прочее ';
+                    $whose = 'Прочие ';
                     $selected_stom = ' ';
                     $selected_cosm = ' selected';
                     /*$datatable = 'scheduler_somat';

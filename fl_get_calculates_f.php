@@ -31,6 +31,28 @@
 
                 $msql_cnnct = ConnectToDB();
 
+                //Отметки по дополнительным опциям
+                //!!! Здесь функция большая и избыточная, но лень переписывать
+                $spec_prikaz8_checked = '';
+                $spec_oklad_checked = '';
+
+                $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$_POST['worker']} LIMIT 1'";
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                $spec_prikaz8 = false;
+                $spec_oklad = false;
+
+                if ($number != 0){
+                    $arr = mysqli_fetch_assoc($res);
+                    if ($arr['prikaz8'] == 1){
+                        $spec_prikaz8 = true;
+                    }
+                    if ($arr['oklad'] == 1){
+                        $spec_oklad = true;
+                    }
+                }
 
                 //Категории процентов
                 $percent_cats_j = array();
@@ -51,6 +73,7 @@
                 }
 
                 //Основные данные
+                //20200421 добавил ограничение, чтоб не собирались ночные посещения, так как ночи давно нет
                 $query = "SELECT jcalc.*, ji.summ AS in_summ, ji.summins AS in_summins, ji.zapis_id AS in_zapis_id, ji.type AS in_type, ji.create_time AS in_create_time, zapis.noch AS noch,
                             GROUP_CONCAT(DISTINCT jcalcex.percent_cats ORDER BY jcalcex.percent_cats ASC SEPARATOR ',') AS percent_cats 
                             FROM `fl_journal_calculate` jcalc
@@ -62,6 +85,9 @@
                             WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.office_id='{$_POST['office']}' AND jcalc.status <> '7'
                                             AND jcalc.id NOT IN ( SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id ) 
                             AND jcalc.date_in > '2018-05-31'
+                            
+                            AND zapis.noch = '0'
+                            
                             GROUP BY jcalc.id";
                 //$query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.office_id='{$_POST['office']}' AND jcalc.status <> '7' AND jcalc.id NOT IN (SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id) AND jcalc.date_in > '2018-05-31';";
                 //$query = "SELECT jcalc.* FROM `fl_journal_calculate` jcalc WHERE jcalc.type='{$_POST['permission']}' AND jcalc.worker_id='{$_POST['worker']}' AND jcalc.office_id='{$_POST['office']}' AND jcalc.status <> '7' AND jcalc.id NOT IN (SELECT `calculate_id` from `fl_journal_tabels_ex` WHERE `calculate_id`=jcalc.id);";
@@ -97,12 +123,19 @@
 
                         //include_once 'fl_showCalculateRezult.php';
 
+                        $disabled_chkbox = '';
+
+                        //Если спец отметка оклад, то отключаем добавление РЛ
+                        if ($spec_oklad){
+                            $disabled_chkbox = 'disabled';
+                        }
+
                         $rezult .= '
                             <div style="margin: 5px 0; padding: 2px; text-align: center; color: #0C0C0C; font-weight: bold;">
                                 Необработанные расчётные листы
                             </div>
                             <div style="margin: 5px 0; padding: 2px; text-align: center; color: #0C0C0C;">
-                                Выделить всё <input type="checkbox" id="chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$_POST['office'].'" name="checkAll" class="checkAll" chkBoxData="chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$_POST['office'].'" value="1">
+                                Выделить всё <input type="checkbox" id="chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$_POST['office'].'" name="checkAll" class="checkAll" chkBoxData="chkBox_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$_POST['office'].'" value="1" '.$disabled_chkbox.'>
                             </div>
                             <div id="calcs_list_'.$_POST['permission'].'_'.$_POST['worker'].'_'.$_POST['office'].'">';
 
@@ -202,7 +235,20 @@
                                         <div>
                                             <a href="fl_calculate.php?id=' . $rezData['id'] . '" class="ahref">
                                                 <div>
-                                                    <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
+                                                    <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">';
+                                                        
+                                //Если время наряда меньше текущего месяца, сигнализируем
+//                                $rezult .= date('y.m.01', time()).'<br>';
+//                                $rezult .= $rezData['in_create_time'];
+//                                $rezult .= $invoice_create_time2;
+                                //$rezult .= date('y.m.01', time()) > $invoice_create_time2;
+
+                                if (date('y.m.01', time()) > $invoice_create_time2){
+                                    $rezult .= '
+                                                        <i class="fa fa-warning" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);" title="РЛ за прошедший период"></i>';
+                                }
+
+                                $rezult .= '
                                                         <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
                                                     </div>
                                                     <div style="display: inline-block; vertical-align: middle;">
@@ -214,13 +260,13 @@
                                                         Сумма расчёта: <span class="calculateInvoice calculateCalculateN" style="font-size: 11px">' . $rezData['summ'] . '</span> руб.
                                                     </div>
                                                 </div>
-                                                
+
                                             </a>
                                         </div>
                                         <div style="margin: 5px 0 5px 3px; font-size: 80%;">
                                             <b>Наряд: <a href="invoice.php?id=' . $rezData['invoice_id'] . '" class="ahref">#' . $rezData['invoice_id'] . '</a> от ' . $invoice_create_time . ' ' . $noch_str . '<br>пац.: <a href="client.php?id=' . $rezData['client_id'] . '" class="ahref">' . $name . '</a><br>
                                             Сумма: ' . $summ . ' р. Страх.: ' . $summins . ' р.</b> <br>
-                                            
+
                                         </div>
                                         <div style="margin: 5px 0 5px 3px; font-size: 80%;">';
 
@@ -240,7 +286,7 @@
                                     </div>
                                     <div style="display: inline-block; vertical-align: top;">
                                         <div style="/*border: 1px solid #CCC;*/ padding: 3px; margin: 1px;" title="Выделить">
-                                            <input type="checkbox" class="chkBoxCalcs chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $_POST['office'] . '" name="nPaidCalcs_' . $rezData['id'] . '" chkBoxData="chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $_POST['office'] . '" value="1">
+                                            <input type="checkbox" class="chkBoxCalcs chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $_POST['office'] . '" name="nPaidCalcs_' . $rezData['id'] . '" chkBoxData="chkBox_' . $_POST['permission'] . '_' . $_POST['worker'] . '_' . $_POST['office'] . '" value="1" '.$disabled_chkbox.'>
                                         </div>
                                     </div>
                                     <!--<span style="position: absolute; top: 2px; right: 3px;"><i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;"></i></span>-->

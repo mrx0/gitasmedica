@@ -410,9 +410,17 @@
                                                         <div>
                                                             <div style="display: inline-block;">Осталось внести: <div id="calculateInvoice" style="">' . ($invoice_j[0]['summ'] - $invoice_j[0]['paid']) . '</div> руб.</div>
                                                         </div>
-                                                    <div>
-                                                        <div style="display: inline-block;"><a href="payment_add.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b">Оплатить</a></div>
-                                                        <div style="display: inline-block;"><a href="certificate_payment_add.php?invoice_id='.$invoice_j[0]['id'].'" class="b">Оплатить сертификатом</a></div>
+                                                    <div style="font-size: 80%; margin-left: -2px;">
+                                                        <div style="display: inline-block;"><a href="payment_add.php?invoice_id=' . $invoice_j[0]['id'] . '" class="b2">Оплатить</a></div>';
+                                    echo '
+                                                        <div style="display: inline-block;"><a href="certificate_payment_add.php?invoice_id='.$invoice_j[0]['id'].'" class="b2">Оплатить сертификатом</a></div>';
+
+                                    if (($finances['see_all'] == 1) || $god_mode) {
+                                        echo '
+                                                        <div style=""><a href="payment_from_alien_add.php?invoice_id=' . $invoice_j[0]['id'] . '&client_id='.$invoice_j[0]['client_id'].'" class="b4" style="border: 1px dashed red;">Оплатить с чужого счёта</a></div>';
+                                    }
+
+                                    echo '
                                                     </div>';
                                 }
 							}

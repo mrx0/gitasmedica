@@ -123,6 +123,25 @@
 		}
 		return $rez;
 	}
+
+	//Функция показывает, сколько рабочих дней в указанном месяце при 6тидневой рабочей неделе (без праздников)
+	function getWeekdays($m, $y = NULL){
+		$arrDtext = array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
+
+		if(is_null($y) || (!is_null($y) && $y == ''))
+			$y = date('Y');
+
+		$d = 1;
+		$timestamp = mktime(0,0,0,$m,$d,$y);
+		$lastDate = date('t', $timestamp);
+		$workingDays = 0;
+		for($i=$d; $i<=$lastDate; $i++){
+			if(in_array(date('D', mktime(0,0,0,$m,$i,$y)), $arrDtext)){
+				$workingDays++;
+			}
+		}
+		return $workingDays;
+	}
 	
 	//Специализации работника (не должность)
 	function workerSpecialization($worker_id){
@@ -164,7 +183,7 @@
 	}
 
 	//Пишем ФИО человека
-	function WriteSearchUser($datatable, $sw, $type, $link){
+	function WriteSearchUser($datatable, $sw, $type, $link, $show_info=false){
 		if ($type == 'user_full'){
 			$search = 'user';
 		}else{
@@ -177,24 +196,47 @@
 		if ($datatable == 'spr_workers'){
 			$uri = 'user.php';
 		}
-		
+
+		$info_str = '';
+
 		if ($sw != ''){
 			$user = SelDataFromDB($datatable, $sw, $search);
 			//var_dump ($user);
 			//var_dump ($search);
 
+            if ($show_info){
+                $info_str .= ' <i class="fa fa-info-circle" aria-hidden="true" title="';
+
+                $info_str .= '
+                тел.: '.$user[0]['telephone'];
+                    if ($user[0]['htelephone'] != NULL) {
+                        $info_str .= '
+                /д.тел: ' . $user[0]['htelephone'];
+                    }
+                    if ($user[0]['telephoneo'] != NULL) {
+                        $info_str .= ' 
+                /тел оп.: ' . $user[0]['telephoneo'];
+                    }
+                    if ($user[0]['htelephoneo'] != NULL) {
+                        $info_str .= ' 
+                /д.тел оп.: ' . $user[0]['htelephoneo'];
+                    }
+
+                $info_str .= '" style="font-size: 110%; color: rgb(214, 89, 0); float: right;"></i>';
+			}
+
 			if ($user != 0){
 				if ($type == 'user_full'){
 					if ($link){
-						return '<a href="'.$uri.'?id='.$sw.'" class="ahref">'.$user[0]['full_name'].'</a>';
+						return '<a href="'.$uri.'?id='.$sw.'" class="ahref" target="_blank" rel="nofollow noopener">'.$user[0]['full_name']. '</a>'.$info_str;
 					}else{
-						return $user[0]['full_name'];
+						return $user[0]['full_name'].''.$info_str.'';
 					}
 				}else{
 					if ($link){
-						return '<a href="'.$uri.'?id='.$sw.'" class="ahref">'.$user[0]['name'].'</a>';
+						return '<a href="'.$uri.'?id='.$sw.'" class="ahref">'.$user[0]['name'].'</a>'.$info_str;
 					}else{
-						return $user[0]['name'];
+						return $user[0]['name'].''.$info_str.'';
 					}
 				}
 			}else{
@@ -343,7 +385,8 @@
 		}
 		return $temp_arr1;
 	}
-	
+
+	//Проверка не уволен ли
 	function isFired($id){
 		$user = SelDataFromDB('spr_workers', $id, 'user');
 		if ($user != 0){
@@ -952,7 +995,7 @@
 		return $sanat;
 	}
 	
-	function selectDate ($selD, $selM, $selY){
+	function selectDate ($selD, $selM, $selY, $yStart=0, $selIndex=0){
 		//var_dump($selD);
 		//var_dump($selM);
 		//var_dump($selY);
@@ -976,9 +1019,19 @@
 		
 		$i = 1;
 		$j = 1920;
+
+		if ($yStart != 0){
+            $j = $yStart;
+		}
+
+		$index = '';
+
+		if ($selIndex != 0){
+            $index = $selIndex;
+		}
 		
 		//День
-		$result .= '<select name="sel_date" id="sel_date">';
+		$result .= '<select name="sel_date'.$index.'" id="sel_date'.$index.'">';
 		$result .= '<option value="00">00</option>';
 		while ($i <= 31) {
 			if ($selD == $i) $selected = ' selected'; else $selected = '';
@@ -989,7 +1042,7 @@
 		$result .= '</select>';
 		
 		// Месяц
-		$result .= '<select name="sel_month" id="sel_month">';
+		$result .= '<select name="sel_month'.$index.'" id="sel_month'.$index.'">';
 		$result .= '<option value="00">---</option>';
 		foreach ($month as $m => $n) {
 			if ($selM == $m+1) $selected = ' selected'; else $selected = '';
@@ -999,7 +1052,7 @@
 		$result .= '</select>';
 		
 		// Год
-		$result .= '<select name="sel_year" id="sel_year">';
+		$result .= '<select name="sel_year'.$index.'" id="sel_year'.$index.'">';
 		$result .= '<option value="0000">0000</option>';
 		while ($j <= 2020) {
 			if ($selY == $j) $selected = ' selected'; else $selected = '';
@@ -1021,6 +1074,48 @@
 		$first = mb_strtoupper($first);
 		$last = mb_strtolower($last);
 		return $first.$last;
+	}
+
+	//Проверка родителей в дереве
+	function checkExistTreeParents ($dbtable, $item_id, $target_item_id, $exist=false){
+//		var_dump('----------------');
+//		var_dump($item_id);
+//		var_dump($target_item_id);
+//		var_dump($exist);
+
+		if (!$exist) {
+            $msql_cnnct = ConnectToDB();
+
+            $query = "SELECT `parent_id` FROM $dbtable WHERE `id` = '$target_item_id' AND `status` <> '9' LIMIT 1";
+            //var_dump($query);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0) {
+                $arr = mysqli_fetch_assoc($res);
+                //var_dump($arr['parent_id']);
+
+                //Если нашли совпадение с $target_item_id, заканчиваем проверки
+                if ($item_id == $arr['parent_id']) {
+
+                    $exist = true;
+                    return $exist;
+
+                } else {
+                    $exist = checkExistTreeParents($dbtable, $item_id, $arr['parent_id']);
+                }
+            }
+
+            return $exist;
+
+
+        }
+
+        CloseDB($msql_cnnct);
+
+        return $exist;
 	}
 
 	//Долги/Авансы
@@ -1419,10 +1514,12 @@
 	
 	//Дерево с return
 	function returnTree($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id){
-		require 'config.php';
-		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-		mysql_select_db($dbName) or die(mysql_error()); 
-		mysql_query("SET NAMES 'utf8'");
+//		require 'config.php';
+//		mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
+//		mysql_select_db($dbName) or die(mysql_error());
+//		mysql_query("SET NAMES 'utf8'");
+
+        $msql_cnnct = ConnectToDB ();
 				
 		static $rezult_arr = array();
 				
@@ -1466,11 +1563,13 @@
 			$first = FALSE;
 		}
 		//var_dump ($query);
-		
-		$res = mysql_query($query) or die($query);
-		$number = mysql_num_rows($res);
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+
 		if ($number != 0){
-			while ($arr = mysql_fetch_assoc($res)){
+			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($rez, $arr);
 			}
 			$rezult = $rez;
@@ -1487,7 +1586,7 @@
 				$rez2 = array();
 				$arr3 = array();
 				$rez3 = array();
-				
+
 				/*if ($type == 'select'){
 					//echo $space.$value['name'].'<br>';
 					$selected = '';
@@ -1496,10 +1595,10 @@
 					}
 					echo '<option value="'.$value['id'].'" '.$selected.'>'.$space.$value['name'].'</option>';
 				}*/
-				
+
 				if ($type == 'return'){
 					//echo $space.$value['name'].'<br>';
-					
+
 					/*if ($value['level'] == 0) {
 						$style_name = 'font-size: 130%;';
 						$style_name .= $color_array[0];
@@ -1520,7 +1619,7 @@
 							$style_name .= 'background-color: rgba(225, 126, 255, 0.5);';
 						}*/
 					//}
-					
+
 					//Если не страховая
 					/*if ($insure_id == 0){
 						echo '
@@ -1539,14 +1638,15 @@
 							</div>
 						</li>';
 					}*/
-					
+
 					$query = "SELECT * FROM `{$dbtable}` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$deleted_str." ".$q_dop." ORDER BY `name`";			
 					//var_dump($query);
-					
-					$res = mysql_query($query) or die(mysql_error().' -> '.$query);	
-					$number = mysql_num_rows($res);	
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+					$number = mysqli_num_rows($res);
 					if ($number != 0){
-						while ($arr2 = mysql_fetch_assoc($res)){
+						while ($arr2 = mysqli_fetch_assoc($res)){
 							array_push($rez2, $arr2);
 						}
 						$items_j = $rez2;
@@ -1590,12 +1690,12 @@
 							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
 							$query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
 							//var_dump($query);
-							
-							$res = mysql_query($query) or die(mysql_error().' -> '.$query);
 
-							$number = mysql_num_rows($res);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+							$number = mysqli_num_rows($res);
 							if ($number != 0){
-								$arr3 = mysql_fetch_assoc($res);
+								$arr3 = mysqli_fetch_assoc($res);
 								$price = $arr3['price'];
 								$price2 = $arr3['price2'];
 								$price3 = $arr3['price3'];
@@ -1625,9 +1725,10 @@
 				
 				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
 				//var_dump($query);
-				
-				$res = mysql_query($query) or die($query);
-				$number = mysql_num_rows($res);
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+				$number = mysqli_num_rows($res);
 				//var_dump($number);
 
 				if ($number != 0){
@@ -2583,10 +2684,14 @@
 		
 		//Если первый проход
 		if ($first){
+
+			//!!! переделай под это
+			//$msql_cnnct = ConnectToDB ();
+
 			require 'config.php';
-		
+
 			mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение ");
-			mysql_select_db($dbName) or die(mysql_error()); 
+			mysql_select_db($dbName) or die(mysql_error());
 			mysql_query("SET NAMES 'utf8'");
 		}
 		
@@ -2676,6 +2781,439 @@
 		
 		return $rez_str;
 	}
+
+
+	//Ещё одно дерево чисто по типу (стом, косм, и тд)
+//	function showTree6($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype, $direct_type){
+//
+//		$msql_cnnct = ConnectToDB ();
+//
+//		$arr = array();
+//		$rez = array();
+//		$style_name = '';
+//		$color_array = array(
+//			'background-color: rgba(255, 236, 24, 0.5);',
+//			'background-color: rgba(103, 251, 66, 0.5);',
+//			'background-color: rgba(97, 227, 255, 0.5);',
+//		);
+//		$color_index = $last_level;
+//
+//		$deleted_str = '';
+//
+//		if ($deleted){
+//			//$deleted_str = 'AND `status` = 9';
+//		}else{
+//			//выбираем не удалённые
+//			$deleted_str = 'AND `status` <> 9';
+//		}
+//
+//		$q_dop = '';
+//		$dbprices = 'spr_priceprices';
+//		$link = 'pricelistitem.php?';
+//
+//		//Для страховых
+//		if ($insure_id != 0){
+//			$q_dop = " AND `insure`='{$insure_id}'";
+//			$dbprices = 'spr_priceprices_insure';
+//			$link = 'pricelistitem_insure.php?insure='.$insure_id;
+//		}else{
+//			//
+//		}
+//
+//		//Выбираем всё из этого уровня
+//		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+//
+//		//Если не из корня смотрим, то выбираем всё, что в этой группе
+//		if ($first && ($level != 0) && ($type == 'list')){
+//			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+//			$first = FALSE;
+//		}
+//		//var_dump ($query);
+//
+//		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//		$number = mysqli_num_rows($res);
+//		if ($number != 0){
+//			while ($arr = mysqli_fetch_assoc($res)){
+//				array_push($rez, $arr);
+//			}
+//			$rezult = $rez;
+//		}else{
+//			$rezult = 0;
+//		}
+//		//var_dump($rezult);
+//
+//		if ($rezult != 0){
+//
+//			foreach ($rezult as $key => $value){
+//
+//				$arr2 = array();
+//				$rez2 = array();
+//				$arr3 = array();
+//				$rez3 = array();
+//
+//				/*if ($type == 'select'){
+//					//echo $space.$value['name'].'<br>';
+//					$selected = '';
+//					if ($value['id'] == $sel_id){
+//						$selected = ' selected';
+//					}
+//					echo '<option value="'.$value['id'].'" '.$selected.'>'.$space.$value['name'].'</option>';
+//				}*/
+//
+//				if ($type == 'list'){
+//					//echo $space.$value['name'].'<br>';
+//
+//					if ($value['level'] == 0) {
+//						$style_name = 'font-size: 130%;';
+//						$style_name .= $color_array[0];
+//						//$this_level = 0;
+//					}else{
+//						$style_name = 'font-size: 110%; font-style: oblique;';
+//						//$style_name .= 'background-color: rgba(97, 227, 255, 0.5)';
+//						if (isset($color_array[$color_index])){
+//							$style_name .= $color_array[$color_index];
+//						}else{
+//							$style_name .= 'background-color: rgba(225, 126, 255, 0.5);';
+//						}
+//					}
+//
+//					echo '
+//							<li style="cursor: e-resize;">
+//								<div class="drop" style="background-position: 0px 0px;"></div>
+//								<p class="drop"><b>'.$value['name'].'</b></p>';
+//
+//					/*echo '
+//						<li class="cellsBlock" style="width: auto;">
+//							<div class="cellPriority" style=""></div>
+//							<div class="cellOffice" style=" text-align: left; width: 350px; min-width: 350px; max-width: 350px; '.$style_name.'">
+//								<a href="pricelistgroup.php?id='.$value['id'].'" class="ahref" style="font-weight: bold;" id="4filter">'.$space.$value['name'].'</a>
+//							</div>
+//							<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; '.$style_name.'">
+//								<div class="managePriceList" style="font-style: normal; font-size: 13px;">
+//									<a href="pricelistgroup_edit.php?id='.$value['id'].'" class="ahref"><i id="PriceListGroupEdit" class="fa fa-pencil-square-o pricemenu" aria-hidden="true" style="color: #777;" title="Редактировать"></i></a>
+//									<a href="add_pricelist_item.php?addinid='.$value['id'].'" class="ahref"><i id="PriceListGroupAdd" class="fa fa-plus pricemenu" aria-hidden="true" style="color: #36EA5E;" title="Добавить в эту группу"></i></a>
+//									<!--<a href="pricelistgroup_del.php?id='.$value['id'].'" class="ahref"><i id="" class="fa fa-bars pricemenu" aria-hidden="true" style="" title="Изменить порядок"></i></a>-->
+//									<a href="pricelistgroup_del.php?id='.$value['id'].'" class="ahref"><i id="PriceListGroupDelete" class="fa fa-trash pricemenu" aria-hidden="true" style="color: #FF3636" title="Удалить"></i></a>
+//								</div>
+//							</div>
+//						</li>';
+//					*/
+//
+//					echo '
+//								<ul style="display: none;">';
+//
+//					$query = "SELECT * FROM `{$dbtable}` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$deleted_str." ".$q_dop." ORDER BY `name`";
+//
+//					if ($insure_id != 0){
+//						$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `{$dbtable}` WHERE `item` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$q_dop.") ".$deleted_str." ORDER BY `name`";
+//					}
+//
+//					//var_dump($query);
+//
+//					$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//					$number = mysqli_num_rows($res);
+//					if ($number != 0){
+//						while ($arr2 = mysqli_fetch_assoc($res)){
+//							array_push($rez2, $arr2);
+//						}
+//						$items_j = $rez2;
+//					}else{
+//						$items_j = 0;
+//					}
+//
+//					//var_dump($items_j);
+//
+//					if ($items_j != 0){
+//
+//						$anything_here = true;
+//
+//						for ($i = 0; $i < count($items_j); $i++) {
+//
+//							$price = 0;
+//
+//							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
+//							$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
+//
+//							if ($insure_id != 0){
+//								$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' AND `insure`='".$insure_id."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
+//							}
+//							//var_dump($query);
+//
+//							$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//							$number = mysqli_num_rows($res);
+//							if ($number != 0){
+//								$arr3 = mysqli_fetch_assoc($res);
+//								$price = $arr3['price'];
+//							}else{
+//								$price = 0;
+//							}
+//
+//							echo '
+//											<li style="cursor: pointer;">
+//												<p onclick="checkPriceItem('.$items_j[$i]['id'].', '.$dtype.')"><span class="4filter"><span style="font-size: 75%; font-weight: bold;">[#'.$items_j[$i]['id'].']</span> <i>'.$items_j[$i]['code'].'</i> '.$items_j[$i]['name'].'</span></p>
+//											</li>';
+//						}
+//					}else{
+//						//
+//					}
+//
+//					/*echo '
+//							</ul>';
+//
+//					echo '
+//						</li>';*/
+//				}
+//
+//
+//				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
+//				//var_dump($query);
+//
+//				$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//				$number = mysqli_num_rows($res);
+//				if ($number != 0){
+//					//echo '_'.$value['name'].'<br>';
+//					$space2 = $space. '&nbsp;&nbsp;&nbsp;';
+//					$last_level2 = $last_level+1;
+//					showTree2($value['id'], $space2, $type, $sel_id, $first, $last_level2, $deleted, $dbtable, $insure_id, $dtype);
+//				}else{
+//					//---
+//
+//
+//
+//
+//				}
+//
+//				echo '
+//								</ul>';
+//
+//				echo '
+//							</li>';
+//
+//			}
+//		}
+//	}
+
+
+	//для Склада
+//	function showTreeSclad ($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype, $msql_cnnct){
+//
+//		$sclad_rez = array();
+//
+//		$rez_str = '';
+//
+//		$color_array = array(
+//			'background-color: rgba(255, 236, 24, 0.5);',
+//			'background-color: rgba(103, 251, 66, 0.5);',
+//			'background-color: rgba(97, 227, 255, 0.5);',
+//		);
+//		$color_index = $last_level;
+//
+//		//Если первый проход
+////		if ($first){
+////
+////			$msql_cnnct = ConnectToDB ();
+////
+////		}
+//
+//		//определяем уровень для запроса
+//		if ($level == NULL){
+//			$parent_str = '`parent_id` IS NULL';
+//		}else{
+//			$parent_str = '`parent_id` = '.$level;
+//		}
+//
+//		//берем верхний уровень
+//		$query = "SELECT * FROM `$dbtable` WHERE ".$parent_str;
+////		var_dump($query);
+//
+//		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//		$number = mysqli_num_rows($res);
+//
+//		if ($number != 0){
+//			while ($arr = mysqli_fetch_assoc($res)){
+//				array_push($sclad_rez, $arr);
+//			}
+//		}
+//        //var_dump($sclad_rez);
+//
+//
+//		//Если первый проход
+//		if ($first){
+//			$rez_str .= '
+//					<div style="margin: 10px 0 5px; font-size: 11px; cursor: pointer;">
+//						<!--<span class="dotyel a-action lasttreedrophide">скрыть всё</span>, <span class="dotyel a-action lasttreedropshow">раскрыть всё</span>-->
+//					</div>';
+//			$rez_str .= '
+//					<div style="/*width: 350px;*/ height: 600px; overflow-y: scroll; border: 1px solid #CCC;">
+//						<ul class="ul-tree ul-drop" id="lasttree" style="padding-left: 0px;">';
+//		}
+//
+//		if (!empty($sclad_rez)){
+//			foreach ($sclad_rez as $sclad_rez_value){
+//				if ($sclad_rez_value['node_count'] > 0) {
+//                    $rez_str .= '
+//						<li>
+//							<div class="drop" style="background-position: 0px 0px;"></div>
+//							<p onclick="" ><b>#' . $sclad_rez_value['id'] . '</b> ' . $sclad_rez_value['name'] . '</p>';
+//
+//					$rez_str .= '
+//							<ul style="display: block;">';
+//
+//					$rez_str .= showTreeSclad($sclad_rez_value['id'], '', 'list', 0, FALSE, 0, FALSE, $dbtable, 0, 0, $msql_cnnct);
+//
+//					$rez_str .= '
+//							</ul>';
+//					$rez_str .= '
+//						</li>';
+//
+//				} else {
+//					$rez_str .= '
+//							<li>
+//								<p onclick=""><b>#' . $sclad_rez_value['id'] . '</b> ' . $sclad_rez_value['name'] . '</p>
+//							</li>';
+//				}
+//				//if ($type == 'list'){
+//				//echo $space.$value['name'].'<br>';
+//
+//				//играемся с цветом
+//				/*if ($value['level'] == 0) {
+//					$style_name = 'font-size: 130%;';
+//					$style_name .= $color_array[0];
+//					//$this_level = 0;
+//				}else{
+//					$style_name = 'font-size: 110%; font-style: oblique;';
+//					//$style_name .= 'background-color: rgba(97, 227, 255, 0.5)';
+//					if (isset($color_array[$color_index])){
+//						$style_name .= $color_array[$color_index];
+//					}else{
+//						$style_name .= 'background-color: rgba(225, 126, 255, 0.5);';
+//					}
+//				}*/
+//			}
+//		}
+//
+//		if ($first){
+//			$rez_str .= '
+//					</ul>
+//				</div>';
+//			//mysql_close();
+//		}
+//
+//		return $rez_str;
+//	}
+
+	//для Склада
+	function showTreeSclad2 ($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype, $msql_cnnct){
+		//var_dump($first);
+
+		$sclad_rez = array();
+
+		$rez_str = '';
+
+		//определяем уровень для запроса
+		if ($level == NULL){
+			$parent_str = "`parent_id` = '0'";
+		}else{
+			$parent_str = "`parent_id` = ".$level;
+		}
+
+		//берем верхний уровень
+		$query = "SELECT * FROM `$dbtable` WHERE ".$parent_str;
+		//var_dump($query);
+
+		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
+
+		if ($number != 0){
+			while ($arr = mysqli_fetch_assoc($res)){
+				array_push($sclad_rez, $arr);
+			}
+		}
+        //var_dump($sclad_rez);
+
+		//Если первый проход
+		if ($first){
+            //var_dump($sclad_rez);
+
+            if ($type == 'list') {
+                $rez_str .= '	
+						<ol class="tree">
+						<li>
+							<label id="cat_0" class="droppable hover" onclick="getScladItems (0, 0, 1000, false, true, 0); return;" cat_name=""><b>#0</b> Вне категории</label> <input type="checkbox" id="folder0" checked /> 
+						</li>';
+            }
+
+
+		}else{
+            if ($type == 'list') {
+                $rez_str .= '<ol class="tree2">';
+            }
+		}
+
+		if (!empty($sclad_rez)){
+			foreach ($sclad_rez as $sclad_rez_value){
+
+                if ($type == 'list'){
+
+					if ($sclad_rez_value['node_count'] > 0) {
+						$rez_str .= '	
+							<li>
+								<label id="cat_'.$sclad_rez_value['id'].'" class="draggable droppable hover" onclick="getScladItems ('.$sclad_rez_value['id'].', 0, 1000, false, true, '.$sclad_rez_value['id'].'); return;" cat_name="' . $sclad_rez_value['name'] . '"><b>#' . $sclad_rez_value['id'] . '</b> ' . $sclad_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$sclad_rez_value['id'].'" checked />';
+
+						$rez_str .= showTreeSclad2($sclad_rez_value['id'], '', 'list', 0, FALSE, 0, FALSE, $dbtable, 0, 0, $msql_cnnct);
+
+						$rez_str .= '	
+							</li>';
+
+					} else {
+						$rez_str .= '	
+							<li>
+								<label id="cat_'.$sclad_rez_value['id'].'" class="draggable droppable hover" onclick="getScladItems ('.$sclad_rez_value['id'].', 0, 1000, false, true, '.$sclad_rez_value['id'].'); return;" cat_name="' . $sclad_rez_value['name'] . '"><b>#' . $sclad_rez_value['id'] . '</b> ' . $sclad_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$sclad_rez_value['id'].'" checked />';
+						$rez_str .= '	
+							</li>';
+					}
+				}
+
+                if ($type == 'select'){
+                    //echo $space.$value['name'].'<br>';
+
+                    $selected = '';
+                    if ($sclad_rez_value['id'] == $sel_id){
+                        $selected = ' selected';
+                    }
+                    $rez_str .= '<option value="'.$sclad_rez_value['id'].'" '.$selected.'>'.$space.$sclad_rez_value['name'].'</option>';
+
+                    $space2 = $space. '...';
+                    //$last_level2 = $last_level+1;
+
+                    $rez_str .= showTreeSclad2($sclad_rez_value['id'], $space2, 'select', $sel_id, FALSE, 0, FALSE, $dbtable, 0, 0, $msql_cnnct);
+                }
+			}
+
+            if ($type == 'list') {
+                $rez_str .= '	
+					</ol>';
+            }
+
+
+		}
+
+		if ($first){
+            if ($type == 'list') {
+				$rez_str .= '	
+					</ol>';
+            }
+		}
+
+
+
+		return $rez_str;
+	}
+
 
 	//Для контекстной менюшки для управления записью
     function contexMenuZapisMain ($zapisData, $filial, $office_j_arr, $year, $month, $day, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $main_zapis, $title_time, $title_client, $title_descr){
@@ -2787,11 +3325,19 @@
                         $rezult .= '
                                                         <li>
                                                             <div>
-                                                                <a href="add_task_stomat.php?client=' . $zapisData['patient'] . '&filial=' . $zapisData['office'] . '&insured=' . $zapisData['insured'] . '&pervich=' . $zapisData['pervich'] . '&noch=' . $zapisData['noch'] . '&date=' . strtotime($zapisData['day'] . '.' . $month . '.' . $zapisData['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $zapisData['id'] . '&worker=' . $zapisData['worker'] . '" class="ahref">
+                                                                <a href="add_task_stomat.php?client=' . $zapisData['patient'] . '&filial=' . $zapisData['office'] . '&insured=' . $zapisData['insured'] . '&pervich=' . $zapisData['pervich'] . '&noch=' . $zapisData['noch'] . '&date=' . strtotime($zapisData['day'] . '.' . $month . '.' . $zapisData['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&zapis_id=' . $zapisData['id'] . '&worker=' . $zapisData['worker'] . '" class="ahref">
                                                                     Внести Осмотр/Зубную формулу
                                                                 </a>
                                                             </div>
                                                         </li>';
+                        $rezult .= '
+														<li>
+															<div>
+																<a href="invoice_advance_add.php?client=' . $zapisData['patient'] . '&filial=' . $zapisData['office'] . '&date=' . strtotime($zapisData['day'] . '.' . $month . '.' . $zapisData['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $zapisData['id'] . '&worker=' . $zapisData['worker'] . '&type=' . $zapisData['type'] . '" class="ahref">
+																	Предварительный расчёт
+																</a>
+															</div>
+														</li>';
                     }
                     if (($zapisData['type'] == 6) && $cosm_edit && $main_zapis) {
                         $rezult .= '
@@ -4497,7 +5043,7 @@
 			),
             11 => array(
                 'who' => '&who=11',
-                'whose' => 'Прочее ',
+                'whose' => 'Прочие ',
                 'selected_stom' => ' ',
                 'selected_cosm' => ' selected',
                 'datatable' => 'scheduler_somat',
@@ -5183,6 +5729,110 @@
         echo '<span style="font-size: 85%;">Остаток денег по филиалам после ЭТОЙ ЧАСТИЧНОЙ выдачи</span>';
         var_dump($itog_filials_summ_ostatok_temp);
 	}
+
+	//Получить нормы часов персональные или общие
+	function getNormaHours($worker_id, $by_type=false, $type=0){
+
+		$norma = 0;
+
+		$msql_cnnct = ConnectToDB ();
+
+		if ($by_type){
+			//Берем общую для типа
+			$query = "SELECT `count` FROM `fl_spr_normahours` WHERE `type`='" . $type . "' LIMIT 1";
+			$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+			$number = mysqli_num_rows($res);
+			if ($number != 0) {
+				$arr = mysqli_fetch_assoc($res);
+				$norma = $arr['count'];
+			}
+		}else {
+			$type = 0;
+
+			//Узнаем категорию сотрудника
+			$query = "SELECT `id`, `permissions` AS `type` FROM `spr_workers` WHERE `id`='" . $worker_id . "' LIMIT 1";
+
+			$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+			$number = mysqli_num_rows($res);
+			//var_dump($number);
+
+			if ($number != 0) {
+				$arr = mysqli_fetch_assoc($res);
+
+				$type = $arr['type'];
+
+				//Вытащим сразу индивидуальную норму
+				$query = "SELECT `count` FROM `fl_spr_normahours_personal` WHERE `worker_id`='" . $worker_id . "' LIMIT 1";
+				$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+				$number = mysqli_num_rows($res);
+				//var_dump($number);
+
+				if ($number != 0) {
+					$arr = mysqli_fetch_assoc($res);
+					$norma = $arr['count'];
+				} else {
+					//Если нет персональной нормы, берем общую для типа
+					$query = "SELECT `count` FROM `fl_spr_normahours` WHERE `type`='" . $type . "' LIMIT 1";
+					$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+					$number = mysqli_num_rows($res);
+					if ($number != 0) {
+						$arr = mysqli_fetch_assoc($res);
+						$norma = $arr['count'];
+					}
+				}
+			}
+		}
+
+		return $norma;
+	}
+
+	//Here is a quick and easy way to convert a CSV file to an associated array:
+	/**
+	 * @link http://gist.github.com/385876
+	 */
+	function csv_to_array($filename='', $delimiter=',')
+	{
+		if(!file_exists($filename) || !is_readable($filename))
+			return FALSE;
+
+		$header = NULL;
+		$data = array();
+		if (($handle = fopen($filename, 'r')) !== FALSE)
+		{
+			while (($row = fgetcsv($handle, 1000, $delimiter)) !== FALSE)
+			{
+				if(!$header)
+					$header = $row;
+				else
+					$data[] = array_combine($header, $row);
+			}
+			fclose($handle);
+		}
+		return $data;
+	}
+
+
+	//str_split для кириллицы
+//function str_split_utf8($str) {
+//    $split = 1;
+//    $array = array();
+//    for ($i=0; $i < strlen($str); ){
+//        $value = ord($str[$i]);
+//        if($value > 127){
+//            if ($value >= 192 && $value <= 223)      $split = 2;
+//            elseif ($value >= 224 && $value <= 239)  $split = 3;
+//            elseif ($value >= 240 && $value <= 247)  $split = 4;
+//        } else $split = 1;
+//        $key = NULL;
+//        for ( $j = 0; $j < $split; $j++, $i++ ) $key .= $str[$i];
+//        array_push( $array, $key );
+//    }
+//    return $array;
+//}
 
 
 ?>

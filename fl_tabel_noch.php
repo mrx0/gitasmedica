@@ -456,7 +456,7 @@
                                 }elseif ($rezData['type'] == 3){
                                     $rezultS .= ' больничный ';
                                 }else {
-                                    $rezultS .= ' премия ';
+                                    $rezultS .= ' прочее ';
                                 }
                                 $rezultS .=
                                                         '#' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);"><br>создано: ' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>
@@ -840,7 +840,7 @@
                             }
                             echo '
                                         <div style="background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            Рассчёт: <span class="calculateOrder" style="font-size: 13px">' . ($tabel_j[0]['summ'] + $tabel_j[0]['summ_calc']) . '</span> руб.
+                                            Расчёт: <span class="calculateOrder" style="font-size: 13px">' . ($tabel_j[0]['summ'] + $tabel_j[0]['summ_calc']) . '</span> руб.
                                         </div>';
                         }
 

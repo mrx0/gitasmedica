@@ -16,7 +16,8 @@
 		$r_menu = '';
 		$s_menu = '';
 		$first = '';
-		
+
+		$rezult = '';
 		
 		foreach ($tooth_status as $key => $value){
 			if (($key != '6') && ($key != '7')){
@@ -54,16 +55,18 @@
 		
 		
 		if ($menu == 't_menu'){
-			echo $t_menu;
+            $rezult .= $t_menu;
 		}elseif($menu == 'r_menu'){
-			echo $r_menu;
+            $rezult .= $r_menu;
 		}elseif($menu == 's_menu'){
-			echo $s_menu;
+            $rezult .= $s_menu;
 		}elseif($menu == 'first'){
 			$first = '';			
 		}elseif($menu == 'm_menu'){
-			echo $m_menu;			
+            $rezult .= $m_menu;
 		}
+
+		return $rezult;
 	}
 
 

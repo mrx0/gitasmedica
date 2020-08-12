@@ -16,6 +16,7 @@
         // прячем текст ошибок
         $('.error').hide();
         $('#errror').html('');
+        $('#errrror').html('');
 	}
 
 	//Функция для работы с GET
@@ -129,6 +130,81 @@
         // console.log('--------');
 
         return ' rgba('+red+', '+green+', 0, '+alpha+')';
+    }
+
+    //Функция для создания бланка платежки с QR кодом в формате PDF
+    function createPayBlankPdfQRCode(){
+
+	    //получим все данные со странички, проверим их и поедем дальше
+        //Сам человек или опекун
+        var thisFIO = document.querySelector('input[name="thisFIO"]:checked').value;
+
+        //Если опекун
+        if (thisFIO == 1){
+            var fio = $("#fioo").val();
+        }else{
+            var fio = $("#fio").val();
+        }
+
+        //Длина строки JS
+        //Если заполнены ФИО
+        if (fio.length > 0){
+            //Адрес
+            var address = $("#address").val();
+
+            //Если заполнен адрес
+            if (address.length > 0){
+                //Назначение платежа/коммент
+                var comment = $("#comment").val();
+
+                if (comment.length > 0){
+                    //Сумма
+                    var rub = $("#rub").val();
+                    var kop = $("#kop").val();
+                    // console.log(Number(rub));
+                    // console.log(Number(kop));
+                    // console.log(isNaN(rub));
+                    // console.log(isNaN(kop));
+
+                    //Если сумма число
+                    if ((!isNaN(rub) && !isNaN(kop)) && (Number(rub) + Number(kop) > 0)){
+                        //console.log(Number(rub) + Number(kop)/100);
+
+                        //Если выбрали организацию
+                        var org_id = $("#SelectOrg").val();
+
+                        if (org_id != 0) {
+
+                            var inn = $("#inn").html();
+                            var kpp = $("#kpp").html();
+                            var org_full_name = $("#org_full_name").html();
+                            var bik = $("#bik").html();
+                            var ks = $("#ks").html();
+                            var bank_name = $("#bank_name").html();
+                            var rs = $("#rs").html();
+                            var payerinn = $("#payerinn").val();
+
+                            //console.log('pay_blank_pdf_qr_create.php?inn=' + inn + '&kpp=' + kpp + '&org_full_name=' + org_full_name + '&bik=' + bik + '&ks=' + ks + '&bank_name=' + bank_name + '&rs=' + rs + '&fio=' + fio + '&address=' + address + '&comment=' + comment + '&summ=' + (Number(rub) + Number(kop)));
+                            window.open('pay_blank_pdf_qr_create.php?inn=' + inn + '&kpp=' + kpp + '&org_full_name=' + org_full_name + '&bik=' + bik + '&ks=' + ks + '&bank_name=' + bank_name + '&rs=' + rs + '&fio=' + fio + '&address=' + address + '&comment=' + comment + '&rub=' + (Number(rub) + '&kop=' + Number(kop)) + '&payerinn=' + payerinn);
+                        }else{
+                            alert ("Выберите Юр. лицо");
+                        }
+
+                    }else{
+                        alert ("Проверьте сумму");
+                    }
+
+                }else{
+                    alert ("Заполните назначение платежа");
+                }
+            }
+            else{
+                alert ("Проверьте заполнение адреса");
+            }
+
+        }else{
+            alert ("Проверьте заполнение ФИО");
+        }
     }
 
     //Вывод данных сессии в консоль
@@ -301,6 +377,46 @@
         }
     });
 
+    //Для поиска абонемента из модального окна
+    $('#search_abon').bind("change keyup input click", function() {
+
+        //var $this = $(this);
+        var val = $(this).val();
+        //console.log(val);
+
+        if (val.length > 1){
+            $.ajax({
+                url:"FastSearchAbon.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data:{
+					num: val
+				},
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success:function(res){
+                    //console.log(res);
+
+                    if(res.result == 'success') {
+                    	//console.log(res.data);
+
+                        $(".search_result_abon").html(res.data).fadeIn(); //Выводим полученые данные в списке
+                    }else{
+                        //console.log(res.data);
+					}
+                },
+				error:function(){
+                	//console.log(12);
+				}
+            });
+        }else{
+            $("#search_result_abon").hide();
+        }
+    });
+
 	//Для изменения цены вручную
     function changePriceItem(newPrice, start_price){
         //console.log(newPrice);
@@ -323,12 +439,15 @@
 
 	//попытка показать контекстное меню
 	function contextMenuShow(ind, key, event, mark){
-		//console.log(mark);
+		//console.log(event);
 
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
 		// Удаляем предыдущие вызванное контекстное меню:
 		$('.context-menu').remove();
+
+		//Запретить или разрешить показывать меню и отключить при этом стандартное контекстное меню
+        var finShow = true;
 		
 		// Получаем элемент на котором был совершен клик:
 		var target = $(event.target);
@@ -347,6 +466,46 @@
             dopReq.date = date;
             dopReq.filial_id = filial_id;
             //console.log(dopReq);
+        }
+
+        if (mark == 'sclad_cat') {
+            //console.log(target.attr('id'));
+
+            ind = 0;
+
+            if ((target.attr('id') !== undefined) && (target.attr('id') !== 'sclad_cat_rezult')) {
+                ind = target.attr('id').split('_')[1];
+                //console.log(ind);
+            }
+
+            if (target.attr('id') !== 'sclad_cat_rezult') {
+                key = 'dop';
+            }
+        }
+
+        if (mark == 'sclad_item') {
+            //console.log(target.closest('tr').attr('id'));
+
+            ind = 0;
+
+            if (target.closest('tr').attr('id') !== undefined) {
+                event.preventDefault();
+
+                ind = target.closest('tr').attr('id').split('_')[1];;
+                //console.log(ind);
+
+            }else{
+                finShow = false;
+            }
+
+            // if ((target.attr('id') !== undefined) && (target.attr('id') !== 'sclad_cat_rezult')) {
+            //     ind = target.attr('id').split('_')[1];
+            //     //console.log(ind);
+            // }
+            //
+            // if (target.attr('id') !== 'sclad_cat_rezult') {
+            //     key = 'dop';
+            // }
         }
 
         if ((mark == 'insure') || (mark == 'insureItem')){
@@ -451,7 +610,10 @@
 				}
 
                 // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
-				menu.show();
+                if (finShow) {
+                    //event.preventDefault();
+                    menu.show();
+                }
 		
 			}
 		});
@@ -480,11 +642,13 @@
 
         $('input[type="checkbox"]').each(function() {
             var cboxValue = $(this).val();
-            //console.log($(this).attr("id"));
+            //console.log($(this).attr("name"));
 
-            if ($(this).attr("id") != 'fired') {
-                if ($(this).prop("checked")) {
-                    cboxArray = itemExistsChecker2(cboxArray, cboxValue);
+            if ($(this).attr("name") == 'specializations[]'){
+                if ($(this).attr("id") != 'fired') {
+                    if ($(this).prop("checked")) {
+                        cboxArray = itemExistsChecker2(cboxArray, cboxValue);
+                    }
                 }
             }
         });
@@ -511,6 +675,21 @@
 
         var filial = $('#SelectFilial').val();
 
+        var spec_prikaz8 = $("input[name=spec_prikaz8]:checked").val();
+        if (spec_prikaz8 === undefined){
+            spec_prikaz8 = 0;
+        }
+
+        var spec_oklad = $("input[name=spec_oklad]:checked").val();
+        if (spec_oklad === undefined){
+            spec_oklad = 0;
+        }
+
+        var spec_work_6days = $("input[name=spec_work_6days]:checked").val();
+        if (spec_work_6days === undefined){
+            spec_work_6days = 0;
+        }
+
         $.ajax({
             url:"user_edit_f.php",
             global: false,
@@ -525,8 +704,15 @@
                     status: status,
                     specializations: checkedItems2(),
                     category: category,
-                    filial: filial
+                    filial: filial,
 
+                    sel_date: $("#sel_date").val(),
+                    sel_month: $("#sel_month").val(),
+                    sel_year: $("#sel_year").val(),
+
+                    spec_prikaz8: spec_prikaz8,
+                    spec_oklad: spec_oklad,
+                    spec_work_6days: spec_work_6days
                 },
             cache: false,
             beforeSend: function() {
@@ -554,7 +740,7 @@
 				iname: $("#i").val(),
 				oname: $("#o").val(),
 
-				sex:sex_value,
+				sex: sex_value
 			},
 			// тип передачи данных
 			dataType: "json",
@@ -594,6 +780,9 @@
 							telephoneo: $("#telephoneo").val(),
 							htelephoneo: $("#htelephoneo").val(),
 
+                            email: $("#email").val(),
+                            inn: $("#inn").val(),
+
 							passport: $("#passport").val(),
 							passportvidandata: $("#passportvidandata").val(),
 							passportvidankem: $("#passportvidankem").val(),
@@ -607,13 +796,13 @@
 							polisdata: $("#polisdata").val(),
 							insurecompany: $("#insurecompany").val(),
 
-							sex:sex_value,
+							sex: sex_value,
 
-							session_id: session_id,
+							session_id: session_id
 						},
 						success:function(data){
-							/*$("#errrror").html(data);*/
-							$("#data").html(data);
+							$("#errrror").html(data);
+							//$("#errrror").html(data);
 						}
 					})
 				// в случае ошибок в форме
@@ -686,6 +875,9 @@
 
 							telephoneo: $("#telephoneo").val(),
 							htelephoneo: $("#htelephoneo").val(),
+
+                            email: $("#email").val(),
+                            inn: $("#inn").val(),
 
 							passport: $("#passport").val(),
 							passportvidandata: $("#passportvidandata").val(),
@@ -938,6 +1130,27 @@
 				setTimeout(function () {
 					window.location.replace('labor.php?id='+id);
 					//console.log('client.php?id='+id);
+				}, 100);
+			}
+		})
+	}
+
+	//Удаление блокировка филиала
+	function Ajax_del_filial(id) {
+
+		ajax({
+			url:"filial_del_f.php",
+			statbox:"errrror",
+			method:"POST",
+			data:
+			{
+				id: id
+			},
+			success:function(data){
+				 $("#errrror").html(data);
+				setTimeout(function () {
+                    //!!! переход window.location.href - это правильное использование
+                    window.location.href = 'filial.php?id='+id;
 				}, 100);
 			}
 		})
@@ -1241,6 +1454,30 @@
 		})
 	}
 
+	//разблокировка филиала
+	function Ajax_reopen_filial(id) {
+
+		ajax({
+			url:"filial_reopen_f.php",
+			method:"POST",
+			data:
+			{
+				id: id,
+			},
+			success:function(data){
+				// $("#errrror").html(data);
+				setTimeout(function () {
+					//window.location.replace('labor.php?id='+id);
+					//console.log('pricelistitem.php?id='+id);
+
+                    window.location.href = 'filial.php?id='+id;
+
+
+				}, 100);
+			}
+		})
+	}
+
 	//разблокировка сертификата
 	function Ajax_reopen_cert(id) {
 
@@ -1389,7 +1626,7 @@
 				{
                     zapis_id: zapis_id,
                     client_id: client_id,
-					new_client: name,
+					new_client: name
 				},
 				cache: false,
 				beforeSend: function() {
@@ -1626,20 +1863,20 @@
             ticket_id = $("#ticket_id").val();
         }
 
-		var descr = $("#descr").val();
-		var plan_date = $("#iWantThisDate2").val();
-		var workers = $("#postCategory").val();
-        var workers_type = $("#workers_type").val();
-        var filial = $("#filial").val();
+		// var descr = $("#descr").val();
+		// var plan_date = $("#iWantThisDate2").val();
+		// var workers = $("#postCategory").val();
+        // var workers_type = $("#workers_type").val();
+        // var filial = $("#filial").val();
 		//console.log(ticket_type);
 
-        var certData = {
-            descr: descr,
-            plan_date: plan_date,
-            workers: workers,
-            workers_type: workers_type,
-            filial: filial,
-            ticket_id: ticket_id
+        let certData = {
+            descr: $("#descr").val(),
+            plan_date: $("#iWantThisDate2").val(),
+            workers: $("#postCategory").val(),
+            workers_type: $("#workers_type").val(),
+            filial: $("#filial").val(),
+            ticket_id: $("#filial").val()
         };
 
 		$.ajax({
@@ -1669,7 +1906,7 @@
 	};
 
     //Добавляем/редактируем в базу сертификат
-    function  Ajax_cert_add(id, mode, certData){
+    function Ajax_cert_add(id, mode, certData){
 
         var link = "cert_add_f.php";
 
@@ -1693,6 +1930,46 @@
             },
             // действие, при ответе с сервера
             success:function(data){
+                if(data.result == 'success') {
+                    //console.log('success');
+                    $('#data').html(data.data);
+                }else{
+                    //console.log('error');
+                    $('#errror').html(data.data);
+                    $('#errrror').html('');
+                }
+            }
+        });
+    }
+
+    //Добавляем/редактируем в базу абонемент
+    function Ajax_abon_add(id, mode, reqData){
+    	//console.log(mode);
+
+        var link = "abon_add_f.php";
+
+        if (mode == 'edit'){
+            link = "abon_edit_f.php";
+        }
+
+        reqData['abon_id'] = id;
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data: reqData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(data){
+            	//console.log(data);
+
                 if(data.result == 'success') {
                     //console.log('success');
                     $('#data').html(data.data);
@@ -1752,7 +2029,10 @@
     }
 
     //Добавляем/редактируем в базу категории процентов
-    function Ajax_cat_add(mode){
+    function Ajax_cat_add(id, mode){
+
+        //убираем ошибки
+        hideAllErrors ();
 
         var link = "fl_percent_cat_add_f.php";
 
@@ -1761,92 +2041,95 @@
         }
 		//console.log(link);
 
-        var cat_name = $('#cat_name').val();
-        var work_percent = $('#work_percent').val();
-        var material_percent = $('#material_percent').val();
-        var summ_special = $('#summ_special').val();
-        var personal_id = $('#personal_id').val();
+        // var cat_name = $('#cat_name').val();
+        // var work_percent = $('#work_percent').val();
+        // var material_percent = $('#material_percent').val();
+        // var summ_special = $('#summ_special').val();
+        // var personal_id = $('#personal_id').val();
 
-        // убираем класс ошибок с инпутов
-        $("input").each(function(){
-            $(this).removeClass("error_input");
-        });
-        // прячем текст ошибок
-        $(".error").hide();
+        if ($('#personal_id').val() == 0) {
+            $("#personal_id_error").html('<span style="color: red">В этом поле ошибка</span>');
+            $("#personal_id_error").show();
+        }else{
 
-        //проверка данных на валидность
-        $.ajax({
-            url:"ajax_test.php",
-            global: false,
-            type: "POST",
-            dataType: "JSON",
+            let reqData = {
+                cat_name: $('#cat_name').val(),
+                work_percent: $('#work_percent').val(),
+                material_percent: $('#material_percent').val(),
+                summ_special: $('#summ_special').val(),
+                personal_id: $('#personal_id').val(),
+                cat_id: id
+            };
+            console.log(reqData);
 
-            data:{
-                cat_name: cat_name,
-                work_percent: work_percent,
-                material_percent: material_percent,
-                summ_special: summ_special,
-                personal_id: personal_id
-            },
+            // убираем класс ошибок с инпутов
+            $("input").each(function () {
+                $(this).removeClass("error_input");
+            });
+            // прячем текст ошибок
+            $(".error").hide();
 
-            cache: false,
-            beforeSend: function() {
-                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-            },
-            success:function(data){
-                if(data.result == 'success'){
-                    //console.log(data.result);
-                    $.ajax({
-                        url: link,
-                        global: false,
-                        type: "POST",
-                        dataType: "JSON",
+            //проверка данных на валидность
+            $.ajax({
+                url: "ajax_test.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
 
-                        data:
-                            {
-                                cat_name: cat_name,
-                                work_percent: work_percent,
-                                material_percent: material_percent,
-                                summ_special: summ_special,summ_special: summ_special,
-                                personal_id: personal_id
+                data: {cat_name: $('#cat_name').val()},
+
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    if (data.result == 'success') {
+                        //console.log(data.result);
+                        $.ajax({
+                            url: link,
+                            global: false,
+                            type: "POST",
+                            dataType: "JSON",
+
+                            data: reqData,
+
+                            cache: false,
+                            beforeSend: function () {
+                                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
                             },
+                            // действие, при ответе с сервера
+                            success: function (data) {
+                                //console.log(data.data);
 
-                        cache: false,
-                        beforeSend: function() {
-                            //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-                        },
-                        // действие, при ответе с сервера
-                        success:function(data){
-                            //console.log(data.data);
-
-                            if(data.result == 'success') {
-                                //console.log('success');
-                                $('#data').html(data.data);
-                                setTimeout(function () {
-                                    //window.location.replace('specializations.php');
-                                }, 100);
-                            }else{
-                                //console.log('error');
-                                $('#errror').html(data.data);
-                                //$('#errrror').html('');
+                                if (data.result == 'success') {
+                                    //console.log('success');
+                                    $('#data').html(data.data);
+                                    setTimeout(function () {
+                                        //window.location.replace('specializations.php');
+                                    }, 100);
+                                } else {
+                                    //console.log('error');
+                                    $('#errror').html(data.data);
+                                    //$('#errrror').html('');
+                                }
                             }
+                        });
+                        // в случае ошибок в форме
+                    } else {
+                        // перебираем массив с ошибками
+                        for (var errorField in data.text_error) {
+                            // выводим текст ошибок
+                            $('#' + errorField + '_error').html(data.text_error[errorField]);
+                            // показываем текст ошибок
+                            $('#' + errorField + '_error').show();
+                            // обводим инпуты красным цветом
+                            // $('#'+errorField).addClass('error_input');
                         }
-                    });
-                // в случае ошибок в форме
-                }else{
-                    // перебираем массив с ошибками
-                    for(var errorField in data.text_error){
-                        // выводим текст ошибок
-                        $('#'+errorField+'_error').html(data.text_error[errorField]);
-                        // показываем текст ошибок
-                        $('#'+errorField+'_error').show();
-                        // обводим инпуты красным цветом
-                        // $('#'+errorField).addClass('error_input');
+                        $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
                     }
-                    $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
                 }
-            }
-        })
+            })
+        }
     }
 
 	//!!! тут очередная "правильная" ф-ция
@@ -1900,10 +2183,75 @@
         })
     }
 
-    function Ajax_change_expiresTime(id){
-        //console.log(id);
+    //Промежуточная функция добавления/редактирования абонемента
+    function showAbonAdd(id, mode){
+        //console.log(mode);
 
-        var link = "cert_change_expiresTime.php";
+        //убираем ошибки
+        hideAllErrors ();
+
+        var num = $('#num').val();
+        var abon_type = document.querySelector('input[name="abon_type"]:checked');
+        if (abon_type != null) {
+            //console.log(abon_type.value);
+
+            var reqData = {
+                num: num,
+                abon_type: abon_type.value
+            };
+            //console.log(reqData);
+
+            //проверка данных на валидность
+            $.ajax({
+                url:"ajax_test.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+
+                data: reqData,
+
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success:function(data){
+                    if(data.result == 'success'){
+
+                        Ajax_abon_add(id, mode, reqData);
+
+                        //в случае ошибок в форме
+                    }else{
+                        // перебираем массив с ошибками
+                        for(var errorField in data.text_error){
+                            // выводим текст ошибок
+                            $('#'+errorField+'_error').html(data.text_error[errorField]);
+                            // показываем текст ошибок
+                            $('#'+errorField+'_error').show();
+                            // обводим инпуты красным цветом
+                            // $('#'+errorField).addClass('error_input');
+                        }
+                        $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                    }
+                }
+            })
+        }else{
+            //console.log(abon_type);
+
+            $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+		}
+    }
+
+    function Ajax_change_expiresTime(type ,id){
+        //console.log(id);
+        //console.log(type);
+
+        if (type == 'cert') {
+            var link = "cert_change_expiresTime.php";
+        }
+        if (type == 'abon') {
+            var link = "abon_change_expiresTime.php";
+        }
+
 
         var dataCertEnd = $('#dataCertEnd').val();
         var dataCertEnd_arr = dataCertEnd.split('.');
@@ -1917,19 +2265,19 @@
 
         }else{
 
-            var certData = {
-                cert_id: id,
+            var reqData = {
+                id: id,
                 dataCertEnd: dataCertEnd_arr[2] + "-" + dataCertEnd_arr[1] + "-" + dataCertEnd_arr[0]
             };
 
-            console.log(dataCertEnd_arr[2]+"-"+dataCertEnd_arr[1]+"-"+dataCertEnd_arr[0]);
+            //console.log(dataCertEnd_arr[2]+"-"+dataCertEnd_arr[1]+"-"+dataCertEnd_arr[0]);
 
             $.ajax({
                 url: link,
                 global: false,
                 type: "POST",
                 dataType: "JSON",
-                data: certData,
+                data: reqData,
 
                 cache: false,
                 beforeSend: function () {
@@ -2008,7 +2356,7 @@
 
 	function Ajax_edit_labor(id) {
 		// убираем класс ошибок с инпутов
-		$hideAllErrors ();
+		hideAllErrors ();
 
 		var name =  $("#name").val();
 		var contract =  $("#contract").val();
@@ -2059,6 +2407,38 @@
 				}
 			}
 		});
+	};
+
+	//Редактируем филиал
+	function Ajax_edit_filial(id) {
+		// убираем класс ошибок с инпутов
+		hideAllErrors ();
+
+        let link = "filial_edit_f.php";
+
+        let reqData = {
+            id: id,
+            name: $("#name").val(),
+            address: $("#address").val(),
+            contacts: $("#contacts").val()
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                //console.log(res.data);
+
+                $("#errrror").html(res);
+            }
+        })
 	};
 
 
@@ -2316,7 +2696,8 @@
 
 	//Меняем фактический график по шаблону планового
 	//!!!пример массив checkbox
-	function Ajax_change_shed() {
+	function Ajax_change_shed(type) {
+	    //console.log(type);
 
 		var day = $("#SelectDayShedOptions").val();
 		var month = $("#SelectMonthShedOptions").val();
@@ -2350,7 +2731,8 @@
 				year: year,
 				ignoreshed: ignoreshed,
                 all_fililas_chckd: all_fililas_chckd,
-                filials_arr: filials_chckd_arr
+                filials_arr: filials_chckd_arr,
+                type: type
 			},
 			cache: false,
 			beforeSend: function() {
@@ -2460,12 +2842,16 @@
                 //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             success:function(res){
-            	console.log(res.data);
+            	//console.log(res.data);
 
             	if (res.data == "true"){
 					$("#manageMessage").html("Управление <span style='color: green;'>включено</span>");
+					//выключаем контекстное меню
+                    document.oncontextmenu = function() {return false;};
 				}else{
                     $("#manageMessage").html("Управление <span style='color: red;'>выключено</span>");
+                    //включаем контекстное меню
+                    document.oncontextmenu = function() {};
 				}
             }
         })
@@ -2651,10 +3037,202 @@
 
             patientUnic: patientUnic
         };
-        console.log(reqData);
+        //console.log(reqData);
 
         $.ajax({
             url:"ajax_show_result_stat_zapis_f.php",
+            global: false,
+            type: "POST",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                $('#qresult').html(data);
+            }
+        })
+    }
+
+    //Выборка статистики по скидкам и наценкам
+    function Ajax_show_result_stat_percents(){
+
+        var typeW = document.querySelector('input[name="typeW"]:checked').value;
+
+        var zapisAll = $("input[id=zapisAll]:checked").val();
+        if (zapisAll === undefined){
+            zapisAll = 0;
+        }
+        var zapisArrive = $("input[id=zapisArrive]:checked").val();
+        if (zapisArrive === undefined){
+            zapisArrive = 0;
+        }
+        var zapisNotArrive = $("input[id=zapisNotArrive]:checked").val();
+        if (zapisNotArrive === undefined){
+            zapisNotArrive = 0;
+        }
+
+        var zapisError = $("input[id=zapisError]:checked").val();
+        if (zapisError === undefined){
+            zapisError = 0;
+        }
+
+        var zapisNull = $("input[id=zapisNull]:checked").val();
+        if (zapisNull === undefined){
+            zapisNull = 0;
+        }
+
+        var fullAll = $("input[id=fullAll]:checked").val();
+        if (fullAll === undefined){
+            fullAll = 0;
+        }
+
+        var fullWOInvoice = $("input[id=fullWOInvoice]:checked").val();
+        if (fullWOInvoice === undefined){
+            fullWOInvoice = 0;
+        }
+
+        var fullWOTask = $("input[id=fullWOTask]:checked").val();
+        if (fullWOTask === undefined){
+            fullWOTask = 0;
+        }
+
+        var fullOk = $("input[id=fullOk]:checked").val();
+        if (fullOk === undefined){
+            fullOk = 0;
+        }
+
+        var statusAll = $("input[id=statusAll]:checked").val();
+        if (statusAll === undefined){
+            statusAll = 0;
+        }
+
+        var statusPervich = $("input[id=statusPervich]:checked").val();
+        if (statusPervich === undefined){
+            statusPervich = 0;
+        }
+
+        var statusInsure = $("input[id=statusInsure]:checked").val();
+        if (statusInsure === undefined){
+            statusInsure = 0;
+        }
+
+        var statusNight = $("input[id=statusNight]:checked").val();
+        if (statusNight === undefined){
+            statusNight = 0;
+        }
+
+        var statusAnother = $("input[id=statusAnother]:checked").val();
+        if (statusAnother === undefined){
+            statusAnother = 0;
+        }
+
+        var invoiceAll = $("input[id=invoiceAll]:checked").val();
+        if (invoiceAll === undefined){
+            invoiceAll = 0;
+        }
+
+        var invoicePaid = $("input[id=invoicePaid]:checked").val();
+        if (invoicePaid === undefined){
+            invoicePaid = 0;
+        }
+
+        var invoiceNotPaid = $("input[id=invoiceNotPaid]:checked").val();
+        if (invoiceNotPaid === undefined){
+            invoiceNotPaid = 0;
+        }
+
+        var invoiceInsure = $("input[id=invoiceInsure]:checked").val();
+        if (invoiceInsure === undefined){
+            invoiceInsure = 0;
+        }
+
+        var patientUnic = $("input[id=patientUnic]:checked").val();
+        if (patientUnic === undefined){
+            patientUnic = 0;
+        }
+
+        var reqData = {
+            all_time: all_time,
+            datastart:  $("#datastart").val(),
+            dataend:  $("#dataend").val(),
+
+            //Кто создал запись
+            creator:$("#search_worker").val(),
+            //Пациент
+            client:$("#search_client").val(),
+            //К кому запись
+            worker:$("#search_client4").val(),
+            filial:$("#filial").val(),
+
+            typeW:typeW,
+
+            zapisAll: zapisAll,
+            zapisArrive: zapisArrive,
+            zapisNotArrive: zapisNotArrive,
+            zapisError: zapisError,
+            zapisNull: zapisNull,
+
+            fullAll: fullAll,
+            fullWOInvoice: fullWOInvoice,
+            fullWOTask: fullWOTask,
+            fullOk: fullOk,
+
+            statusAll: statusAll,
+            statusPervich: statusPervich,
+            statusInsure: statusInsure,
+            statusNight: statusNight,
+            statusAnother: statusAnother,
+
+            invoiceAll: invoiceAll,
+            invoicePaid: invoicePaid,
+            invoiceNotPaid: invoiceNotPaid,
+            invoiceInsure: invoiceInsure,
+
+            patientUnic: patientUnic
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url:"ajax_show_result_stat_percents_f.php",
+            global: false,
+            type: "POST",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                $('#qresult').html(data);
+            }
+        })
+    }
+
+    //Выборка нарядов в лаборатории
+    function Ajax_show_result_stat_lab_order(){
+
+        var status = document.querySelector('input[name="status"]:checked').value;
+
+        var reqData = {
+            all_time: all_time,
+            datastart:  $("#datastart").val(),
+            dataend:  $("#dataend").val(),
+
+            //Кто создал запись
+            //creator:$("#search_worker").val(),
+            //Пациент
+            client:$("#search_client").val(),
+            //К кому запись
+            worker:$("#search_client4").val(),
+            labor:$("#labor").val(),
+            filial:$("#filial").val(),
+
+            status:status
+        };
+        console.log(reqData);
+
+        $.ajax({
+            url:"ajax_show_result_stat_labor_order_f.php",
             global: false,
             type: "POST",
             data: reqData,
@@ -5353,6 +5931,7 @@
 
 				//получаем значение согласования
 				insureapprove = $(this).prev().attr('insureapprove');
+                //console.log(insureapprove);
 			}
 
 			//получаем значение гарантии
@@ -5413,6 +5992,8 @@
 
 			//с учетом скидки акции, но если не страховая
             if (insure == 0) {
+                //console.log(insure);
+
                 stoim = stoim - (stoim * discount / 100);
 
             	//Убрали округление 2017.08.09
@@ -5427,11 +6008,17 @@
 
             //суммируем сумму в итоги
             if ((guarantee == 0) && (gift == 0)) {
-                if (insure != 0){
-                    if (insureapprove != 0){
-                        SummIns += stoim;
+                if ((typeof insure != "undefined") && (typeof insureapprove != "undefined")) {
+                    if (insure != 0) {
+                        //console.log(typeof(insure));
+
+                        if (insureapprove != 0) {
+                            SummIns += stoim;
+                        }
+                    } else {
+                        Summ += stoim;
                     }
-                }else{
+                } else {
                     Summ += stoim;
                 }
             }
@@ -5550,6 +6137,35 @@
 
 	}
 
+	//Подсчёт суммы для счёта с учетом абонемента
+	function calculatePaymentAbon (){
+
+	    //Общее кол-во минут, оставшееся для использования на всех абонементах
+		var SummAbon = 0;
+		//В итоге, сколько можно срезать минут с абонемента
+		var rezSumm = 0;
+
+		//Минуты, которые хотим исползовать сейчас
+		var min_count = Number($("#min_count").val());
+        //console.log(SummAbon);
+
+        $(".abon_pay").each(function() {
+            SummAbon += Number($(this).html());
+		});
+        //console.log(SummAbon);
+
+        //Если общая сумма минут больше чем хотим использовать
+        if (SummAbon > min_count){
+            rezSumm = min_count;
+		}else{
+            rezSumm = SummAbon;
+		}
+		//console.log(rezSumm);
+
+        $("#summ").html(rezSumm);
+
+	}
+
 	//Смена исполнителя для расчета
     function changeWorkerInCalculate (){
 
@@ -5624,6 +6240,18 @@
 		// 	link = "fill_invoice_cosm_from_session_f.php";
 		// }
 
+        var adv = $("#adv").val();
+		//console.log(adv);
+
+
+        //Время записи (для корректировки цен)
+        var ztime = $("#ztime").val();
+
+        if (ztime == undefined){
+            ztime = 0;
+        }
+        //console.log(ztime);
+
 		$.ajax({
 			url: link,
 			global: false,
@@ -5636,7 +6264,9 @@
 				filial: $("#filial").val(),
 				worker: $("#worker").val(),
                 invoice_type: invoice_type,
-                client_insure: $("#client_insure").val()
+                client_insure: $("#client_insure").val(),
+                adv: adv,
+                ztime: ztime
 			},
 			cache: false,
 			beforeSend: function() {
@@ -6247,6 +6877,52 @@
 		});
 	}
 
+	//Изменить челюсть (верхняя/нижняя) у всех
+	function jawselectInvoice(jaw_select){
+		//console.log(discount);
+
+        var invoice_type = $("#invoice_type").val();
+
+        var link = "add_jawselect_price_id_in_invoice_f.php";
+        if (invoice_type == 88){
+            link = "add_jawselect_price_id_in_invoice_free_f.php";
+        }
+
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+
+		$.ajax({
+			url: link,
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                jaw_select: jaw_select,
+				client: $("#client").val(),
+				zapis_id: $("#zapis_id").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val(),
+
+				invoice_type: invoice_type
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(data){
+
+                // $("#discountValue").html(Number(discount));
+
+                fillInvoiseRez(true);
+
+			}
+		});
+	}
+
 	//Изменить страховую у всех
 	function insureInvoice(insure){
 
@@ -6624,6 +7300,54 @@
 		});
 	}
 
+	//Изменить челюсть (верхняя/нижняя) у этого зуба
+	function jawselectItemInvoice(ind, key, jaw_select){
+
+		var invoice_type = $("#invoice_type").val();
+
+		var link = 'add_jawselect_price_id_in_item_invoice_f.php';
+
+		if (invoice_type == 88){
+            link = "add_jawselect_price_id_in_item_invoice_free_f.php";
+		}
+
+		//console.log(discount);
+		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+		$('*').removeClass('selected-html-element');
+		// Удаляем предыдущие вызванное контекстное меню:
+		$('.context-menu').remove();
+
+		$.ajax({
+			url: link,
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+				ind: ind,
+				key: key,
+                jaw_select: jaw_select,
+				client: $("#client").val(),
+				zapis_id: $("#zapis_id").val(),
+				filial: $("#filial").val(),
+				worker: $("#worker").val(),
+
+				invoice_type: invoice_type
+			},
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//console.log(res);
+
+                fillInvoiseRez(true);
+
+			}
+		});
+	}
+
 	//Изменить цену у этого зуба
 	function priceItemInvoice(ind, key, price, start_price){
 
@@ -6974,8 +7698,10 @@
 	}
 
 	//Показываем блок с суммами и кнопками Для наряда
-	function showInvoiceAdd(invoice_type, mode){
+	function showInvoiceAdd(invoice_type, mode, adv){
 		//console.log(mode);
+		//console.log(adv);
+
 		$('#overlay').show();
 
 		var Summ = $("#calculateInvoice").html();
@@ -6987,7 +7713,7 @@
 			SummInsBlock = '<div>Страховка: <span class="calculateInsInvoice">'+SummIns+'</span> руб.</div>';
 		}
 
-		var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'add\')">';
+		var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'add\', '+adv+')">';
 
 		// if (invoice_type == 88){
          //    buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_free_add(\'add\')">';
@@ -6998,7 +7724,7 @@
 		// }
 
 		if (mode == 'edit'){
-			buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'edit\')">';
+			buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_invoice_add(\'edit\', '+adv+')">';
 		}
 
 
@@ -7462,8 +8188,7 @@
         })
     }
 
-
-   //Показываем блок с суммами и кнопками Для сертификата
+	//Показываем блок с суммами и кнопками Для сертификата
     function showCertCell(id){
         //console.log(id);
         hideAllErrors ();
@@ -7471,7 +8196,7 @@
         var cell_price = $('#cell_price').val();
         //console.log(cell_price);
 
-        var office_id = $('#office_id').val();
+        var filial_id = $('#filial_id').val();
 
         //проверка данных на валидность
         $.ajax({
@@ -7491,7 +8216,7 @@
                 if(data.result == 'success'){
                     $('#overlay').show();
 
-                    var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_cert_cell('+id+', '+cell_price+', '+office_id+')">';
+                    var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_cert_cell('+id+', '+cell_price+', '+filial_id+')">';
 
                     // Создаем меню:
                     var menu = $('<div/>', {
@@ -7503,7 +8228,7 @@
                                 .css({
                                     "height": "100%",
                                     "border": "1px solid #AAA",
-                                    "position": "relative",
+                                    "position": "relative"
                                 })
                                 .append('<span style="margin: 5px;"><i>Проверьте сумму и нажмите сохранить</i></span>')
                                 .append(
@@ -7516,7 +8241,7 @@
                                             "left": "0",
                                             "bottom": "0",
                                             "right": "0",
-                                            "height": "50%",
+                                            "height": "50%"
                                         })
                                         .append('<div style="margin: 10px;">Сумма: <span class="calculateInvoice">'+cell_price+'</span> руб.</div>')
                                 )
@@ -7525,7 +8250,97 @@
                                         .css({
                                             "position": "absolute",
                                             "bottom": "2px",
+                                            "width": "100%"
+                                        })
+                                        .append(buttonsStr+
+                                            '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                                        )
+                                )
+                        );
+
+                    menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+                // в случае ошибок в форме
+                }else{
+                	//console.log(1);
+                    // перебираем массив с ошибками
+                    for(var errorField in data.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(data.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                }
+            }
+        })
+    }
+
+	//Показываем блок с суммами и кнопками Для абонемента
+    function showAbonCell(id){
+        //console.log(id);
+        hideAllErrors ();
+
+        var cell_price = $('#cell_price').val();
+        //console.log(cell_price);
+
+        var filial_id = $('#filial_id').val();
+
+        //проверка данных на валидность
+        $.ajax({
+            url:"ajax_test.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data:
+                {
+                    cell_price: cell_price
+                },
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                if(data.result == 'success'){
+                    $('#overlay').show();
+
+                    var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_abon_cell('+id+', '+cell_price+', '+filial_id+')">';
+
+                    // Создаем меню:
+                    var menu = $('<div/>', {
+                        class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+                    })
+                        .appendTo('#overlay')
+                        .append(
+                            $('<div/>')
+                                .css({
+                                    "height": "100%",
+                                    "border": "1px solid #AAA",
+                                    "position": "relative"
+                                })
+                                .append('<span style="margin: 5px;"><i>Проверьте сумму и нажмите сохранить</i></span>')
+                                .append(
+                                    $('<div/>')
+                                        .css({
+                                            "position": "absolute",
                                             "width": "100%",
+                                            "margin": "auto",
+                                            "top": "-10px",
+                                            "left": "0",
+                                            "bottom": "0",
+                                            "right": "0",
+                                            "height": "50%"
+                                        })
+                                        .append('<div style="margin: 10px;">Сумма: <span class="calculateInvoice">'+cell_price+'</span> руб.</div>')
+                                )
+                                .append(
+                                    $('<div/>')
+                                        .css({
+                                            "position": "absolute",
+                                            "bottom": "2px",
+                                            "width": "100%"
                                         })
                                         .append(buttonsStr+
                                             '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
@@ -7615,6 +8430,68 @@
 
     }
 
+    //Показываем блок для поиска и добавления абонемента
+    function showAbonPayAdd(){
+
+        $('#overlay').show();
+
+        var buttonsStr = '';
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        }).css({
+            "height": "250px"
+        })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative"
+                    })
+                    .append('<span style="margin: 0;"><i></i></span>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-90px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%"
+                            })
+                            .append(
+								'<div id="search_abon_input_target">'+
+								'</div>'
+							).css({
+                            "position": "absolute",
+                            "width": "405px",
+                            "z-index": "1"
+                        })
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "bottom": "2px",
+                                "width": "100%"
+                            })
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'#search_abon_input\').append($(\'#search_abon_input_target\').children()); $(\'.center_block\').remove(); $(\'#search_result_abon\').html(\'\'); $(\'#search_abon\').val(\'\');">'
+                            )
+                    )
+            );
+
+        $('#search_abon_input_target').append($('#search_abon_input').children());
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+    }
+
 
     //Промежуточная функция добавления заказа в лабораторию
     function showLabOrderAdd(mode){
@@ -7677,15 +8554,20 @@
     }
 
     //Добавляем/редактируем в базу наряд из сессии (сама функция)
-    function Ajax_invoice_add_f(invoice_type, mode, zapis_id){
+    function Ajax_invoice_add_f(invoice_type, mode, zapis_id, adv){
 
         var invoice_id = 0;
+        var comment = "";
 
         var link = "invoice_add_f.php";
 
         if (mode == 'edit'){
             link = "invoice_edit_f.php";
             invoice_id = $("#invoice_id").val();
+        }
+
+        if (adv){
+            comment = $("#comment").val();
         }
 
         var Summ = $("#calculateInvoice").html();
@@ -7714,7 +8596,10 @@
             summins: SummIns,
 
             invoice_type: invoice_type,
-            invoice_id: invoice_id
+            invoice_id: invoice_id,
+
+            adv: adv,
+            comment: comment
 		};
 
         if (zapis_id != 0) {
@@ -7734,37 +8619,55 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                //console.log(res);
+                console.log(res);
 
                 $('.center_block').remove();
                 $('#overlay').hide();
 
                 if(res.result == "success"){
                     $('#data').hide();
-                    $('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
-                        '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован наряд</li>'+
-                        '<li class="cellsBlock" style="width: auto;">'+
-                        '<a href="invoice.php?id='+res.data+'" class="cellName ahref">'+
-                        '<b>Наряд #'+res.data+'</b><br>'+
-                        '</a>'+
-                        '<div class="cellName">'+
-                        '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">'+
-                        'Сумма:<br>'+
-                        '<span class="calculateInvoice" style="font-size: 13px">'+Summ+'</span> руб.'+
-                        '</div>'+
-                        SummInsStr+
-                        '</div>'+
-                        '</li>'+
-                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-                        '<a href="payment_add.php?invoice_id='+res.data+'" class="b">Оплатить</a>'+
-                        '</li>'+
-                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-                        '<a href="add_order.php?client_id='+client+'&invoice_id='+res.data+'" class="b">Добавить приходный ордер</a>'+
-                        '</li>'+
-                        '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
-                        '<a href="finance_account.php?client_id='+client+'" class="b">Управление счётом</a>'+
-                        '</li>'+
-                        '</ul>');
+                    if (adv){
+                        $('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
+                            '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован предварительный расчёт</li>' +
+                            '<li class="cellsBlock" style="width: auto;">' +
+                            '<a href="invoice_advance.php?id=' + res.data + '" class="cellName ahref">' +
+                            '<b>Пред. расчёт #' + res.data + '</b><br>' +
+                            '</a>' +
+                            '<div class="cellName">' +
+                            '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">' +
+                            'Сумма:<br>' +
+                            '<span class="calculateInvoice" style="font-size: 13px">' + Summ + '</span> руб.' +
+                            '</div>' +
+                            SummInsStr +
+                            '</div>' +
+                            '</li>' +
+                            '</ul>');
+                    }else {
+                        $('#invoices').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
+                            '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован наряд</li>' +
+                            '<li class="cellsBlock" style="width: auto;">' +
+                            '<a href="invoice.php?id=' + res.data + '" class="cellName ahref">' +
+                            '<b>Наряд #' + res.data + '</b><br>' +
+                            '</a>' +
+                            '<div class="cellName">' +
+                            '<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">' +
+                            'Сумма:<br>' +
+                            '<span class="calculateInvoice" style="font-size: 13px">' + Summ + '</span> руб.' +
+                            '</div>' +
+                            SummInsStr +
+                            '</div>' +
+                            '</li>' +
+                            '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">' +
+                            '<a href="payment_add.php?invoice_id=' + res.data + '" class="b">Оплатить</a>' +
+                            '</li>' +
+                            '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">' +
+                            '<a href="add_order.php?client_id=' + client + '&invoice_id=' + res.data + '" class="b">Добавить приходный ордер</a>' +
+                            '</li>' +
+                            '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">' +
+                            '<a href="finance_account.php?client_id=' + client + '" class="b">Управление счётом</a>' +
+                            '</li>' +
+                            '</ul>');
+                    }
                 }else{
                     $('#errror').html(res.data);
                 }
@@ -7773,7 +8676,7 @@
 	}
 
 	//Добавляем/редактируем в базу наряд из сессии
-	function Ajax_invoice_add(mode){
+	function Ajax_invoice_add(mode, adv){
 		//console.log(mode);
 
         var invoice_type = $("#invoice_type").val();
@@ -7805,7 +8708,7 @@
 
                     if(res.result == "success"){
 
-                        Ajax_invoice_add_f(invoice_type, mode, res.data)
+                        Ajax_invoice_add_f(invoice_type, mode, res.data, adv)
 
                     }else{
                         $('#errror').html(res.data);
@@ -7815,7 +8718,7 @@
 
 
 		}else {
-            Ajax_invoice_add_f(invoice_type, mode, 0)
+            Ajax_invoice_add_f(invoice_type, mode, 0, adv)
         }
 	}
 
@@ -8079,20 +8982,22 @@
         //console.log(summ_type);
         var expirationDate =  $('#expirationDate').val();
 
+        var reqData = {
+            cert_id: id,
+            cell_price: cell_price,
+            office_id: office_id,
+            cell_date: $('#iWantThisDate2').val(),
+            summ_type: summ_type,
+            expirationDate: expirationDate
+		};
+        //console.log(reqData);
+
 		$.ajax({
 			url: "cert_cell_f.php",
 			global: false,
 			type: "POST",
 			dataType: "JSON",
-			data:
-			{
-                cert_id: id,
-                cell_price: cell_price,
-                office_id: office_id,
-                cell_date: $('#iWantThisDate2').val(),
-                summ_type: summ_type,
-                expirationDate: expirationDate
-            },
+			data: reqData,
 			cache: false,
 			beforeSend: function() {
 				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
@@ -8110,6 +9015,52 @@
 									'</ul>');
                     setTimeout(function () {
                         window.location.replace('certificate.php?id='+id+'');
+                        //console.log('client.php?id='+id);
+                    }, 100);
+				}else{
+					$('#errror').html(res.data);
+				}
+			}
+		});
+	}
+
+	//Продаём абонемент по базе
+	function Ajax_abon_cell(id, cell_price, filial_id){
+
+        var summ_type = document.querySelector('input[name="summ_type"]:checked').value;
+        //console.log(summ_type);
+        //var expirationDate =  $('#expirationDate').val();
+
+		$.ajax({
+			url: "abon_cell_f.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                abonement_id: id,
+                cell_price: cell_price,
+                filial_id: filial_id,
+                cell_date: $('#iWantThisDate2').val(),
+                summ_type: summ_type
+            },
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//console.log(res);
+				$('.center_block').remove();
+				$('#overlay').hide();
+
+				if(res.result == "success"){
+					//$('#data').hide();
+					$('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Абонемент продан</li>'+
+									'</ul>');
+                    setTimeout(function () {
+                        window.location.replace('abonement.php?id='+id+'');
                         //console.log('client.php?id='+id);
                     }, 100);
 				}else{
@@ -8164,7 +9115,52 @@
         }
 	}
 
-	//Добавим сертификат сертификат в оплату
+	//Удалим продажу абонемента
+	function Ajax_abonement_celling_del(id){
+
+        var rys = false;
+
+        rys = confirm("Вы собираетесь отменить продажу абонемента.\nВы уверены?");
+
+        if (rys) {
+
+            var link = "abonement_cell_dell_f.php";
+
+            var Data = {
+                abonement_id: id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: Data,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+
+					 if(res.result == "success"){
+					    //$('#data').hide();
+					    $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+					    '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Продажа отменена</li>'+
+					    '</ul>');
+					    setTimeout(function () {
+                            location.reload();
+					    }, 100);
+					 }
+					 if(res.result == "error"){
+					    $('#errror').html(res.data);
+					 }
+                }
+            });
+        }
+	}
+
+	//Добавим сертификат в оплату
 	function Ajax_cert_add_pay(id){
 
         $('#overlay').hide();
@@ -8209,6 +9205,52 @@
 		});
 	}
 
+	//Добавим абонемент в оплату
+	function Ajax_abon_add_pay(id){
+
+        $('#overlay').hide();
+        $('#search_abon_input').append($('#search_abon_input_target').children());
+        $('.center_block').remove();
+        $('#search_result_abon').html('');
+        $('#search_abon').val('');
+
+        //$('.have_money_or_not').show();
+        $('#abons_result').show();
+        $('#showAbonPayAdd_button').hide();
+
+		$.ajax({
+			url: "FastSearchAbonOne.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                id: id
+            },
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//console.log(res);
+
+				$('.center_block').remove();
+				$('#overlay').hide();
+
+				if(res.result == "success"){
+					//$('#data').hide();
+                    $('#abons_result').append(res.data);
+
+                    calculatePaymentAbon();
+
+				}else{
+					//$('#errror').html(res.data);
+				}
+			}
+		});
+	}
+
 	//Очистить все сертификаты
 	function certsResultDel(){
 
@@ -8227,6 +9269,69 @@
         $('#summ').html(0);
 
 	}
+
+	//Очистить все абонементы
+	function abonsResultDel(){
+
+        $('#abons_result').hide();
+        $('#showAbonPayAdd_button').show();
+
+        $('#abons_result').html(
+			'<tr>'+
+				'<td><span class="lit_grey_text">Номер</span></td>'+
+					'<td><span class="lit_grey_text">Всего минут</span></td>'+
+					'<td><span class="lit_grey_text">Осталось</span></td>'+
+				'<td style="text-align: center;"><i class="fa fa-times" aria-hidden="true" title="Удалить"></i></td>'+
+            '</tr>'
+		);
+
+        $('#summ').html(0);
+
+	}
+
+    function Ajax_MaterialCostDelete (id){
+        //console.log();
+
+        let rys = false;
+
+        rys = confirm("Вы хотите удалить расход материалов. \n\nВы уверены?");
+        //console.log(885);
+
+        if (rys) {
+
+            let link = "fl_material_cost_delete_f.php";
+            //console.log(link);
+
+            let reqData = {
+                id: id
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    // console.log(res);
+
+                    if (res.result == "success") {
+                        location.reload();
+                    } else {
+                        alert(res.data);
+                        //$("#overlay").hide();
+                        $('#errrror').html('<div class="query_neok">' + res.data + '</div>');
+                    }
+                }
+            });
+        }
+    }
 
 	//Добавляем/редактируем в базу ордер
 	function Ajax_order_add(mode){
@@ -8455,7 +9560,7 @@
         var menu = $('<div/>', {
             class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
         }).css({
-            "top": "120px",
+            "top": "-170px",
             "height": "fit-content",
             "width": "45%",
             "background-color": "rgb(195, 194, 194)"
@@ -8604,11 +9709,13 @@
 
 				if(res.result == "success"){
 					//$('#data').hide();
+                    if (mode == 'add'){
 
-                    date_arr = date_in.split(".");
-                    //console.log(date_arr);
 
-					$('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+                        date_arr = date_in.split(".");
+                        //console.log(date_arr);
+
+					    $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
 											'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Добавлен/отредактирован расходный ордер</li>'+
 											'<li class="cellsBlock" style="width: auto;">'+
 												'<div class="cellName">'+
@@ -8627,6 +9734,9 @@
                         						'<a href="fl_give_out_cash_add.php?filial_id='+office_id+'&d='+date_arr[0]+'&m='+date_arr[1]+'&y='+date_arr[2]+'" class="b">Добавить ещё</a>'+
 					                        '</li>'+
 										'</ul>');
+                    }else{
+                        location.reload();
+                    }
 				}else{
 					$('#errror').html(res.data);
 				}
@@ -8649,6 +9759,130 @@
                 dataType: "JSON",
                 data: {
                     id: order_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    $('#errrror').html(data);
+                    setTimeout(function () {
+                        window.location.replace('');
+                        //console.log('client.php?id='+id);
+                    }, 100);
+                }
+            })
+        }
+    }
+
+    //Удаление из банка
+    function fl_deleteInBank (item_id){
+
+        var rys = false;
+
+        rys = confirm("Вы собираетесь удалить документ. \n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "fl_delete_in_bank_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: item_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    $('#errrror').html(data);
+                    setTimeout(function () {
+                        window.location.replace('');
+                        //console.log('client.php?id='+id);
+                    }, 100);
+                }
+            })
+        }
+    }
+
+    //Удаление АН
+    function fl_deleteToDirector (item_id){
+
+        var rys = false;
+
+        rys = confirm("Вы собираетесь удалить документ. \n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "fl_delete_to_director_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: item_id
+                },
+                cache: false,
+                beforeSend: function () {
+                    // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    $('#errrror').html(data);
+                    setTimeout(function () {
+                        window.location.replace('');
+                        //console.log('client.php?id='+id);
+                    }, 100);
+                }
+            })
+        }
+    }
+
+    //Удаление(блокировка) посещения солярия
+    function fl_deleteSolar (id){
+
+        var rys = false;
+
+        rys = confirm("Вы хотите удалить документ. \n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "fl_delete_solar_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: id
+                },
+                cache: false,
+                beforeSend: function () {
+                    // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    $('#errrror').html(data);
+                    setTimeout(function () {
+                        window.location.replace('');
+                        //console.log('client.php?id='+id);
+                    }, 100);
+                }
+            })
+        }
+    }
+
+    //Удаление(блокировка) релизации
+    function fl_deleteRealiz (id){
+
+        var rys = false;
+
+        rys = confirm("Вы хотите удалить документ. \n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "fl_delete_realiz_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: id
                 },
                 cache: false,
                 beforeSend: function () {
@@ -8695,6 +9929,37 @@
             })
         }
     }
+
+    //Восстановление(разблокировка) посещения солярия
+    // function fl_reopenSolar (order_id){
+    //
+    //     var rys = false;
+    //
+    //     rys = confirm("Вы хотите восстановить расходный ордер. \n\nВы уверены?");
+    //
+    //     if (rys) {
+    //         $.ajax({
+    //             url: "fl_reopen_give_out_cash_f.php",
+    //             global: false,
+    //             type: "POST",
+    //             dataType: "JSON",
+    //             data: {
+    //                 id: order_id
+    //             },
+    //             cache: false,
+    //             beforeSend: function () {
+    //                 // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+    //             },
+    //             success: function (data) {
+    //                 $('#errrror').html(data);
+    //                 setTimeout(function () {
+    //                     window.location.replace('');
+    //                     //console.log('client.php?id='+id);
+    //                 }, 100);
+    //             }
+    //         })
+    //     }
+    // }
 
 
     //Добавляем/редактируем в базу заказ в лабораторию
@@ -9084,6 +10349,15 @@
             // Проверяем нажата ли именно левая кнопка мыши:
             if (event.which === 1)  {
                 contextMenuShow(0, 0, event, 'spec_koeff');
+            }
+        });
+
+        $("body").on("click", "#jaw_select", function(event){
+            //console.log(1);
+
+            // Проверяем нажата ли именно левая кнопка мыши:
+            if (event.which === 1)  {
+                contextMenuShow(0, 0, event, 'jaw_select');
             }
         });
 
@@ -10560,7 +11834,9 @@
             $("#paidout_summ_error").html('Вы собираетесь выдать больше, чем указано в табеле (' + paidout_summ_tabel + ' руб.).');
             $("#paidout_summ_error").show();
             // $("#showPaidoutAddbutton").hide();
-		}//else {
+		}
+		//Иногда мы хотим выдать больше, поэтому else закомментили
+		//else {
 
             var link = "tabel_subtraction_percent2_f.php";
 
@@ -10599,6 +11875,13 @@
                 }
             })
         // }
+
+        //Спрячем кнопку провести, если суммы не сойдутся
+        if ((Number(summ) > Number(paidout_summ_tabel)) || (Number(summ) == 0)) {
+            $("#addDeployButton").hide();
+        }else{
+            $("#addDeployButton").show();
+        }
 	}
 
 	//!!! пример работы пауза между нажатиями
@@ -10620,8 +11903,8 @@
                 summ = $(this).val(),
                 tabel_id = $(this).attr("tabel_id"),
             	paidout_summ_tabel = $(this).attr("paidout_summ_tabel"),
-                tabel_type = $("#tabel_type").val();;
-            	paidout_type = $("#paidout_type").val();;
+                tabel_type = $("#tabel_type").val();
+            	paidout_type = $("#paidout_type").val();
 
             if (summ.length > 2) {
 
@@ -10707,3 +11990,1677 @@
 
         filialsSubtractionsChange();
 	}
+
+	//Функция считает стоимость посолярию
+    function CalculateSolar(min_count, min_price, discount, realiz_summ, onlyRealiz){
+        //Всего за загар
+        var fin_price = (min_price * min_count)/100 * (100 - discount);
+
+        $("#finPrice").val(fin_price);
+
+        if (onlyRealiz){
+            $("#allSumm").html(Number(realiz_summ));
+        }else{
+            $("#allSumm").html(fin_price + Number(realiz_summ));
+        }
+    }
+
+    //Изменить статус рассрочки
+    function changeInstallmentStatus(client_id, installment_status_now){
+
+        var link = "installment_status_change_f.php";
+
+        var reqData = {
+            client_id: client_id,
+            installment_status_now: installment_status_now
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == 'success') {
+                    location.reload();
+                }
+            }
+        })
+    }
+
+    //Функция блокирует вкладки
+    function disableTabs (permission, worker){
+        //console.log($('#tabs_w'+permission+'_'+worker+' .notes_count2'));
+
+        var tabs_id_arr = [];
+        // tabs_id_arr.push(0);
+
+
+        $('#tabs_w'+permission+'_'+worker+' .notes_count3').each(function(){
+
+            var filial_id = $(this).attr('filial_id');
+            //console.log(filial_id);
+            //console.log(($('#tabs_notes2_'+permission+'_'+worker+'_'+filial_id).css("display") == 'none'));//
+            //console.log(($('#tabs_notes_'+permission+'_'+worker+'_'+filial_id).css("display") == 'none'));
+
+            if (($('#tabs_notes2_'+permission+'_'+worker+'_'+filial_id).css("display") == 'none')
+                &&
+                ($('#tabs_notes_'+permission+'_'+worker+'_'+filial_id).css("display") == 'none'))
+            {
+                var index = $('#tabs_w'+permission+'_'+worker+' a[href="#tabs-'+permission+'_'+worker+'_'+filial_id+'"]').parent().index();
+                tabs_id_arr.push (index);
+            }
+
+            $('#tabs_w'+permission+'_'+worker).tabs( "option", "disabled", tabs_id_arr );
+
+        })
+
+        // if (($('#tabs_notes2_'+permission+'_'+worker+'_'+office).css("display") == 'none')
+        // if (($('#tabs_notes3_'+permission+'_'+worker+'_'+office).css("display") == 'none')
+
+        // if (($('#tabs_w'+permission+'_'+worker+' .notes_count2').css("display") == 'none')
+        //     &&
+        //     ($('#tabs_w'+permission+'_'+worker+' .notes_count3').css("display") == 'none'))
+        // {
+        //     var office = $('#tabs_w'+permission+'_'+worker+' .notes_count3').attr('filial_id');
+        //     //console.log(office);
+        //
+        //     var index = $('#tabs_w'+permission+'_'+worker+' a[href="#tabs-'+permission+'_'+worker+'_'+office+'"]').parent().index();
+        //     tabs_id_arr.push (index);
+        // }
+        //
+        // $('#tabs_w'+permission+'_'+worker).tabs( "option", "disabled", tabs_id_arr );
+
+    }
+
+    //Добавление посещения стоматолога
+    function Ajax_add_task_stomat() {
+
+        var link = "add_task_stomat_f.php";
+
+        var arrayRemoveAct = new Array();
+        var arrayRemoveWorker = new Array();
+
+        $(".remove_add_search").each(function() {
+            if (($(this).attr("id")).indexOf("td_title") != -1){
+                var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
+                arrayRemoveAct[IndexArr] = document.getElementById($(this).attr("id")).value;
+            }
+            if (($(this).attr("id")).indexOf("td_worker") != -1){
+                var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
+                arrayRemoveWorker [IndexArr] = document.getElementById($(this).attr("id")).value;
+            }
+        });
+
+        var reqData = {
+            zapis_id: $("#zapis").val(),
+
+            complaints: $("#complaints").val(),
+            objectively: $("#objectively").val(),
+            diagnosis: $("#diagnosis").val(),
+            therapy: $("#therapy").val(),
+            recommended: $("#recommended").val(),
+
+            comment: $("#comment").val(),
+
+            notes: $("#add_notes_show").val(),
+            remove: $("#add_remove_show").val(),
+
+            removeAct: JSON.stringify(arrayRemoveAct),
+            removeWork: JSON.stringify(arrayRemoveWorker),
+
+            add_notes_type: $("#add_notes_type").val(),
+            add_notes_months: $("#add_notes_months").val(),
+            add_notes_days: $("#add_notes_days").val()
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                $("#status").html(res);
+            }
+        })
+    }
+
+    //Редактирование посещения стоматолога
+    function Ajax_edit_task_stomat(){
+
+        var link = "edit_task_stomat_f.php";
+
+        var add_notes_type = 0;
+        var add_notes_months = 0;
+        var add_notes_days = 0;
+
+        var notes_val = 0;
+        var remove_val = 0;
+
+        if ($("#add_notes_show")){
+            if ($("#add_notes_show").prop("checked")){
+                notes_val = 1;
+                add_notes_type = $("#add_notes_type").val();
+                add_notes_months = $("#add_notes_months").val();
+                add_notes_days = $("#add_notes_days").val();
+            }
+        }
+
+        if ($("#add_remove_show").prop("checked")){
+            remove_val = 1;
+        }
+
+        var arrayRemoveAct = new Array();
+        var arrayRemoveWorker = new Array();
+
+        $(".remove_add_search").each(function() {
+            if (($(this).attr("id")).indexOf("td_title") != -1){
+                var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
+                arrayRemoveAct[IndexArr] = document.getElementById($(this).attr("id")).value;
+            }
+            if (($(this).attr("id")).indexOf("td_worker") != -1){
+                var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
+                arrayRemoveWorker [IndexArr] = document.getElementById($(this).attr("id")).value;
+            }
+        });
+
+        var reqData = {
+            id: $("#id").val(),
+            client_id: $("#client").val(),
+
+            complaints: $("#complaints").val(),
+            objectively: $("#objectively").val(),
+            diagnosis: $("#diagnosis").val(),
+            therapy: $("#therapy").val(),
+            recommended: $("#recommended").val(),
+
+            comment: $("#comment").val(),
+
+            sel_date: $("#sel_date").val(),
+            sel_month: $("#sel_month").val(),
+            sel_year: $("#sel_year").val(),
+
+            sel_seconds: $("#sel_seconds").val(),
+            sel_minutes: $("#sel_minutes").val(),
+            sel_hours: $("#sel_hours").val(),
+
+            notes: notes_val,
+            remove: remove_val,
+
+            removeAct: JSON.stringify(arrayRemoveAct),
+            removeWork: JSON.stringify(arrayRemoveWorker),
+
+            add_notes_type: add_notes_type,
+            add_notes_months: add_notes_months,
+            add_notes_days: add_notes_days,
+
+            client: $("#client").val()
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                $("#status").html(res);
+            }
+        })
+
+    }
+
+    //Изменение плательщика наряда
+    function changeNewPayer(){
+        //!!!Получение данных из GET тест
+        //console.log(params["data"]);
+        //выведет в консоль значение  GET-параметра data
+        //console.log(params);
+
+        let get_data_str = "";
+
+        let params = window
+            .location
+            .search
+            .replace("?","")
+            .split("&")
+            .reduce(
+                function(p,e){
+                    let a = e.split('=');
+                    p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+                    return p;
+                },
+                {}
+            );
+
+        for (let key in params) {
+            if (key.indexOf("client_id") == -1){
+                get_data_str = get_data_str + "&" + key + "=" + params[key];
+            }
+        }
+        // console.log(get_data_str);
+
+        //!!! переход window.location.href - это правильное использование
+        window.location.href = "payment_from_alien_add.php?client_id="+$("#new_payer_id").val() + get_data_str;
+    }
+
+    //Загрузка элементов склада
+    function getScladItems (cat_id, start, limit, free=true, pick=false, pick_id=-1, search_data=''){
+        //Для позиции ВООБЩЕ СОВСЕМ БЕЗ категории free == 'true'
+
+        var link = "get_sclad_items_f.php";
+
+        var reqData = {
+            cat_id: cat_id,
+            start: start,
+            limit: limit,
+            free: free,
+            search_data: search_data
+        };
+        // console.log(reqData);
+
+        //Если надо выделить группу c id == pick_id
+        if (pick){
+            //Сначала очищаем у всех окраску
+            $(".droppable").css({"background-color": ""});
+
+            //Теперь покрасим
+            $("#cat_"+pick_id).css({"background-color": "rgba(131, 219, 83, 0.5)"});
+        }
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res.q);
+
+                if (res.result == 'success') {
+
+                    if (cat_id == 0){
+                        if (free){
+                            //Если поиск по фразе делаем
+                            if (search_data.length > 0){
+                                $("#cat_name_show").html("Результат поиска");
+                                $("#cat_name_show").show();
+                            }
+                        }else {
+                            $("#cat_name_show").html("Вне категории");
+                            $("#cat_name_show").show();
+                        }
+                    }else {
+                        $("#cat_name_show").html($("#cat_" + cat_id).attr("cat_name"));
+                        $("#cat_name_show").show();
+                    }
+
+                    if (res.count > 0) {
+                        $("#sclad_items_rezult").html(res.data);
+                    }else{
+                        $("#sclad_items_rezult").html('<span style="color: red; font-weight: bold; font-size: 80%; margin-left: 20px;">Ничего не найдено</span>');
+                    }
+
+                }
+            }
+        })
+    }
+
+    //Загрузка категорий склада
+    function getScladCategories (){
+
+        var link = "get_sclad_categories_f.php";
+
+        var reqData = {
+            type: 5
+        };
+        //console.log(reqData);
+
+        //Если надо выделить группу
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == 'success') {
+
+                    $("#sclad_cat_rezult").html(res.data);
+
+
+                    //!!! Правильный пример контекстного меню (правильный? точно? ну пока работает)
+
+/*                    var menuArea = document.querySelector(".tree");
+
+                    //if(menuArea){
+                        menuArea.addEventListener( "contextmenu", event => {
+                            event.preventDefault();
+
+                            contextMenuShow(0, 0, event, "sclad_cat");
+
+                        }, false);
+                    //}*/
+
+                }
+            }
+        })
+    }
+
+    //Показываем блок для подтверждения переноса
+    function showMoveApprove(item, target){
+        //console.log(item);
+        //console.log(target);
+        // console.log(item.elem.id+" in "+target.id);
+
+        item.elem.style.display = 'none';
+
+        if (item.elem.id.split('_')[0] == 'cat') {
+            moveScladItemInCategory(0, item.elem.id.split('_')[1], target.id.split('_')[1]);
+        }
+        if (item.elem.id.split('_')[0] == 'item') {
+            moveScladItemInCategory(item.elem.id.split('_')[1], 0, target.id.split('_')[1]);
+        }
+
+        // $('#overlay').show();
+        //
+        // var item_name = $("#item_name_"+item.elem.id.split('_')[1]).html();
+        // var target_name = $("#cat_"+target.id.split('_')[1]).html();
+        //
+        // var buttonsStr = '<input type="button" class="b" value="Ok" onclick="alert(888);">';
+        //
+        // // Создаем меню:
+        // var menu = $('<div/>', {
+        //     class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        // })
+        //     .appendTo('#overlay')
+        //     .append(
+        //         $('<div/>')
+        //             .css({
+        //                 "height": "100%",
+        //                 "border": "1px solid #AAA",
+        //                 "position": "relative",
+        //             })
+        //             .append('<span style="margin: 5px;"><i>Подтвердите перемещение</i></span>')
+        //             .append(
+        //                 $('<div/>')
+        //                     .css({
+        //                         "position": "absolute",
+        //                         "width": "100%",
+        //                         "margin": "auto",
+        //                         "top": "-10px",
+        //                         "left": "0",
+        //                         "bottom": "0",
+        //                         "right": "0",
+        //                         "height": "50%",
+        //                     })
+        //                     .append('<div style="margin: 10px;"><b style="color: orangered;"><i>'+item_name+'</i></b> в <b style="color: darkolivegreen;">'+target_name+'</b>')
+        //             )
+        //             .append(
+        //                 $('<div/>')
+        //                     .css({
+        //                         "position": "absolute",
+        //                         "bottom": "2px",
+        //                         "width": "100%",
+        //                     })
+        //                     .append(buttonsStr+
+        //                         '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
+        //                     )
+        //             )
+        //     );
+        //
+        // menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+    }
+
+    //Перемещаем позицию в другую категорию
+    function moveScladItemInCategory (item_id, cat_id, target_cat_id){
+
+        var link = "move_sclad_items_in_cat_f.php";
+
+        var reqData = {
+            item_id: item_id,
+            cat_id: cat_id,
+            target_cat_id: target_cat_id
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == 'success') {
+
+                    // $("#sclad_items_rezult").html(res.data);
+
+                    //Если надо выделить группу
+                    // if (pick){
+                    //     //Сначала очищаем у всех окраску
+                    //     $(".droppable").css({"background-color": ""});
+                    //
+                    //     //Теперь покрасим
+                    //     $("#cat_"+pick_id).css({"background-color": "rgba(131, 219, 83, 0.5)"});
+                    // }
+
+                    getScladCategories ();
+
+                }
+            }
+        })
+
+    }
+
+    //Показываем блок для добавления категории склада
+    // function showScladCategoryAdd(id){
+    //
+    //     // item.elem.style.display = 'none';
+    //     //
+    //     // if (item.elem.id.split('_')[0] == 'cat') {
+    //     //     moveScladItemInCategory(0, item.elem.id.split('_')[1], target.id.split('_')[1]);
+    //     // }
+    //     // if (item.elem.id.split('_')[0] == 'item') {
+    //     //     moveScladItemInCategory(item.elem.id.split('_')[1], 0, target.id.split('_')[1]);
+    //     // }
+    //
+    //     $('#overlay').show();
+    //
+    //     // var item_name = $("#item_name_"+item.elem.id.split('_')[1]).html();
+    //     // var target_name = $("#cat_"+target.id.split('_')[1]).html();
+    //
+    //     var buttonsStr = '<input type="button" class="b" value="Ok" onclick="alert(888);">';
+    //
+    //     // Создаем меню:
+    //     var menu = $('<div/>', {
+    //         class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+    //     })
+    //         .appendTo('#overlay')
+    //         .append(
+    //             $('<div/>')
+    //                 .css({
+    //                     "height": "100%",
+    //                     "border": "1px solid #AAA",
+    //                     "position": "relative",
+    //                 })
+    //                 .append('<span style="margin: 5px;"><i>Новая категория</i></span>')
+    //                 .append(
+    //                     $('<div/>')
+    //                         .css({
+    //                             "position": "absolute",
+    //                             "width": "100%",
+    //                             "margin": "auto",
+    //                             "top": "-10px",
+    //                             "left": "0",
+    //                             "bottom": "0",
+    //                             "right": "0",
+    //                             "height": "50%",
+    //                         })
+    //                         .append('<div style="margin: 10px;"><b style="color: orangered;"><i>'+id+'</i></b> в <b style="color: darkolivegreen;">'+id+'</b>')
+    //                 )
+    //                 .append(
+    //                     $('<div/>')
+    //                         .css({
+    //                             "position": "absolute",
+    //                             "bottom": "2px",
+    //                             "width": "100%",
+    //                         })
+    //                         .append(buttonsStr+
+    //                             '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
+    //                         )
+    //                 )
+    //         );
+    //
+    //     menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+    //
+    // }
+
+    //Показываем блок для добавления позиции склада
+    function showScladCatItemAdd(targetId, type){
+        // console.log(type);
+
+        var descr = 'Новая позиция';
+
+        if (type == 'category'){
+            descr = 'Новая категория';
+        }
+
+        //Если позиция, спросим еще, про единицы измерения
+        var unit_select = '';
+
+        if (type == 'item'){
+            unit_select =
+                '<div style="margin-top: 20px;">' +
+                    '<select name="unit_sel" id="unit_sel" style="width: 200px;">'+
+                        '<option value="0">Выберите ед. измерения</option>' +
+                        '<option value="pc">штуки</option>' +
+                        '<option value="gr">граммы</option>'+
+                        '<option value="ml">милилитры</option>'+
+                    '</select>' +
+                '</div>';
+        }
+
+        var link = "get_sclad_cat_show_f.php";
+
+        var reqData = {
+            targetId: targetId
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == 'success') {
+
+
+                    $('#overlay').show();
+
+                    //var res = '12313213';
+
+                    var buttonsStr = '<input type="button" class="b" value="Ok" onclick="scladCatItemAdd('+targetId+', \''+type+'\');">';
+
+                    if (type == 'category'){
+                        buttonsStr = '<input type="button" class="b" value="Ok" onclick="scladCatItemAdd('+targetId+', \''+type+'\');">';
+                    }
+
+                    // Создаем меню:
+                    var menu = $('<div/>', {
+                        class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+                    })
+                        .css({
+                            "height": "300px"
+                        })
+                        .appendTo('#overlay')
+                        .append(
+                            $('<div/>')
+                                .css({
+                                    "height": "100%",
+                                    "border": "1px solid #AAA",
+                                    "position": "relative"
+                                })
+                                .append('<span style="margin: 5px;"><i>'+descr+'</i></span>')
+                                .append(
+                                    $('<div/>')
+                                        .css({
+                                            "position": "absolute",
+                                            "width": "100%",
+                                            "margin": "auto",
+                                            "top": "-110px",
+                                            "left": "0",
+                                            "bottom": "0",
+                                            "right": "0",
+                                            "height": "50%"
+                                        })
+                                        .append('<div style="margin-top: 3px;"><span style="font-size:90%; color: #333; ">Введите название</span><br><input name="newCatItemName" id="newCatItemName" type="text" value="" style="width: 250px; font-size: 120%;">')
+                                        .append(unit_select)
+                                        .append(res.data)
+                                )
+                                .append(
+                                    $('<div/>')
+                                        .css({
+                                            "position": "absolute",
+                                            "bottom": "2px",
+                                            "width": "100%"
+                                        })
+                                        .append('<div id="existCatItem" class="error"></div>')
+                                        .append(buttonsStr+
+                                            '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
+                                        )
+                                )
+                        );
+
+                    menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+
+                }
+            }
+        })
+    }
+
+
+    //Показываем блок для добавления позиции склада
+    function showScladCatItemEdit(id, type){
+        // console.log(type);
+
+        $(".context-menu").remove();
+
+        //Если позиция, спросим еще, про единицы измерения
+        var unit_select = '';
+
+        if (type == 'category') {
+            var descr = 'Редактировать категорию';
+            var oldName = $("#cat_" + id).attr("cat_name");
+        }
+
+        if (type == 'item') {
+            var descr = 'Редактировать позицию';
+            var oldName = $("#item_name_"+id).attr("item_name");
+
+            //console.log(oldName);
+
+            unit_select =
+                '<div style="margin-top: 20px;">' +
+                '<select name="unit_sel" id="unit_sel" style="width: 200px;">'+
+                '<option value="0">Выберите ед. измерения</option>' +
+                '<option value="pc">штуки</option>' +
+                '<option value="gк">граммы</option>'+
+                '<option value="ml">милилитры</option>'+
+                '</select>' +
+                '</div>';
+        }
+
+        if (oldName.length > 0){
+
+            $('#overlay').show();
+
+            var buttonsStr = '<input type="button" class="b" value="Ok" onclick="scladCatItemEdit('+id+', \''+type+'\');">';
+
+            // Создаем меню:
+            var menu = $('<div/>', {
+                class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+            })
+                .css({
+                    "height": "300px"
+                })
+                .appendTo('#overlay')
+                .append(
+                    $('<div/>')
+                        .css({
+                            "height": "100%",
+                            "border": "1px solid #AAA",
+                            "position": "relative"
+                        })
+                        .append('<span style="margin: 5px;"><i>'+descr+'</i></span>')
+                        .append(
+                            $('<div/>')
+                                .css({
+                                    "position": "absolute",
+                                    "width": "100%",
+                                    "margin": "auto",
+                                    "top": "-110px",
+                                    "left": "0",
+                                    "bottom": "0",
+                                    "right": "0",
+                                    "height": "50%"
+                                })
+                                .append('<div style="margin-top: 3px;"><span style="font-size:90%; color: #333; ">Введите новое название</span><br><input name="newCatItemName" id="newCatItemName" type="text" value="'+oldName+'" style="width: 250px; font-size: 120%;">')
+                                .append(unit_select)
+                        )
+                        .append(
+                            $('<div/>')
+                                .css({
+                                    "position": "absolute",
+                                    "bottom": "2px",
+                                    "width": "100%"
+                                })
+                                .append('<div id="existCatItem" class="error"></div>')
+                                .append(buttonsStr+
+                                    '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
+                                )
+                        )
+                );
+
+            menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+            //Выделяем пункт в select единиц измерения (Если позиция)
+            if (type == 'item') {
+                //!!! Поиск по аттрибуту в DOM
+                //!!! Выбор пунтка в select
+                var item_unit = $('[item_unit_' + id + ']').attr('item_unit_' + id);
+
+                document.querySelector('#unit_sel').value = item_unit;
+            }
+
+        }
+
+    }
+
+    //Добавляем категорию или позицию в склад
+    function scladCatItemAdd(targetId, type){
+        //console.log();
+
+        hideAllErrors();
+
+        var newCatItemName = $("#newCatItemName").val();
+        //console.log(newCatItemName);
+
+        //Если будет позиция, то указываем еще и ед.изм.
+        var item_units = false;
+        var item_units_val = 0;
+
+        if (type == 'item'){
+            if ($("#unit_sel").val() == 0) {
+                item_units = false;
+            }else{
+                item_units = true;
+                item_units_val = $("#unit_sel").val();
+            }
+        }else{
+            item_units = true;
+        }
+
+        if (newCatItemName.trim().length > 0){
+            if (item_units) {
+
+                var link = "fl_sclad_cat_item_add_f.php";
+
+                var reqData = {
+                    name: newCatItemName.trim(),
+                    type: type,
+                    targetId: targetId,
+                    item_units_val: item_units_val
+                };
+                //console.log(reqData);
+
+                $.ajax({
+                    url: link,
+                    global: false,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: reqData,
+                    cache: false,
+                    beforeSend: function () {
+
+                    },
+                    success: function (res) {
+                        //console.log (res);
+
+                        $('.center_block').remove();
+                        $('#overlay').hide();
+
+                        if (res.result == 'success') {
+                            // console.log (res);
+
+                            //Если категория, перезагрузим их
+                            if (type == 'category') {
+                                getScladCategories();
+                            }
+
+                            //Если позиция, загрузим позиции этой категории
+                            if (type == 'item') {
+                                getScladItems(targetId, 0, 1000, false, true, targetId);
+                            }
+
+                        } else {
+                            $("#existCatItem").html(res.data);
+                            $("#existCatItem").show();
+                        }
+                    }
+                })
+            }else{
+                $("#existCatItem").html('<span style="color: red; font-weight: bold;">Выберите единицы измерения</span>');
+                $("#existCatItem").show();
+            }
+        }else{
+            $("#existCatItem").html('<span style="color: red; font-weight: bold;">Ничего не ввели</span>');
+            $("#existCatItem").show();
+        }
+
+    }
+
+
+    //Редактируем имя категории/позиции
+    function scladCatItemEdit(id, type){
+        //console.log();
+
+        hideAllErrors();
+
+        //!!! Объявим локальный объект для этой ф-ции. потом может исправим и вынесем выше в для всех
+        //Еденицы измерения
+        let units = {
+            pc: 'шт.',
+            gr: 'г.',
+            ml: 'мл.',
+        }
+
+        var newCatItemName = $("#newCatItemName").val();
+        //console.log(newCatItemName);
+
+        //Если будет позиция, то указываем еще и ед.изм.
+        var item_units = false;
+        var item_units_val = 0;
+
+        if (type == 'item'){
+            if ($("#unit_sel").val() == 0) {
+                item_units = false;
+            }else{
+                item_units = true;
+                item_units_val = $("#unit_sel").val();
+            }
+        }else{
+            item_units = true;
+        }
+        //console.log(item_units);
+
+        if (newCatItemName.trim().length > 0){
+            //console.log(newCatItemName.trim().length);
+
+            if (item_units) {
+
+                var link = "fl_sclad_cat_item_edit_f.php";
+
+                var reqData = {
+                    name: newCatItemName.trim(),
+                    id: id,
+                    type: type,
+                    item_units_val: item_units_val
+                };
+                //console.log(reqData);
+
+                $.ajax({
+                    url: link,
+                    global: false,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: reqData,
+                    cache: false,
+                    beforeSend: function () {
+
+                    },
+                    success: function (res) {
+                        //console.log (res);
+
+                        $('.center_block').remove();
+                        $('#overlay').hide();
+
+                        if (res.result == 'success') {
+                            //console.log (res);
+
+                            getScladCategories ();
+                            //getScladItems (cat, 0, 1000, true);
+
+                            if (type == 'item') {
+                                //Обновим имя, не обновляя страницу
+                                $('#item_name_'+id).html(newCatItemName);
+                                //Обновим ед.изм., не обновляя страницу
+                                $('[item_unit_'+id+']').attr('item_unit_'+id, item_units_val);
+                                $('[item_unit_'+id+']').html(units[item_units_val]);
+                            }
+
+                        } else {
+                            $("#existCatItem").html(res.data);
+                            $("#existCatItem").show();
+                        }
+                    }
+                })
+            }else {
+                $("#existCatItem").html('<span style="color: red; font-weight: bold;">Выберите единицы измерения</span>');
+                $("#existCatItem").show();
+            }
+        }else{
+            $("#existCatItem").html('<span style="color: red; font-weight: bold;">Ничего не ввели</span>');
+            $("#existCatItem").show();
+        }
+
+    }
+
+    //Добавление в сессию данных по складским позициям, с которыми будем работать (ID)
+    function addScladItemsSetINSession(item_id, status){
+        // console.log(item_id);
+        // console.log(status);
+
+        var link = "addScladItemsSetINSession.php";
+
+        var reqData = {
+            item_id: item_id,
+            status: status
+        };
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == "success") {
+                    // console.log (res);
+
+                    //Показать выбранные позиции
+                    fillScladItemsInSet ();
+
+                }else{
+                    //--
+                }
+            }
+        })
+    }
+
+    //Показывает выбранные позиции из сессии
+    function fillScladItemsInSet (){
+        var link = "fill_sclad_items_in_set_f.php";
+
+        //Хоть что-то передадим
+        var reqData = {
+            type: 0
+        };
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == "success") {
+                    // console.log (res);
+
+                    if (res.count > 0) {
+                        $("#sclad_items_in_set_rezult").html(res.data);
+                        $("#sclad_items_in_set").show();
+                    }else{
+                        $("#sclad_items_in_set_rezult").html('<span style="color: red; font-weight: bold; font-size: 80%; margin-left: 20px;">Ничего нет</span>');
+                        $("#sclad_items_in_set").hide();
+                    }
+
+                    $("#itemInSetCount").html(res.count);
+
+                }else{
+                    //--
+                }
+            }
+        })
+    }
+
+    //Удалить текущую позицию из набора (используем на странице самого склада + приходная накладная (создание и редактирование))
+    function deleteScladItemsFromSet(item_id=0, ind=0, reload=false, edit=false, prihod_id=0){
+         // console.log(ind);
+         // console.log(edit);
+         // console.log(prihod_id);
+         //console.log(reload);
+
+        let reqData ={};
+
+        //Если не надо перезагружать страницу, значит мы скорее всего тут sclad.php
+        if (!reload) {
+            var link = "delete_sclad_item_from_set_f.php";
+
+            reqData = {
+                item_id: item_id
+            };
+        //А если надо перезагружать страницу, значит мы скорее всего тут например тут sclad_prihod_add.php или *edit.php
+        }else{
+            var link = "delete_sclad_item_from_prihod_data_f.php";
+
+            reqData = {
+                item_id: item_id,
+                ind: ind,
+                edit: edit,
+                prihod_id: prihod_id
+            };
+            //console.log(reqData);
+        }
+        console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+
+                //Если не надо перезагружать страницу, значит мы скорее всего тут sclad.php
+                if (!reload) {
+                    //Показать выбранные позиции
+                    fillScladItemsInSet();
+
+                    if (item_id != 0) {
+                        $("#selected_item_" + item_id).prop("checked", false);
+                    } else {
+                        $(".select_item").each(function () {
+                            $(this).prop("checked", false);
+                        })
+                    }
+                //А если надо перезагружать страницу, значит мы скорее всего тут например тут sclad_prihod_add.php или *edit.php
+                }else{
+                    location.reload();
+                }
+
+                // if(res.result == "success"){
+                //     //console.log(111);
+                // }
+            }
+        });
+    }
+
+    //Удалить текущую позицию из набора
+    function copyScladItemsFromSet(item_id=0, ind=0, edit=false, prihod_id=0){
+        // console.log(ind);
+
+        var link = "copy_sclad_item_from_prihod_data_f.php";
+
+        var reqData = {
+            item_id: item_id,
+            ind: ind,
+            edit: edit,
+            prihod_id: prihod_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+
+
+                location.reload();
+
+            }
+        });
+    }
+
+    //Изменяем кол-во в позиции на приходе
+    function changeQuantityScladItemPrihod(ind, itemId, dataObj, edit=false, prihod_id=0){
+        //console.log(ind);
+        //console.log(itemId);
+        //console.log(dataObj);
+
+        var link = "add_quantity_sclad_item_prihod_f.php";
+
+        //количество
+        var quantity = dataObj.value;
+        //console.log(quantity);
+
+        if (!isNaN(quantity)){
+            if (quantity >= 0) {
+                var reqData = {
+                    item_id: itemId,
+                    ind: ind,
+                    quantity: quantity,
+                    edit: edit,
+                    prihod_id: prihod_id
+                };
+                //console.log(reqData);
+
+                $.ajax({
+                    url: link,
+                    global: false,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: reqData,
+                    cache: false,
+                    beforeSend: function () {
+                        //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                    },
+                    // действие, при ответе с сервера
+                    success: function (res) {
+                        //console.log(res.data);
+
+                        //changeSumScladItemPrihod(ind, itemId);
+
+                    }
+                });
+            }else{
+                $(dataObj).addClass("input_error");
+            }
+        }else{
+            $(dataObj).addClass("input_error");
+        }
+    }
+
+    //Изменяем цену позиции на приходе
+    function changePriceScladItemPrihod(ind, itemId, dataObj, edit=false, prihod_id=0){
+        //console.log(ind);
+        //console.log(itemId);
+        //console.log(dataObj);
+
+        var link = "add_price_sclad_item_prihod_f.php";
+
+        //количество
+        var price = dataObj.value;
+        // console.log(price);
+        // console.log(price > 0);
+
+        if (!isNaN(price)) {
+
+            var reqData = {
+                item_id: itemId,
+                ind: ind,
+                price: price,
+                edit: edit,
+                prihod_id: prihod_id
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    // console.log(res.data);
+
+                    //changeSumScladItemPrihod(ind, itemId);
+
+                }
+            });
+        }else{
+            $(dataObj).addClass("input_error");
+        }
+    }
+
+    //Изменяем сумму позиции, а потом общую
+    function changeSumScladItemPrihod(ind, item_id){
+
+        //$(".sclad_item_prihod_count").each(function(){
+            // console.log($(this).val());
+            // console.log($("#price_"+item_id+"_"+ind).val());
+            // console.log($("#price_"+item_id+"_"+ind).val() * $(this).val());
+
+            // if ($(this).val() > 0){
+                $("#summ_"+item_id+"_"+ind).html( number_format($("#price_"+item_id+"_"+ind).val() * $("#sclad_item_prihod_count_"+item_id+"_"+ind).val(), 2, '.', ''));
+            // }
+        //})
+
+        //Общая сумма
+        let summ = 0;
+
+        $(".sclad_item_prihod_summ").each(function() {
+            summ += parseFloat($(this).html());
+        });
+        $("#itemInSetSumm").html(number_format(summ, 2, '.', ''));
+
+    }
+
+    //Изменяем тип гарантии позиции (гарантия, срок годности или нихера)
+    function changeExpGarantTypeScladItemPrihod(ind, itemId, dataObj, edit=false, prihod_id=0){
+        //console.log(dataObj.val());
+        //console.log(this);
+
+        var link = "add_exp_garant_type_sclad_item_prihod_f.php";
+
+        //тип (гарантия или срок годности или ничего)
+        var eg_type = dataObj.value;
+        //console.log(eg_type);
+
+        var reqData = {
+            item_id: itemId,
+            ind: ind,
+            eg_type: eg_type,
+            edit: edit,
+            prihod_id: prihod_id
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                // console.log(res.data);
+
+                //Ничего не делаем, потому что все и так хорошо?
+
+            }
+        });
+    }
+
+    //Изменяем дату гарантии позиции (гарантия, срок годности)
+    function changeExpGarantDateScladItemPrihod(ind, itemId, newDate){
+        // console.log(newDate);
+        //console.log(this);
+
+        var link = "add_exp_garant_date_sclad_item_prihod_f.php";
+
+        //дата
+        // var eg_date = dataObj.value;
+        var eg_date = newDate;
+        //console.log(eg_date);
+
+        var reqData = {
+            item_id: itemId,
+            ind: ind,
+            eg_date: eg_date,
+            prihod_id: $("#prihod_id").val(),
+            edit: $("#prihod_edit").val()
+        };
+        // console.log('777');
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res.data);
+
+                //Ничего не делаем, потому что все и так хорошо?
+
+            }
+        });
+    }
+
+    //Делаем что-то после изменения даты в календаре
+    function doSomeThingAfterChangeCalendar(class_arr, id, curDate, newDate) {
+        //console.log(arguments);
+
+        //Будем тут работать только по конкретным условиям (не на всех страницах это надо)
+
+        //Если есть класс .eg_date, значит работаем "на складе", например приход
+        if(class_arr.indexOf("eg_date") != -1){
+
+
+            //Если у нас есть нужный объект, то работаем
+            if (typeof(eg_date_arr) != "undefined") {
+                //console.log(eg_date_arr);
+
+                let item_id = id.split("_")[1];
+                let ind = id.split("_")[2];
+
+                if (!(item_id in eg_date_arr)){
+                    eg_date_arr[item_id] = [];
+                }
+                if (!(ind in  eg_date_arr[item_id])){
+                    eg_date_arr[item_id][ind] = $(this).val();
+                }
+
+                changeExpGarantDateScladItemPrihod(ind, item_id, newDate);
+            }
+        }
+    }
+
+    //Проверяем и добавляем приход
+    function Ajax_sclad_prihod_add(edit = false){
+        //console.log(edit);
+
+        hideAllErrors();
+
+        let all_good = true;
+
+        $(".sclad_item_prihod_count").each(function(){
+            // console.log(typeof(Number($(this).val())));
+            // console.log(Number($(this).val()));
+            // console.log(isNaN($(this).val()));
+
+            if (!isNaN($(this).val())){
+                if (Number($(this).val()) > 0){
+
+                    $(this).removeClass("input_error");
+
+                }else{
+                    all_good = false;
+
+                    $(this).addClass("input_error");
+                    // input_error
+                    //return false;
+                }
+            }else{
+                //ошибка
+            }
+        })
+        // console.log(all_good);
+
+        if ($("#provider").val().length == 0){
+            all_good = false;
+            $("#provider").addClass("input_error");
+        }else{
+            $("#provider").removeClass("input_error");
+        }
+
+        if ($("#prov_doc").val().length == 0){
+            all_good = false;
+            $("#prov_doc").addClass("input_error");
+        }else{
+            $("#prov_doc").removeClass("input_error");
+        }
+
+        if (all_good){
+
+            //Добавляем приходную накладную
+            let link = "sclad_prihod_add_f.php";
+
+            if (edit){
+                link = "sclad_prihod_edit_f.php";
+            }
+
+            //Надо что-то передать
+            let reqData = {
+                provider_name: $("#provider").val(),
+                prov_doc: $("#prov_doc").val(),
+                filial_id: $("#SelectFilial").val(),
+                prihod_time: $("#iWantThisDate2").val(),
+                comment: '',
+                prihod_id: $("#prihod_id").val(),
+                summ: $("#itemInSetSumm").html()
+            };
+            // console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function(res){
+                    // $('#errrror').html(res);
+                    // console.log(res.data);
+
+                    //Переедем в накладную?
+                    //window.open('sclad_prihod.php?id='+res.data);
+                    document.location.href = 'sclad_prihod.php?id='+res.data;
+                }
+            });
+
+        }else{
+            $('#errror').html('<span style="color: red; font-weight: bold;">Проверьте введённые данные.</span>');
+        }
+    }
+
+    //Отмена действий на складе (отмена прихода, перемещения, списания, ...)
+    function Ajax_sclad_cancel(from, to){
+
+        //!!!Добавить потом сюда условия всякие
+        //if (from == 'prihod_add'){
+            var link = "sclad_prihod_cancel_f.php";
+        //}
+
+        //Надо что-то передать
+        var reqData = {
+            id: 1
+        };
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                // $('#errrror').html(res);
+                //console.log(res.data);
+
+                //Переедем по ссылке
+                document.location.href = to;
+            }
+        });
+    }
+
+    //Показываем блок с поиском позиции на складе для добавления её в список на приход
+    function showAddNewScladItemsSetINSession(){
+
+        //$(".context-menu").remove();
+
+        //Если позиция, спросим еще, про единицы измерения
+        var unit_select = '';
+
+        var descr = 'Добавить позицию';
+
+        $('#overlay').show();
+
+        //var buttonsStr = '<input type="button" class="b" value="Ok" onclick="addNewScladItemsSetINSession();">';
+        var buttonsStr = '';
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        })
+            .css({
+                "height": "300px"
+            })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative"
+                    })
+                    .append('<span style="margin: 5px;"><i>'+descr+'</i></span>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-110px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%"
+                            })
+                            .append('<div style="margin-top: 3px;"><span style="font-size:90%; color: #333; ">Введите название</span><br>' +
+                                '<input type="text" name="sclad_item_search" id="sclad_item_search" placeholder="Введите для поиска" value="" class="sclad_item_search" autocomplete="off" style="width: 250px; font-size: 120%;">' +
+                                '<ul id="search_result_sclad_item" class="search_result_sclad_item"></ul>')
+                            .append(unit_select)
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "bottom": "2px",
+                                "width": "100%"
+                            })
+                            .append('<div id="existCatItem" class="error"></div>')
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
+                            )
+                    )
+            );
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+    }
+
+    function addNewScladItemsSetINSession(itemId){
+        //console.log($("#prihod_edit").val());
+
+        let link = "add_new_sclad_item_from_prihod_data_f.php";
+
+        let reqData = {
+            item_id: itemId,
+            prihod_id: $("#prihod_id").val(),
+            edit: $("#prihod_edit").val()
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                // console.log(res.data);
+
+                location.reload();
+
+            }
+        });
+    }
+
+    //Показываем блок с кнопками Для проведения наряда
+    function showPrihodClose(prihod_id){
+        //console.log(mode);
+        let rys = false;
+
+        rys = confirm("Провести приходную накладную?");
+
+        if (rys) {
+
+            let link = "prihod_close_f.php";
+
+            let reqData = {
+                prihod_id: prihod_id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    //console.log (res);
+
+                    if (res.result == "success") {
+                        setTimeout(function () {
+                            window.location.href = "sclad_prihod.php?id="+prihod_id;
+                        }, 200);
+                    } else {
+
+                    }
+                }
+            })
+        }
+    }
+
+    //Показываем блок с кнопками Для снятия проведения приходной накладной
+    function showPrihodOpen(prihod_id){
+        //console.log(prihod_id);
+
+        // убираем класс ошибок
+        hideAllErrors ();
+
+        var rys = false;
+
+        rys = confirm("Снять отметку о проведении приходной накладной? Со склада будет списано нужное количество.");
+
+        if (rys) {
+
+            var link = "prihod_open_f.php";
+
+            var reqData = {
+                prihod_id: prihod_id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    // console.log (res);
+
+                    if (res.result == "success") {
+                        setTimeout(function () {
+                            window.location.href = "sclad_prihod.php?id="+prihod_id;
+                        }, 200);
+                    } else {
+                        $("#errror").html('<div class="query_neok">'+res.data+'</div>')
+                    }
+                }
+            })
+        }
+    }
+

@@ -11,6 +11,8 @@
             //$permissions_j = SelDataFromDB('spr_permissions', $_SESSION['permissions'], 'id');
             //var_dump($permissions_j);
 
+            $god_mode = FALSE;
+
             $permissions_j = array();
 
             $msql_cnnct = ConnectToDB();

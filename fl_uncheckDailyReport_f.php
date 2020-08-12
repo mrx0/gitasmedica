@@ -25,10 +25,31 @@
 
                 $msql_cnnct = ConnectToDB2();
 
-                //Обновляем
-                $query = "UPDATE `fl_journal_daily_report` SET `status` = '0' WHERE `id`='{$_POST['report_id']}'";
+                $query = "SELECT * FROM `fl_journal_daily_report` WHERE `id`='{$_POST['report_id']}' LIMIT 1";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0) {
+                    $arr = mysqli_fetch_assoc($res);
+
+                    $day = $arr['day'];
+                    $month = $arr['month'];
+                    $year = $arr['year'];
+
+                    $today = date('Y-m-d', time());
+                    $monthStart15daysPlus = date('Y-m-d', strtotime('+1 month +14 days', gmmktime(0, 0, 0, $month, 1, $year)));
+
+                    //ограничение по времени на редактирование
+                    if (($today <= $monthStart15daysPlus) || ($_SESSION['permissions'] == 3)) {
+                        //Обновляем
+                        $query = "UPDATE `fl_journal_daily_report` SET `status` = '0' WHERE `id`='{$_POST['report_id']}'";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                    }
+
+                }
 
                 CloseDB($msql_cnnct);
 

@@ -254,7 +254,7 @@ if ($enter_ok){
                             $calculate_summ_inv = 0;
                             $calculate_summins_inv = 0;
 
-                            //Получим уже существующие рассчёты
+                            //Получим уже существующие расчёты
                             if ($invoice_j[0]['type'] != 88) {
                                 $query = "SELECT `id`, `summ_inv`, `summ` FROM `fl_journal_calculate` WHERE `invoice_id`='" . $_GET['invoice_id'] . "' AND `zapis_id`='" . $sheduler_zapis[0]['id'] . "';";
                             }else{

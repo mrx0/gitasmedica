@@ -1,7 +1,7 @@
 <?php 
 
-//invoice_close_f.php
-//Закрыть наряд, поставить статус 5
+//invoice_open_f.php
+//Открыть наряд, поставить статус 0
 
 	session_start();
 	

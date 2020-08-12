@@ -52,6 +52,7 @@
                             $temp_arr['gift'] = 0;
                             $temp_arr['spec_koeff'] = 0;
                             $temp_arr['discount'] = 0;
+                            $temp_arr['jaw_select'] = 0;
 
                             //$temp_arr['percent_cats'] = 0;
 
@@ -118,7 +119,7 @@
                             include_once 'ffun.php';
 
                             //получим цены
-                            $prices = takePrices((int)$_POST['price_id'], (int)$_POST['client_insure']);
+                            $prices = takePrices((int)$_POST['price_id'], (int)$_POST['client_insure'], 0);
                             //var_dump($prices);
 
                             if (!empty($prices)) {

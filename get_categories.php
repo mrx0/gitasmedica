@@ -35,7 +35,7 @@
                 if (!empty($rez)){
 
                     $rezult .= '<select name="SelectCategory" id="SelectCategory">';
-                    $rezult .= "<option value=''>Нажми и выбери</option>";
+                    $rezult .= "<option value=''>Выберите категорию</option>";
                     foreach ($rez as $item) {
 
                         $rezult .= "<option value='".$item['id']."'>".$item['name']."</option>";

@@ -3,10 +3,15 @@
 //header.php
 //Заголовок страниц сайта
 //
+    //phpinfo();
 
 	session_start();
 	
 	$enter_ok = FALSE;
+
+//    ini_set('error_reporting', E_ALL);
+//    ini_set('display_errors', 1);
+//    ini_set('display_startup_errors', 1);
 
 	//Время начала работы скрипта PHP
     $script_start = microtime(true);

@@ -166,10 +166,10 @@
 										Тип
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input id="typeW" name="typeW" value="0" type="radio">Все<br />
-										<input id="typeW" name="typeW" value="5" type="radio" checked>Стоматологи<br />
-										<input id="typeW" name="typeW" value="6" type="radio">Косметологи<br />
-										<input id="typeW" name="typeW" value="10" type="radio">Специалисты<br />
+										<input id="typeW" name="typeW" value="0" type="radio">Все<br>
+										<input id="typeW" name="typeW" value="5" type="radio" checked>Стоматологи<br>
+										<input id="typeW" name="typeW" value="6" type="radio">Косметологи<br>
+										<input id="typeW" name="typeW" value="10" type="radio">Специалисты<br>
 									</div>
 								</li>
 								

@@ -84,7 +84,7 @@
                 if (!empty($tabels_j)){
 
                     //Сортируем по году в обратном порядке
-                    //krsort($tabels_j);
+                    krsort($tabels_j);
 
                     $rezult .= '
                         <div style="margin: 5px 0 -17px; padding: 2px; text-align: center; color: #0C0C0C;">

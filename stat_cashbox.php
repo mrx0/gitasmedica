@@ -23,7 +23,7 @@
 					<header style="margin-bottom: 5px;">
 					    <div class="nav">
                             <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт</a>
-                            <a href="giveout_cash.php" class="b">Расходные ордеры</a>
+                            <a href="giveout_cash_all.php" class="b">Расходные ордеры</a>
                         </div>
 						<h1>Касса</h1>';
                 echo '		
@@ -112,7 +112,7 @@
 								
 								<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Показывать проданные сертификаты
+										Показывать проданные сертификаты, абонементы, солярий, средства для загара
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
 										<input type="checkbox" id="certificatesShow" name="certificatesShow" value="1" checked>

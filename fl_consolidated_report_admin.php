@@ -12,10 +12,11 @@
 		if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
+            include_once 'widget_calendar.php';
 			include_once 'ffun.php';
             require 'variables.php';
 
-            //Опция доступа к филиалам конкретных сотрудников
+            //Опция доступа к филиалам конкретных сотрудников (права доступа)
             $optionsWF = getOptionsWorkerFilial($_SESSION['id']);
             //var_dump($optionsWF);
 
@@ -50,18 +51,21 @@
             if (isset($_GET['filial_id'])) {
                 $filial_id = $_GET['filial_id'];
             }else{
-                if (isset($_SESSION['filial'])) {
-                    $filial_id = $_SESSION['filial'];
-                }else{
-                    if (($finances['see_all'] == 1) || $god_mode){
-                        $have_target_filial = true;
-                        $filial_id = 15;
-                    }else {
+                if (($finances['see_all'] == 1) || $god_mode){
+                    $have_target_filial = false;
+                    $filial_id = 0;
+                }else {
+                    if (isset($_SESSION['filial'])) {
+                        $filial_id = $_SESSION['filial'];
+                    }else{
                         $have_target_filial = false;
                         $filial_id = 0;
                     }
                 }
             }
+            //var_dump($filial_id);
+
+            $dop = 'filial_id='.$filial_id;
 
 
             echo '
@@ -69,9 +73,11 @@
                     <header id="header">
                         <div class="nav">
                             <a href="stat_cashbox.php" class="b">Касса</a>';
-            if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
+            if (!empty($optionsWF[$_SESSION['id']]) || $god_mode){
                 echo '
-                <a href="fl_paidout_another_test_in_tabel_add.php" class="b">Добавить расход вручную</a>';
+                <a href="fl_paidout_another_test_in_tabel_add.php" class="b">Добавить расход вручную</a>
+                <a href="fl_money_from_outside_add.php" class="b">Добавить приход вручную</a>
+                <a href="material_costs_test.php?filial_id='.$filial_id.'" class="b">Расходы на материалы</a>';
             }
 
             echo '
@@ -84,6 +90,12 @@
             echo '				
                         <div id="errrror"></div>';
 
+
+
+            echo '<div class="no_print">';
+            echo widget_calendar ($month, $year, 'fl_consolidated_report_admin.php', $dop);
+            echo '</div><br>';
+
             //Выбор филиала
             echo '
                         <div style="font-size: 90%; ">
@@ -93,6 +105,8 @@
 
                 echo '
                             <select name="SelectFilial" id="SelectFilial">';
+                echo '
+                                <option value="0" selected>Выберите филиал</option>';
 
                 foreach ($filials_j as $filial_item) {
 
@@ -115,31 +129,34 @@
             }
 
             //Выбор месяц и год
-            echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Дата: ';
+//            echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Дата: ';
+//            echo '
+//			                <select name="iWantThisMonth" id="iWantThisMonth" style="margin-right: 5px;">';
+//            foreach ($monthsName as $mNumber => $mName){
+//                $selected = '';
+//                if ((int)$mNumber == (int)$month){
+//                    $selected = 'selected';
+//                }
+//                echo '
+//				                <option value="'.$mNumber.'" '.$selected.'>'.$mName.'</option>';
+//            }
+//            echo '
+//			                </select>
+//			                <select name="iWantThisYear" id="iWantThisYear">';
+//            for ($i = 2017; $i <= (int)date('Y')+2; $i++){
+//                $selected = '';
+//                if ($i == (int)date('Y')){
+//                    $selected = 'selected';
+//                }
+//                echo '
+//				                <option value="'.$i.'" '.$selected.'>'.$i.'</option>';
+//            }
+//            echo '
+//			                </select>
+//			                <span class="button_tiny" style="font-size: 90%; cursor: pointer" onclick="iWantThisDate(\'fl_consolidated_report_admin.php?filial_id='. $filial_id . '\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>';
+
+
             echo '
-			                <select name="iWantThisMonth" id="iWantThisMonth" style="margin-right: 5px;">';
-            foreach ($monthsName as $mNumber => $mName){
-                $selected = '';
-                if ((int)$mNumber == (int)$month){
-                    $selected = 'selected';
-                }
-                echo '
-				                <option value="'.$mNumber.'" '.$selected.'>'.$mName.'</option>';
-            }
-            echo '
-			                </select>
-			                <select name="iWantThisYear" id="iWantThisYear">';
-            for ($i = 2017; $i <= (int)date('Y')+2; $i++){
-                $selected = '';
-                if ($i == (int)date('Y')){
-                    $selected = 'selected';
-                }
-                echo '
-				                <option value="'.$i.'" '.$selected.'>'.$i.'</option>';
-            }
-            echo '
-			                </select>
-			                <span class="button_tiny" style="font-size: 90%; cursor: pointer" onclick="iWantThisDate(\'fl_consolidated_report_admin.php?filial_id='. $filial_id . '\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
 			                <div style="font-size: 90%; color: rgb(125, 125, 125); float: right;">Сегодня: <a href="fl_consolidated_report_admin.php" class="ahref">'.date("d").' '.$monthsName[date("m")].' '.date("Y").'</a></div>
 			            </div>';
 
@@ -210,14 +227,14 @@
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Всего безнал
                             </div>';
-                $report_header .= '
+                /*$report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Наличные ордеры
-                            </div>';
-                $report_header .= '
+                            </div>';*/
+                /*$report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Безнал. ордеры
-                            </div>';
+                            </div>';*/
                 $report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
                                 Серт-ты<br>нал
@@ -254,27 +271,29 @@
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Анализы безнал
                             </div>';*/
-                $report_header .= '
+                /*$report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Солярий<br>нал
-                            </div>';
-                $report_header .= '
+                            </div>';*/
+                /*$report_header .= '
                             <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
                                 Солярий<br>безнал
-                            </div>';
+                            </div>';*/
                 $report_header .= '
-                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(63, 0, 255, 0.18); border-top: 1px solid #BFBCB5;">
+                            <div class="cellTime cellsTimereport" style="text-align: center; background-color: rgba(255,137,28,0.18); border-top: 1px solid #BFBCB5;">
                                 Расход
                             </div>';
                 if (($finances['see_all'] == 1) || $god_mode) {
-                    $report_header .= '
-                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
-                                Банк
-                            </div>';
-                    $report_header .= '
-                            <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
-                                АН
-                            </div>';
+                    if (in_array($filial_id, $optionsWF[$_SESSION['id']]) || $god_mode) {
+                        $report_header .= '
+                                <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+                                    Банк
+                                </div>';
+                        $report_header .= '
+                                <div class="cellTime cellsTimereport" style="text-align: center; border-top: 1px solid #BFBCB5;">
+                                    АН
+                                </div>';
+                    }
                 }
 
                 $report_header .= ' 
@@ -332,7 +351,7 @@
                     echo '
                         <li class="' . $weekend_block . ' cellsBlockHover blockControl" style="font-weight: bold; font-size: 12px; color: #949393; ' . $today_outline . '">';
                     echo '
-                            <div class="cellTime cellsTimereport reportDate" status="4" report_id="0" filial_id="'.$filial_id.'" style="text-align: center; cursor: pointer; ' . $today_color . ' '. $today_border .''. $today_border_l .'">
+                            <div class="cellTime cellsTimereport reportDate" status="4" report_id="0" filial_id="'.$filial_id.'" style="position: relative; text-align: center; cursor: pointer; ' . $today_color . ' '. $today_border .''. $today_border_l .'">
                                 ' . $data . '
                             </div>';
 
@@ -376,14 +395,14 @@
                             <div class="cellTime cellsTimereport SummBeznal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';
-                    echo '
+                    /*echo '
                             <div class="cellTime cellsTimereport SummNalStomCosm" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
-                            </div>';
-                    echo '
+                            </div>';*/
+                    /*echo '
                             <div class="cellTime cellsTimereport SummBeznalStomCosm" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
-                            </div>';
+                            </div>';*/
                     echo '
                             <div class="cellTime cellsTimereport SummCertNal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
@@ -420,27 +439,29 @@
                             <div class="cellTime cellsTimereport analizSummBeznal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
                             </div>';*/
-                    echo '
+                    /*echo '
                             <div class="cellTime cellsTimereport solarSummNal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
-                            </div>';
-                    echo '
+                            </div>';*/
+                    /*echo '
                             <div class="cellTime cellsTimereport solarSummBeznal" style="text-align: center; font-weight: normal; '. $today_border .'">
                                 -
-                            </div>';
+                            </div>';*/
                     echo '
-                            <a href="giveout_cash.php?filial_id='.$filial_id.'&d='.dateTransformation($d).'&m='.dateTransformation($month).'&y='.$year.'" class="ahref cellTime cellsTimereport summMinusNal" style="text-align: center; font-weight: normal; cursor: pointer; '. $today_border .'">
+                            <a href="giveout_cash_all.php?filial_id='.$filial_id.'&d='.dateTransformation($d).'&m='.dateTransformation($month).'&y='.$year.'" class="ahref cellTime cellsTimereport summMinusNal" style="text-align: center; font-weight: normal; cursor: pointer; '. $today_border .'">
                                 -
                             </a>';
                     if (($finances['see_all'] == 1) || $god_mode) {
-                        echo '
-                            <a href="fl_in_bank_add.php?filial_id='.$filial_id.'&d='.dateTransformation($d).'&m='.dateTransformation($month).'&y='.$year.'" class="ahref cellTime cellsTimereport giveout_inBank" style="text-align: center; font-weight: normal; ' . $today_border . '">
+                        if (in_array($filial_id, $optionsWF[$_SESSION['id']]) || $god_mode) {
+                            echo '
+                            <a href="fl_in_bank_add.php?filial_id=' . $filial_id . '&d=' . dateTransformation($d) . '&m=' . dateTransformation($month) . '&y=' . $year . '" class="ahref cellTime cellsTimereport giveout_inBank" style="text-align: center; font-weight: normal; ' . $today_border . '">
                                 -
                             </a>';
-                        echo '
-                            <a href="fl_to_director_add.php?filial_id='.$filial_id.'&d='.dateTransformation($d).'&m='.dateTransformation($month).'&y='.$year.'" class="ahref cellTime cellsTimereport giveout_director" style="text-align: center; font-weight: normal; ' . $today_border . '">
+                            echo '
+                            <a href="fl_to_director_add.php?filial_id=' . $filial_id . '&d=' . dateTransformation($d) . '&m=' . dateTransformation($month) . '&y=' . $year . '" class="ahref cellTime cellsTimereport giveout_director" style="text-align: center; font-weight: normal; ' . $today_border . '">
                                 -
                             </a>';
+                        }
                     }
 
                     echo '
@@ -503,14 +524,14 @@
                             <div id="SummBeznalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
                             </div>';
-                    echo '
-                            <div id="SummNalStomCosmAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
-                                0
-                            </div>';
-                    echo '
-                            <div id="SummBeznalStomCosmAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
-                                0
-                            </div>';
+//                    echo '
+//                            <div id="SummNalStomCosmAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+//                                0
+//                            </div>';
+//                    echo '
+//                            <div id="SummBeznalStomCosmAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+//                                0
+//                            </div>';
                     echo '
                             <div id="SummCertNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
@@ -547,14 +568,14 @@
                             <div id="analizSummBeznalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
                             </div>';*/
-                    echo '
-                            <div id="solarSummNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
-                                0
-                            </div>';
-                    echo '
-                            <div id="solarSummBeznalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
-                                0
-                            </div>';
+//                    echo '
+//                            <div id="solarSummNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+//                                0
+//                            </div>';
+//                    echo '
+//                            <div id="solarSummBeznalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
+//                                0
+//                            </div>';
                     echo '
                             <div id="summMinusNalAllMonth" class="cellTime cellsTimereport" style="text-align: right; font-weight: bold;">
                                 0
@@ -616,6 +637,10 @@
                                     <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Наличные</div>    
                                 </div>
                                 <div class="cellsBlock" style="font-size: 14px;">
+                                    <div class="cellLeft">остаток за прошлый месяц</div>
+                                    <div id="prev_month_filial_summ" class="cellRight" style="text-align: right;">-</div>
+                                </div>
+                                <div class="cellsBlock" style="font-size: 14px;">
                                     <div class="cellLeft">наличные касса</div>
                                     <div id="SummNalAllMonthItog2" class="cellRight" style="text-align: right;">-</div>
                                 </div>
@@ -662,16 +687,12 @@
                                 </div>-->
                                 <div class="cellsBlock" style="font-size: 14px;">
                                     <div class="cellLeft">возвраты</div>
-                                    <div id="SummRefundGiveout" class="cellRight" style="text-align: right;">-</div>
+                                    <div id="SummWithdrawGiveout" class="cellRight" style="text-align: right;">-</div>
                                 </div>
                                 <!--<div class="cellsBlock" style="font-size: 14px;">
                                     <div class="cellLeft">материалы</div>
                                     <div id="SummMaterialGiveout" class="cellRight" style="text-align: right;">-</div>
                                 </div>-->
-                                <div class="cellsBlock" style="font-size: 14px;">
-                                    <div class="cellLeft">остаток за прошлый месяц</div>
-                                    <div id="prev_month_filial_summ" class="cellRight" style="text-align: right;">-</div>
-                                </div>
                                 <div class="cellsBlock" style="font-size: 14px;">
                                     <div class="cellLeft" style="font-weight: bold;">итого</div>
                                     <div id="SummGiveoutMonth" class="cellRight" style="font-weight: bold; text-align: right;">-</div>   
@@ -736,8 +757,12 @@
 			    </div>';
 
             }else{
-                echo '
+                if (($finances['see_all'] == 1) || $god_mode) {
+
+                }else {
+                    echo '
                          <span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <i class="ahref change_filial">определить</i></span><br>';
+                }
             }
             echo '
                     </div>

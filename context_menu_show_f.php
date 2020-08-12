@@ -61,14 +61,16 @@
 
 					if ($insures_j != 0){
 						for ($i=0;$i<count($insures_j);$i++){
-                            $bgColor = '';
+                            if ($insures_j[$i]['status'] != 9){
+                                $bgColor = '';
 
-						    if ($insures_j[$i]['id'] == $_POST['dop']['client_insure']) {
-                                $bgColor = 'background-color: yellow;';
+                                if ($insures_j[$i]['id'] == $_POST['dop']['client_insure']) {
+                                    $bgColor = 'background-color: yellow;';
+                                }
+
+                                $data .= '
+                                    <li style="' . $bgColor . '"><div onclick="insureInvoice(' . $insures_j[$i]['id'] . ')">' . $insures_j[$i]['name'] . '</div></li>';
                             }
-
-							$data .= '
-								<li style="'.$bgColor.'"><div onclick="insureInvoice('.$insures_j[$i]['id'].')">'.$insures_j[$i]['name'].'</div></li>';
 						}
 					}
 				}
@@ -90,6 +92,16 @@
 						</li>'.
 						'<li><div><input type="number" size="2" name="discount" id="discount" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="discountInvoice($(\'#discount\').val())"> Применить</div></div></li>';
 				}
+
+				//Челюсть (верхняя/нижняя) общее
+				if ($_POST['mark'] == 'jaw_select'){
+					$data = '
+						<li><div onclick="jawselectInvoice(0)">нет (очистить)</div></li>
+						<li><div onclick="jawselectInvoice(1)">ВЧ</div></li>
+						<li><div onclick="jawselectInvoice(2)">НЧ</div></li>
+						';
+				}
+
 				//Страховая согласовано позиция
 				if ($_POST['mark'] == 'insure_approveItem'){
 					$data = '
@@ -140,6 +152,15 @@
                         </li>'.
 						'<li><div><input type="number" size="2" name="discount" id="discount" min="1" max="100" value="" class="mod"><div style="display: inline;" onclick="discountItemInvoice('.$_POST['ind'].', '.$_POST['key'].', $(\'#discount\').val())"> Применить</div></div></li>';
 				}
+				//Челюсть (верхняя/нижняя) позиция
+				if ($_POST['mark'] == 'jaw_selectItem'){
+					$data = '
+						<li><div onclick="jawselectItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 0)">нет (очистить)</div></li>
+						<li><div onclick="jawselectItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 1)">ВЧ</li>
+						<li><div onclick="jawselectItemInvoice('.$_POST['ind'].', '.$_POST['key'].', 2)">НЧ</li>
+                        ';
+
+				}
 				//Страховка позиция
 				if ($_POST['mark'] == 'insureItem'){
 
@@ -150,14 +171,16 @@
 
 					if ($insures_j != 0){
 						for ($i=0;$i<count($insures_j);$i++){
-                            $bgColor = '';
+                            if ($insures_j[$i]['status'] != 9) {
+                                $bgColor = '';
 
-                            if ($insures_j[$i]['id'] == $_POST['dop']['client_insure']) {
-                                $bgColor = 'background-color: yellow;';
+                                if ($insures_j[$i]['id'] == $_POST['dop']['client_insure']) {
+                                    $bgColor = 'background-color: yellow;';
+                                }
+
+                                $data .= '
+                                    <li style="' . $bgColor . '"><div onclick="insureItemInvoice(' . $_POST['ind'] . ', ' . $_POST['key'] . ', ' . $insures_j[$i]['id'] . ')">' . $insures_j[$i]['name'] . '</div></li>';
                             }
-
-							$data .= '
-								<li style="'.$bgColor.'"><div onclick="insureItemInvoice('.$_POST['ind'].', '.$_POST['key'].', '.$insures_j[$i]['id'].')">'.$insures_j[$i]['name'].'</div></li>';
 						}
 					}
 				}
@@ -349,7 +372,7 @@
 				//Для ночных отчетов в табеле
                 if ($_POST['mark'] == 'tabel_night_options'){
                     $data .= '
-                            <li><div onclick="fl_deleteNightFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить рассчёт</div></li>';
+                            <li><div onclick="fl_deleteNightFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить расчёт</div></li>';
 				}
 
 				//Настройка для записи
@@ -409,27 +432,42 @@
                 if ($_POST['mark'] == 'pervich'){
                     $data .= '
                             <li><div onclick="choosePervich(1)"><img src="img/pervich.png" title="Посещение для пациента первое без работы"> Первичный</div></li>
-                            <li><div onclick="choosePervich(2)"><img src="img/pervich_ostav_2.png" title="Посещение для пациента первое с работой"> Перв. остался</div></li>
+                            <li><div onclick="choosePervich(2)"><img src="img/pervich_ostav_2.png" title="Посещение для пациента первое с работой"> Перв. + остался</div></li>
                             <li><div onclick="choosePervich(3)"><img src="img/vtorich_3.png" title="Посещение для пациента не первое"> Вторичный</div></li>
-                            <li><div onclick="choosePervich(4)"><img src="img/vtorich_davno_4.png" title="Посещение для пациента не первое, но был более полугода назад"> Вторичный (полгода)</div></li>
+                            <!--<li><div onclick="choosePervich(4)"><img src="img/vtorich_davno_4.png" title="Посещение для пациента не первое, но был более полугода назад"> Вторичный (полгода)</div></li>-->
                             <li><div onclick="choosePervich(5)"><img src="img/prodolzhenie.png" title="Продолжение работы"> Продолжение работы</div></li>';
                 }
 
                 //!!!Для графика ассистентов... ???
-                if ($_POST['mark'] == 'scheduler3'){
-                    $data .= '
-                            <li><div onclick="">Весь день</div></li>
-                            <li><div onclick="">Утро</li>
-                            <li><div onclick="">Вечер</li>
-                            <li><div onclick="">Ночь</li>
-                            <hr>
-                            <li><div onclick=""><i>Весь день ?</i></div></li>
-                            <li><div onclick=""><i>Утро ?</i></li>
-                            <li><div onclick=""><i>Вечер ?</i></li>
-                            <li><div onclick=""><i>Ночь ?</i></li>
-                            <hr>
-                            <li><div onclick=""><b>Очистить</b></li>';
-                }
+//                if ($_POST['mark'] == 'scheduler3'){
+//                    $data .= '
+//                            <li><div onclick="">Весь день</div></li>
+//                            <li><div onclick="">Утро</li>
+//                            <li><div onclick="">Вечер</li>
+//                            <li><div onclick="">Ночь</li>
+//                            <hr>
+//                            <li><div onclick=""><i>Весь день ?</i></div></li>
+//                            <li><div onclick=""><i>Утро ?</i></li>
+//                            <li><div onclick=""><i>Вечер ?</i></li>
+//                            <li><div onclick=""><i>Ночь ?</i></li>
+//                            <hr>
+//                            <li><div onclick=""><b>Очистить</b></li>';
+//                }
+//
+//                if ($_POST['mark'] == 'scheduler5'){
+//                    $data .= '
+//                            <li><div onclick="">Удалить смену</div></li>
+//                            <li><div onclick="">Часов: <input type="text" id="newHours" name="newHours" value="0"> <i class="fa fa-check-square" style=" color: green;"></i></li>
+//                            <li><div onclick="">Вечер</li>
+//                            <li><div onclick="">Ночь</li>
+//                            <hr>
+//                            <li><div onclick=""><i>Весь день ?</i></div></li>
+//                            <li><div onclick=""><i>Утро ?</i></li>
+//                            <li><div onclick=""><i>Вечер ?</i></li>
+//                            <li><div onclick=""><i>Ночь ?</i></li>
+//                            <hr>
+//                            <li><div onclick=""><b>Очистить</b></li>';
+//                }
 
                 //Для добавления наряда "с улицы"
                 if ($_POST['mark'] == 'invoice_add_free'){
@@ -445,6 +483,36 @@
 //                            <li>'.$_POST['ind'].'</li>';
 //                }
 
+
+                //Для работы с категориями на складе
+                if ($_POST['mark'] == 'sclad_cat'){
+                    $data .= '
+                            <li><div onclick="showScladCatItemAdd('.$_POST['ind'].', \'category\');">Добавить категорию</div></li>
+                            <li><div onclick="showScladCatItemAdd('.$_POST['ind'].', \'item\');">Добавить позицию</div></li>
+                            ';
+                    if ($_POST['key'] == 'dop'){
+                        $data .= '
+                            <li><div onclick="showScladCatItemEdit('.$_POST['ind'].', \'category\');">Редактировать</div></li>
+                            <!--<li><div onclick="showCatDelete('.$_POST['ind'].');">Пометить на удаление</div></li>-->
+                            ';
+                    }
+                }
+
+                //Для работы с позициями на складе
+                if ($_POST['mark'] == 'sclad_item'){
+//                    $data .= '
+//                            <li><div onclick="addScladItemToSet('.$_POST['ind'].');">Добавить в список</div></li>
+//                            <li><a href="sclad_prihod_add.php?g_id='.$_POST['ind'].'" class="ahref_context" style="">Добавить приход</a></li>
+//                            <li><a href="sclad_move_add.php?g_id='.$_POST['ind'].'" class="ahref_context" style="">Добавить перемещение</a></li>
+//                            <li><div onclick="showScladCatItemAdd('.$_POST['ind'].', \'item\');">Добавить списание</div></li>
+//                            ';
+                    //if ($_POST['key'] == 'dop'){
+                        $data .= '
+                            <li><div onclick="showScladCatItemEdit('.$_POST['ind'].', \'item\');">Редактировать</div></li>
+                            <!--<li><div onclick="showItemDelete('.$_POST['ind'].');">Пометить на удаление</div></li>-->
+                            ';
+                    //}
+                }
 
 				echo json_encode(array('result' => 'success', 'data' => $data));
 

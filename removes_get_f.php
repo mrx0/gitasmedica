@@ -21,7 +21,8 @@
             $removesMy = 0;
             $removesMe = 0;
 
-            $rezult = '<a href="" class="b">Подробно</a>';
+//            $rezult = '<a href="" class="b">Подробно</a>';
+            $rezult = '';
 
             if (!isset($_POST['worker_id'])){
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>', 'summCalc' => 0));
@@ -33,7 +34,7 @@
                 $number = 0;
                 $number2 = 0;
 
-                if (($_SESSION['id'] == $_POST['worker_id']) && !$god_mode && ($stom['see_all'] != 1)){
+//                if (($_SESSION['id'] == $_POST['worker_id']) && !$god_mode && ($stom['see_all'] != 1)){
                     //Перенаправления мои
                     //$removesMy = SelDataFromDB ('removes', $_SESSION['id'], 'create_person');
 
@@ -52,22 +53,22 @@
 
                     $number2 = mysqli_num_rows($res2);
 
-                }else{
-                    if (($stom['see_all'] == 1) || $god_mode){
-                        //Перенаправления мои
-                        //$removesMy = SelDataFromDB ('removes',  $_POST['worker_id'], 'create_person');
-                        //... Ко мне
-                        //$removesMe = SelDataFromDB ('removes',  $_POST['worker_id'], 'whom');
-
-                        //... Все не закрытые
-                        $query = "SELECT * FROM `removes` WHERE `closed` <> 1 ORDER BY `create_time` DESC";
-
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-                        $number = mysqli_num_rows($res);
-
-                    }
-                }
+//                }else{
+//                    if (($stom['see_all'] == 1) || $god_mode){
+//                        //Перенаправления мои
+//                        //$removesMy = SelDataFromDB ('removes',  $_POST['worker_id'], 'create_person');
+//                        //... Ко мне
+//                        //$removesMe = SelDataFromDB ('removes',  $_POST['worker_id'], 'whom');
+//
+//                        //... Все не закрытые
+//                        $query = "SELECT * FROM `removes` WHERE `closed` <> 1 ORDER BY `create_time` DESC";
+//
+//                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//                        $number = mysqli_num_rows($res);
+//
+//                    }
+//                }
 
                 if ($number != 0){
                     while ($arr = mysqli_fetch_assoc($res)){

@@ -31,8 +31,15 @@
 
                 $noch = $arr['noch'];
 
-                //
+                //Удаляем из табеля
+                $time = date('Y-m-d H:i:s', time());
+
                 $query = "DELETE FROM `fl_journal_tabels_ex` WHERE `tabel_id` = '{$_POST['tabel_id']}' AND `calculate_id` = '{$_POST['calculate_id']}' AND `noch`='{$noch}';";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                //Ставим метку обновлено на РЛ
+                $query = "UPDATE `fl_journal_calculate` SET `last_edit_time`='{$time}', `last_edit_person` = '{$_SESSION['id']}' WHERE `id`='{$_POST['calculate_id']}';";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

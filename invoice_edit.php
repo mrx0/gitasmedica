@@ -139,6 +139,7 @@
                                                 $temp_arr2['quantity'] = (int)$invoice_ex_j_val['quantity'];
                                                 $temp_arr2['insure'] = (int)$invoice_ex_j_val['insure'];
                                                 $temp_arr2['insure_approve'] = (int)$invoice_ex_j_val['insure_approve'];
+                                                $temp_arr2['jaw_select'] = (int)$invoice_ex_j_val['jaw_select'];
                                                 $temp_arr2['price'] = (int)$invoice_ex_j_val['price'];
                                                 $temp_arr2['start_price'] = (int)$invoice_ex_j_val['price'];
                                                 $temp_arr2['guarantee'] = (int)$invoice_ex_j_val['guarantee'];
@@ -392,7 +393,14 @@
 
                                             echo '
                                                 </ul>';
+
+                                            echo
+                                                '<input type="hidden" id="ztime" value="'.strtotime($sheduler_zapis[0]['year'].'-'.$month.'-'.$sheduler_zapis[0]['day']).'">';
+
+
                                         }
+
+
 
                                         //Наряды
                                         echo '
@@ -404,7 +412,8 @@
                                             <div id="data">';
 
                                         echo '	
-                                                <input type="hidden" id="invoice_id" name="client" value="' . $invoice_j[0]['id'] . '">
+                                                <input type="hidden" id="adv" name="adv" value="false">
+                                                <input type="hidden" id="invoice_id" name="invoice_id" value="' . $invoice_j[0]['id'] . '">
                                                 <input type="hidden" id="client" name="client" value="' . $invoice_j[0]['client_id'] . '">
                                                 <input type="hidden" id="client_insure" name="client_insure" value="' . $client_j[0]['insure'] . '">
                                                 <input type="hidden" id="zapis_id" name="zapis_id" value="' . $invoice_j[0]['zapis_id'] . '">
@@ -737,7 +746,7 @@
                                                     <div id="errror" class="invoceHeader" style="position: relative;">
                                                         <div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
                                                             <div>	
-                                                                <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\')">
+                                                                <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\', false)">
                                                             </div>
                                                         </div>
                                                         <div>
@@ -802,7 +811,7 @@
 
                                         echo '
                                             <div>	
-                                                <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\')">
+                                                <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\', false)">
                                             </div>
                                         </div>
                     
@@ -865,10 +874,10 @@
 					echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 				}
 			}else{
-				echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
+                echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 			}
 		}else{
-			echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
+            echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}
 	}else{
 		header("location: enter.php");

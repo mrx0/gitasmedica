@@ -67,6 +67,19 @@
     		$dop = '';
     		if (isset($_SESSION['filial'])){
                 $dop = "WHERE `place`='".$_SESSION['filial']."'";
+
+                //Если энгельса, то плюсуем пустые (без филиала)
+                if ($_SESSION['filial'] == 15){
+                    $dop = "WHERE (`place`='".$_SESSION['filial']."' OR `place`='')";
+                }
+                //Если 72, то плюсуем 54
+                if ($_SESSION['filial'] == 19){
+                    $dop = "WHERE (`place`='".$_SESSION['filial']."' OR `place`='13')";
+                }
+                //Если ком, то плюсуем авиа
+                if ($_SESSION['filial'] == 14){
+                    $dop = "WHERE (`place`='".$_SESSION['filial']."' OR `place`='12')";
+                }
             }
 
             //$query = "SELECT * FROM `zapis_online` ".$dop." ORDER BY `id` DESC LIMIT {$limit_pos[0]}, {$limit_pos[1]};";
@@ -78,6 +91,36 @@
             $number = mysqli_num_rows($res);
             if ($number != 0){
                 while ($arr = mysqli_fetch_assoc($res)){
+//                    var_dump($arr);
+
+                    $diff_days = 0;
+
+
+                    //Если не обработано
+                    if ($arr['status'] == 6){
+                        //Разница между датами количествол дней
+                        $diff_days = date_diff(new DateTime(), new DateTime($arr['datetime']))->days;
+                        //var_dump($diff_days);
+
+                        //Если дней больше 28
+                        if ($diff_days > 28) {
+
+                            $time = date('Y-m-d H:i:s', time());
+
+                            $dop1 = ", `closed_time`='".$time."', `last_edit_person`='0'";
+
+                            //Обновляем
+                            $query = "UPDATE `zapis_online` SET `status`='7'".$dop1." WHERE `id`='{$arr['id']}'";
+//                            var_dump($query);
+
+                            mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                            $arr['time'] = $time;
+                            $arr['status'] = 7;
+                            $arr['last_edit_person'] = 0;
+                        }
+
+                    }
                     array_push($zapis_online_j, $arr);
                 }
             }
@@ -129,7 +172,7 @@
                         if (isset($offices_j[$zapis_online_j[$i]['place']])){
                             $filial_name = $offices_j[$zapis_online_j[$i]['place']]['name'];
                         }else{
-                            $filial_name = 'не указан';
+                            $filial_name = 'филиал не указан';
                         }
                         //($offices_j[$zapis_online_j[$i]['place']] > 0) ? $offices_j[$zapis_online_j[$i]['place']]['name'] : 'не указан'
                         echo '
@@ -157,7 +200,11 @@
 								<div class="cellTime ahref" style="text-align: center" onclick="contextMenuShow('.$zapis_online_j[$i]['id'].', '.$zapis_online_j[$i]['status'].', event, \'zapisOnlineStatusChange\');">
 								    '.$status.'<br>';
                         if ($zapis_online_j[$i]['closed_time'] != '0000-00-00 00:00:00'){
-                            echo '<b>'.WriteSearchUser('spr_workers', $zapis_online_j[$i]['last_edit_person'], 'user', false).'</b><br>'.date('d.m.y H:i',strtotime($zapis_online_j[$i]['closed_time']));
+                            if ($zapis_online_j[$i]['last_edit_person'] != 0) {
+                                echo '<b>' . WriteSearchUser('spr_workers', $zapis_online_j[$i]['last_edit_person'], 'user', false) . '</b><br>' . date('d.m.y H:i', strtotime($zapis_online_j[$i]['closed_time']));
+                            }else{
+                                echo '<b>автоматически</b><br>' . date('d.m.y H:i', strtotime($zapis_online_j[$i]['closed_time']));
+                            }
                         }
                         echo '
 								</div>
@@ -165,6 +212,11 @@
 
 
                     } else {
+                        if (isset($offices_j[$zapis_online_j[$i]['place']])){
+                            $filial_name = $offices_j[$zapis_online_j[$i]['place']]['name'];
+                        }else{
+                            $filial_name = 'филиал не указан';
+                        }
                         $deleted_zapis .= '
 							<li class="cellsBlock cellsBlockHover" style="' . $bgcolor . '">
 								<div class="cellTime" style="text-align: center">
@@ -184,13 +236,17 @@
 								    ' . $zapis_online_j[$i]['time'] . '
 								</div>-->
 								<div class="cellOffice" style="text-align: center;">
-								    ' . $offices_j[$zapis_online_j[$i]['place']]['name'] . '<br>
+								    ' . $filial_name . '<br>
 								    <b>' . $permissions_j[$zapis_online_j[$i]['type']]['name'] . '</b>
 								</div>
 								<div class="cellTime ahref" style="text-align: center" onclick="contextMenuShow('.$zapis_online_j[$i]['id'].', '.$zapis_online_j[$i]['status'].', event, \'zapisOnlineStatusChange\');">
 								    '.$status.'<br>';
                         if ($zapis_online_j[$i]['closed_time'] != '0000-00-00 00:00:00'){
-                            $deleted_zapis .= '<b>'.WriteSearchUser('spr_workers', $zapis_online_j[$i]['last_edit_person'], 'user', false).'</b><br>'.date('d.m.y H:i',strtotime($zapis_online_j[$i]['closed_time']));
+                            if ($zapis_online_j[$i]['last_edit_person'] != 0) {
+                                $deleted_zapis .= '<b>'.WriteSearchUser('spr_workers', $zapis_online_j[$i]['last_edit_person'], 'user', false).'</b><br>'.date('d.m.y H:i',strtotime($zapis_online_j[$i]['closed_time']));
+                            }else{
+                                $deleted_zapis .= '<b>автоматически</b><br>'.date('d.m.y H:i',strtotime($zapis_online_j[$i]['closed_time']));
+                            }
                         }
                         $deleted_zapis .= '
 								</div>

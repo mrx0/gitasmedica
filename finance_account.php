@@ -63,6 +63,13 @@
                                     <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
                                         Контрагент: '.WriteSearchUser('spr_clients',   $client_j[0]['id'], 'user_full', true).'
                                     </li> 
+                                    <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">
+                                        <a href="pay_blank_pdf_qr.php?client_id='. $client_j[0]['id'].'" class="ahref" style="text-align: center;" target="_blank" rel="nofollow noopener" title="Выписать счет на оплату">
+                                            Выписать счет на оплату в банке
+                                            <i class="fa fa-file-text" style="font-size: 140%; color: rgb(74, 148, 70); /*float: right;*/" aria-hidden="true"></i>
+                                        </a>
+                                    </li> 
+                                    
                                 </ul>';
                             echo '
                                 <div id="data">';
@@ -131,7 +138,7 @@
                             echo '
                                 <div>';
 
-                        //Выписанные наряды
+                        //  Выписанные наряды
                         $arr = array();
                         $invoice_j = array();
 
@@ -186,7 +193,7 @@
                         echo '
 								<ul id="orders" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px;">
-									    Внесенные оплаты/ордеры	<a href="add_order.php?client_id='.$client_j[0]['id'].'" class="b">Добавить новый</a>
+									    Внесенные средства (ордеры)	<a href="add_order.php?client_id='.$client_j[0]['id'].'" class="b">Добавить новый</a>
 									</li>';
 
                         //$query = "SELECT * FROM `journal_order` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC LIMIT $order_j_start, $order_j_count";
@@ -278,7 +285,7 @@
 
 
                             echo '
-		                            <div id="doc_title">Счёт пациента '.WriteSearchUser('spr_clients',   $client_j[0]['id'], 'user', false).' - Асмедика</div>';
+		                            <div id="doc_title">'.WriteSearchUser('spr_clients',   $client_j[0]['id'], 'user', false).' - Счёт пациента - Асмедика</div>';
 
 
                             echo '<script src="js/dds.js" type="text/javascript"></script>';

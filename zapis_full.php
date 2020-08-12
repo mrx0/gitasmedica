@@ -9,12 +9,20 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 		//var_dump($stom);
-		
+
+        //!!! Исправить
+        //чтобы не пускало врачей в общую запись
+
 		if (($scheduler['see_all'] == 1) || ($scheduler['see_own'] == 1) || $god_mode){
+		//if (($scheduler['see_all'] == 1) || $god_mode){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
-			$offices = $offices_j = SelDataFromDB('spr_filials', '', '');
+
+			//$offices = $offices_j = SelDataFromDB('spr_filials', '', '');
 			//var_dump ($offices);
+
+            $filials_j = getAllFilials(true, false, false);
+            //var_dump($filials_j);
 
             require 'variables.php';
 
@@ -187,6 +195,7 @@
 								<a href="?'.$dopFilial.$dopDate.'&who=5&kab=1" class="b" style="'.$stom_color.'">Стоматологи</a>
 								<a href="?'.$dopFilial.$dopDate.'&who=6&kab=1" class="b" style="'.$cosm_color.'">Косметологи</a>
 								<a href="?'.$dopFilial.$dopDate.'&who=10&kab=1" class="b" style="'.$somat_color.'">Специалисты</a>
+								<a href="zapis_solar.php" class="b" style="">Солярий</a>
 								<a href="zapis_full2.php" class="b" style="">Без записи</a>
 							</li>
 							<li class="cellsBlock" style="width: auto; margin-bottom: 20px;">
@@ -197,15 +206,15 @@
 									<div>
 										<select name="SelectFilial" id="SelectFilial">
 											';
-				if ($offices_j != 0){
-					for ($i=0;$i<count($offices_j);$i++){
+				if (!empty($filials_j)){
+                    foreach($filials_j as $f_id => $filial_item){
 						$selected = '';
 						if (isset($_GET['filial'])){
-							if ($offices_j[$i]['id'] == $_GET['filial']){
+							if ($f_id == $_GET['filial']){
 								$selected = 'selected';
 							}
 						}
-						echo "<option value='".$offices_j[$i]['id']."' $selected>".$offices_j[$i]['name']."</option>";
+						echo "<option value='".$f_id."' $selected>".$filial_item['name']."</option>";
 					}
 				}
 				echo '
@@ -223,7 +232,8 @@
 							
 					$ZapisHereQueryToday = FilialKabSmenaZapisToday($datatable, $year, $month, $day, $_GET['filial'], $kab, $type, 0);
 					//var_dump($ZapisHereQueryToday);
-					
+
+                    //var_dump(explode('.', date('d.m.Y', strtotime('+1 days', gmmktime(0, 0, 0, $month, $day, $year))))[0]);
 					
 					//Календарик	
 					echo '
@@ -233,7 +243,9 @@
 									<div>
 										<span style="color: rgb(125, 125, 125);">
 											Изменить дату:
-											<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
+											<a href="zapis_full.php?&kab='.$kab.$dopFilial.$dopWho.'&d='.explode('.', date('d.m.Y', strtotime('-1 days', gmmktime(0, 0, 0, $month, $day, $year))))[0].'&m='.explode('.', date('d.m.Y', strtotime('-1 days', gmmktime(0, 0, 0, $month, $day, $year))))[1].'&y='.explode('.', date('d.m.Y', strtotime('-1 days', gmmktime(0, 0, 0, $month, $day, $year))))[2].'" class="b4" title="Пред. день"><i class="fa fa-caret-left" aria-hidden="true"></i></a>
+											<a href="zapis_full.php?&kab='.$kab.$dopFilial.$dopWho.'&d='.explode('.', date('d.m.Y', strtotime('+1 days', gmmktime(0, 0, 0, $month, $day, $year))))[0].'&m='.explode('.', date('d.m.Y', strtotime('+1 days', gmmktime(0, 0, 0, $month, $day, $year))))[1].'&y='.explode('.', date('d.m.Y', strtotime('+1 days', gmmktime(0, 0, 0, $month, $day, $year))))[2].'" class="b4" title="След. день"><i class="fa fa-caret-right" aria-hidden="true"></i></a>
+											<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date(dateTransformation($day).'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
 												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off"> 
 											<span class="button_tiny" style="font-size: 100%; cursor: pointer" onclick="iWantThisDate2(\'zapis_full.php?&kab='.$kab.$dopFilial.$dopWho.'\')"><i class="fa fa-check-square" style=" color: green;"></i> Перейти</span>
 										</span>

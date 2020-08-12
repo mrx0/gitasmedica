@@ -149,7 +149,7 @@
                                     $spec_koeff = $items['spec_koeff'];
 
                                     //получим цены
-                                    $prices = takePrices ($items['id'], $items['insure']);
+                                    $prices = takePrices ($items['id'], $items['insure'], $_POST['ztime']);
                                     //var_dump($prices);
 
                                     /*if (!empty($prices)) {

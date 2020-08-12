@@ -60,10 +60,12 @@
 
                         if (!$thisCalcIsInAnotherTabel){
 
+                            $time = date('Y-m-d H:i:s', time());
+
                             //Вставим новый табель
-                            $query = "INSERT INTO `fl_journal_tabels` (`office_id`, `worker_id`, `type`, `month`, `year`, `summ`)
+                            $query = "INSERT INTO `fl_journal_tabels` (`office_id`, `worker_id`, `type`, `month`, `year`, `summ`, `create_time`, `create_person`)
                             VALUES (
-                            '{$filialID}', '{$workerID}', '{$typeID}', '{$_POST['tabelMonth']}', '{$_POST['tabelYear']}', '{$_POST['summCalcs']}')";
+                            '{$filialID}', '{$workerID}', '{$typeID}', '{$_POST['tabelMonth']}', '{$_POST['tabelYear']}', '{$_POST['summCalcs']}', '{$time}', '{$_SESSION['id']}')";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -75,7 +77,7 @@
 
                             foreach ($calcArr as $calcID => $status) {
 
-                                $query .= "INSERT INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`, `noch`) VALUES ('{$mysqli_insert_id}', '{$calcID}', '0');";
+                                $query .= "INSERT INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`, `noch`, `create_time`, `create_person`) VALUES ('{$mysqli_insert_id}', '{$calcID}', '0', '{$time}', '{$_SESSION['id']}');";
 
                                 //$summCalcs += $rezData['summ'];
 

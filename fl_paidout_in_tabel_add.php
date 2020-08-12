@@ -25,6 +25,10 @@ if ($enter_ok){
 //                    $link = 'fl_tabel2.php';
 //                }
 
+                if (isset($_GET['ref'])){
+                    //var_dump($_GET['ref']);
+                }
+
                 $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['tabel_id'], 'id');
                 //var_dump($tabel_j);
 
@@ -74,7 +78,12 @@ if ($enter_ok){
                                 <header>
                                     <div class="nav">
                                         <!--<a href="fl_tabel.php?id='.$_GET['tabel_id'].'" class="b">Вернуться в табель #'.$_GET['tabel_id'].'</a>-->
-                                        <a href="fl_tabels.php" class="b">Важный отчёт</a>
+                                        <a href="fl_tabels.php" class="b">Важный отчёт</a>';
+                    if (isset($_GET['ref'])){
+                        echo '
+                                        <a href="fl_tabels_simple_pay.php?&filial='.$tabel_j[0]['office_id'].'&m='.$tabel_j[0]['month'].'&y='.$tabel_j[0]['year'].'&who='.$tabel_j[0]['type'].'" class="b">Проверка табелей 2</a>';
+                    }
+                    echo '
                                     </div>
                                     <h2>Добавить выплату [';
 
@@ -189,7 +198,7 @@ if ($enter_ok){
                                 } elseif ($rezData['type'] == 3) {
                                     $rezultS .= ' больничный ';
                                 } else {
-                                    $rezultS .= ' премия ';
+                                    $rezultS .= ' прочее ';
                                 }
                                 $rezultS .=
                                     '#' . $rezData['id'] . '</b> <span style="    color: rgb(115, 112, 112);"><br>создано: ' . date('d.m.y H:i', strtotime($rezData['create_time'])) . '</span>
@@ -261,7 +270,7 @@ if ($enter_ok){
                                         <div class="cellsBlock2">
                                             <div class="cellLeft">
                                             <span style="font-size:80%;  color: #555;">Сумма (руб.)</span><br>
-                                                <input type="text" name="paidout_summ" id="paidout_summ" value="'.intval($paidout_summ_value).'" class="paidout_summ2" tabel_id="'.$_GET['tabel_id'].'" paidout_summ_tabel="'.intval($paidout_summ_value).'" autocomplete="off" autofocus><!--<span class="button_tiny" style="font-size: 90%; cursor: pointer" onclick=""><i class="fa fa-check-square" style=" color: green;"></i> Применить</span>--><br>
+                                                <input type="text" name="paidout_summ" id="paidout_summ" value="', intval($paidout_summ_value) == 0 ? '' : intval($paidout_summ_value) ,'" class="paidout_summ2" tabel_id="'.$_GET['tabel_id'].'" paidout_summ_tabel="'.intval($paidout_summ_value).'" autocomplete="off" autofocus><!--<span class="button_tiny" style="font-size: 90%; cursor: pointer" onclick=""><i class="fa fa-check-square" style=" color: green;"></i> Применить</span>--><br>
                                                 <label id="paidout_summ_error" class="error"></label>
                                             </div>
                                         </div>
@@ -305,12 +314,17 @@ if ($enter_ok){
                     echo '                    
                                         <input type="hidden" name="noch" id="noch" value="'.$noch.'">
                                         <input type="hidden" name="tabel_type" id="tabel_type" value="'.$tabel_j[0]['type'].'">
-                                        <input type="hidden" name="paidout_type" id="paidout_type" value="'.$_GET['type'].'">
-                                        
+                                        <input type="hidden" name="paidout_type" id="paidout_type" value="'.$_GET['type'].'">';
+
+                    if (isset($_GET['ref'])){
+                        echo '
+                                        <input type="hidden" name="ref" id="ref" value="fl_tabels_simple_pay.php?&filial='.$tabel_j[0]['office_id'].'&m='.$tabel_j[0]['month'].'&y='.$tabel_j[0]['year'].'&who='.$tabel_j[0]['type'].'">';
+                    }
+                    echo '
                                         <div id="errror"></div>
                                         <div id="showPaidoutAddbutton" style="display: none;">
                                             <input type="button" class="b" value="Добавить" onclick="fl_showPaidoutAdd(0, '.$_GET['tabel_id'].', '.$_GET['type'].', '.$tabel_j[0]['worker_id'].', '.$tabel_j[0]['month'].', '.$tabel_j[0]['year'].', \''.$link.'\', \'add\', false, 2)">
-                                            <!--<input type="button" class="b" value="Добавить и провести" onclick="fl_showPaidoutAdd(0, '.$_GET['tabel_id'].', '.$_GET['type'].', \''.$link.'\', \'add\', true, 2)">-->
+                                            <input id="addDeployButton" type="button" class="b" value="Добавить и провести" onclick="fl_showPaidoutAdd(0, '.$_GET['tabel_id'].', '.$_GET['type'].', '.$tabel_j[0]['worker_id'].', '.$tabel_j[0]['month'].', '.$tabel_j[0]['year'].', \''.$link.'\', \'add\', true, 2)">
                                         </div>
                                     </form>';
 
@@ -328,9 +342,9 @@ if ($enter_ok){
                                         paidout_type = $("#paidout_type").val();
                                     //console.log(tabel_type);
                                     
-                                    if (summ.length > 2) {
+                                    //if (summ.length > 2) {
                                         tabelSubtractionPercent(tabel_id, tabel_type, paidout_type, summ, paidout_summ_tabel);
-                                    }
+                                    //}
                                 });
                             </script>
                             ';

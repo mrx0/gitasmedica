@@ -321,6 +321,7 @@
                                     <div id="data">';
 
                                 echo "	
+                                        <input type='hidden' id='adv' name='adv' value='false'>
                                         <input type='hidden' id='client' name='client' value='" . $_GET['client'] . "'>
                                         <input type='hidden' id='client_insure' name='client_insure' value='" . $client_j[0]['insure'] . "'>
                                         <input type='hidden' id='zapis_id' name='zapis_id' value='" . $_GET['id'] . "'>
@@ -651,6 +652,7 @@
                                                             <div style=" /*width: 350px;*/ height: 450px; overflow: scroll; border: 1px solid #CCC;">
                                                                 <ul class="ul-tree ul-drop live_filter" id="lasttree">';
 
+                                    //Показывает дерево прайса
                                     showTree2(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0, $_GET['type']);
 
                                     echo '
@@ -699,7 +701,7 @@
                                                 <div id="errror" class="invoceHeader" style="position: relative;">
                                                     <div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
                                                         <div>	
-                                                            <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\')">
+                                                            <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\', false)">
                                                         </div>
                                                     </div>
                                                     <div>
@@ -764,7 +766,7 @@
 
                                     echo '
                                             <div>	
-                                                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\')">
+                                                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\', false)">
                                             </div>
                                         </div>
                     
@@ -822,6 +824,10 @@
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}
+
+        echo '
+		    <div id="doc_title">Новый наряд /' . WriteSearchUser('spr_clients', $sheduler_zapis[0]['patient'], 'user', false) . ' - Асмедика</div>';
+
 	}else{
 		header("location: enter.php");
 	}

@@ -1,6 +1,6 @@
 <?php
 
-//cosmet.php
+//cosmet1_test.php
 //Косметология
 
 	require_once 'header.php';

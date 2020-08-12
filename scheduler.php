@@ -14,8 +14,9 @@
 			include_once 'widget_calendar.php';
 			include_once 'variables.php';
 
-			$offices = $offices_j = SelDataFromDB('spr_filials', '', '');
-			//var_dump ($offices);
+            $filials_j = getAllFilials(true, true, false);
+            //var_dump ($filials_j);
+
 			
 			$kabsInFilialExist = FALSE;
 			$kabsInFilial = array();
@@ -24,6 +25,11 @@
 			$dopDate = '';
 			$dopFilial = '';
 			$di = 0;
+
+            //Сегодняшняя дата
+            $cur_day = date("d");
+            $cur_month = date("m");
+            $cur_year = date("Y");
 			
 			if (!isset($_GET['filial'])){
 				//Филиал	
@@ -113,6 +119,9 @@
 			$filial = SelDataFromDB('spr_filials', $_GET['filial'], 'offices');
 			//var_dump($filial['name']);
 
+            //Сколько смен отображать (раньше было 4, потому что работали ночью)
+            $maxSmens = 2;
+
             $msql_cnnct = ConnectToDB ();
 
 			//Получаем график факт на текущий филиал
@@ -159,7 +168,7 @@
 
             echo '
 				<script>';
-            if (($scheduler['edit'] == 1) || $god_mode) {
+            if (($scheduler['edit'] == 1) || ($scheduler['add_worker'] == 1) || $god_mode){
                 if (isset($_SESSION['options'])) {
                     if (isset($_SESSION['options']['scheduler'])) {
                         $iCanManage = $_SESSION['options']['scheduler']['manage'];
@@ -207,8 +216,18 @@
 					<div id="data" style="margin-top: 5px;">
 					    <input type="hidden" id="type" value="'.$type.'">
 						<ul style="margin-left: 6px; margin-bottom: 20px;">';
-			if (($scheduler['edit'] == 1) || $god_mode){
-				echo '
+//			if (($scheduler['edit'] == 1) || $god_mode){
+//				echo '
+//							<div class="no_print">
+//							<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
+//								<div style="cursor: pointer;" onclick="manageScheduler(\'scheduler\')">
+//									<span id="manageMessage" style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">', $displayBlock ? 'Управление <span style=\'color: green;\'>включено</span>' : 'Управление <span style=\'color: red;\'>выключено</span>' ,'</span> <i class="fa fa-cog" title="Настройки"></i>
+//								</div>
+//							</li>
+//							</div>';
+//			}
+            if (($scheduler['edit'] == 1) || ($scheduler['add_worker'] == 1) || $god_mode){
+                echo '
 							<div class="no_print"> 
 							<li class="cellsBlock" style="width: auto; margin-bottom: 10px;">
 								<div style="cursor: pointer;" onclick="manageScheduler(\'scheduler\')">
@@ -216,7 +235,7 @@
 								</div>
 							</li>
 							</div>';
-			}
+            }
 			echo '			
 							<div class="no_print"> 
 							<span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
@@ -228,8 +247,20 @@
                                     <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
                                     <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
                                     <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
-                                    <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
-                                    <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=11" class="b" style="'.$other_color.'">Прочие</a>
+                                    <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=15" class="b" style="'.$dvornik_color.'">Дворники</a>';
+
+            if (($finances['see_all'] == 1) || $god_mode) {
+                echo '
+                                    <a href="scheduler4.php?' . $dopFilial . $dopDate . '&who=11" class="b" style="' . $other_color . '">Прочие</a>';
+
+
+                if (in_array($_SESSION['permissions'], $workers_target_arr) || ($_SESSION['id'] == 270) || $god_mode) {
+                    echo '
+                                    <a href="scheduler5.php?' . $dopFilial . $dopDate . '&who=999" class="b" style="">Другие</a>';
+                }
+            }
+
+            echo '
 							</li>
 							<li style="width: auto; margin-bottom: 20px;">
 								<div style="display: inline-block; margin-right: 20px;">
@@ -239,16 +270,16 @@
 									<div>
 										<select name="SelectFilial" id="SelectFilial">
 											';
-			if ($offices_j != 0){
-				for ($i=0;$i<count($offices_j);$i++){
-					$selected = '';
-					if (isset($_GET['filial'])){
-						if ($offices_j[$i]['id'] == $_GET['filial']){
-							$selected = 'selected';
-						}
-					}
-					echo "<option value='".$offices_j[$i]['id']."' $selected>".$offices_j[$i]['name']."</option>";
-				}
+			if (!empty($filials_j)){
+                foreach ($filials_j as $filial_id => $filial_data){
+                    $selected = '';
+                    if (isset($_GET['filial'])){
+                        if ($filial_id == $_GET['filial']){
+                            $selected = 'selected';
+                        }
+                    }
+                    echo "<option value='".$filial_id."' $selected>".$filial_data['name']."</option>";
+                }
 			}
 			echo '
 										</select>
@@ -338,7 +369,7 @@
 							if (isset($schedulerFakt[$d])){
 								//if ($d==3) var_dump ($schedulerFakt[$d]);
 								//номера смен 1 - день 2- вечер 3 - ночь 4 - утро
-								for ($smenaN = 1; $smenaN <= 4; $smenaN++) {
+								for ($smenaN = 1; $smenaN <= $maxSmens; $smenaN++) {
 									//отсутствие врачей в клинике
 									$now_ahtung = TRUE;
 									$ahtung = TRUE;
@@ -374,17 +405,55 @@
 											$resEcho = WriteSearchUser('spr_workers',$kabValue['worker'], 'user', false).' <a href="scheduler_own.php?id='.$kabValue['worker'].'" class="info"><i class="fa fa-info-circle" title="График врача"></i></a>';
 											$ahtung = FALSE;
 											$fontSize = 'font-size: 70%;';
-											$resEcho2 .= '
-													<div style="box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);" onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$kab.', '.$year.', '.$month.','.$d.', '.$smenaN.')">
+
+                                            if (($scheduler['edit'] == 1) || $god_mode){
+                                                $resEcho2 .= '
+													<div style="box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);" onclick="if (iCanManage) ShowSettingsSchedulerFakt(' . $filial[0]['id'] . ', \'' . $filial[0]['name'] . '\', ' . $kab . ', ' . $year . ', ' . $month . ',' . $d . ', ' . $smenaN . ')">
 														<div style="text-align: right; color: #555;">
-															<b>каб. '.$kab.'</b>
+															<b>каб. ' . $kab . '</b>
 														</div>
 														<div style="text-align: left; padding: 4px;">';
-											$resEcho2 .= $resEcho;
-											$resEcho2 .= '
+                                                $resEcho2 .= $resEcho;
+                                                $resEcho2 .= '
 														</div>
 													</div>';
-													
+                                            }elseif ($scheduler['add_worker'] == 1){
+                                                if (($cur_day == $d) && ($cur_month == $month) && ($cur_year == $year)) {
+                                                    $resEcho2 .= '
+													<div style="box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);" onclick="if (iCanManage) ShowSettingsSchedulerFakt(' . $filial[0]['id'] . ', \'' . $filial[0]['name'] . '\', ' . $kab . ', ' . $year . ', ' . $month . ',' . $d . ', ' . $smenaN . ')">
+														<div style="text-align: right; color: #555;">
+															<b>каб. ' . $kab . '</b>
+														</div>
+														<div style="text-align: left; padding: 4px;">';
+                                                    $resEcho2 .= $resEcho;
+                                                    $resEcho2 .= '
+														</div>
+													</div>';
+                                                }else {
+                                                    $resEcho2 .= '
+													<div style="box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);">
+														<div style="text-align: right; color: #555;">
+															<b>каб. ' . $kab . '</b>
+														</div>
+														<div style="text-align: left; padding: 4px;">';
+                                                    $resEcho2 .= $resEcho;
+                                                    $resEcho2 .= '
+														</div>
+													</div>';
+                                                }
+                                            }else {
+                                                $resEcho2 .= '
+													<div style="box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);">
+														<div style="text-align: right; color: #555;">
+															<b>каб. ' . $kab . '</b>
+														</div>
+														<div style="text-align: left; padding: 4px;">';
+                                                $resEcho2 .= $resEcho;
+                                                $resEcho2 .= '
+														</div>
+													</div>';
+                                            }
+
 											//Вычеркиваем этот кабинет из списка незанятых
 											unset ($kabsInFilialTemp[$kab]);
 										}
@@ -410,8 +479,21 @@
 														<div style="text-align: center; padding: 4px; margin: 1px;">';
 														
 											foreach	($kabsInFilialTemp as $keyK => $valueK){
-												$kabs .= '
-													<div style="display: inline-block; bottom: 0; font-size: 110%; cursor: pointer; border: 1px dotted #9F9D9D; width: 15px; margin-right: 2px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$keyK.', '.$year.', '.$month.','.$d.', '.$smenaN.')"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+                                                if (($scheduler['edit'] == 1) || $god_mode){
+												    $kabs .= '
+													    <div style="display: inline-block; bottom: 0; font-size: 110%; cursor: pointer; border: 1px dotted #9F9D9D; width: 15px; margin-right: 2px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$keyK.', '.$year.', '.$month.','.$d.', '.$smenaN.')"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+                                                }elseif ($scheduler['add_worker'] == 1) {
+                                                    if (($cur_day == $d) && ($cur_month == $month) && ($cur_year == $year)) {
+                                                        $kabs .= '
+													        <div style="display: inline-block; bottom: 0; font-size: 110%; cursor: pointer; border: 1px dotted #9F9D9D; width: 15px; margin-right: 2px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt(' . $filial[0]['id'] . ', \'' . $filial[0]['name'] . '\', ' . $keyK . ', ' . $year . ', ' . $month . ',' . $d . ', ' . $smenaN . ')"><span style="color: #333;">' . $valueK . '</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+
+                                                    } else {
+                                                        $kabs .= '';
+                                                    }
+                                                }else{
+                                                    $kabs .= '';
+
+                                                }
 											}
 											$kabs .= '
 														</div>
@@ -438,8 +520,19 @@
                                             $kabs .= '">';
 															
 											foreach	($kabsInFilial as $keyK => $valueK){
-												$kabs .= '
-																<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$valueK.', '.$year.', '.$month.','.$d.', '.$smenaN.')"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+                                                if (($scheduler['edit'] == 1) || $god_mode) {
+                                                    $kabs .= '
+																<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt(' . $filial[0]['id'] . ', \'' . $filial[0]['name'] . '\', ' . $valueK . ', ' . $year . ', ' . $month . ',' . $d . ', ' . $smenaN . ')"><span style="color: #333;">' . $valueK . '</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+                                                }elseif ($scheduler['add_worker'] == 1) {
+                                                    if (($cur_day == $d) && ($cur_month == $month) && ($cur_year == $year)) {
+                                                        $kabs .= '
+																<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt(' . $filial[0]['id'] . ', \'' . $filial[0]['name'] . '\', ' . $valueK . ', ' . $year . ', ' . $month . ',' . $d . ', ' . $smenaN . ')"><span style="color: #333;">' . $valueK . '</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+                                                    }else{
+                                                        $kabs .= '';
+                                                    }
+                                                }else{
+                                                    $kabs .= '';
+                                                }
 											}
 											$kabs .= '
 															</div>
@@ -471,8 +564,19 @@
                                             $kabs .= '">';
 															
 											foreach	($kabsInFilial as $keyK => $valueK){
-												$kabs .= '
+                                                if (($scheduler['edit'] == 1) || $god_mode) {
+												    $kabs .= '
 																<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$valueK.', '.$year.', '.$month.','.$d.', '.$smenaN.')"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+                                                }elseif ($scheduler['add_worker'] == 1) {
+                                                    if (($cur_day == $d) && ($cur_month == $month) && ($cur_year == $year)) {
+                                                        $kabs .= '
+																<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$valueK.', '.$year.', '.$month.','.$d.', '.$smenaN.')"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+                                                    }else{
+                                                        $kabs .= '';
+                                                    }
+                                                }else{
+                                                    $kabs .= '';
+                                                }
 											}
 											$kabs .= '
 																</div>
@@ -486,7 +590,7 @@
 								//Если вообще никого целый день и ночь
 								//Но нам нужен только день
 								$ahtung = TRUE;
-									for ($smenaN = 1; $smenaN <= 4; $smenaN++) {
+									for ($smenaN = 1; $smenaN <= $maxSmens; $smenaN++) {
 										if (($smenaN == 1) || ($smenaN == 2)){
 											$kabsNone .= '
 													<div style="width: 100%; height: 35px; min-height: 35px; outline: 1px solid  #BBB; display: table; margin-bottom: 3px; font-size: 70%;">
@@ -503,8 +607,19 @@
                                             $kabsNone .= '">';
 															
 											foreach	($kabsInFilial as $keyK => $valueK){
-												$kabsNone .= '
+                                                if (($scheduler['edit'] == 1) || $god_mode) {
+												    $kabsNone .= '
 																<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$valueK.', '.$year.', '.$month.','.$d.', '.$smenaN.')"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+                                                }elseif ($scheduler['add_worker'] == 1) {
+                                                    if (($cur_day == $d) && ($cur_month == $month) && ($cur_year == $year)) {
+                                                        $kabsNone .= '
+																<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$valueK.', '.$year.', '.$month.','.$d.', '.$smenaN.')"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+                                                    }else{
+                                                        $kabsNone .= '';
+                                                    }
+                                                }else{
+                                                    $kabsNone .= '';
+                                                }
 											}
 											$kabsNone .= '
 															</div>
@@ -529,8 +644,20 @@
                                             $kabsNone .= '">';
 															
 											foreach	($kabsInFilial as $keyK => $valueK){
-												$kabsNone .= '
-																<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt('.$filial[0]['id'].', \''.$filial[0]['name'].'\', '.$valueK.', '.$year.', '.$month.','.$d.', '.$smenaN.')"><span style="color: #333;">'.$valueK.'</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+                                                if (($scheduler['edit'] == 1) || $god_mode) {
+                                                    $kabsNone .= '
+																<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt(' . $filial[0]['id'] . ', \'' . $filial[0]['name'] . '\', ' . $valueK . ', ' . $year . ', ' . $month . ',' . $d . ', ' . $smenaN . ')"><span style="color: #333;">' . $valueK . '</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+                                                }elseif ($scheduler['add_worker'] == 1) {
+                                                    if (($cur_day == $d) && ($cur_month == $month) && ($cur_year == $year)) {
+                                                        $kabsNone .= '
+																<div style="display: inline-block; bottom: 0; font-size: 120%; cursor: pointer; border: 1px dotted #9F9D9D; width: 20px; margin-right: 3px;" title="Добавить сотрудника"  onclick="if (iCanManage) ShowSettingsSchedulerFakt(' . $filial[0]['id'] . ', \'' . $filial[0]['name'] . '\', ' . $valueK . ', ' . $year . ', ' . $month . ',' . $d . ', ' . $smenaN . ')"><span style="color: #333;">' . $valueK . '</span><br><span style="color: green;"><i class="fa fa-plus-square"></i></span></div>';
+                                                    }else{
+                                                        $kabsNone .= '';
+                                                    }
+                                                }else{
+                                                    $kabsNone .= '';
+                                                }
+
 											}
 											$kabsNone .= '
 																</div>
@@ -625,7 +752,7 @@
 				echo '
 						</div>
 					</div>';
-			if (($scheduler['edit'] == 1) || $god_mode){
+            if (($scheduler['edit'] == 1) || ($scheduler['add_worker'] == 1) || $god_mode){
 				echo '
 					<div id="ShowSettingsSchedulerFakt" style="position: absolute; z-index: 105; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; padding:10px;">
 						<a class="close" href="#" onclick="HideSettingsSchedulerFakt()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(img/close.png) no-repeat;">

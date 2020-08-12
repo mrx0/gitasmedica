@@ -2,7 +2,6 @@ $(function(){
 	    
 	//Живой поиск
 	$('.who').bind("change keyup input click", function() {
-
 		if(this.value.length > 2){
 			$.ajax({
 				url: "FastSearchName.php", //Путь к обработчику
@@ -21,11 +20,11 @@ $(function(){
 			var elem1 = $("#search_result"); 
 			elem1.hide(); 
 		}
-	})
+	});
 	    
 	$(".search_result").hover(function(){
 		$(".who").blur(); //Убираем фокус с input
-	})
+	});
 	    
     //При выборе результата поиска, прячем список и заносим выбранный результат в input
     $(".search_result").on("click", "li", function(){
@@ -37,7 +36,7 @@ $(function(){
 		//document.getElementById("qwe").innerHTML = "111110";
         //$(".who").val(s_user).attr('disabled', 'disabled'); //деактивируем input, если нужно
         $(".search_result").fadeOut();
-    })
+    });
 	//Если click за пределами результатов поиска - убираем эти результаты
 	$(document).click(function(e){
 		var elem = $("#search_result"); 
@@ -45,4 +44,4 @@ $(function(){
 			elem.hide(); 
 		} 
 	})
-})
+});

@@ -162,6 +162,8 @@
 
                                             if ($newCalcID > 0) {
 
+                                                $time = date('Y-m-d H:i:s', time());
+
                                                 //Удаляем старый РЛ
                                                 //Удаляем из БД
                                                 $query = "DELETE FROM `fl_journal_calculate` WHERE `id`='{$calc_id}'";
@@ -180,7 +182,7 @@
                                                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                                                     //2. добавить новый РЛ туда же
-                                                    $query = "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`, `noch`) VALUES ('{$tabel_id}', '{$newCalcID}', '0');";
+                                                    $query = "INSERT IGNORE INTO `fl_journal_tabels_ex` (`tabel_id`, `calculate_id`, `noch`, `create_time`, `create_person`) VALUES ('{$tabel_id}', '{$newCalcID}', '0', '{$time}', '{$_SESSION['id']}');";
                                                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                                                     //3. Пересчитать табель с этим ID

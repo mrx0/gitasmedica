@@ -47,6 +47,11 @@
 								<a href="stat_stomat4.php" class="b3">Отсутствующие зубы</a>
 							</li>';
 
+			echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="stat_lab_order.php" class="b3">Лабораторные работы</a>
+							</li>';
+
 //            echo '
 //							<li class="cellsBlock" style="margin: 1px;">
 //								<a href="stat_labor.php" class="b3">Заказы в лабораторию</a>
@@ -102,18 +107,44 @@
 
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
-								<a href="stat_cashbox.php" class="b3">Касса</a>
+								<a href="report_zapis_daily.php" class="b3">Ведомость</a>
 							</li>';
 
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
-								<a href="giveout_cash.php" class="b3">Расходные ордеры</a>
+								<a href="stat_cashbox.php" class="b3">Касса</a>
 							</li>';
+
+                if (($finances['see_all'] == 1) || $god_mode){
+                    echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="stat_installments.php" class="b3">Открытые рассрочки</a>
+							</li>';
+                }
+
+                echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="giveout_cash_all.php" class="b3">Расходные ордеры</a>
+							</li>';
+
+                if (($finances['see_all'] == 1) || $god_mode){
+                    echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="stat_giveout_cash.php" class="b3">Расходы по филиалам</a>
+							</li>';
+                }
 
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_consolidated_report_admin.php" class="b3">Сводный отчёт по филиалу</a>
 							</li>';
+
+                if (($_SESSION['permissions'] == 3) || $god_mode){
+                    echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="fl_main_report_average.php" class="b3">Усреднённый отчёт</a>
+							</li>';
+                }
 
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
@@ -180,12 +211,13 @@
 								<a href="fl_tabels.php" class="b3">Важный отчёт</a>
 							</li>';
 
-                if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
-                    echo '				
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="fl_main_report2.php" class="b3">Финальный отчёт</a>
-							</li>';
-                }
+//                if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
+//                if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
+//                    echo '
+//							<li class="cellsBlock" style="margin: 1px;">
+//								<a href="fl_main_report2.php" class="b3">Финальный отчёт</a>
+//							</li>';
+//                }
 
                 echo '
                             <li class="cellsBlock" style="margin: 1px;">
@@ -204,24 +236,49 @@
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_mainReportZapis.php" class="b3">Отчёт по записи</a>
 							</li>';
+                echo '
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="stat_percents.php" class="b3">Отчёт по скидкам и наценкам</a>
+							</li>';
+                echo '
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="material_costs_test.php" class="b3">Расходы на материалы</a>
+							</li>';
                 /*echo '
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="absents.php" class="b3">Отпуск/больничный</a>
 							</li>';*/
 
-                echo '
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="stat_invoice2.php" class="b3">Отчёт по оплатам (выручка)</a>
-							</li>';
+//                echo '
+//							<li class="cellsBlock" style="margin: 1px;">
+//								<a href="stat_invoice2.php" class="b3">Отчёт по оплатам (выручка)</a>
+//							</li>';
 
                 //if (($finances['see_all'] == 1) || $god_mode) {
-                echo '
-                            <li class="cellsBlock" style="margin: 1px;">
-                                <a href="fl_report_noch.php" class="b3">Ночь</a>
-                            </li>';
+
+
+
+//                echo '
+//                            <li class="cellsBlock" style="margin: 1px;">
+//                                <a href="fl_report_noch.php" class="b3">Ночь</a>
+//                            </li>';
 
 
                 //}
+                echo '
+						</ul>';
+            }
+
+            if (($finances['see_all'] == 1) || $god_mode) {
+                echo '
+						<ul class="reportBlock" style="">
+								<h1>Складской учёт [ТЕСТ]</h1>';
+
+                echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="sclad.php" class="b3">Склад (тест)</a>
+							</li>';
+
                 echo '
 						</ul>';
             }

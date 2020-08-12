@@ -104,6 +104,21 @@ ORDER BY `name`;
                     if ($client_j[0]['status'] != 9) {
                         echo '<a href="finance_account.php?client_id='.$client_j[0]['id'].'" class="b" style="display: inline; margin-left: 20px; font-size: 70%; padding: 2px 5px;">Управление счётом</a>';
                         echo '<a href="zapis.php?client_id='.$client_j[0]['id'].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Записать пациента</a>';
+                        if (($_SESSION['permissions'] == 3) || ($_SESSION['id'] == 364) || $god_mode){
+                            //var_dump($client_j[0]['installment']);
+                            //Нет отметки о рассрочке
+                            if ($client_j[0]['installment'] == 0) {
+                                echo '<span class="info"  style="display: inline; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus('.$client_j[0]['id'].', '.$client_j[0]['installment'].');"><i class="fa fa-database" aria-hidden="true" title="Нет рассрочек"></i></span>';
+                            }
+                            //Включена рассрочка
+                            if ($client_j[0]['installment'] == 1) {
+                                echo '<span class="info"  style="display: inline; color: red; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus('.$client_j[0]['id'].', '.$client_j[0]['installment'].');"><i class="fa fa-database" aria-hidden="true" title="Есть незакрытая рассрочка"></i></span>';
+                            }
+                            //Рассрочка закрыта
+                            if ($client_j[0]['installment'] == 7) {
+                                echo '<span class="info"  style="display: inline; color: green; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus('.$client_j[0]['id'].', '.$client_j[0]['installment'].');"><i class="fa fa-database" aria-hidden="true" title="Рассрочка закрыта"></i></span>';
+                            }
+                        }
                     }
                 }
 
@@ -117,8 +132,13 @@ ORDER BY `name`;
 				echo '
 							Номер карты: '.$client_j[0]['card'].'';
 
+
                 echo '
                         </header>';
+
+                echo '<div style="margin-top: 7px; font-size: 70%; color: #777;">
+                <a href="test_print2.php?client_id=' . $client_j[0]['id'] . '" class="ahref b2 no_print"  target="_blank" rel="nofollow noopener">Мед.карта стом.(тест) </a>
+                </div>';
 
 				echo '
                     <div style="margin-top: 7px; font-size: 70%; color: #777;">
@@ -191,7 +211,25 @@ ORDER BY `name`;
 				echo '
 									</div>
 								</div>';
+
+                echo '
+								<div class="cellsBlock2">
+									<div class="cellLeft">Email</div>
+									<div class="cellRight">
+                                        '.$client_j[0]['email'].'';
+                echo '
+									</div>
+								</div>';
 								
+                echo '
+								<div class="cellsBlock2">
+									<div class="cellLeft">ИНН</div>
+									<div class="cellRight">
+                                        '.$client_j[0]['inn'].'';
+                echo '
+									</div>
+								</div>';
+
 				echo '
 								<div class="cellsBlock2">
 									<div class="cellLeft">Паспорт</div>
@@ -789,7 +827,7 @@ ORDER BY `name`;
 																	<div class=\'cellLeft\'>
 																		'.t_surface_name($n_zuba.$surface, 2).'<br />';
 
-												DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');
+												echo DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');
 
 
 												echo '
@@ -1333,6 +1371,7 @@ ORDER BY `name`;
 									</div>';
 						}
 
+
                         //Лаборатория
                         $laborder_j = SelDataFromDB ('journal_laborder', $client_j[0]['id'], 'client');
                         //var_dump($laborder_j);
@@ -1428,6 +1467,76 @@ ORDER BY `name`;
                         }
 
 						//mysql_close();
+
+
+
+
+                        //Предварительные расчёты пациента
+                        $invoice_j = array();
+
+                        echo '
+                                    <ul id="invoices" style="margin-left: 6px; margin-bottom: 10px;">					
+                                        <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Предварительные расчёты пациента:</li>';
+
+
+
+                        $query = "SELECT * FROM `journal_advanaced_invoice` WHERE `client_id`='" . $client_j[0]['id'] . "' AND `status` <> '9' ORDER BY `create_time`";
+
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0) {
+                            while ($arr = mysqli_fetch_assoc($res)) {
+                                array_push($invoice_j, $arr);
+                            }
+                        } else
+                            $invoice_j = 0;
+                        //var_dump ($invoice_j);
+
+                        if ($invoice_j != 0) {
+                            //var_dump ($invoice_j);
+                            echo '
+                                            <li class="cellsBlock" style="width: auto; vertical-align: top;">';
+                            foreach ($invoice_j as $invoice_item) {
+
+                                echo '
+                                                <div class="cellsBlockHover" style="display: inline-block;  vertical-align: top;">
+                                                    <a href="invoice_advance.php?id=' . $invoice_item['id'] . '" class="cellName ahref" style="border-right: none;">
+                                                        <b>Пред. расчёт #' . $invoice_item['id'] . '</b><br>
+                                                        <span style="font-size: 85%; color: #999;">Автор: ' . WriteSearchUser('spr_workers', $invoice_item['create_person'], 'user', false) . '</span><br>
+                                                        <span style="font-size: 85%; color: #999;">' . date('d.m.y H:i', strtotime($invoice_item['create_time'])) . '</span>
+                                                    </a>
+                                                    <div class="cellName" style="border-left: none;">
+                                                        <div style="margin: 1px 0; padding: 1px 3px;">
+                                                            <i>'.$invoice_item['comment'].'</i>
+                                                        </div>
+                                                        <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+                                                            Сумма:<br>
+                                                            <span class="calculateInvoice" style="font-size: 13px">' . $invoice_item['summ'] . '</span> руб.
+                                                        </div>';
+                                if ($invoice_item['summins'] != 0) {
+                                    echo '
+                                                        <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+                                                            Страховка:<br>
+                                                            <span class="calculateInsInvoice" style="font-size: 13px">' . $invoice_item['summins'] . '</span> руб.
+                                                        </div>';
+                                }
+                                echo '
+                                                    </div>';
+                                echo '
+                                                </div>';
+
+                            }
+                            echo '
+                                            </li>';
+
+                        } else {
+                            echo '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 5px; color: red;">Нет нарядов</li>';
+                        }
+
+                        echo '
+                                    </ul>';
+
+
 						
 						echo '
 							</div>';
@@ -1544,7 +1653,7 @@ ORDER BY `name`;
 			}
 				
 			echo '					
-				<div id="doc_title">Пациент: '.$client_j[0]['full_name'].' - Асмедика</div>
+				<div id="doc_title">'.$client_j[0]['full_name'].' - Карточка пациента - Асмедика</div>
 				</div>
 			</div>
 

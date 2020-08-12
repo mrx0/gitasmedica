@@ -22,7 +22,8 @@
             $removesMy = 0;
             $removesMe = 0;
 
-            $rezult = '<a href="" class="b">Подробно</a>';
+            //$rezult = '<a href="" class="b">Подробно</a>';
+            $rezult = '';
 
             if (!isset($_POST['worker_id'])){
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>', 'summCalc' => 0));
@@ -32,7 +33,7 @@
                 $notes = array();
                 $number = 0;
 
-                if (($stom['see_own'] == 1) && ($stom['see_all'] != 1) && !$god_mode){
+//                if (($stom['see_own'] == 1) && ($stom['see_all'] != 1) && !$god_mode){
                     //$notes = SelDataFromDB ('notes', $_SESSION['id'], 'create_person');
                     $query = "SELECT * FROM `notes` WHERE `create_person`='".$_SESSION['id']."' AND `closed` <> 1 ORDER BY `dead_line` ASC";
 
@@ -40,17 +41,17 @@
 
                     $number = mysqli_num_rows($res);
 
-                }else{
-                    if (($stom['see_all'] == 1) || $god_mode){
-                        //$notes = SelDataFromDB ('notes', 'dead_line', 'dead_line');
-                        $query = "SELECT * FROM `notes` WHERE (`dead_line` < '".time()."' OR `dead_line` = '".time()."') AND `closed` <> 1 ORDER BY `dead_line` DESC";
-
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-                        $number = mysqli_num_rows($res);
-
-                    }
-                }
+//                }else{
+//                    if (($stom['see_all'] == 1) || $god_mode){
+//                        //$notes = SelDataFromDB ('notes', 'dead_line', 'dead_line');
+//                        $query = "SELECT * FROM `notes` WHERE (`dead_line` < '".time()."' OR `dead_line` = '".time()."') AND `closed` <> 1 ORDER BY `dead_line` DESC";
+//
+//                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//                        $number = mysqli_num_rows($res);
+//
+//                    }
+//                }
 
                 if ($number != 0){
                     while ($arr = mysqli_fetch_assoc($res)){

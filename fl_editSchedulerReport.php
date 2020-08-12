@@ -18,8 +18,13 @@
                     //!!! @@@
                     include_once 'ffun.php';
 
+                    include_once 'variables.php';
+
                     $filials_j = getAllFilials(false, false, false);
                     //var_dump($filials_j);
+
+                    //Массив типов сотрудников для этого конкретного отчёта
+                    //$workers_target_arr = [1, 9, 12, 777];
 
                     //Сегодняшняя дата
                     /*$d = date('d', time());
@@ -35,7 +40,7 @@
                     $report_ids_arr = array_diff($report_ids_arr, array(''));
                     //var_dump($report_ids_arr);
 
-                    //Смотрим не было ли уже отчета на этом филиале за этот день
+                    //Для отчета на этом филиале за этот день
                     $dailyReports_j = array();
 
                     $msql_cnnct = ConnectToDB();
@@ -50,12 +55,22 @@
 //                        $dop_query .= '';
 //                    }
 
+                    $type = 0;
+
+                    $type_str = '';
+                    if (isset($_GET['type'])){
+                        $type_str = '&type='.$_GET['type'];
+                        $type = $_GET['type'];
+                    }
+
+                    //Смотрим не было ли уже отчета на этом филиале за этот день
                     $query = "SELECT sch.*, s_w.full_name AS full_name, s_p.name AS type_name  FROM `fl_journal_scheduler_report` sch
                     LEFT JOIN `spr_workers` s_w
                       ON sch.worker_id = s_w.id
                     LEFT JOIN `spr_permissions` s_p
                       ON s_w.permissions = s_p.id
-                    WHERE ".$dop_query;
+                    WHERE ".$dop_query."
+                    ORDER BY sch.type, s_w.full_name ASC";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -67,7 +82,7 @@
                         }
                     }
                     //var_dump($query);
-                    //var_dump($dailyReports_j);
+//                    var_dump($dailyReports_j);
 
                     echo '
                         <div id="status">
@@ -96,7 +111,20 @@
                         //Все сотрудники, которые есть в графике тут в эту дату
                         $scheduler_j = array();
 
-                        $dop_query = " AND (sch.type='4' OR sch.type='7' OR sch.type='11' OR sch.type='13' OR sch.type='14' OR sch.type='15') ";
+                        $workers_target_str = implode(',', $workers_target_arr);
+
+                        //$dop_query = " AND (sch.type='4' OR sch.type='7' OR sch.type='11' OR sch.type='13' OR sch.type='14' OR sch.type='15' OR sch.type IN ($workers_target_str)) ";
+
+                        $dop_query = " 
+                        AND (sch.type='4' OR sch.type='7' OR sch.type='11' OR sch.type='13' OR sch.type='14' OR sch.type='15' 
+                        OR sch.type IN ($workers_target_str)
+                        OR 
+                            sch.worker IN (
+                                SELECT s_w.id FROM `spr_workers` s_w 
+                                LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = s_w.id
+                                WHERE (opt_ws.oklad = '1') AND s_w.status = '0' 
+                            )
+                        ) ";
 
                         $query = "SELECT sch.*, s_w.full_name AS full_name, s_p.name AS type_name FROM `scheduler` sch 
                           LEFT JOIN `spr_workers` s_w
@@ -159,18 +187,37 @@
 
 
                             foreach ($dailyReports_j as $sch_item){
+                                //var_dump($sch_item);
+
+                                $border_color = '';
+                                $norma_hours = $sch_item['hours'];
+                                if ($norma_hours == 0) {
+                                    $norma_hours = getNormaHours($sch_item['worker_id']);
+                                    $border_color = 'border: 1px solid rgb(255, 0, 0)';
+                                }
+
+                                $display_style = '';
+
+                                if (($sch_item['type'] == 1) || ($sch_item['type'] == 9) || ($sch_item['type'] == 11) || ($sch_item['type'] == 12) || ($sch_item['type'] == 777)) {
+                                    //Если есть право на посмотреть
+                                    if (($finances['see_all'] == 1) || $god_mode) {
+                                        //--
+                                    }else{
+                                        $display_style = 'display: none;';
+                                    }
+                                }
 
                                 echo '
-                                <div class="cellsBlock400px" style="position: relative;">
+                                <div class="cellsBlock400px" style="position: relative; '.$display_style.'">
                                     <div class="cellLeft" style="font-size: 90%;">
                                         '.$sch_item['full_name'].'<br>
                                         <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'.$sch_item['type_name'].'</span>
                                     </div>
                                     <div class="cellRight" style="font-size: 13px;">
-                                        <input type="text" size="1" class="workerHoursValue" worker_id="'.$sch_item['worker_id'].'" worker_type="'.$sch_item['type'].'" value="'.$sch_item['hours'].'" autocomplete="off"> часов
+                                        <input type="text" size="1" class="workerHoursValue" style="'.$border_color.'" worker_id="'.$sch_item['worker_id'].'" worker_type="'.$sch_item['type'].'" value="'.$norma_hours.'" autocomplete="off"> часов
                                         <label id="hours_'.$sch_item['worker_id'].'_num_error" class="error"></label>
                                     </div>';
-                                if (($scheduler['see_all'] == 1) || $god_mode) {
+                                if (($scheduler['see_all'] == 1) || $god_mode || (($scheduler['add_own'] == 1) && ($_SESSION['filial'] == $sch_item['filial_id']) && ($report_date == date('d.m.Y', time())))) {
                                     echo '
                                         <i class="fa fa-times" aria-hidden="true" style="position: absolute; top: 10px; right: 10px; cursor: pointer; color:red;" title="Удалить" onclick="fl_deleteSchedulerReportItem(' . $sch_item['id'] . ');"></i>';
                                 }
@@ -182,19 +229,37 @@
                             }
                             //var_dump($scheduler_j);
 
-                            //Если остались сотрудники, которые тут работают в эту дату, но их не оказалось в графике
+                            //Если остались сотрудники, которые тут работают в эту дату, но у них еще нет часов в базе
                             if (!empty($scheduler_j)){
 
                                 foreach ($scheduler_j as $sch_item){
+                                    //var_dump($sch_item);
+
+                                    $border_color = '';
+//                                    $norma_hours = $sch_item['hours'];
+//                                    if ($norma_hours == 0) {
+                                        $norma_hours = getNormaHours($sch_item['worker']);
+                                        $border_color = 'border: 1px solid rgb(255, 0, 0)';
+//                                    }
+
+                                    $display_style = '';
+
+                                    if ($sch_item['type'] == 11) {
+                                        if (($finances['see_all'] == 1) || $god_mode) {
+                                            //--
+                                        }else{
+                                            $display_style = 'display: none;';
+                                        }
+                                    }
 
                                     echo '
-                                        <div class="cellsBlock400px">
+                                        <div class="cellsBlock400px" style="'.$display_style.'">
                                             <div class="cellLeft" style="font-size: 90%;">
                                                 '.$sch_item['full_name'].'<br>
                                                 <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'.$sch_item['type_name'].'</span>
                                             </div>
                                             <div class="cellRight" style="font-size: 13px;">
-                                                <input type="text" size="1" class="workerHoursValue" worker_id="'.$sch_item['worker'].'" worker_type="'.$sch_item['type'].'" value="0" autocomplete="off"> часов
+                                                <input type="text" size="1" class="workerHoursValue" style="'.$border_color.'" worker_id="'.$sch_item['worker'].'" worker_type="'.$sch_item['type'].'" value="'.$norma_hours.'" autocomplete="off"> часов
                                                 <label id="hours_'.$sch_item['worker'].'_num_error" class="error"></label>
                                             </div>
                                         </div>';
@@ -226,7 +291,7 @@
                             </div>';
 
                             echo '
-                                <input type="button" class="b" value="Применить" onclick="fl_editSchedulerReport_add(\''.$_GET['report_id'].'\');">';
+                                <input type="button" id="fl_editSchedulerReport_add" class="b" value="Применить" onclick="fl_editSchedulerReport_add(\''.$_GET['report_id'].'\', '.$type.'); $(this).attr(\'disabled\', \'disabled\');">';
 
                         }else{
                             echo '<span style="color: red;">Ничего не найдено</span>';
@@ -346,7 +411,7 @@
                             
                         });
 						
-                        //Живой поиск
+                        //
                         $("#arendaNal, #ortoSummNal, #ortoSummBeznal, #specialistSummNal, #specialistSummBeznal, #analizSummNal, #analizSummBeznal, #summMinusNal, #summMinusBeznal, #solarSummNal, #solarSummBeznal").bind("change keyup input click", function() {
                             if($(this).val().length > 0){
                                 //console.log($(this).val().length);

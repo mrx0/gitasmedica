@@ -81,7 +81,7 @@
 											<div class=\'cellLeft\'>
 												'.t_surface_name($n_zuba.$surface, 2).'<br />';
 								
-						DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');	
+						echo DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');
 						
 						echo '
 											</div>
@@ -174,12 +174,12 @@
 											<div class=\'cellLeft\'>
 												'.t_surface_name($n_zuba.'NONE', 1).'<br />';
 										
-							DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');	
+							echo DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');
 									echo '
 											</div>
 											<div class=\'cellRight\'>
 												'.t_surface_name($n_zuba.$surface, 0).'<br />';
-							if ($DrawMenu){ DrawTeethMapMenu($key, $n_zuba, $surface, $menu);}	
+							if ($DrawMenu){ echo DrawTeethMapMenu($key, $n_zuba, $surface, $menu);}
 							echo '
 											</div>
 										</div>';	
@@ -225,7 +225,7 @@
 									<div class=\'cellLeft\'>
 										'.t_surface_name($n_zuba.$surface, 2).'<br />';
 							
-					DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');	
+					echo DrawTeethMapMenu($key, $n_zuba, $surface, 't_menu');
 					echo '
 									</div>
 								</div>';

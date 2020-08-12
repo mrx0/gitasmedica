@@ -2,6 +2,7 @@
 
 //fl_main_report.php
 //Финальный отчет
+//!!! не используем
 
 	require_once 'header.php';
 	
@@ -432,7 +433,7 @@
 //                                -
 //                            </div>';
 //                    echo '
-//                            <a href="giveout_cash.php?filial_id='.$filial_id.'&d='.dateTransformation($d).'&m='.dateTransformation($month).'&y='.$year.'" class="ahref cellTime cellsTimereport summMinusNal" style="text-align: center; font-weight: normal; cursor: pointer; '. $today_border .'">
+//                            <a href="giveout_cash_all.php?filial_id='.$filial_id.'&d='.dateTransformation($d).'&m='.dateTransformation($month).'&y='.$year.'" class="ahref cellTime cellsTimereport summMinusNal" style="text-align: center; font-weight: normal; cursor: pointer; '. $today_border .'">
 //                                -
 //                            </a>';
 //                    echo '

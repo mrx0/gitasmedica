@@ -21,6 +21,16 @@
 
                 include_once 'DBWork.php';
 
+                $db = 'journal_invoice';
+                $db_ex = 'journal_invoice_ex';
+                $db_ex_mkb = 'journal_invoice_ex_mkb';
+
+                if ($_POST['adv'] == 'true'){
+                    $db = 'journal_advanaced_invoice';
+                    $db_ex = 'journal_advanaced_invoice_ex';
+                    $db_ex_mkb = 'journal_advanaced_invoice_ex_mkb';
+                }
+
 				if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
 					if (!empty($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
 						$data = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'];
@@ -45,9 +55,9 @@
                         }
 
 						//Добавляем в базу
-						$query = "INSERT INTO `journal_invoice` (`zapis_id`, `office_id`, `client_id`, `worker_id`, `type`, `summ`, `discount`, `summins`, `create_person`, `create_time`) 
+						$query = "INSERT INTO `$db` (`zapis_id`, `office_id`, `client_id`, `worker_id`, `type`, `summ`, `discount`, `summins`, `comment`, `create_person`, `create_time`) 
 						VALUES (
-						'{$zapis_id}', '{$_POST['filial']}', '{$_POST['client']}', '{$_POST['worker']}', '{$_POST['invoice_type']}', '{$_POST['summ']}', '{$discount}', '{$_POST['summins']}', '{$_SESSION['id']}', '{$time}')";
+						'{$zapis_id}', '{$_POST['filial']}', '{$_POST['client']}', '{$_POST['worker']}', '{$_POST['invoice_type']}', '{$_POST['summ']}', '{$discount}', '{$_POST['summins']}', '{$_POST['comment']}', '{$_SESSION['id']}', '{$time}')";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -72,11 +82,12 @@
 										$percent_cat = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['percent_cats'];
 										$manual_price = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['manual_price'];
 										$itog_price = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['itog_price'];
+										$jaw_select = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['jaw_select'];
 
 										//Добавляем в базу
-										$query = "INSERT INTO `journal_invoice_ex` (`invoice_id`, `ind`, `price_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `gift`, `spec_koeff`, `discount`, `percent_cats`, `manual_price`, `itog_price`) 
+										$query = "INSERT INTO `$db_ex` (`invoice_id`, `ind`, `jaw_select`, `price_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `gift`, `spec_koeff`, `discount`, `percent_cats`, `manual_price`, `itog_price`) 
 										VALUES (
-										'{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$gift}', '{$spec_koeff}', '{$discount}', '{$percent_cat}', '{$manual_price}', '{$itog_price}')";
+										'{$mysql_insert_id}', '{$ind}', '{$jaw_select}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$gift}', '{$spec_koeff}', '{$discount}', '{$percent_cat}', '{$manual_price}', '{$itog_price}')";
 
                                         mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 									}
@@ -85,7 +96,7 @@
 										$mkb_data = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind];
 										foreach ($mkb_data as $mkb_id){
 											//Добавляем в базу МКБ
-											$query = "INSERT INTO `journal_invoice_ex_mkb` (`invoice_id`, `ind`, `mkb_id`) 
+											$query = "INSERT INTO `$db_ex_mkb` (`invoice_id`, `ind`, `mkb_id`) 
 											VALUES (
 											'{$mysql_insert_id}', '{$ind}', '{$mkb_id}')";
 
@@ -111,7 +122,7 @@
                                     $itog_price = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['itog_price'];
 
 									//Добавляем в базу
-									$query = "INSERT INTO `journal_invoice_ex` (`invoice_id`, `ind`, `price_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `gift`, `spec_koeff`, `discount`, `percent_cats`, `manual_price`, `itog_price`) 
+									$query = "INSERT INTO `$db_ex` (`invoice_id`, `ind`, `price_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `gift`, `spec_koeff`, `discount`, `percent_cats`, `manual_price`, `itog_price`) 
 									VALUES (
 									'{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$gift}', '{$spec_koeff}', '{$discount}', '{$percent_cat}', '{$manual_price}', '{$itog_price}')";
 

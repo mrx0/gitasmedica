@@ -286,7 +286,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                     $query = $query . " ORDER BY `create_time` DESC";
 
-                    var_dump($query);
+                    //var_dump($query);
 
                     $msql_cnnct = ConnectToDB();
 

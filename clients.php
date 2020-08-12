@@ -1,7 +1,7 @@
 <?php
 
-//index.php
-//Главная
+//clients.php
+//Список пациентов
 
 	require_once 'header.php';
     require_once 'blocks_dom.php';
@@ -75,9 +75,12 @@
 				echo '
 					<a href="client_add.php" class="b">Добавить</a>';
 			}
-			if (!$filter){
+			//if (!$filter){
 				echo '<button class="md-trigger b" data-modal="modal-11">Поиск</button>';
-			}
+			//}
+
+            echo '<a href="clients_birth_search.php" class="b">Поиск по др</a>';
+
 			echo '
 				</header>';
 			
@@ -220,10 +223,10 @@
 						}*/
 
 					}else{
-						$deleted_clients .= '
-							<!--<div class="cellCosmAct" style="text-align: center"></div>-->
-							<div class="cellCosmAct" style="text-align: center"></div>
-							';
+//						$deleted_clients .= '
+//							<!--<div class="cellCosmAct" style="text-align: center"></div>-->
+//							<div class="cellCosmAct" style="text-align: center"></div>
+//							';
 					}
 					if ($clients_j[$i]['status'] != 9){
 						echo '
@@ -300,7 +303,7 @@
 						$deleted_clients .= '
 									</div>';
 						$deleted_clients .= '
-									<div class="cellCosmAct" style="text-align: center; width: 60px; min-width: 60px; max-width: 60px;">'.$clients_j[$i]['card'].'</div>';
+									<div class="cellCosmAct" style="text-align: center; width: 80px; min-width: 80px; max-width: 80px;">'.$clients_j[$i]['card'].'</div>';
 						$deleted_clients .= '
 									<div class="cellTime" style="text-align: center">';
 

@@ -56,7 +56,7 @@
             $arr = array();
             $rez = array();
 
-            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '{$type}' AND `status` <> '8'";
+            $query = "SELECT * FROM `spr_workers` WHERE `permissions` = '{$type}' AND `status` <> '8' ORDER BY `full_name` ASC";
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
             $number = mysqli_num_rows($res);
@@ -117,7 +117,13 @@
                                 <a href="?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
                                 <!--<a href="?who=4" class="b" style="'.$admin_color.'">Администраторы</a>-->
                                 <!--<a href="?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>-->
-                                <a href="?who=11" class="b" style="'.$other_color.'">Прочие</a>
+                                <a href="?who=11" class="b" style="'.$other_color.'">Прочие</a>';
+            //!!! Только для ВВ
+            if (($_SESSION['id'] == 270) || ($god_mode)){
+                echo '
+                                <a href="fl_salaries2.php?who=999" class="b" style="">Другие</a>';
+            }
+            echo '	
                             </li>';
 
             if (!empty($workers_j)){

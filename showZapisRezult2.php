@@ -176,7 +176,27 @@
                     $rezultInvoice = '';
 
                     if (!empty($invoice_data_db)) {
-                        //var_dump($invoice_data_db);
+//                        var_dump($invoice_data_db);
+
+
+                        //Пройдемся по нарядам
+                        foreach ($invoice_data_db as $invoice_data){
+                            //Если по страховой
+                            if ($invoice_data['summins'] > 0){
+                                //var_dump($invoice_data_db);
+                                $invoiceInsure = true;
+                            }
+                            //Если не оплачено
+                            if (($invoice_data['summ'] != 0) && ($invoice_data['summ'] != $invoice_data['paid'])){
+                                //var_dump($invoice_data_db);
+                                $invoiceNotPaid = true;
+                            }
+                            //Если оплачено
+                            if (($invoice_data['summ'] != 0) && ($invoice_data['summ'] == $invoice_data['paid'])){
+                                //var_dump($invoice_data_db);
+                                $invoicePaid = true;
+                            }
+                        }
 
                         $rezultInvoices = showInvoiceDivRezult($invoice_data_db, true, false, true, false, false, false);
                         //$data, $minimal, $show_categories, $show_absent, $show_deleted
@@ -315,7 +335,7 @@
 
                         if ($dop['patientUnic'] == 1) {
                             $rezult .=
-                                '<b>' . WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', true) . '</b>';
+                                '<b>' . WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', true, true) . '</b>';
                         }
 
                         if ($dop['patientUnic'] != 1) {
@@ -461,8 +481,16 @@
                                                 $rezult .= '
                                                                 <li>
                                                                     <div>
-                                                                        <a href="add_task_stomat.php?client=' . $ZapisHereQueryToday[$z]['patient'] . '&filial=' . $ZapisHereQueryToday[$z]['office'] . '&insured=' . $ZapisHereQueryToday[$z]['insured'] . '&pervich=' . $ZapisHereQueryToday[$z]['pervich'] . '&noch=' . $ZapisHereQueryToday[$z]['noch'] . '&date=' . strtotime($ZapisHereQueryToday[$z]['day'] . '.' . $month . '.' . $ZapisHereQueryToday[$z]['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $ZapisHereQueryToday[$z]['id'] . '&worker=' . $ZapisHereQueryToday[$z]['worker'] . '" class="ahref">
+                                                                        <a href="add_task_stomat.php?client=' . $ZapisHereQueryToday[$z]['patient'] . '&filial=' . $ZapisHereQueryToday[$z]['office'] . '&insured=' . $ZapisHereQueryToday[$z]['insured'] . '&pervich=' . $ZapisHereQueryToday[$z]['pervich'] . '&noch=' . $ZapisHereQueryToday[$z]['noch'] . '&date=' . strtotime($ZapisHereQueryToday[$z]['day'] . '.' . $month . '.' . $ZapisHereQueryToday[$z]['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&zapis_id=' . $ZapisHereQueryToday[$z]['id'] . '&worker=' . $ZapisHereQueryToday[$z]['worker'] . '" class="ahref">
                                                                             Внести Осмотр/Зубную формулу
+                                                                        </a>
+                                                                    </div>
+                                                                </li>';
+                                                $rezult .= '
+                                                                <li>
+                                                                    <div>
+                                                                        <a href="invoice_advance_add.php?client=' . $ZapisHereQueryToday[$z]['patient'] . '&filial=' . $ZapisHereQueryToday[$z]['office'] . '&date=' . strtotime($ZapisHereQueryToday[$z]['day'] . '.' . $month . '.' . $ZapisHereQueryToday[$z]['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $ZapisHereQueryToday[$z]['id'] . '&worker=' . $ZapisHereQueryToday[$z]['worker'] . '&type=' . $ZapisHereQueryToday[$z]['type'] . '" class="ahref">
+                                                                            Предварительный расчёт
                                                                         </a>
                                                                     </div>
                                                                 </li>';

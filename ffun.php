@@ -387,14 +387,18 @@
     }
 
     //берем цены из прайса
-    function takePrices ($item, $insure){
+    function takePrices ($item, $insure, $ttime){
 
         $msql_cnnct = ConnectToDB2 ();
 
         $prices_j = array();
         $arr = array();
 
-        $time = time();
+        if ($ttime == 0) {
+            $time = time();
+        }else{
+            $time = $ttime;
+        }
 
         //Вытащим цены позиции
         $query = "SELECT `price`,`price2`,`price3` FROM `spr_priceprices` WHERE `item`='".$item."' AND $time > `date_from` ORDER BY `date_from` DESC, `create_time` DESC LIMIT 1";
@@ -1430,9 +1434,15 @@
                             <div style="padding: 2px 0 3px; font-size: 115%;">
                                 <i style="font-weight: bold;">'.$worker_j['name'].'</i> / <span style="font-size: 85%;">'.$worker_j['type_name'].'</span> / <span style="font-size: 85%;">'.$worker_j['cat_name'].'</span>
                             </div>
-                            <div style="background-color: rgba(144,247,95, 0.4); font-size: 130%; padding: 5px 5px 2px;">
-                                <div style="display: inline;">К выплате:</div>
-                                <div style="float: right; display: inline; text-align: right; font-size: 110%;"><b><i><div class="pay_must_'.$tabel_id.'" style="display: inline;">0</div> р.</i></b></div>
+                            <div style="height: 17px; background-color: rgba(144,247,95, 0.4); font-size: 130%; padding: 5px 5px 2px;">
+                                <div style="float: left; font-size: 80%;">
+                                    <div style="display: inline; font-size: 77%;">К выплате:</div>
+                                    <div style="display: inline; font-size: 110%;"><b><i><div class="pay_must_'.$tabel_id.'" style="display: inline;">0</div> р.</i></b></div>
+                                </div>
+                                <div style="float: right;">
+                                    <div style="font-size: 11px;">_________/__________________</div>
+                                    <div style="font-size: 7px;">дата/подпись</div>
+                                </div>
                             </div>
                             
                         </div>
@@ -1616,7 +1626,7 @@
                              
                             <tr>
                                 <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">
-                                    премия
+                                    прочее
                                 </td>
                                 <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
                                     
@@ -2146,16 +2156,21 @@
 
         $rezult = array();
         $rezult_cert = array();
+        $rezult_abon = array();
+        $rezult_solar = array();
+        $rezult_realiz = array();
         $rezult_give_out_cash = array();
         $arr = array();
 
         //Переменная для строчки запроса по филиалу и типу
         $queryFilial = '';
+        $queryFilial2 = '';
         $queryType = '';
 
         //Филиал
         if ($filial != 99){
             $queryFilial .= "AND `office_id` = '".$filial."'";
+            $queryFilial2 .= "AND `filial_id` = '".$filial."'";
         }
 
         if ($summtype != 0){
@@ -2194,7 +2209,7 @@
                     STR_TO_DATE('".$datastart." 00:00:00', '%Y-%m-%d %H:%i:%s')
                     AND 
                     STR_TO_DATE('".$dataend." 23:59:59', '%Y-%m-%d %H:%i:%s') 
-                    ".$queryFilial.$queryType."
+                    ".$queryFilial.$queryType.$show_deleted_str."
                     ORDER BY `cell_time` DESC";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -2208,8 +2223,72 @@
             }
         }
 
-        //Расход вытащим
+        //Приход денег за абонементы вытащим
         if ($certificatesShow != 0){
+            $query = "SELECT * FROM `journal_abonement_solar` WHERE
+                    `cell_time` BETWEEN 
+                    STR_TO_DATE('".$datastart." 00:00:00', '%Y-%m-%d %H:%i:%s')
+                    AND 
+                    STR_TO_DATE('".$dataend." 23:59:59', '%Y-%m-%d %H:%i:%s') 
+                    ".$queryFilial2.$queryType.$show_deleted_str."
+                    ORDER BY `cell_time` DESC";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($rezult_abon, $arr);
+                }
+            }else{
+                //addClientBalanceNew ($client_id, $Summ);
+            }
+        }
+
+        //Приход денег за солярий
+        if ($certificatesShow != 0){
+            $query = "SELECT * FROM `journal_solar` WHERE
+                    `date_in` BETWEEN 
+                    STR_TO_DATE('".$datastart." 00:00:00', '%Y-%m-%d %H:%i:%s')
+                    AND 
+                    STR_TO_DATE('".$dataend." 23:59:59', '%Y-%m-%d %H:%i:%s') 
+                    AND (`summ_type`='1' OR `summ_type`='2')
+                    ".$queryFilial2.$queryType.$show_deleted_str."
+                    ORDER BY `date_in` DESC";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($rezult_solar, $arr);
+                }
+            }else{
+                //addClientBalanceNew ($client_id, $Summ);
+            }
+        }
+
+        //Приход денег за реализацию
+        if ($certificatesShow != 0){
+            $query = "SELECT * FROM `journal_realiz` WHERE
+                    `date_in` BETWEEN 
+                    STR_TO_DATE('".$datastart." 00:00:00', '%Y-%m-%d %H:%i:%s')
+                    AND 
+                    STR_TO_DATE('".$dataend." 23:59:59', '%Y-%m-%d %H:%i:%s') 
+                    ".$queryFilial2.$queryType.$show_deleted_str."
+                    ORDER BY `date_in` DESC";
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+            $number = mysqli_num_rows($res);
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($rezult_realiz, $arr);
+                }
+            }else{
+                //addClientBalanceNew ($client_id, $Summ);
+            }
+        }
+
+        //Расходы с кассы  вытащим
+        //if ($certificatesShow != 0){
             $query = "SELECT * FROM `journal_giveoutcash` WHERE
                     `date_in` BETWEEN 
                     STR_TO_DATE('".$datastart." 00:00:00', '%Y-%m-%d %H:%i:%s')
@@ -2229,10 +2308,13 @@
             }else{
                 //addClientBalanceNew ($client_id, $Summ);
             }
-        }
+        //}
 
         $result['rezult'] = $rezult;
         $result['rezult_cert'] = $rezult_cert;
+        $result['rezult_abon'] = $rezult_abon;
+        $result['rezult_solar'] = $rezult_solar;
+        $result['rezult_realiz'] = $rezult_realiz;
         $result['rezult_give_out_cash'] = $rezult_give_out_cash;
 
         return $result;
@@ -2260,7 +2342,7 @@
                 $query = "SELECT * FROM `fl_journal_tabels` WHERE `worker_id`='{$worker_id}' AND `type`='{$type_id}' AND `office_id`='{$filial_id}' AND `status` <> '7' AND `status` <> '9' AND (`year` > '2019' OR (`year` = '2019' AND `month` > '05'));";
             }
         }else{
-            //Выберем табели уже существующие для этого работника
+            //Выберем табели уже существующие для этого работника (ночь)
 
             //Если для всех филиалов
             if (($type_id == 0) && ($filial_id == 0)) {

@@ -17,13 +17,24 @@
 							</div>
 							<div class="cellText2" style="font-size: 100%; text-align: center;">
 								<i><b>Наименование</b></i>
-							</div>
-							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px;">
+							</div>';
+        if ($_POST['adv'] == 'true'){
+            $request .= '
+                            <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px;">
+								<div id="jaw_select" class="settings_text" title="Выбор челюсти"><i>Челюсть</i></div>
+							</div>';
+        }else{
+            $request .= '
+                            <div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 80px; min-width: 80px; max-width: 80px;">
 								<div id="insure" class="settings_text" title="Страховая"><i>Страх.</i></div>
 							</div>
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center;">
 								<div id="insure_approve" class="settings_text" title="Согласовано"><i>Сог.</i></div>
-							</div>
+							</div>';
+        }
+
+
+        $request .= '
 							<div class="cellCosmAct" style="font-size: 80%; text-align: center; width: 60px; min-width: 60px; max-width: 60px;">
 								<i><b>Цена, руб.</b></i>
 							</div>
@@ -190,7 +201,7 @@
 								<!--<div class="cellCosmAct" style=" '.$bg_col.'">
 									-
 								</div>-->
-								<div class="cellText2" style=" '.$bg_col.'"><div style="text-overflow: ellipsis; overflow: hidden; white-space: inherit;  width: 120px;">';
+								    <div class="cellText2" style=" '.$bg_col.'"><div style="text-overflow: ellipsis; overflow: hidden; white-space: inherit;  width: 120px;">';
 								
 								//Хочу имя позиции в прайсе
 								$arr = array();
@@ -223,7 +234,7 @@
                                     $spec_koeff = $items['spec_koeff'];
 
                                     //получим цены
-                                    $prices = takePrices ($items['id'], $items['insure']);
+                                    $prices = takePrices ($items['id'], $items['insure'], $_POST['ztime']);
                                     //var_dump($prices);
 
                                     if (!empty($prices)) {
@@ -277,31 +288,52 @@
 								}
 								
 								$request .= '
-								</div>
-								</div>
-								<div class="cellCosmAct settings_text" insure="'.$items['insure'].'" style="font-size: 80%; text-align: center; '.$bg_col.' width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic;" onclick="contextMenuShow('.$ind.', '.$key.', event, \'insureItem\');">
-									'.$insure_name.'
+								    </div>
 								</div>';
-								
-								if ($items['insure'] != 0){
-									if ($items['insure_approve'] == 1){
-										$request .= '
-											<div class="cellCosmAct settings_text" insureapprove="'.$items['insure_approve'].'" style="font-size: 70%; text-align: center; '.$bg_col.'" onclick="contextMenuShow('.$ind.', '.$key.', event, \'insure_approveItem\');">
+
+								//Если предварительный расчет
+                                if ($_POST['adv'] == 'true') {
+                                    $request .= '
+									<div class="cellCosmAct settings_text" jawselect="' . $items['jaw_select'] . '" style="font-size: 70%; text-align: center;  width: 80px; min-width: 80px; max-width: 80px; ' . $bg_col . '" onclick="contextMenuShow(' . $ind . ', ' . $key . ', event, \'jaw_selectItem\');">';
+
+                                    if ($items['jaw_select'] == 1){
+                                        $request .= 'ВЧ';
+                                    }elseif($items['jaw_select'] == 2){
+                                        $request .= 'НЧ';
+                                    }else {
+                                        $request .= '-';
+                                    }
+
+                                    $request .= '
+									</div>';
+                                }else{
+
+
+                                    $request .= '
+                                        <div class="cellCosmAct settings_text" insure="'.$items['insure'].'" style="font-size: 80%; text-align: center; '.$bg_col.' width: 80px; min-width: 80px; max-width: 80px; font-weight: bold; font-style: italic;" onclick="contextMenuShow('.$ind.', '.$key.', event, \'insureItem\');">
+                                            '.$insure_name.'
+                                        </div>';
+
+                                    if ($items['insure'] != 0) {
+                                        if ($items['insure_approve'] == 1) {
+                                            $request .= '
+											<div class="cellCosmAct settings_text" insureapprove="' . $items['insure_approve'] . '" style="font-size: 70%; text-align: center; ' . $bg_col . '" onclick="contextMenuShow(' . $ind . ', ' . $key . ', event, \'insure_approveItem\');">
 												<i class="fa fa-check" aria-hidden="true" style="font-size: 150%;"></i>
 											</div>';
-									}else{
-										$request .= '
-										<div class="cellCosmAct settings_text" insureapprove="'.$items['insure_approve'].'" style="font-size: 100%; text-align: center; background: rgba(255, 0, 0, 0.5) none repeat scroll 0% 0%;" onclick="contextMenuShow('.$ind.', '.$key.', event, \'insure_approveItem\');">
+                                        } else {
+                                            $request .= '
+										<div class="cellCosmAct settings_text" insureapprove="' . $items['insure_approve'] . '" style="font-size: 100%; text-align: center; background: rgba(255, 0, 0, 0.5) none repeat scroll 0% 0%;" onclick="contextMenuShow(' . $ind . ', ' . $key . ', event, \'insure_approveItem\');">
 											<i class="fa fa-ban" aria-hidden="true"></i>
 										</div>';
-									}
+                                        }
 
-								}else{
-									$request .= '
-									<div class="cellCosmAct" insureapprove="'.$items['insure_approve'].'" style="font-size: 70%; text-align: center; '.$bg_col.'">
+                                    } else {
+                                        $request .= '
+									<div class="cellCosmAct" insureapprove="' . $items['insure_approve'] . '" style="font-size: 70%; text-align: center; ' . $bg_col . '">
 										-
 									</div>';
-								}
+                                    }
+                                }
 								
 								$request .= '
 								<div class="cellCosmAct invoiceItemPrice settings_text" ind="'.$ind.'" key="'.$key.'" price="'.$price['price'].'" style="font-size: 100%; text-align: center; width: 60px; min-width: 60px; max-width: 60px; position: relative; '.$bg_col.'">

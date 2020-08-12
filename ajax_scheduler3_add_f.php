@@ -51,9 +51,22 @@
                                             }
                                             if (($selected == 1) || ($selected == 3)){
                                                 //Добавляем отметку о рабочей смене
+                                                //Если раздел "другие"
+                                                if ($_POST['type'] == 99){
+
+                                                    $query = "SELECT `permissions` FROM `spr_workers` WHERE `id` = '$worker_id';";
+                                                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                                                    $arr = mysqli_fetch_assoc($res);
+                                                    $type = $arr['permissions'];
+
+                                                }else{
+                                                    //Eсли все остальное
+                                                    $type = $_POST['type'];
+                                                }
                                                 $query = "INSERT INTO `scheduler` (`worker`, `filial`, `year`, `month`, `day`, `type`, `create_person`) 
 						                        VALUES (
-                        						'{$worker_id}', '{$_POST['filial_id']}', '{$_POST['year']}', '{$_POST['month']}', '{$day}', '{$_POST['type']}', '{$_SESSION['id']}');";
+                        						'{$worker_id}', '{$_POST['filial_id']}', '{$_POST['year']}', '{$_POST['month']}', '{$day}', '{$type}', '{$_SESSION['id']}');";
 
                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
                                             }

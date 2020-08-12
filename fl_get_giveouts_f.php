@@ -53,6 +53,22 @@
                 }
                 //var_dump($subtractions_j);
 
+                //Выдачи (возвраты) денег пациентам
+                $fl_withdraw_j = array();
+
+                $query = "SELECT * FROM  `journal_withdraw` WHERE `filial_id`='{$_POST['filial_id']}' AND MONTH(`date_in`) = '".dateTransformation($_POST['month'])."' AND YEAR(`date_in`) = '{$_POST['year']}'";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0) {
+                    while ($arr = mysqli_fetch_assoc($res)) {
+                        array_push($fl_withdraw_j, $arr);
+                    }
+                }
+                //var_dump($fl_withdraw_j);
+
                 //Выплаты !!! не доделал, переделать всё, если понадобится вообще.
                 $fl_refunds_j = array();
 
@@ -128,7 +144,7 @@
                         $giveouts_result_str .= '
                                 <li class="cellsBlock cellsBlockHover" style="width: auto; ">
                                     <div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">Все расходы из кассы за месяц подробно:</div>
-                                    <!--<div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">giveout_cash.php?filial_id=15&d=31&m=07&y=2019</div>-->
+                                    <!--<div class="" style="font-size: 15px; margin: 5px; font-weight: bold;">giveout_cash_all.php?filial_id=15&d=31&m=07&y=2019</div>-->
                                 </li>';
 
 
@@ -188,7 +204,7 @@
 //                            if ( $item['status'] != 9) {
                                 $giveouts_result_str .= '
                                     <div class="cellCosmAct info" style="font-size: 100%; text-align: center; border-top: none;">
-                                        <a href="giveout_cash.php?filial_id='.$_POST['filial_id'].'&d='.date("d", strtotime($item['date_in'])).'&m='.$_POST['month'].'&y='.$_POST['year'].'"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                                        <a href="giveout_cash_all.php?filial_id='.$_POST['filial_id'].'&d='.date("d", strtotime($item['date_in'])).'&m='.$_POST['month'].'&y='.$_POST['year'].'"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                                     </div>';
 //                            }else {
 //                                $result_temp .= '
@@ -227,30 +243,51 @@
 //                20 => Литейный 59,
 //                21 => Бассейная 45
 
-                $prev_month_filial_summ_arr = array(
-                    11 => 0,
-                    12 => -151929,
-                    13 => -169961,
-                    14 => -232,
-                    15 => -411380,
-                    16 => -684164,
-                    17 => -533,
-                    18 => -16780,
-                    19 => -218297,
-                    20 => -323,
-                    21 => 0
-                );
+//                $prev_month_filial_summ_arr = array(
+//                    11 => 0,
+//                    12 => -151929,
+//                    13 => -169961,
+//                    14 => -232,
+//                    15 => -411380,
+//                    16 => -684164,
+//                    17 => -533,
+//                    18 => -16780,
+//                    19 => -218297,
+//                    20 => -323,
+//                    21 => 0
+//                );
+
+                //Получаем дефициты предыдущих месяцев
+                $prev_month_filial_summ_arr = array();
+
+                $query = "SELECT `filial_id`, `summ` 
+                        FROM `fl_journal_prev_month_filial_deficit` 
+                        WHERE `filial_id`='{$_POST['filial_id']}' AND `year`='{$_POST['year']}' 
+                        AND (`month`='0{$_POST['month']}' OR `month`='".(int)$_POST['month']."')";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                if ($number != 0){
+                    while ($arr = mysqli_fetch_assoc($res)){
+                        //array_push($paidouts_temp_j, $arr);
+
+                        $prev_month_filial_summ_arr[$arr['filial_id']] = $arr['summ'];
+                    }
+                }
+//            var_dump($prev_month_filial_summ_arr);
 
                 $prev_month_filial_summ = 0;
 
-                if (((int)$_POST['month'] == 7) && ($_POST['year'] == 2019)){
+                //if (((int)$_POST['month'] == 7) && ($_POST['year'] == 2019)){
                     if (isset($prev_month_filial_summ_arr[$_POST['filial_id']])){
                         $prev_month_filial_summ = $prev_month_filial_summ_arr[$_POST['filial_id']];
                     }
-                }
+                //}
 
 
-                echo json_encode(array('result' => 'success', 'subtractions_j' => $subtractions_j, 'fl_refunds_j' => $fl_refunds_j, 'material_consumption_j' => $material_consumption_j, 'giveouts_j' => $giveouts_result_str, 'prev_month_filial_summ' => $prev_month_filial_summ));
+                echo json_encode(array('result' => 'success', 'subtractions_j' => $subtractions_j, 'refunds_j' => $fl_refunds_j, 'withdraw_j' => $fl_withdraw_j, 'material_consumption_j' => $material_consumption_j, 'giveouts_j' => $giveouts_result_str, 'prev_month_filial_summ' => $prev_month_filial_summ));
 
             }
         }else{

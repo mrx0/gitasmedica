@@ -54,7 +54,7 @@ if ($enter_ok){
                             </div>
 
                             <div class="cellsBlock2">
-                                <div class="cellLeft">Сумма за работу, руб.</div>
+                                <div class="cellLeft">Спец. цена фиксированная, руб.</div>
                                 <div class="cellRight">
                                     <input type="text" name="summ_special" id="summ_special" value="">
                                     <label id="summ_special_error" class="error"></label>
@@ -63,7 +63,7 @@ if ($enter_ok){
 
         echo '					
                             <div class="cellsBlock2">
-                                <div class="cellLeft">Персонал</div>
+                                <div class="cellLeft">Персонал (тип)</div>
                                 <div class="cellRight">';
         echo '
                                 <select name="personal_id" id="personal_id">
@@ -73,9 +73,10 @@ if ($enter_ok){
         //var_dump($permissions_j);
 
         if ($permissions_j != 0){
-            for ($i=0;$i<count($permissions_j);$i++){
-                //не админ и не директор
-                if ($permissions_j[$i]['id'] > 2) {
+            for ($i=0; $i < count($permissions_j); $i++){
+
+                //стом, косм, спец, ассист
+                if (($permissions_j[$i]['id'] == 5) || ($permissions_j[$i]['id'] == 6) || ($permissions_j[$i]['id'] == 7) || ($permissions_j[$i]['id'] == 10)) {
                     echo "<option value='" . $permissions_j[$i]['id'] . "'>" . $permissions_j[$i]['name'] . "</option>";
                 }
             }
@@ -89,7 +90,7 @@ if ($enter_ok){
 
         echo '					
                             <div id="errror"></div>                        
-                            <input type="button" class="b" value="Добавить" onclick="Ajax_cat_add(\'add\')">
+                            <input type="button" class="b" value="Добавить" onclick="Ajax_cat_add(0, \'add\')">
                         </form>';
 
         echo '

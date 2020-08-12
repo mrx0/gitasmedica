@@ -344,6 +344,15 @@
                             $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3, $dop, $tabel_noch, $link);
 
 
+                        echo '
+                            <div class="no_print" style="position: fixed; top: 50px; right: 10px; border: 1px solid #0C0C0C; border-radius: 5px; padding: 5px 5px; background-color: #FFFFFF">
+                                <div class="cellCosmAct b" style="text-align: center; display: inline-block !important; vertical-align: middle; height: auto; border-radius: 3px;"
+                                onclick="window.print();">
+                                    <i class="fa fa-print" aria-hidden="true"></i>
+                                </div>
+                            </div>';
+
+
                         echo "
                             <script>
                                 $(document).ready(function() {

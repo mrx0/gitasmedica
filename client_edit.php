@@ -86,6 +86,22 @@
 											</div>
 										</div>
 									</div>';
+                    echo '
+									<div class="cellsBlock2">
+										<div class="cellLeft">Email</div>
+										<div class="cellRight">
+                                            <input type="text" name="email" id="email" value="'.$client[0]['email'].'">
+										</div>
+									</div>';
+
+                    echo '
+									<div class="cellsBlock2">
+										<div class="cellLeft">ИНН</div>
+										<div class="cellRight">
+                                            <input type="text" name="inn" id="inn" value="'.$client[0]['inn'].'">
+										</div>
+									</div>';
+
 					echo '			
 					
 									<div id="toggleDiv1" class="cellsBlock2" style="margin-top: 2px; margin-bottom: -1px; display: block; margin: 3px 0;">
@@ -164,11 +180,13 @@
 						
 					if ($insures_j != 0){
 						for ($i=0;$i<count($insures_j);$i++){
-							$selected = '';
-							if ($insures_j[$i]['id'] == $client[0]['insure']){
-								$selected = 'selected';
-							}
-							echo "<option value='".$insures_j[$i]['id']."' ".$selected.">".$insures_j[$i]['name']."</option>";
+                            if ($insures_j[$i]['status'] != 9) {
+                                $selected = '';
+                                if ($insures_j[$i]['id'] == $client[0]['insure']) {
+                                    $selected = 'selected';
+                                }
+                                echo "<option value='" . $insures_j[$i]['id'] . "' " . $selected . ">" . $insures_j[$i]['name'] . "</option>";
+                            }
 						}
 					}
 					echo '

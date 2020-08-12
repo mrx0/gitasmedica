@@ -14,7 +14,7 @@
 			include_once 'widget_calendar.php';
 			include_once 'variables.php';
 
-            $filials_j = getAllFilials(false, false, false);
+            $filials_j = getAllFilials(true, true, false);
             //var_dump ($filials_j);
 
             //обнулим сессионные данные для редактирования
@@ -64,11 +64,13 @@
             $all_color = $getWho['all_color'];
 
             //!!!Норма часов
-            if ($type == 15){
-                $normaHours = 2;
-            }else{
-                $normaHours = 12;
-            }
+//            if ($type == 15){
+//                $normaHours = 2;
+//            }else{
+//                $normaHours = 12;
+//            }
+
+            $normaHours = getNormaHours(0, true, $type);
 
 			if (isset($_GET['m']) && isset($_GET['y'])){
 				//операции со временем						
@@ -76,7 +78,7 @@
 				$year = $_GET['y'];
 			}else{
 				//операции со временем						
-				$month = date('m');		
+				$month = date('m');
 				$year = date('Y');
 			}
 
@@ -317,7 +319,25 @@
 					<header>
 						<div class="nav">
 							<a href="scheduler_template.php" class="b">График план</a>
-							<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>
+							<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>';
+            if (($finances['see_all'] == 1) || $god_mode) {
+                //var_dump($who);
+//                var_dump($type);
+
+                if (($type == 4) || ($type == 7)) {
+                    echo '
+                    <a href="fl_tabels2.php?who=' . $type . '&m=' . $month . '&y=' . $year . '" class="b3">Отчёт по часам</a>';
+                }
+                if (($type == 13) || ($type == 14) || ($type == 15)) {
+                    echo '
+                    <a href="fl_tabels3.php?who=' . $type . '&m=' . $month . '&y=' . $year . '" class="b3">Отчёт по часам</a>';
+                }
+                if ($type == 11) {
+                    echo '
+                    <a href="fl_tabels4.php?who=' . $type . '&m=' . $month . '&y=' . $year . '" class="b3">Отчёт по часам</a>';
+                }
+            }
+            echo '
 						</div>
 						<!--<span style="color: red;">Тестовый режим</span>-->
 						<h2>График '.$whose.' на ',$monthsName[$month],' ',$year,' филиал '.$filials_j[$_GET['filial']]['name'].'</h2>
@@ -351,8 +371,20 @@
                                     <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
                                     <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
                                     <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
-                                    <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
-                                    <!--<a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=11" class="b" style="'.$other_color.'">Прочие</a>-->
+                                    <a href="scheduler3.php?'.$dopFilial.$dopDate.'&who=15" class="b" style="'.$dvornik_color.'">Дворники</a>';
+
+			if (($finances['see_all'] == 1) || $god_mode) {
+                echo '
+                                    <a href="scheduler4.php?' . $dopFilial . $dopDate . '&who=11" class="b" style="' . $other_color . '">Прочие</a>';
+
+
+                if (in_array($_SESSION['permissions'], $workers_target_arr) || ($_SESSION['id'] == 270) || $god_mode) {
+                    echo '
+                                    <a href="scheduler5.php?' . $dopFilial . $dopDate . '&who=999" class="b" style="">Другие</a>';
+                }
+            }
+
+            echo '
                                 </li>
                                 <li style="width: auto; margin-bottom: 20px;">
                                     <div style="display: inline-block; margin-right: 20px;">
@@ -392,8 +424,6 @@
 			echo '</div>';
 			
 			echo '</ul>';
-
-
 
 
 
@@ -446,8 +476,8 @@
                 }
 
                 echo '
-                        <td style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; '.$Shtrih.' padding: 5px; text-align: right; cursor: pointer;" onclick="window.location.href = \'fl_createSchedulerReport.php?filial_id='.$_GET['filial'].'&d='.$ii.'&m='.$month.'&y='.$year.'\';">
-                            <b><i style="'.$currentDayColor.'" onclick="window.location.replace(\'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'#tabs-1\');">'.$ii.'</i></b>
+                        <td style="width: 20px; '.$BgColor.' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; '.$Shtrih.' padding: 5px; text-align: right; cursor: pointer;" onclick="window.location.href = \'fl_createSchedulerReport.php?filial_id='.$_GET['filial'].'&d='.$ii.'&m='.$month.'&y='.$year.'&type='.$type.'\';">
+                            <b><i style="'.$currentDayColor.'" onclick="window.location.replace(\'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'#tabs-1\');">'.$ii.'</i></b><br><span>'.$dayWeek_arr[$weekday_temp].'</span>
                         </td>';
 
                 //Если счетчик дней недели зашел за 7, возвращаем на понедельник
@@ -594,25 +624,37 @@
 
                             //Сумма часов только на всех филиалах
                             if (isset($hours_j[$worker_data['id']][$ii])) {
-                                $hours = array_sum($hours_j[$worker_data['id']][$ii]);
+                                if (array_sum($hours_j[$worker_data['id']][$ii]) > 0) {
+                                    if (($_SESSION['id'] == $worker_data['id']) || ($scheduler['see_all'] == 1) || $god_mode) {
+                                        $hours = '<div id="" class="dayHours_' . $worker_data['id'] . '">' . array_sum($hours_j[$worker_data['id']][$ii]) . '</div>';
+                                    } else {
+                                        if ((date('d') == '28') || (date('d') == '29') || (date('d') == '30') || (date('d') == '31') || (date('d') == '01') || (date('d') == '02') || (date('d') == '03')) {
+                                            $hours = '<i class="fa fa-plus-circle" style="color: rgb(72, 141, 16); font-size: 150%; text-shadow: 1px 1px 1px #999;"></i><div id="" class="dayHours_' . $worker_data['id'] . '" style="display: none;">' . array_sum($hours_j[$worker_data['id']][$ii]) . '</div>';
+                                        }else{
+                                            $hours = '<i class="fa fa-plus-circle" style="color: rgb(72, 141, 16); font-size: 150%; text-shadow: 1px 1px 1px #999;"></i>';
+                                        }
+
+                                    }
+                                }
                             }
+
                         }
 
                         if (($scheduler['edit'] == 1) || $god_mode) {
                             echo '
                             <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, ' . $worker_data['id'] . ', ' . $_GET['filial'] . ', ' . $i . ', ' . $month . ', ' . $year . ', ' . $weekday_temp . '); ' . $invoiceFreeAddStr . '" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
-                                <div id="" class="dayHours_' . $worker_data['id'] . '">' . $hours . '</div>
+                                '.$hours.'
                             </td>';
                         }elseif ($scheduler['add_worker'] == 1){
                             if (($i == $day) && ($cur_month == $month) && ($cur_year == $year)) {
                                 echo '
                                 <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onclick="if (iCanManage) changeTempSchedulerSession(this, ' . $worker_data['id'] . ', ' . $_GET['filial'] . ', ' . $i . ', ' . $month . ', ' . $year . ', ' . $weekday_temp . '); ' . $invoiceFreeAddStr . '" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
-                                    <div id="" class="dayHours_' . $worker_data['id'] . '">' . $hours . '</div>
+                                    '.$hours.'
                                 </td>';
                             }else{
                                 echo '
                                 <td selectedDate="' . $selectedDate . '" class="hoverDate' . $i . ' schedulerItem" style="width: 20px; ' . $BgColor . ' ' . $Shtrih . ' border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right; cursor: pointer;" onmouseover="/*SetVisible(this,true);*/ /*contextMenuShow(\'' . $ii . '.' . $month . '.' . $year . '\', 0, event, \'showCurDate\');*/ $(\'.hoverDate' . $i . '\').addClass(\'cellsBlockHover2\');" onmouseout="/*SetVisible(this,false);*/ $(\'.hoverDate' . $i . '\').removeClass(\'cellsBlockHover2\');" title="' . $title . '">
-                                    <div id="" class="dayHours_' . $worker_data['id'] . '">' . $hours . '</div>
+                                    '.$hours.'
                                 </td>';
                             }
                         }else{
@@ -787,8 +829,24 @@
                             }*/
 
                             //Сумма часов только на всех филиалах
+//                            if (isset($hours_j[$worker_data['id']][$ii])) {
+//                                $hours = array_sum($hours_j[$worker_data['id']][$ii]);
+//                            }
+
                             if (isset($hours_j[$worker_data['id']][$ii])) {
-                                $hours = array_sum($hours_j[$worker_data['id']][$ii]);
+                                if (array_sum($hours_j[$worker_data['id']][$ii]) > 0) {
+                                    if (($_SESSION['id'] == $worker_data['id']) || ($scheduler['see_all'] == 1) || $god_mode) {
+                                        //$hours = array_sum($hours_j[$worker_data['id']][$ii]);
+                                        $hours = '<div id="" class="dayHours_' . $worker_data['id'] . '">' . array_sum($hours_j[$worker_data['id']][$ii]) . '</div>';
+                                    } else {
+                                        if ((date('d') == '28') || (date('d') == '29') || (date('d') == '30') || (date('d') == '31') || (date('d') == '01') || (date('d') == '02') || (date('d') == '03')) {
+                                            $hours = '<i class="fa fa-plus-circle" style="color: rgb(72, 141, 16); font-size: 150%; text-shadow: 1px 1px 1px #999;"></i><div id="" class="dayHours_' . $worker_data['id'] . '" style="display: none;">' . array_sum($hours_j[$worker_data['id']][$ii]) . '</div>';
+                                        } else {
+                                            $hours = '<i class="fa fa-plus-circle" style="color: rgb(72, 141, 16); font-size: 150%; text-shadow: 1px 1px 1px #999;"></i>';
+                                        }
+
+                                    }
+                                }
                             }
                         }
 
@@ -939,8 +997,53 @@
                             
                             blockWhileWaiting (true);
                             
+                            var get_data_str = "";
+							    
+                                //!!!Получение данных из GET тест
+                                /*var params = window
+                                    .location
+                                    .search
+                                    .replace("?","")
+                                    .split("&")
+                                    .reduce(
+                                        function(p,e){
+                                            var a = e.split(\'=\');
+                                            p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+                                            return p;
+                                        },
+                                        {}
+                                    );*/
+                                
+                                //console.log(params["data"]);
+                                //выведет в консоль значение  GET-параметра data
+                                //console.log(params);
+                                
+                                var params = window
+                                    .location
+                                    .search
+                                    .replace("?","")
+                                    .split("&")
+                                    .reduce(
+                                        function(p,e){
+                                            var a = e.split(\'=\');
+                                            p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+                                            return p;
+                                        },
+                                        {}
+                                    );
+                                //console.log(params);
+                                                                
+                                for (key in params) {
+                                    if (key.indexOf("filial") == -1){
+                                        get_data_str = get_data_str + "&" + key + "=" + params[key];
+                                    }
+                                }
+                                //console.log(get_data_str);
+							    
+								document.location.href = "?filial="+$(this).val() + get_data_str;
+                            
                             //var dayW = document.getElementById("SelectDayW").value;
-                            document.location.href = "?filial="+$(this).val()+"'.$who.'";
+                            //document.location.href = "?filial="+$(this).val()+"'.$who.'&m='.$month.'&y='.$year.'";
                         });
                         $("#SelectDayW").change(function(){
                         

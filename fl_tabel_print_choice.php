@@ -21,7 +21,7 @@
 			echo '
 				<header class="never_print_it">
                     <div class="nav">
-                        <a href="fl_tabels.php" class="b">Выжный отчёт</a>
+                        <a href="fl_tabels.php" class="b">Важный отчёт</a>
                     </div>
 					<h1>
     				    Печать
@@ -44,12 +44,13 @@
                                         </div>
 									    <div>';
             echo '
-									        <select name="SelectMonth" id="SelectMonth" style="margin-right: 5px;">';
+									        <select name="SelectMonth" id="SelectMonth" style="margin-right: 5px;">
+									            <option value="0">Выберите месяц</option>';
             foreach ($monthsName as $mNumber => $mName){
                 $selected = '';
-                if ((int)$mNumber == (int)date('m')){
-                    $selected = 'selected';
-                }
+//                if ((int)$mNumber == (int)date('m')){
+//                    $selected = 'selected';
+//                }
                 echo '
 										        <option value="'.$mNumber.'" '.$selected.'>'.$mName.'</option>';
             }
@@ -102,7 +103,14 @@
             $arr = array();
             $workers_rez = array();
 
-            $query = "SELECT `id`, `name` FROM `spr_workers` WHERE `permissions` = '{$_GET['type']}' AND `status` <> '8'";
+            if ($_GET['type'] == 999){
+                //Выберем всех сотрудников с такой должностью
+                $workers_target_str = implode(',', $workers_target_arr);
+
+                $query = "SELECT `id`, `name` FROM `spr_workers` WHERE `permissions` IN ($workers_target_str) AND `status` <> '8'";
+            }else {
+                $query = "SELECT `id`, `name` FROM `spr_workers` WHERE `permissions` = '{$_GET['type']}' AND `status` <> '8'";
+            }
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -146,7 +154,6 @@
             echo '
                             <div id="rezult"></div>
                             <div id="errror"></div>';
-
             echo '
 					        <div id="doc_title">-</div>
 					
@@ -155,6 +162,14 @@
             echo '	
 			<!-- Подложка только одна -->
 			<div id="overlay" class="no_print"></div>';
+
+            echo '
+                            <div class="no_print" style="position: fixed; top: 50px; right: 10px; border: 1px solid #0C0C0C; border-radius: 5px; padding: 5px 5px; background-color: #FFFFFF">
+                                <div class="cellCosmAct b" style="text-align: center; display: inline-block !important; vertical-align: middle; height: auto; border-radius: 3px;"
+                                onclick="window.print();">
+                                    <i class="fa fa-print" aria-hidden="true"></i>
+                                </div>
+                            </div>';
 
             echo "
                     <script>

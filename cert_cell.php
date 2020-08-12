@@ -53,9 +53,10 @@ if ($enter_ok){
 									<div class="cellRight">';
 
                     $offices_j = SelDataFromDB('spr_filials', $_SESSION['filial'], 'offices');
+
                     if ($offices_j != 0) {
                         echo $offices_j[0]['name'].'
-                                <input type="hidden" id="office_id" name="office_id" value="'.$_SESSION['filial'].'">';
+                                <input type="hidden" id="filial_id" name="filial_id" value="'.$_SESSION['filial'].'">';
                     }
 
                     echo '</div>

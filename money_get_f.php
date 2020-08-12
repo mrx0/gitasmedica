@@ -78,7 +78,7 @@
                 $rezult .= '
                             <ul id="orders" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
                                 <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px;">
-                                    Внесенные оплаты/ордеры	<span style="color: red;">(последние 5)</span> <a href="add_order.php?client_id='.$_POST['client_id'].'" class="b">Добавить новый</a>
+                                    Внесенные средства (ордеры)	<span style="color: red;">(последние 5)</span> <a href="add_order.php?client_id='.$_POST['client_id'].'" class="b">Добавить новый</a>
                                 </li>';
 
 

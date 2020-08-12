@@ -61,10 +61,10 @@
 	});
 
     //Показываем блок с суммами и кнопками Для оплаты наряда
-    function showPaymentAdd(mode){
-        //console.log(mode);
+    function showPaymentAdd(mode, another_payer = false){
+        // console.log(another_payer);
 
-        var Summ = document.getElementById("summ").value;
+        let Summ = $("#summ").val();
 
         //проверка данных на валидность
         $.ajax({
@@ -91,11 +91,11 @@
                     }*/
 
                     if (mode == 'add'){
-                       Ajax_payment_add('add');
+                       Ajax_payment_add('add', another_payer);
                     }
 
                     if (mode == 'edit'){
-                        Ajax_payment_add('edit');
+                        Ajax_payment_add('edit', another_payer);
                     }
 
                     // Создаем меню:
@@ -215,7 +215,7 @@
                 //$('#errror').html(res.data); не работает, которое ниже
                 //Приходится смотреть через консоль
                 console.log(res);
-                
+
                 $('.center_block').remove();
                 $('#overlay').hide();
 
@@ -291,43 +291,50 @@
     }
 
     //Добавляем/редактируем в базу оплату
-    function Ajax_payment_add(mode){
-        //console.log(mode);
+    function Ajax_payment_add(mode, another_payer = false){
+        //console.log(another_payer);
 
-        var payment_id = 0;
+        let payment_id = 0;
 
-        var link = "payment_add_f.php";
+        let link = "payment_add_f.php";
 
         if (mode == 'edit'){
             link = "payment_edit_f.php";
             payment_id = $("#payment_id").val();
         }
 
-        var Summ = $("#summ").val();
-        var invoice_id = $("#invoice_id").val();
-        var filial_id = $("#filial_id").val();
+        let reqData = {
+            client_id: $("#client_id").val(),
+            invoice_id: $("#invoice_id").val(),
+            filial_id: $("#filial_id").val(),
+            summ: $("#summ").val(),
+            date_in: $("#date_in").val(),
+            comment: $("#comment").val()
+        };
 
-        var client_id = $("#client_id").val();
-        var date_in = $("#date_in").val();
-        //console.log(date_in);
+        if (another_payer){
+            reqData.another_payer = true;
+            reqData.another_payer_id = $("#new_payer_id").val();
+        }
 
-        var comment = $("#comment").val();
-        //console.log(comment);
+        // var Summ = $("#summ").val();
+        // var invoice_id = $("#invoice_id").val();
+        // var filial_id = $("#filial_id").val();
+        //
+        // var client_id = $("#client_id").val();
+        // var date_in = $("#date_in").val();
+        // //console.log(date_in);
+        //
+        // var comment = $("#comment").val();
+
+        //console.log(reqData);
 
         $.ajax({
             url: link,
             global: false,
             type: "POST",
             dataType: "JSON",
-            data:
-                {
-                    client_id: client_id,
-                    invoice_id: invoice_id,
-                    filial_id: filial_id,
-                    summ: Summ,
-                    date_in: date_in,
-                    comment: comment
-                },
+            data: reqData,
             cache: false,
             beforeSend: function() {
                 //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
@@ -553,6 +560,39 @@
                         alert("Расчётный лист добавлен в табель #"+res.data+".\n\nНельзя удалить.\n\nОбратитесь к руководителю.");
                         $("#tabel_info").html("<div class='query_neok'><a href='fl_tabel.php?id="+res.data+"' class='ahref'>Перейти в табель #"+res.data+"</a></div>");
                     }
+                }
+            });
+        }
+    }
+
+    //Удалить Прочую выдачу/расход
+    function deletePaidoutsTempItem(id){
+        //console.log(id);
+
+        var rys = false;
+
+        rys = confirm("Удалить Выдачу?");
+
+        if (rys) {
+
+
+            $.ajax({
+                url: "fl_paidouts_temp_item_del_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (data) {
+
+                    location.reload();
+
                 }
             });
         }
@@ -862,7 +902,7 @@
                                 })
 
                             } else if (res.result == "empty") {
-
+                                $('#errror').html('<div class="query_neok">Ошибка #61. Нет данных.</div>');
                             } else {
                                 $('#errror').html(res.data);
                             }
@@ -1029,7 +1069,7 @@
         var menu = $('<div/>', {
             class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
         }).css({
-            "top": "120px",
+            "top": "-170px",
             "height": "fit-content",
             "width": "45%",
             "background-color": "rgb(195, 194, 194)"
@@ -1074,14 +1114,14 @@
 
         menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
     }
-    Ajax_change_shed
+    //Ajax_change_shed
     //
     function menuForAddINExistNewTabel(){
 
     }
 
 
-    //Добавить расчетные листы в новый табель, попутно создать этот новый табель (Пока только диалоговое окно)
+    //Добавить расчетные листы в новый табель, попутно создать этот новый табель
     function fl_addNewTabelIN2 (newTabel, type_id, worker_id, filial_id){
 
         /*if (newTabel) {
@@ -1130,7 +1170,8 @@
         var reqData = {
             type_id: type_id,
             worker_id: worker_id,
-            filial_id: filial_id
+            filial_id: filial_id,
+            newTabel: newTabel?1:0
         };
 
         $.ajax({
@@ -1350,7 +1391,7 @@
             tabelMonth: $("#tabelMonth").val(),
             tabelYear: $("#tabelYear").val()
         };
-        console.log(reqData);
+        //console.log(reqData);
 
         $.ajax({
             url: link,
@@ -1367,7 +1408,7 @@
                 //console.log(res);
 
                 if(res.result == "success"){
-                    //console.log(res);
+                    console.log(res);
 
                     //document.location.href = "fl_tabels.php";
                     //window.close('newTabelwindow');
@@ -1732,6 +1773,93 @@
         });
     }
 
+    //Сохраняем дефицитную сумму в указанный месяц
+    function Ajax_PrevMonthDeficitAdd (filial_id){
+        //console.log();
+
+        var link = "fl_add_prev_month_filial_deficit_f.php";
+        //console.log(link);
+
+        var Data = {
+            filial_id: filial_id,
+            summ: Number($("#ostatokDeficit").html().replace(/\s{1,}/g, '')),
+            month:  $("#iWantThisMonthh_prevdef").val(),
+            year:  $("#iWantThisYearh_prevdef").val()
+        };
+        //console.log(Data);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: Data,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                if(res.result == "success"){
+                    location.reload();
+                }else{
+                    alert(res.data);
+                    //$("#overlay").hide();
+                    $('#errrror').html('<div class="query_neok">'+res.data+'</div>');
+                }
+            }
+        });
+    }
+
+    //Удаляем дефицитную сумму тз указанного месяца
+    function Ajax_PrevMonthDeficitDelete (filial_id, year, month){
+        //console.log();
+
+        let rys = false;
+
+        rys = confirm("Вы хотите удалить дефицит. \n\nВы уверены?");
+        //console.log(885);
+
+        if (rys) {
+
+            let link = "fl_delete_prev_month_filial_deficit_f.php";
+            //console.log(link);
+
+            let reqData = {
+                filial_id: filial_id,
+                year: year,
+                month: month
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    // console.log(res);
+
+                    if (res.result == "success") {
+                        location.reload();
+                    } else {
+                        alert(res.data);
+                        //$("#overlay").hide();
+                        $('#errrror').html('<div class="query_neok">' + res.data + '</div>');
+                    }
+                }
+            });
+        }
+    }
+
     //Показываем блок с ночными сменами
     function Ajax_emptySmenaAddINTabel (tabel_id, emptySmens){
         //console.log(tabel_id);
@@ -1805,6 +1933,69 @@
                             })
                             .append('<div style="margin: 10px;">Кол-во ночных смен: <span class="calculateInsInvoice">'+nightSmenaCount+'</span></div>')
                             .append('<div style="margin: 10px;">Общая сумма: <span class="calculateInvoice">'+nightSmenaCount*1000+'</span> руб.</div>')
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "bottom": "2px",
+                                "width": "100%"
+                            })
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                            )
+                    )
+            );
+
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+    }
+
+    //Показываем промежуточный блок для добавления дефицита
+    function showPrevMonthDeficitAdd (filial_id){
+
+        $('#overlay').show();
+
+        var deficit_summ = $("#ostatokDeficit").html();
+        //console.log(deficit_summ);
+
+        // console.log($("#iWantThisMonth").html());
+        // console.log($("#iWantThisYear").html());
+        var calendar_month = $("#iWantThisMonth").html();
+        var calendar_year = $("#iWantThisYear").val();
+
+        var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_PrevMonthDeficitAdd('+filial_id+')">';
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative"
+                    })
+                    .append('<span style="margin: 5px;"><i>Выберите в какой месяц необходимо добавить и нажмите сохранить</i></span>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "10px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%"
+                            })
+                            .append('<select name="iWantThisMonth" id="iWantThisMonthh_prevdef" style="margin-right: 5px;">'+calendar_month+'</select>')
+                            //.append('<select name="iWantThisYear" id="iWantThisYearh_prevdef">'+calendar_year+'</select>')
+                            .append('<input name="iWantThisYear" id="iWantThisYearh_prevdef" type="number" value="'+calendar_year+'" min="2000" max="2030" size="4" style="width: 60px;">')
+                            .append('<div style="margin: 10px;">Cумма: <span class="calculateInvoice">'+deficit_summ+'</span> руб.</div>')
                     )
                     .append(
                         $('<div/>')
@@ -1923,7 +2114,7 @@
                 },
                 // действие, при ответе с сервера
                 success: function (res) {
-                    //console.log(res);
+                    console.log(res);
 
                     if (res.result == "success") {
                         location.reload();
@@ -2215,7 +2406,8 @@
             },
             // действие, при ответе с сервера
             success:function(res){
-                console.log(res.data);
+                //console.log(paidoutData['deploy']);
+                //console.log(res.data);
                 //$('#data').html(res)
 
                 if(res.result == 'success') {
@@ -2225,10 +2417,51 @@
                     blockWhileWaiting (true);
 
                     if (paidoutData['deploy']) {
-                        deployTabel(tabel_id);
-                        document.location.href = link_res+"?id="+tabel_id;
+
+                        wait(function(runNext){
+
+                            setTimeout(function(){
+
+                                deployTabel(tabel_id);
+
+                                runNext();
+
+                            }, 500);
+
+                        }).wait(function(){
+
+                            setTimeout(function(){
+
+                                if ($('#ref').val() === undefined) {
+                                    document.location.href = link_res + "?id=" + tabel_id;
+                                }else{
+                                    document.location.href = $('#ref').val();
+                                }
+
+                            }, 500);
+
+                        });
+
+                        // setTimeout(function(){
+                        //     //console.log($('#ref').val());
+                        //
+                        //     deployTabel(tabel_id);
+                        //
+                        //     if ($('#ref').val() === undefined) {
+                        //         document.location.href = link_res + "?id=" + tabel_id;
+                        //     }else{
+                        //         document.location.href = $('#ref').val();
+                        //     }
+                        //
+                        // }, 100);
                     }else {
-                        document.location.href = link_res + "?id=" + tabel_id;
+                        ///console.log($('#ref').val());
+
+                        if ($('#ref').val() === undefined) {
+                            document.location.href = link_res + "?id=" + tabel_id;
+                        }else{
+                            document.location.href = $('#ref').val();
+                        }
                     }
                 }else{
                     //console.log('error');
@@ -2272,6 +2505,182 @@
                 }else{
                     //console.log('error');
                     $('#errror').html(res.data);
+                    //$('#errrror').html('');
+                }
+            }
+        });
+    }
+
+
+    //Добавляем/редактируем в базу приход извне
+    function  fl_Ajax_money_from_outside_add(moneyData){
+        console.log(moneyData);
+
+        let link = "fl_money_from_outside_add_f.php";
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data: moneyData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(res){
+//                console.log(res.data);
+                //$('#data').html(res)
+
+                blockWhileWaiting (true);
+
+                if(res.result == 'success') {
+                    //console.log('success');
+                    //$('#data').html(res.data);
+
+                    location.reload();
+                    //window.location.replace("fl_tabel.php?id="+tabel_id);
+
+                }else{
+                    //console.log('error');
+                    $('#errror').html(res.data);
+                    //$('#errrror').html('');
+                }
+            }
+        });
+    }
+
+    //Добавляем/редактируем в базу расходы на материалы
+    function  fl_Ajax_material_cost_add(moneyData){
+        //console.log(moneyData);
+
+        let link = "fl_material_cost_add_f.php";
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data: moneyData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(res){
+//                console.log(res.data);
+                //$('#data').html(res)
+
+                blockWhileWaiting (true);
+
+                if(res.result == 'success') {
+                    //console.log('success');
+                    //$('#data').html(res.data);
+
+                    //location.reload();
+                    window.location.href = "material_costs_test.php?filial_id="+moneyData.filial_id+"&m="+moneyData.month+"&y="+moneyData.year;
+
+                }else{
+                    //console.log('error');
+                    $('#errror').html(res.data);
+                    //$('#errrror').html('');
+                }
+            }
+        });
+    }
+
+    //Удаляем все денежные приходы извне на филиал в месяц
+    function Ajax_MoneyFromOutsideDelete (filial_id, year, month){
+        //console.log();
+
+        let rys = false;
+
+        rys = confirm("Вы хотите удалить ВСЕ приходы денег извне. \n\nВы уверены?");
+        //console.log(885);
+
+        if (rys) {
+
+            let link = "fl_delete_money_from_outside_f.php";
+            //console.log(link);
+
+            let reqData = {
+                filial_id: filial_id,
+                year: year,
+                month: month
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    // console.log(res);
+
+                    if (res.result == "success") {
+                        location.reload();
+                    } else {
+                        alert(res.data);
+                        //$("#overlay").hide();
+                        $('#errrror').html('<div class="query_neok">' + res.data + '</div>');
+                    }
+                }
+            });
+        }
+    }
+
+
+    //Добавляем/редактируем в базу оплату солярия
+    function fl_Ajax_solar_add(reqData){
+        //console.log(reqData);
+
+        var link = "fl_solar_add_f.php";
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data: reqData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(res){
+                // console.log(res);
+                // console.log(res.data);
+
+                //$('#data').html(res)
+
+                blockWhileWaiting (true);
+
+                if(res.result == 'success') {
+                    // console.log('success');
+
+                    //$('#data').html(res.data);
+                    //blockWhileWaiting (false);
+
+                    document.location.href = "zapis_solar.php?filial_id=" + reqData.filial_id;
+                }else{
+                    //console.log('error');
+
+                    blockWhileWaiting (false);
+                    $('#errrror').html(res.data);
                     //$('#errrror').html('');
                 }
             }
@@ -2602,7 +3011,7 @@
             deploy: deploy,
             subtractions: filials_subtractions
         };
-        //console.log(paidoutData);
+            //console.log(paidoutData);
 
         //проверка данных на валидность
         $.ajax({
@@ -2645,55 +3054,218 @@
         //убираем ошибки
         hideAllErrors ();
 
-        var paidoutData = {
-            month: $('#iWantThisMonth').val(),
-            year: $('#iWantThisYear').val(),
-            worker: $('#search_client2').val(),
-            paidout_summ: $('#paidout_summ').val(),
-            paidout_id: $('#SelectType').val(),
-            filial_id: $('#SelectFilial').val(),
-            descr: $('#descr').val()
-        };
-        //console.log(paidoutData);
+        if ($('#SelectFilial').val() == 0){
+            $("#errror").html('<div class="query_neok">Не выбран филиал</div>');
+        }else {
 
-        //проверка данных на валидность
-        $.ajax({
-            url:"ajax_test.php",
-            global: false,
-            type: "POST",
-            dataType: "JSON",
+            var paidoutData = {
+                month: $('#iWantThisMonth').val(),
+                year: $('#iWantThisYear').val(),
+                worker: $('#search_client2').val(),
+                paidout_summ: $('#paidout_summ').val(),
+                paidout_id: $('#SelectType').val(),
+                filial_id: $('#SelectFilial').val(),
+                descr: $('#descr').val()
+            };
+            //console.log(paidoutData);
 
-            data: {paidout_summ: $('#paidout_summ').val()},
+            //проверка данных на валидность
+            $.ajax({
+                url: "ajax_test.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
 
-            cache: false,
-            beforeSend: function() {
-                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-            },
-            success:function(res){
-                if(res.result == 'success'){
+                data: {paidout_summ: $('#paidout_summ').val()},
 
-                    fl_Ajax_paidout_another_add(paidoutData);
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    if (res.result == 'success') {
 
-                    // в случае ошибок в форме
-                }else{
-                    // перебираем массив с ошибками
-                    for(var errorField in res.text_error){
-                        // выводим текст ошибок
-                        $('#'+errorField+'_error').html(res.text_error[errorField]);
-                        // показываем текст ошибок
-                        $('#'+errorField+'_error').show();
-                        // обводим инпуты красным цветом
-                        // $('#'+errorField).addClass('error_input');
+                        fl_Ajax_paidout_another_add(paidoutData);
+
+                        // в случае ошибок в форме
+                    } else {
+                        // перебираем массив с ошибками
+                        for (var errorField in res.text_error) {
+                            // выводим текст ошибок
+                            $('#' + errorField + '_error').html(res.text_error[errorField]);
+                            // показываем текст ошибок
+                            $('#' + errorField + '_error').show();
+                            // обводим инпуты красным цветом
+                            // $('#'+errorField).addClass('error_input');
+                        }
+                        $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
                     }
-                    $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
                 }
+            })
+        }
+    }
+
+    //Промежуточная функция для прихода денег извне
+    function fl_showMoneyFromOutsideAdd(){
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        if ($('#SelectFilial').val() == 0){
+            $("#errror").html('<div class="query_neok">Не выбран филиал</div>');
+        }else {
+
+            let moneyData = {
+                month: $('#iWantThisMonth').val(),
+                year: $('#iWantThisYear').val(),
+                summ: $('#paidout_summ').val(),
+                filial_id: $('#SelectFilial').val(),
+                descr: $('#descr').val()
+            };
+            //console.log(paidoutData);
+
+            //проверка данных на валидность
+            $.ajax({
+                url: "ajax_test.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+
+                data: {summ: $('#summ').val()},
+
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    if (res.result == 'success') {
+
+                        fl_Ajax_money_from_outside_add(moneyData);
+
+                        // в случае ошибок в форме
+                    } else {
+                        // перебираем массив с ошибками
+                        for (var errorField in res.text_error) {
+                            // выводим текст ошибок
+                            $('#' + errorField + '_error').html(res.text_error[errorField]);
+                            // показываем текст ошибок
+                            $('#' + errorField + '_error').show();
+                            // обводим инпуты красным цветом
+                            // $('#'+errorField).addClass('error_input');
+                        }
+                        $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                    }
+                }
+            })
+        }
+    }
+
+    //Промежуточная функция для Добавления расходов
+    function fl_showMaterialCostAdd_test(){
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        if ($('#SelectFilial').val() == 0){
+            $("#errror").html('<div class="query_neok">Не выбран филиал</div>');
+        }else {
+            if ($('#SelectCategory').val() == 0){
+                $("#errror").html('<div class="query_neok">Не выбрана категория</div>');
+            }else {
+
+                let moneyData = {
+                    month: $('#iWantThisMonth').val(),
+                    year: $('#iWantThisYear').val(),
+                    summ: $('#paidout_summ').val(),
+                    filial_id: $('#SelectFilial').val(),
+                    cat_id: $('#SelectCategory').val(),
+                    descr: $('#descr').val()
+                };
+                //console.log(paidoutData);
+
+                //проверка данных на валидность
+                $.ajax({
+                    url: "ajax_test.php",
+                    global: false,
+                    type: "POST",
+                    dataType: "JSON",
+
+                    data: {summ: $('#summ').val()},
+
+                    cache: false,
+                    beforeSend: function () {
+                        //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                    },
+                    success: function (res) {
+                        if (res.result == 'success') {
+
+                            fl_Ajax_material_cost_add(moneyData);
+
+                            // в случае ошибок в форме
+                        } else {
+                            // перебираем массив с ошибками
+                            for (var errorField in res.text_error) {
+                                // выводим текст ошибок
+                                $('#' + errorField + '_error').html(res.text_error[errorField]);
+                                // показываем текст ошибок
+                                $('#' + errorField + '_error').show();
+                                // обводим инпуты красным цветом
+                                // $('#'+errorField).addClass('error_input');
+                            }
+                            $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                        }
+                    }
+                })
             }
-        })
+        }
+    }
+
+    //Промежуточная функция для ввода оплаты за солярий
+    function fl_showSolarAdd(filial_id){
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        //!!!тут сделано только для одного абонемента, если надо переделать, то тут
+        var abon_id = $(".abon_pay").attr('abon_id');
+        //console.log(abon_id);
+
+        if (abon_id === undefined){
+            abon_id = 0;
+        }
+
+        if ((Number($('#finPrice').val()) > 0) || (Number($('#realiz_summ').val()) > 0) || (abon_id != 0)){
+            var reqData = {
+                filial_id: filial_id,
+                date_in: $('#iWantThisDate2').val(),
+                /*device_type: $('#selectDeviceType').val(),*/
+                min_count: $('#min_count').val(),
+                discount: $('#discount').val(),
+                summ_type: $('input[name=summ_type]:checked').val(),
+                oneMinPrice: $('#oneMinPrice').html(),
+                finPrice: $('#finPrice').val(),
+                descr: $('#descr').val(),
+                abon_id: abon_id,
+
+                realiz_summ: $('#realiz_summ').val()
+
+            };
+            //console.log(reqData);
+
+            fl_Ajax_solar_add(reqData);
+
+        }else{
+            $("#errror").html('<span style="color: red">Ошибка, что-то заполнено не так.</span>');
+            $("#min_count_error").html('<span style="color: red">В этом поле ошибка</span>');
+            $("#min_count_error").show();
+        }
     }
 
     //Провести табель
     function deployTabel (tabel_id){
-        //console.log(mode);
+        //console.log(tabel_id);
+        //console.log(Number($("#summItog").html()));
+
 
         //убираем ошибки
         hideAllErrors ();
@@ -2704,6 +3276,7 @@
 
         var link = "fl_deployTabel_f.php";
 
+
         var rys = false;
 
         rys = confirm("Вы собираетесь провести табель.\nПосле этого изменить его не получится.\nВы уверены?");
@@ -2711,30 +3284,44 @@
 
         if (rys) {
 
-            $.ajax({
-                url: link,
-                global: false,
-                type: "POST",
-                dataType: "JSON",
+            //if (Number($("#summItog").html()) == 0) {
 
-                data:deployData,
+                $.ajax({
+                    url: link,
+                    global: false,
+                    type: "POST",
+                    dataType: "JSON",
 
-                cache: false,
-                beforeSend: function () {
-                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-                },
-                // действие, при ответе с сервера
-                success: function (res) {
-                    //console.log(res);
+                    data: deployData,
 
-                    if (res.result == "success") {
+                    cache: false,
+                    beforeSend: function () {
+                        //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                    },
+                    // действие, при ответе с сервера
+                    success: function (res) {
                         //console.log(res);
-                        location.reload();
-                    } else {
-                        $('#errror').html(res.data);
+
+                        if (res.result == "success") {
+                            //console.log(res);
+                            //console.log($('#ref').val());
+                            //location.reload();
+
+                            if ($('#ref').val() === undefined) {
+                                window.location.replace("fl_tabel.php?id="+tabel_id);
+                            }else{
+                                window.location.replace($('#ref').val());
+                            }
+
+                        } else {
+                            //$('#errror').html(res.data);
+                            alert("Сумма табеля не равна нулю [ "+parseInt(res.data)+" ] ! Невозможно провести.");
+                        }
                     }
-                }
-            });
+                });
+            // }else{
+            //     alert("Сумма табеля не равна нулю! Невозможно провести.");
+            // }
         }
     }
 
@@ -2900,14 +3487,14 @@
                         $(this).val(Number($(this).val()));
                         materials_consumption_pos_all_summ += Number($(this).val());
 
-                        if (materials_consumption_pos_all_summ > mat_paid_summ){
-                            alert("Сумма расходов не может превышать суммы оплаты.");
-                            materials_consumption_pos_all_summ = mat_paid_summ;
-                            $(".materials_consumption_pos_all").val(materials_consumption_pos_all_summ);
-                            $("#matConsAccept").prop("disabled", true);
-                        }else{
+                        // if (materials_consumption_pos_all_summ > mat_paid_summ){
+                        //     alert("Сумма расходов не может превышать суммы оплаты.");
+                        //     materials_consumption_pos_all_summ = mat_paid_summ;
+                        //     $(".materials_consumption_pos_all").val(materials_consumption_pos_all_summ);
+                        //     $("#matConsAccept").prop("disabled", true);
+                        // }else{
                             $("#matConsAccept").prop("disabled", false);
-                        }
+                        // }
 
                     } else {
                         $(this).val(0);
@@ -3104,11 +3691,11 @@
 
                 var mat_cons_pos_summ_all = Number($(this).val());
 
-                if (mat_cons_pos_summ_all > mat_paid_summ){
-                    alert("Сумма расходов не может превышать суммы оплаты.");
-                    mat_cons_pos_summ_all = mat_paid_summ;
-                    $(this).val(mat_cons_pos_summ_all);
-                }
+                // if (mat_cons_pos_summ_all > mat_paid_summ){
+                //     alert("Сумма расходов не может превышать суммы оплаты.");
+                //     mat_cons_pos_summ_all = mat_paid_summ;
+                //     $(this).val(mat_cons_pos_summ_all);
+                // }
 
                 var chkBoxsCount = $('input[type=checkbox]:checked').length;
 
@@ -3182,8 +3769,6 @@
                         thisObj.html(res.data);
 
                         //Показываем оповещения на фио и филиале
-                        //$("#tabs_notes_"+permission+"_"+worker).show();
-                        //$("#tabs_notes_"+permission+"_"+worker+"_"+office).show();
                         //console.log("#tabs_notes_"+permission+"_"+worker+"_"+office);
 
                         $("#tabs_notes_"+permission+"_"+worker).css("display", "inline-block");
@@ -3234,7 +3819,7 @@
                 //thisObj.html("<div style='width: 120px; height: 32px; padding: 5px 10px 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка<br>расч. листов</span></div>");
             },
             success:function(res){
-                //console.log(res);
+                // console.log(res);
                 //console.log(reqData.worker);
                 // if (reqData.worker == 492) {
                 //     console.log(res.query);
@@ -3343,6 +3928,16 @@
                     worker = ids_arr[1];
                     office = ids_arr[2];
 
+
+                    //Костыль для конкретного персонала, который не входит в другие группы
+                    var workers_target_arr = [1, 9, 12, 777];
+                    //console.log(permission);
+                    //console.log(workers_target_arr.indexOf(Number(permission)));
+
+                    if (workers_target_arr.indexOf(Number(permission)) !== -1){
+                        permission = 999;
+                    }
+
                     if (res.status == 1){
                         thisObj.html(res.data);
 
@@ -3362,6 +3957,34 @@
                         thisObj.parent().find(".summTabelNPaid").html(res.summCalc);
 
                     }
+
+                    // console.log($("#tabs_notes2_"+permission+"_"+worker+"_"+office).css("display"));
+                    // console.log($("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display"));
+
+
+                    // console.log($("#tabs_notes2_"+permission+"_"+worker+"_"+office).css("display"));
+                    // console.log($("#tabs_notes_"+permission+"_"+worker+"_"+office).css("display"));
+                    // console.log(permission);
+                    // console.log(worker);
+                    // console.log(office);
+                    // console.log($('#tabs_notes2_'+permission+'_'+worker+'_'+office).css("display"));
+                    // console.log($('#tabs_notes2_'+permission+'_'+worker+'_'+office).css("display") == 'none');
+                    // console.log((($('#tabs_notes2_'+permission+'_'+worker+'_'+office).css("display") == 'none')&&($('#tabs_notes_'+permission+'_'+worker+'_'+office).css("display") == 'none')));
+
+                    // var index = $('#tabs_w'+permission+'_'+worker+' a[href="#tabs-'+permission+'_'+worker+'_'+office+'"]').parent().index();
+                    //
+                    // //console.log('Index: ' + index);
+                    //
+                    // if (($('#tabs_notes2_'+permission+'_'+worker+'_'+office).css("display") == 'none')
+                    //     &&
+                    //     ($('#tabs_notes_'+permission+'_'+worker+'_'+office).css("display") == 'none'))
+                    // {
+                    //     $('#tabs_w'+permission+'_'+worker).tabs( "option", "disabled", [ index ] );
+                    // }
+
+                    //!!!Если и нужна блокировка закладок, то запускать не отсюда, а в самом конце,
+                    //а значит переделать саму функцию
+                    //disableTabs (permission, worker);
 
                     if (res.status == 0){
                         thisObj.html("Нет данных по табелям");
@@ -3384,6 +4007,8 @@
                             // })
                         }
                     }
+
+
                 }
 
                 if(res.result == "error"){
@@ -3524,9 +4149,9 @@
         //console.log (newPercent);
         //console.log (controlCategories);
 
-        var link = "fl_prikazNomerVosem_JustDoIt_f.php";
+        let link = "fl_prikazNomerVosem_JustDoIt_f.php";
 
-        var reqData = {
+        let reqData = {
             tabel_id: tabel_id,
             newPercent: newPercent,
             controlCategories: controlCategories
@@ -3544,73 +4169,41 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                console.log(res);
+                //console.log(res);
 
-                var calc_ids_arr = Array.from(res.data);
+                if (res.result == 'success') {
+                    let calc_ids_arr = Array.from(res.data);
+                    //console.log(calc_ids_arr);
 
-                //!!! Хороший пример паузы в цикле (пауза в цикле)
-                //Не использовать, если есть вариант, что массив изменится во время
-                //И если обязательно индексы цифровые и по порядку
-                if (calc_ids_arr.length > 0) {
+                    //!!! Хороший пример паузы в цикле (пауза в цикле) через рекурсию
+                    //Не использовать, если есть вариант, что массив изменится во время
+                    //И если обязательно индексы цифровые и по порядку
+                    if (calc_ids_arr.length > 0) {
 
-                    var foo = function (i) {
-                        $("#prikazNomerVosem").html("<i>Обновляем данные для РЛ</i>: #<b>"+calc_ids_arr[i]+"</b><br>");
+                        let foo = function (i) {
+                            $("#prikazNomerVosem").html("<i>Обновляем данные для РЛ</i>: #<b>" + calc_ids_arr[i] + "</b><br>");
 
-                        window.setTimeout(function () {
-                            //console.log(calc_ids_arr[i]);
+                            window.setTimeout(function () {
+                                //console.log(calc_ids_arr[i]);
 
-                            link = "fl_reloadPercentsMarkedCalculates.php";
+                                link = "fl_reloadPercentsMarkedCalculates.php";
 
-                            reqData.tabel_id = tabel_id;
-                            reqData.newPercent = newPercent;
-                            reqData.controlCategories = controlCategories;
+                                reqData.tabel_id = tabel_id;
+                                reqData.newPercent = newPercent;
+                                reqData.controlCategories = controlCategories;
 
-                            //Так как функция, находящаяся в fl_reloadPercentsMarkedCalculates.php
-                            //Работает по-ебаному (лень просто переделывать, лепим костыли),
-                            //а именно: ей нужно скормить перемменную вида chkBox_5_400_16
-                            //В которой хранятся тип (стом, косм...)/5, ID работника/400, филиал/16)
-                            //То создадим такую ебаную переменную reqData.data =)
+                                //Так как функция, находящаяся в fl_reloadPercentsMarkedCalculates.php
+                                //Работает по-ебаному (лень просто переделывать, лепим костыли),
+                                //а именно: ей нужно скормить перемменную вида chkBox_5_400_16
+                                //В которой хранятся тип (стом, косм...)/5, ID работника/400, филиал/16)
+                                //Поэтому создадим такую ебаную переменную reqData.data =)
 
-                            reqData.data = 'chkBox_6_000_00';
+                                reqData.data = 'chkBox_6_000_00';
 
-                            reqData.main_data = [];
+                                reqData.main_data = [];
 
-                            reqData.main_data[reqData.main_data.length] = calc_ids_arr[i];
+                                reqData.main_data[reqData.main_data.length] = calc_ids_arr[i];
 
-                            //По каждому из id пересчитываем РЛ
-                            $.ajax({
-                                url: link,
-                                global: false,
-                                type: "POST",
-                                dataType: "JSON",
-                                data: {
-                                    calcArr: reqData
-                                },
-                                cache: false,
-                                beforeSend: function () {
-                                },
-                                // действие, при ответе с сервера
-                                success: function (res) {
-                                    //console.log(res);
-
-                                    if (res.result == "success") {
-                                        //$("#prikazNomerVosem").append("<i>Новый РЛ</i>: <b>"+res.newCalcID+"</b> <i>создан<br></i>");
-                                    }
-                                }
-                            });
-
-                            if (i < calc_ids_arr.length-1){
-                                foo(i + 1);
-                            } else {
-                                //По окончании цикла, который выше, чего-то делаем
-                                //console.log("Обновляем сумму табеля.");
-
-                                $("#prikazNomerVosem").html("Обновляем сумму табеля.");
-
-                                link = "fl_updateTabelBalance_f.php";
-
-                                //А тут мне пришлось создать отдельный файл с функцией, которая тупо передаёт
-                                //дальше ID табеля и тот пересчитывает свою сумму.
                                 //По каждому из id пересчитываем РЛ
                                 $.ajax({
                                     url: link,
@@ -3618,7 +4211,7 @@
                                     type: "POST",
                                     dataType: "JSON",
                                     data: {
-                                        tabel_id: tabel_id
+                                        calcArr: reqData
                                     },
                                     cache: false,
                                     beforeSend: function () {
@@ -3628,16 +4221,53 @@
                                         //console.log(res);
 
                                         if (res.result == "success") {
-                                            location.reload();
-                                        }else{
-                                            console.log(res.data);
+                                            //$("#prikazNomerVosem").append("<i>Новый РЛ</i>: <b>"+res.newCalcID+"</b> <i>создан<br></i>");
                                         }
                                     }
                                 });
-                            }
-                        }, 1000);
-                    };
-                    foo(0);
+
+                                if (i < calc_ids_arr.length - 1) {
+                                    foo(i + 1);
+                                } else {
+                                    //По окончании цикла, который выше, чего-то делаем
+                                    //console.log("Обновляем сумму табеля.");
+
+                                    $("#prikazNomerVosem").html("Обновляем сумму табеля.");
+
+                                    link = "fl_updateTabelBalance_f.php";
+
+                                    //А тут мне пришлось создать отдельный файл с функцией, которая тупо передаёт
+                                    //дальше ID табеля и тот пересчитывает свою сумму.
+                                    //По каждому из id пересчитываем РЛ
+                                    $.ajax({
+                                        url: link,
+                                        global: false,
+                                        type: "POST",
+                                        dataType: "JSON",
+                                        data: {
+                                            tabel_id: tabel_id
+                                        },
+                                        cache: false,
+                                        beforeSend: function () {
+                                        },
+                                        // действие, при ответе с сервера
+                                        success: function (res) {
+                                            //console.log(res);
+
+                                            if (res.result == "success") {
+                                                location.reload();
+                                            } else {
+                                                //console.log(res.data);
+                                            }
+                                        }
+                                    });
+                                }
+                            }, 1000);
+                        };
+                        foo(0);
+                    }
+                }else{
+                    $("#prikazNomerVosem").html("<i style='color: red;'>Нет РЛ, подходящих для перерасчёта</i>");
                 }
             }
         });
@@ -3733,7 +4363,7 @@
 
                     }else{
                         console.log(res);
-                        
+
                     }
                 }
             });
@@ -3841,22 +4471,44 @@
             arenda: $("#arendaNal").val(),
             zreport: $("#zreport").val(),
             allsumm: $("#allsumm").html(),
+
             SummNal: $("#SummNal").html(),
             SummBeznal: $("#SummBeznal").html(),
+
             SummNalStomCosm: $("#SummNalStomCosm").html(),
             SummBeznalStomCosm: $("#SummBeznalStomCosm").html(),
+
             CertCount: $("#CertCount").html(),
             SummCertNal: $("#SummCertNal").html(),
             SummCertBeznal: $("#SummCertBeznal").html(),
+
+            AbonCount: $("#AbonCount").html(),
+            SummAbonNal: $("#SummAbonNal").html(),
+            SummAbonBeznal: $("#SummAbonBeznal").html(),
+
+            SolarCount: $("#SolarCount").html(),
+            SummSolarNal: $("#SummSolarNal").html(),
+            SummSolarBeznal: $("#SummSolarBeznal").html(),
+
+            RealizCount: $("#RealizCount").html(),
+            SummRealizNal: $("#SummRealizNal").html(),
+            SummRealizBeznal: $("#SummRealizBeznal").html(),
+
+
             ortoSummNal: $("#ortoSummNal").val(),
             ortoSummBeznal: $("#ortoSummBeznal").val(),
+
             specialistSummNal: $("#specialistSummNal").val(),
             specialistSummBeznal: $("#specialistSummBeznal").val(),
+
             analizSummNal: $("#analizSummNal").val(),
             analizSummBeznal: $("#analizSummBeznal").val(),
+
             solarSummNal: $("#solarSummNal").val(),
             solarSummBeznal: $("#solarSummBeznal").val(),
-            summMinusNal: $("#summMinusNal").html()/*,
+
+            summMinusNal: $("#summMinusNal").html()
+            /*,
             bankSummNal: $("#bankSummNal").html(),
             directorSummNal: $("#directorSummNal").html()*/
         };
@@ -3874,7 +4526,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                //console.log(res);
+                console.log(res);
 
                 if(res.result == 'success') {
                     //console.log('success');
@@ -3894,7 +4546,7 @@
     }
 
     //Редактирование ежедневного отчёта в бд
-    function fl_editDailyReport_add(report_id){
+    function fl_editDailyReport_add(report_id, month, year){
 
         //убираем ошибки
         hideAllErrors ();
@@ -3947,7 +4599,7 @@
                     $('#data').html(res.data);
                     setTimeout(function () {
                         //window.location.replace('stat_cashbox.php');
-                        window.location.replace('fl_consolidated_report_admin.php?filial_id='+filial_id);
+                        window.location.replace('fl_consolidated_report_admin.php?filial_id='+filial_id+'&m='+month+'&y='+year);
                         //console.log('client.php?id='+id);
                     }, 500);
                 }else{
@@ -3960,11 +4612,17 @@
     }
 
     //Добавление рабочих часов сотрудникам на филиале
-    function fl_createSchedulerReport_add(){
+    function fl_createSchedulerReport_add(type){
         //console.log($("#allsumm").html().replace(/\s{2,}/g, ''));
 
         //убираем ошибки
         hideAllErrors ();
+
+        //Куда возвращаемся
+        var res_location = 'scheduler3.php';
+        if (type == 11){
+            res_location = 'scheduler4.php';
+        }
 
         var errors = false;
 
@@ -3974,6 +4632,7 @@
 
         $(".workerHoursValue").each(function(){
             // console.log($(this).attr('worker_id'));
+            // console.log($(this).attr('worker_type'));
             // console.log($(this).val());
 
             if (isNaN($(this).val())){
@@ -3985,7 +4644,7 @@
                 $("#hours_"+$(this).attr('worker_id')+"_num_error").show();
             }else{
                 //Часов должно быть хоть сколько-нибудь
-                if ($(this).val() > 0) {
+                if (($(this).val() > 0) || (($(this).val() && (($(this).attr('worker_type') == 1) || ($(this).attr('worker_type') == 9) || ($(this).attr('worker_type') == 11) || ($(this).attr('worker_type') == 12) || ($(this).attr('worker_type') == 777))))){
                     workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
                     workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
                 }else{
@@ -4031,7 +4690,7 @@
                         setTimeout(function () {
                             //window.location.replace('stat_cashbox.php');
                             //window.location.replace('scheduler3.php?filial_id='+filial_id);
-                            window.location.href = 'scheduler3.php?filial_id=' + filial_id;
+                            window.location.href = res_location+'?filial=' + filial_id;
                             //console.log('client.php?id='+id);
                         }, 500);
                     } else {
@@ -4044,72 +4703,110 @@
         }else{
             $("#errrror").html('<div class="query_neok">Ошибка, что-то заполнено не так. Часов должно быть большо 0.</div>')
         }
+
+        setTimeout('$("#fl_createSchedulerReport_add").removeAttr("disabled")', 1500);
     }
 
     //Редактирование рабочих часов сотрудникам на филиале
-    function fl_editSchedulerReport_add(report_ids){
+    function fl_editSchedulerReport_add(report_ids, type){
         //console.log(report_ids);
 
         //убираем ошибки
         hideAllErrors ();
 
+        //Куда возвращаемся
+        var res_location = 'scheduler3.php';
+        if (type == 11){
+            res_location = 'scheduler4.php';
+        }
+
+        var errors = false;
+
         //Соберём данные по часам
         var workerHoursValues_arr = {};
         var workerTypesValues_arr = {};
 
+        // $(".workerHoursValue").each(function(){
+        //     // console.log($(this).attr('worker_id'));
+        //     // console.log(Number($(this).val().replace(',', '.')));
+        //
+        //     workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val().replace(',', '.');
+        //     workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
+        //
+        // });
+
         $(".workerHoursValue").each(function(){
             // console.log($(this).attr('worker_id'));
-            // console.log(Number($(this).val().replace(',', '.')));
+            // console.log($(this).val());
 
-            workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val().replace(',', '.');
-            workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
+            if (isNaN($(this).val())){
+                errors = true;
 
-        });
-        //console.log(workerHoursValues_arr);
+                //console.log("#hours_"+$(this).attr('worker_id')+"_num_error");
 
-        var link = "fl_editSchedulerReport_add_f.php";
-
-        var filial_id = $("#SelectFilial").val();
-
-        var reqData = {
-            report_ids: report_ids,
-            date: $("#iWantThisDate2").val(),
-            filial_id: filial_id,
-            workers_hours_data: workerHoursValues_arr,
-            workers_types_data: workerTypesValues_arr
-        };
-        //console.log(reqData);
-
-        $.ajax({
-            url: link,
-            global: false,
-            type: "POST",
-            dataType: "JSON",
-            data: reqData,
-            cache: false,
-            beforeSend: function() {
-                //$('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-            },
-            // действие, при ответе с сервера
-            success: function(res){
-                //console.log(res);
-
-                if(res.result == 'success') {
-                    //console.log('success');
-                    $('#data').html(res.data);
-                    setTimeout(function () {
-                        //window.location.replace('stat_cashbox.php');
-                        //window.location.replace('scheduler3.php?filial_id='+filial_id);
-                        window.location.href = 'scheduler3.php?filial_id='+filial_id;
-                        //console.log('client.php?id='+id);
-                    }, 500);
+                $("#hours_"+$(this).attr('worker_id')+"_num_error").html("В этом поле ошибка");
+                $("#hours_"+$(this).attr('worker_id')+"_num_error").show();
+            }else{
+                //Часов должно быть хоть сколько-нибудь
+                if (($(this).val() > 0) || (($(this).val() && (($(this).attr('worker_type') == 1) || ($(this).attr('worker_type') == 9) || ($(this).attr('worker_type') == 11) || ($(this).attr('worker_type') == 12) || ($(this).attr('worker_type') == 777))))){
+                    workerHoursValues_arr[$(this).attr('worker_id')] = $(this).val();
+                    workerTypesValues_arr[$(this).attr('worker_id')] = $(this).attr('worker_type');
                 }else{
-                    //console.log('error');
-                    $('#errrror').html(res.data);
-                    //$('#errrror').html('');
+                    errors = true;
                 }
             }
         });
+        //console.log(workerHoursValues_arr);
+
+        if (!errors) {
+            var link = "fl_editSchedulerReport_add_f.php";
+
+            var filial_id = $("#SelectFilial").val();
+
+            var reqData = {
+                report_ids: report_ids,
+                date: $("#iWantThisDate2").val(),
+                filial_id: filial_id,
+                workers_hours_data: workerHoursValues_arr,
+                workers_types_data: workerTypesValues_arr
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res);
+
+                    if (res.result == 'success') {
+                        //console.log('success');
+                        $('#data').html(res.data);
+                        setTimeout(function () {
+                            //window.location.replace('stat_cashbox.php');
+                            //window.location.replace('scheduler3.php?filial_id='+filial_id);
+                            window.location.href = res_location + '?filial=' + filial_id;
+                            //console.log('client.php?id='+id);
+                        }, 500);
+                    } else {
+                        //console.log('error');
+                        $('#errrror').html(res.data);
+                        //$('#errrror').html('');
+                    }
+                }
+            });
+        }else{
+            $("#errrror").html('<div class="query_neok">Ошибка, что-то заполнено не так. Часов должно быть большо 0.</div>')
+        }
+
+        setTimeout('$("#fl_editSchedulerReport_add").removeAttr("disabled")', 1500);
     }
 
     //Удалить часы за смену по id
@@ -4118,7 +4815,7 @@
 
         var rys = false;
 
-        rys = confirm("Вы хотите удалить часы сотрудника за смену. \nЭто необратимо.\n\nВы уверены?");
+        rys = confirm("Вы хотите удалить часы сотрудника за смену. \n\nВы уверены?");
 
         if (rys) {
             $.ajax({
@@ -4184,22 +4881,23 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                //console.log(res);
+                console.log(res);
                 //$('#errrror').html(res.subtractions_j);
-                console.log(res.subtractions_j);
+                // console.log(res.subtractions_j);
                 //console.log(res.subtractions_j.length);
 
                 if(res.result == 'success') {
                     //console.log('success');
                     //$('#errrror').html(res.data);
 
-                    var prev_month_filial_summ = number_format((res.prev_month_filial_summ), 2, '.', ' ');
+                    //var prev_month_filial_summ = number_format((res.prev_month_filial_summ), 2, '.', ' ');
+                    var prev_month_filial_summ = Number(res.prev_month_filial_summ);
 
                     //var subtractionsSumm_arr = [];
 
-                    var subtractions = res.subtractions_j;
+                    var SummPrepayment = 0, SummHolidayPay = 0, SummHospitalPay = 0, SummSalary = 0, SummRefund = 0, SummWithdraw = 0;
 
-                    var SummPrepayment = 0, SummHolidayPay = 0, SummHospitalPay = 0, SummSalary = 0;
+                    var subtractions = res.subtractions_j;
 
                     if (subtractions.length > 0){
                         for(var i = 0; i < subtractions.length; i++){
@@ -4235,10 +4933,24 @@
                             }
                         }
                     }
+
+                    //Выдачи (возвраты) денег пациентам
+                    var withdraws = res.withdraw_j;
+
+                    if (withdraws.length > 0){
+                        for(var i = 0; i < withdraws.length; i++){
+
+                            SummWithdraw += parseFloat(withdraws[i].summ)
+
+                        }
+                    }
                     // console.log(SummPrepayment);
                     // console.log(SummHolidayPay);
                     // console.log(SummHospitalPay);
                     // console.log(SummSalary);
+                    // console.log(SummRefund);
+                    // console.log(SummWithdraw);
+
 
                     //
                     $("#itogSummAllMonth").html(0);
@@ -4269,7 +4981,7 @@
 
 
 
-                    $("#prev_month_filial_summ").html(prev_month_filial_summ);
+                    $("#prev_month_filial_summ").html(number_format((prev_month_filial_summ), 2, '.', ' '));
 
 
                     //- Итог общий
@@ -4596,6 +5308,8 @@
                             Number(
                                 $("#summMinusAllMonth").html().replace(/\s{1,}/g, '')
                             )
+                            +
+                            prev_month_filial_summ
                         )
                         , 2, '.', ' ')
                     );
@@ -4605,8 +5319,15 @@
                     $("#SummHolidayPayGiveout").html(number_format((SummHolidayPay), 2, '.', ' '));
                     $("#SummHospitalPayGiveout").html(number_format((SummHospitalPay), 2, '.', ' '));
                     $("#SummSalaryGiveout").html(number_format((SummSalary), 2, '.', ' '));
+                    //$("#SummRefundGiveout").html(number_format((SummRefund), 2, '.', ' '));
+                    $("#SummWithdrawGiveout").html(number_format((SummWithdraw), 2, '.', ' '));
 
-                    $("#SummGiveoutMonth").html(number_format((SummPrepayment + SummHolidayPay + SummHospitalPay + SummSalary), 2, '.', ' '));
+
+                    $("#SummGiveoutMonth").html(number_format((SummPrepayment + SummHolidayPay + SummHospitalPay + SummSalary + SummRefund + SummWithdraw), 2, '.', ' '));
+
+                    // console.log(Number($("#ostatokNalAllMonth").html().replace(/\s{1,}/g, '')));
+                    // console.log(Number($("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')));
+                    // console.log(Number(prev_month_filial_summ));
 
                     $("#ostatokFinalNalAllMonth").html(number_format(
                         (Number(
@@ -4616,8 +5337,6 @@
                             Number(
                                 $("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')
                             )
-                            +
-                            Number(prev_month_filial_summ)
                         )
                         , 2, '.', ' ')
                     );
@@ -4630,8 +5349,6 @@
                             Number(
                                 $("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')
                             )
-                            +
-                            Number(prev_month_filial_summ)
                         )
                         , 2, '.', ' ')
                     );
@@ -4639,7 +5356,7 @@
 
 
                     //Выдачи из кассы (подробно за месяц)
-                    var giveouts_j = res.giveouts_j
+                    var giveouts_j = res.giveouts_j;
 
                     $("#giveout_cash").html(giveouts_j);
 
@@ -4656,6 +5373,12 @@
             }
         });
     }
+
+    //Функция сравнения с реальностью сохраненных ежеднеынх отчетов (Если были изменения)
+    ///!!! не используем
+    //function checkConsolidateReports(date, filial_id){
+        //console.log(date+'/'+filial_id);
+    //}
 
     //Получение отчёта по какому-то дню из филиала и заполнение отчета
     function fl_getDailyReports(thisObj){
@@ -4736,7 +5459,8 @@
             success: function(res){
                 //console.log(res);
                 //console.log(res.count);
-                //console.log(date == getTodayDate());
+                //console.log(date);
+                //console.log(res.real_summs);
 
                 if(res.result == 'success') {
                     //console.log('success');
@@ -4798,6 +5522,23 @@
                             //И id
                             $(thisObj).find(".reportDate").attr('report_id', data.id);
 
+
+                            //Теперь хотим сравнить с реальностью и поставить метку, если не совпадает
+                            //checkConsolidateReports(date, $("#SelectFilial").val());
+
+                            if ((Number(data.nal) != Number(res.real_summs['nal'])) || (Number(data.beznal) != Number(res.real_summs['beznal']))){
+                                // console.log($(thisObj).find(".reportDate").html());
+                                // console.log(Number(data.nal));
+                                // console.log(Number(res.real_summs['nal']));
+                                // console.log('---------------');
+                                // console.log(Number(data.beznal));
+                                // console.log(Number(res.real_summs['beznal']));
+                                // console.log('/////////////////////////');
+
+                                $(thisObj).find(".reportDate").css({
+                                            "background-color": "rgba(47, 186, 239, 0.7)"
+                                        });
+                            }
 
                         }else{
 
@@ -5056,7 +5797,7 @@
 
                 newInput = document.createElement("input");
                 newInput.type = "text";
-                newInput.maxLength = 7;
+                newInput.maxLength = 10;
                 newInput.setAttribute("size", 20);
                 newInput.style.width = "80px";
                 newInput.style.fontSize = "18px";
@@ -5089,6 +5830,7 @@
                         var reqData = {
                             worker_id: $("#worker_id").val(),
                             date_from: $("#iWantThisDate2").val(),
+                            /*category_id: $("#category_id").val(),*/
                             summ: newVal
                         };
                     }
@@ -5190,7 +5932,7 @@
 
                     newInput = document.createElement("input");
                     newInput.type = "text";
-                    newInput.maxLength = 8;
+                    newInput.maxLength = 10;
                     newInput.setAttribute("size", 20);
                     newInput.style.width = "50px";
                     newInput.addEventListener("blur", function () {
@@ -5276,6 +6018,133 @@
         alert('1234');
     });*/
 
+    //Редактирование надбавки / добавление новой строчки
+    var changeSur_elems = document.getElementsByClassName("changeCurrentSur"), newInput;
+    //console.log(elems);
+
+    if (changeSur_elems.length > 0) {
+        for (var i = 0; i < changeSur_elems.length; i++) {
+            var el = changeSur_elems[i];
+            el.addEventListener("click", function () {
+                //var thisID = this.id;
+                var workerID = this.getAttribute("worker_id");
+                //console.log(this.getAttribute("worker_id"));
+                //var catID = this.getAttribute("cat_id");
+                //console.log(this.getAttribute("cat_id"));
+                //var typeID = this.getAttribute("type_id");
+                //console.log(this.getAttribute("type_id"));
+
+                var thisVal = this.innerHTML;
+                var newVal = thisVal;
+                //console.log(this);
+                //console.log(workerID);
+                //console.log(catID);
+                //console.log(typeID);
+                //console.log(thisVal);
+                //console.log(isNaN(thisVal));
+
+                var inputs = this.getElementsByTagName("input");
+                if (inputs.length > 0) return;
+                if (!newInput) {
+
+                    /*buttonDiv = document.createElement("div");
+                     //buttonDiv.innerHTML = '<i class="fa fa-check" aria-hidden="true" title="Применить" style="margin-right: 4px;"></i> <i class="fa fa-refresh" aria-hidden="true" title="По умолчанию" style="color: red;"></i>';
+                     buttonDiv.innerHTML = '<i class="fa fa-refresh" aria-hidden="true" title="По умолчанию" style="color: red;"></i>';
+                     buttonDiv.style.position = "absolute";
+                     buttonDiv.style.right = "-9px";
+                     buttonDiv.style.top = "1px";
+                     buttonDiv.style.fontSize = "12px";
+                     buttonDiv.style.color = "green";
+                     buttonDiv.style.border = "1px solid #BFBCB5";
+                     buttonDiv.style.backgroundColor = "#FFF";
+                     buttonDiv.style.padding = "0 6px";
+
+                     buttonDiv.id = "changePersonalPercentCatdefault";*/
+
+                    newInput = document.createElement("input");
+                    newInput.type = "text";
+                    newInput.maxLength = 10;
+                    newInput.setAttribute("size", 20);
+                    newInput.style.width = "50px";
+                    newInput.addEventListener("blur", function () {
+                        //console.log(newInput.parentNode.getAttribute("worker_id"));
+
+                        workerID = newInput.parentNode.getAttribute("worker_id");
+                        //catID = newInput.parentNode.getAttribute("cat_id");
+                        //typeID = newInput.parentNode.getAttribute("type_id");
+
+                        //Попытка обработать клика на кнопке для сброса на значения по умолчанию - провалилась, всегда сбрасывается на по умолчанию
+                        //var changePersonalPercentCatdefault = document.getElementById("changePersonalPercentCatdefault");
+                        //console.log(changePersonalPercentCatdefault.innerHTML);
+
+                        //changePersonalPercentCatdefault.addEventListener("click", fl_changePersonalPercentCatdefault(workerID, catID, typeID), false);
+
+                        //Новые данные
+                        //if ((newInput.value == "") || (isNaN(newInput.value)) || (newInput.value < 0) || (newInput.value > 100) || (isNaN(parseInt(newInput.value, 10)))) {
+                        if ((newInput.value == "") || (isNaN(newInput.value)) || (newInput.value < 0) || (isNaN(parseInt(newInput.value, 10)))) {
+                            //newInput.parentNode.innerHTML = 0;
+                            newInput.parentNode.innerHTML = thisVal;
+                            newVal = thisVal;
+                        } else {
+                            newInput.parentNode.innerHTML = number_format(parseFloat(newInput.value, 10), 2, '.', '');
+                            newVal = number_format(parseFloat(newInput.value, 10), 2, '.', '');
+                        }
+                        //console.log(this);
+                        //console.log(workerID);
+
+                        //console.log(thisVal == newVal);
+
+                        if (Number(thisVal) != Number(newVal)) {
+                            //console.log(newVal);
+
+                            $.ajax({
+                                url: "fl_change_personal_surcharge_f.php",
+                                global: false,
+                                type: "POST",
+                                dataType: "JSON",
+                                data: {
+                                    worker_id: workerID,
+                                    //cat_id: catID,
+                                    //type: typeID,
+                                    val: newVal
+                                },
+                                cache: false,
+                                beforeSend: function () {
+                                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                                },
+                                // действие, при ответе с сервера
+                                success: function (res) {
+                                    if (res.result == "success") {
+                                        //console.log(res);
+
+                                        $('#infoDiv').html(res.data);
+                                        $('#infoDiv').show();
+                                        setTimeout(function () {
+                                            $('#infoDiv').hide('slow');
+                                            $('#infoDiv').html();
+                                        }, 1000);
+
+                                        //location.reload();
+                                    }
+
+                                }
+                            });
+                        }
+                    }, false);
+                }
+
+                //newInput.value = this.firstChild.innerHTML;
+                newInput.value = thisVal;
+                this.innerHTML = "";
+                //this.appendChild(buttonDiv);
+                this.appendChild(newInput);
+                //newInput.innerHTML = ('<i class="fa fa-check" aria-hidden="true"></i>');
+                newInput.focus();
+                newInput.select();
+            }.bind(el), false);
+        }
+    }
+
 
     function deleteThisSalary(salary_id, type){
         //console.log(type);
@@ -5315,7 +6184,7 @@
     }
 
     //Функция изменения процента от выручки
-    function Ajax_revenue_percent_change (type, filial_id, category){
+    function Ajax_revenue_percent_change (table, type, filial_id, category){
 
         var value = $("#revenuePercent").val();
         value =  value.replace(',', '.');
@@ -5324,9 +6193,20 @@
         if (!isNaN(value)) {
             if (value.length > 0){
 
+                // if (table == 'solar') {
+                //     var link = "fl_revenue_percent_solar_change_f.php";
+                // }else{
+                //     if (table == 'realiz'){
+                //         var link = "fl_revenue_percent_realiz_change_f.php";
+                //     }else{
+                //         var link = "fl_revenue_percent_change_f.php";
+                //     }
+                // }
+
                 var link = "fl_revenue_percent_change_f.php";
 
                 var reqData = {
+                    table: table,
                     permission: type,
                     filial_id: filial_id,
                     category: category,
@@ -5364,12 +6244,12 @@
     }
 
     //Показывает окно для изменения процента от выручки
-    function revenuePercentChangeShow (haveValue, type, type_name, filial_id, filial_name, category, category_name, value){
+    function revenuePercentChangeShow (table, haveValue, type, type_name, filial_id, filial_name, category, category_name, value){
         //console.log(mode);
         $('#overlay').show();
 
 
-        var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_revenue_percent_change('+type+', '+filial_id+', '+category+')">';
+        var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_revenue_percent_change(\''+table+'\', '+type+', '+filial_id+', '+category+')">';
 
         // if (haveValue){
         // }
@@ -5421,6 +6301,88 @@
         $("#revenuePercent").focus();
     }
 
+    //Показывает окно с процентами
+    function showPersonalPecentHere (worker_id, worker_name){
+        //console.log(mode);
+        $('#overlay').show();
+
+        var res_str = '<table style="font-size: 80%;">'+
+        '<tr><td>Наим.</td><td>Работа</td><td>Материал</td><td>Фикс.</td></tr>';
+
+        $(".percentCatItem").each(function() {
+            var cat_id = fl_createSchedulerReport_add($(this).attr("cat_id"));
+            var cat_name = ($(this).html());
+            // console.log(cat_id);
+            // console.log(cat_name);
+
+            var cpp1 = $(".cpp_1_"+worker_id+"_"+cat_id).html();
+            var cpp2 = $(".cpp_2_"+worker_id+"_"+cat_id).html();
+            var cpp3 = $(".cpp_3_"+worker_id+"_"+cat_id).html();
+
+            res_str += '<tr>';
+            res_str += '<td style="text-align: left; border-bottom: 1px solid rgb(119, 95, 95);">' + cat_name + ' :</td>';
+            if (cpp1 > 0)
+            res_str += '<td style="border-bottom: 1px solid rgb(119, 95, 95);">' + cpp1 + '%</td>';
+            if (cpp2 > 0)
+            res_str += '<td style="border-bottom: 1px solid rgb(119, 95, 95);">' + cpp2 + '%</td>';
+            if (cpp3 > 0)
+            res_str += '<td style="border-bottom: 1px solid rgb(119, 95, 95);">' + cpp3 + ' руб.</td>';
+            res_str += '</tr>';
+
+        });
+
+        res_str += '</table>';
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        }).css({
+            "bottom": "auto", /*Выравниваем вверх*/
+            "height": "auto", /*Выравниваем высоту*/
+            "width": "50%" /*Выравниваем ширину*/
+        })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative"
+                    })
+                    .append('<div style="margin: 5px;"><i><b>'+worker_name+'</b></i></div>')
+                    .append('<div style="margin: 5px;">'+res_str +'</div>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-10px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%"
+                            })
+                            .append('<div style="margin: 50px;"><input type="text" id="revenuePercent" value=">%</div>')
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                /*"position": "absolute",*/
+                                "bottom": "2px",
+                                "width": "100%"
+                            })
+                            .append(
+                                '<input type="button" class="b" value="Закрыть" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                            )
+                    )
+            );
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+        $("#revenuePercent").focus();
+    }
+
 
     //Рассчёт общих часов сотрудников за месяц
     function calculateWorkerHours(){
@@ -5439,7 +6401,7 @@
             //console.log(summHours);
 
             //Выведем кол-во часов
-            $("#allMonthHours_"+worker_id).html(summHours);
+            $("#allMonthHours_"+worker_id).html(number_format(summHours, 2, '.', ' '));
 
             //Берем норму смен этого месяца для этого сотрудника
             //!!! Хотя норма для всех одинакова по сути... короче бред тут каждый раз брать одно и то же с разных мест
@@ -5447,8 +6409,58 @@
             var normaSmen = parseInt($("#allMonthNorma_"+worker_id).html(), 10) || 0;
             //console.log(normaSmen);
 
-            //var hoursMonthPercent = 0;
-            var hoursMonthPercent = summHours*100/normaSmen;
+            var hoursMonthPercent = 0;
+
+            if (normaSmen == 0){
+            }else {
+                hoursMonthPercent = summHours * 100 / normaSmen;
+            }
+
+            $("#hoursMonthPercent_"+worker_id).html(number_format(hoursMonthPercent, 2, '.', ' '));
+
+            $("#schedulerResult_"+worker_id).css({
+                "background-image": "linear-gradient(to right, " + Colorize(Number(hoursMonthPercent.toFixed(0)), 1) + " " + Number(hoursMonthPercent.toFixed(0)) + "%, rgba(255, 255, 255, 0) 0%)"
+            });
+            //console.log("linear-gradient(to right, " + Colorize(hoursMonthPercent.toFixed(0)) + " " + hoursMonthPercent.toFixed(0) + "%, rgba(255, 255, 255, 0) 0%)");
+
+        });
+    }
+
+    //Рассчёт общих дней сотрудников за месяц
+    function calculateWorkerDays(){
+        $(".workerItem").each(function() {
+            var worker_id = ($(this).attr("worker_id"));
+            //console.log(worker_id);
+
+            //var summHours = 0;
+            var summDays = 0;
+
+            $(".dayHours_"+worker_id).each(function() {
+                //summHours += parseFloat($(this).html(), 10) || 0;
+                //summHours += $(this).html();
+                //console.log($(this).html());
+                //console.log(parseInt($(this).html(), 10));
+                summDays += 1 || 0;
+            });
+            //console.log(summHours);
+            //console.log(summDays);
+
+            //Выведем кол-во часов
+            // $("#allMonthHours_"+worker_id).html(summHours);
+            $("#allMonthHours_"+worker_id).html(summDays);
+
+            //Берем норму смен этого месяца для этого сотрудника
+            //!!! Хотя норма для всех одинакова по сути... короче бред тут каждый раз брать одно и то же с разных мест
+
+            var normaSmen = parseInt($("#allMonthNorma_"+worker_id).html(), 10) || 0;
+            //console.log(normaSmen);
+
+            var hoursMonthPercent = 0;
+
+            if (normaSmen == 0){
+            }else {
+                hoursMonthPercent = summHours * 100 / normaSmen;
+            }
 
             $("#hoursMonthPercent_"+worker_id).html(number_format(hoursMonthPercent, 2, '.', ' '));
 
@@ -5485,11 +6497,12 @@
                 //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             success: function (res) {
-                //console.log (res);
+                //console.log (res.data_solar);
 
                 if (res.result == "success") {
                     //console.log (res);
 
+                    //Выручка
                     $(".filialMoney").each(function(){
                         //console.log($(this).attr("filial_id"));
 
@@ -5508,11 +6521,97 @@
                             //$(this).html('<span style="color: rgb(243, 0, 0);">не прикреплен</span>');
                             $(this).html('0.00');
 
-                            $("#w_id_"+worker_id).attr("filialMoney", number_format(res.data[filial_id], 2, '.', ''));
+                            $("#w_id_"+worker_id).attr("filialMoney", 0);
                         }
                     });
 
+                    //Солярий
+                    $(".filialSolar").each(function(){
+                        //console.log($(this).attr("filial_id"));
+                        //console.log(res.data_solar[filial_id]);
+
+                        var filial_id = $(this).attr("filial_id");
+                        var worker_id = $(this).attr("w_id");
+
+                        //Если есть прикрепление к филиалу и только для 17 филиала (Черн)
+                        if ((filial_id > 0) && (filial_id == 17)){
+                            //console.log(filial_id);
+                            //console.log(res.data[filial_id]);
+                            if (typeof(res.data_solar[filial_id]) != "undefined" && res.data_solar[filial_id] !== null) {
+                                $(this).html(number_format(res.data_solar[filial_id]['solar'], 2, '.', ' '));
+
+                                $("#w_id_" + worker_id).attr("filialSolar", number_format(res.data_solar[filial_id]['solar'], 2, '.', ''));
+                            }else{
+                                $(this).html('0.00');
+
+                                $("#w_id_"+worker_id).attr("filialSolar", 0);
+                            }
+                        }/*else{
+                            //$(this).html('<span style="color: rgb(243, 0, 0);">не прикреплен</span>');
+                            $(this).html('0.00');
+
+                            $("#w_id_"+worker_id).attr("filialSolar", 0);
+                        }*/
+                    });
+
+                    //Реализация
+                    $(".filialRealiz").each(function(){
+                        //console.log($(this).attr("filial_id"));
+
+                        var filial_id = $(this).attr("filial_id");
+                        var worker_id = $(this).attr("w_id");
+
+                        //Если есть прикрепление к филиалу и только для 17 филиала (Черн)
+                        if ((filial_id > 0) && (filial_id == 17)){
+                            //console.log(filial_id);
+                            //console.log(res.data[filial_id]);
+                            if (typeof(res.data_solar[filial_id]) != "undefined" && res.data_solar[filial_id] !== null) {
+                                $(this).html(number_format(res.data_solar[filial_id]['realiz'], 2, '.', ' '));
+
+                                $("#w_id_" + worker_id).attr("filialRealiz", number_format(res.data_solar[filial_id]['realiz'], 2, '.', ''));
+                            }else{
+                                $(this).html('0.00');
+
+                                $("#w_id_"+worker_id).attr("filialRealiz", 0);
+                            }
+                        }/*else{
+                            //$(this).html('<span style="color: rgb(243, 0, 0);">не прикреплен</span>');
+                            $(this).html('0.00');
+
+                            $("#w_id_"+worker_id).attr("filialRealiz", 0);
+                        }*/
+                    });
+
+                    //Абонементы
+                    $(".filialAbon").each(function(){
+                        //console.log($(this).attr("filial_id"));
+
+                        var filial_id = $(this).attr("filial_id");
+                        var worker_id = $(this).attr("w_id");
+
+                        //Если есть прикрепление к филиалу и только для 17 филиала (Черн)
+                        if ((filial_id > 0) && (filial_id == 17)){
+                            //console.log(filial_id);
+                            //console.log(res.data[filial_id]);
+                            if (typeof(res.data_solar[filial_id]) != "undefined" && res.data_solar[filial_id] !== null) {
+                                $(this).html(number_format(res.data_solar[filial_id]['abon'], 2, '.', ' '));
+
+                                $("#w_id_" + worker_id).attr("filialAbon", number_format(res.data_solar[filial_id]['abon'], 2, '.', ''));
+                            }else{
+                                $(this).html('0.00');
+
+                                $("#w_id_"+worker_id).attr("filialAbon", 0);
+                            }
+                        }/*else{
+                            //$(this).html('<span style="color: rgb(243, 0, 0);">не прикреплен</span>');
+                            $(this).html('0.00');
+
+                            $("#w_id_"+worker_id).attr("filialAbon", 0);
+                        }*/
+                    });
+
                     $(".itogZP").each(function(){
+                        //console.log("itogZP");
 
                         var worker_id = $(this).attr("w_id");
 
@@ -5520,12 +6619,27 @@
                         var w_percentHours = Number($(this).attr("w_percentHours"));
                         var worker_revenue_percent = Number($(this).attr("worker_revenue_percent"));
                         var filialMoney = Number($(this).attr("filialMoney"));
-                        //console.log(w_percentHours);
+
+                        var worker_revenue_solar_percent = Number($(this).attr("worker_revenue_solar_percent"));
+                        var filialSolar = Number($(this).attr("filialSolar"));
+                        var worker_revenue_realiz_percent = Number($(this).attr("worker_revenue_realiz_percent"));
+                        var filialRealiz = Number($(this).attr("filialRealiz"));
+                        var worker_revenue_abon_percent = Number($(this).attr("worker_revenue_abon_percent"));
+                        var filialAbon = Number($(this).attr("filialAbon"));
+
+                        //if (worker_id == 518) {
+                            // console.log(w_percentHours);
+                            // console.log(worker_revenue_solar_percent);
+                            // console.log(filialSolar);
+                        //}
 
                         if (w_percentHours > 0){
 
                             var zp_temp = 0;
                             var revenue_summ = 0;
+                            var revenue_solar_summ = 0;
+                            var revenue_realiz_summ = 0;
+                            var revenue_abon_summ = 0;
 
                             //Администраторы
                             // if (typeW == 4) {
@@ -5541,12 +6655,29 @@
                             zp_temp = (oklad * w_percentHours) / 100;
 
                             revenue_summ = (((filialMoney / 100) * worker_revenue_percent) / 100) * w_percentHours;
+                            // if (worker_id == 518) {
+                            //     console.log(filialMoney);
+                            //     console.log(worker_revenue_percent);
+                            //     console.log(w_percentHours);
+                            //     console.log(revenue_summ);
+                            // }
 
-                            var itogZP = zp_temp + revenue_summ;
+                            revenue_solar_summ = (((filialSolar / 100) * worker_revenue_solar_percent) / 100) * w_percentHours;
+                            revenue_realiz_summ = (((filialRealiz / 100) * worker_revenue_realiz_percent) / 100) * w_percentHours;
+                            revenue_abon_summ = (((filialAbon / 100) * worker_revenue_abon_percent) / 100) * w_percentHours;
+                            //console.log(revenue_abon_summ);
+
+
+                            //var itogZP = zp_temp + revenue_summ;
+                            var itogZP = zp_temp + revenue_summ + revenue_solar_summ + revenue_realiz_summ + revenue_abon_summ;
                             //console.log(itogZP);
 
                             $("#zp_temp_"+worker_id).html(number_format(zp_temp, 2, '.', ''));
                             $("#w_revenue_summ_"+worker_id).html(number_format(revenue_summ, 2, '.', ''));
+
+                            $("#w_revenue_solar_summ_"+worker_id).html(number_format(revenue_solar_summ, 2, '.', ''));
+                            $("#w_revenue_realiz_summ_"+worker_id).html(number_format(revenue_realiz_summ, 2, '.', ''));
+                            $("#w_revenue_abon_summ_"+worker_id).html(number_format(revenue_abon_summ, 2, '.', ''));
                             //console.log("#zp_temp_"+worker_id);
                             $(this).html(number_format(itogZP, 0, '.', ''));
                         }else{
@@ -5581,7 +6712,7 @@
             var w_percentHours = Number($(this).attr("w_percentHours"));
             var worker_revenue_percent = Number($(this).attr("worker_revenue_percent"));
             var filialMoney = Number($(this).attr("filialMoney"));
-            console.log(w_percentHours);
+            //console.log(w_percentHours);
 
             if (w_percentHours > 0){
 
@@ -5606,7 +6737,7 @@
                 //console.log(revenue_summ);
 
                 var itogZP = zp_temp + revenue_summ;
-                console.log(itogZP);
+                //console.log(itogZP);
 
                 $("#zp_temp_"+worker_id).html(number_format(zp_temp, 2, '.', ''));
                 $("#w_revenue_summ_"+worker_id).html(number_format(revenue_summ, 2, '.', ''));
@@ -5682,8 +6813,8 @@
                                 $("#worker_" + worker_id).html("<a href='fl_tabel.php?id=" + res.data[worker_id]['id'] + "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(215, 34, 236, 0.98); font-size: 130%;' title='Табель не проведён'></i></a> " +
                                     "");
                             } else {
-                                $("#worker_" + worker_id).html("<a href='fl_tabel2.php?id=" + res.data[worker_id]['id'] + "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(236,31,0,0.98); font-size: 130%;' title='Обновите данные табели'></i></a> " +
-                                    "<i class='fa fa-refresh' aria-hidden='true' style='color: rgb(218, 133, 9); font-size: 100%; cursor: pointer;' title='Обновить' onclick=\'refreshTabelForWorkerFromSchedulerReport("+res.data[worker_id]['id']+", "+worker_id+");\'></i>");
+                                $("#worker_" + worker_id).html("<a href='fl_tabel.php?id=" + res.data[worker_id]['id'] + "' class='ahref'><i class='fa fa-file-text' aria-hidden='true' style='color: rgba(236,31,0,0.98); font-size: 130%;' title='Обновите данные табели'></i></a> " +
+                                    "<i class='fa fa-refresh' aria-hidden='true' style='color: rgb(218, 133, 9); font-size: 100%; cursor: pointer;' title='Обновить' onclick=\'refreshTabelForWorkerFromSchedulerReport("+res.data[worker_id]['id']+", "+worker_id+", true);\'></i>");
                             }
                         }
                     }
@@ -5695,8 +6826,44 @@
         })
     }
 
-    //Добавление нового табеля админа, ассиста
-    function addNewTabelForWorkerFromSchedulerReport(worker_id, filial_id, type){
+    //Поиск на странице отсутствующих табелей и попытка создать их
+    function addAllTabelsForWorkerFromSchedulerReport(){
+
+        $(".fa-plus").each(function() {
+            //console.log($(this).attr('onclick'));
+
+            var str_temp = $(this).attr('onclick');
+            // console.log(str_temp);
+
+            if (str_temp !== undefined){
+
+                //var str = str_temp.split('(')[1];
+                var str = str_temp.substring(str_temp.indexOf('(')+1, str_temp.indexOf(')'));
+                //console.log(str.replace(/\s/g, ''));
+
+                var worker_id = str.split(',')[0].replace(/\s/g, '');
+                var filial_id = str.split(',')[1].replace(/\s/g, '');
+                var type_id = str.split(',')[2].replace(/\s/g, '');
+
+                // console.log(worker_id);
+                // console.log(filial_id);
+                // console.log(type_id);
+
+                if (Number($("#w_id_" + worker_id).html()) > 0) {
+                    addNewTabelForWorkerFromSchedulerReport(worker_id, filial_id, type_id);
+                }
+
+            }
+
+            //пример обрезки строки, красиво
+            // var str = "50ml+$100";
+            // var a = str.split('+')[0]; // 50ml
+            // var b = str.split('+')[1]; // $100
+        })
+    }
+
+    //Добавление нового табеля админа, ассиста, ...
+    function addNewTabelForWorkerFromSchedulerReport(worker_id, filial_id, type, all=true){
         // console.log(tabel_id);
         // console.log(worker_id);
         // console.log($("#w_id_"+worker_id).attr("oklad"));
@@ -5708,11 +6875,15 @@
         // console.log($("#w_id_"+worker_id).attr("w_hours"));
         // console.log(Number($("#w_id_"+worker_id).html()));
 
-        var rys = false;
+        if (!all) {
+            var rys = false;
 
-        rys = confirm("Добавить новый табель?");
+            rys = confirm("Добавить новый табель?");
+        }else{
+            // rys = confirm("1");
+        }
 
-        if (rys) {
+        if (rys || all) {
 
             var link = "fl_addNewTabelForWorkerFromSchedulerReport_f.php";
 
@@ -5725,14 +6896,20 @@
                 oklad: $("#w_id_" + worker_id).attr("oklad"),
                 w_percenthours: $("#w_id_" + worker_id).attr("w_percenthours"),
                 worker_revenue_percent: $("#w_id_" + worker_id).attr("worker_revenue_percent"),
+                worker_revenue_solar_percent: $("#w_id_" + worker_id).attr("worker_revenue_solar_percent"),
+                worker_revenue_realiz_percent: $("#w_id_" + worker_id).attr("worker_revenue_realiz_percent"),
+                worker_revenue_abon_percent: $("#w_id_" + worker_id).attr("worker_revenue_abon_percent"),
                 per_from_salary: Number($("#zp_temp_" + worker_id).html()),
                 filialmoney: $("#w_id_" + worker_id).attr("filialmoney"),
+                filialsolar: $("#w_id_" + worker_id).attr("filialSolar"),
+                filialrealiz: $("#w_id_" + worker_id).attr("filialRealiz"),
+                filialabon: $("#w_id_" + worker_id).attr("filialAbon"),
                 w_revenue_summ: Number($("#w_revenue_summ_"+worker_id).html()),
                 worker_category_id: $("#w_id_" + worker_id).attr("worker_category_id"),
                 w_hours: $("#w_id_" + worker_id).attr("w_hours"),
                 summ: Number($("#w_id_" + worker_id).html())
             };
-            //console.log(reqData);
+            // console.log(reqData);
 
             $.ajax({
                 url: link,
@@ -5765,7 +6942,7 @@
     }
 
     //Обновление данных табеля
-    function refreshTabelForWorkerFromSchedulerReport(tabel_id, worker_id){
+    function refreshTabelForWorkerFromSchedulerReport(tabel_id, worker_id, confirmation){
         // console.log(tabel_id);
         // console.log(worker_id);
         // console.log($("#w_id_"+worker_id).attr("oklad"));
@@ -5779,8 +6956,12 @@
 
         var rys = false;
 
-        rys = confirm("Вы собираетесь обновить данные в табеле. \n\nВы уверены?");
-
+        if (confirmation) {
+            rys = confirm("Вы собираетесь обновить данные в табеле. \n\nВы уверены?");
+        }else{
+            rys = true;
+            blockWhileWaiting (true);
+        }
         if (rys) {
 
             var link = "fl_refreshTabelForWorkerFromSchedulerReport_f.php";
@@ -5791,8 +6972,14 @@
                 oklad: $("#w_id_" + worker_id).attr("oklad"),
                 w_percenthours: $("#w_id_" + worker_id).attr("w_percenthours"),
                 worker_revenue_percent: $("#w_id_" + worker_id).attr("worker_revenue_percent"),
+                worker_revenue_solar_percent: $("#w_id_" + worker_id).attr("worker_revenue_solar_percent"),
+                worker_revenue_realiz_percent: $("#w_id_" + worker_id).attr("worker_revenue_realiz_percent"),
+                worker_revenue_abon_percent: $("#w_id_" + worker_id).attr("worker_revenue_abon_percent"),
                 per_from_salary: Number($("#zp_temp_" + worker_id).html()),
                 filialmoney: $("#w_id_" + worker_id).attr("filialmoney"),
+                filialsolar: $("#w_id_" + worker_id).attr("filialSolar"),
+                filialrealiz: $("#w_id_" + worker_id).attr("filialRealiz"),
+                filialabon: $("#w_id_" + worker_id).attr("filialAbon"),
                 worker_category_id: $("#w_id_" + worker_id).attr("worker_category_id"),
                 w_hours: $("#w_id_" + worker_id).attr("w_hours"),
                 summ: Number($("#w_id_" + worker_id).html())
@@ -5810,7 +6997,7 @@
                     //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
                 },
                 success: function (res) {
-                    //console.log (res);
+                    // console.log (res);
 
                     if (res.result == "success") {
                         //console.log(res.data);
@@ -5824,8 +7011,43 @@
         }
     }
 
+    //Поиск на странице табелей, требующих обновления и о попытка обновления данных
+    function refreshAllTabelsForWorkerFromSchedulerReport(){
+        $(".fa-refresh").each(function() {
+            //console.log($(this).attr('onclick'));
+
+            var str_temp = $(this).attr('onclick');
+            // console.log(str_temp);
+
+            if (str_temp !== undefined){
+
+                //var str = str_temp.split('(')[1];
+                var str = str_temp.substring(str_temp.indexOf('(')+1, str_temp.indexOf(')'));
+                //console.log(str.replace(/\s/g, ''));
+
+                var tabel_id = str.split(',')[0].replace(/\s/g, '');
+                var worker_id = str.split(',')[1].replace(/\s/g, '');
+
+                // console.log(tabel_id);
+                // console.log(worker_id);
+
+                refreshTabelForWorkerFromSchedulerReport(tabel_id, worker_id, false);
+
+            }
+
+            //пример обрезки строки, красиво
+            // var str = "50ml+$100";
+            // var a = str.split('+')[0]; // 50ml
+            // var b = str.split('+')[1]; // $100
+        })
+    }
+
     //Добавляем/редактируем в базу выплату в банку
-    function  fl_Ajax_add_in_bank(mode, reqData){
+    function fl_Ajax_add_in_bank(mode, reqData){
+        //console.log(reqData);
+
+        var date_arr = reqData['date'].split(".");
+        var date_str = "&m="+date_arr[1]+"&y="+date_arr[2];
 
         var link = "fl_addInBank_f.php";
 
@@ -5851,7 +7073,7 @@
                     //$('#data').html(res.data);
 
                     blockWhileWaiting (true);
-                    document.location.href = "fl_consolidated_report_admin.php?filial_id=" + reqData.filial_id;
+                    document.location.href = "fl_consolidated_report_admin.php?filial_id=" + reqData.filial_id + date_str;
 
                 }else{
                     //console.log('error');
@@ -5864,6 +7086,10 @@
 
     //Добавляем/редактируем в базу выплату динектору
     function  fl_Ajax_add_to_director(mode, reqData){
+        //console.log(reqData);
+
+        var date_arr = reqData['date'].split(".");
+        var date_str = "&m="+date_arr[1]+"&y="+date_arr[2];
 
         var link = "fl_addToDirector_f.php";
 
@@ -5889,7 +7115,7 @@
                     //$('#data').html(res.data);
 
                     blockWhileWaiting (true);
-                    document.location.href = "fl_consolidated_report_admin.php?filial_id=" + reqData.filial_id;
+                    document.location.href = "fl_consolidated_report_admin.php?filial_id=" + reqData.filial_id + date_str;
 
                 }else{
                     //console.log('error');
@@ -6008,4 +7234,318 @@
         })
     }
 
+    //
+    function fl_mainReportAverage() {
+        //console.log($("#month_count").val());
+        // console.log($("#month_start").val());
+        // console.log($("#year_start").val());
+        // console.log($("#month_end").val());
+        // console.log($("#year_end").val());
+        // console.log($("#SelectFilial").val());
 
+        var just_do_it = false;
+
+        //убираем ошибки
+        hideAllErrors();
+
+        if (Number($("#year_start").val()) > Number($("#year_end").val())) {
+            $('#errrror').html('<span class="query_neok">Ошибка в указанном периоде.</span>');
+        } else {
+            if (Number($("#year_start").val()) == Number($("#year_end").val())) {
+                if (Number($("#month_start").val()) > Number($("#month_end").val())) {
+                    $('#errrror').html('<span class="query_neok">Ошибка в указанном периоде.</span>');
+                } else {
+                    just_do_it = true;
+                }
+            } else {
+                just_do_it = true;
+            }
+        }
+
+        //Если с датами все более менее, то выполняем
+        if (just_do_it) {
+
+            var link = "fl_mainReportAverage_getDates_f.php";
+
+            var reqData = {
+                month_start: $("#month_start").val(),
+                year_start: $("#year_start").val(),
+                month_end: $("#month_end").val(),
+                year_end: $("#year_end").val(),
+                filial_id: $("#SelectFilial").val()
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    //console.log (res);
+
+                    if (res.result == "success") {
+                        //console.log(res.data);
+
+                        $("#res_table_tmpl").html(res.res_str);
+
+                        $("#date_start_name").html(res.date_start_name);
+                        $("#date_end_name").html(res.date_end_name);
+                        $("#filial_name").html(res.filial_name);
+                        $("#filial_name2").html(res.filial_name);
+
+
+                        var months_arr = Array.from(res.months_arr);
+                        //console.log(months_arr);
+
+                        //!!! Хороший пример паузы в цикле (пауза в цикле) через рекурсию
+                        //Не использовать, если есть вариант, что массив изменится во время
+                        //И если обязательно индексы цифровые и по порядку
+                        if (months_arr.length > 0) {
+
+                            var foo = function (i) {
+                                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+
+                                window.setTimeout(function () {
+                                    //console.log(months_arr[i]);
+
+                                    link = "fl_mainReportAverage_getData_f.php";
+                                    // link = "fl_reloadPercentsMarkedCalculates.php";
+
+                                    reqData.date = months_arr[i];
+                                    //console.log(reqData);
+
+                                    //По каждому индексу даты: делаем...
+                                    $.ajax({
+                                        url: link,
+                                        global: false,
+                                        type: "POST",
+                                        dataType: "JSON",
+                                        data: reqData,
+                                        cache: false,
+                                        beforeSend: function () {
+                                        },
+                                        // действие, при ответе с сервера
+                                        success: function (res) {
+                                            // console.log(res);
+
+                                            if (res.result == "success") {
+                                                // console.log(months_arr[i] + ' ***');
+                                                //console.log(res);
+                                                //console.log(res.permission_summs);
+                                                //console.log(res.giveoutcash_j);
+
+                                                $(".allMoney_"+res.month+"_"+res.year).html(Number(res.nal + res.beznal + res.arenda + res.insure_summ));
+
+                                                $(".bank_"+res.month+"_"+res.year).html(Number(res.bank_summ));
+                                                $(".director_"+res.month+"_"+res.year).html(Number(res.director_summ));
+                                                $(".nal_"+res.month+"_"+res.year).html(Number(res.nal));
+                                                $(".beznal_"+res.month+"_"+res.year).html(Number(res.beznal + res.insure_summ));
+                                                $(".arenda_"+res.month+"_"+res.year).html(Number(res.arenda));
+
+                                                //var permission_summs = Array.from(res.permission_summs);
+                                                //  console.log(5 in res.permission_summs);
+
+                                                if (5 in res.permission_summs){
+                                                    $(".zpStom_" + res.month + "_" + res.year).html(Number(res.permission_summs[5]));
+                                                }
+                                                if (6 in res.permission_summs){
+                                                    $(".zpCosm_" + res.month + "_" + res.year).html(Number(res.permission_summs[6]));
+                                                }
+                                                if (10 in res.permission_summs){
+                                                    $(".zpSomat_" + res.month + "_" + res.year).html(Number(res.permission_summs[10]));
+                                                }
+                                                if (7 in res.permission_summs){
+                                                    $(".zpAssist_" + res.month + "_" + res.year).html(Number(res.permission_summs[7]));
+                                                }
+                                                if (4 in res.permission_summs){
+                                                    $(".zpAdm_" + res.month + "_" + res.year).html(Number(res.permission_summs[4]));
+                                                }
+
+                                                //zpSanitUborDvor
+                                                var zpSanitUborDvor = 0;
+                                                if (13 in res.permission_summs){
+                                                    zpSanitUborDvor +=  Number(res.permission_summs[13]);
+                                                }
+                                                if (14 in res.permission_summs){
+                                                    zpSanitUborDvor +=  Number(res.permission_summs[14]);
+                                                }
+                                                if (15 in res.permission_summs){
+                                                    zpSanitUborDvor +=  Number(res.permission_summs[15]);
+                                                }
+                                                $(".zpSanitUborDvor_"+res.month+"_"+res.year).html(zpSanitUborDvor);
+
+                                                if (11 in res.permission_summs){
+                                                    $(".zpZavh_" + res.month + "_" + res.year).html(Number(res.permission_summs[11]));
+                                                }
+
+                                                //zpPom
+                                                var zpPom = 0;
+                                                if (9 in res.permission_summs){
+                                                    zpPom +=  Number(res.permission_summs[9]);
+                                                }
+                                                if (12 in res.permission_summs){
+                                                    zpPom +=  Number(res.permission_summs[12]);
+                                                }
+                                                $(".zpPom_"+res.month+"_"+res.year).html(zpPom);
+
+                                                $(".remont_"+res.month+"_"+res.year).html(res.giveoutcash_j[3]);
+                                            }
+                                        }
+                                    });
+
+                                    if (i < months_arr.length-1){
+                                        foo(i + 1);
+                                    } else {
+                                        //По окончании цикла, который выше, чего-то делаем
+                                        //console.log("Обновляем суммы.");
+
+                                        window.setTimeout(function () {
+                                            var date_arr = {};
+                                            var m_count = 0;
+
+                                            var allMoney = 0;
+                                            var arenda = 0;
+                                            var nal = 0;
+                                            var beznal = 0;
+                                            var zpStom = 0;
+                                            var zpCosm = 0;
+                                            var zpSomat = 0;
+                                            var zpAssist = 0;
+                                            var zpAdm = 0;
+                                            var zpSanitUborDvor = 0;
+                                            var zpZavh = 0;
+                                            var zpPom = 0;
+                                            var remont = 0;
+
+                                            $(".need_date").each(function () {
+                                                //console.log($(this).attr("need_date"));
+
+                                                date_arr = $(this).attr("need_date").split("_");
+
+                                                var m = date_arr[0];
+                                                var y = date_arr[1];
+
+                                                m_count++;
+
+                                                $(".allMoney_" + m + "_" + y).each(function () {
+                                                    allMoney += Number($(this).html());
+                                                });
+
+                                                $(".arenda_" + m + "_" + y).each(function () {
+                                                    arenda += Number($(this).html());
+                                                });
+
+                                                $(".nal_" + m + "_" + y).each(function () {
+                                                    nal += Number($(this).html());
+                                                });
+
+                                                $(".beznal_" + m + "_" + y).each(function () {
+                                                    beznal += Number($(this).html());
+                                                });
+
+                                                $(".zpStom_" + m + "_" + y).each(function () {
+                                                    zpStom += Number($(this).html());
+                                                });
+
+                                                $(".zpCosm_" + m + "_" + y).each(function () {
+                                                    zpCosm += Number($(this).html());
+                                                });
+
+                                                $(".zpSomat_" + m + "_" + y).each(function () {
+                                                    zpSomat += Number($(this).html());
+                                                });
+
+                                                $(".zpAssist_" + m + "_" + y).each(function () {
+                                                    zpAssist += Number($(this).html());
+                                                });
+
+                                                $(".zpAdm_" + m + "_" + y).each(function () {
+                                                    zpAdm += Number($(this).html());
+                                                });
+
+                                                $(".zpSanitUborDvor_" + m + "_" + y).each(function () {
+                                                    zpSanitUborDvor += Number($(this).html());
+                                                });
+
+                                                $(".zpZavh_" + m + "_" + y).each(function () {
+                                                    zpZavh += Number($(this).html());
+                                                });
+
+                                                $(".zpPom_" + m + "_" + y).each(function () {
+                                                    zpPom += Number($(this).html());
+                                                });
+
+                                                $(".remont_" + m + "_" + y).each(function () {
+                                                    remont += Number($(this).html());
+                                                });
+
+                                            });
+
+                                            // console.log(m_count);
+                                            // console.log(allMoney);
+                                            // console.log(arenda);
+
+
+                                            //Выводим результат
+                                            $(".allMoney_summ").html(allMoney);
+                                            $(".allMoney_average").html(number_format(allMoney/m_count, 2, '.', ''));
+
+                                            $(".arenda_summ").html(arenda);
+                                            $(".arenda_average").html(number_format(arenda/m_count, 2, '.', ''));
+
+                                            $(".nal_summ").html(nal);
+                                            $(".nal_average").html(number_format(nal/m_count, 2, '.', ''));
+
+                                            $(".beznal_summ").html(beznal);
+                                            $(".beznal_average").html(number_format(beznal/m_count, 2, '.', ''));
+
+                                            $(".zpStom_summ").html(zpStom);
+                                            $(".zpStom_average").html(number_format(zpStom/m_count, 2, '.', ''));
+
+                                            $(".zpCosm_summ").html(zpCosm);
+                                            $(".zpCosm_average").html(number_format(zpCosm/m_count, 2, '.', ''));
+
+                                            $(".zpSomat_summ").html(zpSomat);
+                                            $(".zpSomat_average").html(number_format(zpSomat/m_count, 2, '.', ''));
+
+                                            $(".zpAssist_summ").html(zpAssist);
+                                            $(".zpAssist_average").html(number_format(zpAssist/m_count, 2, '.', ''));
+
+                                            $(".zpAdm_summ").html(zpAdm);
+                                            $(".zpAdm_average").html(number_format(zpAdm/m_count, 2, '.', ''));
+
+                                            $(".zpSanitUborDvor_summ").html(zpSanitUborDvor);
+                                            $(".zpSanitUborDvor_average").html(number_format(zpSanitUborDvor/m_count, 2, '.', ''));
+
+                                            $(".zpZavh_summ").html(zpZavh);
+                                            $(".zpZavh_average").html(number_format(zpZavh/m_count, 2, '.', ''));
+
+                                            $(".zpPom_summ").html(zpPom);
+                                            $(".zpPom_average").html(number_format(zpPom/m_count, 2, '.', ''));
+
+                                            $(".remont_summ").html(remont);
+                                            $(".remont_average").html(number_format(remont/m_count, 2, '.', ''));
+
+                                            $('#errrror').html('');
+                                        }, 500);
+                                    }
+                                }, 1000);
+                            };
+                            foo(0);
+                        }
+
+
+
+                    } else {
+                        //--
+                    }
+                }
+            })
+        }
+    }

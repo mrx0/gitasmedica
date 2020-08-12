@@ -15,6 +15,9 @@
                 && isset($_POST['SummNal']) && isset($_POST['SummBeznal'])
                 && isset($_POST['SummNalStomCosm']) && isset($_POST['SummBeznalStomCosm'])
                 && isset($_POST['CertCount']) && isset($_POST['SummCertNal']) && isset($_POST['SummCertBeznal'])
+                && isset($_POST['AbonCount']) && isset($_POST['SummAbonNal']) && isset($_POST['SummAbonBeznal'])
+                && isset($_POST['SolarCount']) && isset($_POST['SummSolarNal']) && isset($_POST['SummSolarBeznal'])
+                && isset($_POST['RealizCount']) && isset($_POST['SummRealizNal']) && isset($_POST['SummRealizBeznal'])
                 && isset($_POST['ortoSummNal']) && isset($_POST['ortoSummBeznal'])
                 && isset($_POST['specialistSummNal']) && isset($_POST['specialistSummBeznal'])
                 && isset($_POST['analizSummNal']) && isset($_POST['analizSummBeznal'])
@@ -64,8 +67,34 @@
                         $create_time = date('Y-m-d H:i:s', time());
 
                         $query = "INSERT INTO `fl_journal_daily_report` 
-                        (`filial_id`, `day`, `month`, `year`, `itogSumm`, `arenda`, `zreport`, `summ`,`nal`, `beznal`, `cashbox_nal`, `cashbox_beznal`, `cashbox_cert_count`, `cashbox_cert_nal`, `cashbox_cert_beznal`, `temp_orto_nal`, `temp_orto_beznal`, `temp_specialist_nal`, `temp_specialist_beznal`, `temp_analiz_nal`, `temp_analiz_beznal`, `temp_solar_nal`, `temp_solar_beznal`, `temp_giveoutcash`, `bank_summ_nal`, `director_summ_nal`, `create_time`, `create_person`) 
-                        VALUES ('{$_POST['filial_id']}', '{$d}', '{$m}', '{$y}', '" . str_replace(' ', '', $_POST['itogSumm']) . "', '{$_POST['arenda']}', '{$_POST['zreport']}', '" . str_replace(' ', '', $_POST['allsumm']) . "', '" . str_replace(' ', '', $_POST['SummNal']) . "', '" . str_replace(' ', '', $_POST['SummBeznal']) . "', '{$_POST['SummNalStomCosm']}', '{$_POST['SummBeznalStomCosm']}', '{$_POST['CertCount']}', '{$_POST['SummCertNal']}', '{$_POST['SummCertBeznal']}', '{$_POST['ortoSummNal']}', '{$_POST['ortoSummBeznal']}', '{$_POST['specialistSummNal']}', '{$_POST['specialistSummBeznal']}', '{$_POST['analizSummNal']}', '{$_POST['analizSummBeznal']}', '{$_POST['solarSummNal']}', '{$_POST['solarSummBeznal']}', '{$_POST['summMinusNal']}', '{$_POST['bankSummNal']}', '{$_POST['directorSummNal']}', '{$create_time}', '{$_SESSION['id']}');";
+                        (`filial_id`, `day`, `month`, `year`, 
+                        `itogSumm`, `arenda`, `zreport`, `summ`,
+                        `nal`, `beznal`, 
+                        `cashbox_nal`, `cashbox_beznal`, 
+                        `cashbox_cert_count`, `cashbox_cert_nal`, `cashbox_cert_beznal`, 
+                        `cashbox_abon_count`, `cashbox_abon_nal`, `cashbox_abon_beznal`, 
+                        `cashbox_solar_count`, `cashbox_solar_nal`, `cashbox_solar_beznal`, 
+                        `cashbox_realiz_count`, `cashbox_realiz_nal`, `cashbox_realiz_beznal`, 
+                        `temp_orto_nal`, `temp_orto_beznal`, 
+                        `temp_specialist_nal`, `temp_specialist_beznal`, 
+                        `temp_analiz_nal`, `temp_analiz_beznal`, 
+                        `temp_solar_nal`, `temp_solar_beznal`, 
+                        `temp_giveoutcash`, `bank_summ_nal`, `director_summ_nal`, 
+                        `create_time`, `create_person`) 
+                        VALUES ('{$_POST['filial_id']}', '{$d}', '{$m}', '{$y}', 
+                        '" . str_replace(' ', '', $_POST['itogSumm']) . "', '{$_POST['arenda']}', '{$_POST['zreport']}', '" . str_replace(' ', '', $_POST['allsumm']) . "', 
+                        '" . str_replace(' ', '', $_POST['SummNal']) . "', '" . str_replace(' ', '', $_POST['SummBeznal']) . "', 
+                        '{$_POST['SummNalStomCosm']}', '{$_POST['SummBeznalStomCosm']}', 
+                        '{$_POST['CertCount']}', '{$_POST['SummCertNal']}', '{$_POST['SummCertBeznal']}', 
+                        '{$_POST['AbonCount']}', '{$_POST['SummAbonNal']}', '{$_POST['SummAbonBeznal']}', 
+                        '{$_POST['SolarCount']}', '{$_POST['SummSolarNal']}', '{$_POST['SummSolarBeznal']}', 
+                        '{$_POST['RealizCount']}', '{$_POST['SummRealizNal']}', '{$_POST['SummRealizBeznal']}', 
+                        '{$_POST['ortoSummNal']}', '{$_POST['ortoSummBeznal']}', 
+                        '{$_POST['specialistSummNal']}', '{$_POST['specialistSummBeznal']}', 
+                        '{$_POST['analizSummNal']}', '{$_POST['analizSummBeznal']}', 
+                        '{$_POST['solarSummNal']}', '{$_POST['solarSummBeznal']}', 
+                        '{$_POST['summMinusNal']}', '{$_POST['bankSummNal']}', '{$_POST['directorSummNal']}', 
+                        '{$create_time}', '{$_SESSION['id']}');";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 

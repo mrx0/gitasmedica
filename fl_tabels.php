@@ -3,7 +3,6 @@
 //fl_tabels.php
 //Важный отчёт
 
-
     //!!!Сортировка - нигде не используется??
     function cmp($a, $b)
     {
@@ -23,6 +22,8 @@
 			include_once 'filter.php';
 			include_once 'filter_f.php';
 			include_once 'ffun.php';
+
+            include_once 'variables.php';
 
             unset($_SESSION['fl_calcs_tabels2']);
 
@@ -84,6 +85,12 @@
 				echo '
                     <div class="no_print"> 
 					<header style="margin-bottom: 5px;">
+						<div class="nav">
+						    <a href="fl_tabels2.php" class="b4">Отчёт по часам</a>
+						    <a href="fl_tabels_check.php" class="b4">Проверка табелей</a>
+						    <a href="fl_tabels_simple_pay.php" class="b">Проверка табелей 2</a>
+                        </div>
+
 						<h1>Важный отчёт</h1>';
                 echo '
                         <div>
@@ -99,16 +106,23 @@
 						    <ul style="margin-left: 6px; margin-bottom: 20px;">
 						        <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите раздел</span><br>
                                 <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-                                    <a href="?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
-                                    <a href="?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>
-                                    <a href="?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
-                                    <a href="?who=4" class="b" style="'.$admin_color.'">Администраторы</a>
-                                    <a href="?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
-								    <a href="?who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
-                                    <a href="?who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
-                                    <a href="?who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
+                                    <a href="fl_tabels.php?who=5" class="b" style="'.$stom_color.'">Стоматологи</a>
+                                    <a href="fl_tabels.php?who=6" class="b" style="'.$cosm_color.'">Косметологи</a>
+                                    <a href="fl_tabels.php?who=10" class="b" style="'.$somat_color.'">Специалисты</a>
+                                    <a href="fl_tabels.php?who=4" class="b" style="'.$admin_color.'">Администраторы</a>
+                                    <a href="fl_tabels.php?who=7" class="b" style="'.$assist_color.'">Ассистенты</a>
+								    <a href="fl_tabels.php?who=13" class="b" style="'.$sanit_color.'">Санитарки</a>
+                                    <a href="fl_tabels.php?who=14" class="b" style="'.$ubor_color.'">Уборщицы</a>
+                                    <a href="fl_tabels.php?who=15" class="b" style="'.$dvornik_color.'">Дворники</a>
+                                    <a href="fl_tabels.php?who=11" class="b" style="'.$other_color.'">Прочие</a>
 								    <!--<a href="fl_tabels_noch.php?who=5" class="b" style="">Ночь стом.</a>
-								    <a href="fl_tabels_noch.php?who=7" class="b" style="">Ночь ассист.</a>-->
+								    <a href="fl_tabels_noch.php?who=7" class="b" style="">Ночь ассист.</a>-->';
+
+                if (in_array($_SESSION['permissions'], $workers_target_arr) || ($_SESSION['id'] == 270) || $god_mode) {
+                    echo '
+                                <a href="fl_tabels999.php?who=999" class="b" style="">Другие</a>';
+                }
+                echo '
                                 </li>
 						    </ul>';
 
@@ -143,8 +157,12 @@
 
                     //if (($permission['id'] != 1) && ($permission['id'] != 2) && ($permission['id'] != 3) && ($permission['id'] != 8) && ($permission['id'] != 9)){
 
-                        //Выберем всех сотрудников с такой должностью
-                        $query = "SELECT * FROM `spr_workers` WHERE `permissions`='{$type}' AND `status` <> '8'";
+                        //Выберем всех сотрудников с такой должностью + спец отметки
+                        $query = "
+                        SELECT s_w.*, opt_w_s.oklad, opt_w_s.prikaz8 FROM `spr_workers` s_w 
+                          LEFT JOIN `options_worker_spec` opt_w_s ON opt_w_s.worker_id = s_w.id
+                        WHERE s_w.permissions='{$type}' AND s_w.status <> '8'";
+
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                         $number = mysqli_num_rows($res);
@@ -153,6 +171,8 @@
                                 $workers_j[$arr['name']] = $arr;
                             }
                         }
+                        //var_dump($query);
+                        //var_dump($workers_j);
 
                         //Сортируем по имени
                         ksort($workers_j);
@@ -178,7 +198,11 @@
                                     <li>
                                         <a href="#tabs-' . $type . '_' . $worker['id'] . '" onclick="clearAllChecked(); hideAllErrors();">
                                             ' . $worker['name'] . '
-                                            <div  class="notes_count_div">
+                                            <div  class="notes_count_div">';
+                            if ($worker['prikaz8']){
+                                echo '<span style="font-size: 70%; font-weight: bold; color: white; background: red; padding: 0 2px;">8</span>';
+                            }
+                            echo '
                                                 <div id="tabs_notes2_' . $type . '_' . $worker['id'].'" class="notes_count3" style="display: none;">
                                                     <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
                                                 </div>
@@ -200,9 +224,17 @@
 
                                 <div id="tabs-' . $type . '_' . $worker['id'] . '" class="workerDataAllFilials" workerData="' . $type . '_' . $worker['id'] . '" style="width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); margin-left: 150px; font-size: 12px;">';
 
-                            echo '<h2>' .$permissions_j[$type]['name'].'</h2><h1>'.$worker['name'].'</h2>';
+                            echo '
+                                    <h2>' .$permissions_j[$type]['name'];
+                            echo '
+                                    </h2>
+                                    <h1>'.$worker['name'].'</h1>';
+                            if ($worker['prikaz8']){
+                                echo '<span style="color: red; "><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%"></i> Сотруднику применяется приказ №8</span>';
+                            }
 
-                            $tabs_rez_js .= '$( "#tabs_w'.$type.'_'.$worker['id'].'").tabs();';
+
+                            $tabs_rez_js .= '$( "#tabs_w'.$type.'_'.$worker['id'].'").tabs({collapsible: true, active: false});';
 
                             echo '
                                     <div id="tabs_w'.$type.'_'.$worker['id'].'" style="font-size: 100%;">
@@ -218,10 +250,10 @@
                                                 <a href="#tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '">
                                                     ' . $office['name2'] . '
                                                     <div class="notes_count_div">
-                                                        <div id="tabs_notes2_' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count3" style="display: none;">
+                                                        <div id="tabs_notes2_' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count3" style="display: none;" filial_id="' . $office['id'] . '">
                                                             <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
                                                         </div>
-                                                        <div id="tabs_notes_' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count2" style="display: none;">
+                                                        <div id="tabs_notes_' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" class="notes_count2" style="display: none;" filial_id="' . $office['id'] . '">
                                                             <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
                                                         </div>
                                                     </div>
@@ -237,6 +269,7 @@
                             foreach ($filials_j as $office){
 
                                 if ($office['id'] != 11) {
+
                                     echo '
                                         <div id="tabs-' . $type . '_' . $worker['id'] . '_' . $office['id'] . '" style="position: relative; width: auto; float: none; border: 1px solid rgba(228, 228, 228, 0.72); font-size: 12px; margin-top: 65px;">';
 
@@ -252,9 +285,20 @@
                                             </div>';
 
                                     echo '
-                                            <div id="refreshID_'.$type.'_'.$worker['id'].'_'.$office['id'].'" style="position: absolute; cursor: pointer; top: 1px; right: 5px; font-size: 180%; color: #0C0C0C;" onclick="refreshOnlyThisTab($(this), '.$type . ',' . $worker['id'] . ',' . $office['id'].'); fl_addCalcsIDsINSessionForTabel([], 0, 0, 0, 0);" title="Обновить эту вкладку">
+                                            <div id="refreshID_'.$type.'_'.$worker['id'].'_'.$office['id'].'" style="position: absolute; cursor: pointer; top: -30px; right: 5px; font-size: 180%; color: #0C0C0C;" onclick="refreshOnlyThisTab($(this), '.$type . ',' . $worker['id'] . ',' . $office['id'].'); fl_addCalcsIDsINSessionForTabel([], 0, 0, 0, 0);" title="Обновить эту вкладку">
                                                 <span style="font-size: 50%;">Обновить эту вкладку</span> <i class="fa fa-refresh" aria-hidden="true"></i>
                                             </div>';
+
+                                    echo '
+                                            <div id="" style="position: absolute; top: -25px; right: 160px; cursor: pointer;">
+                                               <span class="b4" onclick="fl_addNewClearTabelIN(true, ' . $type . ', ' . $worker['id'] . ', ' . $office['id'] . ');">Пустой табель +</span>
+                                            </div>';
+
+                                    echo '
+                                            <div id="" style="position: absolute; top: -22px; left: 5px; font-size: 130%; color: rgb(0, 123, 182)">
+                                               '.$office['name'].'
+                                            </div>';
+
 
                                     echo '
                                         </div>';
@@ -288,6 +332,7 @@
 				
 				
 				$( "#tabs_w" ).tabs();
+				
 				//$( "#tabs_ww" ).tabs();
 				//$( "#tabs_w2" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 				'.$tabs_rez_js.'
@@ -319,7 +364,7 @@
                         worker = ids_arr[1];
                         office = ids_arr[2];
                         
-                        var certData = {
+                        var reqData = {
                             permission: permission,
                             worker: worker,
                             office: office,
@@ -329,7 +374,7 @@
                         };
                         
                         
-                        getTabelsfunc (thisObj, certData);
+                        getTabelsfunc (thisObj, reqData);
                     });
 
 				    //Необработанные расчеты
@@ -346,7 +391,7 @@
                         worker = ids_arr[1];
                         office = ids_arr[2];showRefundAdd
                         
-                        var certData = {
+                        var reqData = {
                             permission: permission,
                             worker: worker,
                             office: office,
@@ -356,7 +401,7 @@
                         };
                         
                         
-                        getCalculatesfunc (thisObj, certData);
+                        getCalculatesfunc (thisObj, reqData);
                     });*/
                     
                     $(".workerDataAllFilials").each(function(){
@@ -371,7 +416,7 @@
                         permission = ids_arr[0];
                         worker = ids_arr[1];
                         
-                        var certData = {
+                        var reqData = {
                             permission: permission,
                             worker: worker,
                             month: "'.date("m").'",
@@ -380,7 +425,7 @@
                         };
                         
                         
-                        getCalculatesfunc2 (certData);
+                        getCalculatesfunc2 (reqData);
                         
                     });
                     
