@@ -52,7 +52,7 @@
                                     <a href="sclad.php" class="b">Склад</a>
                                 </div>
 								<h2>
-									Карточка складской позиции';
+									Карточка складской позиции #'.$sclad_item_j[0]['id'].' ';
 					
 					/*if (($items['edit'] == 1) || $god_mode){
 						if ($sclad_item_j[0]['status'] != 9){
@@ -112,7 +112,7 @@
 									
 								<div class="cellsBlock2">
 									<div class="cellLeft">Название</div>
-									<div class="cellRight">#'.$sclad_item_j[0]['id'].' '.$sclad_item_j[0]['name'].'</div>
+									<div class="cellRight">'.$sclad_item_j[0]['name'].'</div>
 								</div>';
 
 

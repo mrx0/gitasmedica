@@ -41,7 +41,9 @@
 					
 					
 						<h2>Добавить приход</h2>
-					</header>';
+					</header>
+					<input type="hidden" id="prihod_edit" value="false">
+					<input type="hidden" id="prihod_id" name="prihod_id" value="0">';
 
             echo '
 					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">';
@@ -174,7 +176,7 @@
 
                 $msql_cnnct = ConnectToDB ();
 
-                $itemsArr = implode(",", array_keys ($_SESSION['sclad']['items_prihod_data']));
+                $itemsArr = implode(",", array_keys ($items_arr));
 
                 $query = "SELECT `id`, `name`,`unit` FROM `spr_sclad_items` WHERE `id` IN ($itemsArr) AND `status` <> '9'";
 
@@ -277,7 +279,7 @@
                                              ' . $items_arr_j[$item_id]['name'] . '
                                         </td>
                                         <td style="text-align: left; ">
-                                            <input type="text" name="price_' . $item_id . '_'.$ind.'" id="price_' . $item_id . '_'.$ind.'" class="sclad_item_prihod_price" value="'.$sclad_item['price'].'" placeholder="0"  style="width: 50px; color: rgb(30, 30, 30); font-size: 12px; border: 1px solid rgb(118, 118, 118); border-radius: 2px;"><span style="font-size: 70%">руб.</span>
+                                            <input type="text" name="price_' . $item_id . '_'.$ind.'" id="price_' . $item_id . '_'.$ind.'" class="sclad_item_prihod_price" value="'.number_format($sclad_item['price']/100, 2, '.', '').'" placeholder="0"  style="width: 50px; color: rgb(30, 30, 30); font-size: 12px; border: 1px solid rgb(118, 118, 118); border-radius: 2px;"><span style="font-size: 70%">руб.</span>
                                         </td>
                                         <td style="text-align: left;">
                                             <!--<input type="number" size="2" name="sclad_item_prihod_count" id="sclad_item_prihod_count_' . $item_id . '_'.$ind.'" class="sclad_item_prihod_count" min="0" max="10000" value="'.$sclad_item['quantity'].'" style="width: 50px;">-->
@@ -296,7 +298,7 @@
                     echo '
                                         </td>
                                         <td style="text-align: center; ">
-                                            <span id="summ_' . $item_id . '_'.$ind.'" class="sclad_item_prihod_summ">'.$sclad_item['quantity'] * $sclad_item['price'].'</span><span style="font-size: 70%">руб.</span>
+                                            <span id="summ_' . $item_id . '_'.$ind.'" class="sclad_item_prihod_summ">'.number_format(($sclad_item['quantity'] * $sclad_item['price'])/100, 2, '.', '').'</span><span style="font-size: 70%">руб.</span>
                                         </td>';
 
                     //Тип гарантии / срок годности
@@ -423,7 +425,7 @@
                         $(".sclad_item_prihod_summ").each(function() {
                             summ += parseFloat($(this).html());
                         });
-                        $("#itemInSetSumm").html(summ);
+                        $("#itemInSetSumm").html(number_format(summ, 2, \'.\', \'\'));
                     });
                     
                     //Изменение цены
@@ -439,6 +441,14 @@
                         //if ($(this).val().length > 0){
                             
                             $(this).val($(this).val().replace(\',\', \'.\'));
+                            
+                            //console.log ($(this).val().split(".")[1]);
+                            //Если знаков после запятой > 2
+                            if ($(this).val().indexOf(".") != -1){
+                                if ($(this).val().split(".")[1].length > 2){
+                                    $(this).val( $(this).val().split(".")[0] + \'.\'+ $(this).val().split(".")[1].substring(0, 2));
+                                }
+                            }
                             
                             changePriceScladItemPrihod(ind, item_id, this);
                             

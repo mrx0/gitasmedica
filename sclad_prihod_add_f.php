@@ -14,7 +14,7 @@
 
 			$temp_arr = array();
 
-			if (!isset($_POST['provider_name']) || !isset($_POST['prov_doc']) || !isset($_POST['filial_id']) || !isset($_POST['prihod_time'])){
+			if (!isset($_POST['provider_name']) || !isset($_POST['prov_doc']) || !isset($_POST['filial_id']) || !isset($_POST['prihod_time']) || !isset($_POST['summ'])){
 				//echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 
@@ -37,6 +37,8 @@
 
                             $time = date('Y-m-d H:i:s', time());
 
+                            $comment = trim(strip_tags(stripcslashes(htmlspecialchars(($_POST['comment'])))));
+
                             //$descr = addslashes($_POST['descr']);
 
                             //Добавляем в базу приход
@@ -56,6 +58,7 @@
                             `provider_id`,
                             `provider_name`,
                             `prov_doc`,
+                            `summ`,
                             `comment`, 
                             `create_person`, 
                             `create_time`
@@ -66,6 +69,7 @@
                             :provider_id,
                             :provider_name,
                             :prov_doc,
+                            :summ,
                             :comment,
                             :create_person,
                             :create_time
@@ -73,11 +77,12 @@
 
                             $args = [
                                 'filial_id' => $_POST['filial_id'],
-                                'prihod_time' => $_POST['prihod_time'],
+                                'prihod_time' => date('Y-m-d', strtotime($_POST['prihod_time'].' 09:00:00')),
                                 'provider_id' => 0,
                                 'provider_name' => $_POST['provider_name'],
                                 'prov_doc' => $_POST['prov_doc'],
-                                'comment' => '',
+                                'summ' => $_POST['summ']*100,
+                                'comment' => $comment,
                                 'create_person' => $_SESSION['id'],
                                 'create_time' => $time
                             ];
@@ -144,11 +149,8 @@
                                     }
                                 }
                             }
-                            unset($_SESSION['sclad']);
 
-                            //!!! @@@ Пересчет долга
-//                            include_once 'ffun.php';
-//                            calculateDebt($_POST['client']);
+                            unset($_SESSION['sclad']);
 
                             echo json_encode(array('result' => 'success', 'data' => $insert_id));
 

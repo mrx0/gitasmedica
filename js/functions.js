@@ -12302,7 +12302,7 @@
 
             },
             success: function (res) {
-                console.log (res.q);
+                //console.log (res.q);
 
                 if (res.result == 'success') {
 
@@ -13026,26 +13026,35 @@
         })
     }
 
-    //Удалить текущую позицию из набора
-    function deleteScladItemsFromSet(item_id=0, ind=0, reload=false){
-        // console.log(ind);
+    //Удалить текущую позицию из набора (используем на странице самого склада + приходная накладная (создание и редактирование))
+    function deleteScladItemsFromSet(item_id=0, ind=0, reload=false, edit=false, prihod_id=0){
+         // console.log(ind);
+         // console.log(edit);
+         // console.log(prihod_id);
+         //console.log(reload);
+
+        let reqData ={};
 
         //Если не надо перезагружать страницу, значит мы скорее всего тут sclad.php
         if (!reload) {
             var link = "delete_sclad_item_from_set_f.php";
 
-            var reqData = {
+            reqData = {
                 item_id: item_id
             };
-        //А если надо перезагружать страницу, значит мы скорее всего тут например тут sclad_prihod_add.php
+        //А если надо перезагружать страницу, значит мы скорее всего тут например тут sclad_prihod_add.php или *edit.php
         }else{
             var link = "delete_sclad_item_from_prihod_data_f.php";
 
-            var reqData = {
+            reqData = {
                 item_id: item_id,
-                ind: ind
+                ind: ind,
+                edit: edit,
+                prihod_id: prihod_id
             };
+            //console.log(reqData);
         }
+        console.log(reqData);
 
         $.ajax({
             url: link,
@@ -13072,7 +13081,7 @@
                             $(this).prop("checked", false);
                         })
                     }
-                //А если надо перезагружать страницу, значит мы скорее всего тут например тут sclad_prihod_add.php
+                //А если надо перезагружать страницу, значит мы скорее всего тут например тут sclad_prihod_add.php или *edit.php
                 }else{
                     location.reload();
                 }
@@ -13085,14 +13094,16 @@
     }
 
     //Удалить текущую позицию из набора
-    function copyScladItemsFromSet(item_id=0, ind=0){
+    function copyScladItemsFromSet(item_id=0, ind=0, edit=false, prihod_id=0){
         // console.log(ind);
 
         var link = "copy_sclad_item_from_prihod_data_f.php";
 
         var reqData = {
             item_id: item_id,
-            ind: ind
+            ind: ind,
+            edit: edit,
+            prihod_id: prihod_id
         };
 
         $.ajax({
@@ -13116,7 +13127,7 @@
     }
 
     //Изменяем кол-во в позиции на приходе
-    function changeQuantityScladItemPrihod(ind, itemId, dataObj){
+    function changeQuantityScladItemPrihod(ind, itemId, dataObj, edit=false, prihod_id=0){
         //console.log(ind);
         //console.log(itemId);
         //console.log(dataObj);
@@ -13132,7 +13143,9 @@
                 var reqData = {
                     item_id: itemId,
                     ind: ind,
-                    quantity: quantity
+                    quantity: quantity,
+                    edit: edit,
+                    prihod_id: prihod_id
                 };
                 //console.log(reqData);
 
@@ -13163,7 +13176,7 @@
     }
 
     //Изменяем цену позиции на приходе
-    function changePriceScladItemPrihod(ind, itemId, dataObj){
+    function changePriceScladItemPrihod(ind, itemId, dataObj, edit=false, prihod_id=0){
         //console.log(ind);
         //console.log(itemId);
         //console.log(dataObj);
@@ -13180,7 +13193,9 @@
             var reqData = {
                 item_id: itemId,
                 ind: ind,
-                price: price
+                price: price,
+                edit: edit,
+                prihod_id: prihod_id
             };
             //console.log(reqData);
 
@@ -13226,12 +13241,12 @@
         $(".sclad_item_prihod_summ").each(function() {
             summ += parseFloat($(this).html());
         });
-        $("#itemInSetSumm").html(summ);
+        $("#itemInSetSumm").html(number_format(summ, 2, '.', ''));
 
     }
 
     //Изменяем тип гарантии позиции (гарантия, срок годности или нихера)
-    function changeExpGarantTypeScladItemPrihod(ind, itemId, dataObj){
+    function changeExpGarantTypeScladItemPrihod(ind, itemId, dataObj, edit=false, prihod_id=0){
         //console.log(dataObj.val());
         //console.log(this);
 
@@ -13244,7 +13259,9 @@
         var reqData = {
             item_id: itemId,
             ind: ind,
-            eg_type: eg_type
+            eg_type: eg_type,
+            edit: edit,
+            prihod_id: prihod_id
         };
         //console.log(reqData);
 
@@ -13283,10 +13300,12 @@
         var reqData = {
             item_id: itemId,
             ind: ind,
-            eg_date: eg_date
+            eg_date: eg_date,
+            prihod_id: $("#prihod_id").val(),
+            edit: $("#prihod_edit").val()
         };
         // console.log('777');
-        // console.log(reqData);
+        //console.log(reqData);
 
         $.ajax({
             url: link,
@@ -13300,7 +13319,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                console.log(res.data);
+                //console.log(res.data);
 
                 //Ничего не делаем, потому что все и так хорошо?
 
@@ -13385,18 +13404,21 @@
         if (all_good){
 
             //Добавляем приходную накладную
-            var link = "sclad_prihod_add_f.php";
+            let link = "sclad_prihod_add_f.php";
 
             if (edit){
                 link = "sclad_prihod_edit_f.php";
             }
 
             //Надо что-то передать
-            var reqData = {
+            let reqData = {
                 provider_name: $("#provider").val(),
                 prov_doc: $("#prov_doc").val(),
                 filial_id: $("#SelectFilial").val(),
-                prihod_time: $("#iWantThisDate2").val()
+                prihod_time: $("#iWantThisDate2").val(),
+                comment: '',
+                prihod_id: $("#prihod_id").val(),
+                summ: $("#itemInSetSumm").html()
             };
             // console.log(reqData);
 
@@ -13527,12 +13549,16 @@
     }
 
     function addNewScladItemsSetINSession(itemId){
+        //console.log($("#prihod_edit").val());
 
-        var link = "add_new_sclad_item_from_prihod_data_f.php";
+        let link = "add_new_sclad_item_from_prihod_data_f.php";
 
-        var reqData = {
-            item_id: itemId
+        let reqData = {
+            item_id: itemId,
+            prihod_id: $("#prihod_id").val(),
+            edit: $("#prihod_edit").val()
         };
+        //console.log(reqData);
 
         $.ajax({
             url: link,
@@ -13546,7 +13572,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-
+                // console.log(res.data);
 
                 location.reload();
 
@@ -13596,10 +13622,14 @@
 
     //Показываем блок с кнопками Для снятия проведения приходной накладной
     function showPrihodOpen(prihod_id){
-        //console.log(mode);
+        //console.log(prihod_id);
+
+        // убираем класс ошибок
+        hideAllErrors ();
+
         var rys = false;
 
-        rys = confirm("Снять отметку о проведении приходной накладной?");
+        rys = confirm("Снять отметку о проведении приходной накладной? Со склада будет списано нужное количество.");
 
         if (rys) {
 
@@ -13620,14 +13650,14 @@
                     //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
                 },
                 success: function (res) {
-                    //console.log (res);
+                    // console.log (res);
 
                     if (res.result == "success") {
                         setTimeout(function () {
                             window.location.href = "sclad_prihod.php?id="+prihod_id;
                         }, 200);
                     } else {
-
+                        $("#errror").html('<div class="query_neok">'+res.data+'</div>')
                     }
                 }
             })

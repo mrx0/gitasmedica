@@ -45,7 +45,7 @@
 //                $filial_id = $_SESSION['filial'];
 //                $have_target_filial = true;
 //            } else {
-            $filial_id = 0;
+            $filial_id = 15;
 //            }
 
             //if (($finances['see_all'] == 1) || $god_mode) {
@@ -78,8 +78,6 @@
                         <div id="errrror"></div>';
 
 
-            //$dop = '';
-
             echo '<div class="no_print">';
             echo widget_calendar ($month, $year, 'sclad_prihods.php', $dop);
             echo '</div>';
@@ -90,7 +88,7 @@
                             Филиал:
 
                             <select name="SelectFilial" id="SelectFilial">
-							    <option value="0" selected>Выберите филиал</option>';
+							    <option value="0" selected>Все</option>';
             if (!empty($filials_j)){
                 foreach($filials_j as $f_id => $filial_item){
                     $selected = '';
@@ -113,123 +111,80 @@
                         </div>
                         ';
 
-
-//            $msql_cnnct = ConnectToDB ();
-//
-//
-//            //Типы расходов
-//            $give_out_cash_types_j = array();
-//
-//            $query = "SELECT `id`,`name` FROM `spr_cashout_types`";
-//            //var_dump($query);
-//
-//            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-//
-//            $number = mysqli_num_rows($res);
-//            if ($number != 0){
-//                while ($arr = mysqli_fetch_assoc($res)){
-//                    $give_out_cash_types_j[$arr['id']] = $arr['name'];
-//                }
-//            }
-//            //var_dump( $give_out_cash_types_j);
-
-            //$msql_cnnct = ConnectToDB ();
             $db = new DB();
-
-            //Выбрать все категории
-            $query = "
-            SELECT j_mc.*, fl_spr_perc.name AS cat_name 
-            FROM `journal_material_costs_test` j_mc
-            RIGHT JOIN `fl_spr_percents` fl_spr_perc
-            ON fl_spr_perc.id = j_mc.category_id
-            WHERE j_mc.filial_id = :filial_id AND j_mc.month = :month AND j_mc.year = :year
-            ORDER BY j_mc.create_time";
 
             $args = [
                 'month' => $month,
-                'year' => $year,
-                'filial_id' => $filial_id
+                'year' => $year
             ];
 
-            $material_costs_j = $db::getRows($query, $args);
-            //var_dump($material_costs_j);
+            $query_dop = '';
 
-                //$data = $db::getRows("SELECT `title` FROM `category` WHERE `parent_id` > ?", [$parent_id]);
-            //foreach ($data as $item) {
-            //echo $item['title'].'<br>';
-            //}
+            if ($filial_id != 0) {
+                $query_dop .= 'AND s_p.filial_id = :filial_id';
 
+                $args['filial_id'] = $filial_id;
+            }
 
-//            $rezult = array();
-//
-//            //Расходы, выдано из кассы
-//            $giveoutcash_j = array();
-//            //Суммы расходов по типам
-//            $giveoutcash_summs = array();
-//            //Сумма расходов
-//            $giveoutcash_summ = 0;
+            if ($status == 1) {
+                $query_dop .= 'AND s_p.status = :status';
+
+                $args['status'] = 0;
+            }
 
 
-//            //Поехали собирать расходные ордера
-//            $query = "SELECT * FROM `journal_giveoutcash` WHERE
-//            MONTH(`date_in`) = '$month' AND YEAR(`date_in`) = '$year' AND `status` <> '9'
-//            ORDER BY `date_in` ASC";
-//
-//            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+            //Выбрать все категории prihod_status
+            $query = "
+            SELECT s_p.*
+            FROM `sclad_prihod` s_p
+            WHERE MONTH(s_p.prihod_time) = :month AND YEAR(s_p.prihod_time) = :year ".$query_dop."
+            ORDER BY s_p.prihod_time DESC, s_p.create_time DESC";
+            //var_dump($query);
 
+            $prihods_j = $db::getRows($query, $args);
+            //var_dump($prihods_j);
 
-//            if ($number != 0) {
-//                while ($arr = mysqli_fetch_assoc($res)) {
-//                    //var_dump($arr);
-//
-//                    if (!isset($giveoutcash_j[$arr['office_id']])) {
-//                        $giveoutcash_j[$arr['office_id']] = array();
-//                    }
-//
-//                    if (!isset($giveoutcash_j[$arr['office_id']][$arr['type']])) {
-//                        $giveoutcash_j[$arr['office_id']][$arr['type']] = 0;
-//                    }
-//                    $giveoutcash_j[$arr['office_id']][$arr['type']] += $arr['summ'];
-//
-//                    //Cуммы по типам со всех филиалов
-//                    if (!isset($giveoutcash_summs[$arr['type']])) {
-//                        $giveoutcash_summs[$arr['type']] = 0;
-//                    }
-//                    $giveoutcash_summs[$arr['type']] += $arr['summ'];
-//
-//                }
-//            }
-            //var_dump($giveoutcash_j);
-            //var_dump($giveoutcash_summs);
-
-            if (!empty($material_costs_j)){
+            if (!empty($prihods_j)){
 
                 echo '
                 <table style="border: 1px solid #BFBCB5; margin: 5px; font-size: 90%;">';
 
                 echo '
                     <tr style="text-align: center;">
-                        <td style="outline: 1px solid #BFBCB5; padding: 2px 5px; font-size: 80%"><i>Месяц/Год</i></td>  
+                        <td style="outline: 1px solid #BFBCB5; padding: 2px 5px; font-size: 80%"><i>№</i></td>  
+                        <td style="outline: 1px solid #BFBCB5; padding: 2px 5px; font-size: 80%"><i>Дата</i></td>  
+                        <td style="outline: 1px solid #BFBCB5; padding: 2px 5px; font-size: 80%"><i>Филиал/Склад</i></td>
+                        <td style="outline: 1px solid #BFBCB5; padding: 2px 5px; font-size: 80%"><i>Поставщик</i></td>
                         <td style="outline: 1px solid #BFBCB5; padding: 2px 5px; font-size: 80%"><i>Сумма</i></td>
-                        <td style="outline: 1px solid #BFBCB5; padding: 2px 5px; font-size: 80%"><i>Категория</i></td>
-                        <td style="outline: 1px solid #BFBCB5; padding: 2px 5px; font-size: 80%"><i>Филиал</i></td>
                         <td style="outline: 1px solid #BFBCB5; padding: 2px 5px; font-size: 80%"><i>Дата создания<br>Автор</i></td>
-                        <td style="outline: 1px solid #BFBCB5; padding: 2px 5px; font-size: 100%"><i class="fa fa-cog" title=""></i></td>
+                        <td style="outline: 1px solid #BFBCB5; padding: 2px 5px; font-size: 100%"><i>Статус</i></td>
                     </tr>';
 
-                foreach ($material_costs_j as $material_cost_data){
+                foreach ($prihods_j as $prihod_item){
 
                     echo '
                         <tr class="cellsBlockHover">    
-                            <td style="border: 1px solid #BFBCB5; padding: 2px 5px;">'.$monthsName[$material_cost_data['month']].' '.$material_cost_data['year'].'</td>
-                            <td style="border: 1px solid #BFBCB5; padding: 2px 5px;">'.$material_cost_data['summ'].' руб.</td>
-                            <td style="border: 1px solid #BFBCB5; padding: 2px 5px;">'.$material_cost_data['cat_name'].'</td>
-                            <td style="border: 1px solid #BFBCB5; padding: 2px 5px;">'.$filials_j[$material_cost_data['filial_id']]['name2'].'</td>
-                            <td style="border: 1px solid #BFBCB5; padding: 2px 5px; font-size: 80%; text-align: right">
-                                '.date('d.m.Y', strtotime($material_cost_data['create_time']."")).'<br>
-                                '.WriteSearchUser('spr_workers', $material_cost_data['create_person'], 'user', true).'
+                            <td style="border: 1px solid #BFBCB5; padding: 2px 5px;">
+                                <a href="sclad_prihod.php?id='.$prihod_item['id'].'" class="ahref">#'.$prihod_item['id'].'</a>
                             </td>
-                            <td style="outline: 1px solid #BFBCB5; padding: 2px 5px; text-align: center; cursor: pointer;" onclick="Ajax_MaterialCostDelete('.$material_cost_data['id'].');"><i class="fa fa-times"  style="color: red;" title="Удалить"></i></td>
+                            <td style="border: 1px solid #BFBCB5; padding: 2px 5px;">'.date('d.m.Y', strtotime($prihod_item['prihod_time'])).'</td>
+                            <td style="border: 1px solid #BFBCB5; padding: 2px 5px;">'.$filials_j[$prihod_item['filial_id']]['name2'].'</td>
+                            <td style="border: 1px solid #BFBCB5; padding: 2px 5px;"><!--'.$prihod_item['id'].'-->'.$prihod_item['provider_name'].'</td>
+                            <td style="border: 1px solid #BFBCB5; padding: 2px 5px;">'.number_format($prihod_item['summ']/100, 2, '.', '').' руб.</td>
+                            <td style="border: 1px solid #BFBCB5; padding: 2px 5px; font-size: 80%; text-align: right">
+                                '.date('d.m.Y', strtotime($prihod_item['create_time']."")).'<br>
+                                '.WriteSearchUser('spr_workers', $prihod_item['create_person'], 'user', true).'
+                            </td>
+                            <td style="outline: 1px solid #BFBCB5; padding: 2px 5px; text-align: center; ">';
+
+                    if ($prihod_item['status'] == 7){
+                        //echo 'проведён';
+                    }else{
+                        echo '<span style="color: red;"><i>не проведён</i></span>';
+                    }
+
+                    echo '            
+                            </td>
                         </tr>';
                 }
 
@@ -237,7 +192,7 @@
 
                 echo '</table>';
             }else{
-                echo '<span style="color: red;">Ничего не найдено</span>';
+                echo '<br><span style="color: red;">Ничего не найдено</span>';
             }
 
             echo '

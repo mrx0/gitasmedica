@@ -48,29 +48,32 @@
 
 									<h2>Приходная накладная #'.$_GET['id'].'';
 
-							if (($finances['edit'] == 1) || $god_mode){
-								if ($prihod_j[0]['status'] != 9){
-									echo '
-												<a href="sclad_prihod_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
-								}
-								if (($prihod_j[0]['status'] == 9) && (($finances['close'] == 1) || $god_mode)){
-									echo '
-										<a href="#" onclick="Ajax_reopen_prihod('.$_GET['id'].')" title="Разблокировать" class="info" style="font-size: 100%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
-								}
-							}
-							//Изменить дату внесения
+							//Если накладная не проведена
+                            if ($prihod_j[0]['status'] != 7) {
+                                if (($finances['edit'] == 1) || $god_mode) {
+                                    if ($prihod_j[0]['status'] != 9) {
+                                        echo '
+												<a href="sclad_prihod_edit.php?id=' . $_GET['id'] . '" class="info" style="font-size: 100%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+                                    }
+                                    if (($prihod_j[0]['status'] == 9) && (($finances['close'] == 1) || $god_mode)) {
+                                        echo '
+										<a href="#" onclick="Ajax_reopen_prihod(' . $_GET['id'] . ')" title="Разблокировать" class="info" style="font-size: 100%;"><i class="fa fa-reply" aria-hidden="true"></i></a><br>';
+                                    }
+                                }
+                                //Изменить дату внесения
 //							if (($finances['see_all'] == 1) || $god_mode){
 //								if ($prihod_j[0]['status'] != 9){
 //									echo '
 //												<a href="prihod_time_edit.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Изменить дату"><i class="fa fa-clock-o" aria-hidden="true"></i></a>';
 //								}
 //							}
-							if (($finances['close'] == 1) || $god_mode){
-								if ($prihod_j[0]['status'] != 9){
-									echo '
-												<a href="sclad_prihod_del.php?id='.$_GET['id'].'" class="info" style="font-size: 100%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
-								}
-							}
+                                if (($finances['close'] == 1) || $god_mode) {
+                                    if ($prihod_j[0]['status'] != 9) {
+                                        echo '
+												<a href="sclad_prihod_del.php?id=' . $_GET['id'] . '" class="info" style="font-size: 100%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+                                    }
+                                }
+                            }
 
 							echo '			
 										</h2>';
@@ -157,11 +160,19 @@
 									<div class="invoice_rezult" style="display: inline-block; border: 1px solid #c5c5c5; border-radius: 3px; position: relative;">';
 
 							echo '	
-										<div id="errror" class="invoceHeader" style="padding: 3px 10px;">
+										<div class="invoceHeader" style="padding: 3px 10px;">
                                             <div>
                                                 <div style="display: inline-block; width: 300px; vertical-align: top;">
                                                     <div>
-                                                        <div style="">Сумма: <div id="calculateInvoice" style="">'.$summ.'</div> руб.</div>
+                                                        <div style="">
+                                                            Сумма: <div id="calculateInvoice" style="">'.number_format($prihod_j[0]['summ']/100, 2, '.', '').'</div> руб.';
+							//!!! Внимание костыль! временно поставил проверку между суммой общей в приходе и суммой всех позиций
+                            //потом надо оставить сумму из приходной только
+                            if ((int)$prihod_j[0]['summ'] !==(int)$summ){
+                                echo '<i class="fa fa-warning" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);" title="Обратитесь к разработчику"></i>';
+                            }
+							echo '
+                                                        </div>
                                                     </div>
                                                     <div>
                                                         <div style="">На склад: 
@@ -276,14 +287,15 @@
                                                 </div>
                                                 <div class="cellText2" style="font-size: 80%; text-align: left;">';
 
-                                        echo $item['name'];
-
+                                        echo '
+                                                    <a href="sclad_item.php?id='.$item['sclad_item_id'].'" class="ahref"  target="_blank" rel="nofollow noopener"><i class="fa fa-folder-open-o" aria-hidden="true" style="color: #000000; text-shadow: 1px 1px 1px #ffc90f;"></i></a>
+                                                    '.$item['name'];
                                         echo '
                                                 </div>';
 
                                         echo '
                                                 <div class="cellCosmAct" style="font-size: 80%; padding: 2px 4px; text-align: right; width: 90px; min-width: 90px; max-width: 90px;">
-                                                    ' . $item['price'] . '
+                                                    ' . number_format($item['price']/100, 2, '.', '') . '
                                                 </div>
                                                 <div class="cellCosmAct" style="font-size: 80%; padding: 2px 4px; text-align: left; width: 70px; min-width: 70px; max-width: 70px;">
                                                     ' . $item['quantity'];
@@ -302,7 +314,7 @@
                                                 <div class="cellCosmAct" style="font-size: 80%; padding: 2px 4px; text-align: right; width: 110px; min-width: 110px; max-width: 110px;">
                                                     ';
 
-                                        echo $item['price'] * $item['quantity'];
+                                        echo number_format(($item['price'] * $item['quantity'])/100, 2, '.', '');
 
 
 
@@ -335,14 +347,17 @@
 
                                         echo '
                                             </div>';
+
+                                        $num++;
                                     }
-                                    $num++;
+
                                 }
                             }
 					
 							echo '
 									    </div>
-                                    </div>';
+                                    </div>
+                                    <div id="errror"></div>';
 
 
                             echo '

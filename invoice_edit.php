@@ -413,7 +413,7 @@
 
                                         echo '	
                                                 <input type="hidden" id="adv" name="adv" value="false">
-                                                <input type="hidden" id="invoice_id" name="client" value="' . $invoice_j[0]['id'] . '">
+                                                <input type="hidden" id="invoice_id" name="invoice_id" value="' . $invoice_j[0]['id'] . '">
                                                 <input type="hidden" id="client" name="client" value="' . $invoice_j[0]['client_id'] . '">
                                                 <input type="hidden" id="client_insure" name="client_insure" value="' . $client_j[0]['insure'] . '">
                                                 <input type="hidden" id="zapis_id" name="zapis_id" value="' . $invoice_j[0]['zapis_id'] . '">

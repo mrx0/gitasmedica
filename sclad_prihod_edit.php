@@ -58,7 +58,9 @@ if ($enter_ok){
 										</div>';
 
                     echo '
-                                </header>';
+                                </header>
+                                <input type="hidden" id="prihod_edit" value="true">
+                                <input type="hidden" id="prihod_id" name="prihod_id" value="' . $_GET['id'] . '">';
 
                     echo '
                                 <div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">';
@@ -80,12 +82,12 @@ if ($enter_ok){
 
                     $selected_filial = -1;
 
-                    if ($prihod_j[0]['filial_id'] == 0){
-                        $selected_filial = 0;
+                    if ($prihod_j[0]['filial_id'] == 15){
+                        $selected_filial = 15;
                     }
 
                     echo '
-                                                            <option value="0" ', $selected_filial == 0 ? 'selected' : '', '>Главный склад [ПР21]</option>';
+                                                            <option value="0" ', $selected_filial == 15 ? 'selected' : '', '>Главный склад [ПР21]</option>';
 
 
                     foreach ($filials_j as $filial_item) {
@@ -143,6 +145,12 @@ if ($enter_ok){
 
                     //Что в накладной
                     $prihod_ex_j = array();
+                    //Массив с позициями из бд (названия, ед. измерения)
+                    $items_arr_j = array();
+                    //Массив с самим позициями для работы с ними
+                    $items_arr = array();
+                    //Всего позиций
+                    $itemInSetCount = 0;
 
                     //Сумма накладной
                     $summ = 0;
@@ -184,19 +192,42 @@ if ($enter_ok){
 
                         $_SESSION['sclad']['items_prihod_data_edit'][$_GET['id']] = array();
 
-                        $_SESSION['sclad']['items_prihod_data'][$_GET['id']] = $items_arr = $prihod_ex_j;
+                        $_SESSION['sclad']['items_prihod_data_edit'][$_GET['id']] = $items_arr = $prihod_ex_j;
 
                     //...или заберем их оттуда, если они там есть
                     }else{
-                        if (isset($_SESSION['sclad']['items_prihod_data'])) {
+                        if (isset($_SESSION['sclad']['items_prihod_data_edit'])) {
 
-                            if (isset($_SESSION['sclad']['items_prihod_data'][$_GET['id']])) {
-                                $items_arr = $_SESSION['sclad']['items_prihod_data'][$_GET['id']];
+                            if (isset($_SESSION['sclad']['items_prihod_data_edit'][$_GET['id']])) {
+                                $items_arr = $_SESSION['sclad']['items_prihod_data_edit'][$_GET['id']];
                             }
                         }
                     }
+                    //var_dump($_SESSION['sclad']['items_prihod_data_edit']);
 
-                    CloseDB($msql_cnnct);
+                    $itemsArr = implode(",", array_keys ($items_arr));
+
+                    $query = "SELECT `id`, `name`,`unit` FROM `spr_sclad_items` WHERE `id` IN ($itemsArr) AND `status` <> '9'";
+
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                    $itemInSetCount = $number = mysqli_num_rows($res);
+
+                    if ($number != 0) {
+                        while ($arr = mysqli_fetch_assoc($res)) {
+                            //array_push($items_arr, $arr);
+
+                            if (!isset($items_arr_j[$arr['id']])){
+                                $items_arr_j[$arr['id']] = array();
+                            }
+                            $items_arr_j[$arr['id']]['name'] = $arr['name'];
+                            $items_arr_j[$arr['id']]['unit'] = $arr['unit'];
+                        }
+
+                    }
+                    //var_dump($items_arr_j);
+
+                    CloseDB ($msql_cnnct);
 
 
                     echo '
@@ -207,7 +238,7 @@ if ($enter_ok){
                     echo '
                                         <div class="invoceHeader" style="position: relative; padding: 5px 10px;">
                                             <div style="display: inline-block;">
-                                                <div style="">Всего позиций: <span id="itemInSetCount" style="">'.$number.'</span> шт.</div>
+                                                <div style="">Всего позиций: <span id="itemInSetCount" style="">'.$itemInSetCount.'</span> шт.</div>
                                             </div>
                                             <div style="display: inline-block;">
                                                 <div style="">На сумму: <span id="itemInSetSumm" style="">0</span> руб.</div>
@@ -226,6 +257,7 @@ if ($enter_ok){
                                         <div style="float: none">';
 
                     if (!empty($items_arr)) {
+                        //var_dump($items_arr);
 
                         echo '
                                             <table style="/*border: 1px solid #CCC;*/ /*width: 100%;*/ table-layout: fixed;">';
@@ -267,15 +299,15 @@ if ($enter_ok){
                                 echo '
                                                 <tr class="<!--draggable--> sclad_item_tr">
                                                     <td style="border-left: 1px solid #CCC; text-align: center;">
-                                                        <i class="fa fa-times" aria-hidden="true" style="cursor: pointer; color: red;"  title="Удалить" onclick="deleteScladItemsFromSet(' . $item_id . ', ' . $ind . ', true);"></i>
-                                                        <i class="fa fa-clone" aria-hidden="true" style="cursor: pointer; color: grey;"  title="Копировать" onclick="copyScladItemsFromSet(' . $item_id . ', ' . $ind . ');"></i>
+                                                        <i class="fa fa-times" aria-hidden="true" style="cursor: pointer; color: red;"  title="Удалить" onclick="deleteScladItemsFromSet(' . $item_id . ', ' . $ind . ', true, true, '.$_GET['id'].');"></i>
+                                                        <i class="fa fa-clone" aria-hidden="true" style="cursor: pointer; color: grey;"  title="Копировать" onclick="copyScladItemsFromSet(' . $item_id . ', ' . $ind . ', true, '.$_GET['id'].');"></i>
                                                     </td>
                                                     <td style="text-align: center; font-size: 80%;">' . $num . '</td>
                                                     <td style="position: relative; max-width: 300px; width: 300px; background: linear-gradient(to right, rgb(0, 0, 0) 88%, rgba(0, 186, 187, 0) 100%); -webkit-background-clip: text; color: transparent; white-space: normal;">
-                                                         ' . $sclad_item['name'] . '
+                                                         ' . $items_arr_j[$item_id]['name'] . '
                                                     </td>
                                                     <td style="text-align: left; ">
-                                                        <input type="text" name="price_' . $item_id . '_' . $ind . '" id="price_' . $item_id . '_' . $ind . '" class="sclad_item_prihod_price" value="' . $sclad_item['price'] . '" placeholder="0"  style="width: 50px; color: rgb(30, 30, 30); font-size: 12px; border: 1px solid rgb(118, 118, 118); border-radius: 2px;"><span style="font-size: 70%">руб.</span>
+                                                        <input type="text" name="price_' . $item_id . '_' . $ind . '" id="price_' . $item_id . '_' . $ind . '" class="sclad_item_prihod_price" value="' . number_format($sclad_item['price']/100, 2, '.', '') . '" placeholder="0"  style="width: 50px; color: rgb(30, 30, 30); font-size: 12px; border: 1px solid rgb(118, 118, 118); border-radius: 2px;"><span style="font-size: 70%">руб.</span>
                                                     </td>
                                                     <td style="text-align: left;">
                                                         <!--<input type="number" size="2" name="sclad_item_prihod_count" id="sclad_item_prihod_count_' . $item_id . '_' . $ind . '" class="sclad_item_prihod_count" min="0" max="10000" value="' . $sclad_item['quantity'] . '" style="width: 50px;">-->
@@ -283,9 +315,9 @@ if ($enter_ok){
                                                     <!--</td>
                                                     <td style="text-align: left;" -->';
 
-                                if (isset($units[$sclad_item['unit']])) {
+                                if (isset($units[$items_arr_j[$item_id]['unit']])) {
                                     //echo 'item_unit_' . $item_id . '_'.$ind.'="' . $sclad_item['unit'] . '">' . $units[$sclad_item['unit']];
-                                    echo '' . $units[$sclad_item['unit']];
+                                    echo '' . $units[$items_arr_j[$item_id]['unit']];
                                 } else {
                                     //echo 'item_unit_' . $item_id . '_'.$ind.'="0"><i class="fa fa-warning" aria-hidden="true" style="color: red;" title="Не указано"></i>';
                                     echo '<i class="fa fa-warning" aria-hidden="true" style="color: red;" title="Не указано"></i>';
@@ -294,7 +326,7 @@ if ($enter_ok){
                                 echo '
                                                     </td>
                                                     <td style="text-align: center; ">
-                                                        <span id="summ_' . $item_id . '_' . $ind . '" class="sclad_item_prihod_summ">' . $sclad_item['quantity'] * $sclad_item['price'] . '</span><span style="font-size: 70%">руб.</span>
+                                                        <span id="summ_' . $item_id . '_' . $ind . '" class="sclad_item_prihod_summ">' . number_format(($sclad_item['quantity'] * $sclad_item['price'])/100, 2, '.', '') . '</span><span style="font-size: 70%">руб.</span>
                                                     </td>';
 
                                 //Тип гарантии / срок годности
@@ -312,7 +344,7 @@ if ($enter_ok){
 
                                 echo '
                                                     <td style="border-top: 1px solid #CCC;">
-                                                        <select name="expirationDate" class="expirationDate" id="expirationDate_' . $item_id . '_' . $ind . '" class="expirationDate" onchange="changeExpGarantTypeScladItemPrihod(' . $ind . ', ' . $item_id . ', this);">
+                                                        <select name="expirationDate" class="expirationDate" id="expirationDate_' . $item_id . '_' . $ind . '" class="expirationDate" onchange="changeExpGarantTypeScladItemPrihod(' . $ind . ', ' . $item_id . ', this, true, '.$_GET['id'].');">
                                                             <option value="0" ' . $sel0 . '>Не указано</option>
                                                             <option value="1" ' . $sel1 . '>Гарантия до</option>
                                                             <option value="2" ' . $sel2 . '>Годен до</option>
@@ -320,7 +352,12 @@ if ($enter_ok){
                                                     </td>';
 
                                 if (mb_strlen($sclad_item['exp_garant_date']) == 10) {
-                                    $exp_garant_date = $sclad_item['exp_garant_date'];
+                                    //$exp_garant_date = $sclad_item['exp_garant_date'];
+                                    if ($sclad_item['exp_garant_date'] != '0000-00-00') {
+                                        $exp_garant_date = date('d.m.Y', strtotime($sclad_item['exp_garant_date']));
+                                    }else{
+                                        $exp_garant_date = date('d', time()) . '.' . date('m', time()) . '.' . date('Y', time());
+                                    }
                                 } else {
                                     $exp_garant_date = date('d', time()) . '.' . date('m', time()) . '.' . date('Y', time());
                                 }
@@ -419,7 +456,7 @@ if ($enter_ok){
                                     $(".sclad_item_prihod_summ").each(function() {
                                         summ += parseFloat($(this).html());
                                     });
-                                    $("#itemInSetSumm").html(summ);
+                                    $("#itemInSetSumm").html(number_format(summ, 2, \'.\', \'\'));
                                 });
                                 
                                 //Изменение цены
@@ -436,7 +473,15 @@ if ($enter_ok){
                                         
                                         $(this).val($(this).val().replace(\',\', \'.\'));
                                         
-                                        changePriceScladItemPrihod(ind, item_id, this);
+                                        //console.log ($(this).val().split(".")[1]);
+                                        //Если знаков после запятой > 2
+                                        if ($(this).val().indexOf(".") != -1){
+                                            if ($(this).val().split(".")[1].length > 2){
+                                                $(this).val( $(this).val().split(".")[0] + '.'+ $(this).val().split(".")[1].substring(0, 2));
+                                            }
+                                        }
+                                        
+                                        changePriceScladItemPrihod(ind, item_id, this, true, '.$_GET['id'].');
                                         
                                     //}
                                     
@@ -464,7 +509,7 @@ if ($enter_ok){
                                         $(this).val($(this).val().replace(\',\', \'\'));
                                         $(this).val($(this).val().replace(\'.\', \'\'));
                                         
-                                        changeQuantityScladItemPrihod(ind, item_id, this);
+                                        changeQuantityScladItemPrihod(ind, item_id, this, true, '.$_GET['id'].');
             
                                     //}
                                     

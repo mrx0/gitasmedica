@@ -44,7 +44,7 @@
                     $dop_cat = " AND (
                         LOWER(sit.name) LIKE LOWER('%$search_data%')
                         OR
-                        `id` RLIKE '^$search_data'
+                        sit.id RLIKE '^$search_data'
                         )";
                 }
 
@@ -60,7 +60,7 @@
                 ON sav.sclad_item_id = sit.id
                 WHERE TRUE $dop_cat
                 GROUP BY sit.id
-                ORDER BY sav.quantity
+                ORDER BY sit.id
                 LIMIT $start , $count";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -117,7 +117,16 @@
                                 </td>
 								<!--<td style="">Срок годности</td>
 								<td style="">Гарантия</td>-->
-								<td style="width: 60px; text-align: right;">'.$arr['quantity'].'</td>
+								<td style="width: 60px; text-align: right;">';
+
+                        if ($arr['quantity'] != NULL){
+                            $rezult .= $arr['quantity'];
+                        }else{
+                            $rezult .= 0;
+                        }
+
+                        $rezult .= ' 	
+                                </td>
 								<td style="text-align: left;" ';
 
                         if (isset($units[$arr['unit']])) {
@@ -136,7 +145,7 @@
                     $rezult .= 	'</table>';
                 }
 
-                echo json_encode(array('result' => 'success', 'data' => $rezult, 'count' => $number, 'q' => $query));
+                echo json_encode(array('result' => 'success', 'data' => $rezult, 'count' => $number/*, 'q' => $query*/));
 
             }
         }
