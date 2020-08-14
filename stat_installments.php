@@ -210,8 +210,8 @@
                 <script>  
                     $(document).ready(function() {
                         $(".cl_data").each(function(){
-                            console.log($(this).attr("cl_id"));
-                            console.log($(this).attr("cl_installment_date"));
+                            //console.log($(this).attr("cl_id"));
+                            //console.log($(this).attr("cl_installment_date"));
                             
                             getPayments4Installments($(this).attr("cl_id"), $(this).attr("cl_installment_date"));
                         })
