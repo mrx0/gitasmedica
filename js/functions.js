@@ -10935,7 +10935,7 @@
 
 
 
-    //Функция открыть скрытый див по его id
+    //Функция открыть скрытый див по его id спрятать блок показать блок скрыть блок
 	function toggleSomething (divID){
         $(divID).toggle('normal');
 	}
@@ -12006,11 +12006,11 @@
     }
 
     //Изменить статус рассрочки
-    function changeInstallmentStatus(client_id, installment_status_now){
+    function changeInstallmentStatus(client_id, installment_status_now, reload=false){
 
-        var link = "installment_status_change_f.php";
+        let link = "installment_status_change_f.php";
 
-        var reqData = {
+        let reqData = {
             client_id: client_id,
             installment_status_now: installment_status_now
         };
@@ -12030,10 +12030,54 @@
                 //console.log (res);
 
                 if (res.result == 'success') {
-                    location.reload();
+                    if (reload) {
+                        location.reload();
+                    }else{
+                        //Удаляем из документа, чтобы не перезагружать таблицу
+                        $('#cl_data_main_'+client_id).remove();
+                        $('#user_options_'+client_id).remove();
+                    }
                 }
             }
         })
+    }
+
+    //Показываем типа график платежей должника
+    function getPayments4Installments (client_id, date_in){
+        //console.log (arguments);
+
+        let link = "get_payments_for_installments_f.php";
+
+        let reqData = {
+            client_id: client_id,
+            date_in: date_in
+        };
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == 'success') {
+                    $("#client_orders_by_period_"+client_id).html(res.data);
+
+                    //Прокрутка вправо до конца
+                    let elem = document.querySelector('#client_orders_by_period_'+client_id);
+                    elem.scrollLeft = elem.scrollWidth;
+
+               }
+            }
+        })
+
     }
 
     //Функция блокирует вкладки

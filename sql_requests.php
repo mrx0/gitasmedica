@@ -10,7 +10,9 @@
 		//var_dump($_SESSION);
 
 		if ($god_mode){
-			include_once 'DBWork.php';
+            /*!!!Тест PDO*/
+            include_once('DBWorkPDO.php');
+
 			include_once 'functions.php';
 			include_once 'ffun.php';
             require 'variables.php';
@@ -26,46 +28,51 @@
 
             $rezult = array();
 
-            $msql_cnnct = ConnectToDB ();
+            $db = new DB();
 
-            //Выбор всех пациентов (ФИО, телефон, комментарий), у которых было зафиксированно хотя бы одно посещение
-            $query = "SELECT `full_name` , `telephone` , `comment`
+            //Выбираем всех, у кого есть рассрочка и вставляем их в journal_installments
+            $query = "SELECT *
                 FROM `spr_clients`
-                WHERE `id`
-                IN (
-                
-                SELECT `patient`
-                FROM `zapis`
-                WHERE `type` = '6'
-                AND (
-                `enter` = '1'
-                OR `enter` = '6'
-                )
-                GROUP BY `patient`
-                )
-                ORDER BY `full_name`";
+                WHERE `installment` = '1'";
             //var_dump($query);
 
-            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+            $data = $db::getRows($query, []);
+            //var_dump( $data);
 
-            $number = mysqli_num_rows($res);
-
-            if ($number != 0){
+            if (!empty($data)){
                 //Сразу будем выводить
 
-                echo 'Всего: '.$number;
+                foreach ($data as $item) {
+                    //Вставить рассрочке в БД
+                    $query = "INSERT INTO `journal_installments` (
+                            `client_id`,
+                            `summ`,
+                            `date_in`,
+                            `create_person`, 
+                            `create_time`,
+                            `status`
+                            )
+                            VALUES (
+                            :client_id,
+                            :summ,
+                            :date_in,
+                            :create_person, 
+                            :create_time,
+                            :status
+                            )";
 
-                echo '<table style="border: 1px solid #BFBCB5; margin: 5px; font-size: 80%;">';
+                    $args = [
+                        'client_id' => $item['id'],
+                        'summ' => 0,
+                        'date_in' => '2020-04-01',
+                        'create_person' => 0,
+                        'create_time' => date('Y-m-d H:i:s', time()),
+                        'status' => 1
+                    ];
 
-                while ($arr = mysqli_fetch_assoc($res)){
-                    echo '<tr>';
-                    echo '<td style="outline: 1px solid #BFBCB5; padding: 2px;">'.$arr['full_name'].'</td>';
-                    echo '<td style="outline: 1px solid #BFBCB5; padding: 2px;">'.$arr['telephone'].'</td>';
-                    echo '<td style="outline: 1px solid #BFBCB5; padding: 2px;">'.$arr['comment'].'</td>';
-                    echo '</tr>';
+                    $db::sql($query, $args);
+
                 }
-
-                echo '</table>';
 
             }else{
                 echo '<span class="query_neok" style="padding-top: 0">Ничего не найдено</span>';
@@ -93,4 +100,27 @@
 	
 	require_once 'footer.php';
 
+
+////Выбор всех пациентов (ФИО, телефон, комментарий), у которых было зафиксированно хотя бы одно посещение
+//$query = "SELECT `full_name` , `telephone` , `comment`
+//                FROM `spr_clients`
+//                WHERE `id`
+//                IN (
+//
+//                SELECT `patient`
+//                FROM `zapis`
+//                WHERE `type` = '6'
+//                AND (
+//                `enter` = '1'
+//                OR `enter` = '6'
+//                )
+//                GROUP BY `patient`
+//                )
+//                ORDER BY `full_name`";
+////var_dump($query);
+
+
 ?>
+
+
+
