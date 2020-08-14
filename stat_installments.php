@@ -68,6 +68,8 @@
                     echo '
 					    <div id="data">';
 
+                    //echo '<div id="allPayments_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allCalcsIsHere\');">скрыть всё</div>';
+
                     echo '
                             <ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
 
@@ -108,15 +110,15 @@
                         $dostOstatok = $client_balance['summ'] - $client_balance['debited'] - $client_balance['withdraw'] + $client_balance['refund'];
 
 						echo '
-                            <li id="cl_data_main_'.$cl_data['id'].'" class="cellsBlock cellsBlockHover" style="">
+                            <li id="cl_data_main_'.$cl_data['id'].'" class="cellsBlock cellsBlockHover cl_data" cl_id="'.$cl_data['id'].'" cl_installment_date="'.$cl_data['installment_date'].'" style="">
                                 <div class="cellCosmAct" style="text-align: center;">
-                                    <span class="info"  style="display: inline; color: darkblue; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="toggleSomething(\'#user_options_'.$cl_data['id'].'\');">
+                                    <span class="info"  style="display: inline; color: darkblue; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="toggleSomething(\'#user_options_'.$cl_data['id'].'\'); getPayments4Installments('.$cl_data['id'].', \''.$cl_data['installment_date'].'\');">
                                         <i class="fa fa-cog" aria-hidden="true" style=" font-size: 140%;" title="Опции"></i>
                                     </span>
                                 </div>
                             
 								<div class="cellFullName 4filter" id="4filter">
-								    '.$cl_data['full_name'].'
+								    '.$cl_data['full_name'].' <div id="current_month_payment_'.$cl_data['id'].'" style="display: none; color: red;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> Не было платежей в этом месяце.</div>
                                 </div>';
 
 						echo '
@@ -204,8 +206,19 @@
 
                 //CloseDB($msql_cnnct);
 
+                echo '
+                <script>  
+                    $(document).ready(function() {
+                        $(".cl_data").each(function(){
+                            console.log($(this).attr("cl_id"));
+                            console.log($(this).attr("cl_installment_date"));
+                            
+                            getPayments4Installments($(this).attr("cl_id"), $(this).attr("cl_installment_date"));
+                        })
+                    });';
 
-
+			    echo '					
+			    </script>';
 						
 
 			}

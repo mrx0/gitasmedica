@@ -12068,11 +12068,15 @@
                 //console.log (res);
 
                 if (res.result == 'success') {
-                    $("#client_orders_by_period_"+client_id).html(res.data);
+                    $("#client_orders_by_period_" + client_id).html(res.data);
 
                     //Прокрутка вправо до конца
-                    let elem = document.querySelector('#client_orders_by_period_'+client_id);
+                    let elem = document.querySelector('#client_orders_by_period_' + client_id);
                     elem.scrollLeft = elem.scrollWidth;
+
+                    if (res.current_month_payment == 0){
+                        $('#current_month_payment_'+client_id).show();
+                    }
 
                }
             }

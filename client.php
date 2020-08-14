@@ -113,8 +113,8 @@ ORDER BY `name`;
                             //Включена рассрочка
                             if ($client_j[0]['installment'] == 1) {
                                 echo '
-                                    <span class="info"  style="display: inline; color: red; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus('.$client_j[0]['id'].', '.$client_j[0]['installment'].', true);">
-                                        <i class="fa fa-database" aria-hidden="true" title="Есть незакрытая рассрочка"></i>
+                                    <span class="info"  style="display: inline; color: red; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;">
+                                        <i class="fa fa-database" aria-hidden="true" onclick="changeInstallmentStatus('.$client_j[0]['id'].', '.$client_j[0]['installment'].', true);" title="Есть незакрытая рассрочка"></i>
 
                                             <a href="stat_installments.php" class="b4" style="font-size: 60%">Открытые рассрочки</a>
 

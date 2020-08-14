@@ -22,6 +22,8 @@
                 require 'variables.php';
 
                 $rezult = '';
+                //Метка платежа текущего месяца
+                $current_month_payment = 0;
 
                 $db = new DB();
 
@@ -87,6 +89,13 @@
 
                                 $rezult .= '</div>';
 
+                                //Если месяц/год текущий и был платёж, поставим 1
+                                if ((date('Y', time()) == $value->format( "Y" )) && (date('m', time()) == $value->format( "m" ))){
+                                    if ($data_arr[$value->format( "Y" )][$value->format( "m" )] > 0) {
+                                        $current_month_payment = 1;
+                                    }
+                                }
+
                             }else{
                                 $rezult .= '<div style="display: table-cell; width: 83px; min-width: 83px; border: 1px solid #BFBCB5; background: #ff7777; padding: 10px;">';
 
@@ -118,7 +127,7 @@
 
 
 
-                echo json_encode(array('result' => 'success', 'data' => $rezult));
+                echo json_encode(array('result' => 'success', 'data' => $rezult, 'current_month_payment' => $current_month_payment));
 
             }
         }
