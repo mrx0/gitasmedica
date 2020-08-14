@@ -108,15 +108,21 @@ ORDER BY `name`;
                             //var_dump($client_j[0]['installment']);
                             //Нет отметки о рассрочке
                             if ($client_j[0]['installment'] == 0) {
-                                echo '<span class="info"  style="display: inline; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus('.$client_j[0]['id'].', '.$client_j[0]['installment'].');"><i class="fa fa-database" aria-hidden="true" title="Нет рассрочек"></i></span>';
+                                echo '<span class="info"  style="display: inline; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus('.$client_j[0]['id'].', '.$client_j[0]['installment'].', true);"><i class="fa fa-database" aria-hidden="true" title="Нет рассрочек"></i></span>';
                             }
                             //Включена рассрочка
                             if ($client_j[0]['installment'] == 1) {
-                                echo '<span class="info"  style="display: inline; color: red; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus('.$client_j[0]['id'].', '.$client_j[0]['installment'].');"><i class="fa fa-database" aria-hidden="true" title="Есть незакрытая рассрочка"></i></span>';
+                                echo '
+                                    <span class="info"  style="display: inline; color: red; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;">
+                                        <i class="fa fa-database" aria-hidden="true" onclick="changeInstallmentStatus('.$client_j[0]['id'].', '.$client_j[0]['installment'].', true);" title="Есть незакрытая рассрочка"></i>
+
+                                            <a href="stat_installments.php" class="b4" style="font-size: 60%">Открытые рассрочки</a>
+
+                                    </span>';
                             }
                             //Рассрочка закрыта
                             if ($client_j[0]['installment'] == 7) {
-                                echo '<span class="info"  style="display: inline; color: green; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus('.$client_j[0]['id'].', '.$client_j[0]['installment'].');"><i class="fa fa-database" aria-hidden="true" title="Рассрочка закрыта"></i></span>';
+                                echo '<span class="info"  style="display: inline; color: green; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus('.$client_j[0]['id'].', '.$client_j[0]['installment'].', true);"><i class="fa fa-database" aria-hidden="true" title="Рассрочка закрыта"></i></span>';
                             }
                         }
                     }

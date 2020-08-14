@@ -23,9 +23,9 @@
 			echo '<a href="wrights.php" class="b">Права</a>';
 			echo '<a href="add_proizvcalendar.php" class="b">Добавить/обновить производственный календарь</a>';
 			echo '<br>';
-			echo '<a href="sql_requests.php" class="b">sql_requests.php</a>';
 			echo '<a href="/sxd" class="b">SXD</a>';
 			echo '<a href="/phpmyadmin" class="b">PHPMyAdmin</a>';
+			echo '<br><br><a href="sql_requests.php" class="b" style="color: red;">sql_requests.php НЕ НАЖИМАЙ, СНАЧАЛА ПОСМОТРИ В КОД, ЧТО ОНО ДЕЛАЕТ И СДЕЛАЙ КОПИЮ БД ПЕРЕД</a>';
 
 				
 			echo '			
