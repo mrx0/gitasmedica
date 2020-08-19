@@ -21,6 +21,7 @@
 				//var_dump($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']]);
 
                 include_once 'DBWork.php';
+                include_once 'functions.php';
 
                 if (isset($_SESSION['scheduler3'])) {
                     if (isset($_SESSION['scheduler3'][$_POST['filial_id']])) {
@@ -46,8 +47,12 @@
                                             if (($selected == 0) || ($selected == 2)){
                                                 //Удаляем отметку о рабочей смене
                                                 $query = "DELETE FROM `scheduler` WHERE `worker`='{$worker_id}' AND `filial`='{$_POST['filial_id']}' AND `year`='{$_POST['year']}' AND `month`='{$_POST['month']}' AND `day`='{$day}';";
-
                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
+                                                //Надо сразу удалить часы, если они там были прописаны до того
+                                                $query = "DELETE FROM `fl_journal_scheduler_report` WHERE `worker_id`='{$worker_id}' AND `filial_id`='{$_POST['filial_id']}' AND `year`='{$_POST['year']}' AND `month`='".dateTransformation($_POST['month'])."' AND `day`='".dateTransformation($day)."';";
+                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
                                             }
                                             if (($selected == 1) || ($selected == 3)){
                                                 //Добавляем отметку о рабочей смене
