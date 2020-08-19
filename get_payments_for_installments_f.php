@@ -45,7 +45,7 @@
                 $data = $db::getRows($query, $args);
                 //var_dump($data);
 
-                if (!empty($data)){
+                if (!empty($data)) {
                     $data_arr = array();
 
                     foreach ($data as $item) {
@@ -55,24 +55,30 @@
                         //var_dump($date->format('m'));
 
 
-                        if (!isset($data_arr[$date->format('Y')])){
+                        if (!isset($data_arr[$date->format('Y')])) {
                             $data_arr[$date->format('Y')] = array();
                         }
-                        if (!isset($data_arr[$date->format('Y')][$date->format('m')])){
+                        if (!isset($data_arr[$date->format('Y')][$date->format('m')])) {
                             $data_arr[$date->format('Y')][$date->format('m')] = 0;
                         }
                         $data_arr[$date->format('Y')][$date->format('m')] += $item['summ'];
                     }
                     //var_dump($data_arr);
 
-                    //вернуть все даты между двумя датами в массиве
-                    $period = new DatePeriod(
-                        new DateTime($_POST['date_in']),
-                        new DateInterval('P1M'),
-                        new DateTime(date('Y-m-d', time()))
-                    );
+                    if ($_POST['date_in'] != date('Y-m-d', time())) {
 
-                    foreach ($period as $key => $value) {
+                        //вернуть все даты между двумя датами в массиве
+                        $period = new DatePeriod(
+                            new DateTime($_POST['date_in']),
+                            new DateInterval('P1M'),
+                            new DateTime(date('Y-m-d', time()))
+                        );
+
+                    }else{
+                        $period[0] = new DateTime(date('Y-m-d', time()));
+                    }
+
+                    foreach ($period as $value) {
                         //var_dump($value->format( "Y-m" ));
 
                         if (isset($data_arr[$value->format( "Y" )])){

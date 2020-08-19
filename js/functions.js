@@ -11787,7 +11787,7 @@
 	function Ajax_tempScheduler_scheduler3_add(filial_id, month, year){
         blockWhileWaiting (true);
 
-        //Чистим сессионный переменную
+        //Чистим сессионную переменную
         var link = "ajax_scheduler3_add_f.php";
 
         var reqData = {
