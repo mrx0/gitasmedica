@@ -586,7 +586,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                 echo '<div style="padding: 10px 4px 2px;">Наряды по гарантии:';
 
                                 for($i=0; $i < count($invoice_garantee); $i++){
-                                    echo '<a href="invoice.php?id='.$invoice_garantee[$i].'" class="ahref button_tiny" style="margin: 0 3px;">'.$invoice_garantee[$i].'</a>';
+                                    echo '<a href="invoice.php?id='.$invoice_garantee[$i].'" class="ahref button_tiny" style="margin: 0 3px;" target="_blank" rel="nofollow noopener">'.$invoice_garantee[$i].'</a>';
                                 }
                                 echo '</div>';
                             }
