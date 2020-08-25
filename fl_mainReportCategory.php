@@ -2,6 +2,7 @@
 
 //fl_mainReportCategory.php
 //отчёт по категориям
+//20200825 !!! Вроде нигде не используется
 
 	require_once 'header.php';
 	

@@ -33,9 +33,7 @@
 				    //var_dump($fast_search);
 
 					for ($i = 0; $i < count($fast_search); $i++){
-						echo "\n<li style='position: relative;'>".$fast_search[$i]["full_name"]." 
-                            <span style='position: absolute; font-size: 80%; right: 5px; top: 4px; color: red;'>".$fast_search[$i]["type_name"]."</span>
-                            </li>";
+						echo "\n<li style='position: relative;'>".$fast_search[$i]["full_name"]."<span style='position: absolute; font-size: 80%; right: 5px; top: 4px; color: red;'>".$fast_search[$i]["type_name"]."</span></li>";
 					}
 				}else{
 					for ($i = 0; $i < count($fast_search); $i++){
