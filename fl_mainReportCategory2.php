@@ -17,8 +17,8 @@
 			
 			$offices_j = SelDataFromDB('spr_filials', '', '');
 
-			if ($_POST){
-			}else{
+			//if ($_POST){
+			//}else{
 				echo '
                     <div`> 
 					<header style="margin-bottom: 5px;">
@@ -406,7 +406,7 @@
 					});
 				</script>';
 
-			}
+			//}
 			//mysql_close();
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
