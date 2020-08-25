@@ -14,6 +14,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         include_once 'DBWork.php';
         include_once 'functions.php';
 
+        $filials_j = getAllFilials(true, true, true);
+        //var_dump($filials_j);
+
         //разбираемся с правами
         $god_mode = FALSE;
 
@@ -478,6 +481,18 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         arsort($temp_cat_closed_array);
                         arsort($temp_cat_opened_array);
 
+
+//                        var_dump($_POST['worker']);
+//                        var_dump($workerExist);
+                        if  ($workerExist && $worker != 0) {
+                            //var_dump($workerSearch[0]['name']);
+                            echo 'Данные указаны для сотрудника: <i><b>'.$workerSearch[0]['name'].'</b></i><br>';
+                        }
+
+                        if ($_POST['filial'] != 99) {
+                           echo 'Для филиала: <i>'.$filials_j[$_POST['filial']]['name'].'</i><br>';
+                        }
+
                         echo '
                                 <div style="padding: 2px 4px;">
                                     Общая сумма: <b>' . number_format($ins_summ+$all_summ, 0, ',', ' ') . ' руб.</b>
@@ -490,8 +505,10 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                 </div>-->
                                 <!--<div style="padding: 2px 4px;">
                                     Сумма по не закрытым работам: <b>' . number_format($opened_summ, 0, ',', ' ') . ' руб.</b>
-                                </div>-->
+                                </div>-->';
 
+
+                        echo '
                                 <div>
                                     <div style="display: inline-block; vertical-align: top;">';
 
@@ -586,7 +603,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                 echo '<div style="padding: 10px 4px 2px;">Наряды по гарантии:';
 
                                 for($i=0; $i < count($invoice_garantee); $i++){
-                                    echo '<a href="invoice.php?id='.$invoice_garantee[$i].'" class="ahref button_tiny" style="margin: 0 3px;">'.$invoice_garantee[$i].'</a>';
+                                    echo '<a href="invoice.php?id='.$invoice_garantee[$i].'" class="ahref button_tiny" style="margin: 0 3px;" target="_blank" rel="nofollow noopener">'.$invoice_garantee[$i].'</a>';
                                 }
                                 echo '</div>';
                             }

@@ -1,7 +1,7 @@
 <?php
 
-//fl_mainReportCategory2.php
-//отчёт по категориям
+//stat_category.php
+//Статистика по категориям
 
 	require_once 'header.php';
 	
@@ -17,25 +17,17 @@
 			
 			$offices_j = SelDataFromDB('spr_filials', '', '');
 
-			//if ($_POST){
-			//}else{
+			if ($_POST){
+			}else{
 				echo '
-                    <div`> 
+                    <div class="no_print"> 
 					<header style="margin-bottom: 5px;">
-						<h1>Отчёт по категориям</h1>
+						<h1>Запись</h1>
 					</header>
-					<ul style="margin-left: 6px; margin-bottom: 2px;">
-						<li style="width: auto; color:#777; font-size: 90%;">
-	                            <ul>
-								<li>Отчёт показывает процентное соотношение категорий работ,</li>
-								<li>а также работы по гарантии и сумму за работы по страховке за указанный период</li>
-							</ul>
-						</li>
-					</ul>
 					</div>';
 
 				echo '
-						<div id="data" style="margin: 0;">';
+						<div id="data">';
 				echo '
                             <div class="no_print"> 
 							<ul style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 20px; width: 420px; font-size: 95%; background-color: rgba(245, 245, 245, 0.9); display: inline-table;">
@@ -51,17 +43,13 @@
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
 										<div style="margin-bottom: 10px;">
 											C <input type="text" id="datastart" name="datastart" class="dateс" value="'.date("01.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off">
-											 &bull;по <input type="text" id="dataend" name="dataend" class="dateс" value="'.date("d.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off">
-                                            <!--C <input type="text" id="datastart" name="datastart" class="dateс" value="'.date("01.10.2018").'" onfocus="this.select();_Calendar.lcs(this)"
 												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
-											 &bull;по <input type="text" id="dataend" name="dataend" class="dateс" value="'.date("01.11.2018").'" onfocus="this.select();_Calendar.lcs(this)"
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">-->
+											 &bull;по <input type="text" id="dataend" name="dataend" class="dateс" value="'.date("d.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
 										</div>
-										<!--<div style="vertical-align: middle; color: #333;">
-											<input type="checkbox" name="all_time" value="1"> <span style="font-size:80%;">За всё время</span>
-										</div>-->
+										<div style="vertical-align: middle; color: #333;">
+											<input type="checkbox" name="all_time" value="1" disabled> <span style="font-size:80%;">За всё время</span>
+										</div>
 									</div>
 								</li>';
 
@@ -115,7 +103,7 @@
                 echo '
 									</div>
 								</li>
-								<li class="filterBlock">
+								<!--<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
 										Пациент<br>
 										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
@@ -124,8 +112,8 @@
 										<input type="text" size="30" name="searchdata" id="search_client" placeholder="Минимум три буквы для поиска" value="" class="who" autocomplete="off">
 										<ul id="search_result" class="search_result"></ul><br />
 									</div>
-								</li>
-								<li class="filterBlock">
+								</li>-->
+								<!--<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
 										Сотрудник, который добавил запись<br>
 										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
@@ -134,24 +122,24 @@
 										<input type="text" size="30" name="searchdata2" id="search_worker" placeholder="Минимум три буквы для поиска" value="" class="who2" autocomplete="off">
 										<ul id="search_result2" class="search_result2"></ul><br />
 									</div>
-								</li>
+								</li>-->
 								';
 
 
-                echo '				
-								
-								<li class="filterBlock">
-									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Состояние
-									</div>
-									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<!--<input type="checkbox" id="zapisAll" name="zapisAll" class="zapisType" value="1" disabled> Все<br>-->
-										<input type="checkbox" id="zapisArrive" name="zapisArrive" class="zapisType" value="1" checked disabled> Пришли<br>
-										<!--<input type="checkbox" id="zapisNotArrive" name="zapisNotArrive" class="zapisType" value="1" disabled> Не пришли<br>
-										<input type="checkbox" id="zapisNull" name="zapisNull" class="zapisType" value="1" disabled> Не закрытые<br>
-										<input type="checkbox" id="zapisError" name="zapisError" class="zapisType" value="1" disabled> Ошибочные<br>-->
-									</div>
-								</li>';
+//                echo '
+//
+//								<li class="filterBlock">
+//									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+//										Состояние
+//									</div>
+//									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
+//										<input type="checkbox" id="zapisAll" name="zapisAll" class="zapisType" value="1"> Все<br>
+//										<input type="checkbox" id="zapisArrive" name="zapisArrive" class="zapisType" value="1" checked> Пришли<br>
+//										<input type="checkbox" id="zapisNotArrive" name="zapisNotArrive" class="zapisType" value="1"> Не пришли<br>
+//										<input type="checkbox" id="zapisNull" name="zapisNull" class="zapisType" value="1"> Не закрытые<br>
+//										<input type="checkbox" id="zapisError" name="zapisError" class="zapisType" value="1"> Ошибочные<br>
+//									</div>
+//								</li>';
 
 				echo '
 							</ul>
@@ -166,35 +154,35 @@
 										Тип
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input id="typeW" name="typeW" value="0" type="radio">Все<br>
-										<input id="typeW" name="typeW" value="5" type="radio" checked>Стоматологи<br>
-										<input id="typeW" name="typeW" value="6" type="radio">Косметологи<br>
-										<input id="typeW" name="typeW" value="10" type="radio">Специалисты<br>
+										<input id="typeW" name="typeW" value="0" type="radio" checked>Все<br />
+										<input id="typeW" name="typeW" value="5" type="radio">Стоматологи<br />
+										<input id="typeW" name="typeW" value="6" type="radio">Косметологи<br />
+										<input id="typeW" name="typeW" value="10" type="radio">Специалисты<br />
 									</div>
 								</li>
 								
-								<li class="filterBlock">
+								<!--<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
 										Заполненность
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="checkbox" id="fullAll" name="fullAll" class="fullType" value="1" checked disabled> Все<br>
-										<!--<input type="checkbox" id="fullWOInvoice" name="fullWOInvoice" class="fullType" value="1" checked disabled> Без нарядов<br>
-										<input type="checkbox" id="fullWOTask" name="fullWOTask" class="fullType" value="1" checked disabled> Без посещений<br>
-										<input type="checkbox" id="fullOk" name="fullOk" class="fullType" value="1" checked disabled> Заполненные полностью<br>-->
+										<input type="checkbox" id="fullAll" name="fullAll" class="fullType" value="1" checked> Все<br>
+										<input type="checkbox" id="fullWOInvoice" name="fullWOInvoice" class="fullType" value="1" checked> Без нарядов<br>
+										<input type="checkbox" id="fullWOTask" name="fullWOTask" class="fullType" value="1" checked> Без посещений<br>
+										<input type="checkbox" id="fullOk" name="fullOk" class="fullType" value="1" checked> Заполненные полностью<br>
 									</div>
-								</li>
+								</li>-->
 								
 								<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
 										Статус
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="checkbox" id="statusAll" name="statusAll" class="statusType" value="1" checked disabled> Все<br>
-										<!--<input type="checkbox" id="statusPervich" name="statusPervich" class="statusType" value="1" checked disabled> Первичные<br>
-										<input type="checkbox" id="statusInsure" name="statusInsure" class="statusType" value="1" checked disabled> Страховые<br>
-										<input type="checkbox" id="statusNight" name="statusNight" class="statusType" value="1" checked disabled> Ночные<br>
-										<input type="checkbox" id="statusAnother" name="statusAnother" class="statusType" value="1" checked disabled> Все остальные<br>-->
+										<input type="checkbox" id="statusAll" name="statusAll" class="statusType" value="1" checked> Все<br>
+										<input type="checkbox" id="statusPervich" name="statusPervich" class="statusType" value="1" checked> Первичные<br>
+										<input type="checkbox" id="statusInsure" name="statusInsure" class="statusType" value="1" checked> Страховые<br>
+										<input type="checkbox" id="statusNight" name="statusNight" class="statusType" value="1" checked> Ночные<br>
+										<input type="checkbox" id="statusAnother" name="statusAnother" class="statusType" value="1" checked> Все остальные<br>
 									</div>
 								</li>
 								
@@ -204,9 +192,9 @@
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
 										<input type="checkbox" id="invoiceAll" name="invoiceAll" class="invoiceType" value="1" checked disabled> Все<br>
-										<!--<input type="checkbox" id="invoicePaid" name="invoicePaid" class="invoiceType" value="1" checked disabled> Оплаченные<br>
+										<input type="checkbox" id="invoicePaid" name="invoicePaid" class="invoiceType" value="1" checked disabled> Оплаченные<br>
 										<input type="checkbox" id="invoiceNotPaid" name="invoiceNotPaid" class="invoiceType" value="1" checked disabled> Не оплаченные<br>
-										<input type="checkbox" id="invoiceInsure" name="invoiceInsure" class="invoiceType" value="1" checked disabled> Страховые<br>-->
+										<input type="checkbox" id="invoiceInsure" name="invoiceInsure" class="invoiceType" value="1" checked disabled> Страховые<br>
 										<!--<input type="checkbox" id="statusAnother" name="statusAnother" class="invoiceType" value="1" checked> Все остальные<br>-->
 									</div>
 								</li>
@@ -216,30 +204,26 @@
 										Показывать только ФИО уникальных пациентов
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="checkbox" id="patientUnic" name="patientUnic" class="invoicePatientUnic" value="1" disabled><br>
+										<input type="checkbox" id="patientUnic" name="patientUnic" class="invoicePatientUnic" value="1"><br>
 										<!--<input type="checkbox" id="statusAnother" name="statusAnother" class="invoiceType" value="1" checked> Все остальные<br>-->
 									</div>
 								</li>
 								
 							</ul>
-							</div>';
+							</div>
+						</div>';
 				
 				echo '
-                            <div class="no_print"> 
-                            <input type="button" class="b" value="Применить" onclick="Ajax_show_result_main_report_category2()">
-                            </div>';
+                        <div class="no_print"> 
+						<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_zapis()">
+						</div>';
 
                 echo '
-                            <div id="status">
-                                <ul style="border: 1px dotted #CCC; margin: 10px; width: auto;" id="qresult">
-                                    Результат отобразится здесь
-                                <ul>
-                            </div>
-
-						
-						    <!-- Подложка только одна -->
-                            <div id="overlay"></div>
-                        </div>';
+						<div id="status">
+							<ul style="border: 1px dotted #CCC; margin: 10px; width: auto;" id="qresult">
+								Результат отобразится здесь
+							<ul>
+						</div>';
 						
 				echo '
 
@@ -386,7 +370,7 @@
 					});
                     
                     
-					var all_time = 1;
+					var all_time = 0;
 					
 					$("input[name=all_time]").change(function() {
 						all_time = $("input[name=all_time]:checked").val();
@@ -405,8 +389,7 @@
 						}
 					});
 				</script>';
-
-			//}
+			}
 			//mysql_close();
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

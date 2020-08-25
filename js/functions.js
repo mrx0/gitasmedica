@@ -568,7 +568,7 @@
                     manual_itog_price = itog_price;
 
 					var min_itog_price = manual_itog_price - 10;
-					var max_itog_price = manual_itog_price + 2;
+					var max_itog_price = manual_itog_price + 10;
 
 					if (min_itog_price < 1) min_itog_price = 1;
 

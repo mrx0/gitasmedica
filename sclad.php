@@ -122,8 +122,11 @@
                                     <div style="">Выбрано позиций: <span id="itemInSetCount" style="">0</span> шт.</div>
                                 </div>
                                 <div style="font-size: 11px;">
-                                    <div>
+                                    <div style="display: inline-block;">
                                         <a href="sclad_prihod_add.php" class="ahref b">Добавить приход</a>
+                                    </div>
+                                    <div style="display: inline-block;">
+                                        <a href="sclad_transfer_add.php" class="ahref b">Добавить перемещение</a>
                                     </div>
                                 </div>
                                 <div style="position: absolute; top: 10px; right: 10px; font-size: 11px;">

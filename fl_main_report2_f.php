@@ -92,7 +92,10 @@
         $zapis_ids = array();
 
         //Кроме тех, которые удалены или не пришли
-        $query = "SELECT `id`, `type`, `patient`, `pervich`, `insured`, `noch`, `enter`  FROM `zapis` WHERE `office` = '{$filial_id}' AND `year` = '{$year}' AND `month` = '{$month}' AND `enter` <> 9 AND `enter` <> 8 ORDER BY `day` ASC";
+        $query = "SELECT `id`, `type`, `patient`, `pervich`, `insured`, `noch`, `enter` 
+        FROM `zapis` 
+        WHERE `office` = '{$filial_id}' AND `year` = '{$year}' AND `month` = '{$month}' AND `enter` <> 9 AND `enter` <> 8 
+        ORDER BY `day` ASC";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
