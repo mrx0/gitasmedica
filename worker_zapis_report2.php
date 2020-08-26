@@ -35,7 +35,7 @@
             //var_dump($permissions_j);
 
             //!!! костыль для меня =)
-            //array_push($permissions_j, array('id' => '777', 'name' => 'Сис.админ'));
+            //array_push($permissions_j, array('id'window.print( => '777', 'name' => 'Сис.админ'));
             $permissions_j[777] = array('id' => '777', 'name' => 'Сис.админ');
             //var_dump($permissions_j);
 
@@ -937,11 +937,11 @@
                                             <td style="border: 1px solid #CCC; padding: 7px;">
                                                 II
                                             </td>
-                                            <td style="border: 1px solid #CCC; padding: 7px;">
+                                            <!--<td style="border: 1px solid #CCC; padding: 7px;">
                                                 продолжение
-                                            </td>
+                                            </td>-->
                                             <td style="border: 1px solid #CCC; padding: 7px;">
-                                                
+                                                конс.
                                             </td>
                                         </tr>
                                         <tr>
@@ -960,11 +960,11 @@
                                             <!--<td style="border: 1px solid #CCC; padding: 7px;">
                                                 ' . $zapis_j[5]['pervich_summ_arr'][4] . '
                                             </td>-->
-                                            <td style="border: 1px solid #CCC; padding: 7px;">
+                                            <!--<td style="border: 1px solid #CCC; padding: 7px;">
                                                 ' . $zapis_j[5]['pervich_summ_arr'][5] . '
-                                            </td>
+                                            </td>-->
                                             <td style="border: 1px solid #CCC; padding: 7px;">
-                                                
+                                                '.$pervich_summ_arr_new[5][1].'
                                             </td>
                                         </tr>
                                     </table>
@@ -1111,11 +1111,11 @@
                                             <!--<td style="border: 1px solid #CCC; padding: 7px;">
                                                 II(6)
                                             </td>-->
-                                            <td style="border: 1px solid #CCC; padding: 7px;">
+                                            <!--<td style="border: 1px solid #CCC; padding: 7px;">
                                                 продолжение
-                                            </td>
+                                            </td>-->
                                             <td style="border: 1px solid #CCC; padding: 7px;">
-                                                
+                                                конс.
                                             </td>
                                         </tr>
                                         <tr>
@@ -1134,11 +1134,11 @@
                                             <!--<td style="border: 1px solid #CCC; padding: 7px;">
                                                 ' . $zapis_j[6]['pervich_summ_arr'][4] . '
                                             </td>-->
-                                            <td style="border: 1px solid #CCC; padding: 7px;">
+                                            <!--<td style="border: 1px solid #CCC; padding: 7px;">
                                                 ' . $zapis_j[6]['pervich_summ_arr'][5] . '
-                                            </td>
+                                            </td>-->
                                             <td style="border: 1px solid #CCC; padding: 7px;">
-                                                
+                                                '.$pervich_summ_arr_new[6][1].'
                                             </td>
                                         </tr>
                                     </table>
@@ -1245,11 +1245,11 @@
                                             <!--<td style="border: 1px solid #CCC; padding: 7px;">
                                                 II(6)
                                             </td>-->
-                                            <td style="border: 1px solid #CCC; padding: 7px;">
+                                            <!--<td style="border: 1px solid #CCC; padding: 7px;">
                                                 продолжение
-                                            </td>
+                                            </td>-->
                                             <td style="border: 1px solid #CCC; padding: 7px;">
-                                                
+                                                конс.
                                             </td>
                                         </tr>
                                         <tr>
@@ -1268,11 +1268,11 @@
                                             <!--<td style="border: 1px solid #CCC; padding: 7px;">
                                                 ' . $zapis_j[10]['pervich_summ_arr'][4] . '
                                             </td>-->
-                                            <td style="border: 1px solid #CCC; padding: 7px;">
+                                            <!--<td style="border: 1px solid #CCC; padding: 7px;">
                                                 ' . $zapis_j[10]['pervich_summ_arr'][5] . '
-                                            </td>
+                                            </td>-->
                                             <td style="border: 1px solid #CCC; padding: 7px;">
-                                                
+                                                '.$pervich_summ_arr_new[10][1].'
                                             </td>
                                         </tr>
                                     </table>
@@ -1485,13 +1485,13 @@
                     </div>
                 </div>';
 
-            echo '
-                            <div class="no_print" style="position: fixed; top: 45px; right: 10px; border: 1px solid #0C0C0C; border-radius: 5px; padding: 5px 5px; background-color: #FFFFFF">
-                                <div class="cellCosmAct b" style="text-align: center; display: inline-block !important; vertical-align: middle; height: auto; border-radius: 3px;"
-                                onclick="window.print();">
-                                    <i class="fa fa-print" aria-hidden="true"></i>
-                                </div>
-                            </div>';
+//            echo '
+//                            <div class="no_print" style="position: fixed; top: 45px; right: 10px; border: 1px solid #0C0C0C; border-radius: 5px; padding: 5px 5px; background-color: #FFFFFF">
+//                                <div class="cellCosmAct b" style="text-align: center; display: inline-block !important; vertical-align: middle; height: auto; border-radius: 3px;"
+//                                onclick="window.print();">
+//                                    <i class="fa fa-print" aria-hidden="true"></i>
+//                                </div>
+//                            </div>';
 
             echo '    
                 <div id="doc_title">Отчёт - Асмедика</div>';
