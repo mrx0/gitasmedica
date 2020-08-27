@@ -125,6 +125,11 @@ ORDER BY `name`;
                                 echo '<span class="info"  style="display: inline; color: green; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus('.$client_j[0]['id'].', '.$client_j[0]['installment'].', true);"><i class="fa fa-database" aria-hidden="true" title="Рассрочка закрыта"></i></span>';
                             }
                         }
+
+                        //новая рассрочка
+                        echo '
+                                        <a href="create_installment.php?client_id='.$client_j[0]['id'].'" class="b4" style="font-size: 60%">Создать рассрочку (пока не работает)</a>';
+
                     }
                 }
 

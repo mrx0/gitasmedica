@@ -3988,7 +3988,7 @@
 							$itemTemp_str .= '
 												<li class="cellsBlock" style="width: auto; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36);">';
 							$itemTemp_str .= '
-													<a href="invoice.php?id=' . $items['id'] . '" class="cellOrder ahref" style="position: relative;">
+													<a href="invoice.php?id=' . $items['id'] . '" class="cellOrder ahref" style="position: relative;"  target="_blank" rel="nofollow noopener">
 														<div style="font-weight: bold;">
 															Наряд #' . $items['id'] . '
 														</div>

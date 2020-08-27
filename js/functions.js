@@ -12084,6 +12084,46 @@
 
     }
 
+    //Функция для рассчета рассрочки
+    function installmentCalculate (summ, m_count){
+        // console.log(summ);
+        // console.log(m_count);
+        // console.log(summ*100);
+        // console.log((summ*100 - summ*100 % m_count) / m_count);
+        // console.log(summ*100 % m_count);
+
+        let rezult = '';
+
+        let payment = (summ - summ % m_count) / m_count;
+
+        for (let i = 1; i <= m_count; i++){
+
+            rezult += '<div style="display: table-cell; width: 83px; min-width: 83px; font-size: 80%; border: 1px solid #BFBCB5; background: lawngreen; padding: 10px;">';
+            rezult += '<div style="margin-bottom: 5px;">'+i+' месяц';
+            rezult += '</div>';
+            rezult += '<div>';
+
+            if (i != m_count) {
+                //console.log(i + ' мес. => ' + payment)
+
+                rezult += '<span style="font-weight: bold">'+payment+' руб.</span>';
+            }else{
+                //console.log(i + ' мес. => ' + (payment + summ % m_count))
+
+                rezult += '<span style="font-weight: bold">'+(payment + summ % m_count)+' руб.</span>';
+            }
+            rezult += '</div>';
+            rezult += '</div>';
+        }
+        //console.log('-------------------------------');
+
+
+
+        // console.log(rezult);
+        $("#installment_calculate").html(rezult);
+    }
+
+
     //Функция блокирует вкладки
     function disableTabs (permission, worker){
         //console.log($('#tabs_w'+permission+'_'+worker+' .notes_count2'));
