@@ -2916,3 +2916,11 @@ input[type="submit"] {
 	border: 1px red solid !important;
 }
 
+/*Стиль для расходов на материалы в финальном отчете*/
+.material_costs {
+	width: 80px;
+	min-width: 80px;
+	text-align: right;
+	color: red;
+}
+

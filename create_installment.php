@@ -31,6 +31,9 @@
                         echo '
                             <div id="status">
 								<header>
+                                    <div class="nav">
+                                        <a href="stat_installments2.php" class="b4">Открытые рассрочки</a>
+                                    </div>
 								    <h2>Создание рассрочки на основе наряда</h2>
 								</header>';
 
@@ -49,6 +52,8 @@
                                 </ul>';
                         echo '
                                 <div id="data">';
+
+                        echo '<input type="hidden" id="client_id" value="'.$_GET['client_id'].'">';
 
                         echo '
                                     <div>';
@@ -146,6 +151,34 @@
                                         </ul>';
 
 
+                        //Выберем данные, есть ли уже у пациента рассрочки
+                        /*!!!Тест PDO*/
+                        include_once('DBWorkPDO.php');
+
+                        $query = "SELECT `id`,`invoice_id` FROM `journal_installments` WHERE `client_id` = :client_id AND `status` = :status
+                        AND `invoice_id` <> 0";
+
+                        $args = [
+                            'client_id' => $client_j[0]['id'],
+                            'status' => 1
+                        ];
+
+                        $exist_installments = $db::getRows($query, $args);
+                        //var_dump($exist_installments);
+
+                        $exist_installments_j = array();
+
+                        if (!empty($exist_installments)) {
+                            foreach ($exist_installments as $data) {
+                                if (!isset($exist_installments_j[$data['invoice_id']])) {
+                                    $exist_installments_j[$data['invoice_id']] = array();
+                                }
+                                array_push($exist_installments_j[$data['invoice_id']], $data['id']);
+                            }
+                        }
+                        //var_dump($exist_installments_j);
+
+
 
                         echo '
                                         <ul id="" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: table; vertical-align: top; border: 1px outset #AAA;">
@@ -155,9 +188,22 @@
                                             </li>';
 
                         foreach ($invoice_j as $data){
+
+                            $disabled = '';
+                            $color = '';
+                            if (array_key_exists($data['id'], $exist_installments_j)){
+                                $disabled = 'disabled';
+                                $color = 'background-color: #CCC';
+                            }
+
                             echo '
-                                        <div style="display: block; margin: 5px; border-bottom: 1px dotted #C5C5EC">
-                                            <input name="invoice4installment" value="'.$data['id'].'" type="radio" installment_summ="'.($data['summ'] - $data['paid']).'"><b> #'.$data['id'].'</b> - Осталось внести: <span class="calculateInvoice">'.($data['summ'] - $data['paid']).'</span> руб.
+                                        <div style="display: block; margin: 5px; border-bottom: 1px dotted #C5C5EC; '.$color.'">
+                                            <input name="invoice4installment" value="'.$data['id'].'" type="radio" installment_summ="'.($data['summ'] - $data['paid']).'" '.$disabled.'><b> #'.$data['id'].'</b> - Осталось внести: <span class="calculateInvoice">'.($data['summ'] - $data['paid']).'</span> руб.';
+                            if (array_key_exists($data['id'], $exist_installments_j)){
+                                echo '<br><span style="color: rgb(243, 0, 0); font-size: 80%;">рассрочка на этот наряд уже открыта</span>';
+                            }
+
+                            echo '
                                         </div>';
                         }
 
@@ -171,22 +217,56 @@
                                                 Настройки рассрочки
                                             </li>
                                             <div style="margin: -5px 5px 5px;">
+                                                Наряд: <b>#</b><span id="invoice4installment" style="font-weight: bold;"></span> руб.
+                                            </div>
+                                            <div style="margin: -5px 5px 5px;">
                                                 Сумма рассрочки: <span id="installment_summ" class="calculateOrder"></span> руб.
                                             </div>
-                                            <div style="margin: 5px;">
+                                            <!--<div style="margin: 5px;">
                                                 Выберите срок:  <input type="number" size="5" name="installment_months" id="installment_months" min="1" max="12" value="3"> мес.
-                                            </div>
+                                            </div>-->
                                                 ';
 
+
                         echo '
-                                            <div id="installment_calculate">
-                                            </div>
-									       ';
+                            <div style="margin: -5px 5px 5px;">
+                                С какого месяца включить:
+                                <select name="iWantThisMonth" id="iWantThisMonth" style="margin-right: 5px;">';
+                        foreach ($monthsName as $mNumber => $mName){
+                            $selected = '';
+                            if ((int)$mNumber == (int)date('m')){
+                                $selected = 'selected';
+                            }
+                            echo '
+                                <option value="'.$mNumber.'" '.$selected.'>'.$mName.'</option>';
+                        }
+
+                        echo '
+                                </select>
+                                <select name="iWantThisYear" id="iWantThisYear">';
+
+                        for ($i = 2017; $i <= (int)date('Y')+2; $i++){
+                            $selected = '';
+                            if ($i == (int)date('Y')){
+                                $selected = 'selected';
+                            }
+                            echo '
+                                        <option value="'.$i.'" '.$selected.'>'.$i.'</option>';
+                        }
+
+                        echo '
+                                </select>
+                            </div>';
+
+//                        echo '
+//                                            <div id="installment_calculate">
+//                                            </div>
+//									       ';
 
 
                         echo '
                                             <div>
-                                                <input type="button" class="b" value="Сохранить" onclick="showinstallmentAdd(\'add\')">
+                                                <input type="button" class="b" value="Сохранить" onclick="Ajax_installment_add(\'add\')">
                                             </div>
 									       ';
 
@@ -224,8 +304,9 @@
                                             
                                             $("#installment_options").css({"display":"table"});
                                             $("#installment_summ").html(this.getAttribute("installment_summ"));
+                                            $("#invoice4installment").html(this.value);
                                             
-                                            installmentCalculate(this.getAttribute("installment_summ"), $("#installment_months").val());
+                                            //installmentCalculate(this.getAttribute("installment_summ"), $("#installment_months").val());
                                         };
                                     }
                                     
@@ -266,7 +347,7 @@
                                                             //console.log(Number($("#installment_summ").html()) % (month_count-1));
                                                             //console.log(12 % 5);
                                                             
-                                                            installmentCalculate(Number($("#installment_summ").html()), month_count);
+                                                            //installmentCalculate(Number($("#installment_summ").html()), month_count);
             
                                                         }
                                                     }
