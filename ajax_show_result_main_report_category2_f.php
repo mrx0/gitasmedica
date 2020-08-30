@@ -124,17 +124,17 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
 
                 $data_temp_arr = explode(".", $_POST['datastart']);
-                $_POST['datastart'] = $data_temp_arr[2].'-'.$data_temp_arr[1].'-'.$data_temp_arr[0];
+                $datastart = $data_temp_arr[2].'-'.$data_temp_arr[1].'-'.$data_temp_arr[0];
 
                 $data_temp_arr = explode(".", $_POST['dataend']);
-                $_POST['dataend'] = $data_temp_arr[2].'-'.$data_temp_arr[1].'-'.$data_temp_arr[0];
+                $dataend = $data_temp_arr[2].'-'.$data_temp_arr[1].'-'.$data_temp_arr[0];
 
                 //Дата/время
                 if ($_POST['all_time'] != 1) {
-                    //$queryDop .= "`create_time` BETWEEN '" . strtotime($_POST['datastart']) . "' AND '" . strtotime($_POST['dataend'] . " 23:59:59") . "'";
+                    //$queryDop .= "`create_time` BETWEEN '" . strtotime($datastart) . "' AND '" . strtotime($dataend . " 23:59:59") . "'";
 
-                    $queryDop .= "CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) BETWEEN '{$_POST['datastart']}' AND '{$_POST['dataend']}'";
-                    //$queryDop .= "ji.closed_time BETWEEN '{$_POST['datastart']}' AND '{$_POST['dataend']}'";
+                    $queryDop .= "CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) BETWEEN '{$datastart}' AND '{$dataend}'";
+                    //$queryDop .= "ji.closed_time BETWEEN '{$datastart}' AND '{$dataend}'";
                     $queryDopExist = true;
                 }
                 //var_dump($queryDop);
@@ -492,6 +492,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         if ($_POST['filial'] != 99) {
                            echo 'Для филиала: <i>'.$filials_j[$_POST['filial']]['name'].'</i><br>';
                         }
+
+                        echo 'с '.$_POST['datastart'].' по '.$_POST['dataend'].'<br>';
 
                         echo '
                                 <div style="padding: 2px 4px;">

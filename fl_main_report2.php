@@ -11,6 +11,9 @@
 
 		//if (($finances['see_all'] == 1) || $god_mode){
         //if (($_SESSION['id'] == 270) || ($god_mode)){
+        /*!!!Тест PDO*/
+        include_once('DBWorkPDO.php');
+
         include_once 'DBWork.php';
         include_once 'functions.php';
         include_once 'widget_calendar.php';
@@ -101,6 +104,42 @@
             $zapis_j = $datas['zapis_j'];
             $pervich_summ_arr_new = $datas['pervich_summ_arr_new'];
 
+
+            //Расходы на материалы внесённые вручную
+            $db = new DB();
+
+            //Выбрать все категории
+            $query = "
+            SELECT j_mc.*
+            FROM `journal_material_costs_test` j_mc
+            WHERE j_mc.filial_id = :filial_id AND j_mc.month = :month AND j_mc.year = :year
+            ORDER BY j_mc.create_time";
+
+            $args = [
+                'month' => $month,
+                'year' => $year,
+                'filial_id' => $filial_id
+            ];
+
+            $material_costs_j = $db::getRows($query, $args);
+            //var_dump($material_costs_j);
+
+            $material_costs = array();
+
+            //Пересоберём массив
+            if (!empty($material_costs_j)){
+                foreach ($material_costs_j as $data){
+                    if (!isset($material_costs[$data['category_id']])){
+                        $material_costs[$data['category_id']] = array();
+                        $material_costs[$data['category_id']]['data'] = array();
+                        $material_costs[$data['category_id']]['summ'] = 0;
+                    }
+                    array_push($material_costs[$data['category_id']]['data'], $data);
+                    $material_costs[$data['category_id']]['summ'] += $data['summ'];
+                }
+            }
+            //var_dump($material_costs);
+
             $dop = 'filial_id='.$filial_id;
 
             echo '
@@ -158,6 +197,7 @@
                 echo '
                                 </select>';
                echo '
+                                <input type="checkbox" name="material_costs_show" id="material_costs_show" value="1"> <span style="font-size:80%;">Показать расходы на материалы</span>
                             </div>';
 
                 //Пробуем вывести то, что получили
@@ -796,7 +836,7 @@
                             <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
                                Стоматология
                             </div>
-                            <div class="cellRight" style="width: 150px; min-width: 150px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+                            <div class="cellRight" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
 
                     if (!empty($rezult_arr[5])) {
@@ -850,9 +890,20 @@
                                         <div class="cellLeft" style="width: 120px; min-width: 120px;">
                                            <b>' . $percents_j[5][$percent_cat_id]['name'] . '</b>
                                         </div>
-                                        <div class="cellRight" style="width: 150px; min-width: 150px;">
-                                            <div style="float:left;">' . number_format($stom_summ_temp / 100 * $cat_prcnt_temp, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format($cat_prcnt_temp, 2, '.', '') . '%</div>
-                                        </div>
+                                        <div class="cellRight" style="width: 120px; min-width: 120px;">
+                                            <div style="float:left;">' . number_format($stom_summ_temp / 100 * $cat_prcnt_temp, 0, '.', ' ') . '</div> 
+                                            <div style="float:right;">' . number_format($cat_prcnt_temp, 2, '.', '') . '%</div>
+                                        </div>';
+                                    echo '
+                                        <div class="cellRight material_costs" style="display: none !important">';
+                                    if (isset($material_costs[$percent_cat_id])){
+                                        echo $material_costs[$percent_cat_id]['summ'].' / '.number_format(($material_costs[$percent_cat_id]['summ'] * 100 / $stom_summ_temp), 2, '.', ' ').'%';
+                                    }else{
+                                        echo '0 / 0%';
+                                    }
+                                    echo '
+                                        </div>';
+                                    echo '
                                     </li>';
                                 } else {
 
@@ -873,7 +924,7 @@
                                     <div class="cellLeft" style="width: 120px; min-width: 120px;">
                                        <b>Детство</b>
                                     </div>
-                                    <div class="cellRight" style="width: 150px; min-width: 150px;">
+                                    <div class="cellRight" style="width: 120px; min-width: 120px;">
                                         <div style="float:left;">' . number_format($stom_summ_temp / 100 * $cat_prcnt_temp, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format($cat_prcnt_temp, 2, '.', '') . '%</div>
                                     </div>
                                 </li>';
@@ -941,7 +992,7 @@
                             <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
                                Ассистенты
                             </div>
-                            <div class="cellRight" style="width: 150px; min-width: 150px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+                            <div class="cellRight" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
 
                     if (!empty($rezult_arr[7])) {
@@ -986,10 +1037,21 @@
                                     <div class="cellLeft" style="width: 120px; min-width: 120px;">
                                        <b>' . $percent_cat_name . '</b>
                                     </div>
-                                    <div class="cellRight" style="width: 150px; min-width: 150px;">
-                                        <div style="float:left;">' . number_format($value, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format((($value * 100) / array_sum($rezult_arr[7]['data'])), 2, '.', '') . '%</div>
-                                    </div>
-                                </li>';
+                                    <div class="cellRight" style="width: 120px; min-width: 120px;">
+                                        <div style="float:left;">' . number_format($value, 0, '.', ' ') . '</div> 
+                                        <div style="float:right;">' . number_format((($value * 100) / array_sum($rezult_arr[7]['data'])), 2, '.', '') . '%</div>
+                                    </div>';
+//                                echo '
+//                                    <div class="cellRight material_costs" style="display: none !important">';
+//                                    if (isset($material_costs[$percent_cat_id])){
+//                                        echo $material_costs[$percent_cat_id]['summ'].' / '.number_format(($material_costs[$percent_cat_id]['summ'] * 100 / $stom_summ_temp), 2, '.', ' ').'%';
+//                                    }else{
+//                                        echo '0 / 0%';
+//                                    }
+//                                    echo '
+//                                </div>';
+                                    echo '
+                                    </li>';
                             }
                         }
                     }
@@ -1003,7 +1065,7 @@
                             <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
                                Косметология
                             </div>
-                            <div class="cellRight" style="width: 150px; min-width: 150px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+                            <div class="cellRight" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
                     if (!empty($rezult_arr[6])) {
                         if (!empty($rezult_arr[6]['data'])) {
@@ -1042,10 +1104,21 @@
                                     <div class="cellLeft" style="width: 120px; min-width: 120px;">
                                        <b>' . $percents_j[6][$percent_cat_id]['name'] . '</b>
                                     </div>
-                                    <div class="cellRight" style="width: 150px; min-width: 150px;">
-                                        <div style="float:left;">' . number_format($value, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format((($value * 100) / array_sum($rezult_arr[6]['data'])), 2, '.', '') . '%</div>
-                                    </div>
-                                </li>';
+                                    <div class="cellRight" style="width: 120px; min-width: 120px;">
+                                        <div style="float:left;">' . number_format($value, 0, '.', ' ') . '</div> 
+                                        <div style="float:right;">' . number_format((($value * 100) / array_sum($rezult_arr[6]['data'])), 2, '.', '') . '%</div>
+                                    </div>';
+                                echo '
+                                    <div class="cellRight material_costs" style="display: none !important">';
+                                    if (isset($material_costs[$percent_cat_id])){
+                                        echo $material_costs[$percent_cat_id]['summ'].' / '.number_format(($material_costs[$percent_cat_id]['summ'] * 100 / $stom_summ_temp), 2, '.', ' ').'%';
+                                    }else{
+                                        echo '0 / 0%';
+                                    }
+                                    echo '
+                                </div>';
+                                echo '
+                                    </li>';
                             }
                         }
                     }
@@ -1111,7 +1184,7 @@
                             <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
                                Солярий
                             </div>
-                            <div class="cellRight" style="width: 150px; min-width: 150px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+                            <div class="cellRight" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
                     echo '<span id="summSol">'.number_format(($temp_solar_nal + $temp_solar_beznal), 0, '.', ' ') . '</span>';
 
@@ -1132,7 +1205,7 @@
                             <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">
                                Специалисты
                             </div>
-                            <div class="cellRight" style="width: 150px; min-width: 150px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
+                            <div class="cellRight" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
 
                     if (!empty($rezult_arr[10])) {
@@ -1172,10 +1245,20 @@
                                     <div class="cellLeft" style="width: 120px; min-width: 120px;">
                                        <b>' . $percents_j[10][$percent_cat_id]['name'] . '</b>
                                     </div>
-                                    <div class="cellRight" style="width: 150px; min-width: 150px;">
+                                    <div class="cellRight" style="width: 120px; min-width: 120px;">
                                         <div style="float:left;">' . number_format($value, 0, '.', ' ') . '</div> <div style="float:right;">' . number_format((($value * 100) / array_sum($rezult_arr[10]['data'])), 2, '.', '') . '%</div>
-                                    </div>
-                                </li>';
+                                    </div>';
+                                echo '
+                                    <div class="cellRight material_costs" style="display: none !important">';
+                                    if (isset($material_costs[$percent_cat_id])){
+                                        echo $material_costs[$percent_cat_id]['summ'].' / '.number_format(($material_costs[$percent_cat_id]['summ'] * 100 / $stom_summ_temp), 2, '.', ' ').'%';
+                                    }else{
+                                        echo '0 / 0%';
+                                    }
+                                    echo '
+                                </div>';
+                                echo '
+                                    </li>';
                             }
                         }
                     }
@@ -1637,6 +1720,24 @@
                             
                             document.location.href = "?filial_id="+$(this).val() + "&" + get_data_str;
                         });
+                    });
+                    
+                    
+                    $("#material_costs_show").click(function() {
+                        
+					    let checked_status = $(this).is(":checked");
+					    
+					    if (checked_status){
+					        //console.log(checked_status);
+					        
+					        $(".material_costs").each(function(){
+					            $(this).attr(\'style\',\'display: table-cell !important;\');
+					        })
+					    }else{
+                            $(".material_costs").each(function(){
+					            $(this).attr(\'style\',\'display:none !important\');
+					        })
+					    }
                     });
                     
                     $(document).ready(function(){
