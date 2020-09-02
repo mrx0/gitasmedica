@@ -275,8 +275,14 @@
                                     $percent_cats_arr = explode(',', $rezData['percent_cats']);
 
                                     foreach ($percent_cats_arr as $percent_cat) {
+                                        $bgColor = "";
+
+                                        if (($percent_cat == 58) || ($percent_cat == 59) || ($percent_cat == 60) || ($percent_cat == 61)){
+                                            $bgColor = "background-color: yellow;";
+                                        }
+
                                         if ($percent_cat > 0) {
-                                            $resultFilialStr .= '<i style="color: rgb(15, 6, 142); font-size: 110%;">' . $percent_cats_j[$percent_cat] . '</i><br>';
+                                            $resultFilialStr .= '<i style="color: rgb(15, 6, 142); font-size: 110%;'.$bgColor.'">' . $percent_cats_j[$percent_cat] . '</i><br>';
                                         } else {
                                             $resultFilialStr .= '<i style="color: red; font-size: 100%;">Ошибка #17</i><br>';
                                         }

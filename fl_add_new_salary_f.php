@@ -28,6 +28,11 @@
 //                  `worker_id`, `summ`, `date_from`, `category`, `create_time`, `create_person`)
 //                VALUES (
 //                  '{$_POST['worker_id']}', '{$_POST['summ']}', '{$date_from}', '{$_POST['category_id']}', '{$time}', '{$_SESSION['id']}')";
+
+                $query = "DELETE FROM `fl_spr_salaries` WHERE `worker_id`='{$_POST['worker_id']}'";
+
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
                 $query = "INSERT INTO `fl_spr_salaries` (
                   `worker_id`, `summ`, `date_from`, `create_time`, `create_person`)
                 VALUES (

@@ -335,7 +335,13 @@
                 $arr = array();
                 $salariesWorkers = array();
 
+                $time = $year.'-'.$month.'-01 00:00:00';
+
                 $query = "SELECT * FROM (SELECT * FROM `fl_spr_salaries` WHERE `worker_id` IN ($w_id_str) ORDER BY `date_from` DESC) AS sub";
+
+                //$query = "SELECT * FROM `fl_spr_salaries` WHERE `worker_id` IN ($w_id_str) AND '$time' > `date_from` ORDER BY `date_from` DESC, `create_time`";
+                //var_dump($query);
+
                 //var_dump($query);
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                 $number = mysqli_num_rows($res);

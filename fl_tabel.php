@@ -371,7 +371,12 @@
 
                             foreach ($percent_cats_arr as $percent_cat){
                                 if ($percent_cat > 0) {
-                                    $rezult .= '<i style="color: rgb(15, 6, 142); font-size: 110%;">' . $percent_cats_j[$percent_cat] . '</i><br>';
+                                    $bgColor = "";
+
+                                    if (($percent_cat == 58) || ($percent_cat == 59) || ($percent_cat == 60) || ($percent_cat == 61)){
+                                        $bgColor = "background-color: yellow;";
+                                    }
+                                    $rezult .= '<i style="color: rgb(15, 6, 142); font-size: 110%; '.$bgColor.'">' . $percent_cats_j[$percent_cat] . '</i><br>';
                                 }else{
                                     $rezult .= '<i style="color: red; font-size: 100%;">Ошибка #15</i><br>';
                                 }

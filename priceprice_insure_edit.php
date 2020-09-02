@@ -219,7 +219,7 @@
                                 <div>';
                                     if ((($items['close'] == 1) && ($finances['close'] == 1)) || $god_mode){
                                         echo '
-						        <i class="fa fa-times" aria-hidden="true" style="cursor: pointer; color: red;"  title="Удалить"></i>';
+						        <i class="fa fa-times" aria-hidden="true" style="cursor: pointer; color: red;"  title="Удалить" onclick="deleteThisPrice(' . $rez[$i]['id'] . ', true);"></i>';
                                     }
                                     echo '
                                 '.$rez[$i]['price'].'/'.$rez[$i]['price2'].'/'.$rez[$i]['price3'].' руб. c '.date('d.m.y H:i', $rez[$i]['date_from']).' | '.date('d.m.y H:i', $rez[$i]['create_time']).'  |  '.WriteSearchUser('spr_workers', $rez[$i]['create_person'], 'user', true).'';

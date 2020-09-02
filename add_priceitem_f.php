@@ -38,7 +38,7 @@
 								$_time = time();
 								$start_day = mktime(9, 0, 0, date("m", $_time), date("d", $_time), date("y", $_time));
 								
-								if ($iWantThisDate2 >= $start_day){
+								//if ($iWantThisDate2 >= $start_day){
 								    //Добавим в базу и вернем id
 									$PriceNameId = WriteToDB_EditPriceName (addslashes($name), $pricecode, $_POST['category_id'], $_SESSION['id']);
 									WriteToDB_EditPricePrice ($PriceNameId, $_POST['price'], $_POST['price2'], $_POST['price3'], $iWantThisDate2, $_SESSION['id']);
@@ -49,12 +49,12 @@
 										<div class="query_ok">
 											Позиция добавлена.<br><br>
 										</div>';
-								}else{
-									echo '
-										<div class="query_neok">
-											Задним числом добавлять нельзя.<br><br>
-										</div>';
-								}
+//								}else{
+//									echo '
+//										<div class="query_neok">
+//											Задним числом добавлять нельзя.<br><br>
+//										</div>';
+//								}
 							}else{
 								echo '
 									<div class="query_neok">
