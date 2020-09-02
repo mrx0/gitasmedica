@@ -6145,7 +6145,7 @@
         }
     }
 
-
+    //Функция удаления оклада
     function deleteThisSalary(salary_id, type){
         //console.log(type);
 
@@ -6162,6 +6162,44 @@
                 data: {
                     id: salary_id,
                     type: type
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    if (res.result == "success") {
+                        location.reload();
+                        //console.log(res.data);
+                    }
+                    if (res.result == "error") {
+                        //alert(res.data);
+                    }
+                    //console.log(data.data);
+
+                }
+            });
+        }
+    }
+
+    //Функция удаления цены из прайса
+    function deleteThisPrice(price_id, insure){
+        //console.log(type);
+
+        var rys = false;
+
+        rys = confirm("Вы хотите удалить цену. \nЭто необратимо.\nПо умолчанию будет цена с более поздней датой.\n\nВы уверены?");
+
+        if (rys) {
+            $.ajax({
+                url: "price_del_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: price_id,
+                    insure: insure
                 },
                 cache: false,
                 beforeSend: function () {
@@ -6310,7 +6348,7 @@
         '<tr><td>Наим.</td><td>Работа</td><td>Материал</td><td>Фикс.</td></tr>';
 
         $(".percentCatItem").each(function() {
-            var cat_id = fl_createSchedulerReport_add($(this).attr("cat_id"));
+            var cat_id = $(this).attr("cat_id");
             var cat_name = ($(this).html());
             // console.log(cat_id);
             // console.log(cat_name);

@@ -2618,6 +2618,11 @@
 			},
 			success:function(data){
 				$('#errror').html(data);
+
+                setTimeout(function () {
+                    location.reload();
+
+                }, 500);
 			}
 		})
 	}
@@ -2648,6 +2653,11 @@
 			},
 			success:function(data){
 				$('#errror').html(data);
+
+                setTimeout(function () {
+                    location.reload();
+
+                }, 500);
 			}
 		})
 	}
@@ -12712,6 +12722,7 @@
                         '<option value="pc">штуки</option>' +
                         '<option value="gr">граммы</option>'+
                         '<option value="ml">милилитры</option>'+
+                        '<option value="sh">шприцы</option>'+
                     '</select>' +
                 '</div>';
         }
@@ -12830,6 +12841,7 @@
                 '<option value="pc">штуки</option>' +
                 '<option value="gк">граммы</option>'+
                 '<option value="ml">милилитры</option>'+
+                '<option value="sh">шприцы</option>'+
                 '</select>' +
                 '</div>';
         }
