@@ -1,7 +1,7 @@
 <?php
 
-//sclad_prihod_add.php
-//Добавить приход
+//sclad_transfer_add.php
+//Добавить перемещение
 
 	require_once 'header.php';
     require_once 'blocks_dom.php';
@@ -35,15 +35,15 @@
 					<header>
                         <div class="nav">
 							<a href="sclad.php" class="b">Склад</a>
-                            <a href="sclad_prihods.php" class="b">Приходные накладные</a>
+                            <a href="sclad_transfers.php" class="b">Перемещения</a>
 						</div>
 						
 					
 					
-						<h2>Добавить приход</h2>
+						<h2>Добавить перемещение</h2>
 					</header>
-					<input type="hidden" id="prihod_edit" value="false">
-					<input type="hidden" id="prihod_id" name="prihod_id" value="0">';
+					<input type="hidden" id="transfer_edit" value="false">
+					<input type="hidden" id="transfer_id" name="transfer_id" value="0">';
 
             echo '
 					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">';
@@ -229,13 +229,15 @@
         echo '
                             <div style="float: none">';
 
-        echo '
+        if (!empty($items_arr)){
+
+            echo '
                                 <table style="/*border: 1px solid #CCC;*/ /*width: 100%;*/ table-layout: fixed;">';
 
-        //$border_top = 'border-top: 1px solid #CCC;';
+            //$border_top = 'border-top: 1px solid #CCC;';
 
 
-        echo '
+            echo '
                                     <tr class="sclad_item_tr" style="font-size: 80%; font-weight: normal;">
                                         <td colspan="8" style="border-left: 1px solid #CCC; text-align: left;">
                                             <span style="cursor:pointer;" onclick="showAddNewScladItemsSetINSession();">
@@ -244,7 +246,6 @@
                                         </td>
                                     </tr>';
 
-        if (!empty($items_arr)){
 
             echo '
                                     <tr class="sclad_item_tr" style="font-size: 80%; font-weight: bold;">
@@ -353,11 +354,10 @@
                     $num++;
                 }
             }
-        }
 
-        echo '
+            echo '
                                 </table>';
-
+        }
 
 
 

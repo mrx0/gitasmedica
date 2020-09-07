@@ -17,8 +17,8 @@
 			
 			$offices_j = SelDataFromDB('spr_filials', '', '');
 
-			if ($_POST){
-			}else{
+			//if ($_POST){
+			//}else{
 				echo '
                     <div`> 
 					<header style="margin-bottom: 5px;">
@@ -148,7 +148,7 @@
 										<!--<input type="checkbox" id="zapisAll" name="zapisAll" class="zapisType" value="1" disabled> Все<br>-->
 										<input type="checkbox" id="zapisArrive" name="zapisArrive" class="zapisType" value="1" checked disabled> Пришли<br>
 										<!--<input type="checkbox" id="zapisNotArrive" name="zapisNotArrive" class="zapisType" value="1" disabled> Не пришли<br>
-										<input type="checkbox" id="zapisNull" name="zapisNull" class="zapisType" value="1" disabled> Не закрытые<br>
+										<input type="checkbox" id="zapisNull" name="zapisNull" class="zapisType" value="1" disabled> Незакрытые<br>
 										<input type="checkbox" id="zapisError" name="zapisError" class="zapisType" value="1" disabled> Ошибочные<br>-->
 									</div>
 								</li>';
@@ -406,7 +406,7 @@
 					});
 				</script>';
 
-			}
+			//}
 			//mysql_close();
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

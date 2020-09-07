@@ -3,7 +3,7 @@
 //fl_main_report2_f.php
 //Функция для Финальный отчет v2.0
 
-    function fl_main_report2_f($month, $year, $filial_id){
+    function fl_main_report2_f($month, $year, $filial_id, $worker_id=0){
         include_once 'DBWork.php';
         include_once 'functions.php';
         include_once 'ffun.php';
@@ -79,6 +79,7 @@
         //2 - Посещение для пациента первое с работой
         //3 - Посещение для пациента не первое
         //4 - Посещение для пациента не первое, но был более полугода назад
+        //--
         //5 - Продолжение работы
         //6 - Без записи (enter)
         $pervich_summ_arr = array(0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0);
@@ -90,9 +91,20 @@
         $zapis_not_enter = 0;
         //ID записей
         $zapis_ids = array();
+        //Если указано, к кому записан
+        $worker_str = '';
+        $worker_str2 = '';
+        if ($worker_id != 0){
+            $worker_str = " AND `worker`='{$worker_id}'";
+            $worker_str2 = " AND z.worker='{$worker_id}'";
+        }
 
         //Кроме тех, которые удалены или не пришли
-        $query = "SELECT `id`, `type`, `patient`, `pervich`, `insured`, `noch`, `enter`  FROM `zapis` WHERE `office` = '{$filial_id}' AND `year` = '{$year}' AND `month` = '{$month}' AND `enter` <> 9 AND `enter` <> 8 ORDER BY `day` ASC";
+        $query = "SELECT `id`, `type`, `patient`, `pervich`, `insured`, `noch`, `enter` 
+        FROM `zapis` 
+        WHERE `office` = '{$filial_id}' AND `year` = '{$year}' AND `month` = '{$month}' AND `enter` <> 9 AND `enter` <> 8 ".$worker_str."
+        ORDER BY `day` ASC";
+        //var_dump($query);
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -157,7 +169,7 @@
                 SELECT jiex.*, ji.summ AS invoice_summ, ji.summins AS invoice_summins, ji.status AS invoice_status, ji.type AS type, ji.zapis_id AS zapis_id, z.enter AS enter, z.pervich AS pervich, sc.birthday2 AS birthday
                 FROM `zapis` z
                 INNER JOIN `journal_invoice` ji ON z.id = ji.zapis_id AND 
-                z.office = '{$filial_id}' AND z.year = '{$year}' AND z.month = '{$month}' AND (z.enter = '1' OR z.enter = '6')
+                z.office = '{$filial_id}' AND z.year = '{$year}' AND z.month = '{$month}' AND (z.enter = '1' OR z.enter = '6') ".$worker_str2."
                 LEFT JOIN `journal_invoice_ex` jiex ON ji.id = jiex.invoice_id
                 LEFT JOIN `spr_clients` sc ON ji.client_id = sc.id 
                 WHERE ji.status <> '9'";

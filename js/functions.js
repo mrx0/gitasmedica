@@ -568,7 +568,7 @@
                     manual_itog_price = itog_price;
 
 					var min_itog_price = manual_itog_price - 10;
-					var max_itog_price = manual_itog_price + 2;
+					var max_itog_price = manual_itog_price + 10;
 
 					if (min_itog_price < 1) min_itog_price = 1;
 
@@ -2618,6 +2618,11 @@
 			},
 			success:function(data){
 				$('#errror').html(data);
+
+                setTimeout(function () {
+                    location.reload();
+
+                }, 500);
 			}
 		})
 	}
@@ -2648,6 +2653,11 @@
 			},
 			success:function(data){
 				$('#errror').html(data);
+
+                setTimeout(function () {
+                    location.reload();
+
+                }, 500);
 			}
 		})
 	}
@@ -12084,6 +12094,93 @@
 
     }
 
+    //Функция для рассчета рассрочки
+    function installmentCalculate (summ, m_count){
+        // console.log(summ);
+        // console.log(m_count);
+        // console.log(summ*100);
+        // console.log((summ*100 - summ*100 % m_count) / m_count);
+        // console.log(summ*100 % m_count);
+
+        let rezult = '';
+
+        let payment = (summ - summ % m_count) / m_count;
+
+        for (let i = 1; i <= m_count; i++){
+
+            rezult += '<div style="display: table-cell; width: 83px; min-width: 83px; font-size: 80%; border: 1px solid #BFBCB5; background: lawngreen; padding: 10px;">';
+            rezult += '<div style="margin-bottom: 5px;">'+i+' месяц';
+            rezult += '</div>';
+            rezult += '<div>';
+
+            if (i != m_count) {
+                //console.log(i + ' мес. => ' + payment)
+
+                rezult += '<span style="font-weight: bold">'+payment+' руб.</span>';
+            }else{
+                //console.log(i + ' мес. => ' + (payment + summ % m_count))
+
+                rezult += '<span style="font-weight: bold">'+(payment + summ % m_count)+' руб.</span>';
+            }
+            rezult += '</div>';
+            rezult += '</div>';
+        }
+        //console.log('-------------------------------');
+
+
+
+        // console.log(rezult);
+        $("#installment_calculate").html(rezult);
+    }
+
+    //Добавляем/редактируем в базу наряд из сессии
+    function Ajax_installment_add(mode){
+        //console.log(mode);
+
+        // let invoice_id = $("#invoice4installment").html();
+        // let month_start = $("#iWantThisMonth").val();
+        // let year_start = $("#iWantThisYear").val();
+
+        let link = "installment_add_f.php";
+
+        let reqData = {
+            client_id: $("#client_id").val(),
+            invoice_id: $("#invoice4installment").html(),
+            summ: $("#installment_summ").html(),
+            month_start: $("#iWantThisMonth").val(),
+            year_start: $("#iWantThisYear").val()
+        };
+        //console.log(reqData);
+
+        //Добавим запись
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                console.log(res);
+
+                if(res.result == "success"){
+
+                    location.reload();
+
+                }else{
+                    $('#errror').html(res.data);
+                }
+            }
+        });
+    }
+
+
+
+
     //Функция блокирует вкладки
     function disableTabs (permission, worker){
         //console.log($('#tabs_w'+permission+'_'+worker+' .notes_count2'));
@@ -12625,6 +12722,7 @@
                         '<option value="pc">штуки</option>' +
                         '<option value="gr">граммы</option>'+
                         '<option value="ml">милилитры</option>'+
+                        '<option value="sh">шприцы</option>'+
                     '</select>' +
                 '</div>';
         }
@@ -12743,6 +12841,7 @@
                 '<option value="pc">штуки</option>' +
                 '<option value="gк">граммы</option>'+
                 '<option value="ml">милилитры</option>'+
+                '<option value="sh">шприцы</option>'+
                 '</select>' +
                 '</div>';
         }

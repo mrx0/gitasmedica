@@ -609,7 +609,7 @@
                         //Направления
 						$removes = SelDataFromDB ('removes', $task[0]['id'], 'task');
 
-						echo WriteRemoves($removes, 0, 0, false);
+						echo WriteRemoves($removes, 0, 0, false, $finances);
 						echo '
 							<div class="cellsBlock3">
 								<div class="cellLeft">

@@ -118,7 +118,11 @@
                 if (($finances['see_all'] == 1) || $god_mode){
                     echo '				
 							<li class="cellsBlock" style="margin: 1px;">
-								<a href="stat_installments.php" class="b3">Открытые рассрочки</a>
+								<a href="stat_installments.php" class="b3">Открытые рассрочки (старое)</a>
+							</li>';
+                    echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="stat_installments2.php" class="b3">Открытые рассрочки (новое)</a>
 							</li>';
                 }
 
@@ -231,6 +235,10 @@
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_mainReportCategory2.php" class="b3">Отчёт по категориям</a>
+							</li>';
+                echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="worker_zapis_report2.php" class="b3">Отчёт посещений по врачу</a>
 							</li>';
                 echo '
 							<li class="cellsBlock" style="margin: 1px;">

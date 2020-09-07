@@ -106,6 +106,11 @@ ORDER BY `name`;
                         echo '<a href="zapis.php?client_id='.$client_j[0]['id'].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Записать пациента</a>';
                         if (($_SESSION['permissions'] == 3) || ($_SESSION['id'] == 364) || $god_mode){
                             //var_dump($client_j[0]['installment']);
+
+                            //новая рассрочка
+                            echo '
+                                        <a href="create_installment.php?client_id='.$client_j[0]['id'].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Создать рассрочку</a>';
+
                             //Нет отметки о рассрочке
                             if ($client_j[0]['installment'] == 0) {
                                 echo '<span class="info"  style="display: inline; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus('.$client_j[0]['id'].', '.$client_j[0]['installment'].', true);"><i class="fa fa-database" aria-hidden="true" title="Нет рассрочек"></i></span>';
@@ -116,7 +121,8 @@ ORDER BY `name`;
                                     <span class="info"  style="display: inline; color: red; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;">
                                         <i class="fa fa-database" aria-hidden="true" onclick="changeInstallmentStatus('.$client_j[0]['id'].', '.$client_j[0]['installment'].', true);" title="Есть незакрытая рассрочка"></i>
 
-                                            <a href="stat_installments.php" class="b4" style="font-size: 60%">Открытые рассрочки</a>
+                                            <a href="stat_installments.php" class="b4" style="font-size: 60%">Открытые рассрочки (старое)</a>
+                                            <a href="stat_installments2.php" class="b4" style="font-size: 60%">Открытые рассрочки (новое)</a>
 
                                     </span>';
                             }
@@ -143,7 +149,7 @@ ORDER BY `name`;
                         </header>';
 
                 echo '<div style="margin-top: 7px; font-size: 70%; color: #777;">
-                <a href="test_print2.php?client_id=' . $client_j[0]['id'] . '" class="ahref b2 no_print"  target="_blank" rel="nofollow noopener">Мед.карта стом.(тест) </a>
+                <a href="test_print2.php?client_id=' . $client_j[0]['id'] . '" class="ahref b2 no_print" target="_blank" rel="nofollow noopener">Мед.карта стом.(тест) </a>
                 </div>';
 
 				echo '
@@ -1360,10 +1366,10 @@ ORDER BY `name`;
                             if (!empty($notes) || ($removes != 0)) {
                                 echo 'Особые отметки<br>';
 
-                                echo WriteNotes($notes, 0, true);
+                                echo WriteNotes($notes, 0, true, $finances);
 
                                 if ($removes != 0){
-                                    echo WriteRemoves($removes, 0, 0, false);
+                                    echo WriteRemoves($removes, 0, 0, false, $finances);
                                 }
 
                             }

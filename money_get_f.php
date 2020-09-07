@@ -48,7 +48,7 @@
                 if ($rezultInvoices['count'] > 0) {
                     $rezult .= '
 								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
-									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Отображаются только <span style="color: red;">не закрытые</span> наряды.<!--<br><span style="font-size: 90%;">Чтобы посмотреть все документы, перейдите в "Управление счётом"</span>--></li>';
+									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Отображаются только <span style="color: red;">незакрытые</span> наряды.<!--<br><span style="font-size: 90%;">Чтобы посмотреть все документы, перейдите в "Управление счётом"</span>--></li>';
 
                     $rezult .= $rezultInvoices['data'];
 

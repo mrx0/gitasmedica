@@ -3549,7 +3549,7 @@
     }
 
     //Вывод напоминаний
-    function WriteNotes($notes, $worker_id, $option){
+    function WriteNotes($notes, $worker_id, $option, $finances){
         require 'variables.php';
 
         $rez = '
@@ -3620,27 +3620,28 @@
                 $rez .= '
                     <li class="cellsBlock cellsBlockHover">
                         <div class="cellPriority" style="background-color:'.$priority_color.'"></div>
-                        <div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $notes[$i]['dead_line']).'</div>
-                        <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients', $notes[$i]['client'], 'user', true).'</div>
-                        <a href="task_stomat_inspection.php?id='.$notes[$i]['task'].'" class="ahref cellName" style="text-align: center">#'.$notes[$i]['task'].'</a>
+                        <div class="cellTime" style="text-align: center; background-color: '.$for_notes_colors[$notes[$i]['description']].'">'.date('d.m.y H:i', $notes[$i]['dead_line']).'</div>
+                        <a href="client.php?id='.$notes[$i]['client'].'" class="ahref cellName" style="text-align: center" target="_blank" rel="nofollow noopener">'.$notes[$i]['name'].'</a>
+                        <a href="task_stomat_inspection.php?id='.$notes[$i]['task'].'" class="ahref cellName" style="text-align: center" target="_blank" rel="nofollow noopener">#'.$notes[$i]['task'].'</a>
                         <div class="cellText" style="'.$background_style.'">'.$for_notes[$notes[$i]['description']].'</div>';
                 if ($option) {
-                    $rez .= '
+					if (($_SESSION['id'] == $notes[$i]['create_person']) || ($_SESSION['permissions'] == 3)) {
+						$rez .= '
                         <div class="cellTime Change_notes_stomat" style="text-align: center;">';
-                    if ($_SESSION['id'] == $notes[$i]['create_person']) {
-                        if ($notes[$i]['closed'] != 1) {
-                            if ($worker_id != 0) {
-                                $rez .= '<a href="#" onclick="Change_notes_stomat(' . $notes[$i]['id'] . ', ' . $notes[$i]['description'] . ', ' . $worker_id . ' , $(this))">ред.</a>';
-                            }
-                            $rez .= '<a href="#" onclick="Close_notes_stomat(' . $notes[$i]['id'] . ', ' . $worker_id . ')">закр.</a>';
-                        }
-                    }
-                    $rez .= '
+
+						if ($notes[$i]['closed'] != 1) {
+							if ($worker_id != 0) {
+								$rez .= '<a href="#" onclick="Change_notes_stomat(' . $notes[$i]['id'] . ', ' . $notes[$i]['description'] . ', ' . $worker_id . ' , $(this))">ред.</a>';
+							}
+							$rez .= '<a href="#" onclick="Close_notes_stomat(' . $notes[$i]['id'] . ', ' . $worker_id . ')">закр.</a>';
+						}
+						$rez .= '
                         </div>';
+					}
                 }
                 $rez .= ' 
                         <div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $notes[$i]['create_time']).'</div>
-                        <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$notes[$i]['create_person'], 'user', true).'</div>
+                        <a href="user.php?id='.$notes[$i]['create_person'].'" class="ahref cellName" style="text-align: center" target="_blank" rel="nofollow noopener">'.$notes[$i]['w_name'].'</a>
                         <div class="cellTime" style="text-align: center; '.$background_style2.'">'.$ended.'</div>
                     </li>';
             }
@@ -3653,7 +3654,7 @@
     }
 
     //Вывод направлений
-    function WriteRemoves($removes, $worker_id, $toMe, $option){
+    function WriteRemoves($removes, $worker_id, $toMe, $option, $finances){
         include_once 'DBWork.php';
 
         $rez = '<div class="cellsBlock">';
@@ -3739,12 +3740,12 @@
 
                 $rez .= '
                         <li class="cellsBlock cellsBlockHover">
-                            <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removes[$i]['whom'], 'user', true).'</div>
-                            <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$removes[$i]['client'], 'user', true).'</div>
-                            <a href="task_stomat_inspection.php?id='.$removes[$i]['task'].'" class="ahref cellName" style="text-align: center">#'.$removes[$i]['task'].'</a>
+                            <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removes[$i]['whom'], 'user', false).'</div>
+                            <a href="client.php?id='.$removes[$i]['client'].'" class="ahref cellName" style="text-align: center" target="_blank" rel="nofollow noopener">'.$removes[$i]['name'].'</a>
+                            <a href="task_stomat_inspection.php?id='.$removes[$i]['task'].'" class="ahref cellName" style="text-align: center" target="_blank" rel="nofollow noopener">#'.$removes[$i]['task'].'</a>
                             <div class="cellText" style="'.$background_style.'">'.$removes[$i]['description'].'</div>';
                 if ($option) {
-                    if (($_SESSION['id'] == $removes[$i]['create_person']) || ($_SESSION['id'] == $removes[$i]['whom'])) {
+                    if (($_SESSION['id'] == $removes[$i]['create_person']) || ($_SESSION['id'] == $removes[$i]['whom']) || ($_SESSION['permissions'] == 3)) {
                         $rez .= '
                             <div class="cellTime" style="text-align: center">
 							    <a href="#" id="Close_removes_stomat" onclick="Close_removes_stomat(' . $removes[$i]['id'] . ', ' . $worker_id . ')">закр.</a>
@@ -3753,7 +3754,7 @@
                 }
                 $rez .= '
                             <div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $removes[$i]['create_time']).'</div>
-                            <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removes[$i]['create_person'], 'user', true).'</div>
+                            <a href="user.php?id='.$removes[$i]['create_person'].'" class="ahref cellName" style="text-align: center" target="_blank" rel="nofollow noopener">'.$removes[$i]['w_name'].'</a>
                             <div class="cellTime" style="text-align: center; '.$background_style2.'">'.$ended.'</div>
                         </li>';
             }
@@ -3988,7 +3989,7 @@
 							$itemTemp_str .= '
 												<li class="cellsBlock" style="width: auto; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36);">';
 							$itemTemp_str .= '
-													<a href="invoice.php?id=' . $items['id'] . '" class="cellOrder ahref" style="position: relative;">
+													<a href="invoice.php?id=' . $items['id'] . '" class="cellOrder ahref" style="position: relative;"  target="_blank" rel="nofollow noopener">
 														<div style="font-weight: bold;">
 															Наряд #' . $items['id'] . '
 														</div>

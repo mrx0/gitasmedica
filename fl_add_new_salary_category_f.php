@@ -23,6 +23,10 @@
 
                 $msql_cnnct = ConnectToDB ();
 
+//                $query = "DELETE FROM `fl_spr_salaries_category` WHERE `permission`='{$_POST['permission_id']}' AND `category`='{$_POST['category_id']}' AND `filial_id`='{$_POST['filial_id']}'";
+//
+//                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
                 //Вставим новую запись
                 $query = "INSERT INTO `fl_spr_salaries_category` (
                   `permission`, `category`, `filial_id`, `summ`, `date_from`, `create_time`, `create_person`)

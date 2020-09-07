@@ -1,7 +1,7 @@
 <?php
 
-//stat_percents.php
-//Статистика по скидкам и наценкам
+//stat_category.php
+//Статистика по категориям
 
 	require_once 'header.php';
 	
@@ -22,7 +22,7 @@
 				echo '
                     <div class="no_print"> 
 					<header style="margin-bottom: 5px;">
-						<h1>Статистика по скидкам и наценкам</h1>
+						<h1>Запись</h1>
 					</header>
 					</div>';
 
@@ -103,7 +103,7 @@
                 echo '
 									</div>
 								</li>
-								<li class="filterBlock" style="display: none">
+								<!--<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
 										Пациент<br>
 										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
@@ -112,8 +112,8 @@
 										<input type="text" size="30" name="searchdata" id="search_client" placeholder="Минимум три буквы для поиска" value="" class="who" autocomplete="off">
 										<ul id="search_result" class="search_result"></ul><br />
 									</div>
-								</li>
-								<li class="filterBlock" style="display: none">
+								</li>-->
+								<!--<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
 										Сотрудник, который добавил запись<br>
 										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
@@ -122,27 +122,28 @@
 										<input type="text" size="30" name="searchdata2" id="search_worker" placeholder="Минимум три буквы для поиска" value="" class="who2" autocomplete="off">
 										<ul id="search_result2" class="search_result2"></ul><br />
 									</div>
-								</li>';
+								</li>-->
+								';
 
 
-                echo '				
-								
-								<li class="filterBlock" style="display: none">
-									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
-										Состояние
-									</div>
-									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="checkbox" id="zapisAll" name="zapisAll" class="zapisType" value="1"> Все<br>
-										<input type="checkbox" id="zapisArrive" name="zapisArrive" class="zapisType" value="1" checked> Пришли<br>
-										<input type="checkbox" id="zapisNotArrive" name="zapisNotArrive" class="zapisType" value="1"> Не пришли<br>
-										<input type="checkbox" id="zapisNull" name="zapisNull" class="zapisType" value="1"> Незакрытые<br>
-										<input type="checkbox" id="zapisError" name="zapisError" class="zapisType" value="1"> Ошибочные<br>
-									</div>
-								</li>';
+//                echo '
+//
+//								<li class="filterBlock">
+//									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+//										Состояние
+//									</div>
+//									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
+//										<input type="checkbox" id="zapisAll" name="zapisAll" class="zapisType" value="1"> Все<br>
+//										<input type="checkbox" id="zapisArrive" name="zapisArrive" class="zapisType" value="1" checked> Пришли<br>
+//										<input type="checkbox" id="zapisNotArrive" name="zapisNotArrive" class="zapisType" value="1"> Не пришли<br>
+//										<input type="checkbox" id="zapisNull" name="zapisNull" class="zapisType" value="1"> Незакрытые<br>
+//										<input type="checkbox" id="zapisError" name="zapisError" class="zapisType" value="1"> Ошибочные<br>
+//									</div>
+//								</li>';
 
 				echo '
 							</ul>
-							<ul style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 20px; width: 420px; font-size: 95%; background-color: rgba(245, 245, 245, 0.9); display: inline-table; ">
+							<ul style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 20px; width: 420px; font-size: 95%; background-color: rgba(245, 245, 245, 0.9);display: inline-table;">
 							    
 								<li style="margin-bottom: 10px;">
 									Дополнительные условия
@@ -160,7 +161,7 @@
 									</div>
 								</li>
 								
-<!--								<li class="filterBlock">
+								<!--<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
 										Заполненность
 									</div>
@@ -170,7 +171,7 @@
 										<input type="checkbox" id="fullWOTask" name="fullWOTask" class="fullType" value="1" checked> Без посещений<br>
 										<input type="checkbox" id="fullOk" name="fullOk" class="fullType" value="1" checked> Заполненные полностью<br>
 									</div>
-								</li>
+								</li>-->
 								
 								<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
@@ -190,11 +191,11 @@
 										Наряды
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="checkbox" id="invoiceAll" name="invoiceAll" class="invoiceType" value="1" checked> Все<br>
-										<input type="checkbox" id="invoicePaid" name="invoicePaid" class="invoiceType" value="1" checked> Оплаченные<br>
-										<input type="checkbox" id="invoiceNotPaid" name="invoiceNotPaid" class="invoiceType" value="1" checked> Не оплаченные<br>
-										<input type="checkbox" id="invoiceInsure" name="invoiceInsure" class="invoiceType" value="1" checked> Страховые<br>
-										&lt;!&ndash;<input type="checkbox" id="statusAnother" name="statusAnother" class="invoiceType" value="1" checked> Все остальные<br>&ndash;&gt;
+										<input type="checkbox" id="invoiceAll" name="invoiceAll" class="invoiceType" value="1" checked disabled> Все<br>
+										<input type="checkbox" id="invoicePaid" name="invoicePaid" class="invoiceType" value="1" checked disabled> Оплаченные<br>
+										<input type="checkbox" id="invoiceNotPaid" name="invoiceNotPaid" class="invoiceType" value="1" checked disabled> Не оплаченные<br>
+										<input type="checkbox" id="invoiceInsure" name="invoiceInsure" class="invoiceType" value="1" checked disabled> Страховые<br>
+										<!--<input type="checkbox" id="statusAnother" name="statusAnother" class="invoiceType" value="1" checked> Все остальные<br>-->
 									</div>
 								</li>
 								
@@ -204,9 +205,9 @@
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
 										<input type="checkbox" id="patientUnic" name="patientUnic" class="invoicePatientUnic" value="1"><br>
-										&lt;!&ndash;<input type="checkbox" id="statusAnother" name="statusAnother" class="invoiceType" value="1" checked> Все остальные<br>&ndash;&gt;
+										<!--<input type="checkbox" id="statusAnother" name="statusAnother" class="invoiceType" value="1" checked> Все остальные<br>-->
 									</div>
-								</li>-->
+								</li>
 								
 							</ul>
 							</div>
@@ -214,7 +215,7 @@
 				
 				echo '
                         <div class="no_print"> 
-						<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_percents()">
+						<input type="button" class="b" value="Применить" onclick="Ajax_show_result_stat_zapis()">
 						</div>';
 
                 echo '

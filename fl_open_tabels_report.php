@@ -1,7 +1,7 @@
 <?php
 
 //fl_open_tabels_report.php
-//Отчёт не закрытые табели
+//Отчёт незакрытые табели
 
 	require_once 'header.php';
 

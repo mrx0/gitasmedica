@@ -633,7 +633,7 @@
                                 </div>';
                     }
 
-					echo WriteNotes($notes, 0, true);
+					echo WriteNotes($notes, 0, true, $finances);
 
 					//Направления
 					$removes = SelDataFromDB ('removes', $task[0]['id'], 'task');
@@ -647,7 +647,7 @@
                                 </div>';
                     }
 
-					echo WriteRemoves($removes, 0, 0, false);
+					echo WriteRemoves($removes, 0, 0, false, $finances);
 									
 					//Фотки			
     				$arr = array();

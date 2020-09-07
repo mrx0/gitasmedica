@@ -14,6 +14,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         include_once 'DBWork.php';
         include_once 'functions.php';
 
+        $filials_j = getAllFilials(true, true, true);
+        //var_dump($filials_j);
+
         //разбираемся с правами
         $god_mode = FALSE;
 
@@ -121,17 +124,17 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
 
                 $data_temp_arr = explode(".", $_POST['datastart']);
-                $_POST['datastart'] = $data_temp_arr[2].'-'.$data_temp_arr[1].'-'.$data_temp_arr[0];
+                $datastart = $data_temp_arr[2].'-'.$data_temp_arr[1].'-'.$data_temp_arr[0];
 
                 $data_temp_arr = explode(".", $_POST['dataend']);
-                $_POST['dataend'] = $data_temp_arr[2].'-'.$data_temp_arr[1].'-'.$data_temp_arr[0];
+                $dataend = $data_temp_arr[2].'-'.$data_temp_arr[1].'-'.$data_temp_arr[0];
 
                 //Дата/время
                 if ($_POST['all_time'] != 1) {
-                    //$queryDop .= "`create_time` BETWEEN '" . strtotime($_POST['datastart']) . "' AND '" . strtotime($_POST['dataend'] . " 23:59:59") . "'";
+                    //$queryDop .= "`create_time` BETWEEN '" . strtotime($datastart) . "' AND '" . strtotime($dataend . " 23:59:59") . "'";
 
-                    $queryDop .= "CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) BETWEEN '{$_POST['datastart']}' AND '{$_POST['dataend']}'";
-                    //$queryDop .= "ji.closed_time BETWEEN '{$_POST['datastart']}' AND '{$_POST['dataend']}'";
+                    $queryDop .= "CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) BETWEEN '{$datastart}' AND '{$dataend}'";
+                    //$queryDop .= "ji.closed_time BETWEEN '{$datastart}' AND '{$dataend}'";
                     $queryDopExist = true;
                 }
                 //var_dump($queryDop);
@@ -478,6 +481,20 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         arsort($temp_cat_closed_array);
                         arsort($temp_cat_opened_array);
 
+
+//                        var_dump($_POST['worker']);
+//                        var_dump($workerExist);
+                        if  ($workerExist && $worker != 0) {
+                            //var_dump($workerSearch[0]['name']);
+                            echo 'Данные указаны для сотрудника: <i><b>'.$workerSearch[0]['name'].'</b></i><br>';
+                        }
+
+                        if ($_POST['filial'] != 99) {
+                           echo 'Для филиала: <i>'.$filials_j[$_POST['filial']]['name'].'</i><br>';
+                        }
+
+                        echo 'с '.$_POST['datastart'].' по '.$_POST['dataend'].'<br>';
+
                         echo '
                                 <div style="padding: 2px 4px;">
                                     Общая сумма: <b>' . number_format($ins_summ+$all_summ, 0, ',', ' ') . ' руб.</b>
@@ -489,9 +506,11 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                     Сумма по закрытым работам: <b>' . number_format($closed_summ, 0, ',', ' ') . ' руб.</b>
                                 </div>-->
                                 <!--<div style="padding: 2px 4px;">
-                                    Сумма по не закрытым работам: <b>' . number_format($opened_summ, 0, ',', ' ') . ' руб.</b>
-                                </div>-->
+                                    Сумма по незакрытым работам: <b>' . number_format($opened_summ, 0, ',', ' ') . ' руб.</b>
+                                </div>-->';
 
+
+                        echo '
                                 <div>
                                     <div style="display: inline-block; vertical-align: top;">';
 
@@ -586,7 +605,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                 echo '<div style="padding: 10px 4px 2px;">Наряды по гарантии:';
 
                                 for($i=0; $i < count($invoice_garantee); $i++){
-                                    echo '<a href="invoice.php?id='.$invoice_garantee[$i].'" class="ahref button_tiny" style="margin: 0 3px;">'.$invoice_garantee[$i].'</a>';
+                                    echo '<a href="invoice.php?id='.$invoice_garantee[$i].'" class="ahref button_tiny" style="margin: 0 3px;" target="_blank" rel="nofollow noopener">'.$invoice_garantee[$i].'</a>';
                                 }
                                 echo '</div>';
                             }
