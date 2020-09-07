@@ -35,7 +35,7 @@
 
 //                if (($stom['see_own'] == 1) && ($stom['see_all'] != 1) && !$god_mode){
                     //$notes = SelDataFromDB ('notes', $_SESSION['id'], 'create_person');
-                    $quey = "SELECT n.*, s_c.name, s_w.name AS w_name FROM `notes` n
+                    $query = "SELECT n.*, s_c.name, s_w.name AS w_name FROM `notes` n
                     RIGHT JOIN `spr_clients` s_c 
                     ON s_c.id = n.client  
                     RIGHT JOIN `spr_workers` s_w
