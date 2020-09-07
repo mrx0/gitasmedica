@@ -35,7 +35,11 @@
 
 //                if (($stom['see_own'] == 1) && ($stom['see_all'] != 1) && !$god_mode){
                     //$notes = SelDataFromDB ('notes', $_SESSION['id'], 'create_person');
-                    $query = "SELECT * FROM `notes` WHERE `create_person`='".$_SESSION['id']."' AND `closed` <> 1 ORDER BY `dead_line` ASC";
+                    $query = "SELECT * FROM `notes` WHERE `create_person`='".$_POST['worker_id']."' AND `closed` <> 1 ORDER BY `dead_line` ASC";
+
+                    if ($_POST['worker_id'] == 0){
+                        $query = "SELECT * FROM `notes` WHERE `closed` <> 1 ORDER BY `dead_line` ASC";
+                    }
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -68,7 +72,7 @@
                         //$rezult .= 'Все просроченные незакрытые напоминания';
                     //}
 
-                    $rezult .= WriteNotes($notes, $_POST['worker_id'], true);
+                    $rezult .= WriteNotes($notes, $_POST['worker_id'], true, $finances);
 
                 }else{
                     $rezult .= '<br><br><div style="display: inline-block; color: red;"><i>Открытых напоминаний нет.</i></div>';

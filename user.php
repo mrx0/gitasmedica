@@ -235,7 +235,11 @@
                             <div style="color: #7D7D7D; margin: 10px;" id="showHideText">Показать всё</div>
                         </div>';*/
             echo '
-                        <div id="tabs_w" style="font-family: Verdana, Calibri, Arial, sans-serif; font-size: 100% !important;">
+                        <div id="tabs_w" style="font-family: Verdana, Calibri, Arial, sans-serif; font-size: 100% !important;">';
+            if (($finances['see_all'] == 1) || $god_mode){
+                echo '<a href="notes_removes.php" class="b ahref">Все не закрытые</a>';
+            }
+            echo '                
                             <ul>
                                 <li><a href="#tabs-1">Напоминания</a></li>
                                 <li><a href="#tabs-2">Направления</a></li>
