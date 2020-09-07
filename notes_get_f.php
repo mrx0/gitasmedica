@@ -35,10 +35,10 @@
 
 //                if (($stom['see_own'] == 1) && ($stom['see_all'] != 1) && !$god_mode){
                     //$notes = SelDataFromDB ('notes', $_SESSION['id'], 'create_person');
-                    $query = "SELECT * FROM `notes` WHERE `create_person`='".$_POST['worker_id']."' AND `closed` <> 1 ORDER BY `dead_line` ASC";
+                    $query = "SELECT * FROM `notes` WHERE `create_person`='".$_POST['worker_id']."' AND `closed` <> 1 ORDER BY `dead_line` DESC";
 
                     if ($_POST['worker_id'] == 0){
-                        $query = "SELECT * FROM `notes` WHERE `closed` <> 1 ORDER BY `dead_line` ASC";
+                        $query = "SELECT * FROM `notes` WHERE `closed` <> 1 ORDER BY `dead_line` DESC";
                     }
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);

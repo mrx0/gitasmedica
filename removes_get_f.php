@@ -40,7 +40,7 @@
 
                     if ($_POST['worker_id'] == 0){
 
-                        $query = "SELECT * FROM `removes` WHERE `closed` <> 1 ORDER BY `create_time` ASC";
+                        $query = "SELECT * FROM `removes` WHERE `closed` <> 1 ORDER BY `create_time` DESC";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -48,7 +48,7 @@
 
                     }else {
 
-                        $query = "SELECT * FROM `removes` WHERE `create_person`='" . $_SESSION['id'] . "' AND `closed` <> 1 ORDER BY `create_time` ASC";
+                        $query = "SELECT * FROM `removes` WHERE `create_person`='" . $_SESSION['id'] . "' AND `closed` <> 1 ORDER BY `create_time` DESC";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -57,7 +57,7 @@
                         //... Ко мне
                         //$removesMe = SelDataFromDB ('removes', $_SESSION['id'], 'whom');
 
-                        $query = "SELECT * FROM `removes` WHERE `whom`='" . $_SESSION['id'] . "' AND `closed` <> 1 ORDER BY `create_time` ASC";
+                        $query = "SELECT * FROM `removes` WHERE `whom`='" . $_SESSION['id'] . "' AND `closed` <> 1 ORDER BY `create_time` DESC";
 
                         $res2 = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
