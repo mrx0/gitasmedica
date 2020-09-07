@@ -234,9 +234,10 @@
                         <div class="showHiddenDivs" style="cursor: pointer;">
                             <div style="color: #7D7D7D; margin: 10px;" id="showHideText">Показать всё</div>
                         </div>';*/
+
             echo '
                         <div id="tabs_w" style="font-family: Verdana, Calibri, Arial, sans-serif; font-size: 100% !important;">';
-            if (($finances['see_all'] == 1) || $god_mode){
+            if (($_SESSION['permissions'] == 1) || ($_SESSION['permissions'] == 2) || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9) || ($_SESSION['permissions'] == 12) || ($_SESSION['permissions'] == 11) || $god_mode){
                 echo '<a href="notes_removes.php" class="b ahref">Все не закрытые</a>';
             }
             echo '                

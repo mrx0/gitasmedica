@@ -40,7 +40,13 @@
 
                     if ($_POST['worker_id'] == 0){
 
-                        $query = "SELECT * FROM `removes` WHERE `closed` <> 1 ORDER BY `create_time` DESC";
+                        $query = "SELECT r.*, s_c.name, s_w.name AS w_name FROM `removes` r 
+                        RIGHT JOIN `spr_clients` s_c 
+                        ON s_c.id = r.client  
+                        RIGHT JOIN `spr_workers` s_w
+                        ON s_w.id = r.create_person 
+                        WHERE r.closed <> 1 
+                        ORDER BY r.create_time DESC";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -48,7 +54,13 @@
 
                     }else {
 
-                        $query = "SELECT * FROM `removes` WHERE `create_person`='" . $_SESSION['id'] . "' AND `closed` <> 1 ORDER BY `create_time` DESC";
+                        $query = "SELECT r.*, s_c.name, s_w.name AS w_name FROM `removes` r 
+                        RIGHT JOIN `spr_clients` s_c 
+                        ON s_c.id = r.client  
+                        RIGHT JOIN `spr_workers` s_w
+                        ON s_w.id = r.create_person 
+                        WHERE r.cvreate_person='" . $_SESSION['id'] . "' AND r.closed <> 1 
+                        ORDER BY r.create_time DESC";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -57,7 +69,13 @@
                         //... Ко мне
                         //$removesMe = SelDataFromDB ('removes', $_SESSION['id'], 'whom');
 
-                        $query = "SELECT * FROM `removes` WHERE `whom`='" . $_SESSION['id'] . "' AND `closed` <> 1 ORDER BY `create_time` DESC";
+                        $query = "SELECT r.*, s_c.name, s_w.name AS w_name FROM `removes` r 
+                        RIGHT JOIN `spr_clients` s_c 
+                        ON s_c.id = r.client  
+                        RIGHT JOIN `spr_workers` s_w
+                        ON s_w.id = r.create_person 
+                        WHERE r.whom='" . $_SESSION['id'] . "' AND r.closed <> 1 
+                        ORDER BY r.create_time DESC";
 
                         $res2 = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 

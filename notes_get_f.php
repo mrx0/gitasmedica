@@ -35,11 +35,23 @@
 
 //                if (($stom['see_own'] == 1) && ($stom['see_all'] != 1) && !$god_mode){
                     //$notes = SelDataFromDB ('notes', $_SESSION['id'], 'create_person');
-                    $query = "SELECT * FROM `notes` WHERE `create_person`='".$_POST['worker_id']."' AND `closed` <> 1 ORDER BY `dead_line` DESC";
+                    $quey = "SELECT n.*, s_c.name, s_w.name AS w_name FROM `notes` n
+                    RIGHT JOIN `spr_clients` s_c 
+                    ON s_c.id = n.client  
+                    RIGHT JOIN `spr_workers` s_w
+                    ON s_w.id = n.create_person 
+                    WHERE n.create_person='".$_POST['worker_id']."' AND n.closed <> 1 
+                    ORDER BY n.dead_line DESC";
 
                     if ($_POST['worker_id'] == 0){
                         //$query = "SELECT * FROM `notes` WHERE `closed` <> 1 ORDER BY `dead_line` DESC";
-                        $query = "SELECT * FROM `notes`  WHERE (`dead_line` < ".time()." OR `dead_line` = ".time().") AND `closed` <> 1 ORDER BY `dead_line` DESC";
+                        $query = "SELECT n.*, s_c.name, s_w.name AS w_name FROM `notes` n
+                        RIGHT JOIN `spr_clients` s_c 
+                        ON s_c.id = n.client  
+                        RIGHT JOIN `spr_workers` s_w
+                        ON s_w.id = n.create_person 
+                        WHERE (n.dead_line < ".time()." OR n.dead_line = ".time().") AND n.closed <> 1 
+                        ORDER BY n.dead_line DESC";
                     }
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -63,6 +75,7 @@
                         array_push($notes, $arr);
                     }
                 }
+//                var_dump($notes);
 
                 if (!empty($notes)){
 

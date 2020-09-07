@@ -3621,7 +3621,7 @@
                     <li class="cellsBlock cellsBlockHover">
                         <div class="cellPriority" style="background-color:'.$priority_color.'"></div>
                         <div class="cellTime" style="text-align: center; background-color: '.$for_notes_colors[$notes[$i]['description']].'">'.date('d.m.y H:i', $notes[$i]['dead_line']).'</div>
-                        <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients', $notes[$i]['client'], 'user', true).'</div>
+                        <a href="client.php?id='.$notes[$i]['client'].'" class="ahref cellName" style="text-align: center">'.$notes[$i]['name'].'</a>
                         <a href="task_stomat_inspection.php?id='.$notes[$i]['task'].'" class="ahref cellName" style="text-align: center" target="_blank" rel="nofollow noopener">#'.$notes[$i]['task'].'</a>
                         <div class="cellText" style="'.$background_style.'">'.$for_notes[$notes[$i]['description']].'</div>';
                 if ($option) {
@@ -3641,7 +3641,7 @@
                 }
                 $rez .= ' 
                         <div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $notes[$i]['create_time']).'</div>
-                        <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$notes[$i]['create_person'], 'user', false).'</div>
+                        <a href="user.php?id='.$notes[$i]['create_person'].'" class="ahref cellName" style="text-align: center" target="_blank" rel="nofollow noopener">'.$notes[$i]['w_name'].'</a>
                         <div class="cellTime" style="text-align: center; '.$background_style2.'">'.$ended.'</div>
                     </li>';
             }
@@ -3741,7 +3741,7 @@
                 $rez .= '
                         <li class="cellsBlock cellsBlockHover">
                             <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removes[$i]['whom'], 'user', false).'</div>
-                            <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients',$removes[$i]['client'], 'user', false).'</div>
+                            <a href="client.php?id='.$removes[$i]['client'].'" class="ahref cellName" style="text-align: center" target="_blank" rel="nofollow noopener">'.$removes[$i]['name'].'</a>
                             <a href="task_stomat_inspection.php?id='.$removes[$i]['task'].'" class="ahref cellName" style="text-align: center" target="_blank" rel="nofollow noopener">#'.$removes[$i]['task'].'</a>
                             <div class="cellText" style="'.$background_style.'">'.$removes[$i]['description'].'</div>';
                 if ($option) {
@@ -3754,7 +3754,7 @@
                 }
                 $rez .= '
                             <div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $removes[$i]['create_time']).'</div>
-                            <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_workers',$removes[$i]['create_person'], 'user', true).'</div>
+                            <a href="user.php?id='.$removes[$i]['create_person'].'" class="ahref cellName" style="text-align: center" target="_blank" rel="nofollow noopener">'.$removes[$i]['w_name'].'</a>
                             <div class="cellTime" style="text-align: center; '.$background_style2.'">'.$ended.'</div>
                         </li>';
             }

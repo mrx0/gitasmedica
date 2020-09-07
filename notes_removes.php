@@ -8,7 +8,7 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 
-        if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
+        if (($_SESSION['permissions'] == 1) || ($_SESSION['permissions'] == 2) || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9) || ($_SESSION['permissions'] == 12) || ($_SESSION['permissions'] == 11) || $god_mode){
 
             require 'variables.php';
 
@@ -45,9 +45,9 @@
 
                     $(document).ready(function() {
                         getNotesfunc (0);
-                        setTimeout(function () {
+                        //setTimeout(function () {
                             getRemovesfunc (0);					        
-        				}, 10000);
+        				//}, 10000);
 				    });
 
  				</script> 
