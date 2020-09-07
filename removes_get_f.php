@@ -59,7 +59,7 @@
                         ON s_c.id = r.client  
                         RIGHT JOIN `spr_workers` s_w
                         ON s_w.id = r.create_person 
-                        WHERE r.cvreate_person='" . $_SESSION['id'] . "' AND r.closed <> 1 
+                        WHERE r.create_person='" . $_SESSION['id'] . "' AND r.closed <> 1 
                         ORDER BY r.create_time DESC";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -90,7 +90,7 @@
 //                        //... Ко мне
 //                        //$removesMe = SelDataFromDB ('removes',  $_POST['worker_id'], 'whom');
 //
-//                        //... Все не закрытые
+//                        //... Все незакрытые
 //                        $query = "SELECT * FROM `removes` WHERE `closed` <> 1 ORDER BY `create_time` DESC";
 //
 //                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);

@@ -3625,7 +3625,7 @@
                         <a href="task_stomat_inspection.php?id='.$notes[$i]['task'].'" class="ahref cellName" style="text-align: center" target="_blank" rel="nofollow noopener">#'.$notes[$i]['task'].'</a>
                         <div class="cellText" style="'.$background_style.'">'.$for_notes[$notes[$i]['description']].'</div>';
                 if ($option) {
-					if (($_SESSION['id'] == $notes[$i]['create_person']) || ($finances['see_all'] == 1)) {
+					if (($_SESSION['id'] == $notes[$i]['create_person']) || ($_SESSION['permissions'] == 3)) {
 						$rez .= '
                         <div class="cellTime Change_notes_stomat" style="text-align: center;">';
 
@@ -3745,7 +3745,7 @@
                             <a href="task_stomat_inspection.php?id='.$removes[$i]['task'].'" class="ahref cellName" style="text-align: center" target="_blank" rel="nofollow noopener">#'.$removes[$i]['task'].'</a>
                             <div class="cellText" style="'.$background_style.'">'.$removes[$i]['description'].'</div>';
                 if ($option) {
-                    if (($_SESSION['id'] == $removes[$i]['create_person']) || ($_SESSION['id'] == $removes[$i]['whom']) || ($finances['see_all'] == 1)) {
+                    if (($_SESSION['id'] == $removes[$i]['create_person']) || ($_SESSION['id'] == $removes[$i]['whom']) || ($_SESSION['permissions'] == 3)) {
                         $rez .= '
                             <div class="cellTime" style="text-align: center">
 							    <a href="#" id="Close_removes_stomat" onclick="Close_removes_stomat(' . $removes[$i]['id'] . ', ' . $worker_id . ')">закр.</a>

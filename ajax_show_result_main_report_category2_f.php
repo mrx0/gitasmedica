@@ -506,7 +506,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                     Сумма по закрытым работам: <b>' . number_format($closed_summ, 0, ',', ' ') . ' руб.</b>
                                 </div>-->
                                 <!--<div style="padding: 2px 4px;">
-                                    Сумма по не закрытым работам: <b>' . number_format($opened_summ, 0, ',', ' ') . ' руб.</b>
+                                    Сумма по незакрытым работам: <b>' . number_format($opened_summ, 0, ',', ' ') . ' руб.</b>
                                 </div>-->';
 
 

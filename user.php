@@ -238,7 +238,7 @@
             echo '
                         <div id="tabs_w" style="font-family: Verdana, Calibri, Arial, sans-serif; font-size: 100% !important;">';
             if (($_SESSION['permissions'] == 1) || ($_SESSION['permissions'] == 2) || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9) || ($_SESSION['permissions'] == 12) || ($_SESSION['permissions'] == 11) || $god_mode){
-                echo '<a href="notes_removes.php" class="b ahref">Все не закрытые</a>';
+                echo '<a href="notes_removes.php" class="b ahref">Все незакрытые</a>';
             }
             echo '                
                             <ul>
