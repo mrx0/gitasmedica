@@ -3620,7 +3620,7 @@
                 $rez .= '
                     <li class="cellsBlock cellsBlockHover">
                         <div class="cellPriority" style="background-color:'.$priority_color.'"></div>
-                        <div class="cellTime" style="text-align: center">'.date('d.m.y H:i', $notes[$i]['dead_line']).'</div>
+                        <div class="cellTime" style="text-align: center; background-color: '.$for_notes_colors[$notes[$i]['description']].'">'.date('d.m.y H:i', $notes[$i]['dead_line']).'</div>
                         <div class="cellName" style="text-align: center">'.WriteSearchUser('spr_clients', $notes[$i]['client'], 'user', true).'</div>
                         <a href="task_stomat_inspection.php?id='.$notes[$i]['task'].'" class="ahref cellName" style="text-align: center" target="_blank" rel="nofollow noopener">#'.$notes[$i]['task'].'</a>
                         <div class="cellText" style="'.$background_style.'">'.$for_notes[$notes[$i]['description']].'</div>';
