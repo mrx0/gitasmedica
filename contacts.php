@@ -207,8 +207,10 @@
 									
 									<div class="cellText" style="'.$bgColor.'">'.$contacts[$i]['contacts'].'</div>
 									<div class="cellName" style="text-align: center; '.$bgColor.'">'.$contacts[$i]['login'].'</div>';
-							if (($workers['see_own'] == 1) &&
-							(($contacts[$i]['permissions'] == 4) || ($contacts[$i]['permissions'] == 5) ||  ($contacts[$i]['permissions'] == 6) ||  ($contacts[$i]['permissions'] == 7) ||  ($contacts[$i]['permissions'] == 9)) || $god_mode){
+							if (($contacts[$i]['id'] == $_SESSION['id']) || ($workers['see_own'] == 1) &&
+							(($contacts[$i]['permissions'] == 4) || ($contacts[$i]['permissions'] == 5) ||  ($contacts[$i]['permissions'] == 6) ||  ($contacts[$i]['permissions'] == 7) || ($contacts[$i]['permissions'] == 10) || ($contacts[$i]['permissions'] == 11) || ($contacts[$i]['permissions'] == 13) || ($contacts[$i]['permissions'] == 14) || ($contacts[$i]['permissions'] == 15))
+                            || $god_mode
+                            || ($_SESSION['permissions'] == 3)){
 								echo '
 										<div class="cellName" style="text-align: center; '.$bgColor.'">
 											<div style="display:inline-block;">'.$contacts[$i]['password'].'</div> <div style="color: red; display: inline-block; cursor: pointer;" title="Сменить пароль" onclick=changePass('.$contacts[$i]['id'].')><i class="fa fa-key" aria-hidden="true"></i></div>
