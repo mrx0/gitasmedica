@@ -149,7 +149,7 @@ ORDER BY `name`;
                         </header>';
 
                 echo '<div style="margin-top: 7px; font-size: 70%; color: #777;">
-                <a href="test_print2.php?client_id=' . $client_j[0]['id'] . '" class="ahref b2 no_print"  target="_blank" rel="nofollow noopener">Мед.карта стом.(тест) </a>
+                <a href="test_print2.php?client_id=' . $client_j[0]['id'] . '" class="ahref b2 no_print" target="_blank" rel="nofollow noopener">Мед.карта стом.(тест) </a>
                 </div>';
 
 				echo '
@@ -1366,10 +1366,10 @@ ORDER BY `name`;
                             if (!empty($notes) || ($removes != 0)) {
                                 echo 'Особые отметки<br>';
 
-                                echo WriteNotes($notes, 0, true);
+                                echo WriteNotes($notes, 0, true, $finances);
 
                                 if ($removes != 0){
-                                    echo WriteRemoves($removes, 0, 0, false);
+                                    echo WriteRemoves($removes, 0, 0, false, $finances);
                                 }
 
                             }

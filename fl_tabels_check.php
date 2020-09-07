@@ -159,7 +159,7 @@
 						
 						<h2>Проверка табелей</h2>
 						
-						<span style="font-size: 85%; color: #7D7D7D;">Отображаются только <span style="color: red;">не закрытые (не выплаченные до конца, не проведёные)</span> табели.</span>
+						<span style="font-size: 85%; color: #7D7D7D;">Отображаются только <span style="color: red;">незакрытые (не выплаченные до конца, не проведёные)</span> табели.</span>
 					</header>';
 			echo '
 					</div>';
