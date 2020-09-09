@@ -265,8 +265,8 @@
                     if (!isset($schedulerFaktOther[$arr['worker']][$arr['day']])) {
                         $schedulerFaktOther[$arr['worker']][$arr['day']] = array();
                     }
-                    //array_push($schedulerFakt[$arr['worker']][$arr['day']], $arr);
-                    $schedulerFaktOther[$arr['worker']][$arr['day']] = $arr['filial'];
+                    array_push($schedulerFaktOther[$arr['worker']][$arr['day']], $arr['filial']);
+                    //$schedulerFaktOther[$arr['worker']][$arr['day']] = $arr['filial'];
                 }
             }
 			//var_dump($query);
@@ -644,7 +644,11 @@
                         if (isset($schedulerFaktOther[$worker_data['id']])){
                             if (isset($schedulerFaktOther[$worker_data['id']][$i])){
 
-                                $title = $filials_j[$schedulerFaktOther[$worker_data['id']][$i]]['name'];
+                                //$title = $filials_j[$schedulerFaktOther[$worker_data['id']][$i]]['name'];
+                                foreach ($schedulerFaktOther[$worker_data['id']][$i] as $item){
+                                    //var_dump($item);
+                                    $title .= ' ['.$filials_j[$item]['name'].'] ';
+                                }
 
                                 if (!$worker_is_here) {
 
@@ -697,8 +701,19 @@
                             //Сумма часов только на всех филиалах
                             if (isset($hours_j[$worker_data['id']][$ii])) {
                                 if (array_sum($hours_j[$worker_data['id']][$ii]) > 0) {
+                                    //Если часов больше 12
+                                    $mark_error = '';
+
+                                    if (array_sum($hours_j[$worker_data['id']][$ii]) > 12){
+                                        $mark_error = "color: red; font-weight: bold;";
+                                    }
+                                    //Если несколько записей с часами в одном филиале
+                                    if (isset($hours_errors[$worker_data['id']][$ii])){
+                                        $mark_error = "color: red; font-weight: bold;";
+                                    }
+
                                     if (($_SESSION['id'] == $worker_data['id']) || ($scheduler['see_all'] == 1) || $god_mode) {
-                                        $hours = '<div id="" class="dayHours_' . $worker_data['id'] . '">' . array_sum($hours_j[$worker_data['id']][$ii]) . '</div>';
+                                        $hours = '<div id="" class="dayHours_' . $worker_data['id'] . '" style="'.$mark_error.'">' . array_sum($hours_j[$worker_data['id']][$ii]) . '</div>';
                                     } else {
                                         if ((date('d') == '28') || (date('d') == '29') || (date('d') == '30') || (date('d') == '31') || (date('d') == '01') || (date('d') == '02') || (date('d') == '03')) {
                                             $hours = '<i class="fa fa-plus-circle" style="color: rgb(72, 141, 16); font-size: 150%; text-shadow: 1px 1px 1px #999;"></i><div id="" class="dayHours_' . $worker_data['id'] . '" style="display: none;">' . array_sum($hours_j[$worker_data['id']][$ii]) . '</div>';
