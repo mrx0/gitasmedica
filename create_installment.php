@@ -200,7 +200,7 @@
                                         <div style="display: block; margin: 5px; border-bottom: 1px dotted #C5C5EC; '.$color.'">
                                             <input name="invoice4installment" value="'.$data['id'].'" type="radio" installment_summ="'.($data['summ'] - $data['paid']).'" '.$disabled.'><b> #'.$data['id'].'</b> - Осталось внести: <span class="calculateInvoice">'.($data['summ'] - $data['paid']).'</span> руб.';
                             if (array_key_exists($data['id'], $exist_installments_j)){
-                                echo '<br><span style="color: rgb(243, 0, 0); font-size: 80%;">рассрочка на этот наряд уже открыта</span>';
+                                echo '<br><span style="color: rgb(243, 0, 0); font-size: 80%;">рассрочка на этот наряд открыта</span>';
                             }
 
                             echo '
