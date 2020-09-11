@@ -417,19 +417,19 @@
                                     //Костыль для категории 7 (ассистенты)
                                     //Если не ассистенты
                                     if (!in_array($data['percent_cats'], [58, 59, 61, 62])) {
-                                        if (!isset($rezult_arr[$type]['data'][$data['percent_cats']])) {
-                                            $rezult_arr[$type]['data'][$data['percent_cats']] = 0;
-                                        }
-                                        $rezult_arr[$type]['data'][$data['percent_cats']] += $data['itog_price'];
+//                                        if (!isset($rezult_arr[$type]['data'][$data['percent_cats']])) {
+//                                            $rezult_arr[$type]['data'][$data['percent_cats']] = 0;
+//                                        }
+//                                        $rezult_arr[$type]['data'][$data['percent_cats']] += $data['itog_price'];
+//
+//                                        //Соберем общие суммы по категориям
+//                                        if (!isset($rezult_arr_summ[$type])) {
+//                                            $rezult_arr_summ[$type] = 0;
+//                                        }
+//                                        $rezult_arr_summ[$type] += $data['itog_price'];
 
-                                        //Соберем общие суммы по категориям
-                                        if (!isset($rezult_arr_summ[$type])) {
-                                            $rezult_arr_summ[$type] = 0;
-                                        }
-                                        $rezult_arr_summ[$type] += $data['itog_price'];
-                                    }
-//                                    } else {
-//                                        //Если ассистенты (позиция, которая используется только для ассистов (кт, орто))
+                                    } else {
+                                        //Если ассистенты (позиция, которая используется только для ассистов (кт, орто))
 //                                        if (!isset($rezult_arr[7]['data'][$data['percent_cats']])) {
 //                                            $rezult_arr[7]['data'][$data['percent_cats']] = 0;
 //                                        }
@@ -440,7 +440,7 @@
 //                                            $rezult_arr_summ[7] = 0;
 //                                        }
 //                                        $rezult_arr_summ[7] += $data['itog_price'];
-//                                    }
+                                    }
                                 }
                                 //}
                             }
