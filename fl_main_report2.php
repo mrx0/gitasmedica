@@ -1023,6 +1023,7 @@
                             arsort($rezult_arr[7]['data']);
 
                             var_dump($rezult_arr[7]['data']);
+                            var_dump($percents_j);
 
                             foreach ($rezult_arr[7]['data'] as $percent_cat_id => $value) {
 
