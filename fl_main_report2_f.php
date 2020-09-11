@@ -430,23 +430,23 @@
 
                                     } else {
                                         //Если ассистенты (позиция, которая используется только для ассистов (кт, орто))
-//                                        if (!isset($rezult_arr[7]['data'][$data['percent_cats']])) {
-//                                            $rezult_arr[7]['data'][$data['percent_cats']] = 0;
-//                                        }
-//                                        $rezult_arr[7]['data'][$data['percent_cats']] += $data['itog_price'];
-//
-//                                        //Соберем общие суммы по категориям
-//                                        if (!isset($rezult_arr_summ[7])) {
-//                                            $rezult_arr_summ[7] = 0;
-//                                        }
-//                                        $rezult_arr_summ[7] += $data['itog_price'];
+                                        if (!isset($rezult_arr[7]['data'][$data['percent_cats']])) {
+                                            $rezult_arr[7]['data'][$data['percent_cats']] = 0;
+                                        }
+                                        $rezult_arr[7]['data'][$data['percent_cats']] += $data['itog_price'];
+
+                                        //Соберем общие суммы по категориям
+                                        if (!isset($rezult_arr_summ[7])) {
+                                            $rezult_arr_summ[7] = 0;
+                                        }
+                                        $rezult_arr_summ[7] += $data['itog_price'];
                                     }
                                 }
                                 //}
                             }
                         }
-                        //////f (isset($percents_j[7][$percent_cat_id])) {
-//                        var_dump( $rezult_arr_summ);
+
+                        //var_dump( $rezult_arr_summ);
 
                         //Детство отдельно добавим
                         if ($type == 5) {
