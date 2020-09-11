@@ -434,7 +434,7 @@
 
                                         //Если что-то пошло не так
                                         if ($type == 7){
-                                            if (in_array($invoice_id, $error_invoices)) {
+                                            if (!in_array($invoice_id, $error_invoices)) {
                                                 array_push($error_invoices, $invoice_id);
                                             }
                                         }
