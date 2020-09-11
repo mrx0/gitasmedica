@@ -27,10 +27,13 @@
 
         $msql_cnnct = ConnectToDB();
 
+        //Массив с нарядами с ошибками
+        $error_invoices = array();
+
         //Соберём все категории процентов (справочник)
         // по типу
         $percents_j = array();
-        // по id
+        // по id (не используется)
         $percents_j2 = array();
 
         $query = "SELECT `id`, `name`, `type` FROM  `fl_spr_percents`";
@@ -417,6 +420,7 @@
                                     //Костыль для категории 7 (ассистенты)
                                     //Если не ассистенты
                                     if (!in_array($data['percent_cats'], [58, 59, 61, 62])) {
+
                                         if (!isset($rezult_arr[$type]['data'][$data['percent_cats']])) {
                                             $rezult_arr[$type]['data'][$data['percent_cats']] = 0;
                                         }
@@ -428,6 +432,15 @@
                                         }
                                         $rezult_arr_summ[$type] += $data['itog_price'];
 
+                                        //Если что-то пошло не так
+                                        if ($type == 7){
+                                            if (!isset($percents_j[$type][$data['percent_cats']])){
+                                                if (!in_array($invoice_id, $error_invoices)) {
+                                                    array_push($error_invoices, $invoice_id);
+                                                }
+                                            }
+                                        }
+                                        //if (isset($percents_j[7][$percent_cat_id])) {
                                     } else {
                                         //Если ассистенты (позиция, которая используется только для ассистов (кт, орто))
                                         if (!isset($rezult_arr[7]['data'][$data['percent_cats']])) {
@@ -445,6 +458,7 @@
                                 //}
                             }
                         }
+
                         //var_dump( $rezult_arr_summ);
 
                         //Детство отдельно добавим
@@ -878,6 +892,7 @@
             'zapis_j' => $zapis_j,
             'pervich_summ_arr_new' => $pervich_summ_arr_new,
             'salary_debt_summ' => $salary_debt_summ,
+            'error_invoices' => $error_invoices,
         );
 
         return $result;

@@ -104,6 +104,16 @@
             $zapis_j = $datas['zapis_j'];
             $pervich_summ_arr_new = $datas['pervich_summ_arr_new'];
 
+            //var_dump($datas['error_invoices']);
+            if (!empty($datas['error_invoices'])){
+                echo '<div class="query_neok" style="padding: 10px 4px 2px; margin-left: 10px; width: 50vw;">Наряды с ошибками в категориях (анализы):';
+
+                for($i=0; $i < count($datas['error_invoices']); $i++){
+                    echo '<a href="invoice.php?id='.$datas['error_invoices'][$i].'" class="ahref button_tiny" style="margin: 0 3px;" target="_blank" rel="nofollow noopener">#'.$datas['error_invoices'][$i].'</a>';
+                }
+                echo '</div>';
+            }
+
 
             //Расходы на материалы внесённые вручную
             $db = new DB();
@@ -1022,7 +1032,8 @@
                         if (!empty($rezult_arr[7]['data'])) {
                             arsort($rezult_arr[7]['data']);
 
-                            //var_dump($rezult_arr[7]['data']);
+//                            var_dump($rezult_arr[7]['data']);
+//                            var_dump($percents_j);
 
                             foreach ($rezult_arr[7]['data'] as $percent_cat_id => $value) {
 
