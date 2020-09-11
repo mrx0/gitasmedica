@@ -206,7 +206,7 @@
 
                 echo '
                                 </select>';
-               echo '
+                echo '
                                 <input type="checkbox" name="material_costs_show" id="material_costs_show" value="1"> <span style="font-size:80%;">Показать расходы на материалы</span>
                             </div>';
 
@@ -872,8 +872,14 @@
 
                     echo '
                             </div>
+                            <div class="cellRight material_costs" id="material_costs_summ_5" style="display: none !important">
+                            </div>
                         </li>';
                 }
+
+                $material_costs_summ_5 = 0;
+                $material_costs_summ_6 = 0;
+                $material_costs_summ_10 = 0;
 
 
                 if (isset($rezult_arr[5])) {
@@ -908,6 +914,7 @@
                                         <div class="cellRight material_costs" style="display: none !important">';
                                     if (isset($material_costs[$percent_cat_id])){
                                         echo $material_costs[$percent_cat_id]['summ'].' / '.number_format(($material_costs[$percent_cat_id]['summ'] * 100 / $stom_summ_temp), 2, '.', ' ').'%';
+                                        $material_costs_summ_5 += $material_costs[$percent_cat_id]['summ'];
                                     }else{
                                         echo '0 / 0%';
                                     }
@@ -1123,6 +1130,7 @@
                                     <div class="cellRight material_costs" style="display: none !important">';
                                     if (isset($material_costs[$percent_cat_id])){
                                         echo $material_costs[$percent_cat_id]['summ'].' / '.number_format(($material_costs[$percent_cat_id]['summ'] * 100 / $stom_summ_temp), 2, '.', ' ').'%';
+                                        $material_costs_summ_6 += $material_costs[$percent_cat_id]['summ'];
                                     }else{
                                         echo '0 / 0%';
                                     }
@@ -1263,6 +1271,7 @@
                                     <div class="cellRight material_costs" style="display: none !important">';
                                     if (isset($material_costs[$percent_cat_id])){
                                         echo $material_costs[$percent_cat_id]['summ'].' / '.number_format(($material_costs[$percent_cat_id]['summ'] * 100 / $stom_summ_temp), 2, '.', ' ').'%';
+                                        $material_costs_summ_10 += $material_costs[$percent_cat_id]['summ'];
                                     }else{
                                         echo '0 / 0%';
                                     }
@@ -1542,6 +1551,11 @@
             echo '	
 			    <!-- Подложка только одна -->
 			    <div id="overlay"></div>';
+
+            var_dump($material_costs_summ_5);
+            var_dump($material_costs_summ_6);
+            var_dump($material_costs_summ_10);
+
 			echo '
 
 				<script type="text/javascript">
