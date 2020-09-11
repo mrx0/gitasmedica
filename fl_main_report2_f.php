@@ -27,6 +27,9 @@
 
         $msql_cnnct = ConnectToDB();
 
+        //Массив с нарядами с ошибками
+        $error_invoices = array();
+
         //Соберём все категории процентов (справочник)
         // по типу
         $percents_j = array();
@@ -417,17 +420,23 @@
                                     //Костыль для категории 7 (ассистенты)
                                     //Если не ассистенты
                                     if (!in_array($data['percent_cats'], [58, 59, 61, 62])) {
-//                                        if (!isset($rezult_arr[$type]['data'][$data['percent_cats']])) {
-//                                            $rezult_arr[$type]['data'][$data['percent_cats']] = 0;
-//                                        }
-//                                        $rezult_arr[$type]['data'][$data['percent_cats']] += $data['itog_price'];
-//
-//                                        //Соберем общие суммы по категориям
-//                                        if (!isset($rezult_arr_summ[$type])) {
-//                                            $rezult_arr_summ[$type] = 0;
-//                                        }
-//                                        $rezult_arr_summ[$type] += $data['itog_price'];
 
+                                        if (!isset($rezult_arr[$type]['data'][$data['percent_cats']])) {
+                                            $rezult_arr[$type]['data'][$data['percent_cats']] = 0;
+                                        }
+                                        $rezult_arr[$type]['data'][$data['percent_cats']] += $data['itog_price'];
+
+                                        //Соберем общие суммы по категориям
+                                        if (!isset($rezult_arr_summ[$type])) {
+                                            $rezult_arr_summ[$type] = 0;
+                                        }
+                                        $rezult_arr_summ[$type] += $data['itog_price'];
+
+                                        //Если что-то пошло не так
+                                        if ($type == 7){
+                                            array_push($error_invoices, $invoice_id);
+                                        }
+                                        //if (isset($percents_j[7][$percent_cat_id])) {
                                     } else {
                                         //Если ассистенты (позиция, которая используется только для ассистов (кт, орто))
                                         if (!isset($rezult_arr[7]['data'][$data['percent_cats']])) {
@@ -879,6 +888,7 @@
             'zapis_j' => $zapis_j,
             'pervich_summ_arr_new' => $pervich_summ_arr_new,
             'salary_debt_summ' => $salary_debt_summ,
+            'error_invoices' => $error_invoices,
         );
 
         return $result;

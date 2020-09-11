@@ -104,6 +104,8 @@
             $zapis_j = $datas['zapis_j'];
             $pervich_summ_arr_new = $datas['pervich_summ_arr_new'];
 
+            var_dump($datas['error_invoices']);
+
 
             //Расходы на материалы внесённые вручную
             $db = new DB();
