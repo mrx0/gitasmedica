@@ -1103,6 +1103,8 @@
                     }
                     echo '
                             </div>
+                            <div class="cellRight material_costs" id="material_costs_summ_6" style="display: none !important">
+                            </div>
                         </li>';
                 }
 
@@ -1244,6 +1246,8 @@
                         echo 'нет данных';
                     }
                     echo '
+                            </div>
+                            <div class="cellRight material_costs" id="material_costs_summ_10" style="display: none !important">
                             </div>
                         </li>';
                 }
@@ -1552,9 +1556,9 @@
 			    <!-- Подложка только одна -->
 			    <div id="overlay"></div>';
 
-            var_dump($material_costs_summ_5);
-            var_dump($material_costs_summ_6);
-            var_dump($material_costs_summ_10);
+//            var_dump($material_costs_summ_5);
+//            var_dump($material_costs_summ_6);
+//            var_dump($material_costs_summ_10);
 
 			echo '
 
@@ -1751,6 +1755,10 @@
                     $("#material_costs_show").click(function() {
                         
 					    let checked_status = $(this).is(":checked");
+					    
+					    $("#material_costs_summ_5").html('.$material_costs_summ_5.');
+					    $("#material_costs_summ_6").html('.$material_costs_summ_6.');
+					    $("#material_costs_summ_10").html('.$material_costs_summ_10.');
 					    
 					    if (checked_status){
 					        //console.log(checked_status);
