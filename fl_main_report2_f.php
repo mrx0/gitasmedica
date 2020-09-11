@@ -30,7 +30,7 @@
         //Соберём все категории процентов (справочник)
         // по типу
         $percents_j = array();
-        // по id
+        // по id (не используется)
         $percents_j2 = array();
 
         $query = "SELECT `id`, `name`, `type` FROM  `fl_spr_percents`";
@@ -445,7 +445,8 @@
                                 //}
                             }
                         }
-                        //var_dump( $rezult_arr_summ);
+                        //////f (isset($percents_j[7][$percent_cat_id])) {
+                        var_dump( $rezult_arr_summ);
 
                         //Детство отдельно добавим
                         if ($type == 5) {
