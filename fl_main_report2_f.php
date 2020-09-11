@@ -434,8 +434,10 @@
 
                                         //Если что-то пошло не так
                                         if ($type == 7){
-                                            if (!in_array($invoice_id, $error_invoices)) {
-                                                array_push($error_invoices, $invoice_id);
+                                            if (!isset($percents_j[$type][$data['percent_cats']])){
+                                                if (!in_array($invoice_id, $error_invoices)) {
+                                                    array_push($error_invoices, $invoice_id);
+                                                }
                                             }
                                         }
                                         //if (isset($percents_j[7][$percent_cat_id])) {
