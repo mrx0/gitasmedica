@@ -1567,9 +1567,9 @@
 //            var_dump($material_costs_summ_6);
 //            var_dump($material_costs_summ_10);
 
-            var_dump($material_costs_summ_p_5);
-            var_dump($material_costs_summ_p_6);
-            var_dump($material_costs_summ_p_10);
+//            var_dump($material_costs_summ_p_5);
+//            var_dump($material_costs_summ_p_6);
+//            var_dump($material_costs_summ_p_10);
 
 			echo '
 
@@ -1767,9 +1767,10 @@
                         
 					    let checked_status = $(this).is(":checked");
 					    
-					    $("#material_costs_summ_5").html('.$material_costs_summ_5.');
-					    $("#material_costs_summ_6").html('.$material_costs_summ_6.');
-					    $("#material_costs_summ_10").html('.$material_costs_summ_10.');
+					    $("#material_costs_summ_5").html('.$material_costs_summ_5.' + " / " + '.number_format($material_costs_summ_p_5, 2, '.', "").' + "%");
+					    $("#material_costs_summ_6").html('.$material_costs_summ_6.' + " / " + '.number_format($material_costs_summ_p_6, 2, '.', "").' + "%");
+					    $("#material_costs_summ_10").html('.$material_costs_summ_10.' + " / " + '.number_format($material_costs_summ_p_10, 2, '.', "").' + "%");
+
 					    
 					    if (checked_status){
 					        //console.log(checked_status);
