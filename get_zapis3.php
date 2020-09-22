@@ -7,7 +7,6 @@
 
 	if ($_POST){
         if (isset($_POST['type'])){
-            //$_POST['type'] = 5;
 
             $rezult = '';
             $rezult_arr = array();
@@ -18,20 +17,8 @@
 
             $msql_cnnct = ConnectToDB();
 
-            //if ($_POST['type'] == 5) {
-                $URL = $URL_server_4zapis;
-                $last_id_zapis_option = 'last_id_zapis_asstom';
-            //}
-
-            //if ($_POST['type'] == 6) {
-                //$URL = 'https://www.asstom.ru/zapis_giveitotome.php?';
-                //$last_id_zapis_option = 'last_id_zapis_ascosm';
-            //}
-
-            //if ($_POST['type'] == 10) {
-                //$URL = 'https://www.asstom.ru/zapis_giveitotome.php?';
-                //$last_id_zapis_option = 'last_id_zapis_assmed';
-            //}
+            $URL = $URL_server_4zapis;
+            $last_id_zapis_option = 'last_id_zapis_asstom';
 
             $arr = array();
 
@@ -62,7 +49,7 @@
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
 
-                curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 2);
                 curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
 
                 $rezult = curl_exec($ch);
@@ -98,13 +85,6 @@
                 }
 
             }
-
-            //Выборка
-//            if (empty($_SESSION['filial'])){
-//                $query = "SELECT COUNT(*) AS total FROM `zapis_online` WHERE `status` <> '7' AND `status` <> '6' ";
-//            }else{
-//                $query = "SELECT COUNT(*) AS total FROM `zapis_online` WHERE `status` <> '7' AND `status` <> '6' AND `place` = '".$_SESSION['filial']."'";
-//            }
 
             $dop = '';
             if (isset($_SESSION['filial'])){

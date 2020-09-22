@@ -514,6 +514,19 @@
                     //}
                 }
 
+                //Для отметки о звонке
+                if ($_POST['mark'] == 'phone_call'){
+                    $data .= '
+                        <li><div onclick="showChangePnoneCallMark('.$_POST['ind'].', 8);"><i class="fa fa-phone-square" style="color: red; font-size: 120%;"></i> Не звонить</div></li>
+                        <li><div onclick="showChangePnoneCallMark('.$_POST['ind'].', 6);"><i class="fa fa-phone-square" style="color: orange; font-size: 120%;"></i> Не дозвонились</div></li>
+                        <li><div onclick="showChangePnoneCallMark('.$_POST['ind'].', 7);"><i class="fa fa-phone-square" style="color: blue; font-size: 120%;"></i> Записались</div></li>
+                        ';
+                    $data .= '
+                        <li>
+                            <a href="phone_calls.php?client_id='.$_POST['ind'].'" class="ahref"><div>История звонков</div></a>
+                        </li>';
+                }
+
 				echo json_encode(array('result' => 'success', 'data' => $data));
 
 			}
