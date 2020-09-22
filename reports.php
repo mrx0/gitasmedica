@@ -47,10 +47,10 @@
 								<a href="stat_stomat4.php" class="b3">Отсутствующие зубы</a>
 							</li>';
 
-			echo '				
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="stat_lab_order.php" class="b3">Лабораторные работы</a>
-							</li>';
+//			echo '
+//							<li class="cellsBlock" style="margin: 1px;">
+//								<a href="stat_lab_order.php" class="b3">Лабораторные работы</a>
+//							</li>';
 
 //            echo '
 //							<li class="cellsBlock" style="margin: 1px;">
@@ -95,6 +95,11 @@
             echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_add_clients.php" class="b3">Добавление пациентов</a>
+							</li>';
+
+            echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="phone_calls.php" class="b3">Статистика звонков</a>
 							</li>';
 
 			echo '

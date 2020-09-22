@@ -58,7 +58,7 @@
         document.location.href = "?"+get_data_str.slice(1);
 	}
 
-	//Сегодня дата
+	//Сегодняшняя дата (сегодня)
 	function getTodayDate (){
         var today = new Date();
         var dd = today.getDate();
@@ -440,6 +440,7 @@
 	//попытка показать контекстное меню
 	function contextMenuShow(ind, key, event, mark){
 		//console.log(event);
+		//console.log(ind);
 
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
@@ -13811,3 +13812,124 @@
         }
     }
 
+    //Показываем блок для добавления статуса звонка
+    function showChangePnoneCallMark(client_id, status){
+        // console.log(client_id);
+
+        // Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+        $('*').removeClass('selected-html-element');
+        // Удаляем предыдущие вызванное контекстное меню:
+        $('.context-menu').remove();
+
+        //Сегодняшняя дата
+        let today = getTodayDate();
+
+        let descr = 'Информация о звонке';
+        let descr2 = '';
+
+        //Отметка о телефонном звонке
+        if (status == 8) {
+            descr2 = '<i class="fa fa-phone-square" style="color: red; font-size: 120%;" title="Не звонить"></i> Не звонить';
+        }
+        if (status == 6) {
+            descr2 = '<i class="fa fa-phone-square" style="color: orange; font-size: 120%;" title="Не дозвонились"></i> Не дозвонились';
+        }
+        if (status == 7) {
+            descr2 = '<i class="fa fa-phone-square" style="color: blue; font-size: 120%;" title="Записались"></i> Записались';
+        }
+
+        let buttonsStr = '<input type="button" class="b" value="Ok" onclick="Ajax_changePnoneCallMark('+client_id+', '+status+');">';
+
+        $('#overlay').show();
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        })
+            .css({
+                "height": "300px"
+            })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative"
+                    })
+                    .append('<div style="margin: 5px;"><i>'+descr+'</i></div>')
+                    .append('<div style="margin: 5px;"><i>'+descr2+'</i></div>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-110px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%"
+                            })
+                            .append('<div style="margin-top: 40px;">Дата звонка <input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="color: rgb(30, 30, 30); font-size: 12px; border: 1px solid rgba(0,220,220,1);" value="'+today+'" onfocus="this.select();_Calendar.lcs(this)"'+
+                                ' onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off"></div>')
+                            .append('<div style="margin-top: 10px;"><span style="font-size:90%; color: #333; ">Введите комментарий</span><br>' +
+                                '<textarea name="phoneCallComment" id="phoneCallComment" cols="35" rows="5"></textarea></div>')
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "bottom": "2px",
+                                "width": "100%"
+                            })
+                            .append('<div id="existonCatItem" class="error"></div>')
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
+                            )
+                    )
+            );
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+    }
+
+    //Проверяем и добавляем приход
+    function Ajax_changePnoneCallMark(client_id, status){
+        //console.log(edit);
+
+        hideAllErrors();
+
+        //Добавляем
+        let link = "change_pnone_call_mark_f.php";
+
+        //Надо что-то передать
+        let reqData = {
+            client_id: client_id,
+            status: status,
+            call_time: $("#iWantThisDate2").val(),
+            comment: $("#phoneCallComment").val()
+        };
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res) {
+                // $('#errrror').html(res);
+                if (res.result == "success") {
+                    location.reload();
+                }
+            }
+        });
+
+
+    }

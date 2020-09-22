@@ -24,13 +24,13 @@
 
 $curl = curl_init();
 curl_setopt($curl, CURLOPT_COOKIESESSION, true);
-curl_setopt($curl, CURLOPT_COOKIEFILE, $cookies_file);
-curl_setopt($curl, CURLOPT_COOKIEJAR, $cookies_file);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+//curl_setopt($curl, CURLOPT_COOKIEFILE, realpath($cookies_file));
+curl_setopt($curl, CURLOPT_COOKIEJAR, realpath($cookies_file));
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true); //+
+curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true); //+
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-//curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; ru; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3');
+curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 6.0; ru; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3');
 curl_setopt($curl, CURLOPT_URL, $url);
 $html = curl_exec($curl);
 //print_r($html);
@@ -60,16 +60,33 @@ $post = [
 curl_setopt($curl, CURLOPT_URL, $url);
 curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($post));
 
-
-//Переходим на нужный url
-curl_setopt($curl, CURLOPT_URL, $urlTo);
-
-$result = curl_exec($curl);
-
-if (curl_errno($curl)) print curl_error($ch);
 curl_close($curl);
 
-print_r($result);
+//Переходим на нужный url
+//curl_setopt($curl, CURLOPT_URL, $urlTo);
+//
+//$result = curl_exec($curl);
+//
+//if (curl_errno($curl)) print curl_error($ch);
+//curl_close($curl);
+
+
+$c = curl_init($urlTo);
+
+//curl_setopt($c, CURLOPT_HTTPHEADER, array(
+//    'Content-Type: application/json',
+//    'Content-Length: ',
+//    'X-CSRF-Token:' .  $csrf
+//));
+
+//curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($c, CURLOPT_COOKIEFILE, realpath($cookies_file));
+$page = curl_exec($c);
+
+curl_close($c);
+
+
+print_r($page);
 
 ?>
 	
