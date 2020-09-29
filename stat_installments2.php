@@ -16,6 +16,8 @@
             /*!!!Тест PDO*/
             include_once('DBWorkPDO.php');
 
+            require 'variables.php';
+
 			include_once 'functions.php';
 			include_once 'filter.php';
 			include_once 'filter_f.php';
@@ -81,9 +83,9 @@
                                     <div class="cellFullName" style="text-align: center">
                                         Полное имя
                                     </div>
-                                    <div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">
+                                    <!--<div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">
                                         Наряд
-                                    </div>
+                                    </div>-->
                                     <div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">
                                         Долг
                                     </div>
@@ -107,7 +109,7 @@
                         echo '
                                     <div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">
                                     </div>
-                                    <div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">Доступно на счету</div>
+                                    <div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;"></div>
                                     <div class="cellText" style="text-align: center; border: 0;"></div>
 							    </li>';
 
@@ -137,18 +139,78 @@
                             echo '
                                 <li class="cellsBlock" style="font-weight:bold; width: 50vw; ">	
                                     
-                                    <div class="cellFullName" style="text-align: left">';
+                                    <div class="cellFullName" style="text-align: left; max-width: 250px;">';
 
                             echo '
                                         <div id="" style="width: 90%; margin-top: 10px; overflow-x: scroll; overflow-y: hidden; ">';
 
-                        foreach ($payment_data as $payment){
-                            echo '
-                                            <div style="display: table-cell; width: 83px; min-width: 83px; border: 1px solid #BFBCB5; background: #ff7777; padding: 10px;">
-                                                <div style="margin-bottom: 5px;">Апрель 2020</div>
-                                                <div>0</div>
-                                            </div>';
-                        }
+                            //Сформируем массив с суммами по месяцам
+                            $payments_month = array();
+
+                            foreach ($payment_data as $payment){
+                                if (!isset($payments_month[date('Y', strtotime($payment['payment_date']))])){
+                                    $payments_month[date('Y', strtotime($payment['payment_date']))] = array();
+                                }
+                                if (!isset($payments_month[date('Y', strtotime($payment['payment_date']))][date('m', strtotime($payment['payment_date']))])){
+                                    $payments_month[date('Y', strtotime($payment['payment_date']))][date('m', strtotime($payment['payment_date']))] = 0;
+                                }
+                                $payments_month[date('Y', strtotime($payment['payment_date']))][date('m', strtotime($payment['payment_date']))] += $payment['payment_summ'];
+                            }
+                            //var_dump($payments_month);
+                            //var_dump($payment_data);
+
+                            if ($payment_data[0]['date_in'] != date('Y-m-d', time())) {
+
+                                //вернуть все даты между двумя датами в массиве
+                                $period = new DatePeriod(
+                                    new DateTime($payment_data[0]['date_in']),
+                                    new DateInterval('P1M'),
+                                    new DateTime(date('Y-m-d', time()))
+                                );
+
+                            }else{
+                                $period[0] = new DateTime(date('Y-m-d', time()));
+                            }
+//                            $period = array_reverse($period, true);
+//                            var_dump($period);
+//                            var_dump(count($period));
+
+                            foreach ($period as $value) {
+//                                var_dump($value->format( "Y-m" ));
+//                                var_dump($value);
+
+                                $summ = 0;
+
+                                if(isset($payments_month[$value->format( "Y" )])){
+                                    if(isset($payments_month[$value->format( "Y" )][$value->format( "m" )])){
+                                        $summ = $payments_month[$value->format( "Y" )][$value->format( "m" )];
+                                    }
+                                }
+                                if ($summ > 0){
+                                    echo ' 
+                                    <div style="display: table-cell; width: 83px; min-width: 83px; border: 1px solid #BFBCB5; background: lawngreen; padding: 10px;">';
+                                }else{
+                                    echo '
+                                    <div style="display: table-cell; width: 83px; min-width: 83px; border: 1px solid #BFBCB5; background: #ff7777; padding: 10px;">';
+                                }
+
+                                echo '
+                                        <div style="margin-bottom: 5px; font-size: 80%;">'.$monthsName[$value->format( "m" )].' '.$value->format( "Y" ).'</div>
+                                        <div>'.$summ.'</div>
+                                    </div>';
+                            }
+
+
+
+
+
+//                            foreach ($payment_data as $payment){
+//                                echo '
+//                                            <div style="display: table-cell; width: 83px; min-width: 83px; border: 1px solid #BFBCB5; background: #ff7777; padding: 10px;">
+//                                                <div style="margin-bottom: 5px;">'.$monthsName[date('m', strtotime($payment['payment_date']))].'</div>
+//                                                <div>'.$payment['payment_summ'].'</div>
+//                                            </div>';
+//                         }
 
 
                             echo '

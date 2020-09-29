@@ -29,8 +29,17 @@
 
                 $db = new DB();
 
+                if ($_POST['status'] == 5) {
+                    $dop1 = '`recall_date`, ';
+                    $dop2 = ':recall_date, ';
+                }else{
+                    $dop1 = '';
+                    $dop2 = '';
+                }
+
                 //Вставить запись прихода в БД:
                 $query = "INSERT INTO `journal_phone_calling` (
+                $dop1
                 `client_id`,
                 `status`,
                 `call_time`,
@@ -39,6 +48,7 @@
                 `create_time`
                 )
                 VALUES (
+                $dop2                
                 :client_id,
                 :status,
                 :call_time,
@@ -55,6 +65,10 @@
                     'create_person' => $_SESSION['id'],
                     'create_time' => $time
                 ];
+
+                if ($_POST['status'] == 5) {
+                    $args['recall_date'] = date('Y-m-d', strtotime($_POST['recall_date'].''));
+                }
 
                 $db::sql($query, $args);
 

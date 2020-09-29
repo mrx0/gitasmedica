@@ -13826,6 +13826,7 @@
 
         let descr = 'Информация о звонке';
         let descr2 = '';
+        let whenRecall = '';
 
         //Отметка о телефонном звонке
         if (status == 8) {
@@ -13836,6 +13837,17 @@
         }
         if (status == 7) {
             descr2 = '<i class="fa fa-phone-square" style="color: blue; font-size: 120%;" title="Записались"></i> Записались';
+        }
+        if (status == 5) {
+            descr2 = '<i class="fa fa-phone-square" style="color: #b35bff; font-size: 120%;" title="Перезвонить"></i> Перезвонить';
+            whenRecall = '<div style="margin-top: 10px;">Дата, когда перезвонить <input type="text" id="recallDate" name="recallDate" class="dateс" style="color: rgb(30, 30, 30); font-size: 12px; border: 1px solid rgba(0,220,220,1);" value="'+today+'" onfocus="this.select();_Calendar.lcs(this)"'+
+                ' onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off"></div>'
+        }
+        if (status == 4) {
+            descr2 = '<i class="fa fa-phone-square" style="color: #93021e; font-size: 120%;" title="Записались"></i> Записались';
+        }
+        if (status == 3) {
+            descr2 = '<i class="fa fa-phone-square" style="color: #b1ffad; font-size: 120%;" title="Записались"></i> Записались';
         }
 
         let buttonsStr = '<input type="button" class="b" value="Ok" onclick="Ajax_changePnoneCallMark('+client_id+', '+status+');">';
@@ -13875,6 +13887,7 @@
                                 ' onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off"></div>')
                             .append('<div style="margin-top: 10px;"><span style="font-size:90%; color: #333; ">Введите комментарий</span><br>' +
                                 '<textarea name="phoneCallComment" id="phoneCallComment" cols="35" rows="5"></textarea></div>')
+                            .append(whenRecall)
                     )
                     .append(
                         $('<div/>')
@@ -13910,6 +13923,11 @@
             call_time: $("#iWantThisDate2").val(),
             comment: $("#phoneCallComment").val()
         };
+
+        if (status == 5){
+            reqData['recall_date'] = $("#recallDate").val()
+        }
+
         // console.log(reqData);
 
         $.ajax({
