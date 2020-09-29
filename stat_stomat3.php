@@ -1,7 +1,7 @@
 <?php
 
 //stat_stomat3.php
-//Выборка
+//!!!Выборка (какая-то, хз)
 
 	require_once 'header.php';
 	

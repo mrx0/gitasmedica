@@ -671,6 +671,7 @@
             $rezult .= '
                             <!--</div>-->
                             <div id="req"></div>';
+            //var_dump($rezult);
 
 
             return $rezult;
