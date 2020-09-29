@@ -88,7 +88,7 @@
             LEFT JOIN `spr_clients` s_c ON s_c.id = j_pc.client_id
             LEFT JOIN `spr_workers` s_w ON s_w.id = j_pc.create_person
             $dopQuery
-            ORDER BY j_pc.call_time DESC LIMIT {$limit_pos[0]}, {$limit_pos[1]}";
+            ORDER BY j_pc.call_time DESC, j_pc.create_time DESC  LIMIT {$limit_pos[0]}, {$limit_pos[1]}";
 
             //Выбрать все
             $calls_j = $db::getRows($query, $args);
@@ -126,6 +126,12 @@
                         $call_mark = '<i class="fa fa-phone-square" style="color: orange; font-size: 140%;" title="Не дозвонились"></i>';
                     }elseif ($calls_j[$i]['status'] == 7){
                         $call_mark = '<i class="fa fa-phone-square" style="color: blue; font-size: 140%;" title="Записались"></i>';
+					}elseif ($calls_j[$i]['status'] == 5){
+                        $call_mark = '<i class="fa fa-phone-square" style="color: #b35bff; font-size: 140%;" title="Перезвонить"></i>';
+					}elseif ($calls_j[$i]['status'] == 4){
+                        $call_mark = '<i class="fa fa-phone-square" style="color: #93021e; font-size: 140%;" title="Плохой отзыв"></i>';
+					}elseif ($calls_j[$i]['status'] == 3){
+                        $call_mark = '<i class="fa fa-phone-square" style="color: #b1ffad; font-size: 140%;" title="Хороший отзыв"></i>';
 					}else{
                         $call_mark = '<i class="fa fa-phone-square" style="color: #dcdcdc; font-size: 140%;" title="Нет отметки"></i>';
 					}
@@ -163,7 +169,14 @@
 
 					echo '
                                 </div>
-								<div class="cellText" style="text-align: left; font-size: 80%;">'.$calls_j[$i]['comment'].'</div>
+								<div class="cellText" style="text-align: left; font-size: 80%;">';
+
+                    if ($calls_j[$i]['status'] == 5){
+                        echo '<span style="/*color: red;*/">Перезвонить: '.date('d.m.Y', strtotime($calls_j[$i]['recall_date'])).'</span><br>';
+                    }
+					echo $calls_j[$i]['comment'];
+                    echo '
+                                </div>
                                 <div class="cellTime" style="font-size: 80%; text-align: center;">'.$calls_j[$i]['worker_name'].'</div>
                                 <div class="cellTime" style="font-size: 70%; text-align: center;">'.date('d.m.Y H:i', strtotime($calls_j[$i]['create_time'])).'</div>
 							</li>';

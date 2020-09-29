@@ -242,6 +242,12 @@ ORDER BY `name`;
                     echo '<i class="fa fa-phone-square" style="color: orange; font-size: 120%;" title="Не дозвонились"></i>';
                 }elseif ($client_j['call_status'] == 7) {
                     echo '<i class="fa fa-phone-square" style="color: blue; font-size: 120%;" title="Записались"></i>';
+                }elseif ($client_j['call_status'] == 5) {
+                    echo '<i class="fa fa-phone-square" style="color: #b35bff; font-size: 120%;" title="Перезвонить"></i>';
+                }elseif ($client_j['call_status'] == 4){
+                    echo '<i class="fa fa-phone-square" style="color: #93021e; font-size: 140%;" title="Плохой отзыв"></i>';
+                }elseif ($client_j['call_status'] == 3){
+                    echo '<i class="fa fa-phone-square" style="color: #b1ffad; font-size: 140%;" title="Хороший отзыв"></i>';
                 }else{
                     echo '<i class="fa fa-phone-square" style="color: #dcdcdc; font-size: 120%;" title="Нет отметки"></i>';
                 }
