@@ -1,7 +1,7 @@
 <?php
 
 //reports.php
-//
+//Отчёты
 
 	require_once 'header.php';
 	

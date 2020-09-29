@@ -1412,7 +1412,15 @@ ORDER BY `name`;
                                 'client_id' => $client_j['id']
                             ];
 
-                            $query = "SELECT * FROM `notes` WHERE `client`= :client_id ORDER BY `dead_line` ASC";
+                            //$query = "SELECT * FROM `notes` WHERE `client`= :client_id ORDER BY `dead_line` ASC";
+
+                            $query = "SELECT n.*, s_c.name, s_w.name AS w_name FROM `notes` n
+                            RIGHT JOIN `spr_clients` s_c 
+                            ON s_c.id = n.client  
+                            RIGHT JOIN `spr_workers` s_w
+                            ON s_w.id = n.create_person 
+                            WHERE n.client = :client_id
+                            ORDER BY n.dead_line DESC";
 
                             //Выбрать все
                             $notes = $db::getRows($query, $args);
@@ -1433,15 +1441,35 @@ ORDER BY `name`;
 
                             //Направления
                             //!!! Привести к одному виду с напоминаниями получение данных
-							$removes = SelDataFromDB ('removes', $client_j['id'], 'client');
+							//$removes = SelDataFromDB ('removes', $client_j['id'], 'client');
+
+                            $removes = array();
+
+                            $args = [
+                                'client_id' => $client_j['id']
+                            ];
+
+                            //$query = "SELECT * FROM `removes` WHERE `client`= :client_id ORDER BY `create_time` DESC";
+
+                            $query = "SELECT r.*, s_c.name, s_w.name AS w_name FROM `removes` r 
+                            RIGHT JOIN `spr_clients` s_c 
+                            ON s_c.id = r.client  
+                            RIGHT JOIN `spr_workers` s_w
+                            ON s_w.id = r.create_person 
+                            WHERE r.client = :client_id
+                            ORDER BY r.create_time DESC";
+
+                            //Выбрать все
+                            $removes = $db::getRows($query, $args);
+                            //var_dump($removes);
 
 							//Вывод всего
-                            if (!empty($notes) || ($removes != 0)) {
+                            if (!empty($notes) || (!empty($removes))) {
                                 echo 'Особые отметки<br>';
 
                                 echo WriteNotes($notes, 0, true, $finances);
 
-                                if ($removes != 0){
+                                if (!empty($removes)){
                                     echo WriteRemoves($removes, 0, 0, false, $finances);
                                 }
 

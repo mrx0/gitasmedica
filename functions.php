@@ -3718,6 +3718,7 @@
     //Вывод напоминаний
     function WriteNotes($notes, $worker_id, $option, $finances){
         require 'variables.php';
+        //var_dump($notes);
 
         $rez = '
             <div id="notes_change"></div>
