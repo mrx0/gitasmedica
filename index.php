@@ -87,7 +87,7 @@
         $announcing_arr = $db::getRows($query, $args);
 
         //var_dump($announcing_arr);
-        var_dump($query);
+        //var_dump($query);
 
         $stocks_str = '';
         $news_str = '';
