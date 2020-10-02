@@ -1,7 +1,7 @@
 <?php
 
-//
-//
+//stat_stomat2.php
+//Пропавшая первичка
 
 
 	//Санация
@@ -22,7 +22,7 @@
 			
 			echo '
 				<header style="margin-bottom: 5px;">
-					<h1>______________</h1>';
+					<h1>Пропавшая первичка</h1>';
 					
 			//$user = SelDataFromDB('spr_workers', $_SESSION['id'], 'user');
 			//var_dump ($user);

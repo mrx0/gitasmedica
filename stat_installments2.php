@@ -16,6 +16,8 @@
             /*!!!Тест PDO*/
             include_once('DBWorkPDO.php');
 
+            require 'variables.php';
+
 			include_once 'functions.php';
 			include_once 'filter.php';
 			include_once 'filter_f.php';
@@ -50,165 +52,202 @@
 
 
                 $clients_w_installment = $db::getRows($query, $args);
-                var_dump($clients_w_installment);
+//                var_dump($clients_w_installment);
+
+                //Массив, где будем хранить нужные данные
+                $installment_j = array();
 
                 //Выводим результат
-//                if (!empty($clients_w_installment)){
+                if (!empty($clients_w_installment)){
+                    foreach ($clients_w_installment as $item){
+                        if (!isset($installment_j[$item['client_id']])){
+                            $installment_j[$item['client_id']] = array();
+                            $installment_j[$item['client_id']]['data'] = array();
+                            $installment_j[$item['client_id']]['name'] = $item['full_name'];
+                        }
+                        if (!isset($installment_j[$item['client_id']]['data'][$item['invoice_id']])){
+                            $installment_j[$item['client_id']]['data'][$item['invoice_id']] = array();
+                        }
+                        array_push($installment_j[$item['client_id']]['data'][$item['invoice_id']], $item);
+                    }
+//                    var_dump($installment_j);
+                    var_dump($installment_j[18576]['data'][77587][0]);
+
+                    echo '
+					    <div id="data">';
+                    echo '
+                            <ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
+
+                    echo '
+                                <li class="cellsBlock" style="font-weight:bold;">	
+                                    <div class="cellFullName" style="text-align: center">
+                                        Полное имя
+                                    </div>
+                                    <!--<div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">
+                                        Наряд
+                                    </div>-->
+                                    <div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">
+                                        Долг
+                                    </div>
+                                    <div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">
+                                        Доступно на счету
+                                    </div>
+                                    <div class="cellText" style="text-align: center; border: 0;"></div>
+							    </li>';
+
+                    foreach ($installment_j as $client_id => $client_data){
+                        //var_dump($client_data);
+
+                        echo '
+                                <li class="cellsBlock" style="font-weight:bold;">	
+                                    <div class="cellFullName" style="text-align: left">';
+
+                        echo $client_data['name'];
+
+                        echo '
+                                    </div>';
+                        echo '
+                                    <div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">
+                                    </div>
+                                    <div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;"></div>
+                                    <div class="cellText" style="text-align: center; border: 0;"></div>
+							    </li>';
+
+                        foreach ($client_data['data'] as $invoice_id => $payment_data) {
+                            echo '
+                                <li class="cellsBlock" style="font-weight:bold; width: 50vw; ">	
+                                    <div class="cellFullName" style="text-align: left">';
+
+                            //echo $client_data['name'];
+                            echo 'Наряд #'.$invoice_id;
+                            echo '
+                                    </div>';
+//                            echo '
+//                                    <div class="cellText" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">';
 //
-//                    echo '
-//					    <div id="data">';
+//                            foreach ($payment_data as $payment){
 //
-//                    //echo '<div id="allPayments_shbtn" style="color: #000005; cursor: pointer; display: inline;" onclick="toggleSomething (\'#allCalcsIsHere\');">скрыть всё</div>';
+//                            }
 //
-//                    echo '
-//                            <ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
+//                            echo '
+//                                    </div>';
+
+                            echo '       
+							    </li>';
+
+
+                            echo '
+                                <li class="cellsBlock" style="font-weight:bold; width: 50vw; ">	
+                                    
+                                    <div class="cellFullName" style="text-align: left; max-width: 250px;">';
+
+                            echo '
+                                        <div id="" style="width: 90%; margin-top: 10px; overflow-x: scroll; overflow-y: hidden; ">';
+
+                            //Сформируем массив с суммами по месяцам
+                            $payments_month = array();
+
+                            foreach ($payment_data as $payment){
+                                if (!isset($payments_month[date('Y', strtotime($payment['payment_date']))])){
+                                    $payments_month[date('Y', strtotime($payment['payment_date']))] = array();
+                                }
+                                if (!isset($payments_month[date('Y', strtotime($payment['payment_date']))][date('m', strtotime($payment['payment_date']))])){
+                                    $payments_month[date('Y', strtotime($payment['payment_date']))][date('m', strtotime($payment['payment_date']))] = 0;
+                                }
+                                $payments_month[date('Y', strtotime($payment['payment_date']))][date('m', strtotime($payment['payment_date']))] += $payment['payment_summ'];
+                            }
+                            //var_dump($payments_month);
+                            //var_dump($payment_data);
+
+                            if ($payment_data[0]['date_in'] != date('Y-m-d', time())) {
+
+                                //вернуть все даты между двумя датами в массиве
+                                $period = new DatePeriod(
+                                    new DateTime($payment_data[0]['date_in']),
+                                    new DateInterval('P1M'),
+                                    new DateTime(date('Y-m-d', time()))
+                                );
+
+                            }else{
+                                $period[0] = new DateTime(date('Y-m-d', time()));
+                            }
+//                            $period = array_reverse($period, true);
+//                            var_dump($period);
+//                            var_dump(count($period));
+
+                            foreach ($period as $value) {
+//                                var_dump($value->format( "Y-m" ));
+//                                var_dump($value);
+
+                                $summ = 0;
+
+                                if(isset($payments_month[$value->format( "Y" )])){
+                                    if(isset($payments_month[$value->format( "Y" )][$value->format( "m" )])){
+                                        $summ = $payments_month[$value->format( "Y" )][$value->format( "m" )];
+                                    }
+                                }
+                                if ($summ > 0){
+                                    echo ' 
+                                    <div style="display: table-cell; width: 83px; min-width: 83px; border: 1px solid #BFBCB5; background: lawngreen; padding: 10px;">';
+                                }else{
+                                    echo '
+                                    <div style="display: table-cell; width: 83px; min-width: 83px; border: 1px solid #BFBCB5; background: #ff7777; padding: 10px;">';
+                                }
+
+                                echo '
+                                        <div style="margin-bottom: 5px; font-size: 80%;">'.$monthsName[$value->format( "m" )].' '.$value->format( "Y" ).'</div>
+                                        <div>'.$summ.'</div>
+                                    </div>';
+                            }
+
+
+
+
+
+//                            foreach ($payment_data as $payment){
+//                                echo '
+//                                            <div style="display: table-cell; width: 83px; min-width: 83px; border: 1px solid #BFBCB5; background: #ff7777; padding: 10px;">
+//                                                <div style="margin-bottom: 5px;">'.$monthsName[date('m', strtotime($payment['payment_date']))].'</div>
+//                                                <div>'.$payment['payment_summ'].'</div>
+//                                            </div>';
+//                         }
+
+
+                            echo '
+                                        </div>';
+                            echo '
+                                    </div>';
+//                            echo '
+//                                    <div class="cellText" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">';
 //
-//                    echo '
-//							<li class="cellsBlock" style="font-weight:bold;">
-//							    <div class="cellCosmAct" style="text-align: center;">-</div>
-//								<div class="cellFullName" style="text-align: center">
-//                                    Полное имя';
-//                    //echo $block_fast_filter;
-//                    echo '
-//                                </div>';
-//                    echo '
-//								<div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">Долг</div>
-//								<div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">Доступно на счету</div>
-//								<!--<div class="cellCosmAct" style="text-align: center;">-</div>-->
-//								<!--<div class="cellCosmAct" style="text-align: center;">Упр. сч.</div>-->
-//								<div class="cellText" style="text-align: center; border: 0;"></div>
-//							</li>';
+//                            foreach ($payment_data as $payment){
 //
-//                    //Общая сумма долгов
-//                    $debtAllSumm = 0;
-//                    //Общая сумма доступно
-//                    $dostOstatokAllSumm = 0;
+//                            }
 //
-//                    foreach ($clients_w_installment as $cl_data) {
-//                        //var_dump($cl_data);
-//
-//                        //Долги/авансы
-//                        //
-//                        //!!! @@@
-//                        //Баланс контрагента
-//                        include_once 'ffun.php';
-//                        $client_balance = json_decode(calculateBalance ($cl_data['id']), true);
-//                        //Долг контрагента
-//                        $client_debt = json_decode(calculateDebt ($cl_data['id']), true);
-//
-//                        //доступный остаток
-//                        $dostOstatok = $client_balance['summ'] - $client_balance['debited'] - $client_balance['withdraw'] + $client_balance['refund'];
-//
-//						echo '
-//                            <li id="cl_data_main_'.$cl_data['id'].'" class="cellsBlock cellsBlockHover cl_data" cl_id="'.$cl_data['id'].'" cl_installment_date="'.$cl_data['installment_date'].'" style="">
-//                                <div class="cellCosmAct" style="text-align: center;">
-//                                    <span class="info"  style="display: inline; color: darkblue; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="toggleSomething(\'#user_options_'.$cl_data['id'].'\'); getPayments4Installments('.$cl_data['id'].', \''.$cl_data['installment_date'].'\');">
-//                                        <i class="fa fa-cog" aria-hidden="true" style=" font-size: 140%;" title="Опции"></i>
-//                                    </span>
-//                                </div>
-//
-//								<div class="cellFullName 4filter" id="4filter">
-//								    '.$cl_data['full_name'].' <div id="current_month_payment_'.$cl_data['id'].'" style="display: none; color: red;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> Не было платежей в этом месяце.</div>
-//                                </div>';
-//
-//						echo '
-//								<div class="cellCosmAct" style="text-align: right; width: 100px; min-width: 100px; max-width: 100px;">
-//								    <span class="calculateInvoice" style="">'.$client_debt['summ'].'</span>
-//                                </div>
-//								<div class="cellCosmAct" style="text-align: right; width: 100px; min-width: 100px; max-width: 100px;">
-//								    <span class="calculateOrder" style="font-size: 13px; color: grey;">'.$dostOstatok.'</span>
-//                                </div>
-//                                <!--<a href="pay_blank_pdf_qr.php?client_id='.$cl_data['id'].'" class="ahref cellCosmAct" style="text-align: center;" target="_blank" rel="nofollow noopener" title="Выписать счет на оплату">
-//                                    <i class="fa fa-file-text" style="font-size: 140%; color: rgb(74, 148, 70); /*float: right;*/" aria-hidden="true"></i>
-//                                </a>-->
-//                                <!--<a href="finance_account.php?client_id='.$cl_data['id'].'" class="ahref cellCosmAct" style="text-align: center;" target="_blank" rel="nofollow noopener">
-//                                    <i class="fa fa-chevron-right" style="color: grey; float: right;" aria-hidden="true"></i>
-//                                </a>-->';
-//                        echo '
-//                                <div class="cellText" style="text-align: center; border: 0;"></div>
-//                            </li>
-//
-//                            <li id="user_options_'.$cl_data['id'].'" class="user_options" style="width: 50vw; display: none; border: 1px solid rgb(140, 140, 140); box-shadow: rgba(146, 146, 146, 0.82) 0px 4px 10px; padding: 5px 10px 15px; background: #f7ffe8; font-size: 80%;">
-//
-//                                <div class="" style="text-align: left;">
-//                                    <a href="client.php?id='.$cl_data['id'].'" class="ahref b4" id="" target="_blank" rel="nofollow noopener">
-//                                        <i class="fa fa-user" aria-hidden="true" style=" font-size: 120%;" title="Карточка пациента"></i> Карточка пациента
-//                                    </a>
-//
-//                                    <a href="finance_account.php?client_id='.$cl_data['id'].'" class="ahref b4" style="text-align: center;" target="_blank" rel="nofollow noopener">
-//                                        <i class="fa fa-chevron-right" style="color: grey;" aria-hidden="true"></i> Управление счётом
-//                                    </a>
-//
-//                                    <a href="pay_blank_pdf_qr.php?client_id='.$cl_data['id'].'" class="ahref b4" style="text-align: center;" target="_blank" rel="nofollow noopener" title="Выписать счет на оплату">
-//                                        <i class="fa fa-file-text" style="font-size: 140%; color: rgb(74, 148, 70); /*float: right;*/" aria-hidden="true"></i> Выписать счёт на оплату
-//                                    </a>
-//
-//                                    <span class="info ahref  b4"  style="display: inline; color: red; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus('.$cl_data['id'].', '.$cl_data['installment'].', false);">
-//                                        <i class="fa fa-database" aria-hidden="true" style=" font-size: 120%;" title="Есть незакрытая рассрочка"></i> Закрыть рассрочку
-//                                    </span>
-//
-//                                </div>
-//
-//                                <div class="" style="text-align: left;">
-//                                    Рассрочка с '.date('d.m.Y' ,strtotime($cl_data['installment_date'])).'
-//                                </div>
-//
-//                                <div class="" style="width: 90%; margin: 10px; padding-bottom: 10px; text-align: left;">
-//                                    <span class="ahref button_tiny" style="font-size:80%;  color: #555;" onclick="getPayments4Installments('.$cl_data['id'].', \''.$cl_data['installment_date'].'\');">Показать платежи</span>
-//                                    <div id="client_orders_by_period_'.$cl_data['id'].'" style="width: 90%; margin-top: 10px; overflow-x: scroll; overflow-y: hidden; ">
-//
-//                                    </div>
-//                                </div>
-//                            </li>';
-//
-//                        $debtAllSumm += $client_debt['summ'];
-//                        $dostOstatokAllSumm += $dostOstatok;
-//
-//				    }
-//
-//
-//                    echo '
-//							<li class="cellsBlock" style="font-weight:bold;">
-//							    <div class="cellCosmAct" style="text-align: center;">-</div>
-//								<div class="cellFullName" style="">
-//                                    Общая сумма
-//                                </div>
-//								<div class="cellCosmAct" style="text-align: right; width: 100px; min-width: 100px; max-width: 100px;">
-//								    <span class="calculateInvoice" style="font-size: 13px">'.number_format($debtAllSumm, 0, '.', ' ').'</span>
-//                                </div>
-//								<div class="cellCosmAct" style="text-align: right; width: 100px; min-width: 100px; max-width: 100px;">
-//								    <span class="calculateOrder" style="font-size: 13px; color: grey;">'.number_format($dostOstatokAllSumm, 0, '.', ' ').'</span>
-//                                </div>
-//								<div class="cellCosmAct" style="text-align: left; width: 100px; min-width: 100px; max-width: 100px;">
-//								    Итого:<br><span class="calculateOrder" style="font-size: 13px; color: blueviolet;">'.number_format(($debtAllSumm-$dostOstatokAllSumm), 0, '.', ' ').'</span>
-//                                </div>
-//                                <div class="cellText" style="text-align: center; border: 0;"></div>
-//                            </li>';
-//
-//                    echo '
-//					        </ul>';
-//                    echo '
-//                        </div>';
-//
-//                }else{
-//                    echo '<span style="color: red;">Ничего не найдено</span>';
-//                }
-//
-//                //CloseDB($msql_cnnct);
-//
-//                echo '
-//                <script>
-//                    $(document).ready(function() {
-//                        $(".cl_data").each(function(){
-//                            //console.log($(this).attr("cl_id"));
-//                            //console.log($(this).attr("cl_installment_date"));
-//
-//                            getPayments4Installments($(this).attr("cl_id"), $(this).attr("cl_installment_date"));
-//                        })
-//                    });';
-//
-//			    echo '
-//			    </script>';
+//                            echo '
+//                                    </div>';
+
+                            echo '       
+							    </li>';
+
+                        }
+                    }
+
+                }
+
+                echo '
+                            </ul>';
+                echo '
+                        </div>';
+
+                echo '
+                <script>
+                    $(document).ready(function() {
+
+                    });';
+
+			    echo '
+			    </script>';
 						
 
 			}

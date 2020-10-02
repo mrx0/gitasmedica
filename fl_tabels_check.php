@@ -269,7 +269,9 @@
                         echo '<b><i>Табель #' . $rezData['id'] . '</i></b><br>';
                         echo '<span style="font-size: 77%; color: #7D7D7D;">'.$monthsName[$month],' ',$year.'</span><br>';
                         echo '<i style="font-size: 80%;">' . WriteSearchUser('spr_workers', $rezData['worker_id'], 'user', false) . '</i><br>';
-                        echo '<i style="font-size: 80%;">' . $permissions_j[$rezData['type']]['name'] . '</i> / ';
+                        if (isset($permissions_j[$rezData['type']])) {
+                            echo '<i style="font-size: 80%;">' . $permissions_j[$rezData['type']]['name'] . '</i> / ';
+                        }
                         echo '<span style="font-size: 70%;">' . $filials_j[$rezData['office_id']]['name2'] . '</span>';
                         echo '
                                                     </div>

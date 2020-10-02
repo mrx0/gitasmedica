@@ -12,7 +12,8 @@
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 			
-			$offices = SelDataFromDB('spr_filials', '', '');
+			//$offices = SelDataFromDB('spr_filials', '', '');
+            $filials_j = getAllFilials(false, false, false);
             //Получили список прав
             $permissions = SelDataFromDB('spr_permissions', '', '');
             //var_dump($permissions);
@@ -36,8 +37,10 @@
 							<div class="cellRight">
 								<select name="announcing_type" id="announcing_type">
 								    <option value="1" selected>Объявление</option>
+								    <option value="4">Акция</option>
 								    <option value="2">Обновление</option>
 								    <option value="3">Инструкция</option>
+								    
 								</select>
 							</div>
 						</div>';
@@ -93,9 +96,9 @@
 								<div class="cellRight">
 								    <span style="font-size:80%;  color: #555;">Кому не видно</span>
 									<select multiple="multiple" name="filial[]" id="filial">';
-            if ($offices != 0){
-                for ($i=0;$i<count($offices);$i++){
-                    echo "<option value='".$offices[$i]['id']."' selected>".$offices[$i]['name']."</option>";
+            if (!empty($filials_j)){
+                foreach ($filials_j as $f_id => $filial_data){
+                    echo "<option value='".$f_id."' selected>".$filial_data['name']."</option>";
                 }
             }
             echo '

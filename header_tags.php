@@ -250,6 +250,7 @@
 //	var_dump($god_mode);
 //	var_dump($enter_ok);
 
+    //Запрет на копирование
 	if (!$god_mode) {
         echo '
 		<body oncopy="return false;">';

@@ -104,6 +104,16 @@
             $zapis_j = $datas['zapis_j'];
             $pervich_summ_arr_new = $datas['pervich_summ_arr_new'];
 
+            //var_dump($datas['error_invoices']);
+            if (!empty($datas['error_invoices'])){
+                echo '<div class="query_neok" style="padding: 10px 4px 2px; margin-left: 10px; width: 50vw;">Наряды с ошибками в категориях (анализы):';
+
+                for($i=0; $i < count($datas['error_invoices']); $i++){
+                    echo '<a href="invoice.php?id='.$datas['error_invoices'][$i].'" class="ahref button_tiny" style="margin: 0 3px;" target="_blank" rel="nofollow noopener">#'.$datas['error_invoices'][$i].'</a>';
+                }
+                echo '</div>';
+            }
+
 
             //Расходы на материалы внесённые вручную
             $db = new DB();
@@ -196,7 +206,7 @@
 
                 echo '
                                 </select>';
-               echo '
+                echo '
                                 <input type="checkbox" name="material_costs_show" id="material_costs_show" value="1"> <span style="font-size:80%;">Показать расходы на материалы</span>
                             </div>';
 
@@ -862,8 +872,18 @@
 
                     echo '
                             </div>
+                            <div class="cellRight material_costs" id="material_costs_summ_5" style="display: none !important">
+                            </div>
                         </li>';
                 }
+
+                $material_costs_summ_5 = 0;
+                $material_costs_summ_6 = 0;
+                $material_costs_summ_10 = 0;
+
+                $material_costs_summ_p_5 = 0;
+                $material_costs_summ_p_6 = 0;
+                $material_costs_summ_p_10 = 0;
 
 
                 if (isset($rezult_arr[5])) {
@@ -898,6 +918,8 @@
                                         <div class="cellRight material_costs" style="display: none !important">';
                                     if (isset($material_costs[$percent_cat_id])){
                                         echo $material_costs[$percent_cat_id]['summ'].' / '.number_format(($material_costs[$percent_cat_id]['summ'] * 100 / $stom_summ_temp), 2, '.', ' ').'%';
+                                        $material_costs_summ_5 += $material_costs[$percent_cat_id]['summ'];
+                                        $material_costs_summ_p_5 += $material_costs[$percent_cat_id]['summ'] * 100 / $stom_summ_temp;
                                     }else{
                                         echo '0 / 0%';
                                     }
@@ -1022,7 +1044,8 @@
                         if (!empty($rezult_arr[7]['data'])) {
                             arsort($rezult_arr[7]['data']);
 
-                            //var_dump($rezult_arr[7]['data']);
+//                            var_dump($rezult_arr[7]['data']);
+//                            var_dump($percents_j);
 
                             foreach ($rezult_arr[7]['data'] as $percent_cat_id => $value) {
 
@@ -1085,6 +1108,8 @@
                     }
                     echo '
                             </div>
+                            <div class="cellRight material_costs" id="material_costs_summ_6" style="display: none !important">
+                            </div>
                         </li>';
                 }
 
@@ -1111,7 +1136,9 @@
                                 echo '
                                     <div class="cellRight material_costs" style="display: none !important">';
                                     if (isset($material_costs[$percent_cat_id])){
-                                        echo $material_costs[$percent_cat_id]['summ'].' / '.number_format(($material_costs[$percent_cat_id]['summ'] * 100 / $stom_summ_temp), 2, '.', ' ').'%';
+                                        echo $material_costs[$percent_cat_id]['summ'].' / '.number_format(($material_costs[$percent_cat_id]['summ'] * 100 / array_sum($rezult_arr[6]['data'])), 2, '.', ' ').'%';
+                                        $material_costs_summ_6 += $material_costs[$percent_cat_id]['summ'];
+                                        $material_costs_summ_p_6 += $material_costs[$percent_cat_id]['summ'] * 100 / array_sum($rezult_arr[6]['data']);
                                     }else{
                                         echo '0 / 0%';
                                     }
@@ -1226,6 +1253,8 @@
                     }
                     echo '
                             </div>
+                            <div class="cellRight material_costs" id="material_costs_summ_10" style="display: none !important">
+                            </div>
                         </li>';
                 }
 
@@ -1251,7 +1280,9 @@
                                 echo '
                                     <div class="cellRight material_costs" style="display: none !important">';
                                     if (isset($material_costs[$percent_cat_id])){
-                                        echo $material_costs[$percent_cat_id]['summ'].' / '.number_format(($material_costs[$percent_cat_id]['summ'] * 100 / $stom_summ_temp), 2, '.', ' ').'%';
+                                        echo $material_costs[$percent_cat_id]['summ'].' / '.number_format(($material_costs[$percent_cat_id]['summ'] * 100 / array_sum($rezult_arr[10]['data'])), 2, '.', ' ').'%';
+                                        $material_costs_summ_10 += $material_costs[$percent_cat_id]['summ'];
+                                        $material_costs_summ_p_10 += $material_costs[$percent_cat_id]['summ'] * 100 / array_sum($rezult_arr[10]['data']);
                                     }else{
                                         echo '0 / 0%';
                                     }
@@ -1531,6 +1562,15 @@
             echo '	
 			    <!-- Подложка только одна -->
 			    <div id="overlay"></div>';
+
+//            var_dump($material_costs_summ_5);
+//            var_dump($material_costs_summ_6);
+//            var_dump($material_costs_summ_10);
+
+//            var_dump($material_costs_summ_p_5);
+//            var_dump($material_costs_summ_p_6);
+//            var_dump($material_costs_summ_p_10);
+
 			echo '
 
 				<script type="text/javascript">
@@ -1726,6 +1766,11 @@
                     $("#material_costs_show").click(function() {
                         
 					    let checked_status = $(this).is(":checked");
+					    
+					    $("#material_costs_summ_5").html('.$material_costs_summ_5.' + " / " + '.number_format($material_costs_summ_p_5, 2, '.', "").' + "%");
+					    $("#material_costs_summ_6").html('.$material_costs_summ_6.' + " / " + '.number_format($material_costs_summ_p_6, 2, '.', "").' + "%");
+					    $("#material_costs_summ_10").html('.$material_costs_summ_10.' + " / " + '.number_format($material_costs_summ_p_10, 2, '.', "").' + "%");
+
 					    
 					    if (checked_status){
 					        //console.log(checked_status);

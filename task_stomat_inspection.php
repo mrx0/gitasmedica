@@ -11,6 +11,9 @@
 		//var_dump($permissions);
 		if (($stom['see_all'] == 1) || ($stom['see_own'] == 1) || $god_mode){
 			if ($_GET){
+                /*!!!Тест PDO*/
+                include_once('DBWorkPDO.php');
+
 				include_once 'DBWork.php';
 				include_once 'functions.php';
 
@@ -622,33 +625,77 @@
 
 
                     //Напоминания
-					$notes = SelDataFromDB ('notes', $task[0]['id'], 'task');
+//					$notes = SelDataFromDB ('notes', $task[0]['id'], 'task');
+//
+//					if ($notes != 0) {
+//                        echo '
+//                                <div class="cellsBlock3" style="margin: 10px 0 0px;">
+//                                    <div class="cellLeft">
+//                                        <span style="font-size: 80%;">Напоминания</span><br>
+//                                    </div>
+//                                </div>';
+//                    }
+//
+//					echo WriteNotes($notes, 0, true, $finances);
 
-					if ($notes != 0) {
-                        echo '
-                                <div class="cellsBlock3" style="margin: 10px 0 0px;">
-                                    <div class="cellLeft">
-                                        <span style="font-size: 80%;">Напоминания</span><br>
-                                    </div>
-                                </div>';
-                    }
+                    $db = new DB();
 
-					echo WriteNotes($notes, 0, true, $finances);
+                    //Напоминания
+                    $notes = array();
+
+                    $args = [
+                        'task' => $task[0]['id']
+                    ];
+
+                    $query = "SELECT n.*, s_c.name, s_w.name AS w_name FROM `notes` n
+                            RIGHT JOIN `spr_clients` s_c 
+                            ON s_c.id = n.client  
+                            RIGHT JOIN `spr_workers` s_w
+                            ON s_w.id = n.create_person 
+                            WHERE n.task = :task
+                            ORDER BY n.dead_line DESC";
+
+                    //Выбрать все
+                    $notes = $db::getRows($query, $args);
+
+                    echo WriteNotes($notes, 0, true, $finances);
+
 
 					//Направления
-					$removes = SelDataFromDB ('removes', $task[0]['id'], 'task');
+//					$removes = SelDataFromDB ('removes', $task[0]['id'], 'task');
+//
+//                    if ($removes != 0) {
+//                        echo '
+//                                <div class="cellsBlock3" style="margin: 10px 0 -10px;">
+//                                    <div class="cellLeft">
+//                                        <span style="font-size: 80%;">Направления</span><br>
+//                                    </div>
+//                                </div>';
+//                    }
+//
+//					echo WriteRemoves($removes, 0, 0, false, $finances);
 
-                    if ($removes != 0) {
-                        echo '
-                                <div class="cellsBlock3" style="margin: 10px 0 -10px;">
-                                    <div class="cellLeft">
-                                        <span style="font-size: 80%;">Направления</span><br>
-                                    </div>
-                                </div>';
-                    }
+                    //Направления
+                    //!!! Привести к одному виду с напоминаниями получение данных
+                    $removes = array();
 
-					echo WriteRemoves($removes, 0, 0, false, $finances);
-									
+                    $args = [
+                        'task' => $task[0]['id']
+                    ];
+
+                    $query = "SELECT r.*, s_c.name, s_w.name AS w_name FROM `removes` r 
+                            RIGHT JOIN `spr_clients` s_c 
+                            ON s_c.id = r.client  
+                            RIGHT JOIN `spr_workers` s_w
+                            ON s_w.id = r.create_person 
+                            WHERE r.task = :task
+                            ORDER BY r.create_time DESC";
+
+                    //Выбрать все
+                    $removes = $db::getRows($query, $args);
+
+                    echo WriteRemoves($removes, 0, 0, false, $finances);
+
 					//Фотки			
     				$arr = array();
 					$rez = array();

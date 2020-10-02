@@ -58,7 +58,7 @@
         document.location.href = "?"+get_data_str.slice(1);
 	}
 
-	//Сегодня дата
+	//Сегодняшняя дата (сегодня)
 	function getTodayDate (){
         var today = new Date();
         var dd = today.getDate();
@@ -440,6 +440,7 @@
 	//попытка показать контекстное меню
 	function contextMenuShow(ind, key, event, mark){
 		//console.log(event);
+		//console.log(ind);
 
 		// Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
 		$('*').removeClass('selected-html-element');
@@ -3051,6 +3052,160 @@
 
         $.ajax({
             url:"ajax_show_result_stat_zapis_f.php",
+            global: false,
+            type: "POST",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                $('#qresult').html(data);
+            }
+        })
+    }
+
+    //Выборка тех, у кого была консультация и они больше не пришли
+    function Ajax_show_result_stat_lost_pervich(){
+
+        let typeW = document.querySelector('input[name="typeW"]:checked').value;
+
+        // var zapisAll = $("input[id=zapisAll]:checked").val();
+        // if (zapisAll === undefined){
+        //     zapisAll = 0;
+        // }
+        // // var zapisArrive = $("input[id=zapisArrive]:checked").val();
+        // // if (zapisArrive === undefined){
+        // //     zapisArrive = 0;
+        // // }
+        // // var zapisNotArrive = $("input[id=zapisNotArrive]:checked").val();
+        // // if (zapisNotArrive === undefined){
+        // //     zapisNotArrive = 0;
+        // // }
+        // //
+        // // var zapisError = $("input[id=zapisError]:checked").val();
+        // // if (zapisError === undefined){
+        // //     zapisError = 0;
+        // // }
+        //
+        // var zapisNull = $("input[id=zapisNull]:checked").val();
+        // if (zapisNull === undefined){
+        //     zapisNull = 0;
+        // }
+
+        // var fullAll = $("input[id=fullAll]:checked").val();
+        // if (fullAll === undefined){
+        //     fullAll = 0;
+        // }
+        //
+        // var fullWOInvoice = $("input[id=fullWOInvoice]:checked").val();
+        // if (fullWOInvoice === undefined){
+        //     fullWOInvoice = 0;
+        // }
+        //
+        // var fullWOTask = $("input[id=fullWOTask]:checked").val();
+        // if (fullWOTask === undefined){
+        //     fullWOTask = 0;
+        // }
+        //
+        // var fullOk = $("input[id=fullOk]:checked").val();
+        // if (fullOk === undefined){
+        //     fullOk = 0;
+        // }
+        //
+        // var statusAll = $("input[id=statusAll]:checked").val();
+        // if (statusAll === undefined){
+        //     statusAll = 0;
+        // }
+        //
+        // var statusPervich = $("input[id=statusPervich]:checked").val();
+        // if (statusPervich === undefined){
+        //     statusPervich = 0;
+        // }
+        //
+        // var statusInsure = $("input[id=statusInsure]:checked").val();
+        // if (statusInsure === undefined){
+        //     statusInsure = 0;
+        // }
+        //
+        // var statusNight = $("input[id=statusNight]:checked").val();
+        // if (statusNight === undefined){
+        //     statusNight = 0;
+        // }
+        //
+        // var statusAnother = $("input[id=statusAnother]:checked").val();
+        // if (statusAnother === undefined){
+        //     statusAnother = 0;
+        // }
+        //
+        // var invoiceAll = $("input[id=invoiceAll]:checked").val();
+        // if (invoiceAll === undefined){
+        //     invoiceAll = 0;
+        // }
+        //
+        // var invoicePaid = $("input[id=invoicePaid]:checked").val();
+        // if (invoicePaid === undefined){
+        //     invoicePaid = 0;
+        // }
+        //
+        // var invoiceNotPaid = $("input[id=invoiceNotPaid]:checked").val();
+        // if (invoiceNotPaid === undefined){
+        //     invoiceNotPaid = 0;
+        // }
+        //
+        // var invoiceInsure = $("input[id=invoiceInsure]:checked").val();
+        // if (invoiceInsure === undefined){
+        //     invoiceInsure = 0;
+        // }
+
+        let patientUnic = $("input[id=patientUnic]:checked").val();
+        if (patientUnic === undefined){
+            patientUnic = 0;
+        }
+
+        let reqData = {
+            all_time: all_time,
+            datastart:  $("#datastart").val(),
+            dataend:  $("#dataend").val(),
+
+            //Кто создал запись
+            creator:$("#search_worker").val(),
+            //Пациент
+            client:$("#search_client").val(),
+            //К кому запись
+            worker:$("#search_client4").val(),
+            filial:$("#filial").val(),
+
+            typeW:typeW,
+
+            // zapisAll: zapisAll,
+            // zapisArrive: zapisArrive,
+            // zapisNotArrive: zapisNotArrive,
+            // zapisError: zapisError,
+            // zapisNull: zapisNull,
+            //
+            // fullAll: fullAll,
+            // fullWOInvoice: fullWOInvoice,
+            // fullWOTask: fullWOTask,
+            // fullOk: fullOk,
+            //
+            // statusAll: statusAll,
+            // statusPervich: statusPervich,
+            // statusInsure: statusInsure,
+            // statusNight: statusNight,
+            // statusAnother: statusAnother,
+            //
+            // invoiceAll: invoiceAll,
+            // invoicePaid: invoicePaid,
+            // invoiceNotPaid: invoiceNotPaid,
+            // invoiceInsure: invoiceInsure,
+
+            patientUnic: patientUnic
+        };
+        console.log(reqData);
+
+        $.ajax({
+            url:"ajax_show_result_stat_lost_pervich_f.php",
             global: false,
             type: "POST",
             data: reqData,
@@ -13811,3 +13966,142 @@
         }
     }
 
+    //Показываем блок для добавления статуса звонка
+    function showChangePnoneCallMark(client_id, status){
+        // console.log(client_id);
+
+        // Убираем css класс selected-html-element у абсолютно всех элементов на странице с помощью селектора "*":
+        $('*').removeClass('selected-html-element');
+        // Удаляем предыдущие вызванное контекстное меню:
+        $('.context-menu').remove();
+
+        //Сегодняшняя дата
+        let today = getTodayDate();
+
+        let descr = 'Информация о звонке';
+        let descr2 = '';
+        let whenRecall = '';
+
+        //Отметка о телефонном звонке
+        if (status == 8) {
+            descr2 = '<i class="fa fa-phone-square" style="color: red; font-size: 120%;" title="Не звонить"></i> Не звонить';
+        }
+        if (status == 6) {
+            descr2 = '<i class="fa fa-phone-square" style="color: orange; font-size: 120%;" title="Не дозвонились"></i> Не дозвонились';
+        }
+        if (status == 7) {
+            descr2 = '<i class="fa fa-phone-square" style="color: blue; font-size: 120%;" title="Записались"></i> Записались';
+        }
+        if (status == 5) {
+            descr2 = '<i class="fa fa-phone-square" style="color: #b35bff; font-size: 120%;" title="Перезвонить"></i> Перезвонить';
+            whenRecall = '<div style="margin-top: 10px;">Дата, когда перезвонить <input type="text" id="recallDate" name="recallDate" class="dateс" style="color: rgb(30, 30, 30); font-size: 12px; border: 1px solid rgba(0,220,220,1);" value="'+today+'" onfocus="this.select();_Calendar.lcs(this)"'+
+                ' onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off"></div>'
+        }
+        if (status == 4) {
+            descr2 = '<i class="fa fa-phone-square" style="color: #93021e; font-size: 120%;" title="Записались"></i> Записались';
+        }
+        if (status == 3) {
+            descr2 = '<i class="fa fa-phone-square" style="color: #b1ffad; font-size: 120%;" title="Записались"></i> Записались';
+        }
+
+        let buttonsStr = '<input type="button" class="b" value="Ok" onclick="Ajax_changePnoneCallMark('+client_id+', '+status+');">';
+
+        $('#overlay').show();
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        })
+            .css({
+                "height": "300px"
+            })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative"
+                    })
+                    .append('<div style="margin: 5px;"><i>'+descr+'</i></div>')
+                    .append('<div style="margin: 5px;"><i>'+descr2+'</i></div>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-110px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%"
+                            })
+                            .append('<div style="margin-top: 40px;">Дата звонка <input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="color: rgb(30, 30, 30); font-size: 12px; border: 1px solid rgba(0,220,220,1);" value="'+today+'" onfocus="this.select();_Calendar.lcs(this)"'+
+                                ' onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" autocomplete="off"></div>')
+                            .append('<div style="margin-top: 10px;"><span style="font-size:90%; color: #333; ">Введите комментарий</span><br>' +
+                                '<textarea name="phoneCallComment" id="phoneCallComment" cols="35" rows="5"></textarea></div>')
+                            .append(whenRecall)
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "bottom": "2px",
+                                "width": "100%"
+                            })
+                            .append('<div id="existonCatItem" class="error"></div>')
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
+                            )
+                    )
+            );
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+    }
+
+    //Проверяем и добавляем приход
+    function Ajax_changePnoneCallMark(client_id, status){
+        //console.log(edit);
+
+        hideAllErrors();
+
+        //Добавляем
+        let link = "change_pnone_call_mark_f.php";
+
+        //Надо что-то передать
+        let reqData = {
+            client_id: client_id,
+            status: status,
+            call_time: $("#iWantThisDate2").val(),
+            comment: $("#phoneCallComment").val()
+        };
+
+        if (status == 5){
+            reqData['recall_date'] = $("#recallDate").val()
+        }
+
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res) {
+                // $('#errrror').html(res);
+                if (res.result == "success") {
+                    location.reload();
+                }
+            }
+        });
+
+
+    }

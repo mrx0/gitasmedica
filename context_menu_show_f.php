@@ -514,6 +514,22 @@
                     //}
                 }
 
+                //Для отметки о звонке
+                if ($_POST['mark'] == 'phone_call'){
+                    $data .= '
+                        <li><div onclick="showChangePnoneCallMark('.$_POST['ind'].', 8);"><i class="fa fa-phone-square" style="color: red; font-size: 120%;"></i> Не звонить</div></li>
+                        <li><div onclick="showChangePnoneCallMark('.$_POST['ind'].', 6);"><i class="fa fa-phone-square" style="color: orange; font-size: 120%;"></i> Не дозвонились</div></li>
+                        <li><div onclick="showChangePnoneCallMark('.$_POST['ind'].', 7);"><i class="fa fa-phone-square" style="color: blue; font-size: 120%;"></i> Записались</div></li>
+                        <li><div onclick="showChangePnoneCallMark('.$_POST['ind'].', 5);"><i class="fa fa-phone-square" style="color: #b35bff; font-size: 120%;"></i> Перезвонить</div></li>
+                        <li><div onclick="showChangePnoneCallMark('.$_POST['ind'].', 4);"><i class="fa fa-phone-square" style="color: #93021e; font-size: 120%;"></i> Плохой отзыв о работе</div></li>
+                        <li><div onclick="showChangePnoneCallMark('.$_POST['ind'].', 3);"><i class="fa fa-phone-square" style="color: #b1ffad; font-size: 120%;"></i> Хороший отзыв о работе</div></li>
+                        ';
+                    $data .= '
+                        <li>
+                            <a href="phone_calls.php?client_id='.$_POST['ind'].'" class="ahref"><div>История звонков</div></a>
+                        </li>';
+                }
+
 				echo json_encode(array('result' => 'success', 'data' => $data));
 
 			}

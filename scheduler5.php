@@ -44,9 +44,9 @@
 
             //тип (космет/стомат/...)
             if (isset($_GET['who'])) {
-                $getWho = returnGetWho($_GET['who'], 11, array(4,7,13,14,15,11));
+                $getWho = returnGetWho($_GET['who'], 999, array(4,7,13,14,15,11));
             }else{
-                $getWho = returnGetWho(11, 11, array(4,7,13,14,15,11));
+                $getWho = returnGetWho(999, 999, array(4,7,13,14,15,11));
             }
             //var_dump($getWho);
 
