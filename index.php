@@ -87,7 +87,7 @@
         $announcing_arr = $db::getRows($query, $args);
 
         //var_dump($announcing_arr);
-        //var_dump($query);
+        var_dump($query);
 
         $stocks_str = '';
         $news_str = '';
@@ -135,7 +135,7 @@
                     $annIco = '<i class="fa fa-bolt" aria-hidden="true"></i>';
                     $annColorAlpha = '0.35';
                     if ($topicTheme == ''){
-                        $topicTheme = 'Инструкция';
+                        $topicTheme = 'Акция';
                     }
                 }
 
