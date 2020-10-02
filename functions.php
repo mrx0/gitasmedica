@@ -5229,6 +5229,26 @@
                 'dvornik_color' => '',
                 'other_color' => 'background-color: #fff261;',
                 'all_color' => ''
+			),
+			999 => array(
+                'who' => '&who=999',
+                'whose' => 'Другие ',
+                'selected_stom' => ' ',
+                'selected_cosm' => ' selected',
+                'datatable' => 'scheduler_somat',
+                'kabsForDoctor' => 'somat',
+                'type' => 999,
+
+                'stom_color' => '',
+                'cosm_color' => '',
+                'somat_color' => '',
+                'admin_color' => '',
+                'assist_color' => '',
+                'sanit_color' => '',
+                'ubor_color' => '',
+                'dvornik_color' => '',
+                'other_color' => 'background-color: #fff261;',
+                'all_color' => ''
 			)
 		);
 

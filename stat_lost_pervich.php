@@ -49,7 +49,7 @@
 											C <input type="text" id="datastart" name="datastart" class="dateс" value="'.date("01.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
 												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
 											 &bull;по <input type="text" id="dataend" name="dataend" class="dateс" value="'.date("d.m.Y").'" onfocus="this.select();_Calendar.lcs(this)"
-												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)" disabled>
+												onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
 										</div>
 										<div style="vertical-align: middle; color: #333;">
 											<input type="checkbox" name="all_time" value="1" disabled> <span style="font-size:80%;">За всё время</span>
@@ -104,7 +104,7 @@
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">';
                 if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
                     echo '
-										<input type="text" size="30" name="searchdata4" id="search_client4" placeholder="Минимум три буквы для поиска" value="" class="who4" autocomplete="off">
+										<input type="text" size="30" name="searchdata4" id="search_client4" placeholder="Минимум три буквы для поиска" value="" class="who4" autocomplete="off" disabled>
 										<ul id="search_result4" class="search_result4"></ul><br />';
                 }else{
                     echo WriteSearchUser('spr_workers', $_SESSION['id'], 'user_full', false).'
@@ -129,7 +129,7 @@
 										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="text" size="30" name="searchdata2" id="search_worker" placeholder="Минимум три буквы для поиска" value="" class="who2" autocomplete="off">
+										<input type="text" size="30" name="searchdata2" id="search_worker" placeholder="Минимум три буквы для поиска" value="" class="who2" autocomplete="off" disabled>
 										<ul id="search_result2" class="search_result2"></ul><br />
 									</div>
 								</li>

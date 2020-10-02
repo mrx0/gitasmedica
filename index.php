@@ -12,12 +12,15 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 
-		include_once 'DBWork.php';
+		//include_once 'DBWork.php';
+        include_once('DBWorkPDO.php');
 		include_once 'functions.php';
 
-        $announcing_arr = array();
+        include_once 'variables.php';
 
-		$offices = SelDataFromDB('spr_filials', '', '');
+        //$announcing_arr = array();
+
+		//$offices = SelDataFromDB('spr_filials', '', '');
 
 		echo '
 			<header style="margin-bottom: 5px;">
@@ -44,7 +47,8 @@
 					</div>';
 
 
-        $msql_cnnct = ConnectToDB ();
+        //$msql_cnnct = ConnectToDB ();
+        $db = new DB();
 
         $arr = array();
         $rez = array();
@@ -61,25 +65,38 @@
         $query = "SELECT jann.*, jannrm.status AS read_status
         FROM `journal_announcing_readmark` jannrm
         RIGHT JOIN (
-          SELECT * FROM `journal_announcing` j_ann  WHERE j_ann.status <> '9'
+          SELECT * FROM `journal_announcing` j_ann  WHERE j_ann.status <> '9' AND (j_ann.type = '1' OR j_ann.type = '4')
           {$query_dop}
         ) jann ON jann.id = jannrm.announcing_id
         AND jannrm.create_person = '{$_SESSION['id']}'
         ORDER BY `create_time` DESC";
 
-        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//        $number = mysqli_num_rows($res);
+//        if ($number != 0){
+//            while ($arr = mysqli_fetch_assoc($res)){
+//                array_push($announcing_arr, $arr);
+//            }
+//        }
 
-        $number = mysqli_num_rows($res);
-        if ($number != 0){
-            while ($arr = mysqli_fetch_assoc($res)){
-                array_push($announcing_arr, $arr);
-            }
-        }
+        $args = [
+
+        ];
+
+        $announcing_arr = $db::getRows($query, $args);
+
         //var_dump($announcing_arr);
         //var_dump($query);
 
+        $stocks_str = '';
+        $news_str = '';
+
         if (!empty($announcing_arr)){
+
             foreach ($announcing_arr as $announcing) {
+
+                $temp_str = '';
 
                 $annColor = '245, 245, 245';
                 $annIco = '<i class="fa fa-refresh" aria-hidden="true"></i>';
@@ -96,17 +113,26 @@
                         $topicTheme = 'Объявление';
                     }
                 }
-                if ($announcing['type'] == 2){
-                    $annColor = '73, 208, 183';
-                    $annIco = '<i class="fa fa-refresh" aria-hidden="true"></i>';
-                    $annColorAlpha = '0.35';
-                    if ($topicTheme == ''){
-                        $topicTheme = 'Обновление';
-                    }
-                }
-                if ($announcing['type'] == 3){
+//                if ($announcing['type'] == 2){
+//                    $annColor = '73, 208, 183';
+//                    $annIco = '<i class="fa fa-refresh" aria-hidden="true"></i>';
+//                    $annColorAlpha = '0.35';
+//                    if ($topicTheme == ''){
+//                        $topicTheme = 'Обновление';
+//                    }
+//                }
+//                if ($announcing['type'] == 3){
+//                    $annColor = '21, 209, 33';
+//                    $annIco = '<i class="fa fa-book" aria-hidden="true"></i>';
+//                    $annColorAlpha = '0.35';
+//                    if ($topicTheme == ''){
+//                        $topicTheme = 'Инструкция';
+//                    }
+//                }
+
+                if ($announcing['type'] == 4){
                     $annColor = '21, 209, 33';
-                    $annIco = '<i class="fa fa-book" aria-hidden="true"></i>';
+                    $annIco = '<i class="fa fa-bolt" aria-hidden="true"></i>';
                     $annColorAlpha = '0.35';
                     if ($topicTheme == ''){
                         $topicTheme = 'Инструкция';
@@ -114,15 +140,22 @@
                 }
 
                 if ($announcing['read_status'] == 1){
-                    $readStateClass = 'display: none;';
+                    if ($announcing['type'] != 4) {
+                        $readStateClass = 'display: none;';
+                    }
                     $newTopic = false;
+
                 }
 
-                echo '
-                
-                <div style="border: 1px dotted #CCC; margin: 10px; padding: 10px 15px 0px; font-size: 80%; background-color: rgba('.$annColor.', '.$annColorAlpha.'); position: relative;">
-                    <h2 class="', $newTopic ? "blink1":"" ,'" style="height: 15px; border: 1px dotted #CCC; background-color: rgba(250, 250, 250, 0.9); width: 100%; padding: 6px 13px; margin: -9px 0 15px -14px; position: relative;">
-                        
+
+
+                $temp_str .= '                
+                <div style="border: 1px dotted #CCC; margin: 0 1px 3px; padding: 10px 15px 0px; font-size: 80%; background-color: rgba('.$annColor.', '.$annColorAlpha.'); position: relative;">
+                    <h2 class="';
+                if ($newTopic) {
+                    $temp_str .= 'blink1';
+                }
+                $temp_str .= '" style="height: 15px; border: 1px dotted #CCC; background-color: rgba(250, 250, 250, 0.9); width: 100%; padding: 6px 13px; margin: -9px 0 5px -14px; position: relative;">
                         <div style="position: absolute; top: 3px; left: 10px; font-size: 17px; color: rgba('.$annColor.', 1);  text-shadow: 1px 1px 3px rgb(0, 0, 0), 0 0 2px rgba(52, 152, 219, 1);">
                             '.$annIco.'
                         </div>
@@ -136,33 +169,197 @@
                             <span style="font-size: 10px; color: #716f6f;">Автор: '.WriteSearchUser('spr_workers', $announcing['create_person'], 'user', false).'</span>
                         </div>';
 
-                echo '
-                    <div style="position: absolute; bottom: 0; left: 34px; font-size: 80%;', $newTopic ? "display:none;":"",'">
-                        <a href="" class="ahref showMeTopic" announcingID="' . $announcing['id'] . '">Развернуть</a>
+                $temp_str .= '
+                    <div style="position: absolute; bottom: 0; left: 34px; font-size: 80%;';
+                if ($newTopic) {
+                    $temp_str .= 'display:none;';
+                }
+                $temp_str .= '">';
+                if ($announcing['type'] != 4) {
+                    $temp_str .= '
+                        <a href="" class="ahref showMeTopic" announcingID="' . $announcing['id'] . '">Развернуть</a>';
+                }
+                $temp_str .= '
                     </div>';
 
-                echo '        
+                $temp_str .= '     
                     </h2>
-                    <p id="topic_'.$announcing['id'].'" style="margin-bottom: 30px; '.$readStateClass.'">
+                    <p id="topic_'.$announcing['id'].'" style="/*margin-bottom: 30px;*/ '.$readStateClass.'">
                         '.nl2br($announcing['text']).'
                     </p>';
 
                 if ($newTopic) {
-                    echo '
+                    $temp_str .= '
                     <div style="position: absolute; bottom: 0; right: 10px;">
                         <button class="b iUnderstand" announcingID="' . $announcing['id'] . '">Ясно</button>
                     </div>';
                 }
 
 
-                echo '
-                </div>';
+                 $temp_str .= '
+                 </div>';
+
                 //var_dump($announcing['status']);
                 //var_dump($announcing['read_status']);
+
+
+                if ($announcing['type'] == 1){
+                    $news_str .= $temp_str;
+                }
+                if ($announcing['type'] == 4){
+                    $stocks_str .= $temp_str;
+                }
             }
+
+            //Дни рождений
+            $births_str = '';
+            $today_birth_str = '';
+
+            $day = date('d');
+            $month = date('m');
+            $year = date('Y');
+
+            $today = date('Y-m-d', time());
+            $afterMonthDate = date('Y-m-d', strtotime('+1 month', gmmktime(0, 0, 0, $month, $day, $year)));
+//            var_dump($afterMonthDate);
+
+            $query = "SELECT `id`, `full_name`, `birth` FROM `spr_workers`
+            WHERE 
+            `status` <> '8' 
+            AND 
+            ((MONTH (`birth`) = '{$month}')
+                AND 
+                (
+                    (DAY (`birth`) > '$day') 
+                    OR 
+                    (DAY (`birth`) = '$day')
+                ) 
+            )
+            OR (
+                (MONTH (`birth`) = MONTH ('$afterMonthDate'))
+                    AND 
+                    (
+                        (DAY (`birth`) < DAY ('$afterMonthDate')) 
+                        OR 
+                        (DAY (`birth`) = DAY ('$afterMonthDate'))
+                    )
+                )
+            ORDER BY MONTH (`birth`), DAY (`birth`) ASC";
+
+            $args = [
+
+            ];
+
+            $births_arr = $db::getRows($query, $args);
+            //var_dump($births_arr);
+            //var_dump($births_arr);
+
+            if (!empty($births_arr)){
+                foreach ($births_arr as $birth) {
+                    //var_dump(date('m-d', strtotime($birth['birth'])));
+
+                    if (date('m-d', strtotime($birth['birth'])) == date('m-d', time())){
+
+                        $today_birth_str .= '
+                            <tr>
+                                <td style="text-align: center; width: 50%; padding-left: 5px; color: #fbff00; text-shadow: 1px 1px 4px #ef0909, 0px 0px 10px #000b34;">
+                                    <i>' .$birth['full_name'].'</i>
+                                </td>
+                            </tr>';
+                    }else{
+                        $births_str .= '
+                            <tr>
+                                <td style="text-align: right; width: 50%; padding-right: 10px; font-size: 90%; ">
+                                    <i>'.explode('-', $birth['birth'])[2].' '.$monthsName[explode('-', $birth['birth'])[1]].'</i>
+                                </td>
+                                <td style="text-align: left; width: 50%; padding-left: 5px;">
+                                    '.$birth['full_name'].'
+                                </td>
+                            </tr>';
+                    }
+                }
+
+            }
+
+            if (mb_strlen($today_birth_str) > 0) {
+                $today_birth_str = '
+                    <table width="100%" border="0" style="text-align: center; background-color: #cbfcff; box-shadow: 0px 9px 0px #cbfcff;">
+                        <tr>
+                            <td style="text-align: center; position: relative;">
+                                <img src="img/HappyBirthday.png" style="width: 200px;">
+                                <!--<div style="width: 100%; position: absolute; bottom: 3px;">
+                               
+                                </div>-->
+                            </td>
+                            <tr>
+                                <td>
+                                    <table width="100%" style="text-align: center; font-size: 160%;">
+                                        '.$today_birth_str.'
+                                    </table> 
+                                </td>
+                            </tr>
+                            
+                        </tr>
+                    </table>';
+            }
+
+            if (mb_strlen($births_str) > 0) {
+                if (mb_strlen($today_birth_str) > 0) {
+                    $absolute_pos = 'position: absolute; bottom: 0;';
+                }else{
+                    $absolute_pos = '';
+                }
+
+                $births_str = '
+                    <table width="100%" border="0" style="text-align: center; border: 1px solid #BFBCB5; '.$absolute_pos.'">
+                        <tr>
+                            <td colspan="2" style="text-align: center; font-size: 80%; background-color: rgb(206 206 206); padding: 3px;">
+                                <i>Скоро день рождения:</i>
+                            </td>
+                        </tr>
+                        '.$births_str.'
+                    </table>';
+            }
+
+            //В таблицу выводим результат
+            echo '
+            <table width="100%" style="border:1px solid #BFBCB5;">
+                <tr style="">
+                    <td style="width: 50%; border:1px solid #BFBCB5; vertical-align: top;">
+                        <div style="height: 20px; max-height: 20px; text-align: center; background-color: rgb(0 150 15); color: white; margin-bottom: 5px; border-bottom: 1px solid #BFBCB5;">
+                            <i>Текущие акции</i>
+                        </div>
+                        <div style="height: 300px; max-height: 300px; overflow-y: scroll; text-align: center; border:1px solid #BFBCB5;">
+                            '.$stocks_str.'
+                        </div>
+                    </td>
+                    <td style="text-align: center; width: 50%; border:1px solid #BFBCB5; vertical-align: top;">
+                        <div style="height: 20px; max-height: 20px; text-align: center; background-color: rgb(255 0 252); color: rgb(255 255 255); margin-bottom: 5px; border-bottom: 1px solid #BFBCB5;">
+                            <i>Дни рождения</i>
+                        </div>
+                        <div style="height: 400px; max-height: 400px; overflow-y: scroll; text-align: center; position: relative;">
+                            '.$today_birth_str.'
+                            '.$births_str.'
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center; width: 100%; border:1px solid #BFBCB5;">
+                        <div style="height: 20px; max-height: 20px; text-align: center; background-color: rgb(233 255 0); color: rgb(39, 0, 255); margin-bottom: 5px; border-bottom: 1px solid #BFBCB5;">
+                            <i>Объявления</i>
+                        </div>
+                        <div style="height: 400px; max-height: 400px; overflow-y: scroll; text-align: center;">
+                            '.$news_str.'
+                        </div>
+                    </td>
+                </tr>
+            </table>';
+
+
+
         }
 
-        echo '<a href="history.php" class="b3">История изменений и обновлений до <b style="color: red;">15.09.2017</b></a><br>';
+        /*echo '<a href="history2.php" class="b3">История изменений и обновлений</a><br>';*/
         echo '	
 			
 			    <div id="doc_title">Главная - Асмедика</div>

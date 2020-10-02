@@ -4719,6 +4719,9 @@
         if (type == 11){
             res_location = 'scheduler4.php';
         }
+        if (type == 999){
+            res_location = 'scheduler5.php';
+        }
 
         var errors = false;
 
