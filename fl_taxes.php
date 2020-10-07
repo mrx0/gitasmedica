@@ -10,7 +10,7 @@
         require_once 'header_tags.php';
         //var_dump($stom);
 
-        if (($_SESSION['id'] == 270) || $god_mode){
+        if (($finances['see_all'] == 1) || $god_mode){
             include_once 'DBWork.php';
             include_once 'functions.php';
             //$offices = SelDataFromDB('spr_filials', '', '');

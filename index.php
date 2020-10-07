@@ -22,7 +22,11 @@
 
 		//$offices = SelDataFromDB('spr_filials', '', '');
 
-		echo '
+        //!!!Массив тех, кому видно по умолчанию, потому надо будет вывести это в базу или в другой файл
+        $permissionsWhoCanSee_arr = array(2, 3, 8, 9);
+
+
+        echo '
 			<header style="margin-bottom: 5px;">
 				<h1>Главная</h1>';
 			echo '
@@ -164,10 +168,19 @@
                             <b>'.$topicTheme.'</b>
                         </div>
                               
-                        <div style="position: absolute; top: 2px; right: 10px; font-size: 11px; text-align: right;">
+                        <div style="position: absolute; top: 2px; right: 50px; font-size: 11px; text-align: right;">
                             Дата: '.date('d.m.y H:i' ,strtotime($announcing['create_time'])).'<br>
                             <span style="font-size: 10px; color: #716f6f;">Автор: '.WriteSearchUser('spr_workers', $announcing['create_person'], 'user', false).'</span>
                         </div>';
+
+                if (in_array($_SESSION['permissions'], $permissionsWhoCanSee_arr) || $god_mode) {
+                    $temp_str .= '
+                        <div style="position: absolute; top: 6px; right: 0px; text-align: right;">
+                            <span style="background-color: #e8e8e8; padding: 1px 3px; border: 1px solid #868686; font-size: 15px; cursor: pointer;" onclick="announcingDelete('.$announcing['id'].');"><i class="fa fa-times" aria-hidden="true" style="color: red; " title="Закрыть"></i></span>
+                            <span style="background-color: #e8e8e8; padding: 1px 3px; border: 1px solid #868686; font-size: 15px; cursor: pointer;" onclick="announcingDelete('.$announcing['id'].');"><i class="fa fa-trash-o" aria-hidden="true" title="Удалить"></i></span>
+                        </div>
+                        ';
+                }
 
                 $temp_str .= '
                     <div style="position: absolute; bottom: 0; left: 34px; font-size: 80%;';

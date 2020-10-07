@@ -388,6 +388,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         }
                         //var_dump($zapis_summ);
                         //var_dump($zapis_summ[5]);
+                        //var_dump($zapis_summ[5]);
 
                         //сортируем по основным ключам
                         ksort($zapis_summ);
@@ -402,7 +403,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                                 if (isset($zapis_data['data'])) {
                                     if (!empty($zapis_data['data'])) {
-                                        foreach ($zapis_data['data'] as $i_id => $i_summ) {
+                                        foreach ($zapis_data['data'] as $z_id => $i_summ) {
                                             if ($pervich == 1 || $pervich == 2) {
                                                 //Стоматология
                                                 if ($type == 5) {
@@ -410,8 +411,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                                         if ($i_summ < 1100) {
                                                             //нас интересует сейчас это условие, первичка без работы
                                                             $pervich_summ_arr_new[$type][1]++;
-                                                            var_dump($i_id);
-                                                            echo '<a href="invoice.php?id='.$i_id.'" class="ahref button_tiny" style="margin: 0 3px; font-size: 90%;" target="_blank" rel="nofollow noopener">'.$i_id.'</a><br>';
+                                                            //var_dump($i_id);
+                                                            echo '<input type="hidden" id="zapis_'.$z_id.'">';
                                                         }/* else {
                                                             $pervich_summ_arr_new[$type][2]++;
                                                         }*/
@@ -424,8 +425,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                                         if ($i_summ < 550) {
                                                             //нас интересует сейчас это условие, первичка без работы
                                                             $pervich_summ_arr_new[$type][1]++;
-                                                            var_dump($i_id);
-                                                            echo '<a href="invoice.php?id='.$i_id.'" class="ahref button_tiny" style="margin: 0 3px; font-size: 90%;" target="_blank" rel="nofollow noopener">'.$i_id.'</a><br>';
+                                                            //var_dump($i_id);
+                                                            //echo '<a href="invoice.php?id='.$z_id.'" class="ahref button_tiny" style="margin: 0 3px; font-size: 90%;" target="_blank" rel="nofollow noopener">'.$z_id.'</a><br>';
+                                                            echo '<input type="hidden" id="zapis_'.$z_id.'">';
                                                         }/* else {
                                                             $pervich_summ_arr_new[$type][2]++;
                                                         }*/
@@ -437,8 +439,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                                         if ($i_summ < 990) {
                                                             //нас интересует сейчас это условие, первичка без работы
                                                             $pervich_summ_arr_new[$type][1]++;
-                                                            var_dump($i_id);
-                                                            echo '<a href="invoice.php?id='.$i_id.'" class="ahref button_tiny" style="margin: 0 3px; font-size: 90%;" target="_blank" rel="nofollow noopener">'.$i_id.'</a><br>';
+                                                            //var_dump($i_id);
+                                                            //echo '<a href="invoice.php?id='.$z_id.'" class="ahref button_tiny" style="margin: 0 3px; font-size: 90%;" target="_blank" rel="nofollow noopener">'.$z_id.'</a><br>';
+                                                            echo '<input type="hidden" id="zapis_'.$z_id.'">';
                                                         }/* else {
                                                             $pervich_summ_arr_new[$type][2]++;
                                                         }*/
