@@ -1804,6 +1804,7 @@
 			}
 		})
 	};
+
 	//Добавить объявление
 	function Ajax_add_announcing(mode) {
 
@@ -1830,10 +1831,10 @@
             dataType: "JSON",
             data:
 			{
-                announcing_type:announcing_type,
-                comment:comment,
-                filial:filial,
-                workers_type:workers_type,
+                announcing_type: announcing_type,
+                comment: comment,
+                filial: filial,
+                workers_type: workers_type,
                 theme: theme
 			},
 			cache: false,
