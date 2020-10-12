@@ -3203,7 +3203,7 @@
 
             patientUnic: patientUnic
         };
-        console.log(reqData);
+        //console.log(reqData);
 
         $.ajax({
             url:"ajax_show_result_stat_lost_pervich_f.php",
@@ -3216,6 +3216,46 @@
             },
             success:function(data){
                 $('#qresult').html(data);
+                $('#q2result').html('');
+
+                Ajax_show_result_stat_lost_pervich_analiz();
+            }
+        })
+    }
+
+    //Функция анализа записей первичек
+    function Ajax_show_result_stat_lost_pervich_analiz(){
+        $(".zapis_id").each(function(){
+            //console.log($(this).val());
+
+            getInvoiceByZapis($(this).val());
+        })
+
+    }
+
+    //Функция берёт наряды по записи
+    function getInvoiceByZapis(zapis_id){
+
+	    let link = "get_inoive_by_zapis_f.php";
+
+        let reqData = {
+            zapis_id: zapis_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                //console.log(res.data);
+
+                $('#q2result').append(res.data);
             }
         })
     }
@@ -6666,7 +6706,7 @@
 		});
 	}
 
-	//Удалить текущую позицию
+	///Удалить текущую позицию
 	function deleteInvoiceItem(ind, dataObj){
 		//console.log(dataObj.getAttribute("invoiceitemid"));
 
@@ -9936,6 +9976,48 @@
                         window.location.replace('');
                         //console.log('client.php?id='+id);
                     }, 100);
+                }
+            })
+        }
+    }
+
+    //Удаление(блокировка)
+    function announcingDelete (ann_id, status){
+
+        let rys = false;
+
+        if (status == 9) {
+            rys = confirm("Вы собираетесь удалить объявление. \n\nВы уверены?");
+        }
+
+        if (status == 8) {
+            rys = confirm("Вы собираетесь закрыть объявление. \n\nВы уверены?");
+        }
+
+        if (status == 0) {
+            rys = confirm("Восстановить объявление?");
+        }
+
+        if (rys) {
+            $.ajax({
+                url: "delete_announce_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    ann_id: ann_id,
+                    status: status
+                },
+                cache: false,
+                beforeSend: function () {
+                    // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    //$('#errrror').html(data);
+                    //setTimeout(function () {
+                        location.reload();
+                        //console.log('client.php?id='+id);
+                    //}, 100);
                 }
             })
         }
