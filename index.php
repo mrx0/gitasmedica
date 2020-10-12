@@ -151,7 +151,10 @@
 
                 }
 
-
+                if($announcing['status'] == 8){
+                    $annColor = '162, 162, 162';
+                    $annColorAlpha = '0.8';
+                }
 
                 $temp_str .= '                
                 <div style="border: 1px dotted #CCC; margin: 0 1px 3px; padding: 10px 15px 0px; font-size: 80%; background-color: rgba('.$annColor.', '.$annColorAlpha.'); position: relative;">
@@ -164,7 +167,13 @@
                             '.$annIco.'
                         </div>
                                                 
-                        <div style="position: absolute; top: 5px; left: 35px; font-size: 13px;">
+                        <div style="position: absolute; top: 5px; left: 35px; font-size: 13px;">';
+
+                if($announcing['status'] == 8){
+                    $temp_str .= '  <span style="color: rgb(239,22,22) ;font-weight:bold;">ЗАКРЫТО / ЗАВЕРШЕНО</span> ';
+                }
+
+                $temp_str .= '
                             <b>'.$topicTheme.'</b>
                         </div>
                               
@@ -174,12 +183,22 @@
                         </div>';
 
                 if (in_array($_SESSION['permissions'], $permissionsWhoCanSee_arr) || $god_mode) {
-                    $temp_str .= '
+                    if ($announcing['status'] == 8){
+                        $temp_str .= '
                         <div style="position: absolute; top: 6px; right: 0px; text-align: right;">
-                            <span style="background-color: #e8e8e8; padding: 1px 3px; border: 1px solid #868686; font-size: 15px; cursor: pointer;" onclick="announcingDelete('.$announcing['id'].');"><i class="fa fa-times" aria-hidden="true" style="color: red; " title="Закрыть"></i></span>
-                            <span style="background-color: #e8e8e8; padding: 1px 3px; border: 1px solid #868686; font-size: 15px; cursor: pointer;" onclick="announcingDelete('.$announcing['id'].');"><i class="fa fa-trash-o" aria-hidden="true" title="Удалить"></i></span>
+                            <span style="background-color: #e8e8e8; padding: 1px 3px; border: 1px solid #868686; font-size: 15px; cursor: pointer;" onclick="announcingDelete(' . $announcing['id'] . ', 0);"><i class="fa fa-reply" aria-hidden="true" style="color: grey; " title="Вернуть"></i></span>
                         </div>
                         ';
+                    }elseif($announcing['status'] == 9){
+
+                    }else {
+                        $temp_str .= '
+                        <div style="position: absolute; top: 6px; right: 0px; text-align: right;">
+                            <span style="background-color: #e8e8e8; padding: 1px 3px; border: 1px solid #868686; font-size: 15px; cursor: pointer;" onclick="announcingDelete(' . $announcing['id'] . ', 8);"><i class="fa fa-times" aria-hidden="true" style="color: red; " title="Закрыть"></i></span>
+                            <span style="background-color: #e8e8e8; padding: 1px 3px; border: 1px solid #868686; font-size: 15px; cursor: pointer;" onclick="announcingDelete(' . $announcing['id'] . ', 9);"><i class="fa fa-trash-o" aria-hidden="true" title="Удалить"></i></span>
+                        </div>
+                        ';
+                    }
                 }
 
                 $temp_str .= '
