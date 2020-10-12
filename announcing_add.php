@@ -37,6 +37,7 @@
 							<div class="cellRight">
 								<select name="announcing_type" id="announcing_type">
 								    <option value="1" selected>Объявление</option>
+								    <option value="5">Важное объявление</option>
 								    <option value="4">Акция</option>
 								    <option value="2">Обновление</option>
 								    <option value="3">Инструкция</option>
