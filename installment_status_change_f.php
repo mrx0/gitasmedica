@@ -14,7 +14,7 @@
 		include_once 'DBWork.php';
 		include_once 'functions.php';
 		if ($_POST){
-		    if (isset($_POST['client_id']) && isset($_POST['installment_status_now'])) {
+		    if (isset($_POST['client_id']) && isset($_POST['invoice_id']) && isset($_POST['installment_status_now'])) {
 
                 //$msql_cnnct = ConnectToDB();
                 /*!!!Тест PDO*/

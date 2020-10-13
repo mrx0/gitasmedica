@@ -41,15 +41,26 @@
                 ];
 
                 //Соберём все платежи по нарядам, которые есть в рассрочках
-                $query = "
-                    SELECT j_i.*, j_p.id AS payment_id, j_p.summ AS payment_summ, j_p.date_in AS payment_date, s_c.full_name
-                    FROM `journal_payment` j_p
-                    INNER JOIN `journal_installments` j_i
-                    ON j_i.invoice_id = j_p.invoice_id
-                    RIGHT JOIN `spr_clients` s_c
-                    ON s_c.id = j_p.client_id
-                    WHERE j_i.status = 1";
+//                $query = "
+//                    SELECT j_i.*, j_p.id AS payment_id, j_p.summ AS payment_summ, j_p.date_in AS payment_date, s_c.full_name
+//                    FROM `journal_installments` j_i
+//                    RIGHT JOIN `journal_payment` j_p
+//                    ON j_i.invoice_id = j_p.invoice_id
+//                    LEFT JOIN `spr_clients` s_c
+//                    ON s_c.id = j_p.client_id
+//                    WHERE j_i.status = 1";
 
+
+                $query = "
+                    SELECT j_inst.*, j_p.id AS payment_id, j_p.summ AS payment_summ, j_p.date_in AS payment_date, s_c.full_name, j_i.summ AS invoice_summ, j_i.paid AS invoice_paid 
+                    FROM `journal_installments` j_inst
+                    LEFT JOIN `journal_payment` j_p
+                    ON j_inst.invoice_id = j_p.invoice_id
+                    LEFT JOIN `spr_clients` s_c
+                    ON s_c.id = j_inst.client_id
+                    LEFT JOIN `journal_invoice` j_i
+                    ON j_i.id = j_inst.invoice_id
+                    WHERE j_inst.status = '1' AND j_inst.invoice_id <> '0'";
 
                 $clients_w_installment = $db::getRows($query, $args);
 //                var_dump($clients_w_installment);
@@ -71,57 +82,108 @@
                         array_push($installment_j[$item['client_id']]['data'][$item['invoice_id']], $item);
                     }
 //                    var_dump($installment_j);
-                    var_dump($installment_j[18576]['data'][77587][0]);
+//                    var_dump($installment_j[39762]['data'][113055]);
 
                     echo '
 					    <div id="data">';
                     echo '
-                            <ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
+                            <ul class="live_filter" id="livefilter-list" style="width: 697px; margin-left: 5px; /*box-shadow: 2px 2px 2px rgba(4,21,101,0.5);*//*box-shadow: rgba(146, 146, 146, 0.82) 0px 4px 10px;*/">';
 
                     echo '
-                                <li class="cellsBlock" style="font-weight:bold;">	
-                                    <div class="cellFullName" style="text-align: center">
+                                <li class="cellsBlock" style="font-weight: bold;">	
+                                    <div class="cellFullName" style="width: 463px; min-width: 463px; text-align: center; border-bottom: 0; border-right: 0;">
                                         Полное имя
                                     </div>
                                     <!--<div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">
                                         Наряд
                                     </div>-->
-                                    <div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">
-                                        Долг
+                                    <div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px; border-bottom: 0; border-right: 0;">
+                                        Общий долг
                                     </div>
-                                    <div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">
+                                    <div class="cellCosmAct" style="text-align: center; width: 103px; min-width: 103px; max-width: 103px; border-bottom: 0;">
                                         Доступно на счету
                                     </div>
                                     <div class="cellText" style="text-align: center; border: 0;"></div>
-							    </li>';
+							    </li>
+                            </ul>';
 
                     foreach ($installment_j as $client_id => $client_data){
                         //var_dump($client_data);
 
-                        echo '
-                                <li class="cellsBlock" style="font-weight:bold;">	
-                                    <div class="cellFullName" style="text-align: left">';
+                        //Баланс контрагента
+                        $client_balance = json_decode(calculateBalance ($client_id), true);
+                        //Долг контрагента
+                        $client_debt = json_decode(calculateDebt ($client_id), true);
 
-                        echo $client_data['name'];
+                        //доступный остаток
+                        $dostOstatok = $client_balance['summ'] - $client_balance['debited'] - $client_balance['withdraw'] + $client_balance['refund'];
 
                         echo '
-                                    </div>';
+                                <ul class="live_filter cellsBlockHover" id="livefilter-list" style="width: 694px; margin-left: 6px; border: 1px solid #BFBCB5; /*box-shadow: 2px 2px 2px rgba(84, 90, 121, 0.5);*/box-shadow: rgba(146, 146, 146, 0.82) 0px 4px 10px;">
+                                    <li class="cellsBlock" style="font-weight:bold;">	
+                                        <div class="cellFullName" style="width: 462px; min-width: 462px; text-align: left; border: 0; font-size: 130%; font-style: italic;">';
+
+                        echo '<!--<a href="client.php?id='.$client_id.'" class="ahref" target="_blank" rel="nofollow noopener">-->'.$client_data['name'].'<!--</a>-->';
+
                         echo '
-                                    <div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">
-                                    </div>
-                                    <div class="cellCosmAct" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;"></div>
-                                    <div class="cellText" style="text-align: center; border: 0;"></div>
-							    </li>';
+                                            <div style="/*float: right;*/ font-weight: normal; font-size: 70%;">
+                                                <a href="client.php?id='.$client_id.'" class="ahref b4" id="" target="_blank" rel="nofollow noopener">
+                                                    <i class="fa fa-user" aria-hidden="true" style=" font-size: 120%;" title="Карточка пациента"></i> Карточка пациента
+                                                </a>
+                                                        
+                                                <a href="finance_account.php?client_id='.$client_id.'" class="ahref b4" style="text-align: center;" target="_blank" rel="nofollow noopener">
+                                                    <i class="fa fa-chevron-right" style="color: grey;" aria-hidden="true"></i> Управление счётом
+                                                </a>
+                                                        
+                                                <a href="pay_blank_pdf_qr.php?client_id='.$client_id.'" class="ahref b4" style="text-align: center;" target="_blank" rel="nofollow noopener" title="Выписать счет на оплату">
+                                                    <i class="fa fa-file-text" style="font-size: 140%; color: rgb(74, 148, 70); /*float: right;*/" aria-hidden="true"></i> Выписать счёт на оплату
+                                                </a>
+                                            </div>';
+
+                        echo '
+                                        </div>';
+                        echo '
+                                        <div class="cellCosmAct calculateInvoice" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px; font-size: 110%; border-top: 0; border-bottom: 0; border-right: 0;">
+                                            '.$client_debt['summ'].'
+                                        </div>
+                                        <div class="cellCosmAct calculateOrder" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px; font-size: 112%; border-top: 0; border-bottom: 0; border-right: 0;">
+                                            '.$dostOstatok.'
+                                        </div>
+                                        <div class="cellText" style="text-align: center; border: 0;">
+                                        
+                                        </div>
+                                    </li>';
 
                         foreach ($client_data['data'] as $invoice_id => $payment_data) {
+//                            var_dump($payment_data);
+
                             echo '
-                                <li class="cellsBlock" style="font-weight:bold; width: 50vw; ">	
-                                    <div class="cellFullName" style="text-align: left">';
+                                <div id="cl_data_main_'.$payment_data[0]['client_id'].'">
+                                    <li class="cellsBlock" style="font-weight:bold; /*width: 50vw;*/ ">	
+                                        <div class="cellFullName" style="text-align: left">';
 
                             //echo $client_data['name'];
-                            echo 'Наряд #'.$invoice_id;
                             echo '
-                                    </div>';
+                                            <div style="float: left;">
+                                                Наряд <a href="invoice.php?id='.$invoice_id.'" class="ahref" target="_blank" rel="nofollow noopener">#'.$invoice_id.'</a> 
+                                                <span style="font-weight: normal;">Рассрочка с '.date('d.m.Y' ,strtotime($payment_data[0]['date_in'])).'</span>';
+
+
+                            echo ' Осталось внести: <span style="font-weight: normal;">'. ($payment_data[0]['invoice_summ'] - $payment_data[0]['invoice_paid']).' руб.</span>';
+                            echo '
+                                            </div>';
+
+                            if ($payment_data[0]['invoice_summ'] - $payment_data[0]['invoice_paid'] <= 0) {
+                                echo '
+                                            <div class="" style="font-size: 80%; text-align: left; float: right; font-weight: normal;">
+                                                <span class="info ahref  b4"  style="display: inline; color: red; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus2(' . $payment_data[0]['id'] . ', ' . $payment_data[0]['client_id'] . ', ' . $invoice_id . ', ' . $payment_data[0]['status'] . ', false);">
+                                                    <i class="fa fa-database" aria-hidden="true" style=" font-size: 120%;" title="Есть незакрытая рассрочка"></i> Закрыть рассрочку
+                                                </span>
+                                            </div>';
+                            }
+
+                            echo '
+                                        </div>';
 //                            echo '
 //                                    <div class="cellText" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">';
 //
@@ -133,16 +195,35 @@
 //                                    </div>';
 
                             echo '       
-							    </li>';
+                                    </li>';
 
+//                            echo '
+//                            <li id="user_options_'.$payment_data[0]['client_id'].'" class="user_options" style="width: 50vw; /*display: none; *//*border: 1px solid rgb(140, 140, 140);*/ /*box-shadow: rgba(146, 146, 146, 0.82) 0px 4px 10px;*/ padding: 5px 10px 1px; /*background: #f7ffe8; */font-size: 80%;">
+//
+//                                <!--<div class="" style="text-align: left;">
+//                                    Рассрочка с '.date('d.m.Y' ,strtotime($payment_data[0]['date_in'])).'
+//                                </div>
+//
+//                                <div class="" style="width: 90%; margin: 10px; padding-bottom: 10px; text-align: left;">
+//                                    <span class="ahref button_tiny" style="font-size:80%;  color: #555;" onclick="getPayments4Installments('.$payment_data[0]['id'].', \''.$payment_data[0]['date_in'].'\');">Показать платежи</span>
+//                                    <div id="client_orders_by_period_'.$payment_data[0]['id'].'" style="width: 90%; margin-top: 10px; overflow-x: scroll; overflow-y: hidden; ">
+//
+//                                    </div>
+//                                </div>-->
+//                            </li>';
 
                             echo '
-                                <li class="cellsBlock" style="font-weight:bold; width: 50vw; ">	
+                                <li class="cellsBlock" style="font-weight:bold; /*width: 50vw;*/ ">	
                                     
-                                    <div class="cellFullName" style="text-align: left; max-width: 250px;">';
+                                    <div class="cellFullName" style="border: 0; text-align: left; max-width: 250px;">';
+
+//                            echo '
+//                                <div class="" style="text-align: left; font-weight: normal;">
+//                                    Рассрочка с '.date('d.m.Y' ,strtotime($payment_data[0]['date_in'])).'
+//                                </div>';
 
                             echo '
-                                        <div id="" style="width: 90%; margin-top: 10px; overflow-x: scroll; overflow-y: hidden; ">';
+                                <div id="" style="width: 90%; margin-top: 10px; overflow-x: scroll; overflow-y: hidden; ">';
 
                             //Сформируем массив с суммами по месяцам
                             $payments_month = array();
@@ -176,8 +257,14 @@
 //                            var_dump(count($period));
 
                             foreach ($period as $value) {
-//                                var_dump($value->format( "Y-m" ));
-//                                var_dump($value);
+//                                var_dump($value->format( "Y" ));
+//                                var_dump(date('Y', time()));
+
+
+                                $todayBorder = '';
+                                if (($value->format( "Y" ) == date('Y', time())) && ($value->format( "m" ) == date('m', time()))) {
+                                    $todayBorder = 'outline: 1px solid #dc06dc; border: 3px solid yellow;';
+                                }
 
                                 $summ = 0;
 
@@ -188,16 +275,16 @@
                                 }
                                 if ($summ > 0){
                                     echo ' 
-                                    <div style="display: table-cell; width: 83px; min-width: 83px; border: 1px solid #BFBCB5; background: lawngreen; padding: 10px;">';
+                                        <div style="display: table-cell; width: 83px; min-width: 83px; border: 1px solid #BFBCB5; background: lawngreen; padding: 10px; '.$todayBorder.'">';
                                 }else{
                                     echo '
-                                    <div style="display: table-cell; width: 83px; min-width: 83px; border: 1px solid #BFBCB5; background: #ff7777; padding: 10px;">';
+                                            <div style="display: table-cell; width: 83px; min-width: 83px; border: 1px solid #BFBCB5; background: #ff7777; padding: 10px; '.$todayBorder.'">';
                                 }
 
                                 echo '
-                                        <div style="margin-bottom: 5px; font-size: 80%;">'.$monthsName[$value->format( "m" )].' '.$value->format( "Y" ).'</div>
-                                        <div>'.$summ.'</div>
-                                    </div>';
+                                                <div style="margin-bottom: 5px; font-size: 80%;">'.$monthsName[$value->format( "m" )].' '.$value->format( "Y" ).'</div>
+                                                <div>'.$summ.'</div>
+                                            </div>';
                             }
 
 
@@ -214,9 +301,9 @@
 
 
                             echo '
-                                        </div>';
+                                            </div>';
                             echo '
-                                    </div>';
+                                        </div>';
 //                            echo '
 //                                    <div class="cellText" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px;">';
 //
@@ -228,15 +315,18 @@
 //                                    </div>';
 
                             echo '       
-							    </li>';
+							        </li>
+							        </div>';
 
                         }
+                        echo '
+                                </ul>';
                     }
 
                 }
 
-                echo '
-                            </ul>';
+                /*echo '
+                            </ul>';*/
                 echo '
                         </div>';
 
