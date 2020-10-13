@@ -26,7 +26,7 @@
 				<div id="status">
 					<header>
 						<div class="nav">
-							<a href="tickets.php" class="b">Все тикеты</a>
+							<a href="tickets.php" class="b">Все заявки</a>
 						</div>
 						
 						<h2>Новый тикет</h2>
