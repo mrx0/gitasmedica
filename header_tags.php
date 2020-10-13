@@ -251,13 +251,13 @@
 //	var_dump($enter_ok);
 
     //Запрет на копирование
-	if (!$god_mode) {
-        echo '
-		<body oncopy="return false;">';
-    }else {
+//	if (!$god_mode) {
+//        echo '
+//		<body oncopy="return false;">';
+//    }else {
         echo '
 		<body>';
-    }
+//    }
 
 
 	echo '
