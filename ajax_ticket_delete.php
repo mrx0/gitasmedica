@@ -46,7 +46,7 @@
                 //Добавляем лог
                 $query_dop .= "INSERT INTO `journal_tickets_logs` (`ticket_id`, `create_person`, `descr`, `create_time`)
                         VALUES (
-                        '{$_POST['ticket_id']}', '{$_SESSION['id']}', 'Тикет был удалён', '{$time}');";
+                        '{$_POST['ticket_id']}', '{$_SESSION['id']}', 'Заявка была удалена', '{$time}');";
 
                 $query = "UPDATE `journal_tickets` SET 
                     `last_edit_time`='$time',
@@ -60,7 +60,7 @@
 
                 $data = '
                         <div class="query_ok">
-                            Тикет удалён
+                            Заявка удалена
                         </div>';
                 echo json_encode(array('result' => 'success', 'data' => $data));
             }

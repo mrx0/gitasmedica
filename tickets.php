@@ -202,7 +202,7 @@
 
             if (($ticket['add_new'] == 1) || ($ticket['add_own'] == 1) || $god_mode){
                 echo '
-					<a href="ticket_add.php" class="b4">Новый тикет</a>';
+					<a href="ticket_add.php" class="b4">Новая заявка</a>';
             }
 
             echo '

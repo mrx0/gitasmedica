@@ -10905,7 +10905,7 @@
     function Ajax_ticket_restore(id){
         var rys = false;
 
-        rys = confirm("Вы cобираетесь вернуть тикет в работу. \n\nВы уверены?");
+        rys = confirm("Вы cобираетесь вернуть заявку в работу. \n\nВы уверены?");
 
         if (rys){
 

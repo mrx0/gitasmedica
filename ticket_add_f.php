@@ -106,7 +106,7 @@
                     //Добавляем лог
                     $query .= "INSERT INTO `journal_tickets_logs` (`ticket_id`, `create_time`, `create_person`, `descr`)
                         VALUES (
-                        '{$mysql_insert_id}', '{$time}', '{$_SESSION['id']}', 'Новый тикет добавлен');";
+                        '{$mysql_insert_id}', '{$time}', '{$_SESSION['id']}', 'Новая заявка добавлена');";
 
                      //Добавляем отметку о прочтении (мы же создали это сами)
                     $query .= "INSERT INTO `journal_tickets_readmark` (`ticket_id`, `create_time`, `create_person`, `status`)
