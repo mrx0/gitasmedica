@@ -73,9 +73,10 @@
 //            WHERE s_c.id = :client_id ORDER BY j_pc.call_time, j_pc.create_time DESC";
 
 			$query = "
-            SELECT s_c.*, 
+            SELECT s_c.*, /*j_inst.status AS installment_status,*/
             (SELECT j_pc.status FROM `journal_phone_calling` j_pc WHERE j_pc.client_id = s_c.id ORDER BY j_pc.call_time DESC, j_pc.create_time DESC LIMIT 1) AS call_status
             FROM `spr_clients` s_c 
+            /*LEFT JOIN `journal_installments` j_inst ON j_inst.client_id = s_c.id*/
             WHERE s_c.id = :client_id";
 
            //Выбрать все
@@ -92,6 +93,30 @@ SELECT
 FROM `users`
 ORDER BY `name`;
             */
+
+            //Есть рассрочки
+            $have_installment = false;
+            //Были рассрочки
+            $was_installment = false;
+
+            $query = "
+            SELECT j_inst.status
+            FROM `journal_installments` j_inst
+            WHERE j_inst.client_id = :client_id AND `invoice_id` <> '0'";
+
+            $installment_j = $db::getRows($query, $args);
+//            var_dump($installment_j);
+
+            foreach ($installment_j as $item){
+                if ($item['status'] == 1){
+                    $have_installment = true;
+                }
+                if ($item['status'] == 7){
+                    $was_installment = true;
+                }
+            }
+//            var_dump($have_installment);
+//            var_dump($was_installment);
 
 
 			//var_dump($client_j);
@@ -129,30 +154,33 @@ ORDER BY `name`;
                         echo '<a href="finance_account.php?client_id='.$client_j['id'].'" class="b" style="display: inline; margin-left: 20px; font-size: 70%; padding: 2px 5px;">Управление счётом</a>';
                         echo '<a href="zapis.php?client_id='.$client_j['id'].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Записать пациента</a>';
                         if (($_SESSION['permissions'] == 3) || ($_SESSION['id'] == 364) || $god_mode){
-                            //var_dump($client_j['installment']);
+                            //var_dump($client_j['installment_status']);
 
                             //новая рассрочка
                             echo '
                                         <a href="create_installment.php?client_id='.$client_j['id'].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Создать рассрочку</a>';
 
                             //Нет отметки о рассрочке
-                            if ($client_j['installment'] == 0) {
-                                echo '<span class="info"  style="display: inline; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus('.$client_j['id'].', '.$client_j['installment'].', true);"><i class="fa fa-database" aria-hidden="true" title="Нет рассрочек"></i></span>';
+                            //if ($client_j['installment_status'] == 0) {
+                            if (!$have_installment && !$was_installment) {
+                                echo '<span class="info"  style="display: inline; margin-left: 0px; font-size: 100%; padding: 2px 5px; /*cursor: pointer;*/"/* onclick="changeInstallmentStatus('.$client_j['id'].', 0, true);"*/><i class="fa fa-database" aria-hidden="true" title="Нет рассрочек"></i></span>';
                             }
                             //Включена рассрочка
-                            if ($client_j['installment'] == 1) {
+                            //if ($client_j['installment_status'] == 1) {
+                            if ($have_installment) {
                                 echo '
-                                    <span class="info"  style="display: inline; color: red; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;">
-                                        <i class="fa fa-database" aria-hidden="true" onclick="changeInstallmentStatus('.$client_j['id'].', '.$client_j['installment'].', true);" title="Есть незакрытая рассрочка"></i>
+                                    <span class="info"  style="display: inline; color: red; margin-left: 0px; font-size: 100%; padding: 2px 5px; /*cursor: pointer;*/">
+                                        <i class="fa fa-database" aria-hidden="true" onclick="changeInstallmentStatus('.$client_j['id'].', 1, true);" title="Есть незакрытая рассрочка"></i>
 
-                                            <a href="stat_installments.php" class="b4" style="font-size: 60%">Открытые рассрочки (старое)</a>
                                             <a href="stat_installments2.php" class="b4" style="font-size: 60%">Открытые рассрочки (новое)</a>
+                                            <a href="stat_installments.php" class="b4" style="font-size: 60%">Открытые рассрочки (старое)</a>
 
                                     </span>';
                             }
                             //Рассрочка закрыта
-                            if ($client_j['installment'] == 7) {
-                                echo '<span class="info"  style="display: inline; color: green; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus('.$client_j['id'].', '.$client_j['installment'].', true);"><i class="fa fa-database" aria-hidden="true" title="Рассрочка закрыта"></i></span>';
+                            //if ($client_j['installment_status'] == 7) {
+                            if (!$have_installment && $was_installment) {
+                                echo '<span class="info"  style="display: inline; color: green; margin-left: 0px; font-size: 100%; padding: 2px 5px; /*cursor: pointer;*/" onclick="changeInstallmentStatus('.$client_j['id'].', 7, true);"><i class="fa fa-database" aria-hidden="true" title="Рассрочка закрыта"></i></span>';
                             }
                         }
                     }
@@ -247,7 +275,7 @@ ORDER BY `name`;
                 }elseif ($client_j['call_status'] == 4){
                     echo '<i class="fa fa-phone-square" style="color: #93021e; font-size: 140%;" title="Плохой отзыв"></i>';
                 }elseif ($client_j['call_status'] == 3){
-                    echo '<i class="fa fa-phone-square" style="color: #b1ffad; font-size: 140%;" title="Хороший отзыв"></i>';
+                    echo '<i class="fa fa-phone-square" style="color: #b1ffad; font-size: 140%; background-color: rgba(51, 51, 51, 0.1); box-shadow: -1px -2px 5px rgba(51, 51, 51, 0.2);" title="Хороший отзыв"></i>';
                 }else{
                     echo '<i class="fa fa-phone-square" style="color: #dcdcdc; font-size: 120%;" title="Нет отметки"></i>';
                 }

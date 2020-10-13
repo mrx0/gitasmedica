@@ -12255,7 +12255,7 @@
     }
 
     //Изменить статус рассрочки
-    function changeInstallmentStatus(client_id, installment_status_now, reload=false){
+    function changeInstallmentStatus(client_id, installment_status_now, reload= false){
 
         let link = "installment_status_change_f.php";
 
@@ -12285,6 +12285,45 @@
                         //Удаляем из документа, чтобы не перезагружать таблицу
                         $('#cl_data_main_'+client_id).remove();
                         $('#user_options_'+client_id).remove();
+                    }
+                }
+            }
+        })
+    }
+
+    //Изменить статус рассрочки v2.0
+    function changeInstallmentStatus2(installment_id, client_id, invoice_id, installment_status_now, reload= false){
+
+        let link = "installment_change_f.php";
+
+        let reqData = {
+            installment_id: installment_id,
+            client_id: client_id,
+            invoice_id: invoice_id,
+            installment_status_now: installment_status_now
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == 'success') {
+                    if (reload) {
+                        location.reload();
+                    }else{
+                        //Удаляем из документа, чтобы не перезагружать таблицу
+                        $('#cl_data_main_'+client_id).remove();
+                        //$('#user_options_'+client_id).remove();
                     }
                 }
             }
