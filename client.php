@@ -1249,7 +1249,7 @@ ORDER BY `name`;
 							}
 
 
-                            //Тикеты
+                            //Заявки
                             $tickets_arr = array();
 
                             $today = date('Y-m-d', time());

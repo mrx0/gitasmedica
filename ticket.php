@@ -177,7 +177,7 @@
                             <div id="status">
                                 <header>
                                     <div class="nav">
-                                        <a href="tickets.php?'.$show_option_str_for_paginator.'" class="b">Все тикеты</a>
+                                        <a href="tickets.php?'.$show_option_str_for_paginator.'" class="b">Все заявки</a>
                                     </div>
                                     <h2>
                                         Тикет #'.$ticket_j[0]['id'];

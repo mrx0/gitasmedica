@@ -297,7 +297,7 @@
 //		var_dump($god_mode);
 
 		if (($ticket['see_all'] == 1) || ($ticket['see_own'] == 1) || $god_mode){
-			echo '<li><a href="tickets.php">Тикеты<div class="have_new-ticket notes_count" style="display: none; top: 0; right: 0; background: red;" title="">4545</div></a></li>';
+			echo '<li><a href="tickets.php">Заявки<div class="have_new-ticket notes_count" style="display: none; top: 0; right: 0; background: red;" title="">4545</div></a></li>';
 		}
 
 		if (($it['see_all'] == 1) || ($it['see_own'] == 1) || $god_mode){
