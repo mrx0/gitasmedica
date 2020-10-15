@@ -12133,6 +12133,199 @@
         }
 	}
 
+    //Добавляем коэффициент в табель
+    function koeffInTabelAdd(tabel_id, minus){
+        //console.log();
+
+        hideAllErrors();
+
+        let koeff = $("#koeff").val();
+        // console.log(koeff);
+
+        if (isNaN(koeff)){
+            $("#koeff").val(0);
+        }else{
+            if (koeff < 0){
+                $("#koeff").val(value * -1);
+            }else{
+                if (koeff == ""){
+                    $("#koeff").val(0);
+                }else{
+                    if (koeff === undefined){
+                        $("#koeff").val(0);
+                    }else{
+                        //Всё норм
+                        //console.log("Всё норм")
+
+                        var link = "fl_koeff_in_tabel_add_f.php";
+
+                        var reqData = {
+                            tabel_id: tabel_id,
+                            minus: minus,
+                            koeff: koeff
+                        };
+                        //console.log(reqData);
+
+                        $.ajax({
+                            url: link,
+                            global: false,
+                            type: "POST",
+                            dataType: "JSON",
+                            data: reqData,
+                            cache: false,
+                            beforeSend: function () {
+
+                            },
+                            success: function (res) {
+                                //console.log (res);
+
+                                $('.center_block').remove();
+                                $('#overlay').hide();
+
+                                location.reload();
+
+                                // if (res.result == 'success') {
+                                //     // console.log (res);
+                                //
+                                //     //Если категория, перезагрузим их
+                                //     if (type == 'category') {
+                                //         getScladCategories();
+                                //     }
+                                //
+                                //     //Если позиция, загрузим позиции этой категории
+                                //     if (type == 'item') {
+                                //         getScladItems(targetId, 0, 1000, false, true, targetId);
+                                //     }
+                                //
+                                // } else {
+                                //     $("#existCatItem").html(res.data);
+                                //     $("#existCatItem").show();
+                                // }
+                            }
+                        })
+
+                    }
+                }
+            }
+        }
+
+
+
+
+
+        //         $.ajax({
+        //             url: link,
+        //             global: false,
+        //             type: "POST",
+        //             dataType: "JSON",
+        //             data: reqData,
+        //             cache: false,
+        //             beforeSend: function () {
+        //
+        //             },
+        //             success: function (res) {
+        //                 //console.log (res);
+        //
+        //                 $('.center_block').remove();
+        //                 $('#overlay').hide();
+        //
+        //                 if (res.result == 'success') {
+        //                     // console.log (res);
+        //
+        //                     //Если категория, перезагрузим их
+        //                     if (type == 'category') {
+        //                         getScladCategories();
+        //                     }
+        //
+        //                     //Если позиция, загрузим позиции этой категории
+        //                     if (type == 'item') {
+        //                         getScladItems(targetId, 0, 1000, false, true, targetId);
+        //                     }
+        //
+        //                 } else {
+        //                     $("#existCatItem").html(res.data);
+        //                     $("#existCatItem").show();
+        //                 }
+        //             }
+        //         })
+        //     }else{
+        //         $("#existCatItem").html('<span style="color: red; font-weight: bold;">Выберите единицы измерения</span>');
+        //         $("#existCatItem").show();
+        //     }
+        // }else{
+        //     $("#existCatItem").html('<span style="color: red; font-weight: bold;">Ничего не ввели</span>');
+        //     $("#existCatItem").show();
+        // }
+
+    }
+
+    //Показываем блок для добавления коэффициента в табель
+    function showKoeffInTabelAdd(tabel_id, minus=false, koeff){
+        // console.log(type);
+
+        let descr = 'Добавить коэффициент ';
+        let mark = '';
+
+        if (minus){
+            mark = ' -';
+        }else{
+            mark = ' +';
+        }
+
+        $('#overlay').show();
+
+        let buttonsStr = '<input type="button" class="b" value="Ok" onclick="koeffInTabelAdd('+tabel_id+', \''+minus+'\');">';
+
+        // Создаем меню:
+        let menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        })
+            .css({
+                "height": "150px"
+            })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative"
+                    })
+                    .append('<span style="margin: 5px;"><i>'+descr+' '+mark+'</i></span>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-10px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%"
+                            })
+                            .append('<div style="margin-top: 3px;"><span style="font-size:90%; color: #333; ">Введите значение</span><br>'+mark+'<input type="number" name="koeff" id="koeff" class="form-control" size="2" min="0" max="99" value="'+koeff+'" class="mod" style="text-align: center;">%')
+                            // .append(unit_select)
+                            // .append(res.data)
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "bottom": "2px",
+                                "width": "100%"
+                            })
+                            .append('<div id="existCatItem" class="error"></div>')
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
+                            )
+                    )
+            );
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+    }
+
 	//!!! пример работы пауза между нажатиями
     //$('.paidout_summ2'). on("keyup", function() {
     $("body").on("keyup change", ".paidout_summ2", function (e) {
