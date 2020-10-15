@@ -12259,6 +12259,34 @@
 
     }
 
+    function changeSettings (option, value){
+        var link = "change_settings_f.php";
+
+        var reqData = {
+            option: option,
+            value: value
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                location.reload();
+
+            }
+        })
+    }
+
     //Показываем блок для добавления коэффициента в табель
     function showKoeffInTabelAdd(tabel_id, minus=false, koeff){
         // console.log(type);
