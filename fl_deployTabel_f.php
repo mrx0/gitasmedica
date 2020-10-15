@@ -30,11 +30,21 @@
                 if ($tabel_j != 0) {
 
                     //Общая сумма, которую осталось выплатить = сумма (РЛ) + надбавки + за ночь + пустые смены - вычеты - оплачено - выплачено
-                    $summItog = $tabel_j[0]['summ'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena'] - $tabel_j[0]['deduction'] - $tabel_j[0]['paid'] - $tabel_j[0]['paidout'];
+                    $summItog = $tabel_j[0]['summ'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena'];
                     //Если ассистент, то плюсуем сумму за РЛ
                     if ($tabel_j[0]['type'] == 7){
                         $summItog += $tabel_j[0]['summ_calc'];
                     }
+
+                    //Коэффициенты +/-
+                    if (($tabel_j[0]['k_plus'] != 0) || ($tabel_j[0]['k_minus'] != 0)){
+                        $summItog = $summItog + $summItog/100*($tabel_j[0]['k_plus'] - $tabel_j[0]['k_minus']);
+                    }
+                    //var_dump($summItog);
+
+                    //Общая сумма, которую осталось выплатить = всего сумма - вычеты - оплачено - выплачено
+                    $summItog = $summItog - $tabel_j[0]['deduction'] - $tabel_j[0]['paid'] - $tabel_j[0]['paidout'];
+//                        var_dump($summItog);
 
                     if (intval($summItog) == 0) {
 

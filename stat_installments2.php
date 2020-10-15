@@ -328,6 +328,7 @@
                 /*echo '
                             </ul>';*/
                 echo '
+                            <div id="doc_title">Открытые рассрочки - Асмедика</div>
                         </div>';
 
                 echo '

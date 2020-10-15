@@ -246,10 +246,18 @@
                                 </header>
                             </div>';
 
+                        //var_dump($tabel_j);
+
                         $tabel_summ = intval($tabel_j['summ']);
+
                         //Если ассистент
                         if ($tabel_j['type'] == 7){
                             $tabel_summ = intval($tabel_j['summ'] + $tabel_j['summ_calc']);
+                        }
+
+                        //Коэффициенты +/-
+                        if (($tabel_j['k_plus'] != 0) || ($tabel_j['k_minus'] != 0)){
+                            $tabel_summ = intval($tabel_summ + $tabel_summ/100*($tabel_j['k_plus'] - $tabel_j['k_minus']));
                         }
 
                         if (isset($tabel_deductions_j[1])){

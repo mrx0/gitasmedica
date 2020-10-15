@@ -29,7 +29,7 @@
 
                 //Выбираем количество непрочитанных сообщений
                 $query = "SELECT COUNT(*) AS total FROM `journal_announcing` jann
-                WHERE jann.id NOT IN 
+                WHERE jann.status <> '8' AND jann.status <> '9' AND jann.id NOT IN 
                 (SELECT `announcing_id` FROM `journal_announcing_readmark` jannrm 
                 WHERE jannrm.create_person = '{$_SESSION['id']}' AND jann.id = jannrm.announcing_id AND jannrm.status = '1')
                 {$query_dop}";
