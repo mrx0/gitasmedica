@@ -265,7 +265,7 @@
                                         </div>
                                         <div style="margin: 5px 0 5px 3px; font-size: 80%;">
                                             <b>Наряд: <a href="invoice.php?id=' . $rezData['invoice_id'] . '" class="ahref">#' . $rezData['invoice_id'] . '</a> от ' . $invoice_create_time . ' ' . $noch_str . '<br>пац.: <a href="client.php?id=' . $rezData['client_id'] . '" class="ahref">' . $name . '</a><br>
-                                            Сумма: ' . $summ . ' р. Страх.: ' . $summins . ' р.</b> <br>
+                                            Сумма: <span class="invoice_summ">' . $summ . '</span> р. Страх.: <span class="invoice_summ_ins">' . $summins . '</span> р.</b> <br>
 
                                         </div>
                                         <div style="margin: 5px 0 5px 3px; font-size: 80%;">';

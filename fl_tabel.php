@@ -361,7 +361,8 @@
                                         </div>
                                         <div style="margin: 5px 0 0 3px; font-size: 80%;">
                                             <b>Наряд: <a href="invoice.php?id='.$rezData['invoice_id'].'" class="ahref">#'.$rezData['invoice_id'].'</a> от '.$invoice_create_time.'<br>пац.: <a href="client.php?id='.$rezData['client_id'].'" class="ahref">'.$name.'</a><br>
-                                            Сумма: '.$summ.' р. Страх.: '.$summins.' р.</b> <br>
+                                            <!--Сумма: '.$summ.' р. Страх.: '.$summins.' р.</b> <br>-->
+                                            Сумма: <span class="invoice_summ">' . $summ . '</span> р. Страх.: <span class="invoice_summ_ins">' . $summins . '</span> р.</b> <br>
                                             
                                         </div>
                                         <div style="margin: 5px 0 5px 3px; font-size: 80%;">';
@@ -1094,7 +1095,7 @@
                         if (($tabel_j[0]['type'] == 5) || ($tabel_j[0]['type'] == 6) || ($tabel_j[0]['type'] == 10)) {
                             echo '
                                         <div style="background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ'] . '</span> руб.
+                                            Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ'] . '</span> руб. <div style="display: inline; color: #5f5f5f; font-size: 90%; font-style: italic;">Сумма всех нарядов: <span id="invoiceSumm"></span>  руб. (включая страховые)</div>
                                         </div>';
                         }
                         //Админы, ассистенты
@@ -1375,6 +1376,32 @@
 					        </div>
 					        <!-- Подложка только одна -->
 					        <div id="overlay"></div>';
+
+                        echo '
+                            <script type="text/javascript">
+                                $(document).ready(function(){
+                                    let all_invoice_summ = 0;
+                                    let all_invoice_summ_ins = 0;
+                                    
+                                    $(".invoice_summ").each(function(){
+//                                        console.log($(this).html());
+
+                                        all_invoice_summ += Number($(this).html());
+                                    })
+                                    
+                                    $(".invoice_summ_ins").each(function(){
+//                                        console.log($(this).html());
+
+                                        all_invoice_summ_ins += Number($(this).html());
+                                    })
+//                                    console.log(all_invoice_summ);
+//                                    console.log(all_invoice_summ_ins);
+                                    
+                                    $("#invoiceSumm").html(number_format(all_invoice_summ + all_invoice_summ_ins, 0, \'.\', \' \'));
+                                });
+
+
+                            </script>';
 
 					}else{
                         echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
