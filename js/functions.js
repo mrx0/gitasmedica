@@ -12477,6 +12477,7 @@
 
     //Изменить статус рассрочки
     function changeInstallmentStatus(client_id, installment_status_now, reload= false){
+        //console.log (arguments);
 
         let link = "installment_status_change_f.php";
 
