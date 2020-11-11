@@ -1268,6 +1268,9 @@
 
                                 //$pervent_value = ;
 
+//                                if (!isset($percents_j[10][$percent_cat_id])){
+//                                    var_dump('!!!');
+//                                }
 
                                 echo '
                                 <li class="filterBlock">
