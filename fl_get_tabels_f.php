@@ -161,6 +161,12 @@
                                     $summItog += $rezData['summ_calc'];
                                 }
 
+                                //Коэффициенты +/-
+                                if (($rezData['k_plus'] != 0) || ($rezData['k_minus'] != 0)){
+                                    $summItog = $summItog + $summItog/100*($rezData['k_plus'] - $rezData['k_minus']);
+                                }
+                                //var_dump($summItog);
+
                                 $rezult .= '
                                     <div class="cellsBlockHover" style="background-color: rgb(255, 255, 255); border: 1px solid #BFBCB5; margin-top: 1px; position: relative; '.$bgColor.'">
                                         <div style="display: inline-block; width: 180px;">';

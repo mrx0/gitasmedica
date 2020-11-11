@@ -128,7 +128,7 @@
                     //Добавляем лог
                     $query .= "INSERT INTO `journal_tickets_logs` (`ticket_id`, `create_person`, `descr`, `create_time`)
                         VALUES (
-                        '{$_POST['ticket_id']}', '{$_SESSION['id']}', 'Тикет был изменён', '{$time}');";
+                        '{$_POST['ticket_id']}', '{$_SESSION['id']}', 'Заявка была изменена', '{$time}');";
 
                     //Добавляем отметку о прочтении (мы же создали это сами)
                     /*$query .= "INSERT INTO `journal_tickets_readmark` (`ticket_id`, `create_time`, `create_person`, `status`)
@@ -143,7 +143,7 @@
 
                     $data = '
                          <div class="query_ok">
-                             Тикет добавлен
+                             Заявка добавлена
                          </div>';
 
                     echo json_encode(array('result' => 'success', 'data' => $data));

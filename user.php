@@ -75,6 +75,10 @@
 			echo '
 				<div id="status">
 					<header>
+                        <div class="nav">
+                            <a href="contacts.php" class="b">Все сотрудники</a>
+                        </div>
+					
 						<h2>Карточка пользователя';
 			if (($workers['edit'] == 1) || $god_mode){
 				echo '

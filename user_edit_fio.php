@@ -25,6 +25,12 @@
 					echo '
 						<div id="status">
 							<header>
+                                <div class="nav">
+                                    <a href="contacts.php" class="b">Все сотрудники</a>
+                                    <a href="user_edit.php?id='.$_GET['id'].'" class="b">Вернуться к редактированию</a>
+                                    <a href="user.php?id='.$_GET['id'].'" class="b">Карточка пользователя</a>
+                                </div>
+                                
 								<h2>Редактировать карточку сотрудника</h2>
 							</header>';
 

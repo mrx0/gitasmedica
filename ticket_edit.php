@@ -105,10 +105,10 @@
                                 <div id="status">
                                     <header>
                                         <div class="nav">
-                                            <a href="tickets.php" class="b">Все тикеты</a>
+                                            <a href="tickets.php" class="b">Все заявки</a>
                                         </div>
                                         
-                                        <h2>Редактировать тикет <a href="ticket.php?id=' . $ticket_j[0]['id'] . '" class="ahref">#' . $ticket_j[0]['id'] . '</a></h2>
+                                        <h2>Редактировать заявку <a href="ticket.php?id=' . $ticket_j[0]['id'] . '" class="ahref">#' . $ticket_j[0]['id'] . '</a></h2>
                                         <input type="hidden" id="ticket_id" value="'.$ticket_j[0]['id'].'">
                                     </header>';
 

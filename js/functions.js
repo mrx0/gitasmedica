@@ -720,7 +720,8 @@
                 // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             success:function(data){
-                 $("#status").html(data);
+                $("#status").html(data);
+                window.location.replace('user.php?id='+worker_id+'');
             }
         })
     };
@@ -1803,6 +1804,7 @@
 			}
 		})
 	};
+
 	//Добавить объявление
 	function Ajax_add_announcing(mode) {
 
@@ -1829,10 +1831,10 @@
             dataType: "JSON",
             data:
 			{
-                announcing_type:announcing_type,
-                comment:comment,
-                filial:filial,
-                workers_type:workers_type,
+                announcing_type: announcing_type,
+                comment: comment,
+                filial: filial,
+                workers_type: workers_type,
                 theme: theme
 			},
 			cache: false,
@@ -3202,7 +3204,7 @@
 
             patientUnic: patientUnic
         };
-        console.log(reqData);
+        //console.log(reqData);
 
         $.ajax({
             url:"ajax_show_result_stat_lost_pervich_f.php",
@@ -3215,6 +3217,46 @@
             },
             success:function(data){
                 $('#qresult').html(data);
+                $('#q2result').html('');
+
+                Ajax_show_result_stat_lost_pervich_analiz();
+            }
+        })
+    }
+
+    //Функция анализа записей первичек
+    function Ajax_show_result_stat_lost_pervich_analiz(){
+        $(".zapis_id").each(function(){
+            //console.log($(this).val());
+
+            getInvoiceByZapis($(this).val());
+        })
+
+    }
+
+    //Функция берёт наряды по записи
+    function getInvoiceByZapis(zapis_id){
+
+	    let link = "get_inoive_by_zapis_f.php";
+
+        let reqData = {
+            zapis_id: zapis_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                //console.log(res.data);
+
+                $('#q2result').append(res.data);
             }
         })
     }
@@ -6665,7 +6707,7 @@
 		});
 	}
 
-	//Удалить текущую позицию
+	///Удалить текущую позицию
 	function deleteInvoiceItem(ind, dataObj){
 		//console.log(dataObj.getAttribute("invoiceitemid"));
 
@@ -9940,6 +9982,48 @@
         }
     }
 
+    //Удаление(блокировка)
+    function announcingDelete (ann_id, status){
+
+        let rys = false;
+
+        if (status == 9) {
+            rys = confirm("Вы собираетесь удалить объявление. \n\nВы уверены?");
+        }
+
+        if (status == 8) {
+            rys = confirm("Вы собираетесь закрыть объявление. \n\nВы уверены?");
+        }
+
+        if (status == 0) {
+            rys = confirm("Восстановить объявление?");
+        }
+
+        if (rys) {
+            $.ajax({
+                url: "delete_announce_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    ann_id: ann_id,
+                    status: status
+                },
+                cache: false,
+                beforeSend: function () {
+                    // $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (data) {
+                    //$('#errrror').html(data);
+                    //setTimeout(function () {
+                        location.reload();
+                        //console.log('client.php?id='+id);
+                    //}, 100);
+                }
+            })
+        }
+    }
+
     //Удаление из банка
     function fl_deleteInBank (item_id){
 
@@ -10739,7 +10823,7 @@
 			}
 		});
 
-		 //Запрос есть ли новые тикеты
+		 //Запрос есть ли новые заявки
 		$.ajax({
 			url:"get_ticket2.php",
 			global: false,
@@ -10821,7 +10905,7 @@
     function Ajax_ticket_restore(id){
         var rys = false;
 
-        rys = confirm("Вы cобираетесь вернуть тикет в работу. \n\nВы уверены?");
+        rys = confirm("Вы cобираетесь вернуть заявку в работу. \n\nВы уверены?");
 
         if (rys){
 
@@ -11021,11 +11105,11 @@
         });
     }
 
-	//Прочитали все тикеты
+	//Прочитали все заявки
     function iReadAllOfTickts(worker_id) {
         var rys = false;
 
-        rys = confirm("Пометить все тикеты как прочитаные?");
+        rys = confirm("Пометить все заявки как прочитаные?");
 
         if (rys) {
 
@@ -12049,6 +12133,227 @@
         }
 	}
 
+    //Добавляем коэффициент в табель
+    function koeffInTabelAdd(tabel_id, minus){
+        //console.log();
+
+        hideAllErrors();
+
+        let koeff = $("#koeff").val();
+        // console.log(koeff);
+
+        if (isNaN(koeff)){
+            $("#koeff").val(0);
+        }else{
+            if (koeff < 0){
+                $("#koeff").val(value * -1);
+            }else{
+                if (koeff == ""){
+                    $("#koeff").val(0);
+                }else{
+                    if (koeff === undefined){
+                        $("#koeff").val(0);
+                    }else{
+                        //Всё норм
+                        //console.log("Всё норм")
+
+                        var link = "fl_koeff_in_tabel_add_f.php";
+
+                        var reqData = {
+                            tabel_id: tabel_id,
+                            minus: minus,
+                            koeff: koeff
+                        };
+                        //console.log(reqData);
+
+                        $.ajax({
+                            url: link,
+                            global: false,
+                            type: "POST",
+                            dataType: "JSON",
+                            data: reqData,
+                            cache: false,
+                            beforeSend: function () {
+
+                            },
+                            success: function (res) {
+                                //console.log (res);
+
+                                $('.center_block').remove();
+                                $('#overlay').hide();
+
+                                location.reload();
+
+                                // if (res.result == 'success') {
+                                //     // console.log (res);
+                                //
+                                //     //Если категория, перезагрузим их
+                                //     if (type == 'category') {
+                                //         getScladCategories();
+                                //     }
+                                //
+                                //     //Если позиция, загрузим позиции этой категории
+                                //     if (type == 'item') {
+                                //         getScladItems(targetId, 0, 1000, false, true, targetId);
+                                //     }
+                                //
+                                // } else {
+                                //     $("#existCatItem").html(res.data);
+                                //     $("#existCatItem").show();
+                                // }
+                            }
+                        })
+
+                    }
+                }
+            }
+        }
+
+
+
+
+
+        //         $.ajax({
+        //             url: link,
+        //             global: false,
+        //             type: "POST",
+        //             dataType: "JSON",
+        //             data: reqData,
+        //             cache: false,
+        //             beforeSend: function () {
+        //
+        //             },
+        //             success: function (res) {
+        //                 //console.log (res);
+        //
+        //                 $('.center_block').remove();
+        //                 $('#overlay').hide();
+        //
+        //                 if (res.result == 'success') {
+        //                     // console.log (res);
+        //
+        //                     //Если категория, перезагрузим их
+        //                     if (type == 'category') {
+        //                         getScladCategories();
+        //                     }
+        //
+        //                     //Если позиция, загрузим позиции этой категории
+        //                     if (type == 'item') {
+        //                         getScladItems(targetId, 0, 1000, false, true, targetId);
+        //                     }
+        //
+        //                 } else {
+        //                     $("#existCatItem").html(res.data);
+        //                     $("#existCatItem").show();
+        //                 }
+        //             }
+        //         })
+        //     }else{
+        //         $("#existCatItem").html('<span style="color: red; font-weight: bold;">Выберите единицы измерения</span>');
+        //         $("#existCatItem").show();
+        //     }
+        // }else{
+        //     $("#existCatItem").html('<span style="color: red; font-weight: bold;">Ничего не ввели</span>');
+        //     $("#existCatItem").show();
+        // }
+
+    }
+
+    function changeSettings (option, value){
+        var link = "change_settings_f.php";
+
+        var reqData = {
+            option: option,
+            value: value
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                location.reload();
+
+            }
+        })
+    }
+
+    //Показываем блок для добавления коэффициента в табель
+    function showKoeffInTabelAdd(tabel_id, minus=false, koeff){
+        // console.log(type);
+
+        let descr = 'Добавить коэффициент ';
+        let mark = '';
+
+        if (minus){
+            mark = ' -';
+        }else{
+            mark = ' +';
+        }
+
+        $('#overlay').show();
+
+        let buttonsStr = '<input type="button" class="b" value="Ok" onclick="koeffInTabelAdd('+tabel_id+', \''+minus+'\');">';
+
+        // Создаем меню:
+        let menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        })
+            .css({
+                "height": "150px"
+            })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative"
+                    })
+                    .append('<span style="margin: 5px;"><i>'+descr+' '+mark+'</i></span>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-10px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%"
+                            })
+                            .append('<div style="margin-top: 3px;"><span style="font-size:90%; color: #333; ">Введите значение</span><br>'+mark+'<input type="number" name="koeff" id="koeff" class="form-control" size="2" min="0" max="99" value="'+koeff+'" class="mod" style="text-align: center;">%')
+                            // .append(unit_select)
+                            // .append(res.data)
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "bottom": "2px",
+                                "width": "100%"
+                            })
+                            .append('<div id="existCatItem" class="error"></div>')
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
+                            )
+                    )
+            );
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+    }
+
 	//!!! пример работы пауза между нажатиями
     //$('.paidout_summ2'). on("keyup", function() {
     $("body").on("keyup change", ".paidout_summ2", function (e) {
@@ -12171,7 +12476,8 @@
     }
 
     //Изменить статус рассрочки
-    function changeInstallmentStatus(client_id, installment_status_now, reload=false){
+    function changeInstallmentStatus(client_id, installment_status_now, reload= false){
+        //console.log (arguments);
 
         let link = "installment_status_change_f.php";
 
@@ -12201,6 +12507,45 @@
                         //Удаляем из документа, чтобы не перезагружать таблицу
                         $('#cl_data_main_'+client_id).remove();
                         $('#user_options_'+client_id).remove();
+                    }
+                }
+            }
+        })
+    }
+
+    //Изменить статус рассрочки v2.0
+    function changeInstallmentStatus2(installment_id, client_id, invoice_id, installment_status_now, reload= false){
+
+        let link = "installment_change_f.php";
+
+        let reqData = {
+            installment_id: installment_id,
+            client_id: client_id,
+            invoice_id: invoice_id,
+            installment_status_now: installment_status_now
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == 'success') {
+                    if (reload) {
+                        location.reload();
+                    }else{
+                        //Удаляем из документа, чтобы не перезагружать таблицу
+                        $('#cl_data_main_'+client_id).remove();
+                        //$('#user_options_'+client_id).remove();
                     }
                 }
             }

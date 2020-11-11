@@ -44,7 +44,7 @@
 								ФИО: '.$full_name.'<br>
 								<br><br>
 								<a href="user.php?id='.$_POST['id'].'" class="b">Вернуться в карточку</a>
-								<a href="contacts.php" class="b">К списку сотрудников</a>
+								<!--<a href="contacts.php" class="b">К списку сотрудников</a>-->
 							</div>
 							';
 					}

@@ -197,6 +197,8 @@
 
                             foreach ($filialData as $rezData) {
 
+//                                $summ = $rezData['in_summ'];
+//                                $summins = $rezData['in_summins'];
                                 $invoice_summ = $rezData['invoice_summ'];
                                 $invoice_summins = $rezData['invoice_summins'];
                                 $invoice_create_time = date('d.m.y', strtotime($rezData['invoice_create_time']));
@@ -266,7 +268,7 @@
                                             </div>
                                             <div style="margin: 5px 0 5px 3px; font-size: 80%;">
                                                 <b>Наряд: <a href="invoice.php?id=' . $rezData['invoice_id'] . '" class="ahref">#' . $rezData['invoice_id'] . '</a> от ' . $invoice_create_time . ' ' . $noch_str . '<br>пац.: <a href="client.php?id=' . $rezData['client_id'] . '" class="ahref">' . $name . '</a><br>
-                                                Сумма: ' . $invoice_summ . ' р. Страх.: ' . $invoice_summins . ' р.</b> <br>
+                                                Сумма: <span class="invoice_summ">' . $invoice_summ . '</span> р. Страх.: <span class="invoice_summ_ins">' . $invoice_summins . '</span> р.</b> <br>
                                                 
                                             </div>
                                             <div style="margin: 5px 0 5px 3px; font-size: 80%;">';

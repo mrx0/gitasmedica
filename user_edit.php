@@ -64,6 +64,10 @@
                     echo '
                         <div id="status">
                             <header>
+                                <div class="nav">
+                                    <a href="contacts.php" class="b">Все сотрудники</a>
+                                </div>
+                            
                                 <h2>Редактировать карточку пользователя</h2>
                             </header>';
 

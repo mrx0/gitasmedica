@@ -250,13 +250,23 @@
 //	var_dump($god_mode);
 //	var_dump($enter_ok);
 
+    $oncopy = false;
+
+    include_once('DBWorkPDO.php');
+    $db = new DB();
+    $query = "SELECT `value` FROM `settings` WHERE `option`='oncopy' LIMIT 1";
+
+    //Выбрать все
+    $oncopy = $db::getValue($query, []);
+    //var_dump($oncopy);
+
     //Запрет на копирование
-	if (!$god_mode) {
-        echo '
-		<body oncopy="return false;">';
-    }else {
+	if ($god_mode || ($_SESSION['permissions'] == 3) || ($oncopy == 'true')) {
         echo '
 		<body>';
+    }else {
+        echo '
+		<body oncopy="return false;">';
     }
 
 
@@ -297,7 +307,7 @@
 //		var_dump($god_mode);
 
 		if (($ticket['see_all'] == 1) || ($ticket['see_own'] == 1) || $god_mode){
-			echo '<li><a href="tickets.php">Тикеты<div class="have_new-ticket notes_count" style="display: none; top: 0; right: 0; background: red;" title="">4545</div></a></li>';
+			echo '<li><a href="tickets.php">Заявки<div class="have_new-ticket notes_count" style="display: none; top: 0; right: 0; background: red;" title="">4545</div></a></li>';
 		}
 
 		if (($it['see_all'] == 1) || ($it['see_own'] == 1) || $god_mode){
@@ -383,7 +393,7 @@
 
         echo '<li><a href="spr_proizvcalendar.php"><i class="fa fa-calendar" aria-hidden="true"></i></a></li>';
         
-		if ($god_mode){
+		if ($god_mode || ($_SESSION['permissions'] == 3)){
 			echo '<li><a href="admin.php" style="font-size: 110%;"><i class="fa fa-cogs"></i></a></li>';
 		}
 

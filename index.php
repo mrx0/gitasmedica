@@ -22,7 +22,11 @@
 
 		//$offices = SelDataFromDB('spr_filials', '', '');
 
-		echo '
+        //!!!Массив тех, кому видно по умолчанию, потому надо будет вывести это в базу или в другой файл
+        $permissionsWhoCanSee_arr = array(2, 3, 8, 9);
+
+
+        echo '
 			<header style="margin-bottom: 5px;">
 				<h1>Главная</h1>';
 			echo '
@@ -65,7 +69,7 @@
         $query = "SELECT jann.*, jannrm.status AS read_status
         FROM `journal_announcing_readmark` jannrm
         RIGHT JOIN (
-          SELECT * FROM `journal_announcing` j_ann  WHERE j_ann.status <> '9' AND (j_ann.type = '1' OR j_ann.type = '4')
+          SELECT * FROM `journal_announcing` j_ann  WHERE j_ann.status <> '9' AND (j_ann.type = '1' OR j_ann.type = '4' OR j_ann.type = '5')
           {$query_dop}
         ) jann ON jann.id = jannrm.announcing_id
         AND jannrm.create_person = '{$_SESSION['id']}'
@@ -91,10 +95,12 @@
 
         $stocks_str = '';
         $news_str = '';
+        $warning_str = '';
 
         if (!empty($announcing_arr)){
 
             foreach ($announcing_arr as $announcing) {
+                //var_dump($announcing);
 
                 $temp_str = '';
 
@@ -139,15 +145,27 @@
                     }
                 }
 
+                if ($announcing['type'] == 5){
+                    $annColor = '255, 51, 51';
+                    $annIco = '<i class="fa fa-bullhorn" aria-hidden="true"></i>';
+                    $annColorAlpha = '0.35';
+                    if ($topicTheme == ''){
+                        $topicTheme = 'Важно!';
+                    }
+                }
+
                 if ($announcing['read_status'] == 1){
-                    if ($announcing['type'] != 4) {
+                    if (($announcing['type'] != 4) && ($announcing['type'] != 5)) {
                         $readStateClass = 'display: none;';
                     }
                     $newTopic = false;
 
                 }
 
-
+                if($announcing['status'] == 8){
+                    $annColor = '162, 162, 162';
+                    $annColorAlpha = '0.8';
+                }
 
                 $temp_str .= '                
                 <div style="border: 1px dotted #CCC; margin: 0 1px 3px; padding: 10px 15px 0px; font-size: 80%; background-color: rgba('.$annColor.', '.$annColorAlpha.'); position: relative;">
@@ -160,14 +178,39 @@
                             '.$annIco.'
                         </div>
                                                 
-                        <div style="position: absolute; top: 5px; left: 35px; font-size: 13px;">
+                        <div style="position: absolute; top: 5px; left: 35px; font-size: 13px;">';
+
+                if($announcing['status'] == 8){
+                    $temp_str .= '  <span style="color: rgb(239,22,22) ;font-weight:bold;">ЗАКРЫТО / ЗАВЕРШЕНО</span> ';
+                }
+
+                $temp_str .= '
                             <b>'.$topicTheme.'</b>
                         </div>
                               
-                        <div style="position: absolute; top: 2px; right: 10px; font-size: 11px; text-align: right;">
+                        <div style="position: absolute; top: 2px; right: 50px; font-size: 11px; text-align: right;">
                             Дата: '.date('d.m.y H:i' ,strtotime($announcing['create_time'])).'<br>
                             <span style="font-size: 10px; color: #716f6f;">Автор: '.WriteSearchUser('spr_workers', $announcing['create_person'], 'user', false).'</span>
                         </div>';
+
+                if (in_array($_SESSION['permissions'], $permissionsWhoCanSee_arr) || $god_mode) {
+                    if ($announcing['status'] == 8){
+                        $temp_str .= '
+                        <div style="position: absolute; top: 6px; right: 0px; text-align: right;">
+                            <span style="background-color: #e8e8e8; padding: 1px 3px; border: 1px solid #868686; font-size: 15px; cursor: pointer;" onclick="announcingDelete(' . $announcing['id'] . ', 0);"><i class="fa fa-reply" aria-hidden="true" style="color: grey; " title="Вернуть"></i></span>
+                        </div>
+                        ';
+                    }elseif($announcing['status'] == 9){
+
+                    }else {
+                        $temp_str .= '
+                        <div style="position: absolute; top: 6px; right: 0px; text-align: right;">
+                            <span style="background-color: #e8e8e8; padding: 1px 3px; border: 1px solid #868686; font-size: 15px; cursor: pointer;" onclick="announcingDelete(' . $announcing['id'] . ', 8);"><i class="fa fa-times" aria-hidden="true" style="color: red; " title="Закрыть"></i></span>
+                            <span style="background-color: #e8e8e8; padding: 1px 3px; border: 1px solid #868686; font-size: 15px; cursor: pointer;" onclick="announcingDelete(' . $announcing['id'] . ', 9);"><i class="fa fa-trash-o" aria-hidden="true" title="Удалить"></i></span>
+                        </div>
+                        ';
+                    }
+                }
 
                 $temp_str .= '
                     <div style="position: absolute; bottom: 0; left: 34px; font-size: 80%;';
@@ -175,7 +218,7 @@
                     $temp_str .= 'display:none;';
                 }
                 $temp_str .= '">';
-                if ($announcing['type'] != 4) {
+                if (($announcing['type'] != 4) && ($announcing['type'] != 5)) {
                     $temp_str .= '
                         <a href="" class="ahref showMeTopic" announcingID="' . $announcing['id'] . '">Развернуть</a>';
                 }
@@ -208,6 +251,9 @@
                 }
                 if ($announcing['type'] == 4){
                     $stocks_str .= $temp_str;
+                }
+                if ($announcing['type'] == 5){
+                    $warning_str .= $temp_str;
                 }
             }
 
@@ -252,13 +298,13 @@
 
             $births_arr = $db::getRows($query, $args);
             //var_dump($births_arr);
-            //var_dump($births_arr);
 
             if (!empty($births_arr)){
                 foreach ($births_arr as $birth) {
                     //var_dump(date('m-d', strtotime($birth['birth'])));
 
-                    if (date('m-d', strtotime($birth['birth'])) == date('m-d', time())){
+                    //if (date('m-d', strtotime($birth['birth'])) == date('m-d', time())){
+                    if (explode('-', $birth['birth'])[1].'-'.explode('-', $birth['birth'])[2] == date('m-d', time())){
 
                         $today_birth_str .= '
                             <tr>
@@ -305,7 +351,7 @@
 
             if (mb_strlen($births_str) > 0) {
                 if (mb_strlen($today_birth_str) > 0) {
-                    $absolute_pos = 'position: absolute; bottom: 0;';
+                    $absolute_pos = 'position: absolute; /*bottom: 0;*/';
                 }else{
                     $absolute_pos = '';
                 }
@@ -323,7 +369,22 @@
 
             //В таблицу выводим результат
             echo '
-            <table width="100%" style="border:1px solid #BFBCB5;">
+            <table width="100%" style="border:1px solid #BFBCB5;">';
+
+            if (mb_strlen($warning_str) > 0) {
+                echo '
+                <tr>
+                    <td colspan="2" style="text-align: center; width: 100%; border:1px solid #BFBCB5;">
+                        <div style="height: 20px; max-height: 20px; text-align: center; background-color: rgb(255, 51, 51); color: rgb(255, 255, 255); margin-bottom: 5px; border-bottom: 1px solid #BFBCB5;">
+                            <i>Важные объявления</i>
+                        </div>
+                        <div  style="/*height: 70px; */max-height: 140px; overflow-y: scroll; text-align: center; position: relative;">
+                            ' . $warning_str . '
+                        </div>
+                    </td>
+                </tr>';
+            }
+            echo '
                 <tr style="">
                     <td style="width: 50%; border:1px solid #BFBCB5; vertical-align: top;">
                         <div style="height: 20px; max-height: 20px; text-align: center; background-color: rgb(0 150 15); color: white; margin-bottom: 5px; border-bottom: 1px solid #BFBCB5;">
@@ -337,7 +398,7 @@
                         <div style="height: 20px; max-height: 20px; text-align: center; background-color: rgb(255 0 252); color: rgb(255 255 255); margin-bottom: 5px; border-bottom: 1px solid #BFBCB5;">
                             <i>Дни рождения</i>
                         </div>
-                        <div style="height: 400px; max-height: 400px; overflow-y: scroll; text-align: center; position: relative;">
+                        <div style="height: 350px; max-height: 350px; overflow-y: scroll; text-align: center; position: relative;">
                             '.$today_birth_str.'
                             '.$births_str.'
                         </div>
@@ -348,7 +409,7 @@
                         <div style="height: 20px; max-height: 20px; text-align: center; background-color: rgb(233 255 0); color: rgb(39, 0, 255); margin-bottom: 5px; border-bottom: 1px solid #BFBCB5;">
                             <i>Объявления</i>
                         </div>
-                        <div style="height: 400px; max-height: 400px; overflow-y: scroll; text-align: center;">
+                        <div style="height: 350px; max-height: 350px; overflow-y: scroll; text-align: center;">
                             '.$news_str.'
                         </div>
                     </td>

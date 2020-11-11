@@ -284,7 +284,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         $query .= "`client` IN (".$queryDopClient.")";
                     }*/
 
-                    $query = $query . " ORDER BY CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) DESC";
+//                    $query = $query . " ORDER BY CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) DESC";
 
 //                    "
 //                    'SELECT * FROM `zapis` z
@@ -322,7 +322,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
 
                     $query = "
-                        SELECT jiex.*, ji.summ AS invoice_summ, ji.summins AS invoice_summins, ji.status AS invoice_status, ji.type AS type, ji.zapis_id AS zapis_id, z.enter AS enter, z.pervich AS pervich, sc.birthday2 AS birthday
+                        SELECT jiex.*, ji.summ AS invoice_summ, ji.summins AS invoice_summins, ji.status AS invoice_status, ji.type AS type, ji.zapis_id AS zapis_id, z.enter AS enter, z.pervich AS pervich, sc.birthday2 AS birthday, CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) AS z_date
                         FROM `zapis` z
                         INNER JOIN `journal_invoice` ji ON z.id = ji.zapis_id 
                         LEFT JOIN `journal_invoice_ex` jiex ON ji.id = jiex.invoice_id
@@ -332,13 +332,14 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) BETWEEN :start_time AND :end_time
                         AND (z.enter = '1' OR z.enter = '6') 
                         {$filial_str}
-                        {$type_str}";
+                        {$type_str}
+                        ORDER BY CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) DESC";
 
                     //var_dump($query);
 
                     $journal_j = $db::getRows($query, $args);
 
-                    //var_dump($journal_j);
+                    var_dump($journal_j);
 
 
                     //Типы посещений - первичка/нет (количество) (pervich)
@@ -359,6 +360,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                     if (!empty($journal_j)) {
 
                         foreach ($journal_j as $arr) {
+//                            var_dump($arr);
 
                             //Теперь суммы нарядов
                             //Пришел/не пришел/с улицы
@@ -373,7 +375,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                 $zapis_summ[$arr['type']][$arr['pervich']]['insure_data'] = array();
                             }
                             //Если страховой
-                            if ($arr['insure'] == 1) {
+                            //if (($arr['insure'] == 1) || ()){
+                            if (($arr['insure'] == 1) || ($arr['invoice_summins'] != 0)){
                                 if (!isset($zapis_summ[$arr['type']][$arr['pervich']]['insure_data'][$arr['zapis_id']])) {
                                     $zapis_summ[$arr['type']][$arr['pervich']]['insure_data'][$arr['zapis_id']] = 0;
                                 }
@@ -388,21 +391,28 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         }
                         //var_dump($zapis_summ);
                         //var_dump($zapis_summ[5]);
+                        //var_dump($zapis_summ[5]);
 
                         //сортируем по основным ключам
-                        ksort($zapis_summ);
+                        //ksort($zapis_summ);
                         //!!! тестовая проверка нового определения первичек
                         $pervich_summ_arr_new = array();
 
                         foreach ($zapis_summ as $type => $pervich_data) {
+//                            var_dump($type);
+                            //var_dump($pervich_data);
+
                             foreach ($pervich_data as $pervich => $zapis_data) {
+//                                var_dump($pervich);
+                                //var_dump($zapis_data);
+
                                 if (!isset($pervich_summ_arr_new[$type])) {
                                     $pervich_summ_arr_new[$type] = $pervich_summ_arr;
                                 }
 
                                 if (isset($zapis_data['data'])) {
                                     if (!empty($zapis_data['data'])) {
-                                        foreach ($zapis_data['data'] as $i_id => $i_summ) {
+                                        foreach ($zapis_data['data'] as $z_id => $i_summ) {
                                             if ($pervich == 1 || $pervich == 2) {
                                                 //Стоматология
                                                 if ($type == 5) {
@@ -410,8 +420,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                                         if ($i_summ < 1100) {
                                                             //нас интересует сейчас это условие, первичка без работы
                                                             $pervich_summ_arr_new[$type][1]++;
-                                                            var_dump($i_id);
-                                                            echo '<a href="invoice.php?id='.$i_id.'" class="ahref button_tiny" style="margin: 0 3px; font-size: 90%;" target="_blank" rel="nofollow noopener">'.$i_id.'</a><br>';
+                                                            //var_dump($z_id);
+                                                            echo '<input type="hidden" value="'.$z_id.'" class="zapis_id">';
                                                         }/* else {
                                                             $pervich_summ_arr_new[$type][2]++;
                                                         }*/
@@ -424,8 +434,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                                         if ($i_summ < 550) {
                                                             //нас интересует сейчас это условие, первичка без работы
                                                             $pervich_summ_arr_new[$type][1]++;
-                                                            var_dump($i_id);
-                                                            echo '<a href="invoice.php?id='.$i_id.'" class="ahref button_tiny" style="margin: 0 3px; font-size: 90%;" target="_blank" rel="nofollow noopener">'.$i_id.'</a><br>';
+                                                            //var_dump($z_id);
+                                                            //echo '<a href="invoice.php?id='.$z_id.'" class="ahref button_tiny" style="margin: 0 3px; font-size: 90%;" target="_blank" rel="nofollow noopener">'.$z_id.'</a><br>';
+                                                            echo '<input type="hidden" value="'.$z_id.'" class="zapis_id">';
                                                         }/* else {
                                                             $pervich_summ_arr_new[$type][2]++;
                                                         }*/
@@ -437,8 +448,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                                         if ($i_summ < 990) {
                                                             //нас интересует сейчас это условие, первичка без работы
                                                             $pervich_summ_arr_new[$type][1]++;
-                                                            var_dump($i_id);
-                                                            echo '<a href="invoice.php?id='.$i_id.'" class="ahref button_tiny" style="margin: 0 3px; font-size: 90%;" target="_blank" rel="nofollow noopener">'.$i_id.'</a><br>';
+                                                            //var_dump($z_id);
+                                                            //echo '<a href="invoice.php?id='.$z_id.'" class="ahref button_tiny" style="margin: 0 3px; font-size: 90%;" target="_blank" rel="nofollow noopener">'.$z_id.'</a><br>';
+                                                            echo '<input type="hidden" value="'.$z_id.'" class="zapis_id">';
                                                         }/* else {
                                                             $pervich_summ_arr_new[$type][2]++;
                                                         }*/
@@ -455,11 +467,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                 }
                             }
                         }
-                        var_dump($pervich_summ_arr_new);
-
-
-
-
+                        //var_dump($pervich_summ_arr_new);
 
                         include_once 'functions.php';
 
@@ -492,37 +500,37 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         }
 
                         //Если хотим видеть только уникальные пациенты
-                        if ($_POST['patientUnic'] == 1){
-                            //var_dump($journal);
-
-                            $journal_temp = array();
-
-                            foreach($journal as $journal_item){
-                                //Нам нужны фио пациентов чтоб потом сортировать их по фио
-
-                                $journal_temp[WriteSearchUser('spr_clients', $journal_item['patient'], 'user_full', false)] =  $journal_item;
-                            }
-
-                            ksort($journal_temp);
-                            $journal = $journal_temp;
-                            $journal = array_values($journal_temp);
-
-                        }
+//                        if ($_POST['patientUnic'] == 1){
+//                            //var_dump($journal);
+//
+//                            $journal_temp = array();
+//
+//                            foreach($journal as $journal_item){
+//                                //Нам нужны фио пациентов чтоб потом сортировать их по фио
+//
+//                                $journal_temp[WriteSearchUser('spr_clients', $journal_item['patient'], 'user_full', false)] =  $journal_item;
+//                            }
+//
+//                            ksort($journal_temp);
+//                            $journal = $journal_temp;
+//                            $journal = array_values($journal_temp);
+//
+//                        }
                         //($journal);
 
 
-                        echo showZapisRezult($journal, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, 0, true, false, $dop);
+                        //echo showZapisRezult($journal, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, 0, true, false, $dop);
                         //$ZapisHereQueryToday, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, $type, $format, $menu, $dop
 
 
-                        echo '
-                                    <li class="cellsBlock" style="margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
-                                        Всего : ' . count($journal) . '<br>
-                                    </li>
-                                    
-                                    <!--<li class="cellsBlock" style="margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
-                                        '.$query.'
-                                    </li>-->';
+//                        echo '
+//                                    <li class="cellsBlock" style="margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
+//                                        Всего : ' . count($journal) . '<br>
+//                                    </li>
+//
+//                                    <!--<li class="cellsBlock" style="margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
+//                                        '.$query.'
+//                                    </li>-->';
 
                         echo '
                                         </ul>

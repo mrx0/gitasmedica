@@ -177,10 +177,10 @@
                             <div id="status">
                                 <header>
                                     <div class="nav">
-                                        <a href="tickets.php?'.$show_option_str_for_paginator.'" class="b">Все тикеты</a>
+                                        <a href="tickets.php?'.$show_option_str_for_paginator.'" class="b">Все заявки</a>
                                     </div>
                                     <h2>
-                                        Тикет #'.$ticket_j[0]['id'];
+                                        Заявка #'.$ticket_j[0]['id'];
                         if (!$ticket_done || ($ticket['see_all'] == 1) || $god_mode)     {
                             if ((($ticket['edit'] == 1) && (($ticket_j[0]['create_person'] == $_SESSION['id']) || ($ticket['see_all'] == 1))) || $god_mode) {
                                 if ($ticket_j[0]['status'] != 9) {
@@ -204,7 +204,7 @@
                                     </h2>';
 
                         if ($ticket_j[0]['status'] == 9){
-                            echo '<i style="color:red;">Тикет удален (заблокирован).</i><br>';
+                            echo '<i style="color:red;">Заявка удалена (заблокирована).</i><br>';
                         }
 
                         echo '
@@ -488,7 +488,7 @@
                         echo '
                         <div style="font-size:80%;  color: #555; margin: 10px 0 5px;">Лог изменений</div>
                         <ul id="ticket_change_log" style="font-size:80%;  color: #555;"></ul>
-                        <div id="doc_title">Тикет #'.$ticket_j[0]['id'].'</div>';
+                        <div id="doc_title">Заявка #'.$ticket_j[0]['id'].'</div>';
 
                         //Модальные окна
                         echo $block_modal_ticket_done;

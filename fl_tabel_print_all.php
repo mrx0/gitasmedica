@@ -250,6 +250,18 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         */
 
                         $tabel_summ = intval($tabel_j[0]['summ']);
+
+                        //Если ассистент
+                        if ($tabel_j[0]['type'] == 7){
+                            $tabel_summ = intval($tabel_j[0]['summ'] + $tabel_j[0]['summ_calc']);
+                        }
+
+                        //Коэффициенты +/-
+                        if (($tabel_j[0]['k_plus'] != 0) || ($tabel_j[0]['k_minus'] != 0)){
+                            $tabel_summ = intval($tabel_summ + $tabel_summ/100*($tabel_j[0]['k_plus'] - $tabel_j[0]['k_minus']));
+                        }
+
+
                         if (isset($tabel_deductions_j[1])){
                             $tabel_summ = intval($tabel_j[0]['summ'] - $tabel_deductions_j[1]);
                         }

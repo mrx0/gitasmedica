@@ -250,6 +250,12 @@
                     }
                     //var_dump(intval($summItog - $rezData['paidout'] - $rezData['deduction']));
 
+                    //Коэффициенты +/-
+                    if (($rezData['k_plus'] != 0) || ($rezData['k_minus'] != 0)){
+                        $summItog = $summItog + $summItog/100*($rezData['k_plus'] - $rezData['k_minus']);
+                    }
+//                        var_dump($summItog);
+
                     if ((intval($summItog - $rezData['paidout'] - $rezData['deduction']) != 0) || ($rezData['status'] != 7)) {
 
                         echo '

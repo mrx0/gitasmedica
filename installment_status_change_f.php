@@ -14,7 +14,7 @@
 		include_once 'DBWork.php';
 		include_once 'functions.php';
 		if ($_POST){
-		    if (isset($_POST['client_id']) && isset($_POST['installment_status_now'])) {
+		    if (isset($_POST['client_id'])/* && isset($_POST['invoice_id'])*/ && isset($_POST['installment_status_now'])) {
 
                 //$msql_cnnct = ConnectToDB();
                 /*!!!Тест PDO*/
@@ -78,7 +78,7 @@
                 }else{
                     //Удаляем рассрочку
 
-                    $query = "DELETE FROM `journal_installments`WHERE `client_id`= :client_id";
+                    $query = "DELETE FROM `journal_installments` WHERE `client_id`= :client_id";
 
                     $args = [
                         'client_id' => $_POST['client_id']

@@ -440,6 +440,13 @@
                                                 }
                                             }
                                         }
+                                        if ($type == 10){
+                                            if (!isset($percents_j[$type][$data['percent_cats']])){
+                                                if (!in_array($invoice_id, $error_invoices)) {
+                                                    array_push($error_invoices, $invoice_id);
+                                                }
+                                            }
+                                        }
                                         //if (isset($percents_j[7][$percent_cat_id])) {
                                     } else {
                                         //Если ассистенты (позиция, которая используется только для ассистов (кт, орто))
@@ -746,7 +753,7 @@
         //var_dump($subtractions_j_temp[5]);
 
 
-        //Сколько еще осталось выплатить
+        //Сколько еще осталось выплатить (!!! тут неправильно, не учитывается коэффициент, ассистенты и так далее. Если будет использоваться, переделать правильно рассчет надо)
         $salary_debt_j_temp = array();
         $salary_debt_j = array();
         //Общая сумма

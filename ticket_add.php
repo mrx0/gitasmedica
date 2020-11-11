@@ -1,7 +1,7 @@
 <?php
 
 //ticket_add.php
-//Добавить тикет
+//Добавить заявку
 
 	require_once 'header.php';
 	
@@ -26,10 +26,10 @@
 				<div id="status">
 					<header>
 						<div class="nav">
-							<a href="tickets.php" class="b">Все тикеты</a>
+							<a href="tickets.php" class="b">Все заявки</a>
 						</div>
 						
-						<h2>Новый тикет</h2>
+						<h2>Новая заявка</h2>
 					</header>';
 
 			echo '

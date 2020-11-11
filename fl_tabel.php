@@ -19,7 +19,7 @@
                 //var_dump($optionsWF);
 
                 $tabel_j = SelDataFromDB('fl_journal_tabels', $_GET['id'], 'id');
-                //var_dump($tabel_j);
+//                var_dump($tabel_j);
 
                 if ($tabel_j != 0){
                     //var_dump($tabel_j);
@@ -361,7 +361,8 @@
                                         </div>
                                         <div style="margin: 5px 0 0 3px; font-size: 80%;">
                                             <b>Наряд: <a href="invoice.php?id='.$rezData['invoice_id'].'" class="ahref">#'.$rezData['invoice_id'].'</a> от '.$invoice_create_time.'<br>пац.: <a href="client.php?id='.$rezData['client_id'].'" class="ahref">'.$name.'</a><br>
-                                            Сумма: '.$summ.' р. Страх.: '.$summins.' р.</b> <br>
+                                            <!--Сумма: '.$summ.' р. Страх.: '.$summins.' р.</b> <br>-->
+                                            Сумма: <span class="invoice_summ">' . $summ . '</span> р. Страх.: <span class="invoice_summ_ins">' . $summins . '</span> р.</b> <br>
                                             
                                         </div>
                                         <div style="margin: 5px 0 5px 3px; font-size: 80%;">';
@@ -1094,7 +1095,7 @@
                         if (($tabel_j[0]['type'] == 5) || ($tabel_j[0]['type'] == 6) || ($tabel_j[0]['type'] == 10)) {
                             echo '
                                         <div style="background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ'] . '</span> руб.
+                                            Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ'] . '</span> руб. <div style="display: inline; color: #5f5f5f; font-size: 90%; font-style: italic;">Сумма всех нарядов: <span id="invoiceSumm"></span>  руб. (включая страховые)</div>
                                         </div>';
                         }
                         //Админы, ассистенты
@@ -1123,9 +1124,10 @@
                                         <div style="background-color: rgba(72, 230, 194, 0.16); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">';
 
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
-                            echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style = "font-size: 80%;" >Отпускной +</a ></div>';
-                            echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3" class="b" style="font-size: 80%;">Больничный +</a></div>';
-                            echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style="font-size: 80%;">Прочее +</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style = "font-size: 80%;" >Добавить отпускной</a ></div>';
+                            echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3" class="b" style="font-size: 80%;">Добавить больничный</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_surcharge_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style="font-size: 80%;">Добавить прочее</a></div>';
+                            echo '<div style="display: inline;"><span class="b" style = "font-size: 80%;" onclick="showKoeffInTabelAdd('.$_GET['id'].', false, '.$tabel_j[0]['k_plus'].')">Коэффициент +</span></div >';
                         }
 
                         //Надбавки
@@ -1149,8 +1151,9 @@
                         echo '
                                 </div>';*/
 
-
-
+                        if ($tabel_j[0]['k_plus'] != 0) {
+                            echo '<div style="font-size: 80%; color: #555;">Применён коэффициент: +' . $tabel_j[0]['k_plus'] . '%</div>';
+                        }
                         echo '
                                                 
                                                 <div>Всего дополнительно начислено: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['surcharge'] . '</span> руб.</div>
@@ -1164,10 +1167,11 @@
 
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
                             //echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1" class="b" style = "font-size: 80%;" >За материалы +</a ></div >';
-                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style = "font-size: 80%;" >Налог +</a ></div >';
-                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3" class="b" style = "font-size: 80%;" >Штраф/Вычет +</a ></div >';
-                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=4" class="b" style = "font-size: 80%;" >Ссуда +</a ></div >';
-                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=5" class="b" style = "font-size: 80%;" >Обучение +</a ></div >';
+                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2" class="b" style = "font-size: 80%;" >Добавить налог</a ></div >';
+                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3" class="b" style = "font-size: 80%;" >Добавить штраф/вычет</a ></div >';
+                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=4" class="b" style = "font-size: 80%;" >Добавить ссуду</a ></div >';
+                            echo '<div style="display: inline;"><a href = "fl_deduction_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=5" class="b" style = "font-size: 80%;" >Добавить обучение</a ></div >';
+                            echo '<div style="display: inline;"><span class="b" style = "font-size: 80%;" onclick="showKoeffInTabelAdd('.$_GET['id'].', true, '.$tabel_j[0]['k_minus'].')">Коэффициент -</span></div >';
                         }
 
                         //Вычеты
@@ -1191,8 +1195,11 @@
                         echo '
                                 </div>';*/
 
-                        echo '
+                        if ($tabel_j[0]['k_minus'] != 0){
+                            echo '<div style="font-size: 80%; color: #555;">Применён коэффициент: -' . $tabel_j[0]['k_minus'] . '%</div>';
+                        }
 
+                        echo '
                                             <div>Всего удержано: <span class="calculateInvoice" style="font-size: 13px">' . $tabel_j[0]['deduction'] . '</span> руб.</div>
                                         </div>';
 
@@ -1200,11 +1207,11 @@
                                         <div style="background-color: rgba(1, 94, 255, 0.22); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">';
 
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1&filial_id='.$tabel_j[0]['office_id'].'" class="b" style = "font-size: 80%;">Аванс +</a ></div>';
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=7&filial_id='.$tabel_j[0]['office_id'].'" class="b" style = "font-size: 80%;">ЗП +</a></div>';
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">Отпускные +</a></div>';
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">Больничный +</a></div>';
-                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=4&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">На карту +</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=1&filial_id='.$tabel_j[0]['office_id'].'" class="b" style = "font-size: 80%;">Выплата аванса</a ></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=7&filial_id='.$tabel_j[0]['office_id'].'" class="b" style = "font-size: 80%;">Выплата ЗП</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=2&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">Выплата отпускного</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=3&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">Выплата больничного</a></div>';
+                            echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=4&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">Выплата на карту</a></div>';
                             //echo '<div style="display: inline;"><a href="fl_paidout_in_tabel_add.php?tabel_id='.$_GET['id'].'&type=5&filial_id='.$tabel_j[0]['office_id'].'" class="b" style="font-size: 80%;">За ночь +</a></div>';
                         }
 
@@ -1243,15 +1250,74 @@
 
 //                        //Общая сумма, которую осталось выплатить = сумма (РЛ) + % с оклада + % с выручки + надбавки + за ночь + пустые смены - вычеты - оплачено - выплачено
 //                        $summItog = $tabel_j[0]['summ'] + $tabel_j[0]['per_from_salary'] + $tabel_j[0]['percent_summ'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena'] - $tabel_j[0]['deduction'] - $tabel_j[0]['paid'] - $tabel_j[0]['paidout'];
-                        //Общая сумма, которую осталось выплатить = сумма (РЛ) + надбавки + за ночь + пустые смены - вычеты - оплачено - выплачено
-                        $summItog = $tabel_j[0]['summ'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena'] - $tabel_j[0]['deduction'] - $tabel_j[0]['paid'] - $tabel_j[0]['paidout'];
+                        //Общая сумма, которую осталось выплатить = сумма (РЛ) + надбавки + за ночь + пустые смены
+                        $summItog = $tabel_j[0]['summ'] + $tabel_j[0]['surcharge'] + $tabel_j[0]['night_smena'] + $tabel_j[0]['empty_smena'];
+//                        var_dump($summItog);
+
                         //Если ассистент, то плюсуем сумму за РЛ
                         if ($tabel_j[0]['type'] == 7){
                             $summItog += $tabel_j[0]['summ_calc'];
                         }
+                        //var_dump($summItog);
+
+                        //Коэффициенты +/-
+                        if (($tabel_j[0]['k_plus'] != 0) || ($tabel_j[0]['k_minus'] != 0)){
+                            $summItog = $summItog + $summItog/100*($tabel_j[0]['k_plus'] - $tabel_j[0]['k_minus']);
+                        }
+                        //var_dump($summItog);
+
+                        //Общая сумма, которую осталось выплатить = всего сумма - вычеты - оплачено - выплачено
+                        $summItog = $summItog - $tabel_j[0]['deduction'] - $tabel_j[0]['paid'] - $tabel_j[0]['paidout'];
+//                        var_dump($summItog);
+
 
                         echo '
-                                        <div style="background-color: rgba(56, 245, 70, 0.36); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
+                                        <div style="background-color: rgba(56, 245, 70, 0.36); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">';
+
+                        //Коэффициенты надбавки и вычета
+                        if (($tabel_j[0]['k_plus'] != 0) || ($tabel_j[0]['k_minus'] != 0)){
+                            $koeff = '';
+
+                            if (($tabel_j[0]['k_plus'] != 0) && ($tabel_j[0]['k_minus'] != 0)) {
+                                //echo $tabel_j[0]['k_plus'] . '% -' . $tabel_j[0]['k_minus'] . '% = ' ;
+
+                                if ($tabel_j[0]['k_plus']-$tabel_j[0]['k_minus'] >= 0){
+                                    //echo '+';
+                                    $koeff = '+';
+                                }
+
+//                                if ($tabel_j[0]['k_plus']-$tabel_j[0]['k_minus'] < 0){
+//                                    echo '-';
+//                                }
+
+                                //echo ($tabel_j[0]['k_plus'] - $tabel_j[0]['k_minus']) . '%';
+                                $koeff .= ($tabel_j[0]['k_plus'] - $tabel_j[0]['k_minus']) . '%';
+
+                            }
+
+                            if ($tabel_j[0]['k_plus'] == 0) {
+                                //echo '-' . $tabel_j[0]['k_minus'] . '%';
+                                $koeff = '-' . $tabel_j[0]['k_minus'] . '%';
+                            }
+
+                            if ($tabel_j[0]['k_minus'] == 0) {
+                                //echo '+'.$tabel_j[0]['k_plus'].'%';
+                                $koeff = '+'.$tabel_j[0]['k_plus'].'%';
+                            }
+
+
+                            //$summItogOld = $summItog;
+                            //Рассчет
+                            //$summItog = $summItog + $summItog/100*($tabel_j[0]['k_plus'] - $tabel_j[0]['k_minus']);
+
+                            echo '<div style="font-size: 80%; color: #555;">С учётом коэффициентов ('.$koeff.') :';
+                            //echo ' '.$summItogOld.' руб. '.$koeff.' = '.intval($summItog).' руб.';
+                            echo '</div>';
+
+
+                        }
+
+                        echo '
                                             <div>Итого осталось выплатить: <span id="summItog" class="calculateOrder" style="font-size: 16px; ', ($summItog) <= 0 ? 'color: red;' : '' ,'">' . intval($summItog) . '</span> руб.<br>
                                             <span style="font-size: 80%; color: #8C8C8C;">сумма округляется до целого для удобства расчетов</span></div>
                                             <div>';
@@ -1310,6 +1376,32 @@
 					        </div>
 					        <!-- Подложка только одна -->
 					        <div id="overlay"></div>';
+
+                        echo '
+                            <script type="text/javascript">
+                                $(document).ready(function(){
+                                    let all_invoice_summ = 0;
+                                    let all_invoice_summ_ins = 0;
+                                    
+                                    $(".invoice_summ").each(function(){
+//                                        console.log($(this).html());
+
+                                        all_invoice_summ += Number($(this).html());
+                                    })
+                                    
+                                    $(".invoice_summ_ins").each(function(){
+//                                        console.log($(this).html());
+
+                                        all_invoice_summ_ins += Number($(this).html());
+                                    })
+//                                    console.log(all_invoice_summ);
+//                                    console.log(all_invoice_summ_ins);
+                                    
+                                    $("#invoiceSumm").html(number_format(all_invoice_summ + all_invoice_summ_ins, 0, \'.\', \' \'));
+                                });
+
+
+                            </script>';
 
 					}else{
                         echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

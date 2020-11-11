@@ -23,6 +23,8 @@
 
                 //require 'variables.php';
 
+                $uncheckDailyReport = 'false';
+
                 $msql_cnnct = ConnectToDB2();
 
                 $query = "SELECT * FROM `fl_journal_daily_report` WHERE `id`='{$_POST['report_id']}' LIMIT 1";
@@ -41,8 +43,13 @@
                     $today = date('Y-m-d', time());
                     $monthStart15daysPlus = date('Y-m-d', strtotime('+1 month +14 days', gmmktime(0, 0, 0, $month, 1, $year)));
 
+                    //Настройка разрешения изменений  задним числом
+                    $query = "SELECT `value` FROM `settings` WHERE `option`='uncheckDailyReport' LIMIT 1";
+                    $res2 = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                    $uncheckDailyReport = mysqli_fetch_assoc($res2);
+
                     //ограничение по времени на редактирование
-                    if (($today <= $monthStart15daysPlus) || ($_SESSION['permissions'] == 3) || TRUE) {
+                    if (($today <= $monthStart15daysPlus) || ($_SESSION['permissions'] == 3) || ($uncheckDailyReport['value'] == 'true')) {
                         //Обновляем
                         $query = "UPDATE `fl_journal_daily_report` SET `status` = '0' WHERE `id`='{$_POST['report_id']}'";
 
@@ -53,7 +60,7 @@
 
                 CloseDB($msql_cnnct);
 
-                echo json_encode(array('result' => 'success', 'data' => 'Ok'));
+                echo json_encode(array('result' => 'success', 'data' => $uncheckDailyReport));
 
             }
         }

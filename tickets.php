@@ -1,7 +1,7 @@
 <?php
 
 //tickets.php
-//Тикеты
+//Заявки
 
 	require_once 'header.php';
 	//require_once 'blocks_dom.php';
@@ -46,7 +46,7 @@
                     if ($_GET['show_option'] == 'all'){
                         $show_option_str = " AND j_ticket.status <> '9'";
                         $show_option_str_for_paginator = 'show_option=all';
-                        $show_option_str_for_header = 'Все тикеты <span style="color: green">(кроме удалённых)</span>';
+                        $show_option_str_for_header = 'Все заявки <span style="color: green">(кроме удалённых)</span>';
                         $bgColor_all = 'background-color: rgba(0, 201, 255, 0.5)';
                     }
                     //Все открытые
@@ -60,41 +60,41 @@
                     /*if ($_GET['show_option'] == 'excl2'){
                         $show_option_str = " AND j_ticket.status <> '9'";
                         $show_option_str_for_paginator = 'show_option=excl2';
-                        $show_option_str_for_header = '<span style="color: red">Просроченные</span> тикеты';
+                        $show_option_str_for_header = '<span style="color: red">Просроченные</span> заявки';
                     }*/
                     //Истёк срок
                     if ($_GET['show_option'] == 'excl'){
                         $show_option_str = " AND j_ticket.status <> '9' AND j_ticket.status <> '1' AND j_ticket.plan_date < '{$today3daysplus}'";
                         $show_option_str_for_paginator = 'show_option=excl';
-                        $show_option_str_for_header = '<span style="color: red">Просроченные и подходящие по сроку</span> тикеты';
+                        $show_option_str_for_header = '<span style="color: red">Просроченные и подходящие по сроку</span> заявки';
                         $bgColor_excl = 'background-color: rgba(0, 201, 255, 0.5)';
                     }
                     //Изменения
                     if ($_GET['show_option'] == 'newtopic'){
                         $show_option_str = " AND j_ticket.id NOT IN (SELECT `ticket_id` FROM `journal_tickets_readmark` jticket_rm2 WHERE j_ticket.id = jticket_rm2.ticket_id AND jticket_rm2.create_person = '{$_SESSION['id']}' AND jticket_rm2.status = '1')";
                         $show_option_str_for_paginator = 'show_option=newtopic';
-                        $show_option_str_for_header = '<span style="color: forestgreen">Обновлённые</span> тикеты';
+                        $show_option_str_for_header = '<span style="color: forestgreen">Обновлённые</span> заявки';
                         $bgColor_newtopic = 'background-color: rgba(0, 201, 255, 0.5)';
                     }
                     //Сделанные
                     if ($_GET['show_option'] == 'done'){
                         $show_option_str = " AND j_ticket.status = '1'";
                         $show_option_str_for_paginator = 'show_option=done';
-                        $show_option_str_for_header = '<span style="color: green">Завершенные</span> тикеты';
+                        $show_option_str_for_header = '<span style="color: green">Завершенные</span> заявки';
                         $bgColor_done = 'background-color: rgba(0, 201, 255, 0.5)';
                     }
                     //Удалённые
                     if ($_GET['show_option'] == 'deleted'){
                         $show_option_str = " AND j_ticket.status = '9'";
                         $show_option_str_for_paginator = 'show_option=deleted';
-                        $show_option_str_for_header = '<span style="color: darkslategrey">Удалённые</span> тикеты';
+                        $show_option_str_for_header = '<span style="color: darkslategrey">Удалённые</span> заявки';
                         $bgColor_deleted = 'background-color: rgba(0, 201, 255, 0.5)';
                     }
                     //Персональные
                     if ($_GET['show_option'] == 'person'){
                         $show_option_str = " AND j_tickets_worker.worker_id = '{$_SESSION['id']}' AND j_ticket.status <> '9'";
                         $show_option_str_for_paginator = 'show_option=person';
-                        $show_option_str_for_header = '<span style="color: rgba(124, 0, 255, 0.68);">Персональные</span> тикеты';
+                        $show_option_str_for_header = '<span style="color: rgba(124, 0, 255, 0.68);">Персональные</span> заявки';
                         $bgColor_person = 'background-color: rgba(0, 201, 255, 0.5)';
                     }
                 }else{
@@ -202,7 +202,7 @@
 
             if (($ticket['add_new'] == 1) || ($ticket['add_own'] == 1) || $god_mode){
                 echo '
-					<a href="ticket_add.php" class="b4">Новый тикет</a>';
+					<a href="ticket_add.php" class="b4">Новая заявка</a>';
             }
 
             echo '
@@ -404,7 +404,7 @@
 			echo '
 					</ul>
 					
-					<div id="doc_title">Тикеты</div>
+					<div id="doc_title">Заявки</div>
 					
 				</div>';
 		}else{
