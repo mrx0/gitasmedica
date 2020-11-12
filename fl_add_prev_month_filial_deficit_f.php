@@ -26,9 +26,17 @@
                 $date = $_POST['year'].'-'.$_POST['month'].'-01';
                 $todaydate = date('Y').'-'.date('m').'-01';
 
+                $msql_cnnct = ConnectToDB();
+
+                $uncheckDailyReport = 'false';
+
+                //Настройка разрешения изменений  задним числом
+                $query = "SELECT `value` FROM `settings` WHERE `option`='uncheckDailyReport' LIMIT 1";
+                $res2 = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                $uncheckDailyReport = mysqli_fetch_assoc($res2);
+
                 //ограничение по времени на редактирование
-                if (($date >= $todaydate) || ($_SESSION['permissions'] == 3)) {
-                    $msql_cnnct = ConnectToDB();
+                if (($date >= $todaydate) || ($_SESSION['permissions'] == 3) || ($uncheckDailyReport['value'] == 'true')) {
 
                     $query = "SELECT `id` FROM `fl_journal_prev_month_filial_deficit` 
                           WHERE `filial_id`='" . $_POST['filial_id'] . "' AND `month`='" . $_POST['month'] . "' AND `year`='" . $_POST['year'] . "' LIMIT 1";
