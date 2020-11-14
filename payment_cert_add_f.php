@@ -187,9 +187,10 @@
 
                                                                 //Обновим в сертификатие "потрачено" и Проверяем не закрыть ли нам сертификат
                                                                 if ($debited >= $cert_j[0]['nominal']) {
-                                                                    //$query_cert_dop = ", `closed_time`='{$date_in}'";
-                                                                    $query_cert_dop = "";
+                                                                    $query_cert_dop = ", `closed_time`='{$date_in}', `status`='5'";
+                                                                    //$query_cert_dop = "";
                                                                 }
+
                                                                 $query = "UPDATE `journal_cert` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `debited`='$debited'$query_cert_dop WHERE `id`='$cert_id'";
                                                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

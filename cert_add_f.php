@@ -29,10 +29,15 @@
                 if ($number != 0) {
                     echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Сертификат с таким номером уже присутствует в базе.</div>'));
                 } else {
-                    //Добавляем сертификат в базу
-                    $cert_id = WriteCertToDB_Edit($_SESSION['id'], $_POST['num'], $_POST['nominal']);
 
-                    echo json_encode(array('result' => 'success', 'data' => '<div class="query_ok"><a href="certificate.php?id=' . $cert_id . '" class="ahref">Сертификат</a> добавлен.</div>'));
+                    if (mb_strlen($_POST['num']) <= 2) {
+                        echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Номер должен содержать минимум 3 символа.</div>'));
+                    }else {
+                        //Добавляем сертификат в базу
+                        $cert_id = WriteCertToDB_Edit($_SESSION['id'], $_POST['num'], $_POST['nominal']);
+
+                        echo json_encode(array('result' => 'success', 'data' => '<div class="query_ok"><a href="certificate.php?id=' . $cert_id . '" class="ahref">Сертификат</a> добавлен.</div>'));
+                    }
                 }
             }
         }

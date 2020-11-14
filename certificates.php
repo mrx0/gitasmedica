@@ -17,11 +17,22 @@
             $limit_pos[1] = 20;
             $pages = 0;
             $dop = '';
+            $dop_link_str = '';
+
+            //Для выделения кнопки
+            $option1_color = 'background-color: #fff261;';
+            $option2_color = '';
+            $option3_color = '';
+            $option4_color = '';
+            $option5_color = '';
+
+            $current_page = '';
 
             $msql_cnnct = ConnectToDB ();
 
             if (isset($_GET['page'])){
                 $limit_pos[0] = ($_GET['page']-1) * $limit_pos[1];
+                $current_page = 'page='.$_GET['page'];
             }else{
                 $_GET['page'] = 1;
             }
@@ -44,11 +55,46 @@
 				echo '
 					<a href="cert_add.php" class="b">Добавить</a>';
 		    }
+
+
+            //var_dump($dop);
+
+            if (isset($_GET['option'])){
+                if ($_GET['option'] == 2){
+                    $dop = "WHERE `status`='7' AND `nominal` <> `debited` AND `expires_time` > '".date('Y-m-d', time())."'";
+                    $dop_link_str = 'option=2';
+                    $option1_color = '';
+                    $option2_color = 'background-color: #fff261;';
+                }
+                if ($_GET['option'] == 3){
+                    $dop = "WHERE `status`='7' AND `nominal` <> `debited` AND `expires_time` < '".date('Y-m-d', time())."'";
+                    $dop_link_str = 'option=3';
+                    $option1_color = '';
+                    $option3_color = 'background-color: #fff261;';
+                }
+                if ($_GET['option'] == 4){
+                    $dop = "WHERE `status`='5'";
+                    $dop_link_str = 'option=4';
+                    $option1_color = '';
+                    $option4_color = 'background-color: #fff261;';
+                }
+            }
+
 			echo '
 						<div id="data">';
+            echo '
+                            <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите опцию просмотра</span><br>
+							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
+								<a href="?" class="b" style="'.$option1_color.'">Все</a>
+								<a href="?&option=2" class="b" style="'.$option2_color.'">Проданные, не потраченные</a>
+								<a href="?&option=3" class="b" style="'.$option3_color.'">Проданные, истёк срок</a>
+								<a href="?&option=4" class="b" style="'.$option4_color.'">Закрытые</a>
+								<!--<a href="?&option=5" class="b" style="'.$option5_color.'"></a>-->
+							</li>';
+
 
             //Пагинатор
-            echo paginationCreate ($limit_pos[1], $_GET['page'], 'journal_cert', 'certificates.php', $msql_cnnct, $dop);
+            echo paginationCreate ($limit_pos[1], $_GET['page'], 'journal_cert', 'certificates.php', $msql_cnnct, $dop, $dop_link_str);
 
             echo '		    
 							<ul class="live_filter" id="livefilter-list" style="margin-left:6px;">';
@@ -66,11 +112,27 @@
 			
 			include_once 'DBWork.php';
 
+			//var_dump($limit_pos);
 
-			$cert_j = SelDataFromDB('journal_cert', '', $limit_pos);
+            $cert_j = array();
+			//$cert_j = SelDataFromDB('journal_cert', '', $limit_pos);
 			//var_dump ($cert_j);
+            $query = "SELECT * FROM `journal_cert` {$dop} ORDER BY `num` ASC LIMIT {$limit_pos[0]}, {$limit_pos[1]}";
+//            var_dump($query);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0){
+                while ($arr = mysqli_fetch_assoc($res)){
+                    array_push($cert_j, $arr);
+                }
+
+            }
+            CloseDB ($msql_cnnct);
 			
-			if ($cert_j !=0){
+			if (!empty($cert_j)){
 				for ($i = 0; $i < count($cert_j); $i++) {
 
                     $status = '';
