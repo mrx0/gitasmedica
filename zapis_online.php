@@ -64,7 +64,12 @@
     		echo '
 				</header>';
 
+    		//Переменная, которую будем переключать после первой проверки
+            //нужна, чтобы чекнуть, когда была последняя запись
+            $check_last = true;
+
     		$dop = '';
+
     		if (isset($_SESSION['filial'])){
                 $dop = "WHERE `place`='".$_SESSION['filial']."'";
 
@@ -93,6 +98,22 @@
                 while ($arr = mysqli_fetch_assoc($res)){
 //                    var_dump($arr);
 
+                    if ($check_last) {
+//                        var_dump($arr['datetime']);
+//                        var_dump(date('Y-m-d', strtotime($arr['datetime'])));
+
+                        $today3daysplus = date('Y-m-d', strtotime(date('Y-m-d', strtotime($arr['datetime'])).' +3 days'));
+//                        var_dump($today3daysplus);
+//                        var_dump(date('Y-m-d', time()));
+
+                        if (date('Y-m-d', time()) >= $today3daysplus){
+                            echo '<div class="query_neok"><i class="fa fa-warning" aria-hidden="true" style="color: red;" title=""></i> Новых записей не было уже 3 дня или более. Возможно возникли проблемы. Обратитесь к руководителю!</div>';
+                        }
+
+                        $check_last = false;
+                    }
+
+
                     $diff_days = 0;
 
 
@@ -102,7 +123,7 @@
                         $diff_days = date_diff(new DateTime(), new DateTime($arr['datetime']))->days;
                         //var_dump($diff_days);
 
-                        //Если дней больше 28
+                        //Если дней больше 28 сами изменим статус, чтоб не болталось
                         if ($diff_days > 28) {
 
                             $time = date('Y-m-d H:i:s', time());

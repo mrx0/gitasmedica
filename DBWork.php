@@ -1547,7 +1547,7 @@
         $msql_cnnct = ConnectToDB ();
 		
 		$query = "SELECT * FROM `$datatable`".$q;
-		//echo $query;
+		//var_dump($query);
 
 		//$res = mysql_query($query) or die(mysql_error().' -> '.$query);
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
