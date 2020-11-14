@@ -64,9 +64,29 @@
     		echo '
 				</header>';
 
-    		//Переменная, которую будем переключать после первой проверки
-            //нужна, чтобы чекнуть, когда была последняя запись
-            $check_last = true;
+
+            //когда была последняя запись
+            $query = "SELECT `datetime` FROM `zapis_online` WHERE `id` IN (SELECT MAX(`id`) FROM `zapis_online`) LIMIT 1";
+//            var_dump($query);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0) {
+                $arr = mysqli_fetch_assoc($res);
+
+                $datetime = $arr['datetime'];
+            }
+
+            $today3daysplus = date('Y-m-d', strtotime(date('Y-m-d', strtotime($datetime)).' +3 days'));
+
+            if (date('Y-m-d', time()) >= $today3daysplus){
+                echo '<div class="query_neok"><i class="fa fa-warning" aria-hidden="true" style="color: red;" title=""></i> Новых записей не было уже 3 дня или более. Возможно возникли проблемы. Обратитесь к руководителю!</div>';
+            }
+
+            $check_last = false;
+
 
     		$dop = '';
 
@@ -89,7 +109,7 @@
 
             //$query = "SELECT * FROM `zapis_online` ".$dop." ORDER BY `id` DESC LIMIT {$limit_pos[0]}, {$limit_pos[1]};";
             $query = "SELECT * FROM `zapis_online` ".$dop." ORDER BY `status`, `id` DESC LIMIT {$limit_pos[0]}, {$limit_pos[1]};";
-            //var_dump($query);
+//            var_dump($query);
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -98,20 +118,7 @@
                 while ($arr = mysqli_fetch_assoc($res)){
 //                    var_dump($arr);
 
-                    if ($check_last) {
-//                        var_dump($arr['datetime']);
-//                        var_dump(date('Y-m-d', strtotime($arr['datetime'])));
 
-                        $today3daysplus = date('Y-m-d', strtotime(date('Y-m-d', strtotime($arr['datetime'])).' +3 days'));
-//                        var_dump($today3daysplus);
-//                        var_dump(date('Y-m-d', time()));
-
-                        if (date('Y-m-d', time()) >= $today3daysplus){
-                            echo '<div class="query_neok"><i class="fa fa-warning" aria-hidden="true" style="color: red;" title=""></i> Новых записей не было уже 3 дня или более. Возможно возникли проблемы. Обратитесь к руководителю!</div>';
-                        }
-
-                        $check_last = false;
-                    }
 
 
                     $diff_days = 0;
