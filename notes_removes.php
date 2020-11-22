@@ -23,7 +23,12 @@
                                     <li><a href="#tabs-2">Направления</a></li>
                                 </ul>';
             echo '
-                                <div id="tabs-1">
+                                <div id="tabs-1">';
+            if (true){
+                echo '
+                                    <a href="temp_notes_cert.php" class="b">Выданные сертификаты</a>';
+            }
+            echo '
                                     <div id="notes"></div>
                                 </div>';
 

@@ -79,7 +79,7 @@
                 $datetime = $arr['datetime'];
             }
 
-            $today3daysplus = date('Y-m-d', strtotime(date('Y-m-d', strtotime($datetime)).' +3 days'));
+            $today3daysplus = date('Y-m-d', strtotime(date('Y-m-d', strtotime($datetime )).' +3 days'));
 
             if (date('Y-m-d', time()) >= $today3daysplus){
                 echo '<div class="query_neok"><i class="fa fa-warning" aria-hidden="true" style="color: red;" title=""></i> Новых записей не было уже 3 дня или более. Возможно возникли проблемы. Обратитесь к руководителю!</div>';

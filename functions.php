@@ -3402,7 +3402,7 @@
 
         //Хочу получить общее количество
         $query = "SELECT COUNT(*) AS total_ids FROM `$db` $dop;";
-//        var_dump($query);
+        //var_dump($query);
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

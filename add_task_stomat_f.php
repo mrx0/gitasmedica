@@ -173,16 +173,7 @@
 								<a href="task_stomat_inspection.php?id='.$task.'" class="ahref">Посещение #'.$task.'</a> добавлено в журнал.
 								<br><br>
 								<a href="zub_photo.php?id='.$task.'" class="b">Добавить фото</a>
-								<a href="invoice_advance_add.php?client=' . $sheduler_zapis[0]['patient'] . '&filial=' . $sheduler_zapis[0]['office'] . '&date=' . strtotime($sheduler_zapis[0]['day'] . '.' . $month . '.' . $sheduler_zapis[0]['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $sheduler_zapis[0]['id'] . '&worker=' . $sheduler_zapis[0]['worker'] . '&type=' . $sheduler_zapis[0]['type'] . '" class="b">Предварительный расчёт</a>
-								<header>
-									<span style= "color: rgba(255,39,39,0.7); padding: 2px;">
-										Напоминание: Если вы что-то забыли или необходимо внести изменения,<br />
-										посещение можно <a href="edit_task_stomat.php?id='.$task.'" class="ahref">отредактировать</a>.
-									</span>
-								</header>
-
-								<br><br>
-								<a href="client.php?id='.$client_id.'" class="b">В карточку пациента</a>';
+								<a href="invoice_advance_add.php?client=' . $sheduler_zapis[0]['patient'] . '&filial=' . $sheduler_zapis[0]['office'] . '&date=' . strtotime($sheduler_zapis[0]['day'] . '.' . $month . '.' . $sheduler_zapis[0]['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $sheduler_zapis[0]['id'] . '&worker=' . $sheduler_zapis[0]['worker'] . '&type=' . $sheduler_zapis[0]['type'] . '" class="b">Предварительный расчёт</a>';
 
 
                     //Напоминания
@@ -228,10 +219,10 @@
 //                                CloseDB ($msql_cnnct2);
 
                             }else{
-                                echo 'Вы не назначили срок напоминания<br><br>';
+                                echo '<br><br><span style="color: red;"><i class="fa fa-warning" aria-hidden="true"></i> Вы не назначили срок напоминания</span>';
                             }
                         }else{
-                            echo 'Не выбран тип напоминания<br><br>';
+                            echo '<br><br><span style="color: red;"><i class="fa fa-warning" aria-hidden="true"></i> Не выбран тип напоминания</span>';
                         }
                     }
 
@@ -272,17 +263,29 @@
                                             //mysql_close();
 
                                         }else{
-                                            echo 'Не нашли в базе врача, к кому направляете.<br>';
+                                            echo '<br><br><span style="color: red;"><i class="fa fa-warning" aria-hidden="true"></i> Не нашли в базе врача, к кому направляете.</span>';
                                         }
                                     }else{
-                                        echo 'Пустое значение врача, к кому направляете.<br>';
+                                        echo '<br><br><span style="color: red;"><i class="fa fa-warning" aria-hidden="true"></i> Пустое значение врача, к кому направляете.</span>';
                                     }
                                 }else{
-                                    echo 'Пустое значение причины направления.<br>';
+                                    echo '<br><br><span style="color: red;"><i class="fa fa-warning" aria-hidden="true"></i> Пустое значение причины направления.</span>';
                                 }
                             }
                         }
                     }
+
+                    echo '
+                            <br><br>
+                                <header>
+									<span style= "color: rgba(255,39,39,0.7); padding: 2px;">
+										Напоминание: Если вы что-то забыли или необходимо внести изменения,<br />
+										посещение можно <a href="edit_task_stomat.php?id='.$task.'" class="ahref">отредактировать</a>.
+									</span>
+								</header>';
+
+                    echo '<br><br>
+								<a href="client.php?id='.$client_id.'" class="b">В карточку пациента</a>';
                 }
 
                 CloseDB ($msql_cnnct);
