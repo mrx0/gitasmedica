@@ -1,6 +1,6 @@
 <?php
 
-//index.php
+//history2.php
 //Главная
 
 	require_once 'header.php';
