@@ -41,6 +41,8 @@
 					<h1>Выгрузки по страховым</h1>
 				</header>';
 
+            $msql_cnnct = ConnectToDB ();
+
             //Пагинатор
             echo paginationCreate ($limit_pos[1], $_GET['page'], 'journal_insure_download', 'insure_xls.php', $msql_cnnct, $dop, $dop_link_str);
 
