@@ -174,6 +174,9 @@
 
 
                     //Наряд (!!!2020-11-22 тест для косметологов)
+
+                    $msql_cnnct = ConnectToDB ();
+
                     if ($task[0]['zapis_id'] != 0) {
 
                         $summ = 0;
