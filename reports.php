@@ -233,13 +233,13 @@
                                 <a href="fl_tabels2.php" class="b3">Отчёт по часам</a>
                             </li>';
 
-//                echo '
-//							<li class="cellsBlock" style="margin: 1px;">
-//								<a href="fl_mainReportCategory.php" class="b3">Отчёт по категориям</a>
-//							</li>';
+                echo '
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="fl_mainReportCategory.php" class="b3">Отчёт по категориям</a>
+							</li>';
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
-								<a href="fl_mainReportCategory2.php" class="b3">Отчёт по категориям</a>
+								<a href="fl_mainReportCategory2.php" class="b3">Отчёт по категориям (общее соотношение)</a>
 							</li>';
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">

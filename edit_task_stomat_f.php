@@ -206,10 +206,10 @@
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
 						}else{
-							echo 'Вы не назначили срок напоминания<br /><br />';
+							echo '<br><br><span style="color: red;"><i class="fa fa-warning" aria-hidden="true"></i> Вы не назначили срок напоминания</span>';
 						}
 					}else{
-						echo 'Не выбран тип напоминания<br /><br />';
+						echo '<br><br><span style="color: red;"><i class="fa fa-warning" aria-hidden="true"></i> Не выбран тип напоминания</span>';
 					}
 				}
 				
@@ -249,13 +249,13 @@
                                         //mysql_close();
 
                                     }else{
-                                        echo 'Не нашли в базе врача, к кому направляете.<br />';
+                                        echo '<br><br><span style="color: red;"><i class="fa fa-warning" aria-hidden="true"></i> Не нашли в базе врача, к кому направляете.</span>';
                                     }
                                 }else{
-                                    echo 'Пустое значение врача, к кому направляете.<br />';
+                                    echo '<br><br><span style="color: red;"><i class="fa fa-warning" aria-hidden="true"></i> Пустое значение врача, к кому направляете.</span>';
                                 }
                             }else{
-                                echo 'Пустое значение причины направления.<br />';
+                                echo '<br><br><span style="color: red;"><i class="fa fa-warning" aria-hidden="true"></i> Пустое значение причины направления.</span>';
                             }
                         }
                     }
@@ -263,8 +263,9 @@
                 //echo($query2);
 
 				echo '
+                    <br><br>
 					Посещение отредактировано.
-					<br /><br />
+					<br><br>
 					<a href="task_stomat_inspection.php?id='.$_POST['id'].'" class="b">В посещение</a>
 					';
 							
