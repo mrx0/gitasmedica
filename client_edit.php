@@ -86,6 +86,20 @@
 											</div>
 										</div>
 									</div>';
+
+					echo '
+                                    <div class="cellsBlock2">
+                                        <div class="cellLeft">Не делать рассылку</div>
+                                        <div class="cellRight">
+                                            <input type="checkbox" name="no_sms" value="1" ';
+					                            if ($client[0]['no_sms'] == 1){
+					                                echo 'checked';
+                                                }
+                    echo '
+					                        >
+                                        </div>
+                                    </div>
+					';
                     echo '
 									<div class="cellsBlock2">
 										<div class="cellLeft">Email</div>

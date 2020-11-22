@@ -783,6 +783,8 @@
 							htelephoneo: $("#htelephoneo").val(),
 
                             email: $("#email").val(),
+                            no_sms: $("input[name=no_sms]:checked").val(),
+
                             inn: $("#inn").val(),
 
 							passport: $("#passport").val(),
@@ -879,6 +881,8 @@
 							htelephoneo: $("#htelephoneo").val(),
 
                             email: $("#email").val(),
+                            no_sms: $("input[name=no_sms]:checked").val(),
+
                             inn: $("#inn").val(),
 
 							passport: $("#passport").val(),

@@ -117,6 +117,13 @@
 							</div>
 							
 							<div class="cellsBlock2">
+								<div class="cellLeft">Не делать рассылку</div>
+								<div class="cellRight">
+                                    <input type="checkbox" name="no_sms" value="1">
+								</div>
+							</div>
+														
+							<div class="cellsBlock2">
 								<div class="cellLeft">Email</div>
 								<div class="cellRight">
                                     <input type="text" name="email" id="email" value="">
