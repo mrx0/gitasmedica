@@ -1,6 +1,6 @@
 <?php
 
-//index.php
+//stom_instruction.php
 //Главная
 
 	require_once 'header.php';

@@ -1,6 +1,6 @@
 <?php
 
-//index.php
+//index2.php
 //Главная
 //!Тут есть скрипт дропдаун
 	require_once 'header.php';
